@@ -487,4 +487,10 @@
   <data name="WaterFlowModel1DFileImporter_ImportItem_An_error_occurred_while_trying_to_import_a__0___" xml:space="preserve">
     <value>An error occurred while trying to import a {0}; </value>
   </data>
+  <data name="CompositeBranchStructureConverter_SetCulvertCrossSectionDefinitionStandardProperties_Culvert___0___references_cross_section_definition___1___with_shape_type___2____which_is_not_supported_for_Culverts__So_Culvert___3___was_not_imported_" xml:space="preserve">
+    <value>Culvert '{0}' references cross section definition '{1}' with shape type '{2}', which is not supported for Culverts. So Culvert '{3}' was not imported.</value>
+  </data>
+  <data name="CompositeBranchStructureConverter_SetBridgeCrossSectionDefinition_Bridge___0___references_cross_section_definition___1___with_shape_type___2____Only_shape_types___3___or_tabulated_are_supported_for_Bridges__so_Bridge___4___was_not_imported_" xml:space="preserve">
+    <value>Bridge '{0}' references cross section definition '{1}' with shape type '{2}'. Only shape types '{3}' or tabulated are supported for Bridges, so Bridge '{4}' was not imported.</value>
+  </data>
 </root>

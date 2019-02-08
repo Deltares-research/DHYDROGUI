@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
@@ -10,7 +9,7 @@ using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSections
 {
-    public class GroundLayerDataTransferObject
+    public class GroundLayerDTO
     {
         public string CrossSectionDefinitionId;
         public bool GroundLayerUsed;
@@ -30,8 +29,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSectio
         /// Read ground layer data from a cross sections definition file defined at <paramref name="filePath"/>.
         /// </summary>
         /// <param name="filePath">The file path to the cross section definition file.</param>
-        /// <returns>A collection of <see cref="GroundLayerDataTransferObject"/> objects.</returns>
-        public static IEnumerable<GroundLayerDataTransferObject> ReadGroundLayerData(string filePath)
+        /// <returns>A collection of <see cref="GroundLayerDTO"/> objects.</returns>
+        public static IEnumerable<GroundLayerDTO> ReadGroundLayerData(string filePath)
         {
             var errorMessages = new List<string>();
             var categories = ReadCategoriesFromFileAndCollectErrorMessages(filePath, errorMessages);

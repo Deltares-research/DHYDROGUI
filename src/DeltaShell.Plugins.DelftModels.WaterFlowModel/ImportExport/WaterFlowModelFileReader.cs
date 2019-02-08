@@ -172,7 +172,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             return crossSectionsReader.Read(fileNames.CrossSectionDefinitions, fileNames.CrossSectionLocations, network);
         }
 
-        private static void ReadStructuresFile(IHydroNetwork network, IList<ICrossSectionDefinition> crossSectionDefinitions, GroundLayerDataTransferObject[] groundLayerDataTransferObject, Action<string, IList<string>> createAndAddErrorReport)
+        private static void ReadStructuresFile(IHydroNetwork network, IList<ICrossSectionDefinition> crossSectionDefinitions, GroundLayerDTO[] groundLayerDataTransferObject, Action<string, IList<string>> createAndAddErrorReport)
         {
             var structuresFileReader = new StructuresFileReader(createAndAddErrorReport);
             var compositeBranchStructures = structuresFileReader.ReadStructures(fileNames.Structures, network.Channels.ToList(), crossSectionDefinitions, groundLayerDataTransferObject);

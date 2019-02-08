@@ -42,7 +42,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
         public IList<ICompositeBranchStructure> Convert(IList<DelftIniCategory> categories,
             IList<IChannel> channels,
             IList<ICrossSectionDefinition> crossSectionDefinitions,
-            GroundLayerDataTransferObject[] groundLayerDataTransferObject,
+            GroundLayerDTO[] groundLayerDataTransferObject,
             List<string> errorMessages)
         {
             IList<ICompositeBranchStructure> compositeBranchStructures = new List<ICompositeBranchStructure>();
@@ -65,7 +65,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
         private void CreationOfStructuresAndCompositeBranchStructures(DelftIniCategory structureBranchCategory,
             IEnumerable<IBranch> channels, 
             IEnumerable<ICrossSectionDefinition> crossSectionDefinitions,
-            GroundLayerDataTransferObject[] groundLayerDataTransferObject,
+            GroundLayerDTO[] groundLayerDataTransferObject,
             IList<ICompositeBranchStructure> compositeBranchStructures,
             ICollection<string> errorMessages)   
         {
@@ -98,7 +98,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
                     var matchingCrossSectionDefinition = crossSectionDefinitions.FirstOrDefault(csd => csd.Name == crossSectionDefinitionId);
                     if (matchingCrossSectionDefinition != null)
                     {
-                        SetCulvertCrossSectionDefinition(matchingCrossSectionDefinition, culvert);
+                        SetCulvertCrossSectionDefinitionProperties(culvert, matchingCrossSectionDefinition);
                     }
 
                     var matchingGroundLayerData = groundLayerDataTransferObject.FirstOrDefault(g => g.CrossSectionDefinitionId == crossSectionDefinitionId);
@@ -139,7 +139,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
             }
         }
 
-        private static void SetGroundLayerProperties(GroundLayerDataTransferObject matchingGroundLayerData, IGroundLayer culvert)
+        private static void SetGroundLayerProperties(GroundLayerDTO matchingGroundLayerData, IGroundLayer culvert)
         {
             if (matchingGroundLayerData != null)
             {
@@ -161,16 +161,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
             switch (crossSectionDefinition)
             {
                 case CrossSectionDefinitionStandard crossSectionDefinitionStandard:
-                    switch (crossSectionDefinitionStandard.ShapeType)
+                    if (crossSectionDefinitionStandard.ShapeType == CrossSectionStandardShapeType.Rectangle)
                     {
-                        case CrossSectionStandardShapeType.Rectangle:
-                            var rectangleShape = (CrossSectionStandardShapeRectangle)crossSectionDefinitionStandard.Shape;
-                            bridge.BridgeType = BridgeType.Rectangle;
-                            bridge.Width = rectangleShape.Width;
-                            bridge.Height = rectangleShape.Height;
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
+                        var rectangleShape = (CrossSectionStandardShapeRectangle)crossSectionDefinitionStandard.Shape;
+                        bridge.BridgeType = BridgeType.Rectangle;
+                        bridge.Width = rectangleShape.Width;
+                        bridge.Height = rectangleShape.Height;
+                    }
+                    else
+                    {
+                        throw new Exception(string.Format(Resources.CompositeBranchStructureConverter_SetBridgeCrossSectionDefinition_Bridge___0___references_cross_section_definition___1___with_shape_type___2____Only_shape_types___3___or_tabulated_are_supported_for_Bridges__so_Bridge___4___was_not_imported_,
+                            bridge.Name, crossSectionDefinition.Name, crossSectionDefinitionStandard.ShapeType, CrossSectionStandardShapeType.Rectangle, bridge.Name));
                     }
                     break;
                 case CrossSectionDefinitionZW crossSectionDefinitionZw:
@@ -180,69 +181,76 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
             }
         }
 
-        private static void SetCulvertCrossSectionDefinition(ICrossSectionDefinition crossSectionDefinition, Culvert culvert)
+        private static void SetCulvertCrossSectionDefinitionProperties(Culvert culvert, ICrossSectionDefinition crossSectionDefinition)
         {
             switch (crossSectionDefinition)
             {
                 case CrossSectionDefinitionStandard crossSectionDefinitionStandard:
-                    switch (crossSectionDefinitionStandard.ShapeType)
-                    {
-                        case CrossSectionStandardShapeType.Round:
-                            var roundShape = (CrossSectionStandardShapeRound) crossSectionDefinitionStandard.Shape;
-                            culvert.GeometryType = CulvertGeometryType.Round;
-                            culvert.Diameter = roundShape.Diameter;
-                            break;
-                        case CrossSectionStandardShapeType.Rectangle:
-                            var rectangleShape = (CrossSectionStandardShapeRectangle) crossSectionDefinitionStandard.Shape;
-                            culvert.GeometryType = CulvertGeometryType.Rectangle;
-                            culvert.Width = rectangleShape.Width;
-                            culvert.Height = rectangleShape.Height;
-                            break;
-                        case CrossSectionStandardShapeType.Arch:
-                            var archShape = (CrossSectionStandardShapeArch) crossSectionDefinitionStandard.Shape;
-                            culvert.GeometryType = CulvertGeometryType.Arch;
-                            culvert.Width = archShape.Width;
-                            culvert.Height = archShape.Height;
-                            culvert.ArcHeight = archShape.ArcHeight;
-                            break;
-                        case CrossSectionStandardShapeType.Cunette:
-                            var cunetteShape = (CrossSectionStandardShapeCunette) crossSectionDefinitionStandard.Shape;
-                            culvert.GeometryType = CulvertGeometryType.Cunette;
-                            culvert.Width = cunetteShape.Width;
-                            break;
-                        case CrossSectionStandardShapeType.Elliptical:
-                            var ellipticalShape =
-                                (CrossSectionStandardShapeElliptical) crossSectionDefinitionStandard.Shape;
-                            culvert.GeometryType = CulvertGeometryType.Ellipse;
-                            culvert.Width = ellipticalShape.Width;
-                            culvert.Height = ellipticalShape.Height;
-                            break;
-                        case CrossSectionStandardShapeType.SteelCunette:
-                            var steelCunetteShape =
-                                (CrossSectionStandardShapeSteelCunette) crossSectionDefinitionStandard.Shape;
-                            culvert.GeometryType = CulvertGeometryType.SteelCunette;
-                            culvert.Height = steelCunetteShape.Height;
-                            culvert.Radius = steelCunetteShape.RadiusR;
-                            culvert.Radius1 = steelCunetteShape.RadiusR1;
-                            culvert.Radius2 = steelCunetteShape.RadiusR2;
-                            culvert.Radius3 = steelCunetteShape.RadiusR3;
-                            culvert.Angle = steelCunetteShape.AngleA;
-                            culvert.Angle1 = steelCunetteShape.AngleA1;
-                            break;
-                        case CrossSectionStandardShapeType.Egg:
-                            var eggShape = (CrossSectionStandardShapeEgg) crossSectionDefinitionStandard.Shape;
-                            culvert.GeometryType = CulvertGeometryType.Egg;
-                            culvert.Width = eggShape.Width;
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
-
+                    SetCulvertCrossSectionDefinitionStandardProperties(culvert, crossSectionDefinitionStandard);
                     break;
                 case CrossSectionDefinitionZW crossSectionDefinitionZw:
                     culvert.GeometryType = CulvertGeometryType.Tabulated;
                     culvert.TabulatedCrossSectionDefinition = crossSectionDefinitionZw;
                     break;
+            }
+        }
+
+        private static void SetCulvertCrossSectionDefinitionStandardProperties(ICulvert culvert, CrossSectionDefinitionStandard crossSectionDefinitionStandard)
+        {
+            switch (crossSectionDefinitionStandard.ShapeType)
+            {
+                case CrossSectionStandardShapeType.Round:
+                    var roundShape = (CrossSectionStandardShapeRound) crossSectionDefinitionStandard.Shape;
+                    culvert.GeometryType = CulvertGeometryType.Round;
+                    culvert.Diameter = roundShape.Diameter;
+                    break;
+                case CrossSectionStandardShapeType.Rectangle:
+                    var rectangleShape = (CrossSectionStandardShapeRectangle) crossSectionDefinitionStandard.Shape;
+                    culvert.GeometryType = CulvertGeometryType.Rectangle;
+                    culvert.Width = rectangleShape.Width;
+                    culvert.Height = rectangleShape.Height;
+                    break;
+                case CrossSectionStandardShapeType.Arch:
+                    var archShape = (CrossSectionStandardShapeArch) crossSectionDefinitionStandard.Shape;
+                    culvert.GeometryType = CulvertGeometryType.Arch;
+                    culvert.Width = archShape.Width;
+                    culvert.Height = archShape.Height;
+                    culvert.ArcHeight = archShape.ArcHeight;
+                    break;
+                case CrossSectionStandardShapeType.Cunette:
+                    var cunetteShape = (CrossSectionStandardShapeCunette) crossSectionDefinitionStandard.Shape;
+                    culvert.GeometryType = CulvertGeometryType.Cunette;
+                    culvert.Width = cunetteShape.Width;
+                    break;
+                case CrossSectionStandardShapeType.Elliptical:
+                    var ellipticalShape =
+                        (CrossSectionStandardShapeElliptical) crossSectionDefinitionStandard.Shape;
+                    culvert.GeometryType = CulvertGeometryType.Ellipse;
+                    culvert.Width = ellipticalShape.Width;
+                    culvert.Height = ellipticalShape.Height;
+                    break;
+                case CrossSectionStandardShapeType.SteelCunette:
+                    var steelCunetteShape =
+                        (CrossSectionStandardShapeSteelCunette) crossSectionDefinitionStandard.Shape;
+                    culvert.GeometryType = CulvertGeometryType.SteelCunette;
+                    culvert.Height = steelCunetteShape.Height;
+                    culvert.Radius = steelCunetteShape.RadiusR;
+                    culvert.Radius1 = steelCunetteShape.RadiusR1;
+                    culvert.Radius2 = steelCunetteShape.RadiusR2;
+                    culvert.Radius3 = steelCunetteShape.RadiusR3;
+                    culvert.Angle = steelCunetteShape.AngleA;
+                    culvert.Angle1 = steelCunetteShape.AngleA1;
+                    break;
+                case CrossSectionStandardShapeType.Egg:
+                    var eggShape = (CrossSectionStandardShapeEgg) crossSectionDefinitionStandard.Shape;
+                    culvert.GeometryType = CulvertGeometryType.Egg;
+                    culvert.Width = eggShape.Width;
+                    break;
+                default:
+                    throw new Exception(
+                        string.Format(
+                            Resources.CompositeBranchStructureConverter_SetCulvertCrossSectionDefinitionStandardProperties_Culvert___0___references_cross_section_definition___1___with_shape_type___2____which_is_not_supported_for_Culverts__So_Culvert___3___was_not_imported_,
+                            culvert.Name, crossSectionDefinitionStandard.Name, crossSectionDefinitionStandard.ShapeType, culvert.Name));
             }
         }
     }

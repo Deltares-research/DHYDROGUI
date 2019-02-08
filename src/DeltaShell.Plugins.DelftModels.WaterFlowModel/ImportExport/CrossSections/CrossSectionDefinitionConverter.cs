@@ -61,11 +61,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSectio
         }
 
         /// <summary>
-        /// Converts <see cref="DelftIniCategory"/> objects to <see cref="GroundLayerDataTransferObject"/> objects.
+        /// Converts <see cref="DelftIniCategory"/> objects to <see cref="GroundLayerDTO"/> objects.
         /// </summary>
         /// <param name="categories">The <see cref="DelftIniCategory"/> objects.</param>
-        /// <returns>A collection of <see cref="GroundLayerDataTransferObject"/> objects.</returns>
-        public static IEnumerable<GroundLayerDataTransferObject> ConvertToGroundLayerData(IEnumerable<DelftIniCategory> categories)
+        /// <returns>A collection of <see cref="GroundLayerDTO"/> objects.</returns>
+        public static IEnumerable<GroundLayerDTO> ConvertToGroundLayerData(IEnumerable<DelftIniCategory> categories)
         {
             var definitionCategories = categories.Where(c => c.Name == DefinitionRegion.Header);
             
@@ -74,7 +74,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSectio
                 if(!category.Properties.Any(p => p.Name == DefinitionRegion.GroundlayerUsed.Key) || !category.Properties.Any(p => p.Name == DefinitionRegion.Groundlayer.Key))
                     continue;
 
-                var groundLayerData = new GroundLayerDataTransferObject
+                var groundLayerData = new GroundLayerDTO
                 {
                     CrossSectionDefinitionId = category.ReadProperty<string>(DefinitionRegion.Id.Key),
                     GroundLayerUsed = category.ReadProperty<string>(DefinitionRegion.GroundlayerUsed.Key) == "1",

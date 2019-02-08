@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
             return new Pump();
         }
 
-        protected override void SetStructureProperties()
+        protected override void SetStructurePropertiesFromCategory()
         {
             if (!(Structure is Pump pump)) return;
 
@@ -70,15 +70,21 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
             if (amountPumpHeadValues != numberOfFunctionEntries)
             {
                 var headProperty = Category.Properties.FirstOrDefault(p => p.Name == StructureRegion.Head.Key);
-                var warningMessage = $"Line {headProperty?.LineNumber}: The amount of defined head values for pump '{pumpName}' is not equal to the defined number at {StructureRegion.ReductionFactorLevels.Key}. The pump was not imported.";
-                warningMessages.Add(warningMessage);
+                if (headProperty != null)
+                {
+                    var warningMessage = $"Line {headProperty.LineNumber}: The amount of defined head values for pump '{pumpName}' is not equal to the defined number at {StructureRegion.ReductionFactorLevels.Key}. The pump was not imported.";
+                    warningMessages.Add(warningMessage);
+                }
             }
 
             if (amountReductionFactorValues != numberOfFunctionEntries)
             {
                 var reductionFactorProperty = Category.Properties.FirstOrDefault(p => p.Name == StructureRegion.ReductionFactor.Key);
-                var warningMessage = $"Line {reductionFactorProperty?.LineNumber}: The amount of defined reduction factor values for pump '{pumpName}' is not equal to the defined number at {StructureRegion.ReductionFactorLevels.Key}. The pump was not imported.";
-                warningMessages.Add(warningMessage);
+                if (reductionFactorProperty != null)
+                {
+                    var warningMessage = $"Line {reductionFactorProperty.LineNumber}: The amount of defined reduction factor values for pump '{pumpName}' is not equal to the defined number at {StructureRegion.ReductionFactorLevels.Key}. The pump was not imported.";
+                    warningMessages.Add(warningMessage);
+                }
             }
 
             if (warningMessages.Count > 0) throw new Exception(string.Join(Environment.NewLine, warningMessages));

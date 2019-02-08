@@ -23,7 +23,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
         /// <param name="structureBranchCategory">The <see cref="IDelftIniCategory"/> object to extract the property values from.</param>
         /// <param name="branch">The branch that is associated with the structure.</param>
         /// <exception cref="ArgumentException">When one of the arguments is equal to null.</exception>
-        public static void SetCommonRegionElements(this IStructure1D structure, IDelftIniCategory structureBranchCategory, IBranch branch)
+        public static void SetCommonRegionElementsFromCategory(this IStructure1D structure, IDelftIniCategory structureBranchCategory, IBranch branch)
         {
             if (structure == null || structureBranchCategory == null) throw new ArgumentException();
 

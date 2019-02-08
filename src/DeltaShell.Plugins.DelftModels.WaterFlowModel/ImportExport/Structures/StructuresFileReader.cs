@@ -23,7 +23,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
             string filePath, 
             IList<IChannel> channels, 
             IList<ICrossSectionDefinition> crossSectionDefinitions, 
-            GroundLayerDataTransferObject[] groundLayerDataTransferObject)
+            GroundLayerDTO[] groundLayerDataTransferObject)
         {
             var errorMessages = new List<string>();
             IList<DelftIniCategory> categories = new List<DelftIniCategory>();

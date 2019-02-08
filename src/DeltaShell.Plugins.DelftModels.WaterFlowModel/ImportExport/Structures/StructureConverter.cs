@@ -21,8 +21,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
         {
             Category = category;
             Structure = CreateNewStructure();
-            Structure.SetCommonRegionElements(category, branch);
-            SetStructureProperties();
+            Structure.SetCommonRegionElementsFromCategory(category, branch);
+            SetStructurePropertiesFromCategory();
 
             return Structure;
         }
@@ -37,6 +37,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
         /// <summary>
         /// Sets the structure properties on <see cref="Structure"/> that are on the <see cref="Category"/> data model.
         /// </summary>
-        protected abstract void SetStructureProperties();
+        protected abstract void SetStructurePropertiesFromCategory();
     }
 }

@@ -13,7 +13,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
             return new ExtraResistance();
         }
 
-        protected override void SetStructureProperties()
+        protected override void SetStructurePropertiesFromCategory()
         {
             if (!(Structure is ExtraResistance extraResistance)) return;
 

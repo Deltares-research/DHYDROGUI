@@ -146,6 +146,28 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Bridge &apos;{0}&apos; references cross section definition &apos;{1}&apos; with shape type &apos;{2}&apos;. Only shape types &apos;{3}&apos; or tabulated are supported for Bridges, so Bridge &apos;{4}&apos; was not imported..
+        /// </summary>
+        public static string CompositeBranchStructureConverter_SetBridgeCrossSectionDefinition_Bridge___0___references_cross_section_definition___1___with_shape_type___2____Only_shape_types___3___or_tabulated_are_supported_for_Bridges__so_Bridge___4___was_not_imported_ {
+            get {
+                return ResourceManager.GetString("CompositeBranchStructureConverter_SetBridgeCrossSectionDefinition_Bridge___0___re" +
+                        "ferences_cross_section_definition___1___with_shape_type___2____Only_shape_types_" +
+                        "__3___or_tabulated_are_supported_for_Bridges__so_Bridge___4___was_not_imported_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Culvert &apos;{0}&apos; references cross section definition &apos;{1}&apos; with shape type &apos;{2}&apos;, which is not supported for Culverts. So Culvert &apos;{3}&apos; was not imported..
+        /// </summary>
+        public static string CompositeBranchStructureConverter_SetCulvertCrossSectionDefinitionStandardProperties_Culvert___0___references_cross_section_definition___1___with_shape_type___2____which_is_not_supported_for_Culverts__So_Culvert___3___was_not_imported_ {
+            get {
+                return ResourceManager.GetString("CompositeBranchStructureConverter_SetCulvertCrossSectionDefinitionStandardPropert" +
+                        "ies_Culvert___0___references_cross_section_definition___1___with_shape_type___2_" +
+                        "___which_is_not_supported_for_Culverts__So_Culvert___3___was_not_imported_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Line {0}: Invalid value is given for property &apos;{1}&apos;, &apos;{2}&apos; will be set as default.
         /// </summary>
         public static string DelftIniPropertyValidator_CheckPropertyAvailability_Property_on_line_number_is_invalid_will_be_set_as_default {

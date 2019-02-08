@@ -16,7 +16,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
             };
         }
 
-        protected override void SetStructureProperties()
+        protected override void SetStructurePropertiesFromCategory()
         {
             if (!(Structure is IWeir weir)) return;
             if (!(weir.WeirFormula is SimpleWeirFormula weirFormula)) return;
