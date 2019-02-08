@@ -6,9 +6,14 @@ using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
 {
+    /// <summary>
+    /// This structure converter sets is responsible for setting values on objects that inherit from
+    /// <see cref="IFrictionData"/> and <see cref="IGroundLayer"/>.
+    /// </summary>
+    /// <seealso cref="StructureConverter" />
     public abstract class FrictionAndGroundLayerStructureConverter : StructureConverter
     {
-        protected static void SetFrictionValues(IFrictionData frictionDataStructure)
+        protected static void SetFrictionValuesFromCategory(IFrictionData frictionDataStructure)
         {
             var bedFriction = Category.ReadProperty<double>(StructureRegion.BedFriction.Key);
 
@@ -16,7 +21,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
             frictionDataStructure.Friction = bedFriction;
         }
 
-        protected static void SetGroundLayerValues(IGroundLayer groundLayerStructure)
+        protected static void SetGroundLayerValuesFromCategory(IGroundLayer groundLayerStructure)
         {
             var groundFriction = Category.ReadProperty<double>(StructureRegion.GroundFriction.Key);
             var bedFriction = Category.ReadProperty<double>(StructureRegion.BedFriction.Key);

@@ -41,8 +41,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
 
             culvert.IsGated = Convert.ToBoolean(Category.ReadProperty<int>(StructureRegion.ValveOnOff.Key));
 
-            SetFrictionValues(culvert);
-            SetGroundLayerValues(culvert);
+            SetFrictionValuesFromCategory(culvert);
+            SetGroundLayerValuesFromCategory(culvert);
             SetGateOpeningLossCoefficientFunctionValues(culvert);
         }
 

@@ -113,7 +113,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
                         var matchingCrossSectionDefinition = crossSectionDefinitions.FirstOrDefault(csd => csd.Name == crossSectionDefinitionId);
                         if (matchingCrossSectionDefinition != null)
                         {
-                            SetBridgeCrossSectionDefinition(matchingCrossSectionDefinition, bridge);
+                            SetBridgeCrossSectionDefinitionProperties(matchingCrossSectionDefinition, bridge);
                         }
 
                         var matchingGroundLayerData = groundLayerDataTransferObject.FirstOrDefault(g => g.CrossSectionDefinitionId == crossSectionDefinitionId);
@@ -156,28 +156,34 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
             }
         }
 
-        private static void SetBridgeCrossSectionDefinition(ICrossSectionDefinition crossSectionDefinition, Bridge bridge)
+        private static void SetBridgeCrossSectionDefinitionProperties(ICrossSectionDefinition crossSectionDefinition, Bridge bridge)
         {
             switch (crossSectionDefinition)
             {
                 case CrossSectionDefinitionStandard crossSectionDefinitionStandard:
-                    if (crossSectionDefinitionStandard.ShapeType == CrossSectionStandardShapeType.Rectangle)
-                    {
-                        var rectangleShape = (CrossSectionStandardShapeRectangle)crossSectionDefinitionStandard.Shape;
-                        bridge.BridgeType = BridgeType.Rectangle;
-                        bridge.Width = rectangleShape.Width;
-                        bridge.Height = rectangleShape.Height;
-                    }
-                    else
-                    {
-                        throw new Exception(string.Format(Resources.CompositeBranchStructureConverter_SetBridgeCrossSectionDefinition_Bridge___0___references_cross_section_definition___1___with_shape_type___2____Only_shape_types___3___or_tabulated_are_supported_for_Bridges__so_Bridge___4___was_not_imported_,
-                            bridge.Name, crossSectionDefinition.Name, crossSectionDefinitionStandard.ShapeType, CrossSectionStandardShapeType.Rectangle, bridge.Name));
-                    }
+                    SetBridgeCrossSectionDefinitionStandardProperties(bridge, crossSectionDefinitionStandard);
                     break;
                 case CrossSectionDefinitionZW crossSectionDefinitionZw:
                     bridge.BridgeType = BridgeType.Tabulated;
                     bridge.TabulatedCrossSectionDefinition = crossSectionDefinitionZw;
                     break;
+            }
+        }
+
+        private static void SetBridgeCrossSectionDefinitionStandardProperties(IBridge bridge, CrossSectionDefinitionStandard crossSectionDefinitionStandard)
+        {
+            if (crossSectionDefinitionStandard.ShapeType == CrossSectionStandardShapeType.Rectangle)
+            {
+                var rectangleShape = (CrossSectionStandardShapeRectangle) crossSectionDefinitionStandard.Shape;
+                bridge.BridgeType = BridgeType.Rectangle;
+                bridge.Width = rectangleShape.Width;
+                bridge.Height = rectangleShape.Height;
+            }
+            else
+            {
+                throw new Exception(string.Format(
+                    Resources.CompositeBranchStructureConverter_SetBridgeCrossSectionDefinition_Bridge___0___references_cross_section_definition___1___with_shape_type___2____Only_shape_types___3___or_tabulated_are_supported_for_Bridges__so_Bridge___4___was_not_imported_,
+                    bridge.Name, crossSectionDefinitionStandard.Name, crossSectionDefinitionStandard.ShapeType, CrossSectionStandardShapeType.Rectangle, bridge.Name));
             }
         }
 
