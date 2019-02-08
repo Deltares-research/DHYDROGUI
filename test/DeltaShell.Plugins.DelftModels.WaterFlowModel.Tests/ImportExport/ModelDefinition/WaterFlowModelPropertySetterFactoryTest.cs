@@ -28,6 +28,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
         [TestCase(ModelDefinitionsRegion.RestartHeader, typeof(WaterFlowModelRestartSetter))]
         [TestCase(ModelDefinitionsRegion.SalinityValuesHeader, typeof(WaterFlowModelSalinitySetter))]
         [TestCase(ModelDefinitionsRegion.GlobalValuesHeader, typeof(WaterFlowModelGlobalValuesSetter))]
+        [TestCase(ModelDefinitionsRegion.SedimentValuesHeader, typeof(WaterFlowModelSedimentOptionsSetter))]
+        [TestCase(ModelDefinitionsRegion.InitialConditionsValuesHeader, typeof(WaterFlowModelInitialConditionsParameterSetter))]
+        [TestCase(ModelDefinitionsRegion.SpecialsValuesHeader, typeof(WaterFlowModelSpecialsPropertiesSetter))]
+        [TestCase(ModelDefinitionsRegion.ObservationsHeader, typeof(WaterFlowModelObservationsParameterSetter))]
         public void GivenDataModelWithSpecificHeader_WhenGettingPropertySetterFromFactory_ThenCorrectPropertiesSetterIsReturned(string headerText, Type expectedType)
         {
             // Given
@@ -37,20 +41,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             var propertySetter = WaterFlowModelPropertySetterFactory.GetPropertySetter(category);
 
             // Then
-            Assert.That(propertySetter.GetType(), Is.EqualTo(expectedType));
+            Assert.That(propertySetter, Is.TypeOf(expectedType));
         }
 
         [Test]
-        public void GivenDataModelWithUnkownHeader_WhenGettingPropertySetterFromFactory_ThenNotImplementedExceptionIsThrown()
+        [ExpectedException(typeof(NotImplementedException))]
+        public void GivenDataModelWithUnknownHeader_WhenGettingPropertySetterFromFactory_ThenNotImplementedExceptionIsThrown()
         {
             // Given
             var unknownCategory = new DelftIniCategory("Unknown Header");
 
-            // When
-            TestDelegate getPropertySetter = () => WaterFlowModelPropertySetterFactory.GetPropertySetter(unknownCategory);
-
-            // Then
-            Assert.Throws<NotImplementedException>(getPropertySetter);
+            // When/Then
+            WaterFlowModelPropertySetterFactory.GetPropertySetter(unknownCategory);
         }
     }
 }

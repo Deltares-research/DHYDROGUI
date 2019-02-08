@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefinition
@@ -12,7 +10,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
         {
             var useDesignFactorDlg = category.ReadProperty<string>(ModelDefinitionsRegion.DesignFactorDlg.Key, true);
 
-            if (useDesignFactorDlg != null) model.DesignFactorDlg = double.Parse(useDesignFactorDlg);
+            if (useDesignFactorDlg != null) model.DesignFactorDlg = double.Parse(useDesignFactorDlg, CultureInfo.InvariantCulture);
         }
     }
 }

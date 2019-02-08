@@ -412,12 +412,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 
         /// <summary>
         /// Generate the Specials category of the md1d file describing the specified <paramref name="waterFlowModel1D"/>.
-        /// </summary>dal
+        /// </summary>
         /// <param name="waterFlowModel1D">The WaterFlowModel1D.</param>
         /// <returns>A DelftIniCategory describing the <c>[Specials]</c> header of the specified <paramref name="waterFlowModel1D"/></returns>
         public static DelftIniCategory GenerateSpecialsValues(WaterFlowModel1D waterFlowModel1D)
         {
-            DelftIniCategory specialsValuesGroup = new DelftIniCategory(ModelDefinitionsRegion.SpecialsValuesHeader);
+            var specialsValuesGroup = new DelftIniCategory(ModelDefinitionsRegion.SpecialsValuesHeader);
 
             var designFactorDlg = waterFlowModel1D.DesignFactorDlg;
             if (designFactorDlg is double valueDesignFactorDlg)
