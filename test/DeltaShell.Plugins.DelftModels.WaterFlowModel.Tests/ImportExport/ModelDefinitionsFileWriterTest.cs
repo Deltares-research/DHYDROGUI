@@ -716,15 +716,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
         [TestCase(false)]
         public void TestModelDefinitionFileWriter_RestartOptions(bool useSaveStateTimeRange)
         {
-            var waterFlowModel1D = new WaterFlowModel1D();
-            waterFlowModel1D.SaveStateStartTime = new DateTime(2015, 12, 1, 12, 0, 0);
-            waterFlowModel1D.SaveStateStopTime = new DateTime(2015, 12, 2, 12, 0, 0);
-
-            var timeStep = new TimeSpan(0, 1, 0, 0);
-            waterFlowModel1D.SaveStateTimeStep = timeStep;
-            
-            waterFlowModel1D.UseRestart = true;
-            waterFlowModel1D.WriteRestart = true;
+            var waterFlowModel1D = new WaterFlowModel1D
+            {
+                SaveStateStartTime = new DateTime(2015, 12, 1, 12, 0, 0),
+                SaveStateStopTime = new DateTime(2015, 12, 2, 12, 0, 0),
+                SaveStateTimeStep = new TimeSpan(0, 1, 0, 0),
+                UseRestart = true,
+                WriteRestart = true
+            };
 
             // Retrieve values from Model
             var expectedUseRestart = true;
@@ -748,26 +747,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
 
             var writeRestartProperty = content.Properties.First(p => p.Name == ModelDefinitionsRegion.WriteRestart.Key);
             Assert.AreEqual(Convert.ToBoolean(expectedWriteRestart) ? "1" : "0", writeRestartProperty.Value);
-            if (Convert.ToBoolean(expectedWriteRestart))
-            {
-                var restartStartTime = content.Properties.First(p => p.Name == ModelDefinitionsRegion.RestartStartTime.Key);
-                var formattedExpectedRestartStartTime = waterFlowModel1D.SaveStateStartTime.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
-                Assert.AreEqual(formattedExpectedRestartStartTime, restartStartTime.Value);
 
-                var restartStopTime = content.Properties.First(p => p.Name == ModelDefinitionsRegion.RestartStopTime.Key);
-                var formattedExpectedRestartStopTime = waterFlowModel1D.SaveStateStopTime.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture); 
-                Assert.AreEqual(formattedExpectedRestartStopTime, restartStopTime.Value);
+            var restartStartTime = content.Properties.First(p => p.Name == ModelDefinitionsRegion.RestartStartTime.Key);
+            var formattedExpectedRestartStartTime = waterFlowModel1D.SaveStateStartTime.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+            Assert.AreEqual(formattedExpectedRestartStartTime, restartStartTime.Value);
 
-                var restartTimeStep = content.Properties.FirstOrDefault(p => p.Name == ModelDefinitionsRegion.RestartTimeStep.Key);
-                Assert.AreEqual(int.Parse(waterFlowModel1D.SaveStateTimeStep.TotalSeconds.ToString(CultureInfo.InvariantCulture)).ToString(), restartTimeStep.Value);
+            var restartStopTime = content.Properties.First(p => p.Name == ModelDefinitionsRegion.RestartStopTime.Key);
+            var formattedExpectedRestartStopTime = waterFlowModel1D.SaveStateStopTime.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture); 
+            Assert.AreEqual(formattedExpectedRestartStopTime, restartStopTime.Value);
 
-            }
-            else
-            {
-                Assert.That(content.Properties.FirstOrDefault(p => p.Name == ModelDefinitionsRegion.RestartStartTime.Key), Is.Null);
-                Assert.That(content.Properties.FirstOrDefault(p => p.Name == ModelDefinitionsRegion.RestartStopTime.Key), Is.Null);
-                Assert.That(content.Properties.FirstOrDefault(p => p.Name == ModelDefinitionsRegion.RestartTimeStep.Key), Is.Null);
-            }
+            var restartTimeStep = content.Properties.FirstOrDefault(p => p.Name == ModelDefinitionsRegion.RestartTimeStep.Key);
+            Assert.AreEqual(int.Parse(waterFlowModel1D.SaveStateTimeStep.TotalSeconds.ToString(CultureInfo.InvariantCulture)).ToString(), restartTimeStep.Value);
         }
 
         [Test]
