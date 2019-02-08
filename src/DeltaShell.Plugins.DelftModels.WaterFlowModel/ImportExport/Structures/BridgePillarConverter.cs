@@ -5,6 +5,12 @@ using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
 {
+    /// <summary>
+    /// This class is responsible for converting <see cref="IDelftIniCategory"/> objects into Bridge Pillars.
+    /// Bridge Pillars are a special case of <see cref="Bridge"/> objects, where its <see cref="BridgeType"/> is equal to
+    /// <see cref="BridgeType.Pillar"/>.
+    /// </summary>
+    /// <seealso cref="BridgeConverter" />
     public class BridgePillarConverter : BridgeConverter
     {
         protected override IStructure1D CreateNewStructure()
