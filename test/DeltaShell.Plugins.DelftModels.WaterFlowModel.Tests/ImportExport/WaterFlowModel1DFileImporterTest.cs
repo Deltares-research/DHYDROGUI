@@ -244,7 +244,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
         [TestCase(typeof(OutOfMemoryException))]
         [TestCase(typeof(IOException))]
         [TestCase(typeof(InvalidOperationException))]
-        [TestCase(typeof(FileReadingException))]
         public void WhenImportItemIsCalledAndAnExpectedErrorIsThrown_ThenAMessageIsLoggedAndNullIsReturned(Type exceptionType)
         {
             // Given
