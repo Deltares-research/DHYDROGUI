@@ -30,11 +30,11 @@ namespace DeltaShell.NGHS.IO.FileReaders.Network
         /// <param name="network">The network.</param>
         /// <returns><see cref="INetworkLocation"/> objects that describe the computational grid points that are read in the network definition file.</returns>
         /// <exception cref="FileNotFoundException">In case the file at location <paramref name="filePath"/> does not exist.</exception>
+        /// <exception cref="FileReadingException">In case the file at location <paramref name="filePath"/> is empty.</exception>
         public INetworkLocation[] ReadNetworkDefinitionFile(string filePath, IHydroNetwork network)
         {
-            var errorMessages = new List<string>();
             networkDefinitionFilePath = filePath;
-            categories = ReadCategoriesFromFileAndCollectErrorMessages(filePath, errorMessages);
+            categories = DelftIniFileParser.ReadFile(filePath);
 
             var nodes = ReadHydroNodes();
             network.Nodes.AddRange(nodes);
@@ -70,25 +70,6 @@ namespace DeltaShell.NGHS.IO.FileReaders.Network
 
             CreateErrorReport("network discretization", errorMessages);
             return networkLocations;
-        }
-
-        private static IList<DelftIniCategory> ReadCategoriesFromFileAndCollectErrorMessages(string filePath, ICollection<string> errorMessages)
-        {
-            IList<DelftIniCategory> categories = new List<DelftIniCategory>();
-            try
-            {
-                categories = DelftIniFileParser.ReadFile(filePath);
-            }
-            catch (FileNotFoundException)
-            {
-                throw;
-            }
-            catch (Exception e)
-            {
-                errorMessages.Add(e.Message);
-            }
-
-            return categories;
         }
 
         private void CreateErrorReport(string objectName, IList<string> errorMessages)

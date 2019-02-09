@@ -8,6 +8,7 @@ using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
+using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties;
@@ -243,6 +244,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
         [TestCase(typeof(OutOfMemoryException))]
         [TestCase(typeof(IOException))]
         [TestCase(typeof(InvalidOperationException))]
+        [TestCase(typeof(FileReadingException))]
         public void WhenImportItemIsCalledAndAnExpectedErrorIsThrown_ThenAMessageIsLoggedAndNullIsReturned(Type exceptionType)
         {
             // Given

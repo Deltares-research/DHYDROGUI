@@ -2,6 +2,8 @@
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.TestUtils;
+using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.FileReaders.Network;
 using DeltaShell.NGHS.IO.FileWriters;
 using DeltaShell.NGHS.IO.FileWriters.Network;
@@ -105,7 +107,8 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
         }
 
         [Test]
-        public void GivenAFileWithZeroCategories_WhenTryingToExecuteReadFile_ThenAnErrorReportWithAnErrorIsReturned()
+        [Category(TestCategory.DataAccess)]
+        public void GivenAFileWithZeroCategories_WhenTryingToExecuteReadFile_ThenAnFileReadingExceptionIsThrown()
         {
             // Setup network data
             originalNetwork.Nodes[0].Geometry = new Point(NetworkAndGridReaderTestHelper.NODE1_X,
@@ -125,11 +128,9 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
             new IniFileWriter().WriteIniFile(new List<DelftIniCategory>(), FileWriterTestHelper.ModelFileNames.Network);
 
             //Read from model
-            var errorReport = new List<string>();
-            var networkDefinitionFileReader = new NetworkDefinitionFileReader((header, errorMessages) => { errorReport.AddRange(errorMessages); });
-            networkDefinitionFileReader.ReadNetworkDefinitionFile(FileWriterTestHelper.ModelFileNames.Network, new HydroNetwork());
-
-            Assert.That(errorReport.Count, Is.GreaterThan(0));
+            var networkDefinitionFileReader = new NetworkDefinitionFileReader((header, errorMessages) => { });
+            Assert.Throws<FileReadingException>(() => 
+                networkDefinitionFileReader.ReadNetworkDefinitionFile(FileWriterTestHelper.ModelFileNames.Network, new HydroNetwork()));
         }
 
         [Test]
