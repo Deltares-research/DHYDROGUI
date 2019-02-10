@@ -39,7 +39,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
         }
 
         [Test]
-        public void GivenMd1dFileWithMandatoryFileNameMissing_WhenInstantiatingModelFileNames_ThenPropertyNotFoundInFileExceptionIsThrownWithMessage()
+        public void GivenModelDefinitionFileWithMandatoryFilePropertyMissing_WhenInstantiatingModelFileNames_ThenPropertyNotFoundInFileExceptionIsThrownWithMessage()
         {
             // Given
             var modelDefinitionFilePath = Path.Combine(tempFolderPath, "ModelDefinitionsFileWithMissingMandatoryFileProperty.md1d");

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
@@ -79,7 +80,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
         }
 
         [Test]
-        public void GivenAnIncorrectTestIniFile_WhenTryingToRead_ThenAnErrorReportWithAnErrorIsReturned()
+        public void GivenAnIncorrectTestIniFile_WhenTryingToRead_ThenAnExceptionIsThrown()
         {
             // Setup network data
             originalNetwork.Nodes[0].Geometry = new Point(NetworkAndGridReaderTestHelper.NODE1_X, NetworkAndGridReaderTestHelper.NODE1_Y);
@@ -101,7 +102,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
             // Read from model
             var errorReport = new List<string>();
             var networkDefinitionFileReader = new NetworkDefinitionFileReader((header, errorMessages) => { errorReport.AddRange(errorMessages); });
-            networkDefinitionFileReader.ReadNetworkDefinitionFile(FileWriterTestHelper.ModelFileNames.Network, new HydroNetwork());
+            Assert.Throws<Exception>(() => networkDefinitionFileReader.ReadNetworkDefinitionFile(FileWriterTestHelper.ModelFileNames.Network, new HydroNetwork()));
 
             Assert.That(errorReport.Count, Is.GreaterThan(0));
         }

@@ -87,7 +87,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
             }
 
             var unsupportedProperties = category.Properties.Where(p => !knownTimePropertyNames.Contains(p.Name));
-            unsupportedProperties.ForEach(c => errorMessages.Add(GetUnsupportedPropertyWarningMessage(c)));
+            unsupportedProperties.ForEach(property => errorMessages.Add(GetUnsupportedPropertyWarningMessage(property)));
         }
 
         private static T GetWithDefault<T>(IDelftIniCategory category,

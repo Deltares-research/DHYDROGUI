@@ -51,15 +51,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 stepCounter = 1;
 
                 reportProgress($"Reading filenames from {Path.GetFileName(modelFilename)}.", stepCounter, TotalSteps);
-                fileNames = new ModelFileNames(modelFilename);
+                fileNames = new ModelFileNames(modelFilename, CreateAndAddErrorReport);
                 stepCounter++;
 
                 reportProgress($"Reading network from {fileNames.Network}.", stepCounter, TotalSteps);
                 ReadNetworkDefinitionFile(model, CreateAndAddErrorReport);
-                if (errorReport.Any())
-                {
-                    throw new Exception(); // If anything goes wrong with reading the network, stop reading.
-                }
                 stepCounter++;
 
                 reportProgress($"'Reading model wide parameters from {Path.GetFileName(modelFilename)}", stepCounter, TotalSteps);

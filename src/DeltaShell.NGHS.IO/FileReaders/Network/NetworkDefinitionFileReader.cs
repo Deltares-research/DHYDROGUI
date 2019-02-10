@@ -75,7 +75,10 @@ namespace DeltaShell.NGHS.IO.FileReaders.Network
         private void CreateErrorReport(string objectName, IList<string> errorMessages)
         {
             if (errorMessages.Count > 0)
+            {
                 createAndAddErrorReport?.Invoke($"While reading the {objectName} from file '{networkDefinitionFilePath}', the following errors occured", errorMessages);
+                throw new Exception(); // If something is going wrong when reading from a network definition file, throw an exception
+            }
         }
     }
 }

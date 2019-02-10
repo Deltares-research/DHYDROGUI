@@ -8,11 +8,38 @@ using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 {
     public class ModelFileNames
     {
+        private readonly HashSet<string> knownPropertyNames = new HashSet<string>
+        {
+            ModelDefinitionsRegion.NetworkFile.Key,
+            ModelDefinitionsRegion.StructuresFile.Key,
+            ModelDefinitionsRegion.ObservationPointsFile.Key,
+            ModelDefinitionsRegion.LateralDischargeLocationsFile.Key,
+            ModelDefinitionsRegion.BoundaryConditionsFile.Key,
+            ModelDefinitionsRegion.BoundaryLocationsFile.Key,
+            ModelDefinitionsRegion.CrossSectionDefinitionsFile.Key,
+            ModelDefinitionsRegion.CrossSectionLocationsFile.Key,
+            ModelDefinitionsRegion.RetentionFile.Key,
+            ModelDefinitionsRegion.SobekSimIniFile.Key,
+            ModelDefinitionsRegion.InitialDischargeFile.Key,
+            ModelDefinitionsRegion.InitialSalinityFile.Key,
+            ModelDefinitionsRegion.InitialTemperatureFile.Key,
+            ModelDefinitionsRegion.InitialWaterLevelFile.Key,
+            ModelDefinitionsRegion.InitialWaterDepthFile.Key,
+            ModelDefinitionsRegion.DispersionFile.Key,
+            ModelDefinitionsRegion.DispersionF3File.Key,
+            ModelDefinitionsRegion.DispersionF4File.Key,
+            ModelDefinitionsRegion.WindShieldingFile.Key,
+            ModelDefinitionsRegion.LogFile.Key,
+            ModelDefinitionsRegion.SalinityParametersFile.Key,
+            ModelDefinitionsRegion.RoughnessFile.Key
+        };
+
         private readonly string targetPath;
         private string network;
         private string observationPoint;
@@ -62,7 +89,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
         
         public IEventedList<string> RoughnessFiles { get; private set; }
         
-        public ModelFileNames(string modelFilename): this()
+        public ModelFileNames(string modelFilename, Action<string, IList<string>> createAndAddErrorReport = null) : this()
         {
             if (!File.Exists(modelFilename))
             {
@@ -120,14 +147,33 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 
             try
             {
-                ReadMandatoryFileNames(fileSection.FirstOrDefault());
-                ReadOptionalFileNames(fileSection.FirstOrDefault());
+                var filesNamesCategory = fileSection.FirstOrDefault();
+                ReadMandatoryFileNames(filesNamesCategory);
+                ReadOptionalFileNames(filesNamesCategory);
+                ValidateFileNames(filesNamesCategory, modelDefinitionFileName, createAndAddErrorReport);
             }
             catch (PropertyNotFoundInFileException e)
             {
                 var errorMessage = string.Join(" ", e.Message, $"'{modelDefinitionFileName}' under category '{ModelDefinitionsRegion.FilesIniHeader}'.");
                 throw new PropertyNotFoundInFileException(errorMessage);
             }
+        }
+
+        private void ValidateFileNames(IDelftIniCategory filesNamesCategory, string modelFilename, Action<string, IList<string>> createAndAddErrorReport)
+        {
+            if(createAndAddErrorReport == null) return;
+
+            var warningMessages = new List<string>();
+            var unsupportedProperties = filesNamesCategory.Properties.Where(p => !knownPropertyNames.Contains(p.Name));
+            unsupportedProperties.ForEach(property =>
+            {
+                var warningMessage = 
+                    string.Format(Resources.SetProperties_Line__0___Parameter___1___found_in_the_md1d_file__This_parameter_will_not_be_imported,
+                        property.LineNumber, property.Name);
+                warningMessages.Add(warningMessage);
+            });
+
+            createAndAddErrorReport.Invoke($"While reading the file names from file '{modelFilename}', the following warnings occured", warningMessages);
         }
 
         private void ReadMandatoryFileNames(IDelftIniCategory filesNamesCategory)
@@ -144,7 +190,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             SobekSim = filesNamesCategory.ReadProperty<string>(ModelDefinitionsRegion.SobekSimIniFile.Key);
         }
 
-        private void ReadOptionalFileNames(DelftIniCategory fileNamesCategory)
+        private void ReadOptionalFileNames(IDelftIniCategory fileNamesCategory)
         {
             InitialDischarge = fileNamesCategory.ReadProperty<string>(ModelDefinitionsRegion.InitialDischargeFile.Key, true);
             InitialSalinity = fileNamesCategory.ReadProperty<string>(ModelDefinitionsRegion.InitialSalinityFile.Key, true);
