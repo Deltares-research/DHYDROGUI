@@ -1234,6 +1234,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Line {0}: Parameter &apos;{1}&apos; will not be imported. Valid values are &apos;0&apos; (false) or &apos;1&apos; (true)..
+        /// </summary>
+        public static string WaterFlowModelMorphologySetter_ParseValueToBool_Line__0___Parameter___1___will_not_be_imported__Valid_values_are__0___false__or__1___true__ {
+            get {
+                return ResourceManager.GetString("WaterFlowModelMorphologySetter_ParseValueToBool_Line__0___Parameter___1___will_no" +
+                        "t_be_imported__Valid_values_are__0___false__or__1___true__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Line {0}: Parameter &apos;{1}&apos; will not be imported. Valid values are doubles only..
         /// </summary>
         public static string WaterFlowModelTemperatureSetter_ParseStringToDouble_Line__0___Parameter___1___will_not_be_imported__Valid_values_are_doubles_only_ {

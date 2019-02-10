@@ -5,10 +5,11 @@ using DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefinition
 {
+    /// <inheritdoc />
     /// <summary>
     /// WaterFlowModelMorphologySetter sets property values described in the Morphology DelftIniCategory on the WaterFlowModel1D.
     /// </summary>
-    /// <seealso cref="DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefinition.IWaterFlowModelCategoryPropertySetter" />
+    /// <seealso cref="T:DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefinition.IWaterFlowModelCategoryPropertySetter" />
     public class WaterFlowModelMorphologySetter : IWaterFlowModelCategoryPropertySetter
     {
         public void SetProperties(DelftIniCategory morphologyCategory, WaterFlowModel1D model, IList<string> errorMessages)
@@ -36,14 +37,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
                 else
                 {
                     errorMessages.Add(
-                        string.Format(
-                            Resources.SetProperties_Line__0___Parameter___1___found_in_the_md1d_file__This_parameter_will_not_be_imported,
+                        string.Format(Resources.SetProperties_Line__0___Parameter___1___found_in_the_md1d_file__This_parameter_will_not_be_imported,
                             property.LineNumber, property.Name));
                 }
             }
         }
 
-        private bool ParseValueToBool(DelftIniProperty property, IList<string> errorMessages)
+        private static bool ParseValueToBool(IDelftIniProperty property, ICollection<string> errorMessages)
         {
             try
             {
@@ -51,7 +51,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
             }
             catch (Exception)
             {
-                errorMessages.Add($"Line {property.LineNumber}: Parameter '{property.Name}' will not be imported. Valid values are '0' (false) or '1' (true).");
+                errorMessages.Add(
+                    string.Format(Resources.WaterFlowModelMorphologySetter_ParseValueToBool_Line__0___Parameter___1___will_not_be_imported__Valid_values_are__0___false__or__1___true__,
+                    property.LineNumber, property.Name));
                 return false;
             }
         }

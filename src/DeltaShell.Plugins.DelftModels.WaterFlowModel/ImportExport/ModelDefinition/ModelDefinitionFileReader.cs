@@ -30,7 +30,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
             model.SetSecondaryModelProperties(modelSettingsCategories, errorMessages);
 
             if (errorMessages.Count > 0)
+            {
+                errorMessages.Sort();
                 createAndAddErrorReport?.Invoke("The following errors occurred when reading the md1d file", errorMessages);
+            }
         }
 
         private static IList<DelftIniCategory> ReadCategoriesFromFileAndCollectErrorMessages(string filePath, ICollection<string> errorMessages)

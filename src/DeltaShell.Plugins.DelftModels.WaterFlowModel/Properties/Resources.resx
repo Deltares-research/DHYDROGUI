@@ -493,4 +493,7 @@
   <data name="CompositeBranchStructureConverter_SetBridgeCrossSectionDefinition_Bridge___0___references_cross_section_definition___1___with_shape_type___2____Only_shape_types___3___or_tabulated_are_supported_for_Bridges__so_Bridge___4___was_not_imported_" xml:space="preserve">
     <value>Bridge '{0}' references cross section definition '{1}' with shape type '{2}'. Only shape types '{3}' or tabulated are supported for Bridges, so Bridge '{4}' was not imported.</value>
   </data>
+  <data name="WaterFlowModelMorphologySetter_ParseValueToBool_Line__0___Parameter___1___will_not_be_imported__Valid_values_are__0___false__or__1___true__" xml:space="preserve">
+    <value>Line {0}: Parameter '{1}' will not be imported. Valid values are '0' (false) or '1' (true).</value>
+  </data>
 </root>

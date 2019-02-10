@@ -3,6 +3,7 @@ using System.Linq;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefinition;
+using DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.ModelDefinition
@@ -65,20 +66,22 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
         [Test]
         public void GivenACategoryWithSalinityPropertiesWithUnknownProperty_WhenSettingTheseModelProperties_ThenAWarningShouldBeGiven()
         {
+            // Given
+            const string unknownPropertyName = "bla";
             var category = new DelftIniCategory(ModelDefinitionsRegion.SalinityValuesHeader);
-
             category.AddProperty(ModelDefinitionsRegion.SaltComputation.Key, "0");
             category.AddProperty(ModelDefinitionsRegion.DiffusionAtBoundaries.Key, "0");
-            category.AddProperty("bla", "0");
+            category.AddProperty(unknownPropertyName, "0");
 
             // Create ModelParameters
             var model = new WaterFlowModel1D();
 
             var errorMessages = new List<string>();
             
-            //When
-            (new WaterFlowModelSalinitySetter()).SetProperties(category, model, errorMessages);
+            // When
+            new WaterFlowModelSalinitySetter().SetProperties(category, model, errorMessages);
 
+            // Then
             Assert.AreEqual(false, model.UseSaltInCalculation);
 
             var diffusionAtBoundariesParameterSetting = model.ParameterSettings.FirstOrDefault(ps => ps.Name == ModelDefinitionsRegion.DiffusionAtBoundaries.Key);
@@ -86,8 +89,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             Assert.NotNull(diffusionAtBoundariesParameterSetting);
             Assert.AreEqual(false.ToString(), diffusionAtBoundariesParameterSetting.Value);
 
-            Assert.AreEqual(1,errorMessages.Count);
-            Assert.AreEqual("Line 0: Unknown property bla found in salinity category", errorMessages[0]);
+            Assert.AreEqual(1, errorMessages.Count);
+            var expectedErrorMessage = string.Format(Resources.SetProperties_Line__0___Parameter___1___found_in_the_md1d_file__This_parameter_will_not_be_imported, 
+                0, unknownPropertyName);
+            Assert.AreEqual(expectedErrorMessage, errorMessages[0]);
         }
 
         [Test]
