@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using DeltaShell.NGHS.IO.Helpers;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefinition
 {
-    public class WaterFlowModelRestartSetter : IWaterFlowModelCategoryPropertySetter
+    public class WaterFlowModelRestartSetter : WaterFlowModelCategoryPropertySetter
     {
-        public void SetProperties(DelftIniCategory category, WaterFlowModel1D model, IList<string> errorMessages)
+        public override void SetProperties(DelftIniCategory category, WaterFlowModel1D model, IList<string> errorMessages)
         {
             if (category?.Name != ModelDefinitionsRegion.RestartHeader) return;
             
@@ -26,21 +25,21 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
 
             if (containsRestartTimeStep && containsRestartStartTime && containsRestartStopTime)
             {
-                foreach (var prop in category.Properties)
+                foreach (var property in category.Properties)
                 {
-                    if (prop.Name == ModelDefinitionsRegion.RestartStartTime.Key)
+                    if (property.Name == ModelDefinitionsRegion.RestartStartTime.Key)
                     {
-                        model.SaveStateStartTime = DateTime.Parse(prop.Value);
+                        model.SaveStateStartTime = DateTime.Parse(property.Value);
                     }
 
-                    if (prop.Name == ModelDefinitionsRegion.RestartStopTime.Key)
+                    if (property.Name == ModelDefinitionsRegion.RestartStopTime.Key)
                     {
-                        model.SaveStateStopTime = DateTime.Parse(prop.Value);
+                        model.SaveStateStopTime = DateTime.Parse(property.Value);
                     }
 
-                    if (prop.Name == ModelDefinitionsRegion.RestartTimeStep.Key)
+                    if (property.Name == ModelDefinitionsRegion.RestartTimeStep.Key)
                     {
-                        model.SaveStateTimeStep = TimeSpan.FromSeconds(Convert.ToDouble(prop.Value));
+                        model.SaveStateTimeStep = TimeSpan.FromSeconds(Convert.ToDouble(property.Value));
                     }
                 }
             }
@@ -53,23 +52,22 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
             }
             
             
-            foreach (var prop in category.Properties)
+            foreach (var property in category.Properties)
             {
 
-                if (prop.Name == ModelDefinitionsRegion.WriteRestart.Key)
+                if (property.Name == ModelDefinitionsRegion.WriteRestart.Key)
                 {
-                    model.WriteRestart = Convert.ToBoolean(Convert.ToInt32(prop.Value));
+                    model.WriteRestart = Convert.ToBoolean(Convert.ToInt32(property.Value));
                 }
-                else if (prop.Name == ModelDefinitionsRegion.UseRestart.Key)
+                else if (property.Name == ModelDefinitionsRegion.UseRestart.Key)
                 {
-                    model.UseRestart = Convert.ToBoolean(Convert.ToInt32(prop.Value));
+                    model.UseRestart = Convert.ToBoolean(Convert.ToInt32(property.Value));
                 }
-                else if (prop.Name != ModelDefinitionsRegion.RestartStartTime.Key &&
-                         prop.Name != ModelDefinitionsRegion.RestartStopTime.Key &&
-                         prop.Name != ModelDefinitionsRegion.RestartTimeStep.Key)
+                else if (property.Name != ModelDefinitionsRegion.RestartStartTime.Key &&
+                         property.Name != ModelDefinitionsRegion.RestartStopTime.Key &&
+                         property.Name != ModelDefinitionsRegion.RestartTimeStep.Key)
                 {
-                    errorMessages.Add(string.Format(Resources.SetProperties_Line__0___Parameter___1___found_in_the_md1d_file__This_parameter_will_not_be_imported
-                        , prop.LineNumber, prop.Name));
+                    errorMessages.Add(GetUnsupportedPropertyWarningMessage(property));
                 }
             }
         }

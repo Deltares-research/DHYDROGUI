@@ -22,8 +22,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
     ///
     /// see the D-Flow1d Technical reference manual for all possible options supported by the kernel.
     /// </remarks>
-    /// <seealso cref="DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefinition.IWaterFlowModelCategoryPropertySetter" />
-    public class WaterFlowModelOutputSetter : IWaterFlowModelCategoryPropertySetter
+    /// <seealso cref="WaterFlowModelCategoryPropertySetter" />
+    public class WaterFlowModelOutputSetter : WaterFlowModelCategoryPropertySetter
     {
         private readonly Dictionary<string, ElementSet> headerMapping = new Dictionary<string, ElementSet>
         {
@@ -50,7 +50,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
         /// 
         /// Pre-condition: categories != null && model.OutputSettings != null
         /// </remarks>
-        public void SetProperties(DelftIniCategory category, WaterFlowModel1D model, IList<string> errorMessages)
+        public override void SetProperties(DelftIniCategory category, WaterFlowModel1D model, IList<string> errorMessages)
         {
             SetProperties(category, model.OutputSettings);
         }

@@ -4,13 +4,21 @@ using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefinition
 {
-    public class WaterFlowModelSpecialsPropertiesSetter : IWaterFlowModelCategoryPropertySetter
+    public class WaterFlowModelSpecialsPropertiesSetter : WaterFlowModelCategoryPropertySetter
     {
-        public void SetProperties(DelftIniCategory category, WaterFlowModel1D model, IList<string> errorMessages)
+        public override void SetProperties(DelftIniCategory category, WaterFlowModel1D model, IList<string> errorMessages)
         {
-            var useDesignFactorDlg = category.ReadProperty<string>(ModelDefinitionsRegion.DesignFactorDlg.Key, true);
-
-            if (useDesignFactorDlg != null) model.DesignFactorDlg = double.Parse(useDesignFactorDlg, CultureInfo.InvariantCulture);
+            foreach (var property in category.Properties)
+            {
+                if (property.Name == ModelDefinitionsRegion.DesignFactorDlg.Key)
+                {
+                    model.DesignFactorDlg = double.Parse(property.Value, CultureInfo.InvariantCulture);
+                }
+                else
+                {
+                    errorMessages.Add(GetUnsupportedPropertyWarningMessage(property));
+                }
+            }
         }
     }
 }

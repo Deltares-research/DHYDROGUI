@@ -8,10 +8,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
     /// <summary>
     /// WaterFlowModelTemperatureSetter sets property values described in the Temperature DelftIniCategory on the WaterFlowModel1D.
     /// </summary>
-    /// <seealso cref="DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefinition.IWaterFlowModelCategoryPropertySetter" />
-    public class WaterFlowModelTemperatureSetter : IWaterFlowModelCategoryPropertySetter
+    /// <seealso cref="WaterFlowModelCategoryPropertySetter" />
+    public class WaterFlowModelTemperatureSetter : WaterFlowModelCategoryPropertySetter
     {
-        public void SetProperties(DelftIniCategory temperatureCategory, WaterFlowModel1D model, IList<string> errorMessages)
+        public override void SetProperties(DelftIniCategory temperatureCategory, WaterFlowModel1D model, IList<string> errorMessages)
         {
             if (temperatureCategory?.Name != ModelDefinitionsRegion.TemperatureValuesHeader) return;
 
@@ -43,9 +43,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
                 }
                 else
                 {
-                    errorMessages.Add(
-                        string.Format(Resources.SetProperties_Line__0___Parameter___1___found_in_the_md1d_file__This_parameter_will_not_be_imported,
-                            property.LineNumber, property.Name));
+                    errorMessages.Add(GetUnsupportedPropertyWarningMessage(property));
                 }
             }
         }

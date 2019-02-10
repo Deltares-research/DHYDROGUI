@@ -192,7 +192,7 @@
     <Compile Include="ImportExport\Flow1DParameterCategoryGenerator.cs" />
     <Compile Include="ImportExport\ModelDefinition\DelftIniPropertyValidationLookup.cs" />
     <Compile Include="ImportExport\ModelDefinition\DelftIniPropertyValidator.cs" />
-    <Compile Include="ImportExport\ModelDefinition\IWaterFlowModelCategoryPropertySetter.cs" />
+    <Compile Include="ImportExport\ModelDefinition\WaterFlowModelCategoryPropertySetter.cs" />
     <Compile Include="ImportExport\ModelDefinition\WaterFlowModelAdvancedOptionsSetter.cs" />
     <Compile Include="ImportExport\ModelDefinition\WaterFlowModelGlobalValuesSetter.cs" />
     <Compile Include="ImportExport\ModelDefinition\WaterFlowModelInitialConditionsParameterSetter.cs" />

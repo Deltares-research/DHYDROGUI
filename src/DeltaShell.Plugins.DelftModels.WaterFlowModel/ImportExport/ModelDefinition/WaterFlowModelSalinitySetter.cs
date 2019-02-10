@@ -2,45 +2,43 @@
 using System.Collections.Generic;
 using System.Linq;
 using DeltaShell.NGHS.IO.Helpers;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefinition
 {
-    public class WaterFlowModelSalinitySetter : IWaterFlowModelCategoryPropertySetter
+    public class WaterFlowModelSalinitySetter : WaterFlowModelCategoryPropertySetter
     {
-        public void SetProperties(DelftIniCategory category, WaterFlowModel1D model, IList<string> errorMessages)
+        public override void SetProperties(DelftIniCategory category, WaterFlowModel1D model, IList<string> errorMessages)
         {
             if (category?.Name != ModelDefinitionsRegion.SalinityValuesHeader) return;
 
 
-            foreach (var prop in category.Properties)
+            foreach (var property in category.Properties)
             {
                 try
                 {
-                    if (prop.Name == ModelDefinitionsRegion.SaltComputation.Key)
+                    if (property.Name == ModelDefinitionsRegion.SaltComputation.Key)
                     {
-                        model.UseSaltInCalculation = Convert.ToBoolean(Convert.ToInt32(prop.Value));
+                        model.UseSaltInCalculation = Convert.ToBoolean(Convert.ToInt32(property.Value));
                     }
-                    else if (prop.Name == ModelDefinitionsRegion.DiffusionAtBoundaries.Key)
+                    else if (property.Name == ModelDefinitionsRegion.DiffusionAtBoundaries.Key)
                     {
                         var diffusionAtBoundariesParameterSetting = model.ParameterSettings.FirstOrDefault(
                             ps => ps.Name == ModelDefinitionsRegion.DiffusionAtBoundaries.Key);
                         if (diffusionAtBoundariesParameterSetting != null)
                         {
                             diffusionAtBoundariesParameterSetting.Value =
-                                Convert.ToString(Convert.ToBoolean(Convert.ToInt32(prop.Value)));
+                                Convert.ToString(Convert.ToBoolean(Convert.ToInt32(property.Value)));
                         }
                     }
                     else
                     {
-                        errorMessages.Add(string.Format(Resources.SetProperties_Line__0___Parameter___1___found_in_the_md1d_file__This_parameter_will_not_be_imported,
-                            prop.LineNumber, prop.Name));
+                        errorMessages.Add(GetUnsupportedPropertyWarningMessage(property));
                     }
                 }
                 catch (Exception e)
                 {
                     errorMessages.Add(string.Format("Line {0}: {1}",
-                        prop.LineNumber, e.Message));
+                        property.LineNumber, e.Message));
                 }
             }
         }

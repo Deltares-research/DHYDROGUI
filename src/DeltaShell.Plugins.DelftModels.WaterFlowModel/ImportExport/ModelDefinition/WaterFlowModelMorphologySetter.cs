@@ -9,10 +9,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
     /// <summary>
     /// WaterFlowModelMorphologySetter sets property values described in the Morphology DelftIniCategory on the WaterFlowModel1D.
     /// </summary>
-    /// <seealso cref="T:DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefinition.IWaterFlowModelCategoryPropertySetter" />
-    public class WaterFlowModelMorphologySetter : IWaterFlowModelCategoryPropertySetter
+    /// <seealso cref="T:DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefinition.WaterFlowModelCategoryPropertySetter" />
+    public class WaterFlowModelMorphologySetter : WaterFlowModelCategoryPropertySetter
     {
-        public void SetProperties(DelftIniCategory morphologyCategory, WaterFlowModel1D model, IList<string> errorMessages)
+        public override void SetProperties(DelftIniCategory morphologyCategory, WaterFlowModel1D model, IList<string> errorMessages)
         {
             if (morphologyCategory?.Name != ModelDefinitionsRegion.MorphologyValuesHeader) return;
 
@@ -36,9 +36,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
                 }
                 else
                 {
-                    errorMessages.Add(
-                        string.Format(Resources.SetProperties_Line__0___Parameter___1___found_in_the_md1d_file__This_parameter_will_not_be_imported,
-                            property.LineNumber, property.Name));
+                    errorMessages.Add(GetUnsupportedPropertyWarningMessage(property));
                 }
             }
         }

@@ -9,8 +9,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
     /// WaterFlowModelTimePropertiesSetter is responsible for setting the properties defined in the
     /// [Time] header of the md1d file on the 0WaterFlowModel1D.
     /// </summary>
-    /// <seealso cref="DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefinition.IWaterFlowModelCategoryPropertySetter" />
-    public class WaterFlowModelTimePropertiesSetter : IWaterFlowModelCategoryPropertySetter
+    /// <seealso cref="WaterFlowModelCategoryPropertySetter" />
+    public class WaterFlowModelTimePropertiesSetter : WaterFlowModelCategoryPropertySetter
     {
         /// <inheritdoc />
         /// <summary>
@@ -23,7 +23,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
         /// <remarks>
         /// Pre-condition: model != null
         /// </remarks>
-        public void SetProperties(DelftIniCategory timeCategory, WaterFlowModel1D model, IList<string> errorMessages)
+        public override void SetProperties(DelftIniCategory timeCategory, WaterFlowModel1D model, IList<string> errorMessages)
         {
             if (timeCategory?.Name != ModelDefinitionsRegion.TimeHeader) return;
 

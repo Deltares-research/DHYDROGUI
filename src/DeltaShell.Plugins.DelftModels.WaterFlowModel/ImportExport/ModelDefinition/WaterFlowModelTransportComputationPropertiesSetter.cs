@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.PhysicalParameters;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefinition
 {
-    public class WaterFlowModelTransportComputationPropertiesSetter : IWaterFlowModelCategoryPropertySetter
+    public class WaterFlowModelTransportComputationPropertiesSetter : WaterFlowModelCategoryPropertySetter
     {
-        public void SetProperties(DelftIniCategory category, WaterFlowModel1D model, IList<string> errorMessages)
+        public override void SetProperties(DelftIniCategory category, WaterFlowModel1D model, IList<string> errorMessages)
         {
             foreach (var property in category.Properties)
             {
@@ -26,8 +25,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
                 }
                 else
                 {
-                    errorMessages.Add(string.Format(Resources.SetProperties_Line__0___Parameter___1___found_in_the_md1d_file__This_parameter_will_not_be_imported,
-                        property.LineNumber, property.Name));
+                    errorMessages.Add(GetUnsupportedPropertyWarningMessage(property));
                 }
             }
         }

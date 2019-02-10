@@ -1,11 +1,11 @@
-﻿ using System;
+﻿using System;
 using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefinition
 {
     public static class WaterFlowModelPropertySetterFactory
     {
-        public static IWaterFlowModelCategoryPropertySetter GetPropertySetter(DelftIniCategory category)
+        public static WaterFlowModelCategoryPropertySetter GetPropertySetter(DelftIniCategory category)
         {
             switch (category.Name)
             {

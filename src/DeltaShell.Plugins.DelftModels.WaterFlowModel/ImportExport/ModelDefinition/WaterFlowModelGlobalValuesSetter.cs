@@ -2,15 +2,14 @@
 using System.Linq;
 using DeltaShell.NGHS.IO.Helpers;
 
-
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefinition
 {
     /// <summary>
     /// WaterFlowModelGlobalValueSetter is responsible for setting the global values of
     /// the WaterFlowModel1D as specified in a .md1d data access model.
     /// </summary>
-    /// <seealso cref="DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefinition.IWaterFlowModelCategoryPropertySetter" />
-    public class WaterFlowModelGlobalValuesSetter : IWaterFlowModelCategoryPropertySetter
+    /// <seealso cref="WaterFlowModelCategoryPropertySetter" />
+    public class WaterFlowModelGlobalValuesSetter : WaterFlowModelCategoryPropertySetter
     {
         ///  <summary>
         ///  Set the GlobalValues properties of the <paramref name="model"/> as
@@ -26,7 +25,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
         ///  pre-condition: category != null && model != null
         ///  This method does not return any errors.
         ///  </remarks>
-        public void SetProperties(DelftIniCategory category, 
+        public override void SetProperties(DelftIniCategory category, 
                                   WaterFlowModel1D model,
                                   IList<string> errorMessages)
         {
