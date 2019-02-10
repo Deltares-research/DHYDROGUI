@@ -42,7 +42,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
         /// </summary>
         /// <param name="string1">The first string.</param>
         /// <param name="string2">The second string.</param>
-        /// <returns></returns>
+        /// <returns>An integer value that determines which string has a higher order of the two.</returns>
         private static int LineNumberComparison(string string1, string string2)
         {
             var lineNumber1 = int.Parse(string1.Split(' ')[1].TrimEnd(':'));
