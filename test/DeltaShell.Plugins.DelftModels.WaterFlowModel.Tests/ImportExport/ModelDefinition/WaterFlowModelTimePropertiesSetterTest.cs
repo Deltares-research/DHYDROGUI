@@ -281,10 +281,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
         }
 
         [Test]
-        public void GivenTransportComputationDataModelWithUnknownProperty_WhenSettingModelProperties_ThenUnknownPropertyIsSkippedAndErrorMessageIsReturned()
+        public void GivenTimeDataModelWithUnknownProperty_WhenSettingModelProperties_ThenUnknownPropertyIsSkippedAndErrorMessageIsReturned()
         {
             // Given
-            var unknownPropertyName = "UnknownProperty";
+            const string unknownPropertyName = "UnknownProperty";
             var category = GetCorrectTimeSettingsDataModel();
             category.AddProperty(unknownPropertyName, 1);
 

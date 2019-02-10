@@ -2,6 +2,7 @@
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefinition;
+using DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties;
 using NUnit.Framework;
 
 
@@ -571,6 +572,26 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             Assert.DoesNotThrow(testAction);
             Assert.IsEmpty(errorMessages);
             Assert.That(model.DispersionFormulationType, Is.EqualTo(DispersionFormulationType.Constant));
+        }
+
+        [Test]
+        public void GivenGlobalValuesDataModelWithUnknownProperty_WhenSettingModelProperties_ThenUnknownPropertyIsSkippedAndErrorMessageIsReturned()
+        {
+            // Given
+            const string unknownPropertyName = "UnknownProperty";
+            var category = GetGlobalCategoryWithCommonElements(ExpectedConditionsType, ExpectedWaterLevel, ExpectedDepth, ExpectedFlow);
+            category.AddProperty(unknownPropertyName, 1);
+
+            // When
+            var errorMessages = new List<string>();
+            var model = new WaterFlowModel1D();
+            new WaterFlowModelGlobalValuesSetter().SetProperties(category, model, errorMessages);
+
+            // Then
+            Assert.That(errorMessages.Count, Is.EqualTo(1));
+            var expectedMessage = string.Format(Resources.SetProperties_Line__0___Parameter___1___found_in_the_md1d_file__This_parameter_will_not_be_imported,
+                0, unknownPropertyName);
+            Assert.Contains(expectedMessage, errorMessages);
         }
 
         private static DelftIniCategory GetGlobalCategoryWithCommonElements(InitialConditionsType conditionsType,

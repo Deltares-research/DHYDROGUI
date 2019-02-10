@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefinition
@@ -11,6 +12,19 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
     /// <seealso cref="WaterFlowModelCategoryPropertySetter" />
     public class WaterFlowModelGlobalValuesSetter : WaterFlowModelCategoryPropertySetter
     {
+        private readonly string[] knownTimePropertyNames =
+        {
+            ModelDefinitionsRegion.UseInitialWaterDepth.Key,
+            ModelDefinitionsRegion.InitialWaterLevel.Key,
+            ModelDefinitionsRegion.InitialWaterDepth.Key,
+            ModelDefinitionsRegion.InitialDischarge.Key,
+            ModelDefinitionsRegion.InitialSalinity.Key,
+            ModelDefinitionsRegion.InitialTemperature.Key,
+            ModelDefinitionsRegion.Dispersion.Key,
+            ModelDefinitionsRegion.DispersionF3.Key,
+            ModelDefinitionsRegion.DispersionF4.Key
+        };
+
         ///  <summary>
         ///  Set the GlobalValues properties of the <paramref name="model"/> as
         ///  described in the GlobalValues <paramref name="category"/>.
@@ -71,6 +85,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
                 model.DispersionF4Coverage.DefaultValue =
                     category.ReadProperty<double>(ModelDefinitionsRegion.DispersionF4.Key);
             }
+
+            var unsupportedProperties = category.Properties.Where(p => !knownTimePropertyNames.Contains(p.Name));
+            unsupportedProperties.ForEach(c => errorMessages.Add(GetUnsupportedPropertyWarningMessage(c)));
         }
 
         private static T GetWithDefault<T>(IDelftIniCategory category,

@@ -13,7 +13,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
     /// <seealso cref="WaterFlowModelCategoryPropertySetter" />
     public class WaterFlowModelTimePropertiesSetter : WaterFlowModelCategoryPropertySetter
     {
-        private string[] knownTimePropertyNames =
+        private readonly string[] knownTimePropertyNames =
         {
             ModelDefinitionsRegion.StartTime.Key,
             ModelDefinitionsRegion.StopTime.Key,
@@ -21,7 +21,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
             ModelDefinitionsRegion.MapOutputTimeStep.Key,
             ModelDefinitionsRegion.OutTimeStepGridPoints.Key,
             ModelDefinitionsRegion.HisOutputTimeStep.Key,
-            ModelDefinitionsRegion.OutTimeStepStructures.Key,
+            ModelDefinitionsRegion.OutTimeStepStructures.Key
         };
 
         /// <inheritdoc />

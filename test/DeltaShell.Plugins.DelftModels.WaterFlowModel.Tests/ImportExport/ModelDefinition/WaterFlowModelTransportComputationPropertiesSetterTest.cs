@@ -40,7 +40,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
         public void GivenTransportComputationDataModelWithUnknownProperty_WhenSettingModelProperties_ThenUnknownPropertyIsSkippedAndErrorMessageIsReturned()
         {
             // Given
-            var unknownPropertyName = "UnknownProperty";
+            const string unknownPropertyName = "UnknownProperty";
             var category = GetCorrectTransportComputationDataModel();
             category.AddProperty(unknownPropertyName, 1);
 
