@@ -43,12 +43,20 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
         /// <param name="string1">The first string.</param>
         /// <param name="string2">The second string.</param>
         /// <returns>An integer value that determines which string has a higher order of the two.</returns>
+        /// <remarks>If the string does not comply with the format, just return 1.</remarks>
         private static int LineNumberComparison(string string1, string string2)
         {
-            var lineNumber1 = int.Parse(string1.Split(' ')[1].TrimEnd(':'));
-            var lineNumber2 = int.Parse(string2.Split(' ')[1].TrimEnd(':'));
+            try
+            {
+                var lineNumber1 = int.Parse(string1.Split(' ')[1].TrimEnd(':'));
+                var lineNumber2 = int.Parse(string2.Split(' ')[1].TrimEnd(':'));
 
-            return lineNumber1.CompareTo(lineNumber2);
+                return lineNumber1.CompareTo(lineNumber2);
+            }
+            catch
+            {
+                return 1;
+            }
         }
 
         private static IList<DelftIniCategory> ReadCategoriesFromFileAndCollectErrorMessages(string filePath, ICollection<string> errorMessages)
