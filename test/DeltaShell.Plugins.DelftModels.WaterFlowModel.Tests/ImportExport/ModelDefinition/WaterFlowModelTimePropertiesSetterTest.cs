@@ -4,6 +4,7 @@ using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefinition;
+using DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.ModelDefinition
@@ -277,6 +278,26 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
 
             var expectedErrorMessage = $"Detected both {ModelDefinitionsRegion.HisOutputTimeStep.Key} and deprecated {ModelDefinitionsRegion.OutTimeStepStructures.Key}, using {ModelDefinitionsRegion.HisOutputTimeStep.Key}, {ModelDefinitionsRegion.OutTimeStepStructures.Key} will be removed upon saving.";
             Assert.That(errorMessages, Contains.Item(expectedErrorMessage), $"Expected a different error message when reading {ModelDefinitionsRegion.OutTimeStepStructures.Key} and {ModelDefinitionsRegion.HisOutputTimeStep.Key}:");
+        }
+
+        [Test]
+        public void GivenTransportComputationDataModelWithUnknownProperty_WhenSettingModelProperties_ThenUnknownPropertyIsSkippedAndErrorMessageIsReturned()
+        {
+            // Given
+            var unknownPropertyName = "UnknownProperty";
+            var category = GetCorrectTimeSettingsDataModel();
+            category.AddProperty(unknownPropertyName, 1);
+
+            // When
+            var errorMessages = new List<string>();
+            var model = new WaterFlowModel1D();
+            new WaterFlowModelTimePropertiesSetter().SetProperties(category, model, errorMessages);
+
+            // Then
+            Assert.That(errorMessages.Count, Is.EqualTo(1));
+            var expectedMessage = string.Format(Resources.SetProperties_Line__0___Parameter___1___found_in_the_md1d_file__This_parameter_will_not_be_imported,
+                0, unknownPropertyName);
+            Assert.Contains(expectedMessage, errorMessages);
         }
 
         private DelftIniCategory GetCorrectTimeSettingsDataModel()

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefinition
@@ -12,6 +13,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
     /// <seealso cref="WaterFlowModelCategoryPropertySetter" />
     public class WaterFlowModelTimePropertiesSetter : WaterFlowModelCategoryPropertySetter
     {
+        private string[] knownTimePropertyNames =
+        {
+            ModelDefinitionsRegion.StartTime.Key,
+            ModelDefinitionsRegion.StopTime.Key,
+            ModelDefinitionsRegion.TimeStep.Key,
+            ModelDefinitionsRegion.MapOutputTimeStep.Key,
+            ModelDefinitionsRegion.OutTimeStepGridPoints.Key,
+            ModelDefinitionsRegion.HisOutputTimeStep.Key,
+            ModelDefinitionsRegion.OutTimeStepStructures.Key,
+        };
+
         /// <inheritdoc />
         /// <summary>
         /// Set the model time properties as specified in the ModelDefinitionsRegion.TimeHeader
@@ -50,6 +62,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
             var modelOutputSettings = model.OutputSettings;
             modelOutputSettings.GridOutputTimeStep = TimeSpan.FromSeconds(gridPointsOutputTimeStep);
             modelOutputSettings.StructureOutputTimeStep = TimeSpan.FromSeconds(structuresOutputTimeStep);
+
+            var unsupportedProperties = timeCategory.Properties.Where(p => !knownTimePropertyNames.Contains(p.Name));
+            unsupportedProperties.ForEach(c => errorMessages.Add(GetUnsupportedPropertyWarningMessage(c)));
         }
 
         /// <summary>
