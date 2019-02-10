@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using DelftTools.Functions;
+using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Hydro.Structures.WeirFormula;
@@ -14,12 +16,94 @@ using NUnit.Framework;
 using Rhino.Mocks;
 using Point = NetTopologySuite.Geometries.Point;
 
+
 namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 {
     [TestFixture]
     public class StructureFactoryTest
     {
         private MockRepository mocks;
+        private string structuresPath;
+        private DateTime refDate;
+        private Dictionary<string, double> constValLookUpTable;
+        private Dictionary<string, string> timeSeriesLookUpTable;
+        private Dictionary<string, Dictionary<string, string>> propertyNameMap;
+
+        [TestFixtureSetUp]
+        public void SetupFixture()
+        {
+            constValLookUpTable = new Dictionary<string, double>()
+            {
+                [KnownStructureProperties.CrestLevel] = 1.0,
+                [KnownStructureProperties.CrestWidth] = 2.0,
+                [KnownStructureProperties.LateralContractionCoefficient] = 4.0,
+                [KnownStructureProperties.GateOpeningWidth] = 8.0,
+                [KnownStructureProperties.GateLowerEdgeLevel] = 16.0,
+                [KnownStructureProperties.GateDoorHeight] = 32.0,
+
+                [EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.WidthLeftW1)]    = 64.0,
+                [EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.WidthLeftWsdl)]  = 128.0,
+                [EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.WidthRightWsdr)] = 256.0,
+                [EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.WidthRightW2)]   = 512.0,
+
+                [EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.LevelLeftZb1)]   = 1024.0,
+                [EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.LevelLeftZbsl)]  = 2048.0,
+                [EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.LevelRightZbsr)] = 4096.0,
+                [EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.LevelRightZb2)]  = 8192.0,
+
+                [EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.PositiveFreeGateFlowCoefficient)]  = 16384.0,
+                [EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.PositiveDrownGateFlowCoefficient)] = 32768.0,
+                [EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.PositiveFreeWeirFlowCoefficient)]  = 65536.0,
+                [EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.PositiveDrownWeirFlowCoefficient)] = 131072.0,
+
+                [EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.NegativeFreeGateFlowCoefficient)]  = 262144.0,
+                [EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.NegativeDrownGateFlowCoefficient)] = 524288.0,
+                [EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.NegativeFreeWeirFlowCoefficient)]  = 1048576.0,
+                [EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.NegativeDrownWeirFlowCoefficient)] = 2097152.0,
+
+                [EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.ExtraResistance)] = 41927.0,
+            };
+
+            timeSeriesLookUpTable = new Dictionary<string, string>()
+            {
+                [KnownStructureProperties.CrestLevel] = "weir_crest_level.tim",
+                [KnownStructureProperties.GateLowerEdgeLevel] = "Gate02_lower_edge_level.tim",
+                [KnownStructureProperties.GateOpeningWidth] = "Gate02_opening_width.tim",
+            };
+
+            propertyNameMap = new Dictionary<string, Dictionary<string, string>>()
+            {
+                [StructureRegion.StructureTypeName.Weir] = new Dictionary<string, string>()
+                {
+                    [KnownStructureProperties.CrestLevel] = KnownStructureProperties.CrestLevel,
+                    [KnownStructureProperties.CrestWidth] = KnownStructureProperties.CrestWidth,
+                },
+                [StructureRegion.StructureTypeName.Gate] = new Dictionary<string, string>()
+                {
+                    [KnownStructureProperties.CrestLevel]         = KnownStructureProperties.GateSillLevel,
+                    [KnownStructureProperties.CrestWidth]         = KnownStructureProperties.GateSillWidth,
+                    [KnownStructureProperties.GateOpeningWidth]   = KnownStructureProperties.GateOpeningWidth,
+                    [KnownStructureProperties.GateLowerEdgeLevel] = KnownStructureProperties.GateLowerEdgeLevel,
+                    [KnownStructureProperties.GateDoorHeight]     = KnownStructureProperties.GateDoorHeight,
+                    [KnownStructureProperties.GateHorizontalOpeningDirection] = 
+                        KnownStructureProperties.GateHorizontalOpeningDirection,
+                },
+                [StructureRegion.StructureTypeName.GeneralStructure] = new Dictionary<string, string>()
+                {
+
+                    [KnownStructureProperties.CrestLevel]         = EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.LevelCenter),
+                    [KnownStructureProperties.CrestWidth]         = EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.WidthCenter),
+                    [KnownStructureProperties.GateOpeningWidth]   = EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.HorizontalDoorOpeningWidth),
+                    [KnownStructureProperties.GateLowerEdgeLevel] = EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.GateHeight),
+                    [KnownStructureProperties.GateDoorHeight]     = EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.GateDoorHeightGeneralStructure),
+                    [KnownStructureProperties.GateHorizontalOpeningDirection] =
+                        EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.HorizontalDoorOpeningDirection),
+                }
+            };
+
+            refDate = DateTime.MinValue;
+            structuresPath = TestHelper.GetTestFilePath(@"structures/nonExistentFile_structures.ini");
+        }
 
         [SetUp]
         public void Setup()
@@ -321,22 +405,28 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         [Category(TestCategory.DataAccess)]
         public void CreateGateWithTimeSeriesTest()
         {
-            var schema = new StructureSchemaCsvFile().ReadStructureSchema(StructureSchemaCsvFileTest.ApplicationStructuresSchemaCsvFilePath);
+            var schema =
+                new StructureSchemaCsvFile().ReadStructureSchema(
+                    StructureSchemaCsvFileTest.ApplicationStructuresSchemaCsvFilePath);
             var openingDirectionDefinition = schema.GetDefinition("gate", "horizontal_opening_direction");
 
             var structure = new Structure2D("gate");
             structure.AddProperty(KnownStructureProperties.Type, typeof(string), "gate");
             structure.AddProperty(KnownStructureProperties.Name, typeof(string), "Gate02");
             structure.AddProperty(KnownStructureProperties.PolylineFile, typeof(string), "pump05.pli");
-            structure.AddProperty(KnownStructureProperties.GateSillLevel, typeof(Steerable), "Gate02_lower_edge_level.tim");
-            structure.AddProperty(KnownStructureProperties.GateLowerEdgeLevel, typeof(Steerable), "Gate02_lower_edge_level.tim");
-            structure.AddProperty(KnownStructureProperties.GateOpeningWidth, typeof(Steerable), "Gate02_opening_width.tim");
+            structure.AddProperty(KnownStructureProperties.GateSillLevel, typeof(Steerable),
+                                  "Gate02_lower_edge_level.tim");
+            structure.AddProperty(KnownStructureProperties.GateLowerEdgeLevel, typeof(Steerable),
+                                  "Gate02_lower_edge_level.tim");
+            structure.AddProperty(KnownStructureProperties.GateOpeningWidth, typeof(Steerable),
+                                  "Gate02_opening_width.tim");
             structure.AddProperty(KnownStructureProperties.GateDoorHeight, typeof(double), "10");
-            structure.AddProperty(KnownStructureProperties.GateHorizontalOpeningDirection, openingDirectionDefinition.DataType, "from_right");
+            structure.AddProperty(KnownStructureProperties.GateHorizontalOpeningDirection,
+                                  openingDirectionDefinition.DataType, "from_right");
 
             var dummyPath = TestHelper.GetTestFilePath(@"structures/nonExistentFile_structures.ini");
 
-            var gate = StructureFactory.CreateGate(structure, dummyPath, new DateTime(2013,1,1));
+            var gate = StructureFactory.CreateGate(structure, dummyPath, new DateTime(2013, 1, 1));
             var gateWeirFormula = gate.WeirFormula as IGatedWeirFormula;
 
             Assert.NotNull(gateWeirFormula);
@@ -344,7 +434,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             Assert.IsNull(gate.LongName);
             Assert.IsNull(gate.Branch);
             Assert.IsNaN(gate.Chainage);
-            Assert.AreEqual(new LineString(new [] { new Coordinate(1, 2), new Coordinate(3, 4), new Coordinate(6, 7) }), gate.Geometry);
+            Assert.AreEqual(new LineString(new[] {new Coordinate(1, 2), new Coordinate(3, 4), new Coordinate(6, 7)}),
+                            gate.Geometry);
             Assert.IsTrue(gate.UseCrestLevelTimeSeries);
             Assert.AreEqual(2, gate.CrestLevelTimeSeries.Time.Values.Count);
             Assert.AreEqual(1.2, gate.CrestLevelTimeSeries[new DateTime(2013, 1, 1, 0, 0, 0)]);
@@ -358,12 +449,385 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
             Assert.IsTrue(gateWeirFormula.UseHorizontalDoorOpeningWidthTimeSeries);
             Assert.AreEqual(2, gateWeirFormula.HorizontalDoorOpeningWidthTimeSeries.Time.Values.Count);
-            Assert.AreEqual(5.6, gateWeirFormula.HorizontalDoorOpeningWidthTimeSeries[new DateTime(2013, 1, 1, 0, 0, 0)]);
-            Assert.AreEqual(7.8, gateWeirFormula.HorizontalDoorOpeningWidthTimeSeries[new DateTime(2013, 1, 1, 2, 3, 0)]);
+            Assert.AreEqual(
+                5.6, gateWeirFormula.HorizontalDoorOpeningWidthTimeSeries[new DateTime(2013, 1, 1, 0, 0, 0)]);
+            Assert.AreEqual(
+                7.8, gateWeirFormula.HorizontalDoorOpeningWidthTimeSeries[new DateTime(2013, 1, 1, 2, 3, 0)]);
 
             Assert.AreEqual(GateOpeningDirection.FromRight, gateWeirFormula.HorizontalDoorOpeningDirection);
         }
 
         #endregion Gate
+
+        #region CreateStructureWeir
+        /// <summary>
+        /// GIVEN a simple weir Structure2D
+        /// WHEN CreateStructure is called
+        /// THEN the corresponding simple weir is returned
+        /// </summary>
+        [TestCase(true)]
+        [TestCase(false)]
+        [Category(TestCategory.DataAccess)]
+        public void GivenASimpleWeirStructure2D_WhenCreateStructureIsCalled_ThenTheCorrespondingSimpleWeirIsReturned(bool isConstCrestLevel)
+        {
+            // Given
+            var simpleWeirPrecursor = ComposeSimpleWeir(isConstCrestLevel);
+
+            // When
+            var result = StructureFactory.CreateStructure(simpleWeirPrecursor, structuresPath, refDate);
+
+            // Then
+            VerifySimpleWeir(result, isConstCrestLevel);
+        }
+
+        /// <summary>
+        /// GIVEN a gated weir Structure2D
+        /// WHEN CreateStructure is called
+        /// THEN the corresponding gated weir is returned
+        /// </summary>
+        [TestCase(false, false, false)]
+        [TestCase(true,  false, false)]
+        [TestCase(false, true,  false)]
+        [TestCase(true,  true,  false)]
+        [TestCase(false, false, true)]
+        [TestCase(true,  false, true)]
+        [TestCase(false, true,  true)]
+        [TestCase(true,  true,  true)]
+        [Category(TestCategory.DataAccess)]
+        public void GivenAGatedWeirStructure2D_WhenCreateStructureIsCalled_ThenTheCorrespondingGatedWeirIsReturned(bool isConstCrestLevel, 
+                                                                                                                   bool isConstLowerEdgeLevel,
+                                                                                                                   bool isConstHorizontalOpeningWidth)
+        {
+            // Given
+            var gatedWeirPrecursor = ComposeGatedWeir(isConstCrestLevel,
+                                                      isConstLowerEdgeLevel, 
+                                                      isConstHorizontalOpeningWidth);
+
+            // When
+            var result = StructureFactory.CreateStructure(gatedWeirPrecursor, structuresPath, refDate);
+
+            // Then
+            VerifyGatedWeir(result, isConstCrestLevel, isConstLowerEdgeLevel, isConstHorizontalOpeningWidth);
+        }
+
+        /// <summary>
+        /// GIVEN a general structure Structure2D
+        /// WHEN CreateStructure is called
+        /// THEN the corresponding general structure is returned
+        /// </summary>
+        [TestCase(false, false, false)]
+        [TestCase(true,  false, false)]
+        [TestCase(false, true,  false)]
+        [TestCase(true,  true,  false)]
+        [TestCase(false, false, true)]
+        [TestCase(true,  false, true)]
+        [TestCase(false, true,  true)]
+        [TestCase(true,  true,  true)]
+        [Category(TestCategory.DataAccess)]
+        public void GivenAGeneralStructureStructure2D_WhenCreateStructureIsCalled_ThenTheCorrespondingGeneralStructureIsReturned(bool isConstCrestLevel,
+                                                                                                                                 bool isConstLowerEdgeLevel,
+                                                                                                                                 bool isConstHorizontalOpeningWidth)
+        {
+            // Given
+            var generalStructurePrecursor = ComposeGeneralStructure(isConstCrestLevel,
+                                                                    isConstLowerEdgeLevel,
+                                                                    isConstHorizontalOpeningWidth);
+
+            // When
+            var result = StructureFactory.CreateStructure(generalStructurePrecursor, structuresPath, refDate);
+
+            // Then
+            VerifyGeneralStructure(result, isConstCrestLevel, isConstLowerEdgeLevel, isConstHorizontalOpeningWidth);
+        }
+        #endregion
+
+        #region CreateStructure
+        private Structure2D ComposeSimpleWeir(bool isConstCrestLevel)
+        {
+            const string t = StructureRegion.StructureTypeName.Weir;
+            var result = ComposeCommon(t, isConstCrestLevel);
+
+            // SimpleWeir specific
+            const string contractionCoefficientProperty = KnownStructureProperties.LateralContractionCoefficient;
+            var contractionCoefficientValue =
+                constValLookUpTable[KnownStructureProperties.LateralContractionCoefficient].ToString();
+
+            result.AddProperty(contractionCoefficientProperty, typeof(double), contractionCoefficientValue);
+
+            return result;
+        }
+
+        private Structure2D ComposeGatedWeir(bool isConstCrestLevel,
+                                             bool isConstLowerEdgeLevel,
+                                             bool isConstHorizontalOpeningWidth)
+        {
+            const string t = StructureRegion.StructureTypeName.Gate;
+            var result = ComposeCommon(t, isConstCrestLevel);
+            AddGatedProperties(result, t, isConstLowerEdgeLevel, isConstHorizontalOpeningWidth);
+
+            return result;
+        }
+
+        private Structure2D ComposeGeneralStructure(bool isConstCrestLevel,
+                                                    bool isConstLowerEdgeLevel,
+                                                    bool isConstHorizontalOpeningWidth)
+        {
+            const string t = StructureRegion.StructureTypeName.GeneralStructure;
+            var result = ComposeCommon(t, isConstCrestLevel);
+            AddGatedProperties(result, t, isConstLowerEdgeLevel, isConstHorizontalOpeningWidth);
+
+            // GeneralStructure specific
+            var generalStructureProperties = new List<string>()
+            {
+                EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.WidthLeftW1),
+                EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.WidthLeftWsdl),
+                EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.WidthRightWsdr),
+                EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.WidthRightW2),
+
+                EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.LevelLeftZb1),
+                EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.LevelLeftZbsl),
+                EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.LevelRightZbsr),
+                EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.LevelRightZb2),
+
+                EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.PositiveFreeGateFlowCoefficient),
+                EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.PositiveDrownGateFlowCoefficient),
+                EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.PositiveFreeWeirFlowCoefficient),
+                EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.PositiveDrownWeirFlowCoefficient),
+
+                EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.NegativeFreeGateFlowCoefficient),
+                EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.NegativeDrownGateFlowCoefficient),
+                EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.NegativeFreeWeirFlowCoefficient),
+                EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.NegativeDrownWeirFlowCoefficient),
+
+                EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.ExtraResistance),
+            };
+
+            foreach (var generalStructureProperty in generalStructureProperties)
+            {
+                result.AddProperty(generalStructureProperty, typeof(double), constValLookUpTable[generalStructureProperty].ToString());
+            }
+
+            return result;
+        }
+
+        private Structure2D ComposeCommon(string structureType, bool isConstCrestLevel)
+        {
+            var result = new Structure2D(structureType);
+
+            result.AddProperty(KnownStructureProperties.Type, typeof(string), structureType);
+            result.AddProperty(KnownStructureProperties.Name, typeof(string), "SomeName");
+
+            // Position
+            result.AddProperty(KnownStructureProperties.X, typeof(double), "500");
+            result.AddProperty(KnownStructureProperties.Y, typeof(double), "360");
+
+            // Crest level
+            var crestLevelProperty =
+                propertyNameMap[structureType][KnownStructureProperties.CrestLevel];
+            var crestLevelValue =
+                isConstCrestLevel ? constValLookUpTable[KnownStructureProperties.CrestLevel].ToString()
+                    : timeSeriesLookUpTable[KnownStructureProperties.CrestLevel];
+
+            result.AddProperty(crestLevelProperty, typeof(Steerable), crestLevelValue);
+
+            // Crest width
+            var crestWidthProperty =
+                propertyNameMap[structureType][KnownStructureProperties.CrestWidth];
+            var crestWidthValue = constValLookUpTable[KnownStructureProperties.CrestWidth].ToString();
+
+            result.AddProperty(crestWidthProperty, typeof(double), crestWidthValue);
+
+            return result;
+        }
+
+        private void AddGatedProperties(Structure2D result,
+                                        string structureType,
+                                        bool isConstLowerEdgeLevel,
+                                        bool isConstHorizontalOpeningWidth)
+        {
+            // LowerEdgeLevel
+            var lowerEdgeLevelProperty =
+                propertyNameMap[structureType][KnownStructureProperties.GateLowerEdgeLevel];
+            var lowerEdgeLevelValue =
+                isConstLowerEdgeLevel
+                    ? constValLookUpTable[KnownStructureProperties.GateLowerEdgeLevel].ToString()
+                    : timeSeriesLookUpTable[KnownStructureProperties.GateLowerEdgeLevel];
+
+            result.AddProperty(lowerEdgeLevelProperty, typeof(Steerable), lowerEdgeLevelValue);
+
+            // Horizontal door opening width
+            var horizontalDoorOpeningWidthProperty =
+                propertyNameMap[structureType][KnownStructureProperties.GateOpeningWidth];
+            var horizontalDoorOpeningWidthValue =
+                isConstHorizontalOpeningWidth
+                    ? constValLookUpTable[KnownStructureProperties.GateOpeningWidth].ToString()
+                    : timeSeriesLookUpTable[KnownStructureProperties.GateOpeningWidth];
+
+            result.AddProperty(horizontalDoorOpeningWidthProperty,
+                               typeof(Steerable),
+                               horizontalDoorOpeningWidthValue);
+
+            // Opening direction
+            var schema = new StructureSchemaCsvFile().ReadStructureSchema(StructureSchemaCsvFileTest.ApplicationStructuresSchemaCsvFilePath);
+            var openingDirectionDefinition = schema.GetDefinition(structureType, "horizontal_opening_direction");
+            result.AddProperty(KnownStructureProperties.GateHorizontalOpeningDirection, openingDirectionDefinition.DataType, "symmetric");
+
+            // door height
+            var gateDoorHeightProperty =
+                propertyNameMap[structureType][KnownStructureProperties.GateDoorHeight];
+            var gateDoorHeightValue =
+                constValLookUpTable[KnownStructureProperties.GateDoorHeight].ToString();
+            result.AddProperty(gateDoorHeightProperty, typeof(double), gateDoorHeightValue);
+        }
+        #endregion
+
+
+        #region VerifyStructure
+        private void VerifySimpleWeir(IStructure1D structure, bool isConstCrestLevel)
+        {
+            var weir = structure as Weir2D;
+
+            VerifyCommon(weir, isConstCrestLevel);
+
+            // Verify SimpleWeir
+            Assert.That(weir.WeirFormula, Is.Not.Null, "Expected a weir formula:");
+            var weirFormula = weir.WeirFormula as SimpleWeirFormula;
+            Assert.That(weirFormula, Is.Not.Null, "Expected the weir formula to be a simple weir");
+            Assert.That(weirFormula.LateralContraction, Is.EqualTo(constValLookUpTable[KnownStructureProperties.LateralContractionCoefficient]));
+        }
+
+        private void VerifyGatedWeir(IStructure1D structure,
+                                     bool isConstCrestLevel,
+                                     bool isConstLowerEdgeLevel,
+                                     bool isConstHorizontalOpeningWidth)
+        {
+            var weir = structure as Weir2D;
+
+            VerifyCommon(weir, isConstCrestLevel);
+            VerifyGated(weir, isConstLowerEdgeLevel, isConstHorizontalOpeningWidth);
+
+        }
+
+        private void VerifyGeneralStructure(IStructure1D structure,
+                                            bool isConstCrestLevel,
+                                            bool isConstLowerEdgeLevel,
+                                            bool isConstHorizontalOpeningWidth)
+        {
+            var weir = structure as Weir2D;
+
+            VerifyCommon(weir, isConstCrestLevel);
+            VerifyGated(weir, isConstLowerEdgeLevel, isConstHorizontalOpeningWidth);
+
+            // Verify GeneralStructure
+            var generalStructureFormula = weir.WeirFormula as GeneralStructureWeirFormula;
+            Assert.That(generalStructureFormula, Is.Not.Null, "Expected the weir formula to be a general structure:");
+
+            Assert.That(generalStructureFormula.WidthLeftSideOfStructure,  Is.EqualTo(constValLookUpTable[EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.WidthLeftW1)]    ));
+            Assert.That(generalStructureFormula.WidthStructureLeftSide,    Is.EqualTo(constValLookUpTable[EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.WidthLeftWsdl)]  ));
+            Assert.That(generalStructureFormula.WidthStructureRightSide,   Is.EqualTo(constValLookUpTable[EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.WidthRightWsdr)] ));
+            Assert.That(generalStructureFormula.WidthRightSideOfStructure, Is.EqualTo(constValLookUpTable[EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.WidthRightW2)]   ));
+
+            Assert.That(generalStructureFormula.BedLevelLeftSideOfStructure,  Is.EqualTo(constValLookUpTable[EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.LevelLeftZb1)]   ));
+            Assert.That(generalStructureFormula.BedLevelLeftSideStructure,    Is.EqualTo(constValLookUpTable[EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.LevelLeftZbsl)]  ));
+            Assert.That(generalStructureFormula.BedLevelRightSideStructure,   Is.EqualTo(constValLookUpTable[EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.LevelRightZbsr)] ));
+            Assert.That(generalStructureFormula.BedLevelRightSideOfStructure, Is.EqualTo(constValLookUpTable[EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.LevelRightZb2)]  ));
+
+            Assert.That(generalStructureFormula.PositiveFreeGateFlow,    Is.EqualTo(constValLookUpTable[EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.PositiveFreeGateFlowCoefficient)]   ));
+            Assert.That(generalStructureFormula.PositiveDrownedGateFlow, Is.EqualTo(constValLookUpTable[EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.PositiveDrownGateFlowCoefficient)]  ));
+            Assert.That(generalStructureFormula.PositiveFreeWeirFlow,    Is.EqualTo(constValLookUpTable[EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.PositiveFreeWeirFlowCoefficient)]   ));
+            Assert.That(generalStructureFormula.PositiveDrownedWeirFlow, Is.EqualTo(constValLookUpTable[EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.PositiveDrownWeirFlowCoefficient)]  ));
+
+            Assert.That(generalStructureFormula.NegativeFreeGateFlow,    Is.EqualTo(constValLookUpTable[EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.NegativeFreeGateFlowCoefficient)]   ));
+            Assert.That(generalStructureFormula.NegativeDrownedGateFlow, Is.EqualTo(constValLookUpTable[EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.NegativeDrownGateFlowCoefficient)]  ));
+            Assert.That(generalStructureFormula.NegativeFreeWeirFlow,    Is.EqualTo(constValLookUpTable[EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.NegativeFreeWeirFlowCoefficient)]   ));
+            Assert.That(generalStructureFormula.NegativeDrownedWeirFlow, Is.EqualTo(constValLookUpTable[EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.NegativeDrownWeirFlowCoefficient)]  ));
+
+            Assert.That(generalStructureFormula.ExtraResistance, Is.EqualTo(constValLookUpTable[EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.ExtraResistance)]));
+        }
+
+        private void VerifyCommon(IWeir weir, bool isConstCrestLevel)
+        {
+            Assert.That(weir, Is.Not.Null, "Expected the structure to not be null");
+
+            // Name
+            Assert.That(weir.Name, Is.EqualTo("SomeName"));
+
+            // Crest level
+            if (isConstCrestLevel)
+            {
+                Assert.That(weir.UseCrestLevelTimeSeries, Is.False, "Expected use crest level time series to be false.");
+                Assert.That(weir.CrestLevel, Is.EqualTo(constValLookUpTable[KnownStructureProperties.CrestLevel]), "Expected a different crest level:");
+            }
+            else
+            {
+                VerifyTimeSeries(KnownStructureProperties.CrestLevel, weir.UseCrestLevelTimeSeries, weir.CrestLevelTimeSeries);
+            }
+
+            // Crest width
+            Assert.That(weir.CrestWidth, Is.EqualTo(constValLookUpTable[KnownStructureProperties.CrestWidth]), "Expected a different crest width:");
+        }
+
+        private void VerifyGated(IWeir weir, bool isConstLowerEdgeLevel, bool isConstHorizontalOpeningWidth)
+        {
+            Assert.That(weir.WeirFormula, Is.Not.Null, "Expected a weir formula:");
+            var weirFormula = weir.WeirFormula as IGatedWeirFormula;
+            Assert.That(weirFormula, Is.Not.Null, "Expected the weir formula to be a gated weir");
+
+            if (isConstLowerEdgeLevel)
+            {
+                Assert.That(weirFormula.UseLowerEdgeLevelTimeSeries, Is.False, "Expected lower edge level time-series to be false.");
+                Assert.That(weirFormula.LowerEdgeLevel, Is.EqualTo(constValLookUpTable[KnownStructureProperties.GateLowerEdgeLevel]), "Expected lower edge level to be a different value:");
+            }
+            else
+            {
+                VerifyTimeSeries(KnownStructureProperties.GateLowerEdgeLevel,
+                                 weirFormula.UseLowerEdgeLevelTimeSeries,
+                                 weirFormula.LowerEdgeLevelTimeSeries);
+            }
+
+            if (isConstHorizontalOpeningWidth)
+            {
+                Assert.That(weirFormula.UseHorizontalDoorOpeningWidthTimeSeries, Is.False, "Expected horizontal door opening width time-series time-series to be false.");
+                Assert.That(weirFormula.HorizontalDoorOpeningWidth, Is.EqualTo(constValLookUpTable[KnownStructureProperties.GateOpeningWidth]), "Expected horizontal door opening width to be a different value:");
+            }
+            else
+            {
+                VerifyTimeSeries(KnownStructureProperties.GateOpeningWidth,
+                                 weirFormula.UseHorizontalDoorOpeningWidthTimeSeries,
+                                 weirFormula.HorizontalDoorOpeningWidthTimeSeries);
+            }
+
+            Assert.That(weirFormula.DoorHeight, Is.EqualTo(constValLookUpTable[KnownStructureProperties.GateDoorHeight]), "Expected door height to be a different value:");
+            Assert.That(weirFormula.HorizontalDoorOpeningDirection, Is.EqualTo(GateOpeningDirection.Symmetric));
+        }
+
+        private void VerifyTimeSeries(string timeSeriesName, bool isActive, TimeSeries timeSeries)
+        {
+            Assert.That(isActive, Is.True, $"Expected use {timeSeriesName} to be true.");
+            Assert.That(timeSeries, Is.Not.Null, $"Expected {timeSeriesName} to not be null:");
+
+            Assert.That(timeSeries.Arguments.Count,  Is.EqualTo(1), $"Expected a single argument in the {timeSeriesName}");
+            Assert.That(timeSeries.Components.Count, Is.EqualTo(1), $"Expected a single component in the {timeSeriesName}");
+
+            var reader = new TimFile();
+            var refTimeSeries = HydroTimeSeriesFactory.CreateTimeSeries("argument", "component", "unit");
+
+            reader.Read(TestHelper.GetTestFilePath($"structures/{timeSeriesLookUpTable[timeSeriesName]}"), refTimeSeries, refDate);
+
+            var argumentValues = timeSeries.Arguments[0];
+
+            Assert.That(argumentValues, Is.Not.Null, "Expected argument values not to be null:");
+            Assert.That(argumentValues.Values.Count, Is.EqualTo(refTimeSeries.Arguments[0].Values.Count), "Expected the number of argument values to be different:");
+            for (var i = 0; i < argumentValues.Values.Count; i++)
+                Assert.That(argumentValues.Values[i], Is.EqualTo(refTimeSeries.Arguments[0].Values[i]), $"Expected argument {i} of the {timeSeriesName} to be different:");
+
+            var componentValues = timeSeries.Components[0];
+
+            Assert.That(componentValues, Is.Not.Null, "Expected argument values not to be null:");
+            Assert.That(componentValues.Values.Count, Is.EqualTo(refTimeSeries.Components[0].Values.Count), "Expected the number of argument values to be different:");
+            for (var i = 0; i < componentValues.Values.Count; i++)
+                Assert.That(componentValues.Values[i], Is.EqualTo(refTimeSeries.Components[0].Values[i]), $"Expected components {i} of the {timeSeriesName} to be different:");
+        }
+        #endregion
     }
 }

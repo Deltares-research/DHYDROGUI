@@ -104,7 +104,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             }
         }
 
-        private static void SetTimeSeriesPropertyInsideWeirFormula(Structure2D structure2D, string propertyName, string path, DateTime refDate, IWeirFormula structure, string useTimeSeriesProperty, string constantValueProperty, TimeSeries timeSeries)
+        private static void SetTimeSeriesPropertyInsideWeirFormula(Structure2D structure2D, string propertyName, string path, DateTime refDate, IWeirFormula structure, string useTimeSeriesProperty, string constantValueProperty, string timeSeriesProperties)
         {
             ModelProperty property = structure2D.GetProperty(propertyName);
             if (property != null)
@@ -118,6 +118,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                         break;
                     case SteerableMode.TimeSeries:
                         TypeUtils.SetPropertyValue(structure, useTimeSeriesProperty, true);
+                        var timeSeries = (TimeSeries) TypeUtils.GetPropertyValue(structure, timeSeriesProperties, false);
+
                         var filePath = FMSuiteFileBase.GetOtherFilePathInSameDirectory(path, steerable.TimeSeriesFilename);
                         var reader = new TimFile();
                         reader.Read(filePath, timeSeries, refDate);
@@ -385,11 +387,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 
             SetTimeSeriesPropertyInsideWeirFormula(structure2D, EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.HorizontalDoorOpeningWidth), path, refDate, gsWeirFormula,
                 TypeUtils.GetMemberName(() => gsWeirFormula.UseHorizontalDoorOpeningWidthTimeSeries),
-                TypeUtils.GetMemberName(() => gsWeirFormula.HorizontalDoorOpeningWidth), gsWeirFormula.HorizontalDoorOpeningWidthTimeSeries);
+                TypeUtils.GetMemberName(() => gsWeirFormula.HorizontalDoorOpeningWidth),
+                TypeUtils.GetMemberName(() => gsWeirFormula.HorizontalDoorOpeningWidthTimeSeries));
 
             SetTimeSeriesPropertyInsideWeirFormula(structure2D, EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.GateHeight), path, refDate, gsWeirFormula,
                 TypeUtils.GetMemberName(() => gsWeirFormula.UseLowerEdgeLevelTimeSeries),
-                TypeUtils.GetMemberName(() => gsWeirFormula.LowerEdgeLevel), gsWeirFormula.LowerEdgeLevelTimeSeries);
+                TypeUtils.GetMemberName(() => gsWeirFormula.LowerEdgeLevel), 
+                TypeUtils.GetMemberName(() => gsWeirFormula.LowerEdgeLevelTimeSeries));
 
             return gsWeirFormula;
         }
@@ -488,7 +492,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                 gateWeirFormula,
                 TypeUtils.GetMemberName(() => gateWeirFormula.UseLowerEdgeLevelTimeSeries),
                 TypeUtils.GetMemberName(() => gateWeirFormula.LowerEdgeLevel),
-                gateWeirFormula.LowerEdgeLevelTimeSeries);
+                TypeUtils.GetMemberName(() => gateWeirFormula.LowerEdgeLevelTimeSeries));
 
             SetTimeSeriesPropertyInsideWeirFormula(structure2D,
                 KnownStructureProperties.GateOpeningWidth,
@@ -496,7 +500,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                 gateWeirFormula,
                 TypeUtils.GetMemberName(() => gateWeirFormula.UseHorizontalDoorOpeningWidthTimeSeries),
                 TypeUtils.GetMemberName(() => gateWeirFormula.HorizontalDoorOpeningWidth),
-                gateWeirFormula.HorizontalDoorOpeningWidthTimeSeries);
+                TypeUtils.GetMemberName(() => gateWeirFormula.HorizontalDoorOpeningWidthTimeSeries));
             
             return gateWeirFormula;
         }
