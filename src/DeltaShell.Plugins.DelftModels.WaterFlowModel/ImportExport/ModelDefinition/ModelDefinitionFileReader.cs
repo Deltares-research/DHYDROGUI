@@ -31,9 +31,24 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
 
             if (errorMessages.Count > 0)
             {
-                errorMessages.Sort();
+                errorMessages.Sort(LineNumberComparison);
                 createAndAddErrorReport?.Invoke("The following errors occurred when reading the md1d file", errorMessages);
             }
+        }
+
+        /// <summary>
+        /// The strings that are being compared to each other in this class, all begin with the text "Line xx: " (xx represents an integer).
+        /// So, we extract the number from the strings and compare the numbers to each other to determine the order of the two strings.
+        /// </summary>
+        /// <param name="string1">The first string.</param>
+        /// <param name="string2">The second string.</param>
+        /// <returns></returns>
+        private static int LineNumberComparison(string string1, string string2)
+        {
+            var lineNumber1 = int.Parse(string1.Split(' ')[1].TrimEnd(':'));
+            var lineNumber2 = int.Parse(string2.Split(' ')[1].TrimEnd(':'));
+
+            return lineNumber1.CompareTo(lineNumber2);
         }
 
         private static IList<DelftIniCategory> ReadCategoriesFromFileAndCollectErrorMessages(string filePath, ICollection<string> errorMessages)

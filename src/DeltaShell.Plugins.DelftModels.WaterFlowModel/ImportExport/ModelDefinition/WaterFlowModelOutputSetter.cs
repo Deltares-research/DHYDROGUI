@@ -41,41 +41,29 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
         /// <summary>
         /// Set the OutputSettings of <paramref name="model"/> to the values specified in <paramref name="category"/>.
         /// </summary>
-        /// <param name="category">A set of DelftIniCategory describing a Results region of the md1d file. </param>
-        /// <param name="model"> reference to WaterFlowModel1D containg OuputSettings which will be set.</param>
+        /// <param name="category">A set of <see cref="DelftIniCategory"/> objects describing a Results region of the md1d file. </param>
+        /// <param name="model"> A reference to WaterFlowModel1D containing OutputSettings which will be set.</param>
         /// <param name="errorMessages"> A collection of error messages that can be added to in case errors occur in this method. </param>
         /// <remarks>
         /// No engine parameters will be changed which are not specified in <paramref name="category"/>.
-        /// If a property is not recognised, it is quietly ignored.
         /// 
         /// Pre-condition: categories != null && model.OutputSettings != null
         /// </remarks>
         public override void SetProperties(DelftIniCategory category, WaterFlowModel1D model, IList<string> errorMessages)
         {
-            SetProperties(category, model.OutputSettings);
-        }
-
-        /// <summary>
-        /// Set the engine parameters in <paramref name="outputSettings"/> to the values specified in <paramref name="category"/> 
-        /// </summary>
-        /// <param name="category">A set of DelftIniCategory describing a Results region of the md1d file. </param>
-        /// <param name="outputSettings"> reference to WaterFlowModel1DOutputSettingData of some WaterFlow1DModel.</param>
-        /// <remarks>
-        /// No engine parameters will be changed which are not specified in <paramref name="category"/>.
-        /// If a property is not recognised, it is quietly ignored.
-        /// 
-        /// Pre-condition: categories != null && outputSettings != null
-        /// </remarks>
-        public void SetProperties(DelftIniCategory category, WaterFlowModel1DOutputSettingData outputSettings)
-        {
             // Determine element set
             ElementSet elementSet;
             if (!headerMapping.TryGetValue(category.Name, out elementSet)) return;
 
+            var outputSettings = model.OutputSettings;
             foreach (var property in category.Properties)
             {
                 var quantityType = GetQuantityType(property);
-                if (quantityType == QuantityType.UndeterminedValue) continue;
+                if (quantityType == QuantityType.UndeterminedValue)
+                {
+                    errorMessages.Add(GetUnsupportedPropertyWarningMessage(property));
+                    continue;
+                }
 
                 // Kernel expects Dispersion in ResultsBranchesHeader. GUI puts it
                 // in ElementSet.GridpointsOnBranches, as such we need to 
