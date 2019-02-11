@@ -4,13 +4,13 @@ from GWSWreader import GWSWreader
 from FMwriter import FMwriter
 from Logger import Logger
 
-p = 'D:\\source\\nghs-1d2dflooding\\test\\DeltaShell.Plugins.FMSuite.Common.Tests\\test-data\\urban\\script\\TestHyd_GWSW\\'
+p = 'D:\source\Branch-1D2D-flooding\\test\\DeltaShell.Plugins.FMSuite.Common.Tests\\test-data\\urban\\script\\TestHyd_GWSW\\'
 #p = r'd:\dam_ar\dflowfm_models\urban\FMSuite.Common.Tests_urban_svn\script\TestHyd_GWSW'
 
 inputDir = 'GWSW_DidactischStelsel'
-#oppervlakOnNode = False
+oppervlakOnNode = False
 #inputDir = 'GWSW_Waardenburg'
-oppervlakOnNode = True
+#oppervlakOnNode = True
 #inputDir = 'GWSW_Leiden'
 #oppervlakOnNode = True
 #inputDir = 'GWSW_Doorlaat'
@@ -22,8 +22,10 @@ oppervlakOnNode = True
 #inputDir = 'W_C4'
 #oppervlakOnNode = True
 
-gridFile = "waardenburg_2dC_net.nc"
-generate2DGrid = True
+#gridFile = "waardenburg_2dC_net.nc"
+
+gridFile = ""
+generate2DGrid = False
 
 outputDir = 'output_FM'
 dirPath = os.path.abspath(p)
