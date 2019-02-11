@@ -173,7 +173,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 warningMessages.Add(warningMessage);
             });
 
-            createAndAddErrorReport.Invoke($"While reading the file names from file '{modelFilename}', the following warnings occured", warningMessages);
+            if(warningMessages.Count > 0)
+                createAndAddErrorReport.Invoke($"While reading the file names from file '{modelFilename}', the following warnings occured", warningMessages);
         }
 
         private void ReadMandatoryFileNames(IDelftIniCategory filesNamesCategory)
