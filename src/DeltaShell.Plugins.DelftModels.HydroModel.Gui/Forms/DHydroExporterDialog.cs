@@ -43,7 +43,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
 
         private DHydroConfigXmlExporter Exporter
         {
-            get { return Gui == null ? null : Gui.Application.FileExporters.OfType<DHydroConfigXmlExporter>().First(); }
+            get { return Gui == null ? null : Gui.Application.FileExporters.OfType<DHydroConfigXmlExporter>().FirstOrDefault(); }
         }
 
         public DelftDialogResult ShowModal()
@@ -58,14 +58,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
             {
                 return DelftDialogResult.Cancel;
             }
-            
-            var saveFileDialog = new SaveFileDialog {Filter = "DIMR config files (*.xml)|*.xml"};
-            if (saveFileDialog.ShowDialog() != DialogResult.OK)
+
+            var dialogResult = ShowSaveFileDialog();
+            if (dialogResult != DialogResult.OK)
             {
                 return DelftDialogResult.Cancel;
             }
 
-            Exporter.ExportFilePath = saveFileDialog.FileName;
             if (Exporter.CoreCountDictionary == null)
             {
                 Exporter.CoreCountDictionary = new ConcurrentDictionary<IDimrModel, int>();
@@ -76,7 +75,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
                 var dimrModels = hydroModel.CurrentWorkflow.Activities.GetActivitiesOfType<IDimrModel>()
                     .Plus(hydroModel.CurrentWorkflow as IDimrModel).Where(dm => dm != null).ToList();
 
-                WarnForModelsWhichCannotBeExportedbyDimr(hydroModel, dimrModels);
+                WarnForModelsWhichCannotBeExportedByDimr(hydroModel, dimrModels);
 
                 foreach (var dimrModel in dimrModels)
                 {
@@ -99,16 +98,22 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
             return DelftDialogResult.OK;
         }
 
-        private static void WarnForModelsWhichCannotBeExportedbyDimr(HydroModel hydroModel, List<IDimrModel> dimrModels)
+        protected virtual DialogResult ShowSaveFileDialog()
         {
-            var remainingActivities =
-                hydroModel.GetAllActivitiesRecursive<IActivity>()
-                    .Select(UnwrapActivity)
-                    .Except(dimrModels.Cast<IActivity>());
+            var saveFileDialog = new SaveFileDialog { Filter = "DIMR config files (*.xml)|*.xml" };
+            var dialogResult = saveFileDialog.ShowDialog();
+
+            Exporter.ExportFilePath = saveFileDialog.FileName;
+            return dialogResult;
+        }
+
+        private static void WarnForModelsWhichCannotBeExportedByDimr(ICompositeActivity hydroModel, IEnumerable<IDimrModel> dimrModels)
+        {
+            var remainingActivities = hydroModel.Activities.Select(UnwrapActivity).Except(dimrModels);
 
             foreach (var remainingActivity in remainingActivities)
             {
-                Log.WarnFormat("Activity of type {0} cannot be exported to DIMR file tree and shall be ignored",
+                Log.WarnFormat("Activity of type {0} cannot be exported to DIMR file tree and shall be ignored.",
                     remainingActivity.GetType());
             }
         }
