@@ -79,9 +79,10 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
             {
                 IniCategory.AddProperty(StructureRegion.ReductionFactorLevels.Key, DEFAULT_REDUCTION_FACTOR_LEVELS,
                     StructureRegion.ReductionFactorLevels.Description);
-                IniCategory.AddProperty(StructureRegion.Head.Key, DEFAULT_HEAD, StructureRegion.Head.Description);
-                IniCategory.AddProperty(StructureRegion.ReductionFactor.Key, DEFAULT_REDUCTION_FACTOR,
-                    StructureRegion.ReductionFactor.Description);
+                IniCategory.AddProperty(StructureRegion.Head.Key, DEFAULT_HEAD, StructureRegion.Head.Description
+                    , StructureRegion.Head.Format);
+                IniCategory.AddProperty(StructureRegion.ReductionFactor.Key, DEFAULT_REDUCTION_FACTOR, StructureRegion.ReductionFactor.Description
+                    , StructureRegion.ReductionFactor.Format);
             }
         }
     }
