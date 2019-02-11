@@ -263,6 +263,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation
                 yield return new ValidationIssue(crossSection, ValidationSeverity.Error,
                     Resources.WaterFlowModel1DHydroNetworkValidator_GetCorrectCrossSectionIssue_FloodPlain2_width_may_not_be_larger_than_zero_if_FloodPlain1_width_is_equal_to_zero_, crossSection);
             }
+
+            if ((crossSection.CrossSectionType == CrossSectionType.YZ) &&
+                (!CrossSectionValidator.AreRoughnessPositionsEqualToFirstAndLastYValue((CrossSectionDefinition) crossSectionDefinition)))
+            {
+                yield return new ValidationIssue(crossSection, ValidationSeverity.Error,
+                    $"Roughness positions of the cross section '{crossSection}' are not equal to first and last y' value");
+            }
         }
 
         private static IEnumerable<IChannel> GetChainOfChannelsWithSameOrderNumber(IChannel channel, IHydroNetwork network, IChannel previousLink = null)

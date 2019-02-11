@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Utils;
 
@@ -144,6 +145,31 @@ namespace DelftTools.Hydro.Helpers
             var floodPlain2Width = crossSectionZw.GetSectionWidth(CrossSectionDefinitionZW.Floodplain2SectionTypeName);
             return !(floodPlain2Width > 0.0);
         }
+
+        /// <summary>
+        /// Checks if the first and last roughness positions are equal to the first and last y' value.
+        /// If they are not equal they will appear as validation errors
+        /// </summary>
+        /// <param name="crossSectionDefinition">The cross section.</param>
+        /// <returns></returns>
+        public static bool AreRoughnessPositionsEqualToFirstAndLastYValue(CrossSectionDefinition crossSectionDefinition)
+        {
+            // Extract start roughness position
+            var startRoughnessPosition = crossSectionDefinition.Sections[0].MinY;
+
+            // Extract end roughness position.
+            var endRoughnessPosition = crossSectionDefinition.Sections[0].MaxY;
+
+            // Extract first y value
+            var firstYValue = crossSectionDefinition.Left;
+
+            // Extract last y value
+            var lastYValue = crossSectionDefinition.Right;
+
+            //Compare 
+            return (Math.Abs(startRoughnessPosition - firstYValue) < double.Epsilon) && (Math.Abs(endRoughnessPosition - lastYValue) < double.Epsilon);
+        }
+
 
         private static bool IsTotalSectionsWidthAtLeastAsWideAsFlowWidth(CrossSectionDefinition crossSection)
         {
