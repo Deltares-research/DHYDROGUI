@@ -1,13 +1,10 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Linq;
-using DelftTools.Controls.Swf.DataEditorGenerator.FromType;
 using DelftTools.Hydro;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils;
 using DelftTools.Utils.ComponentModel;
 using DeltaShell.Plugins.CommonTools.Gui.Property;
-using DeltaShell.Plugins.CommonTools.Gui.Property.Functions;
 using DeltaShell.Plugins.NetworkEditor.Gui.Properties;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
@@ -66,7 +63,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             set
             {
                 double result;
-                if (double.TryParse(value, out result))
+                if (double.TryParse(value, out result) && result > 0)
                 {
                     data.Length = result;
                 }
