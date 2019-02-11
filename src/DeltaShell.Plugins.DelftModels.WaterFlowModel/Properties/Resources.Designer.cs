@@ -725,6 +725,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Roughness positions of the cross section &apos;{0}&apos; are not equal to first and last y&apos; value.
+        /// </summary>
+        public static string WaterFlowModel1DHydroNetworkValidator_GetCorrectCrossSectionIssue_Roughness_positions_of_the_cross_section___0___are_not_equal_to_first_and_last_y__value {
+            get {
+                return ResourceManager.GetString("WaterFlowModel1DHydroNetworkValidator_GetCorrectCrossSectionIssue_Roughness_posit" +
+                        "ions_of_the_cross_section___0___are_not_equal_to_first_and_last_y__value", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Tabulated cross section {0} cannot have zero width at levels above deepest point of its definition..
         /// </summary>
         public static string WaterFlowModel1DHydroNetworkValidator_GetCorrectCrossSectionIssue_Tabulated_cross_section__0__cannot_have_zero_width_at_levels_above_deepest_point_of_its_definition_ {

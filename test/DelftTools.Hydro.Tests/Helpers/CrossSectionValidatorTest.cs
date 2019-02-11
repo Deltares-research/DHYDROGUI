@@ -15,6 +15,7 @@ namespace DelftTools.Hydro.Tests.Helpers
     {
         private Func<ICrossSectionDefinition, bool> checkSectionsTotalWidth = csd => CrossSectionValidator.AreCrossSectionsLengthsLargerThanTheFlowWidth(csd);
         private Func<ICrossSectionDefinition, bool> checkFloodPlain1AndFloodPlain2 = csd => CrossSectionValidator.AreFloodPlain1AndFloodPlain2WidthsValid(csd);
+        private Func<CrossSectionDefinition, bool> positionsEqual = pe => CrossSectionValidator.AreRoughnessPositionsEqualToFirstAndLastYValue(pe);
 
         #region CrossSectionDefinition SectionWidths
 
@@ -141,6 +142,20 @@ namespace DelftTools.Hydro.Tests.Helpers
         #endregion
 
         [Test]
+        public void GivenACrossSectionDefinitionWithASectionWidthThatIsNotEqualToYValues_WhenValidatingRoughnessPositionsAreEqualToYValues_ThenFalseIsReturned()
+        {
+            // Given
+            var csDef = GetSimpleCrossSectionDefinition() as CrossSectionDefinition;
+            csDef.AddSection(new CrossSectionSectionType(), 10.0);
+
+            // When
+            bool validated = CrossSectionValidator.AreRoughnessPositionsEqualToFirstAndLastYValue(csDef);
+
+            // Then
+            Assert.That(validated, Is.EqualTo(false));
+        }
+
+        [Test]
         public void CrossSectionTypeTabulatedZWZeroWidthOptions()
         {
             // cross section of ZW type is valid if:
@@ -226,6 +241,12 @@ namespace DelftTools.Hydro.Tests.Helpers
             Assert.IsFalse(CrossSectionValidator.IsCrossSectionAllowedOnBranch(crossSectionWithProxy2, out errorMessage));
             Assert.AreEqual("Cross-sections on enclosed branches are not supported.", errorMessage);
         }
+
+
+
+
+
+
 
         [Test]
         public void CrossSectionTypeXYZShouldOnlyBeAcceptedOnOpenBranch()

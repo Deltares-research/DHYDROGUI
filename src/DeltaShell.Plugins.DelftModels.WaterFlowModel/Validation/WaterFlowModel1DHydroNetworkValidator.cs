@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
@@ -268,7 +269,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation
                 (!CrossSectionValidator.AreRoughnessPositionsEqualToFirstAndLastYValue((CrossSectionDefinition) crossSectionDefinition)))
             {
                 yield return new ValidationIssue(crossSection, ValidationSeverity.Error,
-                    $"Roughness positions of the cross section '{crossSection}' are not equal to first and last y' value");
+                    string.Format(
+                        Resources.WaterFlowModel1DHydroNetworkValidator_GetCorrectCrossSectionIssue_Roughness_positions_of_the_cross_section___0___are_not_equal_to_first_and_last_y__value,
+                        crossSection));
             }
         }
 

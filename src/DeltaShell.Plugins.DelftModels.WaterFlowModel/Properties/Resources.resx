@@ -496,4 +496,7 @@
   <data name="WaterFlowModelMorphologySetter_ParseValueToBool_Line__0___Parameter___1___will_not_be_imported__Valid_values_are__0___false__or__1___true__" xml:space="preserve">
     <value>Line {0}: Parameter '{1}' will not be imported. Valid values are '0' (false) or '1' (true).</value>
   </data>
+  <data name="WaterFlowModel1DHydroNetworkValidator_GetCorrectCrossSectionIssue_Roughness_positions_of_the_cross_section___0___are_not_equal_to_first_and_last_y__value" xml:space="preserve">
+    <value>Roughness positions of the cross section '{0}' are not equal to first and last y' value</value>
+  </data>
 </root>

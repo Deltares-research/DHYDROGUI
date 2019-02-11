@@ -154,19 +154,12 @@ namespace DelftTools.Hydro.Helpers
         /// <returns></returns>
         public static bool AreRoughnessPositionsEqualToFirstAndLastYValue(CrossSectionDefinition crossSectionDefinition)
         {
-            // Extract start roughness position
             var startRoughnessPosition = crossSectionDefinition.Sections[0].MinY;
-
-            // Extract end roughness position.
             var endRoughnessPosition = crossSectionDefinition.Sections[0].MaxY;
 
-            // Extract first y value
             var firstYValue = crossSectionDefinition.Left;
-
-            // Extract last y value
             var lastYValue = crossSectionDefinition.Right;
-
-            //Compare 
+ 
             return (Math.Abs(startRoughnessPosition - firstYValue) < double.Epsilon) && (Math.Abs(endRoughnessPosition - lastYValue) < double.Epsilon);
         }
 
