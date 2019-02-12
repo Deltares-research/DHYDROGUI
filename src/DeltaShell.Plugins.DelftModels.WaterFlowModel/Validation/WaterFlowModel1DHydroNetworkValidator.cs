@@ -266,9 +266,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation
             }
 
             if ((crossSection.CrossSectionType == CrossSectionType.YZ) &&
-                (!CrossSectionValidator.AreRoughnessPositionsEqualToFirstAndLastYValue((CrossSectionDefinition) crossSectionDefinition)))
+                (!CrossSectionValidator.AreRoughnessPositionsEqualToFirstAndLastYValue(crossSectionDefinition)))
             {
-                yield return new ValidationIssue(crossSection, ValidationSeverity.Error,
+                yield return new ValidationIssue(crossSection, ValidationSeverity.Warning,
                     string.Format(
                         Resources.WaterFlowModel1DHydroNetworkValidator_GetCorrectCrossSectionIssue_Roughness_positions_of_the_cross_section___0___are_not_equal_to_first_and_last_y__value,
                         crossSection));

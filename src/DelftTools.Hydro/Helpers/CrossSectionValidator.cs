@@ -152,14 +152,14 @@ namespace DelftTools.Hydro.Helpers
         /// </summary>
         /// <param name="crossSectionDefinition">The cross section.</param>
         /// <returns>equals(true) or not equals(false)</returns>
-        public static bool AreRoughnessPositionsEqualToFirstAndLastYValue(CrossSectionDefinition crossSectionDefinition)
+        public static bool AreRoughnessPositionsEqualToFirstAndLastYValue(ICrossSectionDefinition crossSectionDefinition)
         {
             if (crossSectionDefinition.Sections.Count == 0) return true; // Fix for models that do not have roughness positions defined.
             var startRoughnessPosition = crossSectionDefinition.Sections[0].MinY;
             var endRoughnessPosition = crossSectionDefinition.Sections[0].MaxY;
 
             var firstYValue = crossSectionDefinition.Left;
-            var lastYValue = crossSectionDefinition.Right;
+            var lastYValue = crossSectionDefinition.Profile.Last().X;
  
             return (Math.Abs(startRoughnessPosition - firstYValue) < double.Epsilon) && (Math.Abs(endRoughnessPosition - lastYValue) < double.Epsilon);
         }
