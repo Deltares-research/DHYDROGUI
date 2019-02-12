@@ -269,6 +269,7 @@
     <ProjectReference Include="..\DeltaShell.Plugins.DelftModels.HydroModel.Gui\DeltaShell.Plugins.DelftModels.HydroModel.Gui.csproj">
       <Project>{67C4F55D-2CF5-424D-91A3-A68365AC1C9C}</Project>
       <Name>DeltaShell.Plugins.DelftModels.HydroModel.Gui</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\DeltaShell.Plugins.FMSuite.Common.Gui\DeltaShell.Plugins.FMSuite.Common.Gui.csproj">
       <Project>{7F3D15D6-3425-47A6-AFD4-9B6E054EE8BE}</Project>
