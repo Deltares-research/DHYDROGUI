@@ -15,8 +15,7 @@ namespace DelftTools.Hydro.Tests.Helpers
     {
         private Func<ICrossSectionDefinition, bool> checkSectionsTotalWidth = csd => CrossSectionValidator.AreCrossSectionsLengthsLargerThanTheFlowWidth(csd);
         private Func<ICrossSectionDefinition, bool> checkFloodPlain1AndFloodPlain2 = csd => CrossSectionValidator.AreFloodPlain1AndFloodPlain2WidthsValid(csd);
-        private Func<CrossSectionDefinition, bool> positionsEqual = pe => CrossSectionValidator.AreRoughnessPositionsEqualToFirstAndLastYValue(pe);
-
+       
         #region CrossSectionDefinition SectionWidths
 
         [TestCase(20.0, false, false)]
