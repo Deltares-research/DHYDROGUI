@@ -100,7 +100,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             Assert.IsTrue(pump.DirectionIsPositive);
 
             var expectedWarningMessage = string.Format(Resources.PumpConverter_GetInvalidDirectionValueWarningMessage_Line__0___the_specified_value___1___for___2___is_invalid_,
-                lineNumber, directionValue, StructureRegion.Direction.Key, PumpControlDirection.SuctionAndDeliverySideControl, PumpName);
+                lineNumber, directionValue, StructureRegion.Direction.Key, PumpControlDirection.SuctionSideControl, PumpName);
             Assert.Contains(expectedWarningMessage, warningMessages);
 
             mocks.VerifyAll();
