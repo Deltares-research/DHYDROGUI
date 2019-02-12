@@ -15,6 +15,7 @@ using DelftTools.Shell.Gui.Swf.Validation;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
+using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
@@ -545,6 +546,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             if (base.Gui == null || base.Gui.Application == null) return;
             base.Gui.Application.ProjectOpened += SubscribeToProjectPropertyChanged;
             base.Gui.Application.ProjectClosing += UnsubscribeToProjectPropertyChanged;
+            base.Gui.Application.ProjectSaving += CloseAllViewsBeforeSaving;
+            base.Gui.Application.ProjectSaveFailed += OpenClosedViews;
+            base.Gui.Application.ProjectSaved += OpenClosedViews;
             base.Gui.Application.FileImporters.OfType<RasterFileImporter>().ForEach(rfi => rfi.MakeLayerVisibleAfterImport = MakeLayerVisibleAfterImport);
             // DELFT3DFM-371: Disable Model Inspection
             // base.Gui.Application.ActivityRunner.Activities.CollectionChanged += Activities_CollectionChanged;
@@ -553,6 +557,29 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             if (project != null)
             {
                 SubscribeToProjectPropertyChanged(project);
+            }
+        }
+        [InvokeRequired]
+        private void OpenClosedViews(Project project)
+        {
+            if (project == null || project.RootFolder == null || ClosedViewTypes == null) return;
+
+            try
+            {
+                if (ClosedViewTypes == null || !ClosedViewTypes.Any()) return;
+                foreach (var flowFmModel in project.RootFolder.GetAllItemsRecursive().OfType<WaterFlowFMModel>())
+                {
+                    foreach (var viewType in ClosedViewTypes)
+                    {
+                        Gui.CommandHandler.OpenView(flowFmModel, viewType);
+                    }
+                }
+                ClosedViewTypes = new List<Type>();
+            }
+            catch
+            {
+                //gulp
+                ClosedViewTypes = new List<Type>();
             }
         }
 
@@ -566,6 +593,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             if (base.Gui == null || base.Gui.Application == null) return;
             base.Gui.Application.ProjectOpened -= SubscribeToProjectPropertyChanged;
             base.Gui.Application.ProjectClosing -= UnsubscribeToProjectPropertyChanged;
+            base.Gui.Application.ProjectSaving -= CloseAllViewsBeforeSaving;
+            base.Gui.Application.ProjectSaveFailed -= OpenClosedViews;
+            base.Gui.Application.ProjectSaved -= OpenClosedViews;
 
             // DELFT3DFM-371: Disable Model Inspection
             //base.Gui.Application.ActivityRunner.Activities.CollectionChanged -= Activities_CollectionChanged;
@@ -711,6 +741,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             if (!(sender is WaterFlowFMModel) || activityStatusChangedEventArgs.NewStatus != ActivityStatus.Failed) return;
 
             Gui.CommandHandler.OpenView(sender, typeof(ValidationView));
+        }
+        private IList<Type> ClosedViewTypes { get; set; }
+
+        [InvokeRequired]
+        private void CloseAllViewsBeforeSaving(Project project)
+        {
+            if (project == null || project.RootFolder == null) return;
+            ClosedViewTypes = new List<Type>();
+            
+            foreach (var flowFmModel in project.RootFolder.GetAllItemsRecursive().OfType<WaterFlowFMModel>())
+            {
+                var collection = Gui.DocumentViews.AllViews.Where(v =>
+                {
+                    var data = v.Data as WaterFlowFMModel;
+                    return data != null && (data == flowFmModel && v.Visible);
+                }).Select(v => v.GetType());
+                if(collection != null)
+                    ClosedViewTypes.AddRange(collection);
+                Gui.CommandHandler.RemoveAllViewsForItem(flowFmModel);
+            }
         }
 
         [InvokeRequired]
