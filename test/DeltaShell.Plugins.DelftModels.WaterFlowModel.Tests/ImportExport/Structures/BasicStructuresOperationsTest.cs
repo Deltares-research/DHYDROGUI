@@ -70,7 +70,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
         public void GivenAStructureBranchCategoryAndAnEmptyStructure_WhenReadingTheBasicParameters_ThenTheseParametersShouldBeSetForTheStructure()
         {
             //Given
-            var category = CreatePerfectCategory();
+            var category = CreateBasicWeirCategory();
 
             var weir = new Weir
             {
@@ -99,7 +99,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
         public void
             GivenAStructureBranchCategory_WhenReadingTheBasicParametersWithNullBranch_ThenAnExceptionShouldBeThrown()
         {
-            var category = CreatePerfectCategory();
+            var category = CreateBasicWeirCategory();
 
             var weir = new Weir
             {
@@ -121,7 +121,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
         [TestCase("chainage")]
         public void GivenAStructureBranchCategoryWithMissingMandatoryParametersAndAnEmptyStructure_WhenReadingTheBasicParameters_ThenAnExceptionShouldBeThrown(string propertyName)
         {
-            var category = CreatePerfectCategory();
+            var category = CreateBasicWeirCategory();
 
             var removeProperty = category.Properties.FirstOrDefault(p => p.Name == propertyName);
             category.RemoveProperty(removeProperty);
@@ -140,7 +140,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
         [Test]
         public void GivenAStructureBranchCategoryWithMissingOptionalParameterAndAnEmptyStructure_WhenReadingTheBasicParameters_ThenBasisPropertiesOfTheStructureShouldBeSet()
         {
-            var category = CreatePerfectCategory();
+            var category = CreateBasicWeirCategory();
             var propertyName = StructureRegion.Name.Key;
             var removeProperty = category.Properties.FirstOrDefault(p => p.Name == propertyName);
             category.RemoveProperty(removeProperty);
@@ -166,7 +166,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             //Given
             IList<ICompositeBranchStructure> compositeBranchStructures = new List<ICompositeBranchStructure>();
 
-            var structureBranchCategory = CreatePerfectCategory();
+            var structureBranchCategory = CreateBasicWeirCategory();
 
             var structure = new Weir
             {
@@ -190,7 +190,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             //Given
             IList<ICompositeBranchStructure> compositeBranchStructures = new List<ICompositeBranchStructure>();
 
-            var structureBranchCategory = CreatePerfectCategory2();
+            var structureBranchCategory = CreateBasicWeirCategoryWithCompoundStructureName();
 
             var structure = new Weir
             {
@@ -200,7 +200,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             structure.SetCommonRegionElementsFromCategory(structureBranchCategory, branch);
 
 
-            var structureBranchCategory2 = CreatePerfectCategory2();
+            var structureBranchCategory2 = CreateBasicWeirCategoryWithCompoundStructureName();
 
             var structure2 = new Weir
             {
@@ -223,7 +223,38 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             Assert.AreEqual("Bla",compositeBranchStructure.Name);
         }
 
-        private DelftIniCategory CreatePerfectCategory()
+        [Test]
+        public void GivenStructureDelftIniCategoryWithCompoundUnequalToZeroAndWithoutCompoundName_WhenCreatingCompoundStructure_ThenPropertyNotFoundInFileExceptionIsThrown()
+        {
+            const int lineNumber = 22;
+            const string structureName = "myWeir";
+            const string structureType = "weir";
+
+            var structureCategory = new DelftIniCategory(StructureRegion.Header);
+            structureCategory.AddProperty(StructureRegion.Id.Key, "Weir1");
+            structureCategory.AddProperty(StructureRegion.DefinitionType.Key, structureType);
+            var compoundProperty = new DelftIniProperty
+            {
+                Name = StructureRegion.Compound.Key,
+                Value = "1",
+                LineNumber = lineNumber
+            };
+            structureCategory.AddProperty(compoundProperty);
+
+            try
+            {
+                BasicStructuresOperations.CreateCompositeBranchStructuresIfNeeded(structureCategory, new Weir(structureName), new List<ICompositeBranchStructure>());
+                Assert.Fail("Method 'BasicStructuresOperations.CreateCompositeBranchStructuresIfNeeded' should have thrown a PropertyNotFoundInFileException.");
+            }
+            catch (PropertyNotFoundInFileException e)
+            {
+                var expectedExceptionMessage = string.Format(Resources.BasicStructuresOperations_CreateCompositeBranchStructuresIfNeeded_Line__0___property___1___is_mandatory_when_property___2___is_defined_as_a_number_unequal_to_0,
+                    lineNumber, StructureRegion.CompoundName.Key, StructureRegion.Compound.Key, structureName, structureType);
+                Assert.That(e.Message, Is.EqualTo(expectedExceptionMessage));
+            }
+        }
+
+        private static DelftIniCategory CreateBasicWeirCategory()
         {
             var category = new DelftIniCategory(StructureRegion.Header);
 
@@ -237,7 +268,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             return category;
         }
 
-        private DelftIniCategory CreatePerfectCategory2()
+        private static DelftIniCategory CreateBasicWeirCategoryWithCompoundStructureName()
         {
             var category = new DelftIniCategory(StructureRegion.Header);
 

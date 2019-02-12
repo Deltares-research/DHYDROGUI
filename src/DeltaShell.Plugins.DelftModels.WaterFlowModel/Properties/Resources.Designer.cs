@@ -61,6 +61,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Line {0}: property &apos;{1}&apos; is mandatory when property &apos;{2}&apos; is defined as a number unequal to 0. &apos;{3}&apos; of type {4} was not imported..
+        /// </summary>
+        public static string BasicStructuresOperations_CreateCompositeBranchStructuresIfNeeded_Line__0___property___1___is_mandatory_when_property___2___is_defined_as_a_number_unequal_to_0 {
+            get {
+                return ResourceManager.GetString("BasicStructuresOperations_CreateCompositeBranchStructuresIfNeeded_Line__0___prope" +
+                        "rty___1___is_mandatory_when_property___2___is_defined_as_a_number_unequal_to_0", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Unable to parse {0} property: {1}, Branch not found in Network.{2}.
         /// </summary>
         public static string BasicStructuresOperations_SetCommonRegionElements_Unable_to_parse__0__property___1___Branch_not_found_in_Network__2_ {

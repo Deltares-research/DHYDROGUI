@@ -90,36 +90,54 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
 
                 return compositeBranchStructure;
             }
-            else
+
+            try
             {
                 var compoundName = structureBranchCategory.ReadProperty<string>(StructureRegion.CompoundName.Key);
-
-                var alreadyExistingCompositeBranchStructure =
-                    compositeBranchStructures.FirstOrDefault(bf => bf.Name == compoundName);
-
-                if (alreadyExistingCompositeBranchStructure != null)
-                {
-                    structure.ParentStructure = alreadyExistingCompositeBranchStructure;
-                    return alreadyExistingCompositeBranchStructure;
-                }
-                else
-                {
-                    compositeBranchStructure = new CompositeBranchStructure
-                    {
-                        Branch = structure.Branch,
-                        Network = structure.Branch.Network,
-                        Chainage = structure.Chainage,
-                        Geometry = (IGeometry) structure.Geometry?.Clone(),
-                        Name = compoundName
-                    };
-
-                    compositeBranchStructures.Add(compositeBranchStructure);
-
-                    structure.ParentStructure = compositeBranchStructure;
-
-                    return compositeBranchStructure;
-                }
+                return GetNewOrExistingCompositeBranchStructure(compoundName, structure, compositeBranchStructures);
             }
+            catch (PropertyNotFoundInFileException)
+            {
+                var compoundProperty = structureBranchCategory.Properties.FirstOrDefault(p => p.Name == StructureRegion.Compound.Key);
+                var type = structureBranchCategory.ReadProperty<string>(StructureRegion.DefinitionType.Key);
+                var errorMessage = string.Format(Resources.BasicStructuresOperations_CreateCompositeBranchStructuresIfNeeded_Line__0___property___1___is_mandatory_when_property___2___is_defined_as_a_number_unequal_to_0,
+                    compoundProperty?.LineNumber, StructureRegion.CompoundName.Key, StructureRegion.Compound.Key, structure.Name, type);
+
+                throw new PropertyNotFoundInFileException(errorMessage);
+            }
+        }
+
+        private static ICompositeBranchStructure GetNewOrExistingCompositeBranchStructure(string compositeStructureName, IStructure1D structure, ICollection<ICompositeBranchStructure> compositeBranchStructures)
+        {
+            var alreadyExistingCompositeBranchStructure = compositeBranchStructures.FirstOrDefault(bf => bf.Name == compositeStructureName);
+            if (alreadyExistingCompositeBranchStructure != null)
+            {
+                return GetCompositeBranchStructureWithAddedStructure(structure, alreadyExistingCompositeBranchStructure);
+            }
+
+            var compositeBranchStructure = CreateNewCompositeBranchStructure(compositeStructureName, structure);
+            compositeBranchStructures.Add(compositeBranchStructure);
+
+            return GetCompositeBranchStructureWithAddedStructure(structure, compositeBranchStructure);
+        }
+
+        private static ICompositeBranchStructure GetCompositeBranchStructureWithAddedStructure(IStructure1D structure,
+            ICompositeBranchStructure compositeBranchStructure)
+        {
+            structure.ParentStructure = compositeBranchStructure;
+            return compositeBranchStructure;
+        }
+
+        private static ICompositeBranchStructure CreateNewCompositeBranchStructure(string compoundName, IStructure1D structure)
+        {
+            return new CompositeBranchStructure
+            {
+                Branch = structure.Branch,
+                Network = structure.Branch.Network,
+                Chainage = structure.Chainage,
+                Geometry = (IGeometry) structure.Geometry?.Clone(),
+                Name = compoundName
+            };
         }
     }
 

@@ -499,4 +499,7 @@
   <data name="WaterFlowModel1DHydroNetworkValidator_GetCorrectCrossSectionIssue_Roughness_positions_of_the_cross_section___0___are_not_equal_to_first_and_last_y__value" xml:space="preserve">
     <value>Roughness positions of the cross section '{0}' are not equal to first and last y' value</value>
   </data>
+  <data name="BasicStructuresOperations_CreateCompositeBranchStructuresIfNeeded_Line__0___property___1___is_mandatory_when_property___2___is_defined_as_a_number_unequal_to_0" xml:space="preserve">
+    <value>Line {0}: property '{1}' is mandatory when property '{2}' is defined as a number unequal to 0. '{3}' of type {4} was not imported.</value>
+  </data>
 </root>

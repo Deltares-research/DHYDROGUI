@@ -60,7 +60,7 @@ namespace DeltaShell.NGHS.IO.Helpers
 
         public void AddProperty(DelftIniProperty property)
         {
-            Properties.Add(new DelftIniProperty { Name = property.Name, Value = property.Value, Comment = property.Comment });
+            Properties.Add(new DelftIniProperty { Name = property.Name, Value = property.Value, Comment = property.Comment, LineNumber = property.LineNumber});
         }
 
         /// <summary>
