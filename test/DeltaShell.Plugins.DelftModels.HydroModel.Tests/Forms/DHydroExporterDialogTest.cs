@@ -70,7 +70,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms
         {
             // Given
             var gui = mocks.DynamicMock<IGui>();
+            var application = mocks.DynamicMock<IApplication>();
+
             gui.Expect(g => g.SelectedModel).Return(mocks.DynamicMock<IHydroModel>()).Repeat.Any();
+            gui.Expect(g => g.Application).Return(application).Repeat.Any();
+            application.Expect(a => a.FileExporters).Return(new IFileExporter[]{new DHydroConfigXmlExporter()}).Repeat.Any();
 
             mocks.ReplayAll();
 
