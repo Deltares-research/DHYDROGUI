@@ -51,9 +51,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
         /// </remarks>
         public override void SetProperties(DelftIniCategory category, WaterFlowModel1D model, IList<string> errorMessages)
         {
-            // Determine element set
-            ElementSet elementSet;
-            if (!headerMapping.TryGetValue(category.Name, out elementSet)) return;
+            if (!headerMapping.TryGetValue(category.Name, out var elementSet)) return;
 
             var outputSettings = model.OutputSettings;
             foreach (var property in category.Properties)
@@ -74,20 +72,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
                         : elementSet,
                     DataItemRole.Output);
 
-                if (engineParameter == null) continue;
-
-                // determine AggregateOption
-                AggregationOptions aggregateOption;
-                try
-                {
-                    aggregateOption = (AggregationOptions)Enum.Parse(typeof(AggregationOptions), property.Value);
-                }
-                catch (ArgumentException)
-                {
-                    continue;
-                }
-
-                engineParameter.AggregationOptions = aggregateOption;
+                SetAggregationOption(engineParameter, property.Value);
             }
         }
 
@@ -108,6 +93,23 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
             }
 
             return quantityType;
+        }
+
+        private static void SetAggregationOption(EngineParameter engineParameter, string propertyValue)
+        {
+            if (engineParameter == null) return;
+
+            AggregationOptions aggregateOption;
+            try
+            {
+                aggregateOption = (AggregationOptions) Enum.Parse(typeof(AggregationOptions), propertyValue);
+            }
+            catch (ArgumentException)
+            {
+                return;
+            }
+
+            engineParameter.AggregationOptions = aggregateOption;
         }
     }
 }

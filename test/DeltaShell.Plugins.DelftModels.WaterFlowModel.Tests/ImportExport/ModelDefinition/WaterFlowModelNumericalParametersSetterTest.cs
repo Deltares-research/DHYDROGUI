@@ -29,8 +29,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
         [TestCase("Theta", "1.1")]
         [TestCase("ThresholdValueFlooding", "0.02")]
         [TestCase("UseTimeStepReducerStructures", "1")]
-       public void
-            GivenANumericalParameterCategoryWithOneProperty_WhenSettingThisModelProperty_ThenThisParameterShouldBeSetInTheModel(string propertyName, string value)
+       public void GivenANumericalParameterCategoryWithOneProperty_WhenSettingThisModelProperty_ThenThisParameterShouldBeSetInTheModel(string propertyName, string value)
         {
             //Given
             var category = new DelftIniCategory(ModelDefinitionsRegion.NumericalParametersValuesHeader);
@@ -93,8 +92,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
 
             var parameterSetting = model.ParameterSettings
                 .FirstOrDefault(ps => ps.Name == ModelDefinitionsRegion.AccelerationTermFactor.Key);
-            //ParameterSetting can never be null here, because in this situation the errorreport has also a message.
-            Assert.NotNull(parameterSetting);
+            //ParameterSetting can never be null here, because in this situation the error report has also a message.
+            Assert.NotNull(parameterSetting, $"Parameter setting with name {ModelDefinitionsRegion.AccelerationTermFactor.Key} was not found on the WaterFlow model.");
             Assert.AreEqual("3", parameterSetting.Value);
         }
     }

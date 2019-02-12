@@ -12,8 +12,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
     public class WaterFlowModelInitialConditionsParameterSetterTest
     {
         [Test]
-        public void
-            GivenAnInitialConditionCategoryWithOneProperty_WhenSettingThisModelProperty_ThenThisParameterShouldBeSetInTheModel()
+        public void GivenAnInitialConditionCategoryWithOneProperty_WhenSettingThisModelProperty_ThenThisParameterShouldBeSetInTheModel()
         {
             const string propertyName = "InitialEmptyWells";
            

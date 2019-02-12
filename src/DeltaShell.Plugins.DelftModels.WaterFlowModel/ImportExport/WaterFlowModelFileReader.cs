@@ -28,9 +28,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 {
     // TODO: this needs to be called from an integration test
 
-    public static class WaterFlowModel1DFileReader
+    public static class WaterFlowModelFileReader
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(WaterFlowModel1DFileReader));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(WaterFlowModelFileReader));
 
         private static int stepCounter;
         private static ModelFileNames fileNames;

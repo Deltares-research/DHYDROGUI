@@ -32,9 +32,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 
         /// <inheritdoc />
         /// <summary>Initializes a new instance of the <see cref="T:DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.WaterFlowModel1DFileImporter" /> class using
-        /// WaterFlowModel1DFileReader to read specified items.
+        /// <see cref="WaterFlowModelFileReader"/> to read specified items.
         /// </summary>
-        public WaterFlowModel1DFileImporter() : this(WaterFlowModel1DFileReader.Read)
+        public WaterFlowModel1DFileImporter() : this(WaterFlowModelFileReader.Read)
         {
 
         }

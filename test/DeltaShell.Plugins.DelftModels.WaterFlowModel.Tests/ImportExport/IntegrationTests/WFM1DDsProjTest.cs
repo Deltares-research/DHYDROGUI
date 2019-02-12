@@ -65,7 +65,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Integ
                 var modelFilename = Path.Combine(targetPath, ModelFileNames.ModelDefinitionFilename);
                 
                 WaterFlowModel1DFileWriter.Write(modelFilename, waterFlowModel1D);
-                var readModel = WaterFlowModel1DFileReader.Read(modelFilename, (s,c,t)=>{Console.WriteLine(@"Step : {0} ({1} / {2})", s, c, t);});
+                var readModel = WaterFlowModelFileReader.Read(modelFilename, (s,c,t)=>{Console.WriteLine(@"Step : {0} ({1} / {2})", s, c, t);});
                 Assert.NotNull(readModel);
                 
                 ////PLEASE REMOVE THIS WHEN MODEL PARAMETER READER IS DONE:
@@ -77,7 +77,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Integ
                 var sfbModelFilename = Path.Combine(targetPath + "_SFB", ModelFileNames.ModelDefinitionFilename);
                 WaterFlowModel1DFileWriter.Write(sfbModelFilename, readModel);
 
-                var readModelAgain = WaterFlowModel1DFileReader.Read(sfbModelFilename, (s, c, t) => { Console.WriteLine(@"Step : {0} ({1} / {2})", s, c, t); });
+                var readModelAgain = WaterFlowModelFileReader.Read(sfbModelFilename, (s, c, t) => { Console.WriteLine(@"Step : {0} ({1} / {2})", s, c, t); });
                 Assert.NotNull(readModelAgain);
                 
                 // now do some file compare!

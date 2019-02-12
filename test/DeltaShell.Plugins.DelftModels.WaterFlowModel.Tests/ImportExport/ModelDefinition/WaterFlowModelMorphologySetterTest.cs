@@ -54,7 +54,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
                 string.Format(Resources.WaterFlowModelMorphologySetter_ParseValueToBool_Line__0___Parameter___1___will_not_be_imported__Valid_values_are__0___false__or__1___true__,
                 0, propertyName);
             Assert.AreEqual(expectedMessage, errorMessages[0]);
-            Assert.AreEqual(false, model.UseMorphology);
+            Assert.IsFalse(model.UseMorphology, "Property UseMorphology should not have been set to true with an invalid value.");
         }
 
         [Test]

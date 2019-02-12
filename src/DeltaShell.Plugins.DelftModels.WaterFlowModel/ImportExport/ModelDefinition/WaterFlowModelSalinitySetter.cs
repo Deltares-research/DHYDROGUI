@@ -10,8 +10,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
         public override void SetProperties(DelftIniCategory category, WaterFlowModel1D model, IList<string> errorMessages)
         {
             if (category?.Name != ModelDefinitionsRegion.SalinityValuesHeader) return;
-
-
+            
             foreach (var property in category.Properties)
             {
                 try

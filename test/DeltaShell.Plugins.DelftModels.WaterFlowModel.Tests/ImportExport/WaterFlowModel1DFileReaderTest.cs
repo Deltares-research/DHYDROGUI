@@ -35,7 +35,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
         {
             var md1dFilePath = Path.Combine(tempFolderPath, "Md1dExport.md1d");
 
-            var waterFlowModel1D = WaterFlowModel1DFileReader.Read(md1dFilePath);
+            var waterFlowModel1D = WaterFlowModelFileReader.Read(md1dFilePath);
             Assert.IsNotNull(waterFlowModel1D);
         }
 
@@ -44,7 +44,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
         {
             var md1dFilePath = Path.Combine(tempFolderPath, "Md1dExportWithSediment.md1d");
 
-            var waterFlowModel1D = WaterFlowModel1DFileReader.Read(md1dFilePath);
+            var waterFlowModel1D = WaterFlowModelFileReader.Read(md1dFilePath);
             Assert.IsNotNull(waterFlowModel1D);
         }
 
@@ -53,7 +53,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
         {
             var md1dFilePath = Path.Combine(tempFolderPath, "Md1dExportWithReversedRoughnessSection.md1d");
 
-            var waterFlowModel1D = WaterFlowModel1DFileReader.Read(md1dFilePath);
+            var waterFlowModel1D = WaterFlowModelFileReader.Read(md1dFilePath);
             Assert.IsNotNull(waterFlowModel1D);
             Assert.IsTrue(waterFlowModel1D.UseReverseRoughness);
             Assert.IsTrue(waterFlowModel1D.UseReverseRoughnessInCalculation);
@@ -79,7 +79,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
             try
             {
                 //When
-                var waterFlowModel1D = WaterFlowModel1DFileReader.Read(md1dFilePath);
+                var waterFlowModel1D = WaterFlowModelFileReader.Read(md1dFilePath);
                 Assert.IsNotNull(waterFlowModel1D);
                 WaterFlowModel1DFileWriter.Write(Path.Combine(targetFilePath, ModelFileNames.ModelDefinitionFilename),
                     waterFlowModel1D);
@@ -99,7 +99,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
         {
             var md1dFilePath = Path.Combine(tempFolderPath, "Md1dExportBadNode.md1d");
 
-            var waterFlowModel1D = WaterFlowModel1DFileReader.Read(md1dFilePath);
+            var waterFlowModel1D = WaterFlowModelFileReader.Read(md1dFilePath);
             Assert.IsNull(waterFlowModel1D);
         }
 
@@ -108,7 +108,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
         {
             var md1dFilePath = Path.Combine(tempFolderPath, "Md1dExportBadBranch.md1d");
 
-            var waterFlowModel1D = WaterFlowModel1DFileReader.Read(md1dFilePath);
+            var waterFlowModel1D = WaterFlowModelFileReader.Read(md1dFilePath);
             Assert.IsNull(waterFlowModel1D);
         }
 
@@ -119,7 +119,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
             var md1dFilePath = Path.Combine(tempFolderPath, "ModelDefinitionsFileWithBadFormat.md1d");
 
             // When - Then
-            Assert.Throws<FormatException>(() => WaterFlowModel1DFileReader.Read(md1dFilePath));
+            Assert.Throws<FormatException>(() => WaterFlowModelFileReader.Read(md1dFilePath));
         }
 
         [Test]
@@ -129,7 +129,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
             var md1dFilePath = Path.Combine(tempFolderPath, "ModelDefinitionsFileWithMissingMandatoryFileProperty.md1d");
 
             // When - Then
-            Assert.Throws<PropertyNotFoundInFileException>(() => WaterFlowModel1DFileReader.Read(md1dFilePath));
+            Assert.Throws<PropertyNotFoundInFileException>(() => WaterFlowModelFileReader.Read(md1dFilePath));
         }
 
         [Test]
@@ -137,7 +137,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
         {
             var md1dFilePath = Path.Combine(tempFolderPath, "Md1dExportBadNetworkDiscretization.md1d");
 
-            var waterFlowModel1D = WaterFlowModel1DFileReader.Read(md1dFilePath);
+            var waterFlowModel1D = WaterFlowModelFileReader.Read(md1dFilePath);
             Assert.IsNull(waterFlowModel1D);
         }
 
@@ -148,7 +148,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
         {
             var md1dFilePath = TestHelper.GetTestFilePath(@"ImportSpatialData\water flow 1d.md1d");
 
-            var waterFlowModel1D = WaterFlowModel1DFileReader.Read(md1dFilePath);
+            var waterFlowModel1D = WaterFlowModelFileReader.Read(md1dFilePath);
             Assert.IsNotNull(waterFlowModel1D.Network);
 
             Assert.AreEqual(267, waterFlowModel1D.Network.Branches.Count);
@@ -162,7 +162,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
         {
             var md1dFilePath = TestHelper.GetTestFilePath(@"ImportSpatialData\water flow 1dIncorrect.md1d");
 
-            var waterFlowModel1D = WaterFlowModel1DFileReader.Read(md1dFilePath);
+            var waterFlowModel1D = WaterFlowModelFileReader.Read(md1dFilePath);
             Assert.IsNull(waterFlowModel1D);
         }
     }

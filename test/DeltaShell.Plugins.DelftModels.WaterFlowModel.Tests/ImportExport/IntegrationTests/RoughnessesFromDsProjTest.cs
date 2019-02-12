@@ -92,7 +92,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Integ
             var modelFilename = Path.Combine(targetPath, ModelFileNames.ModelDefinitionFilename);
             WaterFlowModel1DFileWriter.Write(modelFilename, waterFlowModel1D);
             
-            var readModel = WaterFlowModel1DFileReader.Read(modelFilename);
+            var readModel = WaterFlowModelFileReader.Read(modelFilename);
             Assert.NotNull(readModel);
             Thread.Sleep(2000);
             Directory.CreateDirectory(targetPath + "_SFB");

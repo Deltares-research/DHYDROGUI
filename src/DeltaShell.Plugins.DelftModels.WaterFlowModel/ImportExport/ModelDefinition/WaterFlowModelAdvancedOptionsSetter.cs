@@ -32,14 +32,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
 
                 if (modelParameter != null)
                 {
-                    if (modelParameter.Type == "typeof(bool)")
-                    {
-                        modelParameter.Value = Convert.ToString(Convert.ToBoolean(Convert.ToInt32(property.Value)));
-                    }
-                    else
-                    {
-                        modelParameter.Value = property.Value;
-                    }
+                    modelParameter.Value = modelParameter.Type == "typeof(bool)" 
+                        ? Convert.ToString(Convert.ToBoolean(Convert.ToInt32(property.Value))) 
+                        : property.Value;
                 }
                 else if (property.Name == ModelDefinitionsRegion.CalculateDelwaqOutput.Key)
                 {

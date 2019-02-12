@@ -108,7 +108,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
         public void GivenAnAdvancedOptionsCategoryWithAnUnknownAndKnownProperty_WhenSettingTheseModelProperties_ThenOnlyTheKnownParameterShouldBeSetInTheModel()
         {
             //Given
-            var unknownPropertyName = "Unknown Property";
+            const string unknownPropertyName = "Unknown Property";
             var category = new DelftIniCategory(ModelDefinitionsRegion.AdvancedOptionsHeader);
             category.AddProperty(unknownPropertyName, "unknown");
             category.AddProperty(ModelDefinitionsRegion.ExtraResistanceGeneralStructure.Key, "1.0");
@@ -126,7 +126,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             Assert.AreEqual(1, errorMessages.Count);
             Assert.AreEqual(expectedMessage, errorMessages[0]);
             var parameterSetting = model.ParameterSettings.FirstOrDefault(ps => ps.Name == ModelDefinitionsRegion.ExtraResistanceGeneralStructure.Key);
-            Assert.NotNull(parameterSetting);
+            Assert.NotNull(parameterSetting, $"Parameter setting on WaterFlow model with name {ModelDefinitionsRegion.ExtraResistanceGeneralStructure.Key} was not found.");
             Assert.AreEqual("1.0", parameterSetting.Value);
         }
     }

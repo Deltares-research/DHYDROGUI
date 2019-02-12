@@ -34,6 +34,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void TestNetworkAndGridReaderGivesExpectedResults()
         {
             // Setup network data
@@ -80,6 +81,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void GivenAnIncorrectTestIniFile_WhenTryingToRead_ThenAnExceptionIsThrown()
         {
             // Setup network data
