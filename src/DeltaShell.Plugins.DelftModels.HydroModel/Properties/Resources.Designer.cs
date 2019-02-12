@@ -99,6 +99,16 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Activity of type {0} cannot be exported to DIMR file tree and shall be ignored..
+        /// </summary>
+        public static string DHydroExporterDialog_WarnForModelsWhichCannotBeExportedByDimr_Activity_of_type__0__cannot_be_exported_to_DIMR_file_tree_and_shall_be_ignored_ {
+            get {
+                return ResourceManager.GetString("DHydroExporterDialog_WarnForModelsWhichCannotBeExportedByDimr_Activity_of_type__0" +
+                        "__cannot_be_exported_to_DIMR_file_tree_and_shall_be_ignored_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The workflow &apos;{0}&apos; is currently not supported in DeltaShell.
         /// </summary>
         public static string HydroModel_LogErrorsWhenUnsupportedWorkflow_The_workflow___0___is_currently_not_supported_in_DeltaShell {

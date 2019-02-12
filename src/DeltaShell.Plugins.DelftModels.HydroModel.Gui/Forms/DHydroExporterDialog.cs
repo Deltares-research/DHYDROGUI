@@ -14,6 +14,7 @@ using DelftTools.Shell.Gui;
 using DelftTools.Utils.Collections;
 using DeltaShell.Dimr;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
+using DeltaShell.Plugins.DelftModels.HydroModel.Properties;
 using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
@@ -106,7 +107,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
 
             foreach (var remainingActivity in remainingActivities)
             {
-                Log.WarnFormat("Activity of type {0} cannot be exported to DIMR file tree and shall be ignored.",
+                Log.WarnFormat(Resources.DHydroExporterDialog_WarnForModelsWhichCannotBeExportedByDimr_Activity_of_type__0__cannot_be_exported_to_DIMR_file_tree_and_shall_be_ignored_,
                     remainingActivity.GetType());
             }
         }

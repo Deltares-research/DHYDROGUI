@@ -201,4 +201,7 @@
   <data name="HydroModelConverter_CoupleSubModels_Could_not_couple_models____0___to___1___" xml:space="preserve">
     <value>Could not couple models: '{0}' to '{1}'.</value>
   </data>
+  <data name="DHydroExporterDialog_WarnForModelsWhichCannotBeExportedByDimr_Activity_of_type__0__cannot_be_exported_to_DIMR_file_tree_and_shall_be_ignored_" xml:space="preserve">
+    <value>Activity of type {0} cannot be exported to DIMR file tree and shall be ignored.</value>
+  </data>
 </root>

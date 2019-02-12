@@ -10,6 +10,7 @@ using DelftTools.TestUtils;
 using DeltaShell.Dimr;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms;
+using DeltaShell.Plugins.DelftModels.HydroModel.Properties;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
 using NUnit.Framework;
@@ -54,14 +55,16 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms
         {
             // Given
             var hydroModel = new HydroModel();
-            hydroModel.Activities.Add(new WaterQualityModel.WaterQualityModel());
+            var waterQualityModel = new WaterQualityModel.WaterQualityModel();
+            hydroModel.Activities.Add(waterQualityModel);
             hydroModel.Activities.Add(new WaterFlowModel1D());
             hydroModel.CurrentWorkflow = hydroModel.Workflows.FirstOrDefault();
 
             var hydroExporterDialog = GetDHydroExporterDialog(hydroModel);
 
             // When - Then
-            var expectedWarningMessage = "Activity of type DeltaShell.Plugins.DelftModels.WaterQualityModel.WaterQualityModel cannot be exported to DIMR file tree and shall be ignored.";
+            var expectedWarningMessage = string.Format(Resources.DHydroExporterDialog_WarnForModelsWhichCannotBeExportedByDimr_Activity_of_type__0__cannot_be_exported_to_DIMR_file_tree_and_shall_be_ignored_,
+                waterQualityModel.GetType());
             TestHelper.AssertLogMessageIsGenerated(() => hydroExporterDialog.ShowModal(), expectedWarningMessage, 1);
         }
 
