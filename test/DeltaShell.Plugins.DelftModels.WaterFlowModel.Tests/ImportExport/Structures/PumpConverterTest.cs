@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using DelftTools.Hydro.Structures;
+using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures;
+using DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties;
 using GeoAPI.Extensions.Networks;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
@@ -65,6 +68,40 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             // Then
             Assert.That(pump.ControlDirection, Is.EqualTo(expectedDirection));
             Assert.That(pump.DirectionIsPositive, Is.EqualTo(expectedIsDirectionPositive));
+
+            mocks.VerifyAll();
+        }
+
+        [Test]
+        public void GivenPumpStructureIniCategoryWithInvalidDirectionValue_WhenConvertingToStructure1D_ThenPumpWithDefaultDirectionSettingsIsReturnedWithAWarningMessage()
+        {
+            // Given
+            var category = GetStructureCategoryWithBasicProperties();
+            category.Properties.RemoveAllWhere(p => p.Name == StructureRegion.Direction.Key);
+
+            var lineNumber = 22;
+            var directionValue = "4";
+            var directionProperty = new DelftIniProperty
+            {
+                Name = StructureRegion.Direction.Key,
+                Value = directionValue,
+                LineNumber = lineNumber
+            };
+            category.AddProperty(directionProperty);
+
+            var branch = GetMockedBranch();
+
+            // When
+            var warningMessages = new List<string>();
+            var pump = ConvertAndCheckForNullAndReturnWarningMessages<PumpConverter, Pump>(category, branch, warningMessages);
+
+            // Then
+            Assert.That(pump.ControlDirection, Is.EqualTo(PumpControlDirection.SuctionSideControl));
+            Assert.IsTrue(pump.DirectionIsPositive);
+
+            var expectedWarningMessage = string.Format(Resources.PumpConverter_GetInvalidDirectionValueWarningMessage_Line__0___the_specified_value___1___for___2___is_invalid_,
+                lineNumber, directionValue, StructureRegion.Direction.Key, PumpControlDirection.SuctionAndDeliverySideControl, PumpName);
+            Assert.Contains(expectedWarningMessage, warningMessages);
 
             mocks.VerifyAll();
         }
@@ -187,7 +224,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             mocks.VerifyAll();
         }
 
-        private static IDelftIniCategory GetStructureCategoryWithBasicProperties()
+        private static DelftIniCategory GetStructureCategoryWithBasicProperties()
         {
             var category = new DelftIniCategory(StructureRegion.Header);
             category.AddProperty(StructureRegion.Id.Key, PumpName);

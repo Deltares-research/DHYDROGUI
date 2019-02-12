@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro.Structures;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
@@ -20,7 +21,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
 
             //When
             var converter = new ExtraResistanceConverter();
-            var structure = converter.ConvertToStructure1D(category, branch) as ExtraResistance;
+            var structure = converter.ConvertToStructure1D(category, branch, new List<string>()) as ExtraResistance;
             
             //Then
             Assert.NotNull(structure);
@@ -40,7 +41,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
 
             //When
             var converter = new ExtraResistanceConverter();
-            var structure = converter.ConvertToStructure1D(category, branch) as ExtraResistance;
+            var structure = converter.ConvertToStructure1D(category, branch, new List<string>()) as ExtraResistance;
 
             //Then
             Assert.NotNull(structure);
@@ -65,7 +66,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             //When
             var converter = new ExtraResistanceConverter();
 
-            Assert.That(() => converter.ConvertToStructure1D(category, branch), Throws
+            Assert.That(() => converter.ConvertToStructure1D(category, branch, new List<string>()), Throws
                 .TypeOf<PropertyNotFoundInFileException>().With.Message.EqualTo(
                     $"Property {propertyName} is not found in the file"));
         }

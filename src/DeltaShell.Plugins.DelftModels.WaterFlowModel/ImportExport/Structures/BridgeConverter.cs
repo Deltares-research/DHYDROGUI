@@ -1,4 +1,5 @@
-﻿using DelftTools.Hydro;
+﻿using System.Collections.Generic;
+using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
@@ -16,7 +17,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
             return new Bridge();
         }
 
-        protected override void SetStructurePropertiesFromCategory()
+        protected override void SetStructurePropertiesFromCategory(IList<string> warningMessages)
         {
             var bridge = Structure as IBridge;
 

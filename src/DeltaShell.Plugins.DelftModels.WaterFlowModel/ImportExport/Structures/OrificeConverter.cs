@@ -4,6 +4,7 @@ using DelftTools.Hydro.Structures.WeirFormula;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
 using System;
+using System.Collections.Generic;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
 {
@@ -17,7 +18,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
             };
         }
 
-        protected override void SetStructurePropertiesFromCategory()
+        protected override void SetStructurePropertiesFromCategory(IList<string> warningMessages)
         {
             if (!(Structure is IWeir weir)) return;
             if (!(weir.WeirFormula is GatedWeirFormula weirFormula)) return;

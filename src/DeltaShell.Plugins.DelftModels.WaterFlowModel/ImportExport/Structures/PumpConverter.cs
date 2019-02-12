@@ -5,6 +5,7 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
 {
@@ -19,14 +20,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
             return new Pump();
         }
 
-        protected override void SetStructurePropertiesFromCategory()
+        protected override void SetStructurePropertiesFromCategory(IList<string> warningMessages)
         {
             if (!(Structure is Pump pump)) return;
 
             pump.Capacity = Category.ReadProperty<double>(StructureRegion.Capacity.Key);
             SetSuctionTriggerProperties(pump);
             SetDeliveryTriggerProperties(pump);
-            SetDirectionProperties(pump);
+            SetDirectionProperties(pump, warningMessages);
             SetReductionTableValues(pump);
         }
 
@@ -42,11 +43,30 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
             pump.StopDelivery = Category.ReadProperty<double>(StructureRegion.StopLevelDeliverySide.Key);
         }
 
-        private static void SetDirectionProperties(IPump pump)
+        private static void SetDirectionProperties(IPump pump, ICollection<string> warningMessages)
         {
             var direction = Category.ReadProperty<int>(StructureRegion.Direction.Key);
-            pump.ControlDirection = (PumpControlDirection) Math.Abs(direction);
-            pump.DirectionIsPositive = direction > 0;
+            var absoluteDirectionValue = Math.Abs(direction);
+            if (Enum.IsDefined(typeof(PumpControlDirection), absoluteDirectionValue))
+            {
+                pump.ControlDirection = (PumpControlDirection) absoluteDirectionValue;
+                pump.DirectionIsPositive = direction > 0;
+            }
+            else
+            {
+                warningMessages.Add(GetInvalidDirectionValueWarningMessage(pump, direction));
+                pump.ControlDirection = PumpControlDirection.SuctionSideControl;
+                pump.DirectionIsPositive = true;
+            }
+        }
+
+        private static string GetInvalidDirectionValueWarningMessage(IPump pump, int direction)
+        {
+            var directionProperty = Category.Properties.FirstOrDefault(p => p.Name == StructureRegion.Direction.Key);
+            var message = string.Format(Resources.PumpConverter_GetInvalidDirectionValueWarningMessage_Line__0___the_specified_value___1___for___2___is_invalid_,
+                directionProperty?.LineNumber, direction, StructureRegion.Direction.Key, PumpControlDirection.SuctionSideControl, pump.Name);
+
+            return message;
         }
 
         private static void SetReductionTableValues(IPump pump)

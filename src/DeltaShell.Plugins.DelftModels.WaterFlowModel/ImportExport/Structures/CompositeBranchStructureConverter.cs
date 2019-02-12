@@ -43,7 +43,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
             IList<IChannel> channels,
             IList<ICrossSectionDefinition> crossSectionDefinitions,
             GroundLayerDTO[] groundLayerDataTransferObject,
-            List<string> errorMessages)
+            List<string> warningMessages)
         {
             IList<ICompositeBranchStructure> compositeBranchStructures = new List<ICompositeBranchStructure>();
 
@@ -52,12 +52,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
             foreach (var structureBranchCategory in categories.Where(
                 category => category.Name == StructureRegion.Header && System.Convert.ToInt32((category.GetPropertyValue(StructureRegion.Compound.Key))) != 0))
             {
-                CreationOfStructuresAndCompositeBranchStructures(structureBranchCategory, channels, crossSectionDefinitions, groundLayerDataTransferObject, compositeBranchStructures, errorMessages);
+                CreationOfStructuresAndCompositeBranchStructures(structureBranchCategory, channels, crossSectionDefinitions, groundLayerDataTransferObject, compositeBranchStructures, warningMessages);
             }
             foreach (var structureBranchCategory in categories.Where(
                 category => category.Name == StructureRegion.Header && System.Convert.ToInt32((category.GetPropertyValue(StructureRegion.Compound.Key))) == 0))
             {
-                CreationOfStructuresAndCompositeBranchStructures(structureBranchCategory, channels, crossSectionDefinitions, groundLayerDataTransferObject, compositeBranchStructures, errorMessages);
+                CreationOfStructuresAndCompositeBranchStructures(structureBranchCategory, channels, crossSectionDefinitions, groundLayerDataTransferObject, compositeBranchStructures, warningMessages);
             }
             return compositeBranchStructures;
         }
@@ -67,7 +67,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
             IEnumerable<ICrossSectionDefinition> crossSectionDefinitions,
             GroundLayerDTO[] groundLayerDataTransferObject,
             IList<ICompositeBranchStructure> compositeBranchStructures,
-            ICollection<string> errorMessages)   
+            IList<string> warningMessages)   
         {
             try
             {
@@ -84,7 +84,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
                         type, structureBranchCategory.LineNumber));
                 }
 
-                var structure = converter.ConvertToStructure1D(structureBranchCategory, channel);
+                var structure = converter.ConvertToStructure1D(structureBranchCategory, channel, warningMessages);
+                
                 if (structure == null)
                 {
                     throw new Exception(string.Format(
@@ -135,7 +136,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
             }
             catch (Exception e)
             {
-                errorMessages.Add(e.Message);
+                warningMessages.Add(e.Message);
             }
         }
 

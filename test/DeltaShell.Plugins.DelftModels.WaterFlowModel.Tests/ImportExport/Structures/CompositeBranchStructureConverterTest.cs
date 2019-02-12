@@ -766,7 +766,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             categories.Add(category);
 
             var convertMock = mocks.StrictMock<IStructureConverter>();
-            convertMock.Expect(e => e.ConvertToStructure1D(category, channels.FirstOrDefault()))
+            convertMock.Expect(e => e.ConvertToStructure1D(category, channels.FirstOrDefault(), new List<string>()))
                 .Return(null)
                 .Repeat.AtLeastOnce();
 
@@ -810,7 +810,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             someStructure.Expect(s => s.Name).Return("Weir").Repeat.Any();
             
             var convertMock = mocks.DynamicMock<IStructureConverter>();
-            convertMock.Expect(e => e.ConvertToStructure1D(category, channels.FirstOrDefault()))
+            convertMock.Expect(e => e.ConvertToStructure1D(category, channels.FirstOrDefault(), new List<string>()))
                 .Return(someStructure)
                 .Repeat.AtLeastOnce();
 

@@ -502,4 +502,7 @@
   <data name="BasicStructuresOperations_CreateCompositeBranchStructuresIfNeeded_Line__0___property___1___is_mandatory_when_property___2___is_defined_as_a_number_unequal_to_0" xml:space="preserve">
     <value>Line {0}: property '{1}' is mandatory when property '{2}' is defined as a number unequal to 0. '{3}' of type {4} was not imported.</value>
   </data>
+  <data name="PumpConverter_GetInvalidDirectionValueWarningMessage_Line__0___the_specified_value___1___for___2___is_invalid_" xml:space="preserve">
+    <value>Line {0}: the specified value '{1}' for '{2}' is invalid. The default value 1 ({3}) is given to pump {4}'s control direction.</value>
+  </data>
 </root>

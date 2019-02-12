@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
@@ -20,7 +21,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
 
             //When
             var converter = new SimpleWeirConverter();
-            var structure = (Weir)converter.ConvertToStructure1D(category, branch);
+            var structure = (Weir)converter.ConvertToStructure1D(category, branch, new List<string>());
             Assert.IsNotNull(structure);
             var weirFormula = structure.WeirFormula as SimpleWeirFormula;
 
@@ -51,7 +52,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             //When
             var converter = new SimpleWeirConverter();
 
-            Assert.That(() => converter.ConvertToStructure1D(category, branch), Throws
+            Assert.That(() => converter.ConvertToStructure1D(category, branch, new List<string>()), Throws
                 .TypeOf<PropertyNotFoundInFileException>().With.Message.EqualTo(
                     $"Property {propertyName} is not found in the file"));
         }

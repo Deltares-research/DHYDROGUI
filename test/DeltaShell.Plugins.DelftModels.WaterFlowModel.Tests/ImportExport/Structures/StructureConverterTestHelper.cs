@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System.Collections.Generic;
+using System.Globalization;
 using DelftTools.Hydro;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.IO.Helpers;
@@ -47,7 +48,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             where TConverter : IStructureConverter, new()
             where TType : class, IStructure1D
         {
-            var structure = new TConverter().ConvertToStructure1D(category, branch);
+            var structure = new TConverter().ConvertToStructure1D(category, branch, new List<string>());
+            var culvert = structure as TType;
+            Assert.IsNotNull(culvert, $"Converter did not return a {typeof(TConverter)} object.");
+
+            return culvert;
+        }
+
+        protected static TType ConvertAndCheckForNullAndReturnWarningMessages<TConverter, TType>(IDelftIniCategory category, IBranch branch, IList<string> warningMessages)
+            where TConverter : IStructureConverter, new()
+            where TType : class, IStructure1D
+        {
+            var structure = new TConverter().ConvertToStructure1D(category, branch, warningMessages);
             var culvert = structure as TType;
             Assert.IsNotNull(culvert, $"Converter did not return a {typeof(TConverter)} object.");
 

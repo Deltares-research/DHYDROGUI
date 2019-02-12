@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
@@ -21,7 +22,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
 
             //When
             var converter = new UniversalWeirConverter();
-            var structure = (Weir) converter.ConvertToStructure1D(category, branch);
+            var structure = (Weir) converter.ConvertToStructure1D(category, branch, new List<string>());
             Assert.IsNotNull(structure);
             var weirFormula = structure.WeirFormula as FreeFormWeirFormula;
 
@@ -52,7 +53,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
 
             //When
             var converter = new UniversalWeirConverter();
-            converter.ConvertToStructure1D(category, branch);
+            converter.ConvertToStructure1D(category, branch, new List<string>());
         }
 
         [Test]
@@ -67,7 +68,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
 
             //When
             var converter = new UniversalWeirConverter();
-            converter.ConvertToStructure1D(category, branch);
+            converter.ConvertToStructure1D(category, branch, new List<string>());
         }
 
         [Test]
@@ -82,7 +83,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
 
             //When
             var converter = new UniversalWeirConverter();
-            converter.ConvertToStructure1D(category, branch);
+            converter.ConvertToStructure1D(category, branch, new List<string>());
         }
 
         [Test]
@@ -97,7 +98,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
 
             //When
             var converter = new UniversalWeirConverter();
-            converter.ConvertToStructure1D(category, branch);
+            converter.ConvertToStructure1D(category, branch, new List<string>());
         }
 
         [Test]
@@ -120,7 +121,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             //When
             var converter = new UniversalWeirConverter();
 
-            Assert.That(() => converter.ConvertToStructure1D(category, branch), Throws
+            Assert.That(() => converter.ConvertToStructure1D(category, branch, new List<string>()), Throws
                 .TypeOf<PropertyNotFoundInFileException>().With.Message.EqualTo(string.Format(
                     "Property {0} is not found in the file", propertyName)));
         }

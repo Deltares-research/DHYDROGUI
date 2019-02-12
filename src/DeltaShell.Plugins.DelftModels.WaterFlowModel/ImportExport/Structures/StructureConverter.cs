@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using DelftTools.Hydro;
 using DeltaShell.NGHS.IO.Helpers;
@@ -16,13 +17,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
         /// </summary>
         /// <param name="category">The data model.</param>
         /// <param name="branch">The branch that the structure should be put on.</param>
+        /// <param name="warningMessages">The warning messages that will be shown to the user when setting structure properties.</param>
         /// <returns></returns>
-        public IStructure1D ConvertToStructure1D(IDelftIniCategory category, IBranch branch)
+        public IStructure1D ConvertToStructure1D(IDelftIniCategory category, IBranch branch, IList<string> warningMessages)
         {
             Category = category;
             Structure = CreateNewStructure();
             Structure.SetCommonRegionElementsFromCategory(category, branch);
-            SetStructurePropertiesFromCategory();
+            SetStructurePropertiesFromCategory(warningMessages);
 
             return Structure;
         }
@@ -37,6 +39,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
         /// <summary>
         /// Sets the structure properties on <see cref="Structure"/> that are on the <see cref="Category"/> data model.
         /// </summary>
-        protected abstract void SetStructurePropertiesFromCategory();
+        protected abstract void SetStructurePropertiesFromCategory(IList<string> warningMessages);
     }
 }

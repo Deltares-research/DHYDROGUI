@@ -315,6 +315,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Line {0}: the specified value &apos;{1}&apos; for &apos;{2}&apos; is invalid. The default value 1 ({3}) is given to pump {4}&apos;s control direction..
+        /// </summary>
+        public static string PumpConverter_GetInvalidDirectionValueWarningMessage_Line__0___the_specified_value___1___for___2___is_invalid_ {
+            get {
+                return ResourceManager.GetString("PumpConverter_GetInvalidDirectionValueWarningMessage_Line__0___the_specified_valu" +
+                        "e___1___for___2___is_invalid_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Line {0}: The amount of defined head values for pump &apos;{1}&apos; is not equal to the defined number at {2}. The pump was not imported..
         /// </summary>
         public static string PumpConverter_ValidateReductionTableValues_Line__0___The_amount_of_defined_head_values_for_pump___1___is_not_equal_to_the_defined_number_at__2__ {
