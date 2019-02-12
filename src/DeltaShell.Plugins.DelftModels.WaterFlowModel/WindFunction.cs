@@ -3,15 +3,30 @@ using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Units;
 
+
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
 {
+    /// <summary>
+    /// The WindFunction describes the wind in a model as a function.
+    /// It provides a wind velocity and wind direction component for this.
+    /// </summary>
+    /// <seealso cref="DelftTools.Functions.Function" />
+    /// <inheritdoc/>
     public class WindFunction : Function
     {
+        /// <summary>
+        /// Initialize a new instance of the <see cref="WindFunction"/> class with "wind velocity" as name.
+        /// </summary>
+        /// <inheritdoc/>
         public WindFunction()
             : this("wind velocity")
         {
         }
 
+        /// <summary>
+        /// Initialize a new instance of the <see cref="WindFunction"/> class with the specified <param name="name"/>.
+        /// </summary>
+        /// <param name="name">The name of this new WindFunction.</param>
         public WindFunction(string name)
             : base (name)
         {
@@ -30,20 +45,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             Attributes[FunctionAttributes.LocationType] = FunctionAttributes.Global;
         }
 
-        public IVariable Velocity
-        {
-            get
-            {
-                return Components[0];
-            }
-        }
+        /// <summary>
+        /// Get the wind velocity component of this WindFunction.
+        /// </summary>
+        /// <value> The wind velocity. </value>
+        public IVariable Velocity => Components[0];
 
-        public IVariable Direction
-        {
-            get
-            {
-                return Components[1];
-            }
-        }
+        /// <summary>
+        /// Get the wind direction component of this WindFunction.
+        /// </summary>
+        /// <value>The wind direction.</value>
+        public IVariable Direction => Components[1];
     }
 }
