@@ -38,8 +38,7 @@
             </Grid.RowDefinitions>
 
             <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Margin="5" TextWrapping="Wrap">
-            Do you want to correct the main section width on all incorrect cross sections, such that the total width of all sections matches
-            the maximum flow width on each cross section?
+            Please select the cross sections that you want to correct. This will fix the errors/warnings given by adjusting the y' values to match the profile.
             </TextBlock>
 
             <Grid Grid.Row="1" >

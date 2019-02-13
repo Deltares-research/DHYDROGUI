@@ -163,8 +163,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation
             var channelsCheckedOnInterpolationBranches = new HashSet<string>();
             var issues = network?.Channels.SelectMany(b => GetCrossSectionValidationIssues(b, network, channelsCheckedOnInterpolationBranches)).ToList() ?? new List<ValidationIssue>();
 
+            var roughnessPositionsDoNotMatchYZProfileIssues = issues.Where(i =>
+                i.Message.Equals(Resources.WaterFlowModel1DHydroNetworkValidator_ValidateCrossSections_Roughness_positions_of_one_or_more_cross_sections_do_not_match_the_start_and_stop_positions_of_the_y__values_)).ToList();
             var issuesContainSectionIssues = issues.Where(i => i.Message.Equals(Resources.WaterFlowModel1DHydroNetworkValidator_ValidateCrossSections_The_maximum_flow_width_of_this_cross_section_does_not_match_the_total_width_of_all_its_sections_)).ToList();
-            var finalIssues = issues.Where(i => !i.Message.Equals(Resources.WaterFlowModel1DHydroNetworkValidator_ValidateCrossSections_The_maximum_flow_width_of_this_cross_section_does_not_match_the_total_width_of_all_its_sections_)).ToList();
+
+            var finalIssues = issues.Where(i => !i.Message.Equals(Resources.WaterFlowModel1DHydroNetworkValidator_ValidateCrossSections_The_maximum_flow_width_of_this_cross_section_does_not_match_the_total_width_of_all_its_sections_)
+                                                && !i.Message.Equals(Resources.WaterFlowModel1DHydroNetworkValidator_ValidateCrossSections_Roughness_positions_of_one_or_more_cross_sections_do_not_match_the_start_and_stop_positions_of_the_y__values_)).ToList();
             if (issuesContainSectionIssues.Any())
             {
                 var crossSectionsToCorrect = issuesContainSectionIssues.Select(issue => issue.ViewData as ICrossSection).ToList();
@@ -172,6 +176,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation
                     Resources.WaterFlowModel1DHydroNetworkValidator_ValidateCrossSections_The_maximum_flow_width_of_one_or_more_cross_sections_is_larger_than_the_total_width_of_all_its_sections_, crossSectionsToCorrect));
             }
 
+            if (roughnessPositionsDoNotMatchYZProfileIssues.Any())
+            {
+                var crossSectionsToCorrect = roughnessPositionsDoNotMatchYZProfileIssues.Select(issue => issue.ViewData as ICrossSection).ToList();
+                finalIssues.Add(new ValidationIssue($"Cross section sections issues ({crossSectionsToCorrect.Count})", ValidationSeverity.Warning,
+                    Resources.WaterFlowModel1DHydroNetworkValidator_ValidateCrossSections_Roughness_positions_of_one_or_more_cross_sections_do_not_match_the_start_and_stop_positions_of_the_y__values_, crossSectionsToCorrect));
+            }
+            
             return new ValidationReport("Cross sections", finalIssues);
         }
 
@@ -269,9 +280,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation
                 (!CrossSectionValidator.AreRoughnessPositionsEqualToFirstAndLastYValue(crossSectionDefinition)))
             {
                 yield return new ValidationIssue(crossSection, ValidationSeverity.Warning,
-                    string.Format(
-                        Resources.WaterFlowModel1DHydroNetworkValidator_GetCorrectCrossSectionIssue_Roughness_positions_of_the_cross_section___0___are_not_equal_to_first_and_last_y__value,
-                        crossSection));
+                    (Resources.WaterFlowModel1DHydroNetworkValidator_ValidateCrossSections_Roughness_positions_of_one_or_more_cross_sections_do_not_match_the_start_and_stop_positions_of_the_y__values_));
             }
         }
 

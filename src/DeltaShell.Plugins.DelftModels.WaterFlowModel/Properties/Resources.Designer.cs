@@ -745,16 +745,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Roughness positions of the cross section &apos;{0}&apos; are not equal to first and last y&apos; value.
-        /// </summary>
-        public static string WaterFlowModel1DHydroNetworkValidator_GetCorrectCrossSectionIssue_Roughness_positions_of_the_cross_section___0___are_not_equal_to_first_and_last_y__value {
-            get {
-                return ResourceManager.GetString("WaterFlowModel1DHydroNetworkValidator_GetCorrectCrossSectionIssue_Roughness_posit" +
-                        "ions_of_the_cross_section___0___are_not_equal_to_first_and_last_y__value", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Tabulated cross section {0} cannot have zero width at levels above deepest point of its definition..
         /// </summary>
         public static string WaterFlowModel1DHydroNetworkValidator_GetCorrectCrossSectionIssue_Tabulated_cross_section__0__cannot_have_zero_width_at_levels_above_deepest_point_of_its_definition_ {
@@ -762,6 +752,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties {
                 return ResourceManager.GetString("WaterFlowModel1DHydroNetworkValidator_GetCorrectCrossSectionIssue_Tabulated_cross" +
                         "_section__0__cannot_have_zero_width_at_levels_above_deepest_point_of_its_definit" +
                         "ion_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The roughness positions of one or more cross sections do not match the start and stop positions of the y&apos; values..
+        /// </summary>
+        public static string WaterFlowModel1DHydroNetworkValidator_ValidateCrossSections_Roughness_positions_of_one_or_more_cross_sections_do_not_match_the_start_and_stop_positions_of_the_y__values_ {
+            get {
+                return ResourceManager.GetString("WaterFlowModel1DHydroNetworkValidator_ValidateCrossSections_Roughness_positions_o" +
+                        "f_one_or_more_cross_sections_do_not_match_the_start_and_stop_positions_of_the_y_" +
+                        "_values_", resourceCulture);
             }
         }
         
