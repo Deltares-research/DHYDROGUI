@@ -7,6 +7,7 @@ using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
+using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Dimr;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms;
@@ -41,13 +42,31 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms
         public void GivenHydroModelWithDimrModelAsActivity_WhenShowingModal_ThenNoWarningMessageIsShownToUser()
         {
             // Given
-            var hydroModel = new HydroModel();
-            hydroModel.Activities.Add(new WaterFlowModel1D());
-            hydroModel.CurrentWorkflow = hydroModel.Workflows.FirstOrDefault();
+            var dimrModel = GetMockedDimrModel();
+            var currentWorkFlow = GetMockedCurrentWorkFlow(dimrModel);
 
-            var hydroExporterDialog = GetDHydroExporterDialog(hydroModel);
+            var integratedModel = mocks.DynamicMultiMock<IHydroModel>(typeof(ICompositeActivity));
+            integratedModel.Expect(m => ((ICompositeActivity)m).Activities).Return(new EventedList<IActivity> { dimrModel }).Repeat.Any();
+            integratedModel.Expect(m => ((ICompositeActivity)m).CurrentWorkflow).Return(currentWorkFlow).Repeat.Any();
 
+            var hydroExporterDialog = GetDHydroExporterDialog(integratedModel);
+
+            // When - Then
             TestHelper.AssertLogMessagesCount(() => hydroExporterDialog.ShowModal(), 0);
+        }
+
+        private IDimrModel GetMockedDimrModel()
+        {
+            var waterFlowModel1D = mocks.DynamicMock<IDimrModel>();
+            waterFlowModel1D.Expect(m => m.ExporterType).Return(typeof(DHydroConfigXmlExporter)).Repeat.Any();
+            return waterFlowModel1D;
+        }
+
+        private ICompositeActivity GetMockedCurrentWorkFlow(IDimrModel dimrModel)
+        {
+            var currentWorkFlow = mocks.DynamicMock<ICompositeActivity>();
+            currentWorkFlow.Expect(w => w.Activities).Return(new EventedList<IActivity> {dimrModel}).Repeat.Any();
+            return currentWorkFlow;
         }
 
         [Test]
@@ -118,7 +137,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms
             Assert.That(dialogResult, Is.EqualTo(DelftDialogResult.Cancel));
         }
 
-        private DHydroExporterDialogStub GetDHydroExporterDialog(IModel hydroModel)
+        private DHydroExporterDialogStub GetDHydroExporterDialog(IHydroModel hydroModel)
         {
             var gui = mocks.DynamicMock<IGui>();
             var application = mocks.DynamicMock<IApplication>();

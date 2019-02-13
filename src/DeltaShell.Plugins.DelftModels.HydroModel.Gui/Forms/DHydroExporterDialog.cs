@@ -7,6 +7,7 @@ using System.Linq;
 using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Controls.Swf;
+using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
@@ -60,12 +61,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
 
             switch (SelectedModel)
             {
-                case HydroModel hydroModel:
-                    return ExportSubDimrModels(hydroModel);
-                case IDimrModel singleDimrModel:
+                case ICompositeActivity integratedModel:
+                    return ExportSubDimrModels(integratedModel);
+                case IDimrModel dimrModel:
                 {
-                    var dimrModelExporter = (IFileExporter)Activator.CreateInstance(singleDimrModel.ExporterType);
-                    return DimrSubModelsExportDialogResult(dimrModelExporter, singleDimrModel);
+                    var dimrModelExporter = (IFileExporter)Activator.CreateInstance(dimrModel.ExporterType);
+                    return DimrSubModelsExportDialogResult(dimrModelExporter, dimrModel);
                 }
                 default:
                     return DelftDialogResult.Cancel;
