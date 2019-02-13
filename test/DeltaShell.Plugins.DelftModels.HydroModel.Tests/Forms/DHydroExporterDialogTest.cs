@@ -37,20 +37,36 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms
         }
 
         [Test]
-        public void GivenHydroModelWithDimrModelAsActivity_WhenShowingModal_ThenNoWarningMessageIsShownToUser()
+        public void GivenIntegratedModelWithDimrModelAsActivity_WhenShowingModal_ThenNoWarningMessageIsShownToUser()
         {
             // Given
             var dimrModel = GetMockedDimrModel();
             var currentWorkFlow = GetMockedCurrentWorkFlow(dimrModel);
+            var integratedModel = GetMockedIntegratedModel(currentWorkFlow, dimrModel);
 
-            var integratedModel = mocks.DynamicMultiMock<IHydroModel>(typeof(ICompositeActivity));
-            integratedModel.Expect(m => ((ICompositeActivity)m).Activities).Return(new EventedList<IActivity> { dimrModel }).Repeat.Any();
-            integratedModel.Expect(m => ((ICompositeActivity)m).CurrentWorkflow).Return(currentWorkFlow).Repeat.Any();
-
-            var hydroExporterDialog = GetDHydroExporterDialog(integratedModel);
+            var fileExporters = new List<IFileExporter> { new DHydroConfigXmlExporter() };
+            var hydroExporterDialog = GetDHydroExporterDialog(integratedModel, fileExporters);
 
             // When - Then
             TestHelper.AssertLogMessagesCount(() => hydroExporterDialog.ShowModal(), 0);
+        }
+
+        [Test]
+        public void GivenIntegratedModelWithNonDimrModelAsActivity_WhenShowingModal_ThenWarningMessageIsShownToUser()
+        {
+            // Given
+            var dimrModel = GetMockedDimrModel();
+            var nonDimrModel = mocks.DynamicMock<IModel>();
+            var currentWorkFlow = GetMockedCurrentWorkFlow(dimrModel, nonDimrModel);
+            var integratedModel = GetMockedIntegratedModel(currentWorkFlow, dimrModel, nonDimrModel);
+
+            var fileExporters = new List<IFileExporter> { new DHydroConfigXmlExporter() };
+            var hydroExporterDialog = GetDHydroExporterDialog(integratedModel, fileExporters);
+
+            // When - Then
+            var expectedWarningMessage = string.Format(Resources.DHydroExporterDialog_WarnForModelsWhichCannotBeExportedByDimr_Activity_of_type__0__cannot_be_exported_to_DIMR_file_tree_and_shall_be_ignored_,
+                nonDimrModel.GetType());
+            TestHelper.AssertLogMessageIsGenerated(() => hydroExporterDialog.ShowModal(), expectedWarningMessage, 1);
         }
 
         private IDimrModel GetMockedDimrModel()
@@ -67,43 +83,22 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms
             return currentWorkFlow;
         }
 
-        [Test]
-        public void GivenHydroModelWithNonDimrModelAsActivity_WhenShowingModal_ThenWarningMessageIsShownToUser()
+        private IHydroModel GetMockedIntegratedModel(ICompositeActivity currentWorkFlow, params IActivity[] modelActivities)
         {
-            // Given
-            var dimrModel = GetMockedDimrModel();
-            var nonDimrModel = mocks.DynamicMock<IModel>();
-            var currentWorkFlow = GetMockedCurrentWorkFlow(dimrModel, nonDimrModel);
-
             var integratedModel = mocks.DynamicMultiMock<IHydroModel>(typeof(ICompositeActivity));
-            integratedModel.Expect(m => ((ICompositeActivity)m).Activities).Return(new EventedList<IActivity> { dimrModel, nonDimrModel }).Repeat.Any();
-            integratedModel.Expect(m => ((ICompositeActivity)m).CurrentWorkflow).Return(currentWorkFlow).Repeat.Any();
-            
-            var hydroExporterDialog = GetDHydroExporterDialog(integratedModel);
+            integratedModel.Expect(m => ((ICompositeActivity) m).Activities).Return(new EventedList<IActivity>(modelActivities)).Repeat.Any();
+            integratedModel.Expect(m => ((ICompositeActivity) m).CurrentWorkflow).Return(currentWorkFlow).Repeat.Any();
 
-            // When - Then
-            var expectedWarningMessage = string.Format(Resources.DHydroExporterDialog_WarnForModelsWhichCannotBeExportedByDimr_Activity_of_type__0__cannot_be_exported_to_DIMR_file_tree_and_shall_be_ignored_,
-                nonDimrModel.GetType());
-            TestHelper.AssertLogMessageIsGenerated(() => hydroExporterDialog.ShowModal(), expectedWarningMessage, 1);
+            return integratedModel;
         }
 
         [Test]
-        public void GivenIHydroModelAsSelectedModel_WhenShowingModal_ThenDialogResultIsEqualToCancel()
+        public void GivenNonDimrOrIntegratedModelAsSelectedModel_WhenShowingModal_ThenDialogResultIsEqualToCancel()
         {
             // Given
-            var gui = mocks.DynamicMock<IGui>();
-            var application = mocks.DynamicMock<IApplication>();
-
-            gui.Expect(g => g.SelectedModel).Return(mocks.DynamicMock<IHydroModel>()).Repeat.Any();
-            gui.Expect(g => g.Application).Return(application).Repeat.Any();
-            application.Expect(a => a.FileExporters).Return(new IFileExporter[]{new DHydroConfigXmlExporter()}).Repeat.Any();
-
-            mocks.ReplayAll();
-
-            var hydroExporterDialog = new DHydroExporterDialogStub
-            {
-                Gui = gui
-            };
+            var selectedModel = mocks.DynamicMock<IModel>();
+            var fileExporters = new IFileExporter[] { new DHydroConfigXmlExporter() };
+            var hydroExporterDialog = GetDHydroExporterDialog(selectedModel, fileExporters);
 
             // When
             var dialogResult = hydroExporterDialog.ShowModal();
@@ -116,19 +111,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms
         public void GivenIDimrModelAsSelectedModel_WhenShowingModalWithoutDHydroConfigXmlExporter_ThenDialogResultIsEqualToCancel()
         {
             // Given
-            var gui = mocks.DynamicMock<IGui>();
-            var application = mocks.DynamicMock<IApplication>();
-
-            gui.Expect(g => g.SelectedModel).Return(mocks.DynamicMock<IDimrModel>()).Repeat.Any();
-            gui.Expect(g => g.Application).Return(application).Repeat.Any();
-            application.Expect(a => a.FileExporters).Return(new IFileExporter[0]).Repeat.Any();
-
-            mocks.ReplayAll();
-
-            var hydroExporterDialog = new DHydroExporterDialogStub
-            {
-                Gui = gui
-            };
+            var selectedModel = mocks.DynamicMock<IDimrModel>();
+            var fileExporters = new IFileExporter[0];
+            var hydroExporterDialog = GetDHydroExporterDialog(selectedModel, fileExporters);
 
             // When
             var dialogResult = hydroExporterDialog.ShowModal();
@@ -137,14 +122,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms
             Assert.That(dialogResult, Is.EqualTo(DelftDialogResult.Cancel));
         }
 
-        private DHydroExporterDialogStub GetDHydroExporterDialog(IHydroModel hydroModel)
+        private DHydroExporterDialogStub GetDHydroExporterDialog(IModel selectedModel, IEnumerable<IFileExporter> fileExporters)
         {
             var gui = mocks.DynamicMock<IGui>();
             var application = mocks.DynamicMock<IApplication>();
-            var fileExporters = new List<IFileExporter> {new DHydroConfigXmlExporter()};
             var viewResolver = mocks.DynamicMock<IViewResolver>();
 
-            gui.Expect(g => g.SelectedModel).Return(hydroModel).Repeat.Any();
+            gui.Expect(g => g.SelectedModel).Return(selectedModel).Repeat.Any();
             gui.Expect(g => g.Application).Return(application).Repeat.Any();
             gui.Expect(g => g.DocumentViewsResolver).Return(viewResolver).Repeat.Any();
             application.Expect(a => a.FileExporters).Return(fileExporters).Repeat.Any();
