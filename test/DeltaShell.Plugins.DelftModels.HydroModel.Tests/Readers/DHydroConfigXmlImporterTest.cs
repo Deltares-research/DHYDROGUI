@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core;
+using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DeltaShell.Dimr;
 using DeltaShell.Plugins.DelftModels.HydroModel.Import;
+using DeltaShell.Plugins.DelftModels.HydroModel.Properties;
 using NUnit.Framework;
 using Rhino.Mocks;
 using Is = NUnit.Framework.Is;
@@ -281,5 +283,266 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
 
             Assert.That(result, Is.True);
         }
+
+        /// <summary>
+        /// WHEN FileFilter is retrieved
+        /// THEN the expected FileFilter is returned
+        /// </summary>
+        [Test]
+        public void WhenFileFilterIsRetrieved_ThenTheExpectedFileFilterIsReturned()
+        {
+            // Given
+            const string expectedValue = "xml|*.xml";
+            var importer = new DHydroConfigXmlImporter(() => new List<IDimrModelFileImporter>());
+
+            // When
+            var result = importer.FileFilter;
+
+            // Then
+            Assert.That(result, Is.EqualTo(expectedValue), "Expected a different FileFilter:");
+        }
+
+        /// <summary>
+        /// WHEN OpenViewAfterImport is retrieved
+        /// THEN true should be returned
+        /// </summary>
+        [Test]
+        public void WhenOpenViewAfterImportIsRetrieved_ThenTrueShouldBeReturned()
+        {
+            // Given
+            var importer = new DHydroConfigXmlImporter(() => new List<IDimrModelFileImporter>());
+
+            // When
+            var result = importer.OpenViewAfterImport;
+
+            // Then
+            Assert.That(result, Is.True);
+        }
+
+        #region ImportItem Tests
+        /// <summary>
+        /// WHEN ImportItem is called
+        ///  AND an expected error is thrown
+        /// THEN a message is logged
+        ///  AND null is returned
+        /// </summary>
+        [TestCase(typeof(ArgumentException))]
+        [TestCase(typeof(PathTooLongException))]
+        [TestCase(typeof(FormatException))]
+        [TestCase(typeof(OutOfMemoryException))]
+        [TestCase(typeof(IOException))]
+        [TestCase(typeof(InvalidOperationException))]
+        public void WhenImportItemIsCalledAndAnExpectedErrorIsThrown_ThenAMessageIsLoggedAndNullIsReturned(Type exceptionType)
+        {
+            // Given
+            const string path = "somePath";
+
+            var readFunc =
+                MockRepository.GenerateStrictMock<Func<string, IList<IDimrModelFileImporter>, HydroModel>>();
+            readFunc.Expect(f => f.Invoke(null, null))
+                    .IgnoreArguments()
+                    .Throw((Exception)Activator.CreateInstance(exceptionType))
+                    .Repeat.Any();
+
+
+            var importer = new DHydroConfigXmlImporter(readFunc,
+                                                       () => new List<IDimrModelFileImporter>());
+
+            // When | Then
+
+            HydroModel result = null;
+            TestHelper.AssertLogMessageIsGenerated(() =>
+            {
+                result = (HydroModel)importer.ImportItem(path);
+            }, string.Format(Resources.DHydroConfigXmlImporter_ImportItem_An_error_occurred_while_trying_to_import_a__0__, importer.Name), 1);
+
+            readFunc.VerifyAllExpectations();
+            Assert.That(result, Is.Null, "Expected ImportItem to file upon reading and return null:");
+        }
+
+        /// <summary>
+        /// WHEN ImportItem is called
+        ///  AND an unexpected error is thrown
+        /// THEN this error is propagated
+        /// </summary>
+        [Test]
+        public void WhenImportItemIsCalledAndAnUnexpectedErrorIsThrown_ThenThisErrorIsPropagated()
+        {
+            // Given
+            const string path = "somePath";
+            const string errorMsg = "Uncaught Exception";
+
+            var readFunc =
+                MockRepository.GenerateStrictMock<Func<string, IList<IDimrModelFileImporter>, HydroModel>>();
+            readFunc.Expect(f => f.Invoke(null, null))
+                    .IgnoreArguments()
+                    .Throw(new Exception(errorMsg))
+                    .Repeat.Any();
+
+            var importer = new DHydroConfigXmlImporter(readFunc,
+                                                       () => new List<IDimrModelFileImporter>());
+
+            Assert.Throws<Exception>(() => importer.ImportItem(path), errorMsg);
+            readFunc.VerifyAllExpectations();
+        }
+
+        /// <summary>
+        /// GIVEN a HydroModel
+        ///   AND some path
+        ///   AND a null target
+        /// WHEN ImportItem is called with these parameters
+        ///  AND this model is read
+        /// THEN this model is returned
+        /// </summary>
+        [Test]
+        public void GivenSomePathAndANullTarget_WhenImportItemIsCalledWithTheseParameters_ThenThisModelIsReturned()
+        {
+            // Given
+            var model = new HydroModel();
+
+            const string path = "somePath";
+
+            var readFunc = 
+                MockRepository.GenerateStrictMock<Func<string, IList<IDimrModelFileImporter>, HydroModel>>();
+
+            readFunc.Expect(f => f.Invoke(null, null))
+                    .IgnoreArguments()
+                    .Return(model)
+                    .Repeat.Once();
+
+            var importer = new DHydroConfigXmlImporter(readFunc, 
+                                                       () => new List<IDimrModelFileImporter>());
+
+            // When
+            var result = importer.ImportItem(path, null);
+
+            // Then
+            readFunc.VerifyAllExpectations();
+
+            Assert.That(result, Is.EqualTo(model), "Expected returned model to be equal to the read function result:");
+        }
+
+        /// <summary>
+        /// GIVEN a HydroModel
+        ///   AND some path
+        ///   AND some target folder
+        /// WHEN ImportItem is called with these parameters
+        ///  AND this new model is read
+        /// THEN this new model is returned
+        ///  AND the folder contains the model
+        /// </summary>
+        [Test]
+        public void GivenSomePathAndSomeTargetFolder_WhenImportItemIsCalledWithTheseParameters_ThenThisNewModelIsReturnedAndTheFolderContainsTheModel()
+        {
+            // Given
+            var folder = new Folder();
+            var model = new HydroModel();
+
+            const string path = "somePath";
+
+            var readFunc =
+                MockRepository.GenerateStrictMock<Func<string, IList<IDimrModelFileImporter>, HydroModel>>();
+
+            readFunc.Expect(f => f.Invoke(null, null))
+                    .IgnoreArguments()
+                    .Return(model)
+                    .Repeat.Once();
+
+            var importer = new DHydroConfigXmlImporter(readFunc,
+                                                       () => new List<IDimrModelFileImporter>());
+
+            // When
+            var result = (HydroModel)importer.ImportItem(path, folder);
+
+            // Then
+            readFunc.VerifyAllExpectations();
+
+            Assert.That(result, Is.EqualTo(model), "Expected returned model to be equal to the read function result:");
+            Assert.That(result.Owner(), Is.EqualTo(folder), "Expected the owner of the returned model to be equal to the provided target:");
+            Assert.That(folder.Items.Contains(result), "Expected the folder to contain the newly read model");
+        }
+
+        /// <summary>
+        /// GIVEN a HydroModel
+        ///   AND some path
+        ///   AND some target HydroModel with a folder owner
+        /// WHEN ImportItem is called with these parameters
+        ///  AND this new model is read
+        /// THEN this new model is returned
+        ///  AND the target model has been replaced in the folder
+        /// </summary>
+        [Test]
+        public void GivenSomePathAndSomeTargetHydroModelWithAFolderOwner_WhenImportItemIsCalledWithTheseParameters_ThenThisNewModelIsReturnedAndTheTargetModelHasBeenReplacedInTheFolder()
+        {
+            // Given
+            var folder = new Folder();
+            var prevModel = new HydroModel();
+            folder.Add(prevModel);
+
+            var model = new HydroModel();
+
+            const string path = "somePath";
+
+            var readFunc =
+                MockRepository.GenerateStrictMock<Func<string, IList<IDimrModelFileImporter>, HydroModel>>();
+
+            readFunc.Expect(f => f.Invoke(null, null))
+                    .IgnoreArguments()
+                    .Return(model)
+                    .Repeat.Once();
+
+            var importer = new DHydroConfigXmlImporter(readFunc,
+                                                       () => new List<IDimrModelFileImporter>());
+
+            // When
+            var result = (HydroModel)importer.ImportItem(path, prevModel);
+
+            // Then
+            readFunc.VerifyAllExpectations();
+
+            Assert.That(result, Is.EqualTo(model), "Expected returned model to be equal to the read function result:");
+            Assert.That(result.Owner(), Is.EqualTo(folder), "Expected the owner of the returned model to be equal to the provided target:");
+            Assert.That(folder.Items.Contains(prevModel), Is.False, "Expected folder not to contain the previous WaterFlowModel1D");
+            Assert.That(folder.Items.Contains(result), "Expected the folder to contain the newly read model");
+        }
+
+        /// <summary>
+        /// GIVEN a HydroModel
+        ///   AND some path
+        /// WHEN ShouldCancel is set
+        ///  AND ImportItem is called with these parameters
+        /// THEN null is returned
+        /// </summary>
+        [Test]
+        public void GivenSomePath_WhenShouldCancelIsSetAndImportItemIsCalledWithTheseParameters_ThenNullIsReturned()
+        {
+            // Given
+            var model = new HydroModel();
+
+            const string path = "somePath";
+
+            var readFunc =
+                MockRepository.GenerateStrictMock<Func<string, IList<IDimrModelFileImporter>, HydroModel>>();
+
+            readFunc.Expect(f => f.Invoke(null, null))
+                    .IgnoreArguments()
+                    .Return(model)
+                    .Repeat.Once();
+
+            var importer = new DHydroConfigXmlImporter(readFunc,
+                                                       () => new List<IDimrModelFileImporter>())
+            {
+                ShouldCancel = true
+            };
+
+            // When
+            var result = importer.ImportItem(path, null);
+
+            // Then
+            readFunc.VerifyAllExpectations();
+
+            Assert.That(result, Is.EqualTo(null), "Expected returned model to be null:");
+        }
+        #endregion
     }
 }

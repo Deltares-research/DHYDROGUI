@@ -2,18 +2,47 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core;
+using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DeltaShell.Dimr;
+using DeltaShell.NGHS.IO.FileReaders;
+using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.Plugins.DelftModels.HydroModel.Properties;
+using log4net;
+
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
 {
-    public class DHydroConfigXmlImporter: IFileImporter
+    public class DHydroConfigXmlImporter : IFileImporter
     {
-        public DHydroConfigXmlImporter(Func<List<IDimrModelFileImporter>> dimrFileImporters)
+        private readonly ILog log = LogManager.GetLogger(typeof(DHydroConfigXmlImporter));
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DHydroConfigXmlImporter"/> class
+        /// with the specified read function and dimrFileImporters.
+        /// </summary>
+        /// <param name="readFunc">The read function.</param>
+        /// <param name="dimrFileImporters">The DIMR file importers.</param>
+        public DHydroConfigXmlImporter(Func<string, IList<IDimrModelFileImporter>, HydroModel> readFunc,
+                                       Func<IList<IDimrModelFileImporter>> dimrFileImporters)
         {
+            this.readFunc = readFunc;
             getDimrModelFileImporters = dimrFileImporters;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DHydroConfigXmlImporter"/> class
+        /// with the default read function and the specified dimrFileImporters.
+        /// </summary>
+        /// <param name="dimrFileImporters">The DIMR file importers.</param>
+        public DHydroConfigXmlImporter(Func<IList<IDimrModelFileImporter>> dimrFileImporters) : this(
+            HydroModelReader.Read,
+            dimrFileImporters)
+        {
+
         }
 
         /// <inheritdoc />
@@ -41,12 +70,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
         public string FileFilter => "xml|*.xml";
 
         /// <inheritdoc />
+        [ExcludeFromCodeCoverage]
         public string TargetDataDirectory { get; set; }
 
         /// <inheritdoc />
         public bool ShouldCancel { get; set; }
 
         /// <inheritdoc />
+        [ExcludeFromCodeCoverage]
         public ImportProgressChangedDelegate ProgressChanged { get; set; }
 
         /// <inheritdoc />
@@ -61,13 +92,55 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
         /// <inheritdoc />
         public object ImportItem(string path, object target = null)
         {
-            var dimrModelFileImporters = GetDimrModelFileImporters;
-            return HydroModelReader.Read(path, dimrModelFileImporters );
+            try
+            {
+                var importedModel = Read(path);
+
+                var targetModel = target as HydroModel;
+                if (targetModel != null)
+                {
+                    target = targetModel.Owner();
+                }
+
+                if (target is Folder folder)
+                {
+                    folder.Items.Remove(targetModel);
+                    folder.Items.Add(importedModel);
+                }
+
+                return ShouldCancel ? null : importedModel;
+            }
+            catch (Exception e) when (e is ArgumentException               ||
+                                      e is PathTooLongException            ||
+                                      e is FormatException                 ||
+                                      e is OutOfMemoryException            ||
+                                      e is IOException                     ||
+                                      e is InvalidOperationException       ||
+                                      e is PropertyNotFoundInFileException ||
+                                      e is FileReadingException)
+            {
+                log.Error(string.Format(Resources.DHydroConfigXmlImporter_ImportItem_An_error_occurred_while_trying_to_import_a__0__, Name), e);
+                return null;
+            }
         }
 
-        private List<IDimrModelFileImporter> GetDimrModelFileImporters =>
+        /// <summary>
+        /// Reads the model located at the specified path with this Importers
+        /// read delegate.
+        /// </summary>
+        /// <param name="path">The path.</param>
+        /// <returns> The model read from the specified path. </returns>
+        private HydroModel Read(string path)
+        {
+            return readFunc.Invoke(path, GetDimrModelFileImporters);
+        }
+
+        /// <summary> Function responsible for reading the model. </summary>
+        private readonly Func<string, IList<IDimrModelFileImporter>, HydroModel> readFunc;
+
+        private IList<IDimrModelFileImporter> GetDimrModelFileImporters =>
             getDimrModelFileImporters?.Invoke() ?? new List<IDimrModelFileImporter>();
 
-        private readonly Func<List<IDimrModelFileImporter>> getDimrModelFileImporters;
+        private readonly Func<IList<IDimrModelFileImporter>> getDimrModelFileImporters;
     }
 }

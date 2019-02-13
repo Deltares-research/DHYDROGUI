@@ -99,6 +99,16 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to An error occurred while trying to import a {0};.
+        /// </summary>
+        public static string DHydroConfigXmlImporter_ImportItem_An_error_occurred_while_trying_to_import_a__0__ {
+            get {
+                return ResourceManager.GetString("DHydroConfigXmlImporter_ImportItem_An_error_occurred_while_trying_to_import_a__0_" +
+                        "_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Activity of type {0} cannot be exported to DIMR file tree and shall be ignored..
         /// </summary>
         public static string DHydroExporterDialog_WarnForModelsWhichCannotBeExportedByDimr_Activity_of_type__0__cannot_be_exported_to_DIMR_file_tree_and_shall_be_ignored_ {

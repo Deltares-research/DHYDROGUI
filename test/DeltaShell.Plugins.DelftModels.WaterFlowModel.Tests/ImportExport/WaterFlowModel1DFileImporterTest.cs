@@ -8,7 +8,6 @@ using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
-using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties;
@@ -343,7 +342,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
         {
             // Given
             var folder = new Folder();
-            var prevModel = new WaterFlowModel1D("definitely-not-a-potato") { Owner = folder };
+            var prevModel = new WaterFlowModel1D("definitely-not-a-potato");
+            folder.Add(prevModel);
 
             var model = new WaterFlowModel1D("potato");
 
@@ -366,6 +366,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
             Assert.That(result, Is.EqualTo(model), "Expected returned model to be equal to read function result:");
             Assert.That(result.Owner(), Is.EqualTo(folder), "Expected the owner of the returned model to be equal to the provided target:");
             Assert.That(folder.Items.Contains(prevModel), Is.False, "Expected folder not to contain the previous WaterFlowModel1D");
+            Assert.That(folder.Items.Contains(result), "Expected the folder to contain the newly read model");
         }
 
         /// <summary>
@@ -402,6 +403,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
 
             Assert.That(result, Is.EqualTo(model), "Expected returned model to be equal to read function result:");
             Assert.That(result.Owner(), Is.EqualTo(folder), "Expected the owner of the returned model to be equal to the provided target:");
+            Assert.That(folder.Items.Contains(result), "Expected the folder to contain the newly read model");
         }
 
 

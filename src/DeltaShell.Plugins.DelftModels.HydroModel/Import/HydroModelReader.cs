@@ -17,7 +17,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
         /// <param name="path">Path to the Dimr.xml</param>
         /// <param name="fileImporters">File importers for importing sub-models</param>
         /// <returns>Read <see cref="HydroModel"/></returns>
-        public static HydroModel Read(string path, List<IDimrModelFileImporter> fileImporters)
+        public static HydroModel Read(string path, IList<IDimrModelFileImporter> fileImporters)
         {
             if (path == null) { return null;}
             
