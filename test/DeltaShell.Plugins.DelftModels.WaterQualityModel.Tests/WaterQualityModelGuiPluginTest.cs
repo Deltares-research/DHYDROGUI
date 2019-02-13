@@ -33,6 +33,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
     public class WaterQualityModelGuiPluginTest
     {
         [Test]
+        [Category(TestCategory.Integration)]
         [Category(TestCategory.Slow)]
         public void GetRibbonCommandHandlerReturnsWaterQualityRibbon()
         {
