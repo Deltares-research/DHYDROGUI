@@ -62,10 +62,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms
             return waterFlowModel1D;
         }
 
-        private ICompositeActivity GetMockedCurrentWorkFlow(IDimrModel dimrModel)
+        private ICompositeActivity GetMockedCurrentWorkFlow(params IModel[] models)
         {
             var currentWorkFlow = mocks.DynamicMock<ICompositeActivity>();
-            currentWorkFlow.Expect(w => w.Activities).Return(new EventedList<IActivity> {dimrModel}).Repeat.Any();
+            currentWorkFlow.Expect(w => w.Activities).Return(new EventedList<IActivity>(models)).Repeat.Any();
             return currentWorkFlow;
         }
 
@@ -73,17 +73,19 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms
         public void GivenHydroModelWithNonDimrModelAsActivity_WhenShowingModal_ThenWarningMessageIsShownToUser()
         {
             // Given
-            var hydroModel = new HydroModel();
-            var waterQualityModel = new WaterQualityModel.WaterQualityModel();
-            hydroModel.Activities.Add(waterQualityModel);
-            hydroModel.Activities.Add(new WaterFlowModel1D());
-            hydroModel.CurrentWorkflow = hydroModel.Workflows.FirstOrDefault();
+            var dimrModel = GetMockedDimrModel();
+            var nonDimrModel = mocks.DynamicMock<IModel>();
+            var currentWorkFlow = GetMockedCurrentWorkFlow(dimrModel, nonDimrModel);
 
-            var hydroExporterDialog = GetDHydroExporterDialog(hydroModel);
+            var integratedModel = mocks.DynamicMultiMock<IHydroModel>(typeof(ICompositeActivity));
+            integratedModel.Expect(m => ((ICompositeActivity)m).Activities).Return(new EventedList<IActivity> { dimrModel, nonDimrModel }).Repeat.Any();
+            integratedModel.Expect(m => ((ICompositeActivity)m).CurrentWorkflow).Return(currentWorkFlow).Repeat.Any();
+            
+            var hydroExporterDialog = GetDHydroExporterDialog(integratedModel);
 
             // When - Then
             var expectedWarningMessage = string.Format(Resources.DHydroExporterDialog_WarnForModelsWhichCannotBeExportedByDimr_Activity_of_type__0__cannot_be_exported_to_DIMR_file_tree_and_shall_be_ignored_,
-                waterQualityModel.GetType());
+                nonDimrModel.GetType());
             TestHelper.AssertLogMessageIsGenerated(() => hydroExporterDialog.ShowModal(), expectedWarningMessage, 1);
         }
 
