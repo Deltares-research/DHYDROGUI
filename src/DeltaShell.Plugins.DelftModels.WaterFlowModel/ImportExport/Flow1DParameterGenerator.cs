@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.DelftIniCategoryGenerators;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 {
@@ -23,7 +24,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             if (waterFlowModel1D == null) yield break;
 
             // Global values
-            yield return Flow1DParameterCategoryGenerator.GenerateGlobalValues(waterFlowModel1D);
+            yield return waterFlowModel1D.GenerateGlobalValuesCategory();
 
             // Initial Conditions
             yield return Flow1DParameterCategoryGenerator.GenerateInitialConditionsValues(waterFlowModel1D);

@@ -33,8 +33,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
         }
 
         [Test]
-        public void
-            GivenAWaterFlowModel1DWithSedimentValues_WhenGeneratingSedimentProperties_ThenADelftIniCategoryIsReturned()
+        public void GivenAWaterFlowModel1DWithSedimentValues_WhenGeneratingSedimentProperties_ThenADelftIniCategoryIsReturned()
         {
             var model = new WaterFlowModel1D("TestModel")
             {
@@ -49,8 +48,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
         }
 
         [Test]
-        public void
-            GivenAWaterFlowModel1DWithoutSedimentValues_WhenGeneratingSedimentProperties_ThenNoPropertiesAreReturnedAndValuesAreNotSetOnModel()
+        public void GivenAWaterFlowModel1DWithoutSedimentValues_WhenGeneratingSedimentProperties_ThenNoPropertiesAreReturnedAndValuesAreNotSetOnModel()
         {
             var model = new WaterFlowModel1D("TestModel");
 
@@ -170,22 +168,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
             AssertThatCategoryContainsPropertyWithValue(properties, ModelDefinitionsRegion.RestartTimeStep, expectedRestartTimeStepString);
             AssertThatCategoryContainsPropertyWithValue(properties, ModelDefinitionsRegion.UseRestart, expectedUseRestart);
             AssertThatCategoryContainsPropertyWithValue(properties, ModelDefinitionsRegion.WriteRestart, expectedWriteRestart);
-        }
-
-        [Test]
-        public void GivenAWaterFlowModel1D_WhenGenerateTimeValuesIsCalledWithThisModel_ThenSpecialsDelftIniCategoryIsGenerated()
-        {
-            var model = new WaterFlowModel1D()
-            {
-                DesignFactorDlg = 2.0,
-
-            };
-
-            var result = Flow1DParameterCategoryGenerator.GenerateSpecialsValues(model);
-
-            Assert.That(result.Properties, Is.Not.Null, "Expected the returned DelftIniCategory.Properties not to be null.");
-            var properties = result.Properties.ToList();
-
         }
 
         private static void AssertThatCategoryContainsPropertyWithValue(IList<DelftIniProperty> properties,
