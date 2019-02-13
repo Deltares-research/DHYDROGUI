@@ -122,6 +122,20 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms
             Assert.That(dialogResult, Is.EqualTo(DelftDialogResult.Cancel));
         }
 
+        [Test]
+        public void GivenWithoutSelectedModel_WhenShowingModalWithoutDHydroConfigXmlExporter_ThenDialogResultIsEqualToCancel()
+        {
+            // Given
+            var fileExporters = new IFileExporter[] { new DHydroConfigXmlExporter() };
+            var hydroExporterDialog = GetDHydroExporterDialog(null, fileExporters);
+
+            // When
+            var dialogResult = hydroExporterDialog.ShowModal();
+
+            // Then
+            Assert.That(dialogResult, Is.EqualTo(DelftDialogResult.Cancel));
+        }
+
         private DHydroExporterDialogStub GetDHydroExporterDialog(IModel selectedModel, IEnumerable<IFileExporter> fileExporters)
         {
             var gui = mocks.DynamicMock<IGui>();
