@@ -4,9 +4,11 @@ using System.Data;
 using System.Linq;
 using DelftTools.Hydro.CrossSections.DataSets;
 using DelftTools.Hydro.Helpers;
+using DelftTools.Hydro.Properties;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Editing;
 using GeoAPI.Geometries;
+using log4net;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.LinearReferencing;
 
@@ -15,6 +17,8 @@ namespace DelftTools.Hydro.CrossSections
     [Entity(FireOnCollectionChange=false)]
     public class CrossSectionDefinitionYZ : CrossSectionDefinition
     {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(CrossSectionDefinitionYZ));
+
         public CrossSectionDefinitionYZ()
             : this("")
         {
@@ -213,8 +217,22 @@ namespace DelftTools.Hydro.CrossSections
         {
             if (Sections.Count == 0) return; // Fix for models that do not have roughness positions defined.
 
-            Sections.First().MinY = Profile.First().X;
-            Sections.Last().MaxY = Profile.Last().X;
+            var firstRoughnessPosition = Sections.First().MinY;
+            var lastRoughnessPosition = Sections.Last().MaxY;
+            var firstProfilePosition = Profile.First().X;
+            var lastProfilePosition = Profile.Last().X;
+
+            Sections.First().MinY = firstProfilePosition;
+            Sections.Last().MaxY = lastProfilePosition;
+
+            Log.Info(
+                string.Format(
+                    Resources.CrossSectionDefinitionYZ_RefreshSectionsWidths_The__0__roughness_position_of_cross_section____1___has_been_changed_from__2__m_to__3__m_to_match_the_flow_profile,
+                    "starting", Name, firstRoughnessPosition, firstProfilePosition));
+            Log.Info(
+                string.Format(
+                    Resources.CrossSectionDefinitionYZ_RefreshSectionsWidths_The__0__roughness_position_of_cross_section____1___has_been_changed_from__2__m_to__3__m_to_match_the_flow_profile,
+                    "ending", Name, lastRoughnessPosition, lastProfilePosition));
         }
 
         public override object Clone()

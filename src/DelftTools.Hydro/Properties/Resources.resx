@@ -175,4 +175,7 @@
   <data name="ModelDefinitionFileReaderTest_GivenDataModelWithCategoryThatHasAnUnknownHeader_WhenSettingProperties_ThenLogMessageIsReturned_There_is_unrecognized_data_read_from_the_md1d_file_with_header___0____This_category_has_been_skipped_when_reading_" xml:space="preserve">
     <value>There is unrecognized data read from the md1d file with header '{0}'. This category has been skipped when reading.</value>
   </data>
+  <data name="CrossSectionDefinitionYZ_RefreshSectionsWidths_The__0__roughness_position_of_cross_section____1___has_been_changed_from__2__m_to__3__m_to_match_the_flow_profile" xml:space="preserve">
+    <value>The {0} roughness position of cross section: '{1}' has been changed from {2} m to {3} m to match the flow profile</value>
+  </data>
 </root>

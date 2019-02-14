@@ -19,10 +19,10 @@ namespace DelftTools.Hydro.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class Resources {
+    internal class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -91,6 +91,16 @@ namespace DelftTools.Hydro.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The {0} roughness position of cross section: &apos;{1}&apos; has been changed from {2} m to {3} m to match the flow profile.
+        /// </summary>
+        internal static string CrossSectionDefinitionYZ_RefreshSectionsWidths_The__0__roughness_position_of_cross_section____1___has_been_changed_from__2__m_to__3__m_to_match_the_flow_profile {
+            get {
+                return ResourceManager.GetString("CrossSectionDefinitionYZ_RefreshSectionsWidths_The__0__roughness_position_of_cros" +
+                        "s_section____1___has_been_changed_from__2__m_to__3__m_to_match_the_flow_profile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} Property &apos;{1}&apos; on line number is missing, &apos;{2}&apos; will be set as default.
         /// </summary>
         internal static string DelftIniPropertyValidator_CheckPropertyAvailability__0__Property___1___on_line_number_is_missing____2___will_be_set_as_default {
@@ -133,7 +143,7 @@ namespace DelftTools.Hydro.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Branch feature names must be unique, the following Branch features have been renamed:.
         /// </summary>
-        public static string HydroNetworkExtensions_MakeNamesUnique_Branch_feature_names_must_be_unique__the_following_Branch_features_have_been_renamed_ {
+        internal static string HydroNetworkExtensions_MakeNamesUnique_Branch_feature_names_must_be_unique__the_following_Branch_features_have_been_renamed_ {
             get {
                 return ResourceManager.GetString("HydroNetworkExtensions_MakeNamesUnique_Branch_feature_names_must_be_unique__the_f" +
                         "ollowing_Branch_features_have_been_renamed_", resourceCulture);
