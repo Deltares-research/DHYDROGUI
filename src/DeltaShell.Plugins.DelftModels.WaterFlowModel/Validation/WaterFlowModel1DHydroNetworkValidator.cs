@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
@@ -163,7 +162,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation
             var channelsCheckedOnInterpolationBranches = new HashSet<string>();
             var issues = network?.Channels.SelectMany(b => GetCrossSectionValidationIssues(b, network, channelsCheckedOnInterpolationBranches)).ToList() ?? new List<ValidationIssue>();
 
-            var roughnessPositionsDoNotMatchYZProfileIssues = issues.Where(i =>
+            var roughnessPositionsDoNotMatchYzProfileIssues = issues.Where(i =>
                 i.Message.Equals(Resources.WaterFlowModel1DHydroNetworkValidator_ValidateCrossSections_Roughness_positions_of_one_or_more_cross_sections_do_not_match_the_start_and_stop_positions_of_the_y__values_)).ToList();
             var issuesContainSectionIssues = issues.Where(i => i.Message.Equals(Resources.WaterFlowModel1DHydroNetworkValidator_ValidateCrossSections_The_maximum_flow_width_of_this_cross_section_does_not_match_the_total_width_of_all_its_sections_)).ToList();
 
@@ -176,10 +175,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation
                     Resources.WaterFlowModel1DHydroNetworkValidator_ValidateCrossSections_The_maximum_flow_width_of_one_or_more_cross_sections_is_larger_than_the_total_width_of_all_its_sections_, crossSectionsToCorrect));
             }
 
-            if (roughnessPositionsDoNotMatchYZProfileIssues.Any())
+            if (roughnessPositionsDoNotMatchYzProfileIssues.Any())
             {
-                var crossSectionsToCorrect = roughnessPositionsDoNotMatchYZProfileIssues.Select(issue => issue.ViewData as ICrossSection).ToList();
-                finalIssues.Add(new ValidationIssue($"Cross section sections issues ({crossSectionsToCorrect.Count})", ValidationSeverity.Warning,
+                var crossSectionsToCorrect = roughnessPositionsDoNotMatchYzProfileIssues.Select(issue => issue.ViewData as ICrossSection).ToList();
+                finalIssues.Add(new ValidationIssue($"Cross section sections issues ({crossSectionsToCorrect.Count})", ValidationSeverity.Error,
                     Resources.WaterFlowModel1DHydroNetworkValidator_ValidateCrossSections_Roughness_positions_of_one_or_more_cross_sections_do_not_match_the_start_and_stop_positions_of_the_y__values_, crossSectionsToCorrect));
             }
             
@@ -238,10 +237,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation
 
         private static IEnumerable<ValidationIssue> GetCorrectCrossSectionIssue(ICrossSection crossSection, IHydroNetwork network)
         {
-            string errorMessage;
             var crossSectionDefinition = crossSection.Definition;
 
-            if (!CrossSectionValidator.IsCrossSectionAllowedOnBranch((CrossSection) crossSection, out errorMessage))
+            if (!CrossSectionValidator.IsCrossSectionAllowedOnBranch((CrossSection) crossSection, out var errorMessage))
             {
                 yield return new ValidationIssue(crossSection, ValidationSeverity.Error, errorMessage, network);
             }
@@ -279,8 +277,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation
             if ((crossSection.CrossSectionType == CrossSectionType.YZ) &&
                 (!CrossSectionValidator.AreRoughnessPositionsEqualToFirstAndLastYValue(crossSectionDefinition)))
             {
-                yield return new ValidationIssue(crossSection, ValidationSeverity.Warning,
-                    (Resources.WaterFlowModel1DHydroNetworkValidator_ValidateCrossSections_Roughness_positions_of_one_or_more_cross_sections_do_not_match_the_start_and_stop_positions_of_the_y__values_));
+                yield return new ValidationIssue(crossSection, ValidationSeverity.Error,
+                    Resources.WaterFlowModel1DHydroNetworkValidator_ValidateCrossSections_Roughness_positions_of_one_or_more_cross_sections_do_not_match_the_start_and_stop_positions_of_the_y__values_);
             }
         }
 
