@@ -8,14 +8,11 @@ using DelftTools.Controls;
 using DelftTools.Controls.Swf.Editors;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Utils.Collections.Generic;
-using log4net;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
 {
     public partial class SectionsTableView : UserControl, IView
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(SectionsTableView));
-
         private const int MinYColumn = 0;
         private const int MaxYColumn = 1;
         private const int SectionTypeColumn = 2;
@@ -125,9 +122,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             tableViewSections.AddColumn("MinY", "Start");
             tableViewSections.AddColumn("MaxY", "End");
             tableViewSections.AddColumn("SectionType", "Roughness");
-
-            tableViewSections.Columns[MinYColumn].DisplayFormat = "0.00";
-            tableViewSections.Columns[MaxYColumn].DisplayFormat = "0.00";
 
             ResetSelectionTypeEditor();
 
