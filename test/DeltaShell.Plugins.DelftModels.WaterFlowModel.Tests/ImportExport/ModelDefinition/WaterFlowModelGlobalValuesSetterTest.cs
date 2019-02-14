@@ -21,6 +21,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
         private const double ExpectedF3Coverage = 128.0;
         private const double ExpectedF4Coverage = 256.0;
 
+        [Test]
+        public void WhenSettingGlobalValuesOnModelWithCategoryThatHasNoGlobalValuesName_ThenNoExceptionIsThrown()
+        {
+            Assert.DoesNotThrow(() => 
+                new WaterFlowModelGlobalValuesSetter().SetProperties(new DelftIniCategory("UnknownHeader"), null, new List<string>()));
+        }
 
         /// <summary>
         /// GIVEN a simple flow model
@@ -35,7 +41,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             var model = new WaterFlowModel1D
             {
                 UseSalt = true,
-                UseTemperature = true,
+                UseTemperature = true
             };
 
             model.SetCustomInitialValues();

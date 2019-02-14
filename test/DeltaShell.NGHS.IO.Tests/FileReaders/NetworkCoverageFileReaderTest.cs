@@ -10,7 +10,7 @@ using Rhino.Mocks;
 namespace DeltaShell.NGHS.IO.Tests.FileReaders
 {
     [TestFixture]
-    public class SpatialDataReaderTest
+    public class NetworkCoverageFileReaderTest
     {
         [Test]
         public void GivenSpatialFileData_WhenAnErrorOccursDuringReadSpatialFileData_ThenAnExceptionIsThrown()
@@ -38,7 +38,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
                 };
 
             mocks.ReplayAll();
-            var spatialFileDataReader = new SpatialDataReader(parseMock, convertMock, someErrorReportFunction);
+            var spatialFileDataReader = new NetworkCoverageFileReader(parseMock, convertMock, someErrorReportFunction);
             spatialFileDataReader.ReadSpatialFileData(filePath, null);
 
             Assert.IsTrue(errorHandlingHasBeenCalled);

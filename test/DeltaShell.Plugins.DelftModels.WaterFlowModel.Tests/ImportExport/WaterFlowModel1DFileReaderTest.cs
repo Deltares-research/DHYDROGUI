@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
+using DeltaShell.NGHS.IO.FileWriters.SpatialData;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
@@ -59,20 +60,19 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
             Assert.IsTrue(waterFlowModel1D.UseReverseRoughnessInCalculation);
         }
 
-        [TestCase("InitialWaterLevel.ini")]
-        [TestCase("Dispersion.ini")]
-        [TestCase("InitialDischarge.ini")]
-        [TestCase("InitialSalinity.ini")]
-        [TestCase("InitialTemperature.ini")]
-        [TestCase("InitialWaterLevel.ini")]
-        [TestCase("WindShielding.ini")]
+        [TestCase(SpatialDataFileNames.InitialWaterLevel)]
+        [TestCase(SpatialDataFileNames.Dispersion)]
+        [TestCase(SpatialDataFileNames.InitialDischarge)]
+        [TestCase(SpatialDataFileNames.InitialSalinity)]
+        [TestCase(SpatialDataFileNames.InitialTemperature)]
+        [TestCase(SpatialDataFileNames.WindShielding)]
         [Category(TestCategory.Slow)]
-        public void GivenAnMd1dFile_WhenReadingAndWriting_ThenTheWrittenFilesAreEqualToReadFiles(string spatialIniFile)
+        public void GivenAnMd1dFile_WhenReadingAndWriting_ThenTheWrittenFilesAreEqualToReadFiles(string fileName)
         {
             // Given
             var md1dFilePath = TestHelper.GetTestFilePath(@"ImportSpatialData\water flow 1d.md1d");
             var testDirectory = FileUtils.CreateTempDirectory();
-            var sourceFile = TestHelper.GetTestFilePath($@"ImportSpatialData\{spatialIniFile}");
+            var sourceFile = TestHelper.GetTestFilePath($@"ImportSpatialData\{fileName}");
             var errorMessage = "Files not equal";
             var targetFilePath = Path.Combine(testDirectory, "FileWriters");
 
@@ -85,7 +85,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
                     waterFlowModel1D);
 
                 // Then
-                var iniFilePath = Path.Combine(targetFilePath, spatialIniFile);
+                var iniFilePath = Path.Combine(targetFilePath, fileName);
                 Assert.IsTrue(FileComparer.Compare(iniFilePath, sourceFile, out errorMessage));
             }
             finally

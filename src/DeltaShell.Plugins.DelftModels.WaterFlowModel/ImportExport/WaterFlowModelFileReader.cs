@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using DelftTools.Functions;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures;
@@ -21,8 +20,8 @@ using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefinition;
+using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.SpatialData;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness;
-using GeoAPI.Extensions.Coverages;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 {
@@ -118,13 +117,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                     $"Reading spatial data from {fileNames}.",
                     stepCounter, TotalSteps);
 
-                var spatialDataFileNames = PopulateSpatialDataFileNamesList(model.DispersionFormulationType);
-
-                foreach (var fileName in spatialDataFileNames)
-                {
-                    ReadSpatialData(fileName, model, CreateAndAddErrorReport);
-                }
-
+                var spatialDataFileNames = GetSpatialDataFileNames(model);
+                SpatialDataReader.ReadSpatialData(spatialDataFileNames, model, CreateAndAddErrorReport);
             }
             catch (Exception e) when (e is FormatException || 
                                       e is PropertyNotFoundInFileException || 
@@ -191,28 +185,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 var correspondingBranch = network.Channels.FirstOrDefault(c => c.Name == compositeBranchStructure.Branch.Name);
                 correspondingBranch?.BranchFeatures.Add(compositeBranchStructure);
             }
-        }
-
-        private static IEnumerable<string> PopulateSpatialDataFileNamesList(DispersionFormulationType modelDispersionFormulationType)
-        {
-            var spatialDataFileNames = new List<string>
-            {
-                fileNames.InitialDischarge,
-                fileNames.InitialSalinity,
-                fileNames.InitialTemperature,
-                fileNames.InitialWaterLevel,
-                fileNames.InitialWaterDepth,
-                fileNames.Dispersion,
-                fileNames.WindShielding
-            };
-
-            if (modelDispersionFormulationType != DispersionFormulationType.Constant)
-            {
-                spatialDataFileNames.Add(fileNames.DispersionF3);
-                spatialDataFileNames.Add(fileNames.DispersionF4);
-            }
-
-            return spatialDataFileNames.Where(fn => fn != null);
         }
 
         private static void ReadRetentionFile(IHydroNetwork network, Action<string, IList<string>> createAndAddErrorReport)
@@ -316,71 +288,27 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 }
             }
         }
-        /// <summary>
-        /// Reads the file spatial data. It first checks the locationFilePath for null because the file does not exist when it is null.
-        /// </summary>
-        /// <param name="locationFilePath"></param>
-        /// <param name="model"></param>
-        /// <param name="createAndAddErrorReport"></param>
-        private static void ReadSpatialData(string locationFilePath, WaterFlowModel1D model,
-            Action<string, IList<string>> createAndAddErrorReport)
+
+        private static IEnumerable<string> GetSpatialDataFileNames(WaterFlowModel1D model)
         {
-            //Necessary because the default value of a string is null and you do not want to continue 
-            if (locationFilePath == null) return;
-
-            var spatialFileDataReader = new SpatialDataReader(createAndAddErrorReport);
-            if (!File.Exists(locationFilePath)) return;
-            var spatialFileData = spatialFileDataReader.ReadSpatialFileData(locationFilePath, model.Network.Channels.ToList());
-
-            SetModelSpatialDataOnModel(locationFilePath, model, spatialFileData);
-        }
-
-        private static void SetModelSpatialDataOnModel(string locationFilePath, WaterFlowModel1D model, INetworkCoverage spatialFileData)
-        {
-            var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(locationFilePath);
-
-            switch (fileNameWithoutExtension)
+            var spatialDataFileNames = new List<string>
             {
-                case "InitialDischarge":
-                    CopySpatialFileDataToModel(model.InitialFlow, spatialFileData);
-                    break;
-                case "InitialSalinity":
-                    CopySpatialFileDataToModel(model.InitialSaltConcentration, spatialFileData);
-                    break;
-                case "InitialTemperature":
-                    CopySpatialFileDataToModel(model.InitialTemperature, spatialFileData);
-                    break;
-                case "InitialWaterLevel":
-                    CopySpatialFileDataToModel(model.InitialConditions, spatialFileData);
-                    model.InitialConditionsType = InitialConditionsType.WaterLevel;
-                    break;
-                case "InitialWaterDepth":
-                    CopySpatialFileDataToModel(model.InitialConditions, spatialFileData);
-                    model.InitialConditionsType = InitialConditionsType.Depth;
-                    break;
-                case "Dispersion":
-                    CopySpatialFileDataToModel(model.DispersionCoverage, spatialFileData);
-                    break;
-                case "DispersionF3":
-                    CopySpatialFileDataToModel(model.DispersionF3Coverage, spatialFileData);
-                    break;
-                case "DispersionF4":
-                    CopySpatialFileDataToModel(model.DispersionF4Coverage, spatialFileData);
-                    break;
-                case "WindShielding":
-                    CopySpatialFileDataToModel(model.WindShielding, spatialFileData);
-                    break;
-                default:
-                    Log.Warn($"Could not find any spatial data to set on the model. The file: {locationFilePath} does not have a correct name.");
-                    break;
-            }
-        }
+                fileNames.InitialWaterLevel,
+                fileNames.InitialWaterDepth,
+                fileNames.InitialDischarge,
+                fileNames.InitialSalinity,
+                fileNames.InitialTemperature,
+                fileNames.Dispersion,
+                fileNames.WindShielding
+            };
 
-        private static void CopySpatialFileDataToModel(IFunction copyTo, IFunction copyFrom)
-        {
-            if(copyTo == null || copyFrom == null) return;
-            copyTo.Arguments[0].SetValues(copyFrom.Arguments[0].Values);
-            copyTo.Components[0].SetValues(copyFrom.Components[0].Values);
+            if (model.DispersionFormulationType != DispersionFormulationType.Constant)
+            {
+                spatialDataFileNames.Add(fileNames.DispersionF3);
+                spatialDataFileNames.Add(fileNames.DispersionF4);
+            }
+
+            return spatialDataFileNames.Where(fn => fn != null);
         }
 
         private static void LogErrorReport(List<string> errorReport, Action<string> logAction)

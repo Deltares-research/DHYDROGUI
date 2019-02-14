@@ -139,7 +139,7 @@
     <Compile Include="FileReaders\SpatialData\SalinityConverter.cs" />
     <Compile Include="FileReaders\SpatialData\SalinityFileReader.cs" />
     <Compile Include="FileReaders\SpatialData\SpatialDataConverter.cs" />
-    <Compile Include="FileReaders\SpatialData\SpatialDataReader.cs" />
+    <Compile Include="FileReaders\SpatialData\NetworkCoverageFileReader.cs" />
     <Compile Include="FileWriters\Boundary\BoundaryFileWriter.cs" />
     <Compile Include="FileWriters\Boundary\BoundaryRegion.cs" />
     <Compile Include="FileWriters\Boundary\DefinitionGeneratorBoundary.cs" />

@@ -8,6 +8,7 @@ using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
+using DeltaShell.NGHS.IO.FileWriters.SpatialData;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties;
@@ -41,13 +42,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
             var fileCollection = new List<string>
             {
                 "BoundaryLocations.ini",
-                "Dispersion.ini",
-                "DispersionF3.ini",
-                "DispersionF4.ini",
-                "InitialDischarge.ini",
-                "InitialSalinity.ini",
-                "InitialTemperature.ini",
-                "InitialWaterLevel.ini",
+                SpatialDataFileNames.Dispersion,
+                SpatialDataFileNames.DispersionF3,
+                SpatialDataFileNames.DispersionF4,
+                SpatialDataFileNames.InitialDischarge,
+                SpatialDataFileNames.InitialSalinity,
+                SpatialDataFileNames.InitialTemperature,
+                SpatialDataFileNames.InitialWaterLevel,
                 "LateralDischargeLocations.ini",
                 "Retention.ini",
                 "roughness-FloodPlain1 (Reversed).ini",
@@ -58,7 +59,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
                 "sobeksim.fnm",
                 "SobekSim.ini",
                 "Structures.ini",
-                "WindShielding.ini"
+                SpatialDataFileNames.WindShielding
             };
 
             try

@@ -217,6 +217,7 @@
     <Compile Include="ImportExport\Roughness\RegularRoughnessConverter.cs" />
     <Compile Include="ImportExport\Roughness\RoughnessConverter.cs" />
     <Compile Include="ImportExport\Roughness\RoughnessReader.cs" />
+    <Compile Include="ImportExport\SpatialData\SpatialDataReader.cs" />
     <Compile Include="ImportExport\Structures\AdvancedWeirConverter.cs" />
     <Compile Include="ImportExport\Structures\BridgeConverter.cs" />
     <Compile Include="ImportExport\Structures\BridgePillarConverter.cs" />
