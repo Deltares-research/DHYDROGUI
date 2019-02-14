@@ -124,7 +124,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
         public void TestModelDefinitionsFileWriter_GlobalValues_1()
         {
             // water level (no initial discharge/initial salinity / dispersion)
-            WaterFlowModel1D waterFlowModel1D = new WaterFlowModel1D
+            var waterFlowModel1D = new WaterFlowModel1D
             {
                 InitialConditionsType = InitialConditionsType.WaterLevel,
                 DefaultInitialWaterLevel = 17.0,
@@ -135,7 +135,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
 
             ModelDefinitionFileWriter.WriteFile(modelDefinitionFile, waterFlowModel1D);
             string resultFileContent = File.ReadAllText(modelDefinitionFile).Replace(" ","");
-            Assert.IsFalse(resultFileContent.Contains("UseInitialWaterDepth"));
+            Assert.IsTrue(resultFileContent.Contains("UseInitialWaterDepth"));
             Assert.IsTrue(resultFileContent.Contains("InitialWaterLevel=17"));
             Assert.IsTrue(resultFileContent.Contains("InitialWaterDepth=7"));
             Assert.IsTrue(resultFileContent.Contains("InitialDischarge=0"));
