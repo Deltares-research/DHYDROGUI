@@ -293,8 +293,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
         {
             var spatialDataFileNames = new List<string>
             {
-                fileNames.InitialWaterLevel,
-                fileNames.InitialWaterDepth,
                 fileNames.InitialDischarge,
                 fileNames.InitialSalinity,
                 fileNames.InitialTemperature,
@@ -307,6 +305,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 spatialDataFileNames.Add(fileNames.DispersionF3);
                 spatialDataFileNames.Add(fileNames.DispersionF4);
             }
+
+            spatialDataFileNames.Add(model.InitialConditionsType == InitialConditionsType.WaterLevel
+                ? fileNames.InitialWaterLevel
+                : fileNames.InitialWaterDepth);
 
             return spatialDataFileNames.Where(fn => fn != null);
         }

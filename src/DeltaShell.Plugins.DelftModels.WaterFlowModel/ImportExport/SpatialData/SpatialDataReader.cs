@@ -5,6 +5,7 @@ using System.Linq;
 using DelftTools.Functions;
 using DeltaShell.NGHS.IO.FileReaders.SpatialData;
 using DeltaShell.NGHS.IO.FileWriters.SpatialData;
+using DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties;
 using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.SpatialData
@@ -25,11 +26,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.SpatialData
         private static void ReadNetworkCoverage(string filePath, WaterFlowModel1D model,
             Action<string, IList<string>> createAndAddErrorReport)
         {
-            if(!File.Exists(filePath)) return;
-
             var networkCoverageFileReader = new NetworkCoverageFileReader(createAndAddErrorReport);
             var networkCoverage = networkCoverageFileReader.ReadSpatialFileData(filePath, model.Network.Channels.ToList());
-            SetModelSpatialDataOnModel(filePath, model, networkCoverage);
+
+            if(networkCoverage != null) SetModelSpatialDataOnModel(filePath, model, networkCoverage);
         }
 
         private static void SetModelSpatialDataOnModel(string filePath, WaterFlowModel1D model, IFunction spatialFileData)
@@ -66,7 +66,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.SpatialData
                     CopySpatialFileDataToModel(model.WindShielding, spatialFileData);
                     break;
                 default:
-                    Log.Warn($"Could not find any spatial data to set on the model. The file: {filePath} does not have a correct name.");
+                    Log.Warn(string.Format(Resources.SpatialDataReader_SetModelSpatialDataOnModel_Could_not_find_any_spatial_data_to_set_on_the_model__The_file___0__does_not_have_a_correct_name_,
+                        filePath));
                     break;
             }
         }

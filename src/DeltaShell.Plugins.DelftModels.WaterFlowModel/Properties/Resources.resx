@@ -505,4 +505,7 @@
   <data name="WaterFlowModel1DHydroNetworkValidator_ValidateCrossSections_Roughness_positions_of_one_or_more_cross_sections_do_not_match_the_start_and_stop_positions_of_the_y__values_" xml:space="preserve">
     <value>The roughness positions of one or more cross sections do not match the start and stop positions of the y' values.</value>
   </data>
+  <data name="SpatialDataReader_SetModelSpatialDataOnModel_Could_not_find_any_spatial_data_to_set_on_the_model__The_file___0__does_not_have_a_correct_name_" xml:space="preserve">
+    <value>Could not find any spatial data to set on the model. The file: {0} does not have a correct name.</value>
+  </data>
 </root>

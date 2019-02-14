@@ -609,6 +609,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not find any spatial data to set on the model. The file: {0} does not have a correct name..
+        /// </summary>
+        public static string SpatialDataReader_SetModelSpatialDataOnModel_Could_not_find_any_spatial_data_to_set_on_the_model__The_file___0__does_not_have_a_correct_name_ {
+            get {
+                return ResourceManager.GetString("SpatialDataReader_SetModelSpatialDataOnModel_Could_not_find_any_spatial_data_to_s" +
+                        "et_on_the_model__The_file___0__does_not_have_a_correct_name_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to While reading the structures from file at &apos;{0}&apos;, an error occured.
         /// </summary>
         public static string StructuresFileReader_ReadStructures_While_reading_the_structures_from_file_at___0____an_error_occured {

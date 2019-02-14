@@ -279,6 +279,7 @@
     <Compile Include="ImportExport\Roughness\RoughnessSectionToDataTableConverterTest.cs" />
     <Compile Include="ImportExport\Roughness\RoughnessBranchDataCsvReaderTest.cs" />
     <Compile Include="ImportExport\SobekToFMExporterTest.cs" />
+    <Compile Include="ImportExport\SpatialData\SpatialDataReaderTest.cs" />
     <Compile Include="ImportExport\Structures\AdvancedWeirConverterTest.cs" />
     <Compile Include="ImportExport\Structures\BridgeConverterTest.cs" />
     <Compile Include="ImportExport\Structures\BridgePillarTest.cs" />
