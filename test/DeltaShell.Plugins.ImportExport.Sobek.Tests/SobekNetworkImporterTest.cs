@@ -815,7 +815,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         }
 
         [Test]
-        [Category(TestCategory.Jira)] // issue SOBEK3-1644
         public void RunZwolleModel()
         {
             InitializeSobekLicense();
@@ -873,7 +872,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         }
 
         [Test]
-        [Category(TestCategory.Jira)] // issue SOBEK3-1644
         public void RunZwolleModelWithAddedCrossSection()
         {
             InitializeSobekLicense();

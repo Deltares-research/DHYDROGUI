@@ -89,7 +89,6 @@ namespace Sobek.IntegrationTests
         }
 
         [Test]
-        [Category(TestCategory.Jira)] //SOBEK3-1644
         public void ShowSideViewForProblematicRoute()
         {
             var modelImporter = new SobekWaterFlowModel1DImporter();
@@ -185,7 +184,6 @@ namespace Sobek.IntegrationTests
         }
 
         [Test]
-        [Category(TestCategory.Jira)] // SOBEK3-1644
         [Category(TestCategory.Integration)]
         [Category(TestCategory.Slow)]
         public void RunImportedAndCopiedModel()
