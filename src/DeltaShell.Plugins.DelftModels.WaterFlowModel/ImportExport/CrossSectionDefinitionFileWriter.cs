@@ -20,10 +20,20 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
         {
             if (File.Exists(targetFile)) File.Delete(targetFile);
 
+            var categories = CrossSectionDefinitionFileConverter.Convert(waterFlowModel1D);
+            
+            new IniFileWriter().WriteIniFile(categories, targetFile);
+        }
+    }
+
+    public static class CrossSectionDefinitionFileConverter
+    {
+        public static IEnumerable<DelftIniCategory> Convert(WaterFlowModel1D waterFlowModel1D)
+        {
             var categories = new List<DelftIniCategory>()
             {
-                GeneralRegionGenerator.GenerateGeneralRegion(GeneralRegion.CrossSectionDefinitionsMajorVersion, 
-                                      GeneralRegion.CrossSectionDefinitionsMinorVersion, 
+                GeneralRegionGenerator.GenerateGeneralRegion(GeneralRegion.CrossSectionDefinitionsMajorVersion,
+                                      GeneralRegion.CrossSectionDefinitionsMinorVersion,
                                       GeneralRegion.FileTypeName.CrossSectionDefinition),
             };
 
@@ -39,7 +49,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                     : crossSection.Definition;
 
                 var definitionGeneratorCrossSectionDefinition = DefinitionGeneratorFactory.GetDefinitionGeneratorCrossSection(definition, crossSection.CrossSectionType);
-                
+
                 if (definitionGeneratorCrossSectionDefinition == null) continue;
 
                 string csDefinitionId = definition.Name;
@@ -64,34 +74,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 categories.Add(definitionRegion);
                 processedCsDefinitions.Add(csDefinitionId);
             }
-            
-            new IniFileWriter().WriteIniFile(categories, targetFile);
-        }
 
-        private static DelftIniCategory AddGroundLayer(DelftIniCategory iniCategory, string crossSectionDefinitionName, IHydroNetwork network)
-        {
-            int groundlayerUsed = 0; // default value
-            double groundlayer = 0.0;  // default value
-            var structure = network.Structures.FirstOrDefault(s =>  (s is ICulvert && ((ICulvert)s).CrossSectionDefinition.Name == crossSectionDefinitionName) ||
-                                                                    (s is IBridge && ((IBridge)s).CrossSectionDefinition !=null && ((IBridge)s).CrossSectionDefinition.Name == crossSectionDefinitionName)) as IGroundLayer;
-            if (structure != null)
-            {
-                groundlayerUsed = Convert.ToInt32(structure.GroundLayerEnabled);
-                groundlayer = structure.GroundLayerThickness;
-            }
-            
-            iniCategory.AddProperty(DefinitionRegion.GroundlayerUsed.Key, groundlayerUsed, DefinitionRegion.GroundlayerUsed.Description);
-            iniCategory.AddProperty(DefinitionRegion.Groundlayer.Key, groundlayer, DefinitionRegion.Groundlayer.Description, DefinitionRegion.Groundlayer.Format);
-            return iniCategory;
+            return categories;
         }
-
         private static DelftIniCategory AddRoughnessDataToFileContent(DelftIniCategory iniCategory, ICrossSection crossSection, IList<RoughnessSection> roughnessSections, bool useReverseRoughness)
         {
             var sectionSections = crossSection.Definition.Sections as IList<CrossSectionSection>;
             if (sectionSections.Count == 0)
             {
                 IList<double> y = crossSection.Definition.Profile.Select(yz => yz.X).ToArray();
-                
+
                 IList<CrossSectionSection> crossSectionSections = new List<CrossSectionSection>
                                                                       {
                                                                           new CrossSectionSection
@@ -106,7 +98,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 
             }
             var sectionCount = sectionSections.Count.ToString();
-            
+
             var roughnessPositions = sectionSections.Select(s => s.MinY).Union(sectionSections.Select(s => s.MaxY));
             var frictionNames = new List<string>();
             var frictionTypePositive = new List<int>();
@@ -160,7 +152,21 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             }
             return roughnessSection;
         }
+        private static DelftIniCategory AddGroundLayer(DelftIniCategory iniCategory, string crossSectionDefinitionName, IHydroNetwork network)
+        {
+            int groundlayerUsed = 0; // default value
+            double groundlayer = 0.0;  // default value
+            var structure = network.Structures.FirstOrDefault(s => (s is ICulvert && ((ICulvert)s).CrossSectionDefinition.Name == crossSectionDefinitionName) ||
+                                                                   (s is IBridge && ((IBridge)s).CrossSectionDefinition != null && ((IBridge)s).CrossSectionDefinition.Name == crossSectionDefinitionName)) as IGroundLayer;
+            if (structure != null)
+            {
+                groundlayerUsed = System.Convert.ToInt32(structure.GroundLayerEnabled);
+                groundlayer = structure.GroundLayerThickness;
+            }
 
-        
+            iniCategory.AddProperty(DefinitionRegion.GroundlayerUsed.Key, groundlayerUsed, DefinitionRegion.GroundlayerUsed.Description);
+            iniCategory.AddProperty(DefinitionRegion.Groundlayer.Key, groundlayer, DefinitionRegion.Groundlayer.Description, DefinitionRegion.Groundlayer.Format);
+            return iniCategory;
+        }
     }
 }
