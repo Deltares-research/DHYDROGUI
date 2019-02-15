@@ -172,6 +172,7 @@
     <Compile Include="FiniteVolumeDiscretizationProvider.cs" />
     <Compile Include="FiniteVolumeDiscretizationType.cs" />
     <Compile Include="Flow1DBasicModelInterface.cs" />
+    <Compile Include="Flow1DFunctionExtension.cs" />
     <Compile Include="ImportExport\Boundary\BcConverterHelper.cs" />
     <Compile Include="ImportExport\Boundary\BoundaryComponent.cs" />
     <Compile Include="ImportExport\Boundary\BoundaryCondition.cs" />
