@@ -8,7 +8,7 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.DelftIniCategoryGenerators
 {
     [TestFixture]
-    public class GlobalValuesCategoryGenerator
+    public class GlobalValuesCategoryGeneratorTest
     {
         [TestCase(InitialConditionsType.WaterLevel, "0")]
         [TestCase(InitialConditionsType.Depth, "1")]
