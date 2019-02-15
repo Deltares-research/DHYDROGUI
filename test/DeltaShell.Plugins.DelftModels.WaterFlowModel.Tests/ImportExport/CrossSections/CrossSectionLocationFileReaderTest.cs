@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Extensions;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSections;
+using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSections.Reader;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.CrossSections

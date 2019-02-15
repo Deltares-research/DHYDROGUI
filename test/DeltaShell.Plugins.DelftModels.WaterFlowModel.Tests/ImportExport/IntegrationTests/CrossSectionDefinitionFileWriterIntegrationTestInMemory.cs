@@ -9,7 +9,7 @@ using DeltaShell.Core;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSections;
+using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSections.Reader;
 using DeltaShell.Plugins.NetworkEditor;
 using log4net.Core;
 using NetTopologySuite.Extensions.Coverages;

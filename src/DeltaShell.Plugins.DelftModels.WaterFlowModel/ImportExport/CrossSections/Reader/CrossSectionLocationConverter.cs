@@ -1,11 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using DelftTools.Hydro.CrossSections;
 using DeltaShell.NGHS.IO.FileWriters.Location;
 using DeltaShell.NGHS.IO.Helpers;
-using System.Collections.Generic;
-using System.Linq;
 
-namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSections
+namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSections.Reader
 {
     public static class CrossSectionLocationConverter
     {

@@ -1,10 +1,10 @@
-﻿using DelftTools.Hydro.CrossSections;
+﻿using System;
+using System.Collections.Generic;
+using DelftTools.Hydro.CrossSections;
 using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.Helpers;
-using System;
-using System.Collections.Generic;
 
-namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSections
+namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSections.Reader
 {
     public class CrossSectionLocationFileReader
     {

@@ -184,11 +184,11 @@
     <Compile Include="ImportExport\Boundary\WindDataConverter.cs" />
     <Compile Include="ImportExport\Boundary\BoundaryLocation.cs" />
     <Compile Include="ImportExport\Boundary\BoundaryLocationConverter.cs" />
-    <Compile Include="ImportExport\CrossSections\CrossSectionDefinitionConverter.cs" />
-    <Compile Include="ImportExport\CrossSections\CrossSectionDefinitionFileReader.cs" />
-    <Compile Include="ImportExport\CrossSections\CrossSectionFileReader.cs" />
-    <Compile Include="ImportExport\CrossSections\CrossSectionLocationConverter.cs" />
-    <Compile Include="ImportExport\CrossSections\CrossSectionLocationFileReader.cs" />
+    <Compile Include="ImportExport\CrossSections\Reader\CrossSectionDefinitionConverter.cs" />
+    <Compile Include="ImportExport\CrossSections\Reader\CrossSectionDefinitionFileReader.cs" />
+    <Compile Include="ImportExport\CrossSections\Reader\CrossSectionFileReader.cs" />
+    <Compile Include="ImportExport\CrossSections\Reader\CrossSectionLocationConverter.cs" />
+    <Compile Include="ImportExport\CrossSections\Reader\CrossSectionLocationFileReader.cs" />
     <Compile Include="ImportExport\DelftIniCategoryGenerators\GlobalValuesCategoryGenerator.cs" />
     <Compile Include="ImportExport\Flow1DParameterCategoryGenerator.cs" />
     <Compile Include="ImportExport\ModelDefinition\DelftIniPropertyValidationLookup.cs" />
@@ -241,7 +241,7 @@
     <Compile Include="ImportExport\WaterFlowModel1DBoundaryFileWriter.cs" />
     <Compile Include="ImportExport\BoundaryFileWriterHelper.cs" />
     <Compile Include="ImportExport\BoundaryLocationFileWriter.cs" />
-    <Compile Include="ImportExport\CrossSectionDefinitionFileWriter.cs" />
+    <Compile Include="ImportExport\CrossSections\Writer\CrossSectionDefinitionFileWriter.cs" />
     <Compile Include="ImportExport\Flow1DParameterGenerator.cs" />
     <Compile Include="ImportExport\ModelDefinitionFileWriter.cs" />
     <Compile Include="ImportExport\ModelDefinitionsRegion.cs" />

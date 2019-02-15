@@ -7,7 +7,7 @@ using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
 using DeltaShell.NGHS.IO.Helpers;
 
-namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSections
+namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSections.Reader
 {
     public class GroundLayerDTO
     {

@@ -1,13 +1,13 @@
 ﻿using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.TestUtils;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSections;
 using NetTopologySuite.Extensions.Networks;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSections.Reader;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.CrossSections
 {

@@ -1,12 +1,12 @@
-﻿using DelftTools.Hydro.CrossSections;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using DelftTools.Hydro.CrossSections;
 using DeltaShell.NGHS.IO.FileWriters;
 using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
 using DeltaShell.NGHS.IO.Helpers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
-namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSections
+namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSections.Reader
 {
     public static class CrossSectionDefinitionConverter
     {

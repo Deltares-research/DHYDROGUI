@@ -12,7 +12,7 @@ using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness;
 using NetTopologySuite.Extensions.Networks;
 
-namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
+namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSections.Writer
 {
     public static class CrossSectionDefinitionFileWriter
     {
