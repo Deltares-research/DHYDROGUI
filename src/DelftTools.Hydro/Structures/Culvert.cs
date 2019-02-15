@@ -16,11 +16,13 @@ namespace DelftTools.Hydro.Structures
     [Entity(FireOnCollectionChange=false)]
     public class Culvert : BranchStructure, ICulvert
     {
+        private double width;
         private FlowDirection flowDirection;
         private CrossSectionDefinitionZW tabulatedCrossSectionDefinition;
         private ICrossSectionDefinition crossSectionDefinition;
         private CulvertGeometryType geometryType;
         private CulvertType culvertType;
+
 
         public Culvert()
             : this("Culvert")
@@ -160,8 +162,6 @@ namespace DelftTools.Hydro.Structures
             get { return Length; }
             set { Length = value; }
         }
-
-        private double width;
 
         [DynamicReadOnly]
         [FeatureAttribute(Order = 24)]

@@ -71,17 +71,24 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSectio
             
             foreach (var category in definitionCategories)
             {
-                if(!category.Properties.Any(p => p.Name == DefinitionRegion.GroundlayerUsed.Key) || !category.Properties.Any(p => p.Name == DefinitionRegion.Groundlayer.Key))
+                if(category.Properties.All(p => p.Name != DefinitionRegion.GroundlayerUsed.Key) || 
+                   category.Properties.All(p => p.Name != DefinitionRegion.Groundlayer.Key))
                     continue;
 
-                var groundLayerData = new GroundLayerDTO
-                {
-                    CrossSectionDefinitionId = category.ReadProperty<string>(DefinitionRegion.Id.Key),
-                    GroundLayerUsed = category.ReadProperty<string>(DefinitionRegion.GroundlayerUsed.Key) == "1",
-                    GroundLayerThickness = category.ReadProperty<double>(DefinitionRegion.Groundlayer.Key)
-                };
+                var groundLayerData = CreateGroundLayerDataDto(category);
                 yield return groundLayerData;
             }
+        }
+
+        private static GroundLayerDTO CreateGroundLayerDataDto(DelftIniCategory category)
+        {
+            var groundLayerData = new GroundLayerDTO
+            {
+                CrossSectionDefinitionId = category.ReadProperty<string>(DefinitionRegion.Id.Key),
+                GroundLayerUsed = category.ReadProperty<string>(DefinitionRegion.GroundlayerUsed.Key) == "1",
+                GroundLayerThickness = category.ReadProperty<double>(DefinitionRegion.Groundlayer.Key)
+            };
+            return groundLayerData;
         }
     }
 }

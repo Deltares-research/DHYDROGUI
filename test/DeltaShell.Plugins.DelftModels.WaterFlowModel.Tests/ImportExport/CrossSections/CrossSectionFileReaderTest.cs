@@ -196,7 +196,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Cross
             var groundLayerData = groundLayerDataObjects.FirstOrDefault();
             Assert.IsNotNull(groundLayerData);
             Assert.That(groundLayerData.CrossSectionDefinitionId, Is.EqualTo("CrossSection1"));
-            Assert.IsTrue(groundLayerData.GroundLayerUsed);
+            Assert.IsTrue(groundLayerData.GroundLayerUsed, "GroundLayer is not used");
             Assert.That(groundLayerData.GroundLayerThickness, Is.EqualTo(2.0));
         }
     }

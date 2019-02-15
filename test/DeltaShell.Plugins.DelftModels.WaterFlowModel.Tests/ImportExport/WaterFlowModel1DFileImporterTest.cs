@@ -308,7 +308,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
         public void GivenAWaterFlowModel1DAndSomePathAndANullTarget_WhenImportItemIsCalledWithTheseParametersAndThisModelIsRead_ThenThisModelIsReturned()
         {
             // Given
-            var model = new WaterFlowModel1D("potato");
+            var model = new WaterFlowModel1D("newModel");
 
             const string path = "somePath";
 
@@ -343,10 +343,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
         {
             // Given
             var folder = new Folder();
-            var prevModel = new WaterFlowModel1D("definitely-not-a-potato");
+            var prevModel = new WaterFlowModel1D("prevModel");
             folder.Add(prevModel);
 
-            var model = new WaterFlowModel1D("potato");
+            var model = new WaterFlowModel1D("newModel");
 
             const string path = "somePath";
 

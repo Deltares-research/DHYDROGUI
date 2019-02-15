@@ -282,16 +282,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
         #region View properties
 
         public bool IsSiphon { get; set; }
-        public bool IsInvertedSiphon { get; set; }
-        public bool IsCulvert { get; set; }
+        private bool IsInvertedSiphon { get; set; }
+        private bool IsCulvert { get; set; }
         public bool IsTabulated { get; set; }
         public bool IsRound { get; set; }
         public bool IsSteelCunette { get; set; }
-        public bool IsCunette { get; set; }
+        private bool IsCunette { get; set; }
         public bool IsArch { get; set; }
-        public bool IsEllipse { get; set; }
-        public bool IsRectangle { get; set; }
-        public bool IsEgg { get; set; }
+        private bool IsEllipse { get; set; }
+        private bool IsRectangle { get; set; }
+        private bool IsEgg { get; set; }
         public bool GeometryWidthVisibility { get; set; }
         public bool GeometryHeightVisibility { get; set; }
         public bool GeometryHeightEnabled { get; set; }
