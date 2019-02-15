@@ -42,6 +42,39 @@ namespace DelftTools.Hydro.Tests
         }
 
         [Test]
+        public void
+            GivenACrossSectionDefinitionYZWhereNoSectionsAreDefined_WhenRefreshSectionsWidths_ThenMethodIsReturningBeforeChanges()
+        {
+            var crossSection = new CrossSectionDefinitionYZ("myCrossSection");
+            Assert.That(crossSection.Sections.Count, Is.EqualTo(0), "Cross section sections have been created, this is not expected.");
+            crossSection.RefreshSectionsWidths();
+            Assert.That(crossSection.Sections.Count, Is.EqualTo(0), "Cross section sections have been created, this is not expected.");
+        }
+        
+        [Test]
+        public void
+            GivenACrossSectionDefinitionYZWhereRoughnessPositionsDoNotMatchProfile_WhenRefreshSectionsWidths_ThenTheFirstAndLastRoughnessPositionsHaveChanged()
+        {
+            var crossSection = new CrossSectionDefinitionYZ("myCrossSection");
+            crossSection.BeginEdit(new DefaultEditAction("Set YZ data"));
+            crossSection.YZDataTable.AddCrossSectionYZRow(0.0, 0.0, 0.0);
+            crossSection.YZDataTable.AddCrossSectionYZRow(4.0, 0.0, 0.0);
+            crossSection.YZDataTable.AddCrossSectionYZRow(9.0, 0.0, 0.0);
+            crossSection.EndEdit();
+
+            var crossSectionSection1 = new CrossSectionSection {MinY = 0.2, MaxY = 5.2};
+            var crossSectionSection2 = new CrossSectionSection {MinY = 5.2, MaxY = 9.2};
+
+            crossSection.Sections.Add(crossSectionSection1);
+            crossSection.Sections.Add(crossSectionSection2);
+
+            TestHelper.AssertLogMessagesCount(() => crossSection.RefreshSectionsWidths(), 2);
+            Assert.That(crossSectionSection1.MinY, Is.EqualTo(0.0), "First roughness position not correctly set");
+            Assert.That(crossSectionSection2.MaxY, Is.EqualTo(9.0), "Last roughness position not correctly set");
+        }
+        
+
+        [Test]
         public void GetGeometryWithNoYZReturnsPoint()
         {
             //this is not a requirement but it seems handy. null might also be reasonable

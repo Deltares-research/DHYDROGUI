@@ -222,17 +222,25 @@ namespace DelftTools.Hydro.CrossSections
             var firstProfilePosition = Profile.First().X;
             var lastProfilePosition = Profile.Last().X;
 
-            Sections.First().MinY = firstProfilePosition;
-            Sections.Last().MaxY = lastProfilePosition;
+            if (Math.Abs(firstRoughnessPosition - firstProfilePosition) > double.Epsilon)
+            {
+                Sections.First().MinY = firstProfilePosition;
+                Log.Info(
+                    string.Format(
+                        Resources
+                            .CrossSectionDefinitionYZ_RefreshSectionsWidths_The__0__roughness_position_of_cross_section____1___has_been_changed_from__2__m_to__3__m_to_match_the_flow_profile,
+                        "starting", Name, firstRoughnessPosition, firstProfilePosition));
+            }
 
-            Log.Info(
-                string.Format(
-                    Resources.CrossSectionDefinitionYZ_RefreshSectionsWidths_The__0__roughness_position_of_cross_section____1___has_been_changed_from__2__m_to__3__m_to_match_the_flow_profile,
-                    "starting", Name, firstRoughnessPosition, firstProfilePosition));
-            Log.Info(
-                string.Format(
-                    Resources.CrossSectionDefinitionYZ_RefreshSectionsWidths_The__0__roughness_position_of_cross_section____1___has_been_changed_from__2__m_to__3__m_to_match_the_flow_profile,
-                    "ending", Name, lastRoughnessPosition, lastProfilePosition));
+            if (Math.Abs(lastRoughnessPosition - lastProfilePosition) > double.Epsilon)
+            {
+                Sections.Last().MaxY = lastProfilePosition;
+                Log.Info(
+                    string.Format(
+                        Resources
+                            .CrossSectionDefinitionYZ_RefreshSectionsWidths_The__0__roughness_position_of_cross_section____1___has_been_changed_from__2__m_to__3__m_to_match_the_flow_profile,
+                        "ending", Name, lastRoughnessPosition, lastProfilePosition));
+            }
         }
 
         public override object Clone()
