@@ -24,7 +24,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
         }
 
         /// <summary>
-        /// Initialize a new instance of the <see cref="WindFunction"/> class with the specified <param name="name"/>.
+        /// Initialize a new instance of the <see cref="WindFunction"/> class with the specified <paramref name="name"/>.
         /// </summary>
         /// <param name="name">The name of this new WindFunction.</param>
         public WindFunction(string name)
@@ -48,13 +48,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
         /// <summary>
         /// Get the wind velocity component of this WindFunction.
         /// </summary>
-        /// <value> The wind velocity. </value>
+        /// <value> The wind velocity (m/s). </value>
         public IVariable Velocity => Components[0];
 
         /// <summary>
         /// Get the wind direction component of this WindFunction.
         /// </summary>
-        /// <value>The wind direction.</value>
+        /// <value>The wind direction (deg).</value>
         public IVariable Direction => Components[1];
     }
 }
