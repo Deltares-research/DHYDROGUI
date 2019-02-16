@@ -1,10 +1,10 @@
-﻿using System;
-using DelftTools.Functions.Generic;
+﻿using System.ComponentModel;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils;
 using DelftTools.Utils.ComponentModel;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Properties;
+
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
 {
@@ -15,10 +15,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
         [ResourcesCategory(typeof(Resources), "Categories_General")]
         [ResourcesDisplayName(typeof(Resources), "Common_Name_DisplayName")]
         [ResourcesDescription(typeof(Resources), "WaterFlowModel1DLateralDataProperties_Name_Description")]
-        public string Name
-        {
-            get { return data.Name; }
-        }
+        public string Name => data.Name;
 
         [PropertyOrder(2)]
         [ResourcesCategory(typeof(Resources), "Categories_General")]
@@ -26,97 +23,87 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
         [ResourcesDescription(typeof(Resources), "WaterFlowModel1DLateralDataProperties_Type_Description")]
         public WaterFlowModel1DLateralDataType LateralType
         {
-            get { return data.DataType; }
+            get => data.DataType;
             set
             {
                 if (data.DataType != value)
                 {
                     data.DataType = value;
-
-                    if (data.DataType == WaterFlowModel1DLateralDataType.FlowWaterLevelTable && data.Data != null)
-                    {
-                        data.Data.Arguments[0].InterpolationType = InterpolationType.Linear;
-                    }
                 }
             }
         }
 
         [PropertyOrder(3)]
-        [DynamicReadOnly] // TODO: make this property invisible if readonly
+        [DynamicReadOnly]
         [ResourcesCategory(typeof(Resources), "Categories_General")]
-        [ResourcesDisplayName(typeof(Resources), "WaterFlowModel1DLateralDataProperties_InterpolationTypeQt_DisplayName")]
-        [ResourcesDescription(typeof(Resources), "WaterFlowModel1DLateralDataProperties_InterpolationTypeQt_Description")]
-        public InterpolationTypeBoundaryTime InterpolationTypeQt
+        [ResourcesDisplayName(typeof(Resources), "WaterFlowModel1DLateralDataProperties_InterpolationType_DisplayName")]
+        [ResourcesDescription(typeof(Resources), "WaterFlowModel1DLateralDataProperties_InterpolationType_Description")]
+        public Flow1DInterpolationType InterpolationType
         {
             get
             {
-                var type = (InterpolationTypeBoundaryTime) data.Data.Arguments[0].InterpolationType;
-
-                return Enum.IsDefined(typeof(InterpolationTypeBoundaryTime), type)
-                           ? type
-                           : InterpolationTypeBoundaryTime.Constant;
+                if (data.DataType == WaterFlowModel1DLateralDataType.FlowConstant)
+                    return Flow1DInterpolationType.BlockFrom;
+                return data.Data.GetInterpolationType();
             }
-            set
-            {
-                data.Data.Arguments[0].InterpolationType = (InterpolationType) value;
-            }
+            set => data.Data.SetInterpolationType(value);
         }
 
-        [PropertyOrder(4)] // TODO: make this property invisible if not relevant
+        [PropertyOrder(4)]
+        [DynamicReadOnly]
         [ResourcesCategory(typeof(Resources), "Categories_General")]
-        [ResourcesDisplayName(typeof(Resources), "WaterFlowModel1DBoundaryNodeDataProperties_InterpolationTypeQh_DisplayName")]
-        [ResourcesDescription(typeof(Resources), "WaterFlowModel1DBoundaryNodeDataProperties_ExtrapolationTypeQh_Description")]
-        public InterpolationTypeBoundaryQh InterpolationTypeQh
+        [ResourcesDisplayName(typeof(Resources), "WaterFlowModel1DLateralDataProperties_ExtrapolationType_DisplayName")]
+        [ResourcesDescription(typeof(Resources), "WaterFlowModel1DLateralDataProperties_ExtrapolationType_Description")]
+        public Flow1DExtrapolationType ExtrapolationType
         {
             get
             {
-                var type = (InterpolationTypeBoundaryQh) data.Data.Arguments[0].InterpolationType;
-
-                return Enum.IsDefined(typeof(InterpolationTypeBoundaryQh), type)
-                           ? type
-                           : InterpolationTypeBoundaryQh.Linear;
+                if (data.DataType == WaterFlowModel1DLateralDataType.FlowConstant)
+                    return Flow1DExtrapolationType.Constant;
+                return data.Data.GetExtrapolationType();
             }
+            set => data.Data.SetExtrapolationType(value);
         }
 
         [PropertyOrder(5)]
-        [DynamicReadOnly] // TODO: make this property invisible if readonly
+        [DynamicReadOnly]
         [ResourcesCategory(typeof(Resources), "Categories_General")]
-        [ResourcesDisplayName(typeof(Resources), "WaterFlowModel1DLateralDataProperties_ExtrapolationTypeQt_DisplayName")]
-        [ResourcesDescription(typeof(Resources), "WaterFlowModel1DLateralDataProperties_ExtrapolationTypeQt_Description")]
-        public ExtrapolationType ExtrapolationTypeQt
-        {
-            get { return data.Data.Arguments[0].ExtrapolationType; }
-            set { data.Data.Arguments[0].ExtrapolationType = value; }
-        }
-
-        [PropertyOrder(6)] // TODO: make this property invisible if not relevant
-        [ResourcesCategory(typeof(Resources), "Categories_General")]
-        [ResourcesDisplayName(typeof(Resources), "WaterFlowModel1DBoundaryNodeDataProperties_ExtrapolationTypeQh_DisplayName")]
-        [ResourcesDescription(typeof(Resources), "WaterFlowModel1DBoundaryNodeDataProperties_ExtrapolationTypeQh_Description")]
-        public ExtrapolationTypeQh ExtrapolationTypeQh
+        [ResourcesDisplayName(typeof(Resources), "WaterFlowModel1DLateralDataProperties_HasPeriodicity_DisplayName")]
+        [ResourcesDescription(typeof(Resources), "WaterFlowModel1DLateralDataProperties_HasPeriodicity_Description")]
+        public bool HasPeriodicity
         {
             get
             {
-                var type = (ExtrapolationTypeQh) data.Data.Arguments[0].ExtrapolationType;
-
-                return Enum.IsDefined(typeof(ExtrapolationTypeQh), type)
-                           ? type
-                           : ExtrapolationTypeQh.Constant;
+                if (data.DataType == WaterFlowModel1DLateralDataType.FlowConstant)
+                    return false;
+                return data.Data.HasPeriodicity();
             }
+            set => data.Data.SetPeriodicity(value);
         }
 
         [DynamicReadOnlyValidationMethod]
         public bool DynamicReadOnlyValidationMethod(string propertyName)
         {
-            if (propertyName == "InterpolationTypeQt")
+            if (propertyName == "InterpolationType")
             {
-                return LateralType != WaterFlowModel1DLateralDataType.FlowTimeSeries;
+                return LateralType != WaterFlowModel1DLateralDataType.FlowTimeSeries ||
+                       !data.Data.HasArguments()                                     ||
+                       !data.Data.Arguments[0].AllowSetInterpolationType;
             }
 
-            if (propertyName == "ExtrapolationTypeQt")
+            if (propertyName == "ExtrapolationType")
             {
-                return LateralType != WaterFlowModel1DLateralDataType.FlowTimeSeries;
+                return LateralType != WaterFlowModel1DLateralDataType.FlowTimeSeries      ||
+                       !data.Data.HasArguments()                                          ||
+                       !data.Data.Arguments[0].AllowSetExtrapolationType                  ||
+                       data.Data.GetInterpolationType() != Flow1DInterpolationType.Linear ||
+                       data.Data.HasPeriodicity();
             }
+
+            if (propertyName == "HasPeriodicity")
+                return  LateralType != WaterFlowModel1DLateralDataType.FlowTimeSeries ||
+                       !data.Data.HasArguments()                                      ||
+                       !data.Data.Arguments[0].AllowSetExtrapolationType;
 
             return true;
         }

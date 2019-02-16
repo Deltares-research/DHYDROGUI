@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -246,6 +246,78 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Properties {
             get {
                 object obj = ResourceManager.GetObject("Meteo", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Interpolation scheme used along the time-axis of the time-series..
+        /// </summary>
+        internal static string MeteoDataFunctionFunctionProperties_InterpolationType_Description {
+            get {
+                return ResourceManager.GetString("MeteoDataFunctionFunctionProperties_InterpolationType_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Meteo data time-series.
+        /// </summary>
+        internal static string MeteoDataFunctionProperties_DisplayName {
+            get {
+                return ResourceManager.GetString("MeteoDataFunctionProperties_DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Extrapolation scheme used along the time-axis of the time-series..
+        /// </summary>
+        internal static string MeteoDataFunctionProperties_Extrapolation_Description {
+            get {
+                return ResourceManager.GetString("MeteoDataFunctionProperties_Extrapolation_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Extrapolation.
+        /// </summary>
+        internal static string MeteoDataFunctionProperties_Extrapolation_DisplayName {
+            get {
+                return ResourceManager.GetString("MeteoDataFunctionProperties_Extrapolation_DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Whether to use periodicity or the defined extrapolation scheme..
+        /// </summary>
+        internal static string MeteoDataFunctionProperties_HasPeriodicity_Description {
+            get {
+                return ResourceManager.GetString("MeteoDataFunctionProperties_HasPeriodicity_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Is periodic.
+        /// </summary>
+        internal static string MeteoDataFunctionProperties_HasPeriodicity_DisplayName {
+            get {
+                return ResourceManager.GetString("MeteoDataFunctionProperties_HasPeriodicity_DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Interpolation.
+        /// </summary>
+        internal static string MeteoDataFunctionProperties_InterpolationType_DisplayName {
+            get {
+                return ResourceManager.GetString("MeteoDataFunctionProperties_InterpolationType_DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The name of this data..
+        /// </summary>
+        internal static string MeteoDataFunctionProperties_Name_Description {
+            get {
+                return ResourceManager.GetString("MeteoDataFunctionProperties_Name_Description", resourceCulture);
             }
         }
         
@@ -574,74 +646,56 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Extrapolation scheme used along the water level axis for the water level dependent water flow data series..
+        ///   Looks up a localized string similar to Extrapolation scheme used along the time axis for the currently selected type..
         /// </summary>
-        internal static string WaterFlowModel1DBoundaryNodeDataProperties_ExtrapolationTypeQh_Description {
+        internal static string WaterFlowModel1DBoundaryNodeDataProperties_ExtrapolationType_Description {
             get {
-                return ResourceManager.GetString("WaterFlowModel1DBoundaryNodeDataProperties_ExtrapolationTypeQh_Description", resourceCulture);
+                return ResourceManager.GetString("WaterFlowModel1DBoundaryNodeDataProperties_ExtrapolationType_Description", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Extrapolation scheme for Q(h).
+        ///   Looks up a localized string similar to Extrapolation scheme.
         /// </summary>
-        internal static string WaterFlowModel1DBoundaryNodeDataProperties_ExtrapolationTypeQh_DisplayName {
+        internal static string WaterFlowModel1DBoundaryNodeDataProperties_ExtrapolationType_DisplayName {
             get {
-                return ResourceManager.GetString("WaterFlowModel1DBoundaryNodeDataProperties_ExtrapolationTypeQh_DisplayName", resourceCulture);
+                return ResourceManager.GetString("WaterFlowModel1DBoundaryNodeDataProperties_ExtrapolationType_DisplayName", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Extrapolation scheme used along the time axis for the time-dependent water flow and water level time-series..
+        ///   Looks up a localized string similar to Whether to use periodicity or the defined extrapolation scheme..
         /// </summary>
-        internal static string WaterFlowModel1DBoundaryNodeDataProperties_ExtrapolationTypeT_Description {
+        internal static string WaterFlowModel1DBoundaryNodeDataProperties_HasPeriodicity_Description {
             get {
-                return ResourceManager.GetString("WaterFlowModel1DBoundaryNodeDataProperties_ExtrapolationTypeT_Description", resourceCulture);
+                return ResourceManager.GetString("WaterFlowModel1DBoundaryNodeDataProperties_HasPeriodicity_Description", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Extrapolation scheme for Q(t) or H(t).
+        ///   Looks up a localized string similar to Is periodic.
         /// </summary>
-        internal static string WaterFlowModel1DBoundaryNodeDataProperties_ExtrapolationTypeT_DisplayName {
+        internal static string WaterFlowModel1DBoundaryNodeDataProperties_HasPeriodicity_DisplayName {
             get {
-                return ResourceManager.GetString("WaterFlowModel1DBoundaryNodeDataProperties_ExtrapolationTypeT_DisplayName", resourceCulture);
+                return ResourceManager.GetString("WaterFlowModel1DBoundaryNodeDataProperties_HasPeriodicity_DisplayName", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Interpolation scheme used along the water level axis for the water level dependent water flow data series..
+        ///   Looks up a localized string similar to Interpolation scheme used along the time axis for the currently selected type..
         /// </summary>
-        internal static string WaterFlowModel1DBoundaryNodeDataProperties_InterpolationTypeQh_Description {
+        internal static string WaterFlowModel1DBoundaryNodeDataProperties_InterpolationType_Description {
             get {
-                return ResourceManager.GetString("WaterFlowModel1DBoundaryNodeDataProperties_InterpolationTypeQh_Description", resourceCulture);
+                return ResourceManager.GetString("WaterFlowModel1DBoundaryNodeDataProperties_InterpolationType_Description", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Interpolation scheme for Q(h).
+        ///   Looks up a localized string similar to Interpolation scheme.
         /// </summary>
-        internal static string WaterFlowModel1DBoundaryNodeDataProperties_InterpolationTypeQh_DisplayName {
+        internal static string WaterFlowModel1DBoundaryNodeDataProperties_InterpolationType_DisplayName {
             get {
-                return ResourceManager.GetString("WaterFlowModel1DBoundaryNodeDataProperties_InterpolationTypeQh_DisplayName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Interpolation scheme used along the time axis for the time-dependent water flow and water level time-series..
-        /// </summary>
-        internal static string WaterFlowModel1DBoundaryNodeDataProperties_InterpolationTypeT_Description {
-            get {
-                return ResourceManager.GetString("WaterFlowModel1DBoundaryNodeDataProperties_InterpolationTypeT_Description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Interpolation scheme for Q(t) or H(t).
-        /// </summary>
-        internal static string WaterFlowModel1DBoundaryNodeDataProperties_InterpolationTypeT_DisplayName {
-            get {
-                return ResourceManager.GetString("WaterFlowModel1DBoundaryNodeDataProperties_InterpolationTypeT_DisplayName", resourceCulture);
+                return ResourceManager.GetString("WaterFlowModel1DBoundaryNodeDataProperties_InterpolationType_DisplayName", resourceCulture);
             }
         }
         
@@ -727,38 +781,56 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Extrapolation scheme used along the time axis for the time-dependent water flow time-series..
+        ///   Looks up a localized string similar to Extrapolation scheme used along the time axis for the currently selected type..
         /// </summary>
-        internal static string WaterFlowModel1DLateralDataProperties_ExtrapolationTypeQt_Description {
+        internal static string WaterFlowModel1DLateralDataProperties_ExtrapolationType_Description {
             get {
-                return ResourceManager.GetString("WaterFlowModel1DLateralDataProperties_ExtrapolationTypeQt_Description", resourceCulture);
+                return ResourceManager.GetString("WaterFlowModel1DLateralDataProperties_ExtrapolationType_Description", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Extrapolation scheme for Q(t).
+        ///   Looks up a localized string similar to Extrapolation scheme.
         /// </summary>
-        internal static string WaterFlowModel1DLateralDataProperties_ExtrapolationTypeQt_DisplayName {
+        internal static string WaterFlowModel1DLateralDataProperties_ExtrapolationType_DisplayName {
             get {
-                return ResourceManager.GetString("WaterFlowModel1DLateralDataProperties_ExtrapolationTypeQt_DisplayName", resourceCulture);
+                return ResourceManager.GetString("WaterFlowModel1DLateralDataProperties_ExtrapolationType_DisplayName", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Interpolation scheme used along the time axis for the time-dependent water flow time-series..
+        ///   Looks up a localized string similar to Whether to use periodicity or the defined extrapolation scheme..
         /// </summary>
-        internal static string WaterFlowModel1DLateralDataProperties_InterpolationTypeQt_Description {
+        internal static string WaterFlowModel1DLateralDataProperties_HasPeriodicity_Description {
             get {
-                return ResourceManager.GetString("WaterFlowModel1DLateralDataProperties_InterpolationTypeQt_Description", resourceCulture);
+                return ResourceManager.GetString("WaterFlowModel1DLateralDataProperties_HasPeriodicity_Description", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Interpolation scheme for Q(t).
+        ///   Looks up a localized string similar to Is periodic.
         /// </summary>
-        internal static string WaterFlowModel1DLateralDataProperties_InterpolationTypeQt_DisplayName {
+        internal static string WaterFlowModel1DLateralDataProperties_HasPeriodicity_DisplayName {
             get {
-                return ResourceManager.GetString("WaterFlowModel1DLateralDataProperties_InterpolationTypeQt_DisplayName", resourceCulture);
+                return ResourceManager.GetString("WaterFlowModel1DLateralDataProperties_HasPeriodicity_DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Interpolation scheme used along the time axis for the currently selected type..
+        /// </summary>
+        internal static string WaterFlowModel1DLateralDataProperties_InterpolationType_Description {
+            get {
+                return ResourceManager.GetString("WaterFlowModel1DLateralDataProperties_InterpolationType_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Interpolation scheme.
+        /// </summary>
+        internal static string WaterFlowModel1DLateralDataProperties_InterpolationType_DisplayName {
+            get {
+                return ResourceManager.GetString("WaterFlowModel1DLateralDataProperties_InterpolationType_DisplayName", resourceCulture);
             }
         }
         
@@ -1707,60 +1779,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Properties {
             get {
                 object obj = ResourceManager.GetObject("Wind", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Wind time-series.
-        /// </summary>
-        internal static string WindFunctionProperties_DisplayName {
-            get {
-                return ResourceManager.GetString("WindFunctionProperties_DisplayName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Extrapolation scheme used along the time-axis of the time-series..
-        /// </summary>
-        internal static string WindFunctionProperties_Extrapolation_Description {
-            get {
-                return ResourceManager.GetString("WindFunctionProperties_Extrapolation_Description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Extrapolation.
-        /// </summary>
-        internal static string WindFunctionProperties_Extrapolation_DisplayName {
-            get {
-                return ResourceManager.GetString("WindFunctionProperties_Extrapolation_DisplayName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Interpolation scheme used along the time-axis of the time-series..
-        /// </summary>
-        internal static string WindFunctionProperties_InterpolationType_Description {
-            get {
-                return ResourceManager.GetString("WindFunctionProperties_InterpolationType_Description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Interpolation.
-        /// </summary>
-        internal static string WindFunctionProperties_InterpolationType_DisplayName {
-            get {
-                return ResourceManager.GetString("WindFunctionProperties_InterpolationType_DisplayName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Name of the wind data shown to the user..
-        /// </summary>
-        internal static string WindFunctionProperties_Name_Description {
-            get {
-                return ResourceManager.GetString("WindFunctionProperties_Name_Description", resourceCulture);
             }
         }
     }

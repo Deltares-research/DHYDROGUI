@@ -205,7 +205,7 @@
     <Compile Include="Forms\PropertyGrid\WaterFlowModel1DLateralSourceDataPropertiesTest.cs" />
     <Compile Include="Forms\PropertyGrid\WaterFlowModel1DOutputSettingsPropertiesTest.cs" />
     <Compile Include="Forms\PropertyGrid\WaterFlowModel1DPropertiesTest.cs" />
-    <Compile Include="Forms\PropertyGrid\WindFunctionPropertiesTest.cs" />
+    <Compile Include="Forms\PropertyGrid\MeteoDataFunctionPropertiesTest.cs" />
     <Compile Include="Forms\RefreshMainSectionWidthsDialogTest.cs" />
     <Compile Include="Forms\RefreshMainSectionWidthsDialogViewModelTest.cs" />
     <Compile Include="Forms\RoughnessAsFunctionOfViewTest.cs" />

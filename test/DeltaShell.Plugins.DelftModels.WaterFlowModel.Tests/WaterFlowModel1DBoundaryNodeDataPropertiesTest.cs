@@ -32,7 +32,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             properties.Type = WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant;
 
             //get extrapolation type caused an exception
-            Assert.AreEqual(ExtrapolationType.None, properties.ExtrapolationTypeT);
+            Assert.AreEqual(Flow1DExtrapolationType.Constant, properties.ExtrapolationType);
         }
     }
 }

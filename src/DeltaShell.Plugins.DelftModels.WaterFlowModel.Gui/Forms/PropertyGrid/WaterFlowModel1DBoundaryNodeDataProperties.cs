@@ -1,10 +1,10 @@
 ﻿using System;
-using DelftTools.Functions.Generic;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils;
 using DelftTools.Utils.ComponentModel;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Properties;
+
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
 {
@@ -12,138 +12,125 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
     public class WaterFlowModel1DBoundaryNodeDataProperties : ObjectProperties<WaterFlowModel1DBoundaryNodeData>
     {
         [PropertyOrder(1)]
-        [ResourcesCategory(typeof(Resources), "Categories_General")]
+        [ResourcesCategory(typeof(Resources),    "Categories_General")]
         [ResourcesDisplayName(typeof(Resources), "Common_Name_DisplayName")]
         [ResourcesDescription(typeof(Resources), "WaterFlowModel1DBoundaryNodeDataProperties_Name_Description")]
-        public string Name
-        {
-            get { return data.Name; }
-        }
+        public string Name => data.Name;
 
         [PropertyOrder(2)]
-        [ResourcesCategory(typeof(Resources), "Categories_General")]
+        [ResourcesCategory(typeof(Resources),    "Categories_General")]
         [ResourcesDisplayName(typeof(Resources), "WaterFlowModel1DBoundaryNodeDataProperties_Type_DisplayName")]
         [ResourcesDescription(typeof(Resources), "WaterFlowModel1DBoundaryNodeDataProperties_Type_Description")]
         public WaterFlowModel1DBoundaryNodeDataType Type
         {
-            get { return data.DataType; }
-            set { data.DataType = value; }
+            get => data.DataType;
+            set => data.DataType = value;
         }
 
         [PropertyOrder(3)]
-        [DynamicReadOnly] // TODO: make this property invisible if readonly
+        [DynamicReadOnly]
         [ResourcesCategory(typeof(Resources), "Categories_General")]
-        [ResourcesDisplayName(typeof(Resources), "WaterFlowModel1DBoundaryNodeDataProperties_InterpolationTypeT_DisplayName")]
-        [ResourcesDescription(typeof(Resources), "WaterFlowModel1DBoundaryNodeDataProperties_InterpolationTypeT_Description")]
-        public InterpolationTypeBoundaryTime InterpolationTypeT
+        [ResourcesDisplayName(typeof(Resources), "WaterFlowModel1DBoundaryNodeDataProperties_InterpolationType_DisplayName")]
+        [ResourcesDescription(typeof(Resources), "WaterFlowModel1DBoundaryNodeDataProperties_InterpolationType_Description")]
+        public Flow1DInterpolationType InterpolationType
         {
             get
             {
-                if (!SourceHasFunctionData())
+                switch (Type)
                 {
-                    return InterpolationTypeBoundaryTime.Constant;
+                    case WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries:
+                    case WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries:
+                    case WaterFlowModel1DBoundaryNodeDataType.FlowWaterLevelTable:
+                        return data.Data.GetInterpolationType();
+                    case WaterFlowModel1DBoundaryNodeDataType.FlowConstant:
+                    case WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant:
+                    case WaterFlowModel1DBoundaryNodeDataType.None: // This should never happen
+                        return Flow1DInterpolationType.BlockFrom;
                 }
 
-                var type = (InterpolationTypeBoundaryTime) data.Data.Arguments[0].InterpolationType;
-
-                return Enum.IsDefined(typeof(InterpolationTypeBoundaryTime), type)
-                           ? type
-                           : InterpolationTypeBoundaryTime.Constant;
+                throw new NotImplementedException("The provided interpolation type is not yet supported.");
             }
-            set { data.Data.Arguments[0].InterpolationType = (InterpolationType) value; }
+            set => data.Data.SetInterpolationType(value);
         }
 
-        [PropertyOrder(4)] // TODO: make this property invisible if not relevant
+        [PropertyOrder(4)]
+        [DynamicReadOnly]
         [ResourcesCategory(typeof(Resources), "Categories_General")]
-        [ResourcesDisplayName(typeof(Resources), "WaterFlowModel1DBoundaryNodeDataProperties_InterpolationTypeQh_DisplayName")]
-        [ResourcesDescription(typeof(Resources), "WaterFlowModel1DBoundaryNodeDataProperties_InterpolationTypeQh_Description")]
-        public InterpolationTypeBoundaryQh InterpolationTypeQh
+        [ResourcesDisplayName(typeof(Resources), "WaterFlowModel1DBoundaryNodeDataProperties_ExtrapolationType_DisplayName")]
+        [ResourcesDescription(typeof(Resources), "WaterFlowModel1DBoundaryNodeDataProperties_ExtrapolationType_Description")]
+        public Flow1DExtrapolationType ExtrapolationType
         {
             get
             {
-                if (!SourceHasFunctionData())
+                switch (Type)
                 {
-                    return InterpolationTypeBoundaryQh.Linear;
+                    case WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries:
+                    case WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries:
+                    case WaterFlowModel1DBoundaryNodeDataType.FlowWaterLevelTable:
+                        return data.Data.GetExtrapolationType();
+                    case WaterFlowModel1DBoundaryNodeDataType.FlowConstant:
+                    case WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant:
+                    case WaterFlowModel1DBoundaryNodeDataType.None: // This should never happen
+                        return Flow1DExtrapolationType.Constant;
                 }
 
-                var type = (InterpolationTypeBoundaryQh) data.Data.Arguments[0].InterpolationType;
-
-                return Enum.IsDefined(typeof(InterpolationTypeBoundaryQh), type)
-                           ? type
-                           : InterpolationTypeBoundaryQh.Linear;
+                throw new NotImplementedException("The provided interpolation type is not yet supported.");
             }
+            set => data.Data.SetExtrapolationType(value);
         }
 
-        [PropertyOrder(5)]
-        [DynamicReadOnly] // TODO: make this property invisible if readonly
+        [PropertyOrder(4)]
+        [DynamicReadOnly]
         [ResourcesCategory(typeof(Resources), "Categories_General")]
-        [ResourcesDisplayName(typeof(Resources), "WaterFlowModel1DBoundaryNodeDataProperties_ExtrapolationTypeT_DisplayName")]
-        [ResourcesDescription(typeof(Resources), "WaterFlowModel1DBoundaryNodeDataProperties_ExtrapolationTypeT_Description")]
-        public ExtrapolationType ExtrapolationTypeT
+        [ResourcesDisplayName(typeof(Resources), "WaterFlowModel1DBoundaryNodeDataProperties_HasPeriodicity_DisplayName")]
+        [ResourcesDescription(typeof(Resources), "WaterFlowModel1DBoundaryNodeDataProperties_HasPeriodicity_Description")]
+        public bool HasPeriodicity
         {
             get
             {
-                return !SourceHasFunctionData()
-                           ? ExtrapolationType.None
-                           : data.Data.Arguments[0].ExtrapolationType;
-            }
-            set { data.Data.Arguments[0].ExtrapolationType = value; }
-        }
-
-        [PropertyOrder(6)] // TODO: make this property invisible if not relevant
-        [ResourcesCategory(typeof(Resources), "Categories_General")]
-        [ResourcesDisplayName(typeof(Resources), "WaterFlowModel1DBoundaryNodeDataProperties_ExtrapolationTypeQh_DisplayName")]
-        [ResourcesDescription(typeof(Resources), "WaterFlowModel1DBoundaryNodeDataProperties_ExtrapolationTypeQh_Description")]
-        public ExtrapolationTypeQh ExtrapolationTypeQh
-        {
-            get
-            {
-                if (!SourceHasFunctionData())
+                switch (Type)
                 {
-                    return ExtrapolationTypeQh.Constant;
+                    case WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries:
+                    case WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries:
+                    case WaterFlowModel1DBoundaryNodeDataType.FlowWaterLevelTable:
+                        return data.Data.HasPeriodicity();
+                    case WaterFlowModel1DBoundaryNodeDataType.FlowConstant:
+                    case WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant:
+                    case WaterFlowModel1DBoundaryNodeDataType.None: // This should never happen
+                        return false;
                 }
 
-                var type = (ExtrapolationTypeQh) data.Data.Arguments[0].ExtrapolationType;
-
-                return Enum.IsDefined(typeof (ExtrapolationTypeQh), type)
-                           ? type
-                           : ExtrapolationTypeQh.Constant;
+                throw new NotImplementedException("The provided interpolation type is not yet supported.");
             }
-        }
-
-        [PropertyOrder(7)]
-        [ResourcesCategory(typeof(Resources), "Categories_General")]
-        [ResourcesDisplayName(typeof(Resources), "WaterFlowModel1DBoundaryNodeDataProperties_NodeName_DisplayName")]
-        [ResourcesDescription(typeof(Resources), "WaterFlowModel1DBoundaryNodeDataProperties_NodeName_Description")]
-        public string NodeName
-        {
-            get { return data.Node.Name; }
-            set { data.Node.Name = value; }
-        }
-
-        /// <summary>
-        /// Returns whether or not the BC has data in a function. If so, interpolation and extrapolation can be set and read
-        /// </summary>
-        private bool SourceHasFunctionData()
-        {
-            return (data.DataType == WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries
-                    || data.DataType == WaterFlowModel1DBoundaryNodeDataType.FlowWaterLevelTable
-                    || data.DataType == WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries)
-                   && data.Data != null;
+            set => data.Data.SetPeriodicity(value);
         }
 
         [DynamicReadOnlyValidationMethod]
         public bool DynamicReadOnlyValidationMethod(string propertyName)
         {
-            if (propertyName == "InterpolationTypeT")
+            if (propertyName == "InterpolationType")
             {
-                return !(Type == WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries || Type == WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries);
+                return (Type != WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries &&
+                        Type != WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries) ||
+                       !data.Data.HasArguments()                                           ||
+                       !data.Data.Arguments[0].AllowSetInterpolationType;
             }
 
-            if (propertyName == "ExtrapolationTypeT")
+            if (propertyName == "ExtrapolationType")
             {
-                return !(Type == WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries || Type == WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries);
+                return (Type != WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries &&
+                        Type != WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries) ||
+                       !data.Data.HasArguments()                                           ||
+                       !data.Data.Arguments[0].AllowSetExtrapolationType                   ||
+                       data.Data.GetInterpolationType() != Flow1DInterpolationType.Linear  ||
+                       data.Data.HasPeriodicity();
             }
+
+            if (propertyName == "HasPeriodicity")
+                return (Type != WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries &&
+                        Type != WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries) ||
+                       !data.Data.HasArguments()                                           ||
+                       !data.Data.Arguments[0].AllowSetExtrapolationType;
 
             return true;
         }

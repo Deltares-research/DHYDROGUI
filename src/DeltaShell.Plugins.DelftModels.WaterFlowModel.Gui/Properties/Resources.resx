@@ -238,29 +238,17 @@
   <data name="WaterFlowModel1DBoundaryNodeDataProperties_Type_Description" xml:space="preserve">
     <value>Data type of the boundary node data.</value>
   </data>
-  <data name="WaterFlowModel1DBoundaryNodeDataProperties_InterpolationTypeT_DisplayName" xml:space="preserve">
-    <value>Interpolation scheme for Q(t) or H(t)</value>
+  <data name="WaterFlowModel1DBoundaryNodeDataProperties_InterpolationType_DisplayName" xml:space="preserve">
+    <value>Interpolation scheme</value>
   </data>
-  <data name="WaterFlowModel1DBoundaryNodeDataProperties_InterpolationTypeT_Description" xml:space="preserve">
-    <value>Interpolation scheme used along the time axis for the time-dependent water flow and water level time-series.</value>
+  <data name="WaterFlowModel1DBoundaryNodeDataProperties_InterpolationType_Description" xml:space="preserve">
+    <value>Interpolation scheme used along the time axis for the currently selected type.</value>
   </data>
-  <data name="WaterFlowModel1DBoundaryNodeDataProperties_InterpolationTypeQh_DisplayName" xml:space="preserve">
-    <value>Interpolation scheme for Q(h)</value>
+  <data name="WaterFlowModel1DBoundaryNodeDataProperties_ExtrapolationType_DisplayName" xml:space="preserve">
+    <value>Extrapolation scheme</value>
   </data>
-  <data name="WaterFlowModel1DBoundaryNodeDataProperties_InterpolationTypeQh_Description" xml:space="preserve">
-    <value>Interpolation scheme used along the water level axis for the water level dependent water flow data series.</value>
-  </data>
-  <data name="WaterFlowModel1DBoundaryNodeDataProperties_ExtrapolationTypeT_DisplayName" xml:space="preserve">
-    <value>Extrapolation scheme for Q(t) or H(t)</value>
-  </data>
-  <data name="WaterFlowModel1DBoundaryNodeDataProperties_ExtrapolationTypeT_Description" xml:space="preserve">
-    <value>Extrapolation scheme used along the time axis for the time-dependent water flow and water level time-series.</value>
-  </data>
-  <data name="WaterFlowModel1DBoundaryNodeDataProperties_ExtrapolationTypeQh_DisplayName" xml:space="preserve">
-    <value>Extrapolation scheme for Q(h)</value>
-  </data>
-  <data name="WaterFlowModel1DBoundaryNodeDataProperties_ExtrapolationTypeQh_Description" xml:space="preserve">
-    <value>Extrapolation scheme used along the water level axis for the water level dependent water flow data series.</value>
+  <data name="WaterFlowModel1DBoundaryNodeDataProperties_ExtrapolationType_Description" xml:space="preserve">
+    <value>Extrapolation scheme used along the time axis for the currently selected type.</value>
   </data>
   <data name="WaterFlowModel1DBoundaryNodeDataProperties_NodeName_DisplayName" xml:space="preserve">
     <value>Boundary node name</value>
@@ -280,17 +268,17 @@
   <data name="WaterFlowModel1DLateralDataProperties_Type_Description" xml:space="preserve">
     <value>Data type of the lateral source boundary data.</value>
   </data>
-  <data name="WaterFlowModel1DLateralDataProperties_InterpolationTypeQt_DisplayName" xml:space="preserve">
-    <value>Interpolation scheme for Q(t)</value>
+  <data name="WaterFlowModel1DLateralDataProperties_InterpolationType_DisplayName" xml:space="preserve">
+    <value>Interpolation scheme</value>
   </data>
-  <data name="WaterFlowModel1DLateralDataProperties_InterpolationTypeQt_Description" xml:space="preserve">
-    <value>Interpolation scheme used along the time axis for the time-dependent water flow time-series.</value>
+  <data name="WaterFlowModel1DLateralDataProperties_InterpolationType_Description" xml:space="preserve">
+    <value>Interpolation scheme used along the time axis for the currently selected type.</value>
   </data>
-  <data name="WaterFlowModel1DLateralDataProperties_ExtrapolationTypeQt_Description" xml:space="preserve">
-    <value>Extrapolation scheme used along the time axis for the time-dependent water flow time-series.</value>
+  <data name="WaterFlowModel1DLateralDataProperties_ExtrapolationType_Description" xml:space="preserve">
+    <value>Extrapolation scheme used along the time axis for the currently selected type.</value>
   </data>
-  <data name="WaterFlowModel1DLateralDataProperties_ExtrapolationTypeQt_DisplayName" xml:space="preserve">
-    <value>Extrapolation scheme for Q(t)</value>
+  <data name="WaterFlowModel1DLateralDataProperties_ExtrapolationType_DisplayName" xml:space="preserve">
+    <value>Extrapolation scheme</value>
   </data>
   <data name="WaterFlowModel1DProperties_DisplayName" xml:space="preserve">
     <value>Water flow model (1D)</value>
@@ -472,23 +460,23 @@
   <data name="ModelApiParameterProperties_Visible_Description" xml:space="preserve">
     <value>Determines whether or not the parameter should be visible.</value>
   </data>
-  <data name="WindFunctionProperties_Name_Description" xml:space="preserve">
-    <value>Name of the wind data shown to the user.</value>
+  <data name="MeteoDataFunctionProperties_Name_Description" xml:space="preserve">
+    <value>The name of this data.</value>
   </data>
-  <data name="WindFunctionProperties_InterpolationType_DisplayName" xml:space="preserve">
+  <data name="MeteoDataFunctionProperties_InterpolationType_DisplayName" xml:space="preserve">
     <value>Interpolation</value>
   </data>
-  <data name="WindFunctionProperties_InterpolationType_Description" xml:space="preserve">
+  <data name="MeteoDataFunctionFunctionProperties_InterpolationType_Description" xml:space="preserve">
     <value>Interpolation scheme used along the time-axis of the time-series.</value>
   </data>
-  <data name="WindFunctionProperties_Extrapolation_DisplayName" xml:space="preserve">
+  <data name="MeteoDataFunctionProperties_Extrapolation_DisplayName" xml:space="preserve">
     <value>Extrapolation</value>
   </data>
-  <data name="WindFunctionProperties_Extrapolation_Description" xml:space="preserve">
+  <data name="MeteoDataFunctionProperties_Extrapolation_Description" xml:space="preserve">
     <value>Extrapolation scheme used along the time-axis of the time-series.</value>
   </data>
-  <data name="WindFunctionProperties_DisplayName" xml:space="preserve">
-    <value>Wind time-series</value>
+  <data name="MeteoDataFunctionProperties_DisplayName" xml:space="preserve">
+    <value>Meteo data time-series</value>
   </data>
   <data name="RoughnessSectionProperties_RoughnessSection_DisplayName" xml:space="preserve">
     <value>Roughness section</value>
@@ -693,5 +681,23 @@
   </data>
   <data name="WaterFlowModel1DProperties_DepthUsedForSediment_DisplayName" xml:space="preserve">
     <value>Depth used for sediment</value>
+  </data>
+  <data name="MeteoDataFunctionProperties_HasPeriodicity_Description" xml:space="preserve">
+    <value>Whether to use periodicity or the defined extrapolation scheme.</value>
+  </data>
+  <data name="MeteoDataFunctionProperties_HasPeriodicity_DisplayName" xml:space="preserve">
+    <value>Is periodic</value>
+  </data>
+  <data name="WaterFlowModel1DBoundaryNodeDataProperties_HasPeriodicity_Description" xml:space="preserve">
+    <value>Whether to use periodicity or the defined extrapolation scheme.</value>
+  </data>
+  <data name="WaterFlowModel1DBoundaryNodeDataProperties_HasPeriodicity_DisplayName" xml:space="preserve">
+    <value>Is periodic</value>
+  </data>
+  <data name="WaterFlowModel1DLateralDataProperties_HasPeriodicity_Description" xml:space="preserve">
+    <value>Whether to use periodicity or the defined extrapolation scheme.</value>
+  </data>
+  <data name="WaterFlowModel1DLateralDataProperties_HasPeriodicity_DisplayName" xml:space="preserve">
+    <value>Is periodic</value>
   </data>
 </root>

@@ -26,6 +26,7 @@ using DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.ProjectExplorer;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.Tools;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
+using DeltaShell.Plugins.DelftModels.WaterFlowModel.PhysicalParameters;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView;
@@ -96,7 +97,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui
             yield return new PropertyInfo<WaterFlowModel1DBoundaryNodeData, WaterFlowModel1DBoundaryNodeDataProperties>();
             yield return new PropertyInfo<WaterFlowModel1DLateralSourceData, WaterFlowModel1DLateralDataProperties>();
             yield return new PropertyInfo<WaterFlowModel1D, WaterFlowModel1DProperties>();
-            yield return new PropertyInfo<WindFunction, WindFunctionProperties>();
+            yield return new PropertyInfo<Function, MeteoDataFunctionProperties>()
+            {
+                AdditionalDataCheck = (f => f is WindFunction || f is MeteoFunction)
+            };
             yield return new PropertyInfo<ReverseRoughnessSection, ReverseRoughnessSectionProperties>();
             yield return new PropertyInfo<RoughnessSection, RoughnessSectionPropertiesBase<RoughnessSection>>();
         }

@@ -124,7 +124,7 @@
     <Compile Include="Forms\PropertyGrid\WaterFlowModel1DOutputSettingsProperties.cs" />
     <Compile Include="WaterFlowModel1DMapLayerProvider.cs" />
     <Compile Include="WaterFlowModelConstants.cs" />
-    <Compile Include="Forms\PropertyGrid\WindFunctionProperties.cs" />
+    <Compile Include="Forms\PropertyGrid\MeteoDataFunctionProperties.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Forms\DialogForm.resx">
