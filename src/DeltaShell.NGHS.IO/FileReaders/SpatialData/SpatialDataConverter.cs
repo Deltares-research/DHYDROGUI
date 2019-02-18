@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DeltaShell.NGHS.IO.FileWriters.Location;
@@ -16,15 +17,11 @@ namespace DeltaShell.NGHS.IO.FileReaders.SpatialData
 {
     public static class SpatialDataConverter
     {
-        public static INetworkCoverage Convert(IList<DelftIniCategory> categories, IList<IChannel> channelsList, IList<string> errorMessages)
+        public static INetworkCoverage Convert(IList<DelftIniCategory> categories, IList<IChannel> channels, IList<string> errorMessages)
         {
             var networkCoverage = new NetworkCoverage();
-            //Content tab
-            var contentTab = categories.FirstOrDefault(category => category.Name == SpatialDataRegion.ContentIniHeader);
-           
-            var interpolated = contentTab.ReadProperty<string>(SpatialDataRegion.Interpolate.Key);
-            networkCoverage.Arguments[0].InterpolationType = interpolated == "1" ? InterpolationType.Linear : InterpolationType.Constant;
-            
+            networkCoverage.SetInterpolationType(categories);
+
             //Definition tabs
             var definitionTabs = categories.Where(category => category.Name == SpatialDataRegion.DefinitionIniHeader);
             var networkLocations = new List<INetworkLocation>();
@@ -34,7 +31,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.SpatialData
                 try
                 {
                     //Extract branchId & chainage properties
-                    var generatedSpatialData = ConvertToSpatialData(spatialDefinition, channelsList);
+                    var generatedSpatialData = ConvertToSpatialData(spatialDefinition, channels);
                     networkLocations.Add(generatedSpatialData);
                     
                     //Extract value property
@@ -52,13 +49,26 @@ namespace DeltaShell.NGHS.IO.FileReaders.SpatialData
             return networkCoverage;
         }
 
-        private static INetworkLocation ConvertToSpatialData(IDelftIniCategory category, IList<IChannel> channelsList)
+        private static void SetInterpolationType(this IFunction function, IEnumerable<IDelftIniCategory> categories)
+        {
+            var contentTab = categories.FirstOrDefault(category => category.Name == SpatialDataRegion.ContentIniHeader);
+            if (contentTab == null)
+            {
+                function.Arguments[0].InterpolationType = InterpolationType.Constant;
+                return;
+            }
+
+            var interpolated = contentTab.ReadProperty<string>(SpatialDataRegion.Interpolate.Key);
+            function.Arguments[0].InterpolationType = interpolated == "1" ? InterpolationType.Linear : InterpolationType.Constant;
+        }
+
+        private static INetworkLocation ConvertToSpatialData(IDelftIniCategory category, IEnumerable<IChannel> channels)
         {
             // Essential Properties (an error will be generated if these fail)
             var branchName = category.ReadProperty<string>(SpatialDataRegion.BranchId.Key);
             var chainage = category.ReadProperty<double>(SpatialDataRegion.Chainage.Key);
 
-            var branch = channelsList.FirstOrDefault(c => c.Name == branchName);
+            var branch = channels.FirstOrDefault(c => c.Name == branchName);
 
             if (branch == null)
             {

@@ -324,4 +324,7 @@
   <data name="RetentionFileReader_ReadRetention_While_reading_the_retention_from_file__an_error_occured" xml:space="preserve">
     <value>While reading the retention from file, an error occured</value>
   </data>
+  <data name="NetworkCoverageFileReader_ReadSpatialFileData_Spatial_data_file_at_location___0___does_not_contain_a___1___tab_" xml:space="preserve">
+    <value>Spatial data file at location '{0}' does not contain a '{1}' tab. The corresponding interpolation type has been set to Constant.</value>
+  </data>
 </root>

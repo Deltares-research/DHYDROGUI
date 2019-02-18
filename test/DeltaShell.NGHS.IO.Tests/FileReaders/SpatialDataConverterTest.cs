@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.IO.FileReaders.SpatialData;
@@ -57,8 +58,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
 
         [TestCase("branchId")]
         [TestCase("chainage")]
-        public void
-            GivenACategoryWithAnSpatialRegion_WhenAMandatoryParameterIsMissing_ThenTheSpatialRegionShouldNotBeCreated(
+        public void GivenACategoryWithAnSpatialRegion_WhenAMandatoryParameterIsMissing_ThenTheSpatialRegionShouldNotBeCreated(
                 string propertyName)
         {
             var categories = new List<DelftIniCategory>();
@@ -83,8 +83,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
         }
 
         [Test]
-        public void
-            GivenACategoryWithAnSpatialRegion_WhenTheValuePropertyIsMissing_ThenTheSpatialRegionShouldBeCreatedButAnErrorMessageShouldBeThrown()
+        public void GivenACategoryWithAnSpatialRegion_WhenTheValuePropertyIsMissing_ThenTheSpatialRegionShouldBeCreatedButAnErrorMessageShouldBeThrown()
         {
             var categories = new List<DelftIniCategory>();
             const string propertyName = "value";
@@ -110,8 +109,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
         }
 
         [Test]
-        public void
-            GivenACategoryWithAnSpatialRegion_WhenDuringConvertToSpatialDataTheBranchIsNull_ThenAnErrorMessageIsThrown()
+        public void GivenACategoryWithAnSpatialRegion_WhenDuringConvertToSpatialDataTheBranchIsNull_ThenAnErrorMessageIsThrown()
         {
             var incorrectChannelsList = new List<IChannel>();
 
@@ -130,6 +128,16 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
             Assert.That(errorMessages.Contains(string.Format(
                 Resources.SpatialDataConverter_ConvertToSpatialData_Unable_to_parse__0__property___1___Branch_not_found_in_Network__2_,
                 categories[1].Name, LocationRegion.BranchId.Key, Environment.NewLine)));
+        }
+
+        [Test]
+        public void GivenSpatialDataModelWithoutContentCategory_WhenConvertingToSpatialData_ThenDefaultValueConstantIsSetAsInterpolationType()
+        {
+            var errorMessages = new List<string>();
+            var networkCoverage = SpatialDataConverter.Convert(new List<DelftIniCategory>(), new List<IChannel>(), errorMessages);
+            
+            Assert.IsNotNull(networkCoverage);
+            Assert.That(networkCoverage.Arguments[0].InterpolationType, Is.EqualTo(InterpolationType.Constant));
         }
 
         private static DelftIniCategory CreateValidDefinitionIniHeader(string branchId, double chainage, double value)

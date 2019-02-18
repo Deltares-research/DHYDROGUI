@@ -151,6 +151,16 @@ namespace DeltaShell.NGHS.IO.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Spatial data file at location &apos;{0}&apos; does not contain a &apos;{1}&apos; tab. The corresponding interpolation type has been set to Constant..
+        /// </summary>
+        public static string NetworkCoverageFileReader_ReadSpatialFileData_Spatial_data_file_at_location___0___does_not_contain_a___1___tab_ {
+            get {
+                return ResourceManager.GetString("NetworkCoverageFileReader_ReadSpatialFileData_Spatial_data_file_at_location___0__" +
+                        "_does_not_contain_a___1___tab_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Unable to parse {0} property: {1}, Branch not found in Network.{2}.
         /// </summary>
         public static string RetentionConverter_ConvertToRetention_Unable_to_parse__0__property___1___Branch_not_found_in_Network__2_ {
