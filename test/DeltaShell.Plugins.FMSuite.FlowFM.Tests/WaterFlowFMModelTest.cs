@@ -398,15 +398,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
             var workingDir = string.Empty;
+            var workingOutputDir = string.Empty;
+            
             using (var model = new WaterFlowFMModel(mduPath))
             {
 
                 ActivityRunner.RunActivity(model);
                 Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
                 workingDir = Path.Combine(model.WorkingDirectory, model.DirectoryName);
+                var outputDirName = "DFM_OUTPUT_" + model.Name;
+                workingOutputDir = Path.Combine(workingDir, outputDirName);
             }
             var statisticsWritten = false;
-            Parallel.ForEach(File.ReadAllLines(Path.Combine(workingDir, "bendprof.dia")),
+            Parallel.ForEach(File.ReadAllLines(Path.Combine(workingOutputDir, "bendprof.dia")),
                 (line, loopstate) =>
                 {
                     if (line.Contains("** INFO   :"))
