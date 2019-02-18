@@ -291,26 +291,30 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 
         private static IEnumerable<string> GetSpatialDataFileNames(WaterFlowModel1D model)
         {
-            var spatialDataFileNames = new List<string>
-            {
-                fileNames.InitialDischarge,
-                fileNames.InitialSalinity,
-                fileNames.InitialTemperature,
-                fileNames.Dispersion,
-                fileNames.WindShielding
-            };
+
+            yield return fileNames.InitialDischarge;
+            yield return fileNames.WindShielding;
 
             if (model.DispersionFormulationType != DispersionFormulationType.Constant)
             {
-                spatialDataFileNames.Add(fileNames.DispersionF3);
-                spatialDataFileNames.Add(fileNames.DispersionF4);
+                yield return fileNames.DispersionF3;
+                yield return fileNames.DispersionF4;
             }
 
-            spatialDataFileNames.Add(model.InitialConditionsType == InitialConditionsType.WaterLevel
-                ? fileNames.InitialWaterLevel
-                : fileNames.InitialWaterDepth);
+            if (model.UseSalt)
+            {
+                yield return fileNames.InitialSalinity;
+                yield return fileNames.Dispersion;
+            }
 
-            return spatialDataFileNames.Where(fn => fn != null);
+            if (model.UseTemperature)
+            {
+                yield return fileNames.InitialTemperature;
+            }
+
+            yield return model.InitialConditionsType == InitialConditionsType.WaterLevel
+                ? fileNames.InitialWaterLevel
+                : fileNames.InitialWaterDepth;
         }
 
         private static void LogErrorReport(List<string> errorReport, Action<string> logAction)
