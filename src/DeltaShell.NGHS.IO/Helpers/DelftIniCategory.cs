@@ -207,7 +207,7 @@ namespace DeltaShell.NGHS.IO.Helpers
         }
         public static T ReadProperty<T>(this IDelftIniCategory category, string key, bool isOptional = false)
         {
-            var iniProperty = category.Properties.FirstOrDefault(property => property.Name == key);
+            var iniProperty = category.Properties.FirstOrDefault(property => property.Name.Equals(key, StringComparison.OrdinalIgnoreCase));
 
             if (iniProperty != null)
                 return (T)TypeDescriptor.GetConverter(typeof(T)).ConvertFromInvariantString(iniProperty.Value);
