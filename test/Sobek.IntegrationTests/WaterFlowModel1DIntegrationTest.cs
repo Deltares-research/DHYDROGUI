@@ -89,6 +89,7 @@ namespace Sobek.IntegrationTests
         }
 
         [Test]
+        [Category(TestCategory.Integration)]
         public void ShowSideViewForProblematicRoute()
         {
             var modelImporter = new SobekWaterFlowModel1DImporter();
