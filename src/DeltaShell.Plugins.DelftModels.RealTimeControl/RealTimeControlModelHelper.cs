@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using DelftTools.Utils;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
@@ -16,7 +15,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         private const string IntervalRuleGroup = "Interval Rule with condition";
         private const string TimeRuleGroup = "Time Rule with condition";
         private const string RelativeTimeRuleGroup = "Relative Time Rule with condition";
-        private const string RelativeTimeFromValueRuleGroup = "Relative Time from value Rule with condition";
         private const string InvertorRuleGroup = "InvertorRule";
              
         public static IEnumerable<string> StandardControlGroups
@@ -29,7 +27,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 yield return IntervalRuleGroup;
                 yield return TimeRuleGroup;
                 yield return RelativeTimeRuleGroup;
-                yield return RelativeTimeFromValueRuleGroup;
                 yield return InvertorRuleGroup;
             }
         }
@@ -50,8 +47,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                     return CreateGroupTimeRuleWithCondition();
                 case RelativeTimeRuleGroup:
                     return CreateGroupRelativeTimeRule();
-                case RelativeTimeFromValueRuleGroup:
-                    return CreateGroupRelativeTimeFromValueRule();
                 case InvertorRuleGroup:
                     return CreateGroupInvertorRule();
             }
@@ -123,11 +118,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             return CreateGroupRuleWithoutInput(new RelativeTimeRule {FromValue = false });
         }
 
-        public static ControlGroup CreateGroupRelativeTimeFromValueRule()
-        {
-            return CreateGroupRuleWithoutInput(new RelativeTimeRule { FromValue = true });
-        }
-
         private static ControlGroup CreateGroupRuleWithoutInput(RuleBase ruleBase)
         {
             var controlGroup = new ControlGroup { Name = "Control group" };
@@ -144,7 +134,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             return controlGroup;
         }
 
-        public static ControlGroup CreateGroupRuleWithoutCondition(RuleBase ruleBase)
+        private static ControlGroup CreateGroupRuleWithoutCondition(RuleBase ruleBase)
         {
             var controlGroup = new ControlGroup { Name = "Control group" };
             var ruleInput = new Input();
@@ -183,19 +173,18 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 {
                     o.Name = string.Empty;
                 }
-                names[(o).Name] = 0;
+                names[o.Name] = 0;
             }
 
-            String unique;
-            int id = 1;
+            string unique;
+            var id = 1;
 
             do
             {
-                unique = String.Format(filter, id++);
+                unique = string.Format(filter, id++);
             } while (names.ContainsKey(unique));
 
             return unique;
         }
-
     }
 }
