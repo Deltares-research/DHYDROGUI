@@ -53,7 +53,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Retention
             var retentionProperties = new List<RetentionPropertiesDTO>();
             foreach (var category in categories)
             {
-                if (category.Name != RetentionRegion.Header) continue;
+                if (!string.Equals(category.Name, RetentionRegion.Header, StringComparison.OrdinalIgnoreCase)) continue;
                 var readPropertiesFromCategory = ReadPropertiesFromCategory(category, channelsList);
                 if (readPropertiesFromCategory == null)
                 {

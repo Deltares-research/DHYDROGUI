@@ -35,8 +35,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
             if (!ValidateDataAccessModel(dataAccessModel, errorMessages))
                 return boundaryConditions;
 
-            var relevantCategories = dataAccessModel.Where(p => p.Name == BoundaryRegion.BcBoundaryHeader && 
-                                                                p.ReadProperty<string>(BoundaryRegion.Name.Key) != FunctionAttributes.StandardFeatureNames.ModelWide);
+            var relevantCategories = dataAccessModel.Where(p =>
+                string.Equals(p.Name, BoundaryRegion.BcBoundaryHeader, StringComparison.OrdinalIgnoreCase) && 
+                                                                !string.Equals(p.ReadProperty<string>(BoundaryRegion.Name.Key), FunctionAttributes.StandardFeatureNames.ModelWide, StringComparison.OrdinalIgnoreCase));
+
             foreach (var category in relevantCategories)
                 Parse(category, boundaryConditions, errorMessages);
 

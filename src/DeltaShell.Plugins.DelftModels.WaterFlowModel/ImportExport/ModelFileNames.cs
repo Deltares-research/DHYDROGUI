@@ -133,7 +133,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             if (categories.Count == 0)
                 throw new FileReadingException(string.Format("Could not read file {0} properly, it seems empty",
                     modelDefinitionFileName));
-            var fileSection = categories.Where(category => category.Name == ModelDefinitionsRegion.FilesIniHeader).ToArray();
+            var fileSection = categories.Where(category =>
+                string.Equals(category.Name, ModelDefinitionsRegion.FilesIniHeader, StringComparison.OrdinalIgnoreCase)).ToArray();
             if (fileSection.Length != 1)
                 throw new FileReadingException(string.Format("Could not read files section {0} properly", modelDefinitionFileName));
 

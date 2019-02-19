@@ -94,7 +94,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
 
         private static bool IsInitialCategory(IDelftIniCategory category)
         {
-            return (category.Name == ModelDefinitionsRegion.TransportComputationValuesHeader || category.Name == ModelDefinitionsRegion.SalinityValuesHeader);
+            return (string.Equals(category.Name, ModelDefinitionsRegion.TransportComputationValuesHeader, StringComparison.OrdinalIgnoreCase) || 
+                    string.Equals(category.Name, ModelDefinitionsRegion.SalinityValuesHeader, StringComparison.OrdinalIgnoreCase));
         }
 
         private static bool IsSecondaryCategory(IDelftIniCategory category)
@@ -115,8 +116,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
         /// </returns>
         private static bool IsExcluded(IDelftIniCategory category)
         {
-            return category.Name == GeneralRegion.IniHeader ||
-                   category.Name == ModelDefinitionsRegion.FilesIniHeader;
+            return string.Equals(category.Name, GeneralRegion.IniHeader, StringComparison.OrdinalIgnoreCase) ||
+                   string.Equals(category.Name, ModelDefinitionsRegion.FilesIniHeader, StringComparison.OrdinalIgnoreCase);
         }
 
  

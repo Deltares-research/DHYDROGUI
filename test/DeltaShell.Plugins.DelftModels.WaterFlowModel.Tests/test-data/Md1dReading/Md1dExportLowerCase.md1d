@@ -1,0 +1,227 @@
+[general]
+    majorversion          = 1                   # major file version. do not edit this.
+    minorversion          = 0                   # minor file version. do not edit this.
+    filetype              = modeldef            # file type. do not edit this.
+
+[files]
+    networkfile           = networkdefinition.ini# #name and location of the network file
+    crosslocfile          = crosssectionlocations.ini# name and location of the file containing the locations of the cross sections
+    crossdeffile          = crosssectiondefinitions.ini# name and location of the file containing the definitions of the cross sections
+    structurefile         = structures.ini      # name and location of the structure file
+    obspointsfile         = observationpoints.ini# name and location of the observation points file
+    initialwaterlevelfile = initialwaterlevel.ini# name and location of the file containing the spatial definition of the initial water level
+    initialwaterdepthfile = initialwaterdepth.ini# name and location of the file containing the spatial definition of the initial water depth
+    initialdischargefile  = initialdischarge.ini# name and location of the file containing the spatial definition of the initial discharge
+    initialsalinityfile   = initialsalinity.ini # name and location of the file containing the spatial definition of the initial salinity
+    initialtemperaturefile= initialtemperature.ini# name and location of the file containing the spatial definition of the initial temperature
+    windshieldingfile     = windshielding.ini   # name and location of the file containing the spatial definition of the wind shielding
+    roughnessfile         = roughness-main.ini  # name and location of the file containing the roughness data
+    boundlocfile          = boundarylocations.ini# name and location of the file containing the boundary locations
+    latdischargelocfile   = lateraldischargelocations.ini# name and location of the file containing the lateral discharge locations
+    boundcondfile         = boundaryconditions.bc# name and location of the file containing the boundary conditions and lateral discharges
+    sobeksiminifile       = sobeksim.ini        # name of the sobek sim ini file containing also model parameter which are not in here. will be phased out later
+    retentionfile         = retention.ini       # name of the retention ini file containing the values of the retention areas
+    logfile               = sobek.log           # name of the log file
+
+[resultsnodes]
+    density               = none                # gridpointsonbranches output density
+    effectivebackrad      = none                # gridpointsonbranches output effective back radiation
+    heatlossconv          = none                # gridpointsonbranches output heat loss due to convection
+    heatlossevap          = none                # gridpointsonbranches output heat loss due to evaporation
+    heatlossforcedconv    = none                # gridpointsonbranches output heat loss due to forced convection
+    heatlossforcedevap    = none                # gridpointsonbranches output heat loss due to forced evaporation
+    heatlossfreeconv      = none                # gridpointsonbranches output heat loss due to free convection
+    heatlossfreeevap      = none                # gridpointsonbranches output heat loss due to free evaporation
+    lateralatnodes        = none                # gridpointsonbranches output lateral at nodes
+    negativedepth         = none                # gridpointsonbranches output negative depth
+    netsolarrad           = none                # gridpointsonbranches output net incident solar radiation
+    noiteration           = none                # gridpointsonbranches output number of iterations
+    lateral1d2d           = none                # gridpointsonbranches output lateral discharge from 2d to 1d
+    radfluxclearsky       = none                # gridpointsonbranches output radiation flux for clear sky condition
+    salinity              = none                # gridpointsonbranches output salt concentration
+    temperature           = none                # gridpointsonbranches output temperature
+    totalarea             = none                # gridpointsonbranches output total area
+    totalheatflux         = none                # gridpointsonbranches output total heat flux
+    totalwidth            = none                # gridpointsonbranches output total width
+    volume                = none                # gridpointsonbranches output water volume
+    waterdepth            = none                # gridpointsonbranches output water depth
+    waterlevel            = current             # gridpointsonbranches output water level
+
+[resultsbranches]
+    areafp1               = none                # reachsegelmset output floodplain1 flow area
+    areafp2               = none                # reachsegelmset output floodplain2 flow area
+    areamain              = none                # reachsegelmset output main flow area
+    chezyfp1              = none                # reachsegelmset output floodplain1 chezy values
+    chezyfp2              = none                # reachsegelmset output floodplain2 chezy values
+    chezymain             = none                # reachsegelmset output main chezy values
+    discharge             = current             # reachsegelmset output discharge
+    dischargefp1          = none                # reachsegelmset output floodplain1 discharge
+    dischargefp2          = none                # reachsegelmset output floodplain2 discharge
+    dischargemain         = none                # reachsegelmset output main discharge
+    flowarea              = none                # reachsegelmset output flow area
+    flowchezy             = none                # reachsegelmset output chezy values
+    flowconv              = none                # reachsegelmset output conveyance
+    flowhydrad            = none                # reachsegelmset output hydraulic radius
+    froude                = none                # reachsegelmset output froude number
+    hydradfp1             = none                # reachsegelmset output floodplain1 hydraulic radius
+    hydradfp2             = none                # reachsegelmset output floodplain2 hydraulic radius
+    hydradmain            = none                # reachsegelmset output main hydraulic radius
+    timestepestimation    = none                # reachsegelmset output time step estimation
+    velocity              = none                # reachsegelmset output velocity
+    waterlevelgradient    = none                # reachsegelmset output water level gradient
+    widthfp1              = none                # reachsegelmset output floodplain1 flow width
+    widthfp2              = none                # reachsegelmset output floodplain2 flow width
+    widthmain             = none                # reachsegelmset output main flow width
+    dispersion            = none                # gridpointsonbranches output salt dispersion
+
+[resultsstructures]
+    crestlevel            = none                # structures input, output crest level (s)
+    crestwidth            = none                # structures input, output crest width (s)
+    discharge             = none                # structures output discharge (s)
+    flowarea              = none                # structures output flow area (s)
+    gateloweredgelevel    = none                # structures input, output gate lower edge level (s)
+    gateopeningheight     = none                # structures input, output opening height (s)
+    head                  = none                # structures output head difference (s)
+    pressuredifference    = none                # structures output pressure difference (s)
+    valveopening          = none                # structures input, output valve opening (s)
+    velocity              = none                # structures output velocity (s)
+    waterlevelatcrest     = none                # structures output water level at crest (s)
+    waterleveldown        = none                # structures output water level down (s)
+    waterlevelup          = none                # structures output water level up (s)
+
+[resultspumps]
+    actualpumpstage       = none                # pumps output pump stage (p)
+    deliverysidelevel     = none                # pumps output delivery side (p)
+    pumpcapacity          = none                # pumps output capacity (p)
+    pumpdischarge         = none                # pumps output discharge (p)
+    pumphead              = none                # pumps output pump head (p)
+    reductionfactor       = none                # pumps output reduction factor (p)
+    suctionsidelevel      = none                # pumps output suction side (p)
+
+[resultsobservationpoints]
+    discharge             = current             # observations output discharge (op)
+    dispersion            = none                # observations output salt dispersion (op)
+    salinity              = none                # observations output salt concentration (op)
+    temperature           = none                # observations output temperature (op)
+    velocity              = none                # observations output velocity (op)
+    volume                = none                # observations output water volume (op)
+    waterdepth            = none                # observations output water depth (op)
+    waterlevel            = current             # observations output water level (op)
+
+[resultslaterals]
+    actualdischarge       = none                # laterals input, output actual discharge (l)
+    defineddischarge      = none                # laterals output defined discharge (l)
+    lateraldifference     = none                # laterals output lateral difference (l)
+    waterlevel            = none                # laterals output water level (l)
+
+[resultsretentions]
+    volume                = none                # retentions output volume (rt)
+    waterlevel            = none                # retentions output water level (rt)
+
+[resultswaterbalance]
+    bal2d1din             = none                # modelwide output waterbalance1d_lateral1d2ddischarge_in
+    bal2d1dout            = none                # modelwide output waterbalance1d_lateral1d2ddischarge_out
+    bal2d1dtot            = none                # modelwide output waterbalance1d_lateral1d2ddischarge_total
+    balboundariesin       = none                # modelwide output waterbalance1d_boundaries_in
+    balboundariesout      = none                # modelwide output waterbalance1d_boundaries_out
+    balboundariestot      = none                # modelwide output waterbalance1d_boundaries_total
+    balerror              = none                # modelwide output waterbalance1d_volumeerror
+    ballatin              = none                # modelwide output waterbalance1d_lateraldischarge_in
+    ballatout             = none                # modelwide output waterbalance1d_lateraldischarge_out
+    ballattot             = none                # modelwide output waterbalance1d_lateraldischarge_total
+    balstorage            = none                # modelwide output waterbalance1d_storage
+    balvolume             = none                # modelwide output waterbalance1d_totalvolume
+
+[finitevolumegridongridpoints]
+    finitegridtype        = none                # finitevolumegridongridpoints output grid type (finite volume)
+
+[globalvalues]
+    useinitialwaterdepth  = 1                   # use initial water depth instead of water level. 0=false, 1=true
+    initialwaterlevel     = 0.000               # initial water level for locations where no spatial varying values is defined
+    initialwaterdepth     = 0.000               # initial water depth for locations where no spatial varying values is defined
+    initialdischarge      = 0.000               # initial discharge for branches where no spatial varying values is defined
+
+[initialconditions]
+    initialemptywells     = 0                   # 0=false, 1=true
+
+[time]
+    starttime             = 2018-11-13 00:00:00 # yyyy-mm-dd hh:mm:ss
+    stoptime              = 2018-11-14 00:00:00 # yyyy-mm-dd hh:mm:ss
+    timestep              = 3600.000            # in seconds
+    outtimestepgridpoints = 3600.000            # in seconds
+    outtimestepstructures = 3600.000            # in seconds
+
+[sediment]
+
+[specials]
+
+[numericalparameters]
+    accelerationtermfactor= 1                   
+    accurateversusspeed   = 3                   
+    courantnumber         = 1.0                 
+    dtminimum             = 0.001               
+    epsilonvaluevolume    = 0.0001              
+    epsilonvaluewaterdepth= 0.0001              
+    maxdegree             = 6                   
+    maxiterations         = 8                   
+    minimumsurfaceatstreet= 0.1                 
+    minimumsurfaceinnode  = 0.1                 
+    minimumlength         = 1.0                 
+    relaxationfactor      = 1.0                 
+    rho                   = 1000                
+    structureinertiadampingfactor= 1.0                 
+    theta                 = 1.0                 
+    thresholdvalueflooding= 0.01                
+    usetimestepreducerstructures= 0                   # 0=false, 1=true
+
+[simulationoptions]
+    debug                 = 0                   # 0=false, 1=true
+    debugtime             = 0                   
+    dispmaxfactor         = 0.45                
+    dumpinput             = 0                   # 0=false, 1=true
+    iadvec1d              = 2                   
+    limtyphu1d            = 1                   
+    timersoutputfrequency = 1                   
+    usetimers             = 0                   # 0=false, 1=true
+    writenetcdf           = 1                   # 0=false, 1=true
+
+[transportcomputation]
+    temperature           = 0                   # 0=false, 1=true
+    density               = eckart_modified     # possible values: eckart_modified, eckart, unesco
+    heattransfermodel     = transport           # possible values: transport, excess, composite
+
+[advancedoptions]
+    calculatedelwaqoutput = 0                   
+    extraresistancegeneralstructure= 0.0                 
+    fillculvertswithgl    = 0                   # 0=false, 1=true
+    laterallocation       = 0                   
+    maxloweringcrossatculvert= 0.0                 
+    maxvolfact            = 0.9                 
+    nonegativeqlatwhenthereisnowater= 1                   # 0=false, 1=true
+    transitionheightsd    = 0.5                 
+    latitude              = 5.2006670e+001      
+    longitude             = 4.3555600e+000      
+
+[salinity]
+    saltcomputation       = 0                   # 0=false, 1=true
+    diffusionatboundaries = 1                   # 0=false, 1=true
+
+[temperature]
+    backgroundtemperature = 0.0000000e+000      
+    surfacearea           = 1.0000000e+006      # exposed surface area (used in excess model)
+    atmosphericpressure   = 1.0000000e+005      # atmospheric pressure
+    daltonnumber          = 1.3000000e-003      # dalton number
+    stantonnumber         = 1.3000000e-003      # stanton number
+    heatcapacitywater     = 3.9300000e+003      # heat capacity of water
+
+[morphology]
+    calculatemorphology   = 0                   # 0=false, 1=true
+    additionaloutput      = 0                   # 0=false, 1=true
+
+[observations]
+    interpolationtype     = nearest             # interpolation type (linear or nearest)
+
+[restart]
+    userestart            = 0                   # 0=false, 1=true
+    writerestart          = 0                   # 0=false, 1=true
+

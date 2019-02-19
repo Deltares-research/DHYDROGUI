@@ -14,7 +14,8 @@ namespace DeltaShell.NGHS.IO.FileReaders.Location
         public static IList<IObservationPoint> Convert(IList<DelftIniCategory> categories, IList<IChannel> channelsList, IList<string> errorMessages)
         {
             IList<IObservationPoint> observationPoints = new List<IObservationPoint>();
-            foreach (var observationPointCategory in categories.Where(category => category.Name == ObservationPointRegion.IniHeader))
+            foreach (var observationPointCategory in categories.Where(category =>
+                string.Equals(category.Name, ObservationPointRegion.IniHeader, StringComparison.OrdinalIgnoreCase)))
             {
                 try
                 {
@@ -38,7 +39,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Location
             var chainage = category.ReadProperty<double>(LocationRegion.Chainage.Key);
             
             var branchName = category.ReadProperty<string>(LocationRegion.BranchId.Key);
-            var branch = channelsList.FirstOrDefault(c => c.Name == branchName);
+            var branch = channelsList.FirstOrDefault(c => string.Equals(c.Name, branchName, StringComparison.OrdinalIgnoreCase));
             if (branch == null)
             {
                 var errorMessage = string.Format("Unable to parse {0} property: {1}, Branch not found in Network.{2}", category.Name, LocationRegion.BranchId.Key, Environment.NewLine);
@@ -52,7 +53,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Location
             var geometry = new Point(
                 LengthLocationMap.GetLocation(branch.Geometry, resultingChainage).GetCoordinate(branch.Geometry));
 
-            return new ObservationPoint()
+            return new ObservationPoint
             {
                 Branch = branch,
                 Name = name,

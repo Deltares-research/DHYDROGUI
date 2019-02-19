@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
-using DelftTools.Utils.Collections.Extensions;
-using DeltaShell.NGHS.IO.FileReaders.Network;
 using DeltaShell.NGHS.IO.FileWriters.Location;
 using DeltaShell.NGHS.IO.Helpers;
-using GeoAPI.Extensions.Networks;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.LinearReferencing;
 
@@ -18,7 +14,8 @@ namespace DeltaShell.NGHS.IO.FileReaders.Location
         public static IList<ILateralSource> Convert(IList<DelftIniCategory> categories, IList<IChannel> channelsList, IList<string> errorMessages)
         {
             IList<ILateralSource> lateralSources = new List<ILateralSource>();
-            foreach (var observationPointCategory in categories.Where(category => category.Name == BoundaryRegion.LateralDischargeHeader))
+            foreach (var observationPointCategory in categories.Where(category =>
+                string.Equals(category.Name, BoundaryRegion.LateralDischargeHeader, StringComparison.OrdinalIgnoreCase)))
             {
                 try
                 {
@@ -42,7 +39,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Location
             var chainage = category.ReadProperty<double>(LocationRegion.Chainage.Key);
             
             var branchName = category.ReadProperty<string>(LocationRegion.BranchId.Key);
-            var branch = channelsList.FirstOrDefault(c => c.Name == branchName);
+            var branch = channelsList.FirstOrDefault(c => string.Equals(c.Name, branchName, StringComparison.OrdinalIgnoreCase));
             if (branch == null)
             {
                 var errorMessage = string.Format("Unable to parse {0} property: {1}, Branch not found in Network.{2}", category.Name, LocationRegion.BranchId.Key, Environment.NewLine);
@@ -57,7 +54,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Location
             var geometry = new Point(
                 LengthLocationMap.GetLocation(branch.Geometry, resultingChainage).GetCoordinate(branch.Geometry));
 
-            var lateralSource = new LateralSource()
+            var lateralSource = new LateralSource
             {
                 Branch = branch,
                 Name = name,

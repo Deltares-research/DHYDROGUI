@@ -23,7 +23,8 @@ namespace DeltaShell.NGHS.IO.FileReaders.SpatialData
             networkCoverage.SetInterpolationType(categories);
 
             //Definition tabs
-            var definitionTabs = categories.Where(category => category.Name == SpatialDataRegion.DefinitionIniHeader);
+            var definitionTabs = categories.Where(category =>
+                string.Equals(category.Name, SpatialDataRegion.DefinitionIniHeader, StringComparison.OrdinalIgnoreCase));
             var networkLocations = new List<INetworkLocation>();
             var networkValues = new List<double>();
             foreach (var spatialDefinition in definitionTabs)
@@ -68,7 +69,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.SpatialData
             var branchName = category.ReadProperty<string>(SpatialDataRegion.BranchId.Key);
             var chainage = category.ReadProperty<double>(SpatialDataRegion.Chainage.Key);
 
-            var branch = channels.FirstOrDefault(c => c.Name == branchName);
+            var branch = channels.FirstOrDefault(c => string.Equals(c.Name, branchName, StringComparison.OrdinalIgnoreCase));
 
             if (branch == null)
             {

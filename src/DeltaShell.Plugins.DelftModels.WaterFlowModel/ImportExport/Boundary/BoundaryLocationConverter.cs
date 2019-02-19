@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DeltaShell.NGHS.IO.FileWriters.General;
 using DeltaShell.NGHS.IO.FileWriters.Location;
@@ -69,12 +70,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
                 return false;
             }
 
-            if (category.Name == GeneralRegion.IniHeader)
+            if (string.Equals(category.Name, GeneralRegion.IniHeader, StringComparison.OrdinalIgnoreCase))
             {
                 return false;
             }
 
-            if (category.Name != BoundaryRegion.BoundaryHeader)
+            if (!string.Equals(category.Name, BoundaryRegion.BoundaryHeader, StringComparison.OrdinalIgnoreCase))
             {
                 errorMessages.Add($"Could not parse boundary location category: {category.Name} at line {category.LineNumber}: Invalid header");
                 return false;
@@ -90,7 +91,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
 
             // Validate if at least NodeID and type are properly defined
             // Validate NodeID
-            var nNodeId = category.Properties.Count(e => e.Name == BoundaryRegion.NodeId.Key);
+            var nNodeId = category.Properties.Count(e => string.Equals(e.Name, BoundaryRegion.NodeId.Key, StringComparison.OrdinalIgnoreCase));
             if (nNodeId < 1)
             {
                 errorMessages.Add($"Could not parse boundary location category: {category.Name} at line {category.LineNumber}: Missing data");
@@ -104,7 +105,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
             } 
 
             // Validate Type
-            var nType = category.Properties.Count(e => e.Name == BoundaryRegion.Type.Key);
+            var nType = category.Properties.Count(e =>
+                string.Equals(e.Name, BoundaryRegion.Type.Key, StringComparison.OrdinalIgnoreCase));
             if (nType < 1)
             {
                 errorMessages.Add(
@@ -140,7 +142,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
             var expectedNProperties = 2;
 
             // Validate Thatcher-Harlemann coefficient
-            var nTHC = category.Properties.Count(e => e.Name == BoundaryRegion.ThatcherHarlemanCoeff.Key);
+            var nTHC = category.Properties.Count(e =>
+                string.Equals(e.Name, BoundaryRegion.ThatcherHarlemanCoeff.Key, StringComparison.OrdinalIgnoreCase));
             if (nTHC > 1)
             {
                 errorMessages.Add($"Could not parse boundary location category: {category.Name} at line {category.LineNumber}: Multiple defined data");

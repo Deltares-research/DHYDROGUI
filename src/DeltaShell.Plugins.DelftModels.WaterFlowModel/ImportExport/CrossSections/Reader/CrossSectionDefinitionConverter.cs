@@ -14,7 +14,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSectio
         {
             var crossSectionDefinitions = new List<ICrossSectionDefinition>();
 
-            var selectedCategories = categories.Where(category => category.Name == DefinitionRegion.Header).ToList();
+            var selectedCategories = categories.Where(category =>
+                string.Equals(category.Name, DefinitionRegion.Header, StringComparison.OrdinalIgnoreCase)).ToList();
 
             selectedCategories.ForEach(category =>
             {
@@ -67,12 +68,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSectio
         /// <returns>A collection of <see cref="GroundLayerDTO"/> objects.</returns>
         public static IEnumerable<GroundLayerDTO> ConvertToGroundLayerData(IEnumerable<DelftIniCategory> categories)
         {
-            var definitionCategories = categories.Where(c => c.Name == DefinitionRegion.Header);
+            var definitionCategories = categories.Where(c =>
+                string.Equals(c.Name, DefinitionRegion.Header, StringComparison.OrdinalIgnoreCase));
             
             foreach (var category in definitionCategories)
             {
-                if(category.Properties.All(p => p.Name != DefinitionRegion.GroundlayerUsed.Key) || 
-                   category.Properties.All(p => p.Name != DefinitionRegion.Groundlayer.Key))
+                if(category.Properties.All(p => !string.Equals(p.Name, DefinitionRegion.GroundlayerUsed.Key,
+                       StringComparison.OrdinalIgnoreCase)) || 
+                   category.Properties.All(p => !string.Equals(p.Name, DefinitionRegion.Groundlayer.Key,
+                       StringComparison.OrdinalIgnoreCase)))
                     continue;
 
                 var groundLayerData = CreateGroundLayerDataDto(category);

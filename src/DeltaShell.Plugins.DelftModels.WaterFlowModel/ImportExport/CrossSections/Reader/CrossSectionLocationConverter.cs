@@ -13,7 +13,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSectio
         {
             var crossSectionLocations = new List<ICrossSectionLocation>();
 
-            var selectedCategories = categories.Where(category => category.Name == CrossSectionRegion.IniHeader).ToList();
+            var selectedCategories = categories.Where(category =>
+                string.Equals(category.Name, CrossSectionRegion.IniHeader, StringComparison.OrdinalIgnoreCase)).ToList();
 
             selectedCategories.ForEach(category =>
             {

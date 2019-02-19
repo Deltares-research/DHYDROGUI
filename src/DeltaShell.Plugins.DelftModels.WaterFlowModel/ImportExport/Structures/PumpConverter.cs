@@ -62,7 +62,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
 
         private static string GetInvalidDirectionValueWarningMessage(IPump pump, int direction)
         {
-            var directionProperty = Category.Properties.FirstOrDefault(p => p.Name == StructureRegion.Direction.Key);
+            var directionProperty = Category.Properties.FirstOrDefault(p =>
+                string.Equals(p.Name, StructureRegion.Direction.Key, StringComparison.OrdinalIgnoreCase));
             var message = string.Format(Resources.PumpConverter_GetInvalidDirectionValueWarningMessage_Line__0___the_specified_value___1___for___2___is_invalid_,
                 directionProperty?.LineNumber, direction, StructureRegion.Direction.Key, PumpControlDirection.SuctionSideControl, pump.Name);
 
@@ -89,7 +90,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
             var warningMessages = new List<string>();
             if (amountPumpHeadValues != numberOfFunctionEntries)
             {
-                var headProperty = Category.Properties.FirstOrDefault(p => p.Name == StructureRegion.Head.Key);
+                var headProperty = Category.Properties.FirstOrDefault(p =>
+                    string.Equals(p.Name, StructureRegion.Head.Key, StringComparison.OrdinalIgnoreCase));
                 if (headProperty != null)
                 {
                     var warningMessage = $"Line {headProperty.LineNumber}: The amount of defined head values for pump '{pumpName}' is not equal to the defined number at {StructureRegion.ReductionFactorLevels.Key}. The pump was not imported.";
@@ -99,7 +101,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
 
             if (amountReductionFactorValues != numberOfFunctionEntries)
             {
-                var reductionFactorProperty = Category.Properties.FirstOrDefault(p => p.Name == StructureRegion.ReductionFactor.Key);
+                var reductionFactorProperty = Category.Properties.FirstOrDefault(p =>
+                    string.Equals(p.Name, StructureRegion.ReductionFactor.Key, StringComparison.OrdinalIgnoreCase));
                 if (reductionFactorProperty != null)
                 {
                     var warningMessage = $"Line {reductionFactorProperty.LineNumber}: The amount of defined reduction factor values for pump '{pumpName}' is not equal to the defined number at {StructureRegion.ReductionFactorLevels.Key}. The pump was not imported.";

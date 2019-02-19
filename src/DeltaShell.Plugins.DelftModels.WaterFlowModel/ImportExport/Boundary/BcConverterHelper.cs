@@ -87,11 +87,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
             out string propertyVal)
         {
             propertyVal = null;
-            var nPropertyEntries = properties.Count(p => p.Name.Equals(propertyKey));
+            var nPropertyEntries = properties.Count(p => p.Name.Equals(propertyKey, StringComparison.OrdinalIgnoreCase));
             if (!(nPropertyEntries == 1 || (isOptional && nPropertyEntries == 0)))
                 return false;
 
-            propertyVal = properties.FirstOrDefault(p => p.Name.Equals(propertyKey))?.Value;
+            propertyVal = properties.FirstOrDefault(p => p.Name.Equals(propertyKey, StringComparison.OrdinalIgnoreCase))?.Value;
             return true;
         }
 
@@ -108,7 +108,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
         public static bool ValidateNameProperty(IList<DelftIniProperty> properties,
             out string name)
         {
-            return BcConverterHelper.ValidateUniqueProperty(properties,
+            return ValidateUniqueProperty(properties,
                        BoundaryRegion.Name.Key,
                        false,
                        out name) &&
