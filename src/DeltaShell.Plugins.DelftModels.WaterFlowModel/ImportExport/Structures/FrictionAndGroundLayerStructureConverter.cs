@@ -24,12 +24,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
         protected static void SetGroundLayerValuesFromCategory(IGroundLayer groundLayerStructure)
         {
             var groundFriction = Category.ReadProperty<double>(StructureRegion.GroundFriction.Key);
-            var bedFriction = Category.ReadProperty<double>(StructureRegion.BedFriction.Key);
-
-            if (Math.Abs(groundFriction - bedFriction) > double.Epsilon)
-            {
-                groundLayerStructure.GroundLayerRoughness = groundFriction;
-            }
+            groundLayerStructure.GroundLayerRoughness = groundFriction;
         }
     }
 }

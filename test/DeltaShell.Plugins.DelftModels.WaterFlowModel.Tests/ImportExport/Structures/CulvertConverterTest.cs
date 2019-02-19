@@ -131,38 +131,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
         [TestCase("5", CulvertFrictionType.StricklerKn, Friction.Nikuradse)]
         [TestCase("6", CulvertFrictionType.StricklerKs, Friction.Strickler)]
         [TestCase("7", CulvertFrictionType.WhiteColebrook, Friction.WhiteColebrook)]
-        public void GivenCulvertStructureIniCategoryWithBedFrictionEntries_WhenConvertingToStructure1D_ThenCulvertWithExpectedFrictionValuesIsReturned
-            (string frictionTypeValue, CulvertFrictionType expectedCulvertFrictionType, Friction expectedFrictionDataType)
-        {
-            // Given
-            var friction = "10.0";
-            var category = GetStructureCategoryWithBasicProperties();
-            // Same values for bed friction and ground friction
-            category.SetProperty(StructureRegion.BedFrictionType.Key, frictionTypeValue);
-            category.SetProperty(StructureRegion.BedFriction.Key, friction);
-            category.SetProperty(StructureRegion.GroundFrictionType.Key, frictionTypeValue);
-            category.SetProperty(StructureRegion.GroundFriction.Key, friction);
-
-            var branch = GetMockedBranch();
-
-            // When
-            var culvert = ConvertAndCheckForNull<CulvertConverter, Culvert>(category, branch);
-
-            // Then
-            Assert.That(culvert.CulvertType, Is.EqualTo(CulvertType.Culvert));
-            Assert.That(culvert.FrictionType, Is.EqualTo(expectedCulvertFrictionType));
-            Assert.That(culvert.FrictionDataType, Is.EqualTo(expectedFrictionDataType));
-            Assert.That(culvert.Friction, Is.EqualTo(ParseToDouble(friction)));
-            Assert.That(culvert.GroundLayerRoughness, Is.EqualTo(0.0));
-
-            mocks.VerifyAll();
-        }
-
-        [TestCase("1", CulvertFrictionType.Chezy, Friction.Chezy)]
-        [TestCase("4", CulvertFrictionType.Manning, Friction.Mannings)]
-        [TestCase("5", CulvertFrictionType.StricklerKn, Friction.Nikuradse)]
-        [TestCase("6", CulvertFrictionType.StricklerKs, Friction.Strickler)]
-        [TestCase("7", CulvertFrictionType.WhiteColebrook, Friction.WhiteColebrook)]
         public void GivenCulvertStructureIniCategoryWithBedFrictionEntriesThatAreDifferentFromGroundLayerSettings_WhenConvertingToStructure1D_ThenCulvertWithExpectedFrictionAndGroundLayerValuesIsReturned
             (string frictionTypeValue, CulvertFrictionType expectedCulvertFrictionType, Friction expectedFrictionDataType)
         {
