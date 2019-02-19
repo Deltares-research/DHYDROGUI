@@ -197,7 +197,7 @@ namespace DeltaShell.NGHS.IO.Helpers
     {
         public static T ReadProperty<T>(this IDelftIniCategory category, string key, ref string errorMessage)
         {
-            var iniProperty = category.Properties.FirstOrDefault(property => property.Name == key);
+            var iniProperty = category.Properties.FirstOrDefault(property => PropertyEqualsKey(key, property));
 
             if (iniProperty != null)
                 return (T)TypeDescriptor.GetConverter(typeof(T)).ConvertFromInvariantString(iniProperty.Value);
@@ -205,9 +205,10 @@ namespace DeltaShell.NGHS.IO.Helpers
             errorMessage += string.Format("Unable to parse {0} property: {1}{2}", category.Name, key, Environment.NewLine);
             return default(T);
         }
+
         public static T ReadProperty<T>(this IDelftIniCategory category, string key, bool isOptional = false)
         {
-            var iniProperty = category.Properties.FirstOrDefault(property => property.Name.Equals(key, StringComparison.OrdinalIgnoreCase));
+            var iniProperty = category.Properties.FirstOrDefault(property => PropertyEqualsKey(key, property));
 
             if (iniProperty != null)
                 return (T)TypeDescriptor.GetConverter(typeof(T)).ConvertFromInvariantString(iniProperty.Value);
@@ -218,7 +219,7 @@ namespace DeltaShell.NGHS.IO.Helpers
         }
         public static IList<T> ReadPropertiesToListOfType<T>(this IDelftIniCategory category, string key, ref string errorMessage)
         {
-            var iniProperty = category.Properties.FirstOrDefault(property => property.Name == key);
+            var iniProperty = category.Properties.FirstOrDefault(property => PropertyEqualsKey(key, property));
 
             if (iniProperty != null)
             {
@@ -230,7 +231,7 @@ namespace DeltaShell.NGHS.IO.Helpers
         }
         public static IList<T> ReadPropertiesToListOfType<T>(this IDelftIniCategory category, string key, bool isOptional = false, char separator = ' ')
         {
-            var iniProperty = category.Properties.FirstOrDefault(property => property.Name == key);
+            var iniProperty = category.Properties.FirstOrDefault(property => PropertyEqualsKey(key, property));
 
             if (iniProperty != null)
             {
@@ -241,6 +242,10 @@ namespace DeltaShell.NGHS.IO.Helpers
                 throw new PropertyNotFoundInFileException(String.Format("Property {0} is not found in the file", key));
             
             return default(IList<T>);
+        }
+        private static bool PropertyEqualsKey(string key, DelftIniProperty property)
+        {
+            return property.Name.Equals(key, StringComparison.OrdinalIgnoreCase);
         }
     }
     #endregion
