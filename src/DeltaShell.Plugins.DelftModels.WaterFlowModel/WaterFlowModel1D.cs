@@ -850,8 +850,26 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
         public virtual double SurfaceArea { get; set; }
 
         public virtual double AtmosphericPressure { get; set; }
+        /// <summary>
+        /// Gets or sets the grain diameter at which 50% of the grains is smaller in [m].
+        /// </summary>
+        /// <value>
+        /// Grain diameter at which 50% of the grains is smaller in m.
+        /// </value>
         public virtual double? D50 { get; set; }
+        /// <summary>
+        /// Gets or sets the grain diameter at which 90% of the grains is smaller in [m].
+        /// </summary>
+        /// <value>
+        /// Grain diameter at which 90% of the grains is smaller in m.
+        /// </value>
         public virtual double? D90 { get; set; }
+        /// <summary>
+        /// Gets or sets the depth (or waterlevel) over which the sediment is transported in [m].  
+        /// </summary>
+        /// <value>
+        /// Depth (or waterlevel) over which the sediment is transported in m.
+        /// </value>
         public virtual double? DepthUsedForSediment { get; set; }
         public virtual double? DesignFactorDlg { get; set; }
         public virtual double HeatCapacityWater { get; set; }

@@ -30,6 +30,11 @@
 
     <property name="Latitude"/>
     <property name="Longitude"/>
-    
+
+    <!-- Sediment properties -->
+    <property name="D50"/>
+    <property name="D90"/>
+    <property name="DepthUsedForSediment"/>
+
   </joined-subclass>
 </hibernate-mapping>

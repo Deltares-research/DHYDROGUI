@@ -84,7 +84,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui
 
         public override string FileFormatVersion
         {
-            get { return "3.5.3.0"; }
+            get { return "3.5.4.0"; }
         }
 
         public override IEnumerable<PropertyInfo> GetPropertyInfos()

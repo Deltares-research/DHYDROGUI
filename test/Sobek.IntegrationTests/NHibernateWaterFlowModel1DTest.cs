@@ -2098,6 +2098,33 @@ namespace Sobek.IntegrationTests
         }
 
         [Test]
+        public void GivenAMd1dModelWithSedimentProperties_WhenSaveLoading_PropertiesArePersisted()
+        {
+            // Given
+            var model = WaterFlowModel1DDemoModelTestHelper.CreateModelWithDemoNetwork();
+            model.D50 = 0.0005;
+            model.D90 = 0.003;
+            model.DepthUsedForSediment = 0.1;
+
+            model.Initialize();
+            var path = TestHelper.GetCurrentMethodName() + ".dsproj";
+
+            // When
+            SaveModelToProject(model, path);
+
+            // Then
+            using (var projectRepository = factory.CreateNew())
+            {
+                var retrievedProject = projectRepository.Open(path);
+                var retrievedModel = (WaterFlowModel1D) retrievedProject.RootFolder.Models.FirstOrDefault();
+                Assert.IsNotNull(retrievedModel);
+                Assert.AreEqual(retrievedModel.D50, 0.0005);
+                Assert.AreEqual(retrievedModel.D90, 0.003);
+                Assert.AreEqual(retrievedModel.DepthUsedForSediment, 0.1);
+            }
+        }
+
+        [Test]
         public void SaveLoadWaterFlowModel1D()
         {
             var model = WaterFlowModel1DDemoModelTestHelper.CreateModelWithDemoNetwork();
