@@ -15,7 +15,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         private const string HydraulicRuleGroup = "Lookup table Rule with condition";
         private const string IntervalRuleGroup = "Interval Rule with condition";
         private const string TimeRuleGroup = "Time Rule with condition";
-        private const string RelativeTimeRuleGroup = "Relative Time Rule with condition";
+        private const string RelativeTimeRuleGroup = "Relative from time/value rule with condition";
         private const string InvertorRuleGroup = "InvertorRule";
              
         [ExcludeFromCodeCoverage]
