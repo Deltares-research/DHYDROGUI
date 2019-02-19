@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using DelftTools.Utils;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
@@ -17,6 +18,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         private const string RelativeTimeRuleGroup = "Relative Time Rule with condition";
         private const string InvertorRuleGroup = "InvertorRule";
              
+        [ExcludeFromCodeCoverage]
         public static IEnumerable<string> StandardControlGroups
         {
             get
