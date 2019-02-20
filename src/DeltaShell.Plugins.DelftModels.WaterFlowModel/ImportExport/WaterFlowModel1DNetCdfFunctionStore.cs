@@ -30,6 +30,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 
         private string path;
         private string fileName;
+        private bool warningMessageNotYetThrown = true;
 
         // protected for testing
         protected FeatureTypeConverter featureTypeConverter = new FeatureTypeConverter();
@@ -107,6 +108,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 path = value;
                 fileName = File.Exists(path) ? new FileInfo(path).Name : null;
                 metaData = null;
+                warningMessageNotYetThrown = true;
 
                 // clear caches for argument variables and min/max
                 argumentVariableCache.Clear(); 
@@ -189,12 +191,25 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
         {
             return (IMultiDimensionalArray<T>) GetVariableValues(function, filters);
         }
-
+        /// <summary>
+        /// Gets the variable values as an implementation of IMultiDimensionalArray
+        /// </summary>
+        /// <param name="variable">The variable.</param>
+        /// <param name="filters">The filters.</param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException">
+        /// </exception>
         public IMultiDimensionalArray GetVariableValues(IVariable variable, params IVariableFilter[] filters)
         {
             if (Path == null || !File.Exists(path))
             {
-                Log.WarnFormat("Unable to get variable values for function: {0}, path = {1}", variable.Name, Path);
+                if (warningMessageNotYetThrown)
+                {
+                    var functionNames = Functions?.OfType<ICoverage>().Select(f => f.Name) ?? Enumerable.Empty<string>();
+                    Log.Warn($"Path {Path} does not exist. {Environment.NewLine}Unable to get values for : {string.Join(",", functionNames)}");
+                    warningMessageNotYetThrown = false;
+                }
+
                 var genericType = typeof(MultiDimensionalArray<>).MakeGenericType(variable.ValueType);
                 return (IMultiDimensionalArray) Activator.CreateInstance(genericType);
             }
