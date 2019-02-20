@@ -212,10 +212,13 @@ namespace DelftTools.Hydro.CrossSections
         /// <summary>
         /// This will set the minimal y' value of the first roughness to the minimal y' value of the first profile AND
         /// This will set the maximal y' value of the last roughness to the maximal y' value of the last profile
+        /// <remarks>
+        /// Returning when Sections.Count == 0 is a a fix for models that do not have roughness positions defined.
+        /// </remarks>
         /// </summary>
         public override void RefreshSectionsWidths()
         {
-            if (Sections.Count == 0) return; // Fix for models that do not have roughness positions defined.
+            if (Sections.Count == 0) return;
 
             var firstRoughnessPosition = Sections.First().MinY;
             var lastRoughnessPosition = Sections.Last().MaxY;
