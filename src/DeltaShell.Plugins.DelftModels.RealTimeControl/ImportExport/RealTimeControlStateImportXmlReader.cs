@@ -1,48 +1,52 @@
-﻿using DeltaShell.NGHS.IO;
-using DeltaShell.NGHS.IO.FileReaders;
+﻿using DeltaShell.NGHS.IO.FileReaders;
+using DeltaShell.NGHS.IO.Handlers;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
-using log4net;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 {
-    public static class RealTimeControlStateImportXmlReader
+    /// <summary>
+    /// Responsible for reading the state import file and setting the state import data on the connection points.
+    /// </summary>
+    public class RealTimeControlStateImportXmlReader
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(RealTimeControlStateImportXmlReader));
+        private readonly ILogHandler logHandler;
 
-        public static void Read(string stateImportFilePath, IList<Output> outputs)
+        public RealTimeControlStateImportXmlReader(ILogHandler logHandler)
         {
-            if (!File.Exists(stateImportFilePath))
+            this.logHandler = logHandler;
+        }
+
+        /// <summary>
+        /// Reads the specified state import file path and sets the state import data on the connection points.
+        /// </summary>
+        /// <param name="stateImportFilePath">The state import file path.</param>
+        /// <param name="connectionPoints">The connection points (inputs and outputs).</param>
+        /// <remarks>If parameter connectionPoints is NULL, methods returns.</remarks>
+        public void Read(string stateImportFilePath, IList<ConnectionPoint> connectionPoints)
+        {
+            if (connectionPoints == null) return;
+
+            var delftConfigXmlParser = new DelftConfigXmlFileParser(logHandler);
+
+            TreeVectorFileXML stateImportObject;
+            try
             {
-                Log.ErrorFormat(Resources.RealTimeControlStateImportXmlReader_Read_File___0___does_not_exist_, stateImportFilePath);
+                stateImportObject = delftConfigXmlParser.Read<TreeVectorFileXML>(stateImportFilePath);
+            }
+            catch (FileNotFoundException e)
+            {
+                logHandler.ReportError(e.Message);
                 return;
             }
-                
-            if (outputs == null) return;
 
-            var stateImportObject = DelftConfigXmlFileParser.Read<TreeVectorFileXML>(stateImportFilePath);
+            var connectionPointItems = stateImportObject.treeVector.Items.OfType<TreeVectorLeafXML>().ToList();
 
-            var outputItems = stateImportObject.treeVector.Items.OfType<TreeVectorLeafXML>();
-
-            foreach (var outputItem in outputItems)
-            {
-                var outputName = outputItem.id;
-                var outputValue = double.Parse(outputItem.vector, System.Globalization.CultureInfo.InvariantCulture);
-
-                var correspondingOutput = outputs.FirstOrDefault(o => o.Name == outputName);
-
-                if (correspondingOutput == null)
-                {
-                    Log.WarnFormat(Resources.RealTimeControlStateImportXmlReader_Read_Could_not_find_output_with_name___0___that_is_referenced_in_file___1____Please_check_file___2__, outputName, stateImportFilePath, RealTimeControlXMLFiles.XmlData);
-                    continue;
-                }
-
-                correspondingOutput.Value = outputValue;
-            }
+            var stateImportSetter = new RealTimeControlStateImportSetter(logHandler);
+            stateImportSetter.SetStateImportOnConnectionPoints(connectionPoints, connectionPointItems);
         }
     }
 }

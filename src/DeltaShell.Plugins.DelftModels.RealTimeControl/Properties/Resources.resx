@@ -355,6 +355,15 @@
   <data name="RealTimeControlXmlReaderHelper_GetConnectionPointByName_Could_not_find_the_input_output___0____The_input_output_needs_to_be_referenced_in_file___1___" xml:space="preserve">
     <value>Could not find the input/output '{0}'. The input/output needs to be referenced in file '{1}'.</value>
   </data>
+  <data name="RealTimeControlXmlReaderHelper_ConnectInputToRule_Could_not_find_the_input_for_rule___0____in_control_group__1___The_input_needs_to_be_referenced_in_file___2___" xml:space="preserve">
+    <value>Could not find the input for rule '{0}' in control group '{1}'. The input needs to be referenced in file '{2}'.</value>
+  </data>
+  <data name="RealTimeControlXmlReaderHelper_ConnectInputToRule_Could_not_find_the_input_for_signal___0____in_control_group__1___The_input_needs_to_be_referenced_in_file___2___" xml:space="preserve">
+    <value>Could not find the input for signal '{0}' in control group '{1}'. The input needs to be referenced in file '{2}'.</value>
+  </data>
+  <data name="RealTimeControlXmlReaderHelper_ConnectOutputToRule_Could_not_find_the_output_for_rule___0____in_control_group__1___The_output_needs_to_be_referenced_in_file___2___" xml:space="preserve">
+    <value>Could not find the output for rule '{0}' in control group '{1}'. The output needs to be referenced in file '{2}'.</value>
+  </data>
   <data name="RealTimeControlXmlReaderHelper_GetRuleByElementIdInControlGroup_Could_not_find_the_input_output___0___that_is_referenced_in_id___1____The_input_output_needs_to_be_referenced_in_file___2___" xml:space="preserve">
     <value>Could not find the input/output '{0}' that is referenced in id '{1}'. The input/output needs to be referenced in file '{2}'.</value>
   </data>
@@ -363,5 +372,23 @@
   </data>
   <data name="RealTimeControlXmlReaderHelper_GetRuleByElementIdInControlGroup_Could_not_find_the_rule___0___that_is_referenced_in_id___1___The_rule_needs_to_be_referenced_in_file___2___" xml:space="preserve">
     <value>Could not find the rule '{0}' that is referenced in id '{1}'.The rule needs to be referenced in file '{2}'.</value>
+  </data>
+  <data name="RealTimeControlXmlReaderHelper_GetSignalByElementIdInControlGroup_Could_not_find_the_signal___0___that_is_referenced_in_id___1___The_signal_needs_to_be_referenced_in_file___2___" xml:space="preserve">
+    <value>Could not find the rule '{0}' that is referenced in id '{1}'.The rule needs to be referenced in file '{2}'.</value>
+  </data>
+  <data name="RealTimeControlTimeSeriesXmlReader_Read_There_was_an_error_reading_the_time_series_file____0____Please_check_file___1__" xml:space="preserve">
+    <value>There was an error reading the time series file: '{0}'. Please check file: {1}.</value>
+  </data>
+  <data name="RealTimeControlDataConfigXmlSetter_SetTimeLagOnHydraulicRules_Hydraulic_rule___0___must_have_an_input__Please_check_file____1___" xml:space="preserve">
+    <value>Hydraulic rule '{0}' must have an input. Please check file: '{1}'.</value>
+  </data>
+  <data name="RealTimeControlDataConfigXmlSetter_SetSetPointOnPIDRules_PID_rule___0___must_have_a_setpoint__Please_check_file____1___" xml:space="preserve">
+    <value>PID rule '{0}' must have a setpoint. Please check file: '{1}'.</value>
+  </data>
+  <data name="RealTimeControlDataConfigXmlSetter_SetSetPointOnIntervalRules_Interval_rule___0___must_have_a_setpoint__Please_check_file____1___" xml:space="preserve">
+    <value>Interval rule '{0}' must have a setpoint. Please check file: '{1}'.</value>
+  </data>
+  <data name="RealTimeControlDataConfigXmlSetter_SetTimeLagOnHydraulicRules_Cannot_find_input_with_element_ID___0___for_rule___1____Please_check_file____2___" xml:space="preserve">
+    <value>Cannot find input with element ID '{0}' for rule '{1}'. Please check file: '{2}'.</value>
   </data>
 </root>

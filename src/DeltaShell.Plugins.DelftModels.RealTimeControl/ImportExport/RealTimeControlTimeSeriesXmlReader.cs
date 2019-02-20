@@ -1,30 +1,40 @@
-﻿using DeltaShell.NGHS.IO;
-using DeltaShell.NGHS.IO.FileReaders;
+﻿using DeltaShell.NGHS.IO.FileReaders;
+using DeltaShell.NGHS.IO.Handlers;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
-using log4net;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd;
 using System.Collections.Generic;
 using System.IO;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 {
-    public static class RealTimeControlTimeSeriesXmlReader
+    /// <summary>
+    /// Responsible for reading the time series file path and setting the time series on the RTC objects.
+    /// </summary>
+    public class RealTimeControlTimeSeriesXmlReader
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(RealTimeControlTimeSeriesXmlReader));
+        private readonly ILogHandler logHandler;
 
-        public static void Read(string timeSeriesFilePath, IList<ControlGroup> controlGroups )
+        public RealTimeControlTimeSeriesXmlReader(ILogHandler logHandler)
         {
-            if (!File.Exists(timeSeriesFilePath))
-            {
-                Log.ErrorFormat(Resources.RealTimeControlTimeSeriesXmlReader_Read_File___0___does_not_exist_, timeSeriesFilePath);
-                return;
-            }
+            this.logHandler = logHandler;
+        }
 
-            if (controlGroups == null) return;
+        /// <summary>
+        /// Reads the specified time series file path.
+        /// </summary>
+        /// <param name="timeSeriesFilePath">The time series file path.</param>
+        /// <param name="controlGroups">The control groups.</param>
+        /// <remarks>If parameter controlGroups is NULL or timeSeriesFilePath does not exist, methods returns.</remarks>
+        public void Read(string timeSeriesFilePath, IList<IControlGroup> controlGroups)
+        {
+            if (string.IsNullOrEmpty(timeSeriesFilePath) || !File.Exists(timeSeriesFilePath) || controlGroups == null) return;
 
-            var timeSeriesObject = DelftConfigXmlFileParser.Read<TimeSeriesCollectionComplexType>(timeSeriesFilePath);
-            RealTimeControlTimeSeriesConnector.ConnectTimeSeries(timeSeriesObject?.series, controlGroups );
+            var delftConfigXmlParser = new DelftConfigXmlFileParser(logHandler);
+
+            var timeSeriesObject = delftConfigXmlParser.Read<TimeSeriesCollectionComplexType>(timeSeriesFilePath);
+
+            var timeSeriesSetter = new RealTimeControlTimeSeriesSetter(logHandler);
+            timeSeriesSetter.SetTimeSeries(timeSeriesObject.series, controlGroups);
         }
     }
 }

@@ -33,10 +33,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.PropertyGrid
         [ResourcesCategory(typeof(Resources), "RTC_Category_InterpolationExtrapolation")]
         [ResourcesDisplayName(typeof(Resources), "RTC_Interpolation_DisplayName")]
         [ResourcesDescription(typeof(Resources), "RTC_Interpolation_Description")]
-        public InterpolationType Interpolation
+        public InterpolationHydraulicType Interpolation
         {
-            get { return data.InterpolationOptionsTime; }
-            set { data.InterpolationOptionsTime = value; }
+            get { return (InterpolationHydraulicType)data.InterpolationOptionsTime; }
+            set { data.InterpolationOptionsTime = (InterpolationType)value; }
         }
 
         [ResourcesCategory(typeof(Resources), "RTC_Category_InterpolationExtrapolation")]

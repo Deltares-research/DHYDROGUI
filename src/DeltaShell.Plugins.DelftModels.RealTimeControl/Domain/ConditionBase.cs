@@ -31,6 +31,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 
         public abstract string GetDescription();
 
+        /// <summary>
+        /// Converts the information of the condition needed for writing the tools config file to an xml element.
+        /// </summary>
+        /// <param name="xNamespace">The x namespace.</param>
+        /// <param name="prefix">The control group name.</param>
+        /// <returns>The Xml Element.</returns>
         public override XElement ToXml(XNamespace xNamespace, string prefix)
         {
             return new XElement(xNamespace + "trigger");
@@ -38,7 +44,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 
         public virtual IEnumerable<XElement> ToDataConfigExportSeries(XNamespace xNamespace, string prefix)
         {
-            yield return new XElement(xNamespace + "timeSeries", new XAttribute("id", XmlTag + RtcXmlTag.Status + prefix + "/" + Name));
+            yield return new XElement(xNamespace + "timeSeries", new XAttribute("id", RtcXmlTag.Status + GetXmlNameWithoutTag(prefix)));
         }
 
         public virtual IEnumerable<XElement> ToDataConfigImportSeries(string prefix, XNamespace xNamespace)

@@ -66,7 +66,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
         private string OriginXml()
         {
             return "<rule xmlns=\"http://www.wldelft.nl/fews\">" +
-                   "<lookupTable id=\"" + "/" + RuleName + "\">" +
+                   "<lookupTable id=\"" + "[HydraulicRule]" + RuleName + "\">" +
                    "<table>" +
                    "<record x=\"" +
                    ((double) tableFunction.Arguments[0].Values[0]).ToString(CultureInfo.InvariantCulture) + "\" y=\"" +
@@ -96,7 +96,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
         private string HydraulicRuleWithTimeLagXml()
         {
             return "<rule xmlns=\"http://www.wldelft.nl/fews\">" +
-                   "<lookupTable id=\"" + "/" + RuleName + "\">" +
+                   "<lookupTable id=\"" + "[HydraulicRule]" + RuleName + "\">" +
                    "<table>" +
                    "<record x=\"" +
                    ((double)tableFunction.Arguments[0].Values[0]).ToString(CultureInfo.InvariantCulture) + "\" y=\"" +
@@ -114,7 +114,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
                    "<interpolationOption>BLOCK</interpolationOption>" +
                    "<extrapolationOption>BLOCK</extrapolationOption>" +
                    "<input>" +
-                   "<x ref=\"EXPLICIT\">delayed" + RtcXmlTag.Input + InputName + "/" + InputParameterName + "[" + (nTimeSteps - 2) + "]</x>" +
+                   "<x ref=\"EXPLICIT\">" + RtcXmlTag.Delayed + RtcXmlTag.Input + InputName + "/" + InputParameterName + "[" + (nTimeSteps - 2) + "]</x>" +
                    "</input>" +
                    "<output>" +
                    "<y>" + RtcXmlTag.Output + OutputName + "/" + OutputParameterName + "</y>" +

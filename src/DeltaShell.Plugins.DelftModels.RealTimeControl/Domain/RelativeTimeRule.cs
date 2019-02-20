@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Xml.Linq;
-using DelftTools.Functions;
+﻿using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Xml;
 using log4net;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Xml.Linq;
 using ValidationAspects;
 using ValidationAspects.Exceptions;
-using ValidationAspects.Factories;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 {
@@ -114,22 +113,48 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             return outputAsInput.XmlName + RtcXmlTag.OutputAsInput + Name;
         }
 
+        // Example of ToXml:
+        //  <timeRelative id = "[RelativeTimeRule]control_group_1/relative_time_rule">
+        //      <mode>RETAINVALUEWHENINACTIVE</mode>
+        //      <valueOption>ABSOLUTE</valueOption>
+        //      <maximumPeriod>0</maximumPeriod>
+        //      <controlTable>
+        //          <record time="60" value="10"/>
+        //          <record time ="600" value="9"/>
+        //          <record time ="1800" value="8"/>
+        //      </controlTable>
+        //      <output>
+        //          <y>[Output] Weir1/Crest level(s)</y>
+        //          <timeActive>control_group_1/relative_time_rule</timeActive>
+        //      </output>
+        //  </timeRelative>
+
+        /// <summary>
+        /// Converts the information of the relative time rule needed for writing the tools config file to an xml element.
+        /// </summary>
+        /// <param name="xNamespace">The x namespace.</param>
+        /// <param name="prefix">The control group name.</param>
+        /// <returns>The Xml Element.</returns>
         public override XElement ToXml(XNamespace xNamespace, string prefix)
         {
             var result = base.ToXml(xNamespace, prefix);
             var table = GetTable();
             foreach (var output in Outputs)
             {
-                output.IntegralPart = XmlTag + prefix + "/" + Name; // also in data export and statevector
+                output.IntegralPart = GetXmlNameWithoutTag(prefix); // also in data export and statevector
             }
+
+            var interpolationString = Interpolation == InterpolationType.Linear ? "LINEAR" : "BLOCK";
+
             var element = new XElement(xNamespace + "timeRelative",
-                                       new XAttribute("id", prefix + "/" + Name),
-                                       new XElement(xNamespace + "mode", "RETAINVALUEWHENINACTIVE"),
-                                       new XElement(xNamespace + "valueOption", TimeValueOption),
-                                       new XElement(xNamespace + "maximumPeriod", MinimumPeriod.ToString()),
-                                       new XElement(xNamespace + "controlTable",
-                                                    table.Select(record => record.ToXml(xNamespace)))
-                                       );
+                new XAttribute("id", GetXmlNameWithTag(prefix)),
+                new XElement(xNamespace + "mode", "RETAINVALUEWHENINACTIVE"),
+                new XElement(xNamespace + "valueOption", TimeValueOption),
+                new XElement(xNamespace + "maximumPeriod", MinimumPeriod.ToString()),
+                new XElement(xNamespace + "interpolationOption", interpolationString),
+                new XElement(xNamespace + "controlTable",
+                    table.Select(record => record.ToXml(xNamespace)))
+            );
             if (FromValue)
             {
                 // set an extra input to RtcTools. This input is the same output of the rule
@@ -137,8 +162,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
                 var extraInput = new XElement(xNamespace + "input");
                 extraInput.Add(new XElement(xNamespace + "y", OutputAsInput(Outputs[0])));
                 element.Add(extraInput);
-
             }
+
             element.Add(Outputs.Select(output => output.ToXml(xNamespace, "y", "timeActive")));
             result.Add(element);
             return result;
@@ -235,8 +260,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
         {
             var xmlTimeSeries = new XmlTimeSeries
                                     {
-                                        Name = XmlTag + prefix +"/"+ Name,
-                                        LocationId = prefix + "/" + Name,
+                                        Name = GetXmlNameWithoutTag(prefix),
+                                        LocationId = GetXmlNameWithTag(prefix),
                                         ParameterId = "t",
                                     };
             return xmlTimeSeries;

@@ -64,7 +64,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 
         public override IEnumerable<IXmlTimeSeries> XmlExportTimeSeries(string prefix)
         {
-            yield return GetExportTimeSeries(prefix + Name);
+            yield return GetExportTimeSeries(RtcXmlTag.Signal + GetXmlNameWithoutTag(prefix));
         }
 
         public override XElement ToXml(XNamespace xNamespace, string prefix)
@@ -83,12 +83,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
                 xElement.Add(new XAttribute("ref", "IMPLICIT"));
             }
 
-            result.Add(new XElement(xNamespace + "lookupTable", new XAttribute("id", prefix + "/" + Name),
+            result.Add(new XElement(xNamespace + "lookupTable", new XAttribute("id", GetXmlNameWithTag(prefix)),
                        new XElement(xNamespace + "table", table.Select(record => record.ToXml(xNamespace))),
                        new XElement(xNamespace + "interpolationOption", Interpolation == InterpolationType.Constant ? "BLOCK" : "LINEAR"),
                        new XElement(xNamespace + "extrapolationOption", Extrapolation == ExtrapolationType.Constant ? "BLOCK" : "LINEAR"),
                        xElementsInput,
-                       new XElement(xNamespace + "output", new XElement(xNamespace + "y", prefix + Name))));
+                       new XElement(xNamespace + "output", new XElement(xNamespace + "y", RtcXmlTag.Signal + GetXmlNameWithoutTag(prefix)))));
             return result;
         }
 

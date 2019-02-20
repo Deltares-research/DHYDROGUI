@@ -151,6 +151,8 @@
     <Compile Include="Grid\UGridTest.cs" />
     <Compile Include="Grid\UGridUnitTests.cs" />
     <Compile Include="Grid\UnstructuredGridFileHelperTest.cs" />
+    <Compile Include="Handlers\LogHandlerTest.cs" />
+    <Compile Include="Handlers\LogMessagesListTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

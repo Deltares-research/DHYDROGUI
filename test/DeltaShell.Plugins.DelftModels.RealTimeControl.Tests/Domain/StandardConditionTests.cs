@@ -12,6 +12,30 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
     [TestFixture]
     public class StandardConditionTests
     {
+        [SetUp]
+        public void SetUp()
+        {
+            mocks = new MockRepository();
+            controlGroup = mocks.StrictMock<IControlGroup>();
+            trueRule = new PIDRule {Name = TrueReference};
+            falseRule = new PIDRule {Name = FalseReference};
+            trueAndFalseRule = new PIDRule {Name = TrueAndFalseReference};
+
+            standardCondition = new StandardCondition
+            {
+                Name = Name,
+                Reference = Implicit,
+                Operation = Operation.Greater,
+                Input =
+                    new Input
+                    {
+                        ParameterName = InputParameterName,
+                        Feature = new RtcTestFeature {Name = InputName}
+                    },
+                Value = Value
+            };
+        }
+
         private static readonly XNamespace Fns = "http://www.wldelft.nl/fews";
 
         private const string Implicit = StandardCondition.ReferenceType.Implicit;
@@ -30,35 +54,107 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
         private PIDRule trueAndFalseRule;
         private StandardCondition standardCondition;
 
-        [SetUp]
-        public void SetUp()
+        private string OriginXml()
         {
-            mocks = new MockRepository();
-            controlGroup = mocks.StrictMock<IControlGroup>();
-            trueRule = new PIDRule { Name = TrueReference };
-            falseRule = new PIDRule { Name = FalseReference };
-            trueAndFalseRule = new PIDRule { Name = TrueAndFalseReference };
+            return "<trigger xmlns=\"http://www.wldelft.nl/fews\">" +
+                   "<standard id=\"[StandardCondition]" + standardCondition.Name + "\">" +
+                   //"<input ref=\"" + Implicit + "\">" + InputName + "_" + InputParameterName + "</input>" +
+                   //"<greaterThan>" + Value.ToString(CultureInfo.InvariantCulture) + "</greaterThan>" +
+                   "<condition>" +
+                   "<x1Series ref=\"" + Implicit + "\">" + RtcXmlTag.Input + InputName + "/" + InputParameterName +
+                   "</x1Series>" +
+                   "<relationalOperator>Greater</relationalOperator>" +
+                   "<x2Value>" + Value.ToString(CultureInfo.InvariantCulture) + "</x2Value>" +
+                   "</condition>" +
+                   "<true>" +
+                   "<trigger><ruleReference>[PID]" + TrueReference + "</ruleReference></trigger>" +
+                   "</true>" +
+                   "<false>" +
+                   "<trigger><ruleReference>[PID]" + FalseReference + "</ruleReference></trigger>" +
+                   "</false>" +
+                   "<output>" +
+                   "<status>" + RtcXmlTag.Status + standardCondition.Name + "</status>" +
+                   "</output>" +
+                   "</standard>" +
+                   "</trigger>";
+        }
 
-            standardCondition = new StandardCondition
-                                   {
-                                       Name = Name,
-                                       Reference = Implicit,
-                                       Operation = Operation.Greater,
-                                       Input =
-                                           new Input
-                                               {
-                                                   ParameterName = InputParameterName,
-                                                   Feature = new RtcTestFeature { Name = InputName }
-                                               },
-                                       Value = Value,
-                                   };
+        private string SecondaryConditionLessThanXml()
+        {
+            return "<trigger xmlns=\"http://www.wldelft.nl/fews\">" +
+                   "<standard id=\"[StandardCondition]" + standardCondition.Name + "\">" +
+                   //"<input ref=\"" + Implicit + "\">" + InputName + "_" + InputParameterName + "</input>" +
+                   //"<lessThan>" + Value.ToString(CultureInfo.InvariantCulture) + "</lessThan>" +
+                   "<condition>" +
+                   "<x1Series ref=\"" + Implicit + "\">" + RtcXmlTag.Input + InputName + "/" + InputParameterName +
+                   "</x1Series>" +
+                   "<relationalOperator>Less</relationalOperator>" +
+                   "<x2Value>" + Value.ToString(CultureInfo.InvariantCulture) + "</x2Value>" +
+                   "</condition>" +
+                   "<true>" +
+                   "<trigger><ruleReference>[PID]" + TrueReference + "</ruleReference></trigger>" +
+                   "</true>" +
+                   "<false>" +
+                   "<trigger><ruleReference>[PID]" + FalseReference + "</ruleReference></trigger>" +
+                   "</false>" +
+                   "<output>" +
+                   "<status>" + RtcXmlTag.Status + standardCondition.Name + "</status>" +
+                   "</output>" +
+                   "</standard>" +
+                   "</trigger>";
+        }
 
+        private string xmlConditionToCondition()
+        {
+            return "<trigger xmlns=\"http://www.wldelft.nl/fews\">" +
+                   "<standard id=\"[StandardCondition]" + standardCondition.Name + "\">" +
+                   "<condition>" +
+                   "<x1Series ref=\"" + Implicit + "\">" + RtcXmlTag.Input + InputName + "/" + InputParameterName +
+                   "</x1Series>" +
+                   "<relationalOperator>Greater</relationalOperator>" +
+                   "<x2Value>" + Value.ToString(CultureInfo.InvariantCulture) + "</x2Value>" +
+                   "</condition>" +
+                   "<true>" +
+                   "<trigger>" +
+                   "<standard id=\"[StandardCondition]trueCondition\">" +
+                   "<condition>" +
+                   "<x1Series ref=\"" + Implicit + "\">" + RtcXmlTag.Input + InputName + "/" + InputParameterName +
+                   "</x1Series>" +
+                   "<relationalOperator>Greater</relationalOperator>" +
+                   "<x2Value>" + Value.ToString(CultureInfo.InvariantCulture) + "</x2Value>" +
+                   "</condition>" +
+                   "<output>" +
+                   "<status>" + RtcXmlTag.Status + "trueCondition</status>" +
+                   "</output>" +
+                   "</standard>" +
+                   "</trigger>" +
+                   "</true>" +
+                   "<false>" +
+                   "<trigger>" +
+                   "<standard id=\"[StandardCondition]falseCondition\">" +
+                   "<condition>" +
+                   "<x1Series ref=\"" + Implicit + "\">" + RtcXmlTag.Input + InputName + "/" + InputParameterName +
+                   "</x1Series>" +
+                   "<relationalOperator>Greater</relationalOperator>" +
+                   "<x2Value>" + Value.ToString(CultureInfo.InvariantCulture) + "</x2Value>" +
+                   "</condition>" +
+                   "<output>" +
+                   "<status>" + RtcXmlTag.Status + "falseCondition</status>" +
+                   "</output>" +
+                   "</standard>" +
+                   "</trigger>" +
+                   "</false>" +
+                   "<output>" +
+                   "<status>" + RtcXmlTag.Status + standardCondition.Name +
+                   "</status>" +
+                   "</output>" +
+                   "</standard>" +
+                   "</trigger>";
         }
 
         [Test]
         public void CheckXmlGeneration()
         {
-
             standardCondition.TrueOutputs.Add(trueRule);
             standardCondition.FalseOutputs.Add(falseRule);
 
@@ -67,152 +163,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
 
         [Test]
         public void CheckXmlGenerationOtherBooleanCheck()
-        { 
+        {
             standardCondition.Operation = Operation.Less;
 
             standardCondition.TrueOutputs.Add(trueRule);
             standardCondition.FalseOutputs.Add(falseRule);
 
-            Assert.AreEqual(SecondaryConditionLessThanXml(), standardCondition.ToXml(Fns, "").ToString(SaveOptions.DisableFormatting));
-        }
- 
-        [Test]
-        public void TrueAndFalseOutputsCanContainRulesAndConditions()
-        {
-            var condition = new StandardCondition();
-            condition.TrueOutputs.Add(new PIDRule());
-            condition.FalseOutputs.Add(new StandardCondition());
-            Assert.AreEqual(1, condition.TrueOutputs.Count);
-            Assert.AreEqual(1, condition.FalseOutputs.Count);
-        }
-
-        [Test]
-        public void GenerateXmlConditionToCondition()
-        {
-            var trueCondition = new StandardCondition()
-            {
-                Name = "trueCondition",
-                Reference = Implicit,
-                Operation = Operation.Greater,
-                Input =
-                    new Input
-                    {
-                        ParameterName = InputParameterName,
-                        Feature = new RtcTestFeature { Name = InputName }
-                    },
-                Value = Value,
-            };
-
-            var falseCondition = new StandardCondition()
-            {
-                Name = "falseCondition",
-                Reference = Implicit,
-                Operation = Operation.Greater,
-                Input =
-                    new Input
-                    {
-                        ParameterName = InputParameterName,
-                        Feature = new RtcTestFeature { Name = InputName }
-                    },
-                Value = Value,
-            };
-
-            standardCondition.TrueOutputs.Add(trueCondition);
-            standardCondition.FalseOutputs.Add(falseCondition);
-
-            Assert.AreEqual(xmlConditionToCondition(), standardCondition.ToXml(Fns, "").ToString(SaveOptions.DisableFormatting));
-        }
-
-        private string OriginXml()
-        {
-            return "<trigger xmlns=\"http://www.wldelft.nl/fews\">" +
-                    "<standard id=\"/" + standardCondition.Name + "\">" +
-                    //"<input ref=\"" + Implicit + "\">" + InputName + "_" + InputParameterName + "</input>" +
-                    //"<greaterThan>" + Value.ToString(CultureInfo.InvariantCulture) + "</greaterThan>" +
-                    "<condition>" +
-                    "<x1Series ref=\"" + Implicit + "\">" + RtcXmlTag.Input + InputName + "/" + InputParameterName + "</x1Series>" +
-  	                "<relationalOperator>Greater</relationalOperator>"+
-                    "<x2Value>" + Value.ToString(CultureInfo.InvariantCulture) + "</x2Value>" +
-                    "</condition>" +
-                    "<true>" +
-					"<trigger><ruleReference>/"+TrueReference+"</ruleReference></trigger>"+
-				    "</true>"+
-					"<false>"+
-					"<trigger><ruleReference>/"+FalseReference+"</ruleReference></trigger>"+
-					"</false>"+
-                    "<output>" +
-                    "<status>" + RtcXmlTag.StandardCondition + RtcXmlTag.Status + "/" + standardCondition.Name + "</status>" +
-                    "</output>" +
-                    "</standard>" +
-                    "</trigger>";
-        }
-
-        private string SecondaryConditionLessThanXml()
-        {
-            return "<trigger xmlns=\"http://www.wldelft.nl/fews\">" +
-                    "<standard id=\"/" + standardCondition.Name + "\">" +
-                    //"<input ref=\"" + Implicit + "\">" + InputName + "_" + InputParameterName + "</input>" +
-                    //"<lessThan>" + Value.ToString(CultureInfo.InvariantCulture) + "</lessThan>" +
-                    "<condition>" +
-                    "<x1Series ref=\"" + Implicit + "\">" + RtcXmlTag.Input + InputName + "/" + InputParameterName + "</x1Series>" +
-                    "<relationalOperator>Less</relationalOperator>" +
-                    "<x2Value>" + Value.ToString(CultureInfo.InvariantCulture) + "</x2Value>" +
-                    "</condition>" +
-                    "<true>" +
-                    "<trigger><ruleReference>/" + TrueReference + "</ruleReference></trigger>" +
-                    "</true>" +
-                    "<false>" +
-                    "<trigger><ruleReference>/" + FalseReference + "</ruleReference></trigger>" +
-                    "</false>" +
-                    "<output>" +
-                    "<status>" + RtcXmlTag.StandardCondition + RtcXmlTag.Status+ "/" + standardCondition.Name + "</status>" +
-                    "</output>" +
-                    "</standard>" +
-                    "</trigger>";
-        }
-
-        private string xmlConditionToCondition()
-        {
-            return "<trigger xmlns=\"http://www.wldelft.nl/fews\">" +
-                    "<standard id=\"/" + standardCondition.Name + "\">" +
-                    "<condition>" +
-                    "<x1Series ref=\"" + Implicit + "\">" + RtcXmlTag.Input + InputName + "/" + InputParameterName + "</x1Series>" +
-                    "<relationalOperator>Greater</relationalOperator>" +
-                    "<x2Value>" + Value.ToString(CultureInfo.InvariantCulture) + "</x2Value>" +
-                    "</condition>" +
-                    "<true>" +
-                    "<trigger>"+
-                             "<standard id=\"/trueCondition\">" +
-                            "<condition>" +
-                            "<x1Series ref=\"" + Implicit + "\">" + RtcXmlTag.Input + InputName + "/" + InputParameterName + "</x1Series>" +
-                            "<relationalOperator>Greater</relationalOperator>" +
-                            "<x2Value>" + Value.ToString(CultureInfo.InvariantCulture) + "</x2Value>" +
-                            "</condition>" +
-                            "<output>" +
-                            "<status>" + RtcXmlTag.StandardCondition + RtcXmlTag.Status + "/trueCondition</status>" +
-                            "</output>" +
-                            "</standard>" +
-                            "</trigger>" +
-                    "</true>" +
-                    "<false>" +
-                    "<trigger>"+
-                             "<standard id=\"/falseCondition\">" +
-                            "<condition>" +
-                            "<x1Series ref=\"" + Implicit + "\">" + RtcXmlTag.Input + InputName + "/" + InputParameterName + "</x1Series>" +
-                            "<relationalOperator>Greater</relationalOperator>" +
-                            "<x2Value>" + Value.ToString(CultureInfo.InvariantCulture) + "</x2Value>" +
-                            "</condition>" +
-                            "<output>" +
-                            "<status>" + RtcXmlTag.StandardCondition + RtcXmlTag.Status + "/falseCondition</status>" +
-                            "</output>" +
-                            "</standard>" +
-                    "</trigger>" +
-                    "</false>" +
-                    "<output>" +
-                    "<status>" + RtcXmlTag.StandardCondition + RtcXmlTag.Status +"/"+ standardCondition.Name + "</status>" +
-                    "</output>" +
-                    "</standard>" +
-                    "</trigger>";
+            Assert.AreEqual(SecondaryConditionLessThanXml(),
+                standardCondition.ToXml(Fns, "").ToString(SaveOptions.DisableFormatting));
         }
 
 
@@ -230,7 +188,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
         [Test]
         public void CopyFromAndCreateClone()
         {
-            var source = new StandardCondition()
+            var source = new StandardCondition
             {
                 Name = "test",
                 LongName = "testLong",
@@ -250,10 +208,58 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             Assert.AreEqual(source.Value, newCondition.Value);
             Assert.AreEqual(source.Reference, newCondition.Reference);
             Assert.AreEqual(source.Operation, newCondition.Operation);
-            
+
             var clone = (StandardCondition) source.Clone();
             Assert.IsFalse(ReferenceEquals(source, clone));
             Assert.AreEqual(source.Name, clone.Name);
+        }
+
+        [Test]
+        public void GenerateXmlConditionToCondition()
+        {
+            var trueCondition = new StandardCondition
+            {
+                Name = "trueCondition",
+                Reference = Implicit,
+                Operation = Operation.Greater,
+                Input =
+                    new Input
+                    {
+                        ParameterName = InputParameterName,
+                        Feature = new RtcTestFeature {Name = InputName}
+                    },
+                Value = Value
+            };
+
+            var falseCondition = new StandardCondition
+            {
+                Name = "falseCondition",
+                Reference = Implicit,
+                Operation = Operation.Greater,
+                Input =
+                    new Input
+                    {
+                        ParameterName = InputParameterName,
+                        Feature = new RtcTestFeature {Name = InputName}
+                    },
+                Value = Value
+            };
+
+            standardCondition.TrueOutputs.Add(trueCondition);
+            standardCondition.FalseOutputs.Add(falseCondition);
+
+            Assert.AreEqual(xmlConditionToCondition(),
+                standardCondition.ToXml(Fns, "").ToString(SaveOptions.DisableFormatting));
+        }
+
+        [Test]
+        public void TrueAndFalseOutputsCanContainRulesAndConditions()
+        {
+            var condition = new StandardCondition();
+            condition.TrueOutputs.Add(new PIDRule());
+            condition.FalseOutputs.Add(new StandardCondition());
+            Assert.AreEqual(1, condition.TrueOutputs.Count);
+            Assert.AreEqual(1, condition.FalseOutputs.Count);
         }
 
         [Test]

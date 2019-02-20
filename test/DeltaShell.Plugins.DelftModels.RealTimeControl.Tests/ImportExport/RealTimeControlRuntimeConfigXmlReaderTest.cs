@@ -1,134 +1,81 @@
 ﻿using DelftTools.TestUtils;
+using DeltaShell.NGHS.IO.Handlers;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
 using NUnit.Framework;
 using System;
 using System.IO;
+using System.Linq;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
 {
     [TestFixture]
     public class RealTimeControlRuntimeConfigXmlReaderTest
     {
-        [TestCase("rtcRuntimeConfig_false_minute.xml", "00:01:00", false, false)]
-        [TestCase("rtcRuntimeConfig_true_second.xml", "00:00:01", true, false)]
-        [TestCase("rtcRuntimeConfig_true_minute.xml", "00:01:00", true, false)]
-        [TestCase("rtcRuntimeConfig_true_hour.xml", "01:00:00", true, false)]
-        [TestCase("rtcRuntimeConfig_true_day.xml", "1.00:00:00", true, false)]
-        [TestCase("rtcRuntimeConfig_true_week.xml", "7.00:00:00", true, false)]
-        [TestCase("rtcRuntimeConfig_true_week _with_writeRestartTrue.xml", "7.00:00:00", true, true)]
-        [Category(TestCategory.DataAccess)]
-        public void GivenAnExistingFileWithTimeData_WhenReading_ThenCorrectDateTimesAreSetOnModel(string fileName, string expectedTimeSpanString, bool limitedMemory, bool writeRestart)
+        private const string AssertMessage_CollectedLogMessagesDidNotContainExpectedMessage = "The collected log messages did not contain the expected message.";
+
+        private ILogHandler logHandler;
+        private RealTimeControlRuntimeConfigXmlReader runtimeConfigReader;
+        private readonly string directoryPath = TestHelper.GetTestFilePath(Path.Combine("ImportExport", "RuntimeConfigFiles"));
+        private RealTimeControlModel rtcModel;
+
+        private DateTime defaultStartTime;
+        private DateTime defaultStopTime;
+        private TimeSpan defaultTimeStep;
+        private bool defaultLimitMemory;
+
+        [SetUp]
+        public void SetUp()
         {
-            // Given
-            var directoryPath = TestHelper.GetTestFilePath(Path.Combine("ImportExport", "RuntimeConfigFiles"));
-            var filePath = Path.Combine(directoryPath, fileName);
+            rtcModel = new RealTimeControlModel();
+            logHandler = new LogHandler("");
+            runtimeConfigReader = new RealTimeControlRuntimeConfigXmlReader(logHandler);
+            Assert.IsTrue(Directory.Exists(directoryPath),
+                $"Directory path '{directoryPath}' was expected to exist.");
+        }
 
-            Assert.That(Directory.Exists(directoryPath));       
-            Assert.That(File.Exists(filePath));
-
-            var rtcModel = new RealTimeControlModel();
-
-            // When
-            RealTimeControlRuntimeConfigXmlReader.Read(filePath, rtcModel);
-
-            // Then
-            Assert.AreEqual(new DateTime(2018, 12, 12), rtcModel.StartTime);
-            Assert.AreEqual(expectedTimeSpanString, rtcModel.TimeStep.ToString());
-            Assert.AreEqual(new DateTime(2018, 12, 13), rtcModel.StopTime);
-            Assert.AreEqual(limitedMemory, rtcModel.LimitMemory);
-
-            if (writeRestart)
-            {
-                Assert.AreEqual(rtcModel.StartTime, rtcModel.SaveStateStartTime);
-                Assert.AreEqual(rtcModel.StopTime, rtcModel.SaveStateStopTime);
-                Assert.AreEqual(3600, rtcModel.SaveStateTimeStep.TotalSeconds);
-            }
-            else
-            {
-                Assert.AreEqual(rtcModel.StopTime, rtcModel.SaveStateStartTime);
-                Assert.AreEqual(rtcModel.StopTime, rtcModel.SaveStateStopTime);
-                Assert.AreEqual(rtcModel.TimeStep, rtcModel.SaveStateTimeStep);
-            }
+        [TearDown]
+        public void TearDown()
+        {
+            logHandler = null;
+            runtimeConfigReader = null;
         }
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void GivenAnExistingFileForRmmModel_WhenReading_ThenNoExceptionIsThrown()
+        public void GivenAnExistingFileAndAnRtcModel_WhenReading_ThenExpectedDataIsSetOnModel()
         {
             // Given
-            const string fileName = "rtcRuntimeConfig.xml";
-            var directoryPath = TestHelper.GetTestFilePath(Path.Combine("ImportExport", "RMM"));
-            var filePath = Path.Combine(directoryPath, fileName);
+            var filePath = Path.Combine(directoryPath, "rtcRuntimeConfig.xml");
+            Assert.That(File.Exists(filePath), 
+                $"File path '{filePath}' was expected to exist.");
 
-            Assert.That(Directory.Exists(directoryPath));   
-            Assert.That(File.Exists(filePath));
-
-            var rtcModel = new RealTimeControlModel();
+            // When
+            runtimeConfigReader.Read(filePath, rtcModel);
 
             // Then
-            Assert.DoesNotThrow(() =>
-            {
-                // When
-                RealTimeControlRuntimeConfigXmlReader.Read(filePath, rtcModel);
-            });
+            Assert.AreEqual(new DateTime(2019, 1, 30), rtcModel.StartTime);
+            Assert.AreEqual(new DateTime(2019, 1, 31), rtcModel.StopTime);
+            Assert.AreEqual(TimeSpan.FromHours(1), rtcModel.TimeStep);
+            Assert.AreEqual(true, rtcModel.LimitMemory);
         }
 
         [Test]
         public void GivenANonExistingFile_WhenReading_ThenExpectedMessageIsGivenAndModelHasDefaultValues()
         {
             // Given
-            var filePath = TestHelper.GetTestFilePath(Path.Combine("ImportExport", "Invalid"));
-            Assert.That(!File.Exists(filePath));
+            const string filePath = "invalid_path";
+            Assert.That(!File.Exists(filePath),
+                $"File path '{filePath}' was expected to not exist.");
 
-            var rtcModel = new RealTimeControlModel();
+            RetrieveDefaultValues();
 
-            Assert.DoesNotThrow(() =>
-            {
-                TestHelper.AssertLogMessageIsGenerated(() =>
-                    {
-                        // When
-                        RealTimeControlRuntimeConfigXmlReader.Read(filePath, rtcModel);
-                    },
-                    string.Format(Resources.RealTimeControlRuntimeConfigXmlReader_Read_File___0___does_not_exist_, filePath));
-            });
+            // When
+            runtimeConfigReader.Read(filePath, rtcModel);
 
             // Then
-            Assert.AreEqual(DateTime.Today, rtcModel.StartTime);
-            Assert.AreEqual(DateTime.Today.AddDays(1), rtcModel.StopTime);
-            Assert.AreEqual(TimeSpan.FromHours(1), rtcModel.TimeStep);
-            Assert.AreEqual(true, rtcModel.LimitMemory);
-        }
-
-        [Test]
-        [Category(TestCategory.DataAccess)]
-        public void GivenAnExistingFileWithoutTimeSettings_WhenReading_ThenExpectedMessageIsGivenAndModelHasDefaultValues()
-        {
-            // Given
-            const string fileName = "rtcRuntimeConfig_nosetting.xml";
-            var directoryPath = TestHelper.GetTestFilePath(Path.Combine("ImportExport", "RuntimeConfigFiles"));
-            var filePath = Path.Combine(directoryPath, fileName);
-
-            Assert.That(Directory.Exists(directoryPath));
-            Assert.That(File.Exists(filePath));
-
-            var rtcModel = new RealTimeControlModel();
-
-            Assert.DoesNotThrow(() =>
-            {
-                TestHelper.AssertLogMessageIsGenerated(() =>
-                    {
-                        // When
-                        RealTimeControlRuntimeConfigXmlReader.Read(filePath, rtcModel);
-                    },
-                    string.Format(Resources.RealTimeControlRuntimeConfigXmlReader_Read_There_is_no_time_data_for_the_RTC_model_in_the_file___0____Time_data_is_set_with_default_values_, RealTimeControlXMLFiles.XmlRuntime));
-            });
-
-            // Then
-            Assert.AreEqual(DateTime.Today, rtcModel.StartTime);
-            Assert.AreEqual(DateTime.Today.AddDays(1), rtcModel.StopTime);
-            Assert.AreEqual(TimeSpan.FromHours(1), rtcModel.TimeStep);
-            Assert.AreEqual(true, rtcModel.LimitMemory);
+            AssertValuesAreDefault();
+            Assert.IsTrue(logHandler.LogMessagesTable.AllMessages.Any(m => m.Contains(filePath)),
+                AssertMessage_CollectedLogMessagesDidNotContainExpectedMessage);
         }
 
         [Test]
@@ -136,17 +83,32 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
         public void GivenAnExistingFileAndNullIsGivenAsParameterForModel_WhenReading_ThenMethodDoesNotThrowAnException()
         {
             // Given
-            const string fileName = "rtcRuntimeConfig_false_minute.xml";
-            var directoryPath = TestHelper.GetTestFilePath(Path.Combine("ImportExport", "RuntimeConfigFiles"));
-            var filePath = Path.Combine(directoryPath, fileName);
+            var filePath = Path.Combine(directoryPath, "rtcRuntimeConfig.xml");
+            Assert.That(File.Exists(filePath),
+                $"File path '{filePath}' was expected to exist.");
 
-            Assert.That(File.Exists(filePath));
+            // When, Then
+            Assert.DoesNotThrow(() => runtimeConfigReader.Read(filePath, null));
+        }
 
-            // When/Then
-            Assert.DoesNotThrow(() =>
-            {
-                RealTimeControlRuntimeConfigXmlReader.Read(filePath, null);
-            });
+        private void AssertValuesAreDefault()
+        {
+            Assert.AreEqual(defaultStartTime, rtcModel.StartTime,
+                "Start time of model is incorrectly set.");
+            Assert.AreEqual(defaultStopTime, rtcModel.StopTime,
+                "Stop time of model is incorrectly set.");
+            Assert.AreEqual(defaultTimeStep, rtcModel.TimeStep,
+                "Time step of model is incorrectly set.");
+            Assert.AreEqual(defaultLimitMemory, rtcModel.LimitMemory,
+                $"Option 'limit memory' was expected to be {defaultLimitMemory.ToString()}.");
+        }
+
+        private void RetrieveDefaultValues()
+        {
+            defaultStartTime = rtcModel.StartTime;
+            defaultStopTime = rtcModel.StopTime;
+            defaultTimeStep = rtcModel.TimeStep;
+            defaultLimitMemory = rtcModel.LimitMemory;
         }
     }
 }

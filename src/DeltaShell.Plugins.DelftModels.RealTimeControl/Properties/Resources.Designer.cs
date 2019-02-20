@@ -380,6 +380,46 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Interval rule &apos;{0}&apos; must have a setpoint. Please check file: &apos;{1}&apos;..
+        /// </summary>
+        public static string RealTimeControlDataConfigXmlSetter_SetSetPointOnIntervalRules_Interval_rule___0___must_have_a_setpoint__Please_check_file____1___ {
+            get {
+                return ResourceManager.GetString("RealTimeControlDataConfigXmlSetter_SetSetPointOnIntervalRules_Interval_rule___0__" +
+                        "_must_have_a_setpoint__Please_check_file____1___", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PID rule &apos;{0}&apos; must have a setpoint. Please check file: &apos;{1}&apos;..
+        /// </summary>
+        public static string RealTimeControlDataConfigXmlSetter_SetSetPointOnPIDRules_PID_rule___0___must_have_a_setpoint__Please_check_file____1___ {
+            get {
+                return ResourceManager.GetString("RealTimeControlDataConfigXmlSetter_SetSetPointOnPIDRules_PID_rule___0___must_have" +
+                        "_a_setpoint__Please_check_file____1___", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot find input with element ID &apos;{0}&apos; for rule &apos;{1}&apos;. Please check file: &apos;{2}&apos;..
+        /// </summary>
+        public static string RealTimeControlDataConfigXmlSetter_SetTimeLagOnHydraulicRules_Cannot_find_input_with_element_ID___0___for_rule___1____Please_check_file____2___ {
+            get {
+                return ResourceManager.GetString("RealTimeControlDataConfigXmlSetter_SetTimeLagOnHydraulicRules_Cannot_find_input_w" +
+                        "ith_element_ID___0___for_rule___1____Please_check_file____2___", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hydraulic rule &apos;{0}&apos; must have an input. Please check file: &apos;{1}&apos;..
+        /// </summary>
+        public static string RealTimeControlDataConfigXmlSetter_SetTimeLagOnHydraulicRules_Hydraulic_rule___0___must_have_an_input__Please_check_file____1___ {
+            get {
+                return ResourceManager.GetString("RealTimeControlDataConfigXmlSetter_SetTimeLagOnHydraulicRules_Hydraulic_rule___0_" +
+                        "__must_have_an_input__Please_check_file____1___", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Broken DataItem link detected in Model:{0}, Controlgroup:{1}, at the {2} linked to ({3}).{4}Connection to {5} must be manually re-established..
         /// </summary>
         public static string RealTimeControlModel_BrokenDataItemLinkDetected {
@@ -676,6 +716,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to There was an error reading the time series file: &apos;{0}&apos;. Please check file: {1}..
+        /// </summary>
+        public static string RealTimeControlTimeSeriesXmlReader_Read_There_was_an_error_reading_the_time_series_file____0____Please_check_file___1__ {
+            get {
+                return ResourceManager.GetString("RealTimeControlTimeSeriesXmlReader_Read_There_was_an_error_reading_the_time_serie" +
+                        "s_file____0____Please_check_file___1__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Could not find Relative Time Rule with id &apos;{0}&apos;. See file: &apos;{1}&apos;..
         /// </summary>
         public static string RealTimeControlToolsConfigComponentConnector_ConnectRelativeTimeRules_Could_not_find_Relative_Time_Rule_with_id___0____See_file____1___ {
@@ -722,6 +772,38 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Properties {
         public static string RealTimeControlToolsConfigXmlReader_Read_File___0___does_not_exist_ {
             get {
                 return ResourceManager.GetString("RealTimeControlToolsConfigXmlReader_Read_File___0___does_not_exist_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not find the input for rule &apos;{0}&apos; in control group &apos;{1}&apos;. The input needs to be referenced in file &apos;{2}&apos;..
+        /// </summary>
+        public static string RealTimeControlXmlReaderHelper_ConnectInputToRule_Could_not_find_the_input_for_rule___0____in_control_group__1___The_input_needs_to_be_referenced_in_file___2___ {
+            get {
+                return ResourceManager.GetString("RealTimeControlXmlReaderHelper_ConnectInputToRule_Could_not_find_the_input_for_ru" +
+                        "le___0____in_control_group__1___The_input_needs_to_be_referenced_in_file___2___", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not find the input for signal &apos;{0}&apos; in control group &apos;{1}&apos;. The input needs to be referenced in file &apos;{2}&apos;..
+        /// </summary>
+        public static string RealTimeControlXmlReaderHelper_ConnectInputToRule_Could_not_find_the_input_for_signal___0____in_control_group__1___The_input_needs_to_be_referenced_in_file___2___ {
+            get {
+                return ResourceManager.GetString("RealTimeControlXmlReaderHelper_ConnectInputToRule_Could_not_find_the_input_for_si" +
+                        "gnal___0____in_control_group__1___The_input_needs_to_be_referenced_in_file___2__" +
+                        "_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not find the output for rule &apos;{0}&apos; in control group &apos;{1}&apos;. The output needs to be referenced in file &apos;{2}&apos;..
+        /// </summary>
+        public static string RealTimeControlXmlReaderHelper_ConnectOutputToRule_Could_not_find_the_output_for_rule___0____in_control_group__1___The_output_needs_to_be_referenced_in_file___2___ {
+            get {
+                return ResourceManager.GetString("RealTimeControlXmlReaderHelper_ConnectOutputToRule_Could_not_find_the_output_for_" +
+                        "rule___0____in_control_group__1___The_output_needs_to_be_referenced_in_file___2_" +
+                        "__", resourceCulture);
             }
         }
         
@@ -775,6 +857,17 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Properties {
                 return ResourceManager.GetString("RealTimeControlXmlReaderHelper_GetRuleByElementIdInControlGroup_Could_not_find_th" +
                         "e_rule___0___that_is_referenced_in_id___1___The_rule_needs_to_be_referenced_in_f" +
                         "ile___2___", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not find the rule &apos;{0}&apos; that is referenced in id &apos;{1}&apos;.The rule needs to be referenced in file &apos;{2}&apos;..
+        /// </summary>
+        public static string RealTimeControlXmlReaderHelper_GetSignalByElementIdInControlGroup_Could_not_find_the_signal___0___that_is_referenced_in_id___1___The_signal_needs_to_be_referenced_in_file___2___ {
+            get {
+                return ResourceManager.GetString("RealTimeControlXmlReaderHelper_GetSignalByElementIdInControlGroup_Could_not_find_" +
+                        "the_signal___0___that_is_referenced_in_id___1___The_signal_needs_to_be_reference" +
+                        "d_in_file___2___", resourceCulture);
             }
         }
         

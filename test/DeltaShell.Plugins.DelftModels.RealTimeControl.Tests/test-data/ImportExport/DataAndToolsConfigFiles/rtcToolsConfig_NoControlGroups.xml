@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rtcToolsConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:rtc="http://www.wldelft.nl/fews" xmlns="http://www.wldelft.nl/fews" xsi:schemaLocation="http://www.wldelft.nl/fews C:\Users\sluis_pa\OneDrive%20-%20Stichting%20Deltares\Documents\model%20with%20all%20rules%20and%20conditions\export_dimr\rtc\rtcToolsConfig.xsd">
+  <general>
+    <description>RTC Model DeltaShell</description>
+    <poolRoutingScheme>Theta</poolRoutingScheme>
+    <theta>0.5</theta>
+  </general>
+  <components>
+    <component>
+      <unitDelay id="[Delayed][Input]ObservationPoint1/Water level (op)">
+        <input>
+          <x>[Input]ObservationPoint1/Water level (op)</x>
+        </input>
+        <output>
+          <yVector>[Delayed][Input]ObservationPoint1/Water level (op)</yVector>
+        </output>
+      </unitDelay>
+    </component>
+  </components>
+  <rules>
+  </rules>
+  <triggers>
+  </triggers>
+</rtcToolsConfig>

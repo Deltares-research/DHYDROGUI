@@ -1,17 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Xml.Linq;
-using DelftTools.Functions;
+﻿using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Converters;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Xml;
 using log4net;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Xml.Linq;
 using ValidationAspects;
-using ValidationAspects.Exceptions;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 {
@@ -29,7 +28,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
     /// structures in order to increase their life time.
     /// </summary>
     [Entity]
-    public class IntervalRule : RuleBase, IItemContainer
+    public class IntervalRule : RuleBase, IItemContainer, ITimeDependentRtcObject
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(IntervalRule));
 
@@ -101,21 +100,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             set { timeSeries = value; }
         }
         
-        public string Status
-        {
-            get
-            {
-                return Name + "_status";
-            }
-        }
-        public string SetPoint
-        {
-            get
-            {
-                return Name + "_SP";
-            }
-        }
-
         public IntervalRule()
             : this(null)
         {
@@ -128,16 +112,35 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             XmlTag = RtcXmlTag.IntervalRule;
         }
 
+        // Example of ToXml:
+        //  <interval id ="[IntervalRule]control_group_1/interval_rule">
+        //      <settingBelow>4</settingBelow>
+        //      <settingAbove>3</settingAbove>
+        //      <settingMaxSpeed>1</settingMaxSpeed >
+        //      <deadbandSetpointRelative>5</deadbandSetpointRelative>
+        //      <input>
+        //          <x ref="EXPLICIT">[Input]ObservationPoint1/Water level(op)</x>
+        //          <setpoint>[SP]control_group_1/interval_rule</setpoint>
+        //      </input>
+        //      <output>
+        //          <y>[Output]Weir1/Crest level(s)</y>
+        //          <status>[Status]control_group_1/interval_rule</status>
+        //      </output>
+        //  </interval>
+
+        /// <summary>
+        /// Converts the information of the interval rule needed for writing the tools config file to an xml element.
+        /// </summary>
+        /// <param name="xNamespace">The x namespace.</param>
+        /// <param name="prefix">The control group name.</param>
+        /// <returns>The Xml Element.</returns>
         public override XElement ToXml(XNamespace xNamespace, string prefix)
         {
             var result = base.ToXml(xNamespace, prefix);
-            foreach (var input in Inputs)
-            {
-                input.SetPoint = prefix + SetPoint;
-            }
+           
             foreach (var output in Outputs)
             {
-                output.IntegralPart = prefix + Status;  // also in data export and statevector
+                output.IntegralPart = RtcXmlTag.Status + GetXmlNameWithoutTag(prefix);  // also in data export and statevector
             }
 
             var deadBandSetpoint = "deadbandSetpointAbsolute";
@@ -161,7 +164,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             }
 
             result.Add(new XElement(xNamespace + "interval",
-                    new XAttribute("id", prefix + "/" + Name),
+                    new XAttribute("id", GetXmlNameWithTag(prefix)),
                     new XElement(xNamespace + "settingBelow", Setting.Below.ToString(CultureInfo.InvariantCulture)),
                     new XElement(xNamespace + "settingAbove", Setting.Above.ToString(CultureInfo.InvariantCulture)),
                     new XElement(xNamespace + settingMax, settingMaxValue.ToString(CultureInfo.InvariantCulture)),
@@ -204,8 +207,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             {
                 StartTime = startTime,
                 EndTime = endTime,
-                Name = prefix + SetPoint,
-                LocationId = prefix+Name,
+                Name = RtcXmlTag.SP + GetXmlNameWithoutTag(prefix),
+                LocationId = GetXmlNameWithTag(prefix),
                 ParameterId = "SP",
                 TimeStep = timeStep,
                 TimeSeries = (TimeSeries) TimeSeries.Clone(),
@@ -235,8 +238,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
         {
             var xmlTimeSeries = new XmlTimeSeries
             {
-                Name = prefix + Status,
-                LocationId = prefix+Name,
+                Name = RtcXmlTag.Status + GetXmlNameWithoutTag(prefix),
+                LocationId = GetXmlNameWithTag(prefix),
                 ParameterId = "Status",
             };
 

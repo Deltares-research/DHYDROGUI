@@ -1,76 +1,45 @@
-﻿using DelftTools.TestUtils;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport;
-using NUnit.Framework;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using DelftTools.TestUtils;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport;
+using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
 {
     [TestFixture]
     public class RealTimeControlModelImporterTest
     {
-        private RealTimeControlModelImporter importer;
-
-        [SetUp]
+        [TestFixtureSetUp]
         public void SetUp()
         {
             importer = new RealTimeControlModelImporter();
         }
+
+        [TestFixtureTearDown]
+        public void TearDown()
+        {
+            importer = null;
+        }
+
+        private RealTimeControlModelImporter importer;
 
         [Test]
         public void GivenAnInvalidRtcDirectoryPath_WhenReading_ThenNoExceptionIsThrownAndNullIsReturned()
         {
             // Given
             var directoryPath = TestHelper.GetTestFilePath(Path.Combine("ImportExport", "Invalid"));
-            Assert.That(!Directory.Exists(directoryPath));
+            Assert.That(!Directory.Exists(directoryPath), 
+                $"Directory path '{directoryPath}' was expected to exist.");
 
-            Assert.DoesNotThrow(() =>
-            {
-                // When
-                var modelObject = importer.ImportItem(directoryPath);
+            object modelObject = null;
 
-                // Then
-                Assert.Null(modelObject);
-            });
-        }
+            // When
+            Assert.DoesNotThrow(
+                () => modelObject = importer.ImportItem(directoryPath));
 
-        [Category(TestCategory.DataAccess)]
-        [TestCase("SimpleModel")]
-        [TestCase("RMM")]
-        public void GivenAValidRtcDirectoryPath_WhenReading_ThenNoExceptionIsThrownAndRtcModelIsReturned(string directoryName)
-        {
-            // Given
-            var directoryPath = TestHelper.GetTestFilePath(Path.Combine("ImportExport", directoryName));
-            Assert.That(Directory.Exists(directoryPath));
-
-            Assert.DoesNotThrow(() =>
-            {
-                // When
-                var rtcModel = importer.ImportItem(directoryPath) as RealTimeControlModel;
-
-                // Then
-                Assert.NotNull(rtcModel);
-            });
-        }
-
-        [Test]
-        public void GivenARealTimeControlModelImporter_WhenNameIsCalled_ThenExpectedIsReturned()
-        {
-            Assert.AreEqual("RTC-Tools xml files", importer.Name);
-        }
-
-        [Test]
-        public void GivenARealTimeControlModelImporter_WhenCategoryIsCalled_ThenExpectedIsReturned()
-        {
-            Assert.AreEqual("Xml files", importer.Category);
-        }
-
-        [Test]
-        public void GivenARealTimeControlModelImporter_WhenSupportedItemTypesIsCalled_ThenExpectedIsReturned()
-        {
-            var expectedSupportedItemTypes = new List<Type> { typeof(HydroModel.HydroModel) };
-            Assert.AreEqual(expectedSupportedItemTypes, importer.SupportedItemTypes);
+            // Then
+            Assert.Null(modelObject, "After importing from invalid directory, rtcModel object was expected to be NULL.");
         }
 
         [Test]
@@ -80,16 +49,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
         }
 
         [Test]
-        public void GivenARealTimeControlModelImporter_WhenFileFilterIsCalled_ThenExpectedIsReturned()
+        public void GivenARealTimeControlModelImporter_WhenCategoryIsCalled_ThenExpectedIsReturned()
         {
-            Assert.AreEqual("xml files|*.xml", importer.FileFilter);
-
+            Assert.AreEqual("Xml files", importer.Category);
         }
 
         [Test]
-        public void GivenARealTimeControlModelImporter_WhenOpenViewAfterImportIsCalled_ThenExpectedIsReturned()
+        public void GivenARealTimeControlModelImporter_WhenFileFilterIsCalled_ThenExpectedIsReturned()
         {
-            Assert.AreEqual(false, importer.OpenViewAfterImport);
+            Assert.AreEqual("xml files|*.xml", importer.FileFilter);
         }
 
         [Test]
@@ -99,16 +67,28 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
         }
 
         [Test]
+        public void GivenARealTimeControlModelImporter_WhenNameIsCalled_ThenExpectedIsReturned()
+        {
+            Assert.AreEqual("RTC-Tools xml files", importer.Name);
+        }
+
+        [Test]
+        public void GivenARealTimeControlModelImporter_WhenOpenViewAfterImportIsCalled_ThenExpectedIsReturned()
+        {
+            Assert.AreEqual(false, importer.OpenViewAfterImport);
+        }
+
+        [Test]
         public void GivenARealTimeControlModelImporter_WhenSubFoldersIsCalled_ThenExpectedIsReturned()
         {
-            var expectedSubFolders = new List<string> { "rtc" };
+            var expectedSubFolders = new List<string> {"rtc"};
             Assert.AreEqual(expectedSubFolders, importer.SubFolders);
         }
 
-        [TearDown]
-        public void TearDown()
+        [Test]
+        public void GivenARealTimeControlModelImporter_WhenSupportedItemTypesIsCalled_ThenExpectedIsReturned()
         {
-            importer = null;
+            Assert.AreEqual(new List<Type>(), importer.SupportedItemTypes);
         }
     }
 }

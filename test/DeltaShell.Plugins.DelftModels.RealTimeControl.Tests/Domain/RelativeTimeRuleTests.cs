@@ -49,10 +49,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
                 Function = tableFunction
             };
             var xmlAbsolute = "<rule xmlns=\"http://www.wldelft.nl/fews\">" +
-                   "<timeRelative id=\"/Relative time rule\">" +
+                   "<timeRelative id=\"[RelativeTimeRule]Relative time rule\">" +
                    "<mode>RETAINVALUEWHENINACTIVE</mode>" +
                    "<valueOption>ABSOLUTE</valueOption>" +  // RelativeTimeseries is ABSOLUTE; RelativeTimeseries is RELATIVE
                    "<maximumPeriod>0</maximumPeriod>" +
+                   "<interpolationOption>BLOCK</interpolationOption>" +
                    "<controlTable>" +
                    "<record time=\"0\" value=\"1.2\" />" +
                    "<record time=\"60\" value=\"3.4\" />" +
@@ -62,7 +63,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
                    "</controlTable>" +
                    "<output>" +
                    "<y>" + RtcXmlTag.Output + "output name/output parameter</y>" +
-                   "<timeActive>[RelativeTimeRule]/Relative time rule</timeActive>" +
+                   "<timeActive>Relative time rule</timeActive>" +
                    "</output>" +
                    "</timeRelative>" +
                    "</rule>";
@@ -82,10 +83,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
                 Function = tableFunction
             };
             var xmlRelative = "<rule xmlns=\"http://www.wldelft.nl/fews\">" +
-                   "<timeRelative id=\"/Relative time rule\">" +
+                   "<timeRelative id=\"[RelativeTimeRule]Relative time rule\">" +
                    "<mode>RETAINVALUEWHENINACTIVE</mode>" +
                    "<valueOption>RELATIVE</valueOption>" +  // RelativeTimeseries is ABSOLUTE; RelativeTimeseries is RELATIVE
                    "<maximumPeriod>0</maximumPeriod>" +
+                   "<interpolationOption>BLOCK</interpolationOption>" +
                    "<controlTable>" +
                    "<record time=\"0\" value=\"1.2\" />" +
                    "<record time=\"60\" value=\"3.4\" />" +
@@ -98,7 +100,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
                    "</input>" +
                    "<output>" +
                    "<y>" + RtcXmlTag.Output + "output name/output parameter</y>" +
-                   "<timeActive>[RelativeTimeRule]/Relative time rule</timeActive>" +
+                   "<timeActive>Relative time rule</timeActive>" +
                    "</output>" +
                    "</timeRelative>" +
                    "</rule>";

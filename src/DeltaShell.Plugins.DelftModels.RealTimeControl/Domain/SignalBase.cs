@@ -26,6 +26,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             RuleBases = new EventedList<RuleBase>();
         }
 
+        /// <summary>
+        /// Converts the information the signal needed for writing the tools config file to an xml element.
+        /// </summary>
+        /// <param name="xNamespace">The x namespace.</param>
+        /// <param name="prefix">The control group name.</param>
+        /// <returns>The Xml Element.</returns>
         public override XElement ToXml(XNamespace xNamespace, string prefix)
         {
             return StoreAsRule ? new XElement(xNamespace + "rule") : new XElement(xNamespace + "signal");

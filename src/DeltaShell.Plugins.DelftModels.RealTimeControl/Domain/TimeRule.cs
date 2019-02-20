@@ -21,13 +21,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
     public class TimeRule : RuleBase, IItemContainer, ITimeDependentRtcObject
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(TimeRule));
-        private string LocationId
-        {
-            get
-            {
-                return Name;
-            }
-        }
 
         private string QuantityId = "TimeSeries";
 
@@ -107,8 +100,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             {
                 StartTime = startTime,
                 EndTime = endTime,
-                Name = XmlTag + prefix + "/" + LocationId,
-                LocationId = prefix + "/" + LocationId,
+                Name = GetXmlNameWithoutTag(prefix),
+                LocationId = GetXmlNameWithTag(prefix),
                 ParameterId = QuantityId,
                 TimeStep = timeStep,
                 TimeSeries = (TimeSeries) TimeSeries.Clone(),
@@ -125,15 +118,31 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             return xmlTimeSeries;
         }
 
+        // Example of ToXml:
+        //  <timeAbsolute id = "[TimeRule]control_group_1/time_rule">
+        //      <input>
+        //          <x> control_group_1/time_rule </x>
+        //      </input>
+        //      <output>
+        //          <y>[Output]Weir1/Crest level(s)</y>
+        //      </output>
+        //  </timeAbsolute>
+
+        /// <summary>
+        /// Converts the information of the time rule needed for writing the tools config file to an xml element.
+        /// </summary>
+        /// <param name="xNamespace">The x namespace.</param>
+        /// <param name="prefix">The control group name.</param>
+        /// <returns>The Xml Element.</returns>
         public override XElement ToXml(XNamespace xNamespace, string prefix)
         {
             var result = base.ToXml(xNamespace, prefix);
             result.Add(new XElement(xNamespace + "timeAbsolute",
-                                    new XAttribute("id", prefix + "/" + Name),
+                                    new XAttribute("id", GetXmlNameWithTag(prefix)),
                                     new XElement(xNamespace + "input",
                                                  new XElement(xNamespace + "x",
                                                               Reference == string.Empty ? null : new XAttribute("ref", Reference),
-                                                              XmlTag + prefix +"/"+ Name)),
+                                                              GetXmlNameWithoutTag(prefix))),
                                     Outputs.Select(output => output.ToXml(xNamespace, "y", null))));
             return result;
         }

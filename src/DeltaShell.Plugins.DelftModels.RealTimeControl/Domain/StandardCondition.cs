@@ -47,17 +47,29 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             return new OperationConverter().OperationToString(Operation) + Value;
         }
 
+        // Example of ToXml:
+        //     <standard id = "[StandardCondition]control_group_1/standard_condition">
+        //         <condition>
+        //             < x1Series ref="EXPLICIT">[Input]ObservationPoint1/Water level(op)</x1Series>
+        //             <relationalOperator>LessEqual</relationalOperator>
+        //             <x2Value>5</x2Value>
+        //         </condition>
+        //         <true>
+        //             <trigger>
+        //                 <ruleReference>[PID]control_group_1/pid_rule</ruleReference>
+        //             </trigger>
+        //         </true>
+        //         <output>
+        //             <status>[Status]control_group_1/standard_condition</status>
+        //         </output>
+        //     </standard>
+
         /// <summary>
-        /// Generates the xml for standard condition. 
-        /// RTC supports either
-        ///  "x1Series" operator "x2Value" 
-        ///  "x1Series" operator "x2Series" 
-        ///  "x1Value" operator "x2Value" 
-        ///  "x1Value" operator "x2Series" 
-        /// Delta only supports
-        ///  "x1Series" operator "x2Value" where x1Series is base.Input and x2Value is base.Value
+        /// Converts the information of the standard condition needed for writing the tools config file to an xml element.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="xNamespace">The x namespace.</param>
+        /// <param name="prefix">The control group name.</param>
+        /// <returns>The Xml Element.</returns>
         public override XElement ToXml(XNamespace xNamespace, string prefix)
         {
             return ToXml(xNamespace, prefix, GetInputName());
@@ -71,7 +83,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
         public XElement ToXml(XNamespace xNamespace, string prefix, string inputName)
         {
             var result = base.ToXml(xNamespace, prefix);
-            var standard = new XElement(xNamespace + "standard", new XAttribute("id", prefix +"/"+ Name));
+            var standard = new XElement(xNamespace + "standard", new XAttribute("id", GetXmlNameWithTag(prefix)));
             standard.Add(new XElement(xNamespace + "condition",
                                 new XElement(xNamespace + "x1Series", Reference == string.Empty ? null : new XAttribute("ref", Reference), inputName),
                                 new XElement(xNamespace + "relationalOperator", Operation.ToString()),
@@ -106,7 +118,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             }
 
             // output series with status info is required by RTC
-            standard.Add(new XElement(xNamespace + "output", new XElement(xNamespace + "status", XmlTag + RtcXmlTag.Status + prefix +"/"+ Name)));
+            standard.Add(new XElement(xNamespace + "output", new XElement(xNamespace + "status", RtcXmlTag.Status + GetXmlNameWithoutTag(prefix))));
             result.Add(standard);
             return result;
         }

@@ -307,7 +307,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
         private timeRelativeEnumStringType _valueOption;
         
         private double _maximumPeriod;
-        
+
+        private interpolationOptionEnumStringType _interpolationOption;
+
         private List<TimeRelativeControlTableRecordXML> _controlTable;
         
         private TimeRelativeInputXML _input;
@@ -363,7 +365,19 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
                 this._maximumPeriod = value;
             }
         }
-        
+
+        public interpolationOptionEnumStringType interpolationOption
+        {
+            get
+            {
+                return this._interpolationOption;
+            }
+            set
+            {
+                this._interpolationOption = value;
+            }
+        }
+
         [XmlArrayItem("record", IsNullable=false)]
         public List<TimeRelativeControlTableRecordXML> controlTable
         {
@@ -4845,12 +4859,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [XmlType(Namespace="http://www.wldelft.nl/fews")]
     public enum interpolationOptionEnumStringType
     {
-        
-        /// <remarks/>
-        BLOCK,
-        
+
         /// <remarks/>
         LINEAR,
+
+        /// <remarks/>
+        BLOCK,     
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]

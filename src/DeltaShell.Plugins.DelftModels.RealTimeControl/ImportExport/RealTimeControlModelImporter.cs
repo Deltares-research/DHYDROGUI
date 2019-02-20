@@ -4,9 +4,11 @@ using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using DelftTools.Shell.Core;
 using DeltaShell.Dimr;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 {
+    /// <summary>This class is responsible for importing an RTC Model.</summary>
     public class RealTimeControlModelImporter : IDimrModelFileImporter
     {
         [ExcludeFromCodeCoverage]
@@ -15,38 +17,40 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             return false;
         }
 
-        public object ImportItem(string path, object target = null)
+        /// <inheritdoc />
+        /// <summary>Imports the RTC Model.</summary>
+        /// <param name="directoryPath">The directory path of the directory of the RTC files.</param>
+        /// <returns>A RealTimeControlModel as object</returns>
+        public object ImportItem(string directoryPath, object target = null)
         {
-            return RealTimeControlModelXmlReader.Read(path);
+            return RealTimeControlModelXmlReader.Read(directoryPath);
         }
 
-        public string Name { get { return "RTC-Tools xml files"; } }
+        public string Name => "RTC-Tools xml files";
 
-        public string Category { get { return "Xml files"; } }
+        public string Category => "Xml files";
 
-        [ExcludeFromCodeCoverage]
-        public Bitmap Image { get { return Properties.Resources.brick_add; } }
+        [ExcludeFromCodeCoverage] public Bitmap Image => Resources.brick_add;
 
-        public IEnumerable<Type> SupportedItemTypes { get { yield return typeof(HydroModel.HydroModel); } }
-        
-        public bool CanImportOnRootLevel { get { return false; } }
-
-        public string FileFilter { get { return "xml files|*.xml"; } }
-
-        [ExcludeFromCodeCoverage]
-        public string TargetDataDirectory { get; set; }
-
-        [ExcludeFromCodeCoverage]
-        public bool ShouldCancel { get; set; }
-
-        [ExcludeFromCodeCoverage]
-        public ImportProgressChangedDelegate ProgressChanged { get; set; }
-
-        public bool OpenViewAfterImport { get { return false; } }
-        public string MasterFileExtension
+        public IEnumerable<Type> SupportedItemTypes
         {
-            get { return "json"; }
+            get { yield break; }
         }
+
+        public bool CanImportOnRootLevel => false;
+
+        public string FileFilter => "xml files|*.xml";
+
+        [ExcludeFromCodeCoverage] public string TargetDataDirectory { get; set; }
+
+        [ExcludeFromCodeCoverage] public bool ShouldCancel { get; set; }
+
+        [ExcludeFromCodeCoverage] public ImportProgressChangedDelegate ProgressChanged { get; set; }
+
+        public bool OpenViewAfterImport => false;
+
+        public string MasterFileExtension => "json";
+
         public IEnumerable<string> SubFolders
         {
             get { yield return "rtc"; }

@@ -7,10 +7,10 @@
 	<treeVectorLeaf id="[Output]b/c">
       <vector>0.1</vector>
     </treeVectorLeaf>
-	<treeVectorLeaf id="[Output]c/d">
+	<treeVectorLeaf id="[Input]c/d">
       <vector>2.2</vector>
     </treeVectorLeaf>
-	<treeVectorLeaf id="[Output]d/e">
+	<treeVectorLeaf id="[Input]d/e">
       <vector>303.03</vector>
     </treeVectorLeaf>
   </treeVector>

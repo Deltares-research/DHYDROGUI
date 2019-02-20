@@ -16,18 +16,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
         protected string XmlTag { get; set; }
 
         /// <summary>
-        /// todo refactor this; there not 1 xml attached to a RtcBaseObject
-        /// For rules:
-        /// implement to write xml for rule to rtcToolsConfig.xml file.
+        /// Converts the information of the RtcBaseObject needed for writing the tools config file to an xml element.
         /// </summary>
-        /// <param name="xNamespace"></param>
-        /// <param name="prefix"></param>
-        /// <returns></returns>
+        /// <param name="xNamespace">The x namespace.</param>
+        /// <param name="prefix">The control group name.</param>
+        /// <returns>The Xml Element.</returns>
         public abstract XElement ToXml(XNamespace xNamespace, string prefix);
 
         public virtual XElement ToXmlReference(XNamespace xNamespace, string prefix)
         {
-            return new XElement(xNamespace + "trigger", new XElement(xNamespace + "ruleReference", prefix + "/" + Name));
+            return new XElement(xNamespace + "trigger", new XElement(xNamespace + "ruleReference", GetXmlNameWithTag(prefix)));
         }
 
         /// <summary>
@@ -69,8 +67,34 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
                 LongName = rtcBaseObject.LongName;
             }
         }
+
+        /// <summary>
+        /// Gets the XML name with the XML tag.
+        /// Example: "[TimeRule]ControlGroup1/TimeRule1"
+        /// </summary>
+        /// <param name="prefix">The prefix</param>
+        /// <returns>The XML name</returns>
+        public string GetXmlNameWithTag(string prefix)
+        {
+            return XmlTag + GetXmlNameWithoutTag(prefix);
+        }
+
+        /// <summary>
+        /// Gets the XML name without the XML tag.
+        /// Example: "ControlGroup1/TimeRule1"
+        /// </summary>
+        /// <param name="prefix">The prefix</param>
+        /// <returns>The XML name</returns>
+        public string GetXmlNameWithoutTag(string prefix)
+        {
+            return prefix + Name;
+        }
     }
 
+
+    /// <summary>
+    /// RtcXmlTags used for writing and reading xml files.
+    /// </summary>
     public class RtcXmlTag
     {
         public const string DirectionalCondition = "[DirectionalCondition]";
@@ -78,7 +102,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
         public const string HydraulicRule = "[HydraulicRule]";
         public const string IntervalRule = "[IntervalRule]";
         public const string LookupSignal = "[LookupSignal]";
-        public const string PIDRule = "[PIDRule]";
+        public const string PIDRule = "[PID]";
         public const string RelativeTimeRule = "[RelativeTimeRule]";
         public const string StandardCondition = "[StandardCondition]";
         public const string TimeCondition = "[TimeCondition]";
@@ -88,7 +112,33 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
         public const string Output = "[Output]";
 
         public const string OutputAsInput = "[AsInputFor]";
+
         public const string Status = "[Status]";
 
+        public const string SP = "[SP]"; // set point
+        public const string IP = "[IP]"; // integral part
+        public const string DP = "[DP]"; // differential part
+        public const string Delayed = "[Delayed]";
+        public const string Signal = "[Signal]";
+
+        public static IList<string> ComponentTags = new List<string>()
+        {
+            DirectionalCondition,
+            FactorRule,
+            HydraulicRule,
+            IntervalRule,
+            LookupSignal,
+            PIDRule,
+            RelativeTimeRule,
+            StandardCondition,
+            TimeCondition,
+            TimeRule
+        };
+
+        public static IList<string> ConnectionPointTags = new List<string>
+        {
+            Input,
+            Output
+        };
     }
 }

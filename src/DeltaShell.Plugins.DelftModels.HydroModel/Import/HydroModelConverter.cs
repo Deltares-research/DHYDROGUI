@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DeltaShell.NGHS.IO.Handlers;
 using DeltaShell.Plugins.DelftModels.HydroModel.Properties;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
@@ -16,9 +17,16 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
     /// <summary>
     /// Converts the components information from a dimr file into sub-models of the Integrated model.
     /// </summary>
-    public static class HydroModelConverter
+    public class HydroModelConverter
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(HydroModelConverter));
+
+        private readonly ILogHandler logHandler;
+
+        public HydroModelConverter(ILogHandler logHandler)
+        {
+            this.logHandler = logHandler;
+        }
 
         /// <summary>
         /// Converts <see cref="dimrObject"/> to a <see cref="HydroModel"/> using the <param name="fileImporters"/> 
@@ -29,7 +37,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
         /// <param name="fileImporters">List of file importers for importing sub-models</param>
         /// <returns>Converted <see cref="HydroModel"/></returns>
         /// <exception cref="ArgumentException">When <param name="dimrObject"/> is null</exception>
-        public static HydroModel Convert(dimrXML dimrObject, string path, IList<IDimrModelFileImporter> fileImporters)
+        public HydroModel Convert(dimrXML dimrObject, string path, IList<IDimrModelFileImporter> fileImporters)
         {
             if (dimrObject == null)
             {
@@ -42,10 +50,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
             hydroModel.BeginEdit(new ImportingFullModelAction("Importing full Dimr model"));
             try
             {
-                hydroModel.AddModels(fileImporters, dimrObject, rootFolder);
+                AddModels(hydroModel, fileImporters, dimrObject, rootFolder);
 
                 var subModels = hydroModel.Activities.OfType<IDimrModel>().ToList();
-                if(dimrObject.coupler != null) CoupleSubModels(dimrObject, subModels);
+                if (dimrObject.coupler != null) CoupleSubModels(dimrObject, subModels);
             }
             finally
             {
@@ -55,14 +63,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
             return hydroModel;
         }
 
-        private static void AddModels(this HydroModel hydroModel, ICollection<IDimrModelFileImporter> fileImporters, dimrXML dimrObject, string rootFolder)
+        private void AddModels(HydroModel hydroModel, ICollection<IDimrModelFileImporter> fileImporters, dimrXML dimrObject, string rootFolder)
         {
             var componentGroups = dimrObject.component
                 .GroupBy(component => Path.GetExtension(component.inputFile)?.TrimStart('.'));
 
             foreach (var componentGroup in componentGroups)
             {
-                var extension = componentGroup.GetExtension();
+                var extension = GetExtension(componentGroup);
                 var importer = fileImporters.FirstOrDefault(f => f.MasterFileExtension == extension);
                 if (importer == null)
                 {
@@ -79,7 +87,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
 
                     if (!(importedItem is IActivity subModel))
                     {
-                        Log.ErrorFormat(Resources.HydroModelConverter_AddModels_Could_not_import_sub_model_defined_at_location__0__to_integrated_model_, filePath); 
+                        logHandler.ReportErrorFormat(Resources.HydroModelConverter_AddModels_Could_not_import_sub_model_defined_at_location__0__to_integrated_model_, filePath);
                         continue;
                     }
 
@@ -89,7 +97,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
             }
         }
 
-        private static string GetExtension(this IGrouping<string, dimrComponentXML> componentGroup)
+        private string GetExtension(IGrouping<string, dimrComponentXML> componentGroup)
         {
             var extension = componentGroup.Key;
 
@@ -101,26 +109,26 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
             return extension;
         }
 
-        private static void LogUnknownImporter(string extension)
+        private void LogUnknownImporter(string extension)
         {
-            Log.Info($"No importer found for extension: {extension}");
+            logHandler.ReportInfo($"No importer found for extension: {extension}");
         }
 
-        private static string GetFilePath(string rootFolder, string inputFileName, IDimrModelFileImporter importer)
+        private string GetFilePath(string rootFolder, string inputFileName, IDimrModelFileImporter importer)
         {
             var fileName = GetFileName(inputFileName);
             var filePath = ComposeFilePath(rootFolder, fileName, importer);
             return filePath;
         }
 
-        private static string GetFileName(string fileName)
+        private string GetFileName(string fileName)
         {
             return fileName.Equals(".") 
                 ? "settings.json"
                 : fileName;
         }
 
-        private static string ComposeFilePath(string rootFolder, string fileName, IDimrModelFileImporter importer)
+        private string ComposeFilePath(string rootFolder, string fileName, IDimrModelFileImporter importer)
         {
             string[] pathParts;
 
@@ -138,7 +146,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
             }
             else
             {
-
                 pathParts = new[] {rootFolder}
                     .Concat(importer.SubFolders)
                     .Plus(fileName)
@@ -148,7 +155,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
             return Path.Combine(pathParts);
         }
 
-        private static void RenameSubModelWhenNeeded(IActivity subModel, string componentName)
+        private void RenameSubModelWhenNeeded(IActivity subModel, string componentName)
         {
             if (subModel.Name == componentName) return;
 
@@ -156,7 +163,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
             subModel.Name = componentName;
         }
 
-        private static void SetHydroModelProperties(HydroModel hydroModel, IActivity subModel)
+        private void SetHydroModelProperties(HydroModel hydroModel, IActivity subModel)
         {
             if (subModel is IHydroModel hydroModelSubModel)
             {
@@ -166,7 +173,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
             hydroModel.Activities.Add(subModel);
         }
 
-        private static void CoupleSubModels(dimrXML dimrObject, IList<IDimrModel> subModels)
+        private void CoupleSubModels(dimrXML dimrObject, IList<IDimrModel> subModels)
         {
             foreach (var dimrCouplerXml in dimrObject.coupler)
             {
@@ -175,7 +182,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
 
                 if (sourceModel == null || targetModel == null)
                 {
-                    Log.ErrorFormat(Resources.HydroModelConverter_CoupleSubModels_Could_not_couple_models____0___to___1___,
+                    logHandler.ReportErrorFormat(Resources.HydroModelConverter_CoupleSubModels_Could_not_couple_models____0___to___1___,
                         dimrCouplerXml.sourceComponent, dimrCouplerXml.targetComponent);
                     continue;
                 }
@@ -184,7 +191,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
             }
         }
 
-        private static void CoupleModelsByDimrCouplerXml(IDimrModel sourceModel, IDimrModel targetModel, dimrCoupledItemXML[] dimrCouplerXml)
+        private void CoupleModelsByDimrCouplerXml(IDimrModel sourceModel, IDimrModel targetModel, dimrCoupledItemXML[] dimrCouplerXml)
         {
             foreach (var couplerXml in dimrCouplerXml)
             {
@@ -195,7 +202,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
 
                     if (sourceDataItem == null || targetDataItem == null)
                     {
-                        Log.Error($"Could not link {couplerXml.sourceName} to {couplerXml.targetName}");
+                        logHandler.ReportError($"Could not link {couplerXml.sourceName} to {couplerXml.targetName}");
                         continue;
                     }
 
@@ -203,7 +210,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
                 }
                 catch (NotImplementedException exception)
                 {
-                    Log.Error($"Could not link {couplerXml.sourceName} to {couplerXml.targetName} : {exception.Message}");
+                    logHandler.ReportError($"Could not link {couplerXml.sourceName} to {couplerXml.targetName} : {exception.Message}");
                 }
             }
         }

@@ -2,6 +2,7 @@
 using DeltaShell.Dimr;
 using DeltaShell.Dimr.xsd;
 using DeltaShell.NGHS.IO.FileReaders;
+using DeltaShell.NGHS.IO.Handlers;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
 {
@@ -19,10 +20,19 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
         /// <returns>Read <see cref="HydroModel"/></returns>
         public static HydroModel Read(string path, IList<IDimrModelFileImporter> fileImporters)
         {
-            if (path == null) { return null;}
-            
-            var dataObject = DelftConfigXmlFileParser.Read<dimrXML>(path);
-            return HydroModelConverter.Convert(dataObject, path, fileImporters);
+            var logHandler = new LogHandler("import of the Hydro Model");
+
+            if (path == null) return null;
+
+            var delftConfigXmlParser = new DelftConfigXmlFileParser(logHandler);
+            var dataObject = delftConfigXmlParser.Read<dimrXML>(path);
+
+            var hydroModelConverter = new HydroModelConverter(logHandler);
+            var hydroModel = hydroModelConverter.Convert(dataObject, path, fileImporters);
+
+            logHandler.LogReport();
+
+            return hydroModel;
         }
     }
 }

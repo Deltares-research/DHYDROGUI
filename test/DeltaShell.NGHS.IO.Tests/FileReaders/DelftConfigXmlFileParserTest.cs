@@ -1,9 +1,13 @@
-﻿using System.IO;
-using System.Xml;
+﻿using System.Collections.Generic;
 using DelftTools.TestUtils;
 using DeltaShell.Dimr.xsd;
 using DeltaShell.NGHS.IO.FileReaders;
+using DeltaShell.NGHS.IO.Handlers;
 using NUnit.Framework;
+using System.IO;
+using System.Linq;
+using System.Xml;
+using Rhino.Mocks;
 
 namespace DeltaShell.NGHS.IO.Tests.FileReaders
 {
@@ -13,18 +17,36 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
         private string XmlFileDirectory = @"FileReaders\ConfigXmlReader";
 
         #region General Exception tests
+
+        private ILogHandler logHandler;
+        private DelftConfigXmlFileParser delftConfigXmlParser;
+
+        [SetUp]
+        public void SetUp()
+        {
+            logHandler = MockRepository.GenerateMock<ILogHandler>();
+            delftConfigXmlParser = new DelftConfigXmlFileParser(logHandler);
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            logHandler = null;
+            delftConfigXmlParser = null;
+        }
+
         [Test]
         [ExpectedException(typeof(FileNotFoundException))]
         public void ConfigurationPathDoesNotExist()
         {
-            DelftConfigXmlFileParser.Read<dimrXML>(null);
+            delftConfigXmlParser.Read<dimrXML>(null);
         }
 
         [Test]
         [ExpectedException(typeof(FileNotFoundException))]
         public void ConfigurationFilePathIsEmpty()
         {
-            DelftConfigXmlFileParser.Read<dimrXML>("");
+            delftConfigXmlParser.Read<dimrXML>("");
         }
 
         [Test]
@@ -32,20 +54,20 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
         {
             var unknownFilePath = @"unknownpathtofile.xml";
             var dimrFileSource = Path.Combine(TestHelper.GetDataDir(), XmlFileDirectory, unknownFilePath);
-            
-            var exception = Assert.Throws<FileNotFoundException>(() => { DelftConfigXmlFileParser.Read<dimrXML>(dimrFileSource); });
+            var exception = Assert.Throws<FileNotFoundException>(() => delftConfigXmlParser.Read<dimrXML>(dimrFileSource));
             Assert.AreEqual(exception.Message, $"Configuration file {unknownFilePath} cannot be found");
         }
+
         #endregion
 
         #region Dimr tests
+
         [Test]
         [Category(TestCategory.DataAccess)]
         public void DimrConfigFileWithMissingDocumentationTagThrowsXmlException()
         {
             var pathWithInvalidConfigurationFile = Path.Combine(TestHelper.GetDataDir(), XmlFileDirectory, "dimrWithMissingDocTag.xml");
-            
-            var exception = Assert.Throws<XmlException>(() => { DelftConfigXmlFileParser.Read<dimrXML>(pathWithInvalidConfigurationFile); });
+            var exception = Assert.Throws<XmlException>(() => delftConfigXmlParser.Read<dimrXML>(pathWithInvalidConfigurationFile));
             Assert.AreEqual("Error during parsing : The 'documentation' start tag on line 3 position 4 does not match the end tag of 'dimrConfig'. Line 192, position 3.", exception.Message);
         }
 
@@ -54,7 +76,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
         public void InvalidDimrConfigurationFileWithEmptyBodyThrowsXmlException()
         {
             var pathWithInvalidConfigurationFile = Path.Combine(TestHelper.GetDataDir(), XmlFileDirectory, "invalidDimrEmptyBody.xml");
-            var exception = Assert.Throws<XmlException>(() => { DelftConfigXmlFileParser.Read<dimrXML>(pathWithInvalidConfigurationFile); });
+            var exception = Assert.Throws<XmlException>(() => delftConfigXmlParser.Read<dimrXML>(pathWithInvalidConfigurationFile));
             Assert.AreEqual("Error during parsing : Root element is missing.", exception.Message);
         }
 
@@ -63,8 +85,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
         public void InvalidDimrConfigurationFileWithInvalidHeaderThrowsXmlException()
         {
             var pathWithInvalidConfigurationFile = Path.Combine(TestHelper.GetDataDir(), XmlFileDirectory, "invalidDimrMissingHeader.xml");
-
-            var exception = Assert.Throws<XmlException>(() => { DelftConfigXmlFileParser.Read<dimrXML>(pathWithInvalidConfigurationFile); });
+            var exception = Assert.Throws<XmlException>(() => delftConfigXmlParser.Read<dimrXML>(pathWithInvalidConfigurationFile));
             Assert.AreEqual("Error during parsing : <abc xmlns='http://schemas.deltares.nl/dimr'> was not expected.", exception.Message);
         }
 
@@ -73,10 +94,10 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
         public void InvalidDimrConfigurationFileWithUnknownRootName()
         {
             var pathWithInvalidConfigurationFile = Path.Combine(TestHelper.GetDataDir(), XmlFileDirectory, "invalidDimrUnknownRootName.xml");
-
-            var exception = Assert.Throws<XmlException>(() => { DelftConfigXmlFileParser.Read<dimrXML>(pathWithInvalidConfigurationFile); });
+            var exception = Assert.Throws<XmlException>(() => delftConfigXmlParser.Read<dimrXML>(pathWithInvalidConfigurationFile));
             Assert.AreEqual("Error during parsing : <InvalidRoot xmlns='http://schemas.deltares.nl/dimr'> was not expected.", exception.Message);
         }
+
         #endregion
 
         [Test]
@@ -85,7 +106,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
         {
             var dimrSourcePath = Path.GetFullPath(Path.Combine(TestHelper.GetDataDir(), XmlFileDirectory));
             var dimrConfigurationFile = Path.Combine(dimrSourcePath, "dimr.xml");
-            var dimrXmlObject = DelftConfigXmlFileParser.Read<dimrXML>(dimrConfigurationFile);
+            var dimrXmlObject = delftConfigXmlParser.Read<dimrXML>(dimrConfigurationFile);
             Assert.IsNotNull(dimrXmlObject);
 
             Assert.IsNotNull(dimrXmlObject.component);
@@ -100,37 +121,62 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
         [Category(TestCategory.DataAccess)]
         public void GetDimrConfigurationFileWithExtraElementsOnRootLevelInLogMessage()
         {
+            // Given
             var dimrConfigurationFile = DimrConfigFileWithExtraCategory();
+            SetExpectationReportedInfoMessageLogHandler(new[] {"test"});
 
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read<dimrXML>(dimrConfigurationFile), "test");
+            // When
+            delftConfigXmlParser.Read<dimrXML>(dimrConfigurationFile);
 
+            // Then
+            logHandler.VerifyAllExpectations();
         }
 
         [Test]
         [Category(TestCategory.DataAccess)]
         public void GetDimrConfigurationFileWithUnknownAttributesOnCouplerInLogMessages()
         {
+            // Given
             var dimrConfigurationFile = DimrConfigFileWithExtraCategory();
+            SetExpectationReportedInfoMessageLogHandler(new[]
+            {
+                "Attribute",
+                "abc"
+            });
 
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read<dimrXML>(dimrConfigurationFile), "Attribute");
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read<dimrXML>(dimrConfigurationFile), "abc");
+            // When
+            delftConfigXmlParser.Read<dimrXML>(dimrConfigurationFile);
+
+            // Then
+            logHandler.VerifyAllExpectations();
         }
 
         [Test]
         [Category(TestCategory.DataAccess)]
         public void GetDimrConfigurationFileWithUnknownElementsOnCouplerInLogMessages()
         {
+            // Given
             var dimrConfigurationFile = DimrConfigFileWithExtraCategory();
+            SetExpectationReportedInfoMessageLogHandler(new[]
+            {
+                "Element",
+                "test",
+                "abc",
+                "abcsourcename",
+                "logger",
+                "dimrwithextrainfo.xml",
+                "Attribute",
+            });
 
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read<dimrXML>(dimrConfigurationFile), "Element");
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read<dimrXML>(dimrConfigurationFile), "test");
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read<dimrXML>(dimrConfigurationFile), "abc");
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read<dimrXML>(dimrConfigurationFile), "abcsourcename");
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read<dimrXML>(dimrConfigurationFile), "logger");
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read<dimrXML>(dimrConfigurationFile), "dimrwithextrainfo.xml");
+            // When
+            delftConfigXmlParser.Read<dimrXML>(dimrConfigurationFile);
+
+            // Then
+            logHandler.VerifyAllExpectations();
         }
 
         #region Helper Methods
+
         private string DimrConfigFileWithExtraCategory()
         {
             var xmlFileDirectory = @"FileReaders\ConfigXmlReader";
@@ -139,6 +185,17 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
 
             return dimrFile;
         }
+
+        private void SetExpectationReportedInfoMessageLogHandler(IList<string> expectedStrings)
+        {
+            var argExpectation = Arg<string>.Matches(arg => expectedStrings.All(arg.Contains));
+
+            logHandler.Expect(obj => obj.ReportInfo(argExpectation))
+                .Repeat.Once().Message(
+                    "ReportInfo method was not called with an argument containing all of the following strings: " +
+                    $"'{"\"" + string.Join("\" \"", expectedStrings) + "\""}'");
+        }
+
         #endregion
     }
 }

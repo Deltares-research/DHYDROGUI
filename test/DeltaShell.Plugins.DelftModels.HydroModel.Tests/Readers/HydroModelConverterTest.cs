@@ -7,6 +7,7 @@ using DelftTools.TestUtils;
 using DeltaShell.Dimr;
 using DeltaShell.Dimr.xsd;
 using DeltaShell.NGHS.IO.FileReaders;
+using DeltaShell.NGHS.IO.Handlers;
 using DeltaShell.Plugins.DelftModels.HydroModel.Import;
 using DeltaShell.Plugins.DelftModels.HydroModel.Properties;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
@@ -28,18 +29,44 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
         private static readonly string FileName = $"{ComponentName}.{XmlExtension}";
         private readonly string xmlFilePath = Path.Combine(DirectoryPath, FileName);
         private readonly MockRepository mocks = new MockRepository();
+        private ILogHandler logHandler;
+        private HydroModelConverter hydroModelConverter;
+
+        [SetUp]
+        public void SetUp()
+        {
+            logHandler = MockRepository.GenerateMock<ILogHandler>();
+            hydroModelConverter = new HydroModelConverter(logHandler);
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            logHandler = null;
+            hydroModelConverter = null;
+        }
 
         [Test]
         [Category(TestCategory.DataAccess)]
         public void IfNoFileImporterIsFoundLogInfoMessage()
         {
+            // Given
             var dimrPath = TestHelper.GetTestFilePath(Path.Combine("FileReader", "dimr.xml"));
             var fileImporters = new List<IDimrModelFileImporter>();
 
-            var dimrObject = DelftConfigXmlFileParser.Read<dimrXML>(dimrPath);
-            HydroModelConverter.Convert(dimrObject, dimrPath, fileImporters);
+            var argExpectation = Arg<string>.Matches(arg => arg.StartsWith("No importer found for extension:"));
+            logHandler.Expect(obj => obj.ReportInfo(argExpectation))
+                .Repeat.Once();
 
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => HydroModelConverter.Convert(dimrObject, dimrPath, fileImporters), "No importer found for extension:");
+            var delftConfigXmlParser = new DelftConfigXmlFileParser(logHandler);
+            var dimrObject = delftConfigXmlParser.Read<dimrXML>(dimrPath);
+            hydroModelConverter.Convert(dimrObject, dimrPath, fileImporters);
+
+            // When
+            hydroModelConverter.Convert(dimrObject, dimrPath, fileImporters);
+
+            // Then
+            logHandler.VerifyAllExpectations();
         }
 
         [Test]
@@ -52,8 +79,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
                 new WaterFlowModel1DFileImporter()
             };
 
-            var dimrObject = DelftConfigXmlFileParser.Read<dimrXML>(dimrPath);
-            var result = HydroModelConverter.Convert(dimrObject, dimrPath, fileImporters);
+            var delftConfigXmlParser = new DelftConfigXmlFileParser(logHandler);
+            var dimrObject = delftConfigXmlParser.Read<dimrXML>(dimrPath);
+            var result = hydroModelConverter.Convert(dimrObject, dimrPath, fileImporters);
 
             Assert.IsNotNull(result);
             Assert.That(result, Is.TypeOf<HydroModel>());
@@ -72,8 +100,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
                 new RealTimeControlModelImporter()
             };
 
-            var dimrObject = DelftConfigXmlFileParser.Read<dimrXML>(dimrPath);
-            var result = HydroModelConverter.Convert(dimrObject, dimrPath, fileImporters);
+            var delftConfigXmlParser = new DelftConfigXmlFileParser(logHandler);
+            var dimrObject = delftConfigXmlParser.Read<dimrXML>(dimrPath);
+            var result = hydroModelConverter.Convert(dimrObject, dimrPath, fileImporters);
 
             Assert.IsNotNull(result);
             Assert.That(result, Is.TypeOf<HydroModel>());
@@ -94,8 +123,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
                 new WaterFlowModel1DFileImporter()
             };
 
-            var dimrObject = DelftConfigXmlFileParser.Read<dimrXML>(dimrPath);
-            var result = HydroModelConverter.Convert(dimrObject, dimrPath, fileImporters);
+            var delftConfigXmlParser = new DelftConfigXmlFileParser(logHandler);
+            var dimrObject = delftConfigXmlParser.Read<dimrXML>(dimrPath);
+            var result = hydroModelConverter.Convert(dimrObject, dimrPath, fileImporters);
             Assert.IsNotNull(result);
             Assert.That(result, Is.TypeOf<HydroModel>());
             Assert.That(result.Activities.Count, Is.EqualTo(2));
@@ -115,14 +145,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
             Assert.IsNull(dimrXml.coupler); // Test initial requirement
 
             // When/Then
-            Assert.DoesNotThrow(() => HydroModelConverter.Convert(dimrXml, tempFilePath, new List<IDimrModelFileImporter>()));
+            Assert.DoesNotThrow(() => hydroModelConverter.Convert(dimrXml, tempFilePath, new List<IDimrModelFileImporter>()));
         }
 
         [Test]
         [ExpectedException(typeof(ArgumentException), ExpectedMessage = "Cannot convert empty dimr data object.")]
         public void GivenNullDimrXmlObject_WhenConvertingToHydroModel_ThenArgumentExceptionIsThrown()
         {
-            HydroModelConverter.Convert(null, string.Empty, new List<IDimrModelFileImporter>());
+            hydroModelConverter.Convert(null, string.Empty, new List<IDimrModelFileImporter>());
         }
 
         [Test]
@@ -146,17 +176,20 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
             };
 
             var importers = new List<IDimrModelFileImporter> {dimrFileImporter};
-            HydroModel hydroModel = null;
 
-            // When / Then
-            var expectedLogMessage = string.Format(Resources.HydroModelConverter_AddModels_Could_not_import_sub_model_defined_at_location__0__to_integrated_model_, xmlFilePath);
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => hydroModel = HydroModelConverter.Convert(dimrXml, DirectoryPath, importers),
-                expectedLogMessage);
+            logHandler.Expect(l => l.ReportErrorFormat(
+                    Resources.HydroModelConverter_AddModels_Could_not_import_sub_model_defined_at_location__0__to_integrated_model_, xmlFilePath))
+                .Repeat.Once();
 
+            // When
+            var hydroModel = hydroModelConverter.Convert(dimrXml, DirectoryPath, importers);
+
+            // Then
             Assert.IsNotNull(hydroModel, "The returned model was expected to be not null.");
             Assert.IsEmpty(hydroModel.Activities, "No sub model should have been imported.");
 
             mocks.VerifyAll();
+            logHandler.VerifyAllExpectations();
         }
 
         [Test]
@@ -183,7 +216,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
 
             // When / Then
             var expectedLogMessage = string.Format(Resources.HydroModelConverter_AddModels_Renamed_model__0__to__1_, activityInitialName, ComponentName);
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => hydroModel = HydroModelConverter.Convert(dimrXml, DirectoryPath, importers),
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => hydroModel = hydroModelConverter.Convert(dimrXml, DirectoryPath, importers),
                 expectedLogMessage);
 
             Assert.IsNotNull(hydroModel, "The returned model was expected to be not null.");
@@ -220,19 +253,22 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
             };
 
             var importers = new List<IDimrModelFileImporter> { dimrFileImporter };
-            HydroModel hydroModel = null;
+            HydroModel hydroModel;
 
-            // When / Then
-            var expectedLogMessage = string.Format(Resources.HydroModelConverter_CoupleSubModels_Could_not_couple_models____0___to___1___,
-                sourceComponentName, targetComponentName);
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => hydroModel = HydroModelConverter.Convert(dimrXml, DirectoryPath, importers),
-                expectedLogMessage);
+            logHandler.Expect(l => l.ReportErrorFormat(
+                Resources.HydroModelConverter_CoupleSubModels_Could_not_couple_models____0___to___1___,
+                sourceComponentName, targetComponentName)).Repeat.Once();
 
+            // When
+            hydroModel = hydroModelConverter.Convert(dimrXml, DirectoryPath, importers);
+
+            // Then
             Assert.IsNotNull(hydroModel, "The returned model was expected to be not null.");
             Assert.That(hydroModel.Activities.Count, Is.EqualTo(1));
             Assert.That(hydroModel.Activities[0].Name, Is.EqualTo(ComponentName));
 
             mocks.VerifyAll();
+            logHandler.VerifyAllExpectations();
         }
 
         private IDimrModelFileImporter GetDimrModelFileImporter<T>(string subModelName) where T : IActivity

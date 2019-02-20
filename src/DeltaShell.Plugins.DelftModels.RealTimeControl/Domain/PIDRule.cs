@@ -15,7 +15,7 @@ using ValidationAspects.Exceptions;
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 {
     [Entity]
-    public class PIDRule : RuleBase, IItemContainer
+    public class PIDRule : RuleBase, IItemContainer, ITimeDependentRtcObject
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(PIDRule));
 
@@ -30,6 +30,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             if (name != null) Name = name;
 
             Setting = new Setting {MaxSpeed = 0};
+
             XmlTag = RtcXmlTag.PIDRule;
         }
 
@@ -82,24 +83,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             set { timeSeries = value; }
         }
 
-        public string IntegralPart
-        {
-            get { return Name + "_IP"; }
-        }
-
-        public string DifferentialPart
-        {
-            get { return Name + "_DP"; }
-        }
-
-        public string SetPoint
-        {
-            get
-            {
-                return Name + "_SP";
-            }
-        }
-
         public override IEnumerable<IXmlTimeSeries> XmlImportTimeSeries(string prefix, DateTime start, DateTime stop, TimeSpan step)
         {
             yield return GetImportTimeSeries(prefix, start, stop, step);
@@ -107,22 +90,57 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 
         public override IEnumerable<IXmlTimeSeries> XmlExportTimeSeries(string prefix)
         {
-            yield return GetExportTimeSeries(prefix + IntegralPart);
-            yield return GetExportTimeSeries(prefix + DifferentialPart);
+            yield return GetExportTimeSeries(GetIntegralPartId(prefix));
+            yield return GetExportTimeSeries(GetDifferentialPartId(prefix));
         }
 
+        private string GetIntegralPartId(string prefix)
+        {
+            return RtcXmlTag.IP + GetXmlNameWithoutTag(prefix);
+        }
 
+        private string GetDifferentialPartId(string prefix)
+        {
+            return RtcXmlTag.DP + GetXmlNameWithoutTag(prefix);
+        }
+
+        // Example of ToXml:
+        //  <pid id ="[PID]control_group_1/pid_rule">
+        //      <mode>PIDVEL</mode>
+        //      <settingMin>4</settingMin>
+        //      <settingMax>5</settingMax>
+        //      <settingMaxSpeed>6</settingMaxSpeed>
+        //      <kp>1</kp>
+        //      <ki>2</ki>
+        //      <kd>3</kd>
+        //      <input>
+        //          <x>[Input]ObservationPoint1/Water level(op)</x>
+        //          <setpointSeries>[SP]control_group_1/pid_rule</setpointSeries>
+        //      </input>
+        //      <output>
+        //          <y>[Output]Weir1/Crest level(s)</y>
+        //          <integralPart>[IP]control_group_1/pid_rule</integralPart>
+        //          <differentialPart>[DP]control_group_1/pid_rule</differentialPart>
+        //      </output>
+        //  </pid>
+
+        /// <summary>
+        /// Converts the information of the PID rule needed for writing the tools config file to an xml element.
+        /// </summary>
+        /// <param name="xNamespace">The x namespace.</param>
+        /// <param name="prefix">The control group name.</param>
+        /// <returns>The Xml Element.</returns>
         public override XElement ToXml(XNamespace xNamespace, string prefix)
         {
             var result = base.ToXml(xNamespace, prefix);
 
             foreach (var output in Outputs)
             {
-                output.IntegralPart = prefix + IntegralPart;  // also in data export and statevector
-                output.DifferentialPart = prefix + DifferentialPart;  // also in data export and statevector
+                output.IntegralPart = GetIntegralPartId(prefix);
+                output.DifferentialPart = GetDifferentialPartId(prefix);
             }
             result.Add(new XElement(xNamespace + "pid",
-                                    new XAttribute("id", prefix + "/" + Name),
+                                    new XAttribute("id", GetXmlNameWithTag(prefix)),
                                     new XElement(xNamespace + "mode", "PIDVEL"),
                                     new XElement(xNamespace + "settingMin", Setting.Min),
                                     new XElement(xNamespace + "settingMax", Setting.Max),
@@ -170,8 +188,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
                                     {
                                         StartTime = startTime,
                                         EndTime = endTime,
-                                        Name = prefix + SetPoint,
-                                        LocationId = prefix + Name,
+                                        Name = RtcXmlTag.SP + GetXmlNameWithoutTag(prefix),
+                                        LocationId = GetXmlNameWithTag(prefix),
                                         ParameterId = "SP",
                                         TimeStep = timeStep,
                                         TimeSeries = (TimeSeries) TimeSeries.Clone(),

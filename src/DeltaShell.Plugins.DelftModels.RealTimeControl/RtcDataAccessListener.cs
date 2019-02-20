@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
+using DelftTools.Functions;
+using DelftTools.Functions.Generic;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
 using DelftTools.Utils.Collections;
@@ -34,6 +36,25 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 ProjectRepository.PreLoad<Output>(i => i.Feature);
 
                 firstRtcModel = false;
+            }
+
+            RemovingInterpolationNoneForTimeRulesIfSetInDatabase(entity, loadedState);
+        }
+
+
+        private static void RemovingInterpolationNoneForTimeRulesIfSetInDatabase(object entity, object[] loadedState)
+        {
+            if (entity is TimeRule)
+            {
+                var timeSeries = loadedState.OfType<TimeSeries>().FirstOrDefault();
+
+                if (timeSeries != null)
+                {
+                    if (timeSeries.Time.InterpolationType == InterpolationType.None)
+                    {
+                        timeSeries.Time.InterpolationType = InterpolationType.Linear;
+                    }
+                }
             }
         }
 

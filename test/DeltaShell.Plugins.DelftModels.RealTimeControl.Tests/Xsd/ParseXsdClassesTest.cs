@@ -1,125 +1,136 @@
-﻿using System.IO;
-using DelftTools.TestUtils;
+﻿using DelftTools.TestUtils;
 using DeltaShell.NGHS.IO.FileReaders;
+using DeltaShell.NGHS.IO.Handlers;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd;
 using NUnit.Framework;
+using Rhino.Mocks;
+using System.IO;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Xsd
 {
     [TestFixture]
     public class ParseXsdClassesTest
     {
+        private const string Directory = @"XsdClassesXml";
+        private ILogHandler logHandler;
+        private DelftConfigXmlFileParser delftConfigXmlParser;
+
+        [SetUp]
+        public void SetUp()
+        {
+            logHandler = MockRepository.GenerateMock<ILogHandler>();
+            delftConfigXmlParser = new DelftConfigXmlFileParser(logHandler);
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            logHandler.VerifyAllExpectations();
+
+            logHandler = null;
+            delftConfigXmlParser = null;
+        }
+
         [Test]
         [Category(TestCategory.DataAccess)]
         public void ReadingStateImportXmlFilesDoesNotThrow()
         {
-            var fileName = "state_import.xml";
+            // Given
+            const string fileName = "state_import.xml";
+            var path = Path.GetFullPath(Path.Combine(TestHelper.GetDataDir(), Directory, fileName));
+            Assert.True(File.Exists(path), $"File path '{path}' should exist.");
 
-            var directory = @"XsdClassesXml";
-            var path = Path.GetFullPath(Path.Combine(TestHelper.GetDataDir(), directory, fileName));
+            SetExpectationReportedInfoMessageLogHandler(fileName);
 
-            Assert.True(File.Exists(path));
+            // When
+            var dataAccessModel = delftConfigXmlParser.Read<TreeVectorFileXML>(path);
 
-            var dataAccesModel = DelftConfigXmlFileParser.Read<TreeVectorFileXML>(path);
-
-            Assert.IsNotNull(dataAccesModel);
-
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read<TreeVectorFileXML>(path), "Attribute: \"xsi:schemaLocation\"");
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read<TreeVectorFileXML>(path), fileName);
-
-            Assert.NotNull(dataAccesModel);
+            // Then
+            Assert.NotNull(dataAccessModel);
         }
 
         [Test]
         [Category(TestCategory.DataAccess)]
         public void ReadingTimeSeriesImportXmlFilesDoesNotThrown()
         {
-            var fileName = "timeseries_import.xml";
+            // Given
+            const string fileName = "timeseries_import.xml";
+            var path = Path.GetFullPath(Path.Combine(TestHelper.GetDataDir(), Directory, fileName));
+            Assert.True(File.Exists(path), $"File path '{path}' should exist.");
 
-            var directory = @"XsdClassesXml";
-            var path = Path.GetFullPath(Path.Combine(TestHelper.GetDataDir(), directory, fileName));
+            SetExpectationReportedInfoMessageLogHandler(fileName);
 
-            Assert.True(File.Exists(path));
+            // When
+            var dataAccessModel = delftConfigXmlParser.Read<TimeSeriesCollectionComplexType>(path);
 
-            var dataAccesModel = DelftConfigXmlFileParser.Read<TimeSeriesCollectionComplexType>(path);
-
-            Assert.IsNotNull(dataAccesModel);
-
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read<TimeSeriesCollectionComplexType>(path), "Attribute: \"xsi:schemaLocation\"");
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read<TimeSeriesCollectionComplexType>(path), fileName);
-
-            var timeSeriesCollection = dataAccesModel;
-
-            Assert.NotNull(timeSeriesCollection);
+            // Then
+            Assert.NotNull(dataAccessModel);
         }
 
         [Test]
         [Category(TestCategory.DataAccess)]
         public void ReadingToolsConfigXmlFilesDoesNotThrow()
         {
-            var fileName = "rtcToolsConfig.xml";
+            // Given
+            const string fileName = "rtcToolsConfig.xml";
+            var path = Path.GetFullPath(Path.Combine(TestHelper.GetDataDir(), Directory, fileName));
+            Assert.True(File.Exists(path), $"File path '{path}' should exist.");
 
-            var directory = @"XsdClassesXml";
-            var path = Path.GetFullPath(Path.Combine(TestHelper.GetDataDir(), directory, fileName));
+            SetExpectationReportedInfoMessageLogHandler(fileName);
 
-            Assert.True(File.Exists(path));
+            // When
+            var dataAccessModel = delftConfigXmlParser.Read<RtcToolsConfigXML>(path);
 
-            var dataAccesModel = DelftConfigXmlFileParser.Read<RtcToolsConfigXML>(path);
-
-            Assert.IsNotNull(dataAccesModel);
-
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read<RtcToolsConfigXML>(path), "Attribute: \"xsi:schemaLocation\"");
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read<RtcToolsConfigXML>(path), fileName);
-
-            var rtcToolsConfig = dataAccesModel as RtcToolsConfigXML;
-
-            Assert.NotNull(rtcToolsConfig);
+            // Then
+            Assert.NotNull(dataAccessModel);
         }
 
         [Test]
         [Category(TestCategory.DataAccess)]
         public void ReadingRuntimeConfigXmlFilesDoesNotThrow()
         {
-            var fileName = "rtcRuntimeConfig.xml";
+            // Given
+            const string fileName = "rtcRuntimeConfig.xml";
+            var path = Path.GetFullPath(Path.Combine(TestHelper.GetDataDir(), Directory, fileName));
+            Assert.True(File.Exists(path), $"File path '{path}' should exist.");
 
-            var directory = @"XsdClassesXml";
-            var path = Path.GetFullPath(Path.Combine(TestHelper.GetDataDir(), directory, fileName));
+            SetExpectationReportedInfoMessageLogHandler(fileName);
 
-            Assert.True(File.Exists(path));
+            // When
+            var dataAccessModel = delftConfigXmlParser.Read<RtcRuntimeConfigXML>(path);
 
-            var dataAccesModel = DelftConfigXmlFileParser.Read<RtcRuntimeConfigXML>(path);
-
-            Assert.IsNotNull(dataAccesModel);
-
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read<RtcRuntimeConfigXML>(path), "Attribute: \"xsi:schemaLocation\"");
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read<RtcRuntimeConfigXML>(path), fileName);
-
-            var rtcRuntimeConfig = dataAccesModel;
-
-            Assert.NotNull(rtcRuntimeConfig);
+            // Then
+            Assert.NotNull(dataAccessModel);
         }
 
         [Test]
         [Category(TestCategory.DataAccess)]
         public void ReadingDataConfigXmlFilesDoesNotThrow()
         {
-            var fileName = "rtcDataConfig.xml";
+            // Given
+            const string fileName = "rtcDataConfig.xml";
+            var path = Path.GetFullPath(Path.Combine(TestHelper.GetDataDir(), Directory, fileName));
+            Assert.True(File.Exists(path), $"File path '{path}' should exist.");
 
-            var directory = @"XsdClassesXml";
-            var path = Path.GetFullPath(Path.Combine(TestHelper.GetDataDir(), directory, fileName));
+            SetExpectationReportedInfoMessageLogHandler(fileName);
 
-            Assert.True(File.Exists(path));
+            // When
+            var dataAccessModel = delftConfigXmlParser.Read<RTCDataConfigXML>(path);
 
-            var dataAccesModel = DelftConfigXmlFileParser.Read<RTCDataConfigXML>(path);
+            // Then
+            Assert.NotNull(dataAccessModel);
+        }
 
-            Assert.IsNotNull(dataAccesModel);
+        private void SetExpectationReportedInfoMessageLogHandler(string fileName)
+        {
+            var attributeString = "Attribute: \"xsi:schemaLocation\"";
 
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read<RTCDataConfigXML>(path), "Attribute: \"xsi:schemaLocation\"");
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read<RTCDataConfigXML>(path), fileName);
+            var argExpectation = Arg<string>.Matches(arg => arg.Contains(fileName) && arg.Contains(attributeString));
 
-            var rtcDataConfig = dataAccesModel;
-
-            Assert.NotNull(rtcDataConfig);
+            logHandler.Expect(obj => obj.ReportInfo(argExpectation))
+                .Repeat.Once().Message(
+                    "ReportInfo method was not called with an argument containing all of the following strings: " +
+                    $"\"{attributeString}\" \"{fileName}\"");
         }
     }
 }

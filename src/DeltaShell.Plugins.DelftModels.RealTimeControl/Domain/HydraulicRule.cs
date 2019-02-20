@@ -47,6 +47,29 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             return function;
         }
 
+        // Example of ToXml:
+        //  <lookupTable id ="[HydraulicRule]control_group_1/lookup_table_rule" >
+        //      <table>
+        //          <record x="1" y="5"/>
+        //          <record x="2" y="4"/>
+        //          <record x="3" y="3"/>
+        //      </table>
+        //      <interpolationOption>LINEAR</interpolationOption>
+        //      <extrapolationOption>BLOCK</extrapolationOption>
+        //      <input>
+        //          <x ref="EXPLICIT">[Delayed][Input]ObservationPoint1/Water level(op)[0]</x>
+        //      </input>
+        //      <output>
+        //          <y>[Output]Weir1/Crest level(s)</y>
+        //      </output>
+        //  </lookupTable>
+
+        /// <summary>
+        /// Converts the information of the hydraulic rule needed for writing the tools config file to an xml element.
+        /// </summary>
+        /// <param name="xNamespace">The x namespace.</param>
+        /// <param name="prefix">The control group name.</param>
+        /// <returns>The Xml Element.</returns>
         public override XElement ToXml(XNamespace xNamespace, string prefix)
         {
             var result = base.ToXml(xNamespace, prefix);
@@ -66,7 +89,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
                 {
                     var xElement = xElementInput.Elements().First();
                     // we need the last element from vector with length (timeLagInTimeSteps-1)
-                    xElement.Value = string.Format("delayed{0}[{1}]", xElement.Value, (timeLagInTimeSteps - 2));
+                    xElement.Value = string.Format(RtcXmlTag.Delayed + xElement.Value + $"[{timeLagInTimeSteps - 2}]");
                     xElement.Add(new XAttribute("ref","EXPLICIT"));
                 }
             }
@@ -81,7 +104,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             }
 
             result.Add(new XElement(xNamespace + "lookupTable",
-                            new XAttribute("id", prefix + "/" + Name),
+                            new XAttribute("id", GetXmlNameWithTag(prefix)),
                             new XElement(xNamespace + "table", table.Select(record => record.ToXml(xNamespace))),
                             new XElement(xNamespace + "interpolationOption", Interpolation == InterpolationType.Constant ? "BLOCK" : "LINEAR"),
                             new XElement(xNamespace + "extrapolationOption", Extrapolation == ExtrapolationType.Constant ? "BLOCK" : "LINEAR"),
