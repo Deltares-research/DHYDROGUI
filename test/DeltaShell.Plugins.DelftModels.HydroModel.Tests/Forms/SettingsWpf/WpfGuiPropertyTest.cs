@@ -114,5 +114,60 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
             Assert.IsNotNull(prop.Value);
             Assert.AreEqual(newTimeSpan, prop.Value);
         }
+
+        [Test]
+        public void Test_WpfGuiProperty_Has_Min_Max_Value()
+        {
+            var dummyField = new FieldUIDescription(null, null)
+            {
+                Label = "dummyName",
+                MaxValue = 100,
+                MinValue = 10,
+                HasMaxValue = true,
+                HasMinValue = true
+            };
+
+            var property = new WpfGuiProperty(dummyField);
+
+            Assert.AreEqual(dummyField.MinValue, property.MinValue);
+            Assert.AreEqual(dummyField.MaxValue, property.MaxValue);
+
+            Assert.AreEqual(dummyField.HasMaxValue, property.HasMaxValue);
+            Assert.AreEqual(dummyField.HasMinValue, property.HasMinValue);
+
+            Assert.IsTrue(property.HasMinMaxValue.HasValue);
+            Assert.IsTrue(property.HasMinMaxValue.Value);
+
+            dummyField.HasMaxValue = false;
+
+            Assert.IsTrue(property.HasMinMaxValue.HasValue);
+            Assert.IsTrue(property.HasMinMaxValue.Value);
+
+            dummyField.HasMinValue = false;
+
+            Assert.IsTrue(property.HasMinMaxValue.HasValue);
+            Assert.IsFalse(property.HasMinMaxValue.Value);
+        }
+
+        [Test]
+        public void Test_WpfGuiProperty_Unit_Has_Brackets()
+        {
+            var dummyField = new FieldUIDescription(null, null)
+            {
+                Label = "dummyName"
+            };
+
+            var property = new WpfGuiProperty(dummyField);
+
+            Assert.AreEqual("", property.UnitSymbol);
+
+            dummyField.UnitSymbol = "";
+
+            Assert.AreEqual("", property.UnitSymbol);
+
+            dummyField.UnitSymbol = "m/s";
+
+            Assert.AreEqual("[m/s]", property.UnitSymbol);
+        }
     }
 }
