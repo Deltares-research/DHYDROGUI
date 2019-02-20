@@ -50,34 +50,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                     Label = label,
                     Name = prop.PropertyDefinition.FilePropertyName,
                     ValueType = prop.PropertyDefinition.DataType,
-                    ToolTip = GetToolTip(prop),
+                    ToolTip = prop.PropertyDefinition.Description,
                     UnitSymbol = prop.PropertyDefinition.Unit
                 };
-        }
-
-        private static string GetToolTip(WaveModelProperty prop)
-        {
-            var validRangeText = new StringBuilder();
-
-            if (!prop.PropertyDefinition.DataType.IsEnum) //enums ranges are enforced by combobox
-            {
-                if (prop.MinValue != null)
-                {
-                    validRangeText.Append("Minimum value: ");
-                    validRangeText.Append(prop.PropertyDefinition.MinValueAsString);
-                    validRangeText.Append(Environment.NewLine);
-                }
-                if (prop.MaxValue != null)
-                {
-                    validRangeText.Append("Maximum value: ");
-                    validRangeText.Append(prop.PropertyDefinition.MaxValueAsString);
-                    validRangeText.Append(Environment.NewLine);
-                }
-            }
-            return string.Format("Mdw name: {0}{3}Description:{3}\t{1}{3}{2}",
-                                 prop.PropertyDefinition.FilePropertyName,
-                                 prop.PropertyDefinition.Description,
-                                 validRangeText, Environment.NewLine);
         }
     }
 }

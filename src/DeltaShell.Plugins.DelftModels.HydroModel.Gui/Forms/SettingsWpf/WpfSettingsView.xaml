@@ -10,7 +10,7 @@
              xmlns:attachedProperties="clr-namespace:DelftTools.Controls.Wpf.AttachedProperties;assembly=DelftTools.Controls.Wpf"
              mc:Ignorable="d" 
              x:Name="UserControl"
-             d:DesignHeight="300" d:DesignWidth="1000" 
+             d:DesignHeight="400" d:DesignWidth="1000" 
              d:DataContext="{x:Static settingsWpf:WpfSettingsViewModelDesignInstances.AllTypes}">
     <UserControl.DataContext>
         <settingsWpf:WpfSettingsViewModel x:Name="ViewModel"/>
@@ -28,11 +28,11 @@
         </valueConverters:ValueConverterGroup>
 
         <!--#region Styles-->
-        <sys:Double x:Key="UnitWidth">20</sys:Double>
+        <sys:Double x:Key="UnitWidth">47</sys:Double>
 
         <GridLength x:Key ="LabelLength">200</GridLength>
         <GridLength x:Key ="ControlLength">*</GridLength>
-        <GridLength x:Key ="UnitLength">20</GridLength>
+        <GridLength x:Key ="UnitLength">47</GridLength>
 
         <Style x:Key="LabelTextBlockStyle" TargetType="TextBlock">
             <Setter Property="VerticalAlignment" Value="Center"/>
@@ -62,7 +62,66 @@
             <Setter Property="Margin" Value="2"/>
             <Setter Property="IsEnabled" Value="{Binding IsEnabled, UpdateSourceTrigger=PropertyChanged}"/>
             <Setter Property="Visibility" Value="{Binding IsVisible, Converter={StaticResource BoolToVisibility}}"/>
-            <Setter Property="ToolTip" Value="{Binding ToolTip}"/>
+            <Setter Property="ToolTip">
+                <Setter.Value>
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,5" MaxWidth="300">
+                            <TextBlock Text="{Binding Label}" 
+                                       FontWeight="Bold"/>
+                            <TextBlock Text="{Binding Name, StringFormat=(\{0\})}" 
+                                       FontWeight="Bold"
+                                       Margin="5,0,0,0"/>
+                        </StackPanel>
+                        <TextBlock Text="{Binding ToolTip}" TextWrapping="Wrap" MaxWidth="300"/>
+                        <Separator Margin="0,5,0,5" Visibility="{Binding HasMinMaxValue, Converter={StaticResource BoolToVisibility}}"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Grid.Row="0" 
+                                       Grid.Column="0"
+                                       Text="Minimum value"
+                                       Visibility="{Binding HasMinValue, Converter={StaticResource BoolToVisibility}}"/>
+                            
+                            <TextBlock Grid.Row="1" 
+                                       Grid.Column="0"
+                                       Text="Maximum value"
+                                       Visibility="{Binding HasMaxValue, Converter={StaticResource BoolToVisibility}}"/>
+
+                            <TextBlock Grid.Row="0" 
+                                       Grid.Column="1"
+                                       Margin="5,0,0,0"
+                                       Text="{Binding MinValue}"
+                                       Visibility="{Binding HasMinValue, Converter={StaticResource BoolToVisibility}}"/>
+
+                            <TextBlock Grid.Row="1" 
+                                       Grid.Column="1"
+                                       Margin="5,0,0,0"
+                                       Text="{Binding MaxValue}"
+                                       Visibility="{Binding HasMaxValue, Converter={StaticResource BoolToVisibility}}"/>
+
+                            <TextBlock Grid.Row="0" 
+                                       Grid.Column="2"
+                                       Margin="5,0,0,0"
+                                       Text="{Binding UnitSymbol, FallbackValue=-}"
+                                       Visibility="{Binding HasMinValue, Converter={StaticResource BoolToVisibility}}"/>
+
+                            <TextBlock Grid.Row="1" 
+                                       Grid.Column="2"
+                                       Margin="5,0,0,0"
+                                       Text="{Binding UnitSymbol, FallbackValue=-}"
+                                       Visibility="{Binding HasMaxValue, Converter={StaticResource BoolToVisibility}}"/>
+                        </Grid>
+                    </StackPanel>
+                </Setter.Value>
+            </Setter>
             <Setter Property="ToolTipService.ShowDuration" Value="15000"/>
         </Style>
 
@@ -72,7 +131,7 @@
             </d:Style.DataContext>
 
             <Setter Property="Margin" Value="5"/>
-            <Setter Property="Width" Value="400"/>
+            <Setter Property="Width" Value="450"/>
             <Setter Property="Header" Value="{Binding SubCategoryName}"/>
             <Setter Property="IsExpanded" Value="{Binding Expanded}"/>
             <Setter Property="Visibility" Value="{Binding IsVisible, Converter={StaticResource BoolToVisibility}}"/>
@@ -98,6 +157,7 @@
                             ValidatesOnExceptions=True,
                             Converter={StaticResource DoubleToStringConverter}}"
                     TextAlignment="Right"
+                    VerticalAlignment="Center"
                     Style="{StaticResource ControlWithErrorStyle}"
                     IsEnabled="{Binding Path=IsEditable}"
                     attachedProperties:InputBindingsManager.UpdatePropertySourceWhenEnterPressed="TextBox.Text"/>
@@ -109,8 +169,8 @@
                 <Button 
                     Grid.Column="2"
                     VerticalAlignment="Center"
-                    Width="{StaticResource UnitWidth}"
-                    Height="{StaticResource UnitWidth}"
+                    Width="20"
+                    Height="20"
                     Visibility="{Binding CustomCommand.ButtonIsVisible, Converter={StaticResource BoolToVisibility}}"
                     Command="{Binding CustomCommand.CustomCommand}">
                     <Image Source="{Binding CustomCommand.ButtonImage, Converter={StaticResource ImageToBitmapSourceConverter}}"/>
@@ -223,10 +283,12 @@
                               HorizontalContentAlignment="Stretch">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <TextBox Name="TextBoxList" Text="{Binding Path=WrapperValue}" 
+                            <TextBox Name="TextBoxList" 
+                                     Text="{Binding Path=WrapperValue}" 
                                      BorderThickness="1.25"
                                      Margin="0,0,0,-1.25"
                                      BorderBrush="Black"
+                                     HorizontalContentAlignment="Right"
                                      HorizontalAlignment="Stretch" 
                                      VerticalAlignment="Stretch"/>
                         </DataTemplate>
@@ -246,7 +308,7 @@
         <!-- GUI Subcategory -->
         <DataTemplate x:Key="subCategoryTemplate" DataType="{x:Type settingsWpf:WpfGuiSubCategory}">
             <!-- Display your BaseViewModel data items here -->
-            <Expander Style="{StaticResource SubCategoryExpanderStyle}" ClipToBounds="True" >
+            <Expander Style="{StaticResource SubCategoryExpanderStyle}" >
                 <Border>
                     <ScrollViewer
                         HorizontalScrollBarVisibility="Auto"

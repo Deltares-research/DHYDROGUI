@@ -114,12 +114,56 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
         
         public string Label { get { return description?.Label; } }
 
-        public string ToolTip
+        public string ToolTip { get { return description?.ToolTip ?? "-"; } }
+
+        /// <summary>
+        /// Unit for this property
+        /// </summary>
+        public string UnitSymbol
         {
-            get { return description?.ToolTip; }
+            get
+            {
+                var unitSymbol = description?.UnitSymbol;
+
+                return !string.IsNullOrEmpty(unitSymbol) 
+                    ? $"[{unitSymbol}]"
+                    : "";
+            }
         }
 
-        public string UnitSymbol { get { return description?.UnitSymbol; } }
+        /// <summary>
+        /// Minimum allowed value
+        /// </summary>
+        public double? MinValue { get { return description?.MinValue; } }
+
+        /// <summary>
+        /// Maximum allowed value
+        /// </summary>
+        public double? MaxValue { get { return description?.MaxValue; } }
+
+        /// <summary>
+        /// Has a minimum value is set
+        /// </summary>
+        public bool? HasMinValue { get { return description?.HasMinValue; } }
+
+        /// <summary>
+        /// Has a maximum value is set
+        /// </summary>
+        public bool? HasMaxValue { get { return description?.HasMaxValue; } }
+
+        /// <summary>
+        /// Has a minimum or a maximum value set
+        /// </summary>
+        public bool? HasMinMaxValue
+        {
+            get
+            {
+                return (HasMaxValue.HasValue &&
+                         HasMaxValue.Value) ||
+                         (HasMinValue.HasValue &&
+                         HasMinValue.Value);
+            }
+        }
 
         /// <summary>
         /// Gets or sets the get model function that will be used later on for 

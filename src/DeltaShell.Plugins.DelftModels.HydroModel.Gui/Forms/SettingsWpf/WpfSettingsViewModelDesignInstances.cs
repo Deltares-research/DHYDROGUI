@@ -29,7 +29,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
                             Category = "Test category 1",
                             ValueType = typeof(int),
                             Label = "Label Test parameter 1 (int)",
-                            SubCategory = "Sub category 1"
+                            SubCategory = "Sub category 1",
+                            UnitSymbol = "abc def ghi"
                         },
                         new FieldUIDescription((o)=> 2.0, (o,o1)=> {})
                         {
@@ -38,7 +39,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
                             ValueType = typeof(double),
                             Label = "Label Test parameter 2 (double)",
                             SubCategory = "Sub category 1",
-                            UnitSymbol = "abc",
+                            UnitSymbol = "abc def",
                         },
                         new FieldUIDescription((o)=> true, (o,o1)=> {})
                         {

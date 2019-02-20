@@ -72,7 +72,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                     Label = label,
                     Name = prop.PropertyDefinition.MduPropertyName,
                     ValueType = prop.PropertyDefinition.DataType,
-                    ToolTip = GetToolTip(prop),
+                    ToolTip = prop.PropertyDefinition.Description,
                     HasMinValue = hasMinVal,
                     HasMaxValue = hasMaxVal,
                     MinValue = minVal,
@@ -80,31 +80,5 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                     UnitSymbol = prop.PropertyDefinition.Unit
                 };
         }
-
-        private static string GetToolTip(WaterFlowFMProperty prop)
-        {
-            var validRangeText = new StringBuilder();
-
-            if (!prop.PropertyDefinition.DataType.IsEnum) //enums ranges are enforced by combobox
-            {
-                if (prop.MinValue != null)
-                {
-                    validRangeText.Append("Minimum value: ");
-                    validRangeText.Append(prop.PropertyDefinition.MinValueAsString);
-                    validRangeText.Append(Environment.NewLine);
-                }
-                if (prop.MaxValue != null)
-                {
-                    validRangeText.Append("Maximum value: ");
-                    validRangeText.Append(prop.PropertyDefinition.MaxValueAsString);
-                    validRangeText.Append(Environment.NewLine);
-                }
-            }
-            return string.Format("Mdu name: {0}{3}Description:{3}{1}{3}{2}",
-                                 prop.PropertyDefinition.MduPropertyName,
-                                 prop.PropertyDefinition.Description,
-                                 validRangeText, Environment.NewLine);
-        }
-
     }
 }
