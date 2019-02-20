@@ -9,6 +9,7 @@ using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Reflection;
 using DelftTools.Utils.UndoRedo.DataTable;
+using DeltaShell.NGHS.TestUtils;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using log4net;
@@ -333,6 +334,7 @@ namespace DelftTools.Hydro.Tests
         }
 
         [Test]
+        [Category(NghsTestCategory.DoNotRunForCodeCoverage)] // Garbage collection is not performed directly during coverage run
         public void ClonedNetworkIsCollected()
         {
             GC.Collect();

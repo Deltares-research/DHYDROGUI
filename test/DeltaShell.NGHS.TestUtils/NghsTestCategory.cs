@@ -4,5 +4,6 @@
     {
         public const string LargeTestData = "Build.LargeTestData";
         public const string AcceptanceTests = "Build.Acceptance";
+        public const string DoNotRunForCodeCoverage = "DoNotRunForCodeCoverage";
     }
 }
