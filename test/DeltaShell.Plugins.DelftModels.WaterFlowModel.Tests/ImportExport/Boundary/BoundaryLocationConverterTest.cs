@@ -375,7 +375,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
             const BoundaryType someType = BoundaryType.Level;
             var invalidSet = new List<DelftIniCategory>();
             var categoryWithInvalidValues = new DelftIniCategory(BoundaryRegion.BoundaryHeader);
-            categoryWithInvalidValues.AddProperty("nodeID", "SomeNodeID", BoundaryRegion.NodeId.Description);
+            categoryWithInvalidValues.AddProperty("MyNodeID", "SomeNodeID", BoundaryRegion.NodeId.Description);
             categoryWithInvalidValues.AddProperty(BoundaryRegion.Type.Key, valFromBoundaryType(someType), BoundaryRegion.Type.Description);
             invalidSet.Add(categoryWithInvalidValues);
 
