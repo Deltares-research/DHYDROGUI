@@ -24,6 +24,7 @@ using Rhino.Mocks;
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Boundary
 {
     [TestFixture]
+    [Category(TestCategory.DataAccess)]
     public class BoundaryFileWriterTest
     {
         /// <summary>
