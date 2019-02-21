@@ -240,6 +240,8 @@
     <Compile Include="ImportExport\CrossSections\CrossSectionLocationConverterTest.cs" />
     <Compile Include="ImportExport\CrossSections\CrossSectionLocationFileReaderTest.cs" />
     <Compile Include="ImportExport\Boundary\BoundaryLocationConverterTest.cs" />
+    <Compile Include="ImportExport\CrossSections\Writer\CrossSectionDefinitionFileConverterTest.cs" />
+    <Compile Include="ImportExport\CrossSections\Writer\CrossSectionDefinitionFileWriterTest.cs" />
     <Compile Include="ImportExport\DelftIniCategoryGenerators\GlobalValuesCategoryGeneratorTest.cs" />
     <Compile Include="ImportExport\Flow1DParameterCategoryGeneratorTest.cs" />
     <Compile Include="ImportExport\Flow1DParameterGeneratorTest.cs" />

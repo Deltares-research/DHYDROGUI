@@ -13,9 +13,9 @@ using NetTopologySuite.Extensions.Networks;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSections.Writer
 {
-    public static class CrossSectionDefinitionFileConverter
+    public class CrossSectionDefinitionFileConverter
     {
-        public static IEnumerable<DelftIniCategory> Convert(WaterFlowModel1D waterFlowModel1D)
+        public virtual IEnumerable<DelftIniCategory> Convert(WaterFlowModel1D waterFlowModel1D)
         {
             var categories = new List<DelftIniCategory>()
             {
@@ -40,9 +40,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSectio
                 {
                     definition = crossSection.Definition;
                 }
-                //var definition = crossSection.Definition.IsProxy
-                //    ? ((CrossSectionDefinitionProxy)crossSection.Definition).InnerDefinition
-                //    : crossSection.Definition;
 
                 var definitionGeneratorCrossSectionDefinition = DefinitionGeneratorFactory.GetDefinitionGeneratorCrossSection(definition, crossSection.CrossSectionType);
 
@@ -57,12 +54,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSectio
                 {
                     case CrossSectionType.GeometryBased:
                     case CrossSectionType.YZ:
-                        //add roughness
                         definitionRegion = AddRoughnessDataToFileContent(definitionRegion, crossSection, waterFlowModel1D.RoughnessSections, waterFlowModel1D.UseReverseRoughness);
                         break;
                     case CrossSectionType.ZW:
                     case CrossSectionType.Standard:
-                        //add groundlevel
                         definitionRegion = AddGroundLayer(definitionRegion, crossSection.Definition.Name, waterFlowModel1D.Network);
                         break;
                 }

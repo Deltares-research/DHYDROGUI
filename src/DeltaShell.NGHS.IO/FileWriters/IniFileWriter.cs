@@ -5,7 +5,7 @@ namespace DeltaShell.NGHS.IO.FileWriters
 {
     public class IniFileWriter : DelftIniWriter
     {
-        public void WriteIniFile(IEnumerable<DelftIniCategory> categories, string iniFile, bool writeComments = false)
+        public virtual void WriteIniFile(IEnumerable<DelftIniCategory> categories, string iniFile, bool writeComments = false)
         {
             OpenOutputFile(iniFile);
             try
