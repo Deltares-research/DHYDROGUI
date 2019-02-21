@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DelftTools.Utils.Collections;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSections.Reader;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.CrossSections
@@ -198,6 +199,42 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Cross
             Assert.That(groundLayerData.CrossSectionDefinitionId, Is.EqualTo("CrossSection1"));
             Assert.IsTrue(groundLayerData.GroundLayerUsed, "GroundLayer is not used");
             Assert.That(groundLayerData.GroundLayerThickness, Is.EqualTo(2.0));
+        }
+
+        [Test]
+        public void GivenCrossSectionFilesThatDescribeTwoDefinitionsReferencingTheSameSharedDefinition_WhenReadingCrossSections_ThenNetworkIsAsExpected()
+        {
+            // Given
+            var definitionsFilePath = TestHelper.GetTestFilePath(@"FileReaders\CrossSectionFileReaderTest\CrossSectionDefinitions.ini");
+            var locationsFilePath = TestHelper.GetTestFilePath(@"FileReaders\CrossSectionFileReaderTest\CrossSectionLocations.ini");
+            
+            // When
+            void ErrorMessageHandling(string s, IList<string> list)
+            {
+            }
+
+            var network = new HydroNetwork();
+            network.Branches.Add(new Channel {Name = "Channel1"}); // This channel is defined in the file at location locationsFilePath, so we add it
+
+            var reader = new CrossSectionFileReader(ErrorMessageHandling);
+            reader.Read(definitionsFilePath, locationsFilePath, network);
+
+            // Then
+            Assert.That(network.SharedCrossSectionDefinitions.Count, Is.EqualTo(1));
+            Assert.That(network.CrossSections.Count, Is.EqualTo(2));
+
+            // Check that all cross sections in the network have definitions that refer to the shared definition in the network
+            var sharedDefinitionInNetwork = network.SharedCrossSectionDefinitions.FirstOrDefault();
+            var proxyDefinitions = network.CrossSections.Select(cs => cs.Definition as CrossSectionDefinitionProxy).ToArray();
+            proxyDefinitions.ForEach(proxy =>
+            {
+                Assert.IsNotNull(proxy.InnerDefinition);
+                Assert.That(proxy.InnerDefinition, Is.EqualTo(sharedDefinitionInNetwork));
+            });
+
+            // Check that level shifts have been imported correctly
+            Assert.That(proxyDefinitions.Any(proxy => Math.Abs(proxy.LevelShift - 88.0) < double.Epsilon));
+            Assert.That(proxyDefinitions.Any(proxy => Math.Abs(proxy.LevelShift - 22.0) < double.Epsilon));
         }
     }
 }

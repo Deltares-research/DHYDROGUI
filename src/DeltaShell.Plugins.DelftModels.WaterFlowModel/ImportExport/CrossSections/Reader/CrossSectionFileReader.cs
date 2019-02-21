@@ -5,6 +5,7 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.IO.FileReaders;
+using GeoAPI.Extensions.Networks;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSections.Reader
 {
@@ -48,43 +49,35 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSectio
         }
 
         private static void CreateCrossSectionAndAddToBranch(string definitionFilePath, IHydroNetwork network,
-            IList<ICrossSectionDefinition> crossSectionDefinitions, ICrossSectionLocation csl)
+            IEnumerable<ICrossSectionDefinition> crossSectionDefinitions, ICrossSectionLocation crossSectionLocation)
         {
             var correspondingDefinition = crossSectionDefinitions?
-                .FirstOrDefault(d => d.Name == csl.Definition);
+                .FirstOrDefault(d => d.Name == crossSectionLocation.Definition);
 
             if (correspondingDefinition == null)
                 throw new FileReadingException(
-                    $"The cross section location '{csl.Name}' has no definition in the definition file: {definitionFilePath}");
+                    $"The cross section location '{crossSectionLocation.Name}' has no definition in the definition file: {definitionFilePath}");
 
             var correspondingDefinitionProxy = correspondingDefinition as CrossSectionDefinitionProxy;
+            AddDefinitionToNetworkSharedDefinitionsIfNotExisting(network, correspondingDefinitionProxy);
 
-            if (correspondingDefinitionProxy != null &&
-                !network.SharedCrossSectionDefinitions.Contains(correspondingDefinitionProxy.InnerDefinition))
-            {
-                network.SharedCrossSectionDefinitions.Add(correspondingDefinitionProxy.InnerDefinition);
-            }
-
-            var crossSection = CreateCrossSection(correspondingDefinition, csl);
-
-            AddToBranch(network, csl.BranchName, crossSection);
+            var crossSection = CreateCrossSection(correspondingDefinition, crossSectionLocation);
+            AddToBranch(network, crossSectionLocation.BranchName, crossSection);
         }
 
-        private static void AddToBranch(IHydroNetwork network, string branchName, CrossSection crossSection)
+        private static void AddDefinitionToNetworkSharedDefinitionsIfNotExisting(IHydroNetwork network, CrossSectionDefinitionProxy correspondingDefinitionProxy)
         {
-            var branch = network.Branches.FirstOrDefault(b => b.Name == branchName);
+            if (correspondingDefinitionProxy == null || network.SharedCrossSectionDefinitions.Contains(correspondingDefinitionProxy.InnerDefinition)) return;
 
-            if (branch == null)
-                throw new FileReadingException($"The read cross section '{crossSection.Name}' has a branch ID ({branchName}) which is not available in the model.");
-
-            branch.BranchFeatures.Add(crossSection);
+            network.SharedCrossSectionDefinitions.Add(correspondingDefinitionProxy.InnerDefinition);
         }
 
         private static CrossSection CreateCrossSection(ICrossSectionDefinition crossSectionDefinition, ICrossSectionLocation crossSectionLocation)
         {
-            crossSectionDefinition?.ShiftLevel(crossSectionLocation.Shift);
+            var definitionClone = (ICrossSectionDefinition)crossSectionDefinition?.Clone();
+            definitionClone?.ShiftLevel(crossSectionLocation.Shift);
 
-            var crossSection = new CrossSection(crossSectionDefinition)
+            var crossSection = new CrossSection(definitionClone)
             {
                 Name = crossSectionLocation.Name,
                 LongName = crossSectionLocation.LongName,
@@ -94,7 +87,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSectio
             return crossSection;
         }
 
-        private void CreateErrorReport(string objectName, List<string> errorMessages)
+        private static void AddToBranch(INetwork network, string branchName, CrossSection crossSection)
+        {
+            var branch = network.Branches.FirstOrDefault(b => b.Name == branchName);
+
+            if (branch == null)
+                throw new FileReadingException($"The read cross section '{crossSection.Name}' has a branch ID ({branchName}) which is not available in the model.");
+
+            branch.BranchFeatures.Add(crossSection);
+        }
+
+        private void CreateErrorReport(string objectName, IList<string> errorMessages)
         {
             if (errorMessages.Count > 0)
                 createAndAddErrorReport?.Invoke($"While importing the {objectName} to the network, the following errors occured", errorMessages);
