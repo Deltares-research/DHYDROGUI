@@ -191,13 +191,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
         {
             return (IMultiDimensionalArray<T>) GetVariableValues(function, filters);
         }
+        /// <inheritdoc/>
         /// <summary>
-        /// Gets the variable values as an implementation of IMultiDimensionalArray
+        /// Gets the variable values as an implementation of IMultiDimensionalArray.
         /// </summary>
         /// <param name="variable">The variable.</param>
         /// <param name="filters">The filters.</param>
-        /// <returns></returns>
-        /// <exception cref="NotImplementedException">
+        /// <returns>an implementation of IMultiDimensionalArray.</returns>
+        /// <exception cref="T:System.NotImplementedException">
         /// </exception>
         public IMultiDimensionalArray GetVariableValues(IVariable variable, params IVariableFilter[] filters)
         {
@@ -206,7 +207,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 if (warningMessageNotYetThrown)
                 {
                     var functionNames = Functions?.OfType<ICoverage>().Select(f => f.Name) ?? Enumerable.Empty<string>();
-                    Log.Warn($"Path {Path} does not exist. {Environment.NewLine}Unable to get values for : {string.Join(",", functionNames)}");
+                    Log.Warn(string.Format(Resources.WaterFlowModel1DNetCdfFunctionStore_GetVariableValues_Path__0__does_not_exist___1_Unable_to_get_values_for___2_, Path,
+                        Environment.NewLine, string.Join(",", functionNames.ToString())));
                     warningMessageNotYetThrown = false;
                 }
 

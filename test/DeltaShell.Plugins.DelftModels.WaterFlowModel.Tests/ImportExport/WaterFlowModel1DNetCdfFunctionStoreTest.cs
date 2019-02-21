@@ -192,6 +192,23 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
             }
         }
 
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void GivenANonExistingNcFile_WhenGettingVariableValuesMultipleTimes_LogMessageIsOnlyThrownOnce()
+        {
+            // Given
+            var testFile = TestHelper.GetTestFilePath(@"thisFileDoesNotExist.nc");
+            var component = new Variable<double>("Salinity");
+            const string featureName = "stuw_Linn_zom";
+            const string coverageName = "Crest level (s)"; //;
+            CreateVariableAndFilter(coverageName, featureName, testFile, out Weir expectedLocation, out var filters, out var store);
+            var functionNames = store.Functions?.OfType<ICoverage>().Select(f => f.Name) ?? Enumerable.Empty<string>();
+            
+            // When - Then
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => store.GetVariableValues(component, new ComponentFilter(component)), string.Format(Resources.WaterFlowModel1DNetCdfFunctionStore_GetVariableValues_Path__0__does_not_exist___1_Unable_to_get_values_for___2_, testFile, Environment.NewLine, functionNames));
+            TestHelper.AssertLogMessagesCount(() => store.GetVariableValues(component, new ComponentFilter(component)), 0);
+        }
+
         private static Variable<double> CreateVariableAndFilter(string coverageName, string featureName, string filePath,
             out Weir expectedLocation, out IVariableFilter[] filters, out WaterFlowModel1DNetCdfFunctionStore store)
         {

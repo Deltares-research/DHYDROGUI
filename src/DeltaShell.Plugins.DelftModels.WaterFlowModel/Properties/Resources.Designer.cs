@@ -1140,6 +1140,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Path {0} does not exist. {1}Unable to get values for: {2}.
+        /// </summary>
+        public static string WaterFlowModel1DNetCdfFunctionStore_GetVariableValues_Path__0__does_not_exist___1_Unable_to_get_values_for___2_ {
+            get {
+                return ResourceManager.GetString("WaterFlowModel1DNetCdfFunctionStore_GetVariableValues_Path__0__does_not_exist___1" +
+                        "_Unable_to_get_values_for___2_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error reading MetaData for file: {0}{1}{2}.
         /// </summary>
         public static string WaterFlowModel1DNetCdfFunctionStore_MetaData_Error_reading_MetaData_for_file___0__1__2_ {
