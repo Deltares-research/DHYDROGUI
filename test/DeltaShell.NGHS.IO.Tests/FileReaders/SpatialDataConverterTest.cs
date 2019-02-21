@@ -109,7 +109,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
         }
 
         [Test]
-        public void GivenACategoryWithAnSpatialRegion_WhenDuringConvertToSpatialDataTheBranchIsNull_ThenAnErrorMessageIsThrown()
+        public void GivenACategoryWithASpatialRegion_WhenDuringConvertToSpatialDataTheBranchIsNull_ThenAnErrorMessageIsThrown()
         {
             var incorrectChannelsList = new List<IChannel>();
 
@@ -134,7 +134,9 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
         public void GivenSpatialDataModelWithoutContentCategory_WhenConvertingToSpatialData_ThenDefaultValueConstantIsSetAsInterpolationType()
         {
             var errorMessages = new List<string>();
-            var networkCoverage = SpatialDataConverter.Convert(new List<DelftIniCategory>(), new List<IChannel>(), errorMessages);
+            var channels = new List<IChannel>();
+            var categories = new List<DelftIniCategory>();
+            var networkCoverage = SpatialDataConverter.Convert(categories, channels, errorMessages);
             
             Assert.IsNotNull(networkCoverage);
             Assert.That(networkCoverage.Arguments[0].InterpolationType, Is.EqualTo(InterpolationType.Constant));

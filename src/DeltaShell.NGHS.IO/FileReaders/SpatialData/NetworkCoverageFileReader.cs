@@ -42,7 +42,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.SpatialData
 
         /// <summary>
         /// Reads the spatial data ini file and returns the info as a <see cref="INetworkCoverage"/>.
-        /// The invoke functions are used as substitutes for DelftIniFileParser.ReadFile & SpatialDataConverter. Convert to make testing faster.
+        /// The invoke functions are used as substitutes for <see cref="DelftIniFileParser.ReadFile"/> & <see cref="SpatialDataConverter.Convert"/> to make testing faster.
         /// </summary>
         /// <param name="filePath">The file path to the spatial data file.</param>
         /// <param name="channels">The channels from the model that are used to set up the <see cref="INetworkCoverage"/></param>
