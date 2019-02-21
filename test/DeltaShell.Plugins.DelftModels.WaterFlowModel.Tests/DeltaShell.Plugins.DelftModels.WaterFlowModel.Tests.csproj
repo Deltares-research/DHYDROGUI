@@ -195,7 +195,7 @@
     <Compile Include="ConveyanceCalculatorTest.cs" />
     <Compile Include="EngineParametersTest.cs" />
     <Compile Include="EngineParameterTest.cs" />
-    <Compile Include="Flow1DFunctionExtensionTest.cs" />
+    <Compile Include="Flow1DFunctionExtensionsTest.cs" />
     <Compile Include="Forms\FlowSeriesCsvImportDialogTest.cs" />
     <Compile Include="Forms\PropertyGrid\MeteoFunctionPropertiesTest.cs" />
     <Compile Include="Forms\PropertyGrid\ModelApiParameterPropertiesTest.cs" />
