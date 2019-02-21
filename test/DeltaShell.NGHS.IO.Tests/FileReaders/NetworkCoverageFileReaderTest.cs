@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using DelftTools.Hydro;
 using DelftTools.TestUtils;
-using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.FileReaders.SpatialData;
 using DeltaShell.NGHS.IO.FileWriters.SpatialData;
 using DeltaShell.NGHS.IO.Helpers;
