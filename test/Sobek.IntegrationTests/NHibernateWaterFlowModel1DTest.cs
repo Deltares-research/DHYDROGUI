@@ -75,6 +75,7 @@ namespace Sobek.IntegrationTests
         private NHibernateProjectRepositoryFactory factory;
         private long totalMemoryBeforeTest;
         private long maximumExpectedMemoryLeak;
+        private readonly string currentProjectPath = TestHelper.GetCurrentMethodName() + ".dsproj";
 
         [TestFixtureSetUp]
         public void TestFixtureSetUp()
@@ -417,7 +418,7 @@ namespace Sobek.IntegrationTests
             
             project.RootFolder.Items.Add(dataItem);
 
-            string path = TestHelper.GetCurrentMethodName() + ".dsproj";
+            string path = currentProjectPath;
             string path2 = TestHelper.GetCurrentMethodName() + "_export" + ".dsproj";
             
             hybridProjectRepository.SaveProjectAs(project, path);
@@ -442,7 +443,7 @@ namespace Sobek.IntegrationTests
             settings.GridOutputTimeStep = outputTimeStep;
             settings.StructureOutputTimeStep = outputTimeStep;
 
-            string path = TestHelper.GetCurrentMethodName() + ".dsproj";
+            string path = currentProjectPath;
 
             // create and save the project and settings
             projectRepository.Create(path);
@@ -499,7 +500,7 @@ namespace Sobek.IntegrationTests
         [Test]
         public void WaterFlowModel1DHasNoDoubleSaltConcentrationOutputCoverageAfterReload_Tools7556()
         {
-            string path = TestHelper.GetCurrentMethodName() + ".dsproj";
+            string path = currentProjectPath;
 
             var flowModel1D = new WaterFlowModel1D
                                     {
@@ -540,7 +541,7 @@ namespace Sobek.IntegrationTests
         [Test]
         public void Issue1311RegenerateDiscretizationAndSaveSimpleModel()
         {
-            string path = TestHelper.GetCurrentMethodName() + ".dsproj";
+            string path = currentProjectPath;
             projectRepository.Create(path);
             var project = projectRepository.GetProject();
             
@@ -631,7 +632,7 @@ namespace Sobek.IntegrationTests
         [Test]
         public void DataItemLinkTo()
         {
-            string path = TestHelper.GetCurrentMethodName() + ".dsproj";
+            string path = currentProjectPath;
             projectRepository.Create(path);
             var project = projectRepository.GetProject();
 
@@ -669,7 +670,7 @@ namespace Sobek.IntegrationTests
         public void SplitChannelForgetCrossSectionAndSave()
         {
             //reproduces issue 5277
-            var path = TestHelper.GetCurrentMethodName() + ".dsproj";
+            var path = currentProjectPath;
             projectRepository.Create(path);
             var project = projectRepository.GetProject();
 
@@ -981,7 +982,7 @@ namespace Sobek.IntegrationTests
         [Test]
         public void WriteDelftFlowModel1D()
         {
-            string path = TestHelper.GetCurrentMethodName() + ".dsproj";
+            string path = currentProjectPath;
             projectRepository.Create(path);
 
             var model = WaterFlowModel1DDemoModelTestHelper.CreateModelWithDemoNetwork();
@@ -1027,14 +1028,14 @@ namespace Sobek.IntegrationTests
             TypeUtils.SetPrivatePropertyValue(waterFlowModel1D, "OutputOutOfSync", true);
 
             // Save model
-            projectRepository.Create(TestHelper.GetCurrentMethodName() + ".dsproj");
+            projectRepository.Create(currentProjectPath);
             var project = projectRepository.GetProject();
             project.RootFolder.Items.Add(waterFlowModel1D);
             projectRepository.SaveOrUpdate(project);
             projectRepository.Close();
 
             // Retrieve model
-            var loadedProject = projectRepository.Open(TestHelper.GetCurrentMethodName() + ".dsproj");
+            var loadedProject = projectRepository.Open(currentProjectPath);
             var retrievedModel = loadedProject.RootFolder.Models.FirstOrDefault();
 
             Assert.IsNotNull(retrievedModel);
@@ -1075,7 +1076,7 @@ namespace Sobek.IntegrationTests
         [Test]
         public void ExportModelDoesNotRequireSavingFirst()
         {
-            var path = TestHelper.GetCurrentMethodName() + ".dsproj";
+            var path = currentProjectPath;
 
             using (var gui =GetRunningGuiWithFlowPlugins())
             {
@@ -1275,7 +1276,7 @@ namespace Sobek.IntegrationTests
         {
             using (var app = GetRunningAppWithFlowPlugins())
             {
-                string projectPath = TestHelper.GetCurrentMethodName() + ".dsproj";
+                string projectPath = currentProjectPath;
                 app.SaveProjectAs(projectPath); // to initialize file storing                
                 var model1 = WaterFlowModel1DDemoModelTestHelper.CreateModelWithDemoNetwork();
                 model1.Name = "model1";
@@ -1331,7 +1332,7 @@ namespace Sobek.IntegrationTests
         {
             using (var app = GetRunningAppWithFlowPlugins())
             {
-                string projectPath = TestHelper.GetCurrentMethodName() + ".dsproj";
+                string projectPath = currentProjectPath;
                 app.SaveProjectAs(projectPath); // to initialize file storing                
             
                 var model1 = WaterFlowModel1DDemoModelTestHelper.CreateModelWithDemoNetwork();
@@ -1360,7 +1361,7 @@ namespace Sobek.IntegrationTests
         {
             //create a dummy model
             var model1 = WaterFlowModel1DDemoModelTestHelper.CreateModelWithDemoNetwork();
-            string path = TestHelper.GetCurrentMethodName() + ".dsproj";
+            string path = currentProjectPath;
 
             //create a timeseries bc
             var firstBoundaryCondition = model1.BoundaryConditions.First();
@@ -1393,7 +1394,7 @@ namespace Sobek.IntegrationTests
         [Test]
         public void DeepCloneSavedFlowModel()
         {
-            string path = TestHelper.GetCurrentMethodName() + ".dsproj";
+            string path = currentProjectPath;
 
             using (var app = GetRunningAppWithFlowPlugins())
             {
@@ -1424,7 +1425,7 @@ namespace Sobek.IntegrationTests
         {
             //create a dummy model
             var model1 = WaterFlowModel1DDemoModelTestHelper.CreateModelWithDemoNetwork();
-            string path = TestHelper.GetCurrentMethodName() + ".dsproj";
+            string path = currentProjectPath;
 
             //create a constant bc
             var firstBoundaryCondition = model1.BoundaryConditions.First();
@@ -1458,7 +1459,7 @@ namespace Sobek.IntegrationTests
         {
             //create a dummy model
             var model1 = WaterFlowModel1DDemoModelTestHelper.CreateModelWithDemoNetwork();
-            string path = TestHelper.GetCurrentMethodName() + ".dsproj";
+            string path = currentProjectPath;
 
             //create a salty bc
             var firstBoundaryCondition = model1.BoundaryConditions[0];
@@ -1499,7 +1500,7 @@ namespace Sobek.IntegrationTests
 
             //create a dummy model
             var model1 = WaterFlowModel1DDemoModelTestHelper.CreateModelWithDemoNetwork();
-            string path = TestHelper.GetCurrentMethodName() + ".dsproj";
+            string path = currentProjectPath;
 
             //create a salty bc
             var firstBoundaryCondition = model1.BoundaryConditions[0];
@@ -1538,7 +1539,7 @@ namespace Sobek.IntegrationTests
         {
             //create a dummy model
             var model1 = WaterFlowModel1DDemoModelTestHelper.CreateModelWithDemoNetwork();
-            string path = TestHelper.GetCurrentMethodName() + ".dsproj";
+            string path = currentProjectPath;
 
             model1.UseSalt = true;
 
@@ -1582,7 +1583,7 @@ namespace Sobek.IntegrationTests
         {
             //create a dummy model
             var model1 = WaterFlowModel1DDemoModelTestHelper.CreateModelWithDemoNetwork();
-            string path = TestHelper.GetCurrentMethodName() + ".dsproj";
+            string path = currentProjectPath;
 
             //create a constant bc
             var firstBoundaryCondition = model1.BoundaryConditions.First();
@@ -1622,7 +1623,7 @@ namespace Sobek.IntegrationTests
         public void TestFlowBoundaryConditionsCreationAfterLoad()
         {
             //setup repo.
-            string path = TestHelper.GetCurrentMethodName() + ".dsproj";
+            string path = currentProjectPath;
             projectRepository.Create(path);
 
             var network = new HydroNetwork();
@@ -1658,7 +1659,7 @@ namespace Sobek.IntegrationTests
         public void TestRoughnessDataAfterLoad()
         {
             //setup repo.
-            string path = TestHelper.GetCurrentMethodName() + ".dsproj";
+            string path = currentProjectPath;
             projectRepository.Create(path);
 
             var network = CreateSimplerNetwork();
@@ -1721,7 +1722,7 @@ namespace Sobek.IntegrationTests
             project.RootFolder.Add(crossSectionSection);
 
             //setup repo.
-            string path = TestHelper.GetCurrentMethodName() + ".dsproj";
+            string path = currentProjectPath;
             projectRepository.Create(path);
             projectRepository.SaveOrUpdate(project);
 
@@ -1737,7 +1738,7 @@ namespace Sobek.IntegrationTests
         [Test]
         public void SaveAndRoughnessCoverageWithQAndConstant()
         {
-            var path = TestHelper.GetCurrentMethodName() + ".dsproj";
+            var path = currentProjectPath;
             projectRepository.Create(path);
 
             var network = CreateSimplerNetwork();
@@ -1785,7 +1786,7 @@ namespace Sobek.IntegrationTests
         public void TOOLS4766ASimpleReModelRunsAfterImportButNotAfterSavingAndLoading()
         {
             // problem caused by invalid save load of roughness
-            var path = TestHelper.GetCurrentMethodName() + ".dsproj";
+            var path = currentProjectPath;
             projectRepository.Create(path);
             var project = projectRepository.GetProject();
 
@@ -1842,7 +1843,7 @@ namespace Sobek.IntegrationTests
             Assert.AreEqual(2, delftFlowModel1D.BoundaryConditions.Count);
 
             // Setup repository
-            var path = TestHelper.GetCurrentMethodName() + ".dsproj";
+            var path = currentProjectPath;
             projectRepository.Create(path);
 
             // Save
@@ -1870,7 +1871,7 @@ namespace Sobek.IntegrationTests
             var modelImporter = new SobekWaterFlowModel1DImporter();
             modelImporter.TargetItem = new WaterFlowModel1D(); //makes sure we don't get some composite model (with rtc) back
             var model = (IModel)modelImporter.ImportItem(modelPath);
-            string path = TestHelper.GetCurrentMethodName() + ".dsproj";
+            string path = currentProjectPath;
             
             using (var repository = factory.CreateNew())
             {
@@ -1897,7 +1898,7 @@ namespace Sobek.IntegrationTests
 
             var flowModel = importedModel.Activities.OfType<WaterFlowModel1D>().First();
 
-            string path = TestHelper.GetCurrentMethodName() + ".dsproj";
+            string path = currentProjectPath;
             using (var repository = factory.CreateNew())
             {
                 repository.Create(path);
@@ -1917,7 +1918,7 @@ namespace Sobek.IntegrationTests
         [Test]
         public void SaveByPassModelTwice()
         {
-            var path = TestHelper.GetCurrentMethodName() + ".dsproj";
+            var path = currentProjectPath;
             //LogHelper.ConfigureLogging();
             //test reproduces issue 3507
 
@@ -1956,7 +1957,7 @@ namespace Sobek.IntegrationTests
         [Test]
         public void SaveBypassModelWithDiscretization()
         {
-            var path = TestHelper.GetCurrentMethodName() + ".dsproj";
+            var path = currentProjectPath;
             SaveBypassModel(path, false);
         }
 
@@ -1965,7 +1966,7 @@ namespace Sobek.IntegrationTests
         {
             //test 'local' parameters
 
-            var path = TestHelper.GetCurrentMethodName() + ".dsproj";
+            var path = currentProjectPath;
             var waterFlowModel1D = new WaterFlowModel1D();
             //change it!
             const double defaultInitialDepth = 23.0;
@@ -2001,7 +2002,7 @@ namespace Sobek.IntegrationTests
         [Test]
         public void SerializeRoughnessNetworkCoverageAndNetwork()
         {
-            string path = TestHelper.GetCurrentMethodName() + ".dsproj";
+            string path = currentProjectPath;
             var network = CreateSimplerNetwork();
             var branch = network.Branches[0];
             network.CrossSectionSectionTypes.Add(new CrossSectionSectionType { Name = "main" });
@@ -2077,7 +2078,7 @@ namespace Sobek.IntegrationTests
             model.Initialize();
             //Assert.IsNotNull(model.ModelEngine);
             var origParamSettings = model.ParameterSettings;
-            var path = TestHelper.GetCurrentMethodName() + ".dsproj";
+            var path = currentProjectPath;
             SaveModelToProject(model, path);
 
             using (var projectRepository = factory.CreateNew())
@@ -2107,7 +2108,7 @@ namespace Sobek.IntegrationTests
             model.DepthUsedForSediment = 0.1;
 
             model.Initialize();
-            var path = TestHelper.GetCurrentMethodName() + ".dsproj";
+            var path = currentProjectPath;
 
             // When
             SaveModelToProject(model, path);
@@ -2117,6 +2118,7 @@ namespace Sobek.IntegrationTests
             {
                 var retrievedProject = projectRepository.Open(path);
                 var retrievedModel = (WaterFlowModel1D) retrievedProject.RootFolder.Models.FirstOrDefault();
+
                 Assert.IsNotNull(retrievedModel);
                 Assert.AreEqual(retrievedModel.D50, 0.0005);
                 Assert.AreEqual(retrievedModel.D90, 0.003);
@@ -2128,7 +2130,7 @@ namespace Sobek.IntegrationTests
         public void SaveLoadWaterFlowModel1D()
         {
             var model = WaterFlowModel1DDemoModelTestHelper.CreateModelWithDemoNetwork();
-            var path = TestHelper.GetCurrentMethodName() + ".dsproj";
+            var path = currentProjectPath;
             
             SaveModelToProject(model, path);
 
@@ -2156,7 +2158,7 @@ namespace Sobek.IntegrationTests
             project.RootFolder.Add(roughnessSection);
 
             //setup repo.
-            string path = TestHelper.GetCurrentMethodName() + ".dsproj";
+            string path = currentProjectPath;
             projectRepository.Create(path);
             projectRepository.SaveOrUpdate(project);
 
@@ -2188,7 +2190,7 @@ namespace Sobek.IntegrationTests
 
             // Create a dummy model
             var waterFlowModel1D = WaterFlowModel1DDemoModelTestHelper.CreateModelWithDemoNetwork();
-            var path = TestHelper.GetCurrentMethodName() + ".dsproj";
+            var path = currentProjectPath;
             var gridTypeParameter = waterFlowModel1D.OutputSettings.EngineParameters.First(p => p.Name == WaterFlowModelParameterNames.FiniteVolumeGridType);
             gridTypeParameter.AggregationOptions = finiteVolumeDiscretizationType;
 
@@ -2211,7 +2213,7 @@ namespace Sobek.IntegrationTests
         {
             //create a dummy model
             var model1 = WaterFlowModel1DDemoModelTestHelper.CreateModelWithDemoNetwork();
-            string path = TestHelper.GetCurrentMethodName() + ".dsproj";
+            string path = currentProjectPath;
 
             //create temperature data
             var firstBoundaryCondition = model1.BoundaryConditions[0];
@@ -2247,7 +2249,7 @@ namespace Sobek.IntegrationTests
         {
             //create a dummy model
             var model1 = WaterFlowModel1DDemoModelTestHelper.CreateModelWithDemoNetwork();
-            string path = TestHelper.GetCurrentMethodName() + ".dsproj";
+            string path = currentProjectPath;
 
             model1.UseTemperature = true;
 
@@ -2286,7 +2288,7 @@ namespace Sobek.IntegrationTests
         {
             //create a dummy model
             var model1 = WaterFlowModel1DDemoModelTestHelper.CreateModelWithDemoNetwork();
-            string path = TestHelper.GetCurrentMethodName() + ".dsproj";
+            string path = currentProjectPath;
 
             model1.UseTemperature = true;
 
@@ -2324,7 +2326,7 @@ namespace Sobek.IntegrationTests
         {
             //create a dummy model
             var model1 = WaterFlowModel1DDemoModelTestHelper.CreateModelWithDemoNetwork();
-            string path = TestHelper.GetCurrentMethodName() + ".dsproj";
+            string path = currentProjectPath;
 
             model1.UseTemperature = true;
 
@@ -2364,7 +2366,7 @@ namespace Sobek.IntegrationTests
         {
             //create a dummy model
             var model1 = WaterFlowModel1DDemoModelTestHelper.CreateModelWithDemoNetwork();
-            string path = TestHelper.GetCurrentMethodName() + ".dsproj";
+            string path = currentProjectPath;
 
             model1.UseTemperature = true;
             var t0 = DateTime.Now;
