@@ -1,10 +1,8 @@
-﻿using System.ComponentModel;
-using DelftTools.Shell.Gui;
+﻿using DelftTools.Shell.Gui;
 using DelftTools.Utils;
 using DelftTools.Utils.ComponentModel;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Properties;
-
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
 {
@@ -84,28 +82,21 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
         [DynamicReadOnlyValidationMethod]
         public bool DynamicReadOnlyValidationMethod(string propertyName)
         {
-            if (propertyName == "InterpolationType")
-            {
-                return LateralType != WaterFlowModel1DLateralDataType.FlowTimeSeries ||
-                       !data.Data.HasArguments()                                     ||
-                       !data.Data.Arguments[0].AllowSetInterpolationType;
+            switch (propertyName) {
+                case nameof(InterpolationType):
+                    return LateralType != WaterFlowModel1DLateralDataType.FlowTimeSeries ||
+                           !data.Data.Arguments[0].AllowSetInterpolationType;
+                case nameof(ExtrapolationType):
+                    return LateralType != WaterFlowModel1DLateralDataType.FlowTimeSeries      ||
+                           !data.Data.Arguments[0].AllowSetExtrapolationType                  ||
+                           data.Data.GetInterpolationType() != Flow1DInterpolationType.Linear ||
+                           data.Data.HasPeriodicity();
+                case nameof(HasPeriodicity):
+                    return  LateralType != WaterFlowModel1DLateralDataType.FlowTimeSeries ||
+                            !data.Data.Arguments[0].AllowSetExtrapolationType;
+                default:
+                    return true;
             }
-
-            if (propertyName == "ExtrapolationType")
-            {
-                return LateralType != WaterFlowModel1DLateralDataType.FlowTimeSeries      ||
-                       !data.Data.HasArguments()                                          ||
-                       !data.Data.Arguments[0].AllowSetExtrapolationType                  ||
-                       data.Data.GetInterpolationType() != Flow1DInterpolationType.Linear ||
-                       data.Data.HasPeriodicity();
-            }
-
-            if (propertyName == "HasPeriodicity")
-                return  LateralType != WaterFlowModel1DLateralDataType.FlowTimeSeries ||
-                       !data.Data.HasArguments()                                      ||
-                       !data.Data.Arguments[0].AllowSetExtrapolationType;
-
-            return true;
         }
     }
 }

@@ -5,7 +5,6 @@ using DelftTools.Utils.ComponentModel;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Properties;
 using log4net;
 
-
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
 {
     [ResourcesDisplayName(typeof(Resources), "MeteoDataFunctionProperties_DisplayName")]
@@ -39,17 +38,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
             get => InterpolationType == Flow1DInterpolationType.Linear 
                 ? data.GetExtrapolationType()
                 : Flow1DExtrapolationType.Constant;
-            set
-            {
-                if (data.HasArguments() && data.Arguments[0].AllowSetExtrapolationType)
-                {
-                    data.SetExtrapolationType(value);
-                }
-                else
-                {
-                    Log.ErrorFormat("Unable to set extrapolation-type for locations, it is not allowed.");
-                }
-            }
+            set => data.SetExtrapolationType(value);
         }
 
         [PropertyOrder(4)]
@@ -66,19 +55,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
         [DynamicReadOnlyValidationMethod]
         public bool IsReadonly(string propertyName)
         {
-            if (propertyName == "ExtrapolationType")
-                return (!data.HasArguments() ||
-                        !data.Arguments[0].AllowSetExtrapolationType ||
-                        data.GetInterpolationType() != Flow1DInterpolationType.Linear ||
-                        data.HasPeriodicity());
-            if (propertyName == "InterpolationType")
-                return (!data.HasArguments() ||
-                        !data.Arguments[0].AllowSetInterpolationType);
-            if (propertyName == "HasPeriodicity")
-                return (!data.HasArguments() ||
-                        !data.Arguments[0].AllowSetExtrapolationType);
-
-            return false;
+            switch (propertyName) {
+                case nameof(ExtrapolationType):
+                    return (!data.Arguments[0].AllowSetExtrapolationType                  ||
+                            data.GetInterpolationType() != Flow1DInterpolationType.Linear ||
+                            data.HasPeriodicity());
+                case nameof(InterpolationType):
+                    return (!data.Arguments[0].AllowSetInterpolationType);
+                case nameof(HasPeriodicity):
+                    return (!data.Arguments[0].AllowSetExtrapolationType);
+                default:
+                    return false;
+            }
         }
     }
 }

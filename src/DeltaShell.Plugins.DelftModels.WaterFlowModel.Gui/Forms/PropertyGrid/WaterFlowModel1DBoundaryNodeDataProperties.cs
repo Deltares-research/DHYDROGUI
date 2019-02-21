@@ -5,7 +5,6 @@ using DelftTools.Utils.ComponentModel;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Properties;
 
-
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
 {
     [ResourcesDisplayName(typeof(Resources), "WaterFlowModel1DBoundaryNodeDataProperties_DisplayName")]
@@ -46,9 +45,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
                     case WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant:
                     case WaterFlowModel1DBoundaryNodeDataType.None: // This should never happen
                         return Flow1DInterpolationType.BlockFrom;
+                    default:
+                        throw new NotSupportedException("The provided boundary condition type is not supported.");
                 }
-
-                throw new NotImplementedException("The provided interpolation type is not yet supported.");
             }
             set => data.Data.SetInterpolationType(value);
         }
@@ -72,9 +71,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
                     case WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant:
                     case WaterFlowModel1DBoundaryNodeDataType.None: // This should never happen
                         return Flow1DExtrapolationType.Constant;
+                    default:
+                        throw new NotSupportedException("The provided boundary condition type is not supported.");
                 }
-
-                throw new NotImplementedException("The provided interpolation type is not yet supported.");
             }
             set => data.Data.SetExtrapolationType(value);
         }
@@ -98,9 +97,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
                     case WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant:
                     case WaterFlowModel1DBoundaryNodeDataType.None: // This should never happen
                         return false;
+                    default:
+                        throw new NotSupportedException("The boundary condition type is not supported.");
                 }
-
-                throw new NotImplementedException("The provided interpolation type is not yet supported.");
             }
             set => data.Data.SetPeriodicity(value);
         }
@@ -108,31 +107,24 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
         [DynamicReadOnlyValidationMethod]
         public bool DynamicReadOnlyValidationMethod(string propertyName)
         {
-            if (propertyName == "InterpolationType")
-            {
-                return (Type != WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries &&
-                        Type != WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries) ||
-                       !data.Data.HasArguments()                                           ||
-                       !data.Data.Arguments[0].AllowSetInterpolationType;
+            switch (propertyName) {
+                case nameof(InterpolationType):
+                    return (Type != WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries &&
+                            Type != WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries) ||
+                           !data.Data.Arguments[0].AllowSetInterpolationType;
+                case nameof(ExtrapolationType):
+                    return (Type != WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries &&
+                            Type != WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries) ||
+                           !data.Data.Arguments[0].AllowSetExtrapolationType                   ||
+                           data.Data.GetInterpolationType() != Flow1DInterpolationType.Linear  ||
+                           data.Data.HasPeriodicity();
+                case nameof(HasPeriodicity):
+                    return (Type != WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries &&
+                            Type != WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries) ||
+                           !data.Data.Arguments[0].AllowSetExtrapolationType;
+                default:
+                    return true;
             }
-
-            if (propertyName == "ExtrapolationType")
-            {
-                return (Type != WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries &&
-                        Type != WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries) ||
-                       !data.Data.HasArguments()                                           ||
-                       !data.Data.Arguments[0].AllowSetExtrapolationType                   ||
-                       data.Data.GetInterpolationType() != Flow1DInterpolationType.Linear  ||
-                       data.Data.HasPeriodicity();
-            }
-
-            if (propertyName == "HasPeriodicity")
-                return (Type != WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries &&
-                        Type != WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries) ||
-                       !data.Data.HasArguments()                                           ||
-                       !data.Data.Arguments[0].AllowSetExtrapolationType;
-
-            return true;
         }
     }
 }

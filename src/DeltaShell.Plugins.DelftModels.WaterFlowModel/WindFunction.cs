@@ -3,7 +3,6 @@ using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Units;
 
-
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
 {
     /// <summary>
@@ -11,13 +10,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
     /// It provides a wind velocity and wind direction component for this.
     /// </summary>
     /// <seealso cref="DelftTools.Functions.Function" />
-    /// <inheritdoc/>
     public class WindFunction : Function
     {
         /// <summary>
         /// Initialize a new instance of the <see cref="WindFunction"/> class with "wind velocity" as name.
         /// </summary>
-        /// <inheritdoc/>
         public WindFunction()
             : this("wind velocity")
         {
@@ -48,7 +45,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
         /// <summary>
         /// Get the wind velocity component of this WindFunction.
         /// </summary>
-        /// <value> The wind velocity (m/s). </value>
+        /// <value>The wind velocity (m/s).</value>
         public IVariable Velocity => Components[0];
 
         /// <summary>

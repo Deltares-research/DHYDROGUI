@@ -1,20 +1,18 @@
 ﻿using System;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
-using DelftTools.Utils.Collections.Generic;
 using NUnit.Framework;
 using Rhino.Mocks;
-
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 {
     [TestFixture]
-    public class Flow1DFunctionExtensionTest
+    public class Flow1DFunctionExtensionsTest
     {
         /// <summary>
-        /// GIVEN a function with no interpolation set
+        /// GIVEN a function with an interpolation set
         /// WHEN GetInterpolationType is retrieved
-        /// THEN the interpolation type corresponding with the argument interpolation type is retrieved
+        /// THEN the interpolation corresponding with the argument interpolation type is retrieved
         /// </summary>
         [TestCase(InterpolationType.Constant, Flow1DInterpolationType.BlockFrom)]
         [TestCase(InterpolationType.Linear,   Flow1DInterpolationType.Linear)]
@@ -28,9 +26,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             function.Arguments.Add(new Variable<DateTime>("Time")
             {
                 InterpolationType = inInterpolationType,
-                ExtrapolationType = ExtrapolationType.Constant
             });
-
 
             // When
             var result = function.GetInterpolationType();
@@ -38,13 +34,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             // Then
             Assert.That(result,
                 Is.EqualTo(expectedOutInterpolationType),
-                        $"Expected a different interpolation type when the function interpolation type is {inInterpolationType}");
+                        $"Expected a different interpolation type when the function interpolation type is {inInterpolationType}.");
 
             Assert.That(function.Attributes.ContainsKey("Interpolation"),
                 Is.True, "Expected function Attributes to have Interpolation defined.");
             Assert.That(function.Attributes["Interpolation"],
                 Is.EqualTo(expectedOutInterpolationType.ToString()),
-                        $"Expected a different interpolation type stored in the attribute dictionary.");
+                        "Expected a different interpolation type stored in the attribute dictionary.");
         }
 
         /// <summary>
@@ -69,13 +65,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             // Then
             Assert.That(result,
                 Is.EqualTo(expectedOutInterpolationType),
-                        $"Expected a different interpolation type when the function attribute interpolation type is {expectedOutInterpolationType}");
+                        $"Expected a different interpolation type when the function attribute interpolation type is {expectedOutInterpolationType}.");
 
             Assert.That(function.Attributes.ContainsKey("Interpolation"),
                 Is.True, "Expected function Attributes to have Interpolation defined.");
             Assert.That(function.Attributes["Interpolation"],
                 Is.EqualTo(expectedOutInterpolationType.ToString()),
-                        $"Expected a different interpolation type stored in the attribute dictionary.");
+                        "Expected a different interpolation type stored in the attribute dictionary.");
         }
 
         /// <summary>
@@ -98,12 +94,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             // When | Then
             Assert.That(() => function.GetInterpolationType(), 
             Throws.Exception.TypeOf<InvalidOperationException>().And.Message.EqualTo(expectedMsg),
-                "Expected an exception to be thrown when the attribute dict is set incorrectly:");
+                "Expected an exception to be thrown when the attribute dict is set incorrectly.");
         }
 
         /// <summary>
         /// GIVEN a function with no arguments
-        ///   AND any argument
+        ///   AND any Flow1DInterpolationType argument
         /// WHEN SetInterpolationType is called with this argument
         /// THEN nothing is changed
         /// </summary>
@@ -142,7 +138,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             function.Arguments.Add(new Variable<DateTime>("Time")
             {
                 InterpolationType = InterpolationType.None,
-                ExtrapolationType = ExtrapolationType.Constant
             });
 
             // When
@@ -151,13 +146,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             // Then
             Assert.That(function.Arguments[0].InterpolationType,
                         Is.EqualTo(expectedType),
-                        $"Expected a different interpolation type when the function is set to type {setValue.ToString()}");
+                        $"Expected a different interpolation type when the function is set to type {setValue.ToString()}.");
 
             Assert.That(function.Attributes.ContainsKey("Interpolation"),
                 Is.True, "Expected function Attributes to have Interpolation defined.");
             Assert.That(function.Attributes["Interpolation"],
                         Is.EqualTo(setValue.ToString()),
-                        $"Expected a different interpolation type stored in the attribute dictionary.");
+                        "Expected a different interpolation type stored in the attribute dictionary.");
         }
 
         /// <summary>
@@ -169,7 +164,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
         [TestCase(ExtrapolationType.Constant, Flow1DExtrapolationType.Constant)]
         [TestCase(ExtrapolationType.Periodic, Flow1DExtrapolationType.Constant)]
         [TestCase(ExtrapolationType.None,     Flow1DExtrapolationType.Constant)]
-
         public void GivenAFunctionWithNoAttributesSet_WhenGetExtrapolationTypeIsRetrieved_ThenTheExtrapolationTypeCorrespondingWithTheArgumentExtrapolationTypeIsRetrieved(ExtrapolationType inExtrapolationType,
                                                                                                                                                                            Flow1DExtrapolationType expectedOutExtrapolationType)
         {
@@ -178,10 +172,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
             function.Arguments.Add(new Variable<DateTime>("Time")
             {
-                InterpolationType = InterpolationType.Linear,
                 ExtrapolationType = inExtrapolationType
             });
-
 
             // When
             var result = function.GetExtrapolationType();
@@ -189,13 +181,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             // Then
             Assert.That(result,
                 Is.EqualTo(expectedOutExtrapolationType),
-                        $"Expected a different interpolation type when the function interpolation type is {inExtrapolationType}");
+                        $"Expected a different extrapolation type when the function extrapolation type is {inExtrapolationType}.");
 
             Assert.That(function.Attributes.ContainsKey("Extrapolation"),
                 Is.True, "Expected function Attributes to have Extrapolation defined.");
             Assert.That(function.Attributes["Extrapolation"],
                 Is.EqualTo(expectedOutExtrapolationType.ToString()),
-                        $"Expected a different interpolation type stored in the attribute dictionary.");
+                        "Expected a different extrapolation type stored in the attribute dictionary.");
         }
 
         /// <summary>
@@ -219,13 +211,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             // Then
             Assert.That(result,
                 Is.EqualTo(extrapolationType),
-                        $"Expected a different extrapolation type when the function attribute extrapolation type is {extrapolationType}");
+                        $"Expected a different extrapolation type when the function attribute extrapolation type is {extrapolationType}.");
 
             Assert.That(function.Attributes.ContainsKey("Extrapolation"),
                 Is.True, "Expected function Attributes to have Extrapolation defined.");
             Assert.That(function.Attributes["Extrapolation"],
                 Is.EqualTo(extrapolationType.ToString()),
-                        $"Expected a different extrapolation type stored in the attribute dictionary.");
+                        "Expected a different extrapolation type stored in the attribute dictionary.");
         }
 
         /// <summary>
@@ -248,19 +240,20 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             // When | Then
             Assert.That(() => function.GetExtrapolationType(),
             Throws.Exception.TypeOf<InvalidOperationException>().And.Message.EqualTo(expectedMsg),
-                        "Expected an exception to be thrown when the attribute dict is set incorrectly:");
+                        "Expected an exception to be thrown when the attribute dict is set incorrectly.");
         }
 
         /// <summary>
         /// GIVEN a function with no arguments
         ///   AND any argument
-        /// WHEN SetextrapolationType is called with this argument
+        /// WHEN SetExtrapolationType is called with this argument
         /// THEN nothing is changed
         /// </summary>
         [TestCase(Flow1DExtrapolationType.Linear)]
         [TestCase(Flow1DExtrapolationType.Constant)]
-        public void GivenAFunctionWithNoArgumentsAndAnyArgument_WhenSetextrapolationTypeIsCalledWithThisArgument_ThenNothingIsChanged(Flow1DExtrapolationType arg)
+        public void GivenAFunctionWithNoArgumentsAndAnyArgument_WhenSetExtrapolationTypeIsCalledWithThisArgument_ThenNothingIsChanged(Flow1DExtrapolationType arg)
         {
+            // Given
             var mockedFunction = MockRepository.GenerateStrictMock<IFunction>();
             mockedFunction.Expect(f => f.Arguments).Return(null);
 
@@ -288,7 +281,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
             function.Arguments.Add(new Variable<DateTime>("Time")
             {
-                InterpolationType = InterpolationType.None,
                 ExtrapolationType = ExtrapolationType.Constant
             });
 
@@ -298,13 +290,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             // Then
             Assert.That(function.Arguments[0].ExtrapolationType,
                 Is.EqualTo(expectedType),
-                        $"Expected a different extrapolation type when the function is set to type {setValue.ToString()}");
+                        $"Expected a different extrapolation type when the function is set to type {setValue.ToString()}.");
 
             Assert.That(function.Attributes.ContainsKey("Extrapolation"),
                 Is.True, "Expected function Attributes to have Extrapolation defined.");
             Assert.That(function.Attributes["Extrapolation"],
                 Is.EqualTo(setValue.ToString()),
-                        $"Expected a different extrapolation type stored in the attribute dictionary.");
+                        "Expected a different extrapolation type stored in the attribute dictionary.");
         }
 
         /// <summary>
@@ -340,10 +332,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
             function.Arguments.Add(new Variable<DateTime>("Time")
             {
-                InterpolationType = InterpolationType.Linear,
                 ExtrapolationType = ExtrapolationType.Periodic
             });
-
 
             // When
             var result = function.HasPeriodicity();
@@ -369,7 +359,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                 ExtrapolationType = ExtrapolationType.Constant
             });
 
-
             // When
             var result = function.HasPeriodicity();
 
@@ -387,6 +376,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
         [TestCase(false)]
         public void GivenAFunctionWithNoArgumentsAndAnyArgument_WhenSetPeriodicityIsCalledWithThisArgument_ThenNothingIsChanged(bool arg)
         {
+            // Given
             var mockedFunction = MockRepository.GenerateStrictMock<IFunction>();
             mockedFunction.Expect(f => f.Arguments).Return(null);
 
@@ -412,7 +402,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
             function.Arguments.Add(new Variable<DateTime>("Time")
             {
-                InterpolationType = InterpolationType.Linear,
                 ExtrapolationType = previousArgExtrapolationType
             });
 
@@ -424,10 +413,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             // Then
             Assert.That(function.Arguments[0].ExtrapolationType, 
                 Is.EqualTo(ExtrapolationType.Periodic),
-                "Expected the Arguments[0].ExtrapolationType to be different:");
+                "Expected the Arguments[0].ExtrapolationType to be different.");
             Assert.That(function.Attributes["Extrapolation"], 
                 Is.EqualTo(previousExtrapolationType.ToString()),
-                "Expected the attributes 'Extrapolation' to be different:");
+                "Expected the attributes 'Extrapolation' to be different.");
         }
 
         /// <summary>
@@ -446,7 +435,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
             function.Arguments.Add(new Variable<DateTime>("Time")
             {
-                InterpolationType = InterpolationType.Linear,
                 ExtrapolationType = ExtrapolationType.Periodic
             });
 
@@ -458,72 +446,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             // Then
             Assert.That(function.Arguments[0].ExtrapolationType,
                 Is.EqualTo(previousArgExtrapolationType),
-                        "Expected the Arguments[0].ExtrapolationType to be different:");
+                        "Expected the Arguments[0].ExtrapolationType to be different.");
             Assert.That(function.Attributes["Extrapolation"],
                 Is.EqualTo(previousExtrapolationType.ToString()),
-                        "Expected the attributes 'Extrapolation' to be different:");
-        }
-
-
-        /// <summary>
-        /// GIVEN a function with a null arguments
-        /// WHEN HasArguments is retrieved
-        /// THEN false is returned
-        /// </summary>
-        [Test]
-        public void GivenAFunctionWithANullArguments_WhenHasArgumentsIsRetrieved_ThenFalseIsReturned()
-        {
-            // Given
-            var mockedFunction = MockRepository.GenerateStrictMock<IFunction>();
-            mockedFunction.Expect(f => f.Arguments).Return(null);
-
-            // When 
-            var result = mockedFunction.HasArguments();
-
-            // Then
-            mockedFunction.VerifyAllExpectations();
-            Assert.That(result, Is.False);
-        }
-
-        /// <summary>
-        /// GIVEN a function with an empty arguments
-        /// WHEN HasArguments is retrieved
-        /// THEN false is returned
-        /// </summary>
-        [Test]
-        public void GivenAFunctionWithAnEmptyArguments_WhenHasArgumentsIsRetrieved_ThenFalseIsReturned()
-        {
-            // Given
-            var function = new Function();
-
-            // When 
-            var result = function.HasArguments();
-
-            // Then
-            Assert.That(result, Is.False);
-        }
-
-        /// <summary>
-        /// GIVEN a function with correct arguments
-        /// WHEN HasArguments is retrieved
-        /// THEN true is returned
-        /// </summary>
-        [Test]
-        public void GivenAFunctionWithCorrectArguments_WhenHasArgumentsIsRetrieved_ThenTrueIsReturned()
-        {
-            var function = new Function();
-
-            function.Arguments.Add(new Variable<DateTime>("Time")
-            {
-                InterpolationType = InterpolationType.Linear,
-                ExtrapolationType = ExtrapolationType.Periodic
-            });
-
-            // When 
-            var result = function.HasArguments();
-
-            // Then
-            Assert.That(result, Is.True);
+                        "Expected the attributes 'Extrapolation' to be different.");
         }
     }
 }

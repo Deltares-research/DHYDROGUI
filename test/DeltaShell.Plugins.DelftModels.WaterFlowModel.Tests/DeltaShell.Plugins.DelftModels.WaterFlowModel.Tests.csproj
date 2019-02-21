@@ -202,7 +202,7 @@
     <Compile Include="Forms\PropertyGrid\ReverseRoughnessSectionPropertiesTest.cs" />
     <Compile Include="Forms\PropertyGrid\RoughnessSectionPropertiesTest.cs" />
     <Compile Include="Forms\PropertyGrid\WaterFlowModel1DBoundaryDataPropertiesTest.cs" />
-    <Compile Include="Forms\PropertyGrid\WaterFlowModel1DLateralSourceDataPropertiesTest.cs" />
+    <Compile Include="Forms\PropertyGrid\WaterFlowModel1DLateralDataPropertiesTest.cs" />
     <Compile Include="Forms\PropertyGrid\WaterFlowModel1DOutputSettingsPropertiesTest.cs" />
     <Compile Include="Forms\PropertyGrid\WaterFlowModel1DPropertiesTest.cs" />
     <Compile Include="Forms\PropertyGrid\MeteoDataFunctionPropertiesTest.cs" />

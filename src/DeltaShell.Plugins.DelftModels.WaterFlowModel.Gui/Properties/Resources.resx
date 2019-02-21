@@ -464,13 +464,13 @@
     <value>The name of this data.</value>
   </data>
   <data name="MeteoDataFunctionProperties_InterpolationType_DisplayName" xml:space="preserve">
-    <value>Interpolation</value>
+    <value>Interpolation scheme</value>
   </data>
-  <data name="MeteoDataFunctionFunctionProperties_InterpolationType_Description" xml:space="preserve">
+  <data name="MeteoDataFunctionProperties_InterpolationType_Description" xml:space="preserve">
     <value>Interpolation scheme used along the time-axis of the time-series.</value>
   </data>
   <data name="MeteoDataFunctionProperties_Extrapolation_DisplayName" xml:space="preserve">
-    <value>Extrapolation</value>
+    <value>Extrapolation scheme</value>
   </data>
   <data name="MeteoDataFunctionProperties_Extrapolation_Description" xml:space="preserve">
     <value>Extrapolation scheme used along the time-axis of the time-series.</value>

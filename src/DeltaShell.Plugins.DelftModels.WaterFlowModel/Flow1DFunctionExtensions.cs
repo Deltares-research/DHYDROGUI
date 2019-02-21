@@ -1,66 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
-using DelftTools.Utils;
-
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
 {
     /// <summary>
-    /// Flow1D Interpolation options as defined within the D-Flow1D Technical Reference manual.
-    /// </summary>
-    [TypeConverter(typeof(EnumDescriptionAttributeTypeConverter))]
-    public enum Flow1DInterpolationType
-    {
-        [Description("Linear")]
-        Linear,
-        [Description("Block-to (Constant)")]
-        BlockTo,
-        [Description("Block-from (Constant)")]
-        BlockFrom,
-    }
-
-    /// <summary>
-    /// Flow1D Extrapolation options as defined within the D-Flow1D Technical Reference Manual.
-    /// </summary>
-    [TypeConverter(typeof(EnumDescriptionAttributeTypeConverter))]
-    public enum Flow1DExtrapolationType
-    {
-        [Description("Linear")]
-        Linear,
-        [Description("Constant")]
-        Constant,
-    }
-
-    /// <summary>
-    /// Flow1DFunctionExtension provides an interface to interact, and store interpolation and
-    /// extrapolation as defined within D-Flow1D Technical Reference manual. This is used for
-    /// the WindFunction, MeteoFunction, WaterFlowModel1DLateralSourceData, and WaterFlowModel1DBoundaryNodeData.
+    /// Flow1DFunctionExtensions provides an interface to interact, and store interpolation and
+    /// extrapolation as defined within the D-Flow1D Technical Reference manual. This is used for
+    /// the <see cref="WindFunction"/>, <see cref="PhysicalParameters.MeteoFunction"/>,
+    /// <see cref="DataObjects.WaterFlowModel1DLateralSourceData"/>, and <see cref="DataObjects.WaterFlowModel1DBoundaryNodeData"/>.
     ///
     /// It provides methods to get and set the interpolation type, extrapolation type, and periodicity.
     /// If only these methods are used, and functions.arguments[0].InterpolationType|ExtrapolationType
     /// are not set directly, then the state is guaranteed to be correct.
     /// </summary>
-    public static class Flow1DFunctionExtension
+    public static class Flow1DFunctionExtensions
     {
-        /// <summary>The interpolation key used to store the interpolation in the Function.Attributes. </summary>
+        /// <summary>The interpolation key used to store the interpolation in the Function.Attributes.</summary>
         private const string InterpolationKey = "Interpolation";
-        /// <summary>The extrapolation key used to storte the extrapolation in the Function.Attributes. </summary>
+        /// <summary>The extrapolation key used to store the extrapolation in the Function.Attributes.</summary>
         private const string ExtrapolationKey = "Extrapolation";
 
         /// <summary>
         /// Get the type of the interpolation as defined in the Flow1D Technical Reference manual.
         /// </summary>
-        /// <param name="function"> The function of which the interpolation type is retrieved. </param>
-        /// <returns> The type of interpolation of the specified function. </returns>
+        /// <param name="function">The function of which the interpolation type is retrieved.</param>
+        /// <returns>The type of interpolation of the specified function.</returns>
         /// <remarks>
         /// If no interpolation key has been set yet, it will be derived from Argument[0].InterpolationType.
         /// </remarks>
         /// <remarks>
         /// Function is expected to have an Argument[0] set.
         /// </remarks>
+        /// <exception cref="InvalidOperationException">Thrown when the Interpolation stored in the Function.Attributes cannot be parsed.</exception>
         public static Flow1DInterpolationType GetInterpolationType(this IFunction function)
         {
             if (Enum.TryParse<Flow1DInterpolationType>(function.GetAttribute(InterpolationKey),
@@ -75,9 +48,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
         /// <summary>
         /// Set the type of the interpolation to <paramref name="value"/>.
         /// </summary>
-        /// <param name="function"> The function on which the interpolation type is set. </param>
-        /// <param name="value"> The value to which the interpolation is set. </param>
-        /// <remarks> Only executed if function.HasArguments() && function.Arguments[0].AllowSetInterpolationType. </remarks>
+        /// <param name="function">The function on which the interpolation type is set.</param>
+        /// <param name="value">The value to which the interpolation is set.</param>
+        /// <remarks>Only executed if function.HasArguments() && function.Arguments[0].AllowSetInterpolationType.</remarks>
         public static void SetInterpolationType(this IFunction function, Flow1DInterpolationType value)
         {
             if (!function.HasArguments() || !function.Arguments[0].AllowSetInterpolationType) return;
@@ -93,14 +66,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
                     break;
             }
 
-            function.SetAttribute<Flow1DInterpolationType>(InterpolationKey, value);
+            function.SetAttribute(InterpolationKey, value);
         }
 
         /// <summary>
         /// Get the type of the Extrapolation as defined in the Flow1D Technical Reference manual.
         /// </summary>
-        /// <param name="function"> The function of which the extrapolation type is retrieved. </param>
-        /// <returns> The type of extrapolation of the specified function. </returns>
+        /// <param name="function">The function of which the extrapolation type is retrieved.</param>
+        /// <returns>The type of extrapolation of the specified function.</returns>
         /// <remarks>
         /// If no extrapolation key has been set yet, it will be derived from Argument[0].ExtrapolationType.
         /// </remarks>
@@ -121,9 +94,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
         /// <summary>
         /// Set the type of the extrapolation to <paramref name="value"/>.
         /// </summary>
-        /// <param name="function"> The function on which the extrapolation type is set. </param>
-        /// <param name="value"> The value to which the extrapolation is set. </param>
-        /// <remarks> Only executed if function.HasArguments() && function.Arguments[0].AllowSetExtrapolationType. </remarks>
+        /// <param name="function">The function on which the extrapolation type is set.</param>
+        /// <param name="value">The value to which the extrapolation is set.</param>
+        /// <remarks>Only executed if function.HasArguments() && function.Arguments[0].AllowSetExtrapolationType.</remarks>
         public static void SetExtrapolationType(this IFunction function, Flow1DExtrapolationType value)
         {
             if (!function.HasArguments() || !function.Arguments[0].AllowSetExtrapolationType) return;
@@ -137,14 +110,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
                     break;
             }
 
-            function.SetAttribute<Flow1DExtrapolationType>(ExtrapolationKey,
-                                                           value);
+            function.SetAttribute(ExtrapolationKey, value);
         }
 
         /// <summary>
         /// Determine whether this Function is periodic.
         /// </summary>
-        /// <param name="function"> The function. </param>
+        /// <param name="function">The function.</param>
         /// <returns><c>true</c> if the specified function has periodicity; otherwise, <c>false</c>.</returns>
         public static bool HasPeriodicity(this IFunction function)
         {
@@ -156,7 +128,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
         /// Set whether this Function is periodic.
         /// </summary>
         /// <param name="function">The function.</param>
-        /// <param name="newHasPeriodicity">if set to <c>true</c> [new has periodicity].</param>
+        /// <param name="newHasPeriodicity">The new periodicity of this function.</param>
+        /// <remarks>The value is only set if function.HasArguments() and function.Arguments[0].AllowSetExtrapolationType</remarks>
         public static void SetPeriodicity(this IFunction function, bool newHasPeriodicity)
         {
             if (!function.HasArguments() || !function.Arguments[0].AllowSetExtrapolationType) return;
@@ -188,7 +161,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
         /// </summary>
         /// <param name="function">The function.</param>
         /// <returns><c>true</c> if the specified function has arguments; otherwise, <c>false</c>.</returns>
-        public static bool HasArguments(this IFunction function)
+        private static bool HasArguments(this IFunction function)
         {
             return function?.Arguments != null && function.Arguments.Count > 0;
         }
@@ -198,12 +171,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
         /// <summary>
         /// Get the attribute with the specified <paramref name="key"/> from the <paramref name="function"/> attributes.
         /// </summary>
-        /// <param name="function">The function from which the attribute should be retrieved. </param>
-        /// <param name="key"> The key of the attribute to be retrieved. </param>
+        /// <param name="function">The function from which the attribute should be retrieved.</param>
+        /// <param name="key">The key of the attribute to be retrieved.</param>
         /// <param name="hasBeenCalledBefore">
         /// if this function has been called before, used to determine whether the key should have been initialized.
         /// </param>
-        /// <returns> The attribute string associated with the key in function.Attributes. </returns>
+        /// <returns>The attribute string associated with the key in function.Attributes.</returns>
         private static string GetAttribute(this IFunction function, string key, bool hasBeenCalledBefore = false)
         {
             try
@@ -222,7 +195,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
         /// <summary>
         /// Set the attribute associated with <paramref name="key"/> to <paramref name="value"/>.
         /// </summary>
-        /// <typeparam name="T"> The type of value that should be added to the Attributes of <paramref name="function"/> </typeparam>
+        /// <typeparam name="T">The type of value that should be added to the Attributes of <paramref name="function"/>.</typeparam>
         /// <param name="function">The function.</param>
         /// <param name="key">The key.</param>
         /// <param name="value">The value.</param>
@@ -232,39 +205,39 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
         }
 
         /// <summary>
-        /// Synchronize the D-flow-1d interpolation and extrapolation schemes with the interpolation and extrapolation of this function.
+        /// Synchronize the D-flow-1d interpolation and extrapolation schemes with the interpolation and
+        /// extrapolation of this function.
         /// </summary>
         /// <param name="function">The function.</param>
+        /// <remarks>
+        /// This should only be called when GetInterpolationType() or GetExtrapolationType() is called on
+        /// a function which has no interpolation or extrapolation key defined yet.
+        /// This situation only happens when an old project is opened, or a new function is created.
+        /// </remarks>
+        /// <exception cref="ArgumentNullException">!Function.HasArguments()</exception>
         private static void SyncApproximationSchemes(this IFunction function)
         {
-            if (!function.HasArguments()) return;
+            if (!function.HasArguments())
+                throw new ArgumentNullException(nameof(function.Arguments), 
+                                                "Function should not have null arguments.");
+
+            var hasPeriodicity = function.Arguments[0].ExtrapolationType == ExtrapolationType.Periodic;
 
             switch (function.Arguments[0].InterpolationType)
             {
                 case InterpolationType.Constant:
-                    function.SetAttribute<Flow1DInterpolationType>(InterpolationKey,
-                                                                   Flow1DInterpolationType.BlockFrom);
+                    function.SetInterpolationType(Flow1DInterpolationType.BlockFrom);
+                    function.SetExtrapolationType(Flow1DExtrapolationType.Constant);
                     break;
                 case InterpolationType.Linear:
                 case InterpolationType.None: // None should not be possible, as such we default to linear
-                    function.SetAttribute<Flow1DInterpolationType>(InterpolationKey,
-                                                                   Flow1DInterpolationType.Linear);
+                    function.SetInterpolationType(Flow1DInterpolationType.Linear);
+                    function.SetExtrapolationType(Flow1DExtrapolationType.Linear);
                     break;
             }
 
-            switch (function.Arguments[0].ExtrapolationType)
-            {
-                case ExtrapolationType.Linear:
-                    function.SetAttribute<Flow1DExtrapolationType>(ExtrapolationKey,
-                                                                   Flow1DExtrapolationType.Linear);
-                    break;
-                case ExtrapolationType.Constant:
-                case ExtrapolationType.None:     // None should not be possible, as such we default to linear
-                case ExtrapolationType.Periodic: // Periodic implies periodic flag is set, as such we default to linear.
-                    function.SetAttribute<Flow1DExtrapolationType>(ExtrapolationKey,
-                                                                   Flow1DExtrapolationType.Constant);
-                    break;
-            }
+            // Set periodicity after updating the Interpolation and Extrapolation.
+            if (hasPeriodicity) function.SetPeriodicity(true);
         }
         #endregion
     }

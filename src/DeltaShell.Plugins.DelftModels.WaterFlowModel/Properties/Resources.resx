@@ -190,19 +190,19 @@
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="generateDataInSeriesToolStripMenuItem.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
-        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
+        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
+        +A25o0ELaCbZYgAAAABJRU5ErkJggg==
 </value>
   </data>
   <data name="WaterFlowModel1DApplicationPlugin_Description" xml:space="preserve">
@@ -507,5 +507,20 @@
   </data>
   <data name="SpatialDataReader_SetModelSpatialDataOnModel_Could_not_find_any_spatial_data_to_set_on_the_model__The_file___0__does_not_have_a_correct_name_" xml:space="preserve">
     <value>Could not find any spatial data to set on the model. The file: {0} does not have a correct name.</value>
+  </data>
+  <data name="Flow1DExtrapolationType_Constant" xml:space="preserve">
+    <value>Constant</value>
+  </data>
+  <data name="Flow1DExtrapolationType_Linear" xml:space="preserve">
+    <value>Linear</value>
+  </data>
+  <data name="Flow1DInterpolationType_BlockFrom" xml:space="preserve">
+    <value>Block-from (Constant)</value>
+  </data>
+  <data name="Flow1DInterpolationType_BlockTo" xml:space="preserve">
+    <value>Block-to (Constant)</value>
+  </data>
+  <data name="Flow1DInterpolationType_Linear" xml:space="preserve">
+    <value>Linear</value>
   </data>
 </root>

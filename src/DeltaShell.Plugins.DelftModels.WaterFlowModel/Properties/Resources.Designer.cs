@@ -208,6 +208,51 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Constant.
+        /// </summary>
+        public static string Flow1DExtrapolationType_Constant {
+            get {
+                return ResourceManager.GetString("Flow1DExtrapolationType_Constant", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Linear.
+        /// </summary>
+        public static string Flow1DExtrapolationType_Linear {
+            get {
+                return ResourceManager.GetString("Flow1DExtrapolationType_Linear", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Block-from (Constant).
+        /// </summary>
+        public static string Flow1DInterpolationType_BlockFrom {
+            get {
+                return ResourceManager.GetString("Flow1DInterpolationType_BlockFrom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Block-to (Constant).
+        /// </summary>
+        public static string Flow1DInterpolationType_BlockTo {
+            get {
+                return ResourceManager.GetString("Flow1DInterpolationType_BlockTo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Linear.
+        /// </summary>
+        public static string Flow1DInterpolationType_Linear {
+            get {
+                return ResourceManager.GetString("Flow1DInterpolationType_Linear", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap folder_with_data {

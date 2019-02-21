@@ -250,15 +250,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Interpolation scheme used along the time-axis of the time-series..
-        /// </summary>
-        internal static string MeteoDataFunctionFunctionProperties_InterpolationType_Description {
-            get {
-                return ResourceManager.GetString("MeteoDataFunctionFunctionProperties_InterpolationType_Description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Meteo data time-series.
         /// </summary>
         internal static string MeteoDataFunctionProperties_DisplayName {
@@ -277,7 +268,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Extrapolation.
+        ///   Looks up a localized string similar to Extrapolation scheme.
         /// </summary>
         internal static string MeteoDataFunctionProperties_Extrapolation_DisplayName {
             get {
@@ -304,7 +295,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Interpolation.
+        ///   Looks up a localized string similar to Interpolation scheme used along the time-axis of the time-series..
+        /// </summary>
+        internal static string MeteoDataFunctionProperties_InterpolationType_Description {
+            get {
+                return ResourceManager.GetString("MeteoDataFunctionProperties_InterpolationType_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Interpolation scheme.
         /// </summary>
         internal static string MeteoDataFunctionProperties_InterpolationType_DisplayName {
             get {

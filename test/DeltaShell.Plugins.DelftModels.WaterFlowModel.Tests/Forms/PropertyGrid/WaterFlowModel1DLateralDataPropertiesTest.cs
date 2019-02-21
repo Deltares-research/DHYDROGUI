@@ -6,7 +6,7 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Forms.PropertyGrid
 {
     [TestFixture]
-    public class WaterFlowModel1DLateralSourceDataPropertiesTest
+    public class WaterFlowModel1DLateralDataPropertiesTest
     {
         [Test, Category(TestCategory.WindowsForms)]
         public void ShowProperties()
