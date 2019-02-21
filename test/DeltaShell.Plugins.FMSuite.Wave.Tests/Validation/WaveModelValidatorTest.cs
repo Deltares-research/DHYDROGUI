@@ -6,7 +6,6 @@ using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.Wave.Properties;
 using DeltaShell.Plugins.FMSuite.Wave.Validation;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
 {
@@ -84,7 +83,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                 validationReport.GetAllIssuesRecursive()
                     .Any(
                         i =>
-                            i.Severity == ValidationSeverity.Error && i.Message == "Coupled wave model must use COM-file"));
+                            i.Severity == ValidationSeverity.Error && i.Message == Resources.WaveCouplingValidator_Validate_Coupled_wave_model_must_use_COM_file));
         }
 
         

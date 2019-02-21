@@ -5,6 +5,7 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.FMSuite.Wave;
+using DeltaShell.Plugins.FMSuite.Wave.Properties;
 using DeltaShell.Plugins.FMSuite.Wave.Validation;
 using NUnit.Framework;
 
@@ -35,7 +36,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 waveReport.GetAllIssuesRecursive()
                     .Any(
                         i =>
-                            i.Severity == ValidationSeverity.Error && i.Message == "Coupled wave model must use COM-file"));
+                            i.Severity == ValidationSeverity.Error && i.Message == Resources.WaveCouplingValidator_Validate_Coupled_wave_model_must_use_COM_file));
 
             var hydroModel = new HydroModelBuilder().BuildModel(ModelGroup.All);
             hydroModel.Activities.Clear();

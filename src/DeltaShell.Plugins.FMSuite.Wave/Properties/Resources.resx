@@ -217,4 +217,13 @@
   <data name="WaveTimePointValidator_BoundaryConditionTimePointsPrecedesModelStartTime_Model_start_time_does_not_precede_any_of_Boundary_Condition_time_points_" xml:space="preserve">
     <value>Model start time does not precede any of the time points of</value>
   </data>
+  <data name="WaveCouplingValidator_Validate_Coupled_wave_model_must_use_COM_file" xml:space="preserve">
+    <value>Coupled wave model must use COM-file</value>
+  </data>
+  <data name="WaveCouplingValidator_Validate_Stand_alone_wave_model_cannot_use_COM_file" xml:space="preserve">
+    <value>Stand-alone wave model cannot use COM-file</value>
+  </data>
+  <data name="WaveCouplingValidator_Validate_Stand_alone_wave_model_cannot_use__0_" xml:space="preserve">
+    <value>Stand-alone wave model cannot use {0}</value>
+  </data>
 </root>

@@ -221,6 +221,33 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Coupled wave model must use COM-file.
+        /// </summary>
+        public static string WaveCouplingValidator_Validate_Coupled_wave_model_must_use_COM_file {
+            get {
+                return ResourceManager.GetString("WaveCouplingValidator_Validate_Coupled_wave_model_must_use_COM_file", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stand-alone wave model cannot use {0}.
+        /// </summary>
+        public static string WaveCouplingValidator_Validate_Stand_alone_wave_model_cannot_use__0_ {
+            get {
+                return ResourceManager.GetString("WaveCouplingValidator_Validate_Stand_alone_wave_model_cannot_use__0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stand-alone wave model cannot use COM-file.
+        /// </summary>
+        public static string WaveCouplingValidator_Validate_Stand_alone_wave_model_cannot_use_COM_file {
+            get {
+                return ResourceManager.GetString("WaveCouplingValidator_Validate_Stand_alone_wave_model_cannot_use_COM_file", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to All the grids Coordinate System should be the same, either Spherical or Cartesian.
         /// </summary>
         public static string WaveDomainValidator_ValidateAllDomainsShareCoordinateSystem_All_the_grids_Coordinate_System_should_be_the_same__either_Spherical_or_Cardesian {
