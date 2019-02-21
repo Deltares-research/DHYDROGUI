@@ -64,7 +64,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                 if (hasInvalidTimePoint)
                 {
                     issues.Add(new ValidationIssue(null, ValidationSeverity.Error,
-                               Resources.WaveTimePointValidator_Validate_Model_Start_time_precedes_Reference_Time,
+                               Resources.WaveTimePointValidator_Validate_Model_start_time_precedes_reference_time,
                                waveModel.TimePointData));
                 }
             }

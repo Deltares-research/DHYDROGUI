@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -368,9 +368,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Model start time precedes reference time.
         /// </summary>
-        public static string WaveTimePointValidator_Validate_Model_Start_time_precedes_Reference_Time {
+        public static string WaveTimePointValidator_Validate_Model_start_time_precedes_reference_time {
             get {
-                return ResourceManager.GetString("WaveTimePointValidator_Validate_Model_Start_time_precedes_Reference_Time", resourceCulture);
+                return ResourceManager.GetString("WaveTimePointValidator_Validate_Model_start_time_precedes_reference_time", resourceCulture);
             }
         }
         

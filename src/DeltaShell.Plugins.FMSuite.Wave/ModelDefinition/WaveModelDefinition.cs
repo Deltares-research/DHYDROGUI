@@ -138,6 +138,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.ModelDefinition
             {
                 return (DateTime)GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.ReferenceDate).Value;
             }
+            set
+            {
+                GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.ReferenceDate).Value = value;
+            }
         }
 
         public WaveDirectionalSpaceType DefaultDirectionalSpaceType

@@ -205,7 +205,7 @@
   <data name="WaveTimePointValidator_Validate_No_time_points_defined" xml:space="preserve">
     <value>No time points defined</value>
   </data>
-  <data name="WaveTimePointValidator_Validate_Model_Start_time_precedes_Reference_Time" xml:space="preserve">
+  <data name="WaveTimePointValidator_Validate_Model_start_time_precedes_reference_time" xml:space="preserve">
     <value>Model start time precedes reference time</value>
   </data>
   <data name="WaveBoundaryConditionValidator_ValidateSpectrumParameters_Parameter__Direction__must_be_a_value_within_the_range__360___360_" xml:space="preserve">
