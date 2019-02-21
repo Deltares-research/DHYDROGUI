@@ -1,5 +1,4 @@
 ﻿using DelftTools.Functions;
-using DelftTools.Functions.Generic;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
 {
@@ -9,20 +8,25 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
     /// </summary>
     public abstract class BoundaryComponent
     {
-        protected BoundaryComponent(InterpolationType interpolationType,
-            bool isPeriodic,
-            double constantBoundaryValue,
-            IFunction timeDependentBoundaryValue)
+        protected BoundaryComponent(Flow1DInterpolationType? interpolationType,
+                                    Flow1DExtrapolationType? extrapolationType,
+                                    bool isPeriodic,
+                                    double constantBoundaryValue,
+                                    IFunction timeDependentBoundaryValue)
         {
-            this.InterpolationType = interpolationType;
-            this.IsPeriodic = isPeriodic;
-            this.ConstantBoundaryValue = constantBoundaryValue;
-            this.TimeDependentBoundaryValue = timeDependentBoundaryValue;
+            InterpolationType = interpolationType;
+            ExtrapolationType = extrapolationType;
+            IsPeriodic = isPeriodic;
+            ConstantBoundaryValue = constantBoundaryValue;
+            TimeDependentBoundaryValue = timeDependentBoundaryValue;
         }
 
-        /// <summary> The type of interpolation for the values of this BoundaryConditionComponent. </summary>
-        public readonly InterpolationType InterpolationType;
-        /// <summary> Whether this BoundaryConditionComponent values are repeating or not. </summary>
+        /// <summary>The type of interpolation for the values of this BoundaryComponent.</summary>
+        public readonly Flow1DInterpolationType? InterpolationType;
+        /// <summary>The type of extrapolation for the values of this BoundaryComponent.</summary>
+        public readonly Flow1DExtrapolationType? ExtrapolationType;
+
+        /// <summary>Whether this BoundaryConditionComponent values are repeating or not.</summary>
         public readonly bool IsPeriodic;
         /// <summary> The constant value of this BoundaryConditionComponent.  </summary>
         public readonly double ConstantBoundaryValue;

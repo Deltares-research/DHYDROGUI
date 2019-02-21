@@ -294,6 +294,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
                 to.Components[i].ExtrapolationType = from.Components[i].ExtrapolationType;
                 to.Components[i].InterpolationType = from.Components[i].InterpolationType;
             }
+
+            to.SetInterpolationType(from.GetInterpolationType());
+            to.SetExtrapolationType(from.GetExtrapolationType());
+            to.SetPeriodicity(from.HasPeriodicity());
         }
 
         private readonly Func<string, IList<IDelftBcCategory>> parseFunc;

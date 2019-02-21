@@ -1,5 +1,4 @@
 ﻿using DelftTools.Functions;
-using DelftTools.Functions.Generic;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
 
 
@@ -23,9 +22,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
             TemperatureComponent = null;
         }
 
+        /// <summary>The name of this BoundaryCondition.</summary>
         public readonly string Name;
+        /// <summary>Gets or sets the water component of this BoundaryCondition.</summary>
+        /// <value>The BoundaryComponent which describes the water component of this BoundaryCondition.</value>
         public BoundaryConditionWater WaterComponent { get; set; }
+        /// <summary>Get or set the salt component of this BoundaryCondition.</summary>
+        /// <value>The BoundaryComponent which describes the salt component of this BoundaryCondition.</value>
         public BoundaryConditionSalt SaltComponent { get; set; }
+        /// <summary>Get or set the temperature component of this BoundaryCondition.</summary>
+        /// <value>The BoundaryComponent which describes the temperature component of this BoundaryCondition.</value>
         public BoundaryConditionTemperature TemperatureComponent { get; set; }
     }
 
@@ -39,32 +45,31 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
         /// Construct a new Constant BoundaryConditionWater.
         /// </summary>
         /// <param name="type"> The type of this BoundaryConditionWater. </param>
-        /// <param name="interpolationType"> The type of interpolation for this BoundaryConditionWater.</param>
-        /// <param name="isPeriodic">Whether the timeseries repeats or not.</param>
         /// <param name="constantBoundaryValue"> The constant value of this BoundaryConditionWater.</param>
         /// <pre-condition>type == FlowConstant || type == WaterLevelConstant. </pre-condition>
         public BoundaryConditionWater(WaterFlowModel1DBoundaryNodeDataType type,
-                                      InterpolationType interpolationType,
-                                      bool isPeriodic,
-                                      double constantBoundaryValue) : this(type, interpolationType, isPeriodic, constantBoundaryValue, null) { }
+                                      double constantBoundaryValue) : this(type, null, null, false, constantBoundaryValue, null) { }
         /// <summary>
         /// Construct a new TimeDependent BoundaryConditionWater.
         /// </summary>
         /// <param name="type"> The type of this BoundaryConditionWater. </param>
         /// <param name="interpolationType"> The type of interpolation for this BoundaryConditionWater.</param>
+        /// <param name="extrapolationType"> The type of extrapolation for this BoundaryConditionWater.</param>
         /// <param name="isPeriodic">Whether the timeseries repeats or not.</param>
         /// <param name="timeDependentBoundaryValue">The TimeDependentFunction of this BoundaryConditionWater.</param>
         /// <pre-condition> type != FlowConstant && type != WaterLevelConstant. </pre-condition>
         public BoundaryConditionWater(WaterFlowModel1DBoundaryNodeDataType type,
-                                      InterpolationType interpolationType,
+                                      Flow1DInterpolationType interpolationType,
+                                      Flow1DExtrapolationType extrapolationType,
                                       bool isPeriodic,
-                                      IFunction timeDependentBoundaryValue) : this(type, interpolationType, isPeriodic, 0.0, timeDependentBoundaryValue) { }
+                                      IFunction timeDependentBoundaryValue) : this(type, interpolationType, extrapolationType, isPeriodic, 0.0, timeDependentBoundaryValue) { }
 
         private BoundaryConditionWater(WaterFlowModel1DBoundaryNodeDataType type,
-                                       InterpolationType interpolationType,
+                                       Flow1DInterpolationType? interpolationType,
+                                       Flow1DExtrapolationType? extrapolationType,
                                        bool isPeriodic,
                                        double constantBoundaryValue,
-                                       IFunction timeDependentBoundaryValue) : base(interpolationType, isPeriodic, constantBoundaryValue, timeDependentBoundaryValue)
+                                       IFunction timeDependentBoundaryValue) : base(interpolationType, extrapolationType, isPeriodic, constantBoundaryValue, timeDependentBoundaryValue)
         {
             this.BoundaryType = type;
         }
@@ -83,32 +88,31 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
         /// Construct a new Constant BoundaryConditionSalt.
         /// </summary>
         /// <param name="type"> The type of this BoundaryConditionSalt. </param>
-        /// <param name="interpolationType"> The type of interpolation for this BoundaryConditionSalt.</param>
-        /// <param name="isPeriodic">Whether the timeseries repeats or not.</param>
         /// <param name="constantBoundaryValue"> The constant value of this BoundaryConditionSalt.</param>
         /// <pre-condition>type == Constant. </pre-condition>
         public BoundaryConditionSalt(SaltBoundaryConditionType type,
-                                     InterpolationType interpolationType,
-                                     bool isPeriodic,
-                                     double constantBoundaryValue) : this(type, interpolationType, isPeriodic, constantBoundaryValue, null) { }
+                                     double constantBoundaryValue) : this(type, null, null, false, constantBoundaryValue, null) { }
         /// <summary>
         /// Construct a new TimeDependent BoundaryConditionSalt.
         /// </summary>
         /// <param name="type"> The type of this BoundaryConditionSalt. </param>
         /// <param name="interpolationType"> The type of interpolation for this BoundaryConditionSalt.</param>
+        /// <param name="extrapolationType"> The type of extrapolation for this BoundaryConditionSalt.</param
         /// <param name="isPeriodic">Whether the timeseries repeats or not.</param>
         /// <param name="timeDependentBoundaryValue">The TimeDependentFunction of this BoundaryConditionSalt.</param>
         /// <pre-condition> type == TimeDependent. </pre-condition>
         public BoundaryConditionSalt(SaltBoundaryConditionType type,
-                                     InterpolationType interpolationType,
+                                     Flow1DInterpolationType interpolationType,
+                                     Flow1DExtrapolationType extrapolationType,
                                      bool isPeriodic,
-                                     IFunction timeDependentBoundaryValue) : this(type, interpolationType, isPeriodic, 0.0, timeDependentBoundaryValue) { }
+                                     IFunction timeDependentBoundaryValue) : this(type, interpolationType, extrapolationType, isPeriodic, 0.0, timeDependentBoundaryValue) { }
 
         private BoundaryConditionSalt(SaltBoundaryConditionType type,
-                                      InterpolationType interpolationType,
+                                      Flow1DInterpolationType? interpolationType,
+                                      Flow1DExtrapolationType? extrapolationType,
                                       bool isPeriodic,
                                       double constantBoundaryValue,
-            IFunction timeDependentBoundaryValue) : base(interpolationType, isPeriodic, constantBoundaryValue, timeDependentBoundaryValue)
+                                      IFunction timeDependentBoundaryValue) : base(interpolationType, extrapolationType, isPeriodic, constantBoundaryValue, timeDependentBoundaryValue)
         {
             this.BoundaryType = type;
         }
@@ -127,32 +131,31 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
         /// Construct a new Constant BoundaryConditionTemperature.
         /// </summary>
         /// <param name="type"> The type of this BoundaryConditionTemperature. </param>
-        /// <param name="interpolationType"> The type of interpolation for this BoundaryConditionTemperature.</param>
-        /// <param name="isPeriodic">Whether the timeseries repeats or not.</param>
         /// <param name="constantBoundaryValue"> The constant value of this BoundaryConditionTemperature.</param>
         /// <pre-condition>type == Constant. </pre-condition>
         public BoundaryConditionTemperature(TemperatureBoundaryConditionType type,
-                                            InterpolationType interpolationType,
-                                            bool isPeriodic,
-                                            double constantBoundaryValue) : this(type, interpolationType, isPeriodic, constantBoundaryValue, null) { }
+                                            double constantBoundaryValue) : this(type, null, null, false, constantBoundaryValue, null) { }
         /// <summary>
         /// Construct a new TimeDependent BoundaryConditionTemperature.
         /// </summary>
         /// <param name="type"> The type of this BoundaryConditionTemperature. </param>
         /// <param name="interpolationType"> The type of interpolation for this BoundaryConditionTemperature.</param>
+        /// <param name="extrapolationType"> The type of extrapolation for this BoundaryConditionTemperature.</param>
         /// <param name="isPeriodic">Whether the timeseries repeats or not.</param>
         /// <param name="timeDependentBoundaryValue">The TimeDependentFunction of this BoundaryConditionTemperature.</param>
         /// <pre-condition> type == TimeDependent. </pre-condition>
         public BoundaryConditionTemperature(TemperatureBoundaryConditionType type,
-                                            InterpolationType interpolationType,
+                                            Flow1DInterpolationType interpolationType,
+                                            Flow1DExtrapolationType extrapolationType,
                                             bool isPeriodic,
-                                            IFunction timeDependentBoundaryValue) : this(type, interpolationType, isPeriodic, 0.0, timeDependentBoundaryValue) { }
+                                            IFunction timeDependentBoundaryValue) : this(type, interpolationType, extrapolationType, isPeriodic, 0.0, timeDependentBoundaryValue) { }
 
         private BoundaryConditionTemperature(TemperatureBoundaryConditionType type,
-                                             InterpolationType interpolationType,
+                                             Flow1DInterpolationType? interpolationType,
+                                             Flow1DExtrapolationType? extrapolationType,
                                              bool isPeriodic,
                                              double constantBoundaryValue,
-                                             IFunction timeDependentBoundaryValue) : base(interpolationType, isPeriodic, constantBoundaryValue, timeDependentBoundaryValue)
+                                             IFunction timeDependentBoundaryValue) : base(interpolationType, extrapolationType, isPeriodic, constantBoundaryValue, timeDependentBoundaryValue)
         {
             this.BoundaryType = type;
         }
@@ -160,6 +163,4 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
         /// <summary> The Type of temperature boundary of this BoundaryConditionSalt. </summary>
         public readonly TemperatureBoundaryConditionType BoundaryType;
     }
-
-
 }

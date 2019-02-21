@@ -21,8 +21,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
         /// <summary>
         /// Extract all valid BoundaryConditions from the specified <paramref name="dataAccessModel"/>.
         /// </summary>
-        /// <param name="dataAccessModel">The data access model describing the BoundaryConditions. </param>
-        /// <param name="errorMessages">List of error messages to which new messages will be added. </param>
+        /// <param name="dataAccessModel">The data access model describing the BoundaryConditions.</param>
+        /// <param name="errorMessages">List of error messages to which new messages will be added.</param>
         /// <returns>
         /// A Dictionary mapping the NodeNames to the corresponding valid BoundaryConditions extracted from
         /// the data access model.
@@ -71,24 +71,23 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
             return true;
         }
 
-        /// <summary> Possible BoundaryCondition ComponentTypes </summary>
+        /// <summary>Possible BoundaryCondition ComponentTypes.</summary>
         private enum ComponentType { Level, Flow, Salt, Temp };
 
         /// <summary>
         /// Parse the provided category, adding any encountered to the <paramref name="errorMessages"/>, and adding
         /// the described component, if valid, to the corresponding BoundaryCondition.
         /// </summary>
-        /// <param name="category"> The category to be parsed. </param>
-        /// <param name="boundaryConditions"> The Dictionary describing all BoundaryConditions encountered so far. </param>
+        /// <param name="category"> The category to be parsed.</param>
+        /// <param name="boundaryConditions"> The Dictionary describing all BoundaryConditions encountered so far.</param>
         /// <param name="errorMessages"> Collection of error messages to which new messages will be added.</param>
-        /// <pre-condition>category != null && boundaryConditions != null && errorMessages != null. </pre-condition>
+        /// <pre-condition>category != null && boundaryConditions != null && errorMessages != null.</pre-condition>
         private static void Parse(IDelftBcCategory category,
-                                  Dictionary<string, BoundaryCondition> boundaryConditions,
+                                  IDictionary<string, BoundaryCondition> boundaryConditions,
                                   ICollection<string> errorMessages)
         {
             // Validate properties of category.
-            string name;
-            if (!BcConverterHelper.ValidateNameProperty(category.Properties, out name))
+            if (!BcConverterHelper.ValidateNameProperty(category.Properties, out var name))
             {
                 errorMessages.Add(
                     $"Unable to parse name of BoundaryCondition: {category.Name} at line {category.LineNumber}.");
@@ -99,28 +98,34 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
                 boundaryConditions.Add(name, new BoundaryCondition(name));
             var boundaryCondition = boundaryConditions[name];
 
-            FunctionType function;
-            if (!BcConverterHelper.ValidateFunctionProperty(category.Properties, out function))
+            if (!BcConverterHelper.ValidateFunctionProperty(category.Properties, out var function))
             {
                 errorMessages.Add(
                     $"Unable to parse function of BoundaryCondition: {category.Name} at line {category.LineNumber}.");
                 return;
             }
 
-            InterpolationType interpolationType;
-            if (!BcConverterHelper.ValidateInterpolation(category.Properties, out interpolationType))
-            {
-                errorMessages.Add(
-                    $"Unable to parse interpolation of BoundaryCondition: {category.Name} at line {category.LineNumber}");
-                return;
-            }
+            var interpolationType = Flow1DInterpolationType.Linear; // Default values will be overwritten 
+            var extrapolationType = Flow1DExtrapolationType.Linear; // if function != constant
+            var hasPeriodicity = false;
 
-            bool hasPeriodicity;
-            if (!BcConverterHelper.ValidatePeriodicity(category.Properties, out hasPeriodicity))
+            if (function != FunctionType.Constant)
             {
-                errorMessages.Add(
-                    $"Unable to parse periodicity of BoundaryCondition: {category.Name} at line {category.LineNumber}");
-                return;
+                if (!BcConverterHelper.ValidateInterpolation(category.Properties,
+                                                             out interpolationType,
+                                                             out extrapolationType))
+                {
+                    errorMessages.Add(
+                        $"Unable to parse interpolation of BoundaryCondition: {category.Name} at line {category.LineNumber}");
+                    return;
+                }
+
+                if (!BcConverterHelper.ValidatePeriodicity(category.Properties, out hasPeriodicity))
+                {
+                    errorMessages.Add(
+                        $"Unable to parse periodicity of BoundaryCondition: {category.Name} at line {category.LineNumber}");
+                    return;
+                }
             }
 
             ComponentType componentType;
@@ -162,13 +167,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
             switch (function)
             {
                 case FunctionType.Constant:
-                    ParseConstant(category.Table, boundaryCondition, interpolationType, hasPeriodicity, componentType);
+                    ParseConstant(category.Table, boundaryCondition, componentType);
                     break;
                 case FunctionType.QhTable:
-                    ParseQhTable(category.Table, boundaryCondition, interpolationType, hasPeriodicity);
+                    ParseQhTable(category.Table, boundaryCondition, interpolationType, extrapolationType, hasPeriodicity);
                     break;
                 case FunctionType.TimeSeries:
-                    ParseTimeSeries(category.Table, boundaryCondition, interpolationType, hasPeriodicity, componentType);
+                    ParseTimeSeries(category.Table, boundaryCondition, interpolationType, extrapolationType, hasPeriodicity, componentType);
                     break;
             }
         }
@@ -177,7 +182,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
         /// Validate the component type specified with the <paramref name="quantity"/>. 
         /// </summary>
         /// <param name="quantity"> The quantity from which the componentType should be obtained.</param>
-        /// <param name="componentType">If valid, the found ComponentType. </param>
+        /// <param name="componentType">If valid, the found ComponentType.</param>
         /// <returns>
         /// True if quantity describes a valid ComponentType, false otherwise.
         /// If true, then componentType will contain the validated ComponentType.
@@ -209,13 +214,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
         /// <summary>
         /// Parse the constant component specified by the parameters and set this in <paramref name="condition"/>
         /// </summary>
-        /// <param name="categoryTable"> The values associated with this constant component. </param>
-        /// <param name="condition"> The BoundaryCondition to which this component is added. </param>
-        /// <param name="interpolationType"> The InterpolationType of this new BoundaryConditionComponent. </param>
-        /// <param name="hasPeriodicity"> Whether this new BoundaryConditionComponent has periodicity. </param>
-        /// <param name="componentType"> The type of BoundaryConditionComponent to be created. </param>
-        private static void ParseConstant(IList<IDelftBcQuantityData> categoryTable, BoundaryCondition condition,
-                                          InterpolationType interpolationType, bool hasPeriodicity, 
+        /// <param name="categoryTable"> The values associated with this constant component.</param>
+        /// <param name="condition"> The BoundaryCondition to which this component is added.</param>
+        /// <param name="interpolationType"> The InterpolationType of this new BoundaryConditionComponent.</param>
+        /// <param name="hasPeriodicity"> Whether this new BoundaryConditionComponent has periodicity.</param>
+        /// <param name="componentType"> The type of BoundaryConditionComponent to be created.</param>
+        private static void ParseConstant(IList<IDelftBcQuantityData> categoryTable, 
+                                          BoundaryCondition condition,
                                           ComponentType componentType)
         {
             var val = double.Parse(categoryTable[0].Values[0],
@@ -227,26 +232,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
             {
                 case ComponentType.Flow:
                     condition.WaterComponent = new BoundaryConditionWater(WaterFlowModel1DBoundaryNodeDataType.FlowConstant, 
-                                                                          interpolationType, 
-                                                                          hasPeriodicity, 
                                                                           val);
                     break;
                 case ComponentType.Level:
                     condition.WaterComponent = new BoundaryConditionWater(WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant,
-                                                                          interpolationType,
-                                                                          hasPeriodicity,
                                                                           val);
                     break;
                 case ComponentType.Salt:
                     condition.SaltComponent = new BoundaryConditionSalt(SaltBoundaryConditionType.Constant,
-                                                                        interpolationType,
-                                                                        hasPeriodicity,
                                                                         val);
                     break;
                 case ComponentType.Temp:
                     condition.TemperatureComponent = new BoundaryConditionTemperature(TemperatureBoundaryConditionType.Constant,
-                                                                                      interpolationType,
-                                                                                      hasPeriodicity,
                                                                                       val);
                     break;
             }
@@ -255,19 +252,24 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
         /// <summary>
         /// Parse the QhTable WaterComponent specified by the parameters and set this in <paramref name="condition"/>
         /// </summary>
-        /// <param name="categoryTable"> The values associated with this QhTable component. </param>
-        /// <param name="condition"> The BoundaryCondition to which this component is added. </param>
-        /// <param name="interpolationType"> The InterpolationType of this new BoundaryConditionComponent. </param>
-        /// <param name="hasPeriodicity"> Whether this new BoundaryConditionComponent has periodicity. </param>
-        private static void ParseQhTable(IList<IDelftBcQuantityData> categoryTable, BoundaryCondition condition, InterpolationType interpolationType, bool hasPeriodicity)
+        /// <param name="categoryTable"> The values associated with this QhTable component.</param>
+        /// <param name="condition"> The BoundaryCondition to which this component is added.</param>
+        /// <param name="interpolationType"> The InterpolationType of this new BoundaryConditionComponent.</param>
+        /// <param name="extrapolationType"> The ExtrapolationType of this new BoundaryConditionComponent.</param>
+        /// <param name="hasPeriodicity"> Whether this new BoundaryConditionComponent has periodicity.</param>
+        private static void ParseQhTable(IList<IDelftBcQuantityData> categoryTable,
+                                         BoundaryCondition condition,
+                                         Flow1DInterpolationType interpolationType, 
+                                         Flow1DExtrapolationType extrapolationType, 
+                                         bool hasPeriodicity)
         {
             // QhTable is only defined for the water component
             var function = new Function();
-            function.Arguments.Add(new Variable<double>(categoryTable[0].Quantity.Value)
-            {
-                InterpolationType = interpolationType,
-                ExtrapolationType = hasPeriodicity ? ExtrapolationType.Periodic : ExtrapolationType.Constant,
-            });
+            function.Arguments.Add(new Variable<double>(categoryTable[0].Quantity.Value));
+
+            function.SetInterpolationType(interpolationType);
+            function.SetExtrapolationType(extrapolationType);
+            function.SetPeriodicity(hasPeriodicity);
 
             function.Components.Add((new Variable<double>(categoryTable[1].Quantity.Value,
                 new Unit(categoryTable[1].Unit.Name, categoryTable[1].Unit.Value))));
@@ -276,6 +278,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
 
             condition.WaterComponent = new BoundaryConditionWater(WaterFlowModel1DBoundaryNodeDataType.FlowWaterLevelTable,
                                                                   interpolationType,
+                                                                  extrapolationType,
                                                                   hasPeriodicity,
                                                                   function);
         }
@@ -283,21 +286,25 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
         /// <summary>
         /// Parse the timeseries component specified by the parameters and set this in <paramref name="condition"/>
         /// </summary>
-        /// <param name="categoryTable"> The values associated with this timeseries component. </param>
-        /// <param name="condition"> The BoundaryCondition to which this component is added. </param>
-        /// <param name="interpolationType"> The InterpolationType of this new BoundaryConditionComponent. </param>
-        /// <param name="hasPeriodicity"> Whether this new BoundaryConditionComponent has periodicity. </param>
-        /// <param name="componentType"> The type of BoundaryConditionComponent to be created. </param>
-        private static void ParseTimeSeries(IList<IDelftBcQuantityData> categoryTable, BoundaryCondition condition,
-            InterpolationType interpolationType, bool hasPeriodicity,
-            ComponentType componentType)
+        /// <param name="categoryTable"> The values associated with this timeseries component.</param>
+        /// <param name="condition"> The BoundaryCondition to which this component is added.</param>
+        /// <param name="interpolationType"> The InterpolationType of this new BoundaryConditionComponent.</param>
+        /// <param name="extrapolationType"> The ExtrapolationType of this new BoundaryConditionComponent.</param>
+        /// <param name="hasPeriodicity"> Whether this new BoundaryConditionComponent has periodicity.</param>
+        /// <param name="componentType"> The type of BoundaryConditionComponent to be created.</param>
+        private static void ParseTimeSeries(IList<IDelftBcQuantityData> categoryTable, 
+                                            BoundaryCondition condition,
+                                            Flow1DInterpolationType interpolationType,
+                                            Flow1DExtrapolationType extrapolationType,
+                                            bool hasPeriodicity,
+                                            ComponentType componentType)
         {
             var function = new Function();
-            function.Arguments.Add(new Variable<DateTime>(categoryTable[0].Quantity.Value)
-            {
-                InterpolationType = interpolationType,
-                ExtrapolationType = hasPeriodicity ? ExtrapolationType.Periodic : ExtrapolationType.Constant,
-            });
+            function.Arguments.Add(new Variable<DateTime>(categoryTable[0].Quantity.Value));
+
+            function.SetInterpolationType(interpolationType);
+            function.SetExtrapolationType(extrapolationType);
+            function.SetPeriodicity(hasPeriodicity);
 
             function.Components.Add((new Variable<double>(categoryTable[1].Quantity.Value,
                 new Unit(categoryTable[1].Unit.Name, categoryTable[1].Unit.Value))));
@@ -308,27 +315,31 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
             {
                 case ComponentType.Flow:
                     condition.WaterComponent = new BoundaryConditionWater(WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries,
-                        interpolationType,
-                        hasPeriodicity,
-                        function);
+                                                                          interpolationType,
+                                                                          extrapolationType,
+                                                                          hasPeriodicity,
+                                                                          function);
                     break;
                 case ComponentType.Level:
                     condition.WaterComponent = new BoundaryConditionWater(WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries,
-                        interpolationType,
-                        hasPeriodicity,
-                        function);
+                                                                          interpolationType,
+                                                                          extrapolationType,
+                                                                          hasPeriodicity,
+                                                                          function);
                     break;
                 case ComponentType.Salt:
                     condition.SaltComponent = new BoundaryConditionSalt(SaltBoundaryConditionType.TimeDependent,
-                        interpolationType,
-                        hasPeriodicity,
-                        function);
+                                                                        interpolationType,
+                                                                        extrapolationType,
+                                                                        hasPeriodicity,
+                                                                        function);
                     break;
                 case ComponentType.Temp:
                     condition.TemperatureComponent = new BoundaryConditionTemperature(TemperatureBoundaryConditionType.TimeDependent,
-                        interpolationType,
-                        hasPeriodicity,
-                        function);
+                                                                                      interpolationType,
+                                                                                      extrapolationType,
+                                                                                      hasPeriodicity,
+                                                                                      function);
                     break;
             }
         }

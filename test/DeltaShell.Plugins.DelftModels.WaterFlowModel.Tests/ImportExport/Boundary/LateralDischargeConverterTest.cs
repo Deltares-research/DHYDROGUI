@@ -258,8 +258,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
                 HasComponent hasWater, HasComponent hasSalt, SaltType saltType, HasComponent hasTemperature)
         {
             const string nodeName = "Bacon";
-            var boundaryCondition = GetLateralDischarge(nodeName, hasWater, hasSalt, saltType, hasTemperature);
-            var inputSet = ToBcCategories(boundaryCondition);
+            var lateralDischarge = GetLateralDischarge(nodeName, hasWater, hasSalt, saltType, hasTemperature);
+            var inputSet = ToBcCategories(lateralDischarge);
 
             var errorMessages = new List<string>();
 
@@ -268,9 +268,69 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
 
             // Then
             AssertOutputEqualsExpectedOutput(output,
-                                             new Dictionary<string, LateralDischarge>() { { nodeName, boundaryCondition } });
+                                             new Dictionary<string, LateralDischarge>() { { nodeName, lateralDischarge } });
             Assert.That(errorMessages, Is.Empty);
+        }
 
+        /// <summary>
+        /// GIVEN a description of a LateralDischarge with timeseries components
+        /// WHEN Convert is called
+        /// THEN a LateralDischarge with the correct interpolation and periodicity is returned
+        /// </summary>
+        [TestCase(  false,  WaterFlowModel1DLateralDataType.FlowTimeSeries, Flow1DInterpolationType.BlockTo,   Flow1DExtrapolationType.Constant)]
+        [TestCase(  true ,  WaterFlowModel1DLateralDataType.FlowTimeSeries, Flow1DInterpolationType.BlockTo,   Flow1DExtrapolationType.Constant)]
+        [TestCase(  false,  WaterFlowModel1DLateralDataType.FlowTimeSeries, Flow1DInterpolationType.BlockFrom, Flow1DExtrapolationType.Constant)]
+        [TestCase(  true ,  WaterFlowModel1DLateralDataType.FlowTimeSeries, Flow1DInterpolationType.BlockFrom, Flow1DExtrapolationType.Constant)]
+        [TestCase(  false,  WaterFlowModel1DLateralDataType.FlowTimeSeries, Flow1DInterpolationType.Linear,    Flow1DExtrapolationType.Constant)]
+        [TestCase(  true ,  WaterFlowModel1DLateralDataType.FlowTimeSeries, Flow1DInterpolationType.Linear,    Flow1DExtrapolationType.Constant)]
+        [TestCase(  false,  WaterFlowModel1DLateralDataType.FlowTimeSeries, Flow1DInterpolationType.Linear,    Flow1DExtrapolationType.Linear  )]
+        [TestCase(  true ,  WaterFlowModel1DLateralDataType.FlowTimeSeries, Flow1DInterpolationType.Linear,    Flow1DExtrapolationType.Linear  )]
+        public void GivenADescriptionOfALateralDischargeWithTimeseriesComponents_WhenConvertIsCalled_ThenALateralDischargeWithTheCorrectInterpolationAndPeriodicityIsReturned(bool hasPeriodicity,
+                                                                                                                                                                              WaterFlowModel1DLateralDataType expectedDataType, 
+                                                                                                                                                                              Flow1DInterpolationType expectedInterpolationType,
+                                                                                                                                                                              Flow1DExtrapolationType expectedExtrapolationType)
+        {
+            // Given
+            const string nodeName = "Bacon";
+            var startTime = DateTime.Today;
+            var valuesWaterLevel = new List<double>() { 5.0, 20.0, 10.0, 30.0 };
+            var timeValuesWaterLevel = new List<DateTime>()
+            {
+                startTime.AddHours(2),
+                startTime.AddHours(4),
+                startTime.AddHours(6),
+                startTime.AddHours(8),
+            };
+
+            var functionWaterLevel = BoundaryTestHelper.GetNewTimeFunction("Water Level", "", "");
+            functionWaterLevel.SetInterpolationType(expectedInterpolationType);
+            functionWaterLevel.SetExtrapolationType(expectedExtrapolationType);
+            functionWaterLevel.SetPeriodicity(hasPeriodicity);
+
+            functionWaterLevel.Arguments[0].SetValues(timeValuesWaterLevel);
+            functionWaterLevel.Components[0].SetValues(valuesWaterLevel);
+
+            var waterComponent = new LateralDischargeWater(WaterFlowModel1DLateralDataType.FlowTimeSeries,
+                                                           expectedInterpolationType,
+                                                           expectedExtrapolationType, 
+                                                           hasPeriodicity,
+                                                           functionWaterLevel);
+            var lateralDischarge = new LateralDischarge(nodeName)
+            {
+                WaterComponent = waterComponent
+            };
+
+            var inputSet = ToBcCategories(lateralDischarge);
+
+            var errorMessages = new List<string>();
+
+            // When
+            var output = LateralDischargeConverter.Convert(inputSet, errorMessages);
+
+            // Then
+            AssertOutputEqualsExpectedOutput(output,
+                                             new Dictionary<string, LateralDischarge>() { { nodeName, lateralDischarge } });
+            Assert.That(errorMessages, Is.Empty);
         }
 
         /// <summary>
@@ -376,8 +436,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
         {
             // Given
             const string nodeName = "Tenderloin";
-            var lateralDischargeSalt =
-                new LateralDischargeSalt(SaltLateralDischargeType.Default, InterpolationType.Constant, false, 0.0);
+            var lateralDischargeSalt = new LateralDischargeSalt(SaltLateralDischargeType.Default, 0.0);
             var lateralDischarge = GetLateralDischarge(nodeName, HasComponent.Constant, HasComponent.None, SaltType.None, HasComponent.None);
             lateralDischarge.SaltComponent = lateralDischargeSalt;
 
@@ -468,11 +527,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
         private static IDelftBcCategory GetWaterComponentCategory(string name, LateralDischargeWater lateralDischarge)
         {
             // Set common elements
+            var interpolationString = lateralDischarge.InterpolationType != null
+                ? BoundaryTestHelper.ToTimeInterpolationString(lateralDischarge.InterpolationType,
+                                                               lateralDischarge.ExtrapolationType)
+                : BoundaryRegion.TimeInterpolationStrings.BlockFrom;
             var boundaryDefinition = BoundaryTestHelper.GetCommonCategory(BoundaryRegion.BcLateralHeader,
                                                                           name,
                                                                           BoundaryFileWriterHelper.GetFunctionString(lateralDischarge.BoundaryType),
-                                                                          lateralDischarge.InterpolationType,
-                                                                          BoundaryTestHelper.GetTimeSeriesIsPeriodicProperty(lateralDischarge.TimeDependentBoundaryValue));
+                                                                          interpolationString,
+                                                                          BoundaryTestHelper.ToPeriodicityString(lateralDischarge.TimeDependentBoundaryValue));
 
             // Create actual table
             switch (lateralDischarge.BoundaryType)
@@ -499,27 +562,31 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
             return boundaryDefinition;
         }
 
-        private static IDelftBcCategory GetSaltComponentCategory(string name, LateralDischargeSalt LateralDischarge)
+        private static IDelftBcCategory GetSaltComponentCategory(string name, LateralDischargeSalt lateralDischarge)
         {
             // Set common elements
+            var interpolationString = lateralDischarge.InterpolationType != null
+                ? BoundaryTestHelper.ToTimeInterpolationString(lateralDischarge.InterpolationType,
+                                                               lateralDischarge.ExtrapolationType)
+                : BoundaryRegion.TimeInterpolationStrings.BlockFrom;
             var boundaryDefinition = BoundaryTestHelper.GetCommonCategory(BoundaryRegion.BcLateralHeader,
                                                                           name,
-                                                                          BoundaryFileWriterHelper.GetFunctionString(LateralDischarge.BoundaryType),
-                                                                          LateralDischarge.InterpolationType,
-                                                                          BoundaryTestHelper.GetTimeSeriesIsPeriodicProperty(LateralDischarge.TimeDependentBoundaryValue));
+                                                                          BoundaryFileWriterHelper.GetFunctionString(lateralDischarge.BoundaryType),
+                                                                          interpolationString,
+                                                                          BoundaryTestHelper.ToPeriodicityString(lateralDischarge.TimeDependentBoundaryValue));
 
-            switch (LateralDischarge.BoundaryType)
+            switch (lateralDischarge.BoundaryType)
             {
                 case SaltLateralDischargeType.ConcentrationConstant:
                     boundaryDefinition.Table = BoundaryTestHelper.GetBcQuantityConstantValue(
-                                                                      LateralDischarge.ConstantBoundaryValue,
+                                                                      lateralDischarge.ConstantBoundaryValue,
                                                                       BoundaryRegion.QuantityStrings.WaterSalinity,
                                                                       BoundaryRegion.UnitStrings.SaltPpt);
                     break;
                 case SaltLateralDischargeType.ConcentrationTimeSeries:
                 {
-                    var dateTimes = ((MultiDimensionalArray<DateTime>) LateralDischarge.TimeDependentBoundaryValue.Arguments[0].Values).ToList();
-                    var values = ((MultiDimensionalArray<double>) LateralDischarge.TimeDependentBoundaryValue.Components[0].Values).ToList();
+                    var dateTimes = ((MultiDimensionalArray<DateTime>) lateralDischarge.TimeDependentBoundaryValue.Arguments[0].Values).ToList();
+                    var values = ((MultiDimensionalArray<double>) lateralDischarge.TimeDependentBoundaryValue.Components[0].Values).ToList();
 
                     boundaryDefinition.Table = BoundaryTestHelper.GetBcQuantityDataTable(dateTimes[0],
                                                                                          dateTimes,
@@ -528,14 +595,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
                                                                                          BoundaryRegion.UnitStrings.SaltPpt);
                 } break;
                 case SaltLateralDischargeType.MassConstant:
-                    boundaryDefinition.Table = BoundaryTestHelper.GetBcQuantityConstantValue(LateralDischarge.ConstantBoundaryValue,
+                    boundaryDefinition.Table = BoundaryTestHelper.GetBcQuantityConstantValue(lateralDischarge.ConstantBoundaryValue,
                                                                                              BoundaryRegion.QuantityStrings.WaterSalinity,
                                                                                              BoundaryRegion.UnitStrings.SaltMass);
                     break;
                 case SaltLateralDischargeType.MassTimeSeries:
                 {
-                    var dateTimes = ((MultiDimensionalArray<DateTime>) LateralDischarge.TimeDependentBoundaryValue.Arguments[0].Values).ToList();
-                    var values = ((MultiDimensionalArray<double>) LateralDischarge.TimeDependentBoundaryValue.Components[0].Values).ToList();
+                    var dateTimes = ((MultiDimensionalArray<DateTime>) lateralDischarge.TimeDependentBoundaryValue.Arguments[0].Values).ToList();
+                    var values = ((MultiDimensionalArray<double>) lateralDischarge.TimeDependentBoundaryValue.Components[0].Values).ToList();
 
                     boundaryDefinition.Table = BoundaryTestHelper.GetBcQuantityDataTable(dateTimes[0],
                                                                                          dateTimes,
@@ -554,11 +621,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
         private static IDelftBcCategory GetTemperatureComponentCategory(string name,
                                                                         LateralDischargeTemperature lateralDischarge)
         {
+            var interpolationString = lateralDischarge.InterpolationType != null
+                ? BoundaryTestHelper.ToTimeInterpolationString(lateralDischarge.InterpolationType,
+                                                               lateralDischarge.ExtrapolationType)
+                : BoundaryRegion.TimeInterpolationStrings.BlockFrom;
             var boundaryDefinition = BoundaryTestHelper.GetCommonCategory(BoundaryRegion.BcLateralHeader,
                                                                           name,
                                                                           BoundaryFileWriterHelper.GetFunctionString(lateralDischarge.BoundaryType),
-                                                                          lateralDischarge.InterpolationType,
-                                                                          BoundaryTestHelper.GetTimeSeriesIsPeriodicProperty(lateralDischarge.TimeDependentBoundaryValue));
+                                                                          interpolationString,
+                                                                          BoundaryTestHelper.ToPeriodicityString(lateralDischarge.TimeDependentBoundaryValue));
+
             switch (lateralDischarge.BoundaryType)
             {
                 case TemperatureLateralDischargeType.Constant:

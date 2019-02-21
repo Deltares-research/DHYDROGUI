@@ -90,8 +90,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
                                   ICollection<string> errorMessages)
         {
             // Validate properties of category.
-            string name;
-            if (!BcConverterHelper.ValidateNameProperty(category.Properties, out name))
+            if (!BcConverterHelper.ValidateNameProperty(category.Properties, out var name))
             {
                 errorMessages.Add(
                     $"Unable to parse name of LateralDischarge: {category.Name} at line {category.LineNumber}.");
@@ -102,33 +101,39 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
                 lateralDischarges.Add(name, new LateralDischarge(name));
             var lateralDischarge = lateralDischarges[name];
 
-            FunctionType function;
-            if (!BcConverterHelper.ValidateFunctionProperty(category.Properties, out function))
+            if (!BcConverterHelper.ValidateFunctionProperty(category.Properties, out var function))
             {
                 errorMessages.Add(
                     $"Unable to parse function of LateralDischarge: {category.Name} at line {category.LineNumber}.");
                 return;
             }
 
-            InterpolationType interpolationType;
-            if (!BcConverterHelper.ValidateInterpolation(category.Properties, out interpolationType))
-            {
-                errorMessages.Add(
-                    $"Unable to parse interpolation of LateralDischarge: {category.Name} at line {category.LineNumber}");
-                return;
-            }
+            var interpolationType = Flow1DInterpolationType.Linear;
+            var extrapolationType = Flow1DExtrapolationType.Linear;
+            var hasPeriodicity = false;
 
-            bool hasPeriodicity;
-            if (!BcConverterHelper.ValidatePeriodicity(category.Properties, out hasPeriodicity))
+            if (function != FunctionType.Constant)
             {
-                errorMessages.Add(
-                    $"Unable to parse periodicity of LateralDischarge: {category.Name} at line {category.LineNumber}");
-                return;
+                if (!BcConverterHelper.ValidateInterpolation(category.Properties,
+                                                             out interpolationType,
+                                                             out extrapolationType))
+                {
+                    errorMessages.Add(
+                        $"Unable to parse interpolation of LateralDischarge: {category.Name} at line {category.LineNumber}");
+                    return;
+                }
+
+                if (!BcConverterHelper.ValidatePeriodicity(category.Properties, out hasPeriodicity))
+                {
+                    errorMessages.Add(
+                        $"Unable to parse periodicity of LateralDischarge: {category.Name} at line {category.LineNumber}");
+                    return;
+                }
             }
 
             ComponentType componentType;
             if (!ValidateComponentType(category.Table[function == FunctionType.Constant ? 0 : 1],
-                out componentType))
+                                       out componentType))
                 errorMessages.Add
                     ($"Unable to parse Quantity of LateralDischarge: {category.Name} at line {category.LineNumber}.");
 
@@ -169,13 +174,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
             switch (function)
             {
                 case FunctionType.Constant:
-                    ParseConstant(category.Table, lateralDischarge, interpolationType, hasPeriodicity, componentType);
+                    ParseConstant(category.Table, lateralDischarge, componentType);
                     break;
                 case FunctionType.QhTable:
-                    ParseQhTable(category.Table, lateralDischarge, interpolationType, hasPeriodicity);
+                    ParseQhTable(category.Table, lateralDischarge, interpolationType, extrapolationType, hasPeriodicity);
                     break;
                 case FunctionType.TimeSeries:
-                    ParseTimeSeries(category.Table, lateralDischarge, interpolationType, hasPeriodicity, componentType);
+                    ParseTimeSeries(category.Table, lateralDischarge, interpolationType, extrapolationType, hasPeriodicity, componentType);
                     break;
             }
         }
@@ -225,8 +230,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
         /// <param name="componentType"> The type of LateralDischargeComponent to be created. </param>
         private static void ParseConstant(IList<IDelftBcQuantityData> categoryTable,
                                           LateralDischarge discharge,
-                                          InterpolationType interpolationType,
-                                          bool hasPeriodicity,
                                           ComponentType componentType)
         {
             var val = double.Parse(categoryTable[0].Values[0],
@@ -238,27 +241,19 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
             {
                 case ComponentType.Water:
                     discharge.WaterComponent = new LateralDischargeWater(WaterFlowModel1DLateralDataType.FlowConstant,
-                                                                         interpolationType,
-                                                                         hasPeriodicity,
                                                                          val);
                     break;
                 case ComponentType.SaltMass:
                     discharge.SaltComponent = new LateralDischargeSalt(SaltLateralDischargeType.MassConstant,
-                                                                       interpolationType,
-                                                                       hasPeriodicity,
                                                                        val);
                     break;
                 case ComponentType.SaltConcentration:
                     discharge.SaltComponent = new LateralDischargeSalt(val == WaterFlowModel1DLateralSourceData.DefaultSalinity ? SaltLateralDischargeType.Default : 
                                                                                                                                   SaltLateralDischargeType.ConcentrationConstant,
-                                                                       interpolationType,
-                                                                       hasPeriodicity,
                                                                        val);
                     break;
                 case ComponentType.Temp:
                     discharge.TemperatureComponent = new LateralDischargeTemperature(TemperatureLateralDischargeType.Constant,
-                                                                                     interpolationType,
-                                                                                     hasPeriodicity,
                                                                                      val);
                     break;
             }
@@ -273,16 +268,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
         /// <param name="hasPeriodicity"> Whether this new LateralDischargeComponent has periodicity. </param>
         private static void ParseQhTable(IList<IDelftBcQuantityData> categoryTable, 
                                          LateralDischarge discharge, 
-                                         InterpolationType interpolationType, 
+                                         Flow1DInterpolationType interpolationType,
+                                         Flow1DExtrapolationType extrapolationType,
                                          bool hasPeriodicity)
         {
             // QhTable is only defined for the water component
             var function = new Function();
-            function.Arguments.Add(new Variable<double>(categoryTable[0].Quantity.Value)
-            {
-                InterpolationType = interpolationType,
-                ExtrapolationType = hasPeriodicity ? ExtrapolationType.Periodic : ExtrapolationType.Constant,
-            });
+            function.Arguments.Add(new Variable<double>(categoryTable[0].Quantity.Value));
+
+            function.SetInterpolationType(interpolationType);
+            function.SetExtrapolationType(extrapolationType);
+            function.SetPeriodicity(hasPeriodicity);
 
             function.Components.Add((new Variable<double>(categoryTable[1].Quantity.Value,
                                                           new Unit(categoryTable[1].Unit.Name, categoryTable[1].Unit.Value))));
@@ -291,6 +287,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
 
             discharge.WaterComponent = new LateralDischargeWater(WaterFlowModel1DLateralDataType.FlowWaterLevelTable,
                                                                  interpolationType,
+                                                                 extrapolationType,
                                                                  hasPeriodicity,
                                                                  function);
         }
@@ -305,16 +302,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
         /// <param name="componentType"> The type of LateralDischargeComponent to be created. </param>
         private static void ParseTimeSeries(IList<IDelftBcQuantityData> categoryTable, 
                                             LateralDischarge discharge,
-                                            InterpolationType interpolationType, 
+                                            Flow1DInterpolationType interpolationType,
+                                            Flow1DExtrapolationType extrapolationType,
                                             bool hasPeriodicity,
                                             ComponentType componentType)
         {
             var function = new Function();
-            function.Arguments.Add(new Variable<DateTime>(categoryTable[0].Quantity.Value)
-            {
-                InterpolationType = interpolationType,
-                ExtrapolationType = hasPeriodicity ? ExtrapolationType.Periodic : ExtrapolationType.Constant,
-            });
+            function.Arguments.Add(new Variable<DateTime>(categoryTable[0].Quantity.Value));
+
+            function.SetInterpolationType(interpolationType);
+            function.SetExtrapolationType(extrapolationType);
+            function.SetPeriodicity(hasPeriodicity);
 
             function.Components.Add((new Variable<double>(categoryTable[1].Quantity.Value,
                                      new Unit(categoryTable[1].Unit.Name, categoryTable[1].Unit.Value))));
@@ -326,24 +324,28 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
                 case ComponentType.Water:
                     discharge.WaterComponent = new LateralDischargeWater(WaterFlowModel1DLateralDataType.FlowTimeSeries,
                                                                          interpolationType,
+                                                                         extrapolationType,
                                                                          hasPeriodicity,
                                                                          function);
                     break;
                 case ComponentType.SaltMass:
                     discharge.SaltComponent = new LateralDischargeSalt(SaltLateralDischargeType.MassTimeSeries,
                                                                        interpolationType,
+                                                                       extrapolationType,
                                                                        hasPeriodicity,
                                                                        function);
                     break;
                 case ComponentType.SaltConcentration:
                     discharge.SaltComponent = new LateralDischargeSalt(SaltLateralDischargeType.ConcentrationTimeSeries,
                                                                        interpolationType,
+                                                                       extrapolationType,
                                                                        hasPeriodicity,
                                                                        function);
                     break;
                 case ComponentType.Temp:
                     discharge.TemperatureComponent = new LateralDischargeTemperature(TemperatureLateralDischargeType.TimeDependent,
                                                                                      interpolationType,
+                                                                                     extrapolationType,
                                                                                      hasPeriodicity,
                                                                                      function);
                     break;

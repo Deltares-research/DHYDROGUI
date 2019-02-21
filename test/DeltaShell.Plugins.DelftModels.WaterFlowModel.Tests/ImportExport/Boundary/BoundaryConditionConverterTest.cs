@@ -163,7 +163,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
             }
         }
 
-        // Test all possible combinations of BoundaryConditions.
         /// <summary>
         /// GIVEN a set of IDelftBcCategories describing a single BoundaryCondition
         ///   AND an empty list of error messages
@@ -245,6 +244,82 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
             const string nodeName = "Bacon";
             // Given
             var boundaryCondition = GetBoundaryCondition(nodeName, hasWater, waterType, hasSalt, hasTemperature);
+            var inputSet = ToBcCategories(boundaryCondition);
+            var errorMessages = new List<string>();
+
+            // When
+            var output = BoundaryConditionConverter.Convert(inputSet, errorMessages);
+
+            // Then
+            Assert.That(output, Is.Not.Null);
+            Assert.That(output.Count, Is.EqualTo(1));
+            Assert.That(output.ContainsKey(nodeName));
+
+            var outputBoundaryCondition = output[nodeName];
+            AssertThatBoundaryConditionIsEqualTo(outputBoundaryCondition, boundaryCondition);
+
+            Assert.That(errorMessages, Is.Empty);
+        }
+
+        /// <summary>
+        /// GIVEN a description of a BoundaryCondition with a timeseries component
+        /// WHEN Convert is called
+        /// THEN a BoundaryCondition with the correct interpolation and periodicity is returned
+        /// </summary>
+        [TestCase(WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries, Flow1DInterpolationType.BlockTo,   Flow1DExtrapolationType.Constant, false )]
+        [TestCase(WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries, Flow1DInterpolationType.BlockTo,   Flow1DExtrapolationType.Constant, true  )]
+        [TestCase(WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries, Flow1DInterpolationType.BlockFrom, Flow1DExtrapolationType.Constant, false )]
+        [TestCase(WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries, Flow1DInterpolationType.BlockFrom, Flow1DExtrapolationType.Constant, true  )]
+        [TestCase(WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries, Flow1DInterpolationType.Linear,    Flow1DExtrapolationType.Constant, false )]
+        [TestCase(WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries, Flow1DInterpolationType.Linear,    Flow1DExtrapolationType.Constant, true  )]
+        [TestCase(WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries, Flow1DInterpolationType.Linear,    Flow1DExtrapolationType.Linear,   false )]
+        [TestCase(WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries, Flow1DInterpolationType.Linear,    Flow1DExtrapolationType.Linear,   true  )]
+
+        [TestCase(WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries, Flow1DInterpolationType.BlockTo,   Flow1DExtrapolationType.Constant, false)] 
+        [TestCase(WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries, Flow1DInterpolationType.BlockTo,   Flow1DExtrapolationType.Constant, true )] 
+        [TestCase(WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries, Flow1DInterpolationType.BlockFrom, Flow1DExtrapolationType.Constant, false)] 
+        [TestCase(WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries, Flow1DInterpolationType.BlockFrom, Flow1DExtrapolationType.Constant, true )] 
+        [TestCase(WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries, Flow1DInterpolationType.Linear,    Flow1DExtrapolationType.Constant, false)] 
+        [TestCase(WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries, Flow1DInterpolationType.Linear,    Flow1DExtrapolationType.Constant, true )] 
+        [TestCase(WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries, Flow1DInterpolationType.Linear,    Flow1DExtrapolationType.Linear,   false)] 
+        [TestCase(WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries, Flow1DInterpolationType.Linear,    Flow1DExtrapolationType.Linear,   true )]
+        public void GivenADescriptionOfABoundaryConditionWithATimeseriesComponent_WhenConvertIsCalled_ThenABoundaryConditionWithTheCorrectInterpolationAndPeriodicityIsReturned(WaterFlowModel1DBoundaryNodeDataType dataType, 
+                                                                                                                                                                                Flow1DInterpolationType expectedInterpolationType,
+                                                                                                                                                                                Flow1DExtrapolationType expectedExtrapolationType,
+                                                                                                                                                                                bool hasPeriodicity)
+        {
+            // Given
+            const string nodeName = "Bacon";
+
+            var startTime = DateTime.Today;
+            var valuesWaterFlow = new List<double>() { 6.0, 21.0, 11.0, 31.0 };
+            var timeValuesWaterFlow = new List<DateTime>()
+            {
+                startTime.AddHours(3),
+                startTime.AddHours(5),
+                startTime.AddHours(7),
+                startTime.AddHours(9),
+            };
+
+            var functionWaterFlow = BoundaryTestHelper.GetNewTimeFunction("Discharge", "", "");
+            functionWaterFlow.Arguments[0].SetValues(timeValuesWaterFlow);
+            functionWaterFlow.Components[0].SetValues(valuesWaterFlow);
+
+            functionWaterFlow.SetInterpolationType(expectedInterpolationType);
+            functionWaterFlow.SetExtrapolationType(expectedExtrapolationType);
+            functionWaterFlow.SetPeriodicity(hasPeriodicity);
+
+            var waterComponent =  new BoundaryConditionWater(dataType,
+                                                             expectedInterpolationType,
+                                                             expectedExtrapolationType,
+                                                             hasPeriodicity,
+                                                             functionWaterFlow);
+
+            var boundaryCondition = new BoundaryCondition(nodeName)
+            {
+                WaterComponent = waterComponent
+            };
+
             var inputSet = ToBcCategories(boundaryCondition);
             var errorMessages = new List<string>();
 
@@ -506,6 +581,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
                 Assert.That(actual.WaterComponent, Is.Not.Null);
                 Assert.That(actual.WaterComponent.BoundaryType, Is.EqualTo(expected.WaterComponent.BoundaryType));
                 Assert.That(actual.WaterComponent.InterpolationType, Is.EqualTo(expected.WaterComponent.InterpolationType));
+                Assert.That(actual.WaterComponent.ExtrapolationType, Is.EqualTo(expected.WaterComponent.ExtrapolationType));
                 Assert.That(actual.WaterComponent.IsPeriodic, Is.EqualTo(expected.WaterComponent.IsPeriodic));
 
                 if (expected.WaterComponent.BoundaryType == WaterFlowModel1DBoundaryNodeDataType.FlowConstant ||
@@ -528,9 +604,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
             if (expected.SaltComponent != null)
             {
                 Assert.That(actual.SaltComponent, Is.Not.Null);
-                Assert.That(actual.SaltComponent.BoundaryType,          Is.EqualTo(expected.SaltComponent.BoundaryType));
-                Assert.That(actual.SaltComponent.InterpolationType,     Is.EqualTo(expected.SaltComponent.InterpolationType));
-                Assert.That(actual.SaltComponent.IsPeriodic,            Is.EqualTo(expected.SaltComponent.IsPeriodic));
+                Assert.That(actual.SaltComponent.BoundaryType,      Is.EqualTo(expected.SaltComponent.BoundaryType));
+                Assert.That(actual.SaltComponent.InterpolationType, Is.EqualTo(expected.SaltComponent.InterpolationType));
+                Assert.That(actual.SaltComponent.ExtrapolationType, Is.EqualTo(expected.SaltComponent.ExtrapolationType));
+                Assert.That(actual.SaltComponent.IsPeriodic,        Is.EqualTo(expected.SaltComponent.IsPeriodic));
                 if (expected.SaltComponent.BoundaryType == SaltBoundaryConditionType.Constant)
                 {
                     Assert.That(actual.SaltComponent.ConstantBoundaryValue, Is.EqualTo(expected.SaltComponent.ConstantBoundaryValue));
@@ -552,6 +629,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
                 Assert.That(actual.TemperatureComponent, Is.Not.Null);
                 Assert.That(actual.TemperatureComponent.BoundaryType, Is.EqualTo(expected.TemperatureComponent.BoundaryType));
                 Assert.That(actual.TemperatureComponent.InterpolationType, Is.EqualTo(expected.TemperatureComponent.InterpolationType));
+                Assert.That(actual.TemperatureComponent.ExtrapolationType, Is.EqualTo(expected.TemperatureComponent.ExtrapolationType));
                 Assert.That(actual.TemperatureComponent.IsPeriodic, Is.EqualTo(expected.TemperatureComponent.IsPeriodic));
                 if (expected.TemperatureComponent.BoundaryType == TemperatureBoundaryConditionType.Constant)
                 {
@@ -590,15 +668,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
 
         private static IDelftBcCategory GetWaterComponentCategory(string name, BoundaryConditionWater boundaryCondition)
         {
-            // Set common elements
-            var boundaryDefinition = BoundaryTestHelper.GetCommonCategory(
-                BoundaryRegion.BcBoundaryHeader, 
-                name,
-                BoundaryFileWriterHelper.GetFunctionString(boundaryCondition.BoundaryType),
-                boundaryCondition.InterpolationType, 
-                BoundaryTestHelper.GetTimeSeriesIsPeriodicProperty(boundaryCondition.TimeDependentBoundaryValue));
-
-            // Create actual table
+            var interpolationString = boundaryCondition.InterpolationType != null
+                ? BoundaryTestHelper.ToTimeInterpolationString(boundaryCondition.InterpolationType,
+                                                               boundaryCondition.ExtrapolationType)
+                : BoundaryRegion.TimeInterpolationStrings.BlockFrom;
+            var boundaryDefinition = BoundaryTestHelper.GetCommonCategory(BoundaryRegion.BcBoundaryHeader,
+                                                                          name,
+                                                                          BoundaryFileWriterHelper.GetFunctionString(boundaryCondition.BoundaryType),
+                                                                          interpolationString,
+                                                                          BoundaryTestHelper.ToPeriodicityString(boundaryCondition.TimeDependentBoundaryValue));
             switch (boundaryCondition.BoundaryType)
             {
                 case WaterFlowModel1DBoundaryNodeDataType.FlowConstant:
@@ -642,14 +720,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
 
         private static IDelftBcCategory GetSaltComponentCategory(string name, BoundaryConditionSalt boundaryCondition)
         {
-            // Set common elements
-            var boundaryDefinition = BoundaryTestHelper.GetCommonCategory(
-                BoundaryRegion.BcBoundaryHeader, 
-                name,
-                BoundaryFileWriterHelper.GetFunctionString(boundaryCondition.BoundaryType),
-                boundaryCondition.InterpolationType,
-                BoundaryTestHelper.GetTimeSeriesIsPeriodicProperty(boundaryCondition.TimeDependentBoundaryValue));
-
+            var interpolationString = boundaryCondition.InterpolationType != null
+                ? BoundaryTestHelper.ToTimeInterpolationString(boundaryCondition.InterpolationType,
+                                                               boundaryCondition.ExtrapolationType)
+                : BoundaryRegion.TimeInterpolationStrings.BlockFrom;
+            var boundaryDefinition = BoundaryTestHelper.GetCommonCategory(BoundaryRegion.BcBoundaryHeader,
+                                                                          name,
+                                                                          BoundaryFileWriterHelper.GetFunctionString(boundaryCondition.BoundaryType),
+                                                                          interpolationString,
+                                                                          BoundaryTestHelper.ToPeriodicityString(boundaryCondition.TimeDependentBoundaryValue));
             switch (boundaryCondition.BoundaryType)
             {
                 case SaltBoundaryConditionType.Constant:
@@ -674,21 +753,23 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
         }
 
         private static IDelftBcCategory GetTemperatureComponentCategory(string name,
-            BoundaryConditionTemperature boundaryCondition)
+                                                                        BoundaryConditionTemperature boundaryCondition)
         {
-            var boundaryDefinition = BoundaryTestHelper.GetCommonCategory(
-                BoundaryRegion.BcBoundaryHeader,
-                name,
-                BoundaryFileWriterHelper.GetFunctionString(boundaryCondition.BoundaryType),
-                boundaryCondition.InterpolationType, 
-                BoundaryTestHelper.GetTimeSeriesIsPeriodicProperty(boundaryCondition.TimeDependentBoundaryValue));
+            var interpolationString = boundaryCondition.InterpolationType != null
+                ? BoundaryTestHelper.ToTimeInterpolationString(boundaryCondition.InterpolationType,
+                                                               boundaryCondition.ExtrapolationType)
+                : BoundaryRegion.TimeInterpolationStrings.BlockFrom; 
+            var boundaryDefinition = BoundaryTestHelper.GetCommonCategory(BoundaryRegion.BcBoundaryHeader,
+                                                                          name,
+                                                                          BoundaryFileWriterHelper.GetFunctionString(boundaryCondition.BoundaryType),
+                                                                          interpolationString,
+                                                                          BoundaryTestHelper.ToPeriodicityString(boundaryCondition.TimeDependentBoundaryValue));
             switch (boundaryCondition.BoundaryType)
             {
                 case TemperatureBoundaryConditionType.Constant:
-                    boundaryDefinition.Table = BoundaryTestHelper.GetBcQuantityConstantValue(
-                        boundaryCondition.ConstantBoundaryValue,
-                        BoundaryRegion.QuantityStrings.WaterTemperature,
-                        BoundaryRegion.UnitStrings.WaterTemperature);
+                    boundaryDefinition.Table = BoundaryTestHelper.GetBcQuantityConstantValue(boundaryCondition.ConstantBoundaryValue,
+                                                                                             BoundaryRegion.QuantityStrings.WaterTemperature,
+                                                                                             BoundaryRegion.UnitStrings.WaterTemperature);
                     break;
                 case TemperatureBoundaryConditionType.TimeDependent:
                     var dateTimes = ((MultiDimensionalArray<DateTime>)boundaryCondition.TimeDependentBoundaryValue.Arguments[0].Values).ToList();

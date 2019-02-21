@@ -32,7 +32,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
                 return null;
 
             var relevantCategories = dataAccessModel.Where(IsWindFunctionAttribute).ToList();
-            return Parse(relevantCategories);
+            return Parse(relevantCategories, errorMessages);
         }
 
         private static bool IsWindFunctionAttribute(IDelftBcCategory category)
@@ -79,7 +79,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
         /// <param name="dataAccessModel">The wind_speed and wind_direction categories (in any order).</param>
         /// <pre-condition>this.Validate(dataAccessModel, _)</pre-condition>
         /// <returns>A new WindFunction corresponding with the description in the dataAccessModel</returns>
-        private static WindFunction Parse(IList<IDelftBcCategory> dataAccessModel)
+        private static WindFunction Parse(IList<IDelftBcCategory> dataAccessModel, 
+                                          IList<string> errorMessages)
         {
             var windFunction = new WindFunction();
 
@@ -98,7 +99,28 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
                     windFunction.Direction.SetValues(values);
             }
 
-            // Parse time table
+            // Determine Interpolation | Extrapolation | Periodicity
+            if (!BcConverterHelper.ValidateInterpolation(dataAccessModel.First().Properties,
+                                                         out var interpolationType,
+                                                         out var extrapolationType))
+            {
+                errorMessages.Add("Unable to parse WindFunction interpolation, defaulting to linear-extrapolate.");
+                interpolationType = Flow1DInterpolationType.Linear;
+                extrapolationType = Flow1DExtrapolationType.Linear;
+            }
+
+            windFunction.SetInterpolationType(interpolationType);
+            windFunction.SetExtrapolationType(extrapolationType);
+
+            if (!BcConverterHelper.ValidatePeriodicity(dataAccessModel.First().Properties,
+                                                       out var hasPeriodicity))
+            {
+                errorMessages.Add("Unable to parse WindFunction periodicity, defaulting to false.");
+                hasPeriodicity = false;
+            }
+
+            windFunction.SetPeriodicity(hasPeriodicity);
+
             return windFunction;
         }
     }

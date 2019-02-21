@@ -27,13 +27,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
         /// then the corresponding MeteoFunction, else null.
         /// </returns>
         public static MeteoFunction Convert(IList<IDelftBcCategory> dataAccessModel,
-            IList<string> errorMessages)
+                                            IList<string> errorMessages)
         {
             if (!Validate(dataAccessModel, errorMessages))
                 return null;
 
             var relevantCategories = dataAccessModel.Where(IsMeteoFunctionAttribute).ToList();
-            return Parse(relevantCategories);
+            return Parse(relevantCategories, errorMessages);
         }
 
 
@@ -53,11 +53,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
         /// This function needs to be further extended as follow up of issue
         /// SOBEK3-1535. 
         /// </remarks>
-        /// <param name="dataAccessModel"> The dataAccessModel to be validated. </param>
-        /// <param name="errorMessages"> List of error messages to be extended. </param>
+        /// <param name="dataAccessModel"> The dataAccessModel to be validated.</param>
+        /// <param name="errorMessages"> List of error messages to be extended.</param>
         /// <returns>True if dataAccessModel can be parsed, false otherwise.</returns>
         private static bool Validate(IList<IDelftBcCategory> dataAccessModel,
-            IList<string> errorMessages)
+                                     ICollection<string> errorMessages)
         {
             if (dataAccessModel == null)
             {
@@ -77,12 +77,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
         /// <summary>
         /// Parse the provided valid dataAccessModel to obtain a valid MeteoFunction.
         /// </summary>
-        /// <param name="dataAccessModel">The air temperature, humidity and cloudiness categories (in any order). </param>
+        /// <param name="dataAccessModel">The air temperature, humidity and cloudiness categories (in any order).</param>
         /// <pre-condition> this.Validate(dataAccessModel, _)</pre-condition>
-        /// <returns>A new MeteoFunction correspoding with the description in the dataAccessModel</returns>
-        private static MeteoFunction Parse(IList<IDelftBcCategory> dataAccessModel)
+        /// <returns>A new MeteoFunction corresponding with the description in the dataAccessModel</returns>
+        private static MeteoFunction Parse(IList<IDelftBcCategory> dataAccessModel,
+                                           ICollection<string> errorMessages)
         {
             var meteoFunction = new MeteoFunction();
+
+            // Obtain Interpolation | Extrapolation
 
             // Obtain DateTime values
             var dateTimeValues = BcConverterHelper.ParseDateTimesValuesFromTableColumn(dataAccessModel[0].Table[0]);
@@ -100,7 +103,28 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
                     meteoFunction.Cloudiness.SetValues(values);
             }
 
-            // Parse time table
+            // Determine Interpolation | Extrapolation | Periodicity
+            if (!BcConverterHelper.ValidateInterpolation(dataAccessModel.First().Properties,
+                                                         out var interpolationType,
+                                                         out var extrapolationType))
+            {
+                errorMessages.Add("Unable to parse MeteoFunction interpolation, defaulting to linear-extrapolate.");
+                interpolationType = Flow1DInterpolationType.Linear;
+                extrapolationType = Flow1DExtrapolationType.Linear;
+            }
+
+            meteoFunction.SetInterpolationType(interpolationType);
+            meteoFunction.SetExtrapolationType(extrapolationType);
+
+            if (!BcConverterHelper.ValidatePeriodicity(dataAccessModel.First().Properties,
+                                                       out var hasPeriodicity))
+            {
+                errorMessages.Add("Unable to parse MeteoFunction periodicity, defaulting to false.");
+                hasPeriodicity = false;
+            }
+
+            meteoFunction.SetPeriodicity(hasPeriodicity);
+
             return meteoFunction;
         }
     }

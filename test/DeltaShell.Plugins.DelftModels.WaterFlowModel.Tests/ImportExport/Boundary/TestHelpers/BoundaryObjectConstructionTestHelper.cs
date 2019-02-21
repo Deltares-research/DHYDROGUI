@@ -22,12 +22,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
     {
         public static BoundaryConditionWater GetConstantWaterLevelBcComponent()
         {
-            return new BoundaryConditionWater(WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant, InterpolationType.Constant, false, 21.0);
+            return new BoundaryConditionWater(WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant, 21.0);
         }
 
         public static BoundaryConditionWater GetConstantWaterDischargeComponent()
         {
-            return new BoundaryConditionWater(WaterFlowModel1DBoundaryNodeDataType.FlowConstant, InterpolationType.Constant, false, 22.0);
+            return new BoundaryConditionWater(WaterFlowModel1DBoundaryNodeDataType.FlowConstant, 22.0);
         }
 
         public static BoundaryConditionWater GetLevelDischargeTableBcComponent()
@@ -36,18 +36,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
             var valuesWaterDischargeTable = new List<double>() { 95.0, 120.0, 210.0, 430.0 };
             var tableFunction = new Function();
 
-            tableFunction.Arguments.Add(new Variable<double>("Water Level")
-            {
-                InterpolationType = InterpolationType.Linear,
-                ExtrapolationType = ExtrapolationType.Periodic
-            });
+            tableFunction.Arguments.Add(new Variable<double>("Water Level"));
+
+            tableFunction.SetInterpolationType(Flow1DInterpolationType.Linear);
+            tableFunction.SetExtrapolationType(Flow1DExtrapolationType.Linear);
+            tableFunction.SetPeriodicity(true);
 
             tableFunction.Components.Add(new Variable<double>("Discharge", new Unit("", "")));
 
-
             tableFunction.Arguments[0].SetValues(valuesWaterLevelTable);
             tableFunction.Components[0].SetValues(valuesWaterDischargeTable);
-            return new BoundaryConditionWater(WaterFlowModel1DBoundaryNodeDataType.FlowWaterLevelTable, InterpolationType.Linear, true, tableFunction);
+            return new BoundaryConditionWater(WaterFlowModel1DBoundaryNodeDataType.FlowWaterLevelTable, Flow1DInterpolationType.Linear, Flow1DExtrapolationType.Linear, true, tableFunction);
         }
 
         public static BoundaryConditionWater GetTimeDependentWaterLevelBcComponent()
@@ -66,7 +65,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
             functionWaterLevel.Arguments[0].SetValues(timeValuesWaterLevel);
             functionWaterLevel.Components[0].SetValues(valuesWaterLevel);
             return new BoundaryConditionWater(WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries,
-                                              InterpolationType.Linear,
+                                              Flow1DInterpolationType.Linear,
+                                              Flow1DExtrapolationType.Linear,
                                               true,
                                               functionWaterLevel);
         }
@@ -87,14 +87,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
             functionWaterFlow.Arguments[0].SetValues(timeValuesWaterFlow);
             functionWaterFlow.Components[0].SetValues(valuesWaterFlow);
             return new BoundaryConditionWater(WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries,
-                                              InterpolationType.Linear,
+                                              Flow1DInterpolationType.Linear,
+                                              Flow1DExtrapolationType.Linear,
                                               true,
                                               functionWaterFlow);
         }
 
         public static BoundaryConditionSalt GetConstantSaltBcComponent()
         {
-            return new BoundaryConditionSalt(SaltBoundaryConditionType.Constant, InterpolationType.Constant, false, 23.0);
+            return new BoundaryConditionSalt(SaltBoundaryConditionType.Constant, 23.0);
         }
 
         public static BoundaryConditionSalt GetTimeDependentSaltBcComponent()
@@ -113,14 +114,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
             functionSalt.Arguments[0].SetValues(timeValuesSalt);
             functionSalt.Components[0].SetValues(valuesSalt);
             return new BoundaryConditionSalt(SaltBoundaryConditionType.TimeDependent,
-                                             InterpolationType.Linear,
+                                             Flow1DInterpolationType.Linear,
+                                             Flow1DExtrapolationType.Linear,
                                              true,
                                              functionSalt);
         }
 
         public static BoundaryConditionTemperature GetConstantTemperatureBcComponent()
         {
-            return new BoundaryConditionTemperature(TemperatureBoundaryConditionType.Constant, InterpolationType.Constant, false, 24.0);
+            return new BoundaryConditionTemperature(TemperatureBoundaryConditionType.Constant, 24.0);
         }
 
         public static BoundaryConditionTemperature GetTimeDependentTemperatureBcComponent()
@@ -138,7 +140,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
             functionTemperature.Arguments[0].SetValues(timeValuesTemperature);
             functionTemperature.Components[0].SetValues(valuesTemperature);
             return new BoundaryConditionTemperature(TemperatureBoundaryConditionType.TimeDependent,
-                                                    InterpolationType.Linear,
+                                                    Flow1DInterpolationType.Linear,
+                                                    Flow1DExtrapolationType.Linear,
                                                     true,
                                                     functionTemperature);
         }
@@ -147,7 +150,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
         #region LateralDischarge
         public static LateralDischargeWater GetConstantWaterLdComponent()
         {
-            return new LateralDischargeWater(WaterFlowModel1DLateralDataType.FlowConstant, InterpolationType.Constant, false, 21.0);
+            return new LateralDischargeWater(WaterFlowModel1DLateralDataType.FlowConstant, 21.0);
         }
 
         public static LateralDischargeWater GetTableWaterLdComponent()
@@ -156,16 +159,19 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
             var valuesWaterDischargeTable = new List<double>() { 95.0, 120.0, 210.0, 430.0 };
             var tableFunction = new Function();
 
-            tableFunction.Arguments.Add(new Variable<double>(BoundaryRegion.QuantityStrings.WaterLevel)
-            {
-                InterpolationType = InterpolationType.Linear,
-                ExtrapolationType = ExtrapolationType.Periodic
-            });
+            tableFunction.Arguments.Add(new Variable<double>(BoundaryRegion.QuantityStrings.WaterLevel));
+            tableFunction.SetInterpolationType(Flow1DInterpolationType.Linear);
+            tableFunction.SetExtrapolationType(Flow1DExtrapolationType.Linear);
+            tableFunction.SetPeriodicity(true);
 
             tableFunction.Components.Add(new Variable<double>(BoundaryRegion.QuantityStrings.WaterDischarge, new Unit("", "")));
             tableFunction.Arguments[0].SetValues(valuesWaterLevelTable);
             tableFunction.Components[0].SetValues(valuesWaterDischargeTable);
-            return new LateralDischargeWater(WaterFlowModel1DLateralDataType.FlowWaterLevelTable, InterpolationType.Linear, true, tableFunction);
+            return new LateralDischargeWater(WaterFlowModel1DLateralDataType.FlowWaterLevelTable,
+                                             Flow1DInterpolationType.Linear,
+                                             Flow1DExtrapolationType.Linear,
+                                             true, 
+                                             tableFunction);
         }
 
         public static LateralDischargeWater GetTimeDependentWaterLdComponent()
@@ -184,14 +190,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
             functionWaterLevel.Arguments[0].SetValues(timeValuesWaterLevel);
             functionWaterLevel.Components[0].SetValues(valuesWaterLevel);
             return new LateralDischargeWater(WaterFlowModel1DLateralDataType.FlowTimeSeries,
-                InterpolationType.Linear,
-                true,
-                functionWaterLevel);
+                                             Flow1DInterpolationType.Linear,
+                                             Flow1DExtrapolationType.Linear,
+                                             true,
+                                             functionWaterLevel);
         }
 
         public static LateralDischargeSalt GetConstantSaltMassLdComponent()
         {
-            return new LateralDischargeSalt(SaltLateralDischargeType.MassConstant, InterpolationType.Constant, false, 23.0);
+            return new LateralDischargeSalt(SaltLateralDischargeType.MassConstant, 23.0);
 
         }
 
@@ -211,14 +218,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
             functionSaltMass.Arguments[0].SetValues(timeValuesSaltMass);
             functionSaltMass.Components[0].SetValues(valuesSaltMass);
             return new LateralDischargeSalt(SaltLateralDischargeType.MassTimeSeries,
-                InterpolationType.Linear,
-                true,
-                functionSaltMass);
+                                            Flow1DInterpolationType.Linear,
+                                            Flow1DExtrapolationType.Linear,
+                                            true,
+                                            functionSaltMass);
         }
 
         public static LateralDischargeSalt GetConstantSaltConcentrationLdComponent()
         {
-            return new LateralDischargeSalt(SaltLateralDischargeType.ConcentrationConstant, InterpolationType.Constant, false, 25.0);
+            return new LateralDischargeSalt(SaltLateralDischargeType.ConcentrationConstant, 25.0);
         }
 
         public static LateralDischargeSalt GetTimeDependentSaltConcentrationLdComponent()
@@ -237,14 +245,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
             functionSaltConcentration.Arguments[0].SetValues(timeValuesSaltConcentration);
             functionSaltConcentration.Components[0].SetValues(valuesSaltConcentration);
             return new LateralDischargeSalt(SaltLateralDischargeType.ConcentrationTimeSeries,
-                InterpolationType.Linear,
-                true,
-                functionSaltConcentration);
+                                            Flow1DInterpolationType.Linear,
+                                            Flow1DExtrapolationType.Linear,
+                                            true,
+                                            functionSaltConcentration);
         }
 
         public static LateralDischargeTemperature GetConstantTemperatureLdComponent()
         {
-            return new LateralDischargeTemperature(TemperatureLateralDischargeType.Constant, InterpolationType.Constant, false, 24.0);
+            return new LateralDischargeTemperature(TemperatureLateralDischargeType.Constant, 24.0);
         }
 
         public static LateralDischargeTemperature timeDependentTemperatureLdComponent()
@@ -262,9 +271,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
             functionTemperature.Arguments[0].SetValues(timeValuesTemperature);
             functionTemperature.Components[0].SetValues(valuesTemperature);
             return new LateralDischargeTemperature(TemperatureLateralDischargeType.TimeDependent,
-                InterpolationType.Linear,
-                true,
-                functionTemperature);
+                                                   Flow1DInterpolationType.Linear,
+                                                   Flow1DExtrapolationType.Linear,
+                                                   true,
+                                                   functionTemperature);
         }
 
 

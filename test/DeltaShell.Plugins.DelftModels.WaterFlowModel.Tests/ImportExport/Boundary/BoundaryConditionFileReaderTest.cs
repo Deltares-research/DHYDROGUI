@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.IO.Helpers;
@@ -126,17 +125,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
 
             boundaryCondition = new BoundaryCondition(bcNodeName)
             {
-                WaterComponent = new BoundaryConditionWater(WaterFlowModel1DBoundaryNodeDataType.FlowConstant, InterpolationType.Constant, false, 20.0),
-                SaltComponent = new BoundaryConditionSalt(SaltBoundaryConditionType.Constant, InterpolationType.Constant, false, 21.0),
-                TemperatureComponent = new BoundaryConditionTemperature(TemperatureBoundaryConditionType.Constant, InterpolationType.Constant, false, 22.0)
+                WaterComponent = new BoundaryConditionWater(WaterFlowModel1DBoundaryNodeDataType.FlowConstant, 20.0),
+                SaltComponent = new BoundaryConditionSalt(SaltBoundaryConditionType.Constant, 21.0),
+                TemperatureComponent = new BoundaryConditionTemperature(TemperatureBoundaryConditionType.Constant, 22.0)
             };
 
             // Lateral Discharge
             lateralDischarge = new LateralDischarge(ldNodeName)
             {
-                WaterComponent = new LateralDischargeWater(WaterFlowModel1DLateralDataType.FlowConstant, InterpolationType.Constant, false, 30.0),
-                SaltComponent = new LateralDischargeSalt(SaltLateralDischargeType.ConcentrationConstant, InterpolationType.Constant, false, 31.0),
-                TemperatureComponent = new LateralDischargeTemperature(TemperatureLateralDischargeType.Constant, InterpolationType.Constant, false, 32.0)
+                WaterComponent = new LateralDischargeWater(WaterFlowModel1DLateralDataType.FlowConstant,30.0),
+                SaltComponent = new LateralDischargeSalt(SaltLateralDischargeType.ConcentrationConstant, 31.0),
+                TemperatureComponent = new LateralDischargeTemperature(TemperatureLateralDischargeType.Constant, 32.0)
             };
         }
 

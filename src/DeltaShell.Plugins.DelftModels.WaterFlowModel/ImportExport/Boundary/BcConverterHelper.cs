@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using DelftTools.Functions.Generic;
 using DeltaShell.NGHS.IO.FileWriters.Boundary;
 using DeltaShell.NGHS.IO.Helpers;
 
@@ -82,9 +81,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
         /// True and null if it does not exist and is optional, False otherwise
         /// </returns>
         public static bool ValidateUniqueProperty(IList<DelftIniProperty> properties,
-            string propertyKey,
-            bool isOptional,
-            out string propertyVal)
+                                                  string propertyKey,
+                                                  bool isOptional,
+                                                  out string propertyVal)
         {
             propertyVal = null;
             var nPropertyEntries = properties.Count(p => p.Name.Equals(propertyKey, StringComparison.OrdinalIgnoreCase));
@@ -106,13 +105,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
         /// If True then name contains the found Name.
         /// </returns>
         public static bool ValidateNameProperty(IList<DelftIniProperty> properties,
-            out string name)
+                                                out string name)
         {
-            return ValidateUniqueProperty(properties,
-                       BoundaryRegion.Name.Key,
-                       false,
-                       out name) &&
-                   name.Length > 0;
+            return ValidateUniqueProperty(properties, BoundaryRegion.Name.Key, false, out name) && name.Length > 0;
         }
 
         /// <summary>
@@ -125,15 +120,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
         /// If True then functionType contains the found FunctionType.
         /// </returns>
         public static bool ValidateFunctionProperty(IList<DelftIniProperty> properties,
-            out FunctionType functionType)
+                                                    out FunctionType functionType)
         {
             functionType = FunctionType.Constant;
 
-            string functionStr;
-            if (!ValidateUniqueProperty(properties,
-                BoundaryRegion.Function.Key,
-                false,
-                out functionStr))
+            if (!ValidateUniqueProperty(properties, BoundaryRegion.Function.Key, false, out var functionStr))
                 return false;
 
             switch (functionStr)
@@ -165,27 +156,35 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
         /// If True then type contains the found InterpolationType.
         /// </returns>
         public static bool ValidateInterpolation(IList<DelftIniProperty> properties,
-            out InterpolationType type)
+                                                 out Flow1DInterpolationType interpolationType,
+                                                 out Flow1DExtrapolationType extrapolationType)
         {
-            type = InterpolationType.None;
+            interpolationType = Flow1DInterpolationType.Linear;
+            extrapolationType = Flow1DExtrapolationType.Linear;
 
-            string interpolationTypeString;
-            if (!ValidateUniqueProperty(properties,
-                BoundaryRegion.Interpolation.Key,
-                false,
-                out interpolationTypeString))
+            if (!ValidateUniqueProperty(properties, 
+                                        BoundaryRegion.Interpolation.Key,
+                                        false,
+                                        out var interpolationTypeString))
                 return false;
 
             switch (interpolationTypeString)
             {
                 case BoundaryRegion.TimeInterpolationStrings.LinearAndExtrapolate:
-                    type = InterpolationType.Linear;
+                    interpolationType = Flow1DInterpolationType.Linear;
+                    extrapolationType = Flow1DExtrapolationType.Linear;
+                    break;
+                case BoundaryRegion.TimeInterpolationStrings.Linear:
+                    interpolationType = Flow1DInterpolationType.Linear;
+                    extrapolationType = Flow1DExtrapolationType.Constant;
                     break;
                 case BoundaryRegion.TimeInterpolationStrings.BlockFrom:
-                    type = InterpolationType.Constant;
+                    interpolationType = Flow1DInterpolationType.BlockFrom;
+                    extrapolationType = Flow1DExtrapolationType.Constant;
                     break;
                 case BoundaryRegion.TimeInterpolationStrings.BlockTo:
-                    type = InterpolationType.Constant;
+                    interpolationType = Flow1DInterpolationType.BlockTo;
+                    extrapolationType = Flow1DExtrapolationType.Constant;
                     break;
                 default:
                     return false;
@@ -204,14 +203,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
         /// If True then hasPeriodicity contains the found Periodicity.
         /// </returns>
         public static bool ValidatePeriodicity(IList<DelftIniProperty> properties,
-            out bool hasPeriodicity)
+                                               out bool hasPeriodicity)
         {
             hasPeriodicity = false;
-            string periodicityStr;
-            if (!ValidateUniqueProperty(properties,
-                BoundaryRegion.Periodic.Key,
-                true,
-                out periodicityStr))
+            if (!ValidateUniqueProperty(properties, BoundaryRegion.Periodic.Key, true, out var periodicityStr))
             {
                 return false;
             }

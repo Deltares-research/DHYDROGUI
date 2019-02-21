@@ -6,7 +6,6 @@ using DelftTools.Functions.Generic;
 using DelftTools.Units;
 using DeltaShell.NGHS.IO.FileWriters.Boundary;
 using DeltaShell.NGHS.IO.Helpers;
-using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Boundary
 {
@@ -86,7 +85,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
         public static IDelftBcCategory GetCommonCategory(string header,
             string name,
             string functionString,
-            InterpolationType interpolationType,
+            string interpolationType,
             string isPeriodic)
         {
             IDefinitionGeneratorBoundary componentDefinitionGenerator =
@@ -96,9 +95,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
             var boundaryDefinition = componentDefinitionGenerator.CreateRegion(
                 name,
                 functionString,
-                interpolationType == InterpolationType.Constant
-                    ? BoundaryRegion.TimeInterpolationStrings.BlockFrom
-                    : BoundaryRegion.TimeInterpolationStrings.LinearAndExtrapolate,
+                interpolationType,
                 isPeriodic);
             return boundaryDefinition;
         }
@@ -107,24 +104,39 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
         {
             var function = new Function();
 
-            function.Arguments.Add(new Variable<DateTime>("Time")
-            {
-                InterpolationType = InterpolationType.Linear,
-                ExtrapolationType = ExtrapolationType.Periodic
-            });
+            function.Arguments.Add(new Variable<DateTime>("Time"));
+
+            function.SetInterpolationType(Flow1DInterpolationType.Linear);
+            function.SetExtrapolationType(Flow1DExtrapolationType.Linear);
+            function.SetPeriodicity(true);
 
             function.Components.Add(new Variable<double>(quantity, new Unit(unitName, unitVal)));
             return function;
         }
 
-        public static string GetTimeSeriesIsPeriodicProperty(IFunction timeSeries)
+        public static string ToTimeInterpolationString(Flow1DInterpolationType? interpolationType, Flow1DExtrapolationType? extrapolationType)
         {
-            string periodic = null;
-            if (timeSeries?.Arguments != null && timeSeries.Arguments.Count > 0)
+            if (interpolationType == null || extrapolationType == null)
+                throw new ArgumentNullException();
+
+            switch (interpolationType)
             {
-                periodic = timeSeries.Arguments[0].ExtrapolationType == ExtrapolationType.Periodic ? "true" : null;
+                case (Flow1DInterpolationType.Linear):
+                    return extrapolationType == Flow1DExtrapolationType.Constant
+                        ? BoundaryRegion.TimeInterpolationStrings.Linear
+                        : BoundaryRegion.TimeInterpolationStrings.LinearAndExtrapolate;
+                case (Flow1DInterpolationType.BlockFrom):
+                    return BoundaryRegion.TimeInterpolationStrings.BlockFrom;
+                case (Flow1DInterpolationType.BlockTo):
+                    return BoundaryRegion.TimeInterpolationStrings.BlockTo;
+                default:
+                    throw new NotImplementedException("Cannot derive a InterpolationString from the specified function.");
             }
-            return periodic;
+        }
+
+        public static string ToPeriodicityString(IFunction function)
+        {
+            return function.HasPeriodicity() ? "1" : null;
         }
     }
 }
