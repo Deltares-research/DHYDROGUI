@@ -191,16 +191,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
         {
             return (IMultiDimensionalArray<T>) GetVariableValues(function, filters);
         }
+
         /// <inheritdoc/>
-        /// <summary>
-        /// Gets the variable values as an implementation of IMultiDimensionalArray.
-        /// </summary>
-        /// <param name="variable">The variable.</param>
-        /// <param name="filters">The filters.</param>
-        /// <returns>an implementation of IMultiDimensionalArray.</returns>
-        /// <exception cref="T:System.NotImplementedException">
-        /// </exception>
-        public IMultiDimensionalArray GetVariableValues(IVariable variable, params IVariableFilter[] filters)
+        /// <exception cref="T:System.NotImplementedException">Thrown when <paramref name="function"/> is of unexpected format.</exception>
+        public IMultiDimensionalArray GetVariableValues(IVariable function, params IVariableFilter[] filters)
         {
             if (Path == null || !File.Exists(path))
             {
@@ -208,31 +202,31 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 {
                     var functionNames = Functions?.OfType<ICoverage>().Select(f => f.Name) ?? Enumerable.Empty<string>();
                     Log.Warn(string.Format(Resources.WaterFlowModel1DNetCdfFunctionStore_GetVariableValues_Path__0__does_not_exist___1_Unable_to_get_values_for___2_, Path,
-                        Environment.NewLine, string.Join(",", functionNames.ToString())));
+                        Environment.NewLine, string.Join(", ", functionNames)));
                     warningMessageNotYetThrown = false;
                 }
 
-                var genericType = typeof(MultiDimensionalArray<>).MakeGenericType(variable.ValueType);
+                var genericType = typeof(MultiDimensionalArray<>).MakeGenericType(function.ValueType);
                 return (IMultiDimensionalArray) Activator.CreateInstance(genericType);
             }
 
-            if (variable.IsIndependent) // argument
+            if (function.IsIndependent) // argument
             {
-                if (variable.ValueType == typeof(INetworkLocation))
+                if (function.ValueType == typeof(INetworkLocation))
                 {
-                    return GetResultsFromCache(variable, () => GetNetworkLocationsForLocations(variable, Enumerable.Range(0, MetaData.NumLocations).ToList()));
+                    return GetResultsFromCache(function, () => GetNetworkLocationsForLocations(function, Enumerable.Range(0, MetaData.NumLocations).ToList()));
                 }
 
-                if (variable.ValueType == typeof(IBranchFeature))
+                if (function.ValueType == typeof(IBranchFeature))
                 {
-                    return GetResultsFromCache(variable, () => GetBranchFeaturesForLocations(variable, Enumerable.Range(0, MetaData.NumLocations).ToList()));
+                    return GetResultsFromCache(function, () => GetBranchFeaturesForLocations(function, Enumerable.Range(0, MetaData.NumLocations).ToList()));
                 }
 
-                if (variable.ValueType == typeof(DateTime))
+                if (function.ValueType == typeof(DateTime))
                 {
                     if (!filters.Any())
                     {
-                        return GetResultsFromCache(variable, () => new MultiDimensionalArray<DateTime>(MetaData.Times));
+                        return GetResultsFromCache(function, () => new MultiDimensionalArray<DateTime>(MetaData.Times));
                     }
 
                     if (filters.Length == 1 && filters[0] is IVariableValueFilter)
@@ -243,9 +237,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 }
             }
 
-            if (variable.ValueType == typeof(double) && !variable.IsIndependent)
+            if (function.ValueType == typeof(double) && !function.IsIndependent)
             {
-                var coverage = GetCoverage(variable);
+                var coverage = GetCoverage(function);
                 var ncVariableName = GetNetCdfVariableName(coverage);
                 if (ncVariableName == null)
                 {
@@ -308,7 +302,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                     throw new NotImplementedException();
                 }
 
-                UpdateMinMax(timeSeriesData, variable);
+                UpdateMinMax(timeSeriesData, function);
 
                 return new MultiDimensionalArray<double>(timeSeriesData, shape);
             }
