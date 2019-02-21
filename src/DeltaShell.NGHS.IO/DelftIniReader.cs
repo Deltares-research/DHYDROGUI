@@ -13,7 +13,7 @@ namespace DeltaShell.NGHS.IO
         /// value can be anything and an optional comment 
         /// starting with the '#' character.
         /// </summary>
-        protected const string KeyValueCommentPattern = @"^\s*(?<key>[^=\s]+)\s*=\s*(?<value>[^#=]*)(#(?<comment>.*))?$";
+        private const string KeyValueCommentPattern = @"^\s*(?<key>[^=\s]+)\s*=\s*(?<value>[^#]*)(#(?<comment>.*))?$";
 
         /// <summary>
         /// Reads a Delft .ini format file.
@@ -72,7 +72,7 @@ namespace DeltaShell.NGHS.IO
             var result = new string[3];
 
             var matches = RegularExpression.GetMatches(KeyValueCommentPattern, line);
-            if(matches.Count == 0) throw new FormatException(String.Format("Invalid key-value-comment line on line {0} in file {1}", 
+            if(matches.Count == 0) throw new FormatException(string.Format("Invalid key-value-comment line on line {0} in file {1}", 
                                                                            LineNumber, InputFilePath));
 
             result[0] = matches[0].Groups["key"].Value.Trim();

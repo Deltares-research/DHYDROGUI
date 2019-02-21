@@ -31,5 +31,21 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Common.IO
             Assert.AreEqual("36", innerDomain.GetPropertyValue("NDir"));
             Assert.AreEqual(null, innerDomain.GetPropertyValue("harazafraz"));
         }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void GivenAnIniFileWithEqualsCharsInTheName_WhenReading_ThenItIsSCorrectlyInterpretedAsAString()
+        {
+            var delftIniReader = new DelftIniReader();
+            var testFilePath = TestHelper.GetTestFilePath(@"IniReaderTest\NetworkDefinition.ini");
+            var categories = delftIniReader.ReadDelftIniFile(testFilePath);
+            Assert.That(categories.Count, Is.EqualTo(4));
+
+            Assert.That(categories[1].Name, Is.EqualTo("Node=1"));
+            Assert.That(categories[1].Properties[0].Value, Is.EqualTo("Node001=6"));
+
+            Assert.That(categories[2].Name, Is.EqualTo("Node"));
+            Assert.That(categories[2].Properties[0].Value, Is.EqualTo("T1_B1_Manhole_x=1000m"));
+        }
     }
 }
