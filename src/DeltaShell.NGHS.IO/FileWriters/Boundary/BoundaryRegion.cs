@@ -14,8 +14,9 @@ namespace DeltaShell.NGHS.IO.FileWriters.Boundary
         public static class TimeInterpolationStrings
         {
             public const string LinearAndExtrapolate = "linear-extrapolate";
+            public const string Linear = "linear";
             public const string BlockFrom = "block-from";
-            public const string BlockTo = "block-to"; // used when reading only?
+            public const string BlockTo = "block-to"; 
         }
 
         public static class QuantityStrings

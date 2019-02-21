@@ -1,27 +1,480 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
+using DelftTools.Hydro;
+using DelftTools.TestUtils;
+using DelftTools.Utils;
+using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.FileWriters.Boundary;
 using DeltaShell.NGHS.IO.FileWriters.General;
+using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
+using DeltaShell.Plugins.DelftModels.WaterFlowModel.PhysicalParameters;
+using GeoAPI.Extensions.Networks;
 using NUnit.Framework;
+using Rhino.Mocks;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Boundary
 {
     [TestFixture]
     public class BoundaryFileWriterTest
     {
-        [SetUp]
-        public void SetUp(){}
+        /// <summary>
+        /// GIVEN a wind function with a specified approximation scheme
+        /// WHEN WriteFile is called
+        /// THEN the correct wind function is written to file
+        /// </summary>
+        [TestCase(Flow1DInterpolationType.BlockTo,   Flow1DExtrapolationType.Constant, false, BoundaryRegion.TimeInterpolationStrings.BlockTo)]
+        [TestCase(Flow1DInterpolationType.BlockTo,   Flow1DExtrapolationType.Constant, true,  BoundaryRegion.TimeInterpolationStrings.BlockTo)]
+        [TestCase(Flow1DInterpolationType.BlockFrom, Flow1DExtrapolationType.Constant, false, BoundaryRegion.TimeInterpolationStrings.BlockFrom)]
+        [TestCase(Flow1DInterpolationType.BlockFrom, Flow1DExtrapolationType.Constant, true,  BoundaryRegion.TimeInterpolationStrings.BlockFrom)]
+        [TestCase(Flow1DInterpolationType.Linear,    Flow1DExtrapolationType.Constant, false, BoundaryRegion.TimeInterpolationStrings.Linear)]
+        [TestCase(Flow1DInterpolationType.Linear,    Flow1DExtrapolationType.Constant, true,  BoundaryRegion.TimeInterpolationStrings.Linear)]
+        [TestCase(Flow1DInterpolationType.Linear,    Flow1DExtrapolationType.Linear,   false, BoundaryRegion.TimeInterpolationStrings.LinearAndExtrapolate)]
+        [TestCase(Flow1DInterpolationType.Linear,    Flow1DExtrapolationType.Linear,   true,  BoundaryRegion.TimeInterpolationStrings.LinearAndExtrapolate)]
+        public void GivenAWindFunctionWithASpecifiedApproximationScheme_WhenWriteFileIsCalled_ThenTheCorrectWindFunctionIsWrittenToFile(Flow1DInterpolationType interpolationType,
+                                                                                                                                        Flow1DExtrapolationType extrapolationType,
+                                                                                                                                        bool isPeriodic,
+                                                                                                                                        string expectedInterpolationValue)
+        {
+            // Given
+            var windFunction = new WindFunction();
+            windFunction.SetInterpolationType(interpolationType);
+            windFunction.SetExtrapolationType(extrapolationType);
+            windFunction.SetPeriodicity(isPeriodic);
 
-        [TearDown]
-        public void TearDown(){}
+            var model = GetModel(windFunction: windFunction);
+
+            // When
+            var categories = WhenWriteFileIsCalled(model);
+
+            // Then
+            // Verify the categories
+            Assert.That(categories, Is.Not.Null, 
+                        "Expected the read categories not to be null.");
+            var windBoundaryCategories = categories.Where(e => e.Name == BoundaryRegion.BcBoundaryHeader).ToList();
+            Assert.That(windBoundaryCategories.Count, Is.EqualTo(2),
+                        "Expected two categories when writing away just a wind function.");
+
+            // Verify the wind function components
+            foreach (var cat in windBoundaryCategories)
+            {
+                AssertTimeSeriesFunction(cat, 
+                                         FunctionAttributes.StandardFeatureNames.ModelWide, 
+                                         BoundaryRegion.FunctionStrings.TimeSeries,
+                                         expectedInterpolationValue,
+                                         isPeriodic);
+            }
+        }
+
+        /// <summary>
+        /// GIVEN a meteo function with a specified approximation scheme
+        /// WHEN WriteFile is called
+        /// THEN the correct meteo function is written to file
+        /// </summary>
+        [TestCase(Flow1DInterpolationType.BlockTo,   Flow1DExtrapolationType.Constant, false, BoundaryRegion.TimeInterpolationStrings.BlockTo)]
+        [TestCase(Flow1DInterpolationType.BlockTo,   Flow1DExtrapolationType.Constant, true,  BoundaryRegion.TimeInterpolationStrings.BlockTo)]
+        [TestCase(Flow1DInterpolationType.BlockFrom, Flow1DExtrapolationType.Constant, false, BoundaryRegion.TimeInterpolationStrings.BlockFrom)]
+        [TestCase(Flow1DInterpolationType.BlockFrom, Flow1DExtrapolationType.Constant, true,  BoundaryRegion.TimeInterpolationStrings.BlockFrom)]
+        [TestCase(Flow1DInterpolationType.Linear,    Flow1DExtrapolationType.Constant, false, BoundaryRegion.TimeInterpolationStrings.Linear)]
+        [TestCase(Flow1DInterpolationType.Linear,    Flow1DExtrapolationType.Constant, true,  BoundaryRegion.TimeInterpolationStrings.Linear)]
+        [TestCase(Flow1DInterpolationType.Linear,    Flow1DExtrapolationType.Linear,   false, BoundaryRegion.TimeInterpolationStrings.LinearAndExtrapolate)]
+        [TestCase(Flow1DInterpolationType.Linear,    Flow1DExtrapolationType.Linear,   true,  BoundaryRegion.TimeInterpolationStrings.LinearAndExtrapolate)]
+        public void GivenAMeteoFunctionWithASpecifiedApproximationScheme_WhenWriteFileIsCalled_ThenTheCorrectMeteoFunctionIsWrittenToFile(Flow1DInterpolationType interpolationType,
+                                                                                                                                          Flow1DExtrapolationType extrapolationType,
+                                                                                                                                          bool isPeriodic,
+                                                                                                                                          string expectedInterpolationValue)
+        {
+            // Given
+            var meteoFunction = new MeteoFunction();
+            meteoFunction.SetInterpolationType(interpolationType);
+            meteoFunction.SetExtrapolationType(extrapolationType);
+            meteoFunction.SetPeriodicity(isPeriodic);
+
+            var model = GetModel(meteoFunction: meteoFunction);
+
+            // When
+            var categories = WhenWriteFileIsCalled(model);
+
+            // Then
+            // Verify categories
+            Assert.That(categories, Is.Not.Null,
+                        "Expected the read categories not to be null.");
+            var windBoundaryCategories = categories.Where(e => e.Name == BoundaryRegion.BcBoundaryHeader).ToList();
+            Assert.That(windBoundaryCategories.Count, Is.EqualTo(3), 
+                        "Expected three categories when writing away just a meteo-function.");
+
+            // Verify meteo function components
+            foreach (var cat in windBoundaryCategories)
+            {
+                AssertTimeSeriesFunction(cat, FunctionAttributes.StandardFeatureNames.ModelWide, BoundaryRegion.FunctionStrings.TimeSeries, expectedInterpolationValue, isPeriodic);
+            }
+        }
+
+        /// <summary>
+        /// GIVEN a BoundaryCondition with a specified approximation scheme
+        /// WHEN WriteFile is called
+        /// THEN the correct boundary condition is written to file
+        /// </summary>
+        [TestCase(WaterFlowModel1DBoundaryNodeDataType.FlowWaterLevelTable, Flow1DInterpolationType.Linear,  Flow1DExtrapolationType.Constant, false, BoundaryRegion.FunctionStrings.QhTable, BoundaryRegion.TimeInterpolationStrings.Linear)]
+
+        [TestCase(WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries, Flow1DInterpolationType.BlockTo,   Flow1DExtrapolationType.Constant, false, BoundaryRegion.FunctionStrings.TimeSeries, BoundaryRegion.TimeInterpolationStrings.BlockTo)]
+        [TestCase(WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries, Flow1DInterpolationType.BlockTo,   Flow1DExtrapolationType.Constant, true,  BoundaryRegion.FunctionStrings.TimeSeries, BoundaryRegion.TimeInterpolationStrings.BlockTo)]
+        [TestCase(WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries, Flow1DInterpolationType.BlockFrom, Flow1DExtrapolationType.Constant, false, BoundaryRegion.FunctionStrings.TimeSeries, BoundaryRegion.TimeInterpolationStrings.BlockFrom)]
+        [TestCase(WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries, Flow1DInterpolationType.BlockFrom, Flow1DExtrapolationType.Constant, true,  BoundaryRegion.FunctionStrings.TimeSeries, BoundaryRegion.TimeInterpolationStrings.BlockFrom)]
+        [TestCase(WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries, Flow1DInterpolationType.Linear,    Flow1DExtrapolationType.Constant, false, BoundaryRegion.FunctionStrings.TimeSeries, BoundaryRegion.TimeInterpolationStrings.Linear)]
+        [TestCase(WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries, Flow1DInterpolationType.Linear,    Flow1DExtrapolationType.Constant, true,  BoundaryRegion.FunctionStrings.TimeSeries, BoundaryRegion.TimeInterpolationStrings.Linear)]
+        [TestCase(WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries, Flow1DInterpolationType.Linear,    Flow1DExtrapolationType.Linear,   false, BoundaryRegion.FunctionStrings.TimeSeries, BoundaryRegion.TimeInterpolationStrings.LinearAndExtrapolate)]
+        [TestCase(WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries, Flow1DInterpolationType.Linear,    Flow1DExtrapolationType.Linear,   true,  BoundaryRegion.FunctionStrings.TimeSeries, BoundaryRegion.TimeInterpolationStrings.LinearAndExtrapolate)]
+
+        [TestCase(WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries, Flow1DInterpolationType.BlockTo,   Flow1DExtrapolationType.Constant, false, BoundaryRegion.FunctionStrings.TimeSeries, BoundaryRegion.TimeInterpolationStrings.BlockTo)]
+        [TestCase(WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries, Flow1DInterpolationType.BlockTo,   Flow1DExtrapolationType.Constant, true,  BoundaryRegion.FunctionStrings.TimeSeries, BoundaryRegion.TimeInterpolationStrings.BlockTo)]
+        [TestCase(WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries, Flow1DInterpolationType.BlockFrom, Flow1DExtrapolationType.Constant, false, BoundaryRegion.FunctionStrings.TimeSeries, BoundaryRegion.TimeInterpolationStrings.BlockFrom)]
+        [TestCase(WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries, Flow1DInterpolationType.BlockFrom, Flow1DExtrapolationType.Constant, true,  BoundaryRegion.FunctionStrings.TimeSeries, BoundaryRegion.TimeInterpolationStrings.BlockFrom)]
+        [TestCase(WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries, Flow1DInterpolationType.Linear,    Flow1DExtrapolationType.Constant, false, BoundaryRegion.FunctionStrings.TimeSeries, BoundaryRegion.TimeInterpolationStrings.Linear)]
+        [TestCase(WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries, Flow1DInterpolationType.Linear,    Flow1DExtrapolationType.Constant, true,  BoundaryRegion.FunctionStrings.TimeSeries, BoundaryRegion.TimeInterpolationStrings.Linear)]
+        [TestCase(WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries, Flow1DInterpolationType.Linear,    Flow1DExtrapolationType.Linear,   false, BoundaryRegion.FunctionStrings.TimeSeries, BoundaryRegion.TimeInterpolationStrings.LinearAndExtrapolate)]
+        [TestCase(WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries, Flow1DInterpolationType.Linear,    Flow1DExtrapolationType.Linear,   true,  BoundaryRegion.FunctionStrings.TimeSeries, BoundaryRegion.TimeInterpolationStrings.LinearAndExtrapolate)]
+        public void GivenABoundaryConditionWithASpecifiedApproximationScheme_WhenWriteFileIsCalled_ThenTheCorrectBoundaryConditionIsWrittenToFile(WaterFlowModel1DBoundaryNodeDataType nodeType,
+                                                                                                                                                  Flow1DInterpolationType interpolationType,
+                                                                                                                                                  Flow1DExtrapolationType extrapolationType,
+                                                                                                                                                  bool isPeriodic,
+                                                                                                                                                  string expectedFunctionString,
+                                                                                                                                                  string expectedInterpolationValue)
+        {
+            // Given
+            const string nodeName = "Node_Smode";
+
+            var relevantBoundary = GetBoundaryNodeData(nodeName);
+            relevantBoundary.DataType = nodeType; // In order to trigger the creation of the function, type is set first.
+            
+            relevantBoundary.Data.SetInterpolationType(interpolationType);
+            relevantBoundary.Data.SetExtrapolationType(extrapolationType);
+            relevantBoundary.Data.SetPeriodicity(isPeriodic);
+
+            var model = GetModel(boundaryNode: relevantBoundary);
+
+            // When
+            var categories = WhenWriteFileIsCalled(model);
+
+            // Then
+            // verify the categories
+            Assert.That(categories, Is.Not.Null, 
+                        "Expected the read categories not to be null.");
+            var boundaryCategories = categories.Where(e => e.Name == BoundaryRegion.BcBoundaryHeader).ToList();
+            Assert.That(boundaryCategories.Count, Is.EqualTo(1), 
+                        "Expected one category when writing away just a boundary condition.");
+
+            // Verify the BoundaryCondition
+            var cat = boundaryCategories.First();
+            AssertTimeSeriesFunction(cat, nodeName, expectedFunctionString, expectedInterpolationValue, isPeriodic);
+        }
+
+        /// <summary>
+        /// GIVEN a none BoundaryCondition
+        /// WHEN WriteFile is called
+        /// THEN no data is written to file
+        /// </summary>
+        [Test]
+        public void GivenANoneBoundaryCondition_WhenWriteFileIsCalled_ThenNoDataIsWrittenToFile()
+        {
+            // Given
+            var relevantBoundary = new WaterFlowModel1DBoundaryNodeData();
+            relevantBoundary.DataType = WaterFlowModel1DBoundaryNodeDataType.None;
+
+            var model = GetModel(boundaryNode: relevantBoundary);
+
+            // When
+            var categories = WhenWriteFileIsCalled(model);
+
+            // Then
+            Assert.That(categories, Is.Not.Null, 
+                        "Expected the read categories not to be null.");
+            var boundaryCategories = categories.Where(e => e.Name == BoundaryRegion.BcBoundaryHeader).ToList();
+            Assert.That(boundaryCategories.Count, Is.EqualTo(0), 
+                        "Expected no categories when writing away a none boundary condition.");
+        }
+
+        /// <summary>
+        /// GIVEN a constant BoundaryCondition
+        /// WHEN WriteFile is called
+        /// THEN the correct boundary condition is written to file
+        /// </summary>
+        [TestCase(WaterFlowModel1DBoundaryNodeDataType.FlowConstant)]
+        [TestCase(WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant)]
+        public void GivenAConstantBoundaryCondition_WhenWriteFileIsCalled_ThenTheCorrectBoundaryConditionIsWrittenToFile(WaterFlowModel1DBoundaryNodeDataType nodeType)
+        {
+            // Given
+            const string nodeName = "Node_Smode";
+            var relevantBoundary = GetBoundaryNodeData(nodeName);
+
+            relevantBoundary.DataType = nodeType;
+
+            var model = GetModel(boundaryNode: relevantBoundary);
+
+            // When
+            var categories = WhenWriteFileIsCalled(model);
+
+            // Then
+            // Verify the categories
+            Assert.That(categories, Is.Not.Null, "Expected the read categories not to be null.");
+            var boundaryCategories = categories.Where(e => e.Name == BoundaryRegion.BcBoundaryHeader).ToList();
+            Assert.That(boundaryCategories.Count, Is.EqualTo(1), 
+                        "Expected 1 category when writing a constant boundary condition.");
+
+            // Verify the boundary conditions
+            var cat = boundaryCategories.First();
+            Assert.That(cat.GetPropertyValue(BoundaryRegion.Name.Key), Is.EqualTo(nodeName),
+                        "Expected a different name.");
+            Assert.That(cat.GetPropertyValue(BoundaryRegion.Function.Key), Is.EqualTo(BoundaryRegion.FunctionStrings.Constant),
+                        "Expected a different function type.");
+        }
+
+        /// <summary>
+        /// GIVEN a LateralDischarge with a specified approximation scheme
+        /// WHEN WriteFile is called
+        /// THEN the correct LateralDischarge is written to file
+        /// </summary>
+        [TestCase(WaterFlowModel1DLateralDataType.FlowWaterLevelTable, Flow1DInterpolationType.Linear, Flow1DExtrapolationType.Constant, false, BoundaryRegion.FunctionStrings.QhTable, BoundaryRegion.TimeInterpolationStrings.Linear)]
+
+        [TestCase(WaterFlowModel1DLateralDataType.FlowTimeSeries, Flow1DInterpolationType.BlockTo,   Flow1DExtrapolationType.Constant, false, BoundaryRegion.FunctionStrings.TimeSeries, BoundaryRegion.TimeInterpolationStrings.BlockTo)]
+        [TestCase(WaterFlowModel1DLateralDataType.FlowTimeSeries, Flow1DInterpolationType.BlockTo,   Flow1DExtrapolationType.Constant, true,  BoundaryRegion.FunctionStrings.TimeSeries, BoundaryRegion.TimeInterpolationStrings.BlockTo)]
+        [TestCase(WaterFlowModel1DLateralDataType.FlowTimeSeries, Flow1DInterpolationType.BlockFrom, Flow1DExtrapolationType.Constant, false, BoundaryRegion.FunctionStrings.TimeSeries, BoundaryRegion.TimeInterpolationStrings.BlockFrom)]
+        [TestCase(WaterFlowModel1DLateralDataType.FlowTimeSeries, Flow1DInterpolationType.BlockFrom, Flow1DExtrapolationType.Constant, true,  BoundaryRegion.FunctionStrings.TimeSeries, BoundaryRegion.TimeInterpolationStrings.BlockFrom)]
+        [TestCase(WaterFlowModel1DLateralDataType.FlowTimeSeries, Flow1DInterpolationType.Linear,    Flow1DExtrapolationType.Constant, false, BoundaryRegion.FunctionStrings.TimeSeries, BoundaryRegion.TimeInterpolationStrings.Linear)]
+        [TestCase(WaterFlowModel1DLateralDataType.FlowTimeSeries, Flow1DInterpolationType.Linear,    Flow1DExtrapolationType.Constant, true,  BoundaryRegion.FunctionStrings.TimeSeries, BoundaryRegion.TimeInterpolationStrings.Linear)]
+        [TestCase(WaterFlowModel1DLateralDataType.FlowTimeSeries, Flow1DInterpolationType.Linear,    Flow1DExtrapolationType.Linear,   false, BoundaryRegion.FunctionStrings.TimeSeries, BoundaryRegion.TimeInterpolationStrings.LinearAndExtrapolate)]
+        [TestCase(WaterFlowModel1DLateralDataType.FlowTimeSeries, Flow1DInterpolationType.Linear,    Flow1DExtrapolationType.Linear,   true,  BoundaryRegion.FunctionStrings.TimeSeries, BoundaryRegion.TimeInterpolationStrings.LinearAndExtrapolate)]
+
+        public void GivenALateralDischargeWithASpecifiedApproximationScheme_WhenWriteFileIsCalled_ThenTheCorrectLateralDischargeIsWrittenToFile(WaterFlowModel1DLateralDataType lateralType,
+                                                                                                                                                Flow1DInterpolationType interpolationType,
+                                                                                                                                                Flow1DExtrapolationType extrapolationType,
+                                                                                                                                                bool isPeriodic,
+                                                                                                                                                string expectedFunctionString,
+                                                                                                                                                string expectedInterpolationValue)
+        {
+            // Given
+            const string nodeName = "Literally_a_lateral";
+
+            var relevantLateral = GetLateralSourceData(nodeName);
+            relevantLateral.DataType = lateralType;
+
+            relevantLateral.Data.SetInterpolationType(interpolationType);
+            relevantLateral.Data.SetExtrapolationType(extrapolationType);
+            relevantLateral.Data.SetPeriodicity(isPeriodic);
+
+            var model = GetModel(lateralNode: relevantLateral);
+
+            // When
+            var categories = WhenWriteFileIsCalled(model);
+
+            // Then
+            // Verify the categories
+            Assert.That(categories, Is.Not.Null, 
+                        "Expected the read categories not to be null.");
+            var lateralCategories = categories.Where(e => e.Name == BoundaryRegion.BcLateralHeader).ToList();
+            Assert.That(lateralCategories.Count, Is.EqualTo(1), 
+                        "Expected 1 category when writing a constant boundary condition.");
+
+            // Verify the LateralDischarge
+            var cat = lateralCategories.First();
+            AssertTimeSeriesFunction(cat, nodeName, expectedFunctionString, expectedInterpolationValue, isPeriodic);
+        }
+
+        /// <summary>
+        /// GIVEN a constant LateralDischarge
+        /// WHEN WriteFile is called
+        /// THEN the correct LateralDischarge is written to file
+        /// </summary>
+        [Test]
+        public void GivenAConstantLateralDischarge_WhenWriteFileIsCalled_ThenTheCorrectLateralDischargeIsWrittenToFile()
+        {
+            // Given
+            // Set up basic elements
+            const string nodeName = "Literally_a_lateral";
+
+            var relevantLateral = GetLateralSourceData(nodeName);
+            relevantLateral.DataType = WaterFlowModel1DLateralDataType.FlowConstant;
+
+            var model = GetModel(lateralNode:relevantLateral);
+
+            // When
+            var categories = WhenWriteFileIsCalled(model);
+
+            // Then
+            // Verify the categories
+            Assert.That(categories, Is.Not.Null,
+                        "Expected the read categories not to be null.");
+            var lateralCategories = categories.Where(e => e.Name == BoundaryRegion.BcLateralHeader).ToList();
+            Assert.That(lateralCategories.Count, Is.EqualTo(1), 
+                        "Expected 1 category when writing a constant boundary condition.");
+
+            // Verify the constant LateralDischarge
+            var cat = lateralCategories.First();
+            Assert.That(cat.GetPropertyValue(BoundaryRegion.Name.Key), Is.EqualTo(nodeName), 
+                        "Expected a different name.");
+            Assert.That(cat.GetPropertyValue(BoundaryRegion.Function.Key), Is.EqualTo(BoundaryRegion.FunctionStrings.Constant), 
+                        "Expected a different function type.");
+        }
+
+        /// <summary>
+        /// Get a basic lateral source data with a mocked node with the specified name.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns>A basic LateralSourceData.</returns>
+        private static WaterFlowModel1DLateralSourceData GetLateralSourceData(string name)
+        {
+            var node = MockRepository.GenerateMock<LateralSource>();
+            node.Expect(n => n.Name).Return(name);
+
+            var lateral = new WaterFlowModel1DLateralSourceData()
+            {
+                Feature = node
+            };
+            return lateral;
+        }
+
+        /// <summary>
+        /// Get a basic boundary node data with a mocked node with the specified name.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns>A basic BoundaryNodeDate. </returns>
+        private static WaterFlowModel1DBoundaryNodeData GetBoundaryNodeData(string name)
+        {
+            var branchList = MockRepository.GenerateStrictMock<IEventedList<IBranch>>();
+            branchList.Expect(l => l.CollectionChanged += null).IgnoreArguments().Repeat.Any();
+            var linksList = MockRepository.GenerateStrictMock<IEventedList<HydroLink>>();
+            linksList.Expect(l => l.CollectionChanged += null).IgnoreArguments().Repeat.Any();
+
+            var node = MockRepository.GenerateMock<IHydroNode, INotifyPropertyChange>();
+            node.Expect(n => n.Name).Return(name);
+            node.Expect(n => n.IncomingBranches).Return(branchList);
+            node.Expect(n => n.OutgoingBranches).Return(branchList);
+            node.Expect(n => n.Links).Return(linksList);
+
+            var boundary = new WaterFlowModel1DBoundaryNodeData()
+            {
+                Feature = node
+            };
+            return boundary;
+        }
+
+        /// <summary>
+        /// Get a partially mocked WaterFlowModel1D with the specified optional parameters.
+        /// </summary>
+        /// <param name="windFunction">Optional wind function.</param>
+        /// <param name="meteoFunction">Optional meteo function.</param>
+        /// <param name="lateralNode">Optional lateral node.</param>
+        /// <param name="boundaryNode">Optional boundary node.</param>
+        /// <returns>Partially mocked WaterFlowModel1D. </returns>
+        /// <remarks>
+        /// If a parameter is not null this value will be returned with the
+        /// corresponding parameter, else a default value will be used.
+        /// </remarks>
+        private static WaterFlowModel1D GetModel(WindFunction windFunction = null,
+                                                 MeteoFunction meteoFunction = null,
+                                                 WaterFlowModel1DLateralSourceData lateralNode = null,
+                                                 WaterFlowModel1DBoundaryNodeData boundaryNode = null)
+        {
+            var boundaryConditions = new EventedList<WaterFlowModel1DBoundaryNodeData>();
+
+            if (boundaryNode != null)
+                boundaryConditions.Add(boundaryNode);
+
+            var laterals = new EventedList<WaterFlowModel1DLateralSourceData>();
+
+            if (lateralNode != null)
+                laterals.Add(lateralNode);
+
+            if (windFunction == null)
+            {
+                windFunction = new WindFunction();
+                windFunction.Arguments.Clear(); // WindFunctions without arguments are skipped
+            }
+
+            if (meteoFunction == null)
+            {
+                meteoFunction = new MeteoFunction();
+                meteoFunction.Arguments.Clear(); // MeteoFunctions without arguments are skipped
+            }
+
+            var model = MockRepository.GeneratePartialMock<WaterFlowModel1D>(); // PartialMock because of eventing
+            model.Expect(m => m.UseSalt)
+                 .Return(false);
+            model.Expect(m => m.UseTemperature)
+                 .Return(false);
+            model.Expect(m => m.BoundaryConditions)
+                 .Return(boundaryConditions);
+            model.Expect(m => m.LateralSourceData)
+                 .Return(laterals);
+            model.Expect(m => m.StartTime)
+                 .Return(DateTime.Today);
+            model.Expect(m => m.Wind)
+                 .Return(windFunction);
+            model.Expect(m => m.MeteoData)
+                 .Return(meteoFunction);
+
+            return model;
+        }
+
+        /// <summary>
+        /// When-operation for the preceding tests.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns>
+        /// A set of read IDelftBcCategories which were written to file.
+        /// </returns>
+        private static IList<IDelftBcCategory> WhenWriteFileIsCalled(WaterFlowModel1D model)
+        {
+            IList<IDelftBcCategory> categories = null;
+            TestHelper.PerformActionInTemporaryDirectory(tempDir =>
+            {
+                var path = Path.Combine(tempDir, "outputFile.bc");
+
+                WaterFlowModel1DBoundaryFileWriter.WriteFile(path, model);
+
+                var delftBcReader = new DelftBcReader();
+                categories = delftBcReader.ReadDelftBcFile(path);
+            });
+
+            return categories;
+        }
+
+        /// <summary>
+        /// Assert that the provided time series function corresponds with the provided parameters.
+        /// </summary>
+        /// <param name="cat">The DilftIniCategory describing the function.</param>
+        /// <param name="name">The name of the function.</param>
+        /// <param name="expectedFunctionString">The expected function value within the category.</param>
+        /// <param name="expectedInterpolationValue">The expected interpolation value within the category.</param>
+        /// <param name="isPeriodic">Whether it is expected that the category describes a periodic function.</param>
+        private static void AssertTimeSeriesFunction(IDelftIniCategory cat,
+                                                     string name, 
+                                                     string expectedFunctionString,
+                                                     string expectedInterpolationValue,
+                                                     bool isPeriodic)
+        {
+            Assert.That(cat.GetPropertyValue(BoundaryRegion.Name.Key),
+                Is.EqualTo(name), "Expected a different name.");
+            Assert.That(cat.GetPropertyValue(BoundaryRegion.Function.Key), 
+                Is.EqualTo(expectedFunctionString), "Expected a different function string.");
+            Assert.That(cat.GetPropertyValue(BoundaryRegion.Interpolation.Key), 
+                Is.EqualTo(expectedInterpolationValue), "Expected a different interpolation value.");
+
+            if (isPeriodic)
+                Assert.That(cat.GetPropertyValue(BoundaryRegion.Periodic.Key), 
+                    Is.EqualTo("1"), "Expected a '1' (true) for periodic.");
+            else
+                Assert.That(cat.GetPropertyValue(BoundaryRegion.Periodic.Key), 
+                    Is.Null, "Expected no periodic key in written file.");
+        }
 
         [Test]
         public void TestBoundaryConditionFileWriterGivesExpectedResults_MeteoData()
@@ -145,7 +598,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
             Assert.AreEqual(3, boundaryNodeCategories[0].Properties.Count);
             Assert.AreEqual(BoundaryFileWriterTestHelper.NodeConstantFlowName, boundaryNodeCategories[0].Properties[0].Value);
             Assert.AreEqual(BoundaryRegion.FunctionStrings.Constant, boundaryNodeCategories[0].Properties[1].Value);
-            Assert.AreEqual(BoundaryRegion.TimeInterpolationStrings.LinearAndExtrapolate, boundaryNodeCategories[0].Properties[2].Value);
+            Assert.AreEqual(BoundaryRegion.TimeInterpolationStrings.BlockTo, boundaryNodeCategories[0].Properties[2].Value);
             Assert.AreEqual(1, boundaryNodeCategories[0].Table.Count);
             Assert.AreEqual(BoundaryRegion.QuantityStrings.WaterDischarge, boundaryNodeCategories[0].Table[0].Quantity.Value);
             Assert.AreEqual(BoundaryRegion.UnitStrings.WaterDischarge, boundaryNodeCategories[0].Table[0].Unit.Value);
@@ -156,7 +609,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
             Assert.AreEqual(3, boundaryNodeCategories[1].Properties.Count);
             Assert.AreEqual(BoundaryFileWriterTestHelper.NodeConstantWaterLevelName, boundaryNodeCategories[1].Properties[0].Value);
             Assert.AreEqual(BoundaryRegion.FunctionStrings.Constant, boundaryNodeCategories[1].Properties[1].Value);
-            Assert.AreEqual(BoundaryRegion.TimeInterpolationStrings.LinearAndExtrapolate, boundaryNodeCategories[1].Properties[2].Value);
+            Assert.AreEqual(BoundaryRegion.TimeInterpolationStrings.BlockTo, boundaryNodeCategories[1].Properties[2].Value);
             Assert.AreEqual(1, boundaryNodeCategories[1].Table.Count);
             Assert.AreEqual(BoundaryRegion.QuantityStrings.WaterLevel, boundaryNodeCategories[1].Table[0].Quantity.Value);
             Assert.AreEqual(BoundaryRegion.UnitStrings.WaterLevel, boundaryNodeCategories[1].Table[0].Unit.Value);
@@ -247,7 +700,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
             Assert.AreEqual(2, boundaryNodeCategories[6].Table[1].Values.Count);
             Assert.AreEqual(BoundaryFileWriterTestHelper.WindDirectionTimeSeriesComponent1.ToString(CultureInfo.InvariantCulture), boundaryNodeCategories[6].Table[1].Values[0]);
             Assert.AreEqual(BoundaryFileWriterTestHelper.WindDirectionTimeSeriesComponent2.ToString(CultureInfo.InvariantCulture), boundaryNodeCategories[6].Table[1].Values[1]);
-
         }
 
         [Test]
@@ -283,7 +735,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
             Assert.AreEqual(3, lateralSourceCategories[0].Properties.Count);
             Assert.AreEqual(BoundaryFileWriterTestHelper.LateralConstantFlowName, lateralSourceCategories[0].Properties[0].Value);
             Assert.AreEqual(BoundaryRegion.FunctionStrings.Constant, lateralSourceCategories[0].Properties[1].Value);
-            Assert.AreEqual(BoundaryRegion.TimeInterpolationStrings.LinearAndExtrapolate, lateralSourceCategories[0].Properties[2].Value);
+            Assert.AreEqual(BoundaryRegion.TimeInterpolationStrings.BlockTo, lateralSourceCategories[0].Properties[2].Value);
             Assert.AreEqual(1, lateralSourceCategories[0].Table.Count);
             Assert.AreEqual(BoundaryRegion.QuantityStrings.WaterDischarge, lateralSourceCategories[0].Table[0].Quantity.Value);
             Assert.AreEqual(BoundaryRegion.UnitStrings.WaterDischarge, lateralSourceCategories[0].Table[0].Unit.Value);
@@ -612,6 +1064,5 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
             Assert.AreEqual(temperatureTimeSeries[2].ToString(CultureInfo.InvariantCulture), lateralSourceCategories[3].Table[1].Values[2]);
             Assert.AreEqual(temperatureTimeSeries[3].ToString(CultureInfo.InvariantCulture), lateralSourceCategories[3].Table[1].Values[3]);
         }
-        
     }
 }

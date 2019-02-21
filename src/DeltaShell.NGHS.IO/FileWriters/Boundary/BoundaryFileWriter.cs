@@ -12,7 +12,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Boundary
         protected static string GetTimeSeriesIsPeriodicProperty(IFunction timeSeries)
         {
             string periodic = null;
-            if (timeSeries != null && timeSeries.Arguments != null && timeSeries.Arguments.Count > 0)
+            if (timeSeries?.Arguments != null && timeSeries.Arguments.Count > 0)
             {
                 periodic = timeSeries.Arguments[0].ExtrapolationType == ExtrapolationType.Periodic ? "true" : null;
             }
@@ -32,7 +32,8 @@ namespace DeltaShell.NGHS.IO.FileWriters.Boundary
             if (!functionData.Arguments.Any()) return table;
             
             var timeQuantity = new DelftIniProperty(BoundaryRegion.Quantity.Key, BoundaryRegion.QuantityStrings.Time, BoundaryRegion.Quantity.Description);
-            var timeUnitString = String.Format("{0} {1}", BoundaryRegion.UnitStrings.TimeMinutes, startTime.ToString(BoundaryRegion.UnitStrings.TimeFormat));
+            var timeUnitString =
+                $"{BoundaryRegion.UnitStrings.TimeMinutes} {startTime.ToString(BoundaryRegion.UnitStrings.TimeFormat)}";
             var timeUnit = new DelftIniProperty(BoundaryRegion.Unit.Key, timeUnitString, BoundaryRegion.Unit.Description);
             
             var timeData = ((MultiDimensionalArray<DateTime>)functionData.Arguments[0].Values).ToList();
@@ -82,7 +83,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Boundary
  
         private static IEnumerable<double> ConvertDateTimeDataToMinutesSinceReferenceDateTime(IEnumerable<DateTime> dateTimes, DateTime refDateTime)
         {
-            // this is our prefered format of datetime
+            // this is our preferred format of datetime
             return dateTimes.Select(t => (t - refDateTime).TotalMinutes).ToList();
         }
     }
