@@ -71,7 +71,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
             Assert.IsNotNull(control);
 
             //Input:
-            this.Value = new TimeSpan(dd, hh, mm,ss, fff);
+            this.Value = new TimeSpan(dd, hh, mm, ss, fff);
 
             //Ensure the value is converted as expected
             var convertedValue = string.Empty;

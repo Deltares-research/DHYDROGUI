@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -11,10 +12,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
     public class WpfCustomTimeSpan : Xceed.Wpf.Toolkit.TimeSpanUpDown
     {
         /// <summary>
-        /// Converts the text to value.
+        /// Converts the a <see cref="string"/> value into a <see cref="TimeSpan"/> object.
         /// </summary>
-        /// <param name="text">The text.</param>
-        /// <returns></returns>
+        /// <param name="text">The <see cref="string"/> value to convert.</param>
+        /// <returns>A <see cref="TimeSpan"/> object that represents the <paramref name="text"/> argument.</returns>
+        /// <remarks><param name="text"/> is expected to be in the form "dd'd' hh:mm:ss.fff" or "dd hh:mm:ss.fff". If
+        /// not, it will return a default <see cref="TimeSpan"/> object.</remarks>
         protected override TimeSpan? ConvertTextToValue(string text)
         {
             if (string.IsNullOrEmpty(text))
@@ -27,36 +30,52 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
 
             // Get seconds and milliseconds
             var ssfff = dhhmmssfff[2].Split('.');
-            var ss = ReplaceToValidDigit(ssfff.First());
+            var ss = ConvertToValidDigit(ssfff.First());
             var fff = ssfff.Length == 2 
-                ? ReplaceToValidDigit(ssfff.Last()) 
+                ? ConvertToValidDigit(ssfff.Last()) 
                 : 0;
             
             //Get minutes
-            var mm = ReplaceToValidDigit(dhhmmssfff[1]);
+            var mm = ConvertToValidDigit(dhhmmssfff[1]);
 
-            //Get hours and days
-            /*Try to split by either the letter d or the space.*/
-            var dhh = dhhmmssfff[0].Split('d');
-            dhh = dhh.Length == 2 ? dhh : dhh.Last().Split(' ');
-            /*Get only the values that are next to the d or the :*/
-            var hh = ReplaceToValidDigit(dhh.Last().Split(' ').Last());
-            var d = dhh.Length == 2 ? ReplaceToValidDigit(dhh.First().Split(' ').Last()) : 0;
+            var dhh = GetDaysAndHours(dhhmmssfff);
+            var hh = GetHours(dhh);
+            var d = GetDays(dhh);
 
             //Return new timespan
             return new TimeSpan(d, hh, mm, ss, fff);
         }
 
-        private int ReplaceToValidDigit(string textInput)
+        private static string[] GetDaysAndHours(string[] dhhmmssfff)
+        {
+            var dhh = dhhmmssfff[0].Split('d');
+            dhh = dhh.Length == 2 ? dhh : dhh.Last().Split(' ');
+            return dhh;
+        }
+
+        private static int GetDays(string[] dhh)
+        {
+            var daysStringValue = dhh.First().Split(' ').Last();
+            return dhh.Length == 2 
+                ? ConvertToValidDigit(daysStringValue) 
+                : 0;
+        }
+
+        private static int GetHours(IEnumerable<string> dhh)
+        {
+            var hoursStringValue = dhh.Last().Split(' ').Last();
+            return ConvertToValidDigit(hoursStringValue);
+        }
+
+        private static int ConvertToValidDigit(string textInput)
         {
             var digitsOnly = new Regex(@"[^\d]");
             return Convert.ToInt32(digitsOnly.Replace(textInput, ""));
         }
 
         /// <summary>
-        /// Converts the value to text.
+        /// Converts the inner <see cref="TimeSpan"/> value into a string representation of the form "dd'd' hh:mm:ss.fff".
         /// </summary>
-        /// <returns></returns>
         protected override string ConvertValueToText()
         {
             if (!this.Value.HasValue)
