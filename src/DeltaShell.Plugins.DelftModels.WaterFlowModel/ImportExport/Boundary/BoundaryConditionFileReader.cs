@@ -111,6 +111,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
                 modelMeteoData.AirTemperature.SetValues(meteoData.AirTemperature.Values);
                 modelMeteoData.Cloudiness.SetValues(meteoData.Cloudiness.Values);
                 modelMeteoData.RelativeHumidity.SetValues(meteoData.RelativeHumidity.Values);
+
+                modelMeteoData.SetInterpolationType(meteoData.GetInterpolationType());
+                modelMeteoData.SetExtrapolationType(meteoData.GetExtrapolationType());
+                modelMeteoData.SetPeriodicity(meteoData.HasPeriodicity());
             }
 
             if (errorMessagesMeteoData.Count > 0)
@@ -127,6 +131,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
                 modelWind.Arguments[0].SetValues(windData.Arguments[0].Values);
                 modelWind.Direction.SetValues(windData.Direction.Values);
                 modelWind.Velocity.SetValues(windData.Velocity.Values);
+
+                modelWind.SetInterpolationType(windData.GetInterpolationType());
+                modelWind.SetExtrapolationType(windData.GetExtrapolationType());
+                modelWind.SetPeriodicity(windData.HasPeriodicity());
             }
 
             if (errorMessagesMeteoData.Count > 0)

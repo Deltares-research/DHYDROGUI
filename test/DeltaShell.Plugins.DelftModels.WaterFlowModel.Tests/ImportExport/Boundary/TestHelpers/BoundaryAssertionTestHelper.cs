@@ -25,6 +25,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
                 Assert.That(actual.Components[0].Values[i],
                     Is.EqualTo(actual.Components[0].Values[i]));
             }
+
+            Assert.That(actual.GetInterpolationType(), Is.EqualTo(expected.GetInterpolationType()));
+            Assert.That(actual.GetExtrapolationType(), Is.EqualTo(expected.GetExtrapolationType()));
+            Assert.That(actual.HasPeriodicity(), Is.EqualTo(expected.HasPeriodicity()));
         }
 
         public static void AssertThatBoundaryConditionIsEqualTo(WaterFlowModel1DBoundaryNodeData node,
@@ -143,8 +147,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
                         break;
                 }
             }
-
-
         }
     }
 }

@@ -115,11 +115,19 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
             meteoFunction.Cloudiness.SetValues(new List<double>() { 13.0 });
             meteoFunction.RelativeHumidity.SetValues(new List<double>() { 13.0 });
 
+            windFunction.SetInterpolationType(Flow1DInterpolationType.Linear);
+            windFunction.SetExtrapolationType(Flow1DExtrapolationType.Constant);
+            windFunction.SetPeriodicity(true);
+
             // WindFunction
             windFunction = new WindFunction();
             windFunction.Arguments[0].SetValues(new List<DateTime>() { DateTime.Today });
             windFunction.Direction.SetValues(new List<double>() { 10.0 });
             windFunction.Velocity.SetValues(new List<double>() { 11.0 });
+
+            windFunction.SetInterpolationType(Flow1DInterpolationType.BlockFrom);
+            windFunction.SetExtrapolationType(Flow1DExtrapolationType.Constant);
+            windFunction.SetPeriodicity(false);
 
             // Boundary Condition
 
@@ -451,10 +459,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
 
 
             // Converters
+            var meteoFunctionLocal = new MeteoFunction();
             var meteoFunctionConverter =
                 mocks.StrictMock<Func<IList<IDelftBcCategory>, IList<string>, MeteoFunction>>();
             meteoFunctionConverter.Expect(e => e.Invoke(Arg<IList<IDelftBcCategory>>.Matches(arg => bcCategories.Equals(arg)), Arg<IList<string>>.Is.NotNull))
-                .Return(new MeteoFunction())
+                .Return(meteoFunctionLocal)
                 .Repeat.Any();
 
             var windFunctionConverter =
