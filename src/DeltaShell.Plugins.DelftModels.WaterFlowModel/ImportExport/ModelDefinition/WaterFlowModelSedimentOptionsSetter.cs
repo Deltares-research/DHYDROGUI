@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using DeltaShell.NGHS.IO.Helpers;
@@ -15,11 +16,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
         /// <param name="errorMessages">The error messages.</param>
         public override void SetProperties(DelftIniCategory sedimentParameterCategory, WaterFlowModel1D model, IList<string> errorMessages)
         {
-            if (sedimentParameterCategory?.Name != ModelDefinitionsRegion.SedimentValuesHeader) return;
+            if (sedimentParameterCategory == null) return;
+            if (!string.Equals(sedimentParameterCategory.Name, ModelDefinitionsRegion.SedimentValuesHeader, StringComparison.OrdinalIgnoreCase)) return;
 
             foreach (var property in sedimentParameterCategory.Properties)
             {
-                var modelParameter = model.ParameterSettings.FirstOrDefault(ps => ps.Name == property.Name);
+                var modelParameter = model.ParameterSettings.FirstOrDefault(ps =>
+                    string.Equals(ps.Name, property.Name, StringComparison.OrdinalIgnoreCase));
                 if (modelParameter == null)
                 {
                     errorMessages.Add(GetUnsupportedPropertyWarningMessage(property));

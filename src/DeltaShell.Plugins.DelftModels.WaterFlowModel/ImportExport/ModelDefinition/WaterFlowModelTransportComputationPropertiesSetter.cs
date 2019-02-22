@@ -9,17 +9,21 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
     {
         public override void SetProperties(DelftIniCategory category, WaterFlowModel1D model, IList<string> errorMessages)
         {
+            if (category == null) return;
+            if (!string.Equals(category.Name, ModelDefinitionsRegion.TransportComputationValuesHeader, StringComparison.OrdinalIgnoreCase)) return;
+
             foreach (var property in category.Properties)
             {
-                if (property.Name == ModelDefinitionsRegion.UseTemperature.Key)
+                if (string.Equals(property.Name, ModelDefinitionsRegion.UseTemperature.Key, StringComparison.OrdinalIgnoreCase))
                 {
                     model.UseTemperature = property.Value != "0" && property.Value == "1";
                 }
-                else if(property.Name == ModelDefinitionsRegion.Density.Key)
+                else if(string.Equals(property.Name, ModelDefinitionsRegion.Density.Key, StringComparison.OrdinalIgnoreCase))
                 {
                     model.DensityType = (DensityType)Enum.Parse(typeof(DensityType), property.Value);
                 }
-                else if (property.Name == ModelDefinitionsRegion.HeatTransferModel.Key)
+                else if (string.Equals(property.Name, ModelDefinitionsRegion.HeatTransferModel.Key,
+                    StringComparison.OrdinalIgnoreCase))
                 {
                     model.TemperatureModelType = (TemperatureModelType)Enum.Parse(typeof(TemperatureModelType), property.Value);
                 }

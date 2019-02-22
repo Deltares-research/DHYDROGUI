@@ -24,11 +24,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
         ///  </remarks>
         public override void SetProperties(DelftIniCategory category, WaterFlowModel1D model, IList<string> errorMessages)
         {
-            if (category?.Name != ModelDefinitionsRegion.AdvancedOptionsHeader) return;
-
+            if (category == null) return;
+            if (!string.Equals(category.Name, ModelDefinitionsRegion.AdvancedOptionsHeader, StringComparison.OrdinalIgnoreCase)) return;
+            
             foreach (var property in category.Properties)
             {
-                var modelParameter = model.ParameterSettings.FirstOrDefault(ps => ps.Name == property.Name);
+                var modelParameter = model.ParameterSettings.FirstOrDefault(ps =>
+                    string.Equals(ps.Name, property.Name, StringComparison.OrdinalIgnoreCase));
 
                 if (modelParameter != null)
                 {
@@ -36,15 +38,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
                         ? Convert.ToString(Convert.ToBoolean(Convert.ToInt32(property.Value))) 
                         : property.Value;
                 }
-                else if (property.Name == ModelDefinitionsRegion.CalculateDelwaqOutput.Key)
+                else if (string.Equals(property.Name, ModelDefinitionsRegion.CalculateDelwaqOutput.Key,
+                    StringComparison.OrdinalIgnoreCase))
                 {
                     model.HydFileOutput = property.Value == "1";
                 }
-                else if (property.Name == ModelDefinitionsRegion.Latitude.Key)
+                else if (string.Equals(property.Name, ModelDefinitionsRegion.Latitude.Key, StringComparison.OrdinalIgnoreCase))
                 {
                     model.Latitude = double.Parse(property.Value, System.Globalization.CultureInfo.InvariantCulture);
                 }
-                else if (property.Name == ModelDefinitionsRegion.Longitude.Key)
+                else if (string.Equals(property.Name, ModelDefinitionsRegion.Longitude.Key, StringComparison.OrdinalIgnoreCase))
                 {
                     model.Longitude = double.Parse(property.Value, System.Globalization.CultureInfo.InvariantCulture);
                 }

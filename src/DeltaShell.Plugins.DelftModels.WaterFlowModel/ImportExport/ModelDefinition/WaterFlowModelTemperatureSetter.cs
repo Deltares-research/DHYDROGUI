@@ -13,31 +13,38 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
     {
         public override void SetProperties(DelftIniCategory temperatureCategory, WaterFlowModel1D model, IList<string> errorMessages)
         {
-            if (temperatureCategory?.Name != ModelDefinitionsRegion.TemperatureValuesHeader) return;
+            if (temperatureCategory == null) return;
+            if (!string.Equals(temperatureCategory.Name, ModelDefinitionsRegion.TemperatureValuesHeader,
+                StringComparison.OrdinalIgnoreCase)) return;
 
             foreach (var property in temperatureCategory.Properties)
             {
-                if (property.Name == ModelDefinitionsRegion.BackgroundTemperature.Key)
+                if (string.Equals(property.Name, ModelDefinitionsRegion.BackgroundTemperature.Key,
+                    StringComparison.OrdinalIgnoreCase))
                 {
                     model.BackgroundTemperature = ParseStringToDouble(property, errorMessages);
                 }
-                else if (property.Name == ModelDefinitionsRegion.SurfaceArea.Key)
+                else if (string.Equals(property.Name, ModelDefinitionsRegion.SurfaceArea.Key, StringComparison.OrdinalIgnoreCase))
                 {
                     model.SurfaceArea = ParseStringToDouble(property, errorMessages);
                 }
-                else if (property.Name == ModelDefinitionsRegion.AtmosphericPressure.Key)
+                else if (string.Equals(property.Name, ModelDefinitionsRegion.AtmosphericPressure.Key,
+                    StringComparison.OrdinalIgnoreCase))
                 {
                     model.AtmosphericPressure = ParseStringToDouble(property, errorMessages);
                 }
-                else if (property.Name == ModelDefinitionsRegion.DaltonNumber.Key)
+                else if (string.Equals(property.Name, ModelDefinitionsRegion.DaltonNumber.Key,
+                    StringComparison.OrdinalIgnoreCase))
                 {
                     model.DaltonNumber = ParseStringToDouble(property, errorMessages);
                 }
-                else if (property.Name == ModelDefinitionsRegion.StantonNumber.Key)
+                else if (string.Equals(property.Name, ModelDefinitionsRegion.StantonNumber.Key,
+                    StringComparison.OrdinalIgnoreCase))
                 {
                     model.StantonNumber = ParseStringToDouble(property, errorMessages);
                 }
-                else if (property.Name == ModelDefinitionsRegion.HeatCapacity.Key)
+                else if (string.Equals(property.Name, ModelDefinitionsRegion.HeatCapacity.Key,
+                    StringComparison.OrdinalIgnoreCase))
                 {
                     model.HeatCapacityWater = ParseStringToDouble(property, errorMessages);
                 }
@@ -63,27 +70,27 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
 
         private double GetDefaultValueForProperty(string propertyName)
         {
-            if (propertyName == ModelDefinitionsRegion.BackgroundTemperature.Key)
+            if (string.Equals(propertyName, ModelDefinitionsRegion.BackgroundTemperature.Key, StringComparison.OrdinalIgnoreCase))
             {
                 return WaterFlowModel1DDataSet.Meteo.valueBackgroundTemperatureDefault;
             }
-            if (propertyName == ModelDefinitionsRegion.SurfaceArea.Key)
+            if (string.Equals(propertyName, ModelDefinitionsRegion.SurfaceArea.Key, StringComparison.OrdinalIgnoreCase))
             {
                 return WaterFlowModel1DDataSet.Meteo.valueSurfaceAreaDefault;
             }
-            if (propertyName == ModelDefinitionsRegion.AtmosphericPressure.Key)
+            if (string.Equals(propertyName, ModelDefinitionsRegion.AtmosphericPressure.Key, StringComparison.OrdinalIgnoreCase))
             {
                 return WaterFlowModel1DDataSet.Meteo.valueAtmosphericPressureDefault;
             }
-            if (propertyName == ModelDefinitionsRegion.DaltonNumber.Key)
+            if (string.Equals(propertyName, ModelDefinitionsRegion.DaltonNumber.Key, StringComparison.OrdinalIgnoreCase))
             {
                 return WaterFlowModel1DDataSet.Meteo.valueDaltonNumberDefault;
             }
-            if (propertyName == ModelDefinitionsRegion.StantonNumber.Key)
+            if (string.Equals(propertyName, ModelDefinitionsRegion.StantonNumber.Key, StringComparison.OrdinalIgnoreCase))
             {
                 return WaterFlowModel1DDataSet.Meteo.valueStantonNumberDefault;
             }
-            if (propertyName == ModelDefinitionsRegion.HeatCapacity.Key)
+            if (string.Equals(propertyName, ModelDefinitionsRegion.HeatCapacity.Key, StringComparison.OrdinalIgnoreCase))
             {
                 return WaterFlowModel1DDataSet.Meteo.valueHeatCapacityWaterDefault;
             }

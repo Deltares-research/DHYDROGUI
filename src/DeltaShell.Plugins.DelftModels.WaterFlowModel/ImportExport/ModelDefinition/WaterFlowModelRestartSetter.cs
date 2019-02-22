@@ -9,7 +9,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
     {
         public override void SetProperties(DelftIniCategory category, WaterFlowModel1D model, IList<string> errorMessages)
         {
-            if (category?.Name != ModelDefinitionsRegion.RestartHeader) return;
+            if (category == null) return;
+            if (!string.Equals(category.Name, ModelDefinitionsRegion.RestartHeader, StringComparison.OrdinalIgnoreCase)) return;
             
             //Set save state properties equal to imported run times
             model.SaveStateStartTime = model.StopTime;
@@ -17,27 +18,33 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
             model.SaveStateTimeStep = model.TimeStep;
 
             var containsRestartStartTime =
-                category.Properties.Any(p => p.Name == ModelDefinitionsRegion.RestartStartTime.Key);
+                category.Properties.Any(p =>
+                    string.Equals(p.Name, ModelDefinitionsRegion.RestartStartTime.Key, StringComparison.OrdinalIgnoreCase));
             var containsRestartStopTime =
-                category.Properties.Any(p => p.Name == ModelDefinitionsRegion.RestartStopTime.Key);
+                category.Properties.Any(p =>
+                    string.Equals(p.Name, ModelDefinitionsRegion.RestartStopTime.Key, StringComparison.OrdinalIgnoreCase));
             var containsRestartTimeStep =
-                category.Properties.Any(p => p.Name == ModelDefinitionsRegion.RestartTimeStep.Key);
+                category.Properties.Any(p =>
+                    string.Equals(p.Name, ModelDefinitionsRegion.RestartTimeStep.Key, StringComparison.OrdinalIgnoreCase));
 
             if (containsRestartTimeStep && containsRestartStartTime && containsRestartStopTime)
             {
                 foreach (var property in category.Properties)
                 {
-                    if (property.Name == ModelDefinitionsRegion.RestartStartTime.Key)
+                    if (string.Equals(property.Name, ModelDefinitionsRegion.RestartStartTime.Key,
+                        StringComparison.OrdinalIgnoreCase))
                     {
                         model.SaveStateStartTime = DateTime.Parse(property.Value);
                     }
 
-                    if (property.Name == ModelDefinitionsRegion.RestartStopTime.Key)
+                    if (string.Equals(property.Name, ModelDefinitionsRegion.RestartStopTime.Key,
+                        StringComparison.OrdinalIgnoreCase))
                     {
                         model.SaveStateStopTime = DateTime.Parse(property.Value);
                     }
 
-                    if (property.Name == ModelDefinitionsRegion.RestartTimeStep.Key)
+                    if (string.Equals(property.Name, ModelDefinitionsRegion.RestartTimeStep.Key,
+                        StringComparison.OrdinalIgnoreCase))
                     {
                         model.SaveStateTimeStep = TimeSpan.FromSeconds(Convert.ToDouble(property.Value));
                     }
@@ -55,17 +62,20 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
             foreach (var property in category.Properties)
             {
 
-                if (property.Name == ModelDefinitionsRegion.WriteRestart.Key)
+                if (string.Equals(property.Name, ModelDefinitionsRegion.WriteRestart.Key, StringComparison.OrdinalIgnoreCase))
                 {
                     model.WriteRestart = Convert.ToBoolean(Convert.ToInt32(property.Value));
                 }
-                else if (property.Name == ModelDefinitionsRegion.UseRestart.Key)
+                else if (string.Equals(property.Name, ModelDefinitionsRegion.UseRestart.Key, StringComparison.OrdinalIgnoreCase))
                 {
                     model.UseRestart = Convert.ToBoolean(Convert.ToInt32(property.Value));
                 }
-                else if (property.Name != ModelDefinitionsRegion.RestartStartTime.Key &&
-                         property.Name != ModelDefinitionsRegion.RestartStopTime.Key &&
-                         property.Name != ModelDefinitionsRegion.RestartTimeStep.Key)
+                else if (!string.Equals(property.Name, ModelDefinitionsRegion.RestartStartTime.Key,
+                             StringComparison.OrdinalIgnoreCase) &&
+                         !string.Equals(property.Name, ModelDefinitionsRegion.RestartStopTime.Key,
+                             StringComparison.OrdinalIgnoreCase) &&
+                         !string.Equals(property.Name, ModelDefinitionsRegion.RestartTimeStep.Key,
+                             StringComparison.OrdinalIgnoreCase))
                 {
                     errorMessages.Add(GetUnsupportedPropertyWarningMessage(property));
                 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using DeltaShell.NGHS.IO.Helpers;
 
@@ -10,7 +11,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
         {
             foreach (var property in category.Properties)
             {
-                if (property.Name == ModelDefinitionsRegion.DesignFactorDlg.Key)
+                if (string.Equals(property.Name, ModelDefinitionsRegion.DesignFactorDlg.Key, StringComparison.OrdinalIgnoreCase))
                 {
                     model.DesignFactorDlg = double.Parse(property.Value, CultureInfo.InvariantCulture);
                 }

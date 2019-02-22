@@ -14,23 +14,29 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
     {
         public override void SetProperties(DelftIniCategory morphologyCategory, WaterFlowModel1D model, IList<string> errorMessages)
         {
-            if (morphologyCategory?.Name != ModelDefinitionsRegion.MorphologyValuesHeader) return;
+            if (morphologyCategory == null) return;
+            if (!string.Equals(morphologyCategory.Name, ModelDefinitionsRegion.MorphologyValuesHeader,
+                StringComparison.OrdinalIgnoreCase)) return;
 
             foreach (var property in morphologyCategory.Properties)
             {
-                if (property.Name == ModelDefinitionsRegion.CalculateMorphology.Key)
+                if (string.Equals(property.Name, ModelDefinitionsRegion.CalculateMorphology.Key,
+                    StringComparison.OrdinalIgnoreCase))
                 {
                     model.UseMorphology = ParseValueToBool(property, errorMessages);
                 }
-                else if (property.Name == ModelDefinitionsRegion.AdditionalOutput.Key)
+                else if (string.Equals(property.Name, ModelDefinitionsRegion.AdditionalOutput.Key,
+                    StringComparison.OrdinalIgnoreCase))
                 {
                     model.AdditionalMorphologyOutput = ParseValueToBool(property, errorMessages);
                 }
-                else if (property.Name == ModelDefinitionsRegion.MorphologyInputFile.Key)
+                else if (string.Equals(property.Name, ModelDefinitionsRegion.MorphologyInputFile.Key,
+                    StringComparison.OrdinalIgnoreCase))
                 {
                     model.MorphologyPath = property.Value;
                 }
-                else if (property.Name == ModelDefinitionsRegion.SedimentInputFile.Key)
+                else if (string.Equals(property.Name, ModelDefinitionsRegion.SedimentInputFile.Key,
+                    StringComparison.OrdinalIgnoreCase))
                 {
                     model.SedimentPath = property.Value;
                 }

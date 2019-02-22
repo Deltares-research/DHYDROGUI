@@ -37,7 +37,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
         /// </remarks>
         public override void SetProperties(DelftIniCategory timeCategory, WaterFlowModel1D model, IList<string> errorMessages)
         {
-            if (timeCategory?.Name != ModelDefinitionsRegion.TimeHeader) return;
+            if (timeCategory == null) return;
+            if (!string.Equals(timeCategory.Name, ModelDefinitionsRegion.TimeHeader, StringComparison.OrdinalIgnoreCase)) return;
 
             var startTime = timeCategory.ReadProperty<DateTime>(ModelDefinitionsRegion.StartTime.Key, true);
             var stopTime = timeCategory.ReadProperty<DateTime>(ModelDefinitionsRegion.StopTime.Key, true);
@@ -88,8 +89,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
                                                        IList<string> errorMessages,
                                                        bool isOptional)
         {
-            var hasPrevious = category.Properties.Any(prop => prop.Name == previousProperty.Key);
-            var hasCurrent  = category.Properties.Any(prop => prop.Name == currentProperty.Key);
+            var hasPrevious = category.Properties.Any(prop =>
+                string.Equals(prop.Name, previousProperty.Key, StringComparison.OrdinalIgnoreCase));
+            var hasCurrent  = category.Properties.Any(prop =>
+                string.Equals(prop.Name, currentProperty.Key, StringComparison.OrdinalIgnoreCase));
 
             if (hasPrevious && hasCurrent)
             {

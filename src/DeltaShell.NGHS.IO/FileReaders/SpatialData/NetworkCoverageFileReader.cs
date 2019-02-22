@@ -71,7 +71,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.SpatialData
 
         private static void ValidateFileContent(IEnumerable<DelftIniCategory> categories, string filePath, ICollection<string> errorMessages)
         {
-            if (categories.Any(c => c.Name == SpatialDataRegion.ContentIniHeader)) return;
+            if (categories.Any(c => string.Equals(c.Name, SpatialDataRegion.ContentIniHeader, StringComparison.OrdinalIgnoreCase))) return;
 
             var warningMessage = string.Format(Resources.NetworkCoverageFileReader_ReadSpatialFileData_Spatial_data_file_at_location___0___does_not_contain_a___1___tab_,
                 filePath, SpatialDataRegion.ContentIniHeader);

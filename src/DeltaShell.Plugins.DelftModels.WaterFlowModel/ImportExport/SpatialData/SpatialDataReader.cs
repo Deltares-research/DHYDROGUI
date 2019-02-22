@@ -17,7 +17,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.SpatialData
         public static void ReadSpatialData(IEnumerable<string> filePaths, WaterFlowModel1D model,
             Action<string, IList<string>> createAndAddErrorReport)
         {
-            foreach (var filePath in filePaths)
+            foreach (var filePath in filePaths.Where(fp => fp != null))
             {
                 ReadNetworkCoverage(filePath, model, createAndAddErrorReport);
             }
