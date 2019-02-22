@@ -133,6 +133,16 @@ namespace DeltaShell.NGHS.IO.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid key-value-comment line on line {0} in file {1}.
+        /// </summary>
+        public static string DelftIniReader_GetKeyValueComment_Invalid_key_value_comment_line_on_line__0__in_file__1_ {
+            get {
+                return ResourceManager.GetString("DelftIniReader_GetKeyValueComment_Invalid_key_value_comment_line_on_line__0__in_f" +
+                        "ile__1_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Level: {0}. message = {1}.
         /// </summary>
         public static string GridApi_Initialize_Level_0__Message_1_ {

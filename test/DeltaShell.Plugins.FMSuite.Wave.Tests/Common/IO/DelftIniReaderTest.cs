@@ -1,6 +1,8 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using DelftTools.TestUtils;
 using DeltaShell.NGHS.IO;
+using DeltaShell.NGHS.IO.Properties;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Common.IO
@@ -46,6 +48,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Common.IO
 
             Assert.That(categories[2].Name, Is.EqualTo("Node"));
             Assert.That(categories[2].Properties[0].Value, Is.EqualTo("T1_B1_Manhole_x=1000m"));
+        }
+
+        [Test]
+        public void GivenAnIniFileWhichDoesNotMatchTheRegexPattern_WhenGettingKeyValueComment_ThenAFormatExceptionIsThrown()
+        {
+            var delftIniReader = new DelftIniReader();
+            var testFilePath = TestHelper.GetTestFilePath(@"IniReaderTest\NetworkDefinitionNotMatchingRegex.ini");
+            Assert.Throws<FormatException>(() => delftIniReader.ReadDelftIniFile(testFilePath), string.Format(
+                Resources.DelftIniReader_GetKeyValueComment_Invalid_key_value_comment_line_on_line__0__in_file__1_,
+                1, testFilePath));
         }
     }
 }

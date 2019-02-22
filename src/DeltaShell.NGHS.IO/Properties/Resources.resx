@@ -327,4 +327,7 @@
   <data name="NetworkCoverageFileReader_ReadSpatialFileData_Spatial_data_file_at_location___0___does_not_contain_a___1___tab_" xml:space="preserve">
     <value>Spatial data file at location '{0}' does not contain a '{1}' tab. The corresponding interpolation type has been set to Constant.</value>
   </data>
+  <data name="DelftIniReader_GetKeyValueComment_Invalid_key_value_comment_line_on_line__0__in_file__1_" xml:space="preserve">
+    <value>Invalid key-value-comment line on line {0} in file {1}</value>
+  </data>
 </root>

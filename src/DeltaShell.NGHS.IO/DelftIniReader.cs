@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using DelftTools.Utils.RegularExpressions;
 using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.NGHS.IO.Properties;
 
 namespace DeltaShell.NGHS.IO
 {
@@ -72,7 +73,7 @@ namespace DeltaShell.NGHS.IO
             var result = new string[3];
 
             var matches = RegularExpression.GetMatches(KeyValueCommentPattern, line);
-            if(matches.Count == 0) throw new FormatException(string.Format("Invalid key-value-comment line on line {0} in file {1}", 
+            if(matches.Count == 0) throw new FormatException(string.Format(Resources.DelftIniReader_GetKeyValueComment_Invalid_key_value_comment_line_on_line__0__in_file__1_, 
                                                                            LineNumber, InputFilePath));
 
             result[0] = matches[0].Groups["key"].Value.Trim();
