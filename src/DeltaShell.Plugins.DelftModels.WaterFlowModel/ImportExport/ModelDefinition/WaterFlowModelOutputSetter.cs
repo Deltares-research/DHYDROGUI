@@ -20,7 +20,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
     ///   ResultsWaterBalance
     ///   FiniteVolumeGridOnGridPoints.
     ///
-    /// see the D-Flow1d Technical reference manual for all possible options supported by the kernel.
+    /// see the D-Flow1d Technical Reference Manual for all possible options supported by the kernel.
     /// </remarks>
     /// <seealso cref="WaterFlowModelCategoryPropertySetter" />
     public class WaterFlowModelOutputSetter : WaterFlowModelCategoryPropertySetter

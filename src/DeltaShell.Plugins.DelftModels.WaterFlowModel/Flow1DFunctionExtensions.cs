@@ -7,7 +7,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
 {
     /// <summary>
     /// Flow1DFunctionExtensions provides an interface to interact, and store interpolation and
-    /// extrapolation as defined within the D-Flow1D Technical Reference manual. This is used for
+    /// extrapolation as defined within the D-Flow1D Technical Reference Manual. This is used for
     /// the <see cref="WindFunction"/>, <see cref="PhysicalParameters.MeteoFunction"/>,
     /// <see cref="DataObjects.WaterFlowModel1DLateralSourceData"/>, and <see cref="DataObjects.WaterFlowModel1DBoundaryNodeData"/>.
     ///
@@ -23,7 +23,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
         private const string ExtrapolationKey = "Extrapolation";
 
         /// <summary>
-        /// Get the type of the interpolation as defined in the Flow1D Technical Reference manual.
+        /// Get the type of the interpolation as defined in the Flow1D Technical Reference Manual.
         /// </summary>
         /// <param name="function">The function of which the interpolation type is retrieved.</param>
         /// <returns>The type of interpolation of the specified function.</returns>
@@ -33,7 +33,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
         /// <remarks>
         /// Function is expected to have an Argument[0] set.
         /// </remarks>
-        /// <exception cref="InvalidOperationException">Thrown when the Interpolation stored in the Function.Attributes cannot be parsed.</exception>
+        /// <exception cref="InvalidOperationException">
+        /// Thrown when the Interpolation stored in the <see cref="IFunction.Attributes"/> cannot be parsed.
+        /// </exception>
         public static Flow1DInterpolationType GetInterpolationType(this IFunction function)
         {
             if (Enum.TryParse<Flow1DInterpolationType>(function.GetAttribute(InterpolationKey),
@@ -50,10 +52,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
         /// </summary>
         /// <param name="function">The function on which the interpolation type is set.</param>
         /// <param name="value">The value to which the interpolation is set.</param>
-        /// <remarks>Only executed if function.HasArguments() && function.Arguments[0].AllowSetInterpolationType.</remarks>
+        /// <remarks>
+        /// Only executed if the function has at least one argument, and the first argument allows
+        /// setting the interpolation type.
+        /// </remarks>
         public static void SetInterpolationType(this IFunction function, Flow1DInterpolationType value)
         {
-            if (!function.HasArguments() || !function.Arguments[0].AllowSetInterpolationType) return;
+            if (!function.HasArguments() || !function.Arguments[0].AllowSetInterpolationType)
+                return;
 
             switch (value)
             {
@@ -70,7 +76,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
         }
 
         /// <summary>
-        /// Get the type of the Extrapolation as defined in the Flow1D Technical Reference manual.
+        /// Get the type of the Extrapolation as defined in the Flow1D Technical Reference Manual.
         /// </summary>
         /// <param name="function">The function of which the extrapolation type is retrieved.</param>
         /// <returns>The type of extrapolation of the specified function.</returns>
@@ -80,6 +86,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
         /// <remarks>
         /// Function is expected to have an Argument[0] set.
         /// </remarks>
+        /// <exception cref="InvalidOperationException">
+        /// Thrown when the Extrapolation stored in the <see cref="IFunction.Attributes"/> cannot be parsed.
+        /// </exception>
         public static Flow1DExtrapolationType GetExtrapolationType(this IFunction function)
         {
             if (Enum.TryParse<Flow1DExtrapolationType>(function.GetAttribute(ExtrapolationKey),
@@ -96,7 +105,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
         /// </summary>
         /// <param name="function">The function on which the extrapolation type is set.</param>
         /// <param name="value">The value to which the extrapolation is set.</param>
-        /// <remarks>Only executed if function.HasArguments() && function.Arguments[0].AllowSetExtrapolationType.</remarks>
+        /// <remarks>
+        /// Only executed if the function has at least one argument, and the first argument allows
+        /// setting the extrapolation type.
+        /// </remarks>
         public static void SetExtrapolationType(this IFunction function, Flow1DExtrapolationType value)
         {
             if (!function.HasArguments() || !function.Arguments[0].AllowSetExtrapolationType) return;
@@ -129,10 +141,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
         /// </summary>
         /// <param name="function">The function.</param>
         /// <param name="newHasPeriodicity">The new periodicity of this function.</param>
-        /// <remarks>The value is only set if function.HasArguments() and function.Arguments[0].AllowSetExtrapolationType</remarks>
+        /// <remarks>
+        /// Only executed if the function has at least one argument, and the first argument allows
+        /// setting the extrapolation type.
+        /// </remarks>
         public static void SetPeriodicity(this IFunction function, bool newHasPeriodicity)
         {
-            if (!function.HasArguments() || !function.Arguments[0].AllowSetExtrapolationType) return;
+            if (!function.HasArguments() || !function.Arguments[0].AllowSetExtrapolationType)
+                return;
 
             if (newHasPeriodicity)
             {
@@ -165,7 +181,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
         {
             return function?.Arguments != null && function.Arguments.Count > 0;
         }
-
 
         #region AttributeHelpers        
         /// <summary>
@@ -210,16 +225,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
         /// </summary>
         /// <param name="function">The function.</param>
         /// <remarks>
-        /// This should only be called when GetInterpolationType() or GetExtrapolationType() is called on
+        /// This should only be called when <see cref="GetInterpolationType"/> or <see cref="GetExtrapolationType"/> is called on
         /// a function which has no interpolation or extrapolation key defined yet.
         /// This situation only happens when an old project is opened, or a new function is created.
         /// </remarks>
-        /// <exception cref="ArgumentNullException">!Function.HasArguments()</exception>
+        /// <exception cref="ArgumentNullException">If the function does not contain at least one argument.</exception>
         private static void SyncApproximationSchemes(this IFunction function)
         {
             if (!function.HasArguments())
                 throw new ArgumentNullException(nameof(function.Arguments), 
-                                                "Function should not have null arguments.");
+                                                "Function have at least one argument.");
 
             var hasPeriodicity = function.Arguments[0].ExtrapolationType == ExtrapolationType.Periodic;
 
@@ -237,7 +252,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             }
 
             // Set periodicity after updating the Interpolation and Extrapolation.
-            if (hasPeriodicity) function.SetPeriodicity(true);
+            if (hasPeriodicity)
+                function.SetPeriodicity(true);
         }
         #endregion
     }
