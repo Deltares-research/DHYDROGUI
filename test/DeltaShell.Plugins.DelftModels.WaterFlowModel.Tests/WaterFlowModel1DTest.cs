@@ -2263,6 +2263,21 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             }
         }
 
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void GivenAWaterFlowModel1DWithSedimentProperties_WhenCloning_ThenSedimentPropertiesAreCloned()
+        {
+            // Given
+            var model = new WaterFlowModel1D("myModel") {D50 = 0.0006, D90 = 0.004, DepthUsedForSediment = 0.2};
+
+            // When
+            var clonedModel = (WaterFlowModel1D) model.Clone();
+
+            // Then
+            Assert.That(clonedModel.D50, Is.EqualTo(0.0006));
+            Assert.That(clonedModel.D90, Is.EqualTo(0.004));
+            Assert.That(clonedModel.DepthUsedForSediment, Is.EqualTo(0.2));
+        }
 
         [Test]
         public void SwitchInitialConditions()

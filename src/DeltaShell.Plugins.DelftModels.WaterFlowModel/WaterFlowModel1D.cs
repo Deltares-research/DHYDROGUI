@@ -2663,6 +2663,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             clonedModel.UseSalt = UseSalt;
             clonedModel.SalinityEstuaryMouthNodeId = SalinityEstuaryMouthNodeId;
 
+            CloneSedimentProperties(clonedModel);
+        
             CloneTemperatureRelatedModelData(clonedModel);
             clonedModel.Name = Name;
 
@@ -2681,6 +2683,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
 
 
             return clonedModel;
+        }
+
+        private void CloneSedimentProperties(WaterFlowModel1D clonedModel)
+        {
+            clonedModel.D50 = D50;
+            clonedModel.D90 = D90;
+            clonedModel.DepthUsedForSediment = DepthUsedForSediment;
         }
 
         private void CloneTemperatureRelatedModelData(WaterFlowModel1D clonedModel)
