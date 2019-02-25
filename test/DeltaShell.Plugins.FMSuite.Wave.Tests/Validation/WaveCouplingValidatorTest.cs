@@ -29,12 +29,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             ContainsValidationErrorWithMessage(validationReport, Resources.WaveTimePointValidator_Validate_Model_start_time_precedes_reference_time);
         }
 
-        private static void ContainsValidationErrorWithMessage(ValidationReport validationReport, string expectedMessage)
-        {
-            var errorMessages = validationReport.AllErrors.Select(issue => issue.Message).ToArray();
-            Assert.Contains(expectedMessage, errorMessages);
-        }
-
         [TestCase(false, "anyPath")]
         [TestCase(true, "")]
         [TestCase(true, null)]
@@ -184,6 +178,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             // Then
             var expectedMessage = string.Format(Resources.WaveCouplingValidator_Validate_Stand_alone_wave_model_cannot_use__0_, "flow wind");
             ContainsValidationErrorWithMessage(validationReport, expectedMessage);
+        }
+
+        private static void ContainsValidationErrorWithMessage(ValidationReport validationReport, string expectedMessage)
+        {
+            var errorMessages = validationReport.AllErrors.Select(issue => issue.Message).ToArray();
+            Assert.Contains(expectedMessage, errorMessages);
         }
     }
 }
