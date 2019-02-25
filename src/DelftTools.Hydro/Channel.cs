@@ -44,6 +44,7 @@ namespace DelftTools.Hydro
         {
         }
 
+        [FeatureAttribute(Order = 4)]
         public override double Length
         {
             get => base.Length;
