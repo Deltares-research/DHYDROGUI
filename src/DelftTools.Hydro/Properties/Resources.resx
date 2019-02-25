@@ -178,4 +178,7 @@
   <data name="CrossSectionDefinitionYZ_RefreshSectionsWidths_The__0__roughness_position_of_cross_section____1___has_been_changed_from__2__m_to__3__m_to_match_the_flow_profile" xml:space="preserve">
     <value>The {0} roughness position of cross section: '{1}' has been changed from {2} m to {3} m to match the flow profile</value>
   </data>
+  <data name="Channel_Length_Channel_length_must_be_positive__Length_of_channel___0___remains__1__" xml:space="preserve">
+    <value>Channel length must be positive. Length of channel '{0}' remains {1}.</value>
+  </data>
 </root>

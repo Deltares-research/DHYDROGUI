@@ -61,6 +61,16 @@ namespace DelftTools.Hydro.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Channel length must be positive. Length of channel &apos;{0}&apos; remains {1}..
+        /// </summary>
+        internal static string Channel_Length_Channel_length_must_be_positive__Length_of_channel___0___remains__1__ {
+            get {
+                return ResourceManager.GetString("Channel_Length_Channel_length_must_be_positive__Length_of_channel___0___remains__" +
+                        "1__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Could not add CrossSectionSection with duplicate name &apos;{0}&apos;.
         /// </summary>
         internal static string CrossSectionDefinitionExtensions_AddCrossSectionSection_Could_not_add_CrossSectionSection_with_duplicate_name___0__ {

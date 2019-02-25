@@ -63,7 +63,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             set
             {
                 double result;
-                if (double.TryParse(value, out result) && result > 0)
+                if (double.TryParse(value, out result))
                 {
                     data.Length = result;
                 }

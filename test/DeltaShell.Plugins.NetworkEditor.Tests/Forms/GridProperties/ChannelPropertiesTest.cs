@@ -56,55 +56,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.GridProperties
 
             Assert.AreEqual(1, channelProperties.Structures);
             Assert.AreEqual(2, channelProperties.Weirs);
-        }
 
-        [Test]
-        public void GivenChannelWithCustomLength_WhenEnteringValidStringValueForLengthInChannelProperties_ThenTheChannelLengthIsAdjustedAccordingly()
-        {
-            // Given
-            const double channelLength = 10.0;
-            var channel = new Channel
-            {
-                Length = channelLength,
-                IsLengthCustom = true
-            };
-
-            var channelProperties = new ChannelProperties
-            {
-                Data = channel
-            };
-
-            // When
-            channelProperties.Length = "12,3";
-
-            // Then
-            Assert.That(channel.Length, Is.EqualTo(12.3));
-        }
-
-        [TestCase("0")]
-        [TestCase("-1")]
-        [TestCase("abc")]
-        [TestCase("#%&*")]
-        public void GivenChannelWithCustomLength_WhenEnteringInvalidStringValueForLengthInChannelProperties_ThenTheChannelLengthRemainsUnchanged(string invalidStringValue)
-        {
-            // Given
-            const double channelLength = 10.0;
-            var channel = new Channel
-            {
-                Length = channelLength,
-                IsLengthCustom = true
-            };
-
-            var channelProperties = new ChannelProperties
-            {
-                Data = channel
-            };
-
-            // When
-            channelProperties.Length = invalidStringValue;
-
-            // Then
-            Assert.That(channel.Length, Is.EqualTo(channelLength));
         }
 
         [Test]

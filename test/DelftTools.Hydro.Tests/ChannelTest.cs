@@ -1,4 +1,5 @@
 ﻿using DelftTools.Hydro.Structures;
+using DelftTools.TestUtils;
 using NUnit.Framework;
 using SharpTestsEx;
 
@@ -15,6 +16,38 @@ namespace DelftTools.Hydro.Tests
 
             //todo expand to cover functionality
             Assert.AreEqual(channel.LongName, clone.LongName);
+        }
+
+        [Test]
+        public void GivenChannel_WhenSettingLengthToNonPositiveValue_ThenLengthIsUnchanged()
+        {
+            // Given
+            var initialChannelLength = 10.0;
+            var channel = new Channel
+            {
+                Length = initialChannelLength
+            };
+
+            // When
+            channel.Length = 0.0;
+
+            // Then
+            Assert.That(channel.Length, Is.EqualTo(initialChannelLength));
+        }
+
+        [Test]
+        public void GivenChannel_WhenSettingLengthToNonPositiveValue_ThenMessageIsLogged()
+        {
+            // Given
+            var initialChannelLength = 10.0;
+            var channel = new Channel
+            {
+                Length = initialChannelLength
+            };
+
+            // When - Then
+            var expectedMessage = $"Channel length must be positive. Length of channel '{channel.Name}' remains {initialChannelLength}.";
+            TestHelper.AssertLogMessageIsGenerated(() => channel.Length = 0.0, expectedMessage, 1);
         }
 
         [Test]

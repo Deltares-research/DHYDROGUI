@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using DelftTools.Hydro.CrossSections;
+using DelftTools.Hydro.Properties;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections.Generic;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
+using log4net;
 using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.IO;
 
@@ -16,6 +18,8 @@ namespace DelftTools.Hydro
     [Entity]
     public class Channel : Branch, IChannel
     {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(Channel));
+
         public Channel() : this(null, null)
         {
         }
@@ -38,6 +42,22 @@ namespace DelftTools.Hydro
         public Channel(string name, INode fromNode, INode toNode, double length) :
             base(name, fromNode, toNode, length)
         {
+        }
+
+        public override double Length
+        {
+            get => base.Length;
+            set
+            {
+                if (value > 0)
+                {
+                    base.Length = value;
+                }
+                else
+                {
+                    Log.ErrorFormat(Resources.Channel_Length_Channel_length_must_be_positive__Length_of_channel___0___remains__1__, Name, Length);
+                }
+            }
         }
 
         public override IEventedList<IBranchFeature> BranchFeatures
