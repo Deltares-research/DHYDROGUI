@@ -25,7 +25,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
 {
     [TestFixture]
     [Category(TestCategory.DataAccess)]
-    public class BoundaryFileWriterTest
+    public class WaterFlowModel1DBoundaryFileWriterTest
     {
         /// <summary>
         /// GIVEN a wind function with a specified approximation scheme
@@ -108,12 +108,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
             // Verify categories
             Assert.That(categories, Is.Not.Null,
                         "Expected the read categories not to be null.");
-            var windBoundaryCategories = categories.Where(e => e.Name == BoundaryRegion.BcBoundaryHeader).ToList();
-            Assert.That(windBoundaryCategories.Count, Is.EqualTo(3), 
+            var meteoBoundaryCategories = categories.Where(e => e.Name == BoundaryRegion.BcBoundaryHeader).ToList();
+            Assert.That(meteoBoundaryCategories.Count, Is.EqualTo(3), 
                         "Expected three categories when writing away just a meteo-function.");
 
             // Verify meteo function components
-            foreach (var cat in windBoundaryCategories)
+            foreach (var cat in meteoBoundaryCategories)
             {
                 AssertTimeSeriesFunction(cat, FunctionAttributes.StandardFeatureNames.ModelWide, BoundaryRegion.FunctionStrings.TimeSeries, expectedInterpolationValue, isPeriodic);
             }
@@ -166,7 +166,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
             var categories = WhenWriteFileIsCalled(model);
 
             // Then
-            // verify the categories
+            // Verify the categories
             Assert.That(categories, Is.Not.Null, 
                         "Expected the read categories not to be null.");
             var boundaryCategories = categories.Where(e => e.Name == BoundaryRegion.BcBoundaryHeader).ToList();
@@ -236,6 +236,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
                         "Expected a different name.");
             Assert.That(cat.GetPropertyValue(BoundaryRegion.Function.Key), Is.EqualTo(BoundaryRegion.FunctionStrings.Constant),
                         "Expected a different function type.");
+            Assert.That(cat.GetPropertyValue(BoundaryRegion.Interpolation.Key),
+                Is.EqualTo(BoundaryRegion.TimeInterpolationStrings.LinearAndExtrapolate),
+                "Expected a different time-interpolation");
         }
 
         /// <summary>
@@ -323,30 +326,32 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
                         "Expected a different name.");
             Assert.That(cat.GetPropertyValue(BoundaryRegion.Function.Key), Is.EqualTo(BoundaryRegion.FunctionStrings.Constant), 
                         "Expected a different function type.");
+            Assert.That(cat.GetPropertyValue(BoundaryRegion.Interpolation.Key),
+                Is.EqualTo(BoundaryRegion.TimeInterpolationStrings.LinearAndExtrapolate),
+                "Expected a different time-interpolation");
         }
 
         /// <summary>
         /// Get a basic lateral source data with a mocked node with the specified name.
         /// </summary>
         /// <param name="name">The name.</param>
-        /// <returns>A basic LateralSourceData.</returns>
+        /// <returns>A basic <see cref="WaterFlowModel1DLateralSourceData"/>.</returns>
         private static WaterFlowModel1DLateralSourceData GetLateralSourceData(string name)
         {
             var node = MockRepository.GenerateMock<LateralSource>();
             node.Expect(n => n.Name).Return(name);
 
-            var lateral = new WaterFlowModel1DLateralSourceData()
+            return new WaterFlowModel1DLateralSourceData()
             {
                 Feature = node
             };
-            return lateral;
         }
 
         /// <summary>
         /// Get a basic boundary node data with a mocked node with the specified name.
         /// </summary>
         /// <param name="name">The name.</param>
-        /// <returns>A basic BoundaryNodeDate. </returns>
+        /// <returns>A basic <see cref="WaterFlowModel1DBoundaryNodeData"/>.</returns>
         private static WaterFlowModel1DBoundaryNodeData GetBoundaryNodeData(string name)
         {
             var branchList = MockRepository.GenerateStrictMock<IEventedList<IBranch>>();
@@ -360,11 +365,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
             node.Expect(n => n.OutgoingBranches).Return(branchList);
             node.Expect(n => n.Links).Return(linksList);
 
-            var boundary = new WaterFlowModel1DBoundaryNodeData()
+            return new WaterFlowModel1DBoundaryNodeData()
             {
                 Feature = node
             };
-            return boundary;
         }
 
         /// <summary>
@@ -430,7 +434,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns>
-        /// A set of read IDelftBcCategories which were written to file.
+        /// A set of read <see cref="IDelftIniCategory"/> which were written to file.
         /// </returns>
         private static IList<IDelftBcCategory> WhenWriteFileIsCalled(WaterFlowModel1D model)
         {
@@ -451,7 +455,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
         /// <summary>
         /// Assert that the provided time series function corresponds with the provided parameters.
         /// </summary>
-        /// <param name="cat">The DilftIniCategory describing the function.</param>
+        /// <param name="cat">The <see cref="IDelftIniCategory"/> describing the function.</param>
         /// <param name="name">The name of the function.</param>
         /// <param name="expectedFunctionString">The expected function value within the category.</param>
         /// <param name="expectedInterpolationValue">The expected interpolation value within the category.</param>
@@ -599,7 +603,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
             Assert.AreEqual(3, boundaryNodeCategories[0].Properties.Count);
             Assert.AreEqual(BoundaryFileWriterTestHelper.NodeConstantFlowName, boundaryNodeCategories[0].Properties[0].Value);
             Assert.AreEqual(BoundaryRegion.FunctionStrings.Constant, boundaryNodeCategories[0].Properties[1].Value);
-            Assert.AreEqual(BoundaryRegion.TimeInterpolationStrings.BlockTo, boundaryNodeCategories[0].Properties[2].Value);
+            Assert.AreEqual(BoundaryRegion.TimeInterpolationStrings.LinearAndExtrapolate, boundaryNodeCategories[0].Properties[2].Value);
             Assert.AreEqual(1, boundaryNodeCategories[0].Table.Count);
             Assert.AreEqual(BoundaryRegion.QuantityStrings.WaterDischarge, boundaryNodeCategories[0].Table[0].Quantity.Value);
             Assert.AreEqual(BoundaryRegion.UnitStrings.WaterDischarge, boundaryNodeCategories[0].Table[0].Unit.Value);
@@ -610,7 +614,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
             Assert.AreEqual(3, boundaryNodeCategories[1].Properties.Count);
             Assert.AreEqual(BoundaryFileWriterTestHelper.NodeConstantWaterLevelName, boundaryNodeCategories[1].Properties[0].Value);
             Assert.AreEqual(BoundaryRegion.FunctionStrings.Constant, boundaryNodeCategories[1].Properties[1].Value);
-            Assert.AreEqual(BoundaryRegion.TimeInterpolationStrings.BlockTo, boundaryNodeCategories[1].Properties[2].Value);
+            Assert.AreEqual(BoundaryRegion.TimeInterpolationStrings.LinearAndExtrapolate, boundaryNodeCategories[1].Properties[2].Value);
             Assert.AreEqual(1, boundaryNodeCategories[1].Table.Count);
             Assert.AreEqual(BoundaryRegion.QuantityStrings.WaterLevel, boundaryNodeCategories[1].Table[0].Quantity.Value);
             Assert.AreEqual(BoundaryRegion.UnitStrings.WaterLevel, boundaryNodeCategories[1].Table[0].Unit.Value);
@@ -736,7 +740,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
             Assert.AreEqual(3, lateralSourceCategories[0].Properties.Count);
             Assert.AreEqual(BoundaryFileWriterTestHelper.LateralConstantFlowName, lateralSourceCategories[0].Properties[0].Value);
             Assert.AreEqual(BoundaryRegion.FunctionStrings.Constant, lateralSourceCategories[0].Properties[1].Value);
-            Assert.AreEqual(BoundaryRegion.TimeInterpolationStrings.BlockTo, lateralSourceCategories[0].Properties[2].Value);
+            Assert.AreEqual(BoundaryRegion.TimeInterpolationStrings.LinearAndExtrapolate, lateralSourceCategories[0].Properties[2].Value);
             Assert.AreEqual(1, lateralSourceCategories[0].Table.Count);
             Assert.AreEqual(BoundaryRegion.QuantityStrings.WaterDischarge, lateralSourceCategories[0].Table[0].Quantity.Value);
             Assert.AreEqual(BoundaryRegion.UnitStrings.WaterDischarge, lateralSourceCategories[0].Table[0].Unit.Value);

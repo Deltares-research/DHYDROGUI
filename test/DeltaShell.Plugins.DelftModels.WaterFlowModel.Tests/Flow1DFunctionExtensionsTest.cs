@@ -158,13 +158,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
         /// <summary>
         /// GIVEN a function with no attributes set
         /// WHEN GetExtrapolationType is retrieved
-        /// THEN the extrapolation type corresponding with the argument extrapolation type is retrieved
+        /// THEN the extrapolation type corresponding with the argument interpolation type is retrieved
         /// </summary>
-        [TestCase(ExtrapolationType.Linear,   Flow1DExtrapolationType.Linear)]
-        [TestCase(ExtrapolationType.Constant, Flow1DExtrapolationType.Constant)]
-        [TestCase(ExtrapolationType.Periodic, Flow1DExtrapolationType.Constant)]
-        [TestCase(ExtrapolationType.None,     Flow1DExtrapolationType.Constant)]
-        public void GivenAFunctionWithNoAttributesSet_WhenGetExtrapolationTypeIsRetrieved_ThenTheExtrapolationTypeCorrespondingWithTheArgumentExtrapolationTypeIsRetrieved(ExtrapolationType inExtrapolationType,
+        [TestCase(InterpolationType.Linear,   Flow1DExtrapolationType.Linear)]
+        [TestCase(InterpolationType.Constant, Flow1DExtrapolationType.Constant)]
+        [TestCase(InterpolationType.None,     Flow1DExtrapolationType.Linear)]
+        public void GivenAFunctionWithNoAttributesSet_WhenGetExtrapolationTypeIsRetrieved_ThenTheExtrapolationTypeCorrespondingWithTheArgumentInterpolationTypeIsRetrieved(InterpolationType inInterpolationType,
                                                                                                                                                                            Flow1DExtrapolationType expectedOutExtrapolationType)
         {
             // Given
@@ -172,7 +171,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
             function.Arguments.Add(new Variable<DateTime>("Time")
             {
-                ExtrapolationType = inExtrapolationType
+                InterpolationType = inInterpolationType
             });
 
             // When
@@ -181,7 +180,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             // Then
             Assert.That(result,
                 Is.EqualTo(expectedOutExtrapolationType),
-                        $"Expected a different extrapolation type when the function extrapolation type is {inExtrapolationType}.");
+                        $"Expected a different extrapolation type when the function interpolation type is {inInterpolationType}.");
 
             Assert.That(function.Attributes.ContainsKey("Extrapolation"),
                 Is.True, "Expected function Attributes to have Extrapolation defined.");

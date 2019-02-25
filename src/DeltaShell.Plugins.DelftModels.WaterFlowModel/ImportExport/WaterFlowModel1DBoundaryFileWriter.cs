@@ -65,7 +65,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             var isConst = boundaryNodeData.DataType == WaterFlowModel1DBoundaryNodeDataType.FlowConstant ||
                           boundaryNodeData.DataType == WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant;
             var interpolationType = isConst 
-                ? BoundaryRegion.TimeInterpolationStrings.BlockTo 
+                ? BoundaryRegion.TimeInterpolationStrings.LinearAndExtrapolate 
                 : ToTimeInterpolationString(boundaryNodeData.Data);
 
             var periodic = ToPeriodicityString(boundaryNodeData.Data);
@@ -159,7 +159,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             // We cannot retrieve the InterpolationType of a constant lateral source
             var interpolationType = lateralSourceData.DataType != WaterFlowModel1DLateralDataType.FlowConstant 
                 ? ToTimeInterpolationString(lateralSourceData.Data) 
-                : BoundaryRegion.TimeInterpolationStrings.BlockTo;
+                : BoundaryRegion.TimeInterpolationStrings.LinearAndExtrapolate;
 
             var periodic = ToPeriodicityString(lateralSourceData.Data);
             
@@ -367,13 +367,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
         {
             switch (function.GetInterpolationType())
             {
-                case (Flow1DInterpolationType.Linear):
+                case Flow1DInterpolationType.Linear:
                     return function.GetExtrapolationType() == Flow1DExtrapolationType.Constant
                         ? BoundaryRegion.TimeInterpolationStrings.Linear
                         : BoundaryRegion.TimeInterpolationStrings.LinearAndExtrapolate;
-                case (Flow1DInterpolationType.BlockFrom):
+                case Flow1DInterpolationType.BlockFrom:
                     return BoundaryRegion.TimeInterpolationStrings.BlockFrom;
-                case (Flow1DInterpolationType.BlockTo):
+                case Flow1DInterpolationType.BlockTo:
                     return BoundaryRegion.TimeInterpolationStrings.BlockTo;
                 default:
                     throw new NotSupportedException("Cannot derive the time-interpolation string from the specified function.");
@@ -384,7 +384,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
         /// Retrieve the Periodicity as string from the provided function.
         /// </summary>
         /// <param name="function">The function.</param>
-        /// <returns>if function.HasPeriodicity() then "1" else null.</returns>
+        /// <returns>"1" if <paramref name="function>"/> has periodicity, else null.</returns>
         private static string ToPeriodicityString(IFunction function)
         {
             return function.HasPeriodicity() ? "1" : null;

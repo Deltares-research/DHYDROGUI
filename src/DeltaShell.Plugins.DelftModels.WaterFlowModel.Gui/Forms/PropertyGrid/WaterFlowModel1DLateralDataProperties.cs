@@ -41,7 +41,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
             get
             {
                 if (data.DataType == WaterFlowModel1DLateralDataType.FlowConstant)
-                    return Flow1DInterpolationType.BlockFrom;
+                    return Flow1DInterpolationType.Linear;
                 return data.Data.GetInterpolationType();
             }
             set => data.Data.SetInterpolationType(value);
@@ -57,7 +57,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
             get
             {
                 if (data.DataType == WaterFlowModel1DLateralDataType.FlowConstant)
-                    return Flow1DExtrapolationType.Constant;
+                    return Flow1DExtrapolationType.Linear;
                 return data.Data.GetExtrapolationType();
             }
             set => data.Data.SetExtrapolationType(value);

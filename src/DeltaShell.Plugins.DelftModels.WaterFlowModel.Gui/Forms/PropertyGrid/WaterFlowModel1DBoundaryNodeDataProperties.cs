@@ -44,7 +44,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
                     case WaterFlowModel1DBoundaryNodeDataType.FlowConstant:
                     case WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant:
                     case WaterFlowModel1DBoundaryNodeDataType.None: // This should never happen
-                        return Flow1DInterpolationType.BlockFrom;
+                        return Flow1DInterpolationType.Linear;
                     default:
                         throw new NotSupportedException("The provided boundary condition type is not supported.");
                 }
@@ -70,7 +70,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
                     case WaterFlowModel1DBoundaryNodeDataType.FlowConstant:
                     case WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant:
                     case WaterFlowModel1DBoundaryNodeDataType.None: // This should never happen
-                        return Flow1DExtrapolationType.Constant;
+                        return Flow1DExtrapolationType.Linear;
                     default:
                         throw new NotSupportedException("The provided boundary condition type is not supported.");
                 }

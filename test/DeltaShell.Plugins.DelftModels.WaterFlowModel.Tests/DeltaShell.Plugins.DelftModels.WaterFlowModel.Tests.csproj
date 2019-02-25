@@ -225,7 +225,7 @@
     <Compile Include="ImportExport\Boundary\BoundaryConditionFileReaderTest.cs" />
     <Compile Include="ImportExport\Boundary\BoundaryFileReaderTest.cs" />
     <Compile Include="ImportExport\Boundary\BoundaryFileReaderTestHelper.cs" />
-    <Compile Include="ImportExport\Boundary\BoundaryFileWriterTest.cs" />
+    <Compile Include="ImportExport\Boundary\WaterFlowModel1DBoundaryFileWriterTest.cs" />
     <Compile Include="ImportExport\Boundary\BoundaryFileWriterTestHelper.cs" />
     <Compile Include="ImportExport\Boundary\BoundaryLocationReaderTest.cs" />
     <Compile Include="ImportExport\Boundary\TestHelpers\BoundaryAssertionTestHelper.cs" />
