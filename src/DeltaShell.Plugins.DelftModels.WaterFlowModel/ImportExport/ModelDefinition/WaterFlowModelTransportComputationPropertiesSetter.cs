@@ -10,20 +10,19 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
         public override void SetProperties(DelftIniCategory category, WaterFlowModel1D model, IList<string> errorMessages)
         {
             if (category == null) return;
-            if (!string.Equals(category.Name, ModelDefinitionsRegion.TransportComputationValuesHeader, StringComparison.OrdinalIgnoreCase)) return;
+            if (!ValueEqualsDefinition(category.Name, ModelDefinitionsRegion.TransportComputationValuesHeader)) return;
 
             foreach (var property in category.Properties)
             {
-                if (string.Equals(property.Name, ModelDefinitionsRegion.UseTemperature.Key, StringComparison.OrdinalIgnoreCase))
+                if (ValueEqualsDefinition(property.Name, ModelDefinitionsRegion.UseTemperature.Key))
                 {
                     model.UseTemperature = property.Value != "0" && property.Value == "1";
                 }
-                else if(string.Equals(property.Name, ModelDefinitionsRegion.Density.Key, StringComparison.OrdinalIgnoreCase))
+                else if(ValueEqualsDefinition(property.Name, ModelDefinitionsRegion.Density.Key))
                 {
                     model.DensityType = (DensityType)Enum.Parse(typeof(DensityType), property.Value);
                 }
-                else if (string.Equals(property.Name, ModelDefinitionsRegion.HeatTransferModel.Key,
-                    StringComparison.OrdinalIgnoreCase))
+                else if (ValueEqualsDefinition(property.Name, ModelDefinitionsRegion.HeatTransferModel.Key))
                 {
                     model.TemperatureModelType = (TemperatureModelType)Enum.Parse(typeof(TemperatureModelType), property.Value);
                 }

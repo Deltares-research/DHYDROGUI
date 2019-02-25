@@ -17,12 +17,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
         public override void SetProperties(DelftIniCategory sedimentParameterCategory, WaterFlowModel1D model, IList<string> errorMessages)
         {
             if (sedimentParameterCategory == null) return;
-            if (!string.Equals(sedimentParameterCategory.Name, ModelDefinitionsRegion.SedimentValuesHeader, StringComparison.OrdinalIgnoreCase)) return;
+            if (!ValueEqualsDefinition(sedimentParameterCategory.Name, ModelDefinitionsRegion.SedimentValuesHeader)) return;
 
             foreach (var property in sedimentParameterCategory.Properties)
             {
                 var modelParameter = model.ParameterSettings.FirstOrDefault(ps =>
-                    string.Equals(ps.Name, property.Name, StringComparison.OrdinalIgnoreCase));
+                    ValueEqualsDefinition(ps.Name, property.Name));
                 if (modelParameter == null)
                 {
                     errorMessages.Add(GetUnsupportedPropertyWarningMessage(property));

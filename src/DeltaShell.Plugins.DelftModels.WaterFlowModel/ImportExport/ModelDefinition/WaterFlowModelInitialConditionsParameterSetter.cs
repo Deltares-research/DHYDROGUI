@@ -10,13 +10,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
         public override void SetProperties(DelftIniCategory initialConditionsParameterCategory, WaterFlowModel1D model, IList<string> errorMessages)
         {
             if (initialConditionsParameterCategory == null) return;
-            if (!string.Equals(initialConditionsParameterCategory.Name,
-                ModelDefinitionsRegion.InitialConditionsValuesHeader, StringComparison.OrdinalIgnoreCase)) return;
+            if (!ValueEqualsDefinition(initialConditionsParameterCategory.Name, ModelDefinitionsRegion.InitialConditionsValuesHeader)) return;
 
             foreach (var property in initialConditionsParameterCategory.Properties)
             {
-                var modelParameter = model.ParameterSettings.FirstOrDefault(ps =>
-                    string.Equals(ps.Name, property.Name, StringComparison.OrdinalIgnoreCase));
+                var modelParameter = model.ParameterSettings.FirstOrDefault(ps => ValueEqualsDefinition(ps.Name, property.Name));
                 if (modelParameter == null)
                 {
                     errorMessages.Add(GetUnsupportedPropertyWarningMessage(property));

@@ -11,7 +11,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
         {
             foreach (var property in category.Properties)
             {
-                if (string.Equals(property.Name, ModelDefinitionsRegion.DesignFactorDlg.Key, StringComparison.OrdinalIgnoreCase))
+                if (ValueEqualsDefinition(property.Name, ModelDefinitionsRegion.DesignFactorDlg.Key))
                 {
                     model.DesignFactorDlg = double.Parse(property.Value, CultureInfo.InvariantCulture);
                 }

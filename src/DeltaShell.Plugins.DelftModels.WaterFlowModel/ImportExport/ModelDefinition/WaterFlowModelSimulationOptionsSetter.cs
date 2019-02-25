@@ -10,8 +10,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
         public override void SetProperties(DelftIniCategory simulationOptionsCategory, WaterFlowModel1D model, IList<string> errorMessages)
         {
             if (simulationOptionsCategory == null) return;
-            if (!string.Equals(simulationOptionsCategory.Name, ModelDefinitionsRegion.SimulationOptionsValuesHeader,
-                StringComparison.OrdinalIgnoreCase)) return;
+            if (!ValueEqualsDefinition(simulationOptionsCategory.Name, ModelDefinitionsRegion.SimulationOptionsValuesHeader)) return;
 
             //Set save state properties equal to imported run times
             model.SaveStateStartTime = model.StopTime;
@@ -21,7 +20,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
             foreach (var property in simulationOptionsCategory.Properties)
             {
                 var modelParameter = model.ParameterSettings.FirstOrDefault(ps =>
-                    string.Equals(ps.Name, property.Name, StringComparison.OrdinalIgnoreCase));
+                    ValueEqualsDefinition(ps.Name, property.Name));
 
                 if (modelParameter != null)
                 {
@@ -34,18 +33,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
                         modelParameter.Value = property.Value;
                     }
                 }
-                else if (string.Equals(property.Name, ModelDefinitionsRegion.UseRestart.Key, StringComparison.OrdinalIgnoreCase))
+                else if (ValueEqualsDefinition(property.Name, ModelDefinitionsRegion.UseRestart.Key))
                 {
                     model.UseRestart = Convert.ToBoolean(Convert.ToInt32(property.Value));
                 }
-                else if (string.Equals(property.Name, ModelDefinitionsRegion.WriteRestart.Key,
-                    StringComparison.OrdinalIgnoreCase))
+                else if (ValueEqualsDefinition(property.Name, ModelDefinitionsRegion.WriteRestart.Key))
                 {
                     model.WriteRestart = Convert.ToBoolean(Convert.ToInt32(property.Value));
                 }
                 //Do nothing with "WriteNetCDF", always true in GUI.
-                else if (!string.Equals(property.Name, ModelDefinitionsRegion.WriteNetCDF.Key,
-                    StringComparison.OrdinalIgnoreCase))
+                else if (!ValueEqualsDefinition(property.Name, ModelDefinitionsRegion.WriteNetCDF.Key))
                 {
                     errorMessages.Add(GetUnsupportedPropertyWarningMessage(property));
                 }

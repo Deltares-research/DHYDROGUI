@@ -29,8 +29,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
             
             foreach (var property in category.Properties)
             {
-                var modelParameter = model.ParameterSettings.FirstOrDefault(ps =>
-                    string.Equals(ps.Name, property.Name, StringComparison.OrdinalIgnoreCase));
+                var modelParameter = model.ParameterSettings.FirstOrDefault(ps => ValueEqualsDefinition(ps.Name, property.Name));
 
                 if (modelParameter != null)
                 {
@@ -38,16 +37,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
                         ? Convert.ToString(Convert.ToBoolean(Convert.ToInt32(property.Value))) 
                         : property.Value;
                 }
-                else if (string.Equals(property.Name, ModelDefinitionsRegion.CalculateDelwaqOutput.Key,
-                    StringComparison.OrdinalIgnoreCase))
+                else if (ValueEqualsDefinition(property.Name, ModelDefinitionsRegion.CalculateDelwaqOutput.Key))
                 {
                     model.HydFileOutput = property.Value == "1";
                 }
-                else if (string.Equals(property.Name, ModelDefinitionsRegion.Latitude.Key, StringComparison.OrdinalIgnoreCase))
+                else if (ValueEqualsDefinition(property.Name, ModelDefinitionsRegion.Latitude.Key))
                 {
                     model.Latitude = double.Parse(property.Value, System.Globalization.CultureInfo.InvariantCulture);
                 }
-                else if (string.Equals(property.Name, ModelDefinitionsRegion.Longitude.Key, StringComparison.OrdinalIgnoreCase))
+                else if (ValueEqualsDefinition(property.Name, ModelDefinitionsRegion.Longitude.Key))
                 {
                     model.Longitude = double.Parse(property.Value, System.Globalization.CultureInfo.InvariantCulture);
                 }

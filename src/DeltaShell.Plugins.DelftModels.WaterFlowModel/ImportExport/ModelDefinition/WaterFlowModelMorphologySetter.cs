@@ -20,23 +20,19 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
 
             foreach (var property in morphologyCategory.Properties)
             {
-                if (string.Equals(property.Name, ModelDefinitionsRegion.CalculateMorphology.Key,
-                    StringComparison.OrdinalIgnoreCase))
+                if (ValueEqualsDefinition(property.Name, ModelDefinitionsRegion.CalculateMorphology.Key))
                 {
                     model.UseMorphology = ParseValueToBool(property, errorMessages);
                 }
-                else if (string.Equals(property.Name, ModelDefinitionsRegion.AdditionalOutput.Key,
-                    StringComparison.OrdinalIgnoreCase))
+                else if (ValueEqualsDefinition(property.Name, ModelDefinitionsRegion.AdditionalOutput.Key))
                 {
                     model.AdditionalMorphologyOutput = ParseValueToBool(property, errorMessages);
                 }
-                else if (string.Equals(property.Name, ModelDefinitionsRegion.MorphologyInputFile.Key,
-                    StringComparison.OrdinalIgnoreCase))
+                else if (ValueEqualsDefinition(property.Name, ModelDefinitionsRegion.MorphologyInputFile.Key))
                 {
                     model.MorphologyPath = property.Value;
                 }
-                else if (string.Equals(property.Name, ModelDefinitionsRegion.SedimentInputFile.Key,
-                    StringComparison.OrdinalIgnoreCase))
+                else if (ValueEqualsDefinition(property.Name, ModelDefinitionsRegion.SedimentInputFile.Key))
                 {
                     model.SedimentPath = property.Value;
                 }

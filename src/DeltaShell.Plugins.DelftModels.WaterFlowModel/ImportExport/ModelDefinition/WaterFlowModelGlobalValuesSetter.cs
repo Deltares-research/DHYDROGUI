@@ -44,8 +44,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
                                   WaterFlowModel1D model,
                                   IList<string> errorMessages)
         {
-            if (!category.Name.Equals(ModelDefinitionsRegion.GlobalValuesHeader, StringComparison.OrdinalIgnoreCase))
-                return;
+            if (!ValueEqualsDefinition(category.Name, ModelDefinitionsRegion.GlobalValuesHeader)) return;
 
             model.InitialConditionsType =
                 GetWithDefault(category, ModelDefinitionsRegion.UseInitialWaterDepth.Key, 0) == 0
@@ -76,10 +75,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
             // TODO: the DispersionFormulaType is not explicitly set in the md1d file, thus we need to deduce it.
             // TODO: This can be changed once we explicitly set the DispersionFormulaType (see issue SOBEK3-1622).
             if (model.UseSalt &&
-                category.Properties.Any(e =>
-                    string.Equals(e.Name, ModelDefinitionsRegion.DispersionF3.Key, StringComparison.OrdinalIgnoreCase)) && 
-                category.Properties.Any(e =>
-                    string.Equals(e.Name, ModelDefinitionsRegion.DispersionF4.Key, StringComparison.OrdinalIgnoreCase)))
+                category.Properties.Any(e => ValueEqualsDefinition(e.Name, ModelDefinitionsRegion.DispersionF3.Key)) && 
+                category.Properties.Any(e => ValueEqualsDefinition(e.Name, ModelDefinitionsRegion.DispersionF4.Key)))
             {
                 model.DispersionFormulationType = DispersionFormulationType.KuijperVanRijnPrismatic;
 

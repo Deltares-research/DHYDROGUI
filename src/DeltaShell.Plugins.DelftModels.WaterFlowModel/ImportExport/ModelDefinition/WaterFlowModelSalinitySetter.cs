@@ -10,23 +10,20 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
         public override void SetProperties(DelftIniCategory category, WaterFlowModel1D model, IList<string> errorMessages)
         {
             if (category == null) return;
-            if (!string.Equals(category.Name, ModelDefinitionsRegion.SalinityValuesHeader, StringComparison.OrdinalIgnoreCase)) return;
+            if (!ValueEqualsDefinition(category.Name, ModelDefinitionsRegion.SalinityValuesHeader)) return;
             
             foreach (var property in category.Properties)
             {
                 try
                 {
-                    if (string.Equals(property.Name, ModelDefinitionsRegion.SaltComputation.Key,
-                        StringComparison.OrdinalIgnoreCase))
+                    if (ValueEqualsDefinition(property.Name, ModelDefinitionsRegion.SaltComputation.Key))
                     {
                         model.UseSaltInCalculation = Convert.ToBoolean(Convert.ToInt32(property.Value));
                     }
-                    else if (string.Equals(property.Name, ModelDefinitionsRegion.DiffusionAtBoundaries.Key,
-                        StringComparison.OrdinalIgnoreCase))
+                    else if (ValueEqualsDefinition(property.Name, ModelDefinitionsRegion.DiffusionAtBoundaries.Key))
                     {
                         var diffusionAtBoundariesParameterSetting = model.ParameterSettings.FirstOrDefault(
-                            ps => string.Equals(ps.Name, ModelDefinitionsRegion.DiffusionAtBoundaries.Key,
-                                StringComparison.OrdinalIgnoreCase));
+                            ps => ValueEqualsDefinition(ps.Name, ModelDefinitionsRegion.DiffusionAtBoundaries.Key));
                         if (diffusionAtBoundariesParameterSetting != null)
                         {
                             diffusionAtBoundariesParameterSetting.Value =
