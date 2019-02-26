@@ -20,7 +20,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                 IsCoupledToFlow = true,
                 StartTime = DateTime.Now
             };
-            waveModel.ModelDefinition.ModelReferenceDateTime = waveModel.StartTime.AddDays(-1); // Model reference time precedes model start time
+            waveModel.ModelDefinition.ModelReferenceDateTime = waveModel.StartTime.AddDays(1); // Model start time precedes model reference time
 
             // When
             var validationReport = WaveCouplingValidator.Validate(waveModel);
