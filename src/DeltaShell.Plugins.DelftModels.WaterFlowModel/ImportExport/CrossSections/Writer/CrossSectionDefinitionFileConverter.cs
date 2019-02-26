@@ -11,7 +11,7 @@ using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSections.Writer
 {
-    public class CrossSectionDefinitionFileConverter
+    public class CrossSectionDefinitionFileConverter : ICrossSectionDefinitionFileConverter
     {
         /// <summary>
         /// Converts a <see cref="WaterFlowModel1D"/> to a <see cref="DelftIniCategory"/>
@@ -135,5 +135,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSectio
                     new CrossSection(crossSectionDefinition) {Name = crossSectionDefinition.Name}));
             return crossSections;
         }
+    }
+
+    public interface ICrossSectionDefinitionFileConverter
+    {
+        IEnumerable<DelftIniCategory> Convert(WaterFlowModel1D model);
     }
 }

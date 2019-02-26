@@ -11,14 +11,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Cross
     public class CrossSectionDefinitionFileWriterTest
     {
         private CrossSectionDefinitionFileWriter writer;
-        private CrossSectionDefinitionFileConverter converter;
+        private ICrossSectionDefinitionFileConverter converter;
         private IniFileWriter iniFileWriter;
         private string filePath = "testPath";
 
         [SetUp]
         public void Setup()
         {
-            converter = MockRepository.GenerateMock<CrossSectionDefinitionFileConverter>();
+            converter = MockRepository.GenerateMock<ICrossSectionDefinitionFileConverter>();
             iniFileWriter = MockRepository.GenerateMock<IniFileWriter>();
             writer = new CrossSectionDefinitionFileWriter(converter,iniFileWriter);
         }
