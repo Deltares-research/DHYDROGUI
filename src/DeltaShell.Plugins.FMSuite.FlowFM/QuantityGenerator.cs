@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.KnownStructureProperties;
@@ -12,12 +8,21 @@ using GeoAPI.Extensions.Feature;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM
 {
+    /// <summary>
+    /// This class generates the possible quantities for every <see cref="IFeature"/> object, depending on
+    /// the concrete type of <see cref="IFeature"/>.
+    /// </summary>
     public static class QuantityGenerator
     {
-        public static IEnumerable<string> GetQuantitiesForLocation(IFeature feature, bool useSalinity)
+        /// <summary>
+        /// Gets the quantities for a feature.
+        /// </summary>
+        /// <param name="feature">The feature.</param>
+        /// <param name="useSalinity">When the requesting model uses salinity, this argument is true. This affects the quantities that are generated.</param>
+        /// <returns>A collection of strings that describe every possible quantity for <paramref name="feature"/></returns>
+        public static IEnumerable<string> GetQuantitiesForFeature(IFeature feature, bool useSalinity)
         {
-            var pump = feature as IPump;
-            if (pump != null)
+            if (feature is IPump)
             {
                 yield return KnownStructureProperties.Capacity;
                 yield break;
@@ -38,6 +43,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     yield return "salinity";
                 }
                 yield return "water_depth";
+                yield break;
             }
 
             if (feature is ObservationCrossSection2D)

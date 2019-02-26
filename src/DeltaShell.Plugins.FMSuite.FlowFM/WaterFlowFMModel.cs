@@ -2636,7 +2636,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private List<IDataItem> GetDataItemListForFeature(IFeature feature, bool isInputSender)
         {
-            var quantities = QuantityGenerator.GetQuantitiesForLocation(feature, UseSalinity);
+            var quantities = QuantityGenerator.GetQuantitiesForFeature(feature, UseSalinity);
             return quantities.Select(quantity => new DataItem(feature)
             {
                 Name = feature.ToString(),

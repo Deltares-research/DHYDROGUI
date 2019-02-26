@@ -313,19 +313,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             // change weir formula
             weir.WeirFormula = new GeneralStructureWeirFormula();
             dataItems = model.GetChildDataItems(weir).ToList();
-            Assert.AreEqual(5, dataItems.Count);
+            Assert.AreEqual(3, dataItems.Count);
 
             var generalStructureDataItems = new List<string>
             {
-                KnownStructureProperties.CrestLevel,
+                EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.LevelCenter),
                 EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.GateHeight),
-                KnownStructureProperties.GateLowerEdgeLevel,
-                EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.WidthCenter),
-                EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.LevelCenter)
+                EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.HorizontalDoorOpeningWidth)
             };
-            Assert.That(generalStructureDataItems.Count == dataItems.Count);
 
-            for (int i = 0; i < dataItems.Count; ++i)
+            for (var i = 0; i < dataItems.Count; ++i)
             {
                 Assert.AreEqual(weir.Name, dataItems[i].Name);
                 Assert.AreEqual(generalStructureDataItems[i], dataItems[i].Tag);
