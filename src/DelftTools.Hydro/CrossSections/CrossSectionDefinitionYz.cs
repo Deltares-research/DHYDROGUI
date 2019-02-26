@@ -272,7 +272,7 @@ namespace DelftTools.Hydro.CrossSections
                 section.MinY += necessaryShift;
                 section.MaxY += necessaryShift;
 
-                Log.Info(string.Format("The roughness positions of cross section '{0}' have been shifted by {1} [m] to match the flow profile",
+                Log.Info(string.Format(Resources.CrossSectionDefinitionYZ_ShiftRoughnessPosition_The_roughness_positions_of_cross_section___0___have_been_shifted_by__1___m__to_match_the_flow_profile,
                         Name,
                         necessaryShift));
             }

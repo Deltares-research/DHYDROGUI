@@ -111,6 +111,16 @@ namespace DelftTools.Hydro.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The roughness positions of cross section &apos;{0}&apos; have been shifted by {1} [m] to match the flow profile.
+        /// </summary>
+        public static string CrossSectionDefinitionYZ_ShiftRoughnessPosition_The_roughness_positions_of_cross_section___0___have_been_shifted_by__1___m__to_match_the_flow_profile {
+            get {
+                return ResourceManager.GetString("CrossSectionDefinitionYZ_ShiftRoughnessPosition_The_roughness_positions_of_cross_" +
+                        "section___0___have_been_shifted_by__1___m__to_match_the_flow_profile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} Property &apos;{1}&apos; on line number is missing, &apos;{2}&apos; will be set as default.
         /// </summary>
         internal static string DelftIniPropertyValidator_CheckPropertyAvailability__0__Property___1___on_line_number_is_missing____2___will_be_set_as_default {

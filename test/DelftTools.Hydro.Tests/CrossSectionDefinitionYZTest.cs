@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.CrossSections.DataSets;
+using DelftTools.Hydro.Properties;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Editing;
 using DelftTools.Utils.Reflection;
@@ -90,7 +91,7 @@ namespace DelftTools.Hydro.Tests
             crossSection.Sections.Add(crossSectionSection1);
             crossSection.Sections.Add(crossSectionSection2);
 
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => crossSection.RefreshSectionsWidths(), string.Format("The roughness positions of cross section '{0}' have been shifted by {1} [m] to match the flow profile", crossSection.Name, 0.3));
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => crossSection.RefreshSectionsWidths(), string.Format(Resources.CrossSectionDefinitionYZ_ShiftRoughnessPosition_The_roughness_positions_of_cross_section___0___have_been_shifted_by__1___m__to_match_the_flow_profile, crossSection.Name, 0.3));
         }
 
         [Test]
