@@ -332,6 +332,7 @@
     <Compile Include="Layers\UnstructuredGridVertexFillCoverageLayerTest.cs" />
     <Compile Include="Gui\FlowFMMapLayerProviderTest.cs" />
     <Compile Include="ModelDefinition\ISedimentFractionExtensionsTests.cs" />
+    <Compile Include="QuantityGeneratorTest.cs" />
     <Compile Include="ScriptingTest\FlowFlexibleMeshFunctionsScriptTest.cs" />
     <Compile Include="IO\MorphologyFileTest.cs" />
     <Compile Include="IO\SedimentFileTest.cs" />
