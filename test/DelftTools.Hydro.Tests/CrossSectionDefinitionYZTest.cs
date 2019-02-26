@@ -57,9 +57,9 @@ namespace DelftTools.Hydro.Tests
         {
             var crossSection = new CrossSectionDefinitionYZ("myCrossSection");
             crossSection.BeginEdit(new DefaultEditAction("Set YZ data"));
-            crossSection.YZDataTable.AddCrossSectionYZRow(0.0, 0.0, 0.0);
-            crossSection.YZDataTable.AddCrossSectionYZRow(4.0, 0.0, 0.0);
-            crossSection.YZDataTable.AddCrossSectionYZRow(9.0, 0.0, 0.0);
+            crossSection.YZDataTable.AddCrossSectionYZRow(0.5, 0.0, 0.0);
+            crossSection.YZDataTable.AddCrossSectionYZRow(5.5, 0.0, 0.0);
+            crossSection.YZDataTable.AddCrossSectionYZRow(9.5, 0.0, 0.0);
             crossSection.EndEdit();
 
             var crossSectionSection1 = new CrossSectionSection {MinY = 0.2, MaxY = 5.2};
@@ -68,11 +68,30 @@ namespace DelftTools.Hydro.Tests
             crossSection.Sections.Add(crossSectionSection1);
             crossSection.Sections.Add(crossSectionSection2);
 
-            TestHelper.AssertLogMessagesCount(() => crossSection.RefreshSectionsWidths(), 2);
-            Assert.That(crossSectionSection1.MinY, Is.EqualTo(0.0), "First roughness position not correctly set");
-            Assert.That(crossSectionSection2.MaxY, Is.EqualTo(9.0), "Last roughness position not correctly set");
+            TestHelper.AssertLogMessagesCount(() => crossSection.RefreshSectionsWidths(), 1);
+            Assert.That(crossSectionSection1.MinY, Is.EqualTo(0.5), "First roughness position not correctly set");
+            Assert.That(crossSectionSection2.MaxY, Is.EqualTo(9.5), "Last roughness position not correctly set");
         }
-        
+
+        [Test]
+        public void
+            GivenACrossSectionDefinitionYZWhereRoughnessPositionsDoNotMatchProfile_WhenRefreshSectionsWidths_ThenLogMessageIsGiven()
+        {
+            var crossSection = new CrossSectionDefinitionYZ("myCrossSection");
+            crossSection.BeginEdit(new DefaultEditAction("Set YZ data"));
+            crossSection.YZDataTable.AddCrossSectionYZRow(0.5, 0.0, 0.0);
+            crossSection.YZDataTable.AddCrossSectionYZRow(5.5, 0.0, 0.0);
+            crossSection.YZDataTable.AddCrossSectionYZRow(9.5, 0.0, 0.0);
+            crossSection.EndEdit();
+
+            var crossSectionSection1 = new CrossSectionSection { MinY = 0.2, MaxY = 5.2 };
+            var crossSectionSection2 = new CrossSectionSection { MinY = 5.2, MaxY = 9.2 };
+
+            crossSection.Sections.Add(crossSectionSection1);
+            crossSection.Sections.Add(crossSectionSection2);
+
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => crossSection.RefreshSectionsWidths(), string.Format("The roughness positions of cross section '{0}' have been shifted by {1} [m] to match the flow profile", crossSection.Name, 0.3));
+        }
 
         [Test]
         public void GetGeometryWithNoYZReturnsPoint()

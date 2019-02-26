@@ -148,20 +148,24 @@ namespace DelftTools.Hydro.Helpers
 
         /// <summary>
         /// Checks if the first and last roughness positions are equal to the first and last y' value.
-        /// If they are not equal they will appear as validation warnings
+        /// If they are not equal a validation warning will be given. 
         /// </summary>
+        /// <remarks>
+        /// Returning true when crossSectionDefinition.Sections.Count == 0 is a a fix for models that do not have roughness positions defined.
+        /// The tolerance is set to 0.0001 to match the tolerance of the kernel.
+        /// </remarks>
         /// <param name="crossSectionDefinition">The cross section.</param>
         /// <returns>equals(true) or not equals(false)</returns>
         public static bool AreRoughnessPositionsEqualToFirstAndLastYValue(ICrossSectionDefinition crossSectionDefinition)
         {
-            if (crossSectionDefinition.Sections.Count == 0) return true; // Fix for models that do not have roughness positions defined.
+            if (crossSectionDefinition.Sections.Count == 0) return true;
             var startRoughnessPosition = crossSectionDefinition.Sections.First().MinY;
             var endRoughnessPosition = crossSectionDefinition.Sections.Last().MaxY;
 
             var firstYValue = crossSectionDefinition.Left;
             var lastYValue = crossSectionDefinition.Profile.Last().X;
  
-            return (Math.Abs(startRoughnessPosition - firstYValue) < double.Epsilon) && (Math.Abs(endRoughnessPosition - lastYValue) < double.Epsilon);
+            return (Math.Abs(startRoughnessPosition - firstYValue) < double.Epsilon) && (Math.Abs(endRoughnessPosition - lastYValue) < 0.0001);
         }
 
         private static bool IsTotalSectionsWidthAtLeastAsWideAsFlowWidth(CrossSectionDefinition crossSection)

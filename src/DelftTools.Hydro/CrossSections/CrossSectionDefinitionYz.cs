@@ -210,39 +210,22 @@ namespace DelftTools.Hydro.CrossSections
         }
 
         /// <summary>
-        /// This will set the minimal y' value of the first roughness to the minimal y' value of the first profile AND
-        /// This will set the maximal y' value of the last roughness to the maximal y' value of the last profile
+        /// This method will check if the roughness sections needs shifting and if they do, shift the roughness positions of the Sections.
         /// <remarks>
         /// Returning when Sections.Count == 0 is a a fix for models that do not have roughness positions defined.
+        /// The tolerance is set to 0.0001 to match the tolerance of the kernel.
         /// </remarks>
         /// </summary>
         public override void RefreshSectionsWidths()
         {
             if (Sections.Count == 0) return;
 
-            var firstRoughnessPosition = Sections.First().MinY;
-            var lastRoughnessPosition = Sections.Last().MaxY;
-            var firstProfilePosition = Profile.First().X;
-            var lastProfilePosition = Profile.Last().X;
-
-            if (Math.Abs(firstRoughnessPosition - firstProfilePosition) > double.Epsilon)
+            var necessaryShift = CalculateNecessaryShift();
+            
+            if (!(Math.Abs(necessaryShift) > 0.0001)) return;
+            foreach (var section in Sections)
             {
-                Sections.First().MinY = firstProfilePosition;
-                Log.Info(
-                    string.Format(
-                        Resources
-                            .CrossSectionDefinitionYZ_RefreshSectionsWidths_The__0__roughness_position_of_cross_section____1___has_been_changed_from__2__m_to__3__m_to_match_the_flow_profile,
-                        "starting", Name, firstRoughnessPosition, firstProfilePosition));
-            }
-
-            if (Math.Abs(lastRoughnessPosition - lastProfilePosition) > double.Epsilon)
-            {
-                Sections.Last().MaxY = lastProfilePosition;
-                Log.Info(
-                    string.Format(
-                        Resources
-                            .CrossSectionDefinitionYZ_RefreshSectionsWidths_The__0__roughness_position_of_cross_section____1___has_been_changed_from__2__m_to__3__m_to_match_the_flow_profile,
-                        "ending", Name, lastRoughnessPosition, lastProfilePosition));
+                ShiftRoughnessPosition(section, necessaryShift);
             }
         }
 
@@ -262,6 +245,41 @@ namespace DelftTools.Hydro.CrossSections
             clone.Thalweg = Thalweg;
             
             return clone;
+        }
+
+        /// <summary>
+        /// Calculates the necessary shift in [m].
+        /// </summary>
+        /// <remarks>
+        /// necessaryShift can be positive and negative.
+        /// Positive means Profile starts before first Roughness section.
+        /// Negative means Profile starts after first Roughness section.
+        /// </remarks>
+        /// <returns>necessaryShift in [m]</returns>
+        private double CalculateNecessaryShift()
+        {
+            var firstRoughnessPosition = Sections.First().MinY;
+            var firstProfilePosition = Profile.First().X;
+            var necessaryShift = firstProfilePosition - firstRoughnessPosition;
+
+            return necessaryShift;
+        }
+
+        private void ShiftRoughnessPosition(CrossSectionSection section, double necessaryShift)
+        {
+            if (section == Sections.First())
+            {
+                section.MinY += necessaryShift;
+                section.MaxY += necessaryShift;
+
+                Log.Info(string.Format("The roughness positions of cross section '{0}' have been shifted by {1} [m] to match the flow profile",
+                        Name,
+                        necessaryShift));
+            }
+            else
+            {
+                section.MaxY += necessaryShift;
+            }
         }
 
         public static CrossSectionDefinitionYZ CreateDefault(string name="")
