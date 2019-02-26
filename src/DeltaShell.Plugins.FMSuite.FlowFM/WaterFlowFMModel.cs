@@ -2636,7 +2636,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private List<IDataItem> GetDataItemListForFeature(IFeature feature, bool isInputSender)
         {
-            return GetQuantitiesForLocation(feature).Select(quantity => new DataItem(feature)
+            var quantities = QuantityGenerator.GetQuantitiesForLocation(feature, UseSalinity);
+            return quantities.Select(quantity => new DataItem(feature)
             {
                 Name = feature.ToString(),
                 Tag = quantity,
@@ -2644,61 +2645,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 ValueType = typeof(double),
                 ValueConverter = new WaterFlowFMFeatureValueConverter(this, feature, quantity, String.Empty) // TODO: insert unit
             }).OfType<IDataItem>().ToList();
-        }
-
-        private IEnumerable<string> GetQuantitiesForLocation(IFeature location)
-        {
-            var pump = location as IPump;
-            if (pump != null)
-            {
-                yield return KnownStructureProperties.Capacity;
-            }
-            
-            var weir = location as IWeir;
-
-            if (weir != null && (weir.WeirFormula is GeneralStructureWeirFormula || weir.WeirFormula is SimpleWeirFormula))
-            {
-                yield return KnownStructureProperties.CrestLevel;
-              
-                var weirFormulaGeneralStructures = weir.WeirFormula as GeneralStructureWeirFormula;
-                if (weirFormulaGeneralStructures != null)
-                {
-                    yield return EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.GateHeight);
-                    yield return KnownStructureProperties.GateLowerEdgeLevel;
-                    yield return EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.WidthCenter);
-                    yield return EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.LevelCenter);
-                }
-            }
-
-            if (weir != null && weir.WeirFormula is GatedWeirFormula)
-            {
-                var weirFormulaGates = weir.WeirFormula as GatedWeirFormula;
-                if (weirFormulaGates != null)
-                {
-                    yield return KnownStructureProperties.GateLowerEdgeLevel;
-                    yield return KnownStructureProperties.GateOpeningWidth;
-                    yield return KnownStructureProperties.GateSillLevel;
-                }
-            }
-
-            if (Area.ObservationPoints.Contains(location))
-            {
-                //TODO: add temperature and tracers
-                yield return "water_level";
-                if (UseSalinity)
-                {
-                    yield return "salinity";
-                }
-                yield return "water_depth";
-            }
-
-            if (Area.ObservationCrossSections.Contains(location))
-            {
-                yield return "discharge";
-                yield return "velocity";
-                yield return "water_level";
-                yield return "water_depth";
-            }
         }
 
         public double GetValueFromModelApi(IFeature feature, string parameterName)
