@@ -1,6 +1,6 @@
 [General]
 FileType=DelftIO HIA file
-DioVersion=Deltares, DELFTIO Version 1.09.00.8428, Mar 23 2018, 15:59:48
+DioVersion=Deltares, DELFTIO Version 1.09.00.63239, Feb 26 2019, 10:50:20
 HiaVersion=1.00
  
 [DioCheck]
@@ -14,4 +14,6 @@ TimeStepMultiplyer=60
 3=Waterlevel down (m AD)
  
 [Long Locations]
+1=Compound1: 2703.92_Culvert1
+2=Compound1: 2703.92_Culvert2
  
