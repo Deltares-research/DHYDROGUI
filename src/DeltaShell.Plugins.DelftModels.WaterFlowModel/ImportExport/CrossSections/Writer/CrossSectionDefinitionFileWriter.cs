@@ -3,7 +3,7 @@ using DeltaShell.NGHS.IO.FileWriters;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSections.Writer
 {
-    public class CrossSectionDefinitionFileWriter
+    public sealed class CrossSectionDefinitionFileWriter
     {
         private readonly CrossSectionDefinitionFileConverter converter;
         private readonly IniFileWriter writer;
@@ -14,7 +14,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSectio
             this.writer = writer;
         }
 
-        public virtual void WriteFile(string targetFile, WaterFlowModel1D waterFlowModel1D)
+        /// <summary>
+        /// Writes a cross section definition .ini format file at target location.
+        /// </summary>
+        /// <param name="targetFile">Specified file path.</param>
+        /// <param name="writer">Writes a cross section definition .ini format file at the specified file path.</param>
+        public void WriteFile(string targetFile, WaterFlowModel1D waterFlowModel1D)
         {
            if (File.Exists(targetFile)) File.Delete(targetFile);
 

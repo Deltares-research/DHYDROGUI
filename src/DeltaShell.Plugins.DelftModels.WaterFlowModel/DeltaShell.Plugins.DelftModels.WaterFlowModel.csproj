@@ -193,6 +193,7 @@
     <Compile Include="ImportExport\CrossSections\Reader\CrossSectionLocationConverter.cs" />
     <Compile Include="ImportExport\CrossSections\Reader\CrossSectionLocationFileReader.cs" />
     <Compile Include="ImportExport\CrossSections\Writer\CrossSectionDefinitionFileConverter.cs" />
+    <Compile Include="ImportExport\CrossSections\Writer\RoughnessDataProcessor.cs" />
     <Compile Include="ImportExport\DelftIniCategoryGenerators\GlobalValuesCategoryGenerator.cs" />
     <Compile Include="ImportExport\Flow1DParameterCategoryGenerator.cs" />
     <Compile Include="ImportExport\ModelDefinition\DelftIniPropertyValidationLookup.cs" />

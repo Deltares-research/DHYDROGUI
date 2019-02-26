@@ -28,7 +28,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Cross
         {
             var mockedModel = MockRepository.GeneratePartialMock<WaterFlowModel1D>();
             var categories = new List<DelftIniCategory>(){new DelftIniCategory("crossSections")};
-            converter.Expect(c => c.Convert(mockedModel)).Return(categories);
+            converter.Expect(c => converter.Convert(mockedModel)).Return(categories);
 
             writer.WriteFile(filePath, mockedModel);
 
