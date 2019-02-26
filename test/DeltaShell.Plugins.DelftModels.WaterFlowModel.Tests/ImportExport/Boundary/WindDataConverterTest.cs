@@ -28,7 +28,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
         [TestCase(BoundaryRegion.TimeInterpolationStrings.Linear,               Flow1DInterpolationType.Linear,    Flow1DExtrapolationType.Constant, true)]
         [TestCase(BoundaryRegion.TimeInterpolationStrings.LinearAndExtrapolate, Flow1DInterpolationType.Linear,    Flow1DExtrapolationType.Linear,   false)]
         [TestCase(BoundaryRegion.TimeInterpolationStrings.LinearAndExtrapolate, Flow1DInterpolationType.Linear,    Flow1DExtrapolationType.Linear,   true)]
-        public void GivenASetOfDelftBcCategoriesContainingTheCorrectWindDataWithASingleEntry_WhenWindDataConverterConvertIsCalledWithTheseParameters_ThenANewWindfunctionWillBeReturnedAndNoErrorIsLogged(string timeInterpolation,
+        public void GivenASetOfDelftBcCategoriesContainingTheCorrectWindDataWithASingleEntry_WhenWindDataConverterConvertIsCalledWithTheseParameters_ThenANewWindFunctionWillBeReturnedAndNoErrorIsLogged(string timeInterpolation,
                                                                                                                                                                                                           Flow1DInterpolationType expectedInterpolationType,
                                                                                                                                                                                                           Flow1DExtrapolationType expectedExtrapolationType,
                                                                                                                                                                                                           bool hasPeriodicity)
@@ -84,7 +84,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
         ///  AND no error is logged
         /// </summary>
         [Test]
-        public void GivenASetOfDelftBcCategoriesContainingTheCorrectWindDataWithMultipleEntries_WhenWindDataConverterConvertIsCalledWithTheseParameters_ThenANewWindfunctionWillBeReturnedAndNoErrorIsLogged()
+        public void GivenASetOfDelftBcCategoriesContainingTheCorrectWindDataWithMultipleEntries_WhenWindDataConverterConvertIsCalledWithTheseParameters_ThenANewWindFunctionWillBeReturnedAndNoErrorIsLogged()
         {
             // Given
             // Construct input set with a single value.
@@ -143,7 +143,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
         /// </summary>
         [TestCase(true)]
         [TestCase(false)]
-        public void GivenASetOfDelftBcCategoriesContainingTheCorrectWindDataWithASingleEntryAndOtherData_WhenWindDataConverterConvertIsCalledWithTheseParameters_ThenANewWindfunctionWillBeReturnedAndNoErrorIsLogged(bool doReverseCategories)
+        public void GivenASetOfDelftBcCategoriesContainingTheCorrectWindDataWithASingleEntryAndOtherData_WhenWindDataConverterConvertIsCalledWithTheseParameters_ThenANewWindFunctionWillBeReturnedAndNoErrorIsLogged(bool doReverseCategories)
         {
             // Given
             // Construct input set with a single value.

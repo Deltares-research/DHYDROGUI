@@ -105,7 +105,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
         /// If True then name contains the found Name.
         /// </returns>
         internal static bool ValidateNameProperty(IList<DelftIniProperty> properties,
-                                                out string name)
+                                                  out string name)
         {
             return ValidateUniqueProperty(properties, BoundaryRegion.Name.Key, false, out name) && name.Length > 0;
         }
@@ -120,7 +120,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
         /// If True then functionType contains the found FunctionType.
         /// </returns>
         internal static bool ValidateFunctionProperty(IList<DelftIniProperty> properties,
-                                                    out FunctionType functionType)
+                                                      out FunctionType functionType)
         {
             functionType = FunctionType.Constant;
 
@@ -153,13 +153,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
         /// <param name="extrapolationType">The validated extrapolation type.</param>/>
         /// <pre-condition>properties != null</pre-condition>
         /// <returns>
-        /// True if interpolation is validated, false otherwise.
-        /// If True then <paramref name="interpolationType"/> contains the found <see cref="Flow1DInterpolationType"/>.
-        /// If True then <paramref name="extrapolationType"/> contains the found <see cref="Flow1DExtrapolationType"/>
+        /// <c>true</c> if interpolation is validated, <c>false</c> otherwise.
+        /// If <c>true</c> then <paramref name="interpolationType"/> contains the found <see cref="Flow1DInterpolationType"/>.
+        /// If <c>true</c> then <paramref name="extrapolationType"/> contains the found <see cref="Flow1DExtrapolationType"/>.
         /// </returns>
         internal static bool ValidateInterpolation(IList<DelftIniProperty> properties,
-                                                 out Flow1DInterpolationType interpolationType,
-                                                 out Flow1DExtrapolationType extrapolationType)
+                                                   out Flow1DInterpolationType interpolationType,
+                                                   out Flow1DExtrapolationType extrapolationType)
         {
             interpolationType = Flow1DInterpolationType.Linear;
             extrapolationType = Flow1DExtrapolationType.Linear;
@@ -205,7 +205,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
         /// If True then hasPeriodicity contains the found Periodicity.
         /// </returns>
         internal static bool ValidatePeriodicity(IList<DelftIniProperty> properties,
-                                               out bool hasPeriodicity)
+                                                 out bool hasPeriodicity)
         {
             hasPeriodicity = false;
             if (!ValidateUniqueProperty(properties, BoundaryRegion.Periodic.Key, true, out var periodicityStr))
