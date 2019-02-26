@@ -186,7 +186,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
                             boundaryNode.SaltConcentrationConstant = nodeData.SaltComponent.ConstantBoundaryValue;
                             break;
                         case SaltBoundaryConditionType.TimeDependent:
-                            CopyFunction(nodeData.SaltComponent.TimeDependentBoundaryValue, boundaryNode.SaltConcentrationTimeSeries);
+                            CopyFunctionSaltTemperature(nodeData.SaltComponent.TimeDependentBoundaryValue, boundaryNode.SaltConcentrationTimeSeries);
                             break;
                         case SaltBoundaryConditionType.None:
                             break;
@@ -203,7 +203,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
                             boundaryNode.TemperatureConstant = nodeData.TemperatureComponent.ConstantBoundaryValue;
                             break;
                         case TemperatureBoundaryConditionType.TimeDependent:
-                            CopyFunction(nodeData.TemperatureComponent.TimeDependentBoundaryValue, boundaryNode.TemperatureTimeSeries);
+                            CopyFunctionSaltTemperature(nodeData.TemperatureComponent.TimeDependentBoundaryValue, boundaryNode.TemperatureTimeSeries);
                             break;
                         case TemperatureBoundaryConditionType.None:
                             break;
@@ -258,7 +258,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
                             lateralNode.SaltMassDischargeConstant = nodeData.SaltComponent.ConstantBoundaryValue;
                             break;
                         case SaltLateralDischargeType.MassTimeSeries:
-                            CopyFunction(nodeData.SaltComponent.TimeDependentBoundaryValue, lateralNode.SaltMassTimeSeries);
+                            CopyFunctionSaltTemperature(nodeData.SaltComponent.TimeDependentBoundaryValue, lateralNode.SaltMassTimeSeries);
                             break;
                         case SaltLateralDischargeType.Default:
                             break;
@@ -275,7 +275,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
                             lateralNode.TemperatureConstant = nodeData.TemperatureComponent.ConstantBoundaryValue;
                             break;
                         case TemperatureLateralDischargeType.TimeDependent:
-                            CopyFunction(nodeData.TemperatureComponent.TimeDependentBoundaryValue, lateralNode.TemperatureTimeSeries);
+                            CopyFunctionSaltTemperature(nodeData.TemperatureComponent.TimeDependentBoundaryValue, lateralNode.TemperatureTimeSeries);
                             break;
                         case TemperatureLateralDischargeType.None:
                             break;
@@ -292,20 +292,37 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
             for (var i = 0; i < from.Arguments.Count; i++)
             {
                 to.Arguments[i].SetValues(from.Arguments[i].Values);
-                to.Arguments[i].ExtrapolationType = from.Arguments[i].ExtrapolationType;
+            }
+
+            for (var i = 0; i < from.Components.Count; i++)
+            {
+                to.Components[i].SetValues(from.Components[i].Values);
+            }
+
+            to.SetInterpolationType(from.GetInterpolationType());
+            to.SetExtrapolationType(from.GetExtrapolationType());
+            to.SetPeriodicity(from.HasPeriodicity());
+        }
+
+        // In order to separate the behaviour of the Water, and Salt and Temperature Components, the copy functionality was 
+        // separated. This should be replaced with the actual CopyFunction, once the Salt and Temperature components support the 
+        // same features.
+        private static void CopyFunctionSaltTemperature(IFunction from, IFunction to)
+        {
+            if (from.Arguments.Count != to.Arguments.Count || from.Components.Count != to.Components.Count)
+                return;
+
+            for (var i = 0; i < from.Arguments.Count; i++)
+            {
+                to.Arguments[i].SetValues(from.Arguments[i].Values);
                 to.Arguments[i].InterpolationType = from.Arguments[i].InterpolationType;
             }
 
             for (var i = 0; i < from.Components.Count; i++)
             {
                 to.Components[i].SetValues(from.Components[i].Values);
-                to.Components[i].ExtrapolationType = from.Components[i].ExtrapolationType;
                 to.Components[i].InterpolationType = from.Components[i].InterpolationType;
             }
-
-            to.SetInterpolationType(from.GetInterpolationType());
-            to.SetExtrapolationType(from.GetExtrapolationType());
-            to.SetPeriodicity(from.HasPeriodicity());
         }
 
         private readonly Func<string, IList<IDelftBcCategory>> parseFunc;

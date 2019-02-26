@@ -21,8 +21,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
         /// <summary>
         /// Extract all valid LateralDischarges from the specified <paramref name="dataAccessModel"/>.
         /// </summary>
-        /// <param name="dataAccessModel">The data access model describing the LateralDischarges. </param>
-        /// <param name="errorMessages">List of error messages to which new messages will be added. </param>
+        /// <param name="dataAccessModel">The data access model describing the LateralDischarges.</param>
+        /// <param name="errorMessages">List of error messages to which new messages will be added.</param>
         /// <returns>
         /// A Dictionary mapping the NodeNames to the corresponding valid LateralDischarges extracted from
         /// the data access model.
@@ -45,7 +45,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
         /// <summary>
         /// Validate the provided <paramref name="dataAccessModel"/>.
         /// </summary>
-        /// <param name="dataAccessModel">The dataAccessModel to be validated. </param>
+        /// <param name="dataAccessModel">The dataAccessModel to be validated.</param>
         /// <param name="errorMessages">Collection of error messages to which new messages will be added.</param>
         /// <returns>
         /// True if the <paramref name="dataAccessModel"/> is valid and false otherwise.
@@ -68,7 +68,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
             return true;
         }
 
-        /// <summary> Possible LateralDischarge types ComponentTypes </summary>
+        /// <summary>Possible LateralDischarge types ComponentTypes.</summary>
         private enum ComponentType
         {
             Water,
@@ -79,14 +79,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
 
         /// <summary>
         /// Parse the provided category, adding any encountered to the <paramref name="errorMessages"/>, and adding
-        /// the described component, if valid, to the corresponding LateralDischarge.
+        /// the described component, if valid, to the corresponding <see cref="LateralDischarge"/>.
         /// </summary>
-        /// <param name="category"> The category to be parsed. </param>
-        /// <param name="boundaryConditions"> The Dictionary describing all LateralDischarges encountered so far. </param>
-        /// <param name="errorMessages"> Collection of error messages to which new messages will be added.</param>
-        /// <pre-condition>category != null && lateralDischarges != null && errorMessages != null. </pre-condition>
+        /// <param name="category">The category to be parsed.</param>
+        /// <param name="lateralDischarges">The dictionary describing all <see cref="LateralDischarge"/> encountered so far.</param>
+        /// <param name="errorMessages">Collection of error messages to which new messages will be added.</param>
+        /// <pre-condition>category != null && lateralDischarges != null && errorMessages != null.</pre-condition>
         private static void Parse(IDelftBcCategory category,
-                                  Dictionary<string, LateralDischarge> lateralDischarges,
+                                  IDictionary<string, LateralDischarge> lateralDischarges,
                                   ICollection<string> errorMessages)
         {
             // Validate properties of category.
@@ -131,9 +131,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
                 }
             }
 
-            ComponentType componentType;
             if (!ValidateComponentType(category.Table[function == FunctionType.Constant ? 0 : 1],
-                                       out componentType))
+                                       out var componentType))
                 errorMessages.Add
                     ($"Unable to parse Quantity of LateralDischarge: {category.Name} at line {category.LineNumber}.");
 
@@ -188,8 +187,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
         /// <summary>
         /// Validate the component type specified with the <paramref name="data"/>. 
         /// </summary>
-        /// <param name="data"> The column from which the componentType should be obtained.</param>
-        /// <param name="componentType">If valid, the found ComponentType. </param>
+        /// <param name="data">The column from which the componentType should be obtained.</param>
+        /// <param name="componentType">If valid, the found ComponentType.</param>
         /// <returns>
         /// True if data describes a valid ComponentType, false otherwise.
         /// If true, then componentType will contain the validated ComponentType.
@@ -223,11 +222,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
         /// <summary>
         /// Parse the constant component specified by the parameters and set this in <paramref name="discharge"/>
         /// </summary>
-        /// <param name="categoryTable"> The values associated with this constant component. </param>
-        /// <param name="discharge"> The LateralDischarge to which this component is added. </param>
-        /// <param name="interpolationType"> The InterpolationType of this new LateralDischargeComponent. </param>
-        /// <param name="hasPeriodicity"> Whether this new LateralDischargeComponent has periodicity. </param>
-        /// <param name="componentType"> The type of LateralDischargeComponent to be created. </param>
+        /// <param name="categoryTable">The values associated with this constant component.</param>
+        /// <param name="discharge">The LateralDischarge to which this component is added.</param>
+        /// <param name="componentType">The type of LateralDischargeComponent to be created.</param>
         private static void ParseConstant(IList<IDelftBcQuantityData> categoryTable,
                                           LateralDischarge discharge,
                                           ComponentType componentType)
@@ -262,10 +259,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
         /// <summary>
         /// Parse the QhTable WaterComponent specified by the parameters and set this in <paramref name="discharge"/>
         /// </summary>
-        /// <param name="categoryTable"> The values associated with this QhTable component. </param>
-        /// <param name="discharge"> The LateralDischarge to which this component is added. </param>
-        /// <param name="interpolationType"> The InterpolationType of this new LateralDischargeComponent. </param>
-        /// <param name="hasPeriodicity"> Whether this new LateralDischargeComponent has periodicity. </param>
+        /// <param name="categoryTable">The values associated with this QhTable component.</param>
+        /// <param name="discharge">The LateralDischarge to which this component is added.</param>
+        /// <param name="interpolationType">The interpolation type of this new LateralDischargeComponent.</param>
+        /// <param name="extrapolationType">The extrapolation type of this new LateralDischargeComponent.</param>
+        /// <param name="hasPeriodicity">Whether this new LateralDischargeComponent has periodicity.</param>
         private static void ParseQhTable(IList<IDelftBcQuantityData> categoryTable, 
                                          LateralDischarge discharge, 
                                          Flow1DInterpolationType interpolationType,
@@ -295,11 +293,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
         /// <summary>
         /// Parse the constant component specified by the parameters and set this in <paramref name="discharge"/>
         /// </summary>
-        /// <param name="categoryTable"> The values associated with this timeseries component. </param>
-        /// <param name="discharge"> The LateralDischarge to which this component is added. </param>
-        /// <param name="interpolationType"> The InterpolationType of this new LateralDischargeComponent. </param>
-        /// <param name="hasPeriodicity"> Whether this new LateralDischargeComponent has periodicity. </param>
-        /// <param name="componentType"> The type of LateralDischargeComponent to be created. </param>
+        /// <param name="categoryTable">The values associated with this timeseries component.</param>
+        /// <param name="discharge">The LateralDischarge to which this component is added.</param>
+        /// <param name="interpolationType">The interpolation type of this new LateralDischargeComponent.</param>
+        /// <param name="extrapolationType">The extrapolation type of this new LateralDischargeComponent.</param>
+        /// <param name="hasPeriodicity">Whether this new LateralDischargeComponent has periodicity.</param>
+        /// <param name="componentType">The type of LateralDischargeComponent to be created.</param>
         private static void ParseTimeSeries(IList<IDelftBcQuantityData> categoryTable, 
                                             LateralDischarge discharge,
                                             Flow1DInterpolationType interpolationType,

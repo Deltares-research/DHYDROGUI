@@ -26,11 +26,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
         /// <summary>The type of extrapolation for the values of this BoundaryComponent.</summary>
         public readonly Flow1DExtrapolationType? ExtrapolationType;
 
-        /// <summary>Whether this BoundaryConditionComponent values are repeating or not.</summary>
+        /// <summary>Whether this BoundaryComponent values are repeating or not.</summary>
         public readonly bool IsPeriodic;
-        /// <summary> The constant value of this BoundaryConditionComponent.  </summary>
+        /// <summary>The constant value of this BoundaryComponent.</summary>
         public readonly double ConstantBoundaryValue;
-        /// <summary> The TimeDependent value of this BoundaryConditionComponent.  </summary>
+        /// <summary>The TimeDependent value of this BoundaryComponent.</summary>
         public readonly IFunction TimeDependentBoundaryValue;
     }
 }

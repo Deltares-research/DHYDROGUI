@@ -25,7 +25,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
         /// <summary>Gets or sets the salt component of this LateralDischarge.</summary>
         /// <value>The BoundaryComponent which describes the salt component of this LateralDischarge.</value>
         public LateralDischargeSalt SaltComponent { get; set; }
-        /// <summary>Gets or sets the salt component of this LateralDischarge.</summary>
+        /// <summary>Gets or sets the temperature component of this LateralDischarge.</summary>
         /// <value>The BoundaryComponent which describes the temperature component of this LateralDischarge.</value>
         public LateralDischargeTemperature TemperatureComponent { get; set; }
     }

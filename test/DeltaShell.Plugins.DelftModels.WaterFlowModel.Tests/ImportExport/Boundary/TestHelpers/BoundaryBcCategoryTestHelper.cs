@@ -7,7 +7,7 @@ using DelftTools.Units;
 using DeltaShell.NGHS.IO.FileWriters.Boundary;
 using DeltaShell.NGHS.IO.Helpers;
 
-namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Boundary
+namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Boundary.TestHelpers
 {
     public static class BoundaryTestHelper
     {
@@ -121,13 +121,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
 
             switch (interpolationType)
             {
-                case (Flow1DInterpolationType.Linear):
+                case Flow1DInterpolationType.Linear:
                     return extrapolationType == Flow1DExtrapolationType.Constant
                         ? BoundaryRegion.TimeInterpolationStrings.Linear
                         : BoundaryRegion.TimeInterpolationStrings.LinearAndExtrapolate;
-                case (Flow1DInterpolationType.BlockFrom):
+                case Flow1DInterpolationType.BlockFrom:
                     return BoundaryRegion.TimeInterpolationStrings.BlockFrom;
-                case (Flow1DInterpolationType.BlockTo):
+                case Flow1DInterpolationType.BlockTo:
                     return BoundaryRegion.TimeInterpolationStrings.BlockTo;
                 default:
                     throw new NotImplementedException("Cannot derive a InterpolationString from the specified function.");

@@ -5,6 +5,7 @@ using DelftTools.Functions.Generic;
 using DeltaShell.NGHS.IO.FileWriters.Boundary;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary;
+using DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Boundary.TestHelpers;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Boundary
@@ -311,7 +312,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
         ///  AND an error message is logged
         /// </summary>
         [Test]
-        public void GivenAMeteoFunctionDescriptionWithAnInvalidInterpolation_WhenConvertIsCalled_ThenAMeteoFunctionWithLinearExtrapolateIsGenerateAndAnErrorMessageIsLogged()
+        public void GivenAMeteoFunctionDescriptionWithAnInvalidInterpolation_WhenConvertIsCalled_ThenAMeteoFunctionWithLinearExtrapolateIsGeneratedAndAnErrorMessageIsLogged()
         {
             // Given
             // Construct input set with a single value.

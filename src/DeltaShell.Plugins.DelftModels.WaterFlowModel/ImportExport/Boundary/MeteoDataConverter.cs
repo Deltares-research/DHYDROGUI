@@ -24,7 +24,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
         /// <param name="errorMessages">List of error messages to which new messages will be added</param>
         /// <returns>
         /// If the <paramref name="dataAccessModel"/> describes a valid MeteoFunction,
-        /// then the corresponding MeteoFunction, else null.
+        /// then the corresponding <see cref="MeteoFunction"/>, else null.
         /// </returns>
         public static MeteoFunction Convert(IList<IDelftBcCategory> dataAccessModel,
                                             IList<string> errorMessages)
@@ -78,14 +78,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
         /// Parse the provided valid dataAccessModel to obtain a valid MeteoFunction.
         /// </summary>
         /// <param name="dataAccessModel">The air temperature, humidity and cloudiness categories (in any order).</param>
+        /// <param name="errorMessages">Collection of error messages to which new messages will be added.</param>
         /// <pre-condition> this.Validate(dataAccessModel, _)</pre-condition>
         /// <returns>A new MeteoFunction corresponding with the description in the dataAccessModel</returns>
         private static MeteoFunction Parse(IList<IDelftBcCategory> dataAccessModel,
                                            ICollection<string> errorMessages)
         {
             var meteoFunction = new MeteoFunction();
-
-            // Obtain Interpolation | Extrapolation
 
             // Obtain DateTime values
             var dateTimeValues = BcConverterHelper.ParseDateTimesValuesFromTableColumn(dataAccessModel[0].Table[0]);
@@ -109,8 +108,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
                                                          out var extrapolationType))
             {
                 errorMessages.Add("Unable to parse MeteoFunction interpolation, defaulting to linear-extrapolate.");
-                interpolationType = Flow1DInterpolationType.Linear;
-                extrapolationType = Flow1DExtrapolationType.Linear;
             }
 
             meteoFunction.SetInterpolationType(interpolationType);
@@ -120,7 +117,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
                                                        out var hasPeriodicity))
             {
                 errorMessages.Add("Unable to parse MeteoFunction periodicity, defaulting to false.");
-                hasPeriodicity = false;
             }
 
             meteoFunction.SetPeriodicity(hasPeriodicity);

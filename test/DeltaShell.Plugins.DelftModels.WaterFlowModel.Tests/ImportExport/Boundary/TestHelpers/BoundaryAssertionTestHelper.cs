@@ -9,26 +9,40 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
     {
         public static void AssertThatTimeDependentFunctionIsEqualTo(IFunction actual, IFunction expected)
         {
+            AssertThatTimeDependentFunctionBaseIsEqualTo(actual, expected);
+
+            Assert.That(actual.GetInterpolationType(), Is.EqualTo(expected.GetInterpolationType()));
+            Assert.That(actual.GetExtrapolationType(), Is.EqualTo(expected.GetExtrapolationType()));
+            Assert.That(actual.HasPeriodicity(), Is.EqualTo(expected.HasPeriodicity()));
+        }
+
+        public static void AssertThatTimeDependentFunctionWithoutExtensionIsEqualTo(
+            IFunction actual, IFunction expected)
+        {
+            AssertThatTimeDependentFunctionBaseIsEqualTo(actual, expected);
+
+            Assert.That(actual.Arguments[0].InterpolationType,
+                Is.EqualTo(expected.Arguments[0].InterpolationType));
+        }
+
+        private static void AssertThatTimeDependentFunctionBaseIsEqualTo(IFunction actual, IFunction expected)
+        {
             Assert.That(actual, Is.Not.Null);
             Assert.That(expected, Is.Not.Null);
 
             var nValues = expected.Arguments[0].Values.Count;
             Assert.That(expected.Arguments[0].Values.Count,
-                Is.EqualTo(nValues));
+                        Is.EqualTo(nValues));
             Assert.That(actual.Components[0].Values.Count,
-                Is.EqualTo(nValues));
+                        Is.EqualTo(nValues));
 
             for (var i = 0; i < nValues; i++)
             {
                 Assert.That(actual.Arguments[0].Values[i],
-                    Is.EqualTo(expected.Arguments[0].Values[i]));
+                            Is.EqualTo(expected.Arguments[0].Values[i]));
                 Assert.That(actual.Components[0].Values[i],
-                    Is.EqualTo(actual.Components[0].Values[i]));
+                            Is.EqualTo(actual.Components[0].Values[i]));
             }
-
-            Assert.That(actual.GetInterpolationType(), Is.EqualTo(expected.GetInterpolationType()));
-            Assert.That(actual.GetExtrapolationType(), Is.EqualTo(expected.GetExtrapolationType()));
-            Assert.That(actual.HasPeriodicity(), Is.EqualTo(expected.HasPeriodicity()));
         }
 
         public static void AssertThatBoundaryConditionIsEqualTo(WaterFlowModel1DBoundaryNodeData node,
@@ -64,7 +78,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
                         Assert.That(node.SaltConcentrationConstant, Is.EqualTo(expected.SaltComponent.ConstantBoundaryValue));
                         break;
                     case SaltBoundaryConditionType.TimeDependent:
-                        AssertThatTimeDependentFunctionIsEqualTo(node.SaltConcentrationTimeSeries, expected.SaltComponent.TimeDependentBoundaryValue);
+                        AssertThatTimeDependentFunctionWithoutExtensionIsEqualTo(node.SaltConcentrationTimeSeries, expected.SaltComponent.TimeDependentBoundaryValue);
                         break;
                     case SaltBoundaryConditionType.None:
                         break;
@@ -81,7 +95,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
                         Assert.That(node.TemperatureConstant, Is.EqualTo(expected.TemperatureComponent.ConstantBoundaryValue));
                         break;
                     case TemperatureBoundaryConditionType.TimeDependent:
-                        AssertThatTimeDependentFunctionIsEqualTo(node.TemperatureTimeSeries, expected.TemperatureComponent.TimeDependentBoundaryValue);
+                        AssertThatTimeDependentFunctionWithoutExtensionIsEqualTo(node.TemperatureTimeSeries, expected.TemperatureComponent.TimeDependentBoundaryValue);
                         break;
                     case TemperatureBoundaryConditionType.None:
                         break;
@@ -118,13 +132,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
                         Assert.That(node.SaltConcentrationDischargeConstant, Is.EqualTo(expected.SaltComponent.ConstantBoundaryValue));
                         break;
                     case SaltLateralDischargeType.ConcentrationTimeSeries:
-                        AssertThatTimeDependentFunctionIsEqualTo(node.SaltConcentrationTimeSeries, expected.SaltComponent.TimeDependentBoundaryValue);
+                        AssertThatTimeDependentFunctionWithoutExtensionIsEqualTo(node.SaltConcentrationTimeSeries, expected.SaltComponent.TimeDependentBoundaryValue);
                         break;
                     case SaltLateralDischargeType.MassConstant:
                         Assert.That(node.SaltMassDischargeConstant, Is.EqualTo(expected.SaltComponent.ConstantBoundaryValue));
                         break;
                     case SaltLateralDischargeType.MassTimeSeries:
-                        AssertThatTimeDependentFunctionIsEqualTo(node.SaltMassTimeSeries, expected.SaltComponent.TimeDependentBoundaryValue);
+                        AssertThatTimeDependentFunctionWithoutExtensionIsEqualTo(node.SaltMassTimeSeries, expected.SaltComponent.TimeDependentBoundaryValue);
                         break;
                     case SaltLateralDischargeType.Default:
                         break;
@@ -141,7 +155,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
                         Assert.That(node.TemperatureConstant, Is.EqualTo(expected.TemperatureComponent.ConstantBoundaryValue));
                         break;
                     case TemperatureLateralDischargeType.TimeDependent:
-                        AssertThatTimeDependentFunctionIsEqualTo(node.TemperatureTimeSeries, expected.TemperatureComponent.TimeDependentBoundaryValue);
+                        AssertThatTimeDependentFunctionWithoutExtensionIsEqualTo(node.TemperatureTimeSeries, expected.TemperatureComponent.TimeDependentBoundaryValue);
                         break;
                     case TemperatureLateralDischargeType.None:
                         break;

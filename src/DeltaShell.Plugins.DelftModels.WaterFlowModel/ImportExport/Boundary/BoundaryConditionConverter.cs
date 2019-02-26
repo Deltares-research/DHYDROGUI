@@ -216,8 +216,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
         /// </summary>
         /// <param name="categoryTable"> The values associated with this constant component.</param>
         /// <param name="condition"> The BoundaryCondition to which this component is added.</param>
-        /// <param name="interpolationType"> The InterpolationType of this new BoundaryConditionComponent.</param>
-        /// <param name="hasPeriodicity"> Whether this new BoundaryConditionComponent has periodicity.</param>
         /// <param name="componentType"> The type of BoundaryConditionComponent to be created.</param>
         private static void ParseConstant(IList<IDelftBcQuantityData> categoryTable, 
                                           BoundaryCondition condition,
@@ -345,4 +343,3 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
         }
     }
 }
-
