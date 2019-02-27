@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using DelftTools.Hydro.Helpers;
-using DelftTools.Hydro.Properties;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Editing;
@@ -36,7 +35,7 @@ namespace DelftTools.Hydro.CrossSections
                     var nameAlreadyExists = CrossSectionNameExists(value);
                     if (nameAlreadyExists)
                     {
-                        Log.ErrorFormat("A cross section with name '{0}' already exists. Cross section name '{1}' remains unchanged.", value, Name);
+                        Log.Error($"A cross section with name '{value}' already exists. Cross section name '{Name}' remains unchanged.");
                     }
                     else
                     {
@@ -55,7 +54,9 @@ namespace DelftTools.Hydro.CrossSections
         private bool CrossSectionNameExists(string value)
         {
             var crossSectionNames = HydroNetwork.CrossSections.Select(cs => cs.Name);
-            return crossSectionNames.Contains(value);
+            var sharedCrossSectionDefinitionNames = HydroNetwork.SharedCrossSectionDefinitions.Select(cs => cs.Name);
+            var names = crossSectionNames.Concat(sharedCrossSectionDefinitionNames);
+            return names.Contains(value);
         }
 
         [EditAction]

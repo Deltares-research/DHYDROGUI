@@ -266,5 +266,34 @@ namespace DelftTools.Hydro.Tests
             // Then
             Assert.That(crossSection1.Name, Is.EqualTo(crossSection1Name));
         }
+
+        [Test]
+        public void GivenCrossSectionsInNetwork_WhenRenamingOneCrossSectionToExistingName_ThenNameStaysTheSame2()
+        {
+            // Given
+            const string crossSection1Name = "CrossSectionDefinition1";
+            const string crossSection2Name = "CrossSectionDefinition2";
+            const string sharedCrossSectionName = "SharedCrossSectionDefinition";
+
+            var network = HydroNetworkHelper.GetSnakeHydroNetwork(new Point(0, 0), new Point(100, 0));
+            var branch = network.Channels.First();
+            var crossSection1 = HydroNetworkHelper.AddCrossSectionDefinitionToBranch(branch, CrossSectionDefinitionYZ.CreateDefault(), 40);
+            crossSection1.ShareDefinitionAndChangeToProxy();
+
+            var sharedCrossSectionDefinition = network.SharedCrossSectionDefinitions.FirstOrDefault();
+            Assert.IsNotNull(sharedCrossSectionDefinition);
+            sharedCrossSectionDefinition.Name = sharedCrossSectionName;
+
+            var crossSection2 = HydroNetworkHelper.AddCrossSectionDefinitionToBranch(branch, CrossSectionDefinitionYZ.CreateDefault(), 50);
+            crossSection1.Name = crossSection1Name;
+            crossSection2.Name = crossSection2Name;
+
+            // When
+            var expectedMessage = $"A cross section with name '{sharedCrossSectionName}' already exists. Cross section name '{crossSection2Name}' remains unchanged.";
+            TestHelper.AssertLogMessageIsGenerated(() => crossSection2.Name = sharedCrossSectionName, expectedMessage, 1);
+
+            // Then
+            Assert.That(crossSection2.Name, Is.EqualTo(crossSection2Name));
+        }
     }
 }
