@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using DelftTools.Hydro.Helpers;
+using DelftTools.Hydro.Properties;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Editing;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
+using log4net;
 using IEditableObject = DelftTools.Utils.Editing.IEditableObject;
 
 namespace DelftTools.Hydro.CrossSections
@@ -15,6 +18,7 @@ namespace DelftTools.Hydro.CrossSections
     [Entity]
     public class CrossSection : BranchFeatureHydroObject, ICrossSection, IEditableObject
     {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(CrossSection));
         private IGeometry tmpGeometry;
 
         [DisplayName("Name")]
@@ -26,17 +30,39 @@ namespace DelftTools.Hydro.CrossSections
             set
             {
                 BeginEdit(new DefaultEditAction(string.Format("Change CrossSection Name from \"{0}\" to \"{1}\"", base.Name, value)));
-                
-                base.Name = value;
-                AfterNameSet();
+
+                if (HydroNetwork != null)
+                {
+                    var nameAlreadyExists = CrossSectionNameExists(value);
+                    if (nameAlreadyExists)
+                    {
+                        Log.ErrorFormat("A cross section with name '{0}' already exists. Cross section name '{1}' remains unchanged.", value, Name);
+                    }
+                    else
+                    {
+                        SetCrossSectionName(value);
+                    }
+                }
+                else
+                {
+                    SetCrossSectionName(value);
+                }
 
                 EndEdit();
             }
         }
 
-        [EditAction]
-        private void AfterNameSet()
+        private bool CrossSectionNameExists(string value)
         {
+            var crossSectionNames = HydroNetwork.CrossSections.Select(cs => cs.Name);
+            return crossSectionNames.Contains(value);
+        }
+
+        [EditAction]
+        private void SetCrossSectionName(string name)
+        {
+            base.Name = name;
+
             //for practical reasons..sync definition name
             if (Definition != null && !Definition.IsProxy)
             {

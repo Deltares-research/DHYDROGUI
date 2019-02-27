@@ -3,6 +3,7 @@ using System.Linq;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Tests.TestObjects;
+using DelftTools.TestUtils;
 using DelftTools.Utils.UndoRedo;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
@@ -241,6 +242,29 @@ namespace DelftTools.Hydro.Tests
             {
                 crossSection.Name = "Pietje";
             }
+        }
+
+        [Test]
+        public void GivenCrossSectionsInNetwork_WhenRenamingOneCrossSectionToExistingName_ThenNameStaysTheSame()
+        {
+            // Given
+            var crossSection1Name = "CrossSectionDefinition1";
+            var crossSection2Name = "CrossSectionDefinition2";
+
+            var network = HydroNetworkHelper.GetSnakeHydroNetwork(new Point(0, 0), new Point(100, 0));
+            var branch = network.Channels.First();
+
+            var crossSection1 = HydroNetworkHelper.AddCrossSectionDefinitionToBranch(branch, CrossSectionDefinitionYZ.CreateDefault(), 40);
+            var crossSection2 = HydroNetworkHelper.AddCrossSectionDefinitionToBranch(branch, CrossSectionDefinitionYZ.CreateDefault(), 50);
+            crossSection1.Name = crossSection1Name;
+            crossSection2.Name = crossSection2Name;
+
+            // When
+            var expectedMessage = string.Format("A cross section with name '{0}' already exists. Cross section name '{1}' remains unchanged.", crossSection2Name, crossSection1Name);
+            TestHelper.AssertLogMessageIsGenerated(() => crossSection1.Name = crossSection2Name, expectedMessage, 1);
+
+            // Then
+            Assert.That(crossSection1.Name, Is.EqualTo(crossSection1Name));
         }
     }
 }
