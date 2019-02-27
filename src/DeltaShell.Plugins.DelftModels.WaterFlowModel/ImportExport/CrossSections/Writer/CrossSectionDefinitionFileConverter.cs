@@ -38,7 +38,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSectio
                 var definitionRegion = definitionGeneratorCrossSectionDefinition.CreateDefinitionRegion(definition);
                 definitionRegion = DetermineCrossSectionType(waterFlowModel1D, crossSection, definitionRegion);
 
-                CheckIfSharedCrossSectionsContainsDefinition(sharedCrossSections, definition, definitionRegion);
+                if (sharedCrossSections.Contains(definition))
+                {
+                    definitionRegion.AddProperty(DefinitionRegion.IsShared.Key,
+                        1, DefinitionRegion.IsShared.Description);
+                }
 
                 categories.Add(definitionRegion);
                 processedCsDefinitions.Add(csDefinitionId);
@@ -47,10 +51,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSectio
             return categories;
         }
 
-        private static void CheckIfSharedCrossSectionsContainsDefinition(IEventedList<ICrossSectionDefinition> sharedCrossSections, ICrossSectionDefinition definition,
-            DelftIniCategory definitionRegion)
+        private static void CheckIfSharedCrossSectionsContainsDefinition(IEventedList<ICrossSectionDefinition> sharedCrossSectionDefinitions, ICrossSectionDefinition definition,
+            IDelftIniCategory definitionRegion)
         {
-            if (sharedCrossSections.Count > 0)
+            if(sharedCrossSectionDefinitions.Contains(definition))
             {
                 definitionRegion.AddProperty(DefinitionRegion.IsShared.Key,
                     1, DefinitionRegion.IsShared.Description);

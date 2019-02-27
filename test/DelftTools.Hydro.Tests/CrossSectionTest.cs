@@ -3,12 +3,11 @@ using System.Linq;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Tests.TestObjects;
-using DelftTools.Utils.Reflection;
+using DelftTools.TestUtils;
 using DelftTools.Utils.UndoRedo;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
-using Rhino.Mocks;
 using Point = NetTopologySuite.Geometries.Point;
 
 namespace DelftTools.Hydro.Tests

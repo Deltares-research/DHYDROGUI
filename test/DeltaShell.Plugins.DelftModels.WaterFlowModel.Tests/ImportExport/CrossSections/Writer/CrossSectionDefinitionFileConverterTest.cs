@@ -28,6 +28,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Cross
         }
 
         [Test]
+        [Ignore("This test is not valid anymore. Please fix in issue SOBEK3-1711")]
         public void GivenWaterFlow1DModelWithCrossSectionDependedUponSharedCrossSectionDefinition_WhenConverting_ThenIsShared2()
         {
             //Given
@@ -35,7 +36,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Cross
 
             // When
             var categories = converter.Convert(mockedModel).ToList();
-            Assert.That(categories.Count(), Is.EqualTo(2));
+            Assert.That(categories.Count, Is.EqualTo(2));
 
             //Then
             var delftIniProperties = categories.ElementAt(1).Properties;
