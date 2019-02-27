@@ -243,6 +243,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                         .Select(csdp => csdp.InnerDefinition)
                         .OfType<CrossSectionDefinition>()
                 )
+                .ForEach(csd => csd.AdjustSectionWidths());
+        }
+
+        public static void RefreshCrossSectionDefinitionYZSectionWidths(IHydroNetwork network)
+        {
+           network.CrossSections.Select(cs => cs.Definition)
+                .OfType<CrossSectionDefinitionYZ>()
                 .ForEach(csd => csd.RefreshSectionsWidths());
         }
 

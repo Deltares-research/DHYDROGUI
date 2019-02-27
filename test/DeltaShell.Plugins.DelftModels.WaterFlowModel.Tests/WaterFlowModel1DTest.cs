@@ -3596,11 +3596,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             definitionYZ.YZDataTable.AddCrossSectionYZRow(15, -1.0, 0);
             definitionYZ.YZDataTable.AddCrossSectionYZRow(16, 1.0, 0);
             definitionYZ.YZDataTable.AddCrossSectionYZRow(26, 1.0, 0);
+            var crossSectionSection1 = new CrossSectionSection { MinY = 0.5, MaxY = 26.5 };
+            definitionYZ.Sections.Add(crossSectionSection1);
             var crossSection = HydroNetworkHelper.AddCrossSectionDefinitionToBranch(branch1, definitionYZ, 105.0d);
             crossSection.Name = HydroNetworkHelper.GetUniqueFeatureName(network, crossSection);
 
             WaterFlowModel1DTestHelper.RefreshCrossSectionDefinitionSectionWidths(network);
-
+            WaterFlowModel1DTestHelper.RefreshCrossSectionDefinitionYZSectionWidths(network);
+            
             // add weir
             var weir = new Weir { CrestWidth = 5, CrestLevel = 1, FlowDirection = FlowDirection.Both };
             ((SimpleWeirFormula) weir.WeirFormula).DischargeCoefficient = 0.8;
