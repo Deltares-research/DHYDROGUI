@@ -88,38 +88,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                     model.ControlGroups, model.WriteRestart || model.UseRestart)
                 .Save(Path.Combine(path, RealTimeControlXMLFiles.XmlTools));
 
-            if (model.UseRestart)
-            {
-                // export target directory may be another than the model working directory, so store the latter
-                string modelWorkingDirectory;
-                try
-                {
-                    modelWorkingDirectory = model.ModelStateHandler.ModelWorkingDirectory;
-                }
-                catch
-                {
-                    // model working directory was not set (yet)
-                    modelWorkingDirectory = null;
-                }
-
-                model.ModelStateHandler.ModelWorkingDirectory = path;
-                model.ModelStateHandler.FeedStateToModel(
-                    model.ModelStateHandler.CreateStateFromFile(model.Name, model.RestartInput.Path));
-
-                if (modelWorkingDirectory != null)
-                {
-                    // there was a model working directory set, restore it
-                    model.ModelStateHandler.ModelWorkingDirectory = modelWorkingDirectory;
-                }
-            }
-            else
-            {
-                RealTimeControlXmlWriter
-                    .GetStateVectorXml(
-                        File.Exists(Path.Combine(path, RealTimeControlXmlWriter.TreeVectorxsd)) ? path : xsdPath,
-                        model.ControlGroups).Save(Path.Combine(path, RealTimeControlXMLFiles.XmlImportState));
-            }
-
             var timeSeriesDoc = RealTimeControlXmlWriter.GetTimeSeriesXml(
                 File.Exists(Path.Combine(path, RealTimeControlXmlWriter.PiTimeseriesxsd)) ? path : xsdPath, model,
                 model.ControlGroups);
