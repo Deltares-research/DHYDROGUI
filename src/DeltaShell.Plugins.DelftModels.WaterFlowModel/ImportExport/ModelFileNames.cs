@@ -15,7 +15,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 {
     public class ModelFileNames
     {
-        private readonly HashSet<string> knownPropertyNames = new HashSet<string>
+        private readonly HashSet<string> knownPropertyNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
         {
             ModelDefinitionsRegion.NetworkFile.Key,
             ModelDefinitionsRegion.StructuresFile.Key,

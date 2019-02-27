@@ -57,6 +57,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
+        public void GivenModelDefinitionFileWithLowerCaseParameters_WhenInstantiatingModelFileNames_ThenNoFileReadingExceptionsAreThrown()
+        {
+            // Given
+            var modelDefinitionFilePath = Path.Combine(tempFolderPath, "ModelDefinitionsFileLowerCase.md1d");
+
+            // When - Then
+            Assert.DoesNotThrow(() => new ModelFileNames(modelDefinitionFilePath));
+        }
+
+        [Test]
 		public void GivenCustomSaved_md1d_iniFileWhenReadingFileNamesThenFilenamesSet()
 		{
             var expectedFile = TestHelper.GetTestFilePath(@"FileWriters/ModelNames_expected.txt");
