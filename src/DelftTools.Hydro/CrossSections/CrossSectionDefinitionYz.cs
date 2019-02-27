@@ -220,6 +220,12 @@ namespace DelftTools.Hydro.CrossSections
         {
             if (Sections.Count == 0) return;
 
+            var sectionWidthsMatch = CompareTotalSectionWidths();
+            if (!sectionWidthsMatch)
+            {
+                base.RefreshSectionsWidths();
+            }
+            
             var necessaryShift = CalculateNecessaryShift();
             
             if (!(Math.Abs(necessaryShift) > 0.0001)) return;
@@ -245,6 +251,14 @@ namespace DelftTools.Hydro.CrossSections
             clone.Thalweg = Thalweg;
             
             return clone;
+        }
+
+        private bool CompareTotalSectionWidths()
+        {
+            var deltaWidthRoughnessPositions = (Sections.Last().MaxY) - (Sections.First().MinY);
+            var deltaWidthProfile = (Profile.Last().X) - (Profile.First().X);
+
+            return Math.Abs(deltaWidthProfile - deltaWidthRoughnessPositions) < 0.0001;
         }
 
         /// <summary>
