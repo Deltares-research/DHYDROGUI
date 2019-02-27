@@ -5,22 +5,22 @@ using System.IO;
 using DelftTools.Shell.Core;
 using DelftTools.Utils.IO;
 using DeltaShell.Dimr;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
 using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 {
-    public class RealTimeControlModelExporter: IFileExporter
+    public class RealTimeControlModelExporter : IFileExporter
     {
-        private static ILog Log = LogManager.GetLogger(typeof (RealTimeControlModelExporter));
-
         private const string SettingsString = "{\r\n\r\n\t\"xmlDir\": \".\",\r\n\t\"schemaDir\": \".\"\r\n\r\n}";
-        
+        private static readonly ILog Log = LogManager.GetLogger(typeof(RealTimeControlModelExporter));
+
+        public string Directory { private get; set; }
+
         public string Name
         {
             get { return "RTC-Tools xml files"; }
         }
-
-        public string Directory { private get; set; }
 
         public bool Export(object item, string path)
         {
@@ -51,10 +51,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                 {
                     Log.Warn(e.Message); // skip model validation exceptions
                 }
+
                 var settingPath = Path.Combine(directory, "settings.json");
-                File.WriteAllText(settingPath,SettingsString);
+                File.WriteAllText(settingPath, SettingsString);
                 return true;
             }
+
             return false;
         }
 
@@ -65,7 +67,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 
         public IEnumerable<Type> SourceTypes()
         {
-            yield return typeof (RealTimeControlModel);
+            yield return typeof(RealTimeControlModel);
         }
 
         public string FileFilter
@@ -73,7 +75,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             get { return "xml files|*.xml"; }
         }
 
-        public Bitmap Icon { get { return Properties.Resources.brick_add; } }
+        public Bitmap Icon
+        {
+            get { return Resources.brick_add; }
+        }
+
         public bool CanExportFor(object item)
         {
             return true;
@@ -83,9 +89,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         {
             // write xml with reference to xsd
             var xsdPath = DimrApiDataSet.RtcToolsDllPath;
-            RealTimeControlXmlWriter.GetRuntimeXml(File.Exists(Path.Combine(path, RealTimeControlXmlWriter.RtcRuntimeConfigxsd)) ?  path : xsdPath, model, model.LimitMemory, model.LogLevel)
+            RealTimeControlXmlWriter
+                .GetRuntimeXml(
+                    File.Exists(Path.Combine(path, RealTimeControlXmlWriter.RtcRuntimeConfigxsd)) ? path : xsdPath,
+                    model, model.LimitMemory, model.LogLevel)
                 .Save(Path.Combine(path, RealTimeControlXMLFiles.XmlRuntime));
-            RealTimeControlXmlWriter.GetToolsConfigXml(File.Exists(Path.Combine(path, RealTimeControlXmlWriter.RtcToolsConfigXsd)) ? path : xsdPath, model.ControlGroups, model.WriteRestart || model.UseRestart)
+            RealTimeControlXmlWriter
+                .GetToolsConfigXml(
+                    File.Exists(Path.Combine(path, RealTimeControlXmlWriter.RtcToolsConfigXsd)) ? path : xsdPath,
+                    model.ControlGroups, model.WriteRestart || model.UseRestart)
                 .Save(Path.Combine(path, RealTimeControlXMLFiles.XmlTools));
 
             if (model.UseRestart)
@@ -101,8 +113,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                     // model working directory was not set (yet)
                     modelWorkingDirectory = null;
                 }
+
                 model.ModelStateHandler.ModelWorkingDirectory = path;
-                model.ModelStateHandler.FeedStateToModel(model.ModelStateHandler.CreateStateFromFile(model.Name, model.RestartInput.Path));
+                model.ModelStateHandler.FeedStateToModel(
+                    model.ModelStateHandler.CreateStateFromFile(model.Name, model.RestartInput.Path));
 
                 if (modelWorkingDirectory != null)
                 {
@@ -112,17 +126,25 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             }
             else
             {
-                RealTimeControlXmlWriter.GetStateVectorXml(File.Exists(Path.Combine(path, RealTimeControlXmlWriter.TreeVectorxsd)) ? path : xsdPath, model.ControlGroups).Save(Path.Combine(path, RealTimeControlXMLFiles.XmlImportState));
+                RealTimeControlXmlWriter
+                    .GetStateVectorXml(
+                        File.Exists(Path.Combine(path, RealTimeControlXmlWriter.TreeVectorxsd)) ? path : xsdPath,
+                        model.ControlGroups).Save(Path.Combine(path, RealTimeControlXMLFiles.XmlImportState));
             }
-            var timeSeriesDoc = RealTimeControlXmlWriter.GetTimeSeriesXml(File.Exists(Path.Combine(path, RealTimeControlXmlWriter.PiTimeseriesxsd)) ? path : xsdPath, model, model.ControlGroups);
+
+            var timeSeriesDoc = RealTimeControlXmlWriter.GetTimeSeriesXml(
+                File.Exists(Path.Combine(path, RealTimeControlXmlWriter.PiTimeseriesxsd)) ? path : xsdPath, model,
+                model.ControlGroups);
             if (timeSeriesDoc != null)
             {
                 timeSeriesDoc.Save(Path.Combine(path, RealTimeControlXMLFiles.XmlTimeSeries));
             }
 
-            RealTimeControlXmlWriter.GetDataConfigXml(File.Exists(Path.Combine(path, RealTimeControlXmlWriter.RtcDataConfigXsd)) ? path : xsdPath, model, model.ControlGroups, timeSeriesDoc == null ? null : "timeseries_import.xml")
+            RealTimeControlXmlWriter
+                .GetDataConfigXml(
+                    File.Exists(Path.Combine(path, RealTimeControlXmlWriter.RtcDataConfigXsd)) ? path : xsdPath, model,
+                    model.ControlGroups, timeSeriesDoc == null ? null : "timeseries_import.xml")
                 .Save(Path.Combine(path, RealTimeControlXMLFiles.XmlData));
         }
-
     }
 }
