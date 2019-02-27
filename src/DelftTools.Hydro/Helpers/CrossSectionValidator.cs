@@ -165,7 +165,7 @@ namespace DelftTools.Hydro.Helpers
             var firstYValue = crossSectionDefinition.Left;
             var lastYValue = crossSectionDefinition.Profile.Last().X;
  
-            return (Math.Abs(startRoughnessPosition - firstYValue) < double.Epsilon) && (Math.Abs(endRoughnessPosition - lastYValue) < 0.0001);
+            return (Math.Abs(startRoughnessPosition - firstYValue) < 0.0001) && (Math.Abs(endRoughnessPosition - lastYValue) < 0.0001);
         }
 
         private static bool IsTotalSectionsWidthAtLeastAsWideAsFlowWidth(CrossSectionDefinition crossSection)
