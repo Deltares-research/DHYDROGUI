@@ -341,5 +341,26 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
                 0, unknownPropertyName);
             Assert.Contains(expectedMessage, errorMessages);
         }
+
+        [Test]
+        [TestCase(ModelDefinitionsRegion.ResultsNodesHeader, "totalwidth")]
+        [TestCase(ModelDefinitionsRegion.ResultsBranchesHeader, "areamain")]
+        [TestCase(ModelDefinitionsRegion.ResultsStructuresHeader, "crestlevel")]
+        [TestCase(ModelDefinitionsRegion.ResultsPumpsHeader, "pumpcapacity")]
+        [TestCase(ModelDefinitionsRegion.ResultsObservationsPointsHeader, "dispersion")]
+        [TestCase(ModelDefinitionsRegion.ResultsLateralsHeader, "lateraldifference")]
+        [TestCase(ModelDefinitionsRegion.ResultsRetentionsHeader, "volume")]
+        [TestCase(ModelDefinitionsRegion.ResultsWaterBalanceHeader, "bal2d1din")]
+        public void GivenACategoryWithCorrectPropertiesInLowerCase_WhenSettingProperties_NoExceptionsOrErrorMessagesAreThrown(string categoryName, string propertyName)
+        {
+            var category = new DelftIniCategory(categoryName);
+            category.AddProperty(propertyName, 1);
+
+            // When - Then
+            var errorMessages = new List<string>();
+            var model = new WaterFlowModel1D();
+            Assert.DoesNotThrow(() => new WaterFlowModelOutputSetter().SetProperties(category, model, errorMessages));
+            Assert.That(errorMessages.Count, Is.EqualTo(0));
+        }
     }
 }

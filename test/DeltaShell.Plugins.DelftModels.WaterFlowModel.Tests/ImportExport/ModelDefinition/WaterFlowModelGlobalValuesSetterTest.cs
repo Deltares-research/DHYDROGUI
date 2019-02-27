@@ -600,6 +600,25 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             Assert.Contains(expectedMessage, errorMessages);
         }
 
+        [Test]
+        public void GivenACategoryWithCorrectPropertiesInLowerCase_WhenSettingProperties_NoExceptionsOrErrorMessagesAreThrown()
+        {
+            // Given
+            var category = GetGlobalCategoryWithCommonElements(ExpectedConditionsType, ExpectedWaterLevel,
+                ExpectedDepth, ExpectedFlow);
+            category.AddProperty("initialwaterlevel", 0.1);
+            category.AddProperty("initialwaterdepth", 0.2);
+            category.AddProperty("initialdischarge", 0.3);
+            category.AddProperty("initialsalinity", 0.4);
+            category.AddProperty("dispersion", 0.5);
+
+            // When - Then
+            var errorMessages = new List<string>();
+            var model = new WaterFlowModel1D();
+            Assert.DoesNotThrow(() => new WaterFlowModelGlobalValuesSetter().SetProperties(category, model, errorMessages));
+            Assert.That(errorMessages.Count, Is.EqualTo(0));
+        }
+        
         private static DelftIniCategory GetGlobalCategoryWithCommonElements(InitialConditionsType conditionsType,
                                                                             double waterLevel,
                                                                             double waterDepth,

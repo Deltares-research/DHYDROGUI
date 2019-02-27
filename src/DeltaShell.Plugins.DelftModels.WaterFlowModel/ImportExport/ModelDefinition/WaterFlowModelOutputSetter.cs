@@ -81,13 +81,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
             QuantityType quantityType;
             try
             {
-                quantityType = (QuantityType)Enum.Parse(typeof(QuantityType), property.Name);
+                quantityType = (QuantityType)Enum.Parse(typeof(QuantityType), property.Name, true);
             }
             catch (ArgumentException)
             {
                 // Kernel expects the property Lateral1D2D. GUI defines this as
                 // QTotal_1d2d. As such we need to explicitly test for this.
-                quantityType = property.Name == "Lateral1D2D" 
+                quantityType = ValueEqualsDefinition(property.Name, "Lateral1D2D")
                     ? QuantityType.QTotal_1d2d 
                     : QuantityType.UndeterminedValue;
             }
