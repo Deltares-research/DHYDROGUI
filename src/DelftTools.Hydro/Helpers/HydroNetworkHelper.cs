@@ -489,6 +489,38 @@ namespace DelftTools.Hydro.Helpers
             var fullRegion = region.Parent as IHydroRegion ?? region;
             var hydroObjectNames = fullRegion.AllHydroObjects.Where(f => f.GetEntityType().Name == featureName).Select(f => f.Name);
             var allLinkNames = fullRegion.AllRegions.OfType<IHydroRegion>().SelectMany(r => r.Links).Select(l => l.Name).ToList();
+            var allNames = hydroObjectNames.Concat(allLinkNames);
+
+            var names = new HashSet<string>(allNames);
+            if (checkIfNewNameIsNeeded)
+            {
+                var nameProperty = feature.GetType().GetProperty("Name");
+                if (nameProperty != null)
+                {
+                    var currentName = nameProperty.GetValue(feature, null);
+
+                    if (!string.IsNullOrWhiteSpace(currentName as string) && !names.Contains(currentName.ToString())) return currentName.ToString();
+                }
+            }
+            int i = 1;
+            var uniqueName = featureName + i;
+            while (names.Contains(uniqueName))
+            {
+                i++;
+                uniqueName = featureName + i;
+            }
+
+            return uniqueName;
+        }
+
+        public static string GetUniqueFeatureNameForCrossSectionRename(IHydroRegion region, IFeature feature,
+            bool checkIfNewNameIsNeeded = false)
+        {
+            var featureName = feature.GetEntityType().Name;
+
+            var fullRegion = region.Parent as IHydroRegion ?? region;
+            var hydroObjectNames = fullRegion.AllHydroObjects.Where(f => f.GetEntityType().Name == featureName).Select(f => f.Name);
+            var allLinkNames = fullRegion.AllRegions.OfType<IHydroRegion>().SelectMany(r => r.Links).Select(l => l.Name).ToList();
             var hydroNetwork = fullRegion as HydroNetwork;
             var sharedNames = hydroNetwork?.SharedCrossSectionDefinitions.Select(d => d.Name).ToList();
             if (sharedNames != null && sharedNames.Count == 0)
