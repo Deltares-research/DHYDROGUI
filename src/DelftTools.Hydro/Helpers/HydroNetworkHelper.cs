@@ -484,15 +484,19 @@ namespace DelftTools.Hydro.Helpers
         /// <param name="feature"></param>
         public static string GetUniqueFeatureName(IHydroRegion region, IFeature feature, bool checkIfNewNameIsNeeded = false)
         {
-            //return feature.GetEntityType().Name;
-
             var featureName = feature.GetEntityType().Name;
 
             var fullRegion = region.Parent as IHydroRegion ?? region;
-
             var hydroObjectNames = fullRegion.AllHydroObjects.Where(f => f.GetEntityType().Name == featureName).Select(f => f.Name);
-            var allLinkNames = fullRegion.AllRegions.OfType<IHydroRegion>().SelectMany(r => r.Links).Select(l => l.Name);
+            var allLinkNames = fullRegion.AllRegions.OfType<IHydroRegion>().SelectMany(r => r.Links).Select(l => l.Name).ToList();
+            var hydroNetwork = fullRegion as HydroNetwork;
+            var sharedNames = hydroNetwork?.SharedCrossSectionDefinitions.Select(d => d.Name).ToList();
+            if (sharedNames != null && sharedNames.Count == 0)
+            {
+                sharedNames.Add("default");
+            }
             var allNames = hydroObjectNames.Concat(allLinkNames);
+            allLinkNames.AddRange(sharedNames);
 
             var names = new HashSet<string>(allNames);
             if (checkIfNewNameIsNeeded)
@@ -514,8 +518,6 @@ namespace DelftTools.Hydro.Helpers
             }
 
             return uniqueName;
-            
-            //return NetworkHelper.GetUniqueName(featureName + "{0:D3}", region.AllHydroObjects.Where(f => f != feature), featureName);
         }
 
         public static void AddStructureToComposite(ICompositeBranchStructure compositeBranchStructure, IStructure1D structure)

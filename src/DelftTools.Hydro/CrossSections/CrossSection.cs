@@ -147,6 +147,16 @@ namespace DelftTools.Hydro.CrossSections
             var crossSectionDefinition = ((CrossSectionDefinitionProxy) Definition).GetUnProxiedDefinition();
             crossSectionDefinition.Name = Name;
             Definition = crossSectionDefinition;
+
+            if (Region != null)
+            RenameCrossSection();
+        }
+
+        private void RenameCrossSection()
+        {
+            var uniqueName = HydroNetworkHelper.GetUniqueFeatureName(Region, this);
+            Name = uniqueName;
+            Definition.Name = uniqueName;
         }
 
         public virtual void UseSharedDefinition(ICrossSectionDefinition definition)
