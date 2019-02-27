@@ -102,6 +102,7 @@ namespace Sobek.IntegrationTests
                 //reduce stoptime to make test faster.
                 waterFlowModel1D.StopTime = waterFlowModel1D.StartTime.AddHours(1);
                 ModelTestHelper.RefreshCrossSectionDefinitionSectionWidths(waterFlowModel1D.Network);
+                ModelTestHelper.RefreshCrossSectionDefinitionYZSectionWidths(waterFlowModel1D.Network);
                 waterFlowModel1D.Validate();
                 RunModel(waterFlowModel1D);
                 Assert.AreEqual(ActivityStatus.Cleaned, waterFlowModel1D.Status);

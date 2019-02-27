@@ -54,6 +54,13 @@ namespace Sobek.IntegrationTests
                         .Select(csdp => csdp.InnerDefinition)
                         .OfType<CrossSectionDefinition>()
                 )
+                .ForEach(csd => csd.AdjustSectionWidths());
+        }
+
+        public static void RefreshCrossSectionDefinitionYZSectionWidths(IHydroNetwork network)
+        {
+            network.CrossSections.Select(cs => cs.Definition)
+                .OfType<CrossSectionDefinitionYZ>()
                 .ForEach(csd => csd.RefreshSectionsWidths());
         }
 
