@@ -225,32 +225,32 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Validation
             var hydroModel = new HydroModelBuilder().BuildModel(ModelGroup.All);
 
             PrepareValidFMWavesIntegratedModel(hydroModel, fmModel, waveModel);
-            ValidateUnconsistentGridTypeErrorInReport(hydroModel, 1);
+            ValidateInconsistentGridTypeErrorInReport(hydroModel, 1);
 
             //Both FM and Wave models have spherical grids -OK!
             var fmIsSpherical = true;
             var waveIsSpherical = true;
             SetFmGridCoordinateType(fmModel, fmIsSpherical);
             SetWaveGridCoordinateType(waveModel, waveIsSpherical);
-            ValidateUnconsistentGridTypeErrorInReport(hydroModel, 1);
+            ValidateInconsistentGridTypeErrorInReport(hydroModel, 1);
 
             //Both FM and Wave models have cartesian grids - OK!
             SetFmGridCoordinateType(fmModel, fmIsSpherical = false);
             SetWaveGridCoordinateType(waveModel, waveIsSpherical = false);
-            ValidateUnconsistentGridTypeErrorInReport(hydroModel, 1);
+            ValidateInconsistentGridTypeErrorInReport(hydroModel, 1);
 
             //FM model has spherical grid and Wave model has cartesian grid -NOT OK!
             SetFmGridCoordinateType(fmModel, fmIsSpherical = true);
             SetWaveGridCoordinateType(waveModel, waveIsSpherical = false);
-            ValidateUnconsistentGridTypeErrorInReport(hydroModel, 2);
+            ValidateInconsistentGridTypeErrorInReport(hydroModel, 2);
 
             //FM model has cartesian grid and Wave model has spherical grid -NOT OK!
             SetFmGridCoordinateType(fmModel, fmIsSpherical = false);
             SetWaveGridCoordinateType(waveModel, waveIsSpherical = true);
-            ValidateUnconsistentGridTypeErrorInReport(hydroModel, 2);
+            ValidateInconsistentGridTypeErrorInReport(hydroModel, 2);
         }
 
-        private static void ValidateUnconsistentGridTypeErrorInReport(HydroModel hydroModel, int expectedErrorCount)
+        private static void ValidateInconsistentGridTypeErrorInReport(HydroModel hydroModel, int expectedErrorCount)
         {
             var report = hydroModel.Validate();
             Assert.AreEqual(expectedErrorCount, report.ErrorCount);
@@ -336,7 +336,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Validation
             Assert.AreEqual(isSpherical, fmModel.Grid.CoordinateSystem.IsGeographic);
         }
 
-        private void PrepareValidFMWavesIntegratedModel(HydroModel hydroModel, WaterFlowFMModel fmModel, WaveModel waveModel)
+        private void PrepareValidFMWavesIntegratedModel(HydroModel hydroModel, IWaterFlowFMModel fmModel, WaveModel waveModel)
         {
             hydroModel.Activities.Clear();
 
@@ -349,10 +349,26 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Validation
             Assert.IsNotEmpty(hydroModel.Activities);
 
             /* Wave Model */
+            waveModel.OuterDomain.Grid = CreateWaveModelOuterDomainGrid();
+            waveModel.ModelDefinition.GetModelProperty(KnownWaveCategories.OutputCategory, KnownWaveProperties.WriteCOM).Value = true;
+            waveModel.ModelDefinition.GetModelProperty(KnownWaveCategories.OutputCategory, KnownWaveProperties.COMFile).Value = "file.txt";
+            waveModel.GetFlowComFilePath = () => "";
+
+            /*FM Model*/
+            fmModel.Grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
+            fmModel.ModelDefinition.GetModelProperty(GuiProperties.HisOutputDeltaT).Value = fmModel.TimeStep;
+            fmModel.ModelDefinition.GetModelProperty(GuiProperties.MapOutputDeltaT).Value = fmModel.TimeStep;
+
+            /*Integrated Model*/
+            waveModel.ModelDefinition.ModelReferenceDateTime = hydroModel.StartTime;
+        }
+
+        private static CurvilinearGrid CreateWaveModelOuterDomainGrid()
+        {
             int mSize = 2;
             int nSize = 3;
-            var xCoordinates = new[] { 0.1, 2.0, 0.1, 2.0, 0.1, 2.0 };
-            var yCoordinates = new[] { 1.0, 1.0, 3.0, 3.0, 5.0, 5.0 };
+            var xCoordinates = new[] {0.1, 2.0, 0.1, 2.0, 0.1, 2.0};
+            var yCoordinates = new[] {1.0, 1.0, 3.0, 3.0, 5.0, 5.0};
 
             //         0          1    = M
             //      
@@ -369,17 +385,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Validation
             var grid = CurvilinearGrid.CreateDefault();
             grid.Resize(nSize, mSize, xCoordinates, yCoordinates);
             grid.IsTimeDependent = false;
-            waveModel.OuterDomain.Grid = grid;
-            waveModel.ModelDefinition.GetModelProperty(KnownWaveCategories.OutputCategory, KnownWaveProperties.WriteCOM)
-                .Value = true;
-            waveModel.ModelDefinition.GetModelProperty(KnownWaveCategories.OutputCategory,
-                KnownWaveProperties.COMFile).Value = "file.txt";
-            waveModel.GetFlowComFilePath = () => "";
-
-            /*FM Model*/
-            fmModel.Grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
-            fmModel.ModelDefinition.GetModelProperty(GuiProperties.HisOutputDeltaT).Value = fmModel.TimeStep;
-            fmModel.ModelDefinition.GetModelProperty(GuiProperties.MapOutputDeltaT).Value = fmModel.TimeStep;
+            return grid;
         }
     }
 }
