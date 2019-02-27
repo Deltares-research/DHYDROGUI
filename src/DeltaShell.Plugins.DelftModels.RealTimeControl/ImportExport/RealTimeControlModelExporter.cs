@@ -17,10 +17,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 
         public string Directory { private get; set; }
 
-        public string Name
-        {
-            get { return "RTC-Tools xml files"; }
-        }
+        public string Name => "RTC-Tools xml files";
 
         public bool Export(object item, string path)
         {
@@ -60,32 +57,23 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             return false;
         }
 
-        public string Category
-        {
-            get { return "Xml files"; }
-        }
+        public string Category => "Xml files";
 
         public IEnumerable<Type> SourceTypes()
         {
             yield return typeof(RealTimeControlModel);
         }
 
-        public string FileFilter
-        {
-            get { return "xml files|*.xml"; }
-        }
+        public string FileFilter => "xml files|*.xml";
 
-        public Bitmap Icon
-        {
-            get { return Resources.brick_add; }
-        }
+        public Bitmap Icon => Resources.brick_add;
 
         public bool CanExportFor(object item)
         {
             return true;
         }
 
-        public virtual void WriteEngineXmlFiles(RealTimeControlModel model, string path)
+        private void WriteEngineXmlFiles(RealTimeControlModel model, string path)
         {
             // write xml with reference to xsd
             var xsdPath = DimrApiDataSet.RtcToolsDllPath;
