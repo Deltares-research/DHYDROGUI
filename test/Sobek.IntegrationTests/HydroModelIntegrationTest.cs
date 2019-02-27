@@ -335,8 +335,11 @@ namespace Sobek.IntegrationTests
         {
             // create network: one branch + lateral
             var network = HydroNetworkHelper.GetSnakeHydroNetwork(new[] {new Point(0, 0), new Point(0, 100.0)});
+            var definitionYZ = CrossSectionDefinitionYZ.CreateDefault();
             HydroNetworkHelper.AddCrossSectionDefinitionToBranch(network.Branches.First(),
-                                                                 CrossSectionDefinitionYZ.CreateDefault(), 20.0);
+                                                                 definitionYZ, 20.0);
+            var crossSectionSection1 = new CrossSectionSection { MinY = 0.0, MaxY = 100.0 };
+            definitionYZ.Sections.Add(crossSectionSection1);
 
             ModelTestHelper.RefreshCrossSectionDefinitionSectionWidths(network);
             
