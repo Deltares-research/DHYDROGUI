@@ -1,7 +1,6 @@
 using BasicModelInterface;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
-using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Extensions;
@@ -2699,14 +2698,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         public virtual string GetFeatureCategory(IFeature feature)
         {
-            if (feature is IPump)
+            switch (feature)
             {
-                return "pumps";
+                case IPump pump:
+                    return "pumps";
+                case IWeir weir when weir.WeirFormula.GetType() == typeof(GeneralStructureWeirFormula):
+                    return "generalstructures";
+                case IWeir weir when weir.WeirFormula.GetType() == typeof(GatedWeirFormula):
+                    return "gates";
+                case IWeir weir:
+                    return "weirs";
             }
-            if (feature is IWeir)
-            {
-                return "weirs";
-            }
+
             if (Area.ObservationPoints.Contains(feature))
             {
                 return "observations";

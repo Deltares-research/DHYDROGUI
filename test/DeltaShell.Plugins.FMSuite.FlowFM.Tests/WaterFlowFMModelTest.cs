@@ -1810,5 +1810,50 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             // Then
             Assert.AreEqual(expectedValue, resultedValue);
         }
+
+        [Test]
+        [TestCase(typeof(SimpleWeirFormula), "weirs")]
+        [TestCase(typeof(GatedWeirFormula), "gates")]
+        [TestCase(typeof(GeneralStructureWeirFormula),"generalstructures")]
+        public void GivenAWeirFeature_WhenGettingFeatureCategory_ThenTheCorrectStringIsReturned(Type weirType, string expectedString)
+        {
+            // Given
+            var feature = new Weir("myStructure") { WeirFormula = (IWeirFormula)Activator.CreateInstance(weirType, false) };
+            var model = new WaterFlowFMModel();
+
+            // When
+            var returnedString = model.GetFeatureCategory(feature);
+
+            // Then
+            Assert.That(expectedString, Is.EqualTo(returnedString));
+        }
+
+        [Test]
+        public void GivenAPumpFeature_WhenGettingFeatureCategory_ThenTheCorrectStringIsReturned()
+        {
+            // Given
+            var feature = new Pump("myPump");
+            var model = new WaterFlowFMModel();
+
+            // When
+            var returnedString = model.GetFeatureCategory(feature);
+
+            // Then
+            Assert.That(returnedString, Is.EqualTo("pumps"));
+        }
+
+        [Test]
+        public void GivenAnEmptyFeature_WhenGettingFeatureCategory_ThenNullIsReturned()
+        {
+            // Given
+            var feature = new Feature();
+            var model = new WaterFlowFMModel();
+
+            // When
+            var returnedString = model.GetFeatureCategory(feature);
+
+            // Then
+            Assert.That(returnedString, Is.EqualTo(null));
+        }
     }
 }
