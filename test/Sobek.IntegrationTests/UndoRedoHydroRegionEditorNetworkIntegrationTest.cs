@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Windows;
-using System.Windows.Forms;
-using DelftTools.Controls.Swf;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
@@ -62,7 +60,7 @@ namespace Sobek.IntegrationTests
             project.RootFolder.Add(region);
 
             // show gui main window
-            mainWindow = (Window)gui.MainWindow;
+            mainWindow = (Window) gui.MainWindow;
 
             // wait until gui starts
             mainWindow.Loaded += delegate
@@ -71,10 +69,8 @@ namespace Sobek.IntegrationTests
                                         gui.CommandHandler.OpenView(regionDataItem, typeof(ProjectItemMapView));
 
                                         ProjectItemMapView = gui.DocumentViews.OfType<ProjectItemMapView>().First();
-                                        
-                                        gui.UndoRedoManager.TrackChanges = true;
 
-                                        onMainWindowShown();
+                                        gui.UndoRedoManager.TrackChanges = true;
                                     };
         }
 
@@ -99,7 +95,7 @@ namespace Sobek.IntegrationTests
             catchment.SetAreaSize(1000);
             basin.Catchments.Add(catchment);
 
-            onMainWindowShown = () =>
+            Action assertions = () =>
             {
                 AddBranchToNetwork(new[] { new Coordinate(0, 0), new Coordinate(50, 0) });
 
@@ -116,13 +112,13 @@ namespace Sobek.IntegrationTests
                 Assert.AreEqual(1, node.Links.Count);
             };
 
-            WpfTestHelper.ShowModal(mainWindow);
+            WpfTestHelper.ShowModal(mainWindow, assertions);
         }
 
         [Test]
         public void BasinRemove()
         {
-            onMainWindowShown = () =>
+            Action assertions = () =>
                 {
                     var drainageBasin = region.SubRegions.First(sr => sr is DrainageBasin);
                     region.SubRegions.Remove(drainageBasin);
@@ -132,13 +128,13 @@ namespace Sobek.IntegrationTests
                     Assert.IsTrue(region.SubRegions.Contains(drainageBasin));
                 };
 
-            WpfTestHelper.ShowModal(mainWindow);
+            WpfTestHelper.ShowModal(mainWindow, assertions);
         }
 
         [Test]
         public void BranchAdd()
         {
-            onMainWindowShown = () =>
+            Action assertions = () =>
             {
                 AssertNumUndoableActions("before", 0);
                 
@@ -157,13 +153,13 @@ namespace Sobek.IntegrationTests
                 AssertNumUndoableActions("at end", 1);
             };
 
-            WpfTestHelper.ShowModal(mainWindow);
+            WpfTestHelper.ShowModal(mainWindow, assertions);
         }
 
         [Test]
         public void BranchRemove()
         {
-            onMainWindowShown = () =>
+            Action assertions = () =>
             {
                 AddBranchToNetwork(new[] { new Coordinate(0, 0), new Coordinate(50, 0) });
                 AddBranchToNetwork(new[] { new Coordinate(50, 0), new Coordinate(100, 0) });
@@ -192,13 +188,13 @@ namespace Sobek.IntegrationTests
                 Assert.AreEqual(0, network.Nodes[1].OutgoingBranches.Count, "redone: out n1");
             };
 
-            WpfTestHelper.ShowModal(mainWindow);
+            WpfTestHelper.ShowModal(mainWindow, assertions);
         }
-        
+
         [Test]
         public void BranchSplit()
         {
-            onMainWindowShown = () =>
+            Action assertions = () =>
             {
                 var branch = AddBranchToNetwork(new[] { new Coordinate(0, 0), new Coordinate(100, 0) });
                 
@@ -218,13 +214,13 @@ namespace Sobek.IntegrationTests
                 AssertNumUndoableActions("at end", 2);
             };
 
-            WpfTestHelper.ShowModal(mainWindow);
+            WpfTestHelper.ShowModal(mainWindow, assertions);
         }
 
         [Test]
         public void BranchSplitBetweenStructures()
         {
-            onMainWindowShown = () =>
+            Action assertions = () =>
                 {
                     var branch = AddBranchToNetwork(new[] {new Coordinate(0, 0), new Coordinate(100, 0)});
 
@@ -242,13 +238,13 @@ namespace Sobek.IntegrationTests
                     AssertNumUndoableActions("after split", 4);
                 };
 
-            WpfTestHelper.ShowModal(mainWindow);
+            WpfTestHelper.ShowModal(mainWindow, assertions);
         }
 
         [Test]
         public void BranchSplitTwiceWithRoute()
         {
-            onMainWindowShown = () =>
+            Action assertions = () =>
             {
                 gui.UndoRedoManager.TrackChanges = false;
 
@@ -278,13 +274,13 @@ namespace Sobek.IntegrationTests
                 AssertNumUndoableActions("at end", 2);
             };
 
-            WpfTestHelper.ShowModal(mainWindow);
+            WpfTestHelper.ShowModal(mainWindow, assertions);
         }
 
         [Test]
         public void SplitBranchWithRouteAfterSave()
         {
-            onMainWindowShown = () =>
+            Action assertions = () =>
             {
                 gui.UndoRedoManager.TrackChanges = true;
 
@@ -310,13 +306,13 @@ namespace Sobek.IntegrationTests
                 Assert.AreEqual(2, route.Segments.Values.Count);
             };
 
-            WpfTestHelper.ShowModal(mainWindow);
+            WpfTestHelper.ShowModal(mainWindow, assertions);
         }
 
         [Test]
         public void NetworkCoverageDeleteBranchesAndUndo()
         {
-            onMainWindowShown = () =>
+            Action assertions = () =>
             {
                 gui.UndoRedoManager.TrackChanges = false;
 
@@ -348,13 +344,13 @@ namespace Sobek.IntegrationTests
                 Assert.AreEqual(3.0, networkCoverage[new NetworkLocation(branch2, 100)]);
             };
 
-            WpfTestHelper.ShowModal(mainWindow);
+            WpfTestHelper.ShowModal(mainWindow, assertions);
         }
 
         [Test]
         public void UndoMoveCrossSectionXYZ()
         {
-            onMainWindowShown = () =>
+            Action assertions = () =>
                 {
                     gui.UndoRedoManager.TrackChanges = true;
                     var branch = AddBranchToNetwork(new[] {new Coordinate(0, 0), new Coordinate(500, 0)});
@@ -381,13 +377,13 @@ namespace Sobek.IntegrationTests
                     Assert.AreEqual(15.0, csDef.XYZDataTable[0].DeltaZStorage);
                 };
 
-            WpfTestHelper.ShowModal(mainWindow);
+            WpfTestHelper.ShowModal(mainWindow, assertions);
         }
 
         [Test]
         public void UndoRemoveCoordinateFromCrossSectionXYZ()
         {
-            onMainWindowShown = () =>
+            Action assertions = () =>
             {
                 gui.UndoRedoManager.TrackChanges = true;
                 var branch = AddBranchToNetwork(new[] { new Coordinate(0, 0), new Coordinate(500, 0) });
@@ -418,13 +414,13 @@ namespace Sobek.IntegrationTests
                 Assert.AreEqual(15.0, csDef.XYZDataTable[3].DeltaZStorage);
             };
 
-            WpfTestHelper.ShowModal(mainWindow);
+            WpfTestHelper.ShowModal(mainWindow, assertions);
         }
 
         [Test]
         public void BranchesWithRouteUndoDeleteBranches()
         {
-            onMainWindowShown = () =>
+            Action assertions = () =>
             {
                 gui.UndoRedoManager.TrackChanges = false;
 
@@ -451,13 +447,13 @@ namespace Sobek.IntegrationTests
                 Assert.IsFalse(RouteHelper.RouteContainLoops(route), "Route should not contain loops");
             };
 
-            WpfTestHelper.ShowModal(mainWindow);
+            WpfTestHelper.ShowModal(mainWindow, assertions);
         }
 
         [Test]
         public void UndoAddRouteWhileSideViewOpen()
         {
-            onMainWindowShown = () =>
+            Action assertions = () =>
             {
                 gui.UndoRedoManager.TrackChanges = false;
                 
@@ -479,13 +475,13 @@ namespace Sobek.IntegrationTests
                 gui.UndoRedoManager.Undo();
             };
 
-            WpfTestHelper.ShowModal(mainWindow);
+            WpfTestHelper.ShowModal(mainWindow, assertions);
         }
 
         [Test]
         public void MoveNodeThroughPropertyGrid()
         {
-            onMainWindowShown = () =>
+            Action assertions = () =>
                 {
                     gui.UndoRedoManager.TrackChanges = false;
 
@@ -500,13 +496,13 @@ namespace Sobek.IntegrationTests
                     Assert.AreEqual(1, gui.UndoRedoManager.UndoStack.Count());
                 };
 
-            WpfTestHelper.ShowModal(mainWindow);
+            WpfTestHelper.ShowModal(mainWindow, assertions);
         }
 
         [Test]
         public void CheckingIfRouteIsValidShouldNotFailInGuiDueToDisabledSideEffectsDuringUndoRedoTools7423()
         {
-            onMainWindowShown = () =>
+            Action assertions = () =>
             {
                 gui.UndoRedoManager.TrackChanges = false;
 
@@ -525,13 +521,13 @@ namespace Sobek.IntegrationTests
                 gui.UndoRedoManager.Undo();
             };
 
-            WpfTestHelper.ShowModal(mainWindow);
+            WpfTestHelper.ShowModal(mainWindow, assertions);
         }
 
         [Test]
         public void CheckingIfRouteIsValidShouldNotFailDueToDisabledSideEffectsDuringUndoRedoTools7441()
         {
-            onMainWindowShown = () =>
+            Action assertions = () =>
             {
                 gui.UndoRedoManager.TrackChanges = false;
 
@@ -554,13 +550,13 @@ namespace Sobek.IntegrationTests
                 }
             };
 
-            WpfTestHelper.ShowModal(mainWindow);
+            WpfTestHelper.ShowModal(mainWindow, assertions);
         }
 
         [Test]
         public void BranchMerge()
         {
-            onMainWindowShown = () =>
+            Action assertions = () =>
             {
                 AddBranchToNetwork(new[] { new Coordinate(0, 0), new Coordinate(50, 0) });
                 AddBranchToNetwork(new[] { new Coordinate(50, 0), new Coordinate(100, 0) });
@@ -585,13 +581,13 @@ namespace Sobek.IntegrationTests
                 AssertNumUndoableActions("at end", 3);
             };
 
-            WpfTestHelper.ShowModal(mainWindow);
+            WpfTestHelper.ShowModal(mainWindow, assertions);
         }
-        
+
         [Test]
         public void BranchRemoveWithFeature()
         {
-            onMainWindowShown = () =>
+            Action assertions = () =>
             {
                 var branch = AddBranchToNetwork(new[] { new Coordinate(0, 0), new Coordinate(50, 0) });
                 var bridge = AddBridge(new Coordinate(25, 0));
@@ -615,13 +611,13 @@ namespace Sobek.IntegrationTests
                 AssertNetworkAsExpected("after redo", 0, 0, 0);
             };
 
-            WpfTestHelper.ShowModal(mainWindow);
+            WpfTestHelper.ShowModal(mainWindow, assertions);
         }
-        
+
         [Test]
         public void BranchFeatureRemove()
         {
-            onMainWindowShown = () =>
+            Action assertions = () =>
             {
                 var branch = AddBranchToNetwork(new[] { new Coordinate(0, 0), new Coordinate(50, 0) });
                 var bridge = AddBridge(new Coordinate(25, 0));
@@ -645,13 +641,13 @@ namespace Sobek.IntegrationTests
                 AssertNetworkAsExpected("after redo", 2, 1, 0);
             };
 
-            WpfTestHelper.ShowModal(mainWindow);
+            WpfTestHelper.ShowModal(mainWindow, assertions);
         }
 
         [Test]
         public void LateralRemove()
         {
-            onMainWindowShown = () =>
+            Action assertions = () =>
             {
                 var branch = AddBranchToNetwork(new[] { new Coordinate(0, 0), new Coordinate(50, 0) });
                 var lateral = AddLateral(new Coordinate(25, 0));
@@ -672,13 +668,13 @@ namespace Sobek.IntegrationTests
                 Assert.AreEqual(0, network.LateralSources.Count());
             };
 
-            WpfTestHelper.ShowModal(mainWindow);
+            WpfTestHelper.ShowModal(mainWindow, assertions);
         }
 
         [Test]
         public void BranchFeatureMove()
         {
-            onMainWindowShown = () =>
+            Action assertions = () =>
             {
                 // LogHelper.ConfigureLogging(Level.Debug);
 
@@ -715,13 +711,13 @@ namespace Sobek.IntegrationTests
                 Assert.AreEqual(branch2, bridge.Branch, "after redo");
             };
 
-            WpfTestHelper.ShowModal(mainWindow);
+            WpfTestHelper.ShowModal(mainWindow, assertions);
         }
 
         [Test]
         public void CrossSectionRename()
         {
-            onMainWindowShown = () =>
+            Action assertions = () =>
             {
                 var branch = AddBranchToNetwork(new[] { new Coordinate(0, 0), new Coordinate(50, 0) });
                 var cs = CrossSection.CreateDefault();
@@ -741,13 +737,13 @@ namespace Sobek.IntegrationTests
                 Assert.AreEqual("newName", cs.Name);
             };
 
-            WpfTestHelper.ShowModal(mainWindow);
+            WpfTestHelper.ShowModal(mainWindow, assertions);
         }
 
         [Test]
         public void CrossSectionDefaultDefinitionRename()
         {
-            onMainWindowShown = () =>
+            Action assertions = () =>
             {
                 gui.UndoRedoManager.TrackChanges = false;
 
@@ -781,13 +777,13 @@ namespace Sobek.IntegrationTests
                 Assert.AreEqual("newName", sharedDefinition.Name);
             };
 
-            WpfTestHelper.ShowModal(mainWindow);
+            WpfTestHelper.ShowModal(mainWindow, assertions);
         }
 
         [Test]
         public void CrossSectionDefinitionRename()
         {
-            onMainWindowShown = () =>
+            Action assertions = () =>
             {
                 gui.UndoRedoManager.TrackChanges = false;
 
@@ -817,13 +813,13 @@ namespace Sobek.IntegrationTests
                 Assert.AreEqual("newName", sharedDefinition.Name);
             };
 
-            WpfTestHelper.ShowModal(mainWindow);
+            WpfTestHelper.ShowModal(mainWindow, assertions);
         }
 
         [Test]
         public void CrossSectionUndoShareDefinition()
         {
-            onMainWindowShown = () =>
+            Action assertions = () =>
             {
                 gui.UndoRedoManager.TrackChanges = false;
 
@@ -851,13 +847,13 @@ namespace Sobek.IntegrationTests
 
             };
 
-            WpfTestHelper.ShowModal(mainWindow);
+            WpfTestHelper.ShowModal(mainWindow, assertions);
         }
 
         [Test]
         public void CrossSectionUndoChangesToStandardCrossSection()
         {
-            onMainWindowShown = () =>
+            Action assertions = () =>
             {
                 gui.UndoRedoManager.TrackChanges = false;
 
@@ -887,13 +883,13 @@ namespace Sobek.IntegrationTests
                 }
             };
 
-            WpfTestHelper.ShowModal(mainWindow);
+            WpfTestHelper.ShowModal(mainWindow, assertions);
         }
 
         [Test]
         public void CrossSectionYZMove()
         {
-            onMainWindowShown = () =>
+            Action assertions = () =>
             {
                 gui.UndoRedoManager.TrackChanges = false;
 
@@ -930,13 +926,13 @@ namespace Sobek.IntegrationTests
                 Assert.AreEqual(branch2, cs.Branch, "after redo");
             };
 
-            WpfTestHelper.ShowModal(mainWindow);
+            WpfTestHelper.ShowModal(mainWindow, assertions);
         }
-        
+
         [Test]
         public void UndoAddRoute()
         {
-            onMainWindowShown = () =>
+            Action assertions = () =>
             {
                 var route = HydroNetworkHelper.AddNewRouteToNetwork(network);
 
@@ -957,13 +953,13 @@ namespace Sobek.IntegrationTests
                                     l => ReferenceEquals(l.Coverage, route)));
             };
 
-            WpfTestHelper.ShowModal(mainWindow);
+            WpfTestHelper.ShowModal(mainWindow, assertions);
         }
 
         [Test]
         public void UndoDeleteRoute()
         {
-            onMainWindowShown = () =>
+            Action assertions = () =>
             {
                 gui.UndoRedoManager.TrackChanges = false;
 
@@ -998,13 +994,13 @@ namespace Sobek.IntegrationTests
                                     l => ReferenceEquals(l.Coverage, route)));
             };
 
-            WpfTestHelper.ShowModal(mainWindow);
+            WpfTestHelper.ShowModal(mainWindow, assertions);
         }
 
         [Test]
         public void ComplexBranchAdd()
         {
-            onMainWindowShown = () =>
+            Action assertions = () =>
             {
                 gui.UndoRedoManager.TrackChanges = false;
                 AddBranchToNetwork(new[] { new Coordinate(0, 0), new Coordinate(50, 0) });
@@ -1028,13 +1024,13 @@ namespace Sobek.IntegrationTests
                 AssertNumUndoableActions("at end", 1);
             };
 
-            WpfTestHelper.ShowModal(mainWindow);
+            WpfTestHelper.ShowModal(mainWindow, assertions);
         }
 
         [Test] //TOOLS-7056
         public void HashOverflowWhileEditingWeir()
         {
-            onMainWindowShown = () =>
+            Action assertions = () =>
             {
                 var channel =
                     AddBranchToNetwork(new[] {new Coordinate(0, 0), new Coordinate(50, 0)});
@@ -1045,15 +1041,7 @@ namespace Sobek.IntegrationTests
                 weirFormula.GateOpening = 15;
             };
 
-            WpfTestHelper.ShowModal(mainWindow);
-        }
-
-        private class StubMessageBox : IMessageBox
-        {
-            public DialogResult Show(string text, string caption, MessageBoxButtons buttons)
-            {
-                return DialogResult.OK;
-            }
+            WpfTestHelper.ShowModal(mainWindow, assertions);
         }
     }
 }
