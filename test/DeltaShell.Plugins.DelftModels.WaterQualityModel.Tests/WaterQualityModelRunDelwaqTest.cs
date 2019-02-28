@@ -14,28 +14,28 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         [Category(TestCategory.Slow)] // TOOLS-22280
         public void RunDelwaqModelWithDoubleAliasEntries()
         {
-            string dataDir = TestHelper.GetDataDir();
-            string hydFile = Path.Combine(dataDir, "IO", "real", "uni3d.hyd");
+            var dataDir = TestHelper.GetDataDir();
+            var hydFile = Path.Combine(dataDir, "IO", "real", "uni3d.hyd");
 
-            WaterQualityModel model = new WaterQualityModel();
+            using (var model = new WaterQualityModel())
+            {
+                new HydFileImporter().ImportItem(hydFile, model);
+                model.Boundaries[0].LocationAliases = "load 1, load 1"; // add double alias
 
-            new HydFileImporter().ImportItem(hydFile, model);
-            model.Boundaries[0].LocationAliases = "load 1, load 1"; // add double alias
+                var subFilePath = Path.Combine(dataDir, "IO", "03d_Tewor2003.sub");
+                new SubFileImporter().Import(model.SubstanceProcessLibrary, subFilePath);
 
-            var subFilePath = Path.Combine(dataDir, "IO", "03d_Tewor2003.sub");
-            new SubFileImporter().Import(model.SubstanceProcessLibrary, subFilePath);
+                var csvFile = Path.Combine(dataDir, "IO", "csv", "loads_multisubs.csv");
+                new DataTableImporter().ImportItem(csvFile, model.BoundaryDataManager);
 
-            string csvFile = Path.Combine(dataDir, "IO", "csv", "loads_multisubs.csv");
-            new DataTableImporter().ImportItem(csvFile, model.BoundaryDataManager);
+                // Send the model to delwaq
+                ActivityRunner.RunActivity(model);
 
-            // Send the model to delwaq
-            ActivityRunner.RunActivity(model);
-
-
-            // Assert that a model can run fine in delwaq when it writes a double statement of
-            // USEDATA_ITEM 'load 1' FORITEM 'sea_002.pli' 'sea_002.pli'
-            // I would like to assert some more, but the activity runner doesn't let me.
-            Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
+                // Assert that a model can run fine in delwaq when it writes a double statement of
+                // USEDATA_ITEM 'load 1' FORITEM 'sea_002.pli' 'sea_002.pli'
+                // I would like to assert some more, but the activity runner doesn't let me.
+                Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
+            }
         }
     }
 }

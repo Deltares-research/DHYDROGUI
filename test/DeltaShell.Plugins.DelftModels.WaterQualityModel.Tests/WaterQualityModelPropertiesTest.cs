@@ -126,22 +126,23 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             // setup
             string hydPath = TestHelper.GetTestFilePath(@"IO\real\uni3d.hyd");
 
-            WaterQualityModel model = new WaterQualityModel();
-
-            new HydFileImporter().ImportItem(hydPath, model);
-
-            var properties = new WaterQualityModelProperties
+            using (var model = new WaterQualityModel())
             {
-                Data = model
-            };
+                new HydFileImporter().ImportItem(hydPath, model);
 
-            // call
-            var layers = properties.WaterQualityLayerThicknesses;
+                var properties = new WaterQualityModelProperties
+                {
+                    Data = model
+                };
 
-            // assert
-            var expectedLayerNumbers = new[] { 0.143, 0.143, 0.143, 0.143, 0.143, 0.143, 0.143 };
-            var expectedTexts = expectedLayerNumbers.Select(d => d.ToString("F3", CultureInfo.InvariantCulture)).ToArray();
-            CollectionAssert.AreEqual(expectedTexts, layers);
+                // call
+                var layers = properties.WaterQualityLayerThicknesses;
+
+                // assert
+                var expectedLayerNumbers = new[] { 0.143, 0.143, 0.143, 0.143, 0.143, 0.143, 0.143 };
+                var expectedTexts = expectedLayerNumbers.Select(d => d.ToString("F3", CultureInfo.InvariantCulture)).ToArray();
+                CollectionAssert.AreEqual(expectedTexts, layers);
+            }
         }
 
         // TODO: Check WaqLayer for vertically aggregated waq-grid.

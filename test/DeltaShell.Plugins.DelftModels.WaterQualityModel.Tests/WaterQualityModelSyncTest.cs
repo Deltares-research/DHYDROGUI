@@ -67,22 +67,23 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         public void TestDatFromHydroDataSyncedOnImportingNewSubstanceProcessLibrary()
         {
             // setup
-            var waterQualityModel = new WaterQualityModel();
-            LoadRealModelWithGridFromFile(waterQualityModel);
+            using (var waterQualityModel = new WaterQualityModel())
+            {
+                LoadRealModelWithGridFromFile(waterQualityModel);
 
-            const string functionName = "Salinity";
-            Assert.IsTrue(waterQualityModel.HasDataInHydroDynamics(functionName),
-                "Precondition: hyd-file should have file to salinity data.");
+                const string functionName = "Salinity";
+                Assert.IsTrue(waterQualityModel.HasDataInHydroDynamics(functionName), "Precondition: hyd-file should have file to salinity data.");
 
-            // Perform import on empty substance process library
-            var commonFilePath = Path.Combine(TestHelper.GetDataDir(), "IO");
+                // Perform import on empty substance process library
+                var commonFilePath = Path.Combine(TestHelper.GetDataDir(), "IO");
 
-            // call (import a library with "Salinity"
-            new SubFileImporter().Import(waterQualityModel.SubstanceProcessLibrary, Path.Combine(commonFilePath, "03d_Tewor2003.sub"));
+                // call (import a library with "Salinity"
+                new SubFileImporter().Import(waterQualityModel.SubstanceProcessLibrary, Path.Combine(commonFilePath, "03d_Tewor2003.sub"));
 
-            // assert
-            var salinityFunction = waterQualityModel.ProcessCoefficients.First(pc => pc.Name == functionName);
-            Assert.IsTrue(salinityFunction.IsFromHydroDynamics());
+                // assert
+                var salinityFunction = waterQualityModel.ProcessCoefficients.First(pc => pc.Name == functionName);
+                Assert.IsTrue(salinityFunction.IsFromHydroDynamics());
+            }
         }
 
         [Test]
@@ -90,28 +91,29 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         public void TestDatFromHydroDataSyncedOnImportingNewSubstanceProcessLibraryThatNoLongerHasSalinity()
         {
             // setup
-            var waterQualityModel = new WaterQualityModel();
-            LoadRealModelWithGridFromFile(waterQualityModel);
+            using (var waterQualityModel = new WaterQualityModel())
+            {
+                LoadRealModelWithGridFromFile(waterQualityModel);
 
-            const string functionName = "Salinity";
-            Assert.IsTrue(waterQualityModel.HasDataInHydroDynamics(functionName),
-                "Precondition: hyd-file should have file to salinity data.");
+                const string functionName = "Salinity";
+                Assert.IsTrue(waterQualityModel.HasDataInHydroDynamics(functionName), "Precondition: hyd-file should have file to salinity data.");
 
-            // Perform import on empty substance process library
-            var commonFilePath = Path.Combine(TestHelper.GetDataDir(), "IO");
+                // Perform import on empty substance process library
+                var commonFilePath = Path.Combine(TestHelper.GetDataDir(), "IO");
 
-            new SubFileImporter().Import(waterQualityModel.SubstanceProcessLibrary, Path.Combine(commonFilePath, "03d_Tewor2003.sub"));
+                new SubFileImporter().Import(waterQualityModel.SubstanceProcessLibrary, Path.Combine(commonFilePath, "03d_Tewor2003.sub"));
 
-            // assert
-            var salinityFunction = waterQualityModel.ProcessCoefficients.First(pc => pc.Name == functionName);
-            Assert.IsTrue(salinityFunction.IsFromHydroDynamics());
+                // assert
+                var salinityFunction = waterQualityModel.ProcessCoefficients.First(pc => pc.Name == functionName);
+                Assert.IsTrue(salinityFunction.IsFromHydroDynamics());
 
-            // call (import a library with "Salinity"
-            new SubFileImporter().Import(waterQualityModel.SubstanceProcessLibrary, Path.Combine(commonFilePath, "Eutrof_simple_custom1.sub"));
+                // call (import a library with "Salinity"
+                new SubFileImporter().Import(waterQualityModel.SubstanceProcessLibrary, Path.Combine(commonFilePath, "Eutrof_simple_custom1.sub"));
 
-            // assert
-            salinityFunction = waterQualityModel.ProcessCoefficients.FirstOrDefault(pc => pc.Name == functionName);
-            Assert.IsNull(salinityFunction);
+                // assert
+                salinityFunction = waterQualityModel.ProcessCoefficients.FirstOrDefault(pc => pc.Name == functionName);
+                Assert.IsNull(salinityFunction);
+            }
         }
 
         [Test]
@@ -119,26 +121,27 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         public void TestDataFromHydroDataSyncedOnImportingNewHydFile()
         {
             // setup
-            var waterQualityModel = new WaterQualityModel();
-            // Perform import on empty substance process library
-            var commonFilePath = Path.Combine(TestHelper.GetDataDir(), "IO");
+            using (var waterQualityModel = new WaterQualityModel())
+            {
+                // Perform import on empty substance process library
+                var commonFilePath = Path.Combine(TestHelper.GetDataDir(), "IO");
 
-            new SubFileImporter().Import(waterQualityModel.SubstanceProcessLibrary, Path.Combine(commonFilePath, "03d_Tewor2003.sub"));
+                new SubFileImporter().Import(waterQualityModel.SubstanceProcessLibrary, Path.Combine(commonFilePath, "03d_Tewor2003.sub"));
 
-            const string functionName = "Salinity";
-            Assert.IsFalse(waterQualityModel.HasDataInHydroDynamics(functionName),
-                "Precondition: hyd-file should NOT have file to salinity data.");
-            var salinityFunction = waterQualityModel.ProcessCoefficients.First(pc => pc.Name == functionName);
-            Assert.IsTrue(salinityFunction.IsConst());
+                const string functionName = "Salinity";
+                Assert.IsFalse(waterQualityModel.HasDataInHydroDynamics(functionName), "Precondition: hyd-file should NOT have file to salinity data.");
+                var salinityFunction = waterQualityModel.ProcessCoefficients.First(pc => pc.Name == functionName);
+                Assert.IsTrue(salinityFunction.IsConst());
 
-            // call
-            LoadRealModelWithGridFromFile(waterQualityModel);
+                // call
+                LoadRealModelWithGridFromFile(waterQualityModel);
 
-            // assert
-            Assert.IsTrue(waterQualityModel.HasDataInHydroDynamics(functionName));
+                // assert
+                Assert.IsTrue(waterQualityModel.HasDataInHydroDynamics(functionName));
 
-            salinityFunction = waterQualityModel.ProcessCoefficients.First(pc => pc.Name == functionName);
-            Assert.IsTrue(salinityFunction.IsFromHydroDynamics());
+                salinityFunction = waterQualityModel.ProcessCoefficients.First(pc => pc.Name == functionName);
+                Assert.IsTrue(salinityFunction.IsFromHydroDynamics());
+            }
         }
 
         [Test]
@@ -146,30 +149,29 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         public void TestDataFromHydroDataSyncedOnImportingNewHydFileThatNoLongerHadSalinityAvailable()
         {
             // setup
-            var waterQualityModel = new WaterQualityModel();
-            var commonFilePath = Path.Combine(TestHelper.GetDataDir(), "IO");
+            using (var waterQualityModel = new WaterQualityModel())
+            {
+                var commonFilePath = Path.Combine(TestHelper.GetDataDir(), "IO");
 
-            new SubFileImporter().Import(waterQualityModel.SubstanceProcessLibrary, Path.Combine(commonFilePath, "03d_Tewor2003.sub"));
+                new SubFileImporter().Import(waterQualityModel.SubstanceProcessLibrary, Path.Combine(commonFilePath, "03d_Tewor2003.sub"));
 
-            LoadRealModelWithGridFromFile(waterQualityModel);
+                LoadRealModelWithGridFromFile(waterQualityModel);
 
-            const string functionName = "Salinity";
-            Assert.IsTrue(waterQualityModel.HasDataInHydroDynamics(functionName),
-                "Precondition: Salinity data should be available in hyd file.");
+                const string functionName = "Salinity";
+                Assert.IsTrue(waterQualityModel.HasDataInHydroDynamics(functionName), "Precondition: Salinity data should be available in hyd file.");
 
-            var salinityFunction = waterQualityModel.ProcessCoefficients.First(pc => pc.Name == functionName);
-            Assert.IsTrue(salinityFunction.IsFromHydroDynamics(),
-                "Precondition: Salinity process coefficient should be linked to hyd-file data.");
+                var salinityFunction = waterQualityModel.ProcessCoefficients.First(pc => pc.Name == functionName);
+                Assert.IsTrue(salinityFunction.IsFromHydroDynamics(), "Precondition: Salinity process coefficient should be linked to hyd-file data.");
 
-            // call (new hyd-file being imported)
-            LoadSquareModelWithGridFromFile(waterQualityModel);
+                // call (new hyd-file being imported)
+                LoadSquareModelWithGridFromFile(waterQualityModel);
 
-            // assert
-            Assert.IsFalse(waterQualityModel.HasDataInHydroDynamics(functionName));
+                // assert
+                Assert.IsFalse(waterQualityModel.HasDataInHydroDynamics(functionName));
 
-            salinityFunction = waterQualityModel.ProcessCoefficients.First(pc => pc.Name == functionName);
-            Assert.IsTrue(salinityFunction.IsConst(),
-                "Importing hyd-file that has no longer data available should set the function back to constant.");
+                salinityFunction = waterQualityModel.ProcessCoefficients.First(pc => pc.Name == functionName);
+                Assert.IsTrue(salinityFunction.IsConst(), "Importing hyd-file that has no longer data available should set the function back to constant.");
+            }
         }
 
         [Test]
@@ -177,57 +179,61 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         public void TestAddInitialConditionCoverage_FunctionHasSpatialOperationWithDefaultValue()
         {
             // setup
-            var waterQualityModel = new WaterQualityModel();
-            LoadRealModelWithGridFromFile(waterQualityModel);
+            using (var waterQualityModel = new WaterQualityModel())
+            {
+                LoadRealModelWithGridFromFile(waterQualityModel);
 
-            var commonFilePath = Path.Combine(TestHelper.GetDataDir(), "IO");
+                var commonFilePath = Path.Combine(TestHelper.GetDataDir(), "IO");
 
-            new SubFileImporter().Import(waterQualityModel.SubstanceProcessLibrary, Path.Combine(commonFilePath, "03d_Tewor2003.sub"));
+                new SubFileImporter().Import(waterQualityModel.SubstanceProcessLibrary, Path.Combine(commonFilePath, "03d_Tewor2003.sub"));
 
-            Assert.AreEqual(5, waterQualityModel.InitialConditions.Count);
+                Assert.AreEqual(5, waterQualityModel.InitialConditions.Count);
 
-            const double constantDefaultValue = 9d;
-            waterQualityModel.InitialConditions[0].Components[0].DefaultValue = constantDefaultValue;
+                const double constantDefaultValue = 9d;
+                waterQualityModel.InitialConditions[0].Components[0].DefaultValue = constantDefaultValue;
 
-            var dataItem =
-                waterQualityModel.AllDataItems.FirstOrDefault(
-                    di => Equals(di.Value, waterQualityModel.InitialConditions[0]));
+                var dataItem = waterQualityModel.AllDataItems.FirstOrDefault(di => Equals(di.Value, waterQualityModel.InitialConditions[0]));
 
-            Assert.IsNotNull(dataItem);
-            Assert.IsNull(dataItem.ValueConverter);
+                Assert.IsNotNull(dataItem);
+                Assert.IsNull(dataItem.ValueConverter);
 
-            // Send events to the sync. A constant function is replaced with a coverage
-            IFunction newCoverage = FunctionTypeCreator.ReplaceFunctionUsingCreator(
-                waterQualityModel.InitialConditions, waterQualityModel.InitialConditions[0],
-                FunctionTypeCreatorFactory.CreateUnstructuredGridCoverageCreator(), waterQualityModel);
+                // Send events to the sync. A constant function is replaced with a coverage
+                IFunction newCoverage = FunctionTypeCreator.ReplaceFunctionUsingCreator(
+                    waterQualityModel.InitialConditions,
+                    waterQualityModel.InitialConditions[0],
+                    FunctionTypeCreatorFactory.CreateUnstructuredGridCoverageCreator(),
+                    waterQualityModel);
 
-            Assert.IsTrue(newCoverage.IsUnstructuredGridCellCoverage());
-            Assert.AreSame(newCoverage, waterQualityModel.InitialConditions[0]);
-            // the new coverage contains all default values over all cells. This is due to the fact that it is regulated via a value converter (spatial operations).
-            CollectionAssert.AreEqual(Enumerable.Repeat(constantDefaultValue, newCoverage.Components[0].Values.Count).ToList(), newCoverage.GetValues<double>().ToList());
+                Assert.IsTrue(newCoverage.IsUnstructuredGridCellCoverage());
+                Assert.AreSame(newCoverage, waterQualityModel.InitialConditions[0]);
+                // the new coverage contains all default values over all cells. This is due to the fact that it is regulated via a value converter (spatial operations).
+                CollectionAssert.AreEqual(Enumerable.Repeat(constantDefaultValue, newCoverage.Components[0].Values.Count).ToList(), newCoverage.GetValues<double>().ToList());
 
-            dataItem = waterQualityModel.AllDataItems.FirstOrDefault(
-                    di => Equals(di.Value, waterQualityModel.InitialConditions[0]));
+                dataItem = waterQualityModel.AllDataItems.FirstOrDefault(di => Equals(di.Value, waterQualityModel.InitialConditions[0]));
 
-            Assert.IsNotNull(dataItem);
-            Assert.IsNotNull(dataItem.ValueConverter);
-            Assert.IsInstanceOf<SpatialOperationSetValueConverter>(dataItem.ValueConverter);
+                Assert.IsNotNull(dataItem);
+                Assert.IsNotNull(dataItem.ValueConverter);
+                Assert.IsInstanceOf<SpatialOperationSetValueConverter>(dataItem.ValueConverter);
 
-            var vc = (SpatialOperationSetValueConverter)dataItem.ValueConverter;
+                var vc = (SpatialOperationSetValueConverter) dataItem.ValueConverter;
 
-            Assert.AreEqual(1, vc.SpatialOperationSet.Operations.Count);
-            Assert.IsInstanceOf<SetValueOperation>(vc.SpatialOperationSet.Operations[0]);
+                Assert.AreEqual(1, vc.SpatialOperationSet.Operations.Count);
+                Assert.IsInstanceOf<SetValueOperation>(vc.SpatialOperationSet.Operations[0]);
 
-            // the original value may only contain no data value
-            CollectionAssert.AreEqual(Enumerable.Repeat((double)newCoverage.Components[0].NoDataValue, newCoverage.Components[0].Values.Count).ToList(), ((UnstructuredGridCoverage)vc.OriginalValue).GetValues<double>().ToList());
-            // the final value contains the default value
-            CollectionAssert.AreEqual(Enumerable.Repeat(constantDefaultValue, newCoverage.Components[0].Values.Count).ToList(), ((UnstructuredGridCoverage)vc.ConvertedValue).GetValues<double>().ToList());
-            Assert.AreEqual(dataItem.Value, newCoverage);
+                // the original value may only contain no data value
+                CollectionAssert.AreEqual(Enumerable.Repeat((double) newCoverage.Components[0].NoDataValue,
+                        newCoverage.Components[0].Values.Count).ToList(),
+                    ((UnstructuredGridCoverage) vc.OriginalValue).GetValues<double>().ToList());
+                // the final value contains the default value
+                CollectionAssert.AreEqual(Enumerable.Repeat(constantDefaultValue, newCoverage.Components[0].Values.Count).ToList(),
+                    ((UnstructuredGridCoverage) vc.ConvertedValue).GetValues<double>().ToList());
+                Assert.AreEqual(dataItem.Value, newCoverage);
 
-            var operation = (SetValueOperation) vc.SpatialOperationSet.Operations[0];
-            Assert.AreEqual(constantDefaultValue, operation.Value);
+                var operation = (SetValueOperation) vc.SpatialOperationSet.Operations[0];
+                Assert.AreEqual(constantDefaultValue, operation.Value);
+            }
         }
-        
+
         [Test]
         [Category(TestCategory.Integration)]
         public void TestModelOutputSyncAfterAddingAndRemovingSubstanceForSubstanceCalculation()
@@ -253,44 +259,53 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         [Category(TestCategory.DataAccess)]
         public void TestInitialConditionsConvertsDefaultCoverage()
         {
-            var model = new WaterQualityModel();
-            LoadSquareModelWithGridFromFile(model);
+            using (var model = new WaterQualityModel())
+            {
+                LoadSquareModelWithGridFromFile(model);
 
-            // add a substance. Initial condition functions will be created.
-            double five = 5;
-            model.SubstanceProcessLibrary.Substances.Add(new WaterQualitySubstance(){Name="O2", Active = true, InitialValue = five});
+                // add a substance. Initial condition functions will be created.
+                double five = 5;
+                model.SubstanceProcessLibrary.Substances.Add(new WaterQualitySubstance
+                {
+                    Name = "O2",
+                    Active = true,
+                    InitialValue = five
+                });
 
-            Assert.AreEqual(1, model.InitialConditions.Count);
-            Assert.AreEqual(five, model.InitialConditions[0].Components[0].DefaultValue);
-            Assert.IsTrue(model.InitialConditions[0].IsConst());
+                Assert.AreEqual(1, model.InitialConditions.Count);
+                Assert.AreEqual(five, model.InitialConditions[0].Components[0].DefaultValue);
+                Assert.IsTrue(model.InitialConditions[0].IsConst());
 
-            var wrapper = CreateFunctionWrapper(model, model.InitialConditions);
+                var wrapper = CreateFunctionWrapper(model, model.InitialConditions);
 
-            // change the type, a lot will happen. Sync will be called
-            wrapper.FunctionType = "Coverage";
+                // change the type, a lot will happen. Sync will be called
+                wrapper.FunctionType = "Coverage";
 
-            AssertConstantChangedToCoverage(model.InitialConditions, five);
+                AssertConstantChangedToCoverage(model.InitialConditions, five);
+            }
         }
 
         [Test]
         [Category(TestCategory.DataAccess)]
         public void TestDispersionConvertsDefaultCoverage()
         {
-            var model = new WaterQualityModel();
-            LoadSquareModelWithGridFromFile(model);
+            using (var model = new WaterQualityModel())
+            {
+                LoadSquareModelWithGridFromFile(model);
 
-            Assert.AreEqual(1, model.Dispersion.Count);
-            double five = 5;
-            model.Dispersion[0].Components[0].DefaultValue = five;
+                Assert.AreEqual(1, model.Dispersion.Count);
+                double five = 5;
+                model.Dispersion[0].Components[0].DefaultValue = five;
 
-            Assert.IsTrue(model.Dispersion[0].IsConst());
+                Assert.IsTrue(model.Dispersion[0].IsConst());
 
-            var wrapper = CreateFunctionWrapper(model, model.Dispersion);
+                var wrapper = CreateFunctionWrapper(model, model.Dispersion);
 
-            // change the type, a lot will happen. Sync will be called
-            wrapper.FunctionType = "Coverage";
+                // change the type, a lot will happen. Sync will be called
+                wrapper.FunctionType = "Coverage";
 
-            AssertConstantChangedToCoverage(model.Dispersion, five);
+                AssertConstantChangedToCoverage(model.Dispersion, five);
+            }
         }
 
         [Test]
