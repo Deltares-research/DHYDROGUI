@@ -299,24 +299,25 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         [Category(TestCategory.Slow)]
         public void TestGetBoundarySegmentsToWrite_Real()
         {
-            string hydPath = TestHelper.GetTestFilePath(@"IO\real\uni3d.hyd");
+            var hydPath = TestHelper.GetTestFilePath(@"IO\real\uni3d.hyd");
 
-            WaterQualityModel model = new WaterQualityModel();
+            using (var model = new WaterQualityModel())
+            {
+                new HydFileImporter().ImportItem(hydPath, model);
 
-            new HydFileImporter().ImportItem(hydPath, model);
+                string result = IncludeFileFactory.CreateBoundaryListInclude(model.BoundaryNodeIds, model.NumberOfWaqSegmentLayers);
 
-            string result = IncludeFileFactory.CreateBoundaryListInclude(model.BoundaryNodeIds, model.NumberOfWaqSegmentLayers);
+                string[] resultLines = result.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
 
-            string[] resultLines = result.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+                // assert the count of the list
+                int allSegmentsCount = model.BoundaryNodeIds.Sum(kvp => kvp.Value.Count());
+                Assert.AreEqual(allSegmentsCount * model.NumberOfWaqSegmentLayers + model.NumberOfWaqSegmentLayers, resultLines.Length - 1);
 
-            // assert the count of the list
-            int allSegmentsCount = model.BoundaryNodeIds.Sum(kvp => kvp.Value.Count());
-            Assert.AreEqual(allSegmentsCount * model.NumberOfWaqSegmentLayers + model.NumberOfWaqSegmentLayers, resultLines.Length - 1);
-
-            Assert.AreEqual("; Boundaries for layer 1", resultLines[1]);
-            Assert.AreEqual("'1' '' 'sea_002.pli'", resultLines[2]);
-            Assert.AreEqual("; Boundaries for layer 2", resultLines[2 + allSegmentsCount]);
-            Assert.AreEqual("'139' '' 'sea_002.pli'", resultLines[3 + allSegmentsCount]);
+                Assert.AreEqual("; Boundaries for layer 1", resultLines[1]);
+                Assert.AreEqual("'1' '' 'sea_002.pli'", resultLines[2]);
+                Assert.AreEqual("; Boundaries for layer 2", resultLines[2 + allSegmentsCount]);
+                Assert.AreEqual("'139' '' 'sea_002.pli'", resultLines[3 + allSegmentsCount]);
+            }
         }
 
         [Test]
@@ -1114,25 +1115,26 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             var testFilePath = TestHelper.GetTestFilePath(@"Zwolle\sobek.hyd");
             var subsFilePath = TestHelper.GetTestFilePath(@"Zwolle\substances\02b_Oxygen_bod_sediment.sub");
 
-            //Import the second model on top of waqmodel.
             var importer = new HydFileImporter();
-            var waqModel = importer.ImportItem(testFilePath) as WaterQualityModel;
-            Assert.IsNotNull(waqModel);
-
-            //Import the substances now.
-            Assert.IsNotNull(waqModel.SubstanceProcessLibrary);
-            new SubFileImporter().Import(waqModel.SubstanceProcessLibrary, subsFilePath);
-
-            //Check for the CHEZY seg function in the include.
-            var initSettings = new WaqInitializationSettings
+            using (var waqModel = importer.ImportItem(testFilePath) as WaterQualityModel)
             {
-                ProcessCoefficients = waqModel.ProcessCoefficients,
-            };
-            var text = IncludeFileFactory.CreateSegfunctionsInclude(initSettings);
-            Assert.IsFalse(string.IsNullOrEmpty(text));
+                Assert.IsNotNull(waqModel);
 
-            var expectedText = "SEG_FUNCTIONS\r\n'CHEZY'\r\nALL\r\nBINARY_FILE";
-            Assert.IsTrue(text.Contains(expectedText));
+                //Import the substances now.
+                Assert.IsNotNull(waqModel.SubstanceProcessLibrary);
+                new SubFileImporter().Import(waqModel.SubstanceProcessLibrary, subsFilePath);
+
+                //Check for the CHEZY seg function in the include.
+                var initSettings = new WaqInitializationSettings
+                {
+                    ProcessCoefficients = waqModel.ProcessCoefficients,
+                };
+                var text = IncludeFileFactory.CreateSegfunctionsInclude(initSettings);
+                Assert.IsFalse(string.IsNullOrEmpty(text));
+
+                var expectedText = "SEG_FUNCTIONS\r\n'CHEZY'\r\nALL\r\nBINARY_FILE";
+                Assert.IsTrue(text.Contains(expectedText));
+            }
         }
 
         private static UnstructuredGrid CreateTwoCellStaggeredGrid()

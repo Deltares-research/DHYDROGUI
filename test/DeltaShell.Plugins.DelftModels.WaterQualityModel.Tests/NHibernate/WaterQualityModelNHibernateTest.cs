@@ -519,24 +519,26 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
             var commonFilePath = Path.Combine(TestHelper.GetDataDir(), "IO");
             var filePath = Path.Combine(commonFilePath, "real", "uni3d.hyd");
 
-            var entity = new WaterQualityModel();
-            new HydFileImporter().ImportItem(filePath, entity);
+            using (var entity = new WaterQualityModel())
+            {
+                new HydFileImporter().ImportItem(filePath, entity);
 
-            new SubFileImporter().Import(entity.SubstanceProcessLibrary, Path.Combine(commonFilePath, "03d_Tewor2003.sub"));
+                new SubFileImporter().Import(entity.SubstanceProcessLibrary, Path.Combine(commonFilePath, "03d_Tewor2003.sub"));
 
-            var creator = FunctionTypeCreatorFactory.CreateUnstructuredGridCoverageCreator();
-            FunctionTypeCreator.ReplaceFunctionUsingCreator(entity.ProcessCoefficients, 
-                entity.ProcessCoefficients.First(), creator, entity);
+                var creator = FunctionTypeCreatorFactory.CreateUnstructuredGridCoverageCreator();
+                FunctionTypeCreator.ReplaceFunctionUsingCreator(entity.ProcessCoefficients, entity.ProcessCoefficients.First(), creator, entity);
 
-            // call
-            var retrievedEntity = SaveAndRetrieveObject(entity);
-
-            // assert
-            var processCoefficientsSet = (DataItemSet)retrievedEntity.GetDataItemByTag("ProcessCoefficientsTag");
-            var dataItem = processCoefficientsSet.DataItems.First();
-            var unproxiedDataItem = TypeUtils.Unproxy(dataItem);
-            Assert.IsInstanceOf<CoverageSpatialOperationValueConverter>(unproxiedDataItem.ValueConverter);
-            Assert.IsInstanceOf<UnstructuredGridCellCoverage>(unproxiedDataItem.ValueConverter.OriginalValue);
+                // call
+                using (var retrievedEntity = SaveAndRetrieveObject(entity))
+                {
+                    // assert
+                    var processCoefficientsSet = (DataItemSet) retrievedEntity.GetDataItemByTag("ProcessCoefficientsTag");
+                    var dataItem = processCoefficientsSet.DataItems.First();
+                    var unproxiedDataItem = TypeUtils.Unproxy(dataItem);
+                    Assert.IsInstanceOf<CoverageSpatialOperationValueConverter>(unproxiedDataItem.ValueConverter);
+                    Assert.IsInstanceOf<UnstructuredGridCellCoverage>(unproxiedDataItem.ValueConverter.OriginalValue);
+                }
+            }
         }
         
         private const string LOADTYPE = "Sewer";
@@ -579,41 +581,43 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
 
             var filePath = Path.Combine(commonFilePath, "real", "uni3d.hyd");
 
-            var entity = new WaterQualityModel();
-            new HydFileImporter().ImportItem(filePath, entity);
-            new SubFileImporter().Import(entity.SubstanceProcessLibrary, Path.Combine(commonFilePath, "03d_Tewor2003.sub"));
-
-            Assert.IsTrue(entity.InitialConditions.Count >= nrOfCoverages);
-
-            // make x coverages instead of constant functions
-            for (int i = 0; i < nrOfCoverages; i++)
+            using (var entity = new WaterQualityModel())
             {
-                FunctionTypeCreator.ReplaceFunctionUsingCreator(
-               entity.InitialConditions, entity.InitialConditions[i],
-               FunctionTypeCreatorFactory.CreateUnstructuredGridCoverageCreator(), entity);
+                new HydFileImporter().ImportItem(filePath, entity);
+                new SubFileImporter().Import(entity.SubstanceProcessLibrary, Path.Combine(commonFilePath, "03d_Tewor2003.sub"));
+
+                Assert.IsTrue(entity.InitialConditions.Count >= nrOfCoverages);
+
+                // make x coverages instead of constant functions
+                for (int i = 0; i < nrOfCoverages; i++)
+                {
+                    FunctionTypeCreator.ReplaceFunctionUsingCreator(
+                        entity.InitialConditions, entity.InitialConditions[i],
+                        FunctionTypeCreatorFactory.CreateUnstructuredGridCoverageCreator(), entity);
+                }
+
+                // assert before
+                AssertModelCoverages(entity, nrOfCoverages);
+
+                // save and retrieve
+                // call
+                var project = SaveAndRetrieveObjectCore(entity);
+                using (var retrievedEntity = RetrievePersistedObjectFromProject<WaterQualityModel>(project))
+                {
+                    waqModels.Add(retrievedEntity);
+                    app.Raise(a => a.ProjectOpened += null, project);
+
+                    // perform spatial operations just like WaterQualityModelApplicationPlugin
+                    foreach (var spatialOperationValueConverter in retrievedEntity.AllDataItems.Select(di => di.ValueConverter).OfType<CoverageSpatialOperationValueConverter>())
+                    {
+                        spatialOperationValueConverter.SpatialOperationSet.Execute();
+                    }
+
+                    // assert after
+                    Assert.IsNotNull(retrievedEntity);
+                    AssertModelCoverages(retrievedEntity, nrOfCoverages);
+                }
             }
-
-            // assert before
-            AssertModelCoverages(entity, nrOfCoverages);
-
-            // save and retrieve
-            //var retrievedEntity = SaveAndRetrieveObject(entity);
-            // call
-            var project = SaveAndRetrieveObjectCore(entity);
-            var retrievedEntity = RetrievePersistedObjectFromProject<WaterQualityModel>(project);
-
-            waqModels.Add(retrievedEntity);
-            app.Raise(a => a.ProjectOpened += null, project);
-            
-            // perform spatial operations just like WaterQualityModelApplicationPlugin
-            foreach (var spatialOperationValueConverter in retrievedEntity.AllDataItems.Select(di => di.ValueConverter).OfType<CoverageSpatialOperationValueConverter>())
-            {
-                spatialOperationValueConverter.SpatialOperationSet.Execute();
-            }
-
-            // assert after
-            Assert.IsNotNull(retrievedEntity);
-            AssertModelCoverages(retrievedEntity, nrOfCoverages);
         }
 
         [Test]
