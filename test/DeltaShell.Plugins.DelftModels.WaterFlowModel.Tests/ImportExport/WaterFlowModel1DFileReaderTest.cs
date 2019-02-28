@@ -31,12 +31,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
             FileUtils.DeleteIfExists(tempFolderPath);
         }
         
-        [TestCase("Md1dExport.md1d")]
-        [TestCase("Md1dExportLowerCase.md1d")]
-        [TestCase("Md1dExportWithSediment.md1d")]
-        public void GivenAnMd1dFile_WhenReadingTheAttachedNetworkDefinitionFile_ThenAModelIsReturned(string md1dFileName)
+        [Test]
+        public void GivenAnMd1dFile_WhenReadingTheAttachedNetworkDefinitionFile_ThenAModelIsReturned()
         {
-            var md1dFilePath = Path.Combine(tempFolderPath, md1dFileName);
+            var md1dFilePath = Path.Combine(tempFolderPath, "Md1dExport.md1d");
 
             var waterFlowModel1D = WaterFlowModelFileReader.Read(md1dFilePath);
             Assert.IsNotNull(waterFlowModel1D);

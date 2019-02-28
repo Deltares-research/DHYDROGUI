@@ -351,7 +351,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
         [TestCase(ModelDefinitionsRegion.ResultsLateralsHeader, "lateraldifference")]
         [TestCase(ModelDefinitionsRegion.ResultsRetentionsHeader, "volume")]
         [TestCase(ModelDefinitionsRegion.ResultsWaterBalanceHeader, "bal2d1din")]
-        public void GivenACategoryWithCorrectPropertiesInLowerCase_WhenSettingProperties_NoExceptionsOrErrorMessagesAreThrown(string categoryName, string propertyName)
+        public void GivenACategoryWithCorrectPropertiesInLowerCase_WhenSettingProperties_ThenNoExceptionsOrErrorMessagesAreThrown(string categoryName, string propertyName)
         {
             var category = new DelftIniCategory(categoryName);
             category.AddProperty(propertyName, 1);

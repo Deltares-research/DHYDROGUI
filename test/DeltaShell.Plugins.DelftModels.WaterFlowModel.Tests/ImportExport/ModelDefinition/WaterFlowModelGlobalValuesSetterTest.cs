@@ -601,11 +601,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
         }
 
         [Test]
-        public void GivenACategoryWithCorrectPropertiesInLowerCase_WhenSettingProperties_NoExceptionsOrErrorMessagesAreThrown()
+        public void GivenACategoryWithCorrectPropertiesInLowerCase_WhenSettingProperties_ThenNoExceptionsOrErrorMessagesAreThrown()
         {
             // Given
-            var category = GetGlobalCategoryWithCommonElements(ExpectedConditionsType, ExpectedWaterLevel,
-                ExpectedDepth, ExpectedFlow);
+            var category = new DelftIniCategory(ModelDefinitionsRegion.GlobalValuesHeader);
             category.AddProperty("initialwaterlevel", 0.1);
             category.AddProperty("initialwaterdepth", 0.2);
             category.AddProperty("initialdischarge", 0.3);

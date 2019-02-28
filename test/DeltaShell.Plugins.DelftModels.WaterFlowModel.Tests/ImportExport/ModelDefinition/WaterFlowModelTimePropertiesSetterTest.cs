@@ -301,23 +301,22 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
         }
 
         [Test]
-        public void GivenACategoryWithCorrectPropertiesInLowerCase_WhenSettingProperties_NoExceptionsOrErrorMessagesAreThrown()
+        public void GivenACategoryWithCorrectPropertiesInLowerCase_WhenSettingProperties_ThenNoExceptionsOrErrorMessagesAreThrown()
         {
             // Given
-            var category = GetCorrectTimeSettingsDataModel();
+            var category = new DelftIniCategory(ModelDefinitionsRegion.TimeHeader);
             category.AddProperty("starttime", "2014-01-01 00:00:00");
             category.AddProperty("stoptime", "2014-01-16 00:00:00");
             category.AddProperty("timestep", 60.000);
-            category.AddProperty("outtimestepgridpoints", 3600.000);
-            category.AddProperty("outtimestepstructures", 600.000);
+            category.AddProperty("mapoutputtimestep", 3600.000);
+            category.AddProperty("hisoutputtimestep", 600.000);
 
             // When - Then
             var errorMessages = new List<string>();
             var model = new WaterFlowModel1D();
             Assert.DoesNotThrow(() => new WaterFlowModelTimePropertiesSetter().SetProperties(category, model, errorMessages));
 
-            // 2 errorMessages because of deprecated keys
-            Assert.That(errorMessages.Count, Is.EqualTo(2));
+            Assert.That(errorMessages.Count, Is.EqualTo(0));
         }
 
         private DelftIniCategory GetCorrectTimeSettingsDataModel()

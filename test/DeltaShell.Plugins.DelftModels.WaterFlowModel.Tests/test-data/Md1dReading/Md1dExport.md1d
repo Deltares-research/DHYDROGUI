@@ -152,8 +152,12 @@
     OutTimeStepStructures = 3600.000            # in seconds
 
 [Sediment]
-
+    D50                   = 0.0006
+    D90                   = 0.001
+    DepthUsedForSediment = 0.3
+	
 [Specials]
+    DesignFactorDlg = 1.0
 
 [NumericalParameters]
     AccelerationTermFactor= 1                   
