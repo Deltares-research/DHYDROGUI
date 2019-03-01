@@ -293,15 +293,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
             var errorMessages = new List<string>();
 
             // When
-            var outputFunc = MeteoDataConverter.Convert(emptySet, errorMessages);
+            var meteoFunction = MeteoDataConverter.Convert(emptySet, errorMessages);
 
             // Then
-            Assert.That(outputFunc, Is.Null);
-
-            Assert.That(errorMessages.Count, Is.EqualTo(1));
-
-            const string expectedErrorMessage = "Unable to parse empty set of meteo data.";
-            Assert.That(errorMessages[0], Is.EqualTo(expectedErrorMessage));
+            Assert.IsNull(meteoFunction);
         }
 
 

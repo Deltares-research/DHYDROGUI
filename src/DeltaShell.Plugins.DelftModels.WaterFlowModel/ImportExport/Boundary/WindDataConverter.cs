@@ -28,11 +28,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
         public static WindFunction Convert(IList<IDelftBcCategory> dataAccessModel,
                                            IList<string> errorMessages)
         {
-            if (!Validate(dataAccessModel, errorMessages))
+            if (dataAccessModel == null)
+            {
+                errorMessages.Add("Unable to parse null wind data function.");
                 return null;
+            }
 
-            var relevantCategories = dataAccessModel.Where(IsWindFunctionAttribute).ToList();
-            return Parse(relevantCategories, errorMessages);
+            var relevantCategories = dataAccessModel.Where(IsWindFunctionAttribute).ToArray();
+            return relevantCategories.Any() 
+                ? Parse(relevantCategories, errorMessages) 
+                : null;
         }
 
         private static bool IsWindFunctionAttribute(IDelftBcCategory category)
@@ -44,37 +49,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
         }
 
         /// <summary>
-        /// Validate the provided dataAccessModel whether it describes a valid
-        /// wind function.
-        /// </summary>
-        /// <remarks>
-        /// This function needs to be further extended as follow up of issue
-        /// SOBEK3-1535. 
-        /// </remarks>
-        /// <param name="dataAccessModel">The dataAccessModel to be validated.</param>
-        /// <param name="errorMessages">List of error messages to be extended.</param>
-        /// <returns>True if dataAccessModel can be parsed, false otherwise.</returns>
-        private static bool Validate(IList<IDelftBcCategory> dataAccessModel,
-                                     IList<string> errorMessages)
-        {
-            if (dataAccessModel == null)
-            {
-                errorMessages.Add("Unable to parse null wind data function.");
-                return false;
-            }
-
-            if (!dataAccessModel.Any())
-            {
-                errorMessages.Add("Unable to parse empty set of wind data.");
-                return false;
-            }
-
-            return true;
-        }
-
-        /// <summary>
-        /// Parse the provided valid dataAccessModel to obtain a valid
-        /// WindFunction.
+        /// Parse the provided valid dataAccessModel to obtain a valid WindFunction.
         /// </summary>
         /// <param name="dataAccessModel">The wind_speed and wind_direction categories (in any order).</param>
         /// <param name="errorMessages">List of error messages to be extended.</param>
