@@ -35,6 +35,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using ObservationCrossSection2D = DelftTools.Hydro.ObservationCrossSection2D;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 {
@@ -1854,6 +1855,36 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             // Then
             Assert.That(returnedString, Is.EqualTo(null));
+        }
+
+        [Test]
+        public void GivenAnObservationPointThatContainsTheCurrentFeature_WhenGettingFeatureCategory_ThenTheCorrectStringIsReturned()
+        {
+            // Given
+            var feature = new GroupableFeature2DPoint();
+            var model = new WaterFlowFMModel();
+            model.Area.ObservationPoints.Add(feature);
+
+            // When
+            var returnedString = model.GetFeatureCategory(feature);
+
+            // Then
+            Assert.That(returnedString, Is.EqualTo("observations"));
+        }
+
+        [Test]
+        public void GivenAnObservationCrossSectionThatContainsTheCurrentFeature_WhenGettingFeatureCategory_ThenTheCorrectStringIsReturned()
+        {
+            // Given
+            var feature = new ObservationCrossSection2D();
+            var model = new WaterFlowFMModel();
+            model.Area.ObservationCrossSections.Add(feature);
+
+            // When
+            var returnedString = model.GetFeatureCategory(feature);
+
+            // Then
+            Assert.That(returnedString, Is.EqualTo("crosssections"));
         }
     }
 }
