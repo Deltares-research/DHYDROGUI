@@ -210,18 +210,20 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
         {
             // setup
             var filePath = Path.Combine(TestHelper.GetDataDir(), "IO", "real", "uni3d.hyd");
-            var entity = new HydFileData
+            using (var entity = new HydFileData
             {
-                Path = new FileInfo(filePath), 
+                Path = new FileInfo(filePath),
                 Checksum = "123456789abcdeffedcba987654321"
-            };
-
-            // call
-            var retrievedEntity = SaveAndRetrieveObject(entity);
-
-            // assert
-            Assert.AreEqual(filePath, retrievedEntity.Path.FullName);
-            Assert.AreEqual("123456789abcdeffedcba987654321", retrievedEntity.Checksum);
+            })
+            {
+                // call
+                using (var retrievedEntity = SaveAndRetrieveObject(entity))
+                {
+                    // assert
+                    Assert.AreEqual(filePath, retrievedEntity.Path.FullName);
+                    Assert.AreEqual("123456789abcdeffedcba987654321", retrievedEntity.Checksum);
+                }
+            }
         }
 
         [Test]

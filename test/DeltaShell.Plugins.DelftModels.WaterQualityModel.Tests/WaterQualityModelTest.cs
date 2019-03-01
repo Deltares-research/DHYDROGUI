@@ -485,31 +485,33 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         [Test]
         public void Import_HydroData_OverExistingModel_Overwrites_Timers()
         {
-            var waqModel = new WaterQualityModel {Name = "Model 1"};
-            var testFilePath = TestHelper.GetTestFilePath("IO\\attribute files\\random_3x5.atr");
-            var fileData = new HydFileData()
+            using (var waqModel = new WaterQualityModel {Name = "Model 1"})
             {
-                Path = new FileInfo(testFilePath),
-                AttributesRelativePath = "random_3x5.atr",
-                NumberOfDelwaqSegmentsPerHydrodynamicLayer = 3,
-                NumberOfHydrodynamicLayersPerWaqSegmentLayer = new int[] {0, 1, 2, 3, 4},
-                HydrodynamicLayerThicknesses = new double[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9},
-                NumberOfWaqSegmentLayers = 5,
-                ConversionStartTime = waqModel.StartTime.AddYears(10),
-                ConversionStopTime = waqModel.StopTime.AddYears(10),
-                ConversionTimeStep = waqModel.TimeStep.Add(new TimeSpan(1000)),
-                Boundaries = new EventedList<WaterQualityBoundary>(),
-            };
+                var testFilePath = TestHelper.GetTestFilePath("IO\\attribute files\\random_3x5.atr");
+                var fileData = new HydFileData
+                {
+                    Path = new FileInfo(testFilePath),
+                    AttributesRelativePath = "random_3x5.atr",
+                    NumberOfDelwaqSegmentsPerHydrodynamicLayer = 3,
+                    NumberOfHydrodynamicLayersPerWaqSegmentLayer = new int[] {0, 1, 2, 3, 4},
+                    HydrodynamicLayerThicknesses = new double[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9},
+                    NumberOfWaqSegmentLayers = 5,
+                    ConversionStartTime = waqModel.StartTime.AddYears(10),
+                    ConversionStopTime = waqModel.StopTime.AddYears(10),
+                    ConversionTimeStep = waqModel.TimeStep.Add(new TimeSpan(1000)),
+                    Boundaries = new EventedList<WaterQualityBoundary>(),
+                };
 
-            Assert.AreNotEqual(waqModel.StartTime, fileData.ConversionStartTime);
-            Assert.AreNotEqual(waqModel.StopTime, fileData.ConversionStopTime);
-            Assert.AreNotEqual(waqModel.TimeStep, fileData.ConversionTimeStep);
+                Assert.AreNotEqual(waqModel.StartTime, fileData.ConversionStartTime);
+                Assert.AreNotEqual(waqModel.StopTime, fileData.ConversionStopTime);
+                Assert.AreNotEqual(waqModel.TimeStep, fileData.ConversionTimeStep);
 
-            //Improt the second model on top of waqmodel.
-            waqModel.ImportHydroData(fileData);
-            Assert.AreEqual(waqModel.StartTime, fileData.ConversionStartTime);
-            Assert.AreEqual(waqModel.StopTime, fileData.ConversionStopTime);
-            Assert.AreEqual(waqModel.TimeStep, fileData.ConversionTimeStep);
+                //Import the second model on top of waqmodel.
+                waqModel.ImportHydroData(fileData);
+                Assert.AreEqual(waqModel.StartTime, fileData.ConversionStartTime);
+                Assert.AreEqual(waqModel.StopTime, fileData.ConversionStopTime);
+                Assert.AreEqual(waqModel.TimeStep, fileData.ConversionTimeStep);
+            }
         }
 
         #region ImportHydroData Twice

@@ -371,13 +371,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         [Test]
         public void HydFileImporterToString()
         {
-            var data = new HydFileData();
-            Assert.AreEqual("", data.ToString());
+            using (var data = new HydFileData())
+            {
+                Assert.AreEqual("", data.ToString());
 
-            var path = Path.GetFullPath(TestHelper.GetTestFilePath(@"IO\real\uni3d.hyd"));
-            data.Path = new FileInfo(path);
+                var path = Path.GetFullPath(TestHelper.GetTestFilePath(@"IO\real\uni3d.hyd"));
+                data.Path = new FileInfo(path);
 
-            Assert.AreEqual(path, data.ToString());
+                Assert.AreEqual(path, data.ToString());
+            }
         }
 
         [Test]
