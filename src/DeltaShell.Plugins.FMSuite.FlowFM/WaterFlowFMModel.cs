@@ -2698,17 +2698,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         public virtual string GetFeatureCategory(IFeature feature)
         {
-            switch (feature)
-            {
-                case IPump pump:
-                    return "pumps";
-                case IWeir weir when weir.WeirFormula.GetType() == typeof(GeneralStructureWeirFormula):
-                    return "generalstructures";
-                case IWeir weir when weir.WeirFormula.GetType() == typeof(GatedWeirFormula):
-                    return "gates";
-                case IWeir weir:
-                    return "weirs";
-            }
+            if (feature is IPump)
+                return "pumps";
+            if (feature is IWeir weir1 && weir1.WeirFormula.GetType() == typeof(GeneralStructureWeirFormula))
+                return "generalstructures";
+            if (feature is IWeir weir2 && weir2.WeirFormula.GetType() == typeof(GatedWeirFormula))
+                return "gates";
+            if (feature is IWeir) return "weirs";
 
             if (Area.ObservationPoints.Contains(feature))
             {
