@@ -1371,24 +1371,24 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 
             const string expectedStartTime = "2014-01-01 00:00:00";
             const string expectedEndTime = "2014-01-08 00:00:00";
-            
-            var model = new WaterQualityModel
+
+            using (var model = new WaterQualityModel
             {
                 StartTime = DateTime.Now,
                 StopTime = DateTime.Now.AddDays(3)
-            };
+            })
+            {
+                //Check correct initial test state
+                Assert.AreNotEqual(expectedStartTime, model.StartTime.ToString("yyyy-MM-dd HH:mm:ss"));
+                Assert.AreNotEqual(expectedEndTime, model.StopTime.ToString("yyyy-MM-dd HH:mm:ss"));
 
-            //Check correct initial test state
-            Assert.AreNotEqual(expectedStartTime, model.StartTime.ToString("yyyy-MM-dd HH:mm:ss"));
-            Assert.AreNotEqual(expectedEndTime, model.StopTime.ToString("yyyy-MM-dd HH:mm:ss"));
+                //Import hyd file
+                var importer = new HydFileImporter();
+                importer.ImportItem(hydPath, model);
 
-            //Import hyd file
-            var importer = new HydFileImporter();
-            var importedModel = importer.ImportItem(hydPath, model) as WaterQualityModel;
-            Assert.IsNotNull(importedModel);
-            
-            Assert.That(importedModel.StartTime.ToString("yyyy-MM-dd HH:mm:ss"), Is.EqualTo(expectedStartTime));
-            Assert.That(importedModel.StopTime.ToString("yyyy-MM-dd HH:mm:ss"), Is.EqualTo(expectedEndTime));
+                Assert.That(model.StartTime.ToString("yyyy-MM-dd HH:mm:ss"), Is.EqualTo(expectedStartTime));
+                Assert.That(model.StopTime.ToString("yyyy-MM-dd HH:mm:ss"), Is.EqualTo(expectedEndTime));
+            }
         }
 
         [Test]
@@ -1396,8 +1396,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         [Category(TestCategory.Slow)]
         public void Test_When_HydFile_IsImported_OverExistingHydFile_SimulationTimers_AreUpdated_ToNewHydFile()
         {
-            var hydPath =
-                TestHelper.GetTestFilePath(@"WaterQualityDataFiles\ImportHydFile\westernscheldt01.hyd");
+            var hydPath = TestHelper.GetTestFilePath(@"WaterQualityDataFiles\ImportHydFile\westernscheldt01.hyd");
             hydPath = TestHelper.CreateLocalCopy(hydPath);
             Assert.IsFalse(string.IsNullOrEmpty(hydPath));
             Assert.IsTrue(File.Exists(hydPath));
@@ -1438,39 +1437,35 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 
                 //Import hyd file
                 var importer = new HydFileImporter();
-                var importedModel = importer.ImportItem(hydPath, model) as WaterQualityModel;
-                Assert.IsNotNull(importedModel);
+                importer.ImportItem(hydPath, model);
 
-                Assert.AreEqual(expectedStartTime, importedModel.StartTime.ToString("yyyy-MM-dd HH:mm:ss"));
-                Assert.AreEqual(expectedEndTime, importedModel.StopTime.ToString("yyyy-MM-dd HH:mm:ss"));
+                Assert.AreEqual(expectedStartTime, model.StartTime.ToString("yyyy-MM-dd HH:mm:ss"));
+                Assert.AreEqual(expectedEndTime, model.StopTime.ToString("yyyy-MM-dd HH:mm:ss"));
 
                 //Modify values again, this time to save them into the .dsproj.
-                importedModel.StartTime = DateTime.Now;
-                importedModel.StopTime = DateTime.Now.AddDays(3);
+                model.StartTime = DateTime.Now;
+                model.StopTime = DateTime.Now.AddDays(3);
 
                 //Check the timers are different from the expected
-                Assert.AreNotEqual(expectedStartTime, importedModel.StartTime.ToString("yyyy-MM-dd HH:mm:ss"));
-                Assert.AreNotEqual(expectedEndTime, importedModel.StopTime.ToString("yyyy-MM-dd HH:mm:ss"));
+                Assert.AreNotEqual(expectedStartTime, model.StartTime.ToString("yyyy-MM-dd HH:mm:ss"));
+                Assert.AreNotEqual(expectedEndTime, model.StopTime.ToString("yyyy-MM-dd HH:mm:ss"));
 
                 //Save project
                 app.SaveProject();
 
                 //Import hyd file
-                var reImportedModel = importer.ImportItem(hydPath, importedModel) as WaterQualityModel;
-                Assert.IsNotNull(reImportedModel);
+                importer.ImportItem(hydPath, model);
 
                 //Assert timers of hyd file and of project are equal
-                Assert.AreEqual(expectedStartTime, reImportedModel.StartTime.ToString("yyyy-MM-dd HH:mm:ss"));
-                Assert.AreEqual(expectedEndTime, reImportedModel.StopTime.ToString("yyyy-MM-dd HH:mm:ss"));
+                Assert.AreEqual(expectedStartTime, model.StartTime.ToString("yyyy-MM-dd HH:mm:ss"));
+                Assert.AreEqual(expectedEndTime, model.StopTime.ToString("yyyy-MM-dd HH:mm:ss"));
             }
         }
-
 
         [Test]
         public void Test_When_Importing_HydFile_ChangeTimers_ImportAgainSameHydFile_TimersAreInSync()
         {
-            var hydPath =
-                TestHelper.GetTestFilePath(@"WaterQualityDataFiles\ImportHydFile2\westernscheldt01.hyd");
+            var hydPath = TestHelper.GetTestFilePath(@"WaterQualityDataFiles\ImportHydFile2\westernscheldt01.hyd");
             hydPath = TestHelper.CreateLocalCopy(hydPath);
             Assert.IsFalse(string.IsNullOrEmpty(hydPath));
             Assert.IsTrue(File.Exists(hydPath));
@@ -1479,29 +1474,28 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             var expectedEndTime = "2014-01-08 00:00:00";
 
             //Initialize WAQ Model and add it to the project.
-            var model = new WaterQualityModel();
+            using (var model = new WaterQualityModel())
+            {
+                //Import hyd file
+                var importer = new HydFileImporter();
+                importer.ImportItem(hydPath, model);
 
-            //Import hyd file
-            var importer = new HydFileImporter();
-            var importedModel = importer.ImportItem(hydPath, model) as WaterQualityModel;
-            Assert.IsNotNull(importedModel);
+                //Change timers of the model
+                var customHydroData = model.HydroData as HydFileData;
+                Assert.IsNotNull(customHydroData);
+                customHydroData.ConversionStartTime = DateTime.Now.AddDays(1);
+                customHydroData.ConversionStopTime = DateTime.Now.AddDays(3);
 
-            //Change timers of the model
-            var customHydroData = importedModel.HydroData as HydFileData;
-            Assert.IsNotNull(customHydroData);
-            customHydroData.ConversionStartTime = DateTime.Now.AddDays(1);
-            customHydroData.ConversionStopTime = DateTime.Now.AddDays(3);
+                Assert.AreEqual(expectedStartTime, model.StartTime.ToString("yyyy-MM-dd HH:mm:ss"));
+                Assert.AreEqual(expectedEndTime, model.StopTime.ToString("yyyy-MM-dd HH:mm:ss"));
 
-            Assert.AreEqual(expectedStartTime, importedModel.StartTime.ToString("yyyy-MM-dd HH:mm:ss"));
-            Assert.AreEqual(expectedEndTime, importedModel.StopTime.ToString("yyyy-MM-dd HH:mm:ss"));
+                //Import the same hyd file
+                importer.ImportItem(hydPath, model);
 
-            //Import the same hyd file
-            var reImportedModel = importer.ImportItem(hydPath, importedModel) as WaterQualityModel;
-            Assert.IsNotNull(reImportedModel);
-
-            //Assert timers of hyd file and of project are equal
-            Assert.AreEqual(expectedStartTime, reImportedModel.StartTime.ToString("yyyy-MM-dd HH:mm:ss"));
-            Assert.AreEqual(expectedEndTime, reImportedModel.StopTime.ToString("yyyy-MM-dd HH:mm:ss"));
+                //Assert timers of hyd file and of project are equal
+                Assert.AreEqual(expectedStartTime, model.StartTime.ToString("yyyy-MM-dd HH:mm:ss"));
+                Assert.AreEqual(expectedEndTime, model.StopTime.ToString("yyyy-MM-dd HH:mm:ss"));
+            }
         }
 
         [Test]
@@ -1510,32 +1504,30 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             var epsgAmersfoort = new OgrCoordinateSystemFactory().CreateFromEPSG(28992);
 
             //Initialize WAQ Model
-            var model = new WaterQualityModel();
-            Assert.AreNotEqual(model.CoordinateSystem, epsgAmersfoort);
+            using (var model = new WaterQualityModel())
+            {
+                Assert.AreNotEqual(model.CoordinateSystem, epsgAmersfoort);
 
-            //Import hyd file
-            var hydPath =
-                TestHelper.GetTestFilePath(
-                    @"WaterQualityDataFiles\ImportHydFileForCoordSystem\DefaultCoordSystem\westernscheldt01.hyd");
-            Assert.IsTrue(File.Exists(hydPath));
-            var importer = new HydFileImporter();
-            var importedItem = importer.ImportItem(hydPath, model) as WaterQualityModel;
-            Assert.IsNotNull(importedItem);
+                //Import hyd file
+                var hydPath = TestHelper.GetTestFilePath(@"WaterQualityDataFiles\ImportHydFileForCoordSystem\DefaultCoordSystem\westernscheldt01.hyd");
+                Assert.IsTrue(File.Exists(hydPath));
+                var importer = new HydFileImporter();
+                importer.ImportItem(hydPath, model);
 
-            //Assert that Coordinate System is now set to Amersfoort/RD
-            Assert.AreEqual(model.CoordinateSystem, epsgAmersfoort);
+                //Assert that Coordinate System is now set to Amersfoort/RD
+                Assert.AreEqual(model.CoordinateSystem, epsgAmersfoort);
 
-            //Change Coordinate System to something random and assert it is set to something different
-            var newCoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(25000);
-            model.CoordinateSystem = newCoordinateSystem;
-            Assert.AreNotEqual(model.CoordinateSystem, epsgAmersfoort);
+                //Change Coordinate System to something random and assert it is set to something different
+                var newCoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(25000);
+                model.CoordinateSystem = newCoordinateSystem;
+                Assert.AreNotEqual(model.CoordinateSystem, epsgAmersfoort);
 
-            //Import hyd file
-            importedItem = importer.ImportItem(hydPath, model) as WaterQualityModel;
-            Assert.IsNotNull(importedItem);
+                //Import hyd file
+                importer.ImportItem(hydPath, model);
 
-            //Assert that Coordinate System is now again set to Amersfoort/RD
-            Assert.AreEqual(epsgAmersfoort, model.CoordinateSystem);
+                //Assert that Coordinate System is now again set to Amersfoort/RD
+                Assert.AreEqual(epsgAmersfoort, model.CoordinateSystem);
+            }
         }
 
         [Test]
@@ -1546,29 +1538,26 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             var epsgZ20Par = new OgrCoordinateSystemFactory().CreateFromEPSG(32210);
 
             //Initialize WAQ Model
-            var model = new WaterQualityModel();
-            Assert.AreNotEqual(model.CoordinateSystem, epsgAmersfoort);
+            using (var model = new WaterQualityModel())
+            {
+                Assert.AreNotEqual(model.CoordinateSystem, epsgAmersfoort);
 
-            //Import hyd file
-            var hydPath =
-                TestHelper.GetTestFilePath(
-                    @"WaterQualityDataFiles\ImportHydFileForCoordSystem\DefaultCoordSystem\westernscheldt01.hyd");
-            Assert.IsTrue(File.Exists(hydPath));
-            var importer = new HydFileImporter();
-            var importedItem = importer.ImportItem(hydPath, model) as WaterQualityModel;
-            Assert.IsNotNull(importedItem);
+                //Import hyd file
+                var hydPath = TestHelper.GetTestFilePath(@"WaterQualityDataFiles\ImportHydFileForCoordSystem\DefaultCoordSystem\westernscheldt01.hyd");
+                Assert.IsTrue(File.Exists(hydPath));
+                var importer = new HydFileImporter();
+                importer.ImportItem(hydPath, model);
 
-            //Assert that Coordinate System is now set to Amersfoort/RD
-            Assert.AreEqual(model.CoordinateSystem, epsgAmersfoort);
+                //Assert that Coordinate System is now set to Amersfoort/RD
+                Assert.AreEqual(model.CoordinateSystem, epsgAmersfoort);
 
-            //Import a hyd file with a different coordinate system
-            var differentHydPath = TestHelper.GetTestFilePath(
-                @"WaterQualityDataFiles\ImportHydFileForCoordSystem\DifferentCoordSystem\z20_par.hyd");
-            importedItem = importer.ImportItem(differentHydPath, model) as WaterQualityModel;
-            Assert.IsNotNull(importedItem);
+                //Import a hyd file with a different coordinate system
+                var differentHydPath = TestHelper.GetTestFilePath(@"WaterQualityDataFiles\ImportHydFileForCoordSystem\DifferentCoordSystem\z20_par.hyd");
+                importer.ImportItem(differentHydPath, model);
 
-            //Assert that Coordinate System is set to te new coordinate system
-            Assert.AreEqual(model.CoordinateSystem, epsgZ20Par);
+                //Assert that Coordinate System is set to te new coordinate system
+                Assert.AreEqual(model.CoordinateSystem, epsgZ20Par);
+            }
         }
 
         [Test]
@@ -1579,30 +1568,27 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             var epsgZ20Par = new OgrCoordinateSystemFactory().CreateFromEPSG(32210);
 
             //Initialize WAQ Model
-            var model = new WaterQualityModel();
-            Assert.AreNotEqual(model.CoordinateSystem, epsgAmersfoort);
+            using (var model = new WaterQualityModel())
+            {
+                Assert.AreNotEqual(model.CoordinateSystem, epsgAmersfoort);
 
-            //Import hyd file
-            var hydPath =
-                TestHelper.GetTestFilePath(
-                    @"WaterQualityDataFiles\ImportHydFileForCoordSystem\DefaultCoordSystem\westernscheldt01.hyd");
-            Assert.IsTrue(File.Exists(hydPath));
-            var importer = new HydFileImporter();
-            var importedItem = importer.ImportItem(hydPath, model) as WaterQualityModel;
-            Assert.IsNotNull(importedItem);
+                //Import hyd file
+                var hydPath = TestHelper.GetTestFilePath(@"WaterQualityDataFiles\ImportHydFileForCoordSystem\DefaultCoordSystem\westernscheldt01.hyd");
+                Assert.IsTrue(File.Exists(hydPath));
+                var importer = new HydFileImporter();
+                importer.ImportItem(hydPath, model);
 
-            //Assert that Coordinate System is now set to Amersfoort/RD
-            Assert.AreEqual(model.CoordinateSystem, epsgAmersfoort);
+                //Assert that Coordinate System is now set to Amersfoort/RD
+                Assert.AreEqual(model.CoordinateSystem, epsgAmersfoort);
 
-            //Import a hyd file with a different coordinate system
-            var differentHydPath = TestHelper.GetTestFilePath(
-                @"WaterQualityDataFiles\ImportHydFileForCoordSystem\DifferentCoordSystem\z20_par.hyd");
-            
-            TestHelper.AssertAtLeastOneLogMessagesContains(
-                () => importer.ImportItem(differentHydPath, model), 
-                string.Format(Resources.WaterQualityModel_ImportHydroData_The_coordinate_system_of_the_model___0__has_been_set_to__1_, 
-                    model.Name, 
-                    epsgZ20Par));
+                //Import a hyd file with a different coordinate system
+                var differentHydPath = TestHelper.GetTestFilePath(@"WaterQualityDataFiles\ImportHydFileForCoordSystem\DifferentCoordSystem\z20_par.hyd");
+
+                TestHelper.AssertAtLeastOneLogMessagesContains(() => importer.ImportItem(differentHydPath, model),
+                    string.Format(Resources.WaterQualityModel_ImportHydroData_The_coordinate_system_of_the_model___0__has_been_set_to__1_,
+                        model.Name,
+                        epsgZ20Par));
+            }
         }
 
         [Test]
@@ -1612,25 +1598,25 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             var epsgAmersfoort = new OgrCoordinateSystemFactory().CreateFromEPSG(28992);
 
             //Initialize WAQ Model
-            var model = new WaterQualityModel();
-            Assert.AreNotEqual(model.CoordinateSystem, epsgAmersfoort);
+            using (var model = new WaterQualityModel())
+            {
+                Assert.AreNotEqual(model.CoordinateSystem, epsgAmersfoort);
 
-            //Import hyd file
-            var hydPath =
-                TestHelper.GetTestFilePath(
-                    @"WaterQualityDataFiles\ImportHydFileForCoordSystem\ImportHydFileEmptyCS\westernscheldt01.hyd");
-            Assert.IsTrue(File.Exists(hydPath));
-            var importer = new HydFileImporter();
-            var importedItem = importer.ImportItem(hydPath, model) as WaterQualityModel;
-            Assert.IsNotNull(importedItem);
+                //Import hyd file
+                var hydPath = TestHelper.GetTestFilePath(@"WaterQualityDataFiles\ImportHydFileForCoordSystem\ImportHydFileEmptyCS\westernscheldt01.hyd");
+                Assert.IsTrue(File.Exists(hydPath));
+                var importer = new HydFileImporter();
+                importer.ImportItem(hydPath, model);
 
-            //Assert that Coordinate System is now set to Amersfoort/RD
-            Assert.AreEqual(model.CoordinateSystem, epsgAmersfoort);
+                //Assert that Coordinate System is now set to Amersfoort/RD
+                Assert.AreEqual(model.CoordinateSystem, epsgAmersfoort);
 
-            //Import a hyd file with an empty coordinate system
-            var hydPathEmptyCs = TestHelper.GetTestFilePath(
-                @"WaterQualityDataFiles\ImportHydFileForCoordSystem\ImportHydFileEmptyCS\FlowFM.hyd");
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => importer.ImportItem(hydPathEmptyCs, model), string.Format(Resources.WaterQualityModel_ImportHydroData_The_coordinate_system_of_the_model___0__has_been_set_to__1_, model.Name, "<empty>"));
+                //Import a hyd file with an empty coordinate system
+                var hydPathEmptyCs = TestHelper.GetTestFilePath(@"WaterQualityDataFiles\ImportHydFileForCoordSystem\ImportHydFileEmptyCS\FlowFM.hyd");
+                TestHelper.AssertAtLeastOneLogMessagesContains(() => importer.ImportItem(hydPathEmptyCs, model),
+                    string.Format(Resources.WaterQualityModel_ImportHydroData_The_coordinate_system_of_the_model___0__has_been_set_to__1_,
+                        model.Name, "<empty>"));
+            }
         }
 
         [Test]
@@ -1640,24 +1626,23 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             var epsgAmersfoort = new OgrCoordinateSystemFactory().CreateFromEPSG(28992);
 
             //Initialize WAQ Model
-            var model = new WaterQualityModel();
-            Assert.AreNotEqual(model.CoordinateSystem, epsgAmersfoort);
+            using (var model = new WaterQualityModel())
+            {
+                Assert.AreNotEqual(model.CoordinateSystem, epsgAmersfoort);
 
-            //Import hyd file
-            var hydPath =
-                TestHelper.GetTestFilePath(
-                    @"WaterQualityDataFiles\ImportHydFileForCoordSystem\DefaultCoordSystem\westernscheldt01.hyd");
-            Assert.IsTrue(File.Exists(hydPath));
-            var importer = new HydFileImporter();
-            var importedItem = importer.ImportItem(hydPath, model) as WaterQualityModel;
-            Assert.IsNotNull(importedItem);
+                //Import hyd file
+                var hydPath = TestHelper.GetTestFilePath(@"WaterQualityDataFiles\ImportHydFileForCoordSystem\DefaultCoordSystem\westernscheldt01.hyd");
+                Assert.IsTrue(File.Exists(hydPath));
+                var importer = new HydFileImporter();
+                importer.ImportItem(hydPath, model);
 
-            //Assert that Coordinate System is now set to Amersfoort/RD
-            Assert.AreEqual(model.CoordinateSystem, epsgAmersfoort);
+                //Assert that Coordinate System is now set to Amersfoort/RD
+                Assert.AreEqual(model.CoordinateSystem, epsgAmersfoort);
 
-            //Import a hyd file with the same coordinate system, assert that there is only 1 message thrown which is from the output timers.
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => importer.ImportItem(hydPath, model), "Output timers");
-            TestHelper.AssertLogMessagesCount(() => importer.ImportItem(hydPath, model), 1);
+                //Import a hyd file with the same coordinate system, assert that there is only 1 message thrown which is from the output timers.
+                TestHelper.AssertAtLeastOneLogMessagesContains(() => importer.ImportItem(hydPath, model), "Output timers");
+                TestHelper.AssertLogMessagesCount(() => importer.ImportItem(hydPath, model), 1);
+            }
         }
 
         [Test]
@@ -1668,20 +1653,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         [TestCase("salinity", false)]
         public void Test_IsSegmentFunction_ReturnsExpected(string functionName, bool expected)
         {
-            var model = new WaterQualityModel();
-            Assert.IsNotNull(model);
+            using (var model = new WaterQualityModel())
+            {
+                //Import hyd file
+                var hydPath = TestHelper.GetTestFilePath(@"Zwolle\sobek.hyd");
+                Assert.IsTrue(File.Exists(hydPath));
+                var importer = new HydFileImporter();
+                importer.ImportItem(hydPath, model);
 
-            //Import hyd file
-            var hydPath =
-                TestHelper.GetTestFilePath(@"Zwolle\sobek.hyd");
-            Assert.IsTrue(File.Exists(hydPath));
-            var importer = new HydFileImporter();
-            var importedItem = importer.ImportItem(hydPath, model) as WaterQualityModel;
-            Assert.IsNotNull(importedItem);
-
-            Assert.IsNotNull(model.HydroData);
-
-            Assert.AreEqual(expected, model.HasDataInHydroDynamics(functionName));
+                Assert.IsNotNull(model.HydroData);
+                Assert.AreEqual(expected, model.HasDataInHydroDynamics(functionName));
+            }
         }
 
         [Test]
@@ -1693,27 +1675,29 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 
             //Import the second model on top of waqmodel.
             var importer = new HydFileImporter();
-            var waqModel = importer.ImportItem(testFilePath) as WaterQualityModel;
-            Assert.IsNotNull(waqModel);
+            using (var waqModel = importer.ImportItem(testFilePath) as WaterQualityModel)
+            {
+                Assert.IsNotNull(waqModel);
 
-            //Check filepaths
-            Assert.IsFalse(string.IsNullOrEmpty(waqModel.SurfacesRelativeFilePath));
-            Assert.IsFalse(string.IsNullOrEmpty(waqModel.VelocitiesFilePath));
-            Assert.IsFalse(string.IsNullOrEmpty(waqModel.WidthsFilePath));
-            Assert.IsFalse(string.IsNullOrEmpty(waqModel.ChezyCoefficientsFilePath));
+                //Check filepaths
+                Assert.IsFalse(string.IsNullOrEmpty(waqModel.SurfacesRelativeFilePath));
+                Assert.IsFalse(string.IsNullOrEmpty(waqModel.VelocitiesFilePath));
+                Assert.IsFalse(string.IsNullOrEmpty(waqModel.WidthsFilePath));
+                Assert.IsFalse(string.IsNullOrEmpty(waqModel.ChezyCoefficientsFilePath));
 
-            //Import the substances now.
-            var subsFilePath = TestHelper.GetTestFilePath(@"Zwolle\substances\02b_Oxygen_bod_sediment.sub");
-            subsFilePath = TestHelper.CreateLocalCopy(subsFilePath);
+                //Import the substances now.
+                var subsFilePath = TestHelper.GetTestFilePath(@"Zwolle\substances\02b_Oxygen_bod_sediment.sub");
+                subsFilePath = TestHelper.CreateLocalCopy(subsFilePath);
 
-            Assert.IsNotNull(waqModel.SubstanceProcessLibrary);
-            new SubFileImporter().Import(waqModel.SubstanceProcessLibrary, subsFilePath);
+                Assert.IsNotNull(waqModel.SubstanceProcessLibrary);
+                new SubFileImporter().Import(waqModel.SubstanceProcessLibrary, subsFilePath);
 
-            //Check the process has been imported as a segmnent file function
-            var chezyProcess = waqModel.ProcessCoefficients.FirstOrDefault(pc => pc.Name.ToLower().Equals("chezy"));
-            Assert.IsNotNull(chezyProcess);
-            
-            Assert.IsTrue( chezyProcess is FunctionFromHydroDynamics);
+                //Check the process has been imported as a segmnent file function
+                var chezyProcess = waqModel.ProcessCoefficients.FirstOrDefault(pc => pc.Name.ToLower().Equals("chezy"));
+                Assert.IsNotNull(chezyProcess);
+
+                Assert.IsTrue(chezyProcess is FunctionFromHydroDynamics);
+            }
         }
 
         #endregion
@@ -1726,49 +1710,45 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             Assert.IsTrue(File.Exists(zwolleFilePath));
 
             //Import hyd file
-            var westernschedlt =
-                TestHelper.GetTestFilePath(
-                    @"WaterQualityDataFiles\ImportHydFileForCoordSystem\DefaultCoordSystem\westernscheldt01.hyd");
+            var westernschedlt = TestHelper.GetTestFilePath(@"WaterQualityDataFiles\ImportHydFileForCoordSystem\DefaultCoordSystem\westernscheldt01.hyd");
             Assert.IsTrue(File.Exists(westernschedlt));
 
             var importer = new HydFileImporter();
-            var westernModel = importer.ImportItem(westernschedlt) as WaterQualityModel;
-            Assert.IsNotNull(westernModel);
-            Assert.IsTrue(string.IsNullOrEmpty(westernModel.ChezyCoefficientsFilePath));
+            using (var westernModel = importer.ImportItem(westernschedlt) as WaterQualityModel)
+            {
+                Assert.IsNotNull(westernModel);
+                Assert.IsTrue(string.IsNullOrEmpty(westernModel.ChezyCoefficientsFilePath));
 
-            //Import the substances now.
-            var subsFilePath = TestHelper.GetTestFilePath(@"Zwolle\substances\02b_Oxygen_bod_sediment.sub");
-            Assert.IsTrue(File.Exists(subsFilePath));
-            Assert.IsNotNull(westernModel.SubstanceProcessLibrary);
-            new SubFileImporter().Import(westernModel.SubstanceProcessLibrary, subsFilePath);
+                //Import the substances now.
+                var subsFilePath = TestHelper.GetTestFilePath(@"Zwolle\substances\02b_Oxygen_bod_sediment.sub");
+                Assert.IsTrue(File.Exists(subsFilePath));
+                Assert.IsNotNull(westernModel.SubstanceProcessLibrary);
+                new SubFileImporter().Import(westernModel.SubstanceProcessLibrary, subsFilePath);
 
-            //Check the process has been imported as a segmnent file function
-            var chezyProcess = westernModel.ProcessCoefficients.FirstOrDefault(pc => pc.Name.ToLower().Equals("chezy"));
-            Assert.IsNotNull(chezyProcess);
+                //Check the process has been imported as a segmnent file function
+                var chezyProcess = westernModel.ProcessCoefficients.FirstOrDefault(pc => pc.Name.ToLower().Equals("chezy"));
+                Assert.IsNotNull(chezyProcess);
 
-            //Make sure the chezyprocess IS NOT a segment file function or FromHydroDynamics
-            Assert.IsFalse(chezyProcess is SegmentFileFunction);
-            Assert.IsFalse(chezyProcess is FunctionFromHydroDynamics);
+                //Make sure the chezyprocess IS NOT a segment file function or FromHydroDynamics
+                Assert.IsFalse(chezyProcess is SegmentFileFunction);
+                Assert.IsFalse(chezyProcess is FunctionFromHydroDynamics);
 
-            //Import the second model on top of the previous one.
+                using (var zwolleModel = importer.ImportItem(zwolleFilePath) as WaterQualityModel)
+                {
+                    Assert.IsNotNull(zwolleModel);
+                    var expectedLogMessage = string.Format(Resources.WaterQualityModel_HandleNewHydroDynamicsFunctionDataSet_The_process_coefficient__0__has_been_updated_with_the_latest_Hydrodynamic_data_file_, "CHEZY");
+                    TestHelper.AssertAtLeastOneLogMessagesContains(() => westernModel.ImportHydroData(zwolleModel.HydroData), expectedLogMessage);
 
-            var zwolleModel = importer.ImportItem(zwolleFilePath) as WaterQualityModel;
-            Assert.IsNotNull(zwolleModel);
-            var expectedLogMessage =
-                string.Format(
-                    Resources
-                        .WaterQualityModel_HandleNewHydroDynamicsFunctionDataSet_The_process_coefficient__0__has_been_updated_with_the_latest_Hydrodynamic_data_file_,
-                    "CHEZY");
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => westernModel.ImportHydroData(zwolleModel.HydroData), expectedLogMessage);
+                    //Check filepaths, it has been updated.
+                    Assert.IsFalse(string.IsNullOrEmpty(westernModel.ChezyCoefficientsFilePath));
 
-            //Check filepaths, it has been updated.
-            Assert.IsFalse(string.IsNullOrEmpty(westernModel.ChezyCoefficientsFilePath));
+                    //Check the process has been updated as a 'FunctionFromHydroDynamics' file function
+                    chezyProcess = westernModel.ProcessCoefficients.FirstOrDefault(pc => pc.Name.ToLower().Equals("chezy"));
+                    Assert.IsNotNull(chezyProcess);
 
-            //Check the process has been updated as a 'FunctionFromHydroDynamics' file function
-            chezyProcess = westernModel.ProcessCoefficients.FirstOrDefault(pc => pc.Name.ToLower().Equals("chezy"));
-            Assert.IsNotNull(chezyProcess);
-
-            Assert.IsTrue(chezyProcess is FunctionFromHydroDynamics);
+                    Assert.IsTrue(chezyProcess is FunctionFromHydroDynamics);
+                }
+            }
         }
 
         [Test]
