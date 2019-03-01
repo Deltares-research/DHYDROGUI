@@ -35,6 +35,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using GeoAPI.Extensions.Feature;
 using ObservationCrossSection2D = DelftTools.Hydro.ObservationCrossSection2D;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
@@ -1830,31 +1831,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        public void GivenAPumpFeature_WhenGettingFeatureCategory_ThenTheCorrectStringIsReturned()
+        [TestCase(typeof(Pump), "pumps")]
+        [TestCase(typeof(Feature), null)]
+        public void GivenAFeature_WhenGettingFeatureCategory_ThenTheCorrectStringOrNullIsReturned(Type type, string expectedString)
         {
             // Given
-            var feature = new Pump("myPump");
+            var feature = (IFeature)Activator.CreateInstance(type, false);
             var model = new WaterFlowFMModel();
 
             // When
             var returnedString = model.GetFeatureCategory(feature);
 
             // Then
-            Assert.That(returnedString, Is.EqualTo("pumps"));
-        }
-
-        [Test]
-        public void GivenAnEmptyFeature_WhenGettingFeatureCategory_ThenNullIsReturned()
-        {
-            // Given
-            var feature = new Feature();
-            var model = new WaterFlowFMModel();
-
-            // When
-            var returnedString = model.GetFeatureCategory(feature);
-
-            // Then
-            Assert.That(returnedString, Is.EqualTo(null));
+            Assert.That(returnedString, Is.EqualTo(expectedString));
         }
 
         [Test]
