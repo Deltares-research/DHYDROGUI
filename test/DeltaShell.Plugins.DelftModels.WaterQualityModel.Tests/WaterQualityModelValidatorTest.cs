@@ -1000,29 +1000,33 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             Assert.IsTrue(File.Exists(modelFilePath));
 
             var importer = new HydFileImporter();
-            var waqModel = importer.ImportItem(modelFilePath) as WaterQualityModel;
-            Assert.IsNotNull(waqModel);
+            using (var waqModel = importer.ImportItem(modelFilePath) as WaterQualityModel)
+            {
+                Assert.IsNotNull(waqModel);
 
-            var subsFilePath = TestHelper.GetTestFilePath(@"Zwolle\substances\02b_Oxygen_bod_sediment.sub");
-            Assert.IsTrue(File.Exists(subsFilePath));
-            new SubFileImporter().Import(waqModel.SubstanceProcessLibrary, subsFilePath);
-            Assert.IsNotNull(waqModel.SubstanceProcessLibrary);
-            Assert.IsTrue(waqModel.SubstanceProcessLibrary.ActiveSubstances.Any());
+                var subsFilePath = TestHelper.GetTestFilePath(@"Zwolle\substances\02b_Oxygen_bod_sediment.sub");
+                Assert.IsTrue(File.Exists(subsFilePath));
+                new SubFileImporter().Import(waqModel.SubstanceProcessLibrary, subsFilePath);
+                Assert.IsNotNull(waqModel.SubstanceProcessLibrary);
+                Assert.IsTrue(waqModel.SubstanceProcessLibrary.ActiveSubstances.Any());
 
-            #endregion
-            //Calling private method just to check this return.
-            var validationResult = TypeUtils.CallPrivateStaticMethod(typeof(WaterQualityModelValidator), "ValidateProcessCoefficients",
+                #endregion
+
+                //Calling private method just to check this return.
+                var validationResult = TypeUtils.CallPrivateStaticMethod(typeof(WaterQualityModelValidator),
+                    "ValidateProcessCoefficients",
                     waqModel.SubstanceProcessLibrary,
                     waqModel.ProcessCoefficients,
                     new List<WaqProcessValidationRule>()
                 ) as IEnumerable<ValidationIssue>;
 
-            Assert.IsNotNull(validationResult);
-            var issues = validationResult.ToList();
-            Assert.IsTrue(issues.Any());
+                Assert.IsNotNull(validationResult);
+                var issues = validationResult.ToList();
+                Assert.IsTrue(issues.Any());
 
-            var expectedMssg = string.Format(Resources.WaterQualityModelValidator_ValidateProcessCoefficients_No_process_coefficient_rules_have_been_loaded__Therefore_they_cannot_be_validated_);
-            Assert.IsTrue(issues.Any(iss => iss.Severity == ValidationSeverity.Warning && iss.Message.Contains(expectedMssg)));
+                var expectedMssg = string.Format(Resources.WaterQualityModelValidator_ValidateProcessCoefficients_No_process_coefficient_rules_have_been_loaded__Therefore_they_cannot_be_validated_);
+                Assert.IsTrue(issues.Any(iss => iss.Severity == ValidationSeverity.Warning && iss.Message.Contains(expectedMssg)));
+            }
         }
 
         [Test]
@@ -1036,36 +1040,39 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             Assert.IsTrue(File.Exists(modelFilePath));
 
             var importer = new HydFileImporter();
-            var waqModel = importer.ImportItem(modelFilePath) as WaterQualityModel;
-            Assert.IsNotNull(waqModel);
+            using (var waqModel = importer.ImportItem(modelFilePath) as WaterQualityModel)
+            {
+                Assert.IsNotNull(waqModel);
 
-            var subsFilePath = TestHelper.GetTestFilePath(@"Zwolle\substances\02b_Oxygen_bod_sediment.sub");
-            Assert.IsTrue(File.Exists(subsFilePath));
-            new SubFileImporter().Import(waqModel.SubstanceProcessLibrary, subsFilePath);
-            Assert.IsNotNull(waqModel.SubstanceProcessLibrary);
-            Assert.IsTrue(waqModel.SubstanceProcessLibrary.ActiveSubstances.Any());
+                var subsFilePath = TestHelper.GetTestFilePath(@"Zwolle\substances\02b_Oxygen_bod_sediment.sub");
+                Assert.IsTrue(File.Exists(subsFilePath));
+                new SubFileImporter().Import(waqModel.SubstanceProcessLibrary, subsFilePath);
+                Assert.IsNotNull(waqModel.SubstanceProcessLibrary);
+                Assert.IsTrue(waqModel.SubstanceProcessLibrary.ActiveSubstances.Any());
 
-            #endregion
+                #endregion
 
-            //We know that the parameter swoxydem has a rule and is contained in the library
-            //for the test data we are using. So let's remove it for this test.
-            var swoxydem = "swoxydem";
-            var swoxyDemParam = waqModel.ProcessCoefficients.FirstOrDefault(pc => pc.Name.ToLower().Equals(swoxydem));
-            Assert.IsNotNull(swoxyDemParam);
+                //We know that the parameter swoxydem has a rule and is contained in the library
+                //for the test data we are using. So let's remove it for this test.
+                var swoxydem = "swoxydem";
+                var swoxyDemParam = waqModel.ProcessCoefficients.FirstOrDefault(pc => pc.Name.ToLower().Equals(swoxydem));
+                Assert.IsNotNull(swoxyDemParam);
 
-            //Calling private method just to check this return.
-            var validationResult = TypeUtils.CallPrivateStaticMethod(typeof(WaterQualityModelValidator), "ValidateProcessCoefficients",
-                new SubstanceProcessLibrary(),
-                waqModel.ProcessCoefficients,
-                waqModel.WaqProcessesRules
-            ) as IEnumerable<ValidationIssue>;
+                //Calling private method just to check this return.
+                var validationResult = TypeUtils.CallPrivateStaticMethod(typeof(WaterQualityModelValidator),
+                    "ValidateProcessCoefficients",
+                    new SubstanceProcessLibrary(),
+                    waqModel.ProcessCoefficients,
+                    waqModel.WaqProcessesRules
+                ) as IEnumerable<ValidationIssue>;
 
-            Assert.IsNotNull(validationResult);
-            var issues = validationResult.ToList();
-            Assert.IsTrue(issues.Any());
+                Assert.IsNotNull(validationResult);
+                var issues = validationResult.ToList();
+                Assert.IsTrue(issues.Any());
 
-            var expectedMssg = string.Format(Resources.WaterQualityModelValidator_ValidateProcessCoefficients_The_Substance_library_does_not_contain_the_given_parameter__0__, swoxyDemParam.Name);
-            Assert.IsTrue(issues.Any(iss => iss.Severity == ValidationSeverity.Warning && iss.Message.Contains(expectedMssg)));
+                var expectedMssg = string.Format(Resources.WaterQualityModelValidator_ValidateProcessCoefficients_The_Substance_library_does_not_contain_the_given_parameter__0__, swoxyDemParam.Name);
+                Assert.IsTrue(issues.Any(iss => iss.Severity == ValidationSeverity.Warning && iss.Message.Contains(expectedMssg)));
+            }
         }
 
         [Test]
@@ -1079,47 +1086,50 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             Assert.IsTrue(File.Exists(modelFilePath));
 
             var importer = new HydFileImporter();
-            var waqModel = importer.ImportItem(modelFilePath) as WaterQualityModel;
-            Assert.IsNotNull(waqModel);
+            using (var waqModel = importer.ImportItem(modelFilePath) as WaterQualityModel)
+            {
+                Assert.IsNotNull(waqModel);
 
-            var subsFilePath = TestHelper.GetTestFilePath(@"Zwolle\substances\02b_Oxygen_bod_sediment.sub");
-            Assert.IsTrue(File.Exists(subsFilePath));
-            new SubFileImporter().Import(waqModel.SubstanceProcessLibrary, subsFilePath);
-            Assert.IsNotNull(waqModel.SubstanceProcessLibrary);
-            Assert.IsTrue(waqModel.SubstanceProcessLibrary.ActiveSubstances.Any());
-            #endregion
+                var subsFilePath = TestHelper.GetTestFilePath(@"Zwolle\substances\02b_Oxygen_bod_sediment.sub");
+                Assert.IsTrue(File.Exists(subsFilePath));
+                new SubFileImporter().Import(waqModel.SubstanceProcessLibrary, subsFilePath);
+                Assert.IsNotNull(waqModel.SubstanceProcessLibrary);
+                Assert.IsTrue(waqModel.SubstanceProcessLibrary.ActiveSubstances.Any());
 
-            //Get one of the parameters
-            var swoxydem = "swoxydem";
-            var swoxyDemParam = waqModel.ProcessCoefficients.FirstOrDefault(pc => pc.Name.ToLower().Equals(swoxydem));
-            Assert.IsNotNull(swoxyDemParam);
-            var invalidValue = 3;
+                #endregion
 
-            var validator = new WaterQualityModelValidator();
-            var report = validator.Validate(waqModel);
-            var categoryName = "Process coefficients";
-            var subReport = report.SubReports.FirstOrDefault(sr => sr.Category == categoryName);
+                //Get one of the parameters
+                var swoxydem = "swoxydem";
+                var swoxyDemParam = waqModel.ProcessCoefficients.FirstOrDefault(pc => pc.Name.ToLower().Equals(swoxydem));
+                Assert.IsNotNull(swoxyDemParam);
+                var invalidValue = 3;
 
-            Assert.IsNotNull(subReport);
-            Assert.IsFalse(subReport.Issues.Any());
+                var validator = new WaterQualityModelValidator();
+                var report = validator.Validate(waqModel);
+                var categoryName = "Process coefficients";
+                var subReport = report.SubReports.FirstOrDefault(sr => sr.Category == categoryName);
 
-            var message = Resources.WaqValidationRulesExtension_GetWaqProcessValidationRuleAsString_Process_coefficient__0___value__1____2__3__;
-            message = message.Replace(".", string.Empty); //small trick.
-            var expectedMssg = string.Format(message, swoxyDemParam.Name, invalidValue, string.Empty, string.Empty);
-            Assert.IsFalse( subReport.Issues.Any( iss => iss.Severity == ValidationSeverity.Warning && iss.Message.Contains(expectedMssg)));
+                Assert.IsNotNull(subReport);
+                Assert.IsFalse(subReport.Issues.Any());
 
-            //Modify the parameter for which we know the validation will fail, let´s use:
-            //SWOXYDEM,0,2,int,
-            if (swoxyDemParam.Components != null && swoxyDemParam.Components.Any())
-                swoxyDemParam.Components[0].DefaultValue = invalidValue;
+                var message = Resources .WaqValidationRulesExtension_GetWaqProcessValidationRuleAsString_Process_coefficient__0___value__1____2__3__;
+                message = message.Replace(".", string.Empty); //small trick.
+                var expectedMssg = string.Format(message, swoxyDemParam.Name, invalidValue, string.Empty, string.Empty);
+                Assert.IsFalse(subReport.Issues.Any(iss => iss.Severity == ValidationSeverity.Warning && iss.Message.Contains(expectedMssg)));
 
-            report = validator.Validate(waqModel);
-            subReport = report.SubReports.FirstOrDefault(sr => sr.Category == categoryName);
+                //Modify the parameter for which we know the validation will fail, let´s use:
+                //SWOXYDEM,0,2,int,
+                if (swoxyDemParam.Components != null && swoxyDemParam.Components.Any())
+                    swoxyDemParam.Components[0].DefaultValue = invalidValue;
 
-            Assert.IsNotNull(subReport);
-            Assert.IsTrue(subReport.Issues.Any());
-            //The message is now given.
-            Assert.IsTrue(subReport.Issues.Any(iss => iss.Severity == ValidationSeverity.Warning && iss.Message.Contains(expectedMssg)));
+                report = validator.Validate(waqModel);
+                subReport = report.SubReports.FirstOrDefault(sr => sr.Category == categoryName);
+
+                Assert.IsNotNull(subReport);
+                Assert.IsTrue(subReport.Issues.Any());
+                //The message is now given.
+                Assert.IsTrue(subReport.Issues.Any(iss => iss.Severity == ValidationSeverity.Warning && iss.Message.Contains(expectedMssg)));
+            }
         }
 
         #endregion
