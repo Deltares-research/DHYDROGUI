@@ -333,7 +333,7 @@ namespace Sobek.IntegrationTests
                 //Action<Form> formShownAction = delegate
                 //{
                 LogHelper.ConfigureLogging(Level.Debug);
-                    TestHelper.AssertIsFasterThan(6700, () =>
+                    TestHelper.AssertIsFasterThan(6800, () =>
                                                             {
                                                                 gui.Application.OpenProject(
                                                                     tempFileName);
