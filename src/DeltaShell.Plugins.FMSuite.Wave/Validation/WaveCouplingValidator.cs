@@ -45,8 +45,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
         {
             if (model.StartTime < model.ModelDefinition.ModelReferenceDateTime)
             {
+                var waveValidationShortcut = new WaveValidationIssueToWaveSettingsViewShortcut
+                {
+                    WaveModel = model,
+                    TabName = "General"
+                };
                 yield return new ValidationIssue("Coupling", ValidationSeverity.Error,
-                    Resources.WaveTimePointValidator_Validate_Model_start_time_precedes_reference_time, model);
+                    Resources.WaveTimePointValidator_Validate_Model_start_time_precedes_reference_time, waveValidationShortcut);
             }
         }
 

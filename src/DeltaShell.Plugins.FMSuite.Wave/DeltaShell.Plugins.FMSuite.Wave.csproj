@@ -142,6 +142,7 @@
     <Compile Include="Validation\WaveDomainValidator.cs" />
     <Compile Include="Validation\WaveModelValidator.cs" />
     <Compile Include="Validation\WaveTimePointValidator.cs" />
+    <Compile Include="Validation\WaveValidationIssueToWaveSettingsViewShortcut.cs" />
     <Compile Include="WaveBoundaryConditionFactory.cs" />
     <Compile Include="WaveBoundarySpectralData.cs" />
     <Compile Include="WaveDataAccessListener.cs" />

@@ -12,7 +12,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
     public class WaveCouplingValidatorTest
     {
         [Test]
-        public void GivenWaveModelCoupledToFlowAndReferenceTimePrecedingStartTime_WhenValidatingCoupling_ThenValidationErrorIsReturned()
+        public void GivenWaveModelCoupledToFlowAndReferenceTimePrecedingStartTime_WhenValidatingCoupling_ThenValidationErrorIsReturnedWithExpectedViewData()
         {
             // Given
             var waveModel = new WaveModel
@@ -26,7 +26,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             var validationReport = WaveCouplingValidator.Validate(waveModel);
 
             // Then
-            ContainsValidationErrorWithMessage(validationReport, Resources.WaveTimePointValidator_Validate_Model_start_time_precedes_reference_time);
+            var expectedMessage = Resources.WaveTimePointValidator_Validate_Model_start_time_precedes_reference_time;
+            var validationError = validationReport.AllErrors.FirstOrDefault(issue => issue.Message == expectedMessage);
+            Assert.IsNotNull(validationError);
+
+            var waveValidationShortcut = validationError.ViewData as WaveValidationIssueToWaveSettingsViewShortcut;
+            Assert.IsNotNull(waveValidationShortcut);
+            Assert.That(waveValidationShortcut.WaveModel, Is.EqualTo(waveModel));
+            Assert.That(waveValidationShortcut.TabName, Is.EqualTo("General"));
         }
 
         [TestCase(false, "anyPath")]

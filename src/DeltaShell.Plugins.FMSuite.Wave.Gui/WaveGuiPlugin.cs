@@ -220,6 +220,25 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                 }
             };
 
+            yield return new ViewInfo<WaveValidationIssueToWaveSettingsViewShortcut, WaveModel, WpfSettingsView>
+            {
+                Description = "Wave settings",
+                GetViewName = (v, o) => o.Name + _wavesSettings,
+                GetViewData = o => o.WaveModel,
+                OnActivateView = (v, o) =>
+                {
+                    var shortcut = o as WaveValidationIssueToWaveSettingsViewShortcut;
+                    if (shortcut == null) return;
+                    v.EnsureVisible(shortcut.TabName);
+                },
+                AfterCreate = (v, o) =>
+                {
+                    //Set the properties.
+                    v.SettingsCategories = WaveSettingsHelper.GetWpfGuiCategories(o.WaveModel, Gui);
+                    v.GetChangedPropertyName = (sender, propertyName) => (sender as WaveModelProperty)?.PropertyDefinition.FilePropertyName;
+                }
+            };
+
             yield return new ViewInfo<WaveModel, ValidationView>
             {
                 Description = "Validation Report",
