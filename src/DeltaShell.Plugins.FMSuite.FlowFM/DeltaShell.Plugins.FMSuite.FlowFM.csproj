@@ -224,6 +224,7 @@
     <Compile Include="IO\WaterFlowFMModelHydroAreaExtensions.cs" />
     <Compile Include="ISedimentModelData.cs" />
     <Compile Include="IWaterFlowFMModel.cs" />
+    <Compile Include="KnownFeatureCategories.cs" />
     <Compile Include="Layers\FMOutputSnappedFeaturesGroupLayerData.cs" />
     <Compile Include="Layers\FMSnappedFeaturesGroupLayerData.cs" />
     <Compile Include="ModelDefinition\HeatFluxModel.cs" />

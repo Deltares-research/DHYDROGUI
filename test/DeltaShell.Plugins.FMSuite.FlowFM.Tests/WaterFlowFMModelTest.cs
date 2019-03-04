@@ -1814,9 +1814,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        [TestCase(typeof(SimpleWeirFormula), "weirs")]
-        [TestCase(typeof(GatedWeirFormula), "gates")]
-        [TestCase(typeof(GeneralStructureWeirFormula),"generalstructures")]
+        [TestCase(typeof(SimpleWeirFormula), KnownFeatureCategories.Weirs)]
+        [TestCase(typeof(GatedWeirFormula), KnownFeatureCategories.Gates)]
+        [TestCase(typeof(GeneralStructureWeirFormula),KnownFeatureCategories.GeneralStructures)]
         public void GivenAWeirFeature_WhenGettingFeatureCategory_ThenTheCorrectStringIsReturned(Type weirType, string expectedString)
         {
             // Given
@@ -1827,11 +1827,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var returnedString = model.GetFeatureCategory(feature);
 
             // Then
-            Assert.That(expectedString, Is.EqualTo(returnedString));
+            Assert.That(returnedString, Is.EqualTo(expectedString));
         }
 
         [Test]
-        [TestCase(typeof(Pump), "pumps")]
+        [TestCase(typeof(Pump), KnownFeatureCategories.Pumps)]
         [TestCase(typeof(Feature), null)]
         public void GivenAFeature_WhenGettingFeatureCategory_ThenTheCorrectStringOrNullIsReturned(Type type, string expectedString)
         {
@@ -1858,7 +1858,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var returnedString = model.GetFeatureCategory(feature);
 
             // Then
-            Assert.That(returnedString, Is.EqualTo("observations"));
+            Assert.That(returnedString, Is.EqualTo(KnownFeatureCategories.Observations));
         }
 
         [Test]
@@ -1873,7 +1873,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var returnedString = model.GetFeatureCategory(feature);
 
             // Then
-            Assert.That(returnedString, Is.EqualTo("crosssections"));
+            Assert.That(returnedString, Is.EqualTo(KnownFeatureCategories.CrossSections));
         }
     }
 }

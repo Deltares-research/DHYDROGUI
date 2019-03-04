@@ -2699,20 +2699,31 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         public virtual string GetFeatureCategory(IFeature feature)
         {
             if (feature is IPump)
-                return "pumps";
-            if (feature is IWeir weir1 && weir1.WeirFormula.GetType() == typeof(GeneralStructureWeirFormula))
-                return "generalstructures";
-            if (feature is IWeir weir2 && weir2.WeirFormula.GetType() == typeof(GatedWeirFormula))
-                return "gates";
-            if (feature is IWeir) return "weirs";
+            {
+                return KnownFeatureCategories.Pumps;
+            }
+
+            if (feature is IWeir weir)
+            {
+                var weirFormula = weir.WeirFormula;
+                if (weirFormula is GeneralStructureWeirFormula)
+                {
+                    return KnownFeatureCategories.GeneralStructures;
+                }
+                if (weirFormula is GatedWeirFormula)
+                {
+                    return KnownFeatureCategories.Gates;
+                }
+                return KnownFeatureCategories.Weirs;
+            }
 
             if (Area.ObservationPoints.Contains(feature))
             {
-                return "observations";
+                return KnownFeatureCategories.Observations;
             }
             if (Area.ObservationCrossSections.Contains(feature))
             {
-                return "crosssections";
+                return KnownFeatureCategories.CrossSections;
             }
 
             return null;
