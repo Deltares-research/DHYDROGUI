@@ -932,7 +932,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
             store.DisableCaching = false;
 
             // should be much faster with caching -> gets better with more values in .nc file
-            TestHelper.AssertIsFasterThan(1000, () =>
+            TestHelper.AssertIsFasterThan(2000, () =>
             {
                 for (int i = 0; i < getValuesCount; i++)
                 {
