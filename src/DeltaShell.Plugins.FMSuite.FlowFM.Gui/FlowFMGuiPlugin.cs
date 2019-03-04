@@ -33,6 +33,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DeltaShell.Plugins.FMSuite.FlowFM.Validation;
 using DeltaShell.Plugins.SharpMapGis.Gui;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms.CoverageViews;
@@ -129,7 +130,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 }
             };
 
-            yield return new ViewInfo<FmModelTreeShortcut, WaterFlowFMModel ,WpfSettingsView>
+            yield return new ViewInfo<FmModelTreeShortcut, WaterFlowFMModel, WpfSettingsView>
             {
                 Description = "FM Settings",
                 AdditionalDataCheck = o => o.ShortCutType == ShortCutType.SettingsTab,
@@ -140,6 +141,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     var shortcut = o as FmModelTreeShortcut;
                     if (shortcut == null) return;
                     v.EnsureVisible(shortcut.Data);
+                },
+                AfterCreate = (v, o) =>
+                {
+                    //Set the properties.
+                    v.SettingsCategories = WaterFlowFmSettingsHelper.GetWpfGuiCategories(o.FlowFmModel, Gui);
+                    v.GetChangedPropertyName = FmSettingsPropertyChanged;
+                }
+            };
+
+            yield return new ViewInfo<FmValidationShortcut, WaterFlowFMModel, WpfSettingsView>
+            {
+                Description = "FM Settings",
+                GetViewData = o => o.FlowFmModel,
+                GetViewName = (v, o) => o.Name + _fmModelSettingsSuffix,
+                OnActivateView = (v, o) =>
+                {
+                    var shortcut = o as FmValidationShortcut;
+                    if (shortcut == null) return;
+                    v.EnsureVisible(shortcut.TabName);
                 },
                 AfterCreate = (v, o) =>
                 {

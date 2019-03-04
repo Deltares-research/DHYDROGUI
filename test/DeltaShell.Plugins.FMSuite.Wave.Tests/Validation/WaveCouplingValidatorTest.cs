@@ -30,7 +30,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             var validationError = validationReport.AllErrors.FirstOrDefault(issue => issue.Message == expectedMessage);
             Assert.IsNotNull(validationError);
 
-            var waveValidationShortcut = validationError.ViewData as WaveValidationIssueToWaveSettingsViewShortcut;
+            var waveValidationShortcut = validationError.ViewData as WaveValidationIssueShortcut;
             Assert.IsNotNull(waveValidationShortcut);
             Assert.That(waveValidationShortcut.WaveModel, Is.EqualTo(waveModel));
             Assert.That(waveValidationShortcut.TabName, Is.EqualTo("General"));

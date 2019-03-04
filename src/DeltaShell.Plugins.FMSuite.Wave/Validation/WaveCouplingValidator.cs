@@ -45,7 +45,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
         {
             if (model.StartTime < model.ModelDefinition.ModelReferenceDateTime)
             {
-                var waveValidationShortcut = new WaveValidationIssueToWaveSettingsViewShortcut
+                var waveValidationShortcut = new WaveValidationIssueShortcut
                 {
                     WaveModel = model,
                     TabName = "General"

@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Linq;
-
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Validation;
-
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Validation;
-
 using NUnit.Framework;
-
 using Rhino.Mocks;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
@@ -188,24 +184,29 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         }
 
         [Test]
-        public void ValidatingWaterFlowFMModelReferenceTimeGreaterThanStartTime()
+        public void GivenFmModelWithReferenceTimeGreaterThanStartTime_WhenValidatingTime_ThenValidationErrorIsReturnedWithExpectedViewData()
         {
+            // Given
             using (var model = CreateWaterFlowFMModelWithValidTimers())
             {
-                // arrange
                 model.ReferenceTime = new DateTime(2027, 8, 7);
                 model.StartTime = new DateTime(2017, 8, 7);
                 var validator = new WaterFlowFMModelTimersValidator();
 
-                // act
+                // When
                 var issues = validator.ValidateModelTimers(model, model.OutputTimeStep).ToArray();
 
-                // assert
-                Assert.AreEqual(2, issues.Length);
-                Assert.AreEqual("The calculation period must be positive.", issues[0].Message);
-                Assert.AreEqual(ValidationSeverity.Error, issues[0].Severity);
-                Assert.AreEqual("Model start time precedes reference time", issues[1].Message);
-                Assert.AreEqual(ValidationSeverity.Error, issues[1].Severity);
+                // Then
+                Assert.That(issues.Length, Is.EqualTo(2));
+                Assert.That(issues[0].Message, Is.EqualTo("The calculation period must be positive."));
+                Assert.That(issues[0].Severity, Is.EqualTo(ValidationSeverity.Error));
+                Assert.That(issues[1].Message, Is.EqualTo("Model start time precedes reference time"));
+                Assert.That(issues[1].Severity, Is.EqualTo(ValidationSeverity.Error));
+
+                var viewData = issues[1].ViewData as FmValidationShortcut;
+                Assert.IsNotNull(viewData);
+                Assert.That(viewData.FlowFmModel, Is.EqualTo(model));
+                Assert.That(viewData.TabName, Is.EqualTo("Time Frame"));
             }
         }
 

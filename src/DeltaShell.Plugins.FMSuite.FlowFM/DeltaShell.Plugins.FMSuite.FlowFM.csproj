@@ -257,6 +257,7 @@
     <Compile Include="Validation\Area\SourceAndSinkValidator.cs" />
     <Compile Include="Validation\Area\ThinDamValidator.cs" />
     <Compile Include="Validation\Area\WeirValidator.cs" />
+    <Compile Include="Validation\FmValidationShortcut.cs" />
     <Compile Include="Validation\VerticalProfileValidator.cs" />
     <Compile Include="Validation\FMStructuresValidator.cs" />
     <Compile Include="Validation\WaterFlowFMBoundaryConditionValidator.cs" />

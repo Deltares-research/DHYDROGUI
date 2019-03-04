@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Shell.Core.Workflow;
-using DelftTools.Utils.Collections;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 
@@ -43,7 +42,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             
             if (waterFlowFmModel.ReferenceTime > waterFlowFmModel.StartTime)
             {
-                yield return new ValidationIssue(timerCategory, ValidationSeverity.Error, "Model start time precedes reference time", model);
+                var validationShortcut = new FmValidationShortcut
+                {
+                    FlowFmModel = (WaterFlowFMModel) model,
+                    TabName = "Time Frame"
+                };
+                yield return new ValidationIssue(timerCategory, ValidationSeverity.Error, "Model start time precedes reference time", validationShortcut);
             }
 
             if (waterFlowFmModel.WriteRestart && waterFlowFmModel.SaveStateTimeStep.Ticks == 0)
