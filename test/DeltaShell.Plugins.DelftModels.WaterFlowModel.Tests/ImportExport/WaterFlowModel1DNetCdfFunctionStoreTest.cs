@@ -921,7 +921,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
 
             store.DisableCaching = true;
 
-            TestHelper.AssertIsFasterThan(4000, () =>
+            TestHelper.AssertIsFasterThan(4800, () =>
             {
                 for (int i = 0; i < getValuesCount; i++)
                 {
