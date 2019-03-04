@@ -5,10 +5,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSectio
 {
     public sealed class CrossSectionDefinitionFileWriter
     {
-        private readonly ICrossSectionDefinitionFileConverter converter;
+        private readonly CrossSectionDefinitionFileConverter converter;
         private readonly IniFileWriter writer;
 
-        public CrossSectionDefinitionFileWriter(ICrossSectionDefinitionFileConverter converter, IniFileWriter writer)
+        public CrossSectionDefinitionFileWriter(CrossSectionDefinitionFileConverter converter, IniFileWriter writer)
         {
             this.converter = converter;
             this.writer = writer;

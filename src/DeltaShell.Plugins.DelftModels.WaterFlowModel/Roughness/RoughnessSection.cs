@@ -85,7 +85,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness
         }
 
         [Aggregation]
-        public INetwork Network
+        public virtual INetwork Network
         {
             get { return network; }
             set

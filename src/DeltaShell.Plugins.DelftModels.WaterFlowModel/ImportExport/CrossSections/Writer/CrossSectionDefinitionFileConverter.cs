@@ -11,14 +11,14 @@ using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSections.Writer
 {
-    public class CrossSectionDefinitionFileConverter : ICrossSectionDefinitionFileConverter
+    public class CrossSectionDefinitionFileConverter
     {
         /// <summary>
         /// Converts a <see cref="WaterFlowModel1D"/> to a <see cref="DelftIniCategory"/>
         /// </summary>
         /// <param name="waterFlowModel1D"></param>
         /// <returns>a <see cref="DelftIniCategory"/>></returns>
-        public IEnumerable<DelftIniCategory> Convert(WaterFlowModel1D waterFlowModel1D)
+        public virtual IEnumerable<DelftIniCategory> Convert(WaterFlowModel1D waterFlowModel1D)
         {
             var categories = CreateCrossSectionDefinitionCategory();
             var crossSections = AddCrossSections(waterFlowModel1D);
@@ -38,7 +38,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSectio
                 var definitionRegion = definitionGeneratorCrossSectionDefinition.CreateDefinitionRegion(definition);
                 definitionRegion = DetermineCrossSectionType(waterFlowModel1D, crossSection, definitionRegion);
 
-                if (sharedCrossSections.Contains(definition))
+                if (sharedCrossSections.Any(cs=>cs.Name == definition.Name))
                 {
                     definitionRegion.AddProperty(DefinitionRegion.IsShared.Key,
                         1, DefinitionRegion.IsShared.Description);
