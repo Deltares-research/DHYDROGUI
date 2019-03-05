@@ -213,7 +213,7 @@ output,ObsFile,,,,MultipleEntriesFileName,,,,TRUE,,,,,,"Points file *.xyn with o
 output,CrsFile,,,,MultipleEntriesFileName,,,,TRUE,,,,,,Polyline file *_crs.pli defining observation cross sections
 output,HisFile,,,,FileName,,,,TRUE,,,,,,History output file *_his.nc in NetCDF format
 output,HisInterval,,,His output interval,DoubleArray,300,0,,TRUE,,,,,,"History output times, given as 'interval' 'start period' 'end period'"
-output,XLSInterval,,,XLS output interval,Interval,0,0,,FALSE,,,,,,Interval between XLS history, [Dd HH:MM:SS.ZZZ]
+output,XLSInterval,,,XLS output interval,Interval,0,0,,FALSE,,,,,,Interval between XLS history [Dd HH:MM:SS.ZZZ],
 output,MapFile,,,,FileName,,,,TRUE,,,,,,Map file output file *_map.nc in NetCDF format
 output,MapInterval,,,Map output interval,DoubleArray,1200,0,,TRUE,,WriteMapFile,,,,"Map file output times, given as 'interval' 'start period' 'end period'"
 output,RstInterval,,,Restart output interval,DoubleArray,86400,0,,TRUE,,,,,,"Restart file output times, given as 'interval' 'start period' 'end period'"
