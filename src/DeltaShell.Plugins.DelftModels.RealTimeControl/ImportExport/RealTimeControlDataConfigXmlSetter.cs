@@ -89,14 +89,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                 var correspondingElementName = RtcXmlTag.Delayed + input.Name;
                 var correspondingInputElement = elements.FirstOrDefault(e => e.id == correspondingElementName);
 
-                if (correspondingInputElement == null)
-                {
-                    logHandler.ReportErrorFormat(
-                        Resources.RealTimeControlDataConfigXmlSetter_SetTimeLagOnHydraulicRules_Cannot_find_input_with_element_ID___0___for_rule___1____Please_check_file____2___,
-                        correspondingElementName, hydraulicRule.Name, RealTimeControlXMLFiles.XmlData);
-
-                    continue;
-                }
+                if (correspondingInputElement == null) continue;
 
                 var timeLagFactor = correspondingInputElement.vectorLength;
                 var timeLagInSeconds = (int) Math.Round((timeLagFactor + 1) * modelTimeStep.TotalSeconds);
