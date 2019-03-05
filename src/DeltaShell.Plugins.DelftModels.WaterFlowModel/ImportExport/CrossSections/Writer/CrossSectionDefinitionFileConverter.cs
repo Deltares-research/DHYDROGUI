@@ -32,7 +32,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSectio
 
                 if (definitionGeneratorCrossSectionDefinition == null) continue;
 
-                string csDefinitionId = definition.Name;
+                var csDefinitionId = definition.Name;
                 if (processedCsDefinitions.Contains(csDefinitionId)) continue;
 
                 var definitionRegion = definitionGeneratorCrossSectionDefinition.CreateDefinitionRegion(definition);

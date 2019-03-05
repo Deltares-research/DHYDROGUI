@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Utils.Collections.Generic;
+using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSections.Writer;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness;
 using GeoAPI.Extensions.Networks;
@@ -15,90 +15,119 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Cross
     [TestFixture]
     public class CrossSectionDefinitionFileConverterTest
     {
-        private CrossSectionDefinitionFileConverter converter;
-        private WaterFlowModel1D mockedModel;
-        private HydroNetwork mockedNetwork;
-        private CrossSectionDefinitionProxy mockedCrossSectionDefinitionProxy;
-        private CrossSectionDefinitionYZ mockedCrossSectionDefinitionYz;
-        private CrossSectionSectionType mockedCrossSectionSectionType;
-        private CrossSectionSection mockedCrossSectionSection;
-        private RoughnessSection mockedRoughnessSection;
-        private ICrossSection mockedCrossSection1;
-        private ICrossSection mockedCrossSection2;
-        private INode mockedNode1;
-        private INode mockedNode2;
+        private CrossSectionSectionType crossSectionSectionType;
+        private const string CrossSectionName = "crossSection1";
 
         [SetUp]
         public void Setup()
         {
-            converter = new CrossSectionDefinitionFileConverter();
-            mockedCrossSection1 = MockRepository.GenerateMock<ICrossSection>();
-            mockedCrossSection2 = MockRepository.GenerateMock<ICrossSection>();
-            mockedNode1 = MockRepository.GenerateMock<INode>();
-            mockedNode2 = MockRepository.GenerateMock<INode>();
-            mockedModel = MockRepository.GeneratePartialMock<WaterFlowModel1D>();
-            mockedNetwork = MockRepository.GeneratePartialMock<HydroNetwork>();
-            mockedCrossSectionDefinitionYz = MockRepository.GeneratePartialMock<CrossSectionDefinitionYZ>();
-            mockedCrossSectionDefinitionProxy = MockRepository.GenerateMock<CrossSectionDefinitionProxy>(mockedCrossSectionDefinitionYz);
-            mockedCrossSectionSection = MockRepository.GeneratePartialMock<CrossSectionSection>();
-            mockedCrossSectionSectionType = MockRepository.GeneratePartialMock<CrossSectionSectionType>();
+            crossSectionSectionType = GetMockedCrossSectionSectionType();
+        }
+
+        private static CrossSectionSectionType GetMockedCrossSectionSectionType()
+        {
+            var crossSectionSectionType = MockRepository.GeneratePartialMock<CrossSectionSectionType>();
+            crossSectionSectionType.Expect(s => s.Name).Return("Main").Repeat.Any();
+            return crossSectionSectionType;
         }
 
         [Test]
         public void GivenWaterFlow1DModelWithSharedCrossSectionDefinitionAndChangedBackToLocalDefinition_WhenConvertingToCrossSectionDefinitionCategory_ThenIsSharedIsWrittenToProperty()
         {
             //Given
-            mockedCrossSectionSection.Expect(mcss => mcss.SectionType).Return(mockedCrossSectionSectionType);
-            mockedCrossSectionSection.Expect(mcss => mcss.MinY).Return(-1.0);
-            mockedCrossSectionSection.Expect(mcss => mcss.MaxY).Return(2.0);
-            mockedCrossSectionSection.Expect(mcss => mcss.SectionType).Return(mockedCrossSectionSectionType);
-
-            mockedCrossSectionDefinitionProxy.Expect(mcsdp => mcsdp.Sections).Return(new EventedList<CrossSectionSection>()
-                {
-                    mockedCrossSectionSection
-                });
-
-            mockedCrossSectionDefinitionYz.Expect(mcsdyz => mcsdyz.Name).Return("crossSection1").Repeat.Any();
-            mockedCrossSectionDefinitionProxy.Expect(mcsdp => mcsdp.Name).Return("crossSection1").Repeat.Any();
-            mockedCrossSectionDefinitionProxy.Expect(mcsdp => mcsdp.IsProxy).Return(true).Repeat.Any();
-            mockedCrossSectionDefinitionProxy.Expect(mcsdp => mcsdp.InnerDefinition).Return(mockedCrossSectionDefinitionYz).Repeat.Any();
-            
-            mockedCrossSection1.Expect(cs => cs.Branch).Return(new Branch()).Repeat.Any();
-            mockedCrossSection1.Expect(cs => cs.Chainage).Return(2.0).Repeat.Any();
-            mockedCrossSection1.Expect(cs => cs.Name).Return("crossSection1").Repeat.Any();
-            mockedCrossSection1.Expect(mcs1 => mcs1.Definition).Return(mockedCrossSectionDefinitionProxy).Repeat.Any();
-            mockedCrossSection1.Expect(mcsd => mcsd.ShareDefinitionAndChangeToProxy()).Repeat.Any();
-            mockedCrossSection1.Expect(mcsd => mcsd.UseSharedDefinition(mockedCrossSectionDefinitionProxy)).Repeat.Any();
-           
-            mockedCrossSection2.Expect(mcs2 => mcs2.UseSharedDefinition(mockedCrossSectionDefinitionProxy)).Repeat.Any();
-            mockedCrossSection2.Expect(mcs2 => mcs2.Definition).Return(mockedCrossSectionDefinitionProxy).Repeat.Any();
-
-            //set shared cross section back to local
-            mockedCrossSection1.Expect(mcs1 => mcs1.MakeDefinitionLocal()).Repeat.Any();
-
-            mockedNetwork.Nodes.Add(mockedNode1);
-            mockedNetwork.Nodes.Add(mockedNode2);
-            mockedNetwork.Expect(mcn => mcn.CrossSections)
-                .Return(new List<ICrossSection>() {mockedCrossSection1, mockedCrossSection2}).Repeat.Any();
-            mockedNetwork.Expect(mn => mn.SharedCrossSectionDefinitions)
-                .Return(new EventedList<ICrossSectionDefinition>() { mockedCrossSectionDefinitionProxy}).Repeat.Any();
-
-            mockedCrossSectionSectionType.Expect(mcsst => mcsst.Name).Return("Main").Repeat.Any();
-
-            mockedRoughnessSection = MockRepository.GeneratePartialMock<RoughnessSection>(mockedCrossSectionSectionType, mockedNetwork);
-
-            mockedModel.Expect(mm => mm.RoughnessSections)
-                .Return(new EventedList<RoughnessSection>() {mockedRoughnessSection}).Repeat.Any();
-            mockedModel.Expect(mm => mm.Network).Return(mockedNetwork).Repeat.Any();
+            var flowModel = GetMockedWaterFlowModel();
 
             //When
-            var categories = converter.Convert(mockedModel).ToList();
+            var converter = new CrossSectionDefinitionFileConverter();
+            var categories = converter.Convert(flowModel).ToArray();
 
             //Then
             var properties = categories.ElementAt(1).Properties;
             Assert.That(categories.Count, Is.EqualTo(2));
-            Assert.That(properties.Last().Name, Is.EqualTo("isShared"));
+            Assert.That(properties.Last().Name, Is.EqualTo(DefinitionRegion.IsShared.Key));
             Assert.That(properties.Last().Value, Is.EqualTo("1"));
+        }
+
+        private WaterFlowModel1D GetMockedWaterFlowModel()
+        {
+            var network = GetMockedHydroNetwork();
+            var roughnessSection = MockRepository.GeneratePartialMock<RoughnessSection>(crossSectionSectionType, network);
+
+            var flowModel = MockRepository.GeneratePartialMock<WaterFlowModel1D>();
+            flowModel.Expect(mm => mm.RoughnessSections).Return(new EventedList<RoughnessSection> {roughnessSection}).Repeat.Any();
+            flowModel.Expect(mm => mm.Network).Return(network).Repeat.Any();
+
+            return flowModel;
+        }
+
+        private HydroNetwork GetMockedHydroNetwork()
+        {
+            var crossSectionDefinitionYz = GetMockedCrossSectionDefinitionYz();
+            var crossSectionDefinitionProxy = GetMockedCrossSectionDefinitionProxy(crossSectionDefinitionYz);
+
+            var crossSection1 = GetCrossSectionOnBranchWithDefinition(crossSectionDefinitionProxy);
+            var crossSection2 = GetMockedCrossSectionWithDefinition(crossSectionDefinitionProxy);
+            var crossSections = new []{crossSection1, crossSection2};
+
+            var node1 = MockRepository.GenerateMock<INode>();
+            var node2 = MockRepository.GenerateMock<INode>();
+
+            var network = MockRepository.GeneratePartialMock<HydroNetwork>();
+            network.Nodes.Add(node1);
+            network.Nodes.Add(node2);
+
+            network.Expect(n => n.CrossSections).Return(crossSections).Repeat.Any();
+            network.Expect(n => n.SharedCrossSectionDefinitions).Return(new EventedList<ICrossSectionDefinition> { crossSectionDefinitionYz }).Repeat.Any();
+            return network;
+        }
+
+        private static CrossSectionDefinitionYZ GetMockedCrossSectionDefinitionYz()
+        {
+            var crossSectionDefinitionYz = MockRepository.GeneratePartialMock<CrossSectionDefinitionYZ>();
+            crossSectionDefinitionYz.Expect(csd => csd.Name).Return(CrossSectionName).Repeat.Any();
+
+            return crossSectionDefinitionYz;
+        }
+
+        private CrossSectionDefinitionProxy GetMockedCrossSectionDefinitionProxy(ICrossSectionDefinition innerDefinition)
+        {
+            var crossSectionSection = GetMockedCrossSectionSection();
+            var crossSectionDefinitionProxy = MockRepository.GenerateMock<CrossSectionDefinitionProxy>(innerDefinition);
+            
+            crossSectionDefinitionProxy.Expect(csd => csd.Sections).Return(new EventedList<CrossSectionSection>
+            {
+                crossSectionSection
+            });
+
+            crossSectionDefinitionProxy.Expect(csd => csd.Name).Return(CrossSectionName).Repeat.Any();
+            crossSectionDefinitionProxy.Expect(csd => csd.IsProxy).Return(true).Repeat.Any();
+            crossSectionDefinitionProxy.Expect(csd => csd.InnerDefinition).Return(innerDefinition).Repeat.Any();
+
+            return crossSectionDefinitionProxy;
+        }
+
+        private static ICrossSection GetCrossSectionOnBranchWithDefinition(ICrossSectionDefinition crossSectionDefinition)
+        {
+            var crossSection = MockRepository.GenerateMock<ICrossSection>();
+            crossSection.Expect(cs => cs.Branch).Return(new Branch()).Repeat.Any();
+            crossSection.Expect(cs => cs.Definition).Return(crossSectionDefinition).Repeat.Any();
+
+            return crossSection;
+        }
+
+        private static ICrossSection GetMockedCrossSectionWithDefinition(ICrossSectionDefinition crossSectionDefinition)
+        {
+            var crossSection = MockRepository.GenerateMock<ICrossSection>();
+            crossSection.Expect(cs => cs.Definition).Return(crossSectionDefinition).Repeat.Any();
+            return crossSection;
+        }
+
+        private CrossSectionSection GetMockedCrossSectionSection()
+        {
+            var crossSectionSection = MockRepository.GeneratePartialMock<CrossSectionSection>();
+            crossSectionSection.Expect(css => css.SectionType).Return(crossSectionSectionType);
+
+            return crossSectionSection;
         }
     }
 }
