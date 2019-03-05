@@ -59,12 +59,15 @@ namespace DelftTools.Hydro.CrossSections
             return names.Contains(value);
         }
 
-        [EditAction]
         private void SetCrossSectionName(string name)
         {
             base.Name = name;
+            SetDefinitionName();
+        }
 
-            //for practical reasons..sync definition name
+        [EditAction]
+        private void SetDefinitionName()
+        {
             if (Definition != null && !Definition.IsProxy)
             {
                 Definition.Name = Name;
