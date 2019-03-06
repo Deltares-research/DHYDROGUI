@@ -32,7 +32,7 @@ namespace DelftTools.Hydro.CrossSections
 
                 if (HydroNetwork != null)
                 {
-                    var nameAlreadyExists = CrossSectionNameExists(value);
+                    var nameAlreadyExists = HydroNetwork.IsEditing ? false : CrossSectionNameExists(value);
                     if (nameAlreadyExists)
                     {
                         Log.Error($"A cross section with name '{value}' already exists. Cross section name '{Name}' remains unchanged.");
