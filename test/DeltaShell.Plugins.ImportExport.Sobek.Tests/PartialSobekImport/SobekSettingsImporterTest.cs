@@ -1,4 +1,5 @@
-﻿using DelftTools.TestUtils;
+﻿using System;
+using DelftTools.TestUtils;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi;
 using DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter;
@@ -43,6 +44,28 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
             Assert.That(Equals(waterFlowModel1DModel.OutputSettings.GetEngineParameter(QuantityType.Discharge,ElementSet.Structures).AggregationOptions,AggregationOptions.Current));
             Assert.That(Equals(waterFlowModel1DModel.OutputSettings.GetEngineParameter(QuantityType.WaterlevelUp, ElementSet.Structures).AggregationOptions, AggregationOptions.Current));
             Assert.That(Equals(waterFlowModel1DModel.OutputSettings.GetEngineParameter(QuantityType.WaterlevelDown, ElementSet.Structures).AggregationOptions, AggregationOptions.Current));
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void GivenSobek2FileBase_WhenImporting_ThenSaveStateTimePropertiesAreAsExpected()
+        {
+            // Given
+            var pathToSobekNetwork = TestHelper.GetDataDir() + @"\301_00.lit\2\NETWORK.TP";
+            var waterFlowModel1D = new WaterFlowModel1D("water flow 1d");
+            var initialModelStopTime = waterFlowModel1D.StopTime;
+
+            // When
+            var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekNetwork, waterFlowModel1D, new IPartialSobekImporter[] { new SobekSettingsImporter() });
+            importer.Import();
+
+            // Then
+            Assert.That(waterFlowModel1D.StopTime, Is.Not.EqualTo(initialModelStopTime)); // Check that the importer actually changed the model stop time
+            Assert.That(waterFlowModel1D.SaveStateStartTime, Is.EqualTo(waterFlowModel1D.StopTime));
+            Assert.That(waterFlowModel1D.SaveStateStopTime, Is.EqualTo(waterFlowModel1D.StopTime));
+
+            var oneDayTimeSpan = new TimeSpan(1, 0, 0, 0);
+            Assert.That(waterFlowModel1D.SaveStateTimeStep, Is.EqualTo(oneDayTimeSpan));
         }
 
         [Test]

@@ -158,23 +158,25 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
         private void SetModelParameters()
         {
             // Simulation
+            var importedModelStopTime = sobekCaseSettings.StopTime;
             if (sobekCaseSettings.PeriodFromEvent)
             {
                 DateTime startTime;
                 DateTime stopTime;
                 SobekMeteoDataImporterHelper.ReadTimersFromMeteo(ReadMeasurementTimesFromBuiFile().ToList(),
                                                                  sobekCaseSettings.StartTime,
-                                                                 sobekCaseSettings.StopTime, out startTime,
+                                                                 importedModelStopTime, out startTime,
                                                                  out stopTime);
                 sobekCaseSettings.StartTime = startTime;
                 sobekCaseSettings.StopTime = stopTime;
             }
 
             waterFlowModel1D.StartTime = sobekCaseSettings.StartTime;
-            waterFlowModel1D.StopTime = sobekCaseSettings.StopTime;
+            waterFlowModel1D.StopTime = importedModelStopTime;
             waterFlowModel1D.TimeStep = sobekCaseSettings.TimeStep;
-            waterFlowModel1D.SaveStateStartTime = sobekCaseSettings.StopTime;
-            waterFlowModel1D.SaveStateStopTime = sobekCaseSettings.StopTime;
+            waterFlowModel1D.SaveStateStartTime = importedModelStopTime;
+            waterFlowModel1D.SaveStateStopTime = importedModelStopTime;
+            waterFlowModel1D.SaveStateTimeStep = new TimeSpan(1, 0, 0, 0); // Standard 1 day as time step, such that it is not too small.
 
             waterFlowModel1D.OutputTimeStep = sobekCaseSettings.OutPutTimeStep;
             waterFlowModel1D.OutputSettings.StructureOutputTimeStep = sobekCaseSettings.OutPutTimeStep;
