@@ -151,11 +151,10 @@ namespace DelftTools.Hydro.CrossSections
             crossSectionDefinition.Name = Name;
             Definition = crossSectionDefinition;
 
-            if (Region != null)
-            RenameCrossSection();
+            if (Region != null) RenameToUniqueNameInNetwork();
         }
 
-        private void RenameCrossSection()
+        private void RenameToUniqueNameInNetwork()
         {
             var uniqueName = HydroNetworkHelper.GetUniqueFeatureNameForCrossSectionRename(Region, this);
             Name = uniqueName;

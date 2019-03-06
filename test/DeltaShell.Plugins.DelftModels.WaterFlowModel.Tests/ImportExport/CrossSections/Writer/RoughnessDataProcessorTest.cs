@@ -28,7 +28,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Cross
             Name = RoughnessSectionName2
         };
 
-
         [Test]
         public void GivenCrossSectionWithOneSectionMatchingWithRoughnessSection_WhenAddRoughnessDataToDataModel_ThenRoughnessNamesAndPositionsAreAsExpected()
         {
