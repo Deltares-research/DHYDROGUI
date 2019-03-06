@@ -36,7 +36,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             if (feature is GroupableFeature2DPoint)
             {
-                //TODO: add temperature and tracers
                 yield return "water_level";
                 if (useSalinity)
                 {

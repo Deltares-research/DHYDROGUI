@@ -78,14 +78,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.That(quantities.Contains(KnownStructureProperties.GateOpeningWidth));
         }
 
-        private IWeir GetWeirStubWithWeirFormulaType<TWeirFormulaType>() 
-            where TWeirFormulaType : IWeirFormula, new()
-        {
-            var weir = mocks.Stub<IWeir>();
-            weir.WeirFormula = new TWeirFormulaType();
-            return weir;
-        }
-
         [TestCase(false, "water_level", "water_depth")]
         [TestCase(true, "water_level", "water_depth", "salinity")]
         public void GivenGroupableFeature2DPoint_WhenGettingQuantitiesForGroupableFeature2DPoint_ThenExpectedQuantitiesAreReturned
@@ -121,6 +113,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.That(quantities.Contains("water_depth"));
             Assert.That(quantities.Contains("discharge"));
             Assert.That(quantities.Contains("velocity"));
+        }
+
+        private IWeir GetWeirStubWithWeirFormulaType<TWeirFormulaType>() 
+            where TWeirFormulaType : IWeirFormula, new()
+        {
+            var weir = mocks.Stub<IWeir>();
+            weir.WeirFormula = new TWeirFormulaType();
+            return weir;
         }
     }
 }
