@@ -173,6 +173,9 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             waterFlowModel1D.StartTime = sobekCaseSettings.StartTime;
             waterFlowModel1D.StopTime = sobekCaseSettings.StopTime;
             waterFlowModel1D.TimeStep = sobekCaseSettings.TimeStep;
+            waterFlowModel1D.SaveStateStartTime = sobekCaseSettings.StopTime;
+            waterFlowModel1D.SaveStateStopTime = sobekCaseSettings.StopTime;
+
             waterFlowModel1D.OutputTimeStep = sobekCaseSettings.OutPutTimeStep;
             waterFlowModel1D.OutputSettings.StructureOutputTimeStep = sobekCaseSettings.OutPutTimeStep;
 
