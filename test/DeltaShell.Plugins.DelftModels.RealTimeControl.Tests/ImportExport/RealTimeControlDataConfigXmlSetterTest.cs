@@ -270,6 +270,30 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
         }
 
         [Test]
+        public void GivenAnHydraulicRuleAndWithoutAMatchingInputElement_WhenSetTimeLagOnHydraulicRulesIsCalled_ThenTimeLagIsUnchanged()
+        {
+            // Given
+            var timeSeriesElement = new RTCTimeSeriesXML
+            {
+                vectorLength = 2
+            };
+            var hydraulicRule = new HydraulicRule
+            {
+                Inputs = {new Input {Name = InputName}},
+                TimeLag = 0
+            };
+           
+            // When
+            dataConfigSetter.SetTimeLagOnHydraulicRules(
+                new[] {timeSeriesElement},
+                new[] {hydraulicRule},
+                timeStep);
+
+            // Then
+            Assert.That(hydraulicRule.TimeLag, Is.EqualTo(0)); // Time lag of hydraulic rule is unchanged (0)
+        }
+
+        [Test]
         public void GivenANullParameterAsElements_WhenSetTimeLagOnHydraulicRulesIsCalled_ThenNothingHappensAndMethodIsReturned()
         {
             Assert.DoesNotThrow(
