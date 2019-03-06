@@ -6,6 +6,7 @@ using DelftTools.Hydro.CrossSections;
 using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness;
+using GeoAPI.Extensions.Networks;
 using NetTopologySuite.Extensions.Networks;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSections.Writer
@@ -32,7 +33,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSectio
                 sectionSections = crossSectionSections;
 
             }
-            var sectionCount = sectionSections.Count.ToString();
 
             var roughnessPositions = sectionSections.Select(s => s.MinY).Union(sectionSections.Select(s => s.MaxY));
             var frictionNames = new List<string>();
@@ -41,10 +41,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSectio
             var frictionTypeNegative = new List<int>();
             var frictionValueNegative = new List<double>();
 
-            foreach (
-                var roughnessSection in
-                sectionSections.Select(
-                    section => GetRoughnessSection(roughnessSections, section)))
+            foreach (var roughnessSection in sectionSections.Select(section => GetRoughnessSection(roughnessSections, section)))
             {
                 frictionNames.Add(roughnessSection.Name);
                 //The roughness values for YZ cannot be Q or H dependent (specifically: not Q dependent without major performance issues and changes to rekenhart). 
@@ -62,7 +59,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSectio
                     : frictionValuePositive.Last());
             }
 
-            iniCategory.AddProperty(DefinitionRegion.SectionCount.Key, sectionCount, DefinitionRegion.SectionCount.Description);
+            iniCategory.AddProperty(DefinitionRegion.SectionCount.Key, sectionSections.Count.ToString(), DefinitionRegion.SectionCount.Description);
             iniCategory.AddProperty(DefinitionRegion.RoughnessNames.Key, string.Join(";", frictionNames), DefinitionRegion.RoughnessNames.Description);
             iniCategory.AddProperty(DefinitionRegion.RoughnessPositions.Key, roughnessPositions, DefinitionRegion.RoughnessPositions.Description, DefinitionRegion.RoughnessPositions.Format);
             iniCategory.AddProperty(DefinitionRegion.RoughnessTypesPos.Key, frictionTypePositive, DefinitionRegion.RoughnessTypesPos.Description);
@@ -72,13 +69,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSectio
             return iniCategory;
         }
 
-        private static double GetNegativeFrictionValue(IList<RoughnessSection> roughnessSections, RoughnessSection roughnessSection, ICrossSection crossSection)
+        private static double GetNegativeFrictionValue(IEnumerable<RoughnessSection> roughnessSections, RoughnessSection roughnessSection, IBranchFeature crossSection)
         {
             var reverseRoughnessSection = roughnessSections.GetApplicableReverseRoughnessSection(roughnessSection);
             return reverseRoughnessSection.RoughnessNetworkCoverage.EvaluateRoughnessValue(crossSection.ToNetworkLocation());
         }
 
-        private static RoughnessSection GetRoughnessSection(IList<RoughnessSection> roughnessSections, CrossSectionSection crossSectionSection)
+        private static RoughnessSection GetRoughnessSection(IEnumerable<RoughnessSection> roughnessSections, CrossSectionSection crossSectionSection)
         {
             var roughnessSection = roughnessSections.FirstOrDefault(rs => rs.Name == crossSectionSection.SectionType.Name);
             if (roughnessSection == null)
