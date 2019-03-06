@@ -59,8 +59,10 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
             var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekNetwork, waterFlowModel1D, new IPartialSobekImporter[] { new SobekSettingsImporter() });
             importer.Import();
 
+            // Pre-condition
+            Assert.That(waterFlowModel1D.StopTime, Is.Not.EqualTo(initialModelStopTime), "The importer did not change the model stop time during import.");
+
             // Then
-            Assert.That(waterFlowModel1D.StopTime, Is.Not.EqualTo(initialModelStopTime)); // Check that the importer actually changed the model stop time
             Assert.That(waterFlowModel1D.SaveStateStartTime, Is.EqualTo(waterFlowModel1D.StopTime));
             Assert.That(waterFlowModel1D.SaveStateStopTime, Is.EqualTo(waterFlowModel1D.StopTime));
 
