@@ -270,30 +270,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
         }
 
         [Test]
-        public void GivenAnHydraulicRuleAndWithoutAMatchingInputElement_WhenSetTimeLagOnHydraulicRulesIsCalled_ThenExpectedLogMessageIsGiven()
-        {
-            // Given
-            var timeSeriesElement = new RTCTimeSeriesXML();
-            var hydraulicRule = new HydraulicRule {Inputs = {new Input {Name = InputName}}};
-
-            var expectedMessage = string.Format(
-                Resources.RealTimeControlDataConfigXmlSetter_SetTimeLagOnHydraulicRules_Cannot_find_input_with_element_ID___0___for_rule___1____Please_check_file____2___,
-                RtcXmlTag.Delayed + InputName, hydraulicRule.Name, RealTimeControlXMLFiles.XmlData);
-
-            // When
-            dataConfigSetter.SetTimeLagOnHydraulicRules(
-                new[] {timeSeriesElement},
-                new[] {hydraulicRule},
-                timeStep);
-
-            // Then
-            Assert.IsTrue(logHandler.LogMessagesTable.AllMessages.Contains(expectedMessage), 
-                AssertMessage_CollectedLogMessagesDidNotContainExpectedMessage);
-            Assert.AreEqual(0, hydraulicRule.TimeLag, 
-                "Expected time lag for hydraulic rule was expected to be 0.");
-        }
-
-        [Test]
         public void GivenANullParameterAsElements_WhenSetTimeLagOnHydraulicRulesIsCalled_ThenNothingHappensAndMethodIsReturned()
         {
             Assert.DoesNotThrow(
