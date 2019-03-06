@@ -3,7 +3,6 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Structures;
-using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.IO.FileWriters;
 using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
 using DeltaShell.NGHS.IO.FileWriters.General;
@@ -16,21 +15,22 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSectio
         /// <summary>
         /// Converts a <see cref="WaterFlowModel1D"/> to a <see cref="DelftIniCategory"/>
         /// </summary>
-        /// <param name="waterFlowModel1D"></param>
-        /// <returns>a <see cref="DelftIniCategory"/>></returns>
+        /// <param name="waterFlowModel1D">A model that contains cross sections and roughness sections.</param>
+        /// <returns>A collection of <see cref="DelftIniCategory"/> objects representing cross section related data.</returns>
         public virtual IEnumerable<DelftIniCategory> Convert(WaterFlowModel1D waterFlowModel1D)
         {
             var categories = CreateCrossSectionDefinitionCategory();
-            var crossSections = AddCrossSections(waterFlowModel1D);
-            var sharedCrossSections = waterFlowModel1D.Network.SharedCrossSectionDefinitions;
+            var network = waterFlowModel1D.Network;
+            var crossSections = GatherCrossSectionFromNetwork(network);
+            var sharedCrossSections = network.SharedCrossSectionDefinitions;
 
             var processedCsDefinitions = new List<string>();
             foreach (var crossSection in crossSections)
             {
                 var definition = GetDefinition(crossSection);
-                var definitionGeneratorCrossSectionDefinition = DefinitionGeneratorFactory.GetDefinitionGeneratorCrossSection(definition, crossSection.CrossSectionType);
-
-                if (definitionGeneratorCrossSectionDefinition == null) continue;
+                var definitionGeneratorCrossSectionDefinition =
+                    DefinitionGeneratorFactory.GetDefinitionGeneratorCrossSection(definition,
+                        crossSection.CrossSectionType);
 
                 var csDefinitionId = definition.Name;
                 if (processedCsDefinitions.Contains(csDefinitionId)) continue;
@@ -38,7 +38,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSectio
                 var definitionRegion = definitionGeneratorCrossSectionDefinition.CreateDefinitionRegion(definition);
                 definitionRegion = DetermineCrossSectionType(waterFlowModel1D, crossSection, definitionRegion);
 
-                if (sharedCrossSections.Any(cs=>cs.Name == definition.Name))
+                if (sharedCrossSections.Any(cs => cs.Name == definition.Name))
                 {
                     definitionRegion.AddProperty(DefinitionRegion.IsShared.Key,
                         1, DefinitionRegion.IsShared.Description);
@@ -51,49 +51,47 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSectio
             return categories;
         }
 
-        private static void CheckIfSharedCrossSectionsContainsDefinition(IEventedList<ICrossSectionDefinition> sharedCrossSectionDefinitions, ICrossSectionDefinition definition,
-            IDelftIniCategory definitionRegion)
-        {
-            if(sharedCrossSectionDefinitions.Contains(definition))
-            {
-                definitionRegion.AddProperty(DefinitionRegion.IsShared.Key,
-                    1, DefinitionRegion.IsShared.Description);
-            }
-        }
-
-        private static DelftIniCategory DetermineCrossSectionType(WaterFlowModel1D waterFlowModel1D, ICrossSection crossSection,
+        private static DelftIniCategory DetermineCrossSectionType(WaterFlowModel1D waterFlowModel1D,
+            ICrossSection crossSection,
             DelftIniCategory definitionRegion)
         {
             switch (crossSection.CrossSectionType)
             {
                 case CrossSectionType.GeometryBased:
                 case CrossSectionType.YZ:
-                    definitionRegion = RoughnessDataProcessor.AddRoughnessDataToFileContent(definitionRegion, crossSection,
+                    definitionRegion = RoughnessDataProcessor.AddRoughnessDataToFileContent(definitionRegion,
+                        crossSection,
                         waterFlowModel1D.RoughnessSections, waterFlowModel1D.UseReverseRoughness);
                     break;
                 case CrossSectionType.ZW:
                 case CrossSectionType.Standard:
-                    definitionRegion = AddGroundLayer(definitionRegion, crossSection.Definition.Name, waterFlowModel1D.Network);
+                    definitionRegion = AddGroundLayer(definitionRegion, crossSection.Definition.Name,
+                        waterFlowModel1D.Network);
                     break;
             }
 
             return definitionRegion;
         }
 
-        private static DelftIniCategory AddGroundLayer(DelftIniCategory iniCategory, string crossSectionDefinitionName, IHydroNetwork network)
+        private static DelftIniCategory AddGroundLayer(DelftIniCategory iniCategory, string crossSectionDefinitionName,
+            IHydroNetwork network)
         {
             var groundLayerUsed = 0; // default value
-            var groundLayer = 0.0;  // default value
-            var structure = network.Structures.FirstOrDefault(s => (s is ICulvert && ((ICulvert)s).CrossSectionDefinition.Name == crossSectionDefinitionName) ||
-                                                                   (s is IBridge && ((IBridge)s).CrossSectionDefinition != null && ((IBridge)s).CrossSectionDefinition.Name == crossSectionDefinitionName)) as IGroundLayer;
+            var groundLayer = 0.0; // default value
+            var structure = network.Structures.FirstOrDefault(s =>
+                (s is ICulvert && ((ICulvert) s).CrossSectionDefinition.Name == crossSectionDefinitionName) ||
+                (s is IBridge && ((IBridge) s).CrossSectionDefinition != null &&
+                 ((IBridge) s).CrossSectionDefinition.Name == crossSectionDefinitionName)) as IGroundLayer;
             if (structure != null)
             {
                 groundLayerUsed = System.Convert.ToInt32(structure.GroundLayerEnabled);
                 groundLayer = structure.GroundLayerThickness;
             }
 
-            iniCategory.AddProperty(DefinitionRegion.GroundlayerUsed.Key, groundLayerUsed, DefinitionRegion.GroundlayerUsed.Description);
-            iniCategory.AddProperty(DefinitionRegion.Groundlayer.Key, groundLayer, DefinitionRegion.Groundlayer.Description, DefinitionRegion.Groundlayer.Format);
+            iniCategory.AddProperty(DefinitionRegion.GroundlayerUsed.Key, groundLayerUsed,
+                DefinitionRegion.GroundlayerUsed.Description);
+            iniCategory.AddProperty(DefinitionRegion.Groundlayer.Key, groundLayer,
+                DefinitionRegion.Groundlayer.Description, DefinitionRegion.Groundlayer.Format);
             return iniCategory;
         }
 
@@ -124,25 +122,20 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSectio
             return categories;
         }
 
-        private static List<ICrossSection> AddCrossSections(WaterFlowModel1D waterFlowModel1D)
+        private static IEnumerable<ICrossSection> GatherCrossSectionFromNetwork(IHydroNetwork network)
         {
-            var crossSections = waterFlowModel1D.Network.CrossSections.ToList();
-            crossSections.AddRange(waterFlowModel1D.Network.Culverts
+            var crossSections = network.CrossSections.ToList();
+            crossSections.AddRange(network.Culverts
                 .Select(c => c.CrossSectionDefinition)
                 .Select(crossSectionDefinition =>
                     new CrossSection(crossSectionDefinition) {Name = crossSectionDefinition.Name}));
 
-            crossSections.AddRange(waterFlowModel1D.Network.Bridges
+            crossSections.AddRange(network.Bridges
                 .Where(b => b.CrossSectionDefinition != null)
                 .Select(b => b.CrossSectionDefinition)
                 .Select(crossSectionDefinition =>
                     new CrossSection(crossSectionDefinition) {Name = crossSectionDefinition.Name}));
             return crossSections;
         }
-    }
-
-    public interface ICrossSectionDefinitionFileConverter
-    {
-        IEnumerable<DelftIniCategory> Convert(WaterFlowModel1D model);
     }
 }

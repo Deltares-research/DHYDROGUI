@@ -1,3 +1,4 @@
+using System;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DeltaShell.NGHS.IO.FileReaders.Definition;
@@ -65,7 +66,10 @@ namespace DeltaShell.NGHS.IO.FileWriters
                             GetDefinitionGeneratorCrossSectionStandard(standardCrossSectionDefinition.ShapeType);
                     }
                     break;
+
+                default: throw new NotSupportedException();
             }
+
             return definitionGeneratorCrossSectionDefinition;
         }
 

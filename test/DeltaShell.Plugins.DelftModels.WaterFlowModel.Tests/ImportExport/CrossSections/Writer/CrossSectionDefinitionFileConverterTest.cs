@@ -1,6 +1,8 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
+using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSections.Writer;
@@ -15,6 +17,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Cross
     [TestFixture]
     public class CrossSectionDefinitionFileConverterTest
     {
+        private CrossSectionDefinitionFileConverter converter;
         private CrossSectionSectionType crossSectionSectionType;
         private const string CrossSectionName = "crossSection1";
 
@@ -22,6 +25,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Cross
         public void Setup()
         {
             crossSectionSectionType = GetMockedCrossSectionSectionType();
+            converter = new CrossSectionDefinitionFileConverter();
         }
 
         private static CrossSectionSectionType GetMockedCrossSectionSectionType()
@@ -35,10 +39,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Cross
         public void GivenWaterFlow1DModelWithSharedCrossSectionDefinitionAndChangedBackToLocalDefinition_WhenConvertingToCrossSectionDefinitionCategory_ThenIsSharedIsWrittenToProperty()
         {
             //Given
-            var flowModel = GetMockedWaterFlowModel();
+            var flowModel = GetMockedWaterFlowModelWithSharedCrossSectionDefinition();
 
             //When
-            var converter = new CrossSectionDefinitionFileConverter();
             var categories = converter.Convert(flowModel).ToArray();
 
             //Then
@@ -48,7 +51,71 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Cross
             Assert.That(properties.Last().Value, Is.EqualTo("1"));
         }
 
-        private WaterFlowModel1D GetMockedWaterFlowModel()
+        [Test]
+        public void GivenWaterFlow1DModelWithCrossSectionType_WhenConvertingToCrossSectionDefinitionCategory_ThenIdValueIsOfTypeAndGroundLayerIsUsed()
+        {
+            //Given
+            var flowModel = GetMockedWaterFlowModelWithStandardCrossSectionType();
+
+            //When
+            var categories = converter.Convert(flowModel);
+
+            //Then
+            var properties = categories.ElementAt(1).Properties;
+            var idValue = properties.ElementAt(0).Value;
+            var groundLayerUsedName = properties.ElementAt(6).Name;
+            var groundLayerUsedValue = properties.ElementAt(6).Value;
+            Assert.That(flowModel.Network.CrossSections.ElementAt(0).CrossSectionType == CrossSectionType.Standard);
+            Assert.That(idValue, Is.EqualTo("standardCrossSection"));
+            Assert.That(groundLayerUsedName, Is.EqualTo("groundlayerUsed"));
+            Assert.That(groundLayerUsedValue, Is.EqualTo("0"));
+        }
+
+        private static WaterFlowModel1D GetMockedWaterFlowModelWithStandardCrossSectionType()
+        {
+            var network = GetNetworkWithCulvertAndBridge();
+            var model = MockRepository.GeneratePartialMock<WaterFlowModel1D>();
+
+            model.Expect(mm => mm.Network).Return(network).Repeat.Any();
+
+            return model;
+        }
+
+        private static IHydroNetwork GetNetworkWithCulvertAndBridge()
+        {
+            var standardCrossSection = GetCrossSectionWithStandardDefinition();
+            var network = MockRepository.GenerateMock<IHydroNetwork>();
+            network.Expect(mn => mn.CrossSections).Return(new List<ICrossSection>() {standardCrossSection}).Repeat.Any();
+            network.Expect(mn => mn.SharedCrossSectionDefinitions)
+                .Return(new EventedList<ICrossSectionDefinition>() { new CrossSectionDefinitionYZ() }).Repeat.Any();
+
+            var culvert = MockRepository.GenerateMock<ICulvert>();
+            culvert.Expect(c => c.CrossSectionDefinition).Return(new CrossSectionDefinitionYZ(standardCrossSection.Name)).Repeat
+                .Any();
+            network.Expect(mn => mn.Culverts).Return(new List<ICulvert>() {culvert}).Repeat.Any();
+
+            var bridge = MockRepository.GenerateMock<IBridge>();
+            bridge.Expect(b => b.CrossSectionDefinition).Return(new CrossSectionDefinitionYZ(standardCrossSection.Name)).Repeat
+                .Any();
+            network.Expect(mn => mn.Bridges).Return(new List<IBridge>() {bridge}).Repeat.Any();
+
+            network.Expect(mn => mn.Structures).Return(new List<IStructure1D>() {culvert, bridge}).Repeat.Any();
+
+            return network;
+        }
+
+        private static ICrossSection GetCrossSectionWithStandardDefinition()
+        {
+            var crossSectionDefinitionStandard = new CrossSectionDefinitionStandard() {Name = "standardCrossSection"};
+            var standardCrossSection = MockRepository.GenerateMock<ICrossSection>();
+            standardCrossSection.Expect(scs => scs.CrossSectionType).Return(CrossSectionType.Standard).Repeat.Any();
+            standardCrossSection.Expect(scs => scs.Definition).Return(crossSectionDefinitionStandard).Repeat.Any();
+            standardCrossSection.Expect(scs => scs.Name).Return(crossSectionDefinitionStandard.Name).Repeat.Any();
+
+            return standardCrossSection;
+        }
+
+        private WaterFlowModel1D GetMockedWaterFlowModelWithSharedCrossSectionDefinition()
         {
             var network = GetMockedHydroNetwork();
             var roughnessSection = MockRepository.GeneratePartialMock<RoughnessSection>(crossSectionSectionType, network);
@@ -78,6 +145,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Cross
 
             network.Expect(n => n.CrossSections).Return(crossSections).Repeat.Any();
             network.Expect(n => n.SharedCrossSectionDefinitions).Return(new EventedList<ICrossSectionDefinition> { crossSectionDefinitionYz }).Repeat.Any();
+
             return network;
         }
 
@@ -98,7 +166,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Cross
             {
                 crossSectionSection
             });
-
             crossSectionDefinitionProxy.Expect(csd => csd.Name).Return(CrossSectionName).Repeat.Any();
             crossSectionDefinitionProxy.Expect(csd => csd.IsProxy).Return(true).Repeat.Any();
             crossSectionDefinitionProxy.Expect(csd => csd.InnerDefinition).Return(innerDefinition).Repeat.Any();
@@ -119,6 +186,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Cross
         {
             var crossSection = MockRepository.GenerateMock<ICrossSection>();
             crossSection.Expect(cs => cs.Definition).Return(crossSectionDefinition).Repeat.Any();
+
             return crossSection;
         }
 
