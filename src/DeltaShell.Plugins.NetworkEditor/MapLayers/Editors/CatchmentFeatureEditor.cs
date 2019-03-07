@@ -28,7 +28,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors
             {
                 var newCatchment = (Catchment) base.AddNewFeatureByGeometry(layer, geometry);
                 newCatchment.CatchmentType = NewCatchmentType;
-                newCatchment.Name = HydroNetworkHelper.GetUniqueFeatureName(DrainageBasin, newCatchment);
+                newCatchment.Name = HydroNetworkHelper.GetUniqueFeatureNameWithAdditionalNewNameCheck(DrainageBasin, newCatchment);
                 return newCatchment;
             }
             catch (Exception)

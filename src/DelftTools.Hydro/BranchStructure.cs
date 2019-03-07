@@ -67,7 +67,7 @@ namespace DelftTools.Hydro
             branchFeature.Chainage = 0;
 
             branchFeature.Geometry = new Point(branch.Geometry.Coordinates[0]);
-            branchFeature.Name = HydroNetworkHelper.GetUniqueFeatureName(branchFeature.Network as HydroNetwork, branchFeature);
+            branchFeature.Name = HydroNetworkHelper.GetUniqueFeatureNameWithAdditionalNewNameCheck(branchFeature.Network as HydroNetwork, branchFeature);
         }
 
         public virtual int CompareTo(BranchStructure other)

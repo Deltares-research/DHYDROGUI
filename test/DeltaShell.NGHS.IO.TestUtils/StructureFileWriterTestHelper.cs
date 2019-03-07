@@ -627,7 +627,7 @@ namespace DeltaShell.NGHS.IO.TestUtils
                 Chainage = structure.Chainage,
                 Geometry = (IGeometry)structure.Geometry?.Clone()
             };
-            composite.Name = HydroNetworkHelper.GetUniqueFeatureName((IHydroRegion) branch.Network, composite);
+            composite.Name = HydroNetworkHelper.GetUniqueFeatureNameWithAdditionalNewNameCheck((IHydroRegion) branch.Network, composite);
             branch.BranchFeatures.Add(composite);
             HydroNetworkHelper.AddStructureToComposite(composite, structure);
         }

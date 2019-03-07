@@ -215,7 +215,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                     //Extra check, since the composite structures will be added to the network at this level and 
                     // due to this all the new composite branch structures containing only one structure have the same name.  
                     compositeBranchStructure.Name =
-                        HydroNetworkHelper.GetUniqueFeatureName(compositeBranchStructure.Network as HydroNetwork,
+                        HydroNetworkHelper.GetUniqueFeatureNameWithAdditionalNewNameCheck(compositeBranchStructure.Network as HydroNetwork,
                             compositeBranchStructure);
                 }
 

@@ -2237,7 +2237,7 @@ namespace DelftTools.Hydro.Tests.Helpers
             region.Links.Add(link);
             var subRegion = new HydroRegion() {Parent = region};
 
-            var name = HydroNetworkHelper.GetUniqueFeatureName(region, new HydroLink());
+            var name = HydroNetworkHelper.GetUniqueFeatureNameWithAdditionalNewNameCheck(region, new HydroLink());
 
             Assert.AreNotEqual(link.Name, name);
         }
@@ -2255,7 +2255,7 @@ namespace DelftTools.Hydro.Tests.Helpers
             region.Links.Add(link);
 
 
-            var name = HydroNetworkHelper.GetUniqueFeatureName(region, new HydroLink() { Name = uniquehydrolinkName2 }, true);
+            var name = HydroNetworkHelper.GetUniqueFeatureNameWithAdditionalNewNameCheck(region, new HydroLink() { Name = uniquehydrolinkName2 }, true);
             Assert.That(name, Is.EqualTo(uniquehydrolinkName2));
         }
 
@@ -2271,7 +2271,7 @@ namespace DelftTools.Hydro.Tests.Helpers
             var region = new HydroRegion();
             region.Links.Add(link);
             
-            var nameAlreadyExistCreateNew = HydroNetworkHelper.GetUniqueFeatureName(region, new HydroLink() { Name = uniquehydrolinkName }, true);
+            var nameAlreadyExistCreateNew = HydroNetworkHelper.GetUniqueFeatureNameWithAdditionalNewNameCheck(region, new HydroLink() { Name = uniquehydrolinkName }, true);
             Assert.That(nameAlreadyExistCreateNew, Is.Not.EqualTo(uniquehydrolinkName));
         }
 
@@ -2287,7 +2287,7 @@ namespace DelftTools.Hydro.Tests.Helpers
             var region = new HydroRegion();
             region.Links.Add(link);
 
-            var nameAlreadyExistCreateNew = HydroNetworkHelper.GetUniqueFeatureName(region, new HydroLink() { Name = null }, true);
+            var nameAlreadyExistCreateNew = HydroNetworkHelper.GetUniqueFeatureNameWithAdditionalNewNameCheck(region, new HydroLink() { Name = null }, true);
             Assert.That(nameAlreadyExistCreateNew, Is.Not.Null);
             Assert.That(nameAlreadyExistCreateNew, Is.Not.EqualTo(link.Name));
         }

@@ -24,7 +24,7 @@ namespace DelftTools.Hydro
                                            Chainage = 0,
                                            Geometry = new Point(branch.Geometry.Coordinates[0])
                                        };
-            observationPoint.Name = HydroNetworkHelper.GetUniqueFeatureName(observationPoint.Network as HydroNetwork, observationPoint);
+            observationPoint.Name = HydroNetworkHelper.GetUniqueFeatureNameWithAdditionalNewNameCheck(observationPoint.Network as HydroNetwork, observationPoint);
             return observationPoint;
         }
 

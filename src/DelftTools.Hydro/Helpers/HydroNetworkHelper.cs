@@ -476,22 +476,33 @@ namespace DelftTools.Hydro.Helpers
         /// </summary>
         /// <param name="region"></param>
         /// <param name="feature"></param>
-        /// <param name="checkIfNewNameIsNeeded"></param>
-        /// <param name="sharedNames">Collection of shared cross section names</param>
-        public static string GetUniqueFeatureName(IHydroRegion region, IFeature feature, bool checkIfNewNameIsNeeded = false, List<string> sharedNames = null)
+        /// <param name="sharedNames">Collection of shared cross section definition names to check if duplicate names exist with non-shared cross section definitions</param>
+        public static string GetUniqueFeatureName(IHydroRegion region, IFeature feature, IList<string> sharedNames)
         {
             var featureName = feature.GetEntityType().Name;
-            var fullRegion = region.Parent as IHydroRegion ?? region;
-            var hydroObjectNames = fullRegion.AllHydroObjects.Where(f => f.GetEntityType().Name == featureName).Select(f => f.Name);
-            var allLinkNames = fullRegion.AllRegions.OfType<IHydroRegion>().SelectMany(r => r.Links).Select(l => l.Name).ToList();
-            var allNames = hydroObjectNames.Concat(allLinkNames);
+            var names = AggregateAllNames(region, featureName).ToList();
 
             if (sharedNames != null && sharedNames.Count > 0)
             {
-                allLinkNames.AddRange(sharedNames);
+                names.AddRange(sharedNames);
             }
 
-            var names = new HashSet<string>(allNames);
+            var uniqueName = CreateUniqueName(featureName, names);
+
+            return uniqueName;
+        }
+
+        /// <summary>
+        /// Sets the default name of a specific feature.
+        /// </summary>
+        /// <param name="region"></param>
+        /// <param name="feature"></param>
+        /// <param name="checkIfNewNameIsNeeded"></param>
+        public static string GetUniqueFeatureNameWithAdditionalNewNameCheck(IHydroRegion region, IFeature feature, bool checkIfNewNameIsNeeded = false)
+        {
+            var featureName = feature.GetEntityType().Name;
+            var names = AggregateAllNames(region, featureName).ToList();
+
             if (checkIfNewNameIsNeeded)
             {
                 var nameProperty = feature.GetType().GetProperty("Name");
@@ -502,15 +513,57 @@ namespace DelftTools.Hydro.Helpers
                     if (!string.IsNullOrWhiteSpace(currentName as string) && !names.Contains(currentName.ToString())) return currentName.ToString();
                 }
             }
-            int i = 1;
-            var uniqueName = featureName + i;
+
+            var uniqueName = CreateUniqueName(featureName, names);
+
+            return uniqueName;
+        }
+
+        private static HashSet<string> AggregateAllNames(IHydroRegion region, string featureName)
+        {
+            var fullRegion = region.Parent as IHydroRegion ?? region;
+            var hydroObjectNames = GetNamesFromHydroObjects(fullRegion, featureName);
+            var allLinkNames = GetNamesFromRegion(fullRegion);
+            var names = AggregateNames(hydroObjectNames, allLinkNames);
+
+            return names;
+        }
+
+        private static string CreateUniqueName(string featureName, IList<string> names)
+        {
+            var nameIncrement = 1;
+            var uniqueName = featureName + nameIncrement;
             while (names.Contains(uniqueName))
             {
-                i++;
-                uniqueName = featureName + i;
+                nameIncrement++;
+                uniqueName = featureName + nameIncrement;
             }
 
             return uniqueName;
+        }
+
+        private static HashSet<string> AggregateNames(IEnumerable<string> hydroObjectNames, List<string> allLinkNames)
+        {
+            var allNames = hydroObjectNames.Concat(allLinkNames);
+            var names = new HashSet<string>(allNames);
+
+            return names;
+        }
+
+        private static List<string> GetNamesFromRegion(IHydroRegion fullRegion)
+        {
+            var allLinkNames = fullRegion.AllRegions.OfType<IHydroRegion>().SelectMany(r => r.Links).Select(l => l.Name)
+                .ToList();
+
+            return allLinkNames;
+        }
+
+        private static IEnumerable<string> GetNamesFromHydroObjects(IHydroRegion fullRegion, string featureName)
+        {
+            var hydroObjectNames = fullRegion.AllHydroObjects.Where(f => f.GetEntityType().Name == featureName)
+                .Select(f => f.Name);
+
+            return hydroObjectNames;
         }
 
         public static void AddStructureToComposite(ICompositeBranchStructure compositeBranchStructure, IStructure1D structure)
@@ -543,7 +596,7 @@ namespace DelftTools.Hydro.Helpers
                 };
 
                 // make new composite structure names unique
-                compositeBranchStructure.Name = GetUniqueFeatureName(compositeBranchStructure.Network as HydroNetwork, compositeBranchStructure);
+                compositeBranchStructure.Name = GetUniqueFeatureNameWithAdditionalNewNameCheck(compositeBranchStructure.Network as HydroNetwork, compositeBranchStructure);
 
                 branch.BranchFeatures.Add(compositeBranchStructure);
             }

@@ -19,7 +19,7 @@ namespace DelftTools.Hydro
             var lateralSourceLocation = new LateralSourceGridCell()
                                             {Branch = branch, Chainage = chainage, LateralSource = lateralSource};
             lateralSourceLocation.Name =
-                HydroNetworkHelper.GetUniqueFeatureName(lateralSourceLocation.Network as HydroNetwork,
+                HydroNetworkHelper.GetUniqueFeatureNameWithAdditionalNewNameCheck(lateralSourceLocation.Network as HydroNetwork,
                                                         lateralSourceLocation);
             return lateralSourceLocation;
         }

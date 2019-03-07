@@ -126,7 +126,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
             };
 
             // make new composite structure names unique
-            newCompositeStructure.Name = HydroNetworkHelper.GetUniqueFeatureName(newCompositeStructure.Network as HydroNetwork, newCompositeStructure);
+            newCompositeStructure.Name = HydroNetworkHelper.GetUniqueFeatureNameWithAdditionalNewNameCheck(newCompositeStructure.Network as HydroNetwork, newCompositeStructure);
             
             // always connect structure to branch because of property changed events
             structure.Branch =  branch; 

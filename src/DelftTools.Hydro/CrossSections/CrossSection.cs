@@ -157,16 +157,14 @@ namespace DelftTools.Hydro.CrossSections
 
         private void RenameToUniqueNameInNetwork()
         {
-            var hydroNetwork = Region as IHydroRegion;
-            var hn = hydroNetwork as HydroNetwork;
-            var sharedNames = hn?.SharedCrossSectionDefinitions.Select(d => d.Name).ToList();
+            var hydroNetwork = Region as HydroNetwork;
+            var sharedNames = hydroNetwork?.SharedCrossSectionDefinitions.Select(d => d.Name).ToList();
             if (sharedNames != null && sharedNames.Count > 0)
             {
-                 var uniqueName = HydroNetworkHelper.GetUniqueFeatureName(Region, this, sharedNames: sharedNames);
+                 var uniqueName = HydroNetworkHelper.GetUniqueFeatureName(Region, this, sharedNames);
                  Name = uniqueName;
                  Definition.Name = uniqueName;
             }
-   ;
         }
 
         public virtual void UseSharedDefinition(ICrossSectionDefinition definition)
@@ -238,7 +236,7 @@ namespace DelftTools.Hydro.CrossSections
             
             if (crossSection.Network != null)
             {
-                crossSection.Name = HydroNetworkHelper.GetUniqueFeatureName(crossSection.Network as HydroNetwork, crossSection);    
+                crossSection.Name = HydroNetworkHelper.GetUniqueFeatureNameWithAdditionalNewNameCheck(crossSection.Network as HydroNetwork, crossSection);    
             }
             
             return crossSection;
