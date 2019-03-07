@@ -103,10 +103,10 @@ numerics,Maxwaterleveldiff,,,Water level threshold,Double,0,,,FALSE,,,,,,Upper b
 numerics,Maxvelocitydiff,,,Velocity threshold,Double,0,,,FALSE,,,,,,Upper bound on velocity changes (<=0: no bounds), m/s
 numerics,Epshu,,,Dry cell threshold,Double,1.d-4,,,FALSE,,,,,,Threshold water depth for wet and dry cells,m
 numerics,SobekDFM_umin,,,D-Flow 1D - D-Flow FM umin,Double,0,,,FALSE,,,,,,Minimal velocity treshold for weir losses in D-Flow 1D - D-Flow FM  coupling.,m/s
-physics,UnifFrictCoef,physics,Roughness,Uniform friction coefficient,Double,2.3d-2,0,,FALSE,,,,,,Uniform friction coefficient (0: no friction),-
+physics,UnifFrictCoef,physics,Roughness,Uniform friction coefficient,Double,2.3d-2,0,,FALSE,,,,,,Uniform friction coefficient (0: no friction),
 physics,UnifFrictType,physics,Roughness,Uniform friction type:Chezy|Manning|White-Colebrook|Z0,0|1|2|3,1,0,3,FALSE,,,,,,"Uniform friction type (0: Chezy, 1: Manning, 2: White-Colebrook, 3: idem, WAQUA style)"
-physics,UnifFrictCoef1D,physics,Roughness,Uniform 1D friction coefficient,Double,2.3d-2,0,,TRUE,,,,,,Uniform friction coefficient in 1D links (0: no friction),-
-physics,UnifFrictCoefLin,physics,Roughness,Uniform linear friction coefficient,Double,0,0,,FALSE,,,,,,Uniform linear friction coefficient for ocean models (0: no friction),  -
+physics,UnifFrictCoef1D,physics,Roughness,Uniform 1D friction coefficient,Double,2.3d-2,0,,TRUE,,,,,,Uniform friction coefficient in 1D links (0: no friction),
+physics,UnifFrictCoefLin,physics,Roughness,Uniform linear friction coefficient,Double,0,0,,FALSE,,,,,,Uniform linear friction coefficient for ocean models (0: no friction),  
 physics,Umodlin,physics,Roughness,Linear friction Umod,Double,0,0,1,FALSE,,,,,,"Linear friction umod, for ifrctyp=4,5,6",-
 physics,Vicouv,physics,Viscosity,Uniform horizontal eddy viscosity,Double,1,0,,FALSE,,,,,,Uniform horizontal eddy viscosity, m2/s
 physics,Dicouv,physics,Viscosity,Uniform horizontal eddy diffusivity,Double,1,0,,FALSE,,,,,,Uniform horizontal eddy diffusivity, m2/s
@@ -117,7 +117,7 @@ physics,Smagorinsky,physics,Viscosity,Smagorinsky factor,Double,0,0,,FALSE,,,,,,
 physics,Elder,advanced,Advanced,Elder factor,Double,0,0,,FALSE,,,,,,Elder factor in horizontal turbulence,-
 physics,Irov,physics,Roughness,Wall behaviour:Free Slip|Partial Slip|No slip,0|1|2,0,0,2,FALSE,,,,,,"Wall roughness type (0: free slip, 1: partial slip using wall_ks)"
 physics,wall_ks,physics,Roughness,Wall ks for partial slip,Double,0,0,,FALSE,Irov=1,,,,,"Nikuradse roughness for side walls",m
-physics,Rhomean,physics,Density,Default water density,Double,1000,,,FALSE,,,,,,"Average water density (kg/m3)", kg/m3
+physics,Rhomean,physics,Density,Default water density,Double,1000,,,FALSE,,,,,,"Average water density ", kg/m3
 physics,Idensform,physics,Density,Equation of state:Uniform|Eckart|UNESCO|Baroclinic,0|1|2|3,2,,,FALSE,,,,,,"Density calulation (0: uniform, 1: Eckart, 2: UNESCO, 3: baroclinic case)"
 physics,Ag,physics,Others,Gravity,Double,9.813,,,FALSE,,,,,,"Gravitational acceleration",m/s2
 physics,TidalForcing,processes,Processes,Tide generating forces,0|1,0,0,1,FALSE,,,,,,"Tidal forcing, if jsferic = 1 (0: no, 1: yes)"
