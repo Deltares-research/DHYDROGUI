@@ -5,12 +5,17 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.CrossSections.StandardShapes;
+using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSections.Writer;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness;
+using DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView;
+using GeoAPI.Extensions.Networks;
+using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Networks;
 using NUnit.Framework;
+using Rhino.Mocks;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.CrossSections.Writer
 {
@@ -27,6 +32,23 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Cross
         {
             Name = RoughnessSectionName2
         };
+
+        [Test]
+        public void GivenCrossSectionWithNoSectionsMatchingWithRoughnessSections_WhenAddRoughnessDataToDataModelWithUseReverse_ThenRoughnessNamesAndLastPositionAreAsExpected()
+        {
+            //Given
+            var crossSection = GetCrossSectionWithNoSectionsMatching();
+            var roughnessSections = GetRoughnessSections(sectionType1).ToList();
+
+            // When
+            var category = RoughnessDataProcessor.AddRoughnessDataToFileContent(new DelftIniCategory("myName"), crossSection, roughnessSections, true);
+         
+            // Then
+            var sectionCount = category.GetPropertyValue(DefinitionRegion.SectionCount.Key);
+            Assert.That(int.Parse(sectionCount), Is.EqualTo(1));
+            Assert.That(category.Properties.ElementAt(4).Name, Is.EqualTo("roughnessValuesPos"));
+            Assert.That(category.Properties.ElementAt(4).Value, Is.EqualTo("45.000"));
+        }
 
         [Test]
         public void GivenCrossSectionWithOneSectionMatchingWithRoughnessSection_WhenAddRoughnessDataToDataModel_ThenRoughnessNamesAndPositionsAreAsExpected()
@@ -105,6 +127,22 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Cross
             }
         }
 
+        private static ICrossSection GetCrossSectionWithNoSectionsMatching()
+        {
+            var crossSection = MockRepository.GenerateMock<ICrossSection>();
+            var definition = MockRepository.GenerateMock<ICrossSectionDefinition>();
+            var section = MockRepository.GenerateMock<IEventedList<CrossSectionSection>>();
+            var branch = MockRepository.GenerateMock<IBranch>();
+
+            definition.Expect(d => d.Profile).Return(new List<Coordinate>() {new SimplifiedCoordinate()}).Repeat.Any();
+            definition.Expect(d => d.Sections).Return(section).Repeat.Any();
+
+            crossSection.Expect(cs => cs.Definition).Return(definition).Repeat.Any();
+            crossSection.Expect(cs => cs.Branch).Return(branch).Repeat.Any();
+            crossSection.Expect(cs => cs.Chainage).Return(2.0).Repeat.Any();
+            return crossSection;
+        }
+
         private static CrossSection GetCrossSectionWithOneSection(CrossSectionSectionType crossSectionSectionType, double minY, double maxY)
         {
             var crossSectionSection = new CrossSectionSection {SectionType = crossSectionSectionType, MinY = minY, MaxY = maxY};
@@ -116,6 +154,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Cross
                 Branch = new Branch {Length = 20.0},
                 Chainage = 10.0
             };
+
             return crossSection;
         }
 
