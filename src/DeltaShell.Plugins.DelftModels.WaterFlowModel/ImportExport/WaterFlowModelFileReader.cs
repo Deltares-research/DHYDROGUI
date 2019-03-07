@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
+using DelftTools.Shell.Core.Workflow;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
@@ -33,7 +34,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 
         private static int stepCounter;
         private static ModelFileNames fileNames;
-        private const int TotalSteps = 13;
+        private const int TotalSteps = 14;
 
         public static WaterFlowModel1D Read(string modelFilename, Action<string, int, int> reportProgress = null)
         {
@@ -119,9 +120,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 
                 var spatialDataFileNames = GetSpatialDataFileNames(model);
                 SpatialDataReader.ReadSpatialData(spatialDataFileNames, model, CreateAndAddErrorReport);
+
+                if (model.UseRestart)
+                {
+                    reportProgress(
+                        $"Reading restart data from {fileNames}.",
+                        stepCounter, TotalSteps);
+                    ReadRestartFiles(fileNames.TargetPath, model);
+                }
             }
-            catch (Exception e) when (e is FormatException || 
-                                      e is PropertyNotFoundInFileException || 
+            catch (Exception e) when (e is FormatException ||
+                                      e is PropertyNotFoundInFileException ||
                                       e is FileNotFoundException ||
                                       e is FileReadingException)
             {
@@ -135,6 +144,34 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 
             LogErrorReport(errorReport, report => Log.Warn(report));
             return model;
+        }
+
+        /// <summary>
+        /// Creates a temporary <see cref="ModelFileBasedStateHandler"/>.
+        /// </summary>
+        /// <param name="directoryPath">The directory that contains the unzipped state files.</param>
+        /// <param name="model">The name of the <see cref="WaterFlowModel1D"/> at stake.</param>
+        /// <returns>A temporary instance of <see cref="ModelFileBasedStateHandler"/></returns>
+        /// <remarks>The returned <see cref="ModelFileBasedStateHandler"/> differs from <see cref="WaterFlowModel1D.ModelStateHandler"/>
+        /// when it comes to the out and in file names.</remarks>
+        private static void ReadRestartFiles(string directoryPath, WaterFlowModel1D model)
+        {
+            var outAndInFileNames = new List<DelftTools.Utils.Tuple<string, string>>
+            {
+                new DelftTools.Utils.Tuple<string, string>("sobek.rda", "sobek.rda"),
+                new DelftTools.Utils.Tuple<string, string>("sobek.rdf", "sobek.rdf"),
+                new DelftTools.Utils.Tuple<string, string>("1Dlevels-in.xyz", "1Dlevels-in.xyz")
+            };
+
+            var tempModelStateHandler = new ModelFileBasedStateHandler(model.Name, outAndInFileNames)
+            {
+                ModelWorkingDirectory = directoryPath
+            };
+
+            var persistentStateFilePath = Path.Combine(Path.GetTempPath(), "importedState.zip");
+            tempModelStateHandler.SaveStateToFile(tempModelStateHandler.GetState(), persistentStateFilePath);
+
+            model.RestartInput = new FileBasedRestartState("Imported State", persistentStateFilePath);
         }
 
         /// <summary>

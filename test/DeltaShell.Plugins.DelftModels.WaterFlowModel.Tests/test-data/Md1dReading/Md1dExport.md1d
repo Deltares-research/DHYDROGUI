@@ -4,7 +4,7 @@
     fileType              = modelDef            # File type. Do not edit this.
 
 [Files]
-    networkFile           = NetworkDefinition.ini# #Name and location of the network file
+    networkFile           = NetworkDefinition.ini# Name and location of the network file
     crossLocFile          = CrossSectionLocations.ini# Name and location of the file containing the locations of the cross sections
     crossDefFile          = CrossSectionDefinitions.ini# Name and location of the file containing the definitions of the cross sections
     structureFile         = Structures.ini      # Name and location of the structure file
@@ -148,16 +148,16 @@
     StartTime             = 2018-11-13 00:00:00 # yyyy-MM-dd HH:mm:ss
     StopTime              = 2018-11-14 00:00:00 # yyyy-MM-dd HH:mm:ss
     TimeStep              = 3600.000            # in seconds
-    OutTimeStepGridPoints = 3600.000            # in seconds
-    OutTimeStepStructures = 3600.000            # in seconds
+    MapOutputTimeStep     = 3600.000            # in seconds for gridpoints.nc and reachsegments.nc
+    HisOutputTimeStep     = 3600.000            # in seconds for all other output files
 
 [Sediment]
-    D50                   = 0.0006
-    D90                   = 0.001
-    DepthUsedForSediment = 0.3
-	
+    D50                   = 0.0006              # Grain diameter at which 50% of the grains is smaller
+    D90                   = 0.001               # Grain diameter at which 90% of the grains is smaller
+    DepthUsedForSediment  = 0.3                 # Depth used for sediment
+
 [Specials]
-    DesignFactorDlg = 1.0
+    DesignFactorDlg       = 1                   
 
 [NumericalParameters]
     AccelerationTermFactor= 1                   
@@ -226,6 +226,9 @@
     InterpolationType     = Nearest             # Interpolation type (linear or nearest)
 
 [Restart]
-    UseRestart            = 0                   # 0=false, 1=true
-    WriteRestart          = 0                   # 0=false, 1=true
+    UseRestart            = 1                   # 0=false, 1=true
+    WriteRestart          = 1                   # 0=false, 1=true
+    RestartStartTime      = 2018-11-14 00:00:00 # yyyy-MM-dd HH:mm:ss
+    RestartStopTime       = 2018-11-14 00:00:00 # yyyy-MM-dd HH:mm:ss
+    RestartTimeStep       = 3600                # in seconds
 

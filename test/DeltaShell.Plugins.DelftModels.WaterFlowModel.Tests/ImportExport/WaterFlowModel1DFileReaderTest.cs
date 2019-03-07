@@ -32,14 +32,32 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
         }
         
         [Test]
-        public void GivenAnMd1dFile_WhenReadingTheAttachedNetworkDefinitionFile_ThenAModelIsReturned()
+        public void GivenAnMd1dFile_WhenReading_ThenAModelIsReturned()
         {
+            // Given
             var md1dFilePath = Path.Combine(tempFolderPath, "Md1dExport.md1d");
 
+            // When
             var waterFlowModel1D = WaterFlowModelFileReader.Read(md1dFilePath);
+
+            // Then
             Assert.IsNotNull(waterFlowModel1D);
         }
 
+        [Test]
+        public void GivenAnMd1dFile_WhenReading_ThenUseRestartIsTrueAndRestartInputIsSet()
+        {
+            // Given
+            var md1dFilePath = Path.Combine(tempFolderPath, "Md1dExport.md1d");
+
+            // When
+            var waterFlowModel1D = WaterFlowModelFileReader.Read(md1dFilePath);
+
+            // Then
+            Assert.That(waterFlowModel1D.UseRestart, Is.EqualTo(true));
+            Assert.That(waterFlowModel1D.RestartInput.Name, Is.EqualTo("Imported State"));
+        }
+        
         [Test]
         public void GivenAnMd1dFileWithReversedRoughnessSectionDefined_WhenReadingFlow1DModel_ThenModelUsesReversedRoughness()
         {
@@ -135,7 +153,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
         [Test]
         [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]
-        public void GivenAnMd1dFile_WhenReading_ThenAModelIsReturned()
+        public void GivenAnMd1dFile_WhenReading_ThenAModelWithTheExpectedAmountOfBranchesAndNodesIsReturned()
         {
             var md1dFilePath = TestHelper.GetTestFilePath(@"ImportSpatialData\water flow 1d.md1d");
 
