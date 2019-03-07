@@ -20,11 +20,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
         public static void Write(string targetModelFile, WaterFlowModel1D waterFlowModel1D)
         {
             FileUtils.DeleteIfExists(targetModelFile);
-            var fileName = new ModelFileNames(targetModelFile);
 
+            var fileName = new ModelFileNames(targetModelFile);
             FileUtils.CreateDirectoryIfNotExists(fileName.TargetPath);
-           
-            ThrowIfFileNotExists(fileName.CrossSectionDefinitions, fileName.TargetPath, p => new CrossSectionDefinitionFileWriter(new CrossSectionDefinitionFileConverter(), new IniFileWriter()).WriteFile(p, waterFlowModel1D));
+
+            var converter = new CrossSectionDefinitionFileConverter();
+            var iniFileWriter = new IniFileWriter();
+            var crossSectionDefinitionFileWriter = new CrossSectionDefinitionFileWriter(converter, iniFileWriter);
+            ThrowIfFileNotExists(fileName.CrossSectionDefinitions, fileName.TargetPath, p => crossSectionDefinitionFileWriter.WriteFile(p, waterFlowModel1D));
             ThrowIfFileNotExists(fileName.CrossSectionLocations, fileName.TargetPath, p => LocationFileWriter.WriteFileCrossSectionLocations(p, waterFlowModel1D.Network.CrossSections));
             ThrowIfFileNotExists(fileName.ObservationPoints, fileName.TargetPath, p => LocationFileWriter.WriteFileObservationPointLocations(p, waterFlowModel1D.Network.ObservationPoints));
             ThrowIfFileNotExists(fileName.LateralDischarge, fileName.TargetPath, p => LocationFileWriter.WriteFileLateralDischargeLocations(p, waterFlowModel1D.Network.LateralSources));
