@@ -148,6 +148,7 @@ namespace DelftTools.Hydro.CrossSections
                 throw new InvalidOperationException("Definition is already local");
             }
             var crossSectionDefinition = ((CrossSectionDefinitionProxy) Definition).GetUnProxiedDefinition();
+
             crossSectionDefinition.Name = Name;
             Definition = crossSectionDefinition;
 
@@ -156,9 +157,16 @@ namespace DelftTools.Hydro.CrossSections
 
         private void RenameToUniqueNameInNetwork()
         {
-            var uniqueName = HydroNetworkHelper.GetUniqueFeatureNameForCrossSectionRename(Region, this);
-            Name = uniqueName;
-            Definition.Name = uniqueName;
+            var hydroNetwork = Region as IHydroRegion;
+            var hn = hydroNetwork as HydroNetwork;
+            var sharedNames = hn?.SharedCrossSectionDefinitions.Select(d => d.Name).ToList();
+            if (sharedNames != null && sharedNames.Count > 0)
+            {
+                 var uniqueName = HydroNetworkHelper.GetUniqueFeatureName(Region, this, sharedNames: sharedNames);
+                 Name = uniqueName;
+                 Definition.Name = uniqueName;
+            }
+   ;
         }
 
         public virtual void UseSharedDefinition(ICrossSectionDefinition definition)

@@ -145,12 +145,6 @@ namespace DelftTools.Hydro.Helpers
             return (IChannel)newBranch;
         }
 
-        public static IChannel SplitChannelAtNodeInternal(INetwork network, IChannel branch, INode node)
-        {
-            var newBranch = NetworkHelper.SplitBranchAtNode(network, branch, node);
-            return (IChannel)newBranch;
-        }
-
         /// <summary>
         /// Returns the number of networklocation in a coverage for a branch
         /// </summary>
@@ -482,53 +476,20 @@ namespace DelftTools.Hydro.Helpers
         /// </summary>
         /// <param name="region"></param>
         /// <param name="feature"></param>
-        public static string GetUniqueFeatureName(IHydroRegion region, IFeature feature, bool checkIfNewNameIsNeeded = false)
+        /// <param name="checkIfNewNameIsNeeded"></param>
+        /// <param name="sharedNames">Collection of shared cross section names</param>
+        public static string GetUniqueFeatureName(IHydroRegion region, IFeature feature, bool checkIfNewNameIsNeeded = false, List<string> sharedNames = null)
         {
             var featureName = feature.GetEntityType().Name;
-
             var fullRegion = region.Parent as IHydroRegion ?? region;
             var hydroObjectNames = fullRegion.AllHydroObjects.Where(f => f.GetEntityType().Name == featureName).Select(f => f.Name);
             var allLinkNames = fullRegion.AllRegions.OfType<IHydroRegion>().SelectMany(r => r.Links).Select(l => l.Name).ToList();
             var allNames = hydroObjectNames.Concat(allLinkNames);
 
-            var names = new HashSet<string>(allNames);
-            if (checkIfNewNameIsNeeded)
+            if (sharedNames != null && sharedNames.Count > 0)
             {
-                var nameProperty = feature.GetType().GetProperty("Name");
-                if (nameProperty != null)
-                {
-                    var currentName = nameProperty.GetValue(feature, null);
-
-                    if (!string.IsNullOrWhiteSpace(currentName as string) && !names.Contains(currentName.ToString())) return currentName.ToString();
-                }
+                allLinkNames.AddRange(sharedNames);
             }
-            int i = 1;
-            var uniqueName = featureName + i;
-            while (names.Contains(uniqueName))
-            {
-                i++;
-                uniqueName = featureName + i;
-            }
-
-            return uniqueName;
-        }
-
-        public static string GetUniqueFeatureNameForCrossSectionRename(IHydroRegion region, IFeature feature,
-            bool checkIfNewNameIsNeeded = false)
-        {
-            var featureName = feature.GetEntityType().Name;
-
-            var fullRegion = region.Parent as IHydroRegion ?? region;
-            var hydroObjectNames = fullRegion.AllHydroObjects.Where(f => f.GetEntityType().Name == featureName).Select(f => f.Name);
-            var allLinkNames = fullRegion.AllRegions.OfType<IHydroRegion>().SelectMany(r => r.Links).Select(l => l.Name).ToList();
-            var hydroNetwork = fullRegion as HydroNetwork;
-            var sharedNames = hydroNetwork?.SharedCrossSectionDefinitions.Select(d => d.Name).ToList();
-            if (sharedNames != null && sharedNames.Count == 0)
-            {
-                sharedNames.Add("default");
-            }
-            var allNames = hydroObjectNames.Concat(allLinkNames);
-            allLinkNames.AddRange(sharedNames);
 
             var names = new HashSet<string>(allNames);
             if (checkIfNewNameIsNeeded)
