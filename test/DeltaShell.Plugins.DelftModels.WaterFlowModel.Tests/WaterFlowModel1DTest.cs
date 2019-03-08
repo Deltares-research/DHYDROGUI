@@ -3599,7 +3599,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             var crossSectionSection1 = new CrossSectionSection { MinY = 0.5, MaxY = 26.5, SectionType = new CrossSectionSectionType { Name = CrossSectionDefinition.MainSectionName } };
             definitionYZ.Sections.Add(crossSectionSection1);
             var crossSection = HydroNetworkHelper.AddCrossSectionDefinitionToBranch(branch1, definitionYZ, 105.0d);
-            crossSection.Name = HydroNetworkHelper.GetUniqueFeatureNameWithAdditionalNewNameCheck(network, crossSection);
+            crossSection.Name = HydroNetworkHelper.GetUniqueFeatureName(network, crossSection);
 
             WaterFlowModel1DTestHelper.RefreshCrossSectionDefinitionSectionWidths(network);
             WaterFlowModel1DTestHelper.RefreshCrossSectionDefinitionYZSectionWidths(network);

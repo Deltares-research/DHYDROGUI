@@ -181,7 +181,7 @@ namespace DeltaShell.NGHS.IO.TestUtils
             {
                 culvert.TabulatedCrossSectionDefinition = (CrossSectionDefinitionZW)(CreateSimpleTabulatedProfileCrossSection(branch, chainage).Definition);
             }
-            culvert.Name = HydroNetworkHelper.GetUniqueFeatureNameWithAdditionalNewNameCheck((IHydroRegion)branch.Network, culvert);
+            culvert.Name = HydroNetworkHelper.GetUniqueFeatureName((IHydroRegion)branch.Network, culvert);
             culvert.GeometryType = geometryType; 
             branch.BranchFeatures.Add(culvert);
             
@@ -207,7 +207,7 @@ namespace DeltaShell.NGHS.IO.TestUtils
                 GroundLayerThickness = 1.2157
             };
             culvert.GeometryType = geometryType;
-            culvert.Name = HydroNetworkHelper.GetUniqueFeatureNameWithAdditionalNewNameCheck((IHydroRegion)branch.Network, culvert);
+            culvert.Name = HydroNetworkHelper.GetUniqueFeatureName((IHydroRegion)branch.Network, culvert);
             branch.BranchFeatures.Add(culvert);
         }
 
@@ -279,7 +279,7 @@ namespace DeltaShell.NGHS.IO.TestUtils
                 GroundLayerEnabled = true,
                 GroundLayerThickness = 1.2157
             };
-            bridge.Name = HydroNetworkHelper.GetUniqueFeatureNameWithAdditionalNewNameCheck((IHydroRegion)branch.Network, bridge);
+            bridge.Name = HydroNetworkHelper.GetUniqueFeatureName((IHydroRegion)branch.Network, bridge);
             branch.BranchFeatures.Add(bridge);
         }
 
@@ -287,7 +287,7 @@ namespace DeltaShell.NGHS.IO.TestUtils
             double chainage, double crestLevel = 0.0, double floodSurface = 0.0, double totalSurface = 0.0, double floodPlainLevel = 0.0)
         {
             var crossSection = CrossSection.CreateDefault(CrossSectionType.ZW, branch, chainage);
-            crossSection.Name = HydroNetworkHelper.GetUniqueFeatureNameWithAdditionalNewNameCheck(branch.Network as HydroNetwork, crossSection);
+            crossSection.Name = HydroNetworkHelper.GetUniqueFeatureName(branch.Network as HydroNetwork, crossSection);
             crossSection.Definition.Name = crossSection.Name;
             crossSection.Definition.Sections.Add(new CrossSectionSection
             {

@@ -81,7 +81,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
 
                 // make new composite structure names unique
                 compositeBranchStructure.Name =
-                    HydroNetworkHelper.GetUniqueFeatureNameWithAdditionalNewNameCheck(compositeBranchStructure.Network as HydroNetwork,
+                    HydroNetworkHelper.GetUniqueFeatureName(compositeBranchStructure.Network as HydroNetwork,
                         compositeBranchStructure);
 
                 compositeBranchStructures.Add(compositeBranchStructure);

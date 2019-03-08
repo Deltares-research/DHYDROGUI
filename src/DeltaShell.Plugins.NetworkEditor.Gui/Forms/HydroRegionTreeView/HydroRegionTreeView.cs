@@ -362,7 +362,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
                     new WKTReader().Read(String.Format("LINESTRING({0} 0,{0} 100)", network.Branches.Count*100));
 
                 NetworkHelper.AddChannelToHydroNetwork(network, channel);
-                channel.Name = HydroNetworkHelper.GetUniqueFeatureNameWithAdditionalNewNameCheck(network, channel);
+                channel.Name = HydroNetworkHelper.GetUniqueFeatureName(network, channel);
             }
         }
 
@@ -521,7 +521,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
             channel.BranchFeatures.Add(crossSection);
 
             crossSection.Definition.ShiftLevel(formPasteCrossSection.Shift);
-            crossSection.Name =  HydroNetworkHelper.GetUniqueFeatureNameWithAdditionalNewNameCheck(region,crossSection);
+            crossSection.Name =  HydroNetworkHelper.GetUniqueFeatureName(region,crossSection);
             gui.Selection = crossSection;
         }
 
@@ -681,7 +681,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
                     var crossSection = new CrossSection(new CrossSectionDefinitionProxy(definition));
                     NetworkHelper.AddBranchFeatureToBranch(crossSection, channel, channel.Length / 2.0);
 
-                    crossSection.Name = HydroNetworkHelper.GetUniqueFeatureNameWithAdditionalNewNameCheck(SelectedNetwork, crossSection);
+                    crossSection.Name = HydroNetworkHelper.GetUniqueFeatureName(SelectedNetwork, crossSection);
                 }
             }
         }

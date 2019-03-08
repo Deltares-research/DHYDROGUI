@@ -269,12 +269,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             clonedChannel.Geometry = new LineString(clonedChannel.Geometry.Coordinates);
             
             // Update the name of the channel
-            clonedChannel.Name = HydroNetworkHelper.GetUniqueFeatureNameWithAdditionalNewNameCheck(network, clonedChannel, true);
+            clonedChannel.Name = HydroNetworkHelper.GetUniqueFeatureName(network, clonedChannel, true);
 
             // Update the name of all branch features
             foreach (var branchFeature in clonedChannel.BranchFeatures)
             {
-                branchFeature.Name =  HydroNetworkHelper.GetUniqueFeatureNameWithAdditionalNewNameCheck(network, branchFeature, true);
+                branchFeature.Name =  HydroNetworkHelper.GetUniqueFeatureName(network, branchFeature, true);
             }
 
             // Use HydroNetworkHelper to add the channel to the network (this way a source node and a target node are generated automatically)
@@ -345,7 +345,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             //update name only if needed
             if (targetNetwork.BranchFeatures.Any(bf => bf.Name == newBranchFeature.Name) || string.IsNullOrEmpty(newBranchFeature.Name))
             {
-                newBranchFeature.Name = HydroNetworkHelper.GetUniqueFeatureNameWithAdditionalNewNameCheck(targetNetwork, newBranchFeature);
+                newBranchFeature.Name = HydroNetworkHelper.GetUniqueFeatureName(targetNetwork, newBranchFeature);
             }
             var lengthIndexedLine = new LengthIndexedLine(channel.Geometry);
             var newPointGeometry = new Point((Coordinate) lengthIndexedLine.ExtractPoint(chainage).Clone());
@@ -449,7 +449,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 newStructure.Network = branch.Network;
                 newStructure.CopyFrom(structure);
 
-                newStructure.Name = HydroNetworkHelper.GetUniqueFeatureNameWithAdditionalNewNameCheck((IHydroNetwork) branch.Network, newStructure, true);
+                newStructure.Name = HydroNetworkHelper.GetUniqueFeatureName((IHydroNetwork) branch.Network, newStructure, true);
                 
                 if (newStructure.Geometry == null)
                 {

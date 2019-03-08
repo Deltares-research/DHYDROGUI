@@ -496,7 +496,7 @@ namespace DelftTools.Hydro.Helpers
             //if no name is defined generate one.
             if (string.IsNullOrEmpty(name))
             {
-                name = HydroNetworkHelper.GetUniqueFeatureNameWithAdditionalNewNameCheck(branch.HydroNetwork, cs);
+                name = HydroNetworkHelper.GetUniqueFeatureName(branch.HydroNetwork, cs);
             }
             cs.Name = name;
 
@@ -515,7 +515,7 @@ namespace DelftTools.Hydro.Helpers
             //if no name is defined generate one.
             if (string.IsNullOrEmpty(name))
             {
-                name = HydroNetworkHelper.GetUniqueFeatureNameWithAdditionalNewNameCheck(branch.HydroNetwork, cs);
+                name = HydroNetworkHelper.GetUniqueFeatureName(branch.HydroNetwork, cs);
             }
             cs.Name = name;
 
@@ -545,7 +545,7 @@ namespace DelftTools.Hydro.Helpers
             //if no name is defined generate one.
             if (string.IsNullOrEmpty(name))
             {
-                name = HydroNetworkHelper.GetUniqueFeatureNameWithAdditionalNewNameCheck(branch.HydroNetwork, cs);
+                name = HydroNetworkHelper.GetUniqueFeatureName(branch.HydroNetwork, cs);
             }
             cs.Name = name;
             csDef.Thalweg = 0.0;

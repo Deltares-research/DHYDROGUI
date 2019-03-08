@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors
                 var nameable = feat as INameable;
                 if (nameable != null)
                 {
-                    nameable.Name = HydroNetworkHelper.GetUniqueFeatureNameWithAdditionalNewNameCheck(DrainageBasin, feat);
+                    nameable.Name = HydroNetworkHelper.GetUniqueFeatureName(DrainageBasin, feat);
                 }
 
                 return feat;

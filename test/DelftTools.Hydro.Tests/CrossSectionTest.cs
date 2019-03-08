@@ -201,42 +201,6 @@ namespace DelftTools.Hydro.Tests
         }
 
         [Test]
-        public void GivenASharedCrossSection_WhenSetbackToLocal_ThenCrossSectionIsRenamed()
-        {
-            var crossSectionDefinitionYZ = CrossSectionDefinitionYZ.CreateDefault("csd1");
-            var crossSectionDefinitionYZ2 = CrossSectionDefinitionYZ.CreateDefault();
-            
-            var hydroNetwork = HydroNetworkHelper.GetSnakeHydroNetwork(1);
-
-            var crossSection = new CrossSection(crossSectionDefinitionYZ) { Branch = hydroNetwork.Channels.First() };
-            var crossSection2 = new CrossSection(crossSectionDefinitionYZ2) { Branch = hydroNetwork.Channels.First() };
-
-            Assert.AreEqual(0, hydroNetwork.SharedCrossSectionDefinitions.Count);
-
-            crossSection.ShareDefinitionAndChangeToProxy();
-            crossSection2.ShareDefinitionAndChangeToProxy();
-            Assert.That(hydroNetwork.SharedCrossSectionDefinitions.Count, Is.EqualTo(2));
-            crossSection.Definition.Name = "csd1";
-            Assert.That(crossSection.Definition.IsProxy, Is.EqualTo(true));
-            Assert.That(crossSection.Name, Is.EqualTo("cross section"));
-
-            var definitionProxy = (CrossSectionDefinitionProxy) crossSection2.Definition;
-            Assert.That(definitionProxy.IsProxy, Is.EqualTo(true));
-
-            crossSection2.UseSharedDefinition(crossSection.Definition);
-
-            Assert.That(crossSection2.Definition.Name, Is.EqualTo(crossSection.Definition.Name));
-            crossSection.MakeDefinitionLocal();
-            Assert.That(crossSection.Name, Is.EqualTo("CrossSection1"));
-            crossSection.ShareDefinitionAndChangeToProxy();
-            crossSection.MakeDefinitionLocal();
-            Assert.That(crossSection.Name, Is.EqualTo("CrossSection2"));
-            crossSection.ShareDefinitionAndChangeToProxy();
-            crossSection.MakeDefinitionLocal();
-            Assert.That(crossSection.Name, Is.EqualTo("CrossSection3"));
-        }
-
-        [Test]
         public void ChangeInDefinitionUpdatesGeometry()
         {
             //v-shaped cs 100 wide

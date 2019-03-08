@@ -61,7 +61,7 @@ namespace DeltaShell.NGHS.IO.TestUtils
         {
             // By default cross section width = 100 and this is divided over 6 points (see: SetDefaultYZTableAndUpdateThalWeg)
             var crossSection = CrossSection.CreateDefault(csType, branch, chainage);
-            var name = HydroNetworkHelper.GetUniqueFeatureNameWithAdditionalNewNameCheck((IHydroRegion)branch.Network, crossSection);
+            var name = HydroNetworkHelper.GetUniqueFeatureName((IHydroRegion)branch.Network, crossSection);
             crossSection.Name = name;
             crossSection.Definition.Name = name;
             branch.BranchFeatures.Add(crossSection);

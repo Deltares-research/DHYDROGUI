@@ -39,7 +39,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers
 
             var link = source.Item1.LinkTo(target.Item1);
 
-            link.Name = HydroNetworkHelper.GetUniqueFeatureNameWithAdditionalNewNameCheck(Region, link);
+            link.Name = HydroNetworkHelper.GetUniqueFeatureName(Region, link);
             link.Geometry = geometry;
 
             Region.EndEdit();

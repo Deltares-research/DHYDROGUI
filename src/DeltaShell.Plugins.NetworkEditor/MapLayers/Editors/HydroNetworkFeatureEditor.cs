@@ -48,7 +48,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors
 
             if (newFeature is INameable)
             {
-                (newFeature as INameable).Name = HydroNetworkHelper.GetUniqueFeatureNameWithAdditionalNewNameCheck((IHydroRegion)Network, newFeature);
+                (newFeature as INameable).Name = HydroNetworkHelper.GetUniqueFeatureName((IHydroRegion)Network, newFeature);
             }
 
             var interactor = layer.FeatureEditor.CreateInteractor(layer, newFeature);

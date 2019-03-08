@@ -222,7 +222,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 if (network.CompositeBranchStructures.Any(bf => bf.Name == compositeBranchStructure.Name))
                 {
                     compositeBranchStructure.Name =
-                        HydroNetworkHelper.GetUniqueFeatureNameWithAdditionalNewNameCheck(compositeBranchStructure.Network as HydroNetwork,
+                        HydroNetworkHelper.GetUniqueFeatureName(compositeBranchStructure.Network as HydroNetwork,
                             compositeBranchStructure);
                 }
 
