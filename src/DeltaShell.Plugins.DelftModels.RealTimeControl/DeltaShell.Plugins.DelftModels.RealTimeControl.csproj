@@ -144,7 +144,6 @@
     <Compile Include="ImportExport\RealTimeControlRuntimeConfigSetter.cs" />
     <Compile Include="ImportExport\RealTimeControlRuntimeConfigXmlReader.cs" />
     <Compile Include="ImportExport\RealTimeControlStateImportSetter.cs" />
-    <Compile Include="ImportExport\RealTimeControlStateImportXmlReader.cs" />
     <Compile Include="ImportExport\RealTimeControlTimeSeriesSetter.cs" />
     <Compile Include="ImportExport\RealTimeControlTimeSeriesXmlReader.cs" />
     <Compile Include="ImportExport\RealTimeControlToolsConfigComponentConnector.cs" />
