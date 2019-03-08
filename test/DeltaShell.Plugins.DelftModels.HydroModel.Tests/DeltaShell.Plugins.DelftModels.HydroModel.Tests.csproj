@@ -417,7 +417,7 @@
   <PropertyGroup>
     <PostBuildEvent>cmd /c "$(SolutionDir)packages\DeltaShell.TestProject.1.3.0.41635\tools\mklink-test-data.bat" $(SolutionDir)bin\$(Configuration)\ DelftTools.TestUtils $(SolutionDir)packages\DeltaShell.TestProject.1.3.0.41635\test-data\DelftTools.TestUtils
 
-cmd /c "$(SolutionDir)packages\DeltaShell.TestProject.1.3.0.41635\tools\mklink-test-data.bat" $(SolutionDir)bin\$(Configuration)\ AcceptanceModels  $(SolutionDir)AcceptanceModels
+cmd /c "$(SolutionDir)packages\DeltaShell.TestProject.1.3.0.42342\tools\mklink-test-data.bat" $(SolutionDir)bin\$(Configuration)\ AcceptanceModels  $(SolutionDir)AcceptanceModels
 cmd /c "$(SolutionDir)packages\DeltaShell.TestProject.1.3.0.42342\tools\mklink-test-data.bat" $(SolutionDir)bin\$(Configuration)\ DelftTools.TestUtils $(SolutionDir)packages\DeltaShell.TestProject.1.3.0.42342\test-data\DelftTools.TestUtils
 
 cmd /c "$(SolutionDir)packages\DeltaShell.TestProject.1.3.0.42342\tools\mklink-test-data.bat" $(SolutionDir)bin\$(Configuration)\ $(TargetName) $(ProjectDir)test-data
