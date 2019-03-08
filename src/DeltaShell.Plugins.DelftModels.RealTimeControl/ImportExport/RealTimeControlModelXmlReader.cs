@@ -30,7 +30,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             var dataConfigFilePath = Path.Combine(directoryPath, RealTimeControlXMLFiles.XmlData);
             var toolsConfigFilePath = Path.Combine(directoryPath, RealTimeControlXMLFiles.XmlTools);
             var timeSeriesFilePath = Path.Combine(directoryPath, RealTimeControlXMLFiles.XmlTimeSeries);
-            var stateImportFilePath = Path.Combine(directoryPath, RealTimeControlXMLFiles.XmlImportState);
 
             var rtcModel = new RealTimeControlModel();
 
@@ -43,26 +42,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             var timeSeriesReader = new RealTimeControlTimeSeriesXmlReader(logHandler);
             timeSeriesReader.Read(timeSeriesFilePath, controlGroups);
 
-            var connectionPoints = GetAllConnectionPointsFromControlGroups(controlGroups);
-
-            var stateImportReader = new RealTimeControlStateImportXmlReader(logHandler);
-            stateImportReader.Read(stateImportFilePath, connectionPoints);
-
             AddControlGroupsToRtcModel(controlGroups, rtcModel);
 
             logHandler.LogReport();
 
             return rtcModel;
-        }
-
-        private static IList<ConnectionPoint> GetAllConnectionPointsFromControlGroups(IList<IControlGroup> controlGroups)
-        {
-            var connectionPoints = controlGroups
-                .SelectMany(g => g.Inputs)
-                .Concat<ConnectionPoint>(controlGroups.SelectMany(g => g.Outputs))
-                .ToList();
-
-            return connectionPoints;
         }
 
         private static void AddControlGroupsToRtcModel(IList<IControlGroup> controlGroups, RealTimeControlModel rtcModel)
