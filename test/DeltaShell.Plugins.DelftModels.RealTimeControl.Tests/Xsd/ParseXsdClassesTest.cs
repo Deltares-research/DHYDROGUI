@@ -33,24 +33,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Xsd
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void ReadingStateImportXmlFilesDoesNotThrow()
-        {
-            // Given
-            const string fileName = "state_import.xml";
-            var path = Path.GetFullPath(Path.Combine(TestHelper.GetDataDir(), Directory, fileName));
-            Assert.True(File.Exists(path), $"File path '{path}' should exist.");
-
-            SetExpectationReportedInfoMessageLogHandler(fileName);
-
-            // When
-            var dataAccessModel = delftConfigXmlParser.Read<TreeVectorFileXML>(path);
-
-            // Then
-            Assert.NotNull(dataAccessModel);
-        }
-
-        [Test]
-        [Category(TestCategory.DataAccess)]
         public void ReadingTimeSeriesImportXmlFilesDoesNotThrown()
         {
             // Given
