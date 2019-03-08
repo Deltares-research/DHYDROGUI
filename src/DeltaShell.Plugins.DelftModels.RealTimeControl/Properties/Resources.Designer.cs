@@ -678,25 +678,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Could not find output with name &apos;{0}&apos; that is referenced in file &apos;{1}&apos;. Please check file &apos;{2}&apos;.
-        /// </summary>
-        public static string RealTimeControlStateImportXmlReader_Read_Could_not_find_output_with_name___0___that_is_referenced_in_file___1____Please_check_file___2__ {
-            get {
-                return ResourceManager.GetString("RealTimeControlStateImportXmlReader_Read_Could_not_find_output_with_name___0___th" +
-                        "at_is_referenced_in_file___1____Please_check_file___2__", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to File &apos;{0}&apos; does not exist..
-        /// </summary>
-        public static string RealTimeControlStateImportXmlReader_Read_File___0___does_not_exist_ {
-            get {
-                return ResourceManager.GetString("RealTimeControlStateImportXmlReader_Read_File___0___does_not_exist_", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Object with id &apos;{0}&apos; does not seem to be a Time Rule or Time Condition. See file: &apos;{1}&apos;..
         /// </summary>
         public static string RealTimeControlTimeSeriesConnector_ConnectTimeSeries_Object_with_id___0___does_not_seem_to_be_a_Time_Rule_or_Time_Condition__See_file____1___ {
