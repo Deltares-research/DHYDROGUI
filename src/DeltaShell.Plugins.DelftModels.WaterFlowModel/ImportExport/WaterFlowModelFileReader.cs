@@ -157,11 +157,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
         /// when it comes to the out and in file names.</remarks>
         private static void ReadRestartFiles(string directoryPath, WaterFlowModel1D model)
         {
+            const string sobekRda = "sobek.rda";
+            const string sobekRdf = "sobek.rdf";
+            const string dlevelsInXyz = "1Dlevels-in.xyz";
             var outAndInFileNames = new List<DelftTools.Utils.Tuple<string, string>>
             {
-                new DelftTools.Utils.Tuple<string, string>("sobek.rda", "sobek.rda"),
-                new DelftTools.Utils.Tuple<string, string>("sobek.rdf", "sobek.rdf"),
-                new DelftTools.Utils.Tuple<string, string>("1Dlevels-in.xyz", "1Dlevels-in.xyz")
+                new DelftTools.Utils.Tuple<string, string>(sobekRda, sobekRda),
+                new DelftTools.Utils.Tuple<string, string>(sobekRdf, sobekRdf),
+                new DelftTools.Utils.Tuple<string, string>(dlevelsInXyz, dlevelsInXyz)
             };
 
             var tempModelStateHandler = new ModelFileBasedStateHandler(model.Name, outAndInFileNames)
@@ -204,6 +207,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             return crossSectionsReader.Read(fileNames.CrossSectionDefinitions, fileNames.CrossSectionLocations, network);
         }
 
+        /// <remarks>
+        /// Inside 'if (network.CompositeBranchStructures.Any(bf => bf.Name == compositeBranchStructure.Name))':
+        /// Extra check, since the composite structures will be added to the network at this level and 
+        /// due to this all the new composite branch structures containing only one structure have the same name.  
+        /// </remarks>
         private static void ReadStructuresFile(IHydroNetwork network, IList<ICrossSectionDefinition> crossSectionDefinitions, GroundLayerDTO[] groundLayerDataTransferObject, Action<string, IList<string>> createAndAddErrorReport)
         {
             var structuresFileReader = new StructuresFileReader(createAndAddErrorReport);
@@ -213,8 +221,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             {
                 if (network.CompositeBranchStructures.Any(bf => bf.Name == compositeBranchStructure.Name))
                 {
-                    //Extra check, since the composite structures will be added to the network at this level and 
-                    // due to this all the new composite branch structures containing only one structure have the same name.  
                     compositeBranchStructure.Name =
                         HydroNetworkHelper.GetUniqueFeatureNameWithAdditionalNewNameCheck(compositeBranchStructure.Network as HydroNetwork,
                             compositeBranchStructure);

@@ -151,7 +151,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]
         public void GivenAnMd1dFile_WhenReading_ThenAModelWithTheExpectedAmountOfBranchesAndNodesIsReturned()
         {
