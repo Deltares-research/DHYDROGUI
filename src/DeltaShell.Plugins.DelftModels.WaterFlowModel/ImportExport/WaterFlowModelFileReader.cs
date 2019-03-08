@@ -13,6 +13,7 @@ using DelftTools.Shell.Core.Workflow;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
+using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.FileReaders.Retention;
 using DeltaShell.NGHS.IO.FileReaders.SpatialData;
@@ -168,7 +169,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 ModelWorkingDirectory = directoryPath
             };
 
-            var persistentStateFilePath = Path.Combine(Path.GetTempPath(), "importedState.zip");
+            var persistentStateFilePath = Path.Combine(FileUtils.CreateTempDirectory(), "importedState.zip");
             tempModelStateHandler.SaveStateToFile(tempModelStateHandler.GetState(), persistentStateFilePath);
 
             model.RestartInput = new FileBasedRestartState("Imported State", persistentStateFilePath);
