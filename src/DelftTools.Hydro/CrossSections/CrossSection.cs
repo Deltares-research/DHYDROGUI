@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
@@ -9,7 +8,6 @@ using DelftTools.Utils.Editing;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
-using log4net;
 using IEditableObject = DelftTools.Utils.Editing.IEditableObject;
 
 namespace DelftTools.Hydro.CrossSections
@@ -17,7 +15,6 @@ namespace DelftTools.Hydro.CrossSections
     [Entity]
     public class CrossSection : BranchFeatureHydroObject, ICrossSection, IEditableObject
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(CrossSection));
         private IGeometry tmpGeometry;
 
         [DisplayName("Name")]
@@ -29,45 +26,18 @@ namespace DelftTools.Hydro.CrossSections
             set
             {
                 BeginEdit(new DefaultEditAction(string.Format("Change CrossSection Name from \"{0}\" to \"{1}\"", base.Name, value)));
-
-                if (HydroNetwork != null)
-                {
-                    var nameAlreadyExists = HydroNetwork.IsEditing ? false : CrossSectionNameExists(value);
-                    if (nameAlreadyExists)
-                    {
-                        Log.Error($"A cross section with name '{value}' already exists. Cross section name '{Name}' remains unchanged.");
-                    }
-                    else
-                    {
-                        SetCrossSectionName(value);
-                    }
-                }
-                else
-                {
-                    SetCrossSectionName(value);
-                }
+                
+                base.Name = value;
+                AfterNameSet();
 
                 EndEdit();
             }
         }
 
-        private bool CrossSectionNameExists(string value)
-        {
-            var crossSectionNames = HydroNetwork.CrossSections.Select(cs => cs.Name);
-            var sharedCrossSectionDefinitionNames = HydroNetwork.SharedCrossSectionDefinitions.Select(cs => cs.Name);
-            var names = crossSectionNames.Concat(sharedCrossSectionDefinitionNames);
-            return names.Contains(value);
-        }
-
-        private void SetCrossSectionName(string name)
-        {
-            base.Name = name;
-            SetDefinitionName();
-        }
-
         [EditAction]
-        private void SetDefinitionName()
+        private void AfterNameSet()
         {
+            //for practical reasons..sync definition name
             if (Definition != null && !Definition.IsProxy)
             {
                 Definition.Name = Name;

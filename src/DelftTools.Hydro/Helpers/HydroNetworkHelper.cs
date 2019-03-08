@@ -682,7 +682,7 @@ namespace DelftTools.Hydro.Helpers
         {
             var branchFeature = new CrossSection(crossSectionDefinition);
             branchFeature.Name = "cross_section";
-            NetworkHelper.AddBranchFeatureToBranch(branchFeature, branch, offset);
+            NetworkHelper.AddBranchFeatureToBranch(branchFeature,branch, offset);
             return branchFeature;
         }
     }
