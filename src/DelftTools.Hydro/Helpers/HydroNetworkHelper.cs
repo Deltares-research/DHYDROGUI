@@ -484,17 +484,13 @@ namespace DelftTools.Hydro.Helpers
         /// <param name="feature"></param>
         public static string GetUniqueFeatureName(IHydroRegion region, IFeature feature, bool checkIfNewNameIsNeeded = false)
         {
-            //return feature.GetEntityType().Name;
-
             var featureName = feature.GetEntityType().Name;
-
             var fullRegion = region.Parent as IHydroRegion ?? region;
-
             var hydroObjectNames = fullRegion.AllHydroObjects.Where(f => f.GetEntityType().Name == featureName).Select(f => f.Name);
             var allLinkNames = fullRegion.AllRegions.OfType<IHydroRegion>().SelectMany(r => r.Links).Select(l => l.Name);
             var allNames = hydroObjectNames.Concat(allLinkNames);
-
             var names = new HashSet<string>(allNames);
+
             if (checkIfNewNameIsNeeded)
             {
                 var nameProperty = feature.GetType().GetProperty("Name");
@@ -505,6 +501,7 @@ namespace DelftTools.Hydro.Helpers
                     if (!string.IsNullOrWhiteSpace(currentName as string) && !names.Contains(currentName.ToString())) return currentName.ToString();
                 }
             }
+
             int i = 1;
             var uniqueName = featureName + i;
             while (names.Contains(uniqueName))
@@ -514,8 +511,6 @@ namespace DelftTools.Hydro.Helpers
             }
 
             return uniqueName;
-            
-            //return NetworkHelper.GetUniqueName(featureName + "{0:D3}", region.AllHydroObjects.Where(f => f != feature), featureName);
         }
 
         public static void AddStructureToComposite(ICompositeBranchStructure compositeBranchStructure, IStructure1D structure)
