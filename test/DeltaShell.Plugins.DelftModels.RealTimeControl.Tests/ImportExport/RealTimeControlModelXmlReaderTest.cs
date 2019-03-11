@@ -92,6 +92,19 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
                 "Returned model was not expected to be null after reading from an existing path.");
         }
 
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void GivenAValidRtcDirectoryPathWithUseRestartSetToFalse_WhenReadingAllTheFiles_TheExpectedWarningMessageIsGiven()
+        {
+            // When
+            rtcModel = RealTimeControlModelXmlReader.Read(directoryPath);
+
+            // Then
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => rtcModel = RealTimeControlModelXmlReader.Read(directoryPath),
+                string.Format(Resources.RealTimeControlModelXmlReader_Read_We_do_not_support_DIMR_import_of_restart_state_files_for_D_RTC_yet__Use_Restart_option_in_D_RTC_is_set_to_False_,
+                    directoryPath));
+        }
+
         private static void CheckSimpleModelTimeSettings(ITimeDependentModel rtcModel)
         {
             Assert.AreEqual(new DateTime(2018, 12, 12, 0, 0, 0), rtcModel.StartTime, "Model start time is incorrectly set.");

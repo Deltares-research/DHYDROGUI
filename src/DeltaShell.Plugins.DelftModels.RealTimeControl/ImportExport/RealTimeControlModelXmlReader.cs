@@ -14,6 +14,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         /// <param name="directoryPath">The directory path of RTC</param>
         /// <returns>A RealTimeControl Model</returns>
         /// <remarks>If the path directory path does not exist, the method logs a message and returns null.</remarks>
+        /// <remarks>Import for restart/state files is not yet supported.
+        /// The use restart option is automatically set to false after importing.
+        /// for more information please review issue SOBEK3-1704</remarks>
         public static RealTimeControlModel Read(string directoryPath)
         {
             var logHandler = new LogHandler("Import of the Real-Time Control Model");
@@ -32,6 +35,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             var timeSeriesFilePath = Path.Combine(directoryPath, RealTimeControlXMLFiles.XmlTimeSeries);
 
             var rtcModel = new RealTimeControlModel();
+
+            logHandler.ReportWarning(Resources.RealTimeControlModelXmlReader_Read_We_do_not_support_DIMR_import_of_restart_state_files_for_D_RTC_yet__Use_Restart_option_in_D_RTC_is_set_to_False_);
 
             var runtimeConfigReader = new RealTimeControlRuntimeConfigXmlReader(logHandler);
             runtimeConfigReader.Read(runTimeConfigFilePath, rtcModel);

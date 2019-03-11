@@ -385,4 +385,7 @@
   <data name="RealTimeControlDataConfigXmlSetter_SetTimeLagOnHydraulicRules_Cannot_find_input_with_element_ID___0___for_rule___1____Please_check_file____2___" xml:space="preserve">
     <value>Cannot find input with element ID '{0}' for rule '{1}'. Please check file: '{2}'.</value>
   </data>
+  <data name="RealTimeControlModelXmlReader_Read_We_do_not_support_DIMR_import_of_restart_state_files_for_D_RTC_yet__Use_Restart_option_in_D_RTC_is_set_to_False_" xml:space="preserve">
+    <value>We do not support DIMR import of restart/state files for D-RTC yet. Use Restart option in D-RTC is set to False.</value>
+  </data>
 </root>
