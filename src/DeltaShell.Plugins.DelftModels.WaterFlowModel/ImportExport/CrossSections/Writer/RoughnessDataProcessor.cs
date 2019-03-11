@@ -13,7 +13,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSectio
 {
     public static class RoughnessDataProcessor
     {
-        public static DelftIniCategory AddRoughnessDataToFileContent(DelftIniCategory iniCategory, ICrossSection crossSection, IList<RoughnessSection> roughnessSections, bool useReverseRoughness)
+        public static DelftIniCategory AddRoughnessDataToFileContent(DelftIniCategory iniCategory, ICrossSection crossSection, IList<RoughnessSection> listOfRoughnessSections, bool useReverseRoughness)
         {
             var sectionSections = crossSection.Definition.Sections as IList<CrossSectionSection>;
             if (sectionSections.Count == 0)
@@ -27,7 +27,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSectio
                         MinY = y[0],
                         MaxY = y[y.Count - 1],
                         // always use "main"?; first is temporary fix
-                        SectionType = roughnessSections[0].CrossSectionSectionType
+                        SectionType = listOfRoughnessSections[0].CrossSectionSectionType
                     }
                 };
                 sectionSections = crossSectionSections;
@@ -41,7 +41,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSectio
             var frictionTypeNegative = new List<int>();
             var frictionValueNegative = new List<double>();
 
-            foreach (var roughnessSection in sectionSections.Select(section => GetRoughnessSection(roughnessSections, section)))
+            var roughnessSections = sectionSections.Select(section => GetRoughnessSection(listOfRoughnessSections, section));
+            foreach (var roughnessSection in roughnessSections)
             {
                 frictionNames.Add(roughnessSection.Name);
                 //The roughness values for YZ cannot be Q or H dependent (specifically: not Q dependent without major performance issues and changes to rekenhart). 
@@ -55,7 +56,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSectio
 
                 frictionValuePositive.Add(roughnessSection.EvaluateRoughnessValue(crossSection.ToNetworkLocation()));
                 frictionValueNegative.Add(useReverseRoughness
-                    ? GetNegativeFrictionValue(roughnessSections, roughnessSection, crossSection)
+                    ? GetNegativeFrictionValue(listOfRoughnessSections, roughnessSection, crossSection)
                     : frictionValuePositive.Last());
             }
 
