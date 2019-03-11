@@ -36,7 +36,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 
             var rtcModel = new RealTimeControlModel();
 
-            logHandler.ReportWarning(Resources.RealTimeControlModelXmlReader_Read_We_do_not_support_DIMR_import_of_restart_state_files_for_D_RTC_yet__Use_Restart_option_in_D_RTC_is_set_to_False_);
+            logHandler.ReportInfo(Resources.RealTimeControlModelXmlReader_Please_note_that_Use_Restart_option_in_D_RTC_is_set_to_False);
 
             var runtimeConfigReader = new RealTimeControlRuntimeConfigXmlReader(logHandler);
             runtimeConfigReader.Read(runTimeConfigFilePath, rtcModel);

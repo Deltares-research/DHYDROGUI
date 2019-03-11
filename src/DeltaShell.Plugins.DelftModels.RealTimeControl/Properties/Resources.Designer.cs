@@ -650,21 +650,21 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Please note that Use Restart option in D-RTC is set to False..
+        /// </summary>
+        public static string RealTimeControlModelXmlReader_Please_note_that_Use_Restart_option_in_D_RTC_is_set_to_False {
+            get {
+                return ResourceManager.GetString("RealTimeControlModelXmlReader_Please_note_that_Use_Restart_option_in_D-RTC_is_set" +
+                        "_to_False", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Directory &apos;{0}&apos; does not exist..
         /// </summary>
         public static string RealTimeControlModelXmlReader_Read_Directory___0___does_not_exist_ {
             get {
                 return ResourceManager.GetString("RealTimeControlModelXmlReader_Read_Directory___0___does_not_exist_", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to We do not support DIMR import of restart/state files for D-RTC yet. Use Restart option in D-RTC is set to False..
-        /// </summary>
-        public static string RealTimeControlModelXmlReader_Read_We_do_not_support_DIMR_import_of_restart_state_files_for_D_RTC_yet__Use_Restart_option_in_D_RTC_is_set_to_False_ {
-            get {
-                return ResourceManager.GetString("RealTimeControlModelXmlReader_Read_We_do_not_support_DIMR_import_of_restart_state" +
-                        "_files_for_D_RTC_yet__Use_Restart_option_in_D_RTC_is_set_to_False_", resourceCulture);
             }
         }
         
