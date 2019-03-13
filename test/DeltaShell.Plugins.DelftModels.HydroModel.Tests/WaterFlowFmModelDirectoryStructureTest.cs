@@ -1279,6 +1279,507 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             }
         }
 
+        /// <summary>
+        /// GIVEN a migrated model with output
+        ///   AND a project
+        /// WHEN this model is imported into this project
+        /// THEN the input files are copied correctly
+        ///  AND the output is handled correctly
+        ///  AND the import location does not change
+        /// </summary>
+        [TestCase("")]
+        [TestCase("../output")]
+        public void GivenAMigratedModelWithOutput_WhenThisModelIsImported_ThenTheInputAndOutputAreHandledCorrectly(string outputDirValue)
+        {
+            CreateTestDirectories();
+
+            try
+            {
+                CopyProjectToDestinationDir("TestModel");
+
+                using (var app = GetConfiguredApplication())
+                {
+                    // Given
+                    var modelDirImport = Path.Combine(destinationDirPath, "Project1.dsproj_data", "FlowFM1");
+                    var importInputFiles = Directory.EnumerateFiles(modelDirImport).ToList();
+
+                    var mduPath = Path.Combine(modelDirImport, "input", "FlowFM1.mdu");
+
+                    MigrateModel(app, projectFilePath);
+                    UpdateOutputDirInMDUTo(mduPath, outputDirValue);
+
+                    var preImportDirStructure = GetDirectoryStructure(destinationDirPath,
+                                                                      ".",
+                                                                      doChecksum: true);
+
+                    // When
+                    var DsprojSave = Path.Combine(tempDirPath, "Project1.dsproj");
+                    var importedModel = ImportModelIntoProject(app, mduPath, DsprojSave);
+
+                    // Then
+                    var postImportDirStructure = GetDirectoryStructure(destinationDirPath,
+                                                                       ".",
+                                                                       doChecksum: true);
+                    AssertEqualDirectoryStructure(".",
+                                                  ref preImportDirStructure,
+                                                  ref postImportDirStructure,
+                                                  true);
+
+                    var modelDirSave = Path.Combine(DsprojSave + "_data", importedModel.Name);
+                    Assert.That(Directory.Exists(modelDirSave), Is.True, "Expected a model directory, but found none.");
+                    var inputDirSave = Path.Combine(modelDirSave, "input");
+                    Assert.That(Directory.Exists(inputDirSave), Is.True, "Expected an input directory, but found none.");
+
+                    var saveInputFiles = Directory.EnumerateFiles(inputDirSave);
+                    AssertThatInputFilesAreEqual(importInputFiles, saveInputFiles);
+
+                    AssertThatOutputExists(modelDirImport, "output", modelDirSave, importedModel);
+                }
+            }
+            finally
+            {
+                DeleteTestDirectories();
+            }
+        }
+
+        /// <summary>
+        /// GIVEN an old style model with output without an OutputDir set
+        ///   AND a project
+        /// WHEN this model is imported into this project
+        /// THEN the input files are copied correctly
+        ///  AND the output is handled correctly
+        ///  AND the import location does not change
+        /// </summary>
+        [Test]
+        public void GivenAnOldModelWithOutputAndWithoutOutputDirSet_WhenThisModelIsImported_ThenTheInputAndOutputAreHandledCorrectly()
+        {
+            CreateTestDirectories();
+
+            try
+            {
+                CopyProjectToDestinationDir("TestModel");
+
+                using (var app = GetConfiguredApplication())
+                {
+                    // Given
+                    var modelDirImport = Path.Combine(destinationDirPath, "Project1.dsproj_data", "FlowFM1");
+                    var importInputFiles = Directory.EnumerateFiles(modelDirImport).ToList();
+
+                    var mduPath = Path.Combine(modelDirImport, "FlowFM1.mdu");
+
+                    var preImportDirStructure = GetDirectoryStructure(destinationDirPath,
+                                                                      ".",
+                                                                      doChecksum: true);
+
+                    // When
+                    var DsprojSave = Path.Combine(tempDirPath, "Project1.dsproj");
+                    var importedModel = ImportModelIntoProject(app, mduPath, DsprojSave);
+
+                    // Then
+                    var postImportDirStructure = GetDirectoryStructure(destinationDirPath,
+                                                                       ".",
+                                                                       doChecksum: true);
+                    AssertEqualDirectoryStructure(".",
+                                                  ref preImportDirStructure,
+                                                  ref postImportDirStructure,
+                                                  true);
+
+                    var modelDirSave = Path.Combine(DsprojSave + "_data", importedModel.Name);
+                    Assert.That(Directory.Exists(modelDirSave), Is.True, "Expected a model directory, but found none.");
+                    var inputDirSave = Path.Combine(modelDirSave, "input");
+                    Assert.That(Directory.Exists(inputDirSave), Is.True, "Expected an input directory, but found none.");
+
+                    var saveInputFiles = Directory.EnumerateFiles(inputDirSave);
+                    AssertThatInputFilesAreEqual(importInputFiles, saveInputFiles);
+
+                    AssertThatOutputNotExists(modelDirSave, importedModel);
+                }
+            }
+            finally
+            {
+                DeleteTestDirectories();
+            }
+        }
+
+        /// <summary>
+        /// GIVEN an old style model with output and with an OutputDir set
+        ///   AND a project
+        /// WHEN this model is imported into this project
+        /// THEN the input files are copied correctly
+        ///  AND the output is handled correctly
+        ///  AND the import location does not change
+        /// </summary>
+        [Test]
+        public void GivenAnOldModelWithOutputAndWithOutputDirSet_WhenThisModelIsImported_ThenTheInputAndOutputAreHandledCorrectly()
+        {
+            CreateTestDirectories();
+
+            try
+            {
+                CopyProjectToDestinationDir("TestModel");
+
+                using (var app = GetConfiguredApplication())
+                {
+                    // Given
+                    var modelDirImport = Path.Combine(destinationDirPath, "Project1.dsproj_data", "FlowFM1");
+                    var importInputFiles = Directory.EnumerateFiles(modelDirImport).ToList();
+
+                    const string importOutputFolder = "DFM_OUTPUT_FlowFM1";
+
+                    var mduPath = Path.Combine(modelDirImport, "FlowFM1.mdu");
+                    UpdateOutputDirInMDUTo(mduPath, importOutputFolder);
+
+                    var preImportDirStructure = GetDirectoryStructure(destinationDirPath,
+                                                                      ".",
+                                                                      doChecksum: true);
+
+                    // When
+                    var DsprojSave = Path.Combine(tempDirPath, "Project1.dsproj");
+                    var importedModel = ImportModelIntoProject(app, mduPath, DsprojSave);
+
+                    // Then
+                    var postImportDirStructure = GetDirectoryStructure(destinationDirPath,
+                                                                       ".",
+                                                                       doChecksum: true);
+                    AssertEqualDirectoryStructure(".",
+                                                  ref preImportDirStructure,
+                                                  ref postImportDirStructure,
+                                                  true);
+
+                    var modelDirSave = Path.Combine(DsprojSave + "_data", importedModel.Name);
+                    Assert.That(Directory.Exists(modelDirSave), Is.True, "Expected a model directory, but found none.");
+                    var inputDirSave = Path.Combine(modelDirSave, "input");
+                    Assert.That(Directory.Exists(inputDirSave), Is.True, "Expected an input directory, but found none.");
+
+                    var saveInputFiles = Directory.EnumerateFiles(inputDirSave);
+                    AssertThatInputFilesAreEqual(importInputFiles, saveInputFiles);
+
+                    AssertThatOutputExists(modelDirImport, importOutputFolder, modelDirSave, importedModel);
+                }
+            }
+            finally
+            {
+                DeleteTestDirectories();
+            }
+        }
+
+        /// <summary>
+        /// GIVEN a migrated model with output at a custom location and without an OutputDir set
+        ///   AND a project
+        /// WHEN this model is imported into this project
+        /// THEN the input files are copied correctly
+        ///  AND the output is handled correctly
+        ///  AND the import location does not change
+        /// </summary>
+        [Test]
+        public void GivenAMigratedModelWithOutputAtACustomLocationAndWithoutOutputDirValueSet_WhenThisModelIsImported_ThenTheInputAndOutputAreHandledCorrectly()
+        {
+            CreateTestDirectories();
+
+            try
+            {
+                CopyProjectToDestinationDir("TestModel");
+
+                using (var app = GetConfiguredApplication())
+                {
+                    // Given
+                    var modelDirImport = Path.Combine(destinationDirPath, "Project1.dsproj_data", "FlowFM1");
+                    var importInputFiles = Directory.EnumerateFiles(modelDirImport).ToList();
+
+                    var mduPath = Path.Combine(modelDirImport, "input", "FlowFM1.mdu");
+
+                    MigrateModel(app, projectFilePath);
+                    MoveOutputDirToCustomLocation(modelDirImport);
+
+                    var preImportDirStructure = GetDirectoryStructure(destinationDirPath,
+                                                                      ".",
+                                                                      doChecksum: true);
+
+                    // When
+                    var DsprojSave = Path.Combine(tempDirPath, "Project1.dsproj");
+                    var importedModel = ImportModelIntoProject(app, mduPath, DsprojSave);
+
+                    // Then
+                    var postImportDirStructure = GetDirectoryStructure(destinationDirPath,
+                                                                       ".",
+                                                                       doChecksum: true);
+                    AssertEqualDirectoryStructure(".",
+                                                  ref preImportDirStructure,
+                                                  ref postImportDirStructure,
+                                                  true);
+
+                    var modelDirSave = Path.Combine(DsprojSave + "_data", importedModel.Name);
+                    Assert.That(Directory.Exists(modelDirSave), Is.True, "Expected a model directory, but found none.");
+                    var inputDirSave = Path.Combine(modelDirSave, "input");
+                    Assert.That(Directory.Exists(inputDirSave), Is.True, "Expected an input directory, but found none.");
+
+                    var saveInputFiles = Directory.EnumerateFiles(inputDirSave);
+                    AssertThatInputFilesAreEqual(importInputFiles, saveInputFiles);
+
+                    AssertThatOutputNotExists(modelDirSave, importedModel);
+                }
+            }
+            finally
+            {
+                DeleteTestDirectories();
+            }
+        }
+
+        private const string customOutputFolder = "we/must/go/deeper/output";
+
+        /// <summary>
+        /// GIVEN a migrated model with output at a custom location and with an OutputDir set
+        ///   AND a project
+        /// WHEN this model is imported into this project
+        /// THEN the input files are copied correctly
+        ///  AND the output is handled correctly
+        ///  AND the import location does not change
+        /// </summary>
+        [Test]
+        public void GivenAMigratedModelWithOutputAtACustomLocationAndWithOutputDirValueSet_WhenThisModelIsImported_ThenTheInputAndOutputAreHandledCorrectly()
+        {
+            CreateTestDirectories();
+
+            try
+            {
+                CopyProjectToDestinationDir("TestModel");
+
+                using (var app = GetConfiguredApplication())
+                {
+                    // Given
+                    var modelDirImport = Path.Combine(destinationDirPath, "Project1.dsproj_data", "FlowFM1");
+                    var importInputFiles = Directory.EnumerateFiles(modelDirImport).ToList();
+
+                    var mduPath = Path.Combine(modelDirImport, "input", "FlowFM1.mdu");
+
+                    MigrateModel(app, projectFilePath);
+                    UpdateOutputDirInMDUTo(mduPath, "../" + customOutputFolder);
+                    MoveOutputDirToCustomLocation(modelDirImport);
+
+                    var preImportDirStructure = GetDirectoryStructure(destinationDirPath,
+                                                                      ".",
+                                                                      doChecksum: true);
+
+                    // When
+                    var DsprojSave = Path.Combine(tempDirPath, "Project1.dsproj");
+                    var importedModel = ImportModelIntoProject(app, mduPath, DsprojSave);
+
+                    // Then
+                    var postImportDirStructure = GetDirectoryStructure(destinationDirPath,
+                                                                       ".",
+                                                                       doChecksum: true);
+                    AssertEqualDirectoryStructure(".",
+                                                  ref preImportDirStructure,
+                                                  ref postImportDirStructure,
+                                                  true);
+
+                    var modelDirSave = Path.Combine(DsprojSave + "_data", importedModel.Name);
+                    Assert.That(Directory.Exists(modelDirSave), Is.True, "Expected a model directory, but found none.");
+                    var inputDirSave = Path.Combine(modelDirSave, "input");
+                    Assert.That(Directory.Exists(inputDirSave), Is.True, "Expected an input directory, but found none.");
+
+                    var saveInputFiles = Directory.EnumerateFiles(inputDirSave);
+                    AssertThatInputFilesAreEqual(importInputFiles, saveInputFiles);
+
+                    AssertThatOutputExists(modelDirImport, customOutputFolder, modelDirSave, importedModel);
+                }
+            }
+            finally
+            {
+                DeleteTestDirectories();
+            }
+        }
+
+        /// <summary>
+        /// GIVEN a migrated model with output and an OutputDir set
+        ///   AND an Integrated Model
+        /// WHEN this model is imported into this Integrated Model
+        /// THEN the input files are copied correctly
+        ///  AND the model is added to the integrated model
+        ///  AND the output of the imported model is empty
+        /// </summary>
+        [Test]
+        public void GivenAMigratedModelWithOutputAndAnOutputDirSet_WhenThisModelIsImportedIntoAnIntegratedModel_ThenTheInputFilesAreHandledCorrectlyAndTheModelIsAddedToTheIntegratedModelAndTheOutputOfTheImportedModelIsEmpty()
+        {
+            CreateTestDirectories();
+
+            try
+            {
+                CopyProjectToDestinationDir("TestModel");
+
+                using (var app = GetConfiguredApplication())
+                {
+                    // Given
+                    var modelDirImport = Path.Combine(destinationDirPath, "Project1.dsproj_data", "FlowFM1");
+                    // Restart.Meta is not imported.
+                    var importInputFiles = Directory.EnumerateFiles(modelDirImport).Where(p => !p.EndsWith("restart.meta")).ToList();
+
+                    var mduPath = Path.Combine(modelDirImport, "input", "FlowFM1.mdu");
+
+                    MigrateModel(app, projectFilePath);
+
+                    var preImportDirStructure = GetDirectoryStructure(destinationDirPath,
+                                                                      ".",
+                                                                      doChecksum: true);
+
+                    // When
+                    var DsprojSave = Path.Combine(tempDirPath, "Project1.dsproj");
+                    var integratedModel = ImportModelIntoIntegratedModel(app, mduPath, DsprojSave);
+
+                    // Then
+
+                    var integratedModelActivities = integratedModel.Activities.ToList();
+                    Assert.That(integratedModelActivities.Count, Is.EqualTo(1), "Expected the integrated model to contain a single activity.");
+                    var importedModel = integratedModelActivities.First() as WaterFlowFMModel;
+
+                    var postImportDirStructure = GetDirectoryStructure(destinationDirPath,
+                                                                       ".",
+                                                                       doChecksum: true);
+                    AssertEqualDirectoryStructure(".",
+                                                  ref preImportDirStructure,
+                                                  ref postImportDirStructure,
+                                                  true);
+
+                    var modelDirSave = Path.Combine(DsprojSave + "_data", importedModel.Name);
+                    Assert.That(Directory.Exists(modelDirSave), Is.True, "Expected a model directory, but found none.");
+                    var inputDirSave = Path.Combine(modelDirSave, "input");
+                    Assert.That(Directory.Exists(inputDirSave), Is.True, "Expected an input directory, but found none.");
+
+                    var saveInputFiles = Directory.EnumerateFiles(inputDirSave);
+                    AssertThatInputFilesAreEqual(importInputFiles, saveInputFiles);
+
+                    AssertThatOutputNotExists(modelDirSave, importedModel);
+                }
+            }
+            finally
+            {
+                DeleteTestDirectories();
+            }
+        }
+
+        private static void MigrateModel(IApplication app, string dsProjPath)
+        {
+            var hasOpened = app.OpenProject(dsProjPath);
+            Assert.That(hasOpened, Is.True,
+                        $"Could not open project at {dsProjPath}");
+
+            app.SaveProject();
+            app.CloseProject();
+        }
+
+        private void UpdateOutputDirInMDUTo(string mduPath, string newOutputDirPath)
+        {
+            // The OutputDir is already empty.
+            if (string.IsNullOrEmpty(newOutputDirPath))
+                return;
+
+            var mduData = File.ReadAllLines(mduPath);
+            const string outputDir = "OutputDir         =";
+
+            for (var i = 0; i < mduData.Length; i++)
+            {
+                var line = mduData[i];
+
+                if (!line.StartsWith(outputDir))
+                    continue;
+
+                mduData[i] = $"{line.TrimEnd()} {newOutputDirPath}";
+                break;
+            }
+
+            File.WriteAllLines(mduPath, mduData);
+        }
+
+        private static void MoveOutputDirToCustomLocation(string outputParentDirectory)
+        {
+            Directory.CreateDirectory(Path.Combine(outputParentDirectory,
+                                                   Path.GetDirectoryName(customOutputFolder)));
+            Directory.Move(Path.Combine(outputParentDirectory, "output"),
+                           Path.Combine(outputParentDirectory, customOutputFolder));
+        }
+
+        private static WaterFlowFMModel ImportModelIntoProject(IApplication app, string mduPath, string DsprojSave)
+        {
+            app.CreateNewProject();
+            var relevantImporter = app.FileImporters
+                                      .FirstOrDefault(importer => importer is WaterFlowFMFileImporter);
+
+            var importedModel = relevantImporter.ImportItem(mduPath) as WaterFlowFMModel;
+            Assert.That(importedModel, Is.Not.Null,
+                        "Expected the imported model to exist.");
+            AddModelToProject(importedModel, app);
+
+            app.SaveProjectAs(DsprojSave);
+            return importedModel;
+        }
+
+        private static HydroModel ImportModelIntoIntegratedModel(IApplication app, string mduPath, string DsprojSave)
+        {
+            // When
+            app.CreateNewProject();
+            var newIntegratedModel = new HydroModel()
+            {
+                Name = "Blastoise"
+            };
+
+            AddModelToProject(newIntegratedModel, app);
+
+            var relevantImporter = app.FileImporters
+                                      .FirstOrDefault(importer => importer is WaterFlowFMFileImporter);
+
+            relevantImporter.ImportItem(mduPath, newIntegratedModel);
+
+            app.SaveProjectAs(DsprojSave);
+            return newIntegratedModel;
+        }
+
+
+        private static void AssertThatInputFilesAreEqual(IEnumerable<string> importInputFiles,
+                                                         IEnumerable<string> saveInputFiles)
+        {
+            var importFiles = importInputFiles.Select(Path.GetFileName).ToList();
+            var saveFiles = saveInputFiles.Select(Path.GetFileName).ToList();
+
+            Assert.That(saveFiles.Count, Is.EqualTo(importFiles.Count), "Expected the number of saved input files to be equal to the original number of input files.");
+
+            importFiles.Sort();
+            saveFiles.Sort();
+
+            for (var i = 0; i < saveFiles.Count; i++)
+            {
+                Assert.That(saveFiles[i], Is.EqualTo(importFiles[i]), "Expected all the files to be equal but found two different files:");
+            }
+        }
+
+        private static void AssertThatOutputExists(string modelDirImport,
+                                                   string relativeImportOutputPath,
+                                                   string modelDirSave,
+                                                   WaterFlowFMModel importedModel)
+        {
+            var importOutputPath = Path.Combine(modelDirImport, relativeImportOutputPath);
+            var importOutputDirStructure = GetDirectoryStructure(importOutputPath, ".");
+
+            var saveOutputPath = Path.Combine(modelDirSave, "output");
+            var saveOutputDirStructure = GetDirectoryStructure(saveOutputPath, ".");
+
+            AssertEqualDirectoryStructure(".", ref saveOutputDirStructure, ref importOutputDirStructure);
+
+            Assert.That(importedModel.OutputHisFileStore, Is.Not.Null, "Expected an OutputHisFileStore to not be null.");
+            Assert.That(importedModel.OutputMapFileStore, Is.Not.Null, "Expected an OutputMapFileStore to not be null.");
+            Assert.That(importedModel.OutputClassMapFileStore, Is.Not.Null, "Expected an OutputClassFileStore to not be null.");
+        }
+
+        private static void AssertThatOutputNotExists(string modelDirSave,
+                                                      WaterFlowFMModel importedModel)
+        {
+            var outputPath = Path.Combine(modelDirSave, "output");
+            Assert.That(Directory.Exists(outputPath), Is.False, "Did not expect an output directory.");
+
+            Assert.That(importedModel.OutputHisFileStore, Is.Null, "Expected no OutputHisFileStore with no output");
+            Assert.That(importedModel.OutputMapFileStore, Is.Null, "Expected no OutputMapFileStore with no output");
+            Assert.That(importedModel.OutputClassMapFileStore, Is.Null, "Expected no OutputClassFileStore with no output");
+        }
+
         private static void CreateExportedFmModel(IApplication app, 
                                                   string exportPath, 
                                                   out WaterFlowFMModel fmModel)
