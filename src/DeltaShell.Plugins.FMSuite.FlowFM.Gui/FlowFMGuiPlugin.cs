@@ -661,7 +661,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             foreach (var model in FlowModels)
             {
                 FreeSnappedOutputLayers(model);
-                model.OutputSnappedFeaturesPathPropertyChanged += OnOutputSnappedFeaturesPathPropertyChanged;
+                model.OutputSnappedFeaturesPathPropertyChanged += OnModelOutputSnappedFeaturesPathPropertyChanged;
             }
         }
 
@@ -669,11 +669,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         {
             foreach (var model in FlowModels)
             {
-                model.OutputSnappedFeaturesPathPropertyChanged -= OnOutputSnappedFeaturesPathPropertyChanged;
+                model.OutputSnappedFeaturesPathPropertyChanged -= OnModelOutputSnappedFeaturesPathPropertyChanged;
             }
         }
 
-        private void OnOutputSnappedFeaturesPathPropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void OnModelOutputSnappedFeaturesPathPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             var waterflowFmModel = sender as WaterFlowFMModel;
             if (waterflowFmModel == null ||
