@@ -567,7 +567,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var allFixedWeirsAndCorrespondingProperties = new Dictionary<FixedWeir, ModelFeatureCoordinateData<FixedWeir>>();
 
             var mduFile = new MduFile();
-            mduFile.Read(Path.Combine(mduDir, "har.mdu"), modelDefinition, area, allFixedWeirsAndCorrespondingProperties);
+            mduFile.Read(Path.Combine(mduDir, "harWithoutOutputDir.mdu"), modelDefinition, area, allFixedWeirsAndCorrespondingProperties);
 
             const string saveToDir = "readWriteHarlingen";
             Directory.CreateDirectory(saveToDir);
