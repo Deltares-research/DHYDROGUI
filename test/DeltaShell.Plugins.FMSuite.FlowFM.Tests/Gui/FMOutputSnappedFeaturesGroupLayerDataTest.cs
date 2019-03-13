@@ -22,6 +22,7 @@ using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using NUnit.Framework;
 using SharpMap.Extensions.CoordinateSystems;
 using SharpMap.Layers;
+using DeltaShell.NGHS.TestUtils;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 {
@@ -59,7 +60,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 var model = (WaterFlowFMModel)app.Project.RootFolder.Items[0];
                 Assert.NotNull(model);
 
-                var secondModel = new WaterFlowFMModel("SecondModel");
+                var secondModel = new WaterFlowFMModel();
                 app.Project.RootFolder.Add(secondModel);
                 
                 //Open view
@@ -246,7 +247,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             var filePath = TestHelper.GetTestFilePath(@"outputSnappedFeatures\outputSnappedFeatures.dsproj");
             var newSavePath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
             filePath = TestHelper.CreateLocalCopy(filePath);
-            using (var app = new DeltaShellApplication { IsProjectCreatedInTemporaryDirectory = true })
+            
+            var workingDirectoryPath = Path.Combine(Path.GetTempPath(), "DeltaShell_Working_Directory");
+            var application =
+                ApplicationTestHelper.GetMockedApplicationSettingsBase(workingDirectoryPath);
+
+            using (var app = new DeltaShellApplication
+            {
+                UserSettings = application,
+                IsProjectCreatedInTemporaryDirectory = true
+            })
             {
                 app.Plugins.Add(new NHibernateDaoApplicationPlugin());
                 app.Plugins.Add(new CommonToolsApplicationPlugin());
@@ -313,8 +323,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             var filePath = TestHelper.GetTestFilePath(@"outputSnappedFeatures\outputSnappedFeatures.dsproj");
             var newSavePath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
             filePath = TestHelper.CreateLocalCopy(filePath);
-            using (var app = new DeltaShellApplication { IsProjectCreatedInTemporaryDirectory = true })
+
+            var workingDirectoryPath = Path.Combine(Path.GetTempPath(), "DeltaShell_Working_Directory");
+            var application =
+                ApplicationTestHelper.GetMockedApplicationSettingsBase(workingDirectoryPath);
+
+            using (var app = new DeltaShellApplication
             {
+                UserSettings = application,
+                IsProjectCreatedInTemporaryDirectory = true
+            })
+            { 
                 app.Plugins.Add(new NHibernateDaoApplicationPlugin());
                 app.Plugins.Add(new CommonToolsApplicationPlugin());
                 app.Plugins.Add(new SharpMapGisApplicationPlugin());
@@ -360,10 +379,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 /* If the assert below fails, did the FM kernel add support for more outputSnappedFeatures?
                    See about adding them to the Asserts above^ */
                 Assert.AreEqual(7, outputSnappedLayers.Count, "Number of outputSnappedFeatures differs from expected");
-               
+
                 //Limitation from the tests. CreateLayers do not get disposed properly
                 outputSnappedLayers.ForEach(l => l.Dispose());
-                
+
                 app.CloseProject();
             }
             try
@@ -392,7 +411,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
              * it to check whether the folder location is correct as well as the generation of layers. */
             var filePath = TestHelper.GetTestFilePath(@"outputSnappedFeatures\outputSnappedFeatures.dsproj");
             filePath = TestHelper.CreateLocalCopy(filePath);
-            using (var app = new DeltaShellApplication() { IsProjectCreatedInTemporaryDirectory = true })
+
+            var workingDirectoryPath = Path.Combine(Path.GetTempPath(), "DeltaShell_Working_Directory");
+            var application =
+                ApplicationTestHelper.GetMockedApplicationSettingsBase(workingDirectoryPath);
+
+            using (var app = new DeltaShellApplication
+            {
+                UserSettings = application,
+                IsProjectCreatedInTemporaryDirectory = true
+            })
             {
                 app.Plugins.Add(new NHibernateDaoApplicationPlugin());
                 app.Plugins.Add(new CommonToolsApplicationPlugin());

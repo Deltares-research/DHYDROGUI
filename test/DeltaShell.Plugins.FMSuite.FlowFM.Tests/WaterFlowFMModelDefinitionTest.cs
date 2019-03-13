@@ -1565,19 +1565,57 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         {
             Dictionary<string, ModelPropertyGroup> dummyVar;
             Assert.DoesNotThrow(() => dummyVar = WaterFlowFMModelDefinition.GuiPropertyGroups );
-         }
+        }
 
-        [Test]
-        public void GivenAModelDefinition_WhenRelativeClassMapFilePath_ThenCorrectStringIsReturned()
+        [TestCase("file_name", "file_name")]
+        [TestCase("", "FlowFM1_clm.nc")]
+        [TestCase(null, "FlowFM1_clm.nc")]
+        [TestCase("FlowFM1_clm.nc", "FlowFM1_clm.nc")]
+        public void GivenAModelDefinition_WhenClassMapFileNameIsCalled_ThenCorrectStringIsReturned(string propertyValue, string expectedString)
         {
             // Given
-            var modelDefinition = new WaterFlowFMModelDefinition {ModelName = "FlowFM"};
+            var modelDefinition = new WaterFlowFMModelDefinition {ModelName = "FlowFM1"};
+            modelDefinition.GetModelProperty(WaterFlowFMModelDefinition.ClassMapFilePropertyName).SetValueAsString(propertyValue);
 
             // When
-            var resultedRelativePath = modelDefinition.RelativeClassMapFilePath;
+            var resultedFileName = modelDefinition.ClassMapFileName;
 
             //Then
-            Assert.AreEqual("DFM_OUTPUT_FlowFM\\FlowFM_clm.nc", resultedRelativePath);
+            Assert.AreEqual(expectedString, resultedFileName);
+        }
+
+        [TestCase("file_name", "file_name")]
+        [TestCase("", "FlowFM1_map.nc")]
+        [TestCase(null, "FlowFM1_map.nc")]
+        [TestCase("FlowFM1_map.nc", "FlowFM1_map.nc")]
+        public void GivenAModelDefinition_WhenMapFileNameIsCalled_ThenCorrectStringIsReturned(string propertyValue, string expectedString)
+        {
+            // Given
+            var modelDefinition = new WaterFlowFMModelDefinition { ModelName = "FlowFM1" };
+            modelDefinition.GetModelProperty(WaterFlowFMModelDefinition.MapFilePropertyName).SetValueAsString(propertyValue);
+
+            // When
+            var resultedFileName = modelDefinition.MapFileName;
+
+            //Then
+            Assert.AreEqual(expectedString, resultedFileName);
+        }
+
+        [TestCase("file_name", "file_name")]
+        [TestCase("", "FlowFM1_his.nc")]
+        [TestCase(null, "FlowFM1_his.nc")]
+        [TestCase("FlowFM1_his.nc", "FlowFM1_his.nc")]
+        public void GivenAModelDefinition_WhenHisFileNameIsCalled_ThenCorrectStringIsReturned(string propertyValue, string expectedString)
+        {
+            // Given
+            var modelDefinition = new WaterFlowFMModelDefinition {ModelName = "FlowFM1"};
+            modelDefinition.GetModelProperty(WaterFlowFMModelDefinition.HisFilePropertyName).SetValueAsString(propertyValue);
+
+            // When
+            var resultedFileName = modelDefinition.HisFileName;
+
+            //Then
+            Assert.AreEqual(expectedString, resultedFileName);
         }
 
         [Test]
@@ -1621,6 +1659,42 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.IsEmpty((IList<double>)classMapIntervalProperty.Value);
             Assert.AreEqual(0, new TimeSpan(0,0,5,0).CompareTo((TimeSpan)classMapOutputDeltaTProperty.Value));
             Assert.AreEqual(true, (bool) writeClassMapFileProperty.Value);
+        }
+
+        [TestCase("", WaterFlowFMModelDefinition.DefaultOutputDirectoryName)]
+        [TestCase(null, WaterFlowFMModelDefinition.DefaultOutputDirectoryName)]
+        [TestCase(".", "")]
+        [TestCase("custom", "custom")]
+        [TestCase(WaterFlowFMModelDefinition.DefaultOutputDirectoryName, WaterFlowFMModelDefinition.DefaultOutputDirectoryName)]
+        public void GivenAWaterFlowFMModelDefinitionWithAnOutputDirectoryProperty_WhenOutputDirectoryNameIsCalled_ThenCorrectStringIsReturned(string propertyValue, string expectedString)
+        {
+            // given
+            var modelDefinition = new WaterFlowFMModelDefinition();
+            modelDefinition.GetModelProperty(KnownProperties.OutputDir).SetValueAsString(propertyValue);
+
+            // When
+            var resultedString = modelDefinition.OutputDirectoryName;
+
+            // Then
+            Assert.AreEqual(expectedString, resultedString,
+                $"When the value of the 'OutputDir' property is \"{propertyValue}\" then the expected OutputDirectoryName is \"{expectedString}\", but it was \"{resultedString}\".");
+        }
+
+        [Test]
+        public void GivenAWaterFlowFMModelDefinitionWithoutAnOutputDirectoryProperty_WhenOutputDirectoryNameIsCalled_ThenCorrectStringIsReturned()
+        {
+            // given
+            var modelDefinition = new WaterFlowFMModelDefinition();
+            var property = modelDefinition.GetModelProperty(KnownProperties.OutputDir);
+            modelDefinition.Properties.Remove(property);
+            const string expectedString = WaterFlowFMModelDefinition.DefaultOutputDirectoryName;
+
+            // When
+            var resultedString = modelDefinition.OutputDirectoryName;
+
+            // Then
+            Assert.AreEqual(expectedString, resultedString,
+                $"When the model definition does not contain the 'OutputDir' property, then the expected OutputDirectoryName is \"{expectedString}\", but it was \"{resultedString}\".");
         }
     }
 }

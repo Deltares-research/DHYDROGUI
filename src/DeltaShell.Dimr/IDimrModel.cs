@@ -49,6 +49,12 @@ namespace DeltaShell.Dimr
         // TODO: temporary, need to remove when models can no longer run without Dimr
         bool RunsInIntegratedModel { get; set; }
 
+        string DimrExportDirectoryPath { get; set; }
+
+        string DimrModelRelativeWorkingDirectory { get; }
+
+        string DimrModelRelativeOutputDirectory { get; }
+
         ValidationReport Validate();
 
         Array GetVar(string category, string itemName = null, string parameter = null);

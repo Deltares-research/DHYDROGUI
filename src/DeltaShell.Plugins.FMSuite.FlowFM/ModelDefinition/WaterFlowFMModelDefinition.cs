@@ -41,12 +41,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         public const string RoughnessDataItemName = "Roughness";
         public const string ViscosityDataItemName = "Viscosity";
         public const string DiffusivityDataItemName = "Diffusivity";
-        private const string ClassMapFilePropertyName = "ClassMapFile";
-        private const string HisFilePropertyName = "HisFile";
-        private const string MapFilePropertyName = "MapFile";
+        public const string ClassMapFilePropertyName = "ClassMapFile";
+        public const string HisFilePropertyName = "HisFile";
+        public const string MapFilePropertyName = "MapFile";
         public const string MapFileExtension = "_map.nc";
         public const string HisFileExtension = "_his.nc";
         public const string ClassMapFileExtension = "_clm.nc";
+        public const string DefaultOutputDirectoryName = "output";
 
         public static readonly string[] SpatialDataItemNames =
         {
@@ -402,29 +403,29 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             set { GetModelProperty(GuiProperties.UseMorSed).Value = value; }
         }
 
-        public string RelativeMapFilePath
+        public string MapFileName
         {
-            get { return GetFilePathFromProperty(MapFilePropertyName, ModelName + MapFileExtension); }
+            get { return GetFileNameFromProperty(MapFilePropertyName, ModelName + MapFileExtension); }
         }
 
-        public string RelativeHisFilePath
+        public string HisFileName
         {
-            get { return GetFilePathFromProperty(HisFilePropertyName, ModelName + HisFileExtension); }
+            get { return GetFileNameFromProperty(HisFilePropertyName, ModelName + HisFileExtension); }
         }
 
         /// <summary>Gets the relative class map file path.</summary>
         /// <value>The relative class map file path.</value>
-        public string RelativeClassMapFilePath
+        public string ClassMapFileName
         {
-            get { return GetFilePathFromProperty(ClassMapFilePropertyName, ModelName + ClassMapFileExtension); }
+            get { return GetFileNameFromProperty(ClassMapFilePropertyName, ModelName + ClassMapFileExtension); }
         }
 
-        private string GetFilePathFromProperty(string propertyName, string defaultName)
+        private string GetFileNameFromProperty(string propertyName, string defaultName)
         {
             var property = Properties.FirstOrDefault(p => p.PropertyDefinition.MduPropertyName == propertyName);
             var fileName = property != null ? (string) property.Value : defaultName;
 
-            return Path.Combine(OutputDirectory, String.IsNullOrEmpty(fileName) ? defaultName : fileName);
+            return string.IsNullOrEmpty(fileName) ? defaultName : fileName;
         }
 
         public string RelativeComFilePath
@@ -432,27 +433,32 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             get
             {
                 var comFileName = ModelName + "_com.nc";
-                return Path.Combine(OutputDirectory, comFileName);
+                return Path.Combine(OutputDirectoryName, comFileName);
             }
         }
 
-        public string OutputDirectory
+        /// <summary>
+        /// Gets the name of the output directory.
+        /// </summary>
+        /// <value>
+        /// The name of the output directory.
+        /// </value>
+        /// <remarks>If the property does not exist or the value of the property is null or an empty string we use the default output directory name.</remarks>
+        /// <remarks>If the value of the property is a dot (.) it means output files are in the model directory.</remarks>
+        public string OutputDirectoryName
         {
             get
             {
-                var defaultName = "DFM_OUTPUT_" + ModelName;
+                if (!ContainsProperty(KnownProperties.OutputDir))
+                    return DefaultOutputDirectoryName;
 
-                // if the list doesn't contain OutDir
-                if (!ContainsProperty(KnownProperties.OutDir))
-                    return defaultName;
+                var mduOutputDir = GetModelProperty(KnownProperties.OutputDir).GetValueAsString()?.Trim();
 
-                var mduOutputDir = GetModelProperty(KnownProperties.OutDir).GetValueAsString().Trim();
+                if (string.IsNullOrEmpty(mduOutputDir))
+                    return DefaultOutputDirectoryName;
 
-                if (String.IsNullOrEmpty(mduOutputDir))
-                    return defaultName; // empty string = default dir!!! (unexpected, yes)
-
-                if (String.Equals(mduOutputDir, ".")) // dot means current dir
-                    return ""; // mdu dir
+                if (string.Equals(mduOutputDir, "."))
+                    return "";
 
                 return mduOutputDir;
             }

@@ -404,9 +404,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
                 ActivityRunner.RunActivity(model);
                 Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
-                workingDir = Path.Combine(model.WorkingDirectory, model.DirectoryName);
-                var outputDirName = "DFM_OUTPUT_" + model.Name;
-                workingOutputDir = Path.Combine(workingDir, outputDirName);
+                workingDir = Path.Combine(model.WorkingDirectoryPath, model.DirectoryName);
+                workingOutputDir = Path.Combine(workingDir, "output");
             }
             var statisticsWritten = false;
             Parallel.ForEach(File.ReadAllLines(Path.Combine(workingOutputDir, "bendprof.dia")),
@@ -504,11 +503,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         public void HydFileNameShouldBeBasedOnMduFileName()
         {
-            var model = new WaterFlowFMModel {ExplicitWorkingDirectory = "C:\\TestWorkDir"};
+            var model = new WaterFlowFMModel {WorkingDirectoryPathFunc = () => "C:\\TestWorkDir"};
 
             TypeUtils.SetPrivatePropertyValue(model, TypeUtils.GetMemberName(() => model.MduFilePath), "Test.mdu");
 
-            Assert.AreEqual("C:\\TestWorkDir\\DFM_DELWAQ_Test\\Test.hyd", model.HydFilePath);
+            Assert.AreEqual("C:\\TestWorkDir\\FlowFM\\DFM_DELWAQ_FlowFM\\Test.hyd", model.HydFilePath);
         }
 
         [Test]
@@ -1045,7 +1044,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         public void FmModelGetVarCellsToFeaturesNameShouldReturnEmptyTimeseries()
         {
-            var model = new WaterFlowFMModel(TestHelper.GetTestFilePath(@"flow1d2dLinks\FlowFM.mdu"));
+            var model = new WaterFlowFMModel(TestHelper.GetTestFilePath(@"flow1d2dLinks\input\FlowFM.mdu"));
             var timeSeries = model.GetVar(WaterFlowFMModel.CellsToFeaturesName) as ITimeSeries[];
             Assert.IsNotNull(timeSeries);
             Assert.That(timeSeries.Length, Is.EqualTo(9)) ;
@@ -1209,7 +1208,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         {
             var originalDir = TestHelper.GetTestFilePath("flow1d2dLinks");
             var testDir = FileUtils.CreateTempDirectory();
-            var mduFilePath = Path.Combine(testDir, "FlowFM.mdu");
+            var mduFilePath = Path.Combine(testDir, "input", "FlowFM.mdu");
             FileUtils.CopyDirectory(originalDir, testDir);
 
             var messageList = new List<string>
@@ -1732,8 +1731,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void GivenAnFmModelWithAClassMapFunctionStore_WhenGetDirectChilderenIsCalled_ExpectedChildrenObjectsAreReturned()
         {
             // Given
-            var outputDirectoryPath = TestHelper.GetTestFilePath("output_classmapfiles");
-            var filePath = Path.Combine(outputDirectoryPath, "DFM_OUTPUT_FlowFM\\FlowFM_clm.nc");
+            var testDirectoryPath = TestHelper.GetTestFilePath("output_classmapfiles");
+            var outputDirectoryPath = Path.Combine(testDirectoryPath, "output");
+            var filePath = Path.Combine(outputDirectoryPath, "FlowFM_clm.nc");
             Assert.IsTrue(File.Exists(filePath));
 
             var model = new WaterFlowFMModel();
@@ -1769,8 +1769,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void GivenAnFmModelWithAnMduFilePathAndModelDefinitionWithEqualName_WhenClassMapSavePathPropertyIsCalled_ExpectedStringIsReturned()
         {
             // Given
-            var model = new WaterFlowFMModel("mdufile.mdu");
             const string modelName = "some_model_name";
+            var model = new WaterFlowFMModel(Path.Combine("directory", modelName + ".mdu"));
             model.Name = modelName;
             model.ModelDefinition.ModelName = modelName;
 
@@ -1778,7 +1778,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var resultedPath = model.ClassMapSavePath;
 
             // Then
-            var expectedPath = "DFM_OUTPUT_" + modelName + "\\" + modelName + "_clm.nc";
+            var expectedPath = Path.Combine(model.PersistentOutputDirectoryPath, modelName + WaterFlowFMModelDefinition.ClassMapFileExtension);
             Assert.AreEqual(expectedPath, resultedPath);
         }
 
@@ -1813,6 +1813,147 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.AreEqual(expectedValue, resultedValue);
         }
 
+        [Test]
+        public void GivenAModelWithOutput_WhenOpeningIt_ThenCurrentOutputDirectoryIsInPersistentFolder()
+        {
+            //Creation of a path of non-existing model file 
+            var mduPath = TestHelper.GetTestFilePath(@"notexistingmodel\input\notexistingmodel.mdu");
+            
+            //Load model 
+            var model = new WaterFlowFMModel(mduPath);
+            var currentOutputDirectory = TypeUtils.GetField(model, "currentOutputDirectoryPath");
+
+            var expectedPath = Path.Combine(TestHelper.GetDataDir(), @"notexistingmodel\output");
+            Assert.AreEqual(expectedPath, currentOutputDirectory);
+        }
+
+        [Test]
+        public void GivenAModel_WhenARunIsDone_ThenCurrentOutputDirectoryIsInWorkingDirectory()
+        {
+            //Creation of a path of non-existing model file 
+            var mduPath = TestHelper.GetTestFilePath(@"notexistingmodel\input\notexistingmodel.mdu");
+            
+            //Load model and "run"
+            var model = new WaterFlowFMModel(mduPath);
+            TypeUtils.CallPrivateMethod(model, "OnFinish");
+
+            var currentOutputDirectory = TypeUtils.GetField(model, "currentOutputDirectoryPath");
+
+            var expectedPath = model.WorkingOutputDirectoryPath;
+            Assert.AreEqual(expectedPath, currentOutputDirectory);
+        }
+
+        [Test]
+        public void GivenAModel_WhenARunIsDoneAndASave_ThenCurrentOutputDirectoryIsInPersistentFolder()
+        {
+            var tempFolder = FileUtils.CreateTempDirectory();
+
+            try
+            {
+                //Creation of a path of non-existing model file 
+                var mduPath = TestHelper.GetTestFilePath(@"notexistingmodel\input\notexistingmodel.mdu");
+                var mduFile2 = "notexistingmodel2.mdu";
+
+                //Load model and save
+                var model = new WaterFlowFMModel(mduPath);
+
+                //Run, so that the CurrentOutputDirectory is set to WorkingDirectoryPath
+                TypeUtils.CallPrivateMethod(model, "OnFinish");
+
+                var currentOutputDirectory = TypeUtils.GetField(model, "currentOutputDirectoryPath");
+
+                var expectedPath = Path.Combine(model.WorkingDirectoryPath, model.DirectoryName, "output");
+                Assert.AreEqual(expectedPath, currentOutputDirectory);
+
+                //Save, so that CurrentOutputDirectory is set to the persistent folder
+                model.ExportTo(Path.Combine(tempFolder,"notexistingmodel", "input", mduFile2));
+               
+                currentOutputDirectory = TypeUtils.GetField(model, "currentOutputDirectoryPath");
+
+                expectedPath = Path.Combine(tempFolder, @"notexistingmodel\output");
+                Assert.AreEqual(expectedPath, currentOutputDirectory);
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(tempFolder);
+            }
+        }
+
+        [Test]
+        public void GivenASavedModelWithOutput_WhenSavingItToAnotherLocation_ThenTheNewLocationShouldBeCleanedFirstBeforeGettingTheOutput()
+        {
+            var tempFolder = FileUtils.CreateTempDirectory();
+            FileUtils.CreateDirectoryIfNotExists(Path.Combine(tempFolder,"harlingen","input"));
+            FileUtils.CreateDirectoryIfNotExists(Path.Combine(tempFolder, "harlingen", "output"));
+
+            try
+            {
+                var sourceOutput = TestHelper.GetTestFilePath(@"harlingen\output");
+                var sourceMdu = Path.Combine(TestHelper.GetDataDir(), "harlingen", "har.mdu");
+                var existingOutput = Path.Combine(TestHelper.GetDataDir(), "harlingen", "001_map.nc");
+
+                var targetMdu = Path.Combine(tempFolder, "harlingen", "input","har.mdu");
+                var targetOutput = Path.Combine(tempFolder, "harlingen", "output");
+                var targetSnappedOutput = Path.Combine(targetOutput, "snapped");
+                FileUtils.CopyFile(sourceMdu,targetMdu);
+                FileUtils.CopyFile(existingOutput, Path.Combine(tempFolder, "harlingen", "output", "001_map.nc"));
+
+                //Create WaterFlowFMModel from target MDU, so that the outputDirectory is set correctly.
+                var model = new WaterFlowFMModel(targetMdu);
+
+                //Put random file and directory in targetfolder, so that you can check the clean up after a save.
+                Directory.CreateDirectory(Path.Combine(targetOutput, "blarg"));
+                using (File.Create(Path.Combine(targetOutput, "blarg.txt"))) { }
+
+                //Check creation of random file and directory 
+                Assert.That(Directory.Exists(Path.Combine(targetOutput, "blarg")));
+                Assert.That(File.Exists(Path.Combine(targetOutput, "blarg.txt")));
+
+                TypeUtils.SetField(model, "currentOutputDirectoryPath", sourceOutput);
+
+                TypeUtils.CallPrivateMethod(model, "SaveOutput");
+
+                //Check that save location is cleaned before copying all the output files
+                Assert.That(!File.Exists(Path.Combine(targetOutput, "blarg.txt")));
+                Assert.That(!Directory.Exists(Path.Combine(targetOutput, "blarg")));
+
+                //Check if all the output files are copied
+                Assert.That(File.Exists(Path.Combine(targetOutput, "001_his.nc")));
+                Assert.That(File.Exists(Path.Combine(targetOutput, "001_map.nc")));
+                Assert.That(File.Exists(Path.Combine(targetOutput, "har_20080119_120000_rst.nc")));
+                Assert.That(File.Exists(Path.Combine(targetOutput, "har_20080119_121000_rst.nc")));
+                Assert.That(File.Exists(Path.Combine(targetOutput, "har_timings.txt")));
+
+                Assert.That(Directory.Exists(targetSnappedOutput));
+
+                Assert.That(File.Exists(Path.Combine(targetOutput, "snapped", "har_snapped_crs.dbf")));
+                Assert.That(File.Exists(Path.Combine(targetSnappedOutput, "har_snapped_crs.shp")));
+                Assert.That(File.Exists(Path.Combine(targetSnappedOutput, "har_snapped_crs.shx")));
+
+                Assert.That(File.Exists(Path.Combine(targetSnappedOutput, "har_snapped_fxw.dbf")));
+                Assert.That(File.Exists(Path.Combine(targetSnappedOutput, "har_snapped_fxw.shp")));
+                Assert.That(File.Exists(Path.Combine(targetSnappedOutput, "har_snapped_fxw.shx")));
+
+                Assert.That(File.Exists(Path.Combine(targetSnappedOutput, "har_snapped_obs.dbf")));
+                Assert.That(File.Exists(Path.Combine(targetSnappedOutput, "har_snapped_obs.shp")));
+                Assert.That(File.Exists(Path.Combine(targetSnappedOutput, "har_snapped_obs.shx")));
+
+                Assert.That(File.Exists(Path.Combine(targetSnappedOutput, "har_snapped_thd.dbf")));
+                Assert.That(File.Exists(Path.Combine(targetSnappedOutput, "har_snapped_thd.shp")));
+                Assert.That(File.Exists(Path.Combine(targetSnappedOutput, "har_snapped_thd.shx")));
+
+                //Test the "OnClearOutput" method, so at the end the new location is completely empty
+                TypeUtils.SetField(model, "currentOutputDirectoryPath", targetOutput);
+
+                TypeUtils.CallPrivateMethod(model, "OnClearOutput");
+                Assert.That(!FileUtils.IsDirectoryEmpty(targetOutput),"Directory should not be cleared after calling OnClearOutput method");
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(tempFolder);
+            }
+        }
+        
         [Test]
         [TestCase(typeof(SimpleWeirFormula), KnownFeatureCategories.Weirs)]
         [TestCase(typeof(GatedWeirFormula), KnownFeatureCategories.Gates)]

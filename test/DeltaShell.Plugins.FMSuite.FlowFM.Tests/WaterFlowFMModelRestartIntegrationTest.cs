@@ -26,12 +26,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         public void WriteRestart()
         {
-            var model = LoadBendProfModelWithWriteRestart();
+            using (var model = LoadBendProfModelWithWriteRestart())
+            {
+                ActivityRunner.RunActivity(model);
 
-            ActivityRunner.RunActivity(model);
-
-            Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
-            Assert.AreEqual(1, model.GetRestartOutputStates().Count());
+                Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
+                Assert.AreEqual(1, model.GetRestartOutputStates().Count());
+            }
         }
 
         [Test]
@@ -49,32 +50,34 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 var path = "restart.dsproj";
                 app.SaveProjectAs(path); // save to initialize file repository..
 
-                var model = LoadBendProfModelWithWriteRestart();
+                using (var model = LoadBendProfModelWithWriteRestart())
+                {
 
-                app.Project.RootFolder.Add(model);
-                
-                model.SaveStateStartTime = model.StartTime;
-                model.SaveStateStopTime = model.StopTime;
-                model.SaveStateTimeStep = new TimeSpan(0, 1, 0);
+                    app.Project.RootFolder.Add(model);
 
-                ActivityRunner.RunActivity(model);
-                model.RestartInput = (FileBasedRestartState) model.GetRestartOutputStates().First().Clone();
-                
-                var countBefore = model.GetRestartOutputStates().Count();
-                var nameBefore = model.GetRestartOutputStates().First().Name;
+                    model.SaveStateStartTime = model.StartTime;
+                    model.SaveStateStopTime = model.StopTime;
+                    model.SaveStateTimeStep = new TimeSpan(0, 1, 0);
 
-                var newPath = "/new/restartNew.dsproj";
+                    ActivityRunner.RunActivity(model);
+                    model.RestartInput = (FileBasedRestartState) model.GetRestartOutputStates().First().Clone();
 
-                app.SaveProjectAs(newPath);
-                app.CloseProject();
-                app.OpenProject(newPath);
+                    var countBefore = model.GetRestartOutputStates().Count();
+                    var nameBefore = model.GetRestartOutputStates().First().Name;
 
-                var retrievedModel = (WaterFlowFMModel)app.Project.RootFolder.Items[0];
+                    var newPath = "/new/restartNew.dsproj";
 
-                Assert.AreEqual(countBefore, retrievedModel.GetRestartOutputStates().Count());
-                Assert.AreEqual(nameBefore, retrievedModel.GetRestartOutputStates().First().Name);
-                Assert.IsNotNull(retrievedModel.RestartInput);
-                Assert.IsFalse(retrievedModel.RestartInput.IsEmpty);
+                    app.SaveProjectAs(newPath);
+                    app.CloseProject();
+                    app.OpenProject(newPath);
+
+                    var retrievedModel = (WaterFlowFMModel) app.Project.RootFolder.Items[0];
+
+                    Assert.AreEqual(countBefore, retrievedModel.GetRestartOutputStates().Count());
+                    Assert.AreEqual(nameBefore, retrievedModel.GetRestartOutputStates().First().Name);
+                    Assert.IsNotNull(retrievedModel.RestartInput);
+                    Assert.IsFalse(retrievedModel.RestartInput.IsEmpty);
+                }
             }
         }
 
@@ -93,26 +96,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 var path = "restart.dsproj";
                 app.SaveProjectAs(path); // save to initialize file repository..
 
-                var model = LoadBendProfModelWithWriteRestart();
+                using (var model = LoadBendProfModelWithWriteRestart())
+                {
 
-                app.Project.RootFolder.Add(model);
+                    app.Project.RootFolder.Add(model);
 
-                model.SaveStateStartTime = model.StartTime;
-                model.SaveStateStopTime = model.StopTime;
-                model.SaveStateTimeStep = new TimeSpan(0, 1, 0);
+                    model.SaveStateStartTime = model.StartTime;
+                    model.SaveStateStopTime = model.StopTime;
+                    model.SaveStateTimeStep = new TimeSpan(0, 1, 0);
 
-                ActivityRunner.RunActivity(model);
+                    ActivityRunner.RunActivity(model);
 
-                var newPath = "new/restartNew.dsproj";
+                    var newPath = "new/restartNew.dsproj";
 
-                app.SaveProjectAs(newPath);
-                app.CloseProject();
-                app.OpenProject(newPath);
+                    app.SaveProjectAs(newPath);
+                    app.CloseProject();
+                    app.OpenProject(newPath);
 
-                var retrievedModel = (WaterFlowFMModel)app.Project.RootFolder.Items[0];
+                    var retrievedModel = (WaterFlowFMModel) app.Project.RootFolder.Items[0];
 
-                Assert.IsNotNull(retrievedModel.RestartInput);
-                Assert.IsTrue(retrievedModel.RestartInput.IsEmpty);
+                    Assert.IsNotNull(retrievedModel.RestartInput);
+                    Assert.IsTrue(retrievedModel.RestartInput.IsEmpty);
+                }
             }
         }
 
@@ -153,109 +158,139 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         {
             // make sure the test is clean:
             var restartFilePath = "input\\bendprof_19920831_000200_rst.nc";
-            FileUtils.DeleteIfExists(restartFilePath);
-            
+            FileUtils.DeleteIfExists("input");
+
             var model = LoadBendProfModelWithWriteRestart();
-            ActivityRunner.RunActivity(model); //generates an output state
 
-            // set output state as input state
-            model.RestartInput = (FileBasedRestartState) model.GetRestartOutputStates().First().Clone();
-            model.UseRestart = true;
+            try
+            {
+                ActivityRunner.RunActivity(model); //generates an output state
 
-            model.Initialize();
+                // set output state as input state
+                model.RestartInput = (FileBasedRestartState) model.GetRestartOutputStates().First().Clone();
+                model.UseRestart = true;
 
-            restartFilePath = Path.Combine(model.WorkingDirectory, Path.GetFileName(restartFilePath));
+                model.Initialize();
 
-            Assert.AreEqual(ActivityStatus.Initialized, model.Status);
-            Assert.IsTrue(File.Exists(restartFilePath), "restart file exists");
-            Assert.AreEqual(Path.GetFileName(restartFilePath),
-                            model.ModelDefinition.GetModelProperty(KnownProperties.RestartFile).GetValueAsString(),
-                            "model definition is adjusted");
+                restartFilePath = Path.Combine(model.DimrExportDirectoryPath, model.DirectoryName,
+                    Path.GetFileName(restartFilePath));
+
+                Assert.AreEqual(ActivityStatus.Initialized, model.Status);
+                Assert.IsTrue(File.Exists(restartFilePath), "restart file exists");
+                Assert.AreEqual(Path.GetFileName(restartFilePath),
+                    model.ModelDefinition.GetModelProperty(KnownProperties.RestartFile).GetValueAsString(),
+                    "model definition is adjusted");
+            }
+            finally
+            {
+                model.Cleanup();
+                model.Dispose();
+            }
         }
 
         [Test]
         public void WriteExportImportRestart()
         {
             // make sure the test is clean:
-            const string restartFilePath = "input\\bendprof_19920831_000200_rst.nc";
-            FileUtils.DeleteIfExists(restartFilePath);
+            FileUtils.DeleteIfExists("input");
+            FileUtils.DeleteIfExists("restartmodel");
 
             var model = LoadBendProfModelWithWriteRestart();
-            ActivityRunner.RunActivity(model); //generates an output state
 
-            // set output state as input state
-            model.RestartInput = (FileBasedRestartState) model.GetRestartOutputStates().First().Clone();
-            model.UseRestart = true;
+            try
+            {
+                ActivityRunner.RunActivity(model); //generates an output state
 
-            model.Initialize();
+                // set output state as input state
+                model.RestartInput = (FileBasedRestartState) model.GetRestartOutputStates().First().Clone();
+                model.UseRestart = true;
 
-            var exporter = new WaterFlowFMFileExporter();
-            Directory.CreateDirectory("restartmodel");
-            exporter.Export(model, "restartmodel/bendprof.mdu");
+                model.Initialize();
 
-            var importer = new WaterFlowFMFileImporter();
-            var importedModel = (WaterFlowFMModel) importer.ImportItem("restartmodel/bendprof.mdu");
+                var exporter = new WaterFlowFMFileExporter();
+                Directory.CreateDirectory("restartmodel");
+                exporter.Export(model, "restartmodel/bendprof.mdu");
 
-            Assert.IsTrue(importedModel.UseRestart);
-            Assert.AreEqual(Path.GetFileName(importedModel.RestartInput.Path), "state_bendprof_1992-08-31_00-02-00.zip");
+                var temp = FileUtils.CreateTempDirectory();
+                var importer = new WaterFlowFMFileImporter(delegate() { return temp; });
+                var importedModel = (WaterFlowFMModel) importer.ImportItem("restartmodel/bendprof.mdu");
+
+                Assert.IsTrue(importedModel.UseRestart);
+                Assert.AreEqual(Path.GetFileName(importedModel.RestartInput.Path),
+                    "state_bendprof_1992-08-31_00-02-00.zip");
+            }
+            finally
+            {
+                model.Cleanup();
+                model.Dispose();
+            }
         }
 
         [Test]
         public void CompareFullRunWithRestartedRun()
         {
             var measureLocation = new Coordinate(100, 100);
-            var model = LoadBendProfModelWithWriteRestart();
-
-            // first half:
-            model.StopTime = model.StartTime.AddMinutes(2); //6 sec timestep
-            ActivityRunner.RunActivity(model); //generates an output state
-            Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
-            var waterLevelResultsFirstHalf = GetWaterLevelValuesAtPoint(model, measureLocation);
-            var restartHalfway = (FileBasedRestartState)model.GetRestartOutputStates().Last().Clone();
-            
-            // full run:
-            model.WriteRestart = false;
-            model.StopTime = model.StartTime.AddMinutes(4); //6 sec timestep
-            ActivityRunner.RunActivity(model); //generates an output state
-            Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
-            var fullRunTimes = model.OutputWaterLevel.Time.Values.ToList();
-            var waterLevelResultsFullRun = GetWaterLevelValuesAtPoint(model, measureLocation);
-            
-            // restarted run (from halfway):
-            model.RestartInput = restartHalfway;
-            model.UseRestart = true;
-            model.StartTime = model.StartTime.AddMinutes(2);
-            model.StopTime = model.StartTime.AddMinutes(2); //6 sec timestep
-            ActivityRunner.RunActivity(model); //generates an output state
-            Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
-            var waterLevelResultsSecondHalf = GetWaterLevelValuesAtPoint(model, measureLocation); //first time step overlaps with last timestep of first run
-            
-            // log to console:
-            const string format = "{0,-25}{1,-20}{2,-20}{3,-20}{4,-20}";
-            var indexOf2ndRun = waterLevelResultsFirstHalf.Count - 1;
-            for (int i = 0; i < fullRunTimes.Count; i++)
+            using (var model = LoadBendProfModelWithWriteRestart())
             {
-                if (i == 0)
-                    Console.WriteLine(Environment.NewLine + format + Environment.NewLine, "(t)", "Full", "First", "Second", "Diff");
 
-                var currentTime = fullRunTimes[i];
-                var fullRunLevel = waterLevelResultsFullRun[i];
-                var firstHalfLevel = i <= indexOf2ndRun ? waterLevelResultsFirstHalf[i].ToString() : "";
-                var secondHalfLevel = i >= indexOf2ndRun ? waterLevelResultsSecondHalf[i - indexOf2ndRun].ToString() : "";
+                // first half:
+                model.StopTime = model.StartTime.AddMinutes(2); //6 sec timestep
+                ActivityRunner.RunActivity(model); //generates an output state
+                Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
+                var waterLevelResultsFirstHalf = GetWaterLevelValuesAtPoint(model, measureLocation);
+                var restartHalfway = (FileBasedRestartState) model.GetRestartOutputStates().Last().Clone();
 
-                var diff = waterLevelResultsFullRun[i] - (i >= indexOf2ndRun
-                                                              ? waterLevelResultsSecondHalf[i - indexOf2ndRun]
-                                                              : waterLevelResultsFirstHalf[i]);
+                // full run:
+                model.WriteRestart = false;
+                model.StopTime = model.StartTime.AddMinutes(4); //6 sec timestep
+                ActivityRunner.RunActivity(model); //generates an output state
+                Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
+                var fullRunTimes = model.OutputWaterLevel.Time.Values.ToList();
+                var waterLevelResultsFullRun = GetWaterLevelValuesAtPoint(model, measureLocation);
 
-                Console.WriteLine(format, currentTime.ToString(), fullRunLevel, firstHalfLevel, secondHalfLevel, diff);
+                // restarted run (from halfway):
+                model.RestartInput = restartHalfway;
+                model.UseRestart = true;
+                model.StartTime = model.StartTime.AddMinutes(2);
+                model.StopTime = model.StartTime.AddMinutes(2); //6 sec timestep
+                ActivityRunner.RunActivity(model); //generates an output state
+                Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
+                var waterLevelResultsSecondHalf =
+                    GetWaterLevelValuesAtPoint(model,
+                        measureLocation); //first time step overlaps with last timestep of first run
+
+                // log to console:
+                const string format = "{0,-25}{1,-20}{2,-20}{3,-20}{4,-20}";
+                var indexOf2ndRun = waterLevelResultsFirstHalf.Count - 1;
+                for (int i = 0; i < fullRunTimes.Count; i++)
+                {
+                    if (i == 0)
+                        Console.WriteLine(Environment.NewLine + format + Environment.NewLine, "(t)", "Full", "First",
+                            "Second", "Diff");
+
+                    var currentTime = fullRunTimes[i];
+                    var fullRunLevel = waterLevelResultsFullRun[i];
+                    var firstHalfLevel = i <= indexOf2ndRun ? waterLevelResultsFirstHalf[i].ToString() : "";
+                    var secondHalfLevel = i >= indexOf2ndRun
+                        ? waterLevelResultsSecondHalf[i - indexOf2ndRun].ToString()
+                        : "";
+
+                    var diff = waterLevelResultsFullRun[i] - (i >= indexOf2ndRun
+                                   ? waterLevelResultsSecondHalf[i - indexOf2ndRun]
+                                   : waterLevelResultsFirstHalf[i]);
+
+                    Console.WriteLine(format, currentTime.ToString(), fullRunLevel, firstHalfLevel, secondHalfLevel,
+                        diff);
+                }
+
+                var combinedRunResults =
+                    waterLevelResultsFirstHalf.Concat(waterLevelResultsSecondHalf.Skip(1)).ToList();
+
+                // asserts:
+                Assert.AreEqual(waterLevelResultsFullRun.Count, combinedRunResults.Count);
+                for (int i = 0; i < waterLevelResultsFullRun.Count; i++)
+                    Assert.AreEqual(waterLevelResultsFullRun[i], combinedRunResults[i], 0.05, "index:" + i); //5cm..
             }
-
-            var combinedRunResults = waterLevelResultsFirstHalf.Concat(waterLevelResultsSecondHalf.Skip(1)).ToList();
-            
-            // asserts:
-            Assert.AreEqual(waterLevelResultsFullRun.Count, combinedRunResults.Count);
-            for (int i = 0; i < waterLevelResultsFullRun.Count; i++)
-                Assert.AreEqual(waterLevelResultsFullRun[i], combinedRunResults[i], 0.05, "index:" + i); //5cm..
         }
 
         private static IList<double> GetWaterLevelValuesAtPoint(WaterFlowFMModel model, Coordinate measureLocation)

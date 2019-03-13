@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SerializableStatesInfo xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <OutStates>
+    <StateInfo>
+      <Name>FlowFM1: 2001-01-01 12:00:00</Name>
+      <ZipPath>D:\SVN\NGHS_DirRes\test\DeltaShell.Plugins.DelftModels.HydroModel.Tests\test-data\TestPlanFM\TestModel\Project1.dsproj_data\state_FlowFM1_2001-01-01_12-00-00-fcf33284-7aab-42ad-bfca-1d8c622a23b4.zip</ZipPath>
+    </StateInfo>
+    <StateInfo>
+      <Name>FlowFM1: 2001-01-02 00:00:00</Name>
+      <ZipPath>D:\SVN\NGHS_DirRes\test\DeltaShell.Plugins.DelftModels.HydroModel.Tests\test-data\TestPlanFM\TestModel\Project1.dsproj_data\state_FlowFM1_2001-01-02_00-00-00-b1226c6b-a935-402c-a8c2-1ae2517d0c8b.zip</ZipPath>
+    </StateInfo>
+  </OutStates>
+</SerializableStatesInfo>

@@ -84,7 +84,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
 
         private void GetOutputGrid(WaterFlowFMModel model)
         {
-            var mapFilePath = Path.Combine(model.WorkingDirectory, model.ModelDefinition.RelativeMapFilePath);
+            var mapFilePath = Path.Combine(model.WorkingOutputDirectoryPath, model.ModelDefinition.MapFileName);
 
             gotMapFile = File.Exists(mapFilePath);
             lblNoMapFile.Visible = !gotMapFile;

@@ -114,7 +114,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             
             // copies file to correct directory and set RestartFile property in mdu
             var unpackedState = ModelStateHandler.CreateStateFromFile(Name, RestartInput.Path);
-            var restartFileName = Path.GetFileName(((ModelStateFilesImpl)unpackedState).GetFilesInModelState().First());
+            var restartFileName = Path.GetFileName(((ModelStateFilesImpl)unpackedState).GetFilesInModelState().FirstOrDefault(f=> f.EndsWith("_rst.nc")));
             if (ModelStateHandler.FeedStateToModel(unpackedState))
             {
                 ModelDefinition.GetModelProperty(KnownProperties.RestartFile).SetValueAsString(restartFileName);
@@ -170,7 +170,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             // modify Out filename list to account for CurrentTime (instance is same as used inside ModelStateHandler)
             var restartFileName = string.Format("{0}_{1}_rst.nc", Name,
                                                 CurrentTime.ToString("yyyyMMdd_HHmmss"));
-            outAndInFileNames[0].First = Path.Combine(ModelDefinition.OutputDirectory, restartFileName);
+            outAndInFileNames[0].First = Path.Combine(ModelDefinition.OutputDirectoryName, restartFileName);
             outAndInFileNames[0].Second = restartFileName; //out and in is the same
 
             return modelFileBasedStateHandler.GetState();

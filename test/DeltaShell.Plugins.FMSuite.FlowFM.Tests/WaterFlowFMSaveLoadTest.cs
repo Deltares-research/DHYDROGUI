@@ -277,7 +277,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
                 app.Project.RootFolder.Add(model);
 
-                var netFile = Path.GetFullPath(Path.Combine(Path.Combine(path + "_data", "bendprof"), "bend1_net.nc"));
+                var netFile = Path.GetFullPath(Path.Combine(path + "_data", "bendprof", "input", "bend1_net.nc"));
                 Assert.IsTrue(File.Exists(netFile), "grid file should be in the data directory after import (for rgfgrid)");
             }
         }
@@ -303,19 +303,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
                 // upon adding to project, non-memory based stuff should be copied to the project temp directory
                 app.Project.RootFolder.Add(model);
-                var tempSaveDir = Path.GetFullPath(Path.Combine(path + "_data", "manholes_1d2d"));
+                var tempSaveInputDir = Path.GetFullPath(Path.Combine(path + "_data", "manholes_1d2d", "input"));
 
                 // check various files are copied along (even though they aren't supported yet by the UI):
-                var netFile = Path.Combine(tempSaveDir, "manholes_net.nc");
+                var netFile = Path.Combine(tempSaveInputDir, "manholes_net.nc");
                 Assert.IsTrue(File.Exists(netFile), "grid file should be in the data directory after import (for rgfgrid)");
 
-                var manholeFile = Path.Combine(tempSaveDir, "manholes.dat");
+                var manholeFile = Path.Combine(tempSaveInputDir, "manholes.dat");
                 Assert.IsTrue(File.Exists(manholeFile), "manhole file should be copied along while not yet supported in UI");
 
-                var profdefFile = Path.Combine(tempSaveDir, "manhls_profdef.txt");
+                var profdefFile = Path.Combine(tempSaveInputDir, "manhls_profdef.txt");
                 Assert.IsTrue(File.Exists(profdefFile), "prof def file should be copied along while not yet support in UI");
 
-                var proflocFile = Path.Combine(tempSaveDir, "manhls_profloc.xyz");
+                var proflocFile = Path.Combine(tempSaveInputDir, "manhls_profloc.xyz");
                 Assert.IsTrue(File.Exists(proflocFile), "prof loc file should be copied along while not yet support in UI");
             }
         }
@@ -353,7 +353,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 
                 var retrievedModel = (WaterFlowFMModel)app.Project.RootFolder.Items[0];
                 Assert.AreEqual(
-                    Path.GetFullPath(Path.Combine(Path.Combine(path2 + "_data", "bendprof"), "bend1_net.nc")),
+                    Path.GetFullPath(Path.Combine(path2 + "_data", "bendprof", "input", "bend1_net.nc")),
                     retrievedModel.NetFilePath);
             }
         }
@@ -385,7 +385,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
                 app.SaveProjectAs(path2);
 
-                Assert.IsTrue(File.Exists("mdu_save_as_grid.dsproj_data\\bendprof\\bend1_net.nc"), "grid file does not exist");
+                Assert.IsTrue(File.Exists("mdu_save_as_grid.dsproj_data\\bendprof\\input\\bend1_net.nc"), "grid file does not exist");
                 var retrievedModel = ((WaterFlowFMModel) app.Project.RootFolder.Items[0]);
                 Assert.AreEqual(451, retrievedModel.Grid.Vertices.Count);
             }
@@ -689,7 +689,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
                 Assert.IsNotNull(loadedModel);
                 Assert.AreEqual("wind.spw", Path.GetFileName(loadedModel.WindFields.OfType<SpiderWebWindField>().First().Path));
-                Assert.IsTrue(File.Exists(@"windtest.dsproj_data\FlowFM\wind.spw"));
+                Assert.IsTrue(File.Exists(@"windtest.dsproj_data\FlowFM\input\wind.spw"));
             }
         }
 
@@ -733,14 +733,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
                 Assert.IsNotNull(loadedModel);
                 Assert.AreEqual("wind.spw", Path.GetFileName(loadedModel.WindFields.OfType<SpiderWebWindField>().First().WindFilePath));
-                Assert.IsTrue(File.Exists(@"windtest.dsproj_data\FlowFM\wind.spw"));
+                Assert.IsTrue(File.Exists(@"windtest.dsproj_data\FlowFM\input\wind.spw"));
 
                 app.OpenProject("windtest2.dsproj");
                 loadedModel = app.Project.RootFolder.Models.FirstOrDefault() as WaterFlowFMModel;
 
                 Assert.IsNotNull(loadedModel);
                 Assert.AreEqual("wind2.spw", Path.GetFileName(loadedModel.WindFields.OfType<SpiderWebWindField>().First().WindFilePath));
-                Assert.IsTrue(File.Exists(@"windtest2.dsproj_data\FlowFM\wind2.spw"));
+                Assert.IsTrue(File.Exists(@"windtest2.dsproj_data\FlowFM\input\wind2.spw"));
             }
         }
 

@@ -208,6 +208,7 @@ GUIOnly,SpecifyRstStop,output,Restart,Specify Rst output stop time,0|1,0,,,FALSE
 GUIOnly,RstOutputStopTime,output,Restart,Rst output stop time,DateTime,,,,FALSE,WriteRstFile && SpecifyRstStart && SpecifyRstStop,WriteRstFile,,,,No restart files will be written after this time stamp [YYYY-MM-DD HH:MM:SS]
 *,,,,,,,,,,,,,,,
 output,OutputDir,output,Others,Output directory,String,,,,TRUE,,,,,,"Output directory of map-, his-, rst-, dat- and timings-files, default: DFM_OUTPUT_<modelname>. Set to . for current dir."
+output,WAQOutputDir,output,Others,WAQ output directory,String,,,,TRUE,,,,,,"Output directory of WAQ files, default: DFM_DELWAQ_<modelname>. Set to . for current dir."
 output,FlowGeomFile,,,,FileName,,,,TRUE,,,,,,Flow geometry NetCDF *_flowgeom.nc 
 output,ObsFile,,,,MultipleEntriesFileName,,,,TRUE,,,,,,"Points file *.xyn with observation stations with rows x, y, station name"
 output,CrsFile,,,,MultipleEntriesFileName,,,,TRUE,,,,,,Polyline file *_crs.pli defining observation cross sections

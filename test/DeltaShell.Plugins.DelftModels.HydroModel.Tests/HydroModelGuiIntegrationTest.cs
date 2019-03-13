@@ -573,7 +573,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             {
                 const string modelName = "har";
                 var mduPath = Path.Combine(tempDir, $"{modelName}.mdu");
-                var fmModel = new WaterFlowFMModel(modelName);
+                var fmModel = new WaterFlowFMModel(mduPath);
                 fmModel.ExportTo(mduPath, false, false, false);
 
                 /* create a integrated model */

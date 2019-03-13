@@ -289,7 +289,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             mduPath = TestHelper.CreateLocalCopy(mduPath);
 
             var model = new WaterFlowFMModel(mduPath) {ShowModelRunConsole = true};
-            model.ExplicitWorkingDirectory = model.WorkingDirectory;
+            model.ExplicitWorkingDirectory = model.WorkingDirectoryPath;
             using (var gui = new DeltaShellGui())
             {
                 var app = gui.Application;

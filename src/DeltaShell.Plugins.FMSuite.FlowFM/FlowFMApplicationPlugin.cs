@@ -12,6 +12,7 @@ using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
+using DelftTools.Utils.IO;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
@@ -39,6 +40,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
     public class FlowFMApplicationPlugin : ApplicationPlugin, IDataAccessListenersProvider
     {
         private static ILog Log = LogManager.GetLogger(typeof(FlowFMApplicationPlugin));
+        private IApplication application;
+
         public override string Name
         {
             get { return "Delft3D FM"; }
@@ -61,7 +64,32 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         public override string FileFormatVersion
         {
-            get { return "1.1.0.0"; }
+            get { return "1.2.0.0"; }
+        }
+
+        public override IApplication Application
+        {
+            get => application;
+            set
+            {
+                if (application != null)
+                {
+                    application.ProjectOpened -= Application_ProjectOpened;
+                }
+
+                application = value;
+
+                if (application != null)
+                {
+                    application.ProjectOpened += Application_ProjectOpened;
+                }
+            }
+        }
+
+        private void Application_ProjectOpened(Project project)
+        {
+            project?.RootFolder.GetAllModelsRecursive().OfType<WaterFlowFMModel>().ForEach(m => m.WorkingDirectoryPathFunc =
+                () => application.WorkDirectory);
         }
 
         public override IEnumerable<ModelInfo> GetModelInfos()
@@ -75,12 +103,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                             !(owner is ICompositeActivity) // Allow "standalone" flow models
                             ||  (!((ICompositeActivity)owner).Activities.OfType<WaterFlowFMModel>().Any() && owner is IHydroModel), // Don't allow multiple flow models in one composite activity
                     CreateModel = owner => new WaterFlowFMModel()
-                };
+                    {
+                        WorkingDirectoryPathFunc = () => Application.WorkDirectory
+                    }
+            };
         }
 
         public override IEnumerable<IFileImporter> GetFileImporters()
         {
-            yield return new WaterFlowFMFileImporter();
+            yield return new WaterFlowFMFileImporter(() => Application.WorkDirectory);
             yield return new Area2DStructuresImporter { GetModelForArea = GetModelForArea };
             yield return new StructuresListImporter(StructuresListType.Pumps) { GetModelForList = GetModelForCollection };
             yield return new StructuresListImporter(StructuresListType.Weirs) { GetModelForList = GetModelForCollection };

@@ -809,7 +809,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
                 foreach (var dimrModel in dimrModels)
                 {
-                    var outputDirectory = Path.Combine(validPath, dimrModel.DirectoryName);
+                    var outputDirectory = Path.Combine(validPath, dimrModel.DimrModelRelativeOutputDirectory);
                     dimrModel.ConnectOutput(outputDirectory);
                 }
                 var CurrentWorkflowIsDimr = CurrentWorkflow as IDimrModel;

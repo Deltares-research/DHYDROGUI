@@ -69,10 +69,21 @@ namespace DeltaShell.Dimr
             // export this model
             var exporter = (IFileExporter)Activator.CreateInstance(model.ExporterType);
 
-            model.ExplicitWorkingDirectory = ExportDimrModel(model.ExplicitWorkingDirectory, model, exporter);
+            string exportPath = string.Empty;
+            
+            if (model.DimrExportDirectoryPath == null)
+            {
+                exportPath = FileUtils.CreateTempDirectory();
+                model.DimrExportDirectoryPath = exportPath;
+            }
+            else
+            {
+                exportPath = model.DimrExportDirectoryPath;
+            }
+            ExportDimrModel(exportPath, model, exporter);
 
             // generate the dimr config xml
-            dimrFile = GenerateDimrXML(model, model.ExplicitWorkingDirectory);
+            dimrFile = GenerateDimrXML(model, exportPath);
 
             // initialize dimr
             log.Info(model.KernelVersions);
@@ -143,10 +154,10 @@ namespace DeltaShell.Dimr
                 dimrApi.Dispose();
                 dimrApi = null;
             }
-            var validPath = model.ExplicitWorkingDirectory ?? Path.GetDirectoryName(dimrFile);
+            var validPath = model.DimrExportDirectoryPath ?? Path.GetDirectoryName(dimrFile);
             if (!Directory.Exists(validPath)) return;
 
-            var outputDirectory = Path.Combine(validPath, model.DirectoryName);
+            var outputDirectory = Path.Combine(validPath, model.DimrModelRelativeOutputDirectory);
             if (!Directory.Exists(outputDirectory)) return;
 
             model.ConnectOutput(outputDirectory);
@@ -196,12 +207,11 @@ namespace DeltaShell.Dimr
             // control section
             var element = new dimrComponentOrCouplerRefXML() { name = dimrModel.Name };
             dimrConfig.control = new[] { element };
-
+            FileUtils.CreateDirectoryIfNotExists(Path.Combine(dimrModel.DimrExportDirectoryPath, dimrModel.DimrModelRelativeOutputDirectory));
             // component section
             var component = new dimrComponentXML
             {
                 name = dimrModel.Name,
-
                 library = dimrModel.LibraryName,
                 workingDir = dimrModel.DirectoryName,
                 inputFile = dimrModel.InputFile
@@ -212,23 +222,17 @@ namespace DeltaShell.Dimr
             return dimrFile;
         }
 
-        private string ExportDimrModel(string workDirectory, object modelObject, IFileExporter exporter)
+        private void ExportDimrModel(string workDirectory, object modelObject, IFileExporter exporter)
         {
             var orgSuspendClearOutputOnInputChange = model.SuspendClearOutputOnInputChange;
             model.SuspendClearOutputOnInputChange = true;
-            if (workDirectory == null)
-            {
-                var dirPath = FileUtils.CreateTempDirectory();
-                workDirectory = Path.Combine(dirPath, model.Name.Replace(' ', '_') + "dimr_output");
-            }
-
+           
             FileUtils.CreateDirectoryIfNotExists(workDirectory);
             var exportDir = Path.Combine(workDirectory, model.DirectoryName);
             FileUtils.CreateDirectoryIfNotExists(exportDir);
             ClearFolder(exportDir);
             exporter.Export(modelObject, model.GetExporterPath(exportDir));
             model.SuspendClearOutputOnInputChange = orgSuspendClearOutputOnInputChange;
-            return workDirectory;
         }
 
         private void ClearFolder(string FolderName)
@@ -324,7 +328,12 @@ namespace DeltaShell.Dimr
 
         public static void ConnectDimrRunLogFile(IModel model)
         {
-            var completeDimrLogFilename = Path.Combine(model.ExplicitWorkingDirectory, DIMR_RUN_LOGFILE_NAME);
+            var dimrModel=model as IDimrModel;
+            var dimrLogDirectory = "";
+
+            dimrLogDirectory = dimrModel != null ? dimrModel.DimrExportDirectoryPath : model.ExplicitWorkingDirectory;
+
+            var completeDimrLogFilename = Path.Combine(dimrLogDirectory, DIMR_RUN_LOGFILE_NAME);
             if (!File.Exists(completeDimrLogFilename)) return;
             
             //add an dimr run log output dataitem with the log...

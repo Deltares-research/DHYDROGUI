@@ -88,6 +88,11 @@
       <HintPath>..\..\packages\DeltaShell.Framework.1.3.0.42342\lib\net40\DeltaShell\DeltaShell.Gui.exe</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="DeltaShell.NGHS.TestUtils, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\bin\Debug\DeltaShell.NGHS.TestUtils.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="DeltaShell.Plugins.CommonTools">
       <HintPath>..\..\packages\DeltaShell.Framework.1.3.0.42342\lib\net40\plugins\DeltaShell.Plugins.CommonTools\DeltaShell.Plugins.CommonTools.dll</HintPath>
       <Private>False</Private>
@@ -355,6 +360,7 @@
     <Compile Include="Validation\WaterFlowFMModelTimersValidatorTest.cs" />
     <Compile Include="Validation\WaterFlowFMModelValidationExtensionsTest.cs" />
     <Compile Include="Validation\WaterFlowFMSedimentMorphologyValidatorTest.cs" />
+    <Compile Include="WaterFlowFMModel110LegacyLoaderTest.cs" />
     <Compile Include="WaterFlowFMModelRestartTest.cs" />
     <Compile Include="WaterFlowFMModelSedimentFractionsIntegrationTest.cs" />
     <Compile Include="WaterFlowFMModelSedimentFractionsTest.cs" />

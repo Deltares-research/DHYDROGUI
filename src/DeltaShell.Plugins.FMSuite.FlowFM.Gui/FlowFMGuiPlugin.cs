@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Resources;
 using DelftTools.Controls;
 using DelftTools.Functions;
 using DelftTools.Hydro;
@@ -41,11 +36,18 @@ using Mono.Addins;
 using NetTopologySuite.Extensions.Features;
 using SharpMap.Data.Providers;
 using SharpMap.Layers;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.IO;
+using System.Linq;
+using System.Resources;
+using SharpMap.Api.Layers;
+using BridgePillar = DelftTools.Hydro.Structures.BridgePillar;
 using FeatureCollectionViewInfoHelper = DeltaShell.Plugins.FMSuite.Common.Gui.FeatureCollectionViewInfoHelper;
 using FixedWeir = DelftTools.Hydro.Structures.FixedWeir;
 using ObservationCrossSection2D = DelftTools.Hydro.ObservationCrossSection2D;
 using ThinDam2D = DelftTools.Hydro.Structures.ThinDam2D;
-using BridgePillar = DelftTools.Hydro.Structures.BridgePillar;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 {
@@ -532,6 +534,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             if (base.Gui == null || base.Gui.Application == null) return;
             base.Gui.Application.ProjectOpened += SubscribeToProjectPropertyChanged;
             base.Gui.Application.ProjectClosing += UnsubscribeToProjectPropertyChanged;
+            base.Gui.Application.ProjectSaving += ApplicationOnProjectSaving;
+            base.Gui.Application.ProjectSaved += ApplicationOnProjectSaved;
 
             // DELFT3DFM-371: Disable Model Inspection
             // base.Gui.Application.ActivityRunner.Activities.CollectionChanged += Activities_CollectionChanged;
@@ -594,29 +598,36 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 
         void ProjectPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (!(sender is WaterFlowFMModel))
-                return; //early exit
+            var waterFlowFmModel = sender as WaterFlowFMModel;
+            if (waterFlowFmModel == null)
+                return;
 
-            if (e.PropertyName.Equals(CoordinateSystemMemberName))
+            var propertyName = e.PropertyName;
+
+            if (propertyName.Equals(TypeUtils.GetMemberName(() => waterFlowFmModel.OutputSnappedFeaturesPath)))
             {
-                var model = sender as WaterFlowFMModel;
-                if (! model.WriteSnappedFeatures) return;
+                UpdateOutputSnappedFeaturesPaths(waterFlowFmModel);
+            }
 
-                // Set coordinate system to OutputSnappedFeatures
-                var mapViews = Gui.DocumentViews.OfType<ProjectItemMapView>().Where(m => (m.Data as WaterFlowFMModel) == model);
-                foreach (var mapView in mapViews)
-                {
-                    var modelLayer = mapView.MapView.GetLayerForData(model);
-                    var groupModelLayer = modelLayer as GroupLayer;
-                    if (groupModelLayer != null)
-                    {
-                        var snappedOutputLayer = groupModelLayer.Layers.FirstOrDefault(l => l.Name == FlowFMMapLayerProvider.OutputSnappedFeaturesLayerName) as GroupLayer;
-                        if (snappedOutputLayer == null) continue;
+            if (!propertyName.Equals(CoordinateSystemMemberName) || 
+                !waterFlowFmModel.WriteSnappedFeatures)
+                return;
 
-                        snappedOutputLayer.Layers.ForEach(l => l.DataSource.CoordinateSystem = model.CoordinateSystem);
-                    }
-                }
+            // Set coordinate system to OutputSnappedFeatures
+            var mapViews = Gui.DocumentViews.OfType<ProjectItemMapView>().Where(m => (m.Data as WaterFlowFMModel) == waterFlowFmModel);
+            foreach (var mapView in mapViews)
+            {
+                var modelLayer = mapView.MapView.GetLayerForData(waterFlowFmModel);
+                var groupModelLayer = modelLayer as GroupLayer;
 
+                if (groupModelLayer == null)
+                    continue;
+
+                var snappedOutputLayer = groupModelLayer.Layers.FirstOrDefault(l => l.Name == FlowFMMapLayerProvider.OutputSnappedFeaturesLayerName) as GroupLayer;
+                if (snappedOutputLayer == null)
+                    continue;
+
+                snappedOutputLayer.Layers.ForEach(l => l.DataSource.CoordinateSystem = waterFlowFmModel.CoordinateSystem);
             }
         }
 
@@ -645,6 +656,78 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             }
         }
 
+        private void ApplicationOnProjectSaving(Project project)
+        {
+            foreach (var model in FlowModels)
+            {
+                FreeSnappedOutputLayers(model);
+                model.OutputSnappedFeaturesPathPropertyChanged += OnOutputSnappedFeaturesPathPropertyChanged;
+            }
+        }
+
+        private void ApplicationOnProjectSaved(Project obj)
+        {
+            foreach (var model in FlowModels)
+            {
+                model.OutputSnappedFeaturesPathPropertyChanged -= OnOutputSnappedFeaturesPathPropertyChanged;
+            }
+        }
+
+        private void OnOutputSnappedFeaturesPathPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            var waterflowFmModel = sender as WaterFlowFMModel;
+            if (waterflowFmModel == null ||
+                !Equals(e.PropertyName, nameof(waterflowFmModel.OutputSnappedFeaturesPath))) return;
+
+            UpdateOutputSnappedFeaturesPaths(waterflowFmModel);
+        }
+
+        private void UpdateOutputSnappedFeaturesPaths(WaterFlowFMModel waterflowFmModel)
+        {
+            var targetDirectory = waterflowFmModel.OutputSnappedFeaturesPath;
+            foreach (var shapeFile in GetShapeFilesOfSnappedOutputLayersForModel(waterflowFmModel))
+            {
+                var fileName = Path.GetFileName(shapeFile.Path);
+                var targetPath = targetDirectory != null && fileName != null
+                    ? Path.Combine(targetDirectory, fileName)
+                    : null;
+
+                shapeFile.Close();
+                if (targetPath != null)
+                {
+                    shapeFile.Path = targetPath;
+                }
+            }
+        }
+
+        private void FreeSnappedOutputLayers(WaterFlowFMModel model)
+        {
+            GetShapeFilesOfSnappedOutputLayersForModel(model).ForEach(s => s.Close());
+        }
+
+        private IEnumerable<ShapeFile> GetShapeFilesOfSnappedOutputLayersForModel(WaterFlowFMModel model)
+        {
+            var layers = Gui.DocumentViews
+                .OfType<ProjectItemMapView>()
+                .Select(m => m.MapView.GetLayerForData(model))
+                .Where(l => l != null);
+
+            return layers.SelectMany(GetOutputSnappedFeaturesLayerShapeFiles);
+        }
+
+        private static IEnumerable<ShapeFile> GetOutputSnappedFeaturesLayerShapeFiles(ILayer modelLayer)
+        {
+            var groupModelLayer = modelLayer as GroupLayer;
+            if (groupModelLayer == null) return Enumerable.Empty<ShapeFile>();
+
+            var snappedOutputLayer =
+                groupModelLayer.Layers.FirstOrDefault(l => l.Name == FlowFMMapLayerProvider.OutputSnappedFeaturesLayerName) as
+                    GroupLayer;
+            if (snappedOutputLayer == null) return Enumerable.Empty<ShapeFile>();
+
+            return snappedOutputLayer.Layers.Select(l => l.DataSource).OfType<ShapeFile>();
+        }
+
         [InvokeRequired]
         private void OnActivityRunnerStatusChanged(object sender,ActivityStatusChangedEventArgs activityStatusChangedEventArgs)
         {
@@ -669,22 +752,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             var model = sender as WaterFlowFMModel;
             if ( model != null && model.WriteSnappedFeatures && activityStatusChangedEventArgs.NewStatus == ActivityStatus.Initializing)
             {
-                // Clean output snapped layers;
-                // release file locks
-                var mapViews = Gui.DocumentViews.OfType<ProjectItemMapView>().Where( m => (m.Data as WaterFlowFMModel) == model);
-
-                foreach (var mapView in mapViews)
-                {
-                    var modelLayer = mapView.MapView.GetLayerForData(model);
-                    var groupModelLayer = modelLayer as GroupLayer;
-                    if (groupModelLayer != null)
-                    {
-                        var snappedOutputLayer = groupModelLayer.Layers.FirstOrDefault(l => l.Name == FlowFMMapLayerProvider.OutputSnappedFeaturesLayerName) as GroupLayer;
-                        if (snappedOutputLayer == null) continue;
-
-                        snappedOutputLayer.Layers.Select(l => l.DataSource).OfType<ShapeFile>().ForEach(sf => sf.Close());
-                    }
-                }
+                FreeSnappedOutputLayers(model);
             }
 
             var fmModel = sender as WaterFlowFMModel;

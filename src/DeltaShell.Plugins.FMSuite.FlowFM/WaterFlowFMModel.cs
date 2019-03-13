@@ -1,4 +1,5 @@
 using BasicModelInterface;
+using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
@@ -21,7 +22,6 @@ using DeltaShell.Plugins.FMSuite.Common;
 using DeltaShell.Plugins.FMSuite.Common.DepthLayers;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
-using DeltaShell.Plugins.FMSuite.FlowFM.Api;
 using DeltaShell.Plugins.FMSuite.FlowFM.CoverageDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
@@ -75,6 +75,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private bool disposing;
         private bool updatingGroupName;
         private Dictionary<FixedWeir, ModelFeatureCoordinateData<FixedWeir>> fixedWeirProperties = new Dictionary<FixedWeir, ModelFeatureCoordinateData<FixedWeir>>();
+        private const string mduExtension = ".mdu";
+        private const string InputDirectoryName = "input";
+        private const string OutputDirectoryName = "output";
         
         /// <summary>
         /// Gets the bridge pillars data model.
@@ -129,7 +132,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             BridgePillarsDataModel = new List<ModelFeatureCoordinateData<BridgePillar>>();
 
             SedimentOverallProperties = SedimentFractionHelper.GetSedimentationOverAllProperties();
-            tempWorkingDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
             
             // DELFT3DFM-371: Disable Model Inspection
             // ModelInspection = true;
@@ -150,7 +152,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             FireImportProgressChanged(this, "Reading spatial operations", 9, TotalImportSteps);
             AddSpatialDataItems();
             ImportSpatialOperationsAfterCreating();
-            
+        }
+
+        /// <summary> Import the WaterFlowFMModel described by the specified mdu file path.</summary>
+        /// <param name="mduFilePath">The mdu file path.</param>
+        /// <param name="progressChanged">The progressChanged delegate provided by the importer.</param>
+        /// <returns>
+        /// A WaterFlowFMModel describing the mdu defined at the <paramref name="mduFilePath"/>
+        /// </returns>
+        public static WaterFlowFMModel Import(string mduFilePath, ImportProgressChangedDelegate progressChanged)
+        {
+            var model = new WaterFlowFMModel(mduFilePath, progressChanged)
+            {
+                ImportProgressChanged = null,
+            };
+            model.ClearOutputDirAndWaqDirProperty();
+
+            return model;
         }
 
         public WaterFlowFMModelDefinition ModelDefinition
@@ -394,7 +412,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             FireImportProgressChanged(this, "Reading model output", 8, TotalImportSteps);
 
             LoadRestartFile(mduFilePath);
-            ReconnectOutputFiles(Path.GetDirectoryName(mduFilePath));
+
+            currentOutputDirectoryPath = PersistentOutputDirectoryPath;
+            
+            if (ModelDefinition.ContainsProperty(KnownProperties.OutputDir))
+            {
+                var mduOutputDir = ModelDefinition.GetModelProperty(KnownProperties.OutputDir).GetValueAsString()?.Trim();
+
+                if (!string.IsNullOrEmpty(mduOutputDir))
+                {
+                    // We currently assume all OutputDirectoryNames are relative.
+                    var mduOutputDirPath = Path.Combine(mduFileDir, mduOutputDir);
+                    if (Directory.Exists(mduOutputDirPath))
+                        currentOutputDirectoryPath = mduOutputDirPath;
+                }
+            }
+
+            var existingOutputDirectory = Directory.Exists(currentOutputDirectoryPath)
+                ? currentOutputDirectoryPath
+                : Path.GetDirectoryName(mduFilePath); // backwards Compatibility (output next to mdu file)
+
+            ReconnectOutputFiles(existingOutputDirectory);
         }
 
         private void SynchronizeModelDefinitions()
@@ -1161,15 +1199,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             fixedWeirProperties.Clear();
             BridgePillarsDataModel.ForEach( d => d.Dispose());
         }
-
-        private void InitializeRunTimeGridOperationApi()
-        {
-            if (runTimeGridOperationApi != null)
-            {
-                runTimeGridOperationApi.Dispose();
-            }
-            runTimeGridOperationApi = new UnstrucGridOperationApi(this);
-        }
+        
         #region TimedependentModelBase
 
         /// <summary>
@@ -1330,24 +1360,32 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             if (OutputMapFileStore != null)
             {
-                OutputMapFileStore.Functions.Clear();
-                OutputMapFileStore.Close();
+                ClearFunctionStore(OutputMapFileStore);
                 OutputMapFileStore = null;
             }
+
             if (OutputHisFileStore != null)
             {
-                OutputHisFileStore.Functions.Clear();
-                OutputHisFileStore.Close();
+                ClearFunctionStore(OutputHisFileStore);
                 OutputHisFileStore = null;
             }
+
             if (OutputClassMapFileStore != null)
             {
-                OutputClassMapFileStore.Functions.Clear();
-                OutputClassMapFileStore.Close();
+                ClearFunctionStore(OutputClassMapFileStore);
                 OutputClassMapFileStore = null;
             }
         }
-       
+
+        private void ClearFunctionStore(ReadOnlyNetCdfFunctionStoreBase functionStore)
+        {
+            functionStore.Functions.Clear();
+            functionStore.Close();
+        }
+
+        private bool HasOpenFunctionStores =>
+            (OutputMapFileStore != null || OutputHisFileStore != null || OutputClassMapFileStore != null);
+
         public override IProjectItem DeepClone()
         {
             var tempDir = FileUtils.CreateTempDirectory();
@@ -1518,18 +1556,30 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         #endregion
 
-        private readonly string tempWorkingDirectory;
-        public virtual string WorkingDirectory
+        /// <summary>
+        /// For FM the working directory is the same as the working directory from the application,
+        /// which can be set by the user by using the options dialog box and this one is never null.
+        /// Due to this the DimrRunner will never set a new working directory in the temp folder and
+        /// therefore the set should never be executed.
+        /// For other plugins the explicit working directory will be used as working directory. However,
+        /// this one can be null and then the DimrRunner will create a new working directory and the setter
+        /// is then needed.
+        /// </summary>
+        public virtual string WorkingDirectoryPath
         {
-            get { return ExplicitWorkingDirectory ?? tempWorkingDirectory; }
+            get => Path.Combine(WorkingDirectoryPathFunc(), Name);
+            set => throw new NotSupportedException("The working directory for running the model is not set");
         }
+
+        public Func<string> WorkingDirectoryPathFunc =
+            () => Path.Combine(Path.GetTempPath(), "DeltaShell_Working_Directory");
 
         public string HydFilePath
         {
             get
             {
-                var projectName = Path.GetFileNameWithoutExtension(MduFilePath);
-                return Path.Combine(WorkingDirectory, string.Format("DFM_DELWAQ_{0}", projectName),String.Format("{0}.hyd", projectName));
+                var modelName = Path.GetFileNameWithoutExtension(MduFilePath);
+                return Path.Combine(WorkingDirectoryPath, DelwaqOutputDirectoryName, $"{modelName}.hyd");
             }
         }
 
@@ -1586,7 +1636,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         public string MduSavePath
         {
-            get { return GetMduPathFromDeltaShellPath(Path.GetDirectoryName(MduFilePath)); }
+            get
+            {
+                return GetMduPathFromDeltaShellPath(RecursivelyGetModelDirectoryPathFromMduFile());
+            }
+        }
+
+        private string RecursivelyGetModelDirectoryPathFromMduFile()
+        {
+            if (string.IsNullOrEmpty(MduFilePath)) return Name;
+
+            var modelDir = new DirectoryInfo(MduFilePath);
+            while (modelDir != null && modelDir.Name != Name)
+            {
+                modelDir = modelDir.Parent;
+            }
+
+            return modelDir?.Parent == null // should never happen, unless the file-based repository is corrupted
+                ? Path.GetDirectoryName(Path.GetDirectoryName(MduFilePath)) // default behaviour (e.g. model renamed)
+                : modelDir.FullName;
         }
 
         public string HisSavePath
@@ -1706,7 +1774,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             get
             {
                 return !String.IsNullOrEmpty(MduFilePath)
-                    ? Path.Combine(Path.GetDirectoryName(MduFilePath), ModelDefinition.RelativeMapFilePath)
+                    ? Path.Combine(PersistentOutputDirectoryPath, ModelDefinition.MapFileName)
                     : null;
             }
         }
@@ -1739,7 +1807,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             get
             {
                 return !String.IsNullOrEmpty(MduFilePath)
-                    ? Path.Combine(WorkingDirectory, ModelDefinition.RelativeComFilePath)
+                    ? Path.Combine(WorkingDirectoryPath, ModelDefinition.RelativeComFilePath)
                     : null;
             }
         }
@@ -1749,7 +1817,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             get
             {
                 return !String.IsNullOrEmpty(MduFilePath)
-                    ? Path.Combine(Path.GetDirectoryName(MduFilePath), ModelDefinition.RelativeHisFilePath)
+                    ? Path.Combine(PersistentOutputDirectoryPath, ModelDefinition.HisFileName)
                     : null;
             }
         }
@@ -1759,7 +1827,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             get
             {
                 return !String.IsNullOrEmpty(MduFilePath)
-                    ? Path.Combine(Path.GetDirectoryName(MduFilePath), ModelDefinition.RelativeClassMapFilePath)
+                    ? Path.Combine(PersistentOutputDirectoryPath, ModelDefinition.ClassMapFileName)
                     : null;
             }
         }
@@ -1938,7 +2006,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             var dirName = Path.GetDirectoryName(mduPath);
             if (!Directory.Exists(dirName))
+            {
                 Directory.CreateDirectory(dirName);
+            }
 
             // make sure on save / export, restart file + mdu are up to date and could be ran standalone with correct info
             if (switchTo)
@@ -1969,6 +2039,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             InitializeAreaDataColumns();
 
+            if (RunsInIntegratedModel)
+            {
+                SetOutputDirAndWaqDirProperty();
+            }
+
             mduFile.Write(mduPath, ModelDefinition, Area, fixedWeirProperties.Values, switchTo: switchTo, writeExtForcings: writeExtForcings, writeFeatures: writeFeatures, disableFlowNodeRenumbering: DisableFlowNodeRenumbering, sedimentModelData: UseMorSed ? this : null);
 
             RestoreAreaDataColumns();
@@ -1978,6 +2053,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 MduFilePath = mduPath;
                 SaveOutput();
             }
+
             return true;
         }
 
@@ -1990,8 +2066,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             MduFile.CleanBridgePillarAttributes(Area.BridgePillars);
         }
-
-       
 
         private void OnSwitchTo(string mduPath)
         {
@@ -2038,36 +2112,35 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private void OnSave()
         {
-            string modelDir = null;
-            string outputDir = null;
+            const string postfixExplicitWorkingDirectory = "_output";
+
+            string previousModelDir = null;
+            string previousExplicitWorkingDirectory = null;
             if (MduFilePath != MduSavePath)
             {
-                modelDir = Path.GetDirectoryName(MduFilePath);
-                outputDir = Path.GetDirectoryName(MapFilePath);
+                previousModelDir = RecursivelyGetModelDirectoryPathFromMduFile();
+                previousExplicitWorkingDirectory = previousModelDir + postfixExplicitWorkingDirectory;
             }
-            if( ExportTo(MduSavePath))
+
+            if (ExportTo(MduSavePath))
             {
                 /*Make sure the ModelDirectory gets updated when saving*/
-                ModelDefinition.ModelDirectory = Path.GetDirectoryName(MduSavePath);
+                ModelDefinition.ModelDirectory = RecursivelyGetModelDirectoryPathFromMduFile();
             }
-            if (modelDir != null && Directory.Exists(modelDir))
-            {
-                Directory.Delete(modelDir, true);
-            }
-            if (outputDir != null && Directory.Exists(outputDir))
-            {
-                Directory.Delete(outputDir, true);
-            }
+
+            if (previousModelDir == null) return;
+
+            FileUtils.DeleteIfExists(previousModelDir);
+            FileUtils.DeleteIfExists(previousExplicitWorkingDirectory);
         }
 
-        private string GetMduPathFromDeltaShellPath(string path)
+        private string GetMduPathFromDeltaShellPath(string path, string subFoldersFromModelFolder = "input")
         {
             var directoryName = path != null
                 ? Path.GetDirectoryName(path) ?? ""
                 : "";
-
-            // dsproj_data/<model name>/<model name>.mdu
-            return Path.Combine(directoryName, Name, Name + ".mdu");
+            
+            return Path.Combine(directoryName, Name, subFoldersFromModelFolder, Name + mduExtension);
         }
 
         private void RenameSubFilesIfApplicable()
@@ -2187,7 +2260,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         void IFileBased.SwitchTo(string newPath)
         {
             filePath = newPath;
-            OnSwitchTo(GetMduPathFromDeltaShellPath(newPath));
+
+            var expectedMduPath = GetMduPathFromDeltaShellPath(newPath);
+            var mduFileInfo = new FileInfo(expectedMduPath);
+            if (!mduFileInfo.Exists && mduFileInfo.Directory?.Parent != null)
+            {
+                // [D3DFMIQ-450] Backwards compatibility: Older Models may not have 'input' folder
+                var legacyMduPath = Path.Combine(mduFileInfo.Directory.Parent.FullName, mduFileInfo.Name);
+
+                if (File.Exists(legacyMduPath))
+                {
+                    OnSwitchTo(legacyMduPath);
+                    return;
+                }
+            }
+
+            OnSwitchTo(expectedMduPath);
         }
 
         void IFileBased.Delete()
@@ -2204,26 +2292,36 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private FMMapFileFunctionStore outputMapFileStore;
         private IEventedList<string> tracerDefinitions;
         private bool isLoading;
+        private string inputFolder;
 
         private const int TotalImportSteps = 10;
+        private const string PrefixDelwaqDirectoryName = "DFM_DELWAQ_";
 
         #endregion
 
         #region Output
 
+        public event PropertyChangedEventHandler OutputSnappedFeaturesPathPropertyChanged;
+
+        private string outputSnappedFeaturesPath;
+
         public string OutputSnappedFeaturesPath
         {
-            get
+            get => outputSnappedFeaturesPath;
+            set
             {
-                var outputDirectory = ExplicitWorkingDirectory;
-                if (outputDirectory == null)
-                {
-                    //We might still be working in the temp folder.
-                    outputDirectory = WorkingDirectory;
-                }
+                if (outputSnappedFeaturesPath == value)
+                    return;
 
-                return Path.Combine(outputDirectory, DirectoryName, ModelDefinition.OutputDirectory, SnappedFeaturesDirectoryName);
+                outputSnappedFeaturesPath = value;
+
+                OnOutputSnappedFeaturesPathPropertyChanged(TypeUtils.GetMemberName(() => OutputSnappedFeaturesPath));
             }
+        }
+
+        protected void OnOutputSnappedFeaturesPathPropertyChanged(string name)
+        {
+            OutputSnappedFeaturesPathPropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
 
         public TimeSpan OutputTimeStep
@@ -2257,71 +2355,219 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         public virtual FMClassMapFileFunctionStore OutputClassMapFileStore { get; protected set; }
 
         public virtual FMHisFileFunctionStore OutputHisFileStore { get; protected set; }
-        private string WaqHydFilePath { get; set; }
 
+        public string DelwaqOutputDirectoryPath { get; set; }
+
+        public string WorkingOutputDirectoryPath
+        {
+            get { return Path.Combine(WorkingDirectoryPath, DirectoryName, OutputDirectoryName); }
+        }
+
+        public string ModelDirectoryPath
+        {
+            get { return Path.GetDirectoryName(Path.GetDirectoryName(MduFilePath)); }
+        }
+
+        public string PersistentOutputDirectoryPath
+        {
+            get { return Path.Combine(ModelDirectoryPath, OutputDirectoryName); }
+        }
+
+        private string currentOutputDirectoryPath;
+
+        /// <summary>
+        /// Saves the output by either moving or copying the source output to the target output directory.
+        /// </summary>
+        /// <remarks>When a file is locked, we report an error and return.</remarks>
         private void SaveOutput()
         {
-            var oldMapFilePath = OutputMapFileStore == null ? null : OutputMapFileStore.Path;
-            var oldHisFilePath = OutputHisFileStore == null ? null : OutputHisFileStore.Path;
-            var oldClassMapFilePath = OutputClassMapFileStore == null ? null : OutputClassMapFileStore.Path;
+            if (string.IsNullOrEmpty(currentOutputDirectoryPath)) return;
 
-            SaveOutputFile(oldMapFilePath, MapFilePath);
-            SaveOutputFile(oldHisFilePath, HisFilePath);
-            SaveOutputFile(oldClassMapFilePath, ClassMapFilePath);
-
-            // copy the complete delwaq output folder
-            string waqOutputDir = Path.Combine(Path.GetDirectoryName(MduFilePath), DelwaqHydFolderName);
-            if(WaqHydFilePath != null && WaqHydFilePath != waqOutputDir)
+            var sourceOutputDirectory = new DirectoryInfo(currentOutputDirectoryPath);
+            if (!sourceOutputDirectory.Exists)
             {
-                // delete the old delwaq files, they have been recreated
-                FileUtils.DeleteIfExists(waqOutputDir);
-                FileUtils.CopyDirectory(WaqHydFilePath, waqOutputDir);
+                currentOutputDirectoryPath = PersistentOutputDirectoryPath;
+                return;
             }
 
-            ReconnectOutputFiles(MapFilePath, HisFilePath, ClassMapFilePath, waqOutputDir, switchTo: true);
-        }
+            var targetOutputDirectory = new DirectoryInfo(PersistentOutputDirectoryPath);
+            var sourceOutputDirectoryPath = sourceOutputDirectory.FullName;
+            var targetOutputDirectoryPath = targetOutputDirectory.FullName;
 
-        private void SaveOutputFile(string oldFilePath, string currentFilePath)
-        {
-            if (oldFilePath != null && Path.GetFullPath(oldFilePath).ToLower() != Path.GetFullPath(currentFilePath).ToLower())
+            var sourceIsWorkingDir = sourceOutputDirectoryPath == WorkingOutputDirectoryPath;
+
+            if (OutputIsEmpty && !HasOpenFunctionStores)
             {
-                var directory = Path.GetDirectoryName(currentFilePath);
-                if (!Directory.Exists(directory))
+                CleanDirectory(PersistentOutputDirectoryPath);
+
+                if (sourceIsWorkingDir)
+                    CleanDirectory(WorkingDirectoryPath);
+
+                currentOutputDirectoryPath = PersistentOutputDirectoryPath;
+
+                return;
+            }
+
+            if (sourceOutputDirectoryPath == targetOutputDirectoryPath) return;
+
+            //copy all files and subdirectories from source directory "output" to persistent directory "output"
+            if (!FileUtils.IsDirectoryEmpty(sourceOutputDirectoryPath))
+            {
+                FileUtils.CreateDirectoryIfNotExists(targetOutputDirectoryPath);
+
+                if (sourceIsWorkingDir)
                 {
-                    Directory.CreateDirectory(directory);
-                }
+                    var lockedFiles = GetLockedFiles(WorkingDirectoryPath).ToList();
 
-                File.Copy(oldFilePath, currentFilePath, true);
+                    if (lockedFiles.Any())
+                    {
+                        ReportLockedFiles(lockedFiles);
+                        return;
+                    }
+
+                    CleanDirectory(targetOutputDirectoryPath);
+                    MoveAllContentDirectory(sourceOutputDirectory, targetOutputDirectoryPath);
+                }
+                else
+                {
+                    CleanDirectory(targetOutputDirectoryPath);
+                    FileUtils.CopyAll(sourceOutputDirectory, targetOutputDirectory, string.Empty);
+                }
             }
-            else if (oldFilePath == null && File.Exists(currentFilePath))
+
+            var waqOutputDir = Path.Combine(PersistentOutputDirectoryPath, DelwaqOutputDirectoryName);
+            var snappedOutputDir = Path.Combine(PersistentOutputDirectoryPath, SnappedFeaturesDirectoryName);
+            ReconnectOutputFiles(MapFilePath, HisFilePath, ClassMapFilePath, waqOutputDir, snappedOutputDir, switchTo: true);
+
+            if (sourceIsWorkingDir)
             {
-                File.Delete(currentFilePath);
+                CleanDirectory(WorkingDirectoryPath);
+            }
+
+            currentOutputDirectoryPath = PersistentOutputDirectoryPath;
+        }
+
+        /// <summary>
+        /// Moves all content in the source directory into the target directory.
+        /// </summary>
+        /// <param name="sourceDirectory">The source directory.</param>
+        /// <param name="targetDirectoryPath">The target directory path.</param>
+        /// <remarks><paramref name="sourceDirectory"/> should exist.</remarks>
+        private void MoveAllContentDirectory(DirectoryInfo sourceDirectory, string targetDirectoryPath)
+        {
+            foreach (var file in sourceDirectory.EnumerateFiles())
+            {
+                MoveFile(file, targetDirectoryPath);
+            }
+
+            var onSameVolume = Directory.GetDirectoryRoot(sourceDirectory.FullName)
+                .Equals(Directory.GetDirectoryRoot(targetDirectoryPath));
+
+            foreach (var directory in sourceDirectory.EnumerateDirectories())
+            {
+                MoveDirectory(directory, targetDirectoryPath, onSameVolume);
             }
         }
 
-        public string DelwaqHydFolderName
+        private static void ReportLockedFiles(IEnumerable<string> filePaths)
         {
-            get { return "DFM_DELWAQ_" + Name; }
+            var separator = Environment.NewLine + "- ";
+            var lockedFilesMessage = separator + string.Join(separator, filePaths);
+            Log.Error("There are one or more files locked, please close the following file(s) and save again:" + lockedFilesMessage);
+        }
+
+        private IEnumerable<string> GetLockedFiles(string sourceDirectoryPath)
+        {
+            var sourceDirectory = new DirectoryInfo(sourceDirectoryPath);
+
+            foreach (var file in sourceDirectory.EnumerateFiles("*", SearchOption.AllDirectories))
+            {
+                var path = file.FullName;
+                var parentDirectoryName = Path.GetFileName(Path.GetDirectoryName(path));
+
+                // Snapped feature files are locked when the map in the GUI is open, so we ignore and copy snapped files instead.
+                if (parentDirectoryName != SnappedFeaturesDirectoryName && FileUtils.IsFileLocked(path))
+                    yield return path;
+            }
+        }
+
+        private static void MoveFile(FileInfo file, string targetDirectoryPath)
+        {
+            var targetPath = Path.Combine(targetDirectoryPath, file.Name);
+            file.MoveTo(targetPath);
+        }
+
+        private void MoveDirectory(DirectoryInfo sourceDirectoryInfo, string targetParentDirectoryPath, bool onSameVolume)
+        {
+            var targetDirectoryInfo = new DirectoryInfo(Path.Combine(targetParentDirectoryPath, sourceDirectoryInfo.Name));
+
+            if (onSameVolume && sourceDirectoryInfo.Name != SnappedFeaturesDirectoryName)
+            {
+                sourceDirectoryInfo.MoveTo(targetDirectoryInfo.FullName);
+            }
+            else
+            {
+                FileUtils.CopyAll(sourceDirectoryInfo, targetDirectoryInfo, string.Empty);
+            }
+        }
+
+
+        /// <summary>
+        /// Removes all files and directories from the directory.
+        /// </summary>
+        /// <param name="directoryPath">The directory path of the directory that needs to be cleaned.</param>
+        private static void CleanDirectory(string directoryPath)
+        {
+            var directoryInfo = new DirectoryInfo(directoryPath);
+
+            if (!directoryInfo.Exists) return;
+
+            foreach (var file in directoryInfo.GetFiles())
+            {
+                file.Delete();
+            }
+
+            foreach (var directory in directoryInfo.EnumerateDirectories())
+            {
+                try
+                {
+                    directory.Delete(true);
+                }
+                // Do NOT remove: when File Explorer is opened in the directory, an IO exeption is thrown.
+                // There is no way of checking for this case, so we have to catch it. The second time it is called, it works fine.
+                // https://stackoverflow.com/questions/329355/cannot-delete-directory-with-directory-deletepath-true
+                catch (IOException)
+                {
+                    directory.Delete(true);
+                }
+            }
+        }
+
+        public string DelwaqOutputDirectoryName
+        {
+            get { return PrefixDelwaqDirectoryName + Name; }
         }
 
         protected virtual void ReconnectOutputFiles(string outputDirectory)
         {
-            var mapFilePath = Path.Combine(outputDirectory, ModelDefinition.RelativeMapFilePath);
-            var hisFilePath = Path.Combine(outputDirectory, ModelDefinition.RelativeHisFilePath);
-            var classMapFilePath = Path.Combine(outputDirectory, ModelDefinition.RelativeClassMapFilePath);
-            var waqFilePath = Path.Combine(outputDirectory, DelwaqHydFolderName);
+            var mapFilePath = Path.Combine(outputDirectory, ModelDefinition.MapFileName);
+            var hisFilePath = Path.Combine(outputDirectory, ModelDefinition.HisFileName);
+            var classMapFilePath = Path.Combine(outputDirectory, ModelDefinition.ClassMapFileName);
+            var waqFilePath = Path.Combine(outputDirectory, DelwaqOutputDirectoryName);
+            var snappedFolderPath = Path.Combine(outputDirectory, SnappedFeaturesDirectoryName);
 
-            ReconnectOutputFiles(mapFilePath, hisFilePath, classMapFilePath, waqFilePath);
+            ReconnectOutputFiles(mapFilePath, hisFilePath, classMapFilePath, waqFilePath, snappedFolderPath);
         }
 
-        private void ReconnectOutputFiles(string mapFilePath, string hisFilePath, string classMapFilePath, string waqFolderPath, bool switchTo = false)
+        private void ReconnectOutputFiles(string mapFilePath, string hisFilePath, string classMapFilePath, string waqFolderPath, string snappedFolderPath, bool switchTo = false)
         {
-             var existsMapFile = File.Exists(mapFilePath);
+            var existsMapFile = File.Exists(mapFilePath);
             var existsHisFile = File.Exists(hisFilePath);
             var existsClassMapFile = File.Exists(classMapFilePath);
             var existsWaqFolder = Directory.Exists(waqFolderPath);
+            var existsSnappedFolder = Directory.Exists(snappedFolderPath);
 
-            if (!existsMapFile && !existsHisFile && !existsClassMapFile && !existsWaqFolder) return;
+            if (!existsMapFile && !existsHisFile && !existsClassMapFile && !existsWaqFolder && !existsSnappedFolder) return;
 
             FireImportProgressChanged(this, "Reading output files - Reading Map file", 1, 2);
             BeginEdit(new DefaultEditAction("Reconnect output files"));
@@ -2354,7 +2600,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 FireImportProgressChanged(this, "Reading output files - Reading His file", 1, 2);
                 if (switchTo && OutputHisFileStore != null)
                 {
-
                     OutputHisFileStore.Path = hisFilePath;
                 }
                 else
@@ -2382,9 +2627,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             if (existsWaqFolder)
             {
-                WaqHydFilePath = waqFolderPath;
+                DelwaqOutputDirectoryPath = waqFolderPath;
             }
-            
+
+            if (existsSnappedFolder)
+            {
+                OutputSnappedFeaturesPath = snappedFolderPath;
+            }
+
             OutputIsEmpty = false;
 
             EndEdit();
@@ -2946,7 +3196,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         public virtual string GetExporterPath(string directoryName)
         {
-            return Path.Combine(directoryName, InputFile == null ? Name + ".mdu" : Path.GetFileName(InputFile));
+            return Path.Combine(directoryName, InputFile == null ? Name + mduExtension : Path.GetFileName(InputFile));
         }
 
         public virtual bool CanRunParallel
@@ -2970,37 +3220,40 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         /// </summary>
         public virtual void DisconnectOutput()
         {
-            var hasMapFileStore = OutputMapFileStore != null;
-            var hasHisFileStore = OutputHisFileStore != null;
-            var hasClassMapFileStore = OutputClassMapFileStore != null;
-
-            if (hasMapFileStore || hasHisFileStore || hasClassMapFileStore )
+            if (HasOpenFunctionStores)
             {
                 BeginEdit(new DefaultEditAction("Disconnecting from output files"));
 
-                if (hasMapFileStore)
+                if (OutputMapFileStore != null)
                 {
                     OutputMapFileStore.Close();
                     OutputMapFileStore = null;
                 }
-                if (hasHisFileStore)
+
+                if (OutputHisFileStore != null)
                 {
                     OutputHisFileStore.Close();
                     OutputHisFileStore = null;
                 }
-                if (hasClassMapFileStore)
+
+                if (OutputClassMapFileStore != null)
                 {
                     OutputClassMapFileStore.Close();
                     OutputClassMapFileStore = null;
                 }
+
                 EndEdit();
             }
+
+            OutputSnappedFeaturesPath = null;
         }
 
         public virtual void ConnectOutput(string outputPath)
         {
+            currentOutputDirectoryPath = outputPath;
             ReconnectOutputFiles(outputPath);
             ReadDiaFile(outputPath);
+            ClearOutputDirAndWaqDirProperty();
         }
 
         private void ReadDiaFile(string outputDirectory)
@@ -3050,6 +3303,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         [EditAction]
         public virtual bool RunsInIntegratedModel { get; set; }
+
+        public virtual string DimrExportDirectoryPath
+        {
+            get { return WorkingDirectoryPath; }
+            set { WorkingDirectoryPath = value; }
+        }
+
+        public virtual string DimrModelRelativeWorkingDirectory
+        {
+            get { return Path.Combine(DirectoryName, InputDirectoryName); }
+        }
+
+        public virtual string DimrModelRelativeOutputDirectory
+        {
+            get { return Path.Combine(DirectoryName, OutputDirectoryName); }
+        }
 
         [NoNotifyPropertyChange]
         public new virtual DateTime CurrentTime
@@ -3121,7 +3390,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             runner.SetVar(string.Format("{0}/{1}", Name, category), values);
         }
         public bool DisableFlowNodeRenumbering { get; set; }
-        
+
         #endregion
 
         #region TimeDependentModelBase
@@ -3130,26 +3399,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             previousProgress = 0;
             DataItems.RemoveAllWhere(di => di.Tag == DiaFileDataItemTag);
-
-            var mduPath = Path.Combine(WorkingDirectory, Path.GetFileName(MduFilePath));
-
-            ReportProgressText("Exporting to mdu file");
-            ExportTo(mduPath, false);
-            InitializeRunTimeGridOperationApi();
-
+            
             ReportProgressText("Initializing");
+
+            // Force fm kernel to write output to 'output' Directory
+            SetOutputDirAndWaqDirProperty();
+
+            if (Directory.Exists(WorkingOutputDirectoryPath))
+            {
+                DisconnectOutput();
+                FileUtils.DeleteIfExists(WorkingOutputDirectoryPath);
+                FileUtils.CreateDirectoryIfNotExists(WorkingOutputDirectoryPath);
+            }
+
             runner.OnInitialize();
 
             ReportProgressText();
         }
-        
+
         protected override void OnCleanup()
         {
-            if (runTimeGridOperationApi != null)
-            {
-                runTimeGridOperationApi.Dispose();
-                runTimeGridOperationApi = null;
-            }
             snapApiInErrorMode = false;
             base.OnCleanup();
             runner.OnCleanup();
@@ -3166,7 +3435,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         protected override void OnFinish()
         {
             runner.OnFinish();
+            currentOutputDirectoryPath = WorkingOutputDirectoryPath;
         }
+
         #endregion
 
         protected override void OnProgressChanged()
@@ -3193,6 +3464,30 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         public void SetModelStateHandlerModelWorkingDirectory(string modelExplicitWorkingDirectory)
         {
             ModelStateHandler.ModelWorkingDirectory = modelExplicitWorkingDirectory;
+        }
+
+        private void SetOutputDirAndWaqDirProperty()
+        {
+            var outputDirProperty = ModelDefinition.GetModelProperty(KnownProperties.OutputDir);
+
+            var existingOutputDir = outputDirProperty.GetValueAsString();
+            if (!existingOutputDir.StartsWith(OutputDirectoryName))
+            {
+                outputDirProperty.SetValueAsString(OutputDirectoryName);
+                Log.InfoFormat("Running this model requires the OutputDirectory to be overwritten to: {0}", OutputDirectoryName);
+            }
+
+            if (!SpecifyWaqOutputInterval) return;
+
+            var relativeDWaqOutputDirectory = Path.Combine(OutputDirectoryName, DelwaqOutputDirectoryName);
+            var waqOutputDirProperty = ModelDefinition.GetModelProperty(KnownProperties.WaqOutputDir);
+            waqOutputDirProperty.SetValueAsString(relativeDWaqOutputDirectory);
+        }
+
+        private void ClearOutputDirAndWaqDirProperty()
+        {
+            ModelDefinition.GetModelProperty(KnownProperties.OutputDir).SetValueAsString(string.Empty);
+            ModelDefinition.GetModelProperty(KnownProperties.WaqOutputDir).SetValueAsString(string.Empty);
         }
     }
 }

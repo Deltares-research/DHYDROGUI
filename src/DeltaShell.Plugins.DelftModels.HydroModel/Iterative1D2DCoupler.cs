@@ -548,6 +548,22 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         [EditAction]
         public virtual bool RunsInIntegratedModel{get; set;}
 
+        public virtual string DimrExportDirectoryPath
+        {
+            get { return ExplicitWorkingDirectory; }
+            set { ExplicitWorkingDirectory = value; }
+        }
+
+        public virtual string DimrModelRelativeWorkingDirectory
+        {
+            get { return DirectoryName; }
+        }
+
+        public virtual string DimrModelRelativeOutputDirectory
+        {
+            get { return DirectoryName; }
+        }
+
         public virtual ValidationReport Validate()
         {
             var flow1DDimrModel = Flow1DModel as IDimrModel;

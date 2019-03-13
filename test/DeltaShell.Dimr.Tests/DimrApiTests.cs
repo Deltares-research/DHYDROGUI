@@ -108,7 +108,8 @@ namespace DeltaShell.Dimr.Tests
                 model.Area.Weirs.Select(c => { c.CrestWidth = 1.0; return c; }).ToList();
 
                 var exporter = new WaterFlowFMFileExporter();
-                exporter.Export(model, Path.Combine(tmpDir, model.DirectoryName, model.Name + ".mdu"));
+                var exporterPath = model.GetExporterPath(Path.Combine(tmpDir, model.DirectoryName));
+                exporter.Export(model, exporterPath);
                 DimrRunner.GenerateDimrXML(model, tmpDir);
 
                 using (var dimrApi = new DimrApi())

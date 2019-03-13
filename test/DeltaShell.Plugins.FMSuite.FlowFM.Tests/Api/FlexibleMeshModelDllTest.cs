@@ -58,6 +58,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         {
             var mduPath = TestHelper.GetTestFilePath(@"structures_all_types\har.mdu");
             var localCopy = TestHelper.CreateLocalCopy(mduPath);
+
             using (var model = new WaterFlowFMModel(localCopy))
             {
                 // In order for this test to succeed, we need to manually set the Crest Width to anything greater than 0.
@@ -147,7 +148,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 TestHelper.GetTestFilePath(@"structures_all_types\har.mdu");
             var localCopy = TestHelper.CreateLocalCopy(mduPath);
 
-            using (var model = new WaterFlowFMModel(localCopy))
+            var model = new WaterFlowFMModel(localCopy);
+
+            try
             {
                 // In order for this test to succeed, we need to manually set the Crest Width to anything greater than 0.
                 // This is due to the structures file (har_structures.ini) not containing values for Crest Width.
@@ -166,6 +169,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 result = model.GetVar(cat, pump.Name, "capacity");
                 Assert.AreEqual(95.0, ((double[]) result)[0]);
             }
+            finally
+            {
+                model.Cleanup();
+                model.Dispose();
+            }
 
         }
 
@@ -175,7 +183,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             var mduPath = TestHelper.GetTestFilePath(@"structures_all_types\har.mdu");
             var localCopy = TestHelper.CreateLocalCopy(mduPath);
 
-            using (var model = new WaterFlowFMModel(localCopy))
+            var model = new WaterFlowFMModel(localCopy);
+
+            try
             {
                 // In order for this test to succeed, we need to manually set the Crest Width to anything greater than 0.
                 // This is due to the structures file (har_structures.ini) not containing values for Crest Width.
@@ -194,17 +204,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 model.SetVar(new[] { -3.0 }, cat, weir.Name, "crest_level");
                 result = model.GetVar(cat, weir.Name, "crest_level");
                 Assert.AreEqual(-3.0, ((double[])result)[0]);
-                
+
+            }
+            finally
+            {
+                model.Cleanup();
+                model.Dispose();
             }
         }
-
+        
         [Test]
         public void TestCallGetValuesWaterLevelsCount()
         {
             var mduPath = TestHelper.GetTestFilePath(@"structures_all_types\har.mdu");
             var localCopy = TestHelper.CreateLocalCopy(mduPath);
 
-            using (var model = new WaterFlowFMModel(localCopy))
+            var model = new WaterFlowFMModel(localCopy);
+
+            try
             {
                 model.Initialize();
 
@@ -215,6 +232,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 //Assert.AreEqual(waterLevels.Length, model.Grid.Cells.Count);
                 Assert.AreEqual(1, waterLevels.Length); //dimr getvar can only get 1 value!
             }
+            finally
+            {
+                model.Cleanup();
+                model.Dispose();
+            }
         }
 
         [Test]
@@ -223,14 +245,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             var mduPath = TestHelper.GetTestFilePath(@"structures_all_types\har.mdu");
             var localCopy = TestHelper.CreateLocalCopy(mduPath);
 
-            using (var model = new WaterFlowFMModel(localCopy))
+            var model = new WaterFlowFMModel(localCopy);
+
+            try
             {
                 model.Initialize();
+
                 var waterLevels = model.GetVar("s0") as double[];
 
                 Assert.IsNotNull(waterLevels);
 
-                var newWaterLevels = waterLevels.Select(s => 1.5*(s+1)).ToArray();
+                var newWaterLevels = waterLevels.Select(s => 1.5 * (s + 1)).ToArray();
 
                 model.SetVar(newWaterLevels, "s0");
 
@@ -240,6 +265,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
 
                 Assert.AreEqual(waterLevels, newWaterLevels);
             }
+            finally
+            {
+                model.Cleanup();
+                model.Dispose();
+            }
         }
 
         [Test]
@@ -248,15 +278,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             var mduPath = TestHelper.GetTestFilePath(@"structures_all_types\har.mdu");
             var localCopy = TestHelper.CreateLocalCopy(mduPath);
 
-            using (var model = new WaterFlowFMModel(localCopy))
+            var model = new WaterFlowFMModel(localCopy);
+
+            try
             {
                 // In order for this test to succeed, we need to manually set the Crest Width to anything greater than 0.
                 // This is due to the structures file (har_structures.ini) not containing values for Crest Width.
                 // The Gui will initialize the Crest Width with a default value of 0.0, whilst the computational core will initialize with the default length of the structure.
                 // Since this test is not meant to test the CrestWidth getting and setting, we place a hack here to set all the Crest Widths to any positive value.
-                model.Area.Weirs.Select(c => { c.CrestWidth = 1.0; return c; }).ToList();
+                model.Area.Weirs.Select(c =>
+                {
+                    c.CrestWidth = 1.0;
+                    return c;
+                }).ToList();
                 model.Initialize();
-                Assert.AreEqual(Dimr.DimrApiDataSet.DIMR_FILL_VALUE, ((double[])model.GetVar("party", "at", "myplace"))[0], 0.01d);
+                Assert.AreEqual(Dimr.DimrApiDataSet.DIMR_FILL_VALUE,
+                    ((double[]) model.GetVar("party", "at", "myplace"))[0], 0.01d);
+            }
+            finally
+            {
+                model.Cleanup();
+                model.Dispose();
             }
         }
 
@@ -266,7 +308,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
 
             var localCopy = TestHelper.CreateLocalCopy(mduPath);
-            using (var model = new WaterFlowFMModel(localCopy))
+            var model = new WaterFlowFMModel(localCopy);
+
+            try
             {
                 model.Initialize();
                 // get 13
@@ -277,6 +321,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
 
                 // the water level should be found on an observation point, so it is not NaN
                 Assert.AreEqual(0.0, ((double[]) result)[0]);
+            }
+            finally
+            {
+                model.Cleanup();
+                model.Dispose();
             }
         }
 
@@ -363,7 +412,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             var localCopy = TestHelper.CreateLocalCopy(mduPath);
             MockRepository mocks = new MockRepository();
 
-            using (var model = new WaterFlowFMModel(localCopy))
+            var model = new WaterFlowFMModel(localCopy);
+
+            try
             {
                 var gridExtent = model.GridExtent;
                 var center = gridExtent.Centre;
@@ -393,22 +444,30 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                     xin.Add(MissingValue);
                     yin.Add(MissingValue);
                 }
-                /**/
+
                 var fmModelApi = mocks.StrictMock<FlexibleMeshModelApi>();
                 fmModelApi
                     .Expect(
-                        fma => fma.GetSnappedFeature(UnstrucGridOperationApi.ThinDams, xin.ToArray(), yin.ToArray(), ref xout, ref yout, ref featureIds))
+                        fma => fma.GetSnappedFeature(UnstrucGridOperationApi.ThinDams, xin.ToArray(), yin.ToArray(),
+                            ref xout, ref yout, ref featureIds))
                     .Return(false).Repeat.Any();
                 //The inner calls will trigger the mocked api
                 var mockedUgridApi = mocks.StrictMock<UnstrucGridOperationApi>(fmModelApi);
                 mocks.ReplayAll();
 
                 // Try to snap with a 'failed' mocked process.
-                var snappedThinDamGeometries = mockedUgridApi.GetGridSnappedGeometry(UnstrucGridOperationApi.ThinDams, new[]{thinDamGeom1, thinDamGeom2}).ToList();
-                
+                var snappedThinDamGeometries = mockedUgridApi
+                    .GetGridSnappedGeometry(UnstrucGridOperationApi.ThinDams, new[] {thinDamGeom1, thinDamGeom2})
+                    .ToList();
+
                 //If it returns the same geometry means nothing has actually been snapped.
                 Assert.AreEqual(thinDamGeom1, snappedThinDamGeometries.First());
                 Assert.AreNotEqual(thinDamGeom1, snappedThinDamGeometries.Last());
+            }
+            finally
+            {
+                model.Cleanup();
+                model.Dispose();
             }
         }
 
@@ -693,13 +752,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             var mduPath = TestHelper.GetTestFilePath(@"structures_all_types\har.mdu");
             var localCopy = TestHelper.CreateLocalCopy(mduPath);
 
-            using (var model = new WaterFlowFMModel(localCopy))
+            var model = new WaterFlowFMModel(localCopy);
+
+            try
             {
                 // In order for this test to succeed, we need to manually set the Crest Width to anything greater than 0.
                 // This is due to the structures file (har_structures.ini) not containing values for Crest Width.
                 // The Gui will initialize the Crest Width with a default value of 0.0, whilst the computational core will initialize with the default length of the structure.
                 // Since this test is not meant to test the CrestWidth getting and setting, we place a hack here to set all the Crest Widths to any positive value.
-                model.Area.Weirs.Select(c => { c.CrestWidth = 1.0; return c; }).ToList();
+                model.Area.Weirs.Select(c =>
+                {
+                    c.CrestWidth = 1.0;
+                    return c;
+                }).ToList();
                 var obsSeg9 = model.Area.ObservationPoints.First(o => o.Name == "9_040.seg_9");
                 var obCrWeir02 = model.Area.ObservationCrossSections.First(o => o.Name == "weir02");
 
@@ -712,7 +777,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
 
                 Assert.AreEqual(0, report.ErrorCount, errorReport);
                 model.Initialize();
-                
+
                 var startTime = model.BMIEngine.StartTime;
                 var currentTime = model.BMIEngine.CurrentTime;
 
@@ -727,15 +792,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
 
                     if (diffTime.TotalMinutes >= 4.5)
                     {
-                        Assert.GreaterOrEqual(0.01, ((double[])model.GetVar(obsPointCat, obsSeg9.Name, "water_level"))[0]);
-                        Assert.GreaterOrEqual(70, ((double[])model.GetVar(obsCrossCat, obCrWeir02.Name, "discharge"))[0]);
+                        Assert.GreaterOrEqual(0.01,
+                            ((double[]) model.GetVar(obsPointCat, obsSeg9.Name, "water_level"))[0]);
+                        Assert.GreaterOrEqual(70,
+                            ((double[]) model.GetVar(obsCrossCat, obCrWeir02.Name, "discharge"))[0]);
                         break;
                     }
                     else if (!threeMinutesChecked && diffTime.TotalMinutes >= 3)
                     {
-                        var waterLevel = ((double[])model.GetVar(obsPointCat, obsSeg9.Name, "water_level"))[0];
+                        var waterLevel = ((double[]) model.GetVar(obsPointCat, obsSeg9.Name, "water_level"))[0];
                         Assert.AreEqual(0.0, waterLevel);
-                        var discharge = ((double[])model.GetVar(obsCrossCat, obCrWeir02.Name, "discharge"))[0];
+                        var discharge = ((double[]) model.GetVar(obsCrossCat, obCrWeir02.Name, "discharge"))[0];
                         Assert.AreEqual(0.0, discharge);
 
                         threeMinutesChecked = true;
@@ -744,6 +811,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                     currentTime = model.BMIEngine.CurrentTime;
                     diffTime = currentTime - startTime;
                 }
+            }
+            finally
+            {
+                model.Cleanup();
+                model.Dispose();
             }
         }
     }

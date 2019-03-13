@@ -221,8 +221,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         public void GivenAFlowFmMapLayerProviderAndAModelWithAClassMapFileFunctionStore_WhenChildLayerObjectsIsCalled_ThenTheFunctionStoreIsReturned()
         {
             // Given
-            var outputDirectoryPath = TestHelper.GetTestFilePath("output_classmapfiles");
-            var filePath = Path.Combine(outputDirectoryPath, "DFM_OUTPUT_FlowFM\\FlowFM_clm.nc");       
+            var testDirectoryPath = TestHelper.GetTestFilePath("output_classmapfiles");
+            var outputDirectoryPath = Path.Combine(testDirectoryPath, "output");
+            var filePath = Path.Combine(outputDirectoryPath, "FlowFM_clm.nc");
             Assert.IsTrue(File.Exists(filePath));
 
             var model = new WaterFlowFMModel();
@@ -246,7 +247,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         public void GivenAFlowFmMapLayerProviderAndAClassMapFileFunctionStore_WhenChildLayerObjectsIsCalled_ThenTheFunctionsAndGridAreReturned()
         {
             // Given
-            var filePath = TestHelper.GetTestFilePath("output_classmapfiles\\DFM_OUTPUT_FlowFM\\FlowFM_clm.nc");
+            var testDirectoryPath = TestHelper.GetTestFilePath("output_classmapfiles");
+            var outputDirectoryPath = Path.Combine(testDirectoryPath, "output");
+            var filePath = Path.Combine(outputDirectoryPath, "FlowFM_clm.nc");
             Assert.IsTrue(File.Exists(filePath));
 
             var classMapFileStore = new FMClassMapFileFunctionStore(filePath);

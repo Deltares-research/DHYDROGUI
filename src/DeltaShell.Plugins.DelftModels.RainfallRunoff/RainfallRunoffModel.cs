@@ -1069,6 +1069,23 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         [EditAction]
         public virtual bool RunsInIntegratedModel { get; set; }
 
+        [EditAction]
+        public virtual string DimrExportDirectoryPath
+        {
+            get { return ExplicitWorkingDirectory; }
+            set { ExplicitWorkingDirectory = value; }
+        }
+
+        public virtual string DimrModelRelativeWorkingDirectory
+        {
+            get { return DirectoryName; }
+        }
+
+        public virtual string DimrModelRelativeOutputDirectory
+        {
+            get { return DirectoryName; }
+        }
+
         [NoNotifyPropertyChange]
         public new virtual DateTime CurrentTime
         {

@@ -27,7 +27,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         public const string ClassMapInterval = "classmapinterval";
         public const string NetFile = "netfile";
         public const string ObsFile = "obsfile";
-        public const string OutDir = "outputdir";
+        public const string OutputDir = "outputdir";
         public const string PartitionFile = "partitionfile";
         public const string ProfdefFile = "profdeffile";
         public const string ProflocFile = "proflocfile";
@@ -97,6 +97,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         public const string TrtDef = "TrtDef";
         public const string TrtL = "TrtL";
         public const string DtTrt = "DtTrt";
+        public const string WaqOutputDir = "WAQOutputDir";
     }
 
 

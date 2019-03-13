@@ -334,6 +334,7 @@
     <None Include="Uml\HydroAreaCollection.cd" />
     <None Include="Uml\FlowBoundaryConditions.cd" />
     <Compile Include="WaterFlowFMModel.Spatial.cs" />
+    <Compile Include="WaterFlowFMModel110LegacyLoader.cs" />
     <Compile Include="WaterFlowFMModelCoordinateConversion.cs" />
     <None Include="Uml\FlowFMOverview.cd" />
   </ItemGroup>
@@ -393,6 +394,7 @@
     <None Include="Resources\dry_point.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="WaterFlowFMModel.1.1.0.hbm.xml" />
     <Resource Include="Resources\function_timeseries.png" />
     <Content Include="toolboxes\Statistics.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

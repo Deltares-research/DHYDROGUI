@@ -1,0 +1,45 @@
+file-created-by  Deltares, D-Flow FM Version 1.2.0.53941M, Jul 12 2018, 20:37:00
+file-creation-date  2018-09-05, 10:19:05                                        
+task      full-coupling
+geometry  unstructured
+horizontal-aggregation no
+reference-time              '20010101000000'
+hydrodynamic-start-time     '20010101000000'
+hydrodynamic-stop-time      '20010102000000'
+hydrodynamic-timestep       '00000000001000'
+conversion-ref-time         '20010101000000'
+conversion-start-time       '20010101000000'
+conversion-stop-time        '20010102000000'
+conversion-timestep         '00000000001000'
+grid-cells-first-direction                      41
+grid-cells-second-direction                      1
+number-hydrodynamic-segments-per-layer          41
+number-hydrodynamic-layers                       1
+number-water-quality-segments-per-layer         41
+number-water-quality-layers                      1
+number-horizontal-exchanges                     67
+number-vertical-exchanges                        0
+hydrodynamic-file           'TestModel'
+aggregation-file            none
+boundaries-file             'TestModel.bnd'
+waqgeom-file                'TestModel_waqgeom.nc'
+grid-indices-file           'TestModel.bnd'
+grid-coordinates-file       'TestModel_waqgeom.nc'
+volumes-file                'TestModel.vol'
+areas-file                  'TestModel.are'
+flows-file                  'TestModel.flo'
+pointers-file               'TestModel.poi'
+lengths-file                'TestModel.len'
+salinity-file               'TestModel.sal'
+temperature-file            'TestModel.tem'
+vert-diffusion-file         none
+horizontal-surfaces-file    'TestModel.srf'
+surfaces-file               'TestModel.srfold'
+shear-stresses-file         'TestModel.tau'
+attributes-file             'TestModel.atr'
+hydrodynamic-layers
+       1.000000
+end-hydrodynamic-layers
+water-quality-layers   
+       1.000000
+end-water-quality-layers

@@ -87,14 +87,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
                 var restartImportHandlersRst = importHandler.GetImporters(waterFlowFmModel.RestartInput).OfType<FMRstFileImporter>().FirstOrDefault();
                 Assert.IsNotNull(restartImportHandlersRst);
                 const string harRstNc = "har_20080119_120000_rst.nc";
-                const string harlingenDfmOutputHarHarRstNc = @"harlingen/DFM_OUTPUT_har/" +harRstNc;
+                const string harlingenDfmOutputHarHarRstNc = @"harlingen/output/" +harRstNc;
                 var directoryName = Path.GetDirectoryName(waterFlowFmModel.MduFilePath);
                 Assert.IsNotNullOrEmpty(directoryName);
                 
                 restartImportHandlersRst.ImportItem(TestHelper.GetTestFilePath(harlingenDfmOutputHarHarRstNc), waterFlowFmModel.RestartInput);
                 //Assert.IsTrue(File.Exists(Path.Combine(directoryName, @"../state_*.zip")));
-                Assert.IsTrue(Directory.EnumerateFiles(Path.Combine(directoryName, @"../"), "state_*.zip").Any());
-                string[] files = Directory.GetFiles(Path.Combine(directoryName, @"../"), "state_*.zip", SearchOption.TopDirectoryOnly);
+                Assert.IsTrue(Directory.EnumerateFiles(Path.Combine(directoryName, @"../../"), "state_*.zip").Any());
+                string[] files = Directory.GetFiles(Path.Combine(directoryName, @"../../"), "state_*.zip", SearchOption.TopDirectoryOnly);
                 if (files.Length > 0)
                 {
                     //file exist

@@ -69,7 +69,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
 
             // gather paths            
             var mduName = model.Name + MduFile.MduExtension;
-            mduFilePath = Path.Combine(tempPath, mduName);
+
+            mduFilePath = Path.Combine(tempPath, model.Name, "input", mduName);
 
             // make sure we initialize without: ext, thin dams, cross sections, etc..
             var adjustedMduProperties = model.ModelDefinition.Properties.ToList();
@@ -99,7 +100,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             /* When initializing this api for GridSnap features, we are not interested in doing a full export, only in having
              the api running.*/
             model.ExportTo(mduFilePath, false, fullExport, fullExport);
-            model.SetModelStateHandlerModelWorkingDirectory(model.ExplicitWorkingDirectory??model.WorkingDirectory??Environment.CurrentDirectory);
+            model.SetModelStateHandlerModelWorkingDirectory(model.ExplicitWorkingDirectory??model.WorkingDirectoryPath??Environment.CurrentDirectory);
 
             // Overwrite existing mdu to ignore the properties with adjusted properties
             var mduFile = new MduFile();

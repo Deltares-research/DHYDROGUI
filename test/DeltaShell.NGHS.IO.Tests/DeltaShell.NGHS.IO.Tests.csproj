@@ -121,6 +121,8 @@
     <Compile Include="FileConverters\DelftXmlFileConverterTest.cs" />
     <Compile Include="Converters\HydroNodeConverterTest.cs" />
     <Compile Include="Converters\LateralSourceConverterTest.cs" />
+    <Compile Include="Converters\NetworkDiscretizationConverterTest.cs" />
+    <Compile Include="FileBasedUtilsTest.cs" /> 
     <Compile Include="Converters\ObservationPointConverterTest.cs" />
     <Compile Include="FileConverters\RetentionConverterTest.cs" />
     <Compile Include="FileReaders\DelftBcFileParserTest.cs" />
@@ -128,7 +130,6 @@
     <Compile Include="FileReaders\DelftIniFileParserTest.cs" />
     <Compile Include="FileReaders\LateralSourceFileReaderTest.cs" />
     <Compile Include="FileReaders\NetworkDefinitionFileReaderTest.cs" />
-    <Compile Include="Converters\NetworkDiscretizationConverterTest.cs" />
     <Compile Include="FileReaders\ObservationPointFileReaderTest.cs" />
     <Compile Include="FileReaders\RetentionFileReaderTest.cs" />
     <Compile Include="FileReaders\SalinityConverterTest.cs" />
