@@ -75,7 +75,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         private static string modelDirPath;
         private static string inputDirPath;
         private static string outputDirPath;
-        private static string outputFMDirPath;
         private static string outputWAQDirPath;
         private static string snappedDirPath;
 
@@ -86,8 +85,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         private static string tempDirPath;
         private static string workingDirPath;
         private static string tempMduFilePath;
-        private static string tempProjectFilePath;
-        private static string exportMduFilePath;
         private static string exportDimrDirPath;
         private static string exportDimrFilePath;
 
@@ -101,7 +98,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         private static List<string> filtersInputWithMorphology;
         private static List<string> filtersInputWithWind;
 
-        private static List<string> filtersOutput;
         private static List<string> filtersOutputFM_NewModel;
         private static List<string> filtersOutputFM_OldModel;
         private static List<string> filtersOutputWAQ;
@@ -133,16 +129,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             modelDirPath = Path.Combine(projectDirPath, modelDirName);
             inputDirPath = Path.Combine(modelDirPath, InputDirName);
             outputDirPath = Path.Combine(modelDirPath, OutputDirName);
-            outputFMDirPath = Path.Combine(outputDirPath, outputFMDirName);
             outputWAQDirPath = Path.Combine(outputDirPath, outputWAQDirName);
             snappedDirPath = Path.Combine(outputDirPath, SnappedDirName);
 
             exportDimrDirPath = Path.Combine(projectDirPath, ExportDimrDirName);
             exportDimrFilePath = Path.Combine(exportDimrDirPath, ExportDimrFileName);
             dflowfmDirPath = Path.Combine(exportDimrDirPath, DflowfmDirName);
-            exportMduFilePath = Path.Combine(projectDirPath, mduFileName);
             tempMduFilePath = Path.Combine(tempDirPath, mduFileName);
-            tempProjectFilePath = Path.Combine(tempDirPath, projectFileName);
 
             filtersCommonInput = new List<string>
             {
@@ -1313,8 +1306,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                                                                       doChecksum: true);
 
                     // When
-                    var DsprojSave = Path.Combine(tempDirPath, "Project1.dsproj");
-                    var importedModel = ImportModelIntoProject(app, mduPath, DsprojSave);
+                    var dsprojSave = Path.Combine(tempDirPath, "Project1.dsproj");
+                    var importedModel = ImportModelIntoProject(app, mduPath, dsprojSave);
 
                     // Then
                     var postImportDirStructure = GetDirectoryStructure(destinationDirPath,
@@ -1325,7 +1318,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                                                   ref postImportDirStructure,
                                                   true);
 
-                    var modelDirSave = Path.Combine(DsprojSave + "_data", importedModel.Name);
+                    var modelDirSave = Path.Combine(dsprojSave + "_data", importedModel.Name);
                     Assert.That(Directory.Exists(modelDirSave), Is.True, "Expected a model directory, but found none.");
                     var inputDirSave = Path.Combine(modelDirSave, "input");
                     Assert.That(Directory.Exists(inputDirSave), Is.True, "Expected an input directory, but found none.");
@@ -1372,8 +1365,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                                                                       doChecksum: true);
 
                     // When
-                    var DsprojSave = Path.Combine(tempDirPath, "Project1.dsproj");
-                    var importedModel = ImportModelIntoProject(app, mduPath, DsprojSave);
+                    var dsprojSave = Path.Combine(tempDirPath, "Project1.dsproj");
+                    var importedModel = ImportModelIntoProject(app, mduPath, dsprojSave);
 
                     // Then
                     var postImportDirStructure = GetDirectoryStructure(destinationDirPath,
@@ -1384,7 +1377,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                                                   ref postImportDirStructure,
                                                   true);
 
-                    var modelDirSave = Path.Combine(DsprojSave + "_data", importedModel.Name);
+                    var modelDirSave = Path.Combine(dsprojSave + "_data", importedModel.Name);
                     Assert.That(Directory.Exists(modelDirSave), Is.True, "Expected a model directory, but found none.");
                     var inputDirSave = Path.Combine(modelDirSave, "input");
                     Assert.That(Directory.Exists(inputDirSave), Is.True, "Expected an input directory, but found none.");
@@ -1434,8 +1427,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                                                                       doChecksum: true);
 
                     // When
-                    var DsprojSave = Path.Combine(tempDirPath, "Project1.dsproj");
-                    var importedModel = ImportModelIntoProject(app, mduPath, DsprojSave);
+                    var dsprojSave = Path.Combine(tempDirPath, "Project1.dsproj");
+                    var importedModel = ImportModelIntoProject(app, mduPath, dsprojSave);
 
                     // Then
                     var postImportDirStructure = GetDirectoryStructure(destinationDirPath,
@@ -1446,7 +1439,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                                                   ref postImportDirStructure,
                                                   true);
 
-                    var modelDirSave = Path.Combine(DsprojSave + "_data", importedModel.Name);
+                    var modelDirSave = Path.Combine(dsprojSave + "_data", importedModel.Name);
                     Assert.That(Directory.Exists(modelDirSave), Is.True, "Expected a model directory, but found none.");
                     var inputDirSave = Path.Combine(modelDirSave, "input");
                     Assert.That(Directory.Exists(inputDirSave), Is.True, "Expected an input directory, but found none.");
@@ -1496,8 +1489,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                                                                       doChecksum: true);
 
                     // When
-                    var DsprojSave = Path.Combine(tempDirPath, "Project1.dsproj");
-                    var importedModel = ImportModelIntoProject(app, mduPath, DsprojSave);
+                    var dsprojSave = Path.Combine(tempDirPath, "Project1.dsproj");
+                    var importedModel = ImportModelIntoProject(app, mduPath, dsprojSave);
 
                     // Then
                     var postImportDirStructure = GetDirectoryStructure(destinationDirPath,
@@ -1508,7 +1501,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                                                   ref postImportDirStructure,
                                                   true);
 
-                    var modelDirSave = Path.Combine(DsprojSave + "_data", importedModel.Name);
+                    var modelDirSave = Path.Combine(dsprojSave + "_data", importedModel.Name);
                     Assert.That(Directory.Exists(modelDirSave), Is.True, "Expected a model directory, but found none.");
                     var inputDirSave = Path.Combine(modelDirSave, "input");
                     Assert.That(Directory.Exists(inputDirSave), Is.True, "Expected an input directory, but found none.");
@@ -1561,8 +1554,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                                                                       doChecksum: true);
 
                     // When
-                    var DsprojSave = Path.Combine(tempDirPath, "Project1.dsproj");
-                    var importedModel = ImportModelIntoProject(app, mduPath, DsprojSave);
+                    var dsprojSave = Path.Combine(tempDirPath, "Project1.dsproj");
+                    var importedModel = ImportModelIntoProject(app, mduPath, dsprojSave);
 
                     // Then
                     var postImportDirStructure = GetDirectoryStructure(destinationDirPath,
@@ -1573,7 +1566,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                                                   ref postImportDirStructure,
                                                   true);
 
-                    var modelDirSave = Path.Combine(DsprojSave + "_data", importedModel.Name);
+                    var modelDirSave = Path.Combine(dsprojSave + "_data", importedModel.Name);
                     Assert.That(Directory.Exists(modelDirSave), Is.True, "Expected a model directory, but found none.");
                     var inputDirSave = Path.Combine(modelDirSave, "input");
                     Assert.That(Directory.Exists(inputDirSave), Is.True, "Expected an input directory, but found none.");
@@ -1623,14 +1616,15 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                                                                       doChecksum: true);
 
                     // When
-                    var DsprojSave = Path.Combine(tempDirPath, "Project1.dsproj");
-                    var integratedModel = ImportModelIntoIntegratedModel(app, mduPath, DsprojSave);
+                    var dsprojSave = Path.Combine(tempDirPath, "Project1.dsproj");
+                    var integratedModel = ImportModelIntoIntegratedModel(app, mduPath, dsprojSave);
 
                     // Then
 
                     var integratedModelActivities = integratedModel.Activities.ToList();
                     Assert.That(integratedModelActivities.Count, Is.EqualTo(1), "Expected the integrated model to contain a single activity.");
                     var importedModel = integratedModelActivities.First() as WaterFlowFMModel;
+                    Assert.That(importedModel, Is.Not.Null, "Expected the imported model to be a WaterFlowFMModel.");
 
                     var postImportDirStructure = GetDirectoryStructure(destinationDirPath,
                                                                        ".",
@@ -1640,7 +1634,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                                                   ref postImportDirStructure,
                                                   true);
 
-                    var modelDirSave = Path.Combine(DsprojSave + "_data", importedModel.Name);
+                    var modelDirSave = Path.Combine(dsprojSave + "_data", importedModel.Name);
                     Assert.That(Directory.Exists(modelDirSave), Is.True, "Expected a model directory, but found none.");
                     var inputDirSave = Path.Combine(modelDirSave, "input");
                     Assert.That(Directory.Exists(inputDirSave), Is.True, "Expected an input directory, but found none.");
@@ -1667,7 +1661,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             app.CloseProject();
         }
 
-        private void UpdateOutputDirInMDUTo(string mduPath, string newOutputDirPath)
+        private static void UpdateOutputDirInMDUTo(string mduPath, string newOutputDirPath)
         {
             // The OutputDir is already empty.
             if (string.IsNullOrEmpty(newOutputDirPath))
