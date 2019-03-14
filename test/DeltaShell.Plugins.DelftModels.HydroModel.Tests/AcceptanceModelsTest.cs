@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Windows.Controls;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Shell.Core;
@@ -434,24 +433,21 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         {
             var outputTimeStep = 0.0;
             // Set StopTime to StartTime + 10 TimeSteps
-            if (timeDependentModel is HydroModel castedModel)
+            if (timeDependentModel is HydroModel hydroModel)
             {
                 // Turn these settings on (most of the times they are already selected), otherwise your new stop time will not be taken into account
-                castedModel.OverrideStartTime = true;
-                castedModel.OverrideStopTime = true;
-                castedModel.OverrideTimeStep = true;
+                hydroModel.OverrideStartTime = true;
+                hydroModel.OverrideStopTime = true;
+                hydroModel.OverrideTimeStep = true;
 
-                var modelCounter = castedModel.Activities.GetActivitiesOfType<WaterFlowModel1D>().Count();
+                var flow1DModel = hydroModel.Activities.GetActivitiesOfType<WaterFlowModel1D>().FirstOrDefault();
 
-                if (modelCounter > 0)
-                {
-                    outputTimeStep = castedModel.Activities.GetActivitiesOfType<WaterFlowModel1D>().ToList()[0]
-                        .OutputTimeStep.TotalSeconds;
-                }
-                else
-                {
-                    Assert.Fail("Not a WaterFlowModel1D found in the Integrated Model.");
-                }
+                Assert.NotNull(flow1DModel, "Not a WaterFlowModel1D found in the Integrated Model.");
+
+                
+                outputTimeStep = flow1DModel.OutputTimeStep.TotalSeconds;
+                
+               
             }
             else if (timeDependentModel is WaterFlowModel1D waterModel)
             {
