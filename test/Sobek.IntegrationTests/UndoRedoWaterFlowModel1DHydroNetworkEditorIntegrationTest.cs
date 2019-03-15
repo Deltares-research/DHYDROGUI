@@ -435,7 +435,7 @@ namespace Sobek.IntegrationTests
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.WindowsForms)]
         [Category(TestCategory.Slow)]
         public void SaveLoadModelAndAddCulvert()
         {
@@ -461,6 +461,8 @@ namespace Sobek.IntegrationTests
                 ProjectItemMapView = gui.DocumentViews.OfType<ProjectItemMapView>().FirstOrDefault();
                 
                 AddCulvert(new Coordinate(50, 0));
+
+                gui.Application.CloseProject();
             };
 
             WpfTestHelper.ShowModal(mainWindow, mainWindowShown);
