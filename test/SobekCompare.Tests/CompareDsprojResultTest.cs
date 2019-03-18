@@ -160,13 +160,13 @@ namespace SobekCompare.Tests
                 Assert.NotNull(refFunction);
                 var refValues = refFunction.GetValues();
 
-                Assert.AreEqual(tstValues.Count, refValues.Count, "Number of Values not Equal in Function {0}", iFunc);
+                Assert.AreEqual(tstValues.Count, refValues.Count, "HIS-File {0}: Number of Values not Equal for {1}", hisFile, tstFuncName);
                 if (iFunc < 2)
                 {
                     for (var i = 0; i < tstValues.Count; i++)
                     {
                         Assert.AreEqual(tstValues[i], refValues[i],
-                            string.Format("Value Differs at Index {0} for Function {1}", i + 1, iFunc));
+                            string.Format("HIS-File {0}: Value Differs for {1}", hisFile, tstFuncName));
                     }
                 }
                 else
@@ -180,7 +180,7 @@ namespace SobekCompare.Tests
                         var y = Convert.ToDouble(refValues[i].ToString());
                         Assert.IsTrue(
                             Math.Abs(x - y) <= toleranceErrorMargin || Math.Abs(x - y) <= Math.Abs(x)*tolerance,
-                            string.Format("Value Differs at Index {0} for Function {1}", i + 1, iFunc));
+                            string.Format("HIS-File {0}: Value Differs for {1}", hisFile, tstFuncName));
                     }
                 }
             }
