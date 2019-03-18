@@ -21,14 +21,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
         }
 
         [Test]
-        public void GivenAnWaterFlowFMFileExporterWhenNameIsCalledThenTheCorrectNameIsReturned()
+        public void GivenAnWaterFlowFMFileExporter_WhenNameIsCalled_ThenTheCorrectNameIsReturned()
         {
             const string expectedVal = "Flow Flexible Mesh model";
             Assert.That(exporter.Name, Is.EqualTo(expectedVal));
         }
 
         [Test]
-        public void GivenAnWaterFlowFMFileExporterWhenCategoryIsCalledThenGeneralIsReturned()
+        public void GivenAnWaterFlowFMFileExporter_WhenCategoryIsCalled_ThenGeneralIsReturned()
         {
             const string expectedVal = "General";
             Assert.That(exporter.Category, Is.EqualTo(expectedVal));
@@ -36,20 +36,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
 
         [Test]
         [ExpectedException(typeof(Exception),ExpectedMessage = "Item not set")]
-        public void GivenAnWaterFlowFMFileExporterWhenExportIsCalledWithANullItemAndAnyPathThenAnExceptionIsThrown()
+        public void GivenAnWaterFlowFMFileExporter_WhenExportIsCalledWithANullItem_ThenAnExceptionIsThrown()
         {
             exporter.Export(null, Arg<string>.Is.Anything);
         }
 
         [Test]
         [ExpectedException(typeof(Exception), ExpectedMessage = "Unexpected object type: System.Object")]
-        public void GivenAnWaterFlowFMFileExporterAndANotWaterFlowFMModelItemWhenExportIsCalledWithThisItemAndAnyPathThenAnExceptionIsThrown()
+        public void GivenAnWaterFlowFMFileExporterAndANotWaterFlowFMModelItem_WhenExportIsCalled_ThenAnExceptionIsThrown()
         {
             exporter.Export(new object(), Arg<string>.Is.Anything);
         }
 
         [Test]
-        public void GivenAWaterFlowFMFileExporterAndAWaterFlowFMModelItemAndAValidPathWhenExportIsCalledWithThisItemAndPathThenTheModelIsExportedToTheSpecifiedPath()
+        public void GivenAWaterFlowFMFileExporterAndAWaterFlowFMModelItemAndAValidPath_WhenExportIsCalled_ThenTheModelIsExportedToTheSpecifiedPath()
         {
             var path = Path.Combine(Path.GetTempPath(), "FlowFM.mdu");
 
@@ -77,7 +77,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
         }
 
         [Test]
-        public void GivenANWaterFlowFMFileExporterAndAWaterFlowFMModelItemAndAPathPointingToADirectoryWhenExportIsCalledWithThisItemAndPathThenTheModelIsExportedToAPathWithTheModelNameAndMDUExtension()
+        public void GivenANWaterFlowFMFileExporterAndAWaterFlowFMModelItemAndAPathPointingToADirectory_WhenExportIsCalled_ThenTheModelIsExportedToAPathWithTheModelNameAndMDUExtension()
         {
             var path = Path.GetTempPath();
             var expectedPath = Path.Combine(path, "FlowFM.mdu");
@@ -108,20 +108,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
         }
 
         [Test]
-        public void GivenAnWaterFlowFMFileExporterWhenSourceTypesIsCalledThenWaterFlowFMModelIsReturned()
+        public void GivenAnWaterFlowFMFileExporter_WhenSourceTypesIsCalled_ThenWaterFlowFMModelIsReturned()
         {
             Assert.That(exporter.SourceTypes().Count(), Is.EqualTo(1));
             Assert.That(exporter.SourceTypes().Contains(typeof(WaterFlowFMModel)));
         }
 
         [Test]
-        public void GivenAnWaterFlowFMFileExporterWhenCanExportForIsForAnyObjectCalledThenTrueIsReturned()
+        public void GivenAnWaterFlowFMFileExporter_WhenCanExportForIsForAnyObjectCalled_ThenTrueIsReturned()
         {
             Assert.That(exporter.CanExportFor(Arg<object>.Is.Anything), Is.True);
         }
 
         [Test]
-        public void GivenAnWaterFlowFMFileExporterWhenFileFilterIsCalledThenTheCorrectFileFilterIsReturned()
+        public void GivenAnWaterFlowFMFileExporter_WhenFileFilterIsCalled_ThenTheCorrectFileFilterIsReturned()
         {
             const string expectedVal = "Flexible Mesh Model Definition|*.mdu";
             Assert.That(exporter.FileFilter, Is.EqualTo(expectedVal));

@@ -20,13 +20,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
         }
 
         [Test]
-        public void GivenAnBcFileExporterWhenExportIsCalledWithANullItemAndAPathThenFalseIsReturned()
+        public void GivenAnBcFileExporter_WhenExportIsCalledWithANullItem_ThenFalseIsReturned()
         {
             Assert.That(exporter.Export(null, "myFile.tmp"), Is.False);
         }
 
         [Test]
-        public void GivenAnBcFileExporterWhenSourceTypesIsCalledThenAnEnumerableContainingTheSourceTypesIsReturned()
+        public void GivenAnBcFileExporter_WhenSourceTypesIsCalled_ThenAnEnumerableContainingTheSourceTypesIsReturned()
         {
             var obtainedValues = exporter.SourceTypes();
             Assert.That(obtainedValues.Count(), Is.EqualTo(2));

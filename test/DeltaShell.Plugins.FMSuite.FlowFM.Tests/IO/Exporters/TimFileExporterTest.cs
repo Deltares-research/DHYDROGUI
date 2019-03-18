@@ -125,7 +125,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
         }
 
         [Test]
-        public void GivenAnTimFileExporterAndAnIBoundaryConditionWithDataTypeTimeSeriesWhenExportIsCalledWithThisItemAndAnyPathThenTrueIsReturned()
+        public void GivenAnTimFileExporterAndAnIBoundaryConditionWithDataTypeTimeSeries_WhenExportIsCalled_ThenTrueIsReturned()
         {
             var path = Path.Combine(tempDir, "myFile.tmp");
 
@@ -164,7 +164,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
         }
 
         [TestCase(false, HeatFluxModelType.None, false, false, false)]
-        public void GivenAnTimFileExporterAndASourceAndSinkItemWhenExportIsCalledWithThisItemAndAnyPathThenTrueIsReturned(bool useSalinity, HeatFluxModelType temperature, bool useMorSed, bool useSecFlow, bool tracersPresent)
+        public void GivenAnTimFileExporterAndASourceAndSinkItem_WhenExportIsCalled_ThenTrueIsReturned(bool useSalinity, HeatFluxModelType temperature, bool useMorSed, bool useSecFlow, bool tracersPresent)
         {
             var path = Path.Combine(tempDir, "myFile.tmp");
 
@@ -185,13 +185,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
         }
 
         [Test]
-        public void GivenAnTimFileExporterAndAnItemWhichIsNotAIBoundaryConditionSourceAndSinkOrHeatFluxModelWhenExportIsCalledWithThisItemAndAnyStringThenFalseIsReturned()
+        public void GivenAnTimFileExporterAndAnItemWhichIsNotAIBoundaryConditionSourceAndSinkOrHeatFluxModel_WhenExportIsCalled_ThenFalseIsReturned()
         {
             Assert.That(exporter.Export(null, Arg<string>.Is.Anything), Is.False);
         }
 
         [Test]
-        public void GivenAnTimFileExporterWhenExporterIsCalledWithAHeatFluxModelThenTrueIsReturned()
+        public void GivenAnTimFileExporter_WhenExporterIsCalledWithAHeatFluxModel_ThenTrueIsReturned()
         {
             var path = Path.Combine(tempDir, "myFile.tmp");
 
@@ -214,7 +214,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
         }
 
         [Test]
-        public void GivenAnExporterWithAnItemWhichWillCauseAnExceptionInTheWriterWhenExportIsCalledWithThisItemAndAnyPathThenAnErrorIsLoggedAndFalseIsReturned()
+        public void GivenAnExporterWithAnItemWhichWillCauseAnExceptionInTheWriter_WhenExportIsCalled_ThenAnErrorIsLoggedAndFalseIsReturned()
         {
             var path = Path.Combine(tempDir, "myFile.tmp");
 
@@ -244,20 +244,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
         }
 
         [Test]
-        public void GivenAnTimFileExporterWhenCategoryIsCalledThenGeneralIsReturned()
+        public void GivenAnTimFileExporter_WhenCategoryIsCalled_ThenGeneralIsReturned()
         {
             Assert.That(exporter.Category, Is.EqualTo("General"));
         }
 
         [Test]
-        public void GivenAnTimFileExporterWhenNameIsCalledThenTheNameIsReturned()
+        public void GivenAnTimFileExporter_WhenNameIsCalled_ThenTheNameIsReturned()
         {
             const string expectedValue = "Time series to .tim file";
             Assert.That(exporter.Name, Is.EqualTo(expectedValue));
         }
 
         [Test]
-        public void GivenAnTimFileExporterWhenSourceTypesIsCalledThenTheCorrectSourceTypesAreReturned()
+        public void GivenAnTimFileExporter_WhenSourceTypesIsCalled_ThenTheCorrectSourceTypesAreReturned()
         {
             Assert.That(exporter.SourceTypes().Count(), Is.EqualTo(2));
             Assert.That(exporter.SourceTypes().Contains(typeof(SourceAndSink)));
@@ -265,20 +265,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
         }
 
         [Test]
-        public void GivenAnTimFileExporterWhenFileFilterIsCalledThenTheCorrectFileFilterIsReturned()
+        public void GivenAnTimFileExporter_WhenFileFilterIsCalled_ThenTheCorrectFileFilterIsReturned()
         {
             const string expectedValue = "Time series file|*.tim";
             Assert.That(exporter.FileFilter, Is.EqualTo(expectedValue));
         }
 
         [Test]
-        public void GivenAnTimFileExporterWhenCanExportIsCalledWithAnyObjectThenTrueIsReturned()
+        public void GivenAnTimFileExporter_WhenCanExportIsCalledWithAnyObject_ThenTrueIsReturned()
         {
             Assert.That(exporter.CanExportFor(Arg<object>.Is.Anything), Is.True);
         }
 
         [Test]
-        public void GivenAnTimFileExporterWhenForcingTypesIsCalledThenTheCorrectForcingTypesAreReturned()
+        public void GivenAnTimFileExporter_WhenForcingTypesIsCalled_ThenTheCorrectForcingTypesAreReturned()
         {
             Assert.That(exporter.ForcingTypes.Count(), Is.EqualTo(1));
             Assert.That(exporter.ForcingTypes.Contains(BoundaryConditionDataType.TimeSeries));

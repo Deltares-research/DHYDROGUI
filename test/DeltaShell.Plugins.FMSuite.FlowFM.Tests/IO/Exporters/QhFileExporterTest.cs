@@ -23,27 +23,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
         }
 
         [Test]
-        public void GivenAnQhFileExporterWhenTheNamePropertyIsCalledThenNameIsReturned()
+        public void GivenAnQhFileExporter_WhenTheNamePropertyIsCalled_ThenNameIsReturned()
         {
             const string expectedValue = "Boundary data to .qh file";
             Assert.That(exporter.Name, Is.EqualTo(expectedValue));
         }
 
         [Test]
-        public void GivenAnQhFileExporterWhenTheCategoryPropertyIsCalledThenTheCategoryIsReturned()
+        public void GivenAnQhFileExporter_WhenTheCategoryPropertyIsCalled_ThenTheCategoryIsReturned()
         {
             const string expectedValue = "General";
             Assert.That(exporter.Category, Is.EqualTo(expectedValue));
         }
 
         [Test]
-        public void GivenAnQhFileExporterWhenExportIsCalledWithANullItemThenFalseIsReturned()
+        public void GivenAnQhFileExporter_WhenExportIsCalledWithANullItem_ThenFalseIsReturned()
         {
             Assert.That(exporter.Export(null, Arg<string>.Is.Anything), Is.False);
         }
 
         [Test]
-        public void GivenAnQhFileExporterAndAValidItemWhenExportIsCalledWithThisItemAndAnNullPathThenAnErrorIsLoggedAndFalseIsReturned()
+        public void GivenAnQhFileExporterAndAValidItem_WhenExportIsCalledWithAnNullPath_ThenAnErrorIsLoggedAndFalseIsReturned()
         {
             var mocks = new MockRepository();
             var itemMock = mocks.DynamicMock<IBoundaryCondition>();
@@ -65,7 +65,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
         }
 
         [Test]
-        public void GivenAnQhFileExporterAndAnItemWithoutDataWhenExportIsCalledWithThisItemAndAnyPathThenFalseIsReturned()
+        public void GivenAnQhFileExporterAndAnItemWithoutData_WhenExportIsCalled_ThenFalseIsReturned()
         {
             var mocks = new MockRepository();
             var itemMock = mocks.DynamicMock<IBoundaryCondition>();
@@ -80,7 +80,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
         }
 
         [Test]
-        public void GivenAnQhFileExporterAndAValidItemAndAValidPathWhenExportIsCalledWithTheseValuesThenTrueIsReturned()
+        public void GivenAnQhFileExporterAndAValidItemAndAValidPath_WhenExportIsCalled_ThenTrueIsReturned()
         {
             var mocks = new MockRepository();
             var itemMock = mocks.DynamicMock<IBoundaryCondition>();
@@ -111,26 +111,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
         }
 
         [Test]
-        public void GivenAnQHFileExporterWhenSourceTypesIsCalledThenAnEmptyEnumerableIsReturned()
+        public void GivenAnQHFileExporter_WhenSourceTypesIsCalled_ThenAnEmptyEnumerableIsReturned()
         {
             Assert.That(exporter.SourceTypes().Any(), Is.False);
         }
 
         [Test]
-        public void GivenAnQhFileExporterWhenTheFileFilterPropertyIsCalledThenTheFileFilterIsReturned()
+        public void GivenAnQhFileExporter_WhenTheFileFilterPropertyIsCalled_ThenTheFileFilterIsReturned()
         {
             const string expectedValue = "Q-h series series file|*.qh";
             Assert.That(exporter.FileFilter, Is.EqualTo(expectedValue));
         }
 
         [Test]
-        public void GivenAnQhFileExporterWhenTheCanExportForIsCalledWithAnyObjectThenTrueIsReturned()
+        public void GivenAnQhFileExporter_WhenTheCanExportForIsCalledWithAnyObject_ThenTrueIsReturned()
         {
             Assert.That(exporter.CanExportFor(Arg<object>.Is.Anything), Is.True);
         }
 
         [Test]
-        public void GivenAnQhFileExporterWhenForcingTypesIsCalledThenAnEnumerableWithOnlyQhIsReturned()
+        public void GivenAnQhFileExporter_WhenForcingTypesIsCalled_ThenAnEnumerableWithOnlyQhIsReturned()
         {
             Assert.That(exporter.ForcingTypes.Count(), Is.EqualTo(1));
             Assert.That(exporter.ForcingTypes.Single(), Is.EqualTo(BoundaryConditionDataType.Qh));

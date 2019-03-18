@@ -29,14 +29,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
         [TestCase(StructuresListType.Pumps, "Pumps to structures file")]
         [TestCase(StructuresListType.Weirs, "Weirs to structures file")]
         [TestCase(StructuresListType.Gates, "Gates to structures file")]
-        public void GivenAStructuresListExporterWithATypeWhenNameIsCalledThenTheNameOfStructureTypeIsGiven(StructuresListType t, string expectedName)
+        public void GivenAStructuresListExporterWithAType_WhenNameIsCalled_ThenTheNameOfStructureTypeIsGiven(StructuresListType t, string expectedName)
         {
             var exporter = new StructuresListExporter(t);
             Assert.That(exporter.Name, Is.EqualTo(expectedName));
         }
 
         [Test]
-        public void GivenAStructuresListExporterWhenCategoryIsCalledThenGeneralIsReturned()
+        public void GivenAStructuresListExporter_WhenCategoryIsCalled_ThenGeneralIsReturned()
         {
             Assert.That(exporter.Category, Is.EqualTo("General"));
         }
@@ -57,7 +57,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
         }
 
         [Test]
-        public void GivenAStructuresListExporterWhenExportIsCalledWithAnyItemAndANullPathThenAnErrorIsLoggedAndFalseIsReturned()
+        public void GivenAStructuresListExporter_WhenExportIsCalledWithAnyItemAndANullPath_ThenAnErrorIsLoggedAndFalseIsReturned()
         {
             Assert.That(exporter.Export(Arg<object>.Is.Anything, null), Is.False);
 
@@ -66,7 +66,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
         }
 
         [Test]
-        public void GivenAStructuresListExporterAndAValidPathWhenExportIsCalledWithANullItemAndThisPathThenAnErrorIsLoggedAndFalseIsReturned()
+        public void GivenAStructuresListExporterAndAValidPath_WhenExportIsCalledWithANullItem_ThenAnErrorIsLoggedAndFalseIsReturned()
         {
             var path = "";
             do
@@ -81,7 +81,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
         }
 
         [Test]
-        public void GivenAStructuresListExporterAValidItemAndAValidPathWhenExportIsCalledWithThisItemAndThisPathThenAMessageIsLoggedAndTrueIsReturned()
+        public void GivenAStructuresListExporterAValidItemAndAValidPath_WhenExportIsCalled_ThenAMessageIsLoggedAndTrueIsReturned()
         {
             var path = "";
             do
@@ -112,7 +112,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
         }
 
         [Test]
-        public void GivenAStructuresListExporterAndAnExceptionToOccurWhenExportIsCalledWithThisItemThenAnErrorIsLoggedAndFalseIsReturned()
+        public void GivenAStructuresListExporterAndAnExceptionToOccur_WhenExportIsCalled_ThenAnErrorIsLoggedAndFalseIsReturned()
         {
             // This would be significantly easier if structuresFile was properly stored as a dependency and therefore mockable
             var drive = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -141,7 +141,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
 
 
         [Test]
-        public void GivenAStructuresListExporterWhenFileFilterIsCalledThenTheCorrectFileFilterIsReturned()
+        public void GivenAStructuresListExporter_WhenFileFilterIsCalled_ThenTheCorrectFileFilterIsReturned()
         {
             const string expectedValue = "Structures file|*.ini";
             Assert.That(exporter.FileFilter, Is.EqualTo(expectedValue));
@@ -149,7 +149,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
 
 
         [Test]
-        public void GivenAStructuresListExporterWhenCanExportIsCalledWithAnyObjectThenTrueIsReturned()
+        public void GivenAStructuresListExporter_WhenCanExportIsCalledWithAnyObject_ThenTrueIsReturned()
         {
             Assert.That(exporter.CanExportFor(Arg<object>.Is.Anything), Is.True);
         }

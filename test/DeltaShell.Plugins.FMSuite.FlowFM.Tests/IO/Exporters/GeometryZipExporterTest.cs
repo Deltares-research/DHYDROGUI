@@ -139,21 +139,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
         }
 
         [Test]
-        public void GivenAGeometryZipExporterWhenNamePropertyIsCalledThenNameIsReturned()
+        public void GivenAGeometryZipExporter_WhenNamePropertyIsCalled_ThenNameIsReturned()
         {
             const string expectedVal = "Net-geometry exporter";
             Assert.That(exporter.Name, Is.EqualTo(expectedVal));
         }
 
         [Test]
-        public void GivenAGeometryZipExporterWhenCategoryIsCalledThenTheNameOfTheCategoryIsReturned()
+        public void GivenAGeometryZipExporter_WhenCategoryIsCalled_ThenTheNameOfTheCategoryIsReturned()
         {
             const string expectedVal = "General";
             Assert.That(exporter.Category, Is.EqualTo(expectedVal));
         }
 
         [Test]
-        public void GivenAGeometryZipExporterWhenSourceTypesIsCalledThenAnEnumerableContainingTheSourceTypesIsReturned()
+        public void GivenAGeometryZipExporter_WhenSourceTypesIsCalled_ThenAnEnumerableContainingTheSourceTypesIsReturned()
         {
             var obtainedVals = exporter.SourceTypes();
             Assert.That(obtainedVals.Count(), Is.EqualTo(2));
@@ -163,7 +163,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
 
 
         [Test]
-        public void GivenAGeometryZipExporterWhenFileFilterPropertyIsCalledThenFileFilterIsReturned()
+        public void GivenAGeometryZipExporter_WhenFileFilterPropertyIsCalled_ThenFileFilterIsReturned()
         {
             const string expectedVal = "Zip file|*.zip";
             Assert.That(exporter.FileFilter, Is.EqualTo(expectedVal));
@@ -171,21 +171,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
 
 
         [Test]
-        public void GivenAGeometryZipExporterWhenCanExportForIsCalledWithNullThenTrueIsReturned()
+        public void GivenAGeometryZipExporter_WhenCanExportForIsCalledWithNull_ThenTrueIsReturned()
         {
             Assert.That(exporter.CanExportFor(null), Is.True);
         }
 
 
         [Test]
-        public void GivenAGeometryZipExporterWhenExportIsCalledWithNullAndAnyPathThenFalseIsReturned()
+        public void GivenAGeometryZipExporter_WhenExportIsCalledWithNull_ThenFalseIsReturned()
         {
             Assert.That(exporter.Export(null, Arg<string>.Is.Anything), Is.False);
         }
 
 
         [Test]
-        public void GivenAGeometryZipExporterAndAnUnstructuredEmptyGridWhenExportIsCalledWithThisGridAndAnyPathThenFalseIsReturned()
+        public void GivenAGeometryZipExporterAndAnUnstructuredEmptyGrid_WhenExportIsCalled_ThenFalseIsReturned()
         {
             var mocks = new MockRepository();
             var unstructuredGridMock = mocks.DynamicMock<UnstructuredGrid>();
@@ -202,7 +202,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
 
 
         [Test]
-        public void GivenAGeometryZipExporterAndAValidEmptyModelWithAnEmptyGridWhenExportIsCalledWithTheEmptyGridAndAnyPathThenFalseIsReturnedAndAWarningIsLogged()
+        public void GivenAGeometryZipExporterAndAValidEmptyModelWithAnEmptyGrid_WhenExportIsCalled_ThenFalseIsReturnedAndAWarningIsLogged()
         {
             var mocks = new MockRepository();
             var gridMock = mocks.DynamicMock<UnstructuredGrid>();
@@ -222,7 +222,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
         [Category(TestCategory.Integration)]
         [Category(TestCategory.DataAccess)]
         [Category(TestCategory.VerySlow)]
-        public void GivenAGeometryZipExporterAndAValidUnstructuredGridAndAValidFilePathAndMduFileWhenExportIsCalledWithThisGridAndPathThenAZipContainingTheGeometryFilesIsCreated()
+        public void GivenAGeometryZipExporterAndAnUnstructuredGrid_WhenExportIsCalled_ThenAZipContainingTheGeometryFilesIsCreated()
         {
             // Given
             // Create temporary folder
@@ -285,7 +285,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
         [Category(TestCategory.Integration)]
         [Category(TestCategory.DataAccess)]
         [Category(TestCategory.VerySlow)]
-        public void GivenAGeometryZipExporterAndAValidUnstructuredGridAndAValidFilePathAndMduFileAndFilesAlreadyExistInExportWhenExportIsCalledWithThisGridAndPathThenAZipContainingTheGeometryFilesIsCreatedWithTheNamesmodified()
+        public void GivenAGeometryZipExporterAndAnUnstructuredGridAndFilesFromAnOldExport_WhenExportIsCalled_ThenAZipContainingTheGeometryFilesIsCreatedWithTheNamesmodified()
         {
             // Given
             // Create temporary folder
@@ -363,7 +363,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
 
         [Test]
         [ExpectedException(typeof(NotImplementedException))]
-        public void GivenAGeometryZipExporterAndAValidUnstructuredGridAndAValidFilePathWithoutGridToModelSetWhenExportIsCalledWithThisGridAndPathThenFalseIsReturned()
+        public void GivenAGeometryZipExporterAndAnUnstructuredGridWithoutAModel_WhenExportIsCalled_ThenAnExceptionIsReturned()
         {
             var mocks = new MockRepository();
             var gridMock = mocks.DynamicMock<UnstructuredGrid>();
