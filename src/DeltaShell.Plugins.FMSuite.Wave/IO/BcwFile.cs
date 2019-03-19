@@ -216,22 +216,32 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             return line.StartsWith("location");
         }
 
-        public void Write(IDictionary<string, List<IFunction>> bcwData, string filePath)
+        /// <summary>
+        /// Writes the specified boundary condition data.
+        /// </summary>
+        /// <param name="boundaryConditionToFunctionsMappings">A dictionary with the boundary condition names with their functions.</param>
+        /// <param name="filePath">The file path.</param>
+        /// <remarks>If wave boundary condition does not have any functions, no data is written to the file.</remarks>
+        public void Write(IDictionary<string, List<IFunction>> boundaryConditionToFunctionsMappings, string filePath)
         {
             OpenOutputFile(filePath);
             try
             {
-                foreach (var boundary in bcwData)
+                foreach (var boundaryConditionToFunctionsMapping in boundaryConditionToFunctionsMappings)
                 {
-                    var boundaryName = boundary.Key;
-                    var functions = boundary.Value;
+                    var boundaryName = boundaryConditionToFunctionsMapping.Key;
+                    var functions = boundaryConditionToFunctionsMapping.Value;
+
+                    if (!functions.Any()) continue; 
+
                     var header = CreateHeaderFromFunctions(boundaryName, functions);
                     var parameters = CreateParametersFromFunctions(functions);
 
                     if (header == null || parameters == null)
                     {
                         Log.ErrorFormat("Could not write boundary condition data for boundary {0} to file {1}",
-                                        boundaryName, OutputFilePath);
+                            boundaryName, OutputFilePath);
+                        continue;
                     }
 
                     WriteBoundaryData(header, parameters);
