@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.TestUtils;
+using DelftTools.Utils.IO;
+using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.Wave.IO;
 using NUnit.Framework;
 
@@ -39,7 +42,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         {
             var bcwFilePath = TestHelper.GetTestFilePath(@"expectedTimeseries.bcw");
             var bcwExportFilePath = "generatedTimeseries.bcw";
-            
+
             var bcwFile = new BcwFile();
             var result = bcwFile.Read(bcwFilePath);
             bcwFile.Write(result, bcwExportFilePath);
@@ -52,6 +55,28 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             var export = exportedLines.Where(l => l.Trim() != string.Empty).Select(l => l.Replace(" ", "")).ToList();
 
             Assert.AreEqual(original, export);
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void GivenBoundaryConditionNameWithoutAnyFunctions_WhenWriteIsCalled_ThenNoDataIsWrittenToTheFile()
+        {
+            // Given
+            var boundaryConditionToFunctionsMappings = new Dictionary<string, List<IFunction>>
+            {
+                {"boundary_condition", new List<IFunction>()}
+            };
+            var bcwFile = new BcwFile();
+            var filePath = Path.Combine(Path.GetTempPath(), "Waves.bcw");
+
+            // When
+            bcwFile.Write(boundaryConditionToFunctionsMappings, filePath);
+
+            // Then
+            Assert.That(File.Exists(filePath), "The .bcw file should have existed after the Write method was called.");
+            Assert.That(File.ReadAllText(filePath), Is.EqualTo(string.Empty), "The bcw file was expected to be empty when boundary condition does not have functions.");
+
+            FileUtils.DeleteIfExists(filePath);
         }
     }
 }
