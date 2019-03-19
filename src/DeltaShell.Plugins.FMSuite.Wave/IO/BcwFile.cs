@@ -65,18 +65,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
 
                         header = ReadBcwHeaderData();
                         parameterData = ReadParameterMetaData();
-
-                        if (header == null)
-                        {
-                            Log.ErrorFormat("Invalid header in file {0}", InputFilePath);
-                            return null;
-                        }
-
-                        if (parameterData == null)
-                        {
-                            Log.ErrorFormat("No valid parameter definition in file {0}", InputFilePath);
-                            return null;
-                        }
                     }
 
                     var values = new List<double>();
