@@ -59,12 +59,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void GivenBoundaryConditionNameWithoutAnyFunctions_WhenWriteIsCalled_ThenNoDataIsWrittenToTheFile()
+        public void GivenABoundaryConditionNameWithoutAnyFunctions_WhenWriteIsCalled_ThenOnlTheNameIsWrittenToTheFile()
         {
             // Given
+            const string boundaryConditionName = "boundary_condition";
             var boundaryConditionToFunctionsMappings = new Dictionary<string, List<IFunction>>
             {
-                {"boundary_condition", new List<IFunction>()}
+                {boundaryConditionName, new List<IFunction>()}
             };
             var bcwFile = new BcwFile();
             var filePath = Path.Combine(Path.GetTempPath(), "Waves.bcw");
@@ -73,8 +74,38 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             bcwFile.Write(boundaryConditionToFunctionsMappings, filePath);
 
             // Then
-            Assert.That(File.Exists(filePath), "The .bcw file should have existed after the Write method was called.");
-            Assert.That(File.ReadAllText(filePath), Is.EqualTo(string.Empty), "The bcw file was expected to be empty when boundary condition does not have functions.");
+            Assert.That(File.Exists(filePath),
+                "The .bcw file should have existed after the Write method was called.");
+            var linesInFile = File.ReadAllLines(filePath);
+            Assert.That(linesInFile.Length, Is.EqualTo(1),
+                "When a boundary condition does not have any functions, only one line was expected to be written to the file.");
+            Assert.That(linesInFile.First().Contains(boundaryConditionName), 
+                "When a boundary condition does not have any functions, the only line in the file was expected to contain the name of the boundary condition.");
+
+            FileUtils.DeleteIfExists(filePath);
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void GivenABcwFileWithOnlyABoundaryConditionName_WhenReadIsCalled_ThenADictionaryIsReturnedWithThisNameWithoutFunctions()
+        {
+            // Given
+            const string boundaryConditionName = "boundary_condition";
+            var filePath = Path.Combine(Path.GetTempPath(), "Waves.bcw");
+            File.WriteAllLines(filePath, new[] {$@"location '{boundaryConditionName}'"});
+            var bcwFile = new BcwFile();
+
+            // When
+            var boundaryConditionToFunctionsMappings = bcwFile.Read(filePath);
+
+            // Then
+            Assert.That(boundaryConditionToFunctionsMappings.Count, Is.EqualTo(1),
+                "One boundary condition should have been read from the file.");
+            var boundaryConditionToFunctionsMapping = boundaryConditionToFunctionsMappings.First();
+            Assert.That(boundaryConditionToFunctionsMapping.Key, Is.EqualTo(boundaryConditionName),
+                $"The read boundary condition name from the file was expected to be {boundaryConditionName}.");
+            Assert.That(boundaryConditionToFunctionsMapping.Value, Is.EqualTo(new List<IFunction>()),
+                "No functions should have been read from the file.");
 
             FileUtils.DeleteIfExists(filePath);
         }

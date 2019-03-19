@@ -967,12 +967,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                                 // add it to the time series' first support point.
                                 boundaryCondition.SetTimeSeriesAtSupportPoint(0, func);
                             }
-                            else
-                            {
-                                // if the function was not found, throw an error and continue.
-                                Log.ErrorFormat("Unexpected missing data in bcw file for boundary {0}, excluding boundary", name);
-                                continue;
-                            }
                         }
                     }
                 }

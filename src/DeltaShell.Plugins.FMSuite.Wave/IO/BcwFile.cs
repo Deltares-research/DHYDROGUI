@@ -44,33 +44,39 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             {
                 OpenInputFile(timeSeriesFile);
 
+                string boundaryName = null;
                 BcwHeaderData header = null;
                 IList<BcwParameter> parameterData = null;
+
                 while (GetNextLine() != null)
                 {
                     if (IsNewBoundaryDataBlock(CurrentLine))
                     {
                         if (parameterData != null)
                         {
-                            FillBoundaryData(bcwData, header, parameterData);
+                            FillBoundaryData(bcwData, boundaryName, header, parameterData);
+                        }
+
+                        while (IsNewBoundaryDataBlock(CurrentLine))
+                        {
+                            boundaryName = ReadBoundaryName();
+                            bcwData.Add(boundaryName, new List<IFunction>());
                         }
 
                         header = ReadBcwHeaderData();
-                        GetNextLine();
                         parameterData = ReadParameterMetaData();
-                        bcwData.Add(header.BoundaryName, new List<IFunction>());
-                    }
 
-                    if (header == null)
-                    {
-                        Log.ErrorFormat("Invalid header in file {0}", InputFilePath);
-                        return null;
-                    }
+                        if (header == null)
+                        {
+                            Log.ErrorFormat("Invalid header in file {0}", InputFilePath);
+                            return null;
+                        }
 
-                    if (parameterData == null)
-                    {
-                        Log.ErrorFormat("No valid parameter definition in file {0}", InputFilePath);
-                        return null;
+                        if (parameterData == null)
+                        {
+                            Log.ErrorFormat("No valid parameter definition in file {0}", InputFilePath);
+                            return null;
+                        }
                     }
 
                     var values = new List<double>();
@@ -93,7 +99,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 // store last block
                 if (parameterData != null)
                 {
-                    FillBoundaryData(bcwData, header, parameterData);
+                    FillBoundaryData(bcwData, boundaryName, header, parameterData);
                 }
 
             }
@@ -109,11 +115,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             return bcwData;
         }
 
-        private void FillBoundaryData(Dictionary<string, List<IFunction>> bcwData, BcwHeaderData header,
+        private string ReadBoundaryName()
+        {
+            var boundaryName = RegularExpression.GetFirstMatch(BoundaryNamePattern, CurrentLine).Groups["value"].Value;
+            GetNextLine();
+
+            return boundaryName;
+        }
+
+        private void FillBoundaryData(Dictionary<string, List<IFunction>> bcwData, string boundaryName, BcwHeaderData header,
                                       IList<BcwParameter> parameterData)
         {
-            bcwData[header.BoundaryName] = new List<IFunction>();
-            bcwData[header.BoundaryName].AddRange(CreateFunctionsFromData(parameterData, header));
+            bcwData[boundaryName] = new List<IFunction>();
+            bcwData[boundaryName].AddRange(CreateFunctionsFromData(parameterData, header));
         }
 
         private IList<BcwParameter> ReadParameterMetaData()
@@ -139,16 +153,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             var header = new BcwHeaderData();
 
             var line = CurrentLine;
-            header.BoundaryName = RegularExpression.GetFirstMatch(BoundaryNamePattern, line).Groups["value"].Value;
-            line = GetNextLine();
+
             header.TimeFunction = RegularExpression.GetFirstMatch(TimeFunctionPattern, line).Groups["value"].Value;
-            var refDateString =
-                RegularExpression.GetFirstMatch(ReferenceDatePattern, GetNextLine()).Groups["value"].Value;
+            var refDateString = RegularExpression.GetFirstMatch(ReferenceDatePattern, GetNextLine()).Groups["value"].Value;
             header.ReferenceDateString = refDateString;
             line = GetNextLine();
+
             header.TimeUnit = RegularExpression.GetFirstMatch(TimeUnitPattern, line).Groups["value"].Value;
             line = GetNextLine();
+
             header.InterpolationType = RegularExpression.GetFirstMatch(InterpolPattern, line).Groups["value"].Value;
+            GetNextLine();
+
             return header;
         }
 
@@ -231,20 +247,28 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 {
                     var boundaryName = boundaryConditionToFunctionsMapping.Key;
                     var functions = boundaryConditionToFunctionsMapping.Value;
+                    BcwHeaderData header = null;
+                    IList<BcwParameter> parameters = null;
 
-                    if (!functions.Any()) continue; 
-
-                    var header = CreateHeaderFromFunctions(boundaryName, functions);
-                    var parameters = CreateParametersFromFunctions(functions);
-
-                    if (header == null || parameters == null)
+                    if (functions.Any())
                     {
-                        Log.ErrorFormat("Could not write boundary condition data for boundary {0} to file {1}",
-                            boundaryName, OutputFilePath);
-                        continue;
+                        header = CreateHeaderFromFunctions(functions);
+                        parameters = CreateParametersFromFunctions(functions);
+
+                        if (header == null || parameters == null)
+                        {
+                            Log.ErrorFormat("Could not write boundary condition data for boundary {0} to file {1}",
+                                boundaryName, OutputFilePath);
+                            continue;
+                        }
+
+                        WriteBoundaryData(boundaryName, header, parameters);
                     }
 
-                    WriteBoundaryData(header, parameters);
+                    else
+                    {
+                        WriteBoundaryName(boundaryName);
+                    }
                 }
             }
             finally
@@ -252,11 +276,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 CloseOutputFile();
             }
         }
-        
-        private void WriteBoundaryData(BcwHeaderData header, IList<BcwParameter> sortedParameters)
+
+        private void WriteBoundaryName(string boundaryName)
         {
+            WriteLine(string.Format("{0,-21}{1,-21}", "location", "\'" + boundaryName + "\'").TrimEnd());
+        }
+
+        private void WriteBoundaryData(string boundaryName, BcwHeaderData header, IList<BcwParameter> sortedParameters)
+        {
+            WriteBoundaryName(boundaryName);
+
             // header
-            WriteLine(string.Format("{0,-21}{1,-21}", "location", "\'" + header.BoundaryName + "\'").TrimEnd());
             WriteLine(string.Format("{0,-21}{1,-21}", "time-function", "\'" + header.TimeFunction + "\'").TrimEnd());
             WriteLine(string.Format("{0,-21}{1,-21}", "reference-time", header.ReferenceDateString).TrimEnd());
             WriteLine(string.Format("{0,-21}{1,-21}", "time-unit", "\'" + header.TimeUnit + "\'").TrimEnd());
@@ -284,14 +314,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             }
         }
         
-        private BcwHeaderData CreateHeaderFromFunctions(string boundaryName, IList<IFunction> functions)
+        private BcwHeaderData CreateHeaderFromFunctions(IList<IFunction> functions)
         {
             var func = functions.FirstOrDefault();
             if (func == null) return null;
 
             var header = new BcwHeaderData
                 {
-                    BoundaryName = boundaryName,
                     TimeFunction = func.Attributes[TimeFunctionAttributeName],
                     ReferenceDateString = func.Attributes[RefDateAttributeName],
                     TimeUnit = func.Attributes[TimeUnitAttributeName],
@@ -421,7 +450,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
 
         private class BcwHeaderData
         {
-            public string BoundaryName;
             public string TimeFunction;
             public string ReferenceDateString;
             public string TimeUnit;
