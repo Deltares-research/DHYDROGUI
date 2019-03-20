@@ -240,9 +240,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
 
             // Get matching set for this data from ALL boundaryConditionSets (the other boundaryConditionSets are not used...)
-            var selectedSet =
-                boundaryConditionSets.FirstOrDefault(
-                    bcs => bcs.SupportPointNames.Contains(data.SupportPoint) || bcs.Feature.Name == data.SupportPoint);
+            var selectedSet = GetMatchingBoundaryConditionSet(boundaryConditionSets, data.SupportPoint);
             if (selectedSet == null)
             {
                 Log.WarnFormat(
@@ -257,75 +255,51 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 return false;
             }
 
-            bool skippedAny = false;
+            var skippedAny = false;
+
             using (CultureUtils.SwitchToInvariantCulture())
             {
-                // parse and validate forcingType
-                ForcingTypeDefinition forcingTypeDefinition;
-                if (!TryParseForcingType(data, out forcingTypeDefinition))
+                if (!TryParseForcingType(data, out var forcingTypeDefinition))
                 {
-                    Log.WarnFormat(
-                        "File {0}, block starting at line {1}: function type {2} could not be parsed; omitting data block.",
-                        data.FilePath, data.LineNumber, data.FunctionType);
+                    LogWarningParsePropertyFailed(data, "function type", data.FunctionType);
                     return false;
                 }
+
                 if (ExcludedDataTypes != null && ExcludedDataTypes.Contains(forcingTypeDefinition.ForcingType))
                 {
-                    Log.InfoFormat(
-                        "File {0}, block starting at line {1}: skipping boundary data of function type {2}.",
-                        data.FilePath, data.LineNumber, forcingTypeDefinition.ForcingType);
+                    Log.Info($"File {data.FilePath}, block starting at line {data.LineNumber}: skipping boundary data of function type {forcingTypeDefinition.ForcingType}.");
                     return true;
                 }
 
-                // parse and validate verticalProfileDefinition
-                VerticalProfileDefinition verticalProfileDefinition;
-                if (!TryParseDepthLayerDefinition(data, out verticalProfileDefinition))
+                if (!TryParseDepthLayerDefinition(data, out var verticalProfileDefinition))
                 {
-                    Log.WarnFormat(
-                        "File {0}, block starting at line {1}: vertical profile definition {2} could not be parsed; omitting data block.",
-                        data.FilePath, data.LineNumber, data.VerticalPositionDefinition);
+                    LogWarningParsePropertyFailed(data, "vertical profile definition", data.VerticalPositionDefinition);
                     return false;
                 }
 
-                VerticalInterpolationType verticalInterpolationType;
-                if (!TryParseVerticalInterpolationType(data,out verticalInterpolationType))
+                if (!TryParseVerticalInterpolationType(data, out var verticalInterpolationType))
                 {
-                    Log.WarnFormat(
-                        "File {0}, block starting at line {1}: vertical interpolation type {2} could not be parsed; omitting data block.",
-                        data.FilePath, data.LineNumber, data.VerticalInterpolationType);
+                    LogWarningParsePropertyFailed(data, "vertical interpolation type", data.VerticalInterpolationType);
                     return false;
                 }
 
-                // parse timeInterpolation
-                InterpolationType timeInterpolationType;
-                if (!TryParseTimeInterpolationType(data, out timeInterpolationType))
+                if (!TryParseTimeInterpolationType(data, out var timeInterpolationType))
                 {
-                    Log.WarnFormat(
-                        "File {0}, block starting at line {1}: time interpolation type {2} could not be parsed; omitting data block.",
-                        data.FilePath, data.LineNumber, data.TimeInterpolationType);
+                    LogWarningParsePropertyFailed(data, "time interpolation type", data.TimeInterpolationType);
                     return false;
                 }
 
-
-                // parse series index
-                int seriesIndex;
-                if (!TryParseSeriesIndex(data, out seriesIndex))
+                if (!TryParseSeriesIndex(data, out var seriesIndex))
                 {
-                    Log.WarnFormat(
-                        "File {0}, block starting at line {1}: series index {2} could not be parsed; omitting data block.",
-                        data.FilePath, data.LineNumber, data.SeriesIndex);
+                    LogWarningParsePropertyFailed(data, data.SeriesIndex, "series index");
                     return false;
                 }
+
                 seriesIndex--; //to C-style indexing.
 
-                // parse offset and factor
-                double offset;
-                double factor;
-                if (!TryParseOffsetFactor(data, out offset, out factor))
+                if (!TryParseOffsetFactor(data, out var offset, out var factor))
                 {
-                    Log.WarnFormat(
-                        "File {0}, block starting at {1}: offset {2} or factor {3} could not be parsed; omitting data block.",
-                        data.FilePath, data.LineNumber, data.Offset, data.Factor);
+                    Log.WarnFormat($"File {data.FilePath}, block starting at {data.LineNumber}: offset {data.Offset} or factor {data.Factor} could not be parsed; omitting data block.");
                     return false;
                 }
 
@@ -440,7 +414,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
                 foreach (var quantityGroup in quantityGroups)
                 {
-                    FlowBoundaryQuantityType flowQuantityEnum = quantityGroup.Key;
+                    var flowQuantityEnum = quantityGroup.Key;
 
                     if (ExcludedQuantities.Contains(flowQuantityEnum))
                     {
@@ -449,72 +423,62 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     }
 
                     FlowBoundaryCondition boundaryCondition = null;
-                    
+
                     // create actual boundary condition if not already exists
                     foreach (var quantity in quantityGroup)
                     {
-                        var existingConditions = selectedSet.BoundaryConditions.OfType<FlowBoundaryCondition>().
-                            Where(bc => MatchBoundaryCondition(bc, flowQuantityEnum, quantity.Value, forcingTypeDefinition))
+                        var existingConditions = selectedSet.BoundaryConditions.OfType<FlowBoundaryCondition>()
+                            .Where(bc => MatchBoundaryCondition(bc, flowQuantityEnum, quantity.Value, forcingTypeDefinition))
                             .ToList();
 
                         boundaryCondition = existingConditions.ElementAtOrDefault(seriesIndex);
 
-                        if (boundaryCondition == null)
-                        {
-                            var isCorrection = forcingTypeDefinition.ForcingType ==
-                                               BoundaryConditionDataType.AstroCorrection ||
-                                               forcingTypeDefinition.ForcingType ==
-                                               BoundaryConditionDataType.HarmonicCorrection;
-                            
-                            if (CanCreateNewBoundaryCondition && !isCorrection)
-                            {
-                                TimeSpan timelag = TimeSpan.Zero;
-                                if (thatcherHarlemanTimeLag != null)
-                                {
-                                    double timelagdouble;
-                                    if (double.TryParse(thatcherHarlemanTimeLag, out timelagdouble))
-                                    {
-                                        timelag = TimeSpan.FromSeconds(timelagdouble);
-                                    }
-                                }
+                        if (boundaryCondition != null) continue;
 
-                                boundaryCondition = CreateNewBoundaryCondition(quantity.Value.Quantity, flowQuantityEnum, forcingTypeDefinition.ForcingType, selectedSet.Feature, timelag, quantityGroup);
-                                
-                                if (flowQuantityEnum == FlowBoundaryQuantityType.Tracer)
+                        var isCorrection = IsCorrectionDataType(forcingTypeDefinition);
+
+                        if (CanCreateNewBoundaryCondition && !isCorrection)
+                        {
+                            var timelag = TimeSpan.Zero;
+                            if (thatcherHarlemanTimeLag != null)
+                            {
+                                if (double.TryParse(thatcherHarlemanTimeLag, out var timelagdouble))
                                 {
-                                    boundaryCondition.TracerName = quantity.Value.TracerName;
+                                    timelag = TimeSpan.FromSeconds(timelagdouble);
                                 }
                             }
-                            else
+
+                            boundaryCondition = CreateNewBoundaryCondition(quantity.Value.Quantity, flowQuantityEnum, forcingTypeDefinition.ForcingType, selectedSet.Feature, timelag, quantityGroup);
+
+                            if (flowQuantityEnum == FlowBoundaryQuantityType.Tracer)
                             {
-                                Log.WarnFormat(
-                                    "File {0}, block starting at line {1}: quantity {2} and forcing type {3} do not match given boundary condition.",
-                                    data.FilePath, data.LineNumber, quantity.Value,
-                                    forcingTypeDefinition.ForcingType);
+                                boundaryCondition.TracerName = quantity.Value.TracerName;
                             }
+                        }
+                        else
+                        {
+                            Log.Warn($"File {data.FilePath}, block starting at line {data.LineNumber}: quantity {quantity.Value} and forcing type {forcingTypeDefinition.ForcingType} do not match given boundary condition.");
                         }
                     }
 
                     if (boundaryCondition == null) continue;
 
-                    // adjust boundary condition for correction blocks
-                    if (forcingTypeDefinition.ForcingType == BoundaryConditionDataType.AstroCorrection &&
-                        boundaryCondition.DataType == BoundaryConditionDataType.AstroComponents)
+                    switch (forcingTypeDefinition.ForcingType)
                     {
-                        boundaryCondition.DataType = BoundaryConditionDataType.AstroCorrection;
-                    }
-
-                    if (forcingTypeDefinition.ForcingType == BoundaryConditionDataType.HarmonicCorrection &&
-                        boundaryCondition.DataType == BoundaryConditionDataType.Harmonics)
-                    {
-                        boundaryCondition.DataType = BoundaryConditionDataType.HarmonicCorrection;
+                        // adjust boundary condition for correction blocks
+                        case BoundaryConditionDataType.AstroCorrection when boundaryCondition.DataType == BoundaryConditionDataType.AstroComponents:
+                            boundaryCondition.DataType = BoundaryConditionDataType.AstroCorrection;
+                            break;
+                        case BoundaryConditionDataType.HarmonicCorrection when boundaryCondition.DataType == BoundaryConditionDataType.Harmonics:
+                            boundaryCondition.DataType = BoundaryConditionDataType.HarmonicCorrection;
+                            break;
                     }
 
                     boundaryCondition.Offset = offset;
                     boundaryCondition.Factor = factor;
 
                     var dataIndex = selectedSet.SupportPointNames.ToList().IndexOf(data.SupportPoint);
-                    
+
                     if (boundaryCondition.IsHorizontallyUniform)
                     {
                         if (data.SupportPoint == selectedSet.Feature.Name)
@@ -553,6 +517,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                                 continue;
                             }
                         }
+
                         var verticalProfileIndex = boundaryCondition.DataPointIndices.IndexOf(dataPoint);
                         if (!boundaryCondition.IsVerticallyUniform)
                         {
@@ -642,6 +607,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             // If the data block is not completely used, the logic should go through this data block again.
             // So if any blocks are skipped, return false so it is not removed from the list of blocks to go through.
             return !skippedAny; 
+        }
+
+        private static bool IsCorrectionDataType(ForcingTypeDefinition forcingTypeDefinition)
+        {
+            return forcingTypeDefinition.ForcingType ==
+                   BoundaryConditionDataType.AstroCorrection ||
+                   forcingTypeDefinition.ForcingType ==
+                   BoundaryConditionDataType.HarmonicCorrection;
+        }
+
+        private static BoundaryConditionSet GetMatchingBoundaryConditionSet(IEnumerable<BoundaryConditionSet> boundaryConditionSets, string supportPointName)
+        {
+            return boundaryConditionSets.FirstOrDefault(
+                bcs => bcs.SupportPointNames.Contains(supportPointName)
+                       || bcs.Feature.Name == supportPointName);
+        }
+
+        private static void LogWarningParsePropertyFailed(BcBlockData data, string propertyName, string propertyValue)
+        {
+            Log.Warn(
+                $"File {data.FilePath}, block starting at line {data.LineNumber}: {propertyName} {propertyName} could not be parsed; omitting data block.");
         }
 
         protected virtual FlowBoundaryCondition CreateNewBoundaryCondition(string quantityName, FlowBoundaryQuantityType flowQuantityEnum, BoundaryConditionDataType forcingType, Feature2D feature, TimeSpan timelag, IGrouping<FlowBoundaryQuantityType, KeyValuePair<System.Tuple<FlowBoundaryQuantityType, int>, BcQuantityData>> grouping)
