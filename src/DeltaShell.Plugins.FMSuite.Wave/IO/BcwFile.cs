@@ -90,21 +90,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                     FillBoundaryData(bcwData, boundaryName, header, parameterData);
                 }
             }
-            catch (InvalidOperationException e)
+            catch (Exception e) when (e is InvalidOperationException
+                                      || e is OutOfMemoryException
+                                      || e is IOException
+                                      || e is NotSupportedException
+                                      || e is FileFormatException
+            )
             {
                 LogErrorReading(e.Message);
-            }
-            catch (OutOfMemoryException e)
-            {
-                LogErrorReading(e.Message);
-            }
-            catch (IOException e)
-            {
-                LogErrorReading(e.Message);
-            }
-            catch (Exception e)
-            {
-                LogErrorParsingLine(e.Message);
             }
             finally
             {
@@ -114,14 +107,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             return bcwData;
         }
 
-        private static void LogErrorReading(string exceptionMessage)
+        private void LogErrorReading(string exceptionMessage)
         {
-            Log.Error($"There was an error reading the bcw file: {exceptionMessage}");
-        }
-
-        private void LogErrorParsingLine(string exceptionMessage)
-        {
-            Log.Error($"Could not parse line nr. {LineNumber} in file {InputFilePath}: {exceptionMessage}");
+            Log.Error($"There was an error reading the bcw file at line {LineNumber}: {exceptionMessage}");
         }
 
         private static void AddValuesToParameters(IEnumerable<BcwParameter> parameterData, IList<double> values)

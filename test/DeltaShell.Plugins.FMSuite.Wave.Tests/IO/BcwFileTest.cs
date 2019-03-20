@@ -1,6 +1,5 @@
 ﻿using DelftTools.Functions;
 using DelftTools.TestUtils;
-using DelftTools.Utils.IO;
 using DeltaShell.Plugins.FMSuite.Wave.IO;
 using NUnit.Framework;
 using System;
