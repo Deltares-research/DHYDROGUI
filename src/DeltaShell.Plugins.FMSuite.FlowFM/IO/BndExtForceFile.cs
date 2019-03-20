@@ -426,21 +426,135 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             return delftIniCategory.GetPropertyValue(QuantityKey) == ExtForceQuantNames.EmbankmentBnd;
         }
 
-        private void ReadBoundaryConditions(IList<DelftIniCategory> bndBlocks, WaterFlowFMModelDefinition modelDefinition)
+        private void ReadBoundaryConditions(IList<DelftIniCategory> delftIniCategories, WaterFlowFMModelDefinition modelDefinition)
         {
             var correctionFunctionTypes = BcFileFlowBoundaryDataBuilder.CorrectionFunctionTypes.ToList();
 
-            var dataBlocks = new List<BcBlockData>();
-            var bcFilePaths = new List<string>();
+            var bcFilePaths = GetForcingFilePathsFromIniCategories(delftIniCategories);
 
-            // get file paths for each boundary
-            foreach (var delftIniCategory in bndBlocks)
+            var dataBlocks = ReadBoundaryConditionBlocks(bcFilePaths);
+
+            var correctionBlocks = dataBlocks.Where(db => correctionFunctionTypes.Contains(db.FunctionType)).ToList();
+
+            var signalBlocks = dataBlocks.Except(correctionBlocks).ToList();
+
+            foreach (var delftIniCategory in delftIniCategories)
             {
-                var bcFiles = delftIniCategory.GetPropertyValues(ForcingFileKey);
-                bcFilePaths.AddRange(bcFiles.Select(GetFullPath));
+                if (TryGetQuantityValue(delftIniCategory, out var quantity)) continue;
+
+                var pliFile = delftIniCategory.GetPropertyValue(LocationFileKey);
+
+                var feature = existingPolylineFiles.FirstOrDefault(kvp => kvp.Value == pliFile).Key;
+
+                if (feature == null) continue;
+
+                var builder = CreateFlowBoundaryDataBuilder(quantity, feature);
+
+                var bcSets = CreateBoundaryConditionSetsWithFeature(modelDefinition);
+
+                // first loading signals, then corrections
+
+                var timeLagString = delftIniCategory.GetPropertyValue(ThatcherHarlemanTimeLagKey);
+
+                var usedDataBlocks = new List<BcBlockData>();
+                usedDataBlocks.AddRange(signalBlocks
+                    .Where(dataBlock => builder.InsertBoundaryData(bcSets, dataBlock, timeLagString)));
+                usedDataBlocks.AddRange(correctionBlocks
+                    .Where(dataBlock => builder.InsertBoundaryData(bcSets, dataBlock, timeLagString)));
+
+                var newBoundaryCondition = bcSets.SelectMany(bcs => bcs.BoundaryConditions).FirstOrDefault();
+                if (newBoundaryCondition != null)
+                {
+                    existingBndForceFileItems[newBoundaryCondition] = delftIniCategory;
+                }
+
+                RemoveUsedDataBlocks(usedDataBlocks, signalBlocks, correctionBlocks);
+
+                AddBoundaryConditionsToModelDefinition(modelDefinition, bcSets);
+            }
+        }
+
+        private static void AddBoundaryConditionsToModelDefinition(WaterFlowFMModelDefinition modelDefinition, List<BoundaryConditionSet> bcSets)
+        {
+            for (var i = 0; i < bcSets.Count; ++i)
+            {
+                modelDefinition.BoundaryConditionSets[i].BoundaryConditions.AddRange(bcSets[i].BoundaryConditions);
+            }
+        }
+
+        private static List<BoundaryConditionSet> CreateBoundaryConditionSetsWithFeature(WaterFlowFMModelDefinition modelDefinition)
+        {
+            return modelDefinition.BoundaryConditionSets
+                .Select(bcs => new BoundaryConditionSet {Feature = bcs.Feature})
+                .ToList();
+        }
+
+        private static void RemoveUsedDataBlocks(List<BcBlockData> usedDataBlocks, List<BcBlockData> signalBlocks, List<BcBlockData> correctionBlocks)
+        {
+            usedDataBlocks.ForEach(b =>
+            {
+                signalBlocks.Remove(b);
+                correctionBlocks.Remove(b);
+            });
+        }
+
+        private static BcFileFlowBoundaryDataBuilder CreateFlowBoundaryDataBuilder(FlowBoundaryQuantityType quantity,
+            Feature2D feature)
+        {
+            BcFileFlowBoundaryDataBuilder builder;
+            if (IsMorphologyRelatedProperty(quantity))
+            {
+                builder = new BcmFileFlowBoundaryDataBuilder
+                {
+                    ExcludedQuantities =
+                        Enum.GetValues(typeof(FlowBoundaryQuantityType))
+                            .Cast<FlowBoundaryQuantityType>()
+                            .Except(new[] {quantity})
+                            .ToList(),
+                    OverwriteExistingData = true,
+                    CanCreateNewBoundaryCondition = true,
+                    LocationFilter = feature,
+                };
+            }
+            else
+            {
+                builder = new BcFileFlowBoundaryDataBuilder
+                {
+                    ExcludedQuantities =
+                        Enum.GetValues(typeof(FlowBoundaryQuantityType))
+                            .Cast<FlowBoundaryQuantityType>()
+                            .Except(new[] {quantity})
+                            .ToList(),
+                    OverwriteExistingData = true,
+                    CanCreateNewBoundaryCondition = true,
+                    LocationFilter = feature,
+                };
             }
 
-            // read each file path (once)
+            return builder;
+        }
+
+        private static bool TryGetQuantityValue(DelftIniCategory delftIniCategory, out FlowBoundaryQuantityType quantity)
+        {
+            var quantityValue = delftIniCategory.GetPropertyValue(QuantityKey);
+            quantity = FlowBoundaryQuantityType.WaterLevel;
+            if (!string.IsNullOrEmpty(quantityValue) &&
+                !ExtForceQuantNames.TryParseBoundaryQuantityType(quantityValue, out quantity))
+            {
+                if (quantityValue != ExtForceQuantNames.EmbankmentBnd)
+                {
+                    Log.WarnFormat("Could not parse quantity {0} into a valid flow boundary condition", quantityValue);
+                }
+
+                return true;
+            }
+
+            return false;
+        }
+
+        private static List<BcBlockData> ReadBoundaryConditionBlocks(IEnumerable<string> bcFilePaths)
+        {
+            var dataBlocks = new List<BcBlockData>();
             foreach (var bcFilePath in bcFilePaths.Distinct())
             {
                 if (!File.Exists(bcFilePath))
@@ -449,6 +563,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     {
                         Log.WarnFormat("Boundary condition data file {0} not found", bcFilePath);
                     }
+
                     continue;
                 }
 
@@ -457,92 +572,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     : new BcFile().Read(bcFilePath));
             }
 
-            var correctionBlocks = dataBlocks.Where(db => correctionFunctionTypes.Contains(db.FunctionType)).ToList();
+            return dataBlocks;
+        }
 
-            var signalBlocks = dataBlocks.Except(correctionBlocks).ToList();
-         
+        private IEnumerable<string> GetForcingFilePathsFromIniCategories(IList<DelftIniCategory> bndBlocks)
+        {
+            var bcFilePaths = new List<string>();
+
             foreach (var delftIniCategory in bndBlocks)
             {
-                var quantityKey = delftIniCategory.GetPropertyValue(QuantityKey);
-                
-                var quantity = FlowBoundaryQuantityType.WaterLevel;
-
-                var timelagString = delftIniCategory.GetPropertyValue(ThatcherHarlemanTimeLagKey);
-
-                if (!string.IsNullOrEmpty(quantityKey) && !ExtForceQuantNames.TryParseBoundaryQuantityType(quantityKey, out quantity))
-                {
-                    if (quantityKey != ExtForceQuantNames.EmbankmentBnd)
-                    {
-                        Log.WarnFormat("Could not parse quantity {0} into a valid flow boundary condition", quantityKey);
-                    }
-                    continue;
-                }
-
-                var pliFile = delftIniCategory.GetPropertyValue(LocationFileKey);
-                var feature = existingPolylineFiles.FirstOrDefault(kvp => kvp.Value == pliFile).Key;
-                if (feature == null) continue;
-
-                BcFileFlowBoundaryDataBuilder builder;
-                if (IsMorphologyRelatedProperty(quantity))
-                {
-                    builder = new BcmFileFlowBoundaryDataBuilder
-                    {
-                        ExcludedQuantities =
-                            Enum.GetValues(typeof(FlowBoundaryQuantityType))
-                                .Cast<FlowBoundaryQuantityType>()
-                                .Except(new[] { quantity })
-                                .ToList(),
-                        OverwriteExistingData = true,
-                        CanCreateNewBoundaryCondition = true,
-                        LocationFilter = feature,
-                    };
-                }
-                else
-                {
-                    builder = new BcFileFlowBoundaryDataBuilder
-                    {
-                        ExcludedQuantities =
-                            Enum.GetValues(typeof(FlowBoundaryQuantityType))
-                                .Cast<FlowBoundaryQuantityType>()
-                                .Except(new[] {quantity})
-                                .ToList(),
-                        OverwriteExistingData = true,
-                        CanCreateNewBoundaryCondition = true,
-                        LocationFilter = feature,
-                    };
-                }
-                var bcSets =
-                    modelDefinition.BoundaryConditionSets.Select(bcs => new BoundaryConditionSet {Feature = bcs.Feature})
-                        .ToList();
-
-                // first loading signals, then corrections
-                var usedDataBlocks =
-                    signalBlocks.Where(
-                        dataBlock => builder.InsertBoundaryData(bcSets, dataBlock, timelagString))
-                        .ToList();
-
-                usedDataBlocks.AddRange(
-                    correctionBlocks.Where(
-                        dataBlock => builder.InsertBoundaryData(bcSets, dataBlock, timelagString)));
-
-                var newBoundaryCondition = bcSets.SelectMany(bcs => bcs.BoundaryConditions).FirstOrDefault();
-
-                if (newBoundaryCondition != null)
-                {
-                    existingBndForceFileItems[newBoundaryCondition] = delftIniCategory;
-                }
-
-                usedDataBlocks.ForEach(b =>
-                {
-                    signalBlocks.Remove(b);
-                    correctionBlocks.Remove(b);
-                });
-
-                for (var i = 0; i < bcSets.Count(); ++i)
-                {
-                    modelDefinition.BoundaryConditionSets[i].BoundaryConditions.AddRange(bcSets[i].BoundaryConditions);
-                }
+                var bcFiles = delftIniCategory.GetPropertyValues(ForcingFileKey);
+                bcFilePaths.AddRange(bcFiles.Select(GetFullPath));
             }
+
+            return bcFilePaths;
         }
 
         private static bool IsMorphologyRelatedProperty(FlowBoundaryQuantityType quantity)
