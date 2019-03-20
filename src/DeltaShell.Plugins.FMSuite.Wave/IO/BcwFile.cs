@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Units;
@@ -31,18 +32,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
         public const string DateFormatString = "yyyyMMdd";
 
         /// <summary>
-        /// Returns functions with components waveheight,period,direction,spreading and argument time.
-        /// The keys are the names of the boundary conditions, and should be matched to those in the mdw file.
+        /// Reads the .bcw file.
         /// </summary>
-        /// <param name="timeSeriesFile"></param>
-        /// <returns></returns>
-        public IDictionary<string, List<IFunction>> Read(string timeSeriesFile)
+        /// <param name="bcwFilePath">Full file path</param>
+        /// <returns>
+        /// Returns a dictionary with the boundary condition names, matching those in the mdw file,
+        /// and their functions with components wave height, period, direction, spreading and argument time.
+        /// </returns>
+        public IDictionary<string, List<IFunction>> Read(string bcwFilePath)
         {
             var bcwData = new Dictionary<string, List<IFunction>>();
 
             try
             {
-                OpenInputFile(timeSeriesFile);
+                OpenInputFile(bcwFilePath);
 
                 string boundaryName = null;
                 BcwHeaderData header = null;
@@ -81,14 +84,27 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                     AddValuesToParameters(parameterData, values);
                 }
 
+                // store values of the last block
                 if (parameterData != null)
                 {
                     FillBoundaryData(bcwData, boundaryName, header, parameterData);
                 }
             }
-            catch (Exception)
+            catch (InvalidOperationException e)
             {
-                Log.ErrorFormat("Could not parse line nr. {0} in file {1}", LineNumber, InputFilePath);
+                LogErrorReading(e.Message);
+            }
+            catch (OutOfMemoryException e)
+            {
+                LogErrorReading(e.Message);
+            }
+            catch (IOException e)
+            {
+                LogErrorReading(e.Message);
+            }
+            catch (Exception e)
+            {
+                LogErrorParsingLine(e.Message);
             }
             finally
             {
@@ -96,6 +112,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             }
 
             return bcwData;
+        }
+
+        private static void LogErrorReading(string exceptionMessage)
+        {
+            Log.Error($"There was an error reading the bcw file: {exceptionMessage}");
+        }
+
+        private void LogErrorParsingLine(string exceptionMessage)
+        {
+            Log.Error($"Could not parse line nr. {LineNumber} in file {InputFilePath}: {exceptionMessage}");
         }
 
         private static void AddValuesToParameters(IEnumerable<BcwParameter> parameterData, IList<double> values)
@@ -119,7 +145,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             return boundaryName;
         }
 
-        private void FillBoundaryData(Dictionary<string, List<IFunction>> bcwData, string boundaryName, BcwHeaderData header,
+        private void FillBoundaryData(IDictionary<string, List<IFunction>> bcwData, string boundaryName, BcwHeaderData header,
             IList<BcwParameter> parameterData)
         {
             bcwData[boundaryName] = new List<IFunction>();
@@ -150,24 +176,24 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
         {
             var header = new BcwHeaderData();
 
-            var line = CurrentLine;
-            if (line == null) return header;
+            if (CurrentLine == null) return header;
 
-            header.TimeFunction = RegularExpression.GetFirstMatch(TimeFunctionPattern, line).Groups["value"].Value;
-            var refDateString = RegularExpression.GetFirstMatch(ReferenceDatePattern, GetNextLine()).Groups["value"].Value;
-            header.ReferenceDateString = refDateString;
-            line = GetNextLine();
+            header.TimeFunction = ReadParameterValue(TimeFunctionPattern, CurrentLine);
+            header.ReferenceDateString = ReadParameterValue(ReferenceDatePattern, GetNextLine());
+            header.TimeUnit = ReadParameterValue(TimeUnitPattern, GetNextLine());
+            header.InterpolationType = ReadParameterValue(InterpolPattern, GetNextLine());
 
-            header.TimeUnit = RegularExpression.GetFirstMatch(TimeUnitPattern, line).Groups["value"].Value;
-            line = GetNextLine();
-
-            header.InterpolationType = RegularExpression.GetFirstMatch(InterpolPattern, line).Groups["value"].Value;
             GetNextLine();
 
             return header;
         }
 
-        private IList<IFunction> CreateFunctionsFromData(IList<BcwParameter> parameterData, BcwHeaderData header)
+        private static string ReadParameterValue(string searchPattern, string line)
+        {
+            return RegularExpression.GetFirstMatch(searchPattern, line).Groups["value"].Value;
+        }
+
+        private IEnumerable<IFunction> CreateFunctionsFromData(IList<BcwParameter> parameterData, BcwHeaderData header)
         {
             var functions = new List<IFunction>();
             DateTime referenceDate;
@@ -179,14 +205,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             }
             else
             {
-                throw new NotImplementedException(
+                throw new NotSupportedException(
                     string.Format("Reference date \"from model\" in bcw file {0} not (yet) supported", InputFilePath));
             }
 
             var timeParameter = parameterData.FirstOrDefault(pd => pd.Name == "time");
             if (timeParameter == null)
             {
-                throw new Exception(string.Format("Missing time parameter in timeseries file {0}", InputFilePath));
+                throw new FileFormatException($"Missing time parameter in timeseries file {InputFilePath}");
             }
 
             var dateTimes =
@@ -249,7 +275,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
 
                     if (functions.Any())
                     {
-                        var header = CreateHeaderFromFunctions(functions);
+                        var header = CreateHeaderFromFunction(functions.First());
                         var parameters = CreateParametersFromFunctions(functions);
 
                         WriteBoundaryData(boundaryName, header, parameters);
@@ -287,32 +313,31 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             {
                 WriteLine(
                     string.Format("{0,-21}{1,-21}{2,-21}", "parameter", "\'" + parameter.Name + "\'",
-                                  "unit \'" + parameter.Unit + "\'").TrimEnd());
+                        "unit \'" + parameter.Unit + "\'").TrimEnd());
             }
 
             // data
             var timeParameter = sortedParameters.First(p => p.Name == "time");
-            for (int i = 0; i < timeParameter.Values.Count; ++i)
+            for (var i = 0; i < timeParameter.Values.Count; ++i)
             {
                 var time = timeParameter.Values[i].ToString("F2", CultureInfo.InvariantCulture);
                 var line = string.Format("{0,8}", time);
-                for (int j = 1; j < sortedParameters.Count; ++j)
+                for (var j = 1; j < sortedParameters.Count; ++j)
                 {
                     line += string.Format(" {0,8}", sortedParameters[j].Values[i].ToString("F4", CultureInfo.InvariantCulture));
                 }
+
                 WriteLine(line.TrimEnd());
             }
         }
-        
-        private BcwHeaderData CreateHeaderFromFunctions(IList<IFunction> functions)
-        {
-            var func = functions.First();
 
+        private static BcwHeaderData CreateHeaderFromFunction(IFunction function)
+        {
             var header = new BcwHeaderData
             {
-                TimeFunction = func.Attributes[TimeFunctionAttributeName],
-                ReferenceDateString = func.Attributes[RefDateAttributeName],
-                TimeUnit = func.Attributes[TimeUnitAttributeName],
+                TimeFunction = function.Attributes[TimeFunctionAttributeName],
+                ReferenceDateString = function.Attributes[RefDateAttributeName],
+                TimeUnit = function.Attributes[TimeUnitAttributeName],
                 InterpolationType = "linear"
             };
             return header;
@@ -329,22 +354,21 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
 
             // time
             var timeParameter = new BcwParameter
-                {
-                    Name = "time",
-                    Unit = "[min]",
-                    Values = func.Arguments[0].GetValues<DateTime>()
-                                              .Select(d => ConvertToBcwTime(d, refDate, func.Attributes[TimeUnitAttributeName])).ToList()
-                };
+            {
+                Name = "time",
+                Unit = "[min]",
+                Values = func.Arguments[0].GetValues<DateTime>()
+                    .Select(d => ConvertToBcwTime(d, refDate, func.Attributes[TimeUnitAttributeName])).ToList()
+            };
             parameters.Add(timeParameter);
 
             foreach (var f in functions)
             {
-                
                 var waveHeight = CreateBcwParameter(f.Components[0], KnownWaveProperties.WaveHeight);
                 var period = CreateBcwParameter(f.Components[1], KnownWaveProperties.Period);
                 var direction = CreateBcwParameter(f.Components[2], KnownWaveProperties.Direction);
                 var spreading = CreateBcwParameter(f.Components[3], KnownWaveProperties.DirectionalSpreadingValue);
-                
+
                 parameters.Add(waveHeight);
                 parameters.Add(period);
                 parameters.Add(direction);
@@ -363,77 +387,76 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
 
         private static Unit GetUnitFromString(string unitString)
         {
-            if (unitString == "[m]")
-                return new Unit("meter", "m");
-            else if (unitString == "[s]")
-                return new Unit("second", "s");
-            else if (unitString == "[N^o]")
-                return new Unit("degree", "deg");
-            else
-                return new Unit("", "-");
+            switch (unitString)
+            {
+                case "[m]":
+                    return new Unit("meter", "m");
+                case "[s]":
+                    return new Unit("second", "s");
+                case "[N^o]":
+                    return new Unit("degree", "deg");
+                default:
+                    return new Unit("", "-");
+            }
         }
 
         private static string GetStringFromUnit(IUnit unit)
         {
-            if (unit.Name == "meter")
-                return "[m]";
-            if (unit.Name == "second")
-                return "[s]";
-            if (unit.Name == "degree")
-                return "[N^o]";
-            return "[-]";
+            switch (unit.Name)
+            {
+                case "meter":
+                    return "[m]";
+                case "second":
+                    return "[s]";
+                case "degree":
+                    return "[N^o]";
+                default:
+                    return "[-]";
+            }
         }
 
         private DateTime ConvertToDateTime(double value, string unit, DateTime referenceDate)
         {
-            if (unit == "days")
+            switch (unit)
             {
-                return referenceDate.AddDays(value);
+                case "days":
+                    return referenceDate.AddDays(value);
+                case "hours":
+                    return referenceDate.AddHours(value);
+                case "minutes":
+                    return referenceDate.AddMinutes(value);
+                case "seconds":
+                    return referenceDate.AddSeconds(value);
+                default:
+                    throw new NotImplementedException(string.Format("Unit {0} for bcw file is not (yet) implemented", unit));
             }
-            if (unit == "hours")
-            {
-                return referenceDate.AddHours(value);
-            }
-            if (unit == "minutes")
-            {
-                return referenceDate.AddMinutes(value);
-            }
-            if (unit == "seconds")
-            {
-                return referenceDate.AddSeconds(value);
-            }
-            throw new NotImplementedException(string.Format("Unit {0} for bcw file is not (yet) implemented", unit));
         }
 
         private double ConvertToBcwTime(DateTime dateTime, DateTime refDate, string unit)
         {
-            if (unit == "days")
+            switch (unit)
             {
-                return (dateTime - refDate).TotalDays;
+                case "days":
+                    return (dateTime - refDate).TotalDays;
+                case "hours":
+                    return (dateTime - refDate).TotalHours;
+                case "minutes":
+                    return (dateTime - refDate).TotalMinutes;
+                case "seconds":
+                    return (dateTime - refDate).TotalSeconds;
+                default:
+                    throw new NotImplementedException(string.Format("Unit {0} for bcw file is not (yet) implemented", unit));
             }
-            if (unit == "hours")
-            {
-                return (dateTime - refDate).TotalHours;
-            }
-            if (unit == "minutes")
-            {
-                return (dateTime - refDate).TotalMinutes;
-            }
-            if (unit == "seconds")
-            {
-                return (dateTime - refDate).TotalSeconds;
-            }
-            throw new NotImplementedException(string.Format("Unit {0} for bcw file is not (yet) implemented", unit));
         }
 
-        private BcwParameter CreateBcwParameter(IVariable component, string bcwName)
+        private static BcwParameter CreateBcwParameter(IVariable component, string bcwName)
         {
             return new BcwParameter
-                {
-                    Name = bcwName,
-                    Unit = GetStringFromUnit(component.Unit),
-                    Values = component.GetValues<double>().ToList()
-                };
+            {
+                Name = bcwName,
+                Unit = GetStringFromUnit(component.Unit),
+                Values = component.GetValues<double>().ToList()
+            };
         }
 
         private class BcwHeaderData

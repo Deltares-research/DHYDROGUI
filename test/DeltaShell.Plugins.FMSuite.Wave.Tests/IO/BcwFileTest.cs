@@ -1,13 +1,12 @@
-﻿using System;
+﻿using DelftTools.Functions;
+using DelftTools.TestUtils;
+using DelftTools.Utils.IO;
+using DeltaShell.Plugins.FMSuite.Wave.IO;
+using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using DelftTools.Functions;
-using DelftTools.TestUtils;
-using DelftTools.Utils.IO;
-using DelftTools.Utils.Reflection;
-using DeltaShell.Plugins.FMSuite.Wave.IO;
-using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
 {
@@ -63,26 +62,28 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         {
             // Given
             const string boundaryConditionName = "boundary_condition";
+            var expectedLine = $"location             '{boundaryConditionName}'";
+            const string fileName = "Waves.bcw";
+            var bcwFile = new BcwFile();
+
             var boundaryConditionToFunctionsMappings = new Dictionary<string, List<IFunction>>
             {
                 {boundaryConditionName, new List<IFunction>()}
             };
-            var bcwFile = new BcwFile();
-            var filePath = Path.Combine(Path.GetTempPath(), "Waves.bcw");
 
-            // When
-            bcwFile.Write(boundaryConditionToFunctionsMappings, filePath);
+            TestHelper.PerformActionInTemporaryDirectory(tempDirectory =>
+            {
+                var filePath = Path.Combine(tempDirectory, fileName);
+                bcwFile.Write(boundaryConditionToFunctionsMappings, filePath);
 
-            // Then
-            Assert.That(File.Exists(filePath),
-                "The .bcw file should have existed after the Write method was called.");
-            var linesInFile = File.ReadAllLines(filePath);
-            Assert.That(linesInFile.Length, Is.EqualTo(1),
-                "When a boundary condition does not have any functions, only one line was expected to be written to the file.");
-            Assert.That(linesInFile.First().Contains(boundaryConditionName), 
-                "When a boundary condition does not have any functions, the only line in the file was expected to contain the name of the boundary condition.");
-
-            FileUtils.DeleteIfExists(filePath);
+                Assert.That(File.Exists(filePath),
+                    "The .bcw file should exist after the Write method was called.");
+                var linesInFile = File.ReadAllLines(filePath);
+                Assert.That(linesInFile.Length, Is.EqualTo(1),
+                    "When a boundary condition does not have any functions, only one line is expected to be written to the file.");
+                Assert.AreEqual(expectedLine, linesInFile.First(),
+                    "When a boundary condition does not have any functions, the only line in the file is expected to describe the name of the boundary condition.");
+            });
         }
 
         [Test]
@@ -91,23 +92,26 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         {
             // Given
             const string boundaryConditionName = "boundary_condition";
-            var filePath = Path.Combine(Path.GetTempPath(), "Waves.bcw");
-            File.WriteAllLines(filePath, new[] {$@"location '{boundaryConditionName}'"});
+            const string fileName = "Waves.bcw";
             var bcwFile = new BcwFile();
 
-            // When
-            var boundaryConditionToFunctionsMappings = bcwFile.Read(filePath);
+            TestHelper.PerformActionInTemporaryDirectory(tempDirectory =>
+            {
+                var filePath = Path.Combine(tempDirectory, fileName);
+                File.WriteAllLines(filePath, new[] { $@"location '{boundaryConditionName}'" });
 
-            // Then
-            Assert.That(boundaryConditionToFunctionsMappings.Count, Is.EqualTo(1),
-                "One boundary condition should have been read from the file.");
-            var boundaryConditionToFunctionsMapping = boundaryConditionToFunctionsMappings.First();
-            Assert.That(boundaryConditionToFunctionsMapping.Key, Is.EqualTo(boundaryConditionName),
-                $"The read boundary condition name from the file was expected to be {boundaryConditionName}.");
-            Assert.That(boundaryConditionToFunctionsMapping.Value, Is.EqualTo(new List<IFunction>()),
-                "No functions should have been read from the file.");
+                // When
+                var boundaryConditionToFunctionsMappings = bcwFile.Read(filePath);
 
-            FileUtils.DeleteIfExists(filePath);
+                // Then
+                Assert.That(boundaryConditionToFunctionsMappings.Count, Is.EqualTo(1),
+                    "One boundary condition should have been read from the file.");
+                var boundaryConditionToFunctionsMapping = boundaryConditionToFunctionsMappings.First();
+                Assert.That(boundaryConditionToFunctionsMapping.Key, Is.EqualTo(boundaryConditionName),
+                    $"The read boundary condition name from the file was expected to be {boundaryConditionName}.");
+                Assert.That(boundaryConditionToFunctionsMapping.Value, Is.EqualTo(new List<IFunction>()),
+                    "No functions should have been read from the file.");
+            });
         }
     }
 }
