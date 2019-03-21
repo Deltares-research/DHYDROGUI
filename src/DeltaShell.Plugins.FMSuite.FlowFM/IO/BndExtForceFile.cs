@@ -62,15 +62,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         // items that existed in the file when the file was read
         private readonly IDictionary<Feature2D, string> existingPolylineFiles; 
         private readonly IDictionary<IBoundaryCondition, DelftIniCategory> existingBndForceFileItems;
-        private string filePath;
 
         public bool WriteToDisk { get; set; }
 
-        private string FilePath
-        {
-            get { return filePath; }
-            set { filePath = value; }
-        }
+        private string FilePath { get; set; }
 
         private string GetFullPath(string relativePath)
         {
@@ -90,8 +85,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             var refDate = (DateTime) modelDefinition.GetModelProperty(KnownProperties.RefDate).Value;
 
-            Write(filePath, modelDefinition.ModelName, modelDefinition.BoundaryConditionSets, modelDefinition.Embankments,
-                modelDefinition.GetModelProperty(KnownProperties.BndExtForceFile), refDate);
+            Write(
+                filePath,
+                modelDefinition.ModelName,
+                modelDefinition.BoundaryConditionSets,
+                modelDefinition.Embankments,
+                modelDefinition.GetModelProperty(KnownProperties.BndExtForceFile),
+                refDate);
         }
 
         private void Write(string filePath, string modelDefinitionModelName, IList<BoundaryConditionSet> boundaryConditionSets, IList<Embankment> embankments, WaterFlowFMProperty modelProperty, DateTime refDate)
@@ -122,34 +122,41 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 {
                     WriteLine("");
                     WriteLine(BoundaryBlockKey);
-                    WriteLine(QuantityKey + "=" + bndExtForceFileItem.GetPropertyValue(QuantityKey));
-                    WriteLine(LocationFileKey + "=" + bndExtForceFileItem.GetPropertyValue(LocationFileKey));
+                    WritePropertyValue(QuantityKey, bndExtForceFileItem);
+                    WritePropertyValue(LocationFileKey, bndExtForceFileItem);
 
-                    string openBoundaryTolerance = bndExtForceFileItem.GetPropertyValues(OpenBoundaryToleranceKey).FirstOrDefault();
-                    if (openBoundaryTolerance != null)
-                    {
-                        WriteLine(OpenBoundaryToleranceKey + "=" + openBoundaryTolerance);
-                    }
-
-                    foreach (var propertyValue in bndExtForceFileItem.GetPropertyValues(ForcingFileKey))
-                    {
-                        WriteLine(ForcingFileKey + "=" + propertyValue);                        
-                    }
-                    var timelag = bndExtForceFileItem.GetPropertyValue(ThatcherHarlemanTimeLagKey);
-                    if(timelag != null)
-                    {
-                        WriteLine(ThatcherHarlemanTimeLagKey + "=" + timelag);
-                    }
-                    var area = bndExtForceFileItem.GetPropertyValue(AreaKey);
-                    if (area != null)
-                    {
-                        WriteLine(AreaKey + "=" + area);
-                    }
+                    var openBoundaryTolerance = bndExtForceFileItem.GetPropertyValues(OpenBoundaryToleranceKey)
+                        .FirstOrDefault();
+                    WritePropertyValue(OpenBoundaryToleranceKey, openBoundaryTolerance);
+                    WritePropertyValues(ForcingFileKey, bndExtForceFileItem);
+                    WritePropertyValue(ThatcherHarlemanTimeLagKey, bndExtForceFileItem);
+                    WritePropertyValue(AreaKey, bndExtForceFileItem);
                 }
             }
             finally
             {
                 CloseOutputFile();
+            }
+        }
+
+        private void WritePropertyValues(string propertyName, DelftIniCategory bndExtForceFileItem)
+        {
+            foreach (var propertyValue in bndExtForceFileItem.GetPropertyValues(propertyName))
+            {
+                WritePropertyValue(propertyName, propertyValue);
+            }
+        }
+
+        private void WritePropertyValue(string propertyName, DelftIniCategory bndExtForceFileItem)
+        {
+            WritePropertyValue(propertyName, bndExtForceFileItem.GetPropertyValue(propertyName));
+        }
+
+        private void WritePropertyValue(string propertyName, string propertyValue)
+        {
+            if (propertyValue != null)
+            {
+                WriteLine(propertyName + "=" + propertyValue);
             }
         }
 
@@ -537,18 +544,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             var quantityValue = delftIniCategory.GetPropertyValue(QuantityKey);
             quantity = FlowBoundaryQuantityType.WaterLevel;
-            if (!string.IsNullOrEmpty(quantityValue) &&
-                !ExtForceQuantNames.TryParseBoundaryQuantityType(quantityValue, out quantity))
-            {
-                if (quantityValue != ExtForceQuantNames.EmbankmentBnd)
-                {
-                    Log.WarnFormat("Could not parse quantity {0} into a valid flow boundary condition", quantityValue);
-                }
 
-                return true;
+            if (string.IsNullOrEmpty(quantityValue)
+                || ExtForceQuantNames.TryParseBoundaryQuantityType(quantityValue, out quantity))
+                return false;
+
+            if (quantityValue != ExtForceQuantNames.EmbankmentBnd)
+            {
+                Log.WarnFormat("Could not parse quantity {0} into a valid flow boundary condition", quantityValue);
             }
 
-            return false;
+            return true;
         }
 
         private static List<BcBlockData> ReadBoundaryConditionBlocks(IEnumerable<string> bcFilePaths)
