@@ -11,6 +11,7 @@ using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using GeoAPI.Extensions.Feature;
 using log4net;
 using NetTopologySuite.Extensions.Features;
 
@@ -502,15 +503,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             Feature2D feature)
         {
             BcFileFlowBoundaryDataBuilder builder;
+
+            var excludedQuantities = Enum.GetValues(typeof(FlowBoundaryQuantityType))
+                .Cast<FlowBoundaryQuantityType>()
+                .Except(new[] {quantity})
+                .ToList();
+
             if (IsMorphologyRelatedProperty(quantity))
             {
                 builder = new BcmFileFlowBoundaryDataBuilder
                 {
-                    ExcludedQuantities =
-                        Enum.GetValues(typeof(FlowBoundaryQuantityType))
-                            .Cast<FlowBoundaryQuantityType>()
-                            .Except(new[] {quantity})
-                            .ToList(),
+                    ExcludedQuantities = excludedQuantities,
                     OverwriteExistingData = true,
                     CanCreateNewBoundaryCondition = true,
                     LocationFilter = feature,
@@ -520,11 +523,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 builder = new BcFileFlowBoundaryDataBuilder
                 {
-                    ExcludedQuantities =
-                        Enum.GetValues(typeof(FlowBoundaryQuantityType))
-                            .Cast<FlowBoundaryQuantityType>()
-                            .Except(new[] {quantity})
-                            .ToList(),
+                    ExcludedQuantities = excludedQuantities,
                     OverwriteExistingData = true,
                     CanCreateNewBoundaryCondition = true,
                     LocationFilter = feature,

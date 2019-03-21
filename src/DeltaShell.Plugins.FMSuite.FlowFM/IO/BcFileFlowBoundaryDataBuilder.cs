@@ -52,8 +52,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
     // TODO: this class is a mess, needs refactoring
     public class BcFileFlowBoundaryDataBuilder
     {
-        public const string ConcentrationAtBound = "sedfracbnd";
-
         private class ForcingTypeDefinition
         {
             public BoundaryConditionDataType ForcingType;
@@ -160,7 +158,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {new[] {ExtForceQuantNames.SalinityAtBound}, FlowBoundaryQuantityType.Salinity},
             {new[] {ExtForceQuantNames.TemperatureAtBound}, FlowBoundaryQuantityType.Temperature},
             {new[] {ExtForceQuantNames.TracerAtBound}, FlowBoundaryQuantityType.Tracer},
-            {new[] {ConcentrationAtBound}, FlowBoundaryQuantityType.SedimentConcentration},
+            {new[] {ExtForceQuantNames.ConcentrationAtBound}, FlowBoundaryQuantityType.SedimentConcentration},
         };
          
         private static readonly IDictionary<string, VerticalProfileType> VerticalDefinitionKeys =
@@ -632,30 +630,36 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         protected virtual FlowBoundaryCondition CreateNewBoundaryCondition(string quantityName, FlowBoundaryQuantityType flowQuantityEnum, BoundaryConditionDataType forcingType, Feature2D feature, TimeSpan timelag, IGrouping<FlowBoundaryQuantityType, KeyValuePair<System.Tuple<FlowBoundaryQuantityType, int>, BcQuantityData>> grouping)
         {
-            var bc = new FlowBoundaryCondition(flowQuantityEnum, forcingType)
+            var boundaryCondition = new FlowBoundaryCondition(flowQuantityEnum, forcingType)
             {
                 Feature = feature,
                 ThatcherHarlemanTimeLag = timelag,
+                SedimentFractionNames = GetFractionNames(grouping).ToList(),
             };
-            bc.SedimentFractionNames = GetFractionNames(grouping).ToList();
-            if (flowQuantityEnum == FlowBoundaryQuantityType.SedimentConcentration)
+
+            if (flowQuantityEnum != FlowBoundaryQuantityType.SedimentConcentration) return boundaryCondition;
+
+            var flowQuantityComponentsPair = FlowQuantityKeys.FirstOrDefault(kvp => kvp.Key.Any(k => quantityName.Equals(k)));
+            if (flowQuantityComponentsPair.Key == null)
             {
-                var flowQuantityComponentsPair = FlowQuantityKeys.FirstOrDefault(kvp => kvp.Key.Any(k => quantityName.Equals(k)));
-                if (flowQuantityComponentsPair.Key == null)
-                {
-                    flowQuantityComponentsPair = FlowQuantityKeys.FirstOrDefault(kvp => kvp.Key.Any(k => quantityName.StartsWith(k)));
-                }
-                if (flowQuantityComponentsPair.Key != null)
-                {
-                    var matchingQuantity = flowQuantityComponentsPair.Key.FirstOrDefault(k => quantityName.StartsWith(k));
-                    if (matchingQuantity != null)
-                    {
-                        var fractionName = quantityName.Replace(matchingQuantity, string.Empty);
-                        bc.SedimentFractionName = fractionName;
-                    }
-                }
+                flowQuantityComponentsPair = FlowQuantityKeys.FirstOrDefault(kvp => kvp.Key.Any(k => quantityName.StartsWith(k)));
             }
-            return bc;
+
+            if (flowQuantityComponentsPair.Key == null) return boundaryCondition;
+
+            var matchingQuantity = flowQuantityComponentsPair.Key.FirstOrDefault(k => quantityName.StartsWith(k));
+
+            if (matchingQuantity == null) return boundaryCondition;
+
+            var fractionName = GetFractionNameFromQuantityName(quantityName);
+            boundaryCondition.SedimentFractionName = fractionName;
+
+            return boundaryCondition;
+        }
+
+        private static string GetFractionNameFromQuantityName(string quantityName)
+        {
+            return quantityName.Replace(ExtForceQuantNames.ConcentrationAtBound, string.Empty);
         }
 
         private IEnumerable<string> GetFractionNames(IGrouping<FlowBoundaryQuantityType, KeyValuePair<System.Tuple<FlowBoundaryQuantityType, int>, BcQuantityData>> quantityGroup)
@@ -671,6 +675,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             if (bc.FlowQuantity != quantity) return false;
 
             if (bc.FlowQuantity == FlowBoundaryQuantityType.Tracer && quantityData.TracerName != bc.TracerName)
+                return false;
+
+            if (bc.FlowQuantity == FlowBoundaryQuantityType.SedimentConcentration && GetFractionNameFromQuantityName(quantityData.Quantity) != bc.SedimentFractionName)
                 return false;
 
             if (forcingTypeDefinition.ForcingType == BoundaryConditionDataType.AstroCorrection)

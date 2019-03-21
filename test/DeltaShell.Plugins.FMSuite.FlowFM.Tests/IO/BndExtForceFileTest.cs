@@ -815,7 +815,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.IsTrue(File.Exists(extFileName));
             var fileText = File.ReadAllText(extFileName);
             Assert.That(fileText, Is.StringContaining(BndExtForceFile.BoundaryBlockKey)
-                                    .And.StringContaining(BndExtForceFile.QuantityKey + "=" + BcFileFlowBoundaryDataBuilder.ConcentrationAtBound + "frac1")
+                                    .And.StringContaining(BndExtForceFile.QuantityKey + "=" + ExtForceQuantNames.ConcentrationAtBound + "frac1")
                                     .And.StringContaining(BndExtForceFile.LocationFileKey + "=" + "L1.pli")
                                     .And.StringContaining(BndExtForceFile.ForcingFileKey + "=" + "frac1.bc"));
 
@@ -825,7 +825,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.IsTrue(File.Exists("frac1.bc"));
 
             fileText = File.ReadAllText("frac1.bc");
-            Assert.That(fileText, Is.StringContaining(BcFileFlowBoundaryDataBuilder.ConcentrationAtBound + "frac1")
+            Assert.That(fileText, Is.StringContaining(ExtForceQuantNames.ConcentrationAtBound + "frac1")
                                     .And.StringContaining("bound_0001")
                                     .And.StringContaining(BcFile.BlockKey)
                                     .And.StringContaining(BcFile.QuantityKey)

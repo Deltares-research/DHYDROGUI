@@ -423,19 +423,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
 
         public List<string> SedimentFractionNames { get; set; } /* Sediment fraction names are unique */
 
+
+        /// <summary>
+        /// Gets the name of the flow boundary quantity type.
+        /// If the Quantity type is Tracer or Sediment Concentration it will return the tracer name or sediment fraction name, respectively.
+        /// </summary>
+        /// <value>
+        /// The name of the variable.
+        /// </value>
         public override string VariableName
         {
             get
             {
-                if (FlowQuantity == FlowBoundaryQuantityType.Tracer)
+                switch (FlowQuantity)
                 {
-                    return TracerName;
+                    case FlowBoundaryQuantityType.Tracer:
+                        return TracerName;
+                    case FlowBoundaryQuantityType.SedimentConcentration:
+                        return SedimentFractionName;
+                    default:
+                        return GetVariableNameForQuantity(FlowQuantity);
                 }
-                else if (FlowQuantity == FlowBoundaryQuantityType.SedimentConcentration)
-                {
-                    return SedimentFractionName;
-                }
-                return GetVariableNameForQuantity(FlowQuantity);
             }
         }
 

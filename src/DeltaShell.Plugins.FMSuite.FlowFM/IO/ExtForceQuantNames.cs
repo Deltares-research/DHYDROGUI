@@ -23,6 +23,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public const string SalinityAtBound = "salinitybnd";
         public const string TemperatureAtBound = "temperaturebnd";
         public const string TracerAtBound = "tracerbnd";
+        public const string ConcentrationAtBound = "sedfracbnd";
         public const string LowerGateLevel = "lowergatelevel";
         public const string DamLevel = "damlevel";
         public const string SourceAndSink = "discharge_salinity_temperature_sorsin";
@@ -146,8 +147,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 {RiemannVelocityAtBound, FlowBoundaryQuantityType.RiemannVelocity},
                 {OpenFlowConditionAtBound, FlowBoundaryQuantityType.Outflow},
                 {SalinityAtBound, FlowBoundaryQuantityType.Salinity},
-                {TemperatureAtBound,FlowBoundaryQuantityType.Temperature},
-                {BcFileFlowBoundaryDataBuilder.ConcentrationAtBound,FlowBoundaryQuantityType.SedimentConcentration},
+                {TemperatureAtBound, FlowBoundaryQuantityType.Temperature},
+                {ConcentrationAtBound, FlowBoundaryQuantityType.SedimentConcentration},
                 {BcmFileFlowBoundaryDataBuilder.BedLevelAtBound, FlowBoundaryQuantityType.MorphologyBedLevelPrescribed},
                 {BcmFileFlowBoundaryDataBuilder.BedLevelChangeAtBound, FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed},
                 {BcmFileFlowBoundaryDataBuilder.BedLoadAtBound, FlowBoundaryQuantityType.MorphologyBedLoadTransport},
@@ -189,7 +190,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
             if (quantity == FlowBoundaryQuantityType.SedimentConcentration)
             {
-                return BcmFileFlowBoundaryDataBuilder.ConcentrationAtBound + boundaryCondition.SedimentFractionName;
+                return ConcentrationAtBound + boundaryCondition.SedimentFractionName;
             }
             if (BoundaryToQuantityMapping.Values.Contains(quantity))
             {
