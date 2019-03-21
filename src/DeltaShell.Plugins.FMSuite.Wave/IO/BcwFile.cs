@@ -47,50 +47,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             {
                 OpenInputFile(bcwFilePath);
 
-                string boundaryName = null;
-                BcwHeaderData header = null;
-                IList<BcwParameter> parameterData = null;
+                GetNextLine();
 
-                while (GetNextLine() != null)
+                while (CurrentLine != null && IsNewBoundaryDataBlock(CurrentLine))
                 {
-                    if (IsNewBoundaryDataBlock(CurrentLine))
-                    {
-                        if (parameterData != null)
-                        {
-                            FillBoundaryData(bcwData, boundaryName, header, parameterData);
-                            parameterData = null;
-                        }
-
-                        while (CurrentLine != null && IsNewBoundaryDataBlock(CurrentLine))
-                        {
-                            boundaryName = ReadBoundaryName();
-                            bcwData.Add(boundaryName, new List<IFunction>());
-                        }
-
-                        if (CurrentLine == null) break;
-
-                        header = ReadBcwHeaderData();
-                        parameterData = ReadParameterMetaData();
-                    }
-
-                    if (parameterData == null) continue;
-
-                    var values = ReadParameterValues();
-                    if (values.Count != parameterData.Count)
-                    {
-                        Log.ErrorFormat(
-                            "Invalid parameter data in file {0}, line number {1}. Expecting {2} parameter values.",
-                            InputFilePath, LineNumber, parameterData.Count);
-                        return null;
-                    }
-
-                    AddValuesToParameters(parameterData, values);
-                }
-
-                // store values of the last block
-                if (parameterData != null)
-                {
-                    FillBoundaryData(bcwData, boundaryName, header, parameterData);
+                    ReadBlock(bcwData);
                 }
             }
             catch (Exception e) when (e is InvalidOperationException
@@ -110,9 +71,38 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             return bcwData;
         }
 
+        private void ReadBlock(IDictionary<string, List<IFunction>> bcwData)
+        {
+            var boundaryName = ReadBoundaryName();
+            bcwData.Add(boundaryName, new List<IFunction>());
+
+            GetNextLine();
+
+            if (CurrentLine == null || IsNewBoundaryDataBlock(CurrentLine)) return;
+
+            var header = ReadBcwHeaderData();
+
+            var parameterData = ReadParameterMetaData();
+
+            while (CurrentLine != null && !IsNewBoundaryDataBlock(CurrentLine))
+            {
+                var values = ReadParameterValues();
+                if (values.Count != parameterData.Count)
+                {
+                    throw new FileFormatException($"Invalid parameter data: expecting {parameterData.Count} parameter values.");
+                }
+
+                AddValuesToParameters(parameterData, values);
+
+                GetNextLine();
+            }
+
+            FillBoundaryData(bcwData, boundaryName, header, parameterData);
+        }
+
         private void LogErrorReading(string exceptionMessage)
         {
-            Log.Error($"There was an error reading the bcw file at line {LineNumber}: {exceptionMessage}");
+            Log.Error($"There was an error reading file {InputFilePath} at line {LineNumber}: \"{exceptionMessage}\"");
         }
 
         private static void AddValuesToParameters(IEnumerable<BcwParameter> parameterData, IList<double> values)
@@ -130,10 +120,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
 
         private string ReadBoundaryName()
         {
-            var boundaryName = RegularExpression.GetFirstMatch(BoundaryNamePattern, CurrentLine).Groups["value"].Value;
-            GetNextLine();
-
-            return boundaryName;
+            return RegularExpression.GetFirstMatch(BoundaryNamePattern, CurrentLine).Groups["value"].Value;
         }
 
         private void FillBoundaryData(IDictionary<string, List<IFunction>> bcwData, string boundaryName, BcwHeaderData header,
