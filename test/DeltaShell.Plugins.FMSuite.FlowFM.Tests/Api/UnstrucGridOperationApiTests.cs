@@ -2,11 +2,16 @@
 using System.IO;
 using System.Linq;
 using DelftTools.TestUtils;
+using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
+using DeltaShell.NGHS.IO.Grid;
+using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Api;
+using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using GeoAPI.Geometries;
+using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
 
@@ -67,6 +72,114 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 FileUtils.DeleteIfExists(netFile);
                 FileUtils.DeleteIfExists(tempFolder);
             }
+        }
+
+        /// <summary>
+        /// GIVEN an FM model with a morphology boundary
+        /// WHEN grid snapping is called
+        /// THEN morphology should be removed from small export
+        /// </summary>
+        [Test]
+        [Category(TestCategory.Slow)]
+        [Category(TestCategory.Jira)] // D3DFMIQ-471
+        public void GivenAnFMModelWithAMorphologyBoundary_WhenGridSnappingIsCalled_ThenMorphologyShouldBeRemovedFromSmallExport()
+        {
+            var srcNetFile = TestHelper.GetTestFilePath(@"basicGrid\basicGrid_net.nc");
+
+            TestHelper.PerformActionInTemporaryDirectory(tempDir =>
+            {
+                var mduPath = Path.Combine(tempDir, "morph_test.mdu");
+                using (var model = new WaterFlowFMModel())
+                {
+                    // Given
+                    model.ExportTo(mduPath, true, false, false);
+                    File.Copy(srcNetFile, model.NetFilePath, true);
+                    
+                    EnableMorphology(model);
+                    AddMorphologyBoundary(model);
+
+                    // When | Then
+                    string tempMduPath = null;
+
+                    Assert.DoesNotThrow(() =>
+                        {
+                            using (var api = new UnstrucGridOperationApi(model, false))
+                            {
+                                tempMduPath = TypeUtils.GetField<UnstrucGridOperationApi, string>(api, "mduFilePath");
+                            }
+                        }
+                    , "Expected no exception while constructing UnstrucGRidOperationApi.");
+
+                    Assert.That(tempMduPath, Is.Not.Null,
+                                "Expected the API to return a mdu path.");
+                    var mduFileDir = Path.GetDirectoryName(tempMduPath);
+                    var fmModelUsedByApi = new WaterFlowFMModel(Path.Combine(mduFileDir, tempMduPath));
+
+                    Assert.That(fmModelUsedByApi.UseMorSed, Is.False,
+                                "Expected the used model not to have morphology.");
+                }
+            });
+        }
+
+        /// <summary>
+        /// Enable morphology in the specified model.
+        /// </summary>
+        /// <param name="model">The model on which morphology is enabled.</param>
+        private static void EnableMorphology(WaterFlowFMModel model)
+        {
+            // Morphology
+            model.ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value = true;
+            var cellsValue = ((int)UnstructuredGridFileHelper.BedLevelLocation.Faces).ToString();
+            model.ModelDefinition.GetModelProperty(KnownProperties.BedlevType).SetValueAsString(cellsValue);
+
+            // Sediment
+            model.SedimentFractions = new EventedList<ISedimentFraction>
+            {
+                new SedimentFraction {Name = "gloomy_sediment"}
+            };
+        }
+
+        /// <summary>
+        /// Add a morphology boundary to the specified model.
+        /// </summary>
+        /// <param name="model">The model to which the boundary is added.</param>
+        private static void AddMorphologyBoundary(WaterFlowFMModel model)
+        {
+            var feature = new Feature2D
+            {
+                Name = "Boundary2",
+                Geometry = new LineString(new[] { new Coordinate(1, 0), new Coordinate(0, 1) })
+            };
+
+            var morphologyBoundaryCondition = new FlowBoundaryCondition(
+                FlowBoundaryQuantityType.MorphologyBedLevelPrescribed,
+                BoundaryConditionDataType.TimeSeries)
+            {
+                Feature = feature,
+                SedimentFractionNames = new List<string> { "Frick_Freck_and_Frack" }
+            };
+
+            morphologyBoundaryCondition.AddPoint(0);
+            morphologyBoundaryCondition.PointData[0].Arguments[0].SetValues(new[] { model.StartTime, model.StopTime });
+            morphologyBoundaryCondition.PointData[0][model.StartTime] = 0.5;
+            morphologyBoundaryCondition.PointData[0][model.StopTime] = 0.6;
+
+            var flowBoundaryCondition = new FlowBoundaryCondition(FlowBoundaryQuantityType.WaterLevel,
+                                                                  BoundaryConditionDataType.TimeSeries)
+            {
+                Feature = feature
+            };
+
+            flowBoundaryCondition.AddPoint(0);
+            flowBoundaryCondition.PointData[0].Arguments[0].SetValues(new[] { model.StartTime, model.StopTime });
+            flowBoundaryCondition.PointData[0][model.StartTime] = 0.5;
+            flowBoundaryCondition.PointData[0][model.StopTime] = 0.6;
+
+            var set = new BoundaryConditionSet { Feature = feature };
+            set.BoundaryConditions.Add(flowBoundaryCondition);
+            set.BoundaryConditions.Add(morphologyBoundaryCondition);
+
+            model.BoundaryConditionSets.Add(set);
         }
 
         [TestCase("bla_bnd.ext" , KnownProperties.ExtForceFile, TestName = "ExtForceFile")]
