@@ -97,7 +97,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             TestHelper.PerformActionInTemporaryDirectory(tempDirectory =>
             {
                 var filePath = Path.Combine(tempDirectory, fileName);
-                File.WriteAllLines(filePath, new[] { $@"location '{boundaryConditionName}'" });
+                File.WriteAllLines(filePath, new[] {$@"location '{boundaryConditionName}'"});
 
                 // When
                 var boundaryConditionToFunctionsMappings = bcwFile.Read(filePath);

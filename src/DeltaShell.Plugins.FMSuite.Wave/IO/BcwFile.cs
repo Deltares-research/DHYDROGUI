@@ -58,6 +58,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                         if (parameterData != null)
                         {
                             FillBoundaryData(bcwData, boundaryName, header, parameterData);
+                            parameterData = null;
                         }
 
                         while (CurrentLine != null && IsNewBoundaryDataBlock(CurrentLine))
@@ -65,6 +66,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                             boundaryName = ReadBoundaryName();
                             bcwData.Add(boundaryName, new List<IFunction>());
                         }
+
+                        if (CurrentLine == null) break;
 
                         header = ReadBcwHeaderData();
                         parameterData = ReadParameterMetaData();
@@ -143,18 +146,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
         private IList<BcwParameter> ReadParameterMetaData()
         {
             var parameterData = new List<BcwParameter>();
-            var line = CurrentLine;
-            if (line == null) return parameterData;
 
-            while (IsNewParameter(line))
+            while (IsNewParameter(CurrentLine))
             {
-                var bcwParameter = new BcwParameter {Values = new List<double>()};
-                var matches = RegularExpression.GetFirstMatch(ParameterPattern, line);
-                bcwParameter.Name = matches.Groups["parname"].Value.Trim();
-                bcwParameter.Unit = matches.Groups["unit"].Value.Trim();
+                var matches = RegularExpression.GetFirstMatch(ParameterPattern, CurrentLine);
+                var bcwParameter = new BcwParameter
+                {
+                    Values = new List<double>(),
+                    Name = matches.Groups["parname"].Value.Trim(),
+                    Unit = matches.Groups["unit"].Value.Trim()
+                };
+
                 parameterData.Add(bcwParameter);
 
-                line = GetNextLine();
+                GetNextLine();
             }
 
             return parameterData;
@@ -162,14 +167,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
 
         private BcwHeaderData ReadBcwHeaderData()
         {
-            var header = new BcwHeaderData();
-
-            if (CurrentLine == null) return header;
-
-            header.TimeFunction = ReadParameterValue(TimeFunctionPattern, CurrentLine);
-            header.ReferenceDateString = ReadParameterValue(ReferenceDatePattern, GetNextLine());
-            header.TimeUnit = ReadParameterValue(TimeUnitPattern, GetNextLine());
-            header.InterpolationType = ReadParameterValue(InterpolPattern, GetNextLine());
+            var header = new BcwHeaderData
+            {
+                TimeFunction = ReadParameterValue(TimeFunctionPattern, CurrentLine),
+                ReferenceDateString = ReadParameterValue(ReferenceDatePattern, GetNextLine()),
+                TimeUnit = ReadParameterValue(TimeUnitPattern, GetNextLine()),
+                InterpolationType = ReadParameterValue(InterpolPattern, GetNextLine())
+            };
 
             GetNextLine();
 
@@ -290,11 +294,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
         {
             WriteBoundaryName(boundaryName);
 
-            // header
-            WriteLine(string.Format("{0,-21}{1,-21}", "time-function", "\'" + header.TimeFunction + "\'").TrimEnd());
-            WriteLine(string.Format("{0,-21}{1,-21}", "reference-time", header.ReferenceDateString).TrimEnd());
-            WriteLine(string.Format("{0,-21}{1,-21}", "time-unit", "\'" + header.TimeUnit + "\'").TrimEnd());
-            WriteLine(string.Format("{0,-21}{1,-21}", "interpolation", "\'" + header.InterpolationType + "\'").TrimEnd());
+            WriteFormattedHeaderData("time-function", header.TimeFunction);
+            WriteFormattedHeaderData("reference-time", header.ReferenceDateString, false);
+            WriteFormattedHeaderData("time-unit", header.TimeUnit);
+            WriteFormattedHeaderData("interpolation", header.InterpolationType);
 
             // parameters
             foreach (var parameter in sortedParameters)
@@ -317,6 +320,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
 
                 WriteLine(line.TrimEnd());
             }
+        }
+
+        private void WriteFormattedHeaderData(string parameterName, string parameterValue, bool withApostrophes = true)
+        {
+            var apostrophe = withApostrophes ? "\'" : "";
+            WriteLine($"{parameterName,-21}{apostrophe + parameterValue + apostrophe,-21}".TrimEnd());
         }
 
         private static BcwHeaderData CreateHeaderFromFunction(IFunction function)
