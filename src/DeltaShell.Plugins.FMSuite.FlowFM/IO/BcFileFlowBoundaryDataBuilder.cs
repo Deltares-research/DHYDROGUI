@@ -20,6 +20,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             Quantities = new List<BcQuantityData>();
         }
+
         public string FilePath { get; set; }
         public int LineNumber { get; set; }
         public string SupportPoint { get; set; }
@@ -45,7 +46,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public string Unit { get; set; }
         public string VerticalPosition { get; set; }
         public string TracerName { get; set; }
-
         public IList<string> Values;
     }
 
@@ -59,77 +59,75 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             public string[] ComponentDefinitions;
         }
 
-        private static readonly ILog Log = LogManager.GetLogger(typeof (BcFileFlowBoundaryDataBuilder));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(BcFileFlowBoundaryDataBuilder));
 
         private static readonly IDictionary<string, ForcingTypeDefinition> ForcingTypeDefinitions =
             new Dictionary<string, ForcingTypeDefinition>
             {
+                {
+                    "timeseries",
+                    new ForcingTypeDefinition
                     {
-                        "timeseries",
-                        new ForcingTypeDefinition
-                            {
-                                ForcingType = BoundaryConditionDataType.TimeSeries,
-                                ArgumentDefinitions = new[] {"time"},
-                                ComponentDefinitions = new[] {""}
-                            }
-                    },
-                    {
-                        "t3d",
-                        new ForcingTypeDefinition
-                            {
-                                ForcingType = BoundaryConditionDataType.TimeSeries,
-                                ArgumentDefinitions = new[] {"time"},
-                                ComponentDefinitions = new[] {""}
-                            }
-                    },
-                    {
-                        "astronomic",
-                        new ForcingTypeDefinition
-                            {
-                                ForcingType = BoundaryConditionDataType.AstroComponents,
-                                ArgumentDefinitions = new[] {"astronomic component"},
-                                ComponentDefinitions = new[] {"amplitude", "phase"}
-                            }
-                    },
-                    {
-                        "astronomic-correction",
-                        new ForcingTypeDefinition
-                            {
-                                ForcingType = BoundaryConditionDataType.AstroCorrection,
-                                ArgumentDefinitions = new[] {"astronomic component"},
-                                ComponentDefinitions =
-                                    new[] {"amplitude", "phase"}
-                            }
-                    },
-                    {
-                        "harmonic",
-                        new ForcingTypeDefinition
-                            {
-                                ForcingType = BoundaryConditionDataType.Harmonics,
-                                ArgumentDefinitions = new[] {"harmonic component"},
-                                ComponentDefinitions = new[] {"amplitude", "phase"}
-                            }
-                    },
-                    {
-                        "harmonic-correction",
-                        new ForcingTypeDefinition
-                            {
-                                ForcingType = BoundaryConditionDataType.HarmonicCorrection,
-                                ArgumentDefinitions = new[] {"harmonic component"},
-                                ComponentDefinitions =
-                                    new[] {"amplitude", "phase"}
-                            }
-                    },
-                    {
-                        "qhtable",
-                        new ForcingTypeDefinition
-                            {
-                                ForcingType = BoundaryConditionDataType.Qh,
-                                ArgumentDefinitions = new[] {"qhbnd discharge"},
-                                ComponentDefinitions = new[] {"qhbnd waterlevel"}
-                            }
+                        ForcingType = BoundaryConditionDataType.TimeSeries,
+                        ArgumentDefinitions = new[] {"time"},
+                        ComponentDefinitions = new[] {""}
                     }
-                };
+                },
+                {
+                    "t3d",
+                    new ForcingTypeDefinition
+                    {
+                        ForcingType = BoundaryConditionDataType.TimeSeries,
+                        ArgumentDefinitions = new[] {"time"},
+                        ComponentDefinitions = new[] {""}
+                    }
+                },
+                {
+                    "astronomic",
+                    new ForcingTypeDefinition
+                    {
+                        ForcingType = BoundaryConditionDataType.AstroComponents,
+                        ArgumentDefinitions = new[] {"astronomic component"},
+                        ComponentDefinitions = new[] {"amplitude", "phase"}
+                    }
+                },
+                {
+                    "astronomic-correction",
+                    new ForcingTypeDefinition
+                    {
+                        ForcingType = BoundaryConditionDataType.AstroCorrection,
+                        ArgumentDefinitions = new[] {"astronomic component"},
+                        ComponentDefinitions = new[] {"amplitude", "phase"}
+                    }
+                },
+                {
+                    "harmonic",
+                    new ForcingTypeDefinition
+                    {
+                        ForcingType = BoundaryConditionDataType.Harmonics,
+                        ArgumentDefinitions = new[] {"harmonic component"},
+                        ComponentDefinitions = new[] {"amplitude", "phase"}
+                    }
+                },
+                {
+                    "harmonic-correction",
+                    new ForcingTypeDefinition
+                    {
+                        ForcingType = BoundaryConditionDataType.HarmonicCorrection,
+                        ArgumentDefinitions = new[] {"harmonic component"},
+                        ComponentDefinitions = new[] {"amplitude", "phase"}
+                    }
+                },
+                {
+                    "qhtable",
+                    new ForcingTypeDefinition
+                    {
+                        ForcingType = BoundaryConditionDataType.Qh,
+                        ArgumentDefinitions = new[] {"qhbnd discharge"},
+                        ComponentDefinitions = new[] {"qhbnd waterlevel"}
+                    }
+                }
+            };
 
         private static readonly IDictionary<BoundaryConditionDataType, BoundaryConditionDataType> CorrectionTypes =
             new Dictionary<BoundaryConditionDataType, BoundaryConditionDataType>
@@ -138,67 +136,66 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 {BoundaryConditionDataType.AstroCorrection, BoundaryConditionDataType.AstroComponents}
             };
 
-        protected virtual IDictionary<string[], FlowBoundaryQuantityType> FlowQuantityKeys
-        {
-            get { return flowQuantityKeys; }
-        }
+        protected virtual IDictionary<string, FlowBoundaryQuantityType> QuantityNameToTypeDictionary =>
+            quantityNameToTypeDictionary;
 
-        private static readonly IDictionary<string[], FlowBoundaryQuantityType> flowQuantityKeys = new Dictionary<string[], FlowBoundaryQuantityType>
-        {
-            {new[] {ExtForceQuantNames.WaterLevelAtBound}, FlowBoundaryQuantityType.WaterLevel},
-            {new[] {ExtForceQuantNames.DischargeAtBound}, FlowBoundaryQuantityType.Discharge},
-            {new[] {ExtForceQuantNames.QhAtBound}, FlowBoundaryQuantityType.Discharge},
-            {new[] {ExtForceQuantNames.VelocityAtBound}, FlowBoundaryQuantityType.Velocity},
-            {new[] {ExtForceQuantNames.NeumannConditionAtBound}, FlowBoundaryQuantityType.Neumann},
-            {new[] {ExtForceQuantNames.RiemannConditionAtBound}, FlowBoundaryQuantityType.Riemann},
-            {new[] {ExtForceQuantNames.RiemannVelocityAtBound}, FlowBoundaryQuantityType.RiemannVelocity},
-            {new[] {ExtForceQuantNames.NormalVelocityAtBound}, FlowBoundaryQuantityType.NormalVelocity},
-            {new[] {ExtForceQuantNames.TangentialVelocityAtBound}, FlowBoundaryQuantityType.TangentVelocity},
-            {new[] {"x-velocity", "y-velocity"}, FlowBoundaryQuantityType.VelocityVector},
-            {new[] {ExtForceQuantNames.SalinityAtBound}, FlowBoundaryQuantityType.Salinity},
-            {new[] {ExtForceQuantNames.TemperatureAtBound}, FlowBoundaryQuantityType.Temperature},
-            {new[] {ExtForceQuantNames.TracerAtBound}, FlowBoundaryQuantityType.Tracer},
-            {new[] {ExtForceQuantNames.ConcentrationAtBound}, FlowBoundaryQuantityType.SedimentConcentration},
-        };
-         
+        private static readonly IDictionary<string, FlowBoundaryQuantityType> quantityNameToTypeDictionary =
+            new Dictionary<string, FlowBoundaryQuantityType>
+            {
+                {ExtForceQuantNames.WaterLevelAtBound, FlowBoundaryQuantityType.WaterLevel},
+                {ExtForceQuantNames.DischargeAtBound, FlowBoundaryQuantityType.Discharge},
+                {ExtForceQuantNames.QhAtBound, FlowBoundaryQuantityType.Discharge},
+                {ExtForceQuantNames.VelocityAtBound, FlowBoundaryQuantityType.Velocity},
+                {ExtForceQuantNames.NeumannConditionAtBound, FlowBoundaryQuantityType.Neumann},
+                {ExtForceQuantNames.RiemannConditionAtBound, FlowBoundaryQuantityType.Riemann},
+                {ExtForceQuantNames.RiemannVelocityAtBound, FlowBoundaryQuantityType.RiemannVelocity},
+                {ExtForceQuantNames.NormalVelocityAtBound, FlowBoundaryQuantityType.NormalVelocity},
+                {ExtForceQuantNames.TangentialVelocityAtBound, FlowBoundaryQuantityType.TangentVelocity},
+                {"x-velocity", FlowBoundaryQuantityType.VelocityVector},
+                {"y-velocity", FlowBoundaryQuantityType.VelocityVector},
+                {ExtForceQuantNames.SalinityAtBound, FlowBoundaryQuantityType.Salinity},
+                {ExtForceQuantNames.TemperatureAtBound, FlowBoundaryQuantityType.Temperature},
+                {ExtForceQuantNames.TracerAtBound, FlowBoundaryQuantityType.Tracer},
+                {ExtForceQuantNames.ConcentrationAtBound, FlowBoundaryQuantityType.SedimentConcentration}
+            };
+
         private static readonly IDictionary<string, VerticalProfileType> VerticalDefinitionKeys =
             new Dictionary<string, VerticalProfileType>
             {
-                    {"single", VerticalProfileType.Uniform},
-                    {"uniform", VerticalProfileType.Uniform},
-                    {"none", VerticalProfileType.Uniform},
-                    {"bed-surface", VerticalProfileType.TopBottom},
-                    {"surface-bed", VerticalProfileType.TopBottom},
-                    {"top-bottom", VerticalProfileType.TopBottom},
-                    {"bottom-top", VerticalProfileType.TopBottom},
-                    {"z from bed", VerticalProfileType.ZFromBed},
-                    {"z above bed", VerticalProfileType.ZFromBed},
-                    {"z from bottom", VerticalProfileType.ZFromBed},
-                    {"z above bottom", VerticalProfileType.ZFromBed},
-                    {"z from surface", VerticalProfileType.ZFromSurface},
-                    {"z above surface", VerticalProfileType.ZFromSurface},
-                    {"z from top", VerticalProfileType.ZFromSurface},
-                    {"z above top", VerticalProfileType.ZFromSurface},
-                    {"z from datum",VerticalProfileType.ZFromDatum},
-                    {"z above datum",VerticalProfileType.ZFromDatum},
-                    {"percentage from bed",VerticalProfileType.PercentageFromBed},
-                    {"percentage above bed",VerticalProfileType.PercentageFromBed},
-                    {"percentage from bottom",VerticalProfileType.PercentageFromBed},
-                    {"percentage above bottom",VerticalProfileType.PercentageFromBed},
-                    {"percentage from surface",VerticalProfileType.PercentageFromSurface},
-                    {"percentage from top",VerticalProfileType.PercentageFromSurface}
-                };
+                {"single", VerticalProfileType.Uniform},
+                {"uniform", VerticalProfileType.Uniform},
+                {"none", VerticalProfileType.Uniform},
+                {"bed-surface", VerticalProfileType.TopBottom},
+                {"surface-bed", VerticalProfileType.TopBottom},
+                {"top-bottom", VerticalProfileType.TopBottom},
+                {"bottom-top", VerticalProfileType.TopBottom},
+                {"z from bed", VerticalProfileType.ZFromBed},
+                {"z above bed", VerticalProfileType.ZFromBed},
+                {"z from bottom", VerticalProfileType.ZFromBed},
+                {"z above bottom", VerticalProfileType.ZFromBed},
+                {"z from surface", VerticalProfileType.ZFromSurface},
+                {"z above surface", VerticalProfileType.ZFromSurface},
+                {"z from top", VerticalProfileType.ZFromSurface},
+                {"z above top", VerticalProfileType.ZFromSurface},
+                {"z from datum", VerticalProfileType.ZFromDatum},
+                {"z above datum", VerticalProfileType.ZFromDatum},
+                {"percentage from bed", VerticalProfileType.PercentageFromBed},
+                {"percentage above bed", VerticalProfileType.PercentageFromBed},
+                {"percentage from bottom", VerticalProfileType.PercentageFromBed},
+                {"percentage above bottom", VerticalProfileType.PercentageFromBed},
+                {"percentage from surface", VerticalProfileType.PercentageFromSurface},
+                {"percentage from top", VerticalProfileType.PercentageFromSurface}
+            };
 
         public static IEnumerable<string> CorrectionFunctionTypes
         {
             get
             {
-                return
-                    ForcingTypeDefinitions.Where(
-                        kvp =>
-                            kvp.Value.ForcingType == BoundaryConditionDataType.AstroCorrection ||
-                            kvp.Value.ForcingType == BoundaryConditionDataType.HarmonicCorrection)
-                        .Select(kvp => kvp.Key);
+                return ForcingTypeDefinitions
+                    .Where(kvp =>
+                        kvp.Value.ForcingType == BoundaryConditionDataType.AstroCorrection
+                        || kvp.Value.ForcingType == BoundaryConditionDataType.HarmonicCorrection)
+                    .Select(kvp => kvp.Key);
             }
         }
 
@@ -220,7 +217,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             CanCreateNewBoundaryCondition = true;
         }
 
-        public void InsertBoundaryData(IEnumerable<BoundaryConditionSet> boundaryConditionSets, IEnumerable<BcBlockData> data, string thatcherHarlemanTimeLag = null)
+        public void InsertBoundaryData(IEnumerable<BoundaryConditionSet> boundaryConditionSets,
+            IEnumerable<BcBlockData> data, string thatcherHarlemanTimeLag = null)
         {
             var bcSets = boundaryConditionSets.ToList();
             foreach (var bcBlockData in data)
@@ -229,13 +227,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
         }
 
-        // TODO: This method needs to be split up and re-worked - over 400 lines ffs! 
-        public bool InsertBoundaryData(IEnumerable<BoundaryConditionSet> boundaryConditionSets, BcBlockData data, string thatcherHarlemanTimeLag = null)
+        // TODO: This method needs to be split up and re-worked - over 400 lines ffs!
+        public bool InsertBoundaryData(IEnumerable<BoundaryConditionSet> boundaryConditionSets, BcBlockData data,
+            string thatcherHarlemanTimeLag = null)
         {
-            if (data == null)
-            {
-                return false;
-            }
+            if (data == null) return false;
 
             // Get matching set for this data from ALL boundaryConditionSets (the other boundaryConditionSets are not used...)
             var selectedSet = GetMatchingBoundaryConditionSet(boundaryConditionSets, data.SupportPoint);
@@ -248,10 +244,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
 
             // If we are filtering on location and the location doesn't match up, return
-            if (LocationFilter != null && !Equals(selectedSet.Feature, LocationFilter))
-            {
-                return false;
-            }
+            if (LocationFilter != null && !Equals(selectedSet.Feature, LocationFilter)) return false;
 
             var skippedAny = false;
 
@@ -263,9 +256,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     return false;
                 }
 
-                if (ExcludedDataTypes != null && ExcludedDataTypes.Contains(forcingTypeDefinition.ForcingType))
+                if (ExcludedDataTypes?.Contains(forcingTypeDefinition.ForcingType) == true)
                 {
-                    Log.Info($"File {data.FilePath}, block starting at line {data.LineNumber}: skipping boundary data of function type {forcingTypeDefinition.ForcingType}.");
+                    Log.Info(
+                        $"File {data.FilePath}, block starting at line {data.LineNumber}: skipping boundary data of function type {forcingTypeDefinition.ForcingType}.");
                     return true;
                 }
 
@@ -297,7 +291,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
                 if (!TryParseOffsetFactor(data, out var offset, out var factor))
                 {
-                    Log.WarnFormat($"File {data.FilePath}, block starting at {data.LineNumber}: offset {data.Offset} or factor {data.Factor} could not be parsed; omitting data block.");
+                    Log.WarnFormat(
+                        $"File {data.FilePath}, block starting at {data.LineNumber}: offset {data.Offset} or factor {data.Factor} could not be parsed; omitting data block.");
                     return false;
                 }
 
@@ -336,24 +331,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
                     foreach (var componentKey in componentKeys)
                     {
-                        if (String.IsNullOrEmpty(componentKey))
+                        if (string.IsNullOrEmpty(componentKey))
                         {
                             flowQuantity = quantityString.ToLower();
                             break;
                         }
+
                         if (Equals(quantityString, componentKey) &&
                             forcingTypeDefinition.ForcingType == BoundaryConditionDataType.Qh)
                         {
-                            flowQuantity =
-                                FlowQuantityKeys.First(kvp => kvp.Value == FlowBoundaryQuantityType.WaterLevel).Key[0];
+                            flowQuantity = QuantityNameToTypeDictionary
+                                .First(kvp => kvp.Value == FlowBoundaryQuantityType.WaterLevel).Key;
                             break;
                         }
-                        if (quantityString.EndsWith(componentKey))
-                        {
-                            flowQuantity =
-                                quantityString.ToLower().Substring(0, quantityString.Length - componentKey.Length).TrimEnd();
-                            break;
-                        }
+
+                        if (!quantityString.EndsWith(componentKey)) continue;
+
+                        flowQuantity =
+                            quantityString.ToLower().Substring(0, quantityString.Length - componentKey.Length)
+                                .TrimEnd();
+                        break;
                     }
 
                     // if we haven't match the quantity, give a warning and continue
@@ -364,31 +361,36 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                             data.FilePath, data.LineNumber, quantity.Quantity);
                         continue;
                     }
-                    
-                    // add component variable
-                    if (FlowQuantityKeys.Keys.SelectMany(a => a).Any(k => flowQuantity.StartsWith(k)))
-                    {
-                        var flowQuantityComponentsPair = FlowQuantityKeys.FirstOrDefault(kvp => kvp.Key.Any(k => flowQuantity == k));
-                        if (flowQuantityComponentsPair.Key == null)
-                            flowQuantityComponentsPair = FlowQuantityKeys.FirstOrDefault(kvp => kvp.Key.Any(k => flowQuantity.StartsWith(k)));
 
-                        int layerIndex;
-                        if (flowQuantityComponentsPair.Key != null && TryParseVerticalPosition(quantity, out layerIndex))
+                    // add component variable
+                    if (QuantityNameToTypeDictionary.Keys.Any(key => flowQuantity.StartsWith(key)))
+                    {
+                        var flowQuantityComponentsPair =
+                            QuantityNameToTypeDictionary.FirstOrDefault(kvp => kvp.Key == flowQuantity);
+                        if (flowQuantityComponentsPair.Key == null)
+                            flowQuantityComponentsPair =
+                                QuantityNameToTypeDictionary.FirstOrDefault(kvp => flowQuantity.StartsWith(kvp.Key));
+
+                        if (flowQuantityComponentsPair.Key != null &&
+                            TryParseVerticalPosition(quantity, out var layerIndex))
                         {
-                            var totalComponents = flowQuantityComponentsPair.Key.Length;
+                            var totalComponents =
+                                QuantityNameToTypeDictionary.Count(kvp =>
+                                    kvp.Value == flowQuantityComponentsPair.Value);
 
                             var existingQuantities = compVariables
                                 .Where(v => v.Key.Item1 == flowQuantityComponentsPair.Value)
                                 .Select(v => v.Value.Quantity)
                                 .Distinct().ToList();
-                            
+
                             var quantityIndex = existingQuantities.IndexOf(quantity.Quantity);
                             if (quantityIndex == -1) quantityIndex = existingQuantities.Count;
-                            
-                            var index = (totalComponents * layerIndex) + quantityIndex;
-                            
+
+                            var index = totalComponents * layerIndex + quantityIndex;
+
                             compVariables.Add(
-                                new System.Tuple<FlowBoundaryQuantityType, int>(flowQuantityComponentsPair.Value, index),
+                                new System.Tuple<FlowBoundaryQuantityType, int>(flowQuantityComponentsPair.Value,
+                                    index),
                                 quantity);
                         }
                         else
@@ -404,7 +406,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         // Note: this is a bloody awful 'lazy' implementation... we can be far more efficient here
                         return false;
                     }
-                    
                 }
 
                 // we now have argVariables and compVariables
@@ -426,7 +427,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     foreach (var quantity in quantityGroup)
                     {
                         var existingConditions = selectedSet.BoundaryConditions.OfType<FlowBoundaryCondition>()
-                            .Where(bc => MatchBoundaryCondition(bc, flowQuantityEnum, quantity.Value, forcingTypeDefinition))
+                            .Where(bc =>
+                                MatchBoundaryCondition(bc, flowQuantityEnum, quantity.Value, forcingTypeDefinition))
                             .ToList();
 
                         boundaryCondition = existingConditions.ElementAtOrDefault(seriesIndex);
@@ -439,23 +441,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         {
                             var timelag = TimeSpan.Zero;
                             if (thatcherHarlemanTimeLag != null)
-                            {
                                 if (double.TryParse(thatcherHarlemanTimeLag, out var timelagdouble))
-                                {
                                     timelag = TimeSpan.FromSeconds(timelagdouble);
-                                }
-                            }
 
-                            boundaryCondition = CreateNewBoundaryCondition(quantity.Value.Quantity, flowQuantityEnum, forcingTypeDefinition.ForcingType, selectedSet.Feature, timelag, quantityGroup);
+                            boundaryCondition = CreateNewBoundaryCondition(quantity.Value.Quantity, flowQuantityEnum,
+                                forcingTypeDefinition.ForcingType, selectedSet.Feature, timelag, quantityGroup);
 
                             if (flowQuantityEnum == FlowBoundaryQuantityType.Tracer)
-                            {
                                 boundaryCondition.TracerName = quantity.Value.TracerName;
-                            }
                         }
                         else
                         {
-                            Log.Warn($"File {data.FilePath}, block starting at line {data.LineNumber}: quantity {quantity.Value} and forcing type {forcingTypeDefinition.ForcingType} do not match given boundary condition.");
+                            Log.Warn(
+                                $"File {data.FilePath}, block starting at line {data.LineNumber}: quantity {quantity.Value} and forcing type {forcingTypeDefinition.ForcingType} do not match given boundary condition.");
                         }
                     }
 
@@ -464,10 +462,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     switch (forcingTypeDefinition.ForcingType)
                     {
                         // adjust boundary condition for correction blocks
-                        case BoundaryConditionDataType.AstroCorrection when boundaryCondition.DataType == BoundaryConditionDataType.AstroComponents:
+                        case BoundaryConditionDataType.AstroCorrection
+                            when boundaryCondition.DataType == BoundaryConditionDataType.AstroComponents:
                             boundaryCondition.DataType = BoundaryConditionDataType.AstroCorrection;
                             break;
-                        case BoundaryConditionDataType.HarmonicCorrection when boundaryCondition.DataType == BoundaryConditionDataType.Harmonics:
+                        case BoundaryConditionDataType.HarmonicCorrection
+                            when boundaryCondition.DataType == BoundaryConditionDataType.Harmonics:
                             boundaryCondition.DataType = BoundaryConditionDataType.HarmonicCorrection;
                             break;
                     }
@@ -518,10 +518,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
                         var verticalProfileIndex = boundaryCondition.DataPointIndices.IndexOf(dataPoint);
                         if (!boundaryCondition.IsVerticallyUniform)
-                        {
                             boundaryCondition.PointDepthLayerDefinitions[verticalProfileIndex] =
                                 verticalProfileDefinition;
-                        }
 
                         // TODO: move this code to vertical profile (see TOOLS-21777)
                         boundaryCondition.VerticalInterpolationType = verticalInterpolationType;
@@ -537,8 +535,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
                                 var type = forcingTypeDefinition.ForcingType ==
                                            BoundaryConditionDataType.AstroCorrection
-                                    ? typeof (string)
-                                    : typeof (double);
+                                    ? typeof(string)
+                                    : typeof(double);
 
                                 var parsedArgumentValues = ParseValues(argVariables[0], type).ToList();
 
@@ -547,12 +545,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                                 foreach (var comp in quantityGroup)
                                 {
                                     var k = comp.Key.Item2;
-                                    var l = (k%2 == 0) ? 2*k + 2 : 2*k + 1;
+                                    var l = k % 2 == 0 ? 2 * k + 2 : 2 * k + 1;
                                     var variable = existingData.Components[l];
                                     var variableValues = variable.GetValues<double>().ToList();
                                     var values = ParseValues(comp.Value, variable.ValueType).ToList();
 
-                                    for (int i = 0; i < parsedArgumentValues.Count; ++i)
+                                    for (var i = 0; i < parsedArgumentValues.Count; ++i)
                                     {
                                         var index = indexMapping[i];
 
@@ -562,6 +560,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
                                         variableValues[index] = (double) values[i];
                                     }
+
                                     variable.Values.Clear();
                                     FunctionHelper.SetValuesRaw<double>(variable, variableValues);
                                 }
@@ -574,9 +573,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                                     variable.Values.Clear();
                                     variable.SetValues(ParseValues(arg.Value, variable.ValueType));
                                     if (variable is IVariable<DateTime>)
-                                    {
                                         variable.InterpolationType = timeInterpolationType;
-                                    }
                                 }
 
                                 foreach (var comp in quantityGroup)
@@ -585,26 +582,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                                     variable.SetValues(ParseValues(comp.Value, variable.ValueType));
                                 }
                             }
+
                             existingData.EndEdit();
                         }
                         catch (Exception)
                         {
-                            if (addedData)
-                            {
-                                boundaryCondition.DataPointIndices.Remove(dataPoint);
-                            }
+                            if (addedData) boundaryCondition.DataPointIndices.Remove(dataPoint);
                             throw;
                         }
                     }
+
                     if (!selectedSet.BoundaryConditions.Contains(boundaryCondition))
-                    {
                         selectedSet.BoundaryConditions.Add(boundaryCondition);
-                    }
                 }
             }
+
             // If the data block is not completely used, the logic should go through this data block again.
             // So if any blocks are skipped, return false so it is not removed from the list of blocks to go through.
-            return !skippedAny; 
+            return !skippedAny;
         }
 
         private static bool IsCorrectionDataType(ForcingTypeDefinition forcingTypeDefinition)
@@ -615,7 +610,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                    BoundaryConditionDataType.HarmonicCorrection;
         }
 
-        private static BoundaryConditionSet GetMatchingBoundaryConditionSet(IEnumerable<BoundaryConditionSet> boundaryConditionSets, string supportPointName)
+        private static BoundaryConditionSet GetMatchingBoundaryConditionSet(
+            IEnumerable<BoundaryConditionSet> boundaryConditionSets, string supportPointName)
         {
             return boundaryConditionSets.FirstOrDefault(
                 bcs => bcs.SupportPointNames.Contains(supportPointName)
@@ -625,31 +621,31 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private static void LogWarningParsePropertyFailed(BcBlockData data, string propertyName, string propertyValue)
         {
             Log.Warn(
-                $"File {data.FilePath}, block starting at line {data.LineNumber}: {propertyName} {propertyName} could not be parsed; omitting data block.");
+                $"File {data.FilePath}, block starting at line {data.LineNumber}: {propertyName} {propertyValue} could not be parsed; omitting data block.");
         }
 
-        protected virtual FlowBoundaryCondition CreateNewBoundaryCondition(string quantityName, FlowBoundaryQuantityType flowQuantityEnum, BoundaryConditionDataType forcingType, Feature2D feature, TimeSpan timelag, IGrouping<FlowBoundaryQuantityType, KeyValuePair<System.Tuple<FlowBoundaryQuantityType, int>, BcQuantityData>> grouping)
+        protected virtual FlowBoundaryCondition CreateNewBoundaryCondition(string quantityName,
+            FlowBoundaryQuantityType flowQuantityEnum, BoundaryConditionDataType forcingType, Feature2D feature,
+            TimeSpan timelag,
+            IGrouping<FlowBoundaryQuantityType,
+                KeyValuePair<System.Tuple<FlowBoundaryQuantityType, int>, BcQuantityData>> grouping)
         {
             var boundaryCondition = new FlowBoundaryCondition(flowQuantityEnum, forcingType)
             {
                 Feature = feature,
                 ThatcherHarlemanTimeLag = timelag,
-                SedimentFractionNames = GetFractionNames(grouping).ToList(),
+                SedimentFractionNames = GetFractionNames(grouping).ToList()
             };
 
             if (flowQuantityEnum != FlowBoundaryQuantityType.SedimentConcentration) return boundaryCondition;
 
-            var flowQuantityComponentsPair = FlowQuantityKeys.FirstOrDefault(kvp => kvp.Key.Any(k => quantityName.Equals(k)));
+            var flowQuantityComponentsPair =
+                QuantityNameToTypeDictionary.FirstOrDefault(kvp => kvp.Key.Equals(quantityName));
             if (flowQuantityComponentsPair.Key == null)
-            {
-                flowQuantityComponentsPair = FlowQuantityKeys.FirstOrDefault(kvp => kvp.Key.Any(k => quantityName.StartsWith(k)));
-            }
+                flowQuantityComponentsPair =
+                    QuantityNameToTypeDictionary.FirstOrDefault(kvp => quantityName.StartsWith(kvp.Key));
 
             if (flowQuantityComponentsPair.Key == null) return boundaryCondition;
-
-            var matchingQuantity = flowQuantityComponentsPair.Key.FirstOrDefault(k => quantityName.StartsWith(k));
-
-            if (matchingQuantity == null) return boundaryCondition;
 
             var fractionName = GetFractionNameFromQuantityName(quantityName);
             boundaryCondition.SedimentFractionName = fractionName;
@@ -662,10 +658,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             return quantityName.Replace(ExtForceQuantNames.ConcentrationAtBound, string.Empty);
         }
 
-        private IEnumerable<string> GetFractionNames(IGrouping<FlowBoundaryQuantityType, KeyValuePair<System.Tuple<FlowBoundaryQuantityType, int>, BcQuantityData>> quantityGroup)
+        private IEnumerable<string> GetFractionNames(
+            IGrouping<FlowBoundaryQuantityType,
+                KeyValuePair<System.Tuple<FlowBoundaryQuantityType, int>, BcQuantityData>> quantityGroup)
         {
             return quantityGroup.Key == FlowBoundaryQuantityType.MorphologyBedLoadTransport
-                ? quantityGroup.Select(qg => qg.Value).Select(q => q.Quantity.Replace(BcmFileFlowBoundaryDataBuilder.BedLoadAtBound, String.Empty))
+                ? quantityGroup.Select(qg => qg.Value).Select(q =>
+                    q.Quantity.Replace(BcmFileFlowBoundaryDataBuilder.BedLoadAtBound, string.Empty))
                 : Enumerable.Empty<string>();
         }
 
@@ -674,31 +673,30 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             if (bc.FlowQuantity != quantity) return false;
 
-            if (bc.FlowQuantity == FlowBoundaryQuantityType.Tracer && quantityData.TracerName != bc.TracerName)
-                return false;
-
-            if (bc.FlowQuantity == FlowBoundaryQuantityType.SedimentConcentration && GetFractionNameFromQuantityName(quantityData.Quantity) != bc.SedimentFractionName)
-                return false;
-
-            if (forcingTypeDefinition.ForcingType == BoundaryConditionDataType.AstroCorrection)
+            switch (bc.FlowQuantity)
             {
-                return bc.DataType == BoundaryConditionDataType.AstroComponents ||
-                       bc.DataType == BoundaryConditionDataType.AstroCorrection;
+                case FlowBoundaryQuantityType.Tracer when quantityData.TracerName != bc.TracerName:
+                case FlowBoundaryQuantityType.SedimentConcentration when GetFractionNameFromQuantityName(quantityData.Quantity) != bc.SedimentFractionName:
+                    return false;
             }
 
-            if (forcingTypeDefinition.ForcingType == BoundaryConditionDataType.HarmonicCorrection)
+            switch (forcingTypeDefinition.ForcingType)
             {
-                return bc.DataType == BoundaryConditionDataType.Harmonics ||
-                       bc.DataType == BoundaryConditionDataType.HarmonicCorrection;
+                case BoundaryConditionDataType.AstroCorrection:
+                    return bc.DataType == BoundaryConditionDataType.AstroComponents ||
+                           bc.DataType == BoundaryConditionDataType.AstroCorrection;
+                case BoundaryConditionDataType.HarmonicCorrection:
+                    return bc.DataType == BoundaryConditionDataType.Harmonics ||
+                           bc.DataType == BoundaryConditionDataType.HarmonicCorrection;
+                default:
+                    return bc.DataType == forcingTypeDefinition.ForcingType;
             }
-
-            return bc.DataType == forcingTypeDefinition.ForcingType;
         }
 
         public IEnumerable<BcBlockData> CreateBlockData(FlowBoundaryCondition boundaryCondition,
             IEnumerable<string> supportPointNames, DateTime? refDate, int seriesIndex = 0, bool correctionFile = false)
         {
-
+            supportPointNames = supportPointNames.ToList();
             foreach (var dataPointIndex in boundaryCondition.DataPointIndices)
             {
                 var supportPoint = supportPointNames.ElementAt(dataPointIndex);
@@ -706,13 +704,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
                 if (PopulateBcBlockData(boundaryCondition, dataPointIndex, supportPoint,
                     refDate, seriesIndex, correctionFile, bcBlockData))
-                {
                     yield return bcBlockData;
-                }
                 else
-                {
                     yield return null;
-                }
             }
         }
 
@@ -723,12 +717,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private static bool TryParseSeriesIndex(BcBlockData blockData, out int index)
         {
-            if (blockData.SeriesIndex == null)
-            {
-                index = 1;
-                return true;
-            }
-            return Int32.TryParse(blockData.SeriesIndex, out index);
+            if (blockData.SeriesIndex != null) return int.TryParse(blockData.SeriesIndex, out index);
+
+            index = 1;
+            return true;
         }
 
         private static bool TryParseOffsetFactor(BcBlockData data, out double offset, out double factor)
@@ -743,6 +735,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 offsetParsed = double.TryParse(data.Offset, out offset);
             }
+
             bool factorParsed;
             if (data.Factor == null)
             {
@@ -753,48 +746,49 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 factorParsed = double.TryParse(data.Factor, out factor);
             }
+
             return offsetParsed && factorParsed;
         }
 
-        private static bool TryParseDepthLayerDefinition(BcBlockData data, out VerticalProfileDefinition depthLayerDefinition)
+        private static bool TryParseDepthLayerDefinition(BcBlockData data,
+            out VerticalProfileDefinition depthLayerDefinition)
         {
             if (data.VerticalPositionType == null)
             {
                 depthLayerDefinition = new VerticalProfileDefinition();
                 return true;
             }
+
             var verticalPositionType = data.VerticalPositionType.ToLower();
             if (VerticalDefinitionKeys.ContainsKey(verticalPositionType))
             {
                 var type = VerticalDefinitionKeys[verticalPositionType];
-                var depths = Enumerable.Empty<double>();
+                var depths = new List<double>();
                 if (type != VerticalProfileType.Uniform && type != VerticalProfileType.TopBottom)
                 {
-                    depths = data.VerticalPositionDefinition.Split().Select(Double.Parse).ToList();
+                    depths = data.VerticalPositionDefinition.Split().Select(double.Parse).ToList();
                     var sortedDepths = VerticalProfileDefinition.SortDepths(depths, type);
                     if (!depths.SequenceEqual(sortedDepths))
-                    {
                         Log.WarnFormat(
                             "File {0}, block starting at line {1}: vertical profile depths not correctly ordered; omitting data block.",
                             data.FilePath, data.LineNumber);
-                    }
                 }
-                
+
                 depthLayerDefinition = VerticalProfileDefinition.Create(type, depths);
             }
             else
             {
                 depthLayerDefinition = null;
             }
+
             return depthLayerDefinition != null;
         }
 
         private static string VerticalProfileTypeString(VerticalProfileType type)
         {
             if (VerticalDefinitionKeys.Values.Contains(type))
-            {
                 return VerticalDefinitionKeys.First(kvp => kvp.Value == type).Key;
-            }
+
             throw new NotImplementedException("Vertical profile definition " + type +
                                               " not supported by bc file writer");
         }
@@ -803,14 +797,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             if (verticalProfile.Type == VerticalProfileType.Uniform ||
                 verticalProfile.Type == VerticalProfileType.TopBottom)
-            {
                 return null;
-            }
+
             using (CultureUtils.SwitchToInvariantCulture())
             {
-                return String.Join(" ", verticalProfile.SortedPointDepths.Select(d => d.ToString()));
+                return string.Join(" ", verticalProfile.SortedPointDepths.Select(d => d.ToString()));
             }
-
         }
 
         private static bool TryParseVerticalPosition(BcQuantityData quantityData, out int layerIndex)
@@ -820,35 +812,35 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 layerIndex = 0;
                 return true;
             }
-            var result=Int32.TryParse(quantityData.VerticalPosition, out layerIndex);
-            if (result)
-            {
-                layerIndex -= 1; //to C-style indexing
-            }
+
+            var result = int.TryParse(quantityData.VerticalPosition, out layerIndex);
+            if (result) layerIndex -= 1; //to C-style indexing
             return result;
         }
 
 
-        private static bool TryParseVerticalInterpolationType(BcBlockData data, out VerticalInterpolationType verticalInterpolationType)
+        private static bool TryParseVerticalInterpolationType(BcBlockData data,
+            out VerticalInterpolationType verticalInterpolationType)
         {
             var interpolationType = data.VerticalInterpolationType;
-            if (String.IsNullOrEmpty(interpolationType) || interpolationType.ToLower() == "linear")
+            if (string.IsNullOrEmpty(interpolationType) || interpolationType.ToLower() == "linear")
             {
                 verticalInterpolationType = VerticalInterpolationType.Linear;
                 return true;
             }
-            if (interpolationType.ToLower() == "block")
+
+            switch (interpolationType.ToLower())
             {
-                verticalInterpolationType = VerticalInterpolationType.Step;
-                return true;
+                case "block":
+                    verticalInterpolationType = VerticalInterpolationType.Step;
+                    return true;
+                case "log":
+                    verticalInterpolationType = VerticalInterpolationType.Logarithmic;
+                    return true;
+                default:
+                    verticalInterpolationType = VerticalInterpolationType.Uniform;
+                    return false;
             }
-            if (interpolationType.ToLower() == "log")
-            {
-                verticalInterpolationType = VerticalInterpolationType.Logarithmic;
-                return true;
-            }
-            verticalInterpolationType = VerticalInterpolationType.Uniform;
-            return false;
         }
 
 
@@ -866,25 +858,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     return null;
                 default:
                     throw new NotImplementedException(
-                        String.Format("Vertical interpolation type {0} not supported by bc file writer.",
-                                      verticalInterpolationType));
+                        $"Vertical interpolation type {verticalInterpolationType} not supported by bc file writer.");
             }
         }
 
 
         private static bool TryParseTimeInterpolationType(BcBlockData data, out InterpolationType interpolationType)
         {
-            if (String.IsNullOrEmpty(data.TimeInterpolationType) || data.TimeInterpolationType.ToLower() == "linear")
+            if (string.IsNullOrEmpty(data.TimeInterpolationType) || data.TimeInterpolationType.ToLower() == "linear")
             {
                 interpolationType = InterpolationType.Linear;
                 return true;
             }
+
             if (data.TimeInterpolationType.ToLower().Contains("block"))
             {
                 //TODO: implement this correctly
                 interpolationType = InterpolationType.Constant;
                 return true;
             }
+
             interpolationType = InterpolationType.None;
             return false;
         }
@@ -905,78 +898,64 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         protected virtual IEnumerable<object> ParseValues(BcQuantityData data, Type type)
         {
             IEnumerable<string> stringValues = data.Values;
-            string format = data.Unit;
-            if (type == typeof (DateTime))
+            var format = data.Unit;
+            if (type == typeof(DateTime))
             {
-                if (String.IsNullOrEmpty(format) || format == "-")
-                {
+                if (string.IsNullOrEmpty(format) || format == "-")
                     return
                         stringValues.Select(s => DateTime.ParseExact(s, "yyyyMMddHHmmss", CultureInfo.InvariantCulture))
                             .Cast<object>();
-                }
+
                 var splittedFormat = format.Split().ToList();
                 if (splittedFormat[1] == "since")
                 {
                     var dateString = string.Join(" ", splittedFormat.Skip(2));
-                    DateTime startDate;
 
                     var succes = DateTime.TryParseExact(dateString, "yyyy-MM-dd", CultureInfo.InvariantCulture,
-                        DateTimeStyles.AdjustToUniversal, out startDate);
+                        DateTimeStyles.AdjustToUniversal, out var startDate);
 
                     if (!succes)
-                    {
                         succes = DateTime.TryParseExact(dateString, "yyyy-MM-dd hh:mm:ss",
                             CultureInfo.InvariantCulture,
                             DateTimeStyles.AdjustToUniversal, out startDate);
-                    }
 
                     if (!succes)
-                    {
                         throw new FormatException("Time format " + dateString + " is not supported by bc file parser");
-                    }
-                    if (splittedFormat[0].ToLower() == "seconds")
+
+                    switch (splittedFormat[0].ToLower())
                     {
-                        return
-                            stringValues.Select(s => startDate + new TimeSpan(0, 0, 0, Convert.ToInt32(double.Parse(s))))
+                        case "seconds":
+                            return stringValues
+                                .Select(s => startDate + new TimeSpan(0, 0, 0, Convert.ToInt32(double.Parse(s))))
                                 .Cast<object>();
-                    }
-                    if (splittedFormat[0].ToLower() == "minutes")
-                    {
-                        return
-                            stringValues.Select(s => startDate + new TimeSpan(0, 0, Convert.ToInt32(double.Parse(s)), 0))
+                        case "minutes":
+                            return stringValues
+                                .Select(s => startDate + new TimeSpan(0, 0, Convert.ToInt32(double.Parse(s)), 0))
                                 .Cast<object>();
-                    }
-                    if (splittedFormat[0].ToLower() == "hours")
-                    {
-                        return
-                            stringValues.Select(s => startDate + new TimeSpan(0, Convert.ToInt32(double.Parse(s)), 0, 0))
+                        case "hours":
+                            return stringValues
+                                .Select(s => startDate + new TimeSpan(0, Convert.ToInt32(double.Parse(s)), 0, 0))
                                 .Cast<object>();
-                    }
-                    if (splittedFormat[0].ToLower() == "days")
-                    {
-                        return
-                            stringValues.Select(s => startDate + new TimeSpan(Convert.ToInt32(double.Parse(s)), 0, 0, 0))
+                        case "days":
+                            return stringValues
+                                .Select(s => startDate + new TimeSpan(Convert.ToInt32(double.Parse(s)), 0, 0, 0))
                                 .Cast<object>();
                     }
                 }
             }
-            if (type == typeof (string))
-            {
-                return stringValues;
-            }
-            if (type == typeof (double))
-            {
-                if (format != null && format.ToLower().Equals("minutes"))
-                {
-                    return
-                        stringValues.Select(double.Parse)
-                            .Select(FlowBoundaryCondition.GetFrequencyInDegPerHour)
-                            .Cast<object>();
-                }
-                return stringValues.Select(double.Parse).Cast<object>();
-            }
-            throw new ArgumentException(String.Format("Value type {0} with unit {1} not supported by bc file parser.",
-                type, format));
+
+            if (type == typeof(string)) return stringValues;
+
+            if (type != typeof(double))
+                throw new ArgumentException($"Value type {type} with unit {format} not supported by bc file parser.");
+
+            if (format?.ToLower().Equals("minutes") == true)
+                return
+                    stringValues.Select(double.Parse)
+                        .Select(FlowBoundaryCondition.GetFrequencyInDegPerHour)
+                        .Cast<object>();
+
+            return stringValues.Select(double.Parse).Cast<object>();
         }
 
         protected virtual BcBlockData CreateBlockData(FlowBoundaryCondition boundaryCondition, string supportPoint)
@@ -992,9 +971,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             // Inconsistency in kernel: for discharges it expects a single support point name...
             if (boundaryCondition.FlowQuantity == FlowBoundaryQuantityType.Discharge)
-            {
                 bcBlockData.SupportPoint = supportPoint;
-            }
 
             var forcingTypeDefinition = CreateForcingTypeDefinition(boundaryCondition, index, correctionFile);
 
@@ -1017,6 +994,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 functionType =
                     ForcingTypeDefinitions.First(kvp => kvp.Value.ForcingType == forcingType).Key;
             }
+
             if (CorrectionTypes.Values.Contains(forcingType) && correctionFile)
             {
                 forcingType = CorrectionTypes.First(kvp => kvp.Value == forcingType).Key;
@@ -1026,16 +1004,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             bcBlockData.FunctionType = functionType;
 
-            if (seriesIndex > 0)
-            {
-                bcBlockData.SeriesIndex = (seriesIndex + 1).ToString(); //to one-based index.
-            }
+            if (seriesIndex > 0) bcBlockData.SeriesIndex = (seriesIndex + 1).ToString(); //to one-based index.
 
             var data = boundaryCondition.GetDataAtPoint(index);
 
-            var timeArgument = data.Arguments.FirstOrDefault() as IVariable<DateTime>;
-
-            bcBlockData.TimeInterpolationType = timeArgument == null
+            bcBlockData.TimeInterpolationType = !(data.Arguments.FirstOrDefault() is IVariable<DateTime> timeArgument)
                 ? null
                 : TimeInterpolationString(timeArgument.InterpolationType);
 
@@ -1056,13 +1029,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
 
             if (boundaryCondition.Offset != 0)
-            {
                 bcBlockData.Offset = string.Format("{0:0.0000000e+00}", boundaryCondition.Offset);
-            }
             if (boundaryCondition.Factor != 1)
-            {
                 bcBlockData.Factor = string.Format("{0:0.0000000e+00}", boundaryCondition.Factor);
-            }
 
             var i = 0;
             foreach (var argument in data.Arguments)
@@ -1071,62 +1040,58 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 bcBlockData.Quantities.Add(CreateBcQuantityDataForArgument(quantity, argument, referenceTime));
             }
 
-            var skipCorrection = BcFile.IsCorrectionType(((IBoundaryCondition) boundaryCondition).DataType) && !correctionFile;
-            var skipSignal = BcFile.IsCorrectionType(((IBoundaryCondition) boundaryCondition).DataType) && correctionFile;
+            var skipCorrection = BcFile.IsCorrectionType(((IBoundaryCondition) boundaryCondition).DataType) &&
+                                 !correctionFile;
+            var skipSignal = BcFile.IsCorrectionType(((IBoundaryCondition) boundaryCondition).DataType) &&
+                             correctionFile;
 
             var componentCount = forcingTypeDefinition.ComponentDefinitions.Count();
-            if (skipCorrection || skipSignal)
-            {
-                componentCount += 2;
-            }
-            if (!FlowQuantityKeys.Values.Contains(boundaryCondition.FlowQuantity))
-            {
+            if (skipCorrection || skipSignal) componentCount += 2;
+            if (!QuantityNameToTypeDictionary.Values.Contains(boundaryCondition.FlowQuantity))
                 Log.WarnFormat("Flow quantity {0} not supported by bc file writer", boundaryCondition.FlowQuantity);
-            }
-            var flowVariables = FlowQuantityKeys.First(kvp => kvp.Value == boundaryCondition.FlowQuantity).Key;
-            var variableCount = flowVariables.Count();
-            var componentsPerLayer = componentCount*variableCount;
+
+            var flowVariables = QuantityNameToTypeDictionary.Where(kvp => kvp.Value == boundaryCondition.FlowQuantity)
+                .Select(kvp => kvp.Key)
+                .ToList();
+            var variableCount = flowVariables.Count;
+            var componentsPerLayer = componentCount * variableCount;
 
             var j = 0;
 
             foreach (var component in data.Components)
             {
-                var componentIndex = j%componentCount;
+                var componentIndex = j % componentCount;
 
-                if ((skipSignal && componentIndex < 2) || (skipCorrection && componentIndex > 1))
+                if (skipSignal && componentIndex < 2 || skipCorrection && componentIndex > 1)
                 {
                     j++;
                     continue;
                 }
 
-                var variableIndex = (j%componentsPerLayer)/componentCount;
-                var layerIndex = j/componentsPerLayer + 1; //one-based indexing
+                var variableIndex = j % componentsPerLayer / componentCount;
+                var layerIndex = j / componentsPerLayer + 1; //one-based indexing
                 j++;
 
                 var componentString =
-                    forcingTypeDefinition.ComponentDefinitions[skipSignal ? (componentIndex - 2) : componentIndex];
+                    forcingTypeDefinition.ComponentDefinitions[skipSignal ? componentIndex - 2 : componentIndex];
 
-                var quantityString = String.IsNullOrEmpty(componentString)
+                var quantityString = string.IsNullOrEmpty(componentString)
                     ? flowVariables[variableIndex]
-                    : (flowVariables[variableIndex] + " " + componentString);
-                if (boundaryCondition.DataType == BoundaryConditionDataType.Qh)
+                    : flowVariables[variableIndex] + " " + componentString;
+                if (boundaryCondition.DataType == BoundaryConditionDataType.Qh) quantityString = componentString;
+                switch (boundaryCondition.FlowQuantity)
                 {
-                    quantityString = componentString;
+                    case FlowBoundaryQuantityType.Tracer:
+                        quantityString = quantityString + boundaryCondition.TracerName;
+                        break;
+                    case FlowBoundaryQuantityType.SedimentConcentration when boundaryCondition.DataType == BoundaryConditionDataType.TimeSeries:
+                        quantityString = quantityString + boundaryCondition.SedimentFractionName;
+                        break;
+                    case FlowBoundaryQuantityType.MorphologyBedLoadTransport when boundaryCondition.DataType == BoundaryConditionDataType.TimeSeries:
+                        quantityString = quantityString + component.Name;
+                        break;
                 }
-                if (boundaryCondition.FlowQuantity == FlowBoundaryQuantityType.Tracer)
-                {
-                    quantityString = quantityString + boundaryCondition.TracerName;
-                }
-                if (boundaryCondition.FlowQuantity == FlowBoundaryQuantityType.SedimentConcentration
-                    && boundaryCondition.DataType == BoundaryConditionDataType.TimeSeries)
-                {
-                    quantityString = quantityString + boundaryCondition.SedimentFractionName;
-                }
-                if (boundaryCondition.FlowQuantity == FlowBoundaryQuantityType.MorphologyBedLoadTransport
-                    && boundaryCondition.DataType == BoundaryConditionDataType.TimeSeries)
-                {
-                    quantityString = quantityString + component.Name;
-                }
+
                 bcBlockData.Quantities.Add(new BcQuantityData
                 {
                     Quantity = quantityString,
@@ -1139,18 +1104,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             return true;
         }
 
-        private static ForcingTypeDefinition CreateForcingTypeDefinition(FlowBoundaryCondition boundaryCondition, int index, bool correctionFile)
+        private static ForcingTypeDefinition CreateForcingTypeDefinition(FlowBoundaryCondition boundaryCondition,
+            int index, bool correctionFile)
         {
             var dataType = boundaryCondition.DataType;
 
             if (dataType == BoundaryConditionDataType.AstroCorrection && !correctionFile)
-            {
                 dataType = BoundaryConditionDataType.AstroComponents;
-            }
             if (dataType == BoundaryConditionDataType.HarmonicCorrection && correctionFile)
-            {
                 dataType = BoundaryConditionDataType.Harmonics;
-            }
 
             var forcingTypeDefinitions =
                 ForcingTypeDefinitions.Values.Where(ftd => ftd.ForcingType == dataType).ToList();
@@ -1158,38 +1120,44 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             ForcingTypeDefinition forcingTypeDefinition;
 
             // The 2d version comes first, the 3d version afterwards
-            if (forcingTypeDefinitions.Count() > 1)
+            if (forcingTypeDefinitions.Count > 1)
             {
                 if (boundaryCondition.GetDepthLayerDefinitionAtPoint(index) == null ||
                     boundaryCondition.GetDepthLayerDefinitionAtPoint(index).Type == VerticalProfileType.Uniform)
-                {
                     forcingTypeDefinition = forcingTypeDefinitions[0];
-                }
                 else
-                {
                     forcingTypeDefinition = forcingTypeDefinitions[1];
-                }
             }
             else
             {
                 forcingTypeDefinition = forcingTypeDefinitions.FirstOrDefault();
             }
+
             return forcingTypeDefinition;
         }
 
-        protected virtual BcQuantityData CreateBcQuantityDataForArgument(string quantity, IVariable argument, DateTime? referenceTime)
+        protected virtual BcQuantityData CreateBcQuantityDataForArgument(string quantity, IVariable argument,
+            DateTime? referenceTime)
         {
-            var unit = argument.Unit == null ? null : argument.Unit.Symbol;
+            var unit = argument.Unit?.Symbol;
             Func<double, double> converter = null;
             if (argument.ValueType == typeof(DateTime) && referenceTime != null)
-            {
                 unit = "seconds since " + referenceTime.Value.ToString("yyyy-MM-dd HH:mm:ss");
-            }
-            if (argument.ValueType == typeof (double) && unit.ToLower() == "deg/h") //convert frequencies to periods...
+
+            if (argument.ValueType != typeof(double) || unit.ToLower() != "deg/h")
             {
-                unit = "minutes";
-                converter = FlowBoundaryCondition.GetPeriodInMinutes;
+                return CreateBcQuantityData(quantity, argument, referenceTime, unit, converter);
             }
+
+            unit = "minutes";
+            converter = FlowBoundaryCondition.GetPeriodInMinutes;
+
+            return CreateBcQuantityData(quantity, argument, referenceTime, unit, converter);
+        }
+
+        private BcQuantityData CreateBcQuantityData(string quantity, IVariable argument, DateTime? referenceTime, string unit,
+            Func<double, double> converter)
+        {
             return new BcQuantityData
             {
                 Quantity = quantity,
@@ -1201,36 +1169,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         protected virtual IEnumerable<string> PrintValues(IVariable variable, DateTime? referenceTime,
             Func<double, double> converter)
         {
-            if (variable.ValueType == typeof (string))
+            if (variable.ValueType == typeof(string)) return variable.GetValues<string>();
+
+            if (variable.ValueType == typeof(double))
             {
-                return variable.GetValues<string>();
+                return converter == null ? variable.GetValues<double>().Select(d => d.ToString(CultureInfo.InvariantCulture)) : variable.GetValues<double>().Select(d => converter(d).ToString(CultureInfo.InvariantCulture));
             }
-            if (variable.ValueType == typeof (double))
-            {
-                if (converter == null)
-                {
-                    return variable.GetValues<double>().Select(d => d.ToString(CultureInfo.InvariantCulture));
-                }
-                else
-                {
-                    return variable.GetValues<double>().Select(d => converter(d).ToString(CultureInfo.InvariantCulture));
-                }
-            }
-            if (variable.ValueType == typeof (DateTime))
-            {
-                if (referenceTime == null)
-                {
-                    return variable.GetValues<DateTime>().Select(d => d.ToString("yyyyMMddHHmmss"));
-                }
-                return
-                    variable.GetValues<DateTime>()
-                        .Select(d => (d - referenceTime.Value).TotalSeconds)
-                        .Select(m => m.ToString(CultureInfo.InvariantCulture));
-            }
-            return Enumerable.Empty<string>();
+
+            if (variable.ValueType != typeof(DateTime)) return Enumerable.Empty<string>();
+
+            if (referenceTime == null)
+                return variable.GetValues<DateTime>().Select(d => d.ToString("yyyyMMddHHmmss"));
+
+            return
+                variable.GetValues<DateTime>()
+                    .Select(d => (d - referenceTime.Value).TotalSeconds)
+                    .Select(m => m.ToString(CultureInfo.InvariantCulture));
         }
 
-        public void InsertEmptyBoundaryData(List<BoundaryConditionSet> bcSets, FlowBoundaryQuantityType flowBoundaryQuantityType)
+        public void InsertEmptyBoundaryData(List<BoundaryConditionSet> bcSets,
+            FlowBoundaryQuantityType flowBoundaryQuantityType)
         {
             // Get matching set for this data from ALL boundaryConditionSets (the other boundaryConditionSets are not used...)
             var selectedSet = bcSets.FirstOrDefault();
@@ -1241,29 +1199,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
 
             // If we are filtering on location and the location doesn't match up, return
-            if (LocationFilter != null && !Equals(selectedSet.Feature, LocationFilter))
+            if (LocationFilter != null && !Equals(selectedSet.Feature, LocationFilter)) return;
+
+            // parse and validate forcingType
+            if (ExcludedDataTypes?.Contains(BoundaryConditionDataType.Empty) == true)
             {
+                Log.InfoFormat("Skipping boundary data of function type {0}.", BoundaryConditionDataType.Empty);
                 return;
             }
-            
-                // parse and validate forcingType
-                if (ExcludedDataTypes != null && ExcludedDataTypes.Contains(BoundaryConditionDataType.Empty))
-                {
-                    Log.InfoFormat("Skipping boundary data of function type {0}.", BoundaryConditionDataType.Empty);
-                    return ;
-                }
-                FlowBoundaryCondition boundaryCondition =
-                    new FlowBoundaryCondition(flowBoundaryQuantityType,
-                        BoundaryConditionDataType.Empty)
-                    {
-                        Feature = selectedSet.Feature,
-                    };
 
-                if (!selectedSet.BoundaryConditions.Contains(boundaryCondition))
+            var boundaryCondition =
+                new FlowBoundaryCondition(flowBoundaryQuantityType,
+                    BoundaryConditionDataType.Empty)
                 {
-                    selectedSet.BoundaryConditions.Add(boundaryCondition);
-                }
+                    Feature = selectedSet.Feature
+                };
 
+            if (!selectedSet.BoundaryConditions.Contains(boundaryCondition))
+                selectedSet.BoundaryConditions.Add(boundaryCondition);
         }
     }
 }
