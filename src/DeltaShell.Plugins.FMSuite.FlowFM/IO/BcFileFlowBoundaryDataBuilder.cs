@@ -358,21 +358,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     // add component variable
                     if (QuantityNameToTypeDictionary.Keys.Any(key => quantityName.StartsWith(key)))
                     {
-                        var flowQuantityComponentsPair =
+                        var quantityKeyValuePair =
                             QuantityNameToTypeDictionary.FirstOrDefault(kvp => kvp.Key == quantityName);
-                        if (flowQuantityComponentsPair.Key == null)
-                            flowQuantityComponentsPair =
+                        if (quantityKeyValuePair.Key == null)
+                            quantityKeyValuePair =
                                 QuantityNameToTypeDictionary.FirstOrDefault(kvp => quantityName.StartsWith(kvp.Key));
 
-                        if (flowQuantityComponentsPair.Key != null &&
+                        if (quantityKeyValuePair.Key != null &&
                             TryParseVerticalPosition(quantityData, out var layerIndex))
                         {
                             var totalComponents =
                                 QuantityNameToTypeDictionary.Count(kvp =>
-                                    kvp.Value == flowQuantityComponentsPair.Value);
+                                    kvp.Value == quantityKeyValuePair.Value);
 
                             var existingQuantities = compVariables
-                                .Where(v => v.Key.Item1 == flowQuantityComponentsPair.Value)
+                                .Where(v => v.Key.Item1 == quantityKeyValuePair.Value)
                                 .Select(v => v.Value.Quantity)
                                 .Distinct().ToList();
 
@@ -382,15 +382,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                             var index = totalComponents * layerIndex + quantityIndex;
 
                             compVariables.Add(
-                                new System.Tuple<FlowBoundaryQuantityType, int>(flowQuantityComponentsPair.Value,
+                                new System.Tuple<FlowBoundaryQuantityType, int>(quantityKeyValuePair.Value,
                                     index),
                                 quantityData);
                         }
                         else
                         {
-                            Log.WarnFormat(
-                                "File {0}, block starting at line {1}: vertical position {2} could not be parsed; omitting dataBlock column.",
-                                dataBlock.FilePath, dataBlock.LineNumber, quantityData.VerticalPosition);
+                            LogWarningParsePropertyFailed(dataBlock, "vertical position", quantityData.VerticalPosition);
                         }
                     }
                     else
@@ -611,10 +609,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                        || bcs.Feature.Name == supportPointName);
         }
 
-        private static void LogWarningParsePropertyFailed(BcBlockData blockData, string propertyName, string propertyValue)
+        private static void LogWarningParsePropertyFailed(BcBlockData dataBlock, string propertyName, string propertyValue)
         {
             Log.Warn(
-                $"File {blockData.FilePath}, block starting at line {blockData.LineNumber}: {propertyName} {propertyValue} could not be parsed; omitting dataBlock block.");
+                $"File {dataBlock.FilePath}, block starting at line {dataBlock.LineNumber}: {propertyName} {propertyValue} could not be parsed; omitting dataBlock block.");
         }
 
         protected virtual FlowBoundaryCondition CreateNewBoundaryCondition(string quantityName,
@@ -693,24 +691,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             foreach (var dataPointIndex in boundaryCondition.DataPointIndices)
             {
                 var supportPoint = supportPointNames.ElementAt(dataPointIndex);
-                var bcBlockData = CreateBlockData(boundaryCondition, supportPoint);
+                var dataBlock = CreateBlockData(boundaryCondition, supportPoint);
 
                 if (PopulateBcBlockData(boundaryCondition, dataPointIndex, supportPoint,
-                    refDate, seriesIndex, correctionFile, bcBlockData))
-                    yield return bcBlockData;
+                    refDate, seriesIndex, correctionFile, dataBlock))
+                    yield return dataBlock;
                 else
                     yield return null;
             }
         }
 
-        private static bool TryParseForcingType(BcBlockData blockData, out ForcingTypeDefinition forcingType)
+        private static bool TryParseForcingType(BcBlockData dataBlock, out ForcingTypeDefinition forcingType)
         {
-            return ForcingTypeDefinitions.TryGetValue(blockData.FunctionType, out forcingType);
+            return ForcingTypeDefinitions.TryGetValue(dataBlock.FunctionType, out forcingType);
         }
 
-        private static bool TryParseSeriesIndex(BcBlockData blockData, out int index)
+        private static bool TryParseSeriesIndex(BcBlockData dataBlock, out int index)
         {
-            if (blockData.SeriesIndex != null) return int.TryParse(blockData.SeriesIndex, out index);
+            if (dataBlock.SeriesIndex != null) return int.TryParse(dataBlock.SeriesIndex, out index);
 
             index = 1;
             return true;
@@ -960,11 +958,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         }
 
         private bool PopulateBcBlockData(FlowBoundaryCondition boundaryCondition, int index, string supportPoint,
-            DateTime? referenceTime, int seriesIndex, bool correctionFile, BcBlockData bcBlockData)
+            DateTime? referenceTime, int seriesIndex, bool correctionFile, BcBlockData dataBlock)
         {
             // Inconsistency in kernel: for discharges it expects a single support point name...
             if (boundaryCondition.FlowQuantity == FlowBoundaryQuantityType.Discharge)
-                bcBlockData.SupportPoint = supportPoint;
+                dataBlock.SupportPoint = supportPoint;
 
             var forcingTypeDefinition = CreateForcingTypeDefinition(boundaryCondition, index, correctionFile);
 
@@ -995,13 +993,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     ForcingTypeDefinitions.First(kvp => kvp.Value.ForcingType == forcingType).Key;
             }
 
-            bcBlockData.FunctionType = functionType;
+            dataBlock.FunctionType = functionType;
 
-            if (seriesIndex > 0) bcBlockData.SeriesIndex = (seriesIndex + 1).ToString(); //to one-based index.
+            if (seriesIndex > 0) dataBlock.SeriesIndex = (seriesIndex + 1).ToString(); //to one-based index.
 
             var function = boundaryCondition.GetDataAtPoint(index);
 
-            bcBlockData.TimeInterpolationType = !(function.Arguments.FirstOrDefault() is IVariable<DateTime> timeArgument)
+            dataBlock.TimeInterpolationType = !(function.Arguments.FirstOrDefault() is IVariable<DateTime> timeArgument)
                 ? null
                 : TimeInterpolationString(timeArgument.InterpolationType);
 
@@ -1015,22 +1013,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             if (verticalProfileTypeString != null)
             {
-                bcBlockData.VerticalPositionType = verticalProfileTypeString;
-                bcBlockData.VerticalPositionDefinition = VerticalProfileDefinitionString(verticalProfile);
-                bcBlockData.VerticalInterpolationType =
+                dataBlock.VerticalPositionType = verticalProfileTypeString;
+                dataBlock.VerticalPositionDefinition = VerticalProfileDefinitionString(verticalProfile);
+                dataBlock.VerticalInterpolationType =
                     VerticalInterpolationString(boundaryCondition.VerticalInterpolationType);
             }
 
             if (boundaryCondition.Offset != 0)
-                bcBlockData.Offset = string.Format("{0:0.0000000e+00}", boundaryCondition.Offset);
+                dataBlock.Offset = string.Format("{0:0.0000000e+00}", boundaryCondition.Offset);
             if (boundaryCondition.Factor != 1)
-                bcBlockData.Factor = string.Format("{0:0.0000000e+00}", boundaryCondition.Factor);
+                dataBlock.Factor = string.Format("{0:0.0000000e+00}", boundaryCondition.Factor);
 
             var i = 0;
             foreach (var argument in function.Arguments)
             {
                 var quantity = forcingTypeDefinition.ArgumentDefinitions[i++];
-                bcBlockData.Quantities.Add(CreateBcQuantityDataForArgument(quantity, argument, referenceTime));
+                dataBlock.Quantities.Add(CreateBcQuantityDataForArgument(quantity, argument, referenceTime));
             }
 
             var skipCorrection = BcFile.IsCorrectionType(((IBoundaryCondition) boundaryCondition).DataType) &&
@@ -1085,7 +1083,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         break;
                 }
 
-                bcBlockData.Quantities.Add(new BcQuantityData
+                dataBlock.Quantities.Add(new BcQuantityData
                 {
                     Quantity = quantityString,
                     Unit = component.Unit.Symbol,
