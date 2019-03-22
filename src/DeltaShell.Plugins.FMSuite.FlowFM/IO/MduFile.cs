@@ -133,8 +133,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         #region write logic
 
-        public void Write(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, HydroArea hydroArea, IEnumerable<ModelFeatureCoordinateData<FixedWeir>> allFixedWeirsAndCorrespondingProperties,
-        bool switchTo = true, bool writeExtForcings = true, bool writeFeatures = true, bool disableFlowNodeRenumbering = false, ISedimentModelData sedimentModelData = null)
+        public void Write(string targetMduFilePath, 
+                          WaterFlowFMModelDefinition modelDefinition, 
+                          HydroArea hydroArea, 
+                          IEnumerable<ModelFeatureCoordinateData<FixedWeir>> allFixedWeirsAndCorrespondingProperties,
+                          bool switchTo = true, 
+                          bool writeExtForcings = true, 
+                          bool writeFeatures = true, 
+                          bool disableFlowNodeRenumbering = false, 
+                          ISedimentModelData sedimentModelData = null, 
+                          bool writeMorSed = true)
         {
             var targetDir = VerifyTargetDirectory(targetMduFilePath);
             var substitutedPaths = new Dictionary<string, System.Tuple<string, string>>();
@@ -159,7 +167,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 WriteExternalForcings(targetMduFilePath, modelDefinition, hydroArea);
             }
 
-            if (modelDefinition.UseMorphologySediment)
+            if (modelDefinition.UseMorphologySediment && writeMorSed)
             {
                 WriteMorSedFiles(targetMduFilePath, modelDefinition, sedimentModelData);
             }
@@ -168,7 +176,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             var isPartOf1D2DModel = (bool)modelDefinition.GetModelProperty(GuiProperties.PartOf1D2DModel).Value;
           
             // write at the end in case of updated file paths
-            WriteProperties(targetMduFilePath, modelDefinition.Properties, writeExtForcings, writeFeatures, useNetCDFMapFormat:isPartOf1D2DModel, disableFlowNodeRenumbering:disableFlowNodeRenumbering);
+            WriteProperties(targetMduFilePath, 
+                            modelDefinition.Properties, 
+                            writeExtForcings, 
+                            writeFeatures, 
+                            useNetCDFMapFormat:isPartOf1D2DModel,
+                            disableFlowNodeRenumbering:disableFlowNodeRenumbering, 
+                            writeMorSed: writeMorSed);
 
             if (!switchTo)
             {
@@ -180,19 +194,35 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
         }
 
-        public void WriteProperties(string filePath, IEnumerable<WaterFlowFMProperty> modelDefinition, bool writeExtForcings, bool writeFeatures, bool writePartionFile = true, bool useNetCDFMapFormat = false, bool disableFlowNodeRenumbering = false)
+        public void WriteProperties(string filePath,
+                                    IEnumerable<WaterFlowFMProperty> modelDefinition, 
+                                    bool writeExtForcings, bool writeFeatures,
+                                    bool writePartionFile = true,
+                                    bool useNetCDFMapFormat = false, 
+                                    bool disableFlowNodeRenumbering = false,
+                                    bool writeMorSed = true)
         {
             var waterFlowFmProperties = modelDefinition.ToList();
-            WriteMorphologySediment(filePath, waterFlowFmProperties);
+
+            if (writeMorSed)
+                WriteMorphologySediment(filePath, waterFlowFmProperties);
 
             OpenOutputFile(filePath);
             try
             {
-                var propertiesByGroup = GetPropertiesByGroup(waterFlowFmProperties, writeExtForcings, writeFeatures);
+                var propertiesByGroup = GetPropertiesByGroup(waterFlowFmProperties, 
+                                                             writeExtForcings, 
+                                                             writeFeatures,
+                                                             writeMorSed);
                  
                 foreach (var propertyGroup in propertiesByGroup)
                 {
-                    WriteMduLine(writeExtForcings, writeFeatures, writePartionFile, useNetCDFMapFormat, disableFlowNodeRenumbering, propertyGroup);
+                    WriteMduLine(writeExtForcings, 
+                                 writeFeatures, 
+                                 writePartionFile, 
+                                 useNetCDFMapFormat, 
+                                 disableFlowNodeRenumbering, 
+                                 propertyGroup);
                 }
             }
             finally
@@ -419,8 +449,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         }
 
 
-        private void WriteMduLine(bool writeExtForcings, bool writeFeatures, bool writePartionFile, bool useNetCDFMapFormat,
-            bool disableFlowNodeRenumbering, IGrouping<string, WaterFlowFMProperty> propertyGroup)
+        private void WriteMduLine(bool writeExtForcings, 
+                                  bool writeFeatures, 
+                                  bool writePartionFile, 
+                                  bool useNetCDFMapFormat,
+                                  bool disableFlowNodeRenumbering, 
+                                  IGrouping<string, WaterFlowFMProperty> propertyGroup)
         {
             WriteLine("");
             WriteLine("[" + propertyGroup.Key + "]");
@@ -449,7 +483,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
         }
 
-        private IEnumerable<IGrouping<string, WaterFlowFMProperty>> GetPropertiesByGroup(IEnumerable<WaterFlowFMProperty> modelDefinition, bool writeExtForcings, bool writeFeatures)
+        private IEnumerable<IGrouping<string, WaterFlowFMProperty>> GetPropertiesByGroup(IEnumerable<WaterFlowFMProperty> modelDefinition, 
+                                                                                         bool writeExtForcings,
+                                                                                         bool writeFeatures,
+                                                                                         bool writeMorSed)
         {
             WriteLine("# Generated on " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
             WriteLine("# Deltares,Delft3D FM 2018 Suite Version " + FMSuiteFlowModelVersion + ", D-Flow FM Version " +
@@ -466,7 +503,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 .GroupBy(p => p.PropertyDefinition.FileCategoryName);
 
             propertiesByGroup =
-                RemoveMorAndSedPropertiesIfNeeded(propertiesByGroup, modelDefinition, writeExtForcings, writeFeatures);
+                RemoveMorAndSedPropertiesIfNeeded(propertiesByGroup,
+                                                  modelDefinition,
+                                                  writeExtForcings,
+                                                  writeFeatures,
+                                                  writeMorSed);
             return propertiesByGroup;
         }
 
@@ -480,15 +521,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             WriteLine(mduLine.Trim());
         }
 
-        private static IEnumerable<IGrouping<string, WaterFlowFMProperty>> RemoveMorAndSedPropertiesIfNeeded(IEnumerable<IGrouping<string, WaterFlowFMProperty>> propertiesByGroup, IEnumerable<WaterFlowFMProperty> modelDefinition, bool writeExtForcings, bool writeFeatures)
+        private static IEnumerable<IGrouping<string, WaterFlowFMProperty>> RemoveMorAndSedPropertiesIfNeeded(IEnumerable<IGrouping<string, WaterFlowFMProperty>> propertiesByGroup, 
+                                                                                                             IEnumerable<WaterFlowFMProperty> modelDefinition, 
+                                                                                                             bool writeExtForcings, 
+                                                                                                             bool writeFeatures, 
+                                                                                                             bool writeMorSed)
         {
             /* Not include Morphology / Sediment MDUs if UseMorSed has not been selected */
             propertiesByGroup = propertiesByGroup.Where(p => !p.Key.Equals(KnownProperties.morphology));
             var useMorSedProp = modelDefinition.FirstOrDefault(md => md.PropertyDefinition.MduPropertyName == "UseMorSed");
             if (useMorSedProp != null)
             {
-                int useMorSed;
-                if ( int.TryParse(GetPropertyValue(useMorSedProp, writeExtForcings, writeFeatures), out useMorSed) && useMorSed != 1)
+                if (!writeMorSed ||
+                    int.TryParse(GetPropertyValue(useMorSedProp, writeExtForcings, writeFeatures), out var useMorSed) && useMorSed != 1 )
                 {
                     propertiesByGroup = propertiesByGroup.Where(p => !p.Key.Equals(KnownProperties.sediment));
                 }

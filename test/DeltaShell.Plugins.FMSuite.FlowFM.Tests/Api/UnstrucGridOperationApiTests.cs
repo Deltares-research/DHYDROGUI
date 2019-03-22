@@ -81,7 +81,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         /// </summary>
         [Test]
         [Category(TestCategory.Slow)]
-        [Category(TestCategory.Jira)] // D3DFMIQ-471
         public void GivenAnFMModelWithAMorphologyBoundary_WhenGridSnappingIsCalled_ThenMorphologyShouldBeRemovedFromSmallExport()
         {
             var srcNetFile = TestHelper.GetTestFilePath(@"basicGrid\basicGrid_net.nc");
