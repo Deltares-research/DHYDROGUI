@@ -2,6 +2,7 @@
 using System.Linq;
 using DelftTools.TestUtils;
 using DelftTools.Units;
+using DelftTools.Utils.Collections.Extensions;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
@@ -628,6 +629,98 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.AreEqual(new[] { 0.9, 1.1 },
                             boundaryConditionSet.BoundaryConditions[2].GetDataAtPoint(2).Components[0].Values);
 
+        }
+
+        [TestCase("sand", "sand", 1)]
+        [TestCase("sand", "mud", 2)]
+        public void
+            GivenABoundaryConditionSetWithOneSedimentConcentrationBoundaryConditionAndADataBlockDescribingABoundaryConditionOfSameType_WhenInsertBoundaryDataIsCalled_ThenNewBoundaryConditionIsAddedToTheSet(
+                string firstSedimentFractionName,
+                string secondSedimentFractionName,
+                int expectedNumberOfBoundaryConditions)
+        {
+            // Given
+            const string boundaryName = "boundary";
+            var boundaryConditionSet = CreateBoundaryConditionSet(boundaryName, firstSedimentFractionName);
+            var dataBlock = CreateBcBlockData(boundaryName, boundaryConditionSet.SupportPointNames.First(), secondSedimentFractionName);
+
+            // When
+            new BcFileFlowBoundaryDataBuilder().InsertBoundaryData(new[] {boundaryConditionSet}, dataBlock);
+
+            // Then
+            var boundaryConditions = boundaryConditionSet.BoundaryConditions.OfType<FlowBoundaryCondition>().ToList();
+            Assert.AreEqual(expectedNumberOfBoundaryConditions, boundaryConditions.Count,
+                "A different number of boundary conditions was expected in the boundary condition set.");
+            Assert.IsTrue(boundaryConditions.All(bc => bc.FlowQuantity == FlowBoundaryQuantityType.SedimentConcentration),
+                "Both boundary conditions were expected to have Sediment Concentration as quantity type.");
+
+            var sedimentFractionNames = boundaryConditions.Select(bc => bc.SedimentFractionName).ToList();
+            Assert.IsTrue(sedimentFractionNames.Contains(firstSedimentFractionName),
+                NoBoundaryWithSedimentFractionMessage(firstSedimentFractionName));
+            Assert.IsTrue(sedimentFractionNames.Contains(secondSedimentFractionName),
+                NoBoundaryWithSedimentFractionMessage(secondSedimentFractionName));
+        }
+
+        private static string NoBoundaryWithSedimentFractionMessage(string sedimentFractionName)
+        {
+            return $"There was no boundary condition with sediment fraction '{sedimentFractionName}'.";
+        }
+
+        private static BoundaryConditionSet CreateBoundaryConditionSet(string boundaryName, string sedimentFractionName)
+        {
+            var feature = new Feature2D
+            {
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(1, 0),
+                    new Coordinate(2, 0)
+                }),
+                Name = boundaryName
+            };
+
+            var boundaryConditionSet = new BoundaryConditionSet {Feature = feature};
+
+            var boundaryCondition = new FlowBoundaryCondition(FlowBoundaryQuantityType.SedimentConcentration,
+                BoundaryConditionDataType.TimeSeries)
+            {
+                SedimentFractionName = sedimentFractionName, Feature = feature
+            };
+
+            boundaryConditionSet.BoundaryConditions.Add(boundaryCondition);
+
+            return boundaryConditionSet;
+        }
+
+        private static BcBlockData CreateBcBlockData(string boundaryName, string supportPointName, string sedimentFractionName)
+        {
+            var timeQuantity = new BcQuantityData
+            {
+                Quantity = "time",
+                Unit = "seconds since 2001-01-01 00:00:00"
+            };
+            timeQuantity.Values.AddRange(new[] {"0", "43200", "86400"});
+
+            var fractionQuantity = new BcQuantityData
+            {
+                Quantity = $"sedfracbnd{sedimentFractionName}",
+                Unit = "kg/m³"
+            };
+            fractionQuantity.Values.AddRange(new[] {"1", "2", "3"});
+
+            var dataBlock = new BcBlockData
+            {
+                SupportPoint = supportPointName,
+                FunctionType = "timeseries",
+                LineNumber = 1,
+                TimeInterpolationType = "linear",
+                VerticalInterpolationType = "linear",
+                VerticalPositionType = "single"
+            };
+            dataBlock.SupportPoint = $"{boundaryName}_0001";
+
+            dataBlock.Quantities.AddRange(new[] {timeQuantity, fractionQuantity});
+
+            return dataBlock;
         }
     }
 }
