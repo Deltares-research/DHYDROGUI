@@ -65,7 +65,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         public bool WriteToDisk { get; set; }
 
-        private string FilePath { get; set; }
+        private string filePath;
+
+        private string FilePath
+        {
+            get => filePath;
+            set => filePath = value;
+        }
 
         private string GetFullPath(string relativePath)
         {
