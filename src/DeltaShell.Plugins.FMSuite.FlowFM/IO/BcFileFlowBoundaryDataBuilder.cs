@@ -289,10 +289,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
                 seriesIndex--; //to C-style indexing.
 
-                if (!TryParseOffsetFactor(dataBlock, out var offset, out var factor))
+                if (!TryParseOffset(dataBlock, out var offset))
                 {
-                    Log.WarnFormat(
-                        $"File {dataBlock.FilePath}, block starting at {dataBlock.LineNumber}: offset {dataBlock.Offset} or factor {dataBlock.Factor} could not be parsed; omitting dataBlock block.");
+                    LogWarningParsePropertyFailed(dataBlock, "offset", dataBlock.Offset);
+                    return false;
+                }
+
+                if (!TryParseFactor(dataBlock, out var factor))
+                {
+                    LogWarningParsePropertyFailed(dataBlock, "factor", dataBlock.Factor);
                     return false;
                 }
 
@@ -305,17 +310,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 {
                     var quantityName = quantityData.Quantity.ToLower();
 
-                    // extracting the name of the tracer (if it's a tracer)
-                    if (quantityName.StartsWith("tracerbnd_"))
-                    {
-                        quantityData.TracerName = quantityName.Substring(10);
-                        quantityName = "tracerbnd";
-                    }
-                    else if (quantityName.StartsWith("tracerbnd"))
-                    {
-                        quantityData.TracerName = quantityName.Substring(9);
-                        quantityName = "tracerbnd";
-                    }
+                    quantityName = CorrectIfTracerQuantityName(quantityName, quantityData);
 
                     // if it's an argument quantity, add it to the argVariables and continue
                     if (forcingTypeDefinition.ArgumentDefinitions.Contains(quantityName))
@@ -326,32 +321,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         continue;
                     }
 
-                    foreach (var componentKey in componentKeys)
-                    {
-                        if (string.IsNullOrEmpty(componentKey))
-                        {
-                            break;
-                        }
-
-                        if (Equals(quantityName, componentKey) &&forcingTypeDefinition.ForcingType == BoundaryConditionDataType.Qh)
-                        {
-                            quantityName = QuantityNameToTypeDictionary.First(kvp => kvp.Value == FlowBoundaryQuantityType.WaterLevel).Key;
-                            break;
-                        }
-
-                        if (quantityName.EndsWith(componentKey))
-                        {
-                            quantityName = quantityName.Substring(0, quantityName.Length - componentKey.Length).TrimEnd();
-                            break;
-                        }
-                    }
+                    quantityName = ParseQuantityName(componentKeys, quantityName, forcingTypeDefinition);
 
                     // if we haven't match the quantity, give a warning and continue
                     if (quantityName == null)
                     {
-                        Log.WarnFormat(
-                            "File {0}, block starting at line {1}: quantity {2} could not be parsed; omitting dataBlock column.",
-                            dataBlock.FilePath, dataBlock.LineNumber, quantityData.Quantity);
+                        LogWarningParsePropertyFailed(dataBlock, "quantity", quantityData.Quantity);
                         continue;
                     }
 
@@ -593,6 +568,49 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             return !skippedAny;
         }
 
+        private string ParseQuantityName(string[] componentKeys, string quantityName,
+            ForcingTypeDefinition forcingTypeDefinition)
+        {
+            foreach (var componentKey in componentKeys)
+            {
+                if (string.IsNullOrEmpty(componentKey))
+                {
+                    break;
+                }
+
+                if (Equals(quantityName, componentKey) && forcingTypeDefinition.ForcingType == BoundaryConditionDataType.Qh)
+                {
+                    quantityName = QuantityNameToTypeDictionary.First(kvp => kvp.Value == FlowBoundaryQuantityType.WaterLevel)
+                        .Key;
+                    break;
+                }
+
+                if (quantityName.EndsWith(componentKey))
+                {
+                    quantityName = quantityName.Substring(0, quantityName.Length - componentKey.Length).TrimEnd();
+                    break;
+                }
+            }
+
+            return quantityName;
+        }
+
+        private static string CorrectIfTracerQuantityName(string quantityName, BcQuantityData quantityData)
+        {
+            if (quantityName.StartsWith("tracerbnd_"))
+            {
+                quantityData.TracerName = quantityName.Substring(10);
+                quantityName = "tracerbnd";
+            }
+            else if (quantityName.StartsWith("tracerbnd"))
+            {
+                quantityData.TracerName = quantityName.Substring(9);
+                quantityName = "tracerbnd";
+            }
+
+            return quantityName;
+        }
+
         private static bool IsCorrectionDataType(ForcingTypeDefinition forcingTypeDefinition)
         {
             return forcingTypeDefinition.ForcingType ==
@@ -714,7 +732,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             return true;
         }
 
-        private static bool TryParseOffsetFactor(BcBlockData dataBlock, out double offset, out double factor)
+        private static bool TryParseOffset(BcBlockData dataBlock, out double offset)
         {
             bool offsetParsed;
             if (dataBlock.Offset == null)
@@ -727,6 +745,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 offsetParsed = double.TryParse(dataBlock.Offset, out offset);
             }
 
+            return offsetParsed;
+        }
+
+        private static bool TryParseFactor(BcBlockData dataBlock, out double factor)
+        {
             bool factorParsed;
             if (dataBlock.Factor == null)
             {
@@ -738,7 +761,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 factorParsed = double.TryParse(dataBlock.Factor, out factor);
             }
 
-            return offsetParsed && factorParsed;
+            return factorParsed;
         }
 
         private static bool TryParseDepthLayerDefinition(BcBlockData dataBlock,
