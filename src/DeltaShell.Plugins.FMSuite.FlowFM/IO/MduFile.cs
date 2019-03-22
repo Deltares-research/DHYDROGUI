@@ -133,17 +133,30 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         #region write logic
 
+        /// <summary>
+        /// Write this <see cref="MduFile"/> to the specified target mdu file path given the specified parameters.
+        /// </summary>
+        /// <param name="targetMduFilePath">The target mdu file path.</param>
+        /// <param name="modelDefinition">The model definition.</param>
+        /// <param name="hydroArea">The hydro area.</param>
+        /// <param name="allFixedWeirsAndCorrespondingProperties">All fixed weirs and corresponding properties.</param>
+        /// <param name="config">The configuration.</param>
+        /// <param name="switchTo">if set to <c>true</c> [switch to].</param>
+        /// <param name="sedimentModelData">The sediment model data.</param>
+        /// <remarks>
+        /// If <paramref name="config"/> is null, the default MduFileWriteConfig will be used.
+        /// </remarks>
         public void Write(string targetMduFilePath, 
                           WaterFlowFMModelDefinition modelDefinition, 
                           HydroArea hydroArea, 
                           IEnumerable<ModelFeatureCoordinateData<FixedWeir>> allFixedWeirsAndCorrespondingProperties,
+                          IMduFileWriteConfig config = null,
                           bool switchTo = true, 
-                          bool writeExtForcings = true, 
-                          bool writeFeatures = true, 
-                          bool disableFlowNodeRenumbering = false, 
-                          ISedimentModelData sedimentModelData = null, 
-                          bool writeMorSed = true)
+                          ISedimentModelData sedimentModelData = null)
         {
+            if (config == null)
+                config = new MduFileWriteConfig();
+
             var targetDir = VerifyTargetDirectory(targetMduFilePath);
             var substitutedPaths = new Dictionary<string, System.Tuple<string, string>>();
 
@@ -157,17 +170,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 Path = targetMduFilePath;
             }
 
-            if (writeFeatures)
+            if (config.WriteFeatures)
             {
                 WriteAreaFeatures(targetMduFilePath, modelDefinition, hydroArea, allFixedWeirsAndCorrespondingProperties);
             }
 
-            if (writeExtForcings)
+            if (config.WriteExtForcings)
             {
                 WriteExternalForcings(targetMduFilePath, modelDefinition, hydroArea);
             }
 
-            if (modelDefinition.UseMorphologySediment && writeMorSed)
+            if (modelDefinition.UseMorphologySediment && config.WriteMorphologySediment)
             {
                 WriteMorSedFiles(targetMduFilePath, modelDefinition, sedimentModelData);
             }
@@ -177,12 +190,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
           
             // write at the end in case of updated file paths
             WriteProperties(targetMduFilePath, 
-                            modelDefinition.Properties, 
-                            writeExtForcings, 
-                            writeFeatures, 
-                            useNetCDFMapFormat:isPartOf1D2DModel,
-                            disableFlowNodeRenumbering:disableFlowNodeRenumbering, 
-                            writeMorSed: writeMorSed);
+                            modelDefinition.Properties,
+                            config,
+                            useNetCDFMapFormat: isPartOf1D2DModel);
 
             if (!switchTo)
             {
@@ -194,34 +204,42 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
         }
 
+        /// <summary>
+        /// Write the properties to the specified <paramref name="filePath"/>.
+        /// </summary>
+        /// <param name="filePath">The file path.</param>
+        /// <param name="modelDefinition">The model definition.</param>
+        /// <param name="config">The configuration.</param>
+        /// <param name="writePartionFile">if set to <c>true</c> [write partion file].</param>
+        /// <param name="useNetCDFMapFormat">if set to <c>true</c> [use net CDF map format].</param>
+        /// <remarks>
+        /// If <paramref name="config"/> is null, the default MduFileWriteConfig will be used.
+        /// </remarks>
         public void WriteProperties(string filePath,
                                     IEnumerable<WaterFlowFMProperty> modelDefinition, 
-                                    bool writeExtForcings, bool writeFeatures,
+                                    IMduFileWriteConfig config = null,
                                     bool writePartionFile = true,
-                                    bool useNetCDFMapFormat = false, 
-                                    bool disableFlowNodeRenumbering = false,
-                                    bool writeMorSed = true)
+                                    bool useNetCDFMapFormat = false)
         {
+            if (config == null)
+                config = new MduFileWriteConfig();
+
             var waterFlowFmProperties = modelDefinition.ToList();
 
-            if (writeMorSed)
+            if (config.WriteMorphologySediment)
                 WriteMorphologySediment(filePath, waterFlowFmProperties);
 
             OpenOutputFile(filePath);
             try
             {
                 var propertiesByGroup = GetPropertiesByGroup(waterFlowFmProperties, 
-                                                             writeExtForcings, 
-                                                             writeFeatures,
-                                                             writeMorSed);
+                                                             config);
                  
                 foreach (var propertyGroup in propertiesByGroup)
                 {
-                    WriteMduLine(writeExtForcings, 
-                                 writeFeatures, 
+                    WriteMduLine(config,
                                  writePartionFile, 
                                  useNetCDFMapFormat, 
-                                 disableFlowNodeRenumbering, 
                                  propertyGroup);
                 }
             }
@@ -449,11 +467,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         }
 
 
-        private void WriteMduLine(bool writeExtForcings, 
-                                  bool writeFeatures, 
+        private void WriteMduLine(IMduFileWriteConfig config,
                                   bool writePartionFile, 
                                   bool useNetCDFMapFormat,
-                                  bool disableFlowNodeRenumbering, 
                                   IGrouping<string, WaterFlowFMProperty> propertyGroup)
         {
             WriteLine("");
@@ -469,7 +485,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         "# For 1d2d coupling we should always write mapformat output in NetCDF format");
                     WriteLine(line.Trim());
                 }
-                else if (disableFlowNodeRenumbering && prop.PropertyDefinition.MduPropertyName.Equals("RenumberFlowNodes"))
+                else if (config.DisableFlowNodeRenumbering && prop.PropertyDefinition.MduPropertyName.Equals("RenumberFlowNodes"))
                 {
                     var line = String.Format("{0,-18}= {1,-20}{2}", prop.PropertyDefinition.MduPropertyName, 0,
                         "# For 1d2d coupling we should never renumber the flownodes");
@@ -477,16 +493,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 }
                 else
                 {
-                    var mduPropertyValue = GetPropertyValue(prop, writeExtForcings, writeFeatures);
+                    var mduPropertyValue = GetPropertyValue(prop, config);
                     WriteMduLine(prop, mduPropertyValue);
                 }
             }
         }
 
         private IEnumerable<IGrouping<string, WaterFlowFMProperty>> GetPropertiesByGroup(IEnumerable<WaterFlowFMProperty> modelDefinition, 
-                                                                                         bool writeExtForcings,
-                                                                                         bool writeFeatures,
-                                                                                         bool writeMorSed)
+                                                                                         IMduFileWriteConfig config)
         {
             WriteLine("# Generated on " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
             WriteLine("# Deltares,Delft3D FM 2018 Suite Version " + FMSuiteFlowModelVersion + ", D-Flow FM Version " +
@@ -505,9 +519,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             propertiesByGroup =
                 RemoveMorAndSedPropertiesIfNeeded(propertiesByGroup,
                                                   modelDefinition,
-                                                  writeExtForcings,
-                                                  writeFeatures,
-                                                  writeMorSed);
+                                                  config);
             return propertiesByGroup;
         }
 
@@ -523,17 +535,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private static IEnumerable<IGrouping<string, WaterFlowFMProperty>> RemoveMorAndSedPropertiesIfNeeded(IEnumerable<IGrouping<string, WaterFlowFMProperty>> propertiesByGroup, 
                                                                                                              IEnumerable<WaterFlowFMProperty> modelDefinition, 
-                                                                                                             bool writeExtForcings, 
-                                                                                                             bool writeFeatures, 
-                                                                                                             bool writeMorSed)
+                                                                                                             IMduFileWriteConfig config)
         {
             /* Not include Morphology / Sediment MDUs if UseMorSed has not been selected */
             propertiesByGroup = propertiesByGroup.Where(p => !p.Key.Equals(KnownProperties.morphology));
             var useMorSedProp = modelDefinition.FirstOrDefault(md => md.PropertyDefinition.MduPropertyName == "UseMorSed");
             if (useMorSedProp != null)
             {
-                if (!writeMorSed ||
-                    int.TryParse(GetPropertyValue(useMorSedProp, writeExtForcings, writeFeatures), out var useMorSed) && useMorSed != 1 )
+                if (!config.WriteMorphologySediment ||
+                    int.TryParse(GetPropertyValue(useMorSedProp, config), out var useMorSed) && useMorSed != 1 )
                 {
                     propertiesByGroup = propertiesByGroup.Where(p => !p.Key.Equals(KnownProperties.sediment));
                 }
@@ -585,15 +595,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
         }
 
-        private static string GetPropertyValue(WaterFlowFMProperty prop, bool writeExtForcings, bool writeFeatures)
+        private static string GetPropertyValue(WaterFlowFMProperty prop, IMduFileWriteConfig config)
         {
             var propertyName = prop.PropertyDefinition.MduPropertyName.ToLower();
-            if (!writeExtForcings &&
+            if (!config.WriteExtForcings &&
                 (propertyName == KnownProperties.ExtForceFile || propertyName == KnownProperties.BndExtForceFile))
             {
                 return string.Empty;
             }
-            if (!writeFeatures &&
+            if (!config.WriteFeatures &&
                 (propertyName == KnownProperties.DryPointsFile || propertyName == KnownProperties.LandBoundaryFile ||
                  propertyName == KnownProperties.ThinDamFile || propertyName == KnownProperties.FixedWeirFile || propertyName == KnownProperties.BridgePillarFile ||
                  propertyName == KnownProperties.ManholeFile || propertyName == KnownProperties.ObsFile || propertyName == KnownProperties.ObsCrsFile))

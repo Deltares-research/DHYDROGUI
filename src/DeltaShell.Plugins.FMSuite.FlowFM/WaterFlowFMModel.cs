@@ -2044,7 +2044,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 SetOutputDirAndWaqDirProperty();
             }
 
-            mduFile.Write(mduPath, ModelDefinition, Area, fixedWeirProperties.Values, switchTo: switchTo, writeExtForcings: writeExtForcings, writeFeatures: writeFeatures, disableFlowNodeRenumbering: DisableFlowNodeRenumbering, sedimentModelData: UseMorSed ? this : null);
+            var mduFileWriteConfig = new MduFileWriteConfig()
+            {
+                WriteExtForcings = writeExtForcings,
+                WriteFeatures = writeFeatures,
+                DisableFlowNodeRenumbering = DisableFlowNodeRenumbering
+            };
+            mduFile.Write(mduPath, 
+                          ModelDefinition, 
+                          Area, 
+                          fixedWeirProperties.Values, 
+                          mduFileWriteConfig,
+                          switchTo: switchTo, 
+                          sedimentModelData: UseMorSed ? this : null);
 
             RestoreAreaDataColumns();
 

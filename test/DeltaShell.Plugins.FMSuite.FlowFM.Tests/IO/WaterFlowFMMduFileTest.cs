@@ -47,9 +47,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 var mduFile = new MduFile();
                 var modelDefinition = new WaterFlowFMModelDefinition();
                 modelDefinition.WriteSnappedFeatures = true;
-                
+
                 //Write
-                mduFile.WriteProperties(mduFilePath, modelDefinition.Properties, false, false);
+
+                var mduFileWriteConfig = new MduFileWriteConfig
+                {
+                    WriteExtForcings = false,
+                    WriteFeatures = false
+                };
+
+                mduFile.WriteProperties(mduFilePath, 
+                                        modelDefinition.Properties,
+                                        mduFileWriteConfig);
                 var readAllText = File.ReadAllText(mduFilePath);
 
                 foreach (var prop in modelDefinition.KnownWriteOutputSnappedFeatures)
@@ -104,7 +113,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 Assert.AreEqual(expectedValues, property.GetValueAsString());
 
                 //Write
-                mduFile.WriteProperties(mduFilePath, modelDefinition.Properties, false, false);
+                var mduFileWriteConfig = new MduFileWriteConfig
+                {
+                    WriteExtForcings = false,
+                    WriteFeatures = false
+                };
+
+                mduFile.WriteProperties(mduFilePath, 
+                                        modelDefinition.Properties, 
+                                        mduFileWriteConfig);
                 var readAllText = File.ReadAllText(mduFilePath);
 
                 var expectedText = String.Format("{0,-18}= {1,-20}{2}", propertyName, expectedValues, expectedOutputComments).Trim();
@@ -311,7 +328,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 IsMultipleFile = true
             };
             var property = new WaterFlowFMProperty(propertyDefinition, "Test1 Test2");
-            mduFile.WriteProperties(mduFilePath, new List<WaterFlowFMProperty>() { property }, false, false);
+
+            var mduFileWriteConfig = new MduFileWriteConfig
+            {
+                WriteExtForcings = false,
+                WriteFeatures = false
+            };
+
+            mduFile.WriteProperties(mduFilePath, 
+                                    new List<WaterFlowFMProperty>() { property },
+                                    mduFileWriteConfig);
 
             Assert.IsTrue(File.Exists(mduFilePath));
             var readAllText = File.ReadAllText(mduFilePath);
@@ -519,7 +545,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 var originalMd = new WaterFlowFMModelDefinition(mduDir, modelName);
                 var allFixedWeirsAndCorrespondingProperties = new Dictionary<FixedWeir, ModelFeatureCoordinateData<FixedWeir>>();
                 mduFile.Read(mduFilePath, originalMd, originalArea, allFixedWeirsAndCorrespondingProperties);
-                mduFile.Write(savePath, originalMd, originalArea, allFixedWeirsAndCorrespondingProperties.Values, switchTo: false, writeExtForcings: false);
+
+                var mduFileWriteConfig = new MduFileWriteConfig
+                {
+                    WriteExtForcings = false
+                };
+
+                mduFile.Write(savePath, 
+                              originalMd,
+                              originalArea,
+                              allFixedWeirsAndCorrespondingProperties.Values,
+                              mduFileWriteConfig,
+                              switchTo: false);
 
                 var savedArea = new HydroArea();
                 var savedMd = new WaterFlowFMModelDefinition(newMduDir, newMduName);
@@ -624,7 +661,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 mduFile.Read(mduFilePath, originalMd, originalArea, allFixedWeirsAndCorrespondingProperties);
 
                 RemoveGroupNameFromGroupableFeature(originalArea.DryPoints);
-                mduFile.Write(savePath, originalMd, originalArea, allFixedWeirsAndCorrespondingProperties.Values, switchTo: false, writeExtForcings: false);
+
+                var mduFileWriteConfig = new MduFileWriteConfig
+                {
+                    WriteExtForcings = false
+                };
+
+                mduFile.Write(savePath, 
+                              originalMd,
+                              originalArea,
+                              allFixedWeirsAndCorrespondingProperties.Values,
+                              mduFileWriteConfig,
+                              switchTo: false);
 
                 var savedArea = new HydroArea();
                 var savedMd = new WaterFlowFMModelDefinition(newMduDir, newMduName);

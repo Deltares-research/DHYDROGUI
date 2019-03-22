@@ -60,7 +60,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var modelDefinition = model.ModelDefinition;
             modelDefinition.UseMorphologySediment = true;
 
-            mduFile.Write(testFile, modelDefinition, hydroArea, null, false,false, true, false, sedimentData);
+            var mduFileWriteConfig = new MduFileWriteConfig
+            {
+                WriteExtForcings = false,
+                WriteFeatures = true,
+                DisableFlowNodeRenumbering = false
+            };
+
+            mduFile.Write(testFile,
+                          modelDefinition,
+                          hydroArea,
+                          null,
+                          mduFileWriteConfig,
+                          false,
+                          sedimentData);
 
             Assert.IsTrue(File.Exists(testFile));
             var lines = File.ReadLines(testFile);
