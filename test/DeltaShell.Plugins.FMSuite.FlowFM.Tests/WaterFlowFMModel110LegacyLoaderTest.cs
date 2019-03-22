@@ -24,7 +24,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
         [TestCase("run_with_save_and_default_output", "DFM_OUTPUT_TestModel")]
         [TestCase("run_with_save_and_custom_output", "myCustomOutput")]
-        [TestCase("run_with_save_and_flat_output", "")]
+        [TestCase("run_with_save_and_flat_output", "", Category = TestCategory.Jira)] // Jira-Issue: D3DFMIQ-793
         public void TestDirectoryRestructuring_OutputIsMovedToTheCorrectLocation(string testCaseDir, string outputFMDirName)
         {
             var testDataDirInfo = new DirectoryInfo(TestHelper.GetTestFilePath(
