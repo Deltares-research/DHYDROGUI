@@ -560,4 +560,7 @@ Manhole with unique id '{4}' is not imported.</value>
   <data name="FixedWeirValidator_ValidateSillDepths_fixed_weir___0___has_unphysical_sill_depths__parts_will_be_ignored_by_dflow_fm_" xml:space="preserve">
     <value>fixed weir '{0}' has unphysical sill depths, parts will be ignored by dflow-fm.</value>
   </data>
+  <data name="WaterFlowFMModel_ChangingWeirFormulaWhenAlsoUsedInRTC_Structure_component__0__has_been_removed_from_RTC_Control_Group__1__due_to_type_change" xml:space="preserve">
+    <value> Structure component'{0}' has been removed from Control Group '{1}' due to type change.</value>
+  </data>
 </root>

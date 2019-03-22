@@ -1132,6 +1132,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to  Structure component&apos;{0}&apos; has been removed from Control Group &apos;{1}&apos; due to type change..
+        /// </summary>
+        public static string WaterFlowFMModel_ChangingWeirFormulaWhenAlsoUsedInRTC_Structure_component__0__has_been_removed_from_RTC_Control_Group__1__due_to_type_change {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModel_ChangingWeirFormulaWhenAlsoUsedInRTC_Structure_component__0__has" +
+                        "_been_removed_from_RTC_Control_Group__1__due_to_type_change", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Could not find log file: {0} at expected path: {1}.
         /// </summary>
         public static string WaterFlowFMModel_ReadDiaFile_Could_not_find_log_file___0__at_expected_path___1_ {
