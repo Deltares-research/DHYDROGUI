@@ -2022,36 +2022,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             GivenAWaterFlowFMModelWithALinkedStructureToRTC_WhenChangingTheWeirFormula_ThenTheLinkShouldBeBrokenAndAWarningShouldBeGiven()
         {
             // Given
-            var feature = new Weir2D()
-            {
-                WeirFormula = new SimpleWeirFormula()
-            };
-
-            var model = new WaterFlowFMModel();
-
-            var rtcDataItem = new DataItem()
-            {
-                Parent = new DataItem()
-                {
-                    Name = "Control Group 1"
-                }
-            };
-
-            model.Area.Weirs.Add(feature);
-
-            var dataItemWaterFlowFmModel = model.AllDataItems.FirstOrDefault(di => di.ComposedValue is Weir2D);
-
-            Assert.IsNotNull(dataItemWaterFlowFmModel, "The DataItem for the weir is not created");
-
-            Assert.IsNull(dataItemWaterFlowFmModel.LinkedTo, "The DataItem of the structure is already linked before linking");
-            Assert.AreEqual(0, rtcDataItem.LinkedBy.Count, "The DataItem of the RTC component is already linked before linking");
-
-            dataItemWaterFlowFmModel.LinkTo(rtcDataItem);
-
-            Assert.IsNotNull(dataItemWaterFlowFmModel.LinkedTo, "The DataItem of the structure is not linked after linking");
-            Assert.AreEqual(1, rtcDataItem.LinkedBy.Count, "The DataItem of the RTC component is not linked after linking");
-
-            Assert.AreSame(dataItemWaterFlowFmModel.LinkedTo, rtcDataItem, "Something else is linked to the DataItem of the structure instead of the RTC component");
+            var model = CreateFMModelWithStructureLinkedToRTC(out var rtcDataItem, out var dataItemWaterFlowFmModel);
 
             var expectedMessage = string.Format(
                 Properties.Resources
@@ -2060,6 +2031,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 dataItemWaterFlowFmModel.LinkedTo.Parent.ToString());
 
             // When and Then
+            var feature = model.Area.Weirs.FirstOrDefault();
+            Assert.NotNull(feature);
+
             TestHelper.AssertAtLeastOneLogMessagesContains(() => feature.WeirFormula = new GatedWeirFormula(),
                 expectedMessage);
 
@@ -2072,6 +2046,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             GivenAWaterFlowFMModelWithALinkedStructureToRTC_WhenDeletingTheStructure_ThenTheLinkShouldBeBroken()
         {
             // Given
+            var model = CreateFMModelWithStructureLinkedToRTC(out var rtcDataItem, out var dataItemWaterFlowFmModel);
+
+            // When
+            model.Area.Weirs.Clear();
+
+            dataItemWaterFlowFmModel = model.AllDataItems.FirstOrDefault(di => di.ComposedValue is Weir2D);
+            Assert.IsNull(dataItemWaterFlowFmModel, "The DataItem for the weir is not removed after removing the weir");
+            Assert.AreEqual(0, rtcDataItem.LinkedBy.Count, "The DataItem of the RTC component is still linked after removing the weir");
+        }
+
+        private static WaterFlowFMModel CreateFMModelWithStructureLinkedToRTC(out DataItem rtcDataItem, out IDataItem dataItemWaterFlowFmModel)
+        {
             var feature = new Weir2D()
             {
                 WeirFormula = new SimpleWeirFormula()
@@ -2079,7 +2065,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             var model = new WaterFlowFMModel();
 
-            var rtcDataItem = new DataItem()
+            rtcDataItem = new DataItem()
             {
                 Parent = new DataItem()
                 {
@@ -2089,26 +2075,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             model.Area.Weirs.Add(feature);
 
-            var dataItemWaterFlowFmModel = model.AllDataItems.FirstOrDefault(di => di.ComposedValue is Weir2D);
+            dataItemWaterFlowFmModel = model.AllDataItems.FirstOrDefault(di => di.ComposedValue is Weir2D);
 
             Assert.IsNotNull(dataItemWaterFlowFmModel, "The DataItem for the weir is not created");
 
             Assert.IsNull(dataItemWaterFlowFmModel.LinkedTo, "The DataItem of the structure is already linked before linking");
-            Assert.AreEqual(0, rtcDataItem.LinkedBy.Count, "The DataItem of the RTC component is already linked before linking");
+            Assert.AreEqual(0, rtcDataItem.LinkedBy.Count,
+                "The DataItem of the RTC component is already linked before linking");
 
             dataItemWaterFlowFmModel.LinkTo(rtcDataItem);
 
             Assert.IsNotNull(dataItemWaterFlowFmModel.LinkedTo, "The DataItem of the structure is not linked after linking");
             Assert.AreEqual(1, rtcDataItem.LinkedBy.Count, "The DataItem of the RTC component is not linked after linking");
 
-            Assert.AreSame(dataItemWaterFlowFmModel.LinkedTo, rtcDataItem, "Something else is linked to the DataItem of the structure instead of the RTC component");
+            Assert.AreSame(dataItemWaterFlowFmModel.LinkedTo, rtcDataItem,
+                "Something else is linked to the DataItem of the structure instead of the RTC component");
 
-            // When
-            model.Area.Weirs.Remove(feature);
-
-            dataItemWaterFlowFmModel = model.AllDataItems.FirstOrDefault(di => di.ComposedValue is Weir2D);
-            Assert.IsNull(dataItemWaterFlowFmModel, "The DataItem for the weir is not removed after removing the weir");
-            Assert.AreEqual(0, rtcDataItem.LinkedBy.Count, "The DataItem of the RTC component is still linked after removing the weir");
+            return model;
         }
     }
 }

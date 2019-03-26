@@ -2859,25 +2859,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private void UpdateAreaDataItems(IFeature feature, bool isInputSender)
         {
-            List<IDataItem> dataItemsDependentOnThisFeature;
-            if (areaDataItems.TryGetValue(feature, out dataItemsDependentOnThisFeature))
+            if (areaDataItems.TryGetValue(feature, out var dataItemsDependentOnThisFeature))
             {
                 var listToReplace = GetDataItemListForFeature(feature, isInputSender);
 
                 var dataItemsLinkedToRTC = dataItemsDependentOnThisFeature.Where(di => di.LinkedTo != null).ToList();
-
-                if (dataItemsLinkedToRTC.Any())
-                {
+                
                     foreach (var dataItem in dataItemsLinkedToRTC)
                     {
                         Log.WarnFormat(
                             Resources
                                 .WaterFlowFMModel_ChangingWeirFormulaWhenAlsoUsedInRTC_Structure_component__0__has_been_removed_from_RTC_Control_Group__1__due_to_type_change,
-                            dataItem.Name+"_"+dataItem.Tag, dataItem.LinkedTo.Parent.ToString());
+                            dataItem.Name+"_"+dataItem.Tag, dataItem.LinkedTo.Parent.Name);
 
                         OnDataItemRemoved(dataItem);
                     }
-                }
                 areaDataItems[feature] = listToReplace;
             }
         }
