@@ -36,6 +36,37 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
 
         [Test]
         [Category(TestCategory.DataAccess)]
+        public void GivenABcwFileWithATimeVaryingAndUniformBoundaryWithEmptyTimeseries_WhenReadingThisFile_ThenACorrectDictionaryShouldBeBuild()
+        {
+            // Given
+            var bcwFilePath = TestHelper.GetTestFilePath(@"bcwTimeseries\timeseriesuniform.bcw");
+            var newBcwFilePath = WaveTestHelper.CreateLocalCopy(bcwFilePath);
+
+            var bcwFile = new BcwFile();
+
+            // When
+            var bcwTimeseries = bcwFile.Read(newBcwFilePath);
+            
+            // Then
+            Assert.AreEqual("BoundaryCondition01", bcwTimeseries.ElementAt(0).Key, "The name of the boundary is different than expected");
+
+            var supportPoints = bcwTimeseries["BoundaryCondition01"];
+            Assert.AreEqual(1, supportPoints.Count, "The imported boundary is not uniform");
+
+            var supportPoint = supportPoints[0];
+
+            Assert.AreEqual(3, supportPoint.Attributes.Count, "The number of attributes is different than expected");
+            Assert.AreEqual(1, supportPoint.Arguments.Count, "The number of arguments is different than expected");
+            Assert.AreEqual(4, supportPoint.Components.Count, "The number of components is different than expected");
+
+            foreach (var component in supportPoint.Components)
+            {
+                Assert.AreEqual(0, component.Values.Count, "Timeserie data  has been imported while it was not written in the bcw file.");
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
         public void ReadWriteAndCompare()
         {
             var bcwFilePath = TestHelper.GetTestFilePath(@"expectedTimeseries.bcw");
