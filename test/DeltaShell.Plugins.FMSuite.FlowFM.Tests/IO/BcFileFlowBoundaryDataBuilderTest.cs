@@ -634,7 +634,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [TestCase("sand", "sand", 1)]
         [TestCase("sand", "mud", 2)]
         public void
-            GivenABoundaryConditionSetWithOneSedimentConcentrationBoundaryConditionAndADataBlockDescribingABoundaryConditionOfSameType_WhenInsertBoundaryDataIsCalled_ThenNewBoundaryConditionIsAddedToTheSet(
+            GivenABoundaryConditionSetWithOneSedimentConentrationBoundaryConditionAndABoundaryConditionDataBlockWithSameType_WhenInsertBoundaryDataIsCalled_ThenNewBoundaryConditionIsAddedIfSedimentFractionNameIsDifferent(
                 string firstSedimentFractionName,
                 string secondSedimentFractionName,
                 int expectedNumberOfBoundaryConditions)

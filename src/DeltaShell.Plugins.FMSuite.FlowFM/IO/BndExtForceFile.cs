@@ -135,8 +135,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         .FirstOrDefault();
                     WritePropertyValue(OpenBoundaryToleranceKey, openBoundaryTolerance);
                     WritePropertyValues(ForcingFileKey, bndExtForceFileItem);
-                    WritePropertyValue(ThatcherHarlemanTimeLagKey, bndExtForceFileItem);
-                    WritePropertyValue(AreaKey, bndExtForceFileItem);
+                    WritePropertyValueIfNotNull(ThatcherHarlemanTimeLagKey, bndExtForceFileItem);
+                    WritePropertyValueIfNotNull(AreaKey, bndExtForceFileItem);
                 }
             }
             finally
@@ -158,12 +158,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             WritePropertyValue(propertyName, bndExtForceFileItem.GetPropertyValue(propertyName));
         }
 
-        private void WritePropertyValue(string propertyName, string propertyValue)
+        private void WritePropertyValueIfNotNull(string propertyName, IDelftIniCategory bndExtForceFileItem)
         {
+            var propertyValue = bndExtForceFileItem.GetPropertyValue(propertyName);
             if (propertyValue != null)
             {
-                WriteLine(propertyName + "=" + propertyValue);
+                WritePropertyValue(propertyName, propertyValue);
             }
+        }
+
+        private void WritePropertyValue(string propertyName, string propertyValue)
+        {
+            WriteLine(propertyName + "=" + propertyValue);
         }
 
         // TODO: migrate sources & sinks to new format
