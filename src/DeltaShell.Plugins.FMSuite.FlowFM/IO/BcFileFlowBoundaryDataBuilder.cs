@@ -246,7 +246,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             // If we are filtering on location and the location doesn't match up, return
             if (LocationFilter != null && !Equals(matchingBoundaryConditionSet.Feature, LocationFilter)) return false;
 
-            var skippedAny = false;
+            bool skippedAny = false;
 
             using (CultureUtils.SwitchToInvariantCulture())
             {
@@ -354,7 +354,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                             var quantityIndex = existingQuantities.IndexOf(quantityData.Quantity);
                             if (quantityIndex == -1) quantityIndex = existingQuantities.Count;
 
-                            var index = totalComponents * layerIndex + quantityIndex;
+                            int index = totalComponents * layerIndex + quantityIndex;
 
                             compVariables.Add(
                                 new System.Tuple<FlowBoundaryQuantityType, int>(quantityKeyValuePair.Value,
@@ -401,7 +401,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
                         if (boundaryCondition != null) continue;
 
-                        var isCorrection = IsCorrectionDataType(forcingTypeDefinition);
+                        bool isCorrection = IsCorrectionDataType(forcingTypeDefinition);
 
                         if (CanCreateNewBoundaryCondition && !isCorrection)
                         {
@@ -465,7 +465,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     // import and add the actual dataBlock
                     foreach (var dataPoint in dataPoints)
                     {
-                        var addedData = false;
+                        bool addedData = false;
                         if (!boundaryCondition.DataPointIndices.Contains(dataPoint))
                         {
                             boundaryCondition.AddPoint(dataPoint);
@@ -516,7 +516,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                                     var variableValues = variable.GetValues<double>().ToList();
                                     var values = ParseValues(comp.Value, variable.ValueType).ToList();
 
-                                    for (var i = 0; i < parsedArgumentValues.Count; ++i)
+                                    for (int i = 0; i < parsedArgumentValues.Count; ++i)
                                     {
                                         var index = indexMapping[i];
 
@@ -656,7 +656,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             if (flowQuantityComponentsPair.Key == null) return boundaryCondition;
 
-            var fractionName = GetFractionNameFromQuantityName(quantityName);
+            string fractionName = GetFractionNameFromQuantityName(quantityName);
             boundaryCondition.SedimentFractionName = fractionName;
 
             return boundaryCondition;
@@ -827,7 +827,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 return true;
             }
 
-            var result = int.TryParse(quantityData.VerticalPosition, out layerIndex);
+            bool result = int.TryParse(quantityData.VerticalPosition, out layerIndex);
             if (result) layerIndex -= 1; //to C-style indexing
             return result;
         }
@@ -925,7 +925,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 {
                     var dateString = string.Join(" ", splittedFormat.Skip(2));
 
-                    var succes = DateTime.TryParseExact(dateString, "yyyy-MM-dd", CultureInfo.InvariantCulture,
+                    bool succes = DateTime.TryParseExact(dateString, "yyyy-MM-dd", CultureInfo.InvariantCulture,
                         DateTimeStyles.AdjustToUniversal, out var startDate);
 
                     if (!succes)
@@ -1047,7 +1047,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             if (boundaryCondition.Factor != 1)
                 dataBlock.Factor = string.Format("{0:0.0000000e+00}", boundaryCondition.Factor);
 
-            var i = 0;
+            int i = 0;
             foreach (var argument in function.Arguments)
             {
                 var quantity = forcingTypeDefinition.ArgumentDefinitions[i++];
@@ -1059,7 +1059,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             var skipSignal = BcFile.IsCorrectionType(((IBoundaryCondition) boundaryCondition).DataType) &&
                              correctionFile;
 
-            var componentCount = forcingTypeDefinition.ComponentDefinitions.Count();
+            int componentCount = forcingTypeDefinition.ComponentDefinitions.Count();
             if (skipCorrection || skipSignal) componentCount += 2;
             if (!QuantityNameToTypeDictionary.Values.Contains(boundaryCondition.FlowQuantity))
                 Log.WarnFormat("Flow quantity {0} not supported by bc file writer", boundaryCondition.FlowQuantity);
@@ -1067,14 +1067,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             var flowVariables = QuantityNameToTypeDictionary.Where(kvp => kvp.Value == boundaryCondition.FlowQuantity)
                 .Select(kvp => kvp.Key)
                 .ToList();
-            var variableCount = flowVariables.Count;
+            int variableCount = flowVariables.Count;
             var componentsPerLayer = componentCount * variableCount;
 
-            var j = 0;
+            int j = 0;
 
             foreach (var component in function.Components)
             {
-                var componentIndex = j % componentCount;
+                int componentIndex = j % componentCount;
 
                 if (skipSignal && componentIndex < 2 || skipCorrection && componentIndex > 1)
                 {
@@ -1082,14 +1082,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     continue;
                 }
 
-                var variableIndex = j % componentsPerLayer / componentCount;
-                var layerIndex = j / componentsPerLayer + 1; //one-based indexing
+                int variableIndex = j % componentsPerLayer / componentCount;
+                int layerIndex = j / componentsPerLayer + 1; //one-based indexing
                 j++;
 
-                var componentString =
+                string componentString =
                     forcingTypeDefinition.ComponentDefinitions[skipSignal ? componentIndex - 2 : componentIndex];
 
-                var quantityString = string.IsNullOrEmpty(componentString)
+                string quantityString = string.IsNullOrEmpty(componentString)
                     ? flowVariables[variableIndex]
                     : flowVariables[variableIndex] + " " + componentString;
                 if (boundaryCondition.DataType == BoundaryConditionDataType.Qh) quantityString = componentString;
