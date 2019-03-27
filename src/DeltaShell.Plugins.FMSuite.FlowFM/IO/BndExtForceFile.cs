@@ -133,7 +133,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
                     var openBoundaryTolerance = bndExtForceFileItem.GetPropertyValues(OpenBoundaryToleranceKey)
                         .FirstOrDefault();
-                    WritePropertyValue(OpenBoundaryToleranceKey, openBoundaryTolerance);
+                    if (openBoundaryTolerance != null)
+                    {
+                        WritePropertyValue(OpenBoundaryToleranceKey, openBoundaryTolerance);
+                    }
+
                     WritePropertyValues(ForcingFileKey, bndExtForceFileItem);
                     WritePropertyValueIfNotNull(ThatcherHarlemanTimeLagKey, bndExtForceFileItem);
                     WritePropertyValueIfNotNull(AreaKey, bndExtForceFileItem);
