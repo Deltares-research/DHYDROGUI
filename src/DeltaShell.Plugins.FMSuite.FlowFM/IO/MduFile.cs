@@ -499,28 +499,30 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
         }
 
-        private IEnumerable<IGrouping<string, WaterFlowFMProperty>> GetPropertiesByGroup(IEnumerable<WaterFlowFMProperty> modelDefinition, 
-                                                                                         IMduFileWriteConfig config)
+        private IEnumerable<IGrouping<string, WaterFlowFMProperty>> GetPropertiesByGroup(IList<WaterFlowFMProperty> properties, IMduFileWriteConfig config)
         {
             WriteLine("# Generated on " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-            WriteLine("# Deltares,Delft3D FM 2018 Suite Version " + FMSuiteFlowModelVersion + ", D-Flow FM Version " +
-                      FMDllVersion);
-            SetValueToPropertyIfExists(modelDefinition, KnownProperties.Version, FMDllVersion);
-            SetValueToPropertyIfExists(modelDefinition, KnownProperties.GuiVersion, FMSuiteFlowModelVersion);
-            var propertiesByGroup = modelDefinition.Where(p => p.PropertyDefinition.FileCategoryName != "GUIOnly"
-                                                               && p.PropertyDefinition.FileCategoryName !=
-                                                               MorphologyFile
-                                                                   .MorphologyUnknownProperty /*Remove morphology unknown properties*/
-                                                               && p.PropertyDefinition.FileCategoryName !=
-                                                               SedimentFile
-                                                                   .SedimentUnknownProperty) /*Remove sediment unknown properties that should be located on the sediment file*/
-                .GroupBy(p => p.PropertyDefinition.FileCategoryName);
+            WriteLine("# Deltares,Delft3D FM 2018 Suite Version " + FMSuiteFlowModelVersion + ", D-Flow FM Version " + FMDllVersion);
 
-            propertiesByGroup =
-                RemoveMorAndSedPropertiesIfNeeded(propertiesByGroup,
-                                                  modelDefinition,
-                                                  config);
-            return propertiesByGroup;
+            SetValueToPropertyIfExists(properties, KnownProperties.Version, FMDllVersion);
+            SetValueToPropertyIfExists(properties, KnownProperties.GuiVersion, FMSuiteFlowModelVersion);
+
+            properties.RemoveAllWhere(p => !IsMduFileProperty(p));
+
+            var propertiesGroupedByCategory = properties.GroupBy(p => p.PropertyDefinition.FileCategoryName);
+
+            propertiesGroupedByCategory = RemoveMorAndSedPropertiesIfNeeded(propertiesGroupedByCategory, properties, config);
+
+            return propertiesGroupedByCategory;
+        }
+
+        private static bool IsMduFileProperty(WaterFlowFMProperty property)
+        {
+            return property.PropertyDefinition.FileCategoryName != GuiProperties.GUIonly
+                   // Remove morphology unknown properties that should be located in the morphology file
+                   && property.PropertyDefinition.UnknownPropertySource != PropertySource.MorphologyFile
+                   // Remove sediment unknown properties that should be located in the sediment file
+                   && property.PropertyDefinition.FileCategoryName != SedimentFile.SedimentUnknownProperty;
         }
 
         private void WriteMduLine(WaterFlowFMProperty prop, string pathValue)
@@ -534,12 +536,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         }
 
         private static IEnumerable<IGrouping<string, WaterFlowFMProperty>> RemoveMorAndSedPropertiesIfNeeded(IEnumerable<IGrouping<string, WaterFlowFMProperty>> propertiesByGroup, 
-                                                                                                             IEnumerable<WaterFlowFMProperty> modelDefinition, 
+                                                                                                             IEnumerable<WaterFlowFMProperty> properties, 
                                                                                                              IMduFileWriteConfig config)
         {
             /* Not include Morphology / Sediment MDUs if UseMorSed has not been selected */
             propertiesByGroup = propertiesByGroup.Where(p => !p.Key.Equals(KnownProperties.morphology));
-            var useMorSedProp = modelDefinition.FirstOrDefault(md => md.PropertyDefinition.MduPropertyName == "UseMorSed");
+            var useMorSedProp = properties.FirstOrDefault(md => md.PropertyDefinition.MduPropertyName == "UseMorSed");
             if (useMorSedProp != null)
             {
                 if (!config.WriteMorphologySediment ||
@@ -548,6 +550,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     propertiesByGroup = propertiesByGroup.Where(p => !p.Key.Equals(KnownProperties.sediment));
                 }
             }
+
             return propertiesByGroup;
         }
 

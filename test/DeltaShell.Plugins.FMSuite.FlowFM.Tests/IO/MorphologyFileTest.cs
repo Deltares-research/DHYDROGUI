@@ -52,19 +52,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             /*Test check if model contains custom (unknown) properties */
             Assert.True(modelDefinition.Properties.Any(
-                p => p.PropertyDefinition.FileCategoryName.Equals(MorphologyFile.MorphologyUnknownProperty) &&
+                p => p.PropertyDefinition.UnknownPropertySource.Equals(PropertySource.MorphologyFile) &&
                      p.PropertyDefinition.FilePropertyName.Equals("MyCustomStringProp") &&
                      p.Value.Equals("\"123\"")));
             Assert.True(modelDefinition.Properties.Any(
-                p => p.PropertyDefinition.FileCategoryName.Equals(MorphologyFile.MorphologyUnknownProperty) &&
+                p => p.PropertyDefinition.UnknownPropertySource.Equals(PropertySource.MorphologyFile) &&
                      p.PropertyDefinition.FilePropertyName.Equals("MyCustomBoolProp") &&
                      p.Value.Equals("1")));
             Assert.True(modelDefinition.Properties.Any(
-                p => p.PropertyDefinition.FileCategoryName.Equals(MorphologyFile.MorphologyUnknownProperty) &&
+                p => p.PropertyDefinition.UnknownPropertySource.Equals(PropertySource.MorphologyFile) &&
                      p.PropertyDefinition.FilePropertyName.Equals("MyCustomDoubleProp") &&
                      p.Value.Equals("1.23")));
             Assert.True(modelDefinition.Properties.Any(
-                p => p.PropertyDefinition.FileCategoryName.Equals(MorphologyFile.MorphologyUnknownProperty) &&
+                p => p.PropertyDefinition.UnknownPropertySource.Equals(PropertySource.MorphologyFile) &&
                      p.PropertyDefinition.FilePropertyName.Equals("MyCustomIntProp") &&
                      p.Value.Equals("123")));
         }

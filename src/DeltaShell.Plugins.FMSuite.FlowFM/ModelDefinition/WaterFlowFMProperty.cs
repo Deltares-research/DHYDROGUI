@@ -10,7 +10,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         {
         }
 
-        public static WaterFlowFMPropertyDefinition CreatePropertyDefinitionForUnknownProperty(string mduGroupName, string mduPropertyName, string comment)
+        public static WaterFlowFMPropertyDefinition CreatePropertyDefinitionForUnknownProperty(string mduGroupName, string mduPropertyName, string comment, PropertySource propertySource = PropertySource.MduFile)
         {
             return new WaterFlowFMPropertyDefinition
             {
@@ -26,18 +26,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                 VisibleDependencies = "",
                 Description = comment,
                 IsDefinedInSchema = false,
-                IsFile = false
+                IsFile = false,
+                UnknownPropertySource = propertySource
             };
         }
 
-        public new WaterFlowFMPropertyDefinition PropertyDefinition
-        {
-            get { return (WaterFlowFMPropertyDefinition) base.PropertyDefinition; }
-        }
+        public new WaterFlowFMPropertyDefinition PropertyDefinition => (WaterFlowFMPropertyDefinition) base.PropertyDefinition;
 
         public override object Clone()
         {
             return new WaterFlowFMProperty(PropertyDefinition, GetValueAsString());
         }
+    }
+
+    public enum PropertySource
+    {
+        None,
+        MduFile,
+        MorphologyFile,
+        SedimentFile
     }
 }
