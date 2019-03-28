@@ -56,25 +56,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.NotNull( modelDefinition );
             #region Sed 1
             Assert.True(modelDefinition.Properties.Any(
-                p => p.PropertyDefinition.FileCategoryName.Equals(SedimentFile.SedimentUnknownProperty) &&
+                p => p.PropertyDefinition.UnknownPropertySource.Equals(PropertySource.SedimentFile) &&
                      p.PropertyDefinition.Category.Equals("sed1") &&
                      p.PropertyDefinition.FilePropertyName.Equals("MyCustomStringProp") &&
                      p.Value.Equals("\"123\"")));
 
             Assert.True(modelDefinition.Properties.Any(
-                p => p.PropertyDefinition.FileCategoryName.Equals(SedimentFile.SedimentUnknownProperty) &&
+                p => p.PropertyDefinition.UnknownPropertySource.Equals(PropertySource.SedimentFile) &&
                      p.PropertyDefinition.Category.Equals("sed1") &&
                      p.PropertyDefinition.FilePropertyName.Equals("MyCustomBoolProp") &&
                      p.Value.Equals("1")));
 
             Assert.True(modelDefinition.Properties.Any(
-                p => p.PropertyDefinition.FileCategoryName.Equals(SedimentFile.SedimentUnknownProperty) &&
+                p => p.PropertyDefinition.UnknownPropertySource.Equals(PropertySource.SedimentFile) &&
                      p.PropertyDefinition.Category.Equals("sed1") &&
                      p.PropertyDefinition.FilePropertyName.Equals("MyCustomDoubleProp") &&
                      p.Value.Equals("1.23")));
 
             Assert.True(modelDefinition.Properties.Any(
-                p => p.PropertyDefinition.FileCategoryName.Equals(SedimentFile.SedimentUnknownProperty) &&
+                p => p.PropertyDefinition.UnknownPropertySource.Equals(PropertySource.SedimentFile) &&
                      p.PropertyDefinition.Category.Equals("sed1") &&
                      p.PropertyDefinition.FilePropertyName.Equals("MyCustomIntProp") &&
                      p.Value.Equals("123")));
@@ -84,25 +84,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             #region Sed 2
 
             Assert.True(modelDefinition.Properties.Any(
-                p => p.PropertyDefinition.FileCategoryName.Equals(SedimentFile.SedimentUnknownProperty) &&
+                p => p.PropertyDefinition.UnknownPropertySource.Equals(PropertySource.SedimentFile) &&
                      p.PropertyDefinition.Category.Equals("sed2") &&
                      p.PropertyDefinition.FilePropertyName.Equals("MyCustomStringProp") &&
                      p.Value.Equals("\"231\"")));
 
             Assert.True(modelDefinition.Properties.Any(
-                p => p.PropertyDefinition.FileCategoryName.Equals(SedimentFile.SedimentUnknownProperty) &&
+                p => p.PropertyDefinition.UnknownPropertySource.Equals(PropertySource.SedimentFile) &&
                      p.PropertyDefinition.Category.Equals("sed2") &&
                      p.PropertyDefinition.FilePropertyName.Equals("MyCustomBoolProp") &&
                      p.Value.Equals("0")));
 
             Assert.True(modelDefinition.Properties.Any(
-                p => p.PropertyDefinition.FileCategoryName.Equals(SedimentFile.SedimentUnknownProperty) &&
+                p => p.PropertyDefinition.UnknownPropertySource.Equals(PropertySource.SedimentFile) &&
                      p.PropertyDefinition.Category.Equals("sed2") &&
                      p.PropertyDefinition.FilePropertyName.Equals("MyCustomDoubleProp") &&
                      p.Value.Equals("2.31")));
 
             Assert.True(modelDefinition.Properties.Any(
-                p => p.PropertyDefinition.FileCategoryName.Equals(SedimentFile.SedimentUnknownProperty) &&
+                p => p.PropertyDefinition.UnknownPropertySource.Equals(PropertySource.SedimentFile) &&
                      p.PropertyDefinition.Category.Equals("sed2") &&
                      p.PropertyDefinition.FilePropertyName.Equals("MyCustomIntProp") &&
                      p.Value.Equals("231")));
@@ -129,14 +129,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.AreEqual(originalNumberOfProperties + unknownPropertiesForSed1.Count + unknownPropertiesForSed2.Count, finalNumberOfProperties,
                 "Unexpected number of properties in Model Definition");
 
-            Assert.IsTrue(unknownPropertiesForSed1.Select(p => p.PropertyDefinition).All(pd => pd.FileCategoryName == SedimentFile.SedimentUnknownProperty));
+            Assert.IsTrue(unknownPropertiesForSed1.Select(p => p.PropertyDefinition).All(pd => pd.UnknownPropertySource.Equals(PropertySource.SedimentFile)));
             var unknownPropertyNamesSed1 = unknownPropertiesForSed1.Select(p => p.PropertyDefinition.FilePropertyName).ToList();
             Assert.IsTrue(unknownPropertyNamesSed1.Contains("MyCustomStringProp"));
             Assert.IsTrue(unknownPropertyNamesSed1.Contains("MyCustomBoolProp"));
             Assert.IsTrue(unknownPropertyNamesSed1.Contains("MyCustomDoubleProp"));
             Assert.IsTrue(unknownPropertyNamesSed1.Contains("MyCustomIntProp"));
 
-            Assert.IsTrue(unknownPropertiesForSed2.Select(p => p.PropertyDefinition).All(pd => pd.FileCategoryName == SedimentFile.SedimentUnknownProperty));
+            Assert.IsTrue(unknownPropertiesForSed2.Select(p => p.PropertyDefinition).All(pd => pd.UnknownPropertySource.Equals(PropertySource.SedimentFile)));
             var unknownPropertyNamesSed2 = unknownPropertiesForSed2.Select(p => p.PropertyDefinition.FilePropertyName).ToList();
             Assert.IsTrue(unknownPropertyNamesSed2.Contains("MyCustomStringProp"));
             Assert.IsTrue(unknownPropertyNamesSed2.Contains("MyCustomBoolProp"));

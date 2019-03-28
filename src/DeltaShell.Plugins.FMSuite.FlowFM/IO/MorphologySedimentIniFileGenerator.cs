@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Api;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
@@ -47,6 +48,29 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
             
             return overallRegion;
+        }
+
+        public static IEnumerable<DelftIniCategory> CreateDelftIniCategoriesFromProperties(IEnumerable<WaterFlowFMProperty> customPropertiesOfCustomGroups)
+        {
+            var categories = customPropertiesOfCustomGroups.GroupBy(p => p.PropertyDefinition.FileCategoryName);
+
+            foreach (var category in categories)
+            {
+                var categoryName = category.Key;
+                if (categoryName.Equals(KnownProperties.morphology))
+                {
+                    categoryName = MorphologyFile.Header;
+                }
+
+                var delftIniCategory = new DelftIniCategory(categoryName);
+
+                foreach (WaterFlowFMProperty property in category)
+                {
+                    delftIniCategory.AddProperty(property.PropertyDefinition.FilePropertyName, property.GetValueAsString());
+                }
+
+                yield return delftIniCategory;
+            }
         }
 
         private static string FMDllVersion

@@ -518,10 +518,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private static bool IsMduFileProperty(WaterFlowFMProperty property)
         {
             return property.PropertyDefinition.FileCategoryName != "GUIOnly"
-                   /*Remove morphology unknown properties*/
+                   // remove unknown properties that should be located on the sed/mor files
                    && property.PropertyDefinition.UnknownPropertySource != PropertySource.MorphologyFile
-                   /*Remove sediment unknown properties that should be located on the sediment file*/
-                   && property.PropertyDefinition.FileCategoryName != SedimentFile.SedimentUnknownProperty;
+                   && property.PropertyDefinition.UnknownPropertySource != PropertySource.SedimentFile;
         }
 
         private void WriteMduLine(WaterFlowFMProperty prop, string pathValue)

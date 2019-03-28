@@ -128,38 +128,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private static IEnumerable<DelftIniCategory> CreateMorphologyCategories(WaterFlowFMModelDefinition modelDefinition)
         {
-            var morProperties = modelDefinition.Properties
-                .Where(p => p.PropertyDefinition.FilePropertyName != BcFile)
-                .Where(p => p.PropertyDefinition.FileCategoryName != GuiProperties.GUIonly)
-                .Where(p => p.PropertyDefinition.FileCategoryName.ToLower().Equals(KnownProperties.morphology)
-                            || p.PropertyDefinition.UnknownPropertySource.Equals(PropertySource.MorphologyFile));
+            var morCategories = new List<DelftIniCategory>();
 
-            yield return MorphologySedimentIniFileGenerator.GenerateMorpologyGeneralRegion();
+            IEnumerable<WaterFlowFMProperty> morProperties = modelDefinition.Properties
+                                                                            .Where(p => p.PropertyDefinition.FilePropertyName != BcFile)
+                                                                            .Where(p => p.PropertyDefinition.FileCategoryName != GuiProperties.GUIonly)
+                                                                            .Where(p => p.PropertyDefinition.FileCategoryName.ToLower().Equals(KnownProperties.morphology)
+                                                                                        || p.PropertyDefinition.UnknownPropertySource.Equals(PropertySource.MorphologyFile));
 
-            var categories = morProperties.GroupBy(p => p.PropertyDefinition.FileCategoryName);
+            morCategories.Add(MorphologySedimentIniFileGenerator.GenerateMorpologyGeneralRegion());
+            morCategories.AddRange(MorphologySedimentIniFileGenerator.CreateDelftIniCategoriesFromProperties(morProperties));
 
-            foreach (var category in categories)
-            {
-                yield return CreateDelftIniCategory(category);
-            }
-        }
-
-        private static DelftIniCategory CreateDelftIniCategory(IGrouping<string, WaterFlowFMProperty> category)
-        {
-            var categoryName = category.Key;
-            if (categoryName.Equals(KnownProperties.morphology))
-            {
-                categoryName = Header;
-            }
-
-            var delftIniCategory = new DelftIniCategory(categoryName);
-
-            foreach (var property in category)
-            {
-                delftIniCategory.AddProperty(property.PropertyDefinition.FilePropertyName, property.GetValueAsString());
-            }
-
-            return delftIniCategory;
+            return morCategories;
         }
 
         private static void ReadMorphologyBoundaryConditions(string mduFilePath, string bcmFile, IList<IDelftIniCategory> boundaryCategories, WaterFlowFMModelDefinition modelDefinition)
