@@ -502,26 +502,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private IEnumerable<IGrouping<string, WaterFlowFMProperty>> GetPropertiesByGroup(IList<WaterFlowFMProperty> properties, IMduFileWriteConfig config)
         {
             WriteLine("# Generated on " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-            WriteLine("# Deltares,Delft3D FM 2018 Suite Version " + FMSuiteFlowModelVersion + ", D-Flow FM Version " + FMDllVersion);
-
+            WriteLine("# Deltares,Delft3D FM 2018 Suite Version " + FMSuiteFlowModelVersion + ", D-Flow FM Version " +
+                      FMDllVersion);
             SetValueToPropertyIfExists(properties, KnownProperties.Version, FMDllVersion);
             SetValueToPropertyIfExists(properties, KnownProperties.GuiVersion, FMSuiteFlowModelVersion);
+            var propertiesByGroup = properties
+                .Where(IsMduFileProperty)
+                .GroupBy(p => p.PropertyDefinition.FileCategoryName);
 
-            properties.RemoveAllWhere(p => !IsMduFileProperty(p));
+            propertiesByGroup = RemoveMorAndSedPropertiesIfNeeded(propertiesByGroup, properties, config);
 
-            var propertiesGroupedByCategory = properties.GroupBy(p => p.PropertyDefinition.FileCategoryName);
-
-            propertiesGroupedByCategory = RemoveMorAndSedPropertiesIfNeeded(propertiesGroupedByCategory, properties, config);
-
-            return propertiesGroupedByCategory;
+            return propertiesByGroup;
         }
 
         private static bool IsMduFileProperty(WaterFlowFMProperty property)
         {
-            return property.PropertyDefinition.FileCategoryName != GuiProperties.GUIonly
-                   // Remove morphology unknown properties that should be located in the morphology file
+            return property.PropertyDefinition.FileCategoryName != "GUIOnly"
+                   /*Remove morphology unknown properties*/
                    && property.PropertyDefinition.UnknownPropertySource != PropertySource.MorphologyFile
-                   // Remove sediment unknown properties that should be located in the sediment file
+                   /*Remove sediment unknown properties that should be located on the sediment file*/
                    && property.PropertyDefinition.FileCategoryName != SedimentFile.SedimentUnknownProperty;
         }
 
