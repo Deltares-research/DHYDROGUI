@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using DelftTools.Functions;
+﻿using DelftTools.Functions;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
@@ -15,7 +11,10 @@ using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
-using FixedWeir = DelftTools.Hydro.Structures.FixedWeir;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 {
@@ -24,74 +23,127 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
     public class MorphologyFileTest
     {
         [Test]
-        public void LoadAndSaveMorFlowFMWithCustomProperties()
+        [Category(TestCategory.DataAccess)]
+        public void GivenAnMduWithMorphologyFileWithUnknownProperties_WhenReadingAndWriting_ThenTheCorrectPropertiesAreCreatedAndCorrectlyWrittenToTheFile()
         {
+            #region Load 
+
+            // Given
             var mduFilePath = TestHelper.GetTestFilePath(@"sedmor\FlowFMCustomProperties\FlowFMCustomPropertiesSedMor.mdu");
-            var flowFM = new WaterFlowFMModel(mduFilePath);
-            Assert.NotNull(flowFM);
-            TestMorphologyContainsAllUnknownProperties(flowFM.ModelDefinition);
 
-            /* Check if properties have been written again. */
-            var mduFile = new MduFile();
-            const string saveToDir = "LoadAndSaveMorFlowFM";
-            Directory.CreateDirectory(saveToDir);
-            var mduFileSaveToPath = Path.Combine(saveToDir, "FlowFMWithCustomProperties.mdu");
-            var allFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>>();
-            mduFile.Write(mduFileSaveToPath, flowFM.ModelDefinition, flowFM.Area, allFixedWeirsAndCorrespondingProperties);
+            // When
+            var importedModel = new WaterFlowFMModel(mduFilePath);
 
-            /* Check if properties have been written again. */
-            var newFlowFM = new WaterFlowFMModel(mduFileSaveToPath);
-            Assert.NotNull(newFlowFM);
-            var newModelDefinition = flowFM.ModelDefinition;
-            TestMorphologyContainsAllUnknownProperties(newModelDefinition);
+            // Then
+            Assert.NotNull(importedModel, "Model was not imported.");
+            var modelDefinition = importedModel.ModelDefinition;
+            ValidateAllUnknownProperties(modelDefinition);
+
+            #endregion
+
+            #region Save
+
+            TestHelper.PerformActionInTemporaryDirectory(tempDir =>
+            {
+                // Given
+                mduFilePath = Path.Combine(tempDir, "FlowFMWithCustomProperties.mdu");
+
+                // When
+                new MduFile().Write(mduFilePath, modelDefinition, importedModel.Area, importedModel.FixedWeirsProperties, sedimentModelData: importedModel);
+                importedModel = new WaterFlowFMModel(mduFilePath);
+
+                // Then
+                Assert.NotNull(importedModel);
+                modelDefinition = importedModel.ModelDefinition;
+                ValidateAllUnknownProperties(modelDefinition);
+            });
+
+            #endregion
         }
 
-        private static void TestMorphologyContainsAllUnknownProperties(WaterFlowFMModelDefinition modelDefinition)
+        private static void ValidateAllUnknownProperties(WaterFlowFMModelDefinition modelDefinition)
         {
-            Assert.NotNull(modelDefinition);
+            var properties = modelDefinition.Properties;
 
-            /*Test check if model contains custom (unknown) properties */
-            Assert.True(modelDefinition.Properties.Any(
-                p => p.PropertyDefinition.UnknownPropertySource.Equals(PropertySource.MorphologyFile) &&
-                     p.PropertyDefinition.FilePropertyName.Equals("MyCustomStringProp") &&
-                     p.Value.Equals("\"123\"")));
-            Assert.True(modelDefinition.Properties.Any(
-                p => p.PropertyDefinition.UnknownPropertySource.Equals(PropertySource.MorphologyFile) &&
-                     p.PropertyDefinition.FilePropertyName.Equals("MyCustomBoolProp") &&
-                     p.Value.Equals("1")));
-            Assert.True(modelDefinition.Properties.Any(
-                p => p.PropertyDefinition.UnknownPropertySource.Equals(PropertySource.MorphologyFile) &&
-                     p.PropertyDefinition.FilePropertyName.Equals("MyCustomDoubleProp") &&
-                     p.Value.Equals("1.23")));
-            Assert.True(modelDefinition.Properties.Any(
-                p => p.PropertyDefinition.UnknownPropertySource.Equals(PropertySource.MorphologyFile) &&
-                     p.PropertyDefinition.FilePropertyName.Equals("MyCustomIntProp") &&
-                     p.Value.Equals("123")));
+            var propertiesMorphologyCategory = properties.Where(p => p.PropertyDefinition.Category.Equals(MorphologyFile.Header)
+                                                                     && p.PropertyDefinition.UnknownPropertySource.Equals(PropertySource.MorphologyFile))
+                                                         .ToList();
+            Assert.AreEqual(4, propertiesMorphologyCategory.Count);
+            ValidatePropertiesCategory(propertiesMorphologyCategory, MorphologyFile.Header);
+
+            const string customCategoryName = "CustomCategory";
+            var propertiesUnknownCategory = properties.Where(p => p.PropertyDefinition.FileCategoryName.Equals(customCategoryName)).ToList();
+            ValidatePropertiesCategory(propertiesUnknownCategory, customCategoryName);
+        }
+
+        private static void ValidatePropertiesCategory(List<WaterFlowFMProperty> properties, string categoryName)
+        {
+            Assert.IsTrue(properties.All(p => p.PropertyDefinition.UnknownPropertySource.Equals(PropertySource.MorphologyFile)));
+            Assert.IsTrue(properties.All(p => p.PropertyDefinition.FileCategoryName.Equals(categoryName)));
+            Assert.IsTrue(properties.All(p => p.PropertyDefinition.Category.Equals(categoryName)));
+
+            ValidateProperty(properties, "CustomStringProp", "\"777\"");
+            ValidateProperty(properties, "CustomBoolProp", "1");
+            ValidateProperty(properties, "CustomDoubleProp", "7.77");
+            ValidateProperty(properties, "CustomIntProp", "777");
+        }
+
+        private static void ValidateProperty(List<WaterFlowFMProperty> properties, string propertyName, string propertyValue)
+        {
+            var customStringProperty = properties.FirstOrDefault(p => p.PropertyDefinition.FilePropertyName.Equals(propertyName));
+            Assert.NotNull(customStringProperty);
+            Assert.AreEqual(propertyValue, customStringProperty.Value);
         }
 
         [Test]
-        public void SaveMorFile()
+        [Category(TestCategory.DataAccess)]
+        public void GivenAModelDefinitionWithTwoUnknownPropertiesAndOneUnknownCategory_WhenWriting_ThenExpectedLinesAreWrittenToFile()
         {
-            var morFile = Path.GetTempFileName();
-            try
+            TestHelper.PerformActionInTemporaryDirectory(tempDir =>
             {
-                var modelDefinition = new WaterFlowFMModelDefinition();
-                var def = WaterFlowFMProperty.CreatePropertyDefinitionForUnknownProperty(KnownProperties.morphology,
-                    "myprop", string.Empty);
-                var prop = new WaterFlowFMProperty(def, "801");
-                modelDefinition.AddProperty(prop);
+                // Given
+                var morFilePath = Path.Combine(tempDir, "morfile.mor");
+                var customCategoryName = "custom_category";
+                var customPropertyName = "custom_property";
+                var value1 = "123";
+                var value2 = "456";
 
-                MorphologyFile.Save(morFile, modelDefinition);
-                var morWritten = File.ReadAllText(morFile);
-                Assert.That(morWritten, Is.StringContaining(MorphologyFile.GeneralHeader));
-                Assert.That(morWritten, Is.StringContaining(MorphologyFile.Header));
-                Assert.That(morWritten, Is.StringContaining("myprop"));
-                Assert.That(morWritten, Is.StringContaining("801"));
-            }
-            finally
-            {
-                FileUtils.DeleteIfExists(morFile);
-            }
+                var modelDefinition = CreateModelDefinitionWithCustomCategoryAndProperties(customPropertyName, customCategoryName, value1, value2);
+
+                // When
+                MorphologyFile.Save(morFilePath, modelDefinition);
+
+                // Then
+                var lines = File.ReadAllLines(morFilePath);
+                Assert.AreEqual($"[{MorphologyFile.Header}]", lines[4]);
+                Assert.AreEqual($"    {customPropertyName}       = {value1}                    ", lines[34]);
+                Assert.AreEqual($"[{customCategoryName}]", lines[35]);
+                Assert.AreEqual($"    {customPropertyName}       = {value2}                    ", lines[36]);
+            });
+        }
+
+        private static WaterFlowFMModelDefinition CreateModelDefinitionWithCustomCategoryAndProperties(string customPropertyName, string customCategoryName, string value1, string value2)
+        {
+            var modelDefinition = new WaterFlowFMModelDefinition();
+
+            var propertyDefinitionMorphologyCategory = WaterFlowFMProperty.CreatePropertyDefinitionForUnknownProperty(
+                KnownProperties.morphology,
+                customPropertyName,
+                "",
+                PropertySource.MorphologyFile);
+
+            var propertyDefinitionCustomCategory = WaterFlowFMProperty.CreatePropertyDefinitionForUnknownProperty(
+                customCategoryName,
+                customPropertyName,
+                "",
+                PropertySource.MorphologyFile);
+
+            var customPropertyMorphologyCategory = new WaterFlowFMProperty(propertyDefinitionMorphologyCategory, value1);
+            var customPropertyCustomCategory = new WaterFlowFMProperty(propertyDefinitionCustomCategory, value2);
+
+            modelDefinition.AddProperty(customPropertyMorphologyCategory);
+            modelDefinition.AddProperty(customPropertyCustomCategory);
+            return modelDefinition;
         }
 
         [Test]

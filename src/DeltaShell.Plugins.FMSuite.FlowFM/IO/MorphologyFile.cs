@@ -205,7 +205,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             foreach (var delftIniProperty in delftIniCategory.Properties)
             {
-                if (!modelDefinition.ContainsProperty(delftIniProperty.Name))
+                var existingProperty = GetExistingPropertyInCategory(modelDefinition, delftIniProperty, categoryName);
+                if (existingProperty == null)
                 {
                     WaterFlowFMProperty property = CreateModelPropertyForUnknownDelftIniProperty(categoryName, delftIniProperty);
                     modelDefinition.AddProperty(property);
@@ -215,9 +216,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
                 if (!string.IsNullOrEmpty(delftIniProperty.Value))
                 {
-                    modelDefinition.GetModelProperty(delftIniProperty.Name).SetValueAsString(delftIniProperty.Value);
+                    existingProperty.SetValueAsString(delftIniProperty.Value);
                 }
             }
+        }
+
+        private static WaterFlowFMProperty GetExistingPropertyInCategory(WaterFlowFMModelDefinition modelDefinition, DelftIniProperty delftIniProperty, string categoryName)
+        {
+            return modelDefinition.Properties.FirstOrDefault(p => p.PropertyDefinition.FilePropertyName == delftIniProperty.Name
+                                                                  && p.PropertyDefinition.Category == categoryName);
         }
 
         private static WaterFlowFMProperty CreateModelPropertyForUnknownDelftIniProperty(string categoryName, IDelftIniProperty delftIniProperty)

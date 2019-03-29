@@ -27,8 +27,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
     public class SedimentFileTest
     {
         [Test]
+        [Category(TestCategory.DataAccess)]
         // The way the sediment reader it's developed forces a model to be created in order to import the .sed file properties
-        public void GivenAnMduWithMorphologyAndSedimentFileWithUnknownProperties_WhenReadingAndWriting_ThenTheCorrectPropertiesAreCreatedAndCorrectlyWrittenToTheFile()
+        public void GivenAnMduWithSedimentFileWithUnknownProperties_WhenReadingAndWriting_ThenTheCorrectPropertiesAreCreatedAndCorrectlyWrittenToTheFile()
         {
             #region Load 
 
@@ -66,6 +67,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void GivenASedimentFileWithUnknownProperties_WhenReading_ThenOnlyUnknownAndCorrectSedimentPropertiesAreAddedToModelDefinition()
         {
             // Given

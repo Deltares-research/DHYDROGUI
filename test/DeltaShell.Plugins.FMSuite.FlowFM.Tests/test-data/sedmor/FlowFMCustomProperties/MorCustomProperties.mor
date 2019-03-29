@@ -32,7 +32,12 @@
     SedThr                = 0.1                    
     ThetSD                = 1E-36                  
     HMaxTH                = 1.5
-	MyCustomStringProp	  = "123"
-	MyCustomBoolProp	  = 1
-	MyCustomDoubleProp	  = 1.23
-	MyCustomIntProp	  	  = 123	
+	CustomStringProp      = "777"
+    CustomBoolProp        = 1
+    CustomDoubleProp      = 7.77
+    CustomIntProp         = 777
+[CustomCategory]          
+	CustomStringProp      = "777"
+    CustomBoolProp        = 1
+    CustomDoubleProp      = 7.77
+    CustomIntProp         = 777
