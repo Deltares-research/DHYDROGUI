@@ -134,7 +134,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
         {
             var parameterData = new List<BcwParameter>();
 
-            while (IsNewParameter(CurrentLine))
+            while (CurrentLine != null && IsNewParameter(CurrentLine))
             {
                 var matches = RegularExpression.GetFirstMatch(ParameterPattern, CurrentLine);
                 var bcwParameter = new BcwParameter
@@ -228,7 +228,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
 
         private static bool IsNewParameter(string line)
         {
-            return line != null && line.Contains("parameter");
+            return line.Contains("parameter");
         }
 
         private static bool IsNewBoundaryDataBlock(string line)
