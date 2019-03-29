@@ -1880,6 +1880,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
+        [NUnit.Framework.Category(TestCategory.Integration)]
+        [NUnit.Framework.Category(TestCategory.Slow)]
         public void GivenASavedModelWithOutput_WhenSavingItToAnotherLocation_ThenTheNewLocationShouldBeCleanedFirstBeforeGettingTheOutput()
         {
             var tempFolder = FileUtils.CreateTempDirectory();
