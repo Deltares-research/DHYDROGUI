@@ -61,7 +61,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
 
             foreach (var component in supportPoint.Components)
             {
-                Assert.AreEqual(0, component.Values.Count, "Timeserie data  has been imported while it was not written in the bcw file.");
+                Assert.AreEqual(0, component.Values.Count, "Time series data  has been imported while it was not written in the bcw file.");
             }
         }
 
