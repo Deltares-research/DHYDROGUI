@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using DelftTools.Hydro;
+﻿using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
@@ -19,6 +15,10 @@ using SharpMap;
 using SharpMap.Data.Providers;
 using SharpMap.SpatialOperations;
 using SharpMapTestUtils;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 {
@@ -27,85 +27,96 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
     public class SedimentFileTest
     {
         [Test]
-        public void LoadAndSaveSedFlowFMWithCustomProperties()
+        // The way the sediment reader it's developed forces a model to be created in order to import the .sed file properties
+        public void GivenAnMduWithMorphologyAndSedimentFileWithUnknownProperties_WhenReadingAndWriting_ThenTheCorrectPropertiesAreCreatedAndCorrectlyWrittenToTheFile()
         {
+            #region Load 
+
+            // Given
             var mduFilePath = TestHelper.GetTestFilePath(@"sedmor\FlowFMCustomProperties\FlowFMCustomPropertiesSedMor.mdu");
-            /*The way the sediment reader it's developed forces a model to be created in order to import the .sed file properties */
-            var flowFM = new WaterFlowFMModel(mduFilePath);
-            Assert.NotNull(flowFM);
-            var modelDefinition = flowFM.ModelDefinition;
-            TestSedimentsContainAllUnknownProperties(modelDefinition);
 
-            /* Write properties in a new mdu file */
-            var mduFile = new MduFile();
-            const string saveToDir = "LoadAndSaveSedFlowFM";
-            Directory.CreateDirectory(saveToDir);
-            var mduFileSaveToPath = Path.Combine(saveToDir, "FlowFMWithCustomProperties.mdu");
-            mduFile.Write(mduFileSaveToPath, modelDefinition, flowFM.Area, flowFM.FixedWeirsProperties);
+            // When
+            var importedModel = new WaterFlowFMModel(mduFilePath);
 
-            /* Check if properties have been written again. */
-            var newFlowFM = new WaterFlowFMModel(mduFileSaveToPath);
-            Assert.NotNull(newFlowFM);
-            var newModelDefinition = flowFM.ModelDefinition;
-            TestSedimentsContainAllUnknownProperties(newModelDefinition);
-        }
+            // Then
+            Assert.NotNull(importedModel, "Model was not imported.");
+            var modelDefinition = importedModel.ModelDefinition;
+            ValidateAllUnknownProperties(modelDefinition);
 
-        private static void TestSedimentsContainAllUnknownProperties(WaterFlowFMModelDefinition modelDefinition)
-        {
-            Assert.NotNull(modelDefinition);
-            IEventedList<WaterFlowFMProperty> properties = modelDefinition.Properties;
+            #endregion
 
-            Assert.AreEqual(1, properties.Count(p => IsCorrectCustomProperty(p, "MyCustomStringProp", "sed1", "\"123\"")));
-            Assert.AreEqual(1, properties.Count(p => IsCorrectCustomProperty(p, "MyCustomBoolProp", "sed1", "1")));
-            Assert.AreEqual(1, properties.Count(p => IsCorrectCustomProperty(p, "MyCustomDoubleProp", "sed1", "1.23")));
-            Assert.AreEqual(1, properties.Count(p => IsCorrectCustomProperty(p, "MyCustomIntProp", "sed1", "123")));
+            #region Save
 
-            Assert.AreEqual(1, properties.Count(p => IsCorrectCustomProperty(p, "MyCustomStringProp", "sed2", "\"231\"")));
-            Assert.AreEqual(1, properties.Count(p => IsCorrectCustomProperty(p, "MyCustomBoolProp", "sed2", "0")));
-            Assert.AreEqual(1, properties.Count(p => IsCorrectCustomProperty(p, "MyCustomDoubleProp", "sed2", "2.31")));
-            Assert.AreEqual(1, properties.Count(p => IsCorrectCustomProperty(p, "MyCustomIntProp", "sed2", "231")));
-        }
+            TestHelper.PerformActionInTemporaryDirectory(tempDir =>
+            {
+                // Given
+                mduFilePath = Path.Combine(tempDir, "FlowFMWithCustomProperties.mdu");
 
-        private static bool IsCorrectCustomProperty(WaterFlowFMProperty property, string propertyName, string categoryName, string propertyValue)
-        {
-            return property.PropertyDefinition.FilePropertyName.Equals(propertyName)
-                   && property.PropertyDefinition.Category.Equals(categoryName)
-                   && property.Value.Equals(propertyValue)
-                   && property.PropertyDefinition.UnknownPropertySource.Equals(PropertySource.SedimentFile);
+                // When
+                new MduFile().Write(mduFilePath, modelDefinition, importedModel.Area, importedModel.FixedWeirsProperties, sedimentModelData: importedModel);
+                importedModel = new WaterFlowFMModel(mduFilePath);
+
+                // Then
+                Assert.NotNull(importedModel);
+                modelDefinition = importedModel.ModelDefinition;
+                ValidateAllUnknownProperties(modelDefinition);
+            });
+
+            #endregion
         }
 
         [Test]
-        public void TestLoadSediments_OnlyUnknownSedimentPropertiesAreAddedToModelDefinition()
+        public void GivenASedimentFileWithUnknownProperties_WhenReading_ThenOnlyUnknownAndCorrectSedimentPropertiesAreAddedToModelDefinition()
         {
-            var fmModel = new WaterFlowFMModel();
-            var modelDefinitionProperties = fmModel.ModelDefinition.Properties;
-
-            var originalNumberOfProperties = modelDefinitionProperties.Count;
-
+            // Given
+            var model = new WaterFlowFMModel();
+            var properties = model.ModelDefinition.Properties;
+            var originalNumberOfProperties = properties.Count;
             var sedFilePath = TestHelper.GetTestFilePath(@"sedmor\FlowFMCustomProperties\SedCustomProperties.sed");
-            SedimentFile.LoadSediments(sedFilePath, fmModel);
 
-            var unknownPropertiesForSed1 = modelDefinitionProperties.Where(p => p.PropertyDefinition.Category == "sed1").ToList();
-            var unknownPropertiesForSed2 = modelDefinitionProperties.Where(p => p.PropertyDefinition.Category == "sed2").ToList();
-            
-            var finalNumberOfProperties = modelDefinitionProperties.Count;
+            // When
+            SedimentFile.LoadSediments(sedFilePath, model);
 
-            Assert.AreEqual(originalNumberOfProperties + unknownPropertiesForSed1.Count + unknownPropertiesForSed2.Count, finalNumberOfProperties,
-                "Unexpected number of properties in Model Definition");
+            // Then
+            Assert.AreEqual(originalNumberOfProperties + 12, properties.Count,
+                            "Unexpected number of properties in model definition: exactly and only 12 unknown properties should have been added to the original properties.");
+            ValidateAllUnknownProperties(model.ModelDefinition);
+        }
 
-            Assert.IsTrue(unknownPropertiesForSed1.Select(p => p.PropertyDefinition).All(pd => pd.UnknownPropertySource.Equals(PropertySource.SedimentFile)));
-            var unknownPropertyNamesSed1 = unknownPropertiesForSed1.Select(p => p.PropertyDefinition.FilePropertyName).ToList();
-            Assert.IsTrue(unknownPropertyNamesSed1.Contains("MyCustomStringProp"));
-            Assert.IsTrue(unknownPropertyNamesSed1.Contains("MyCustomBoolProp"));
-            Assert.IsTrue(unknownPropertyNamesSed1.Contains("MyCustomDoubleProp"));
-            Assert.IsTrue(unknownPropertyNamesSed1.Contains("MyCustomIntProp"));
+        private static void ValidateAllUnknownProperties(WaterFlowFMModelDefinition modelDefinition)
+        {
+            var properties = modelDefinition.Properties;
 
-            Assert.IsTrue(unknownPropertiesForSed2.Select(p => p.PropertyDefinition).All(pd => pd.UnknownPropertySource.Equals(PropertySource.SedimentFile)));
-            var unknownPropertyNamesSed2 = unknownPropertiesForSed2.Select(p => p.PropertyDefinition.FilePropertyName).ToList();
-            Assert.IsTrue(unknownPropertyNamesSed2.Contains("MyCustomStringProp"));
-            Assert.IsTrue(unknownPropertyNamesSed2.Contains("MyCustomBoolProp"));
-            Assert.IsTrue(unknownPropertyNamesSed2.Contains("MyCustomDoubleProp"));
-            Assert.IsTrue(unknownPropertyNamesSed2.Contains("MyCustomIntProp"));
+            const string sedimentFraction1Name = "sed1";
+            var unknownPropertiesForSed1 = properties.Where(p => p.PropertyDefinition.Category.Equals(sedimentFraction1Name)).ToList();
+            ValidatePropertiesCategory(unknownPropertiesForSed1, SedimentFile.Header, sedimentFraction1Name);
+
+            const string sedimentFraction2Name = "sed2";
+            var unknownPropertiesForSed2 = properties.Where(p => p.PropertyDefinition.Category.Equals(sedimentFraction2Name)).ToList();
+            ValidatePropertiesCategory(unknownPropertiesForSed2, SedimentFile.Header, sedimentFraction2Name);
+
+            const string customCategoryName = "MyCustomCategory";
+            var propertiesUnknownCategory = properties.Where(p => p.PropertyDefinition.FileCategoryName == customCategoryName).ToList();
+            ValidatePropertiesCategory(propertiesUnknownCategory, customCategoryName, customCategoryName);
+        }
+
+        private static void ValidatePropertiesCategory(List<WaterFlowFMProperty> properties, string fileCategoryName, string categoryName)
+        {
+            Assert.IsTrue(properties.All(p => p.PropertyDefinition.UnknownPropertySource.Equals(PropertySource.SedimentFile)));
+            Assert.IsTrue(properties.All(p => p.PropertyDefinition.FileCategoryName.Equals(fileCategoryName)));
+            Assert.IsTrue(properties.All(p => p.PropertyDefinition.Category.Equals(categoryName)));
+
+            ValidateProperty(properties, "MyCustomStringProp", "\"777\"");
+            ValidateProperty(properties, "MyCustomBoolProp", "1");
+            ValidateProperty(properties, "MyCustomDoubleProp", "7.77");
+            ValidateProperty(properties, "MyCustomIntProp", "777");
+        }
+
+        private static void ValidateProperty(List<WaterFlowFMProperty> properties, string propertyName, string propertyValue)
+        {
+            var customStringProperty = properties.FirstOrDefault(p => p.PropertyDefinition.FilePropertyName.Equals(propertyName));
+            Assert.NotNull(customStringProperty);
+            Assert.AreEqual(propertyValue, customStringProperty.Value);
         }
 
         [Test]

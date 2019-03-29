@@ -21,10 +21,10 @@
     EpsPar                = False                            Use Van Rijn's parabolic mixing coefficient
     GamTcr                = 1.5                              Coefficient for grain size effect
     SalMax                = 0                      [ppt]     Salinity for saline settling velocity
-    MyCustomStringProp    = "123"
+    MyCustomStringProp    = "777"
     MyCustomBoolProp      = 1
-    MyCustomDoubleProp    = 1.23
-    MyCustomIntProp       = 123
+    MyCustomDoubleProp    = 7.77
+    MyCustomIntProp       = 777
 [Sediment]
     Name                  = #sed2#                          Name of sediment fraction
     SedTyp                = sand                             Must be "sand", "mud" or "bedload"
@@ -42,7 +42,13 @@
     EpsPar                = False                            Use Van Rijn's parabolic mixing coefficient
     GamTcr                = 1.5                              Coefficient for grain size effect
     SalMax                = 0                      [ppt]     Salinity for saline settling velocity
-    MyCustomStringProp    = "231"
-    MyCustomBoolProp      = 0
-    MyCustomDoubleProp    = 2.31
-    MyCustomIntProp       = 231
+    MyCustomStringProp    = "777"
+    MyCustomBoolProp      = 1
+    MyCustomDoubleProp    = 7.77
+    MyCustomIntProp       = 777
+	
+[MyCustomCategory]
+	MyCustomStringProp    = "777"
+    MyCustomBoolProp      = 1
+    MyCustomDoubleProp    = 7.77
+    MyCustomIntProp       = 777
