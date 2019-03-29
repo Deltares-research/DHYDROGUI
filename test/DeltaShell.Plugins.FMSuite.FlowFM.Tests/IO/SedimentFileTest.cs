@@ -48,66 +48,30 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.NotNull(newFlowFM);
             var newModelDefinition = flowFM.ModelDefinition;
             TestSedimentsContainAllUnknownProperties(newModelDefinition);
-
         }
 
         private static void TestSedimentsContainAllUnknownProperties(WaterFlowFMModelDefinition modelDefinition)
         {
-            Assert.NotNull( modelDefinition );
-            #region Sed 1
-            Assert.True(modelDefinition.Properties.Any(
-                p => p.PropertyDefinition.UnknownPropertySource.Equals(PropertySource.SedimentFile) &&
-                     p.PropertyDefinition.Category.Equals("sed1") &&
-                     p.PropertyDefinition.FilePropertyName.Equals("MyCustomStringProp") &&
-                     p.Value.Equals("\"123\"")));
+            Assert.NotNull(modelDefinition);
+            IEventedList<WaterFlowFMProperty> properties = modelDefinition.Properties;
 
-            Assert.True(modelDefinition.Properties.Any(
-                p => p.PropertyDefinition.UnknownPropertySource.Equals(PropertySource.SedimentFile) &&
-                     p.PropertyDefinition.Category.Equals("sed1") &&
-                     p.PropertyDefinition.FilePropertyName.Equals("MyCustomBoolProp") &&
-                     p.Value.Equals("1")));
+            Assert.AreEqual(1, properties.Count(p => IsCorrectCustomProperty(p, "MyCustomStringProp", "sed1", "\"123\"")));
+            Assert.AreEqual(1, properties.Count(p => IsCorrectCustomProperty(p, "MyCustomBoolProp", "sed1", "1")));
+            Assert.AreEqual(1, properties.Count(p => IsCorrectCustomProperty(p, "MyCustomDoubleProp", "sed1", "1.23")));
+            Assert.AreEqual(1, properties.Count(p => IsCorrectCustomProperty(p, "MyCustomIntProp", "sed1", "123")));
 
-            Assert.True(modelDefinition.Properties.Any(
-                p => p.PropertyDefinition.UnknownPropertySource.Equals(PropertySource.SedimentFile) &&
-                     p.PropertyDefinition.Category.Equals("sed1") &&
-                     p.PropertyDefinition.FilePropertyName.Equals("MyCustomDoubleProp") &&
-                     p.Value.Equals("1.23")));
+            Assert.AreEqual(1, properties.Count(p => IsCorrectCustomProperty(p, "MyCustomStringProp", "sed2", "\"231\"")));
+            Assert.AreEqual(1, properties.Count(p => IsCorrectCustomProperty(p, "MyCustomBoolProp", "sed2", "0")));
+            Assert.AreEqual(1, properties.Count(p => IsCorrectCustomProperty(p, "MyCustomDoubleProp", "sed2", "2.31")));
+            Assert.AreEqual(1, properties.Count(p => IsCorrectCustomProperty(p, "MyCustomIntProp", "sed2", "231")));
+        }
 
-            Assert.True(modelDefinition.Properties.Any(
-                p => p.PropertyDefinition.UnknownPropertySource.Equals(PropertySource.SedimentFile) &&
-                     p.PropertyDefinition.Category.Equals("sed1") &&
-                     p.PropertyDefinition.FilePropertyName.Equals("MyCustomIntProp") &&
-                     p.Value.Equals("123")));
-
-            #endregion
-            
-            #region Sed 2
-
-            Assert.True(modelDefinition.Properties.Any(
-                p => p.PropertyDefinition.UnknownPropertySource.Equals(PropertySource.SedimentFile) &&
-                     p.PropertyDefinition.Category.Equals("sed2") &&
-                     p.PropertyDefinition.FilePropertyName.Equals("MyCustomStringProp") &&
-                     p.Value.Equals("\"231\"")));
-
-            Assert.True(modelDefinition.Properties.Any(
-                p => p.PropertyDefinition.UnknownPropertySource.Equals(PropertySource.SedimentFile) &&
-                     p.PropertyDefinition.Category.Equals("sed2") &&
-                     p.PropertyDefinition.FilePropertyName.Equals("MyCustomBoolProp") &&
-                     p.Value.Equals("0")));
-
-            Assert.True(modelDefinition.Properties.Any(
-                p => p.PropertyDefinition.UnknownPropertySource.Equals(PropertySource.SedimentFile) &&
-                     p.PropertyDefinition.Category.Equals("sed2") &&
-                     p.PropertyDefinition.FilePropertyName.Equals("MyCustomDoubleProp") &&
-                     p.Value.Equals("2.31")));
-
-            Assert.True(modelDefinition.Properties.Any(
-                p => p.PropertyDefinition.UnknownPropertySource.Equals(PropertySource.SedimentFile) &&
-                     p.PropertyDefinition.Category.Equals("sed2") &&
-                     p.PropertyDefinition.FilePropertyName.Equals("MyCustomIntProp") &&
-                     p.Value.Equals("231")));
-
-            #endregion
+        private static bool IsCorrectCustomProperty(WaterFlowFMProperty property, string propertyName, string categoryName, string propertyValue)
+        {
+            return property.PropertyDefinition.FilePropertyName.Equals(propertyName)
+                   && property.PropertyDefinition.Category.Equals(categoryName)
+                   && property.Value.Equals(propertyValue)
+                   && property.PropertyDefinition.UnknownPropertySource.Equals(PropertySource.SedimentFile);
         }
 
         [Test]

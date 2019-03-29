@@ -17,40 +17,42 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private static readonly string createdBy = "Deltares, FM-Suite DFlowFM Model Version " + FMSuiteFlowModelVersion + ", DFlow FM Version " + FMDllVersion;
 
         private const string SEDFILEVERSION = "02.00";
-        public static DelftIniCategory GenerateSedimentGeneralRegion()
+
+        public static DelftIniCategory CreateMorpologyGeneralDelftIniCategory()
+        {
+            var generalCategory = new DelftIniCategory(MorphologyFile.GeneralHeader);
+            AddGeneralProperties(generalCategory);
+            return generalCategory;
+        }
+
+        public static DelftIniCategory CreateSedimentGeneralDelftIniCategory()
         {
             var generalCategory = new DelftIniCategory(SedimentFile.GeneralHeader);
             AddGeneralProperties(generalCategory);
             return generalCategory;
         }
 
-        private static void AddGeneralProperties(DelftIniCategory generalCategory)
+        private static void AddGeneralProperties(IDelftIniCategory generalDelftIniCategory)
         {
             DateTime creationTime = DateTime.Now;
-            generalCategory.AddProperty(SedimentFile.FileCreatedBy, createdBy);
-            generalCategory.AddProperty(SedimentFile.FileCreationDate, creationTime.ToString("ddd MMM dd yyyy, HH:mm:ss"));
-            generalCategory.AddProperty(SedimentFile.FileVersion, SEDFILEVERSION);
+            generalDelftIniCategory.AddProperty(SedimentFile.FileCreatedBy, createdBy);
+            generalDelftIniCategory.AddProperty(SedimentFile.FileCreationDate, creationTime.ToString("ddd MMM dd yyyy, HH:mm:ss"));
+            generalDelftIniCategory.AddProperty(SedimentFile.FileVersion, SEDFILEVERSION);
         }
 
-        public static DelftIniCategory GenerateMorpologyGeneralRegion()
+        public static DelftIniCategory CreateSedimentOverallDelftIniCategory(IEnumerable<ISedimentProperty> sedimentOverallProperties)
         {
-            var generalCategory = new DelftIniCategory(MorphologyFile.GeneralHeader);
-            AddGeneralProperties(generalCategory);
-            return generalCategory;
-        }
-            
-        public static DelftIniCategory GenerateOverallRegion(IEnumerable<ISedimentProperty> sedimentOverallProperties)
-        {
-            var overallRegion = new DelftIniCategory(SedimentFile.OverallHeader);
+            var overallDelftIniCategory = new DelftIniCategory(SedimentFile.OverallHeader);
+
             foreach (var sedimentOverallProperty in sedimentOverallProperties)
             {
-                sedimentOverallProperty.SedimentPropertyWrite(overallRegion);
+                sedimentOverallProperty.SedimentPropertyWrite(overallDelftIniCategory);
             }
-            
-            return overallRegion;
+
+            return overallDelftIniCategory;
         }
 
-        public static IEnumerable<DelftIniCategory> CreateDelftIniCategoriesFromProperties(IEnumerable<WaterFlowFMProperty> customPropertiesOfCustomGroups)
+        public static IEnumerable<DelftIniCategory> CreateDelftIniCategoriesFromModelProperties(IEnumerable<WaterFlowFMProperty> customPropertiesOfCustomGroups)
         {
             var categories = customPropertiesOfCustomGroups.GroupBy(p => p.PropertyDefinition.FileCategoryName);
 
