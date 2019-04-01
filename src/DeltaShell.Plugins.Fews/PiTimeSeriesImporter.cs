@@ -92,6 +92,10 @@ namespace DeltaShell.Plugins.Fews
         public string Name { get; private set; }
         
         public string Category { get; private set; }
+        public string Description
+        {
+            get { return string.Empty; }
+        }
 
         public Bitmap Image
         {

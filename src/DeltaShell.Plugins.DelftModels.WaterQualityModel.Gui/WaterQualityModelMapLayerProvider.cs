@@ -13,7 +13,6 @@ using DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.FeatureEditing;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.ProjectExplorer;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.CustomRenderers;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties;
-using DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils;
 using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;

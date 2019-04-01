@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using DelftTools.Controls;
 using DelftTools.Shell.Core.Workflow;
@@ -98,7 +99,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
             bindingSourceHydroModel.ResumeBinding();
         }
 
-        private void ModelOnCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        private void ModelOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if(Equals(sender, HydroModel.Activities))
             {

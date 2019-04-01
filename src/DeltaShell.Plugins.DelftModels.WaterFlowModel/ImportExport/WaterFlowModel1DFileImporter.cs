@@ -45,6 +45,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
         [ExcludeFromCodeCoverage]
         public string Category => "Water Flow Model 1D";
 
+        public string Description
+        {
+            get { return string.Empty; }
+        }
+
         [ExcludeFromCodeCoverage]
         public Bitmap Image { get; private set; }
         

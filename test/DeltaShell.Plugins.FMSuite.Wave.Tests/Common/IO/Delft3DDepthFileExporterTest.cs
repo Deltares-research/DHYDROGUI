@@ -25,7 +25,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Common.IO
             grid.Resize(20, 4, x, y);
             grid.SetValues(values);
 
-            var exportPath = TestHelper.GetDataDir() + "TestDepth.dep";
+            var exportPath = TestHelper.GetTestDataDirectory() + "TestDepth.dep";
 
             // Export the file
             Assert.AreEqual(true, new Delft3DDepthFileExporter().Export(grid, exportPath));

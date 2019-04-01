@@ -2,7 +2,6 @@
 using System.IO;
 using System.Linq;
 using DelftTools.TestUtils;
-using DelftTools.Utils.IO;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
 using NetTopologySuite.Extensions.Grids;
 using NUnit.Framework;
@@ -228,7 +227,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         public void ReadValidHydFileReturnsAllDataRead()
         {
             // setup
-            var commonFilePath = Path.Combine(TestHelper.GetDataDir(), "IO");
+            var commonFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "IO");
             var hydFile = new FileInfo(Path.Combine(commonFilePath, "uni3d.hyd"));
             Assert.IsTrue(hydFile.Exists,
                 "Expected .hyd file to exist, but is missing.");

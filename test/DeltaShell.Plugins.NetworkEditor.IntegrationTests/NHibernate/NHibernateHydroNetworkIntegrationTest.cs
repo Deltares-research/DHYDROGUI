@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
@@ -1063,10 +1064,10 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
             //register to collectionchanged of network
             int callCount = 0;
             ((INotifyCollectionChange)(network)).CollectionChanged +=
-                delegate(object sender, NotifyCollectionChangingEventArgs e)
+                delegate(object sender, NotifyCollectionChangedEventArgs e)
                 {
                     callCount++;
-                    Debug.WriteLine(String.Format("{0} sent a {1} for {2}", sender, e.Action, e.Item));
+                    Debug.WriteLine(String.Format("{0} sent a {1} for {2}", sender, e.Action, e.GetRemovedOrAddedItem()));
                 };
             //add a cross section results in only one call!
             branch.BranchFeatures.Add(crossSection);

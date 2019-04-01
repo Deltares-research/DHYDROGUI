@@ -9,7 +9,6 @@ using NetTopologySuite.Geometries;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Geometries;
 using NUnit.Framework;
-using FixedWeir = DelftTools.Hydro.Structures.FixedWeir;
 
 namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 {

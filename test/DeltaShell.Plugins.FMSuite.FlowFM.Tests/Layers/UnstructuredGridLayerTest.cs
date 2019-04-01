@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
-using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
@@ -146,16 +144,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Layers
             Assert.AreEqual(10, gridCell.Index);
             Assert.AreEqual(grid, gridCell.UnstructuredGrid);
             Assert.AreEqual(grid.Cells[10].ToPolygon(grid), gridCell.Geometry);
-        }
-
-        private static void RenderBendProfGridOnce()
-        {
-            var ncPath = TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bend1_net.nc");
-            var grid = NetFileImporter.ImportGrid(ncPath);
-            var gridLayer = new UnstructuredGridLayer {Grid = grid};
-            var map = new Map {Layers = {gridLayer}, Size = new Size {Width = 800, Height = 800}};
-            map.ZoomToExtents();
-            map.Render();
         }
     }
 }

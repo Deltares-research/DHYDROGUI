@@ -14,7 +14,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         [Test]
         public void ImportRetentions()
         {
-            string pathToSobekNetwork = TestHelper.GetDataDir() + @"\ReModels\JAMM2010.sbk\40\DEFTOP.1";
+            string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\ReModels\JAMM2010.sbk\40\DEFTOP.1";
             var hydroNetwork = new HydroNetwork();
 
             var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekNetwork, hydroNetwork,
@@ -51,7 +51,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         //To complex for updating (specially from RE)
         public void NoUpdateExistingRetentions()
         {
-            string pathToSobekNetwork = TestHelper.GetDataDir() + @"\ReModels\JAMM2010.sbk\40\DEFTOP.1";
+            string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\ReModels\JAMM2010.sbk\40\DEFTOP.1";
             var hydroNetwork = new HydroNetwork();
 
             var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekNetwork, hydroNetwork, new IPartialSobekImporter[] { new SobekBranchesImporter(), new SobekLateralSourcesImporter(), new SobekRetentionImporter() });
@@ -77,7 +77,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         public void RemoveMarkerLateralsAfterAddingRetention()
         {
             //issue 5344
-            string pathToSobekNetwork = TestHelper.GetDataDir() + @"\ReModels\JAMM2010.sbk\40\DEFTOP.1";
+            string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\ReModels\JAMM2010.sbk\40\DEFTOP.1";
             var hydroNetwork = new HydroNetwork();
 
             var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekNetwork, hydroNetwork, new IPartialSobekImporter[] { new SobekBranchesImporter(), new SobekLateralSourcesImporter(), new SobekRetentionImporter() });
@@ -91,7 +91,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         [Test]
         public void ImportLateralSourcesAndRetentions()
         {
-            string pathToSobekNetwork = TestHelper.GetDataDir() + @"\263_000.lit\1\NETWORK.TP";
+            string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\263_000.lit\1\NETWORK.TP";
 
             var hydroNetwork = new HydroNetwork();
             var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekNetwork, hydroNetwork, new IPartialSobekImporter[] { new SobekBranchesImporter(), new SobekLateralSourcesImporter(), new SobekRetentionImporter() });
@@ -106,7 +106,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         [Test]
         public void ImportLateralSourcesAndNoRetentions()
         {
-            string pathToSobekNetwork = TestHelper.GetDataDir() + @"\271_000\NETWORK.TP";
+            string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\271_000\NETWORK.TP";
 
             var hydroNetwork = new HydroNetwork();
             var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekNetwork, hydroNetwork, new IPartialSobekImporter[] { new SobekBranchesImporter(), new SobekLateralSourcesImporter(), new SobekRetentionImporter() });

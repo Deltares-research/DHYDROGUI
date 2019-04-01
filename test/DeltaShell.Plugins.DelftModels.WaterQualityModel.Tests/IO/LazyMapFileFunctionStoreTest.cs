@@ -24,16 +24,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         [TestFixtureSetUp]
         public void SetUpTests()
         {
-            mapFilePath = Path.Combine(TestHelper.GetDataDir(), "IO", "deltashell.map");
+            mapFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "IO", "deltashell.map");
         }
 
         [Test]
         public void CopyTo_IsSuccessfulWhenCopyingToNonExistantDirectory()
         {
-            var mapFilePath = Path.Combine(TestHelper.GetDataDir(), "FunctionStores", "deltashell.map");
+            var mapFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "FunctionStores", "deltashell.map");
             var store = new LazyMapFileFunctionStore {Path = mapFilePath};
 
-            var directoryPath = Path.Combine(TestHelper.GetDataDir(), "DirectoryDoesNotExist");
+            var directoryPath = Path.Combine(TestHelper.GetTestDataDirectory(), "DirectoryDoesNotExist");
             FileUtils.DeleteIfExists(directoryPath);
 
             var filePath = Path.Combine(directoryPath, "deltashell.map");

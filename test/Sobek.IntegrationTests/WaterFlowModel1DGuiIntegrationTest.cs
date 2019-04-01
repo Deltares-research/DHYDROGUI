@@ -71,8 +71,6 @@ using Point = NetTopologySuite.Geometries.Point;
 namespace Sobek.IntegrationTests
 {
     [TestFixture]
-    [Category(TestCategory.MemoryLeak)]
-    [Category(TestCategory.WindowsForms)]
     [Category(TestCategory.Slow)]
     public class WaterFlowModel1DGuiIntegrationTest
     {
@@ -256,6 +254,7 @@ namespace Sobek.IntegrationTests
         }
 
         [Test]
+        [Category(TestCategory.WindowsForms)]
         public void AddFlowModelAndSaveProject()
         {
             app.Project.RootFolder.Add(new WaterFlowModel1D());
@@ -327,6 +326,7 @@ namespace Sobek.IntegrationTests
         }
 
         [Test]
+        [Category(TestCategory.WindowsForms)]
         public void OpeningInitialConditionsCoverageViewShouldNotClearOutputCoverages()
         {
             var model = WaterFlowModel1DDemoModelTestHelper.CreateModelWithDemoNetwork();
@@ -360,6 +360,7 @@ namespace Sobek.IntegrationTests
         }
         
         [Test]
+        [Category(TestCategory.WindowsForms)]
         public void OpeningBoundaryConditionsCoverageViewShouldNotClearOutputCoverages()
         {
             var model = WaterFlowModel1DDemoModelTestHelper.CreateModelWithDemoNetwork();
@@ -387,6 +388,7 @@ namespace Sobek.IntegrationTests
         
         [Test]
         [Ignore("Not able to reproduce issue using this test..not sure what I'm doing wrong, but it's taking too much time so stopping")]
+        [Category(TestCategory.WindowsForms)]
         [Category((TestCategory.Jira))] //TOOLS-4363
         public void SavingProjectAfterOpeningNetworkViewAndDeletingModelShouldNotThrowException()
         {
@@ -449,6 +451,7 @@ namespace Sobek.IntegrationTests
         }
 
         [Test]
+        [Category(TestCategory.WindowsForms)]
         public void OpeningCrossSectionViewOfTypeHeightFlowStorageWidthShouldNotClearOutputCoverages()
         {
             var model = WaterFlowModel1DDemoModelTestHelper.CreateModelWithDemoNetwork();
@@ -486,6 +489,7 @@ namespace Sobek.IntegrationTests
         }
 
         [Test]
+        [Category(TestCategory.WindowsForms)]
         [Category(TestCategory.WorkInProgress)]
         public void ShowGuiWithWaterFlowModel1DAndUndoRedoEnabled()
         {
@@ -497,6 +501,7 @@ namespace Sobek.IntegrationTests
         }
 
         [Test]
+        [Category(TestCategory.WindowsForms)]
         public void OpenMapViewForInitialConditionsShouldCreateMapWithThreeLayers()
         {
             var model = new WaterFlowModel1D();
@@ -520,6 +525,7 @@ namespace Sobek.IntegrationTests
         }
 
         [Test]
+        [Category(TestCategory.WindowsForms)]
         public void DeleteBranchFromTheNetworkWhichIsPartOfModelShouldRemoveViewsOfBranchFeatures()
         {
             var model = new WaterFlowModel1D();
@@ -554,6 +560,7 @@ namespace Sobek.IntegrationTests
         }
 
         [Test]
+        [Category(TestCategory.WindowsForms)]
         public void CopyPasteDemoModelInApplicationAndRun()
         {
             TestHelper.SetDeltaresLicenseToEnvironmentVariable();
@@ -573,6 +580,7 @@ namespace Sobek.IntegrationTests
         }
 
         [Test]
+        [Category(TestCategory.WindowsForms)]
         [Category(TestCategory.WorkInProgress)]
         public void RunReportShouldBeAvailableForCancelledRun()
         {
@@ -626,6 +634,7 @@ namespace Sobek.IntegrationTests
         }
 
         [Test]
+        [Category(TestCategory.WindowsForms)]
         public void CloneModelInProjectShouldBreakExternalLinks()
         {
             var network = new HydroNetwork();
@@ -654,6 +663,7 @@ namespace Sobek.IntegrationTests
         }
 
         [Test]
+        [Category(TestCategory.WindowsForms)]
         public void CopyPasteModelInProjectShouldNotBreakExternalLinks()
         {
             var network = new HydroNetwork();
@@ -687,6 +697,7 @@ namespace Sobek.IntegrationTests
         }
 
         [Test]
+        [Category(TestCategory.WindowsForms)]
         public void RunCopyPasteRunDemoModelInApplication()
         {
             var model = WaterFlowModel1DDemoModelTestHelper.CreateModelWithDemoNetwork();
@@ -713,6 +724,7 @@ namespace Sobek.IntegrationTests
         }
 
         [Test]
+        [Category(TestCategory.WindowsForms)]
         public void StartDeltaShellWithTimeDependendNetworkCoverage()
         {
             StartDeltaShellWithCoverage(GetBigTimeDependendNetworkCoverage());
@@ -722,6 +734,7 @@ namespace Sobek.IntegrationTests
         }
 
         [Test]
+        [Category(TestCategory.WindowsForms)]
         public void StartDeltaShellWithBigTimeDependendNetworkCoverage()
         {
             StartDeltaShellWithCoverage(GetTimeDependendNetworkCoverage());
@@ -811,6 +824,7 @@ namespace Sobek.IntegrationTests
         }
 
         [Test]
+        [Category(TestCategory.WindowsForms)]
         public void RemovingModelWhichUsesNetworkFromProjectShouldNotRemoveNetworkViewContext()
         {
             WpfTestHelper.ShowModal((Control) gui.MainWindow, () => {
@@ -873,7 +887,7 @@ namespace Sobek.IntegrationTests
 
             var modelImporter = new SobekWaterFlowModel1DImporter();
 
-            var modelPath = TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"ReModels\JAMM2010.sbk\40\DEFTOP.1");
+            var modelPath = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"ReModels\JAMM2010.sbk\40\DEFTOP.1");
             var importedModel = (ICompositeActivity)modelImporter.ImportItem(modelPath);
 
             app.Project.RootFolder.Items.Add(importedModel as IModel);
@@ -899,7 +913,7 @@ namespace Sobek.IntegrationTests
             var modelImporter = new SobekWaterFlowModel1DImporter();
 
             var modelPath =
-                TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly,
+                TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly,
                                            @"ReModels\JAMM2010.sbk\40\DEFTOP.1");
             var importedModel = (ICompositeActivity)modelImporter.ImportItem(modelPath);
 
@@ -924,6 +938,7 @@ namespace Sobek.IntegrationTests
         }
 
         [Test]
+        [Category(TestCategory.WindowsForms)]
         [Category(TestCategory.WorkInProgress)]
         public void ImportIntoNetworkWithOpenHydroNetworkEditor()
         {
@@ -937,7 +952,7 @@ namespace Sobek.IntegrationTests
 
                     gui.CommandHandler.OpenView(network, typeof(ProjectItemMapView));
 
-                    var modelPath = TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly,
+                    var modelPath = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly,
                             @"ReModels\JAMM2010.sbk\40\DEFTOP.1");
 
                     var toNetworkImported = new SobekNetworkToNetworkImporter { TargetObject = network };
@@ -961,7 +976,7 @@ namespace Sobek.IntegrationTests
                 gui.Application.Project.RootFolder.Add(waterFlowModel1D);
                 var network = waterFlowModel1D.Network;
 
-                var modelPath = TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly,
+                var modelPath = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly,
                         @"ReModels\JAMM2010.sbk\40\DEFTOP.1");
 
                 // warm-up
@@ -1008,15 +1023,15 @@ namespace Sobek.IntegrationTests
                 ratio.Should("slow down factor because of tree view event handler").Be.LessThan(1.15); // 15%
             }));
         }
+
         [Test]
         [Category(TestCategory.Performance)]
-        [Category(TestCategory.Slow)]
         public void ImportSloterplasSobekIntoNetworkExportToSobekFilebased()
         {
             // file paths
-            var zipPath = TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly,
+            var zipPath = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly,
                                                      @"ExpSBI.lit.zip");
-            var exportPath = TestHelper.GetTestDataPath(typeof(WaterFlowModel1DGuiIntegrationTest).Assembly,
+            var exportPath = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(WaterFlowModel1DGuiIntegrationTest).Assembly,
                                                         "BridgeExport_SOBEK3-54.md1d");
 
             TestHelper.PerformActionInTemporaryDirectory(tempDir =>
@@ -1091,7 +1106,7 @@ namespace Sobek.IntegrationTests
                 gui.Application.Project.RootFolder.Add(waterFlowModel1D);
                 var network = waterFlowModel1D.Network;
 
-                var modelPath = TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly,
+                var modelPath = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly,
                         @"ReModels\JAMM2010.sbk\40\DEFTOP.1");
 
                 // warm-up
@@ -1135,13 +1150,14 @@ namespace Sobek.IntegrationTests
         }
 
         [Test]
+        [Category(TestCategory.WindowsForms)]
         public void ImportInitialConditionWithOpenSideView()
         {
             WpfTestHelper.ShowModal((Control) gui.MainWindow, (() =>
                 {
                     //reconstruction of 5520. Crash when importing initial conditions with open side view.
                     var modelPath =
-                        TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly,@"ReModels\JAMM2010.sbk\40\DEFTOP.1");
+                        TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly,@"ReModels\JAMM2010.sbk\40\DEFTOP.1");
                     var importer = new SobekHydroModelImporter(false);
                         
                     var model = (HydroModel)importer.ImportItem(modelPath);
@@ -1206,6 +1222,8 @@ namespace Sobek.IntegrationTests
         }
         
         [Test]
+        [Category(TestCategory.WindowsForms)]
+        [SetCulture("en-us")]
         public void CopyPasteModelWithOutputInNetcdf()
         {
             // since gui is created in setup - dispose it first
@@ -1264,6 +1282,7 @@ namespace Sobek.IntegrationTests
         }
 
         [Test]
+        [Category(TestCategory.WindowsForms)]
         public void OpenStructureViewWhileBoundaryGroupDataViewOpenShouldNotCrash_Tools6939()
         {
             var model = new WaterFlowModel1D();
@@ -1287,6 +1306,7 @@ namespace Sobek.IntegrationTests
         }
 
         [Test]
+        [Category(TestCategory.WindowsForms)]
         public void OpenStructureViewWhileLateralGroupDataViewOpenShouldNotCrash_Tools6939()
         {
             var model = new WaterFlowModel1D();
@@ -1311,6 +1331,7 @@ namespace Sobek.IntegrationTests
         }
         
         [Test]
+        [Category(TestCategory.WindowsForms)]
         public void MovingALateralShouldMaintainData()
         {
             var project = app.Project;
@@ -1348,6 +1369,7 @@ namespace Sobek.IntegrationTests
         }
 
         [Test]
+        [Category(TestCategory.WindowsForms)]
         public void MovingADiffuseLateralShouldMaintainData()
         {
             var project = app.Project;

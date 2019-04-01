@@ -19,7 +19,7 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.Fews.Tests
 {
     [TestFixture]
-    class FewsAdapterMaasTest : FewsAdapterTestBase
+    public class FewsAdapterMaasTest : FewsAdapterTestBase
     {
         [SetUp]
         public void SetUpFixture()
@@ -36,7 +36,7 @@ namespace DeltaShell.Plugins.Fews.Tests
             string testRunDir = "LoadMaas";
             FileUtils.DeleteIfExists(testRunDir);
             FileUtils.CreateDirectoryIfNotExists(testRunDir);
-            var path = TestHelper.GetTestDataPath(typeof(FewsAdapterTest).Assembly, @"Maas\DSModel\j03mid_19728_FEWS_v007.dsproj");
+            var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(FewsAdapterTest).Assembly, @"Maas\DSModel\j03mid_19728_FEWS_v007.dsproj");
             var pathNew = testRunDir + "/j03mid_19728_FEWS_v007.dsproj";
             FileUtils.CopyFile(path, pathNew);
             FileUtils.CopyDirectory(path + "_data", pathNew + "_data");
@@ -58,7 +58,7 @@ namespace DeltaShell.Plugins.Fews.Tests
             string testRunDir = "ImportMaas";
             FileUtils.DeleteIfExists(testRunDir);
             FileUtils.CreateDirectoryIfNotExists(testRunDir);
-            var path = TestHelper.GetTestDataPath(typeof(FewsAdapterTest).Assembly, @"Maas\DSModel\j03mid_19728_FEWS_v007.dsproj");
+            var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(FewsAdapterTest).Assembly, @"Maas\DSModel\j03mid_19728_FEWS_v007.dsproj");
             var pathNew = testRunDir + "/j03mid_19728_FEWS_v007.dsproj";
             FileUtils.CopyFile(path, pathNew);
             FileUtils.CopyDirectory(path + "_data", pathNew + "_data", ".svn");

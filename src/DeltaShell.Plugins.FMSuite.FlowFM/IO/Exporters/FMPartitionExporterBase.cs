@@ -47,6 +47,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
             get { return "General"; }
         }
 
+        public string Description
+        {
+            get { return string.Empty; }
+        }
+
         public abstract IEnumerable<Type> SourceTypes();
 
         public abstract string FileFilter { get; }

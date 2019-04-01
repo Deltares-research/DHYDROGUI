@@ -706,7 +706,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         [Category(TestCategory.DataAccess)]
         public void ReadCrossSectionDefinition()
         {
-            string definitionFile = TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"CrossSection\vancouver.def");
+            string definitionFile = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"CrossSection\vancouver.def");
             IList<SobekCrossSectionDefinition> cs =
                 new CrossSectionDefinitionReader().Read(definitionFile).ToList();
 
@@ -737,7 +737,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         [Category(TestCategory.DataAccess)]
         public void ReadCrossSectionLayers()
         {
-            string definitionFile = TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"CrossSection\profile.def");
+            string definitionFile = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"CrossSection\profile.def");
             IList<SobekCrossSectionDefinition> cs =
                 new CrossSectionDefinitionReader().Read(definitionFile).ToList();
 

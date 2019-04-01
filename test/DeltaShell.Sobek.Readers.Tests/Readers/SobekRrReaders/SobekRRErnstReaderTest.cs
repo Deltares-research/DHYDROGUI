@@ -75,7 +75,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         [Category(TestCategory.DataAccess)]
         public void ReadErnstAlfaFile()
         {
-            var path = TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"Tholen.lit\29\Unpaved.Alf");
+            var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"Tholen.lit\29\Unpaved.Alf");
             var lstErnst = new SobekRRErnstReader().Read(path);
             Assert.AreEqual(205, lstErnst.Count());
         }
@@ -84,7 +84,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         [Category(TestCategory.DataAccess)]
         public void ReadErnstAlfaFileLandelijkSobekModel()
         {
-            var path = TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"LSM1_0.lit\12\Unpaved.Alf");
+            var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"LSM1_0.lit\12\Unpaved.Alf");
             var lstErnst = new SobekRRErnstReader().Read(path).ToList();
 
             Assert.IsNotNull(lstErnst.FirstOrDefault(e => e.Id == "P15_Drain1"));

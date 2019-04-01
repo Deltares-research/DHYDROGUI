@@ -13,6 +13,7 @@ using DelftTools.Hydro;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils;
 using DelftTools.Utils.Editing;
+using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms.CoverageViews;
 using GeoAPI.Extensions.Coverages;
@@ -423,7 +424,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms
                 }
 
                 return (value.GetType().IsEnum)
-                           ? EnumDescriptionAttributeTypeConverter.GetEnumDescription((Enum)value)
+                           ? ((Enum)value).GetDescription()
                            : value.ToString();
             }
         }

@@ -13,7 +13,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         [Category(TestCategory.DataAccess)]
         public void ImportMeasurementStations()
         {
-            string pathToSobekNetwork = TestHelper.GetDataDir() + @"\ReModels\J_10BANK.sbk\4\DEFTOP.1";
+            string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\ReModels\J_10BANK.sbk\4\DEFTOP.1";
             var hydroNetwork = new HydroNetwork();
 
             var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekNetwork, hydroNetwork, new IPartialSobekImporter[] { new SobekBranchesImporter(), new SobekMeasurementStationsImporter() });
@@ -27,7 +27,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         [Category(TestCategory.DataAccess)]
         public void UpdateExistingMeasurementStations()
         {
-            string pathToSobekNetwork = TestHelper.GetDataDir() + @"\ReModels\J_10BANK.sbk\4\DEFTOP.1";
+            string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\ReModels\J_10BANK.sbk\4\DEFTOP.1";
             var hydroNetwork = new HydroNetwork();
 
             var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekNetwork, hydroNetwork, new IPartialSobekImporter[] { new SobekBranchesImporter(), new SobekMeasurementStationsImporter() });
@@ -53,7 +53,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         [Category(TestCategory.DataAccess)]
         public void UpdateExistingMeasurementStationOnAnotherBranch()
         {
-            string pathToSobekNetwork = TestHelper.GetDataDir() + @"\ReModels\J_10BANK.sbk\4\DEFTOP.1";
+            string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\ReModels\J_10BANK.sbk\4\DEFTOP.1";
 
             var hydroNetwork = PartialSobekImporterTestHelper.GetTestNetwork();
             var branch = hydroNetwork.Branches.First();

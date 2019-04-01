@@ -2,7 +2,6 @@ using System.IO;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.CompareSobek.Tests;
 using NUnit.Framework;
-using SobekCompare.Tests.Helpers;
 
 namespace SobekCompare.Tests
 {
@@ -16,12 +15,7 @@ namespace SobekCompare.Tests
         public void SetUp()
         {
             LogHelper.ConfigureLogging();
-            baseDir = Path.Combine(TestHelper.GetDataDir(), "BasicTst.lit");
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
+            baseDir = Path.Combine(TestHelper.GetTestDataDirectory(), "BasicTst.lit");
         }
 
         [Test]

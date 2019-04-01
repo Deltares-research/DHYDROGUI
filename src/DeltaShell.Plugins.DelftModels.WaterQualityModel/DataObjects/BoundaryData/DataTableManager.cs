@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 
@@ -161,19 +162,19 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.BoundaryD
         }
 
         /// <summary>
-        /// Datas the tables on collection changed.
+        /// Clears the data related to the data table when a data table is removed.
         /// </summary>
         /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="NotifyCollectionChangingEventArgs"/> instance containing the event data.</param>
-        private void DataTablesOnCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        /// <param name="e">The <see cref="NotifyCollectionChangedEventArgs"/> instance containing the event data.</param>
+        private void DataTablesOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (movingDataTables || !Equals(sender, dataTables))
             {
                 return;
             }
 
-            var dataTable = (DataTable)e.Item;
-            if (e.Action == NotifyCollectionChangeAction.Remove)
+            var dataTable = (DataTable)e.GetRemovedOrAddedItem();
+            if (e.Action == NotifyCollectionChangedAction.Remove)
             {
                 dataTable.DataFile.Delete();
                 dataTable.SubstanceUseforFile.Delete();

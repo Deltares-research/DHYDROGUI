@@ -93,20 +93,6 @@ namespace DeltaShell.Plugins.Fews.Tests
             }
         }
 
-        internal static void MakePathsInFewsAdapterConfigFilesAbsolute(string dir, string testRunDirPath)
-        {
-            foreach (string subDir in Directory.GetDirectories(dir))
-            {
-                MakePathsInFewsAdapterConfigFilesAbsolute(subDir, testRunDirPath);
-            }
-            foreach (string xmlFile in Directory.GetFiles(dir, "*.xml"))
-            {
-                string[] linesInXmlFile = File.ReadAllLines(xmlFile);
-                string adjustedContent = linesInXmlFile.Aggregate("", (current, t) => current + t.Replace(TestDirResolver.TestDirPlaceHolder, testRunDirPath) + "\n");
-                File.WriteAllText(xmlFile, adjustedContent);
-            }
-        }
-
         /// <summary>
         /// to avoid changes in testdata
         /// </summary>
@@ -117,7 +103,7 @@ namespace DeltaShell.Plugins.Fews.Tests
         {
             FileUtils.DeleteIfExists(testRunDir);
             Directory.CreateDirectory(testRunDir);
-            string sourcePath = Path.Combine(TestHelper.GetDataDir(), sourceDirName);
+            string sourcePath = Path.Combine(TestHelper.GetTestDataDirectory(), sourceDirName);
             string targetPath = Path.Combine(testRunDir, sourceDirName);
             FileUtils.CopyDirectory(sourcePath, targetPath, ".svn");
             return targetPath;
@@ -143,29 +129,7 @@ namespace DeltaShell.Plugins.Fews.Tests
             Assert.IsNotEmpty(file);
             Assert.IsTrue(File.Exists(file), "The expected file " + file + " does not exists");
         }
-
-        internal void AssertXmlStringsAreEqual(string actual, string expected)
-        {
-            AssertExpectedResult(actual, expected, true);
-        }
-
-        private static void AssertExpectedResult(string actual, string expected, bool areSame)
-        {
-            TextReader reader1 = new StringReader(actual);
-            TextReader reader2 = new StringReader(expected);
-            DiffResult result = PerformDiff(reader1, reader2);
-            string msg = string.Format("comparing {0} to {1}: {2}", actual, expected, result.Difference);
-            Assert.AreEqual(areSame, result.Equal, msg);
-        }
-
-        private static DiffResult PerformDiff(TextReader reader1, TextReader reader2)
-        {
-            var xmlDiff = new XmlDiff(reader1, reader2);
-            DiffResult result = xmlDiff.Compare();
-            return result;
-        }
-
-
+        
         internal Project CreateProjectWithModel(IModel model)
         {
             var project = new Project("test project");

@@ -87,7 +87,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Import
         private IList<string> GetFirstColumnAsValuesListFromLayer(Layer layer)
         {
             var lstValues = new List<string>();
-            int featureCount = layer.GetFeatureCount(1);
+            long featureCount = layer.GetFeatureCount(1);
             for (int i = 0; i < featureCount; i++)
             {
                 using (var row = layer.GetNextFeature())

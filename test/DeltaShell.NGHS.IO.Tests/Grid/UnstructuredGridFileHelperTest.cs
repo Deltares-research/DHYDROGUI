@@ -13,18 +13,20 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
     [TestFixture]
     public class UnstructuredGridFileHelperTest
     {
+        [Test]
         [TestCase("fileDoesNotExist.nc", false)]
         [TestCase(@"ugrid\Custom_Ugrid.nc", true)]
         [TestCase(@"nonUgrid\TAK3_net.nc", true)]
         public void TestLoadFromFile(string filePath, bool gridShouldLoad)
         {
-            var testFilePath = Path.Combine(TestHelper.GetDataDir(), filePath);
+            var testFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), filePath);
             Assert.AreEqual(gridShouldLoad, File.Exists(testFilePath));
 
             var grid = UnstructuredGridFileHelper.LoadFromFile(testFilePath);
             Assert.AreEqual(gridShouldLoad, grid != null);
         }
 
+        [Test]
         [TestCase(@"ugrid\BedLevelValues_NodesAndFaces.nc", UnstructuredGridFileHelper.BedLevelLocation.Faces)]
         [TestCase(@"ugrid\BedLevelValues_NodesAndFaces.nc", UnstructuredGridFileHelper.BedLevelLocation.FacesMeanLevFromNodes)]
         [TestCase(@"ugrid\BedLevelValues_NodesAndFaces.nc", UnstructuredGridFileHelper.BedLevelLocation.NodesMaxLev)]
@@ -33,7 +35,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [TestCase(@"ugrid\BedLevelValues_NodesAndFaces.nc", UnstructuredGridFileHelper.BedLevelLocation.NodesMeanLev)]
         public void TestReadZValues(string filePath, UnstructuredGridFileHelper.BedLevelLocation location)
         {
-            var testFilePath = Path.Combine(TestHelper.GetDataDir(), filePath);
+            var testFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), filePath);
             Assert.IsTrue(File.Exists(testFilePath));
 
             var zValues = UnstructuredGridFileHelper.ReadZValues(testFilePath, location);
@@ -44,7 +46,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [Test]
         public void TestReadZValues_DoesNotThrowForNoZValuesInFile()
         {
-            var testFilePath = Path.Combine(TestHelper.GetDataDir(), @"ugrid\Custom_Ugrid.nc");
+            var testFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), @"ugrid\Custom_Ugrid.nc");
             Assert.IsTrue(File.Exists(testFilePath));
 
             var zValues = UnstructuredGridFileHelper.ReadZValues(testFilePath, UnstructuredGridFileHelper.BedLevelLocation.Faces);
@@ -54,7 +56,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [Test]
         public void TestReadZValues_GivesWarningForEdgeLocations()
         {
-            var testFilePath = Path.Combine(TestHelper.GetDataDir(), @"ugrid\BedLevelValues_NodesAndFaces.nc");
+            var testFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), @"ugrid\BedLevelValues_NodesAndFaces.nc");
             Assert.IsTrue(File.Exists(testFilePath));
 
             var zValues = new double[0];
@@ -69,7 +71,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [Test]
         public void TestReadZValues_GivesWarningForNonUgridFiles()
         {
-            var testFilePath = Path.Combine(TestHelper.GetDataDir(), @"nonUgrid\TAK3_net.nc");
+            var testFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), @"nonUgrid\TAK3_net.nc");
             Assert.IsTrue(File.Exists(testFilePath));
 
             var zValues = new double[0];
@@ -81,6 +83,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             Assert.AreEqual(0, zValues.Length);
         }
 
+        [Test]
         [TestCase(@"ugrid\Custom_Ugrid.nc", UnstructuredGridFileHelper.BedLevelLocation.Faces)]
         [TestCase(@"ugrid\Custom_Ugrid.nc", UnstructuredGridFileHelper.BedLevelLocation.FacesMeanLevFromNodes)]
         [TestCase(@"ugrid\Custom_Ugrid.nc", UnstructuredGridFileHelper.BedLevelLocation.NodesMaxLev)]
@@ -89,7 +92,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [TestCase(@"nonUgrid\TAK3_net.nc", UnstructuredGridFileHelper.BedLevelLocation.NodesMeanLev)]
         public void TestWriteZValues_DoesNotThrowForSupportedLocations(string filePath, UnstructuredGridFileHelper.BedLevelLocation location)
         {
-            var testFilePath = Path.Combine(TestHelper.GetDataDir(), filePath);
+            var testFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), filePath);
             Assert.IsTrue(File.Exists(testFilePath));
 
             var localtestFile = TestHelper.CreateLocalCopy(testFilePath);
@@ -117,7 +120,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [Test]
         public void TestWriteZValues_GivesWarningForEdgeLocations()
         {
-            var testFilePath = Path.Combine(TestHelper.GetDataDir(), @"ugrid\Custom_Ugrid.nc");
+            var testFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), @"ugrid\Custom_Ugrid.nc");
             Assert.IsTrue(File.Exists(testFilePath));
 
             var localtestFile = TestHelper.CreateLocalCopy(testFilePath);
@@ -132,23 +135,25 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             FileUtils.DeleteIfExists(localtestFile);
         }
 
+        [Test]
         [TestCase("fileDoesNotExist.nc", false, null)]
         [TestCase(@"ugrid\Custom_Ugrid.nc", true, 4326L)] // WGS84
         [TestCase(@"nonUgrid\small_net.nc", true, 28992L)] // Amersfoort / RD New
         public void TestGetCoordinateSystem(string filePath, bool testFileExists, long? expectedResult)
         {
-            var testFilePath = Path.Combine(TestHelper.GetDataDir(), filePath);
+            var testFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), filePath);
             Assert.AreEqual(testFileExists, File.Exists(testFilePath));
             
             var coordinateSystemAuthorityCode = UnstructuredGridFileHelper.GetCoordinateSystem(testFilePath)?.AuthorityCode;
             Assert.AreEqual(expectedResult, coordinateSystemAuthorityCode);
         }
 
+        [Test]
         [TestCase(@"ugrid\Custom_Ugrid.nc")]
         [TestCase(@"nonUgrid\TAK3_net.nc")]
         public void TestSetCoordinateSystem(string filePath)
         {
-            var testFilePath = Path.Combine(TestHelper.GetDataDir(), filePath);
+            var testFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), filePath);
             Assert.IsTrue(File.Exists(testFilePath));
 
             var localtestFile = TestHelper.CreateLocalCopy(testFilePath);
@@ -166,7 +171,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [Test]
         public void TestWriteGridToFile_DoesNotThrowForExistingFile()
         {
-            var testFilePath = Path.Combine(TestHelper.GetDataDir(), @"nonUgrid\TAK3_net.nc");
+            var testFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), @"nonUgrid\TAK3_net.nc");
             Assert.IsTrue(File.Exists(testFilePath));
 
             var localtestFile = TestHelper.CreateLocalCopy(testFilePath);
@@ -178,7 +183,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [Test]
         public void TestWriteGridToFile_CreateNewFileForNonExistingFile()
         {
-            var testFilePath = Path.Combine(TestHelper.GetDataDir(), "fileDoesNotExist.nc");
+            var testFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "fileDoesNotExist.nc");
             Assert.IsFalse(File.Exists(testFilePath));
 
             var localtestFile = TestHelper.CreateLocalCopy(testFilePath);
@@ -190,11 +195,12 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             FileUtils.DeleteIfExists(localtestFile);
         }
 
+        [Test]
         [TestCase(@"ugrid\Custom_Ugrid.nc")]
         [TestCase(@"nonUgrid\TAK3_net.nc")]
         public void TestRewriteGridCoordinates(string filePath)
         {
-            var testFilePath = Path.Combine(TestHelper.GetDataDir(), filePath);
+            var testFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), filePath);
             Assert.IsTrue(File.Exists(testFilePath));
 
             var localtestFile = TestHelper.CreateLocalCopy(testFilePath);
@@ -211,11 +217,12 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             FileUtils.DeleteIfExists(localtestFile);
         }
 
+        [Test]
         [TestCase(@"ugrid\Custom_Ugrid.nc", 1)]
         [TestCase(@"nonUgrid\TAK3_net.nc", 0)]
         public void TestDoIfUgrid(string filePath, int expectedCounter)
         {
-            var testFilePath = Path.Combine(TestHelper.GetDataDir(), filePath);
+            var testFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), filePath);
             Assert.IsTrue(File.Exists(testFilePath));
 
             var counter = 0;
@@ -400,6 +407,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         /// THEN
         ///   The Unstructured Grid File should still contain the same Coordinate System
         /// </summary>
+        [Test]
         [TestCase(4326,  TestName = "GivenAnUnstructuredGridFileContainingACartesianCoordinateSystem_WhenTheSameCoordinateSystemIsWrittenToThisFile_ThenTheFileShouldContainTheCorrectCoordinateSystem")]
         [TestCase(28992, TestName = "GivenAnUnstructuredGridFileContainingASphericalCoordinateSystem_WhenTheSameCoordinateSystemIsWrittenToThisFile_ThenTheFileShouldContainTheCorrectCoordinateSystem")]
         [Category(TestCategory.DataAccess)]
@@ -509,6 +517,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         /// THEN
         ///   Both variables should contain the Authority Code of coordinate system of type B
         /// </summary>
+        [Test]
         [TestCase(4326, 28992)]
         [TestCase(28992, 4326)]
         [Category(TestCategory.DataAccess)]

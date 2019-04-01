@@ -29,7 +29,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
         [Test, Category(TestCategory.Integration)]
         public void BuildSettingsForModelWithHydFile()
         {
-            var commonPath = TestHelper.GetDataDir();
+            var commonPath = TestHelper.GetTestDataDirectory();
 
             var hydFileData = new HydFileData
                 {

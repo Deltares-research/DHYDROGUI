@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Utils;
+using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.Gui.Editors;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
@@ -25,7 +26,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Editors
         [TestCase("999", FlowBoundaryQuantityType.SedimentConcentration, "999")]
         public void TestGetVariableDescription_CorrectlyHandlesTracersAndFractionNames(string variable, FlowBoundaryQuantityType quantityType, string expectedDescription)
         {
-            var category = EnumDescriptionAttributeTypeConverter.GetEnumDescription(quantityType);
+            var category = quantityType.GetDescription();
             var returnedDescription = new FlowBoundaryConditionEditorController().GetVariableDescription(variable, category);
 
             Assert.AreEqual(expectedDescription, returnedDescription);

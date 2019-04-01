@@ -14,7 +14,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         [Category(TestCategory.DataAccess)]
         public void ReadSmallSpeFile_AssertAll()
         {
-            string dataDir = TestHelper.GetDataDir();
+            string dataDir = TestHelper.GetTestDataDirectory();
             string filePath = Path.Combine(dataDir, "IO", "spe", "small.spe");
 
             BloomInfo result = BloomSpeFileReader.Read(filePath);
@@ -60,7 +60,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         [Category(TestCategory.DataAccess)]
         public void ReadLargeSpeFile_AssertHeuristicsOnly()
         {
-            string dataDir = TestHelper.GetDataDir();
+            string dataDir = TestHelper.GetTestDataDirectory();
             string filePath = Path.Combine(dataDir, "IO", "spe", "bloom.spe");
 
             BloomInfo result = BloomSpeFileReader.Read(filePath);

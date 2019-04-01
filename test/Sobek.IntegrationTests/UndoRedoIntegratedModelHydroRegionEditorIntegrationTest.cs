@@ -110,7 +110,7 @@ namespace Sobek.IntegrationTests
 
                 // import new model
                 var modelImporter = new SobekHydroModelImporter();
-                string pathToSobekNetwork = TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"DWAQ_AC1\DWAQ_AC1.lit\37\network.tp");
+                string pathToSobekNetwork = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"DWAQ_AC1\DWAQ_AC1.lit\37\network.tp");
                 modelImporter.PathSobek = pathToSobekNetwork;
                 modelImporter.useFlow = true;
                 modelImporter.useRTC = true;

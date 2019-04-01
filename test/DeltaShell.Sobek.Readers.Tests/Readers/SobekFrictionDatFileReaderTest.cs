@@ -27,7 +27,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
             const string source = @"BDFR id '1' ci '1' mf 4 mt cp 0  .003 0 mr cp 0  .003 0 s1 6 s2 6 bdfr";
             var sobekFriction = SobekFrictionDatFileReader.GetSobekFriction(source);
 
-            //SobekFriction sobekFriction = SobekFrictionDatFileReader.ReadSobekFriction(TestHelper.GetDataDir() + @"\friction\SimpleBedFriction.dat");
+            //SobekFriction sobekFriction = SobekFrictionDatFileReader.ReadSobekFriction(TestHelper.GetTestDataDirectory() + @"\friction\SimpleBedFriction.dat");
             Assert.AreEqual(1, sobekFriction.SobekBedFrictionList.Count);
             SobekBedFriction sobekBedFriction = sobekFriction.SobekBedFrictionList[0];
             Assert.AreEqual(SobekFrictionFunctionType.Constant, sobekBedFriction.MainFriction.Positive.FunctionType);
@@ -41,7 +41,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         public void ReadFrictionAdige()
         {
             // source: P:\sobek\maintenance\Jira\18001-19000\18131\DBS2SBK\Ars-7864\1\ADIGE.lit\6\
-            var path = TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"friction\friction.dat");
+            var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"friction\friction.dat");
             string defFileText = File.ReadAllText(path, Encoding.Default);
             SobekFriction sobekFriction = SobekFrictionDatFileReader.GetSobekFriction(defFileText);
             Assert.AreEqual(199, sobekFriction.CrossSectionFrictionList.Count);
@@ -298,7 +298,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         [Category(TestCategory.DataAccess)]
         public void SobekFrictionOfSW_MAXTest()
         {
-            var path = TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"SW_max_1.lit\3\FRICTION.DAT");
+            var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"SW_max_1.lit\3\FRICTION.DAT");
             string defFileText = File.ReadAllText(path);
             SobekFriction sobekFriction = SobekFrictionDatFileReader.GetSobekFriction(defFileText);
             Assert.AreEqual(12, sobekFriction.SobekBedFrictionList.Count());
@@ -536,7 +536,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         [Category(TestCategory.DataAccess)]
         public void ReadMultipleFrictionDefinitionsFromFile()
         {
-            var path = TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"friction\friction.dat");
+            var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"friction\friction.dat");
 
             var sobekFriction = new SobekFrictionDatFileReader().ReadSobekFriction(path);
 

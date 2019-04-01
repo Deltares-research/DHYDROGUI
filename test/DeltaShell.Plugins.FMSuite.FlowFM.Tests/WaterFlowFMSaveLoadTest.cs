@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
@@ -18,9 +19,7 @@ using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
-using FixedWeir = DelftTools.Hydro.Structures.FixedWeir;
 using Point = NetTopologySuite.Geometries.Point;
-using ThinDam2D = DelftTools.Hydro.Structures.ThinDam2D;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 {

@@ -4,6 +4,7 @@ using System.Linq;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
+using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using NetTopologySuite.Extensions.Features;
@@ -31,7 +32,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
             }
 
             // try to parse the sediment concentration name and the quantity type of the boundary condition (special case)
-            if (quantityType != null && EnumDescriptionAttributeTypeConverter.GetEnumDescription(FlowBoundaryQuantityType.SedimentConcentration).Equals(quantityType))
+            if (quantityType != null && FlowBoundaryQuantityType.SedimentConcentration.GetDescription().Equals(quantityType))
             {
                 if (fractionList.Count > 0 && fractionList.Contains(variable))
                 {

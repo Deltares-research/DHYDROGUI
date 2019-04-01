@@ -13,6 +13,10 @@ namespace DeltaShell.Plugins.Fews.Export
         public string Name { get { return "ModelExchangeItem information"; } }
 
         public string Category { get { return "External"; } }
+        public string Description
+        {
+            get { return string.Empty; }
+        }
 
         public string FileFilter { get { return "csv files (*.csv)|*.csv"; } }
 

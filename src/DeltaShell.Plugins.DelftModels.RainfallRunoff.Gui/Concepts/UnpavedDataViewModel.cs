@@ -3,6 +3,7 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
+using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
 
@@ -121,7 +122,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             set
             {
                 areaUnit = value;
-                AreaUnitLabel = EnumDescriptionAttributeTypeConverter.GetEnumDescription(value);
+                AreaUnitLabel = value.GetDescription();
             }
         }
 

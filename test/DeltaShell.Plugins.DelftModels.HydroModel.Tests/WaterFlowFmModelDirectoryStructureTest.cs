@@ -34,9 +34,6 @@ using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using Rhino.Mocks;
 using SharpMap.Extensions.CoordinateSystems;
-using FixedWeir = DelftTools.Hydro.Structures.FixedWeir;
-using LandBoundary2D = DelftTools.Hydro.LandBoundary2D;
-using ObservationCrossSection2D = DelftTools.Hydro.ObservationCrossSection2D;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 {
@@ -645,7 +642,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         {
             CreateTestDirectories();
 
-            var expectedExtension = ".xml";
+            const string expectedExtension = ".xml";
 
             try
             {
@@ -684,7 +681,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                         app.CloseProject();
 
                         Assert.IsTrue(File.Exists(exportDimrFilePath));
-                        var expectedFileCount = 1;
+                        const int expectedFileCount = 1;
                         var actualFileCount = Directory.GetFiles(exportDimrDirPath, $"*{expectedExtension}").Length;
                         Assert.AreEqual(expectedFileCount, actualFileCount,
                             Message_WrongNumberOfFilesOrFolders(expectedFileCount, "folders", expectedExtension,
@@ -695,7 +692,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                     }
                 }
             }
-
             finally
             {
                 DeleteTestDirectories();
@@ -1043,6 +1039,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 using (var app = GetConfiguredHydroApplication())
                 {
                     app.OpenProject(projectFilePath);
+                    // Execute SaveAs() manually (migrating through GUI does this already).
+                    app.SaveProjectAs(projectFilePath); 
 
                     var integratedModel = app.GetAllModelsInProject().FirstOrDefault(m => m is IHydroModel);
                     Assert.NotNull(integratedModel, "Expected: one integrated model (hydromodel) in the project.");

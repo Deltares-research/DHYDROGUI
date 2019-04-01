@@ -29,7 +29,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         [Test]
         public void SobekType212()
         {
-            string pathToSobekNetwork = TestHelper.GetDataDir() + @"\network1\network.tp";
+            string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\network1\network.tp";
 
             var partialSobekImporterBaseTestClass = new PartialSobekImporterBaseTestClass();
 
@@ -42,7 +42,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         [Test]
         public void SobekTypeRE()
         {
-            string pathToSobekNetwork = TestHelper.GetDataDir() + @"\ReModels\J_10BANK.sbk\4\DEFTOP.1";
+            string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\ReModels\J_10BANK.sbk\4\DEFTOP.1";
 
             var partialSobekImporterBaseTestClass = new PartialSobekImporterBaseTestClass();
 

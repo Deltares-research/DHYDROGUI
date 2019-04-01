@@ -14,7 +14,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         [Category(TestCategory.DataAccess)]
         public void ImportSettingsRe()
         {
-            var pathToSobekNetwork = TestHelper.GetDataDir() + @"\ReModels\LATERALS.sbk\2\DEFTOP.1";
+            var pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\ReModels\LATERALS.sbk\2\DEFTOP.1";
             var waterFlowModel1DModel = new WaterFlowModel1D("water flow 1d");
             waterFlowModel1DModel.StopTime = waterFlowModel1DModel.StartTime;
 
@@ -30,7 +30,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         [Category(TestCategory.DataAccess)]
         public void ImportSettingsFlow()
         {
-            var pathToSobekNetwork = TestHelper.GetDataDir() + @"\301_00.lit\2\NETWORK.TP";
+            var pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\301_00.lit\2\NETWORK.TP";
             var waterFlowModel1DModel = new WaterFlowModel1D("water flow 1d");
             waterFlowModel1DModel.StopTime = waterFlowModel1DModel.StartTime;
 
@@ -51,7 +51,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         public void GivenSobek2FileBase_WhenImporting_ThenSaveStateTimePropertiesAreAsExpected()
         {
             // Given
-            var pathToSobekNetwork = TestHelper.GetDataDir() + @"\301_00.lit\2\NETWORK.TP";
+            var pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\301_00.lit\2\NETWORK.TP";
             var waterFlowModel1D = new WaterFlowModel1D("water flow 1d");
             var initialModelStopTime = waterFlowModel1D.StopTime;
 
@@ -74,7 +74,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         [Category(TestCategory.DataAccess)]
         public void ImportSettingsChezyBecomesConveyance()
         {
-            var pathToSobekNetwork = TestHelper.GetDataDir() + @"\chezyBecomesConveyance\1\NETWORK.TP";
+            var pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\chezyBecomesConveyance\1\NETWORK.TP";
             var waterFlowModel1DModel = new WaterFlowModel1D("water flow 1d");
             waterFlowModel1DModel.StopTime = waterFlowModel1DModel.StartTime;
 

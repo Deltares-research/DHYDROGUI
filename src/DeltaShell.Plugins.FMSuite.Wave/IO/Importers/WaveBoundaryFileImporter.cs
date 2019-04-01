@@ -20,6 +20,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Importers
         }
 
         public string Category { get; private set; }
+        public string Description
+        {
+            get { return string.Empty; }
+        }
         public Bitmap Image { get; private set; }
 
         public IEnumerable<Type> SupportedItemTypes 

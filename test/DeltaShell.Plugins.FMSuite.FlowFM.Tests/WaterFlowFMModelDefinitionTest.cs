@@ -28,7 +28,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using FixedWeir = DelftTools.Hydro.Structures.FixedWeir;
+using DelftTools.Hydro.Structures;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 {
@@ -454,7 +454,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void ReadAndWriteOutputSettings()
         {
             var mduDir =
-                Path.Combine(TestHelper.GetDataDir(), "simpleBox");
+                Path.Combine(TestHelper.GetTestDataDirectory(), "simpleBox");
 
             var area = new HydroArea();
             var modelDefinition = new WaterFlowFMModelDefinition(mduDir, "simplebox");
@@ -522,7 +522,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void ReadAndWriteModelDefinitionIvkModel()
         {
             var mduDir =
-                Path.Combine(TestHelper.GetDataDir(), "mdu_ivoorkust");
+                Path.Combine(TestHelper.GetTestDataDirectory(), "mdu_ivoorkust");
 
             var area = new HydroArea();
             var modelDefinition = new WaterFlowFMModelDefinition(mduDir, "ivk");
@@ -577,7 +577,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void ReadAndWriteModelDefinitionHarlingenModel()
         {
             var mduDir =
-                Path.Combine(TestHelper.GetDataDir(), "harlingen");
+                Path.Combine(TestHelper.GetTestDataDirectory(), "harlingen");
 
             var area = new HydroArea();
             var modelDefinition = new WaterFlowFMModelDefinition(mduDir, "har");
@@ -638,7 +638,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Ignore("Run this test to generate expected model definition files")]
         public void GenerateExpectedResultsFolder()
         {
-            var mduDir = Path.Combine(TestHelper.GetDataDir(), "harlingen");
+            var mduDir = Path.Combine(TestHelper.GetTestDataDirectory(), "harlingen");
             var expectedResultsDir = Path.Combine(mduDir, "expectedResults");
             
             var area = new HydroArea();
@@ -654,7 +654,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void ReadAndWriteModelDefinitionC010TimeSeries()
         {
             var mduDir =
-                Path.Combine(TestHelper.GetDataDir(), @"data\f05_boundary_conditions\c010_time_series\input");
+                Path.Combine(TestHelper.GetTestDataDirectory(), @"data\f05_boundary_conditions\c010_time_series\input");
 
             var area = new HydroArea();
             var modelDefinition = new WaterFlowFMModelDefinition(mduDir, "boundcond_test");
@@ -696,7 +696,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void ReadModelDefinitionC075Frictiontypes()
         {
             var mduDir =
-                Path.Combine(TestHelper.GetDataDir(), @"c075_Frictiontypes");
+                Path.Combine(TestHelper.GetTestDataDirectory(), @"c075_Frictiontypes");
 
             var area = new HydroArea();
             var modelDefinition = new WaterFlowFMModelDefinition(mduDir, "frictiontypes");
@@ -1214,6 +1214,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             CheckOutputSnappedFeaturesValue(md.WriteSnappedFeatures, md);
         }
 
+        [Test]
         [TestCase(KnownProperties.Wrishp_crs)]
         [TestCase(KnownProperties.Wrishp_weir)]
         [TestCase(KnownProperties.Wrishp_gate)]
@@ -1519,6 +1520,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.That(meteoDataComponents[3].Name, Is.EqualTo(solarRadiation));
         }
 
+        [Test]
         [TestCase(KnownProperties.SedFile,"Sediment")]
         [TestCase(KnownProperties.morphology,"Morphology")]
 
@@ -1584,6 +1586,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.DoesNotThrow(() => dummyVar = WaterFlowFMModelDefinition.GuiPropertyGroups );
         }
 
+        [Test]
         [TestCase("file_name", "file_name")]
         [TestCase("", "FlowFM1_clm.nc")]
         [TestCase(null, "FlowFM1_clm.nc")]
@@ -1601,6 +1604,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.AreEqual(expectedString, resultedFileName);
         }
 
+        [Test]
         [TestCase("file_name", "file_name")]
         [TestCase("", "FlowFM1_map.nc")]
         [TestCase(null, "FlowFM1_map.nc")]
@@ -1618,6 +1622,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.AreEqual(expectedString, resultedFileName);
         }
 
+        [Test]
         [TestCase("file_name", "file_name")]
         [TestCase("", "FlowFM1_his.nc")]
         [TestCase(null, "FlowFM1_his.nc")]
@@ -1678,6 +1683,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.AreEqual(true, (bool) writeClassMapFileProperty.Value);
         }
 
+        [Test]
         [TestCase("", WaterFlowFMModelDefinition.DefaultOutputDirectoryName)]
         [TestCase(null, WaterFlowFMModelDefinition.DefaultOutputDirectoryName)]
         [TestCase(".", "")]

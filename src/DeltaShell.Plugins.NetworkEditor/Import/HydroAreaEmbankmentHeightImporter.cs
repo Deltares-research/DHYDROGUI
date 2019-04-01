@@ -25,6 +25,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Import
         public string Name { get { return "Embankment heights"; } }
 
         public string Category { get { return "D-Flow FM 2D/3D"; } }
+        public string Description
+        {
+            get { return string.Empty; }
+        }
 
         public Bitmap Image { get { return Properties.Resources.guide; } }
 

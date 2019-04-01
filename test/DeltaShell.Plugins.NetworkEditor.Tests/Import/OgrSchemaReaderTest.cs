@@ -5,7 +5,7 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
 {
     [TestFixture]
-    [Category("OgrSchema_x86")]
+    [Category(TestCategory.X86)]
     public class OgrSchemaReaderTest
     {
         [Test]

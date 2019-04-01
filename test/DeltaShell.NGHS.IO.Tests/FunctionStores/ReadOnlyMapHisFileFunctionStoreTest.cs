@@ -24,10 +24,10 @@ namespace DeltaShell.NGHS.IO.Tests.FunctionStores
         [Test]
         public void CopyTo_IsSuccessfulWhenCopyingToNonExistantDirectory()
         {
-            var mapFilePath = Path.Combine(TestHelper.GetDataDir(), "FunctionStores", "deltashell.map");
+            var mapFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "FunctionStores", "deltashell.map");
             var store = new ReadOnlyMapHisFileFunctionStore { Path = mapFilePath };
 
-            var directoryPath = Path.Combine(TestHelper.GetDataDir(), "DirectoryDoesNotExist");
+            var directoryPath = Path.Combine(TestHelper.GetTestDataDirectory(), "DirectoryDoesNotExist");
             FileUtils.DeleteIfExists(directoryPath);
 
             var filePath = Path.Combine(directoryPath, "deltashell.map");
@@ -37,7 +37,7 @@ namespace DeltaShell.NGHS.IO.Tests.FunctionStores
         [Test]
         public void ReadTimesFromMapFileStore()
         {
-            string mapFilePath = Path.Combine(TestHelper.GetDataDir(), "FunctionStores", "deltashell.map");
+            string mapFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "FunctionStores", "deltashell.map");
             var firstTimeStep = new DateTime(2010, 1, 1, 0, 0, 0);
             var lastTimeStep = new DateTime(2010, 1, 2, 0, 0, 0);
             var dtVariable = new Variable<DateTime>();
@@ -59,7 +59,7 @@ namespace DeltaShell.NGHS.IO.Tests.FunctionStores
         [Test]
         public void ReadTimeStepValuesFromMapFileStore()
         {
-            var mapFilePath = Path.Combine(TestHelper.GetDataDir(), "FunctionStores", "deltashell.map");
+            var mapFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "FunctionStores", "deltashell.map");
             var timeStep7 = new DateTime(2010, 1, 1, 6, 0, 0);
             var lastTimeStep = new DateTime(2010, 1, 2, 0, 0, 0);
 
@@ -98,7 +98,7 @@ namespace DeltaShell.NGHS.IO.Tests.FunctionStores
         [Test]
         public void ReadTimeSeriesValuesFromMapFileStore()
         {
-            string mapFilePath = Path.Combine(TestHelper.GetDataDir(), "FunctionStores", "deltashell.map");
+            string mapFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "FunctionStores", "deltashell.map");
             var store = new ReadOnlyMapHisFileFunctionStore { Path = mapFilePath };
             
             var component = new Variable<double>("Salinity");
@@ -120,7 +120,7 @@ namespace DeltaShell.NGHS.IO.Tests.FunctionStores
         [Category(TestCategory.DataAccess)]
         public void ReadTimeStepsFromStoreUsingCoverageFromMapFileStore()
         {
-            string mapFilePath = Path.Combine(TestHelper.GetDataDir(), "FunctionStores", "deltashell.map");
+            string mapFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "FunctionStores", "deltashell.map");
             var store = new ReadOnlyMapHisFileFunctionStore { Path = mapFilePath };
             var unstrCellCoverage = new UnstructuredGridCellCoverage(new UnstructuredGrid(), true) { Store = store };
 
@@ -130,7 +130,7 @@ namespace DeltaShell.NGHS.IO.Tests.FunctionStores
         [Test]
         public void ReadTimeSeriesFromHisFileStore()
         {
-            var path = Path.Combine(TestHelper.GetDataDir(), "FunctionStores", "rrbalans.his");
+            var path = Path.Combine(TestHelper.GetTestDataDirectory(), "FunctionStores", "rrbalans.his");
             var store = new ReadOnlyMapHisFileFunctionStore
                 {
                     Path = path,
@@ -149,7 +149,7 @@ namespace DeltaShell.NGHS.IO.Tests.FunctionStores
         [Test]
         public void ReadFeatureCoverageTimeSliceFromHisFileStore()
         {
-            var path = Path.Combine(TestHelper.GetDataDir(), "FunctionStores", "rrrunoff.his");
+            var path = Path.Combine(TestHelper.GetTestDataDirectory(), "FunctionStores", "rrrunoff.his");
             
             var catchment = new Catchment { Name = "Catchment1" };
             var featureCoverage = new FeatureCoverage("Outflow(hbv)")

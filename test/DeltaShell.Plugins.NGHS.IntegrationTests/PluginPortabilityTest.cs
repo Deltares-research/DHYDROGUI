@@ -46,11 +46,8 @@ using NUnit.Framework;
 using SharpMap.Data.Providers;
 using SharpMap.SpatialOperations;
 using SharpMapTestUtils;
-using FixedWeir = DelftTools.Hydro.Structures.FixedWeir;
-using ObservationCrossSection2D = DelftTools.Hydro.ObservationCrossSection2D;
 using PointwiseOperationType = SharpMap.SpatialOperations.PointwiseOperationType;
 using Point = NetTopologySuite.Geometries.Point;
-using ThinDam2D = DelftTools.Hydro.Structures.ThinDam2D;
 
 namespace DeltaShell.Plugins.NGHS.IntegrationTests
 {
@@ -1015,7 +1012,7 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
         private static WaterQualityModel MyWaqModel()
         {
             //copied from DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.WaterQualityModelWorkDirectoryTest.CreateWaqModelWithData()
-            var dataDir = TestHelper.GetTestDataPath(typeof(WaterQualityModelApplicationPluginTest).Assembly);
+            var dataDir = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(WaterQualityModelApplicationPluginTest).Assembly);
             var squareHydFile = Path.Combine(dataDir, "IO", "square", "square.hyd");
 
             var hydFile = squareHydFile;
@@ -1025,7 +1022,7 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
             var model = new WaterQualityModel();
             model.ImportHydroData(data);
 
-            var subFilePath = TestHelper.GetTestDataPath(typeof(WaterQualityModelApplicationPluginTest).Assembly, @"IO\03d_Tewor2003.sub");
+            var subFilePath = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(WaterQualityModelApplicationPluginTest).Assembly, @"IO\03d_Tewor2003.sub");
             new SubFileImporter().Import(model.SubstanceProcessLibrary, subFilePath);
             var oxy = model.SubstanceProcessLibrary.Substances.FirstOrDefault(s => s.Name == "OXY");
             Assert.NotNull(oxy);

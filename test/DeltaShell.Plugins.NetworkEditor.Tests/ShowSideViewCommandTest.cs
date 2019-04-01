@@ -19,78 +19,55 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
     [TestFixture]
     public class ShowSideViewCommandTest
     {
-        private static readonly MockRepository mocks = new MockRepository();
+        private MockRepository mocks;
+
+        [SetUp]
+        public void Setup()
+        {
+            mocks = new MockRepository();
+        }
 
         [Test]
-        public void ExecuteShowOpenViewForCorrectData()
+        public void GivenShowSideViewCommand_WhenExecutingTheCommand_ThenViewOpenedForCorrectData()
         {
-            //test the command issues a command to the commandhandler to open a view with the correct coverages..
-            //quite a lot of mocking but important to get this fragile class under test.
-            
-            //mock the needs
-            var pluginGui = mocks.DynamicMock<GuiPlugin>();
-            var gui = mocks.DynamicMock<IGui>();
-            var documentViews = mocks.DynamicMock<IViewList>();
-            using(var mapView = new MapView())
+            // Given
+            var snakeHydroNetwork = HydroNetworkHelper.GetSnakeHydroNetwork(1);
+            var route = RouteHelper.CreateRoute(new NetworkLocation(snakeHydroNetwork.Branches[0], 0),
+                new NetworkLocation(snakeHydroNetwork.Branches[0], 10));
+
+            var networkCoverageGroupLayer = new NetworkCoverageGroupLayer { Coverage = route };
+
+            var documentViews = mocks.StrictMock<IViewList>();
+            var guiCommandHandler = mocks.StrictMock<IGuiCommandHandler>();
+            guiCommandHandler.Expect(commandHandler => commandHandler.OpenView(route, typeof(NetworkSideView)));
+
+            var hydroNetworkEditorMapTool = mocks.StrictMock<IHydroNetworkEditorMapTool>();
+            hydroNetworkEditorMapTool.Expect(mapTool => mapTool.ActiveNetworkCoverageGroupLayer).Return(networkCoverageGroupLayer).Repeat.Once();
+            hydroNetworkEditorMapTool.Expect(mapTool => mapTool.MapControl).SetPropertyAndIgnoreArgument();
+
+            var gui = mocks.StrictMock<IGui>();
+            gui.Expect(g => g.DocumentViews).Return(documentViews);
+            gui.Expect(g => g.CommandHandler).Return(guiCommandHandler);
+
+            var pluginGui = mocks.StrictMock<GuiPlugin>();
+            pluginGui.Expect(pg => pg.Gui).Return(gui);
+
+            using (var mapView = new MapView())
             {
-                var hydroNetworkEditorMapTool = mocks.DynamicMock<IHydroNetworkEditorMapTool>();
-                var application = mocks.DynamicMock<IApplication>();
-                var project = new Project();//project is pretty lightweight don't need to mock here
-                var sideViewDataBuilder = new MockSideViewDataBuilder();
-                var guiCommandHandler = mocks.DynamicMock<IGuiCommandHandler>();
-            
-                //create a route
-                IHydroNetwork snakeHydroNetwork = HydroNetworkHelper.GetSnakeHydroNetwork(1);
-                var route = RouteHelper.CreateRoute(new NetworkLocation(snakeHydroNetwork.Branches[0], 0),
-                                        new NetworkLocation(snakeHydroNetwork.Branches[0], 10));
-                var networkCoverageGroupLayer = new NetworkCoverageGroupLayer { Coverage = route };
-            
-                var testModelWithHydroNetwork = new TestModelWithHydroNetwork();
-                testModelWithHydroNetwork.HydroNetwork = (HydroNetwork) route.Network;
-            
-                var addedCoverage = new NetworkCoverage{Network = route.Network};
-            
-                //setup expectations
-                Expect.Call(hydroNetworkEditorMapTool.ActiveNetworkCoverageGroupLayer).Return(networkCoverageGroupLayer);
-                Expect.Call(documentViews.GetActiveViews<MapView>()).Return(new[] {mapView});
-                Expect.Call(gui.DocumentViews).Return(documentViews).Repeat.Any();
-                Expect.Call(pluginGui.Gui).Return(gui).Repeat.Any();
-                Expect.Call(gui.Application).Return(application).Repeat.Any();
-                Expect.Call(application.Project).Return(project).Repeat.Any();
-                Expect.Call(gui.CommandHandler).Return(guiCommandHandler).Repeat.Any();
-                Expect.Call(hydroNetworkEditorMapTool.MapControl).SetPropertyAndIgnoreArgument().Repeat.Any();
-                Expect.Call(()=>guiCommandHandler.OpenView(null,null)).IgnoreArguments();
-                //this call is the proof the command found everything.. :) ..Rhino just doesn't get it again...:(
-                //Expect.Call(() => sideViewDataBuilder.GetSideViewData(route, testModelWithHydroNetwork.WaterLevel, new[] {addedCoverage},new INetworkCoverage[0]));
-                sideViewDataBuilder.GetSideViewDataFunction = (theRoute, waterLevel, allCoverages, allFeatureCoverages, renderedCoverages) =>
-                                                                  {
-                                                                      Assert.AreEqual(route, theRoute);
-                                                                      Assert.AreEqual(testModelWithHydroNetwork.WaterLevel,
-                                                                                      waterLevel);
-                                                                      Assert.AreEqual(new[] {addedCoverage}, allCoverages.ToArray());
-                                                                      Assert.AreEqual(0, renderedCoverages.Count());
-                                                                      return null;//return something..
-                                                                  };
-
-
-                //get in on..
+                documentViews.Expect(dv => dv.ActiveView).Return(mapView);
                 mocks.ReplayAll();
+
                 var command = new ShowSideViewCommand
                 {
-                    Gui = pluginGui.Gui,
-                    //SideViewDataBuilder = sideViewDataBuilder
+                    Gui = pluginGui.Gui
                 };
-            
-            
+
                 mapView.MapControl.Tools.Add(hydroNetworkEditorMapTool);
-                project.RootFolder.Add(testModelWithHydroNetwork);
-            
-                //this one should be added to allcoverages of the sideviewdata.
-                project.RootFolder.Add(addedCoverage);
-                //go!
+
+                // When
                 command.Execute();
 
-                //verify we got the calls
+                // Then
                 mocks.VerifyAll();
             }
         }
@@ -112,20 +89,22 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
                 var guiCommandHandler = mocks.DynamicMock<IGuiCommandHandler>();
 
                 //create a route
-                IHydroNetwork snakeHydroNetwork = HydroNetworkHelper.GetSnakeHydroNetwork(1);
+                var snakeHydroNetwork = HydroNetworkHelper.GetSnakeHydroNetwork(1);
                 var route = RouteHelper.CreateRoute(
                     new NetworkLocation(snakeHydroNetwork.Branches[0], 0),
                     new NetworkLocation(snakeHydroNetwork.Branches[0], 10));
                 var networkCoverageGroupLayer = new NetworkCoverageGroupLayer { Coverage = route };
 
-                var testModelWithHydroNetwork = new TestModelWithHydroNetwork();
-                testModelWithHydroNetwork.HydroNetwork = (HydroNetwork)route.Network;
+                var testModelWithHydroNetwork = new TestModelWithHydroNetwork
+                {
+                    HydroNetwork = (HydroNetwork) route.Network
+                };
 
                 var addedCoverage = new NetworkCoverage { Network = route.Network, Name = "addedCoverage" };
                 var coverageInMapView = new NetworkCoverage { Network = route.Network, Name = "coverageInMapView" };
                 //setup expectations
                 Expect.Call(hydroNetworkEditorMapTool.ActiveNetworkCoverageGroupLayer).Return(networkCoverageGroupLayer);
-                Expect.Call(documentViews.GetActiveViews<MapView>()).Return(new[] { mapView });
+                Expect.Call(documentViews.ActiveView).Return(mapView);
                 Expect.Call(gui.DocumentViews).Return(documentViews).Repeat.Any();
                 Expect.Call(pluginGui.Gui).Return(gui).Repeat.Any();
                 Expect.Call(gui.Application).Return(application).Repeat.Any();

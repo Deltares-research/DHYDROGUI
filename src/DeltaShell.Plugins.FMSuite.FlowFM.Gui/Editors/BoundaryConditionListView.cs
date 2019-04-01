@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -86,13 +87,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             }
         }
 
-        private void OnBoundaryConditionRemoved(object sender, NotifyCollectionChangingEventArgs e)
+        private void OnBoundaryConditionRemoved(object sender, NotifyCollectionChangedEventArgs e)
         {
-            if (e.Action == NotifyCollectionChangeAction.Remove)
+            if (e.Action == NotifyCollectionChangedAction.Remove)
             {
                 foreach (var boundaryConditionSet in data)
                 {
-                    boundaryConditionSet.BoundaryConditions.Remove(e.Item as IBoundaryCondition);
+                    boundaryConditionSet.BoundaryConditions.Remove(e.GetRemovedOrAddedItem() as IBoundaryCondition);
                 }
             }
         }
@@ -118,19 +119,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
         }
         
         [InvokeRequired]
-        private void OnBoundaryConditionSetsChanged(object sender, NotifyCollectionChangingEventArgs e)
+        private void OnBoundaryConditionSetsChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
+            var removedOrAddedItem = e.GetRemovedOrAddedItem();
             switch (e.Action)
             {
-                case NotifyCollectionChangeAction.Add:
-                    var item = e.Item as FlowBoundaryCondition;
+                case NotifyCollectionChangedAction.Add:
+                    var item = removedOrAddedItem as FlowBoundaryCondition;
                     if (item != null)
                     {
                         boundaryConditions.Add(item);
                     }
                     else
                     {
-                        var set = e.Item as BoundaryConditionSet;
+                        var set = removedOrAddedItem as BoundaryConditionSet;
                         if (set != null)
                         {
                             foreach (
@@ -142,15 +144,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                         }
                     }
                     break;
-                case NotifyCollectionChangeAction.Remove:
-                    var condition = e.Item as FlowBoundaryCondition;
+                case NotifyCollectionChangedAction.Remove:
+                    var condition = removedOrAddedItem as FlowBoundaryCondition;
                     if (condition != null)
                     {
                         boundaryConditions.Remove(condition);
                     }
                     else
                     {
-                        var set = e.Item as BoundaryConditionSet;
+                        var set = removedOrAddedItem as BoundaryConditionSet;
                         if (set != null)
                         {
                             foreach (
@@ -162,8 +164,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                         }
                     }
                     break;
-                case NotifyCollectionChangeAction.Replace:
-                    if (e.Item is FlowBoundaryCondition || e.Item is BoundaryConditionSet)
+                case NotifyCollectionChangedAction.Replace:
+                    if (removedOrAddedItem is FlowBoundaryCondition || removedOrAddedItem is BoundaryConditionSet)
                     {
                         throw new NotImplementedException("Replacing boundary conditions is not supported");
                     }

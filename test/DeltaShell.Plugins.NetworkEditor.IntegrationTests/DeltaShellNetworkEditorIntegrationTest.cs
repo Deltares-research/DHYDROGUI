@@ -37,6 +37,7 @@ using SharpTestsEx;
 using Point = NetTopologySuite.Geometries.Point;
 using System;
 using System.Windows.Controls;
+using SharpMap.Rendering.Thematics;
 
 namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
 {

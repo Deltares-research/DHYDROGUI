@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Utils.Aop;
-using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
@@ -117,7 +117,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             }
         }
 
-        private void LinksCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        private void LinksCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             UpdateRunMode();
         }

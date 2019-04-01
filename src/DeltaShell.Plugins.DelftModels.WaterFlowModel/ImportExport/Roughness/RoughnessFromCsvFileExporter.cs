@@ -31,6 +31,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness
         }
 
         public string Category { get { return "General"; } }
+        public string Description
+        {
+            get { return string.Empty; }
+        }
 
         public bool Export(object item, string path)
         {

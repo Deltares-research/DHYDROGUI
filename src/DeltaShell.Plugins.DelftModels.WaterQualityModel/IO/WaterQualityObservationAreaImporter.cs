@@ -42,6 +42,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             get { return "Hydro"; }
         }
 
+        public string Description
+        {
+            get { return string.Empty; }
+        }
+
         public Bitmap Image
         {
             get { return null; }

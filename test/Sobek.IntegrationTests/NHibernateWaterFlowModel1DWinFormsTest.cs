@@ -5,7 +5,6 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
-using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.Gui;
@@ -153,33 +152,6 @@ namespace Sobek.IntegrationTests
             return project;
         }
 
-        protected T SaveAndRetrieveObject<T>(T objectToSave) where T : class
-        {
-            var path = TestHelper.GetCurrentMethodName() + "1.dsproj";
-            var project = new Project();
-            project.RootFolder.Add(objectToSave);
-
-            projectRepository.Create(path);
-            projectRepository.SaveOrUpdate(project);
-            projectRepository.Close();
-
-            var np = projectRepository.Open(path);
-            Assert.IsNotNull(np.RootFolder.Items[0]);
-
-            var retrievedEntry = np.RootFolder.Items[0];
-
-            if (retrievedEntry is IDataItem)
-            {
-                return ((IDataItem)np.RootFolder.Items[0]).Value as T;
-            }
-
-            if (retrievedEntry is IModel || retrievedEntry is Folder)
-            {
-                return retrievedEntry as T;
-            }
-            return null;
-        }
-
         private static DeltaShellGui GetRunningGuiWithFlowPlugins()
         {
             var gui = new DeltaShellGui();
@@ -212,7 +184,7 @@ namespace Sobek.IntegrationTests
                 IApplication app = gui.Application;
 
                 var modelPath =
-                    TestHelper.GetTestDataPath(
+                    TestHelper.GetTestDataDirectoryPathForAssembly(
                         typeof(SobekWaterFlowModel1DImporterTest).Assembly,
                         @"BYPASS.Lit\3\Network.TP");
                 //what a cumbersome syntax here..

@@ -13,6 +13,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             get { return "Observation points"; }
         }
 
+        public override string Description
+        {
+            get { return string.Empty; }
+        }
+
         public override string FileFilter
         {
             get { return "Observation points|*.xyn"; }

@@ -52,6 +52,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         }
 
         public string Category => "Xml files";
+        public string Description
+        {
+            get { return string.Empty; }
+        }
 
         public IEnumerable<Type> SourceTypes()
         {
