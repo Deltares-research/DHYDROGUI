@@ -30,7 +30,6 @@ using SharpMap.Rendering.Thematics;
 using SharpMap.Styles;
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -227,10 +226,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             return new string(commonFunctionName).Trim();
         }
 
-        private void MapGroupLayerLayersCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void MapGroupLayerLayersCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
-            var layer = e.GetRemovedOrAddedItem() as UnstructuredGridLayer;
-            if (layer == null || e.Action != NotifyCollectionChangedAction.Add) return;
+            var layer = e.Item as UnstructuredGridLayer;
+            if (layer == null || e.Action != NotifyCollectionChangeAction.Add) return;
 
             layer.GridColor = Color.Gray;
         }

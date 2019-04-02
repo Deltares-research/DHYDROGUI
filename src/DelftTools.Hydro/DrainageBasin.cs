@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using DelftTools.Utils.Aop;
@@ -168,20 +167,20 @@ namespace DelftTools.Hydro
         private bool isCloning;
         
         [EditAction]
-        private void OnLinksCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void OnLinksCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
             if (isCloning)
             {
                 return;
             }
-            var link = e.GetRemovedOrAddedItem() as HydroLink;
+            var link = e.Item as HydroLink;
 
-            if (e.Action == NotifyCollectionChangedAction.Remove)
+            if (e.Action == NotifyCollectionChangeAction.Remove)
             {
                 link.Source.Links.Remove(link);
                 link.Target.Links.Remove(link);
             }
-            else if (e.Action == NotifyCollectionChangedAction.Add)
+            else if (e.Action == NotifyCollectionChangeAction.Add)
             {
                 link.Source.Links.Add(link);
                 link.Target.Links.Add(link);
@@ -241,7 +240,7 @@ namespace DelftTools.Hydro
             return clone;
         }
 
-        void OnCatchmentsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        void OnCatchmentsCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
             if (!(sender is IEventedList<Catchment>)) //catchments, or subcatchments list
                 return;
@@ -252,13 +251,13 @@ namespace DelftTools.Hydro
         }
 
         [EditAction]
-        void HandleCatchmentsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        void HandleCatchmentsCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
-            var catchment = (Catchment)e.GetRemovedOrAddedItem();
+            var catchment = (Catchment)e.Item;
 
             switch (e.Action)
             {
-                case NotifyCollectionChangedAction.Add:
+                case NotifyCollectionChangeAction.Add:
                     catchment.Basin = this;
                     foreach (var subcatchment in catchment.SubCatchments)
                     {
@@ -266,7 +265,7 @@ namespace DelftTools.Hydro
                     }
                     break;
 
-                case NotifyCollectionChangedAction.Remove:
+                case NotifyCollectionChangeAction.Remove:
                     catchment.Links.ToArray().ForEach(HydroRegion.RemoveLink);
                     catchment.Basin = null;
                     foreach (var subcatchment in catchment.SubCatchments)
@@ -279,20 +278,20 @@ namespace DelftTools.Hydro
         }
 
         [EditAction]
-        private void OnBoundariesCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void OnBoundariesCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
             if (sender != Boundaries)
                 return;
 
-            var boundaryNode = (RunoffBoundary)e.GetRemovedOrAddedItem();
+            var boundaryNode = (RunoffBoundary)e.Item;
 
             switch (e.Action)
             {
-                case NotifyCollectionChangedAction.Add:
+                case NotifyCollectionChangeAction.Add:
                     boundaryNode.Basin = this;
                     break;
 
-                case NotifyCollectionChangedAction.Remove:
+                case NotifyCollectionChangeAction.Remove:
                     boundaryNode.Links.ToArray().ForEach(HydroRegion.RemoveLink);
                     boundaryNode.Basin = null;
                     break;
@@ -300,20 +299,20 @@ namespace DelftTools.Hydro
         }
 
         [EditAction]
-        private void OnWasteWaterTreatmentPlantsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void OnWasteWaterTreatmentPlantsCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
             if (sender != WasteWaterTreatmentPlants)
                 return;
 
-            var wasteWaterTreatmentPlant = (WasteWaterTreatmentPlant)e.GetRemovedOrAddedItem();
+            var wasteWaterTreatmentPlant = (WasteWaterTreatmentPlant)e.Item;
 
             switch (e.Action)
             {
-                case NotifyCollectionChangedAction.Add:
+                case NotifyCollectionChangeAction.Add:
                     wasteWaterTreatmentPlant.Basin = this;
                     break;
 
-                case NotifyCollectionChangedAction.Remove:
+                case NotifyCollectionChangeAction.Remove:
                     wasteWaterTreatmentPlant.Links.ToArray().ForEach(HydroRegion.RemoveLink);
                     wasteWaterTreatmentPlant.Basin = null;
                     break;

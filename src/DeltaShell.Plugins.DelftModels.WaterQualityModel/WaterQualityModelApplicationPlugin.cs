@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
@@ -51,6 +50,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         public override string FileFormatVersion
         {
             get { return "3.5.2.0"; }
+        }
+
+        public override Image Image
+        {
+            get { return null; }
         }
 
         public override IEnumerable<ModelInfo> GetModelInfos()
@@ -293,11 +297,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         /// Listen to the creation of new waq models.
         /// Set the project data directory in the models.
         /// </summary>
-        private void Project_OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void Project_OnCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
-            if (e.Action == NotifyCollectionChangedAction.Add)
+            if (e.Action == NotifyCollectionChangeAction.Add)
             {
-                var model = e.GetRemovedOrAddedItem() as WaterQualityModel;
+                var model = e.Item as WaterQualityModel;
                 if (model != null)
                 {
                     model.SetupModelDataFolderStructure(Application.HybridProjectRepository.ProjectDataDirectory);

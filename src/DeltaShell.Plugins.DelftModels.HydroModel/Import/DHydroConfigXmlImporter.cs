@@ -53,11 +53,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
         [ExcludeFromCodeCoverage]
         public string Category => "DIMR Configuration File";
 
-        public string Description
-        {
-            get { return string.Empty; }
-        }
-
         /// <inheritdoc />
         [ExcludeFromCodeCoverage]
         public Bitmap Image { get; }

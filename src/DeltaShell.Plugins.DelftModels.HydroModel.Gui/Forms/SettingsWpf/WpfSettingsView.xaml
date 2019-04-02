@@ -229,7 +229,7 @@
                 <TextBlock 
                     Text="{Binding Label}" 
                     Style="{StaticResource LabelTextBlockStyle}"/>
-                <xctk:TimeSpanUpDown
+                <settingsWpf:WpfCustomTimeSpan
                     Grid.Column="1"
                     FractionalSecondsDigitsCount="3" 
                     Style="{StaticResource ControlWithErrorStyle}"

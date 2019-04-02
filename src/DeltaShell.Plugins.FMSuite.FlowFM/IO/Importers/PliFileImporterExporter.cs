@@ -29,11 +29,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             get { return "Feature geometries"; }
         }
 
-        public override string Description
-        {
-            get { return string.Empty; }
-        }
-
         public override string FileFilter
         {
             get { return "Feature polyline files (*.pli)|*.pli|polyline-z files (*.pliz)|*.pliz"; }

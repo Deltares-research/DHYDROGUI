@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
@@ -75,7 +74,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             }
         }
 
-        private void ModelCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void ModelCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
             RefreshTree();
         }

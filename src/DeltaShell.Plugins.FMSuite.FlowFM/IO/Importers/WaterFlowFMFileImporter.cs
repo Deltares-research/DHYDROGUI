@@ -35,12 +35,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         {
             get { return "D-Flow FM 2D/3D"; }
         }
-
-        public string Description
-        {
-            get { return string.Empty; }
-        }
-
+        
         public Bitmap Image
         {
             get { return Resources.unstrucModel; }

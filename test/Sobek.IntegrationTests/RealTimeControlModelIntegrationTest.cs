@@ -263,7 +263,7 @@ namespace Sobek.IntegrationTests
         [Category(TestCategory.VerySlow)]
         public void DeepCloneCheckFlowModelBeingRewired()
         {
-            string pathToSobekNetwork = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"ReModels\JAMM2010.sbk\40\deftop.1");
+            string pathToSobekNetwork = TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"ReModels\JAMM2010.sbk\40\deftop.1");
 
             var modelImporter = new SobekHydroModelImporter(false);
             var hydroModel = (HydroModel)modelImporter.ImportItem(pathToSobekNetwork);
@@ -282,7 +282,7 @@ namespace Sobek.IntegrationTests
         [Category(TestCategory.VerySlow)]
         public void DeepCloneCheckNetworkIsReplaced()
         {
-            string pathToSobekNetwork = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"ReModels\JAMM2010.sbk\40\deftop.1");
+            string pathToSobekNetwork = TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"ReModels\JAMM2010.sbk\40\deftop.1");
 
             var modelImporter = new SobekHydroModelImporter(false);
             var hydroModel = (HydroModel)modelImporter.ImportItem(pathToSobekNetwork);
@@ -443,7 +443,7 @@ namespace Sobek.IntegrationTests
             // TODO: make this field, and field 'runEngineRemote' in RealTimeControlModel configurable
             // TODO: fix the original issue as described in TOOLS-7224 (in RTCTools code)
 
-            string pathToSobekNetwork = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"030_NDB_zout_grotere_DX.lit\3\NETWORK.TP");
+            string pathToSobekNetwork = TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"030_NDB_zout_grotere_DX.lit\3\NETWORK.TP");
 
             var modelImporter = new SobekHydroModelImporter(false);
             var hydroModel = (HydroModel)modelImporter.ImportItem(pathToSobekNetwork);

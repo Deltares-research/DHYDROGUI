@@ -37,10 +37,6 @@ namespace DeltaShell.Plugins.NetworkEditor.ImportExportCsv
         public abstract string Name { get; }
 
         public virtual string Category { get; protected set; }
-        public string Description
-        {
-            get { return string.Empty; }
-        }
 
         public virtual Bitmap Image { get; protected set; }
         

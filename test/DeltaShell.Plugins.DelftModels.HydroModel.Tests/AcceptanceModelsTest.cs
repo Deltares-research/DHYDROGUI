@@ -69,8 +69,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         #endregion
 
         #region AcceptanceModelTests
-
-        [Test]
         [TestCase("c01_Noordzeemodel/Noordzeemodel.zip", @"DeltaShell_Noordzeemodel\noordzee_2d.mdu", TestName = "c01_Noordzeemodel")]
         [TestCase("c02_Maas_40m/Maas_40m.zip", @"Maas_40m.dsproj_data\Maas_j14_5-v2\Maas_j14_5-v2.mdu", TestName = "c02_Maas_40m (Maas_40m)")]
         [TestCase("c02_Maas_40m/Maas_DIMR.zip", @"DIMR\dflowfm\Maas_j14_5-v2.mdu", TestName = "c02_Maas_40m (Maas_DIMR)")]
@@ -81,7 +79,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         public void Delft3DFM_AcceptanceModelTest(string relativeZipFilePath, string relativeMduFilePath)
         {
             // Step 1: Unzip 
-            var testDataFolder = new DirectoryInfo(TestHelper.GetTestWorkingDirectory()).Parent?.Parent?.Parent?.FullName;
+            var testDataFolder = new DirectoryInfo(TestHelper.GetDataDir()).Parent?.FullName;
             var testCaseZipFilePath = Path.Combine(testDataFolder, "AcceptanceModels", "Delft3DFM", relativeZipFilePath);
 
             Assert.IsTrue(File.Exists(testCaseZipFilePath), "Failed to find acceptance model test-data");
@@ -178,7 +176,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             }
         }
 
-        [Test]
+
         [TestCase("c01_sobek-rijn-j17_5-v1/sobek-rijn-j17_5-v1.zip", @"sobek-rijn-j17_5-v1.dsproj", TestName = "c01_sobek-rijn-j17_5-v1")]
         [TestCase("c02_sobek-maas-j17_5-v1/sobek-maas-j17_5-v1.zip", @"sobek-maas-j17_5-v1.dsproj", TestName = "c02_sobek-maas-j17_5-v1")]
         [TestCase("c03_sobek-rmm-j15_5-v2/sobek-rmm-vozo-j15_5-v2(3-7-14a).zip", @"sobek-rmm-vozo-j15_5-v2(3-7-14a).dsproj", TestName = "sobek-rmm-vozo-j15_5-v2(3-7-14a)")]
@@ -204,7 +202,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         public void SOBEK3_AcceptanceModelTest(string relativeZipFilePath, string relativeDsProjFilePath)
         {
             // Step 1: Unzip 
-            var testDataFolder = new DirectoryInfo(TestHelper.GetTestWorkingDirectory()).Parent?.Parent?.Parent?.FullName;
+            var testDataFolder = new DirectoryInfo(TestHelper.GetDataDir()).Parent?.FullName;
             var testCaseZipFilePath = Path.Combine(testDataFolder, "AcceptanceModels", "Sobek", relativeZipFilePath);
 
             Assert.IsTrue(File.Exists(testCaseZipFilePath), "Failed to find acceptance model test-data");

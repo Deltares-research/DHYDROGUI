@@ -108,7 +108,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         [Category(TestCategory.Slow)]
         public void ReadSeepageFile()
         {
-            var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"Tholen.lit\29\Unpaved.sep");
+            var path = TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"Tholen.lit\29\Unpaved.sep");
             var lstSeepage = new SobekRRSeepageReader().Read(path);
             Assert.AreEqual(274, lstSeepage.Count());
         }

@@ -13,7 +13,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Category(TestCategory.Slow)]
         public void ImportREModel_NDB()
         {
-            string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\ReModels\20110331_NDB.sbk\6\deftop.1";
+            string pathToSobekNetwork = TestHelper.GetDataDir() + @"\ReModels\20110331_NDB.sbk\6\deftop.1";
             var model = ImportModelFromSobek(pathToSobekNetwork);
 
             Assert.IsTrue(model is ICompositeActivity);
@@ -24,7 +24,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Category(TestCategory.Slow)]
         public void ImportREModel_Maas()
         {
-            string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\ReModels\JAMM2010.sbk\40\deftop.1";
+            string pathToSobekNetwork = TestHelper.GetDataDir() + @"\ReModels\JAMM2010.sbk\40\deftop.1";
             var model = ImportModelFromSobek(pathToSobekNetwork);
 
             Assert.IsTrue(model is ICompositeActivity);
@@ -35,7 +35,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Category(TestCategory.Slow)]
         public void ImportNoControllerTriggersModelReturnsAWaterFlowModel()
         {
-            string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\SW_max_1.lit\3\Network.TP";
+            string pathToSobekNetwork = TestHelper.GetDataDir() + @"\SW_max_1.lit\3\Network.TP";
             var model = ImportModelFromSobek(pathToSobekNetwork);
 
             Assert.IsTrue(model is WaterFlowModel1D);
@@ -47,7 +47,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         public void ImportDeltaModel()
         {
             LogHelper.ConfigureLogging();
-            string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\Delta_M.lit\30\Network.TP";
+            string pathToSobekNetwork = TestHelper.GetDataDir() + @"\Delta_M.lit\30\Network.TP";
             var model = ImportModelFromSobek(pathToSobekNetwork);
 
             Assert.IsTrue(model is ICompositeActivity);

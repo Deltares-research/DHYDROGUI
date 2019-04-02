@@ -46,7 +46,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         [ExpectedException(typeof(InvalidOperationException), ExpectedMessage = "Substance process library is not set")]
         public void ImporterShouldThrowOnSubstanceProcessLibraryIsNull()
         {
-            new SubFileImporter().Import(null, Path.Combine(TestHelper.GetTestDataDirectory(), "IO", "Eutrof_simple.sub"));
+            new SubFileImporter().Import(null, Path.Combine(TestHelper.GetDataDir(), "IO", "Eutrof_simple.sub"));
         }
 
         [Test]
@@ -113,7 +113,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             Assert.AreEqual(true, firstOutputParameter.ShowInMap);
 
             // Perform import on non empty substance process library: some objects must be still present after the import
-            new SubFileImporter().Import(library, Path.Combine(TestHelper.GetTestDataDirectory(), "IO", "Eutrof_simple_custom1.sub"));
+            new SubFileImporter().Import(library, Path.Combine(TestHelper.GetDataDir(), "IO", "Eutrof_simple_custom1.sub"));
 
             Assert.AreEqual("Eutrof_simple_custom1", library.Name);
             Assert.AreEqual(3, library.Parameters.Count);
@@ -133,7 +133,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             firstOutputParameter = library.OutputParameters[0];
 
             // Perform import on non empty substance process library again: altough only the units or descriptions are different, none of the previous items should persist
-            new SubFileImporter().Import(library, Path.Combine(TestHelper.GetTestDataDirectory(), "IO", "Eutrof_simple_custom2.sub"));
+            new SubFileImporter().Import(library, Path.Combine(TestHelper.GetDataDir(), "IO", "Eutrof_simple_custom2.sub"));
 
             Assert.AreEqual("Eutrof_simple_custom2", library.Name);
             Assert.AreEqual(1, library.Parameters.Count);
@@ -153,7 +153,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             var library = new SubstanceProcessLibrary();
 
             // Perform import on empty substance process library
-            new SubFileImporter().Import(library, Path.Combine(TestHelper.GetTestDataDirectory(), "IO", "sub_files", "SubFileImporter_test.sub"));
+            new SubFileImporter().Import(library, Path.Combine(TestHelper.GetDataDir(), "IO", "sub_files", "SubFileImporter_test.sub"));
 
             Assert.AreEqual("SubFileImporter_test", library.Name);
             Assert.AreEqual(1, library.Parameters.Count);
@@ -192,7 +192,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         {
             var library = new SubstanceProcessLibrary();
 
-            new SubFileImporter().Import(library, Path.Combine(TestHelper.GetTestDataDirectory(), "IO", "SubstateWithPercentageSign.sub"));
+            new SubFileImporter().Import(library, Path.Combine(TestHelper.GetDataDir(), "IO", "SubstateWithPercentageSign.sub"));
 
             Assert.AreEqual(3, library.Substances.Count);
             Assert.AreEqual(8, library.Parameters.Count);

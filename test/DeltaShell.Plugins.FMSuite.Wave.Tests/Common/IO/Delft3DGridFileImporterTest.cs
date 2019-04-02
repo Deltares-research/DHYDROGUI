@@ -9,13 +9,13 @@ using SharpMapTestUtils;
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Common.IO
 {
     [TestFixture]
-    public class Delft3DGridFileImporterTest
+    class Delft3DGridFileImporterTest
     {
         [Test]
         [Category(TestCategory.WindowsForms)]
         public void ImportGrid()
         {
-            var delft3DGridFile = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(WaveModelTest).Assembly, "Noorderstrand.grd");
+            var delft3DGridFile = TestHelper.GetTestDataPath(typeof(WaveModelTest).Assembly, "Noorderstrand.grd");
 
             var importer = new Delft3DGridFileImporter("test");
             var grid = importer.ImportItem(delft3DGridFile);

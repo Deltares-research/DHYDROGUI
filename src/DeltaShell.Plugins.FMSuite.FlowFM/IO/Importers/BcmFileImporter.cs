@@ -35,11 +35,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             get { return "Morpology boundary data"; }
         }
 
-        public string Description
-        {
-            get { return string.Empty; }
-        }
-
         [ExcludeFromCodeCoverage]
         public Bitmap Image
         {

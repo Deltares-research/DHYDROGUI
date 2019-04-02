@@ -4,7 +4,6 @@ using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils;
-using DelftTools.Utils.Reflection;
 using GeoAPI.Extensions.Feature;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM
@@ -64,9 +63,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
             if (weirFormula is GeneralStructureWeirFormula)
             {
-                yield return KnownGeneralStructureProperties.LevelCenter.GetDescription();
-                yield return KnownGeneralStructureProperties.GateHeight.GetDescription();
-                yield return KnownGeneralStructureProperties.HorizontalDoorOpeningWidth.GetDescription();
+                yield return EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.LevelCenter);
+                yield return EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.GateHeight);
+                yield return EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.HorizontalDoorOpeningWidth);
             }
             if (weirFormula is GatedWeirFormula)
             {

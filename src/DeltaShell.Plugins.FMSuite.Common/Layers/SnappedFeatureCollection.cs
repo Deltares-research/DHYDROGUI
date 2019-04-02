@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -243,32 +242,30 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
                 });
         }
 
-        void OriginalFeaturesCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        void OriginalFeaturesCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
             if (dirty)
                 return; //list already dirty, so don't update
 
-            var removedOrAddedItem = e.GetRemovedOrAddedItem();
-            var data = removedOrAddedItem as IFeatureData;
+            var data = e.Item as IFeatureData;
             var feature = data != null 
                 ? data.Feature 
-                : removedOrAddedItem as IFeature;
+                : e.Item as IFeature;
 
             if (feature == null) return;
 
-            var removedOrAddedIndex = e.GetRemovedOrAddedIndex();
             switch (e.Action)
             {
-                case NotifyCollectionChangedAction.Add:
-                    SnappedFeatures.Insert(removedOrAddedIndex, GetSnappedFeature(feature));
+                case NotifyCollectionChangeAction.Add:
+                    SnappedFeatures.Insert(e.Index, GetSnappedFeature(feature));
                     break;
-                case NotifyCollectionChangedAction.Remove:
-                    SnappedFeatures.RemoveAt(removedOrAddedIndex);
+                case NotifyCollectionChangeAction.Remove:
+                    SnappedFeatures.RemoveAt(e.Index);
                     break;
-                case NotifyCollectionChangedAction.Replace:
-                    SnappedFeatures[removedOrAddedIndex] = GetSnappedFeature(feature);
+                case NotifyCollectionChangeAction.Replace:
+                    SnappedFeatures[e.Index] = GetSnappedFeature(feature);
                     break;
-                case NotifyCollectionChangedAction.Reset:
+                case NotifyCollectionChangeAction.Reset:
                     dirty = true;
                     break;
                 default:

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using DelftTools.Functions;
@@ -348,7 +347,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             CollectionChanging(sender, e);
         }
 
-        private void FireCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void FireCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
             if (CollectionChanged == null) return;
             CollectionChanged(sender, e);

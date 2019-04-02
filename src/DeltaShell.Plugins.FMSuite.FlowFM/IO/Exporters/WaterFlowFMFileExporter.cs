@@ -12,10 +12,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
         public string Name { get { return "Flow Flexible Mesh model"; } }
 
         public string Category { get { return "General"; } }
-        public string Description
-        {
-            get { return string.Empty; }
-        }
 
         public bool Export(object item, string path)
         {

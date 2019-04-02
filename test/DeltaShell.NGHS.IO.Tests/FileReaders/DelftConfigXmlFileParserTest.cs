@@ -53,7 +53,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
         public void ConfigurationFilePathIsUnknown()
         {
             var unknownFilePath = @"unknownpathtofile.xml";
-            var dimrFileSource = Path.Combine(TestHelper.GetTestDataDirectory(), XmlFileDirectory, unknownFilePath);
+            var dimrFileSource = Path.Combine(TestHelper.GetDataDir(), XmlFileDirectory, unknownFilePath);
             var exception = Assert.Throws<FileNotFoundException>(() => delftConfigXmlParser.Read<dimrXML>(dimrFileSource));
             Assert.AreEqual(exception.Message, $"Configuration file {unknownFilePath} cannot be found");
         }
@@ -66,7 +66,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
         [Category(TestCategory.DataAccess)]
         public void DimrConfigFileWithMissingDocumentationTagThrowsXmlException()
         {
-            var pathWithInvalidConfigurationFile = Path.Combine(TestHelper.GetTestDataDirectory(), XmlFileDirectory, "dimrWithMissingDocTag.xml");
+            var pathWithInvalidConfigurationFile = Path.Combine(TestHelper.GetDataDir(), XmlFileDirectory, "dimrWithMissingDocTag.xml");
             var exception = Assert.Throws<XmlException>(() => delftConfigXmlParser.Read<dimrXML>(pathWithInvalidConfigurationFile));
             Assert.AreEqual("Error during parsing : The 'documentation' start tag on line 3 position 4 does not match the end tag of 'dimrConfig'. Line 192, position 3.", exception.Message);
         }
@@ -75,7 +75,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
         [Category(TestCategory.DataAccess)]
         public void InvalidDimrConfigurationFileWithEmptyBodyThrowsXmlException()
         {
-            var pathWithInvalidConfigurationFile = Path.Combine(TestHelper.GetTestDataDirectory(), XmlFileDirectory, "invalidDimrEmptyBody.xml");
+            var pathWithInvalidConfigurationFile = Path.Combine(TestHelper.GetDataDir(), XmlFileDirectory, "invalidDimrEmptyBody.xml");
             var exception = Assert.Throws<XmlException>(() => delftConfigXmlParser.Read<dimrXML>(pathWithInvalidConfigurationFile));
             Assert.AreEqual("Error during parsing : Root element is missing.", exception.Message);
         }
@@ -84,7 +84,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
         [Category(TestCategory.DataAccess)]
         public void InvalidDimrConfigurationFileWithInvalidHeaderThrowsXmlException()
         {
-            var pathWithInvalidConfigurationFile = Path.Combine(TestHelper.GetTestDataDirectory(), XmlFileDirectory, "invalidDimrMissingHeader.xml");
+            var pathWithInvalidConfigurationFile = Path.Combine(TestHelper.GetDataDir(), XmlFileDirectory, "invalidDimrMissingHeader.xml");
             var exception = Assert.Throws<XmlException>(() => delftConfigXmlParser.Read<dimrXML>(pathWithInvalidConfigurationFile));
             Assert.AreEqual("Error during parsing : <abc xmlns='http://schemas.deltares.nl/dimr'> was not expected.", exception.Message);
         }
@@ -93,7 +93,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
         [Category(TestCategory.DataAccess)]
         public void InvalidDimrConfigurationFileWithUnknownRootName()
         {
-            var pathWithInvalidConfigurationFile = Path.Combine(TestHelper.GetTestDataDirectory(), XmlFileDirectory, "invalidDimrUnknownRootName.xml");
+            var pathWithInvalidConfigurationFile = Path.Combine(TestHelper.GetDataDir(), XmlFileDirectory, "invalidDimrUnknownRootName.xml");
             var exception = Assert.Throws<XmlException>(() => delftConfigXmlParser.Read<dimrXML>(pathWithInvalidConfigurationFile));
             Assert.AreEqual("Error during parsing : <InvalidRoot xmlns='http://schemas.deltares.nl/dimr'> was not expected.", exception.Message);
         }
@@ -104,7 +104,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
         [Category(TestCategory.DataAccess)]
         public void GetDimrConfigurationFile()
         {
-            var dimrSourcePath = Path.GetFullPath(Path.Combine(TestHelper.GetTestDataDirectory(), XmlFileDirectory));
+            var dimrSourcePath = Path.GetFullPath(Path.Combine(TestHelper.GetDataDir(), XmlFileDirectory));
             var dimrConfigurationFile = Path.Combine(dimrSourcePath, "dimr.xml");
             var dimrXmlObject = delftConfigXmlParser.Read<dimrXML>(dimrConfigurationFile);
             Assert.IsNotNull(dimrXmlObject);
@@ -181,7 +181,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
         {
             var xmlFileDirectory = @"FileReaders\ConfigXmlReader";
             var dimrFileName = "dimrwithextrainfo.xml";
-            var dimrFile = Path.GetFullPath(Path.Combine(TestHelper.GetTestDataDirectory(), xmlFileDirectory, dimrFileName));
+            var dimrFile = Path.GetFullPath(Path.Combine(TestHelper.GetDataDir(), xmlFileDirectory, dimrFileName));
 
             return dimrFile;
         }

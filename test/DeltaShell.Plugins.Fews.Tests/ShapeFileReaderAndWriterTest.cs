@@ -10,13 +10,13 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.Fews.Tests
 {
     [TestFixture]
-    [Category(TestCategory.DataAccess)]
     public class ShapeFileReaderAndWriterTest
     {
         const string OutputFolder = "TestFiles";
 
         private List<DelftTools.Utils.Tuple<IGeometry,IDictionary<string,object>>> featureCollection;
         private string fileName;
+        private string filePath;
         private string shpFile;
         private string dbfFile;
         private string shxFile;

@@ -160,7 +160,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.HisData
                                      0.98086170 };
 
             string uri = Path.Combine("HisData","flowhis.his");
-            string path = Path.Combine(TestHelper.GetTestDataDirectory() , uri);
+            string path = Path.Combine(TestHelper.GetDataDir() , uri);
             var hisFileReader = new HisFileReader(path);
             var listWaterLevelValues = hisFileReader.ReadAllData("Water level");
             var hisValues = listWaterLevelValues.Where(r => r.LocationName == "branch1_9000.00").Select(r => r.Value).ToArray();
@@ -190,7 +190,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.HisData
 
 
             string uri = Path.Combine("HisData", "flowhis.his");
-            string path = Path.Combine(TestHelper.GetTestDataDirectory(), uri);
+            string path = Path.Combine(TestHelper.GetDataDir(), uri);
             var hisFileReader = new HisFileReader(path);
             var lstTimeStepValues = hisFileReader.ReadTimeStep(hisFileReader.GetHisFileHeader.TimeSteps[5],"Water level").Select(r => r.Value).ToArray();
             hisFileReader.Close();
@@ -356,7 +356,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.HisData
                                     -0.4999999	
                                     };
             string uri = Path.Combine("HisData", "flowhis.his");
-            string path = Path.Combine(TestHelper.GetTestDataDirectory(), uri);
+            string path = Path.Combine(TestHelper.GetDataDir(), uri);
             var hisFileReader = new HisFileReader(path);
             var lstLocationValues = hisFileReader.ReadLocation(hisFileReader.GetHisFileHeader.Locations[4], "Water level").Select(r => r.Value).ToArray();
             hisFileReader.Close();
@@ -521,7 +521,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.HisData
                                     93.027210	
                                     };
             string uri = Path.Combine("HisData", "flowhis.his");
-            string path = Path.Combine(TestHelper.GetTestDataDirectory(), uri);
+            string path = Path.Combine(TestHelper.GetDataDir(), uri);
             var hisFileReader = new HisFileReader(path);
             var lstLocationValues = hisFileReader.ReadLocation(hisFileReader.GetHisFileHeader.Locations[5], "Total Area").Select(r => r.Value).ToArray();
             hisFileReader.Close();
@@ -537,7 +537,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.HisData
         [Test]
         public void ReadTimeStepsHisFile()
         {
-            var pathHisData = Path.Combine(TestHelper.GetTestDataDirectory(), "HisData");
+            var pathHisData = Path.Combine(TestHelper.GetDataDir(), "HisData");
             var path = Path.Combine(pathHisData, "155_000_calcpnt.his");
             var hisFileReader = new HisFileReader(path);
             var timeSteps = hisFileReader.GetHisFileHeader.TimeSteps;

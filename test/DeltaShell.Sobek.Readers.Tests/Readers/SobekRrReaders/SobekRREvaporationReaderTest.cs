@@ -70,7 +70,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         [Category(TestCategory.DataAccess)]
         public void ReadEvaporationFileTholenPlvExtension()
         {
-            string plvFilePath = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"FIXED\EVAPOR.PLV");
+            string plvFilePath = TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"FIXED\EVAPOR.PLV");
             var lstEvaporationData = SobekRREvaporationReader.ReadEvaporationData(plvFilePath);
             Assert.AreEqual(366, lstEvaporationData.FirstOrDefault().Rows.Count);
         }
@@ -79,7 +79,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         [Category(TestCategory.DataAccess)]
         public void ReadEvaporationFileTholenGemExtension()
         {
-            string gemFilePath = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"FIXED\EVAPOR.GEM");
+            string gemFilePath = TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"FIXED\EVAPOR.GEM");
             var lstEvaporationData = SobekRREvaporationReader.ReadEvaporationData(gemFilePath);
             Assert.AreEqual(366, lstEvaporationData.FirstOrDefault().Rows.Count);
         }
@@ -88,7 +88,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         [Category(TestCategory.DataAccess)]
         public void ReadEvaporationFileTholenNoExtensionMultipleStations()
         {
-            string filePath = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"FIXED\EVAPOR");
+            string filePath = TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"FIXED\EVAPOR");
             var lstEvaporationData = SobekRREvaporationReader.ReadEvaporationData(filePath);
             Assert.AreEqual(13, lstEvaporationData.FirstOrDefault().Columns.Count);
             Assert.AreEqual(16437, lstEvaporationData.FirstOrDefault().Rows.Count);

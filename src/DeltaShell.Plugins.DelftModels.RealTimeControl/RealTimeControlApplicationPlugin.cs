@@ -42,6 +42,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             get { return "3.5.0.0"; }
         }
 
+        public override Image Image
+        {
+            get { return null; }
+        }
+
         public override IApplication Application
         {
             get

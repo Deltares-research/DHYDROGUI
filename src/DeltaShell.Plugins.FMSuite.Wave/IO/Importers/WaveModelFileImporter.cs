@@ -25,11 +25,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Importers
             get { return "D-Flow FM 2D/3D"; }
         }
 
-        public string Description
-        {
-            get { return string.Empty; }
-        }
-
         public Bitmap Image
         {
             get { return Properties.Resources.wave; }

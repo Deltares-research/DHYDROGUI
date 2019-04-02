@@ -15,7 +15,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.Toolboxes
         public void RunScriptAddScopeAndVerifyLog()
         {
             // load all test scripts
-            var toolboxDirectory = Path.Combine(TestHelper.GetTestDataDirectory(), "toolboxes");
+            var toolboxDirectory = Path.Combine(TestHelper.GetDataDir(), "toolboxes");
             var bathyCommand = new ScriptCommand("Bathy", null,
                                                  Path.Combine(toolboxDirectory, "Bathymetry from Gebco.py"));
             var logger = new StubLogger();

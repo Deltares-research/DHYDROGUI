@@ -25,6 +25,10 @@ using SharpMap.Editors.Interactors;
 using SharpMap.Editors.Snapping;
 using SharpMap.Layers;
 using SharpMap.Rendering;
+using FixedWeir = DelftTools.Hydro.Structures.FixedWeir;
+using LandBoundary2D = DelftTools.Hydro.LandBoundary2D;
+using ObservationCrossSection2D = DelftTools.Hydro.ObservationCrossSection2D;
+using ThinDam2D = DelftTools.Hydro.Structures.ThinDam2D;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui
 {

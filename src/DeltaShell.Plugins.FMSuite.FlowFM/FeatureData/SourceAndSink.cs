@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using DelftTools.Functions;
@@ -144,9 +143,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
             }
         }
 
-        public void SedimentFractionNamesCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        public void SedimentFractionNamesCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
-            var sedimentFractionName = e.GetRemovedOrAddedItem() as string;
+            var sedimentFractionName = e.Item as string;
 
             if (sedimentFractionName == null)
                 return;
@@ -154,15 +153,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
             switch (e.Action)
             {
                 //Column Order: Time | Discharge | Salinity | Temperature | SedimentFractions | Secondary Flow | Tracers
-                case NotifyCollectionChangedAction.Add:
+                case NotifyCollectionChangeAction.Add:
                     AddSedimentFractionToComponents(sedimentFractionName);
                     break;
-                case NotifyCollectionChangedAction.Remove:
+                case NotifyCollectionChangeAction.Remove:
                     Function.RemoveComponentByName(sedimentFractionName);
                     break;
-                case NotifyCollectionChangedAction.Replace:
+                case NotifyCollectionChangeAction.Replace:
                     throw new NotImplementedException("Renaming of sediment fraction is not yet supported");
-                case NotifyCollectionChangedAction.Reset:
+                case NotifyCollectionChangeAction.Reset:
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -202,23 +201,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
             };
         }
 
-        public void TracerNamesCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        public void TracerNamesCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
-            var tracerName = e.GetRemovedOrAddedItem() as string;
+            var tracerName = e.Item as string;
             if (tracerName == null) return;
             switch (e.Action)
             {
-                case NotifyCollectionChangedAction.Add:
+                case NotifyCollectionChangeAction.Add:
                     Function.Components.Add(new Variable<double>(tracerName)
                     {
                         Unit = new Unit(SourceSinkVariableInfo.TracersUnitDescription, SourceSinkVariableInfo.TracerUnitSymbol)
                     });
                     break;
-                case NotifyCollectionChangedAction.Remove:
+                case NotifyCollectionChangeAction.Remove:
                     Function.RemoveComponentByName(tracerName);
                     break;
-                case NotifyCollectionChangedAction.Replace:
-                    var previousTracerName = e.OldItems[0] as string;
+                case NotifyCollectionChangeAction.Replace:
+                    var previousTracerName = e.OldItem as string;
                     if (previousTracerName == null) break;
 
                     var matchingComponent = Function.Components.FirstOrDefault(c => c.Name == previousTracerName);
@@ -226,7 +225,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
 
                     matchingComponent.Name = tracerName;
                     break;
-                case NotifyCollectionChangedAction.Reset:
+                case NotifyCollectionChangeAction.Reset:
                     break;
                 default: throw new ArgumentOutOfRangeException();
             }

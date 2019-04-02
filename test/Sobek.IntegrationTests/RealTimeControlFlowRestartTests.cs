@@ -33,7 +33,7 @@ namespace Sobek.IntegrationTests
         public void RunModelTwice()
         {
             // setup runs
-            string sourcePath = Path.Combine(TestHelper.GetTestDataDirectory(), "RtcFlow1DRestart");
+            string sourcePath = Path.Combine(TestHelper.GetDataDir(), "RtcFlow1DRestart");
             const string testRunDir = "StartModelTwice";
             FileUtils.CopyDirectory(sourcePath, testRunDir, ".svn");
 

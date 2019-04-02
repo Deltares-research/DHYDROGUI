@@ -52,7 +52,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         [Category(TestCategory.DataAccess)]
         public void ReadDWAFile()
         {
-            var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"Tholen.lit\29\Paved.dwa");
+            var path = TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"Tholen.lit\29\Paved.dwa");
             var lstDWAFile = new SobekRRDryWeatherFlowReader().Read(path);
             Assert.AreEqual(2, lstDWAFile.Count());
         }

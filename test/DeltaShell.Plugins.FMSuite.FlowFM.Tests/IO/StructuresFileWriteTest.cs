@@ -9,7 +9,6 @@ using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.IO;
-using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.Common.IO;
@@ -270,7 +269,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
         private static string GetName(KnownGeneralStructureProperties prop)
         {
-            return prop.GetDescription();
+            return EnumDescriptionAttributeTypeConverter.GetEnumDescription(prop);
         }
 
         /// <summary>

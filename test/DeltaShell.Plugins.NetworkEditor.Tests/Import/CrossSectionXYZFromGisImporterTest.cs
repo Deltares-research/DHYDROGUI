@@ -4,6 +4,7 @@ using DelftTools.Hydro;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.NetworkEditor.Import;
 using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using SharpMap.Api;
 using SharpMap.Data.Providers;
@@ -12,7 +13,7 @@ using SharpMap.Extensions.Data.Providers;
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
 {
     [TestFixture]
-    [Category(TestCategory.X86)]
+    [Category("Geodatabase_x86")]
     public class CrossSectionXYZFromGisImporterTest
     {
         private ChannelFromGisImporter channelImporter;

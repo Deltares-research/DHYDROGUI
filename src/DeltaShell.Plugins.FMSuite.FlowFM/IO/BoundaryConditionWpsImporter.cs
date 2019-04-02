@@ -36,10 +36,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public string Name { get { return "Boundary data from WPS"; } }
 
         public string Category { get { return "Boundary data"; } }
-        public string Description
-        {
-            get { return string.Empty; }
-        }
 
         public Bitmap Image { get { return Properties.Resources.down; } }
 

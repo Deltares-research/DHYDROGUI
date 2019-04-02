@@ -332,13 +332,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             var weir = new Weir2D(true);
             weir.WeirFormula = CreateGeneralStructureWeirFormula(structure2D, path, refDate);
 
-            var crestWidthProperty = structure2D.GetProperty(KnownGeneralStructureProperties.WidthCenter.GetDescription());
+            var crestWidthProperty = structure2D.GetProperty(EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.WidthCenter));
             var crestWidthString = crestWidthProperty?.GetValueAsString();
             weir.CrestWidth = string.IsNullOrEmpty(crestWidthString)
                 ? double.NaN
                 : FMParser.FromString<double>(crestWidthString);
 
-            SetTimeSeriesProperty(structure2D, KnownGeneralStructureProperties.LevelCenter.GetDescription(), path, refDate, weir,
+            SetTimeSeriesProperty(structure2D, EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.LevelCenter), path, refDate, weir,
                 TypeUtils.GetMemberName(() => weir.UseCrestLevelTimeSeries),
                 TypeUtils.GetMemberName(() => weir.CrestLevel), weir.CrestLevelTimeSeries);
             
@@ -385,12 +385,12 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             }
 
 
-            SetTimeSeriesPropertyInsideWeirFormula(structure2D, KnownGeneralStructureProperties.HorizontalDoorOpeningWidth.GetDescription(), path, refDate, gsWeirFormula,
+            SetTimeSeriesPropertyInsideWeirFormula(structure2D, EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.HorizontalDoorOpeningWidth), path, refDate, gsWeirFormula,
                 TypeUtils.GetMemberName(() => gsWeirFormula.UseHorizontalDoorOpeningWidthTimeSeries),
                 TypeUtils.GetMemberName(() => gsWeirFormula.HorizontalDoorOpeningWidth),
                 TypeUtils.GetMemberName(() => gsWeirFormula.HorizontalDoorOpeningWidthTimeSeries));
 
-            SetTimeSeriesPropertyInsideWeirFormula(structure2D, KnownGeneralStructureProperties.GateHeight.GetDescription(), path, refDate, gsWeirFormula,
+            SetTimeSeriesPropertyInsideWeirFormula(structure2D, EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.GateHeight), path, refDate, gsWeirFormula,
                 TypeUtils.GetMemberName(() => gsWeirFormula.UseLowerEdgeLevelTimeSeries),
                 TypeUtils.GetMemberName(() => gsWeirFormula.LowerEdgeLevel), 
                 TypeUtils.GetMemberName(() => gsWeirFormula.LowerEdgeLevelTimeSeries));
@@ -470,7 +470,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                 (Enum)
                     FMParser.FromString(openingDirectionProperty.GetValueAsString(),
                         openingDirectionProperty.PropertyDefinition.DataType);
-            var displayName = openingDirectionValue.GetDisplayName();
+            var displayName = EnumDescriptionAttributeTypeConverter.GetEnumDisplayName(openingDirectionValue);
             switch (displayName)
             {
                 case "symmetric":

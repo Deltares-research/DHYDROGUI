@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
@@ -357,7 +356,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.FunctionLis
             panel1.Controls.Add(view);
         }
 
-        private void FunctionCreatorsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void FunctionCreatorsCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
             UpdateFunctionTypeEditor();
         }

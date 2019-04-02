@@ -6,8 +6,8 @@ using System.Windows.Forms;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
-using DelftTools.Utils.Reflection;
 using DeltaShell.Gui;
+using DeltaShell.Gui.Forms.MainWindow;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.NetworkEditor.Gui;
@@ -141,7 +141,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             onMainWindowShown = () =>
             {
                 /* get the coverages combo box from te ribbon */
-                var ribbon = (Fluent.Ribbon)TypeUtils.GetField(gui.MainWindow, "MainWindowRibbon");
+                var ribbon = ((MainWindow)gui.MainWindow).Ribbon;
                 var tab = ribbon.Tabs.First(t => t.Header.Equals("Map"));
                 var group = tab.Groups.First(g => g.Name.Equals("NetworkCoverage"));
                 var wrapPanel = group.Items.OfType<WrapPanel>().First();

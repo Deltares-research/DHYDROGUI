@@ -29,10 +29,6 @@ namespace DeltaShell.Plugins.NetworkEditor.ImportExportCsv
         public abstract string Name { get; }
 
         public virtual string Category { get { return "General"; } }
-        public string Description
-        {
-            get { return string.Empty; }
-        }
 
         public abstract CrossSectionType CrossSectionType { get; }
 

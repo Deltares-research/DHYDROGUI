@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -159,10 +158,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
             return modifyTool;
         }
 
-        private void NetworkCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void NetworkCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
             bool updateAxes = false;
-            var crossSection = e.GetRemovedOrAddedItem() as ICrossSection;
+            var crossSection = e.Item as ICrossSection;
             if (crossSection != null)
             {
                 var removedDefinition = crossSection.Definition;

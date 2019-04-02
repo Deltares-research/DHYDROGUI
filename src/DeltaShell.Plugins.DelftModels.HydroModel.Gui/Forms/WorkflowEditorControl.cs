@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
@@ -125,7 +124,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
         }
 
         [InvokeRequired]
-        private void WorkflowsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs)
+        private void WorkflowsOnCollectionChanged(object sender, NotifyCollectionChangingEventArgs notifyCollectionChangingEventArgs)
         {
             SetWorkflowSelectionListBoxItems();
         }

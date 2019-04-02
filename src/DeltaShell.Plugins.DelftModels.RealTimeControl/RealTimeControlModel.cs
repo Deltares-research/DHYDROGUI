@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
@@ -128,20 +127,20 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             }
         }
 
-        private void OwnerModelsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void OwnerModelsCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
             //todo: test aggregation of list
-            var model = e.GetRemovedOrAddedItem() as IModel;
+            var model = e.Item as IModel;
             if (model == null || model is RealTimeControlModel)
             {
                 return;
             }
             switch(e.Action)
             {
-                case NotifyCollectionChangedAction.Add:
+                case NotifyCollectionChangeAction.Add:
                     InternalControlledModelsList.Add(model);
                     break;
-                case NotifyCollectionChangedAction.Remove:
+                case NotifyCollectionChangeAction.Remove:
                     InternalControlledModelsList.Remove(model);
                     OnRemoveModel();
                     break;
@@ -177,13 +176,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         }
 
         [EditAction]
-        private void ConnectionPointsCollectionChanged(NotifyCollectionChangedEventArgs e)
+        private void ConnectionPointsCollectionChanged(NotifyCollectionChangingEventArgs e)
         {
             // add/remove data items for control groups and their inputs/outputs
-            var connectionPoint = (ConnectionPoint) e.GetRemovedOrAddedItem();
+            var connectionPoint = (ConnectionPoint) e.Item;
             switch (e.Action)
             {
-                case NotifyCollectionChangedAction.Add:
+                case NotifyCollectionChangeAction.Add:
                     var controlGroupDataItem = DataItems.FirstOrDefault(
                         di =>
                             {
@@ -203,7 +202,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                         AddConnectionDataItem(controlGroupDataItem, connectionPoint, connectionPoint is Input ? DataItemRole.Input : DataItemRole.Output);
                     }
                     break;
-                case NotifyCollectionChangedAction.Remove:
+                case NotifyCollectionChangeAction.Remove:
                     foreach (var dataItem in DataItems.Where(di => di.ValueType == typeof (ControlGroup)))
                     {
                         var connectionPointDataItem = dataItem.Children.FirstOrDefault(di => di.ValueConverter != null && Equals(di.ValueConverter.OriginalValue,connectionPoint));
@@ -221,14 +220,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         private bool cloning;
 
-        void ControlGroupsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        void ControlGroupsCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
             if (cloning)
             {
                 return;
             }
 
-            if (e.GetRemovedOrAddedItem() is ConnectionPoint && !IsAggregationList(sender)) //breaks if other collections are added
+            if (e.Item is ConnectionPoint && !IsAggregationList(sender)) //breaks if other collections are added
             {
                 ConnectionPointsCollectionChanged(e);
             }
@@ -237,20 +236,20 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         }
 
         [EditAction]
-        private void AfterControlGroupsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void AfterControlGroupsCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
             MarkOutputOutOfSync();
 
             if (Equals(sender, ControlGroups))
             {
-                var controlGroup = (ControlGroup)e.GetRemovedOrAddedItem();
+                var controlGroup = (ControlGroup)e.Item;
                 // add/remove data items for control groups and their inputs/outputs
                 switch (e.Action)
                 {
-                    case NotifyCollectionChangedAction.Add:
+                    case NotifyCollectionChangeAction.Add:
                         AddDataItemsForControlGroup(controlGroup);
                         break;
-                    case NotifyCollectionChangedAction.Remove:
+                    case NotifyCollectionChangeAction.Remove:
                         var controlGroupDataItem = GetDataItemByValue(controlGroup);
 
                         if (controlGroupDataItem != null)
@@ -713,10 +712,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             }
         }
 
-        private void ControlledModelsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void ControlledModelsCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
             // required for project load
-            var model = e?.GetRemovedOrAddedItem() as IModel;
+            var model = e?.Item as IModel;
             if (model == null) return;
 
             if (outputFileFunctionStore == null) return;

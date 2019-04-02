@@ -38,7 +38,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             if (tholenModel != null)
                 return; //already loaded: speeds up tests
 
-            string file = TestHelper.GetTestDataDirectory() + @"\Tholen.lit\29\NETWORK.TP";
+            string file = TestHelper.GetDataDir() + @"\Tholen.lit\29\NETWORK.TP";
             var hydroModel = CreateHydroModelWithRR();
             tholenModel = hydroModel.Activities.OfType<RainfallRunoffModel>().First();
             var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(file, hydroModel);
@@ -50,7 +50,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             if (zboModel != null)
                 return;
 
-            string file = TestHelper.GetTestDataDirectory() + @"\ZBOtest.lit\7\NETWORK.TP";
+            string file = TestHelper.GetDataDir() + @"\ZBOtest.lit\7\NETWORK.TP";
             var hydroModel = CreateHydroModelWithRR();
             zboModel = hydroModel.Activities.OfType<RainfallRunoffModel>().First();
             var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(file, hydroModel);
@@ -60,7 +60,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Test]
         public void ImportMiniModelCheckErnst()
         {
-            string file = TestHelper.GetTestDataDirectory() + @"\RRMiniTestModels\DRRSA.lit\8\NETWORK.TP";
+            string file = TestHelper.GetDataDir() + @"\RRMiniTestModels\DRRSA.lit\8\NETWORK.TP";
 
             var simpleModel = new RainfallRunoffModel();
             var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(file, simpleModel);
@@ -88,7 +88,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Test]
         public void ImportMiniModelCheckPaved()
         {
-            string file = TestHelper.GetTestDataDirectory() + @"\RRMiniTestModels\DRRSA.lit\15\NETWORK.TP";
+            string file = TestHelper.GetDataDir() + @"\RRMiniTestModels\DRRSA.lit\15\NETWORK.TP";
 
             var simpleModel = new RainfallRunoffModel();
             var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(file, simpleModel);
@@ -124,7 +124,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Test]
         public void ImportMiniModelCheckSewerTypeImproved()
         {
-            string file = TestHelper.GetTestDataDirectory() + @"\RRMiniTestModels\DRRSA.lit\4\NETWORK.TP";
+            string file = TestHelper.GetDataDir() + @"\RRMiniTestModels\DRRSA.lit\4\NETWORK.TP";
 
             var simpleModel = new RainfallRunoffModel();
             var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(file, simpleModel);
@@ -145,7 +145,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Test]
         public void ImportMiniModelCheckGreenhouseArea()
         {
-            string file = TestHelper.GetTestDataDirectory() + @"\RRMiniTestModels\DRRSA.lit\16\NETWORK.TP";
+            string file = TestHelper.GetDataDir() + @"\RRMiniTestModels\DRRSA.lit\16\NETWORK.TP";
 
             var simpleModel = new RainfallRunoffModel();
             var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(file, simpleModel);
@@ -160,7 +160,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Test]
         public void ImportMiniModelCheckGreenhouseStorageAndCapacities()         // fix for JIRA issues 6372 and 6373
         {
-            string file = TestHelper.GetTestDataDirectory() + @"\RRMiniTestModels\DRRSA.lit\16\NETWORK.TP";
+            string file = TestHelper.GetDataDir() + @"\RRMiniTestModels\DRRSA.lit\16\NETWORK.TP";
 
             var simpleModel = new RainfallRunoffModel();
             var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(file, simpleModel);

@@ -165,7 +165,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 
         #region IFileExporter
 
-        string ICategorizableItem.Name { get { return ExporterName; } }
+        string IFileExporter.Name { get { return ExporterName; } }
 
         public virtual bool Export(object item, string path)
         {

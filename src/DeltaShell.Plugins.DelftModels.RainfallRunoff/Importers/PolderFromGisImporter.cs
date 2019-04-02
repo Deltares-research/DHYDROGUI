@@ -60,10 +60,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Importers
         }
 
         public string Category { get; private set; }
-        public string Description
-        {
-            get { return string.Empty; }
-        }
 
         public Bitmap Image { get; private set; }
 

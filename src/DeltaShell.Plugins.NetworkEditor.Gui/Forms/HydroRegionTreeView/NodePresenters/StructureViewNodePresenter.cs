@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using DelftTools.Controls;
 using DelftTools.Hydro;
@@ -61,16 +60,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePre
             }
         }
 
-        protected override void OnCollectionChanged(T childNodeData, ITreeNode parentNode, NotifyCollectionChangedEventArgs e, int newNodeIndex)
+        protected override void OnCollectionChanged(T childNodeData, ITreeNode parentNode, NotifyCollectionChangingEventArgs e, int newNodeIndex)
         {
             base.OnCollectionChanged(childNodeData, parentNode, e, newNodeIndex);
 
             // re-order structure nodes in case if this is the only one structure
-            if (e.Action == NotifyCollectionChangedAction.Add && childNodeData.ParentStructure == null)
+            if (e.Action == NotifyCollectionChangeAction.Add && childNodeData.ParentStructure == null)
             {
                 if (parentNode.Nodes.Count > 1)
                 {
-                    var node = parentNode.GetNodeByTag(e.GetRemovedOrAddedItem());
+                    var node = parentNode.GetNodeByTag(e.Item);
                     if (node == null) return;
 
                     var index = parentNode.Nodes.IndexOf(node);

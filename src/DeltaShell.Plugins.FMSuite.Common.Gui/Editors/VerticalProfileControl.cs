@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
@@ -439,26 +438,26 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
             }
         }
 
-        private void ProfilePointsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void ProfilePointsCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
             if (updatingProfile || verticalProfileDefinition == null) return;
 
             updatingProfile = true;
-            var removedOrAddedItem = e.GetRemovedOrAddedItem();
+
             switch (e.Action)
             {
-                case NotifyCollectionChangedAction.Add:
-                    ((ProfileDepth) removedOrAddedItem).Offset = profilePointDepths.Select(p => p.Offset).Max() + 1;
-                    verticalProfileDefinition.PointDepths.Add(((ProfileDepth)removedOrAddedItem).Offset);
+                case NotifyCollectionChangeAction.Add:
+                    ((ProfileDepth) e.Item).Offset = profilePointDepths.Select(p => p.Offset).Max() + 1;
+                    verticalProfileDefinition.PointDepths.Add(((ProfileDepth)e.Item).Offset);
                     break;
-                case NotifyCollectionChangedAction.Remove:
-                    verticalProfileDefinition.PointDepths.Remove(((ProfileDepth)removedOrAddedItem).Offset);
+                case NotifyCollectionChangeAction.Remove:
+                    verticalProfileDefinition.PointDepths.Remove(((ProfileDepth) e.Item).Offset);
                     break;
-                case NotifyCollectionChangedAction.Replace:
-                    var index=verticalProfileDefinition.PointDepths.IndexOf(((ProfileDepth) e.OldItems[0]).Offset);
-                    verticalProfileDefinition.PointDepths[index] = ((ProfileDepth)removedOrAddedItem).Offset;
+                case NotifyCollectionChangeAction.Replace:
+                    var index=verticalProfileDefinition.PointDepths.IndexOf(((ProfileDepth) e.OldItem).Offset);
+                    verticalProfileDefinition.PointDepths[index] = ((ProfileDepth) e.Item).Offset;
                     break;
-                case NotifyCollectionChangedAction.Reset:
+                case NotifyCollectionChangeAction.Reset:
                     verticalProfileDefinition.PointDepths.Clear();
                     break;
                 default:

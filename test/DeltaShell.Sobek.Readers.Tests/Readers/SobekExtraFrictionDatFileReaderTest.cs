@@ -42,7 +42,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
                 @" xrst";
             var sobekFriction = new SobekReExtraFrictionDatFileReader().Parse(source);
 
-            //SobekFriction sobekFriction = SobekFrictionDatFileReader.ReadSobekFriction(TestHelper.GetTestDataDirectory() + @"\friction\SimpleBedFriction.dat");
+            //SobekFriction sobekFriction = SobekFrictionDatFileReader.ReadSobekFriction(TestHelper.GetDataDir() + @"\friction\SimpleBedFriction.dat");
             Assert.AreEqual(1, sobekFriction.Count());
             var extraFriction = sobekFriction.FirstOrDefault();
             Assert.AreEqual("5580432", extraFriction.Id);

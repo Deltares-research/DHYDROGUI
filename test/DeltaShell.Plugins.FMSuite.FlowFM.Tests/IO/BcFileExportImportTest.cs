@@ -4,7 +4,6 @@ using System.Linq;
 using DelftTools.Functions;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
-using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
@@ -328,7 +327,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var bCond = fbcFactory.CreateBoundaryCondition(boundary,
                 sedFrac.Name,
                 BoundaryConditionDataType.TimeSeries,
-                FlowBoundaryQuantityType.SedimentConcentration.GetDescription());
+                EnumDescriptionAttributeTypeConverter.GetEnumDescription(FlowBoundaryQuantityType.SedimentConcentration));
 
             model.BoundaryConditionSets[0].BoundaryConditions.Add(bCond);
 

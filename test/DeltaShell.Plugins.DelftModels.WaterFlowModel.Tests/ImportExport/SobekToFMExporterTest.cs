@@ -42,7 +42,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
 
             var modelImporter = new SobekWaterFlowModel1DImporter { TargetItem = new WaterFlowModel1D() };
 
-            var zipFile = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"ExpSBI.lit.zip");
+            var zipFile = TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"ExpSBI.lit.zip");
 
             TestHelper.PerformActionInTemporaryDirectory(tempDir =>
             {

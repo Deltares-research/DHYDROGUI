@@ -2,7 +2,6 @@
 using System.IO;
 using System.Linq;
 using DelftTools.TestUtils;
-using DelftTools.Utils.IO;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Networks;
 using NUnit.Framework;
@@ -15,12 +14,17 @@ namespace DeltaShell.Plugins.Fews.Tests
     {
         private const string OutputFolder = "XmlOutput";
 
+        [TestFixtureSetUp]
+        public void FixtureSetup()
+        {
+            TryCreateDirectory(OutputFolder);
+        }
+        
         [Test]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.WorkInProgress)] // todo: check expected content
         public void Export_NetworkCoverage_XmlFileCreatedAndContentsAreValid()
         {
-            FileUtils.CreateDirectoryIfNotExists(OutputFolder, true);
             var path = Path.Combine(OutputFolder, TestHelper.GetCurrentMethodName() + ".xml");
             Network network = CreateNetwork();
 
@@ -48,7 +52,7 @@ namespace DeltaShell.Plugins.Fews.Tests
             exporter.Export(nc, path);
             var actual =  File.ReadLines(path).ToList();
 
-            string file = TestHelper.GetTestDataDirectory() + @"pi_multipleprofiles.xml";
+            string file = TestHelper.GetDataDir() + @"pi_multipleprofiles.xml";
             var expected = File.ReadLines(file).ToList();
 
             string errors = "";

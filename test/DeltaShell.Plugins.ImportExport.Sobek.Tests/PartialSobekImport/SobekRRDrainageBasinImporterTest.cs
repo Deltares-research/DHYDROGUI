@@ -14,7 +14,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         [Test]
         public void ImportRRNetwork()
         {
-            string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\Tholen.Lit\29\Network.TP";
+            string pathToSobekNetwork = TestHelper.GetDataDir() + @"\Tholen.Lit\29\Network.TP";
 
             var rrDrainageBasinImporter = new SobekRRDrainageBasinImporter
                 {TargetObject = new DrainageBasin(), PathSobek = pathToSobekNetwork};
@@ -33,7 +33,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         [Test]
         public void ImportRRBoundaries()
         {
-            string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\RR.Lit\1\Network.TP";
+            string pathToSobekNetwork = TestHelper.GetDataDir() + @"\RR.Lit\1\Network.TP";
 
             var rrDrainageBasinImporter = new SobekRRDrainageBasinImporter { TargetObject = new DrainageBasin(), PathSobek = pathToSobekNetwork };
 
@@ -49,7 +49,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         [Test]
         public void ImportRRNetworkToExistingNetwork()
         {
-            string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\Tholen.Lit\29\Network.TP";
+            string pathToSobekNetwork = TestHelper.GetDataDir() + @"\Tholen.Lit\29\Network.TP";
 
             var rrDrainageBasinImporter = new SobekRRDrainageBasinImporter();
 
@@ -75,7 +75,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         [Test]
         public void UpdateExistingRRNetwork()
         {
-            string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\Tholen.Lit\29\Network.TP";
+            string pathToSobekNetwork = TestHelper.GetDataDir() + @"\Tholen.Lit\29\Network.TP";
 
             var rrNetworkImporter = new SobekRRDrainageBasinImporter();
 
@@ -110,7 +110,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         [Test]
         public void CheckIfTholenCatchmentZRO652HasTwoLinks()
         {
-            string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\Tholen.Lit\29\Network.TP";
+            string pathToSobekNetwork = TestHelper.GetDataDir() + @"\Tholen.Lit\29\Network.TP";
 
             var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekNetwork,
                                                                                  new HydroRegion()

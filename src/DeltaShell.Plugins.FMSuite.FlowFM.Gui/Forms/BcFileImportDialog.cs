@@ -5,7 +5,6 @@ using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils;
-using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors;
@@ -32,7 +31,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
 
             dataTypes =
                 new FlowBoundaryConditionEditorController().AllSupportedDataTypes.ToDictionary(
-                    d => d.GetDescription(), d => d);
+                    d => EnumDescriptionAttributeTypeConverter.GetEnumDescription(d), d => d);
             dataTypesListBox.Items.AddRange(dataTypes.Keys.OfType<object>().ToArray());
             for (var i = 0; i < dataTypesListBox.Items.Count; ++i)
             {

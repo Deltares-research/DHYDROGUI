@@ -1,10 +1,10 @@
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Utils;
+using DelftTools.Utils.Collections;
 using DelftTools.Utils.Threading;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.SubstanceProcessLibrary;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Properties;
@@ -15,7 +15,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms
     {
         private SubstanceProcessLibrary library;
         private bool showNameAndDescriptionColumnsOnly;
-        private readonly DelayedEventHandler<NotifyCollectionChangedEventArgs> dataCollectionChangedDelayedEventHandler;
+        private readonly DelayedEventHandler<NotifyCollectionChangingEventArgs> dataCollectionChangedDelayedEventHandler;
 
         public SubstanceProcessLibraryView()
         {
@@ -23,7 +23,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms
             Image = new Bitmap(5, 5);
 
             dataCollectionChangedDelayedEventHandler =
-                new DelayedEventHandler<NotifyCollectionChangedEventArgs>(delegate { UpdateDataGridViews(); })
+                new DelayedEventHandler<NotifyCollectionChangingEventArgs>(delegate { UpdateDataGridViews(); })
                     {
                         SynchronizingObject = this
                     };
@@ -46,14 +46,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms
             {
                 if (library != null)
                 {
-                    ((INotifyCollectionChanged) library).CollectionChanged -= dataCollectionChangedDelayedEventHandler;
+                    ((INotifyCollectionChange) library).CollectionChanged -= dataCollectionChangedDelayedEventHandler;
                 }
 
                 library = (SubstanceProcessLibrary) value;
 
                 if (library != null)
                 {
-                    ((INotifyCollectionChanged)library).CollectionChanged += dataCollectionChangedDelayedEventHandler;
+                    ((INotifyCollectionChange) library).CollectionChanged += dataCollectionChangedDelayedEventHandler;
                 }
 
                 UpdateDataGridViews();

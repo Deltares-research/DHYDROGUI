@@ -1,5 +1,6 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
 using System.Linq;
+using DelftTools.Utils.Collections.Extensions;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
 using NUnit.Framework;
 
@@ -28,7 +29,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
                 CategoryVisibility = () => false,
             };
 
-            viewModel.SettingsCategories = new ObservableCollection<WpfGuiCategory>{ wpfGuiCategoryHidden , wpfGuiCategoryVisible };
+            viewModel.SettingsCategories.AddRange(new List<WpfGuiCategory>{wpfGuiCategoryHidden, wpfGuiCategoryVisible});
             Assert.IsTrue( viewModel.SettingsCategories.Any());
 
             Assert.IsTrue( viewModel.SettingsCategories.Contains(wpfGuiCategoryVisible));

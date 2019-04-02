@@ -12,13 +12,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Forms.WaterQual
         [Test]
         public void ShowSubstanceProcessLibraryWizardPageWithExistingDataDirectory()
         {
-            WindowsFormsTestHelper.ShowModal(new SubstanceProcessLibraryWizardPage(Path.Combine(TestHelper.GetTestDataDirectory(), "Data")));
+            WindowsFormsTestHelper.ShowModal(new SubstanceProcessLibraryWizardPage(Path.Combine(TestHelper.GetDataDir(), "Data")));
         }
 
         [Test]
         public void ShowSubstanceProcessLibraryWizardPageWithNonExistingDataDirectory()
         {
-            WindowsFormsTestHelper.ShowModal(new SubstanceProcessLibraryWizardPage(Path.Combine(TestHelper.GetTestDataDirectory(), "NonExist")));
+            WindowsFormsTestHelper.ShowModal(new SubstanceProcessLibraryWizardPage(Path.Combine(TestHelper.GetDataDir(), "NonExist")));
         }
     }
 }

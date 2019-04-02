@@ -20,7 +20,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Category(TestCategory.VerySlow)]
         public void ImportTholenGeneralCheck()
         {
-            string pathToSobekModel = TestHelper.GetTestDataDirectory() + @"\Tholen.lit\29\NETWORK.TP";
+            string pathToSobekModel = TestHelper.GetDataDir() + @"\Tholen.lit\29\NETWORK.TP";
 
             var hydroModel = CreateHydroModelWithRR();
             var rainfallRunoffModel = hydroModel.Activities.OfType<RainfallRunoffModel>().First();
@@ -56,7 +56,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Category(TestCategory.Slow)]
         public void ImportRRBoundariesAndConditions()
         {
-            string pathToModel = TestHelper.GetTestDataDirectory() + @"\RR.Lit\1\Network.TP";
+            string pathToModel = TestHelper.GetDataDir() + @"\RR.Lit\1\Network.TP";
 
             var rrModel = new RainfallRunoffModel();
             var rrImporter = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToModel, rrModel);
@@ -77,7 +77,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Category(TestCategory.VerySlow)]
         public void ImportTholenUnpavedLinkCheck()
         {
-            string pathToSobekModel = TestHelper.GetTestDataDirectory() + @"\Tholen.lit\29\NETWORK.TP";
+            string pathToSobekModel = TestHelper.GetDataDir() + @"\Tholen.lit\29\NETWORK.TP";
 
             var hydroModel = CreateHydroModelWithRR();
             var rainfallRunoffModel = hydroModel.Activities.OfType<RainfallRunoffModel>().First();
@@ -99,7 +99,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         public void ImportRrStandaloneWithFlowConnectionNode()
         {
             // TOOLS-20516
-            string pathToModel = TestHelper.GetTestDataDirectory() + @"\019_011.lit\2\NETWORK.TP";
+            string pathToModel = TestHelper.GetDataDir() + @"\019_011.lit\2\NETWORK.TP";
             var hydroModel = CreateHydroModelWithRR();
             var rainfallRunoffModel = hydroModel.Activities.OfType<RainfallRunoffModel>().First();
             var rrImporter = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToModel, hydroModel);

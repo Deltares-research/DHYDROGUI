@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
@@ -300,13 +299,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             }
         }
 
-        private void SedimentsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void SedimentsCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
                 UpdateControl();
                 componentsChanged = false;
         }
 
-        private void ComponentsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void ComponentsCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
             componentsChanged = true;
         }

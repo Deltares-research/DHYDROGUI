@@ -29,11 +29,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             get { return "SOBEK 2"; }
         }
 
-        public string Description
-        {
-            get { return string.Empty; }
-        }
-
         public Bitmap Image
         {
             get { return Properties.Resources.sobek; }

@@ -22,10 +22,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Editors
             {
                 switch (a.Action)
                 {
-                    case NotifyCollectionChangedAction.Add:
+                    case NotifyCollectionChangeAction.Add:
                         addCount++;
                         break;
-                    case NotifyCollectionChangedAction.Remove:
+                    case NotifyCollectionChangeAction.Remove:
                         removeCount++;
                         break;
                 }

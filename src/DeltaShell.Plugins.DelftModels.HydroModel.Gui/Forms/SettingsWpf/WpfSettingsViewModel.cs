@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -42,8 +41,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
                 {
                     settingsCategories = new ObservableCollection<WpfGuiCategory>(value.Where(cat => cat.IsVisible));
                     RemovedCategories = value.Where(cat => !cat.IsVisible).ToList();
-                    settingsCategories.CollectionChanged += SettingsCategoriesOnCollectionChanged;
-                    settingsCategories.ForEach(gp => gp.PropertyChanged += OnPropertyChanged);
+                    SettingsCategories.CollectionChanged += SettingsCategoriesOnCollectionChanged;
+                    SettingsCategories.ForEach(gp => gp.PropertyChanged += OnPropertyChanged);
                 }
             }
         }
@@ -105,7 +104,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
             if (notVisible.Any())
             {
                 RemovedCategories.AddRange(notVisible);
-                //Unsubscribe removed categories.
+                //Unsuscribre removed categories.
                 notVisible.ForEach(rc => rc.PropertyChanged -= OnPropertyChanged);
                 SettingsCategories.RemoveAllWhere(sc => !sc.IsVisible);
             }

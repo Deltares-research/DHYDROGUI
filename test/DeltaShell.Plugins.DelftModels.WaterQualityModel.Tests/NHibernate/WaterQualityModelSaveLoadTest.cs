@@ -264,7 +264,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
         public void SaveModel_RemoveHydFile_LoadModel_FiresHydNotFound()
         {
             // copy hyd file and related files
-            var dataDir = TestHelper.GetTestDataDirectory();
+            var dataDir = TestHelper.GetDataDir();
             var squareHydFile = Path.Combine(dataDir, "IO", "square", "square.hyd");
             var localHydFile = TestHelper.CreateLocalCopy(squareHydFile);
 
@@ -408,7 +408,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
         public void SaveModel_ChangeHydFileOtherData_LoadModel_OutputRemoved()
         {
             // copy hyd file and related files
-            var dataDir = TestHelper.GetTestDataDirectory();
+            var dataDir = TestHelper.GetDataDir();
             var squareHydFile = Path.Combine(dataDir, "IO", "real", "uni3d.hyd");
             var localHydFile = TestHelper.CreateLocalCopy(squareHydFile);
             var localHydFileOtherTimestep = Path.Combine(Path.GetDirectoryName(localHydFile), "uni3d_otherTimestep.hyd");
@@ -480,7 +480,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
         public void SaveLoadModelWithBoundaryAliases()
         {
             // copy hyd file and related files
-            var dataDir = TestHelper.GetTestDataDirectory();
+            var dataDir = TestHelper.GetDataDir();
             var squareHydFile = Path.Combine(dataDir, "IO", "real", "uni3d.hyd");
             var localHydFile = TestHelper.CreateLocalCopy(squareHydFile);
 
@@ -537,7 +537,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
         public void Check_That_Property_ImportedSubstanceFilePath_Persists_After_SaveLoad_Model()
         {
             // copy hyd file and related files
-            var dataDir = TestHelper.GetTestDataDirectory();
+            var dataDir = TestHelper.GetDataDir();
             var squareHydFile = Path.Combine(dataDir, "IO", "real", "uni3d.hyd");
             var localHydFile = TestHelper.CreateLocalCopy(squareHydFile);
 
@@ -564,7 +564,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                     library.ImportedSubstanceFilePath = null;
                     
                     //Import 
-                    new SubFileImporter().Import(library, Path.Combine(TestHelper.GetTestDataDirectory(), "IO", "Eutrof_simple.sub"));
+                    new SubFileImporter().Import(library, Path.Combine(TestHelper.GetDataDir(), "IO", "Eutrof_simple.sub"));
 
                     // save it and close
                     var savePath = Path.Combine(Path.GetDirectoryName(localHydFile), "savedProject", "project1.dsproj");
@@ -595,7 +595,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
         public void OnProjectOpenedTestWaqModelWithHydFileShouldReimportThatFile()
         {
             // copy hyd file and related files
-            var dataDir = TestHelper.GetTestDataDirectory();
+            var dataDir = TestHelper.GetDataDir();
             var squareHydFile = Path.Combine(dataDir, "IO", "real", "uni3d.hyd");
             var localHydFile = TestHelper.CreateLocalCopy(squareHydFile);
 

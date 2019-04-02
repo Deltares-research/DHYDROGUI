@@ -14,7 +14,6 @@ using DelftTools.Utils.IO;
 using DeltaShell.Plugins.DelftModels.HydroModel.ValueConverters;
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -330,24 +329,23 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void ActivitiesCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void ActivitiesCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
             OnActivitiesCollectionChanged(sender, e);
             BubbleCollectionChangedEvent(sender, e);
         }
 
         [EditAction]
-        private void OnActivitiesCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void OnActivitiesCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
             // activity was removed / added
             if (Equals(sender, activities))
             {
-                var removedOrAddedItem = e.GetRemovedOrAddedItem();
-                var model = removedOrAddedItem as IModel;
-                var timeDependentModel = removedOrAddedItem as ITimeDependentModel;
+                var model = e.Item as IModel;
+                var timeDependentModel = e.Item as ITimeDependentModel;
                 switch (e.Action)
                 {
-                    case NotifyCollectionChangedAction.Add:
+                    case NotifyCollectionChangeAction.Add:
                         if (model != null)
                         {
                             model.Owner = this;
@@ -388,7 +386,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                         }
 
                         break;
-                    case NotifyCollectionChangedAction.Remove:
+                    case NotifyCollectionChangeAction.Remove:
                         if (model != null)
                         {
                             model.DisconnectExternalDataItems();
@@ -441,17 +439,16 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             BubbleCollectionChangingEvent(sender, e);
         }
 
-        private void WorkflowsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void WorkflowsOnCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
-            var removedOrAddedItem = e.GetRemovedOrAddedItem();
-            var activity = removedOrAddedItem as ICompositeActivity;
+            var activity = e.Item as ICompositeActivity;
             if (activity != null)
             {
                 activity.GetActivitiesOfType<IHydroModelWorkFlow>().ForEach(lfc => HydroModelWorkFlowHandler(lfc, e.Action));
             }
 
-            var disposable = removedOrAddedItem as IDisposable;
-            if (disposable != null && e.Action == NotifyCollectionChangedAction.Remove)
+            var disposable = e.Item as IDisposable;
+            if (disposable != null && e.Action == NotifyCollectionChangeAction.Remove)
             {
                 disposable.Dispose();
             }
@@ -459,14 +456,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             BubbleCollectionChangedEvent(sender, e);
         }
 
-        private void HydroModelWorkFlowHandler(IHydroModelWorkFlow hydroModelWorkFlow, NotifyCollectionChangedAction action)
+        private void HydroModelWorkFlowHandler(IHydroModelWorkFlow hydroModelWorkFlow, NotifyCollectionChangeAction action)
         {
-            if (action == NotifyCollectionChangedAction.Add)
+            if (action == NotifyCollectionChangeAction.Add)
             {
                 hydroModelWorkFlow.HydroModel = this;
             }
 
-            if (action == NotifyCollectionChangedAction.Remove)
+            if (action == NotifyCollectionChangeAction.Remove)
             {
                 hydroModelWorkFlow.HydroModel = null;
             }
@@ -872,24 +869,24 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         public virtual Type SupportedRegionType { get { return typeof(HydroRegion); } }
 
         [EditAction]
-        private void OnHydroRegionCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void OnHydroRegionCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
             var subRegions = sender as IEventedList<IRegion>;
-            var subRegion = e.GetRemovedOrAddedItem() as IHydroRegion;
+            var subRegion = e.Item as IHydroRegion;
 
             if (subRegions == null || subRegion == null || subRegion.Parent == null)
             {
                 return;
             }
 
-            if (e.Action == NotifyCollectionChangedAction.Add)
+            if (e.Action == NotifyCollectionChangeAction.Add)
             {
                 var parentRegionDataItem = GetDataItemByValue(subRegion.Parent);
                 AddChildRegionDataItems(parentRegionDataItem);
                 return;
             }
 
-            if (e.Action == NotifyCollectionChangedAction.Remove)
+            if (e.Action == NotifyCollectionChangeAction.Remove)
             {
                 var parentRegionDataItem = GetDataItemByValue(subRegion.Parent);
                 var regionDataItem = parentRegionDataItem.Children.FirstOrDefault(di => Equals(di.Value, subRegion));

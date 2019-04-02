@@ -12,11 +12,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         public string Name { get{ return "Hydrodynamics (*.hyd)";} }
 
         public string Category { get { return "Water Quality"; } }
-        public string Description
-        {
-            get { return string.Empty; }
-        }
-
+        
         public Bitmap Image { get { return Resources.hydFile; } }
         
         public IEnumerable<Type> SupportedItemTypes { get { yield return typeof (WaterQualityModel); } }

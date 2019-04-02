@@ -48,7 +48,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         [Category(TestCategory.DataAccess)]
         public void ReadInfiltrationFile()
         {
-            var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"Tholen.lit\29\Unpaved.inf");
+            var path = TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"Tholen.lit\29\Unpaved.inf");
             var lstInfiltration = new SobekRRInfiltrationReader().Read(path);
             Assert.AreEqual(1, lstInfiltration.Count());
         }

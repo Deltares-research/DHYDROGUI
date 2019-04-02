@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using DelftTools.Hydro.CrossSections.DataSets;
@@ -374,14 +373,14 @@ namespace DelftTools.Hydro.CrossSections
         }
 
         [EditAction]
-        private void SectionsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void SectionsCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
             switch(e.Action)
             {
-                case NotifyCollectionChangedAction.Add:
+                case NotifyCollectionChangeAction.Add:
                     //set defaults?
                     break;
-                case NotifyCollectionChangedAction.Remove:
+                case NotifyCollectionChangeAction.Remove:
                     FixMinMaxOfSections();
                     break;
                 default:

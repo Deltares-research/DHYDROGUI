@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Linq;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
@@ -109,32 +108,32 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils
             });
         }
 
-        private void OutputFeaturesCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void OutputFeaturesCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
             BubbleCollectionChangedEvent(sender, e);
-            var removedOrAddedItem = e.GetRemovedOrAddedItem();
+
             switch (e.Action)
             {
-                case NotifyCollectionChangedAction.Add:
-                    AddDataItem(DataItemRole.Output, (IFeature)removedOrAddedItem);
+                case NotifyCollectionChangeAction.Add:
+                    AddDataItem(DataItemRole.Output, (IFeature)e.Item);
                     break;
-                case NotifyCollectionChangedAction.Remove:
-                    RemoveDataItem((IFeature)removedOrAddedItem);
+                case NotifyCollectionChangeAction.Remove:
+                    RemoveDataItem((IFeature)e.Item);
                     break;
             }
         }
 
-        private void InputFeaturesCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void InputFeaturesCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
             BubbleCollectionChangedEvent(sender, e);
-            var removedOrAddedItem = e.GetRemovedOrAddedItem();
+
             switch (e.Action)
             {
-                case NotifyCollectionChangedAction.Add:
-                    AddDataItem(DataItemRole.Input, (IFeature)removedOrAddedItem);
+                case NotifyCollectionChangeAction.Add:
+                    AddDataItem(DataItemRole.Input, (IFeature)e.Item);
                     break;
-                case NotifyCollectionChangedAction.Remove:
-                    RemoveDataItem((IFeature)removedOrAddedItem);
+                case NotifyCollectionChangeAction.Remove:
+                    RemoveDataItem((IFeature)e.Item);
                     break;
             }
         }

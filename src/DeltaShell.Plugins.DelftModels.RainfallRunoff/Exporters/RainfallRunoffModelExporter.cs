@@ -24,11 +24,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
             get { return ""; }
         }
 
-        public string Description
-        {
-            get { return string.Empty; }
-        }
-
         public IEnumerable<Type> SourceTypes()
         {
             yield return typeof(RainfallRunoffModel);

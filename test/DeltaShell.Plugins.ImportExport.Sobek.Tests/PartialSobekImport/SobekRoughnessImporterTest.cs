@@ -21,7 +21,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         [Category(TestCategory.Slow)]
         public void ImportRoughness()
         {
-            var pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\ReModels\JAMM2010.sbk\40\DEFTOP.1";
+            var pathToSobekNetwork = TestHelper.GetDataDir() + @"\ReModels\JAMM2010.sbk\40\DEFTOP.1";
             var waterFlowModel1DModel = new WaterFlowModel1D("water flow 1d");
 
             var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekNetwork, waterFlowModel1DModel, new IPartialSobekImporter[] { new SobekBranchesImporter(), new SobekCrossSectionsImporter(), new SobekRoughnessImporter() });
@@ -41,7 +41,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         [Category(TestCategory.DataAccess)]
         public void ImportReverseRoughness()
         {
-            var pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\REVERSE.sbk\3\DEFTOP.1";
+            var pathToSobekNetwork = TestHelper.GetDataDir() + @"\REVERSE.sbk\3\DEFTOP.1";
             var waterFlowModel1DModel = new WaterFlowModel1D("water flow 1d");
 
             Assert.IsFalse(waterFlowModel1DModel.UseReverseRoughness);
@@ -119,7 +119,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         [Category(TestCategory.Slow)]
         public void ImportReverseRoughnessNDB()
         {
-            var pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\ReModels\20110331_NDB.sbk\6\DEFTOP.1";
+            var pathToSobekNetwork = TestHelper.GetDataDir() + @"\ReModels\20110331_NDB.sbk\6\DEFTOP.1";
             var waterFlowModel1DModel = new WaterFlowModel1D("water flow 1d");
 
             Assert.IsFalse(waterFlowModel1DModel.UseReverseRoughness);
@@ -167,7 +167,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         [Category(TestCategory.DataAccess)]
         public void ImportRoughnessWhereYZCrossSectionHasNoFrictionDataShouldTakeTheMainValueOfTheBranch() //Review Witteveen en Bos
         {
-            var pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\Twentekanaal.lit\3\Network.TP";
+            var pathToSobekNetwork = TestHelper.GetDataDir() + @"\Twentekanaal.lit\3\Network.TP";
             var waterFlowModel1DModel = new WaterFlowModel1D("water flow 1d");
 
             Assert.IsFalse(waterFlowModel1DModel.UseReverseRoughness);
@@ -198,7 +198,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         [Category(TestCategory.Slow)]
         public void ImportRoughnessShouldBeEfficient()
         {
-            var zipPath = TestHelper.GetTestDataDirectory() + @"\LSM1_0.lit\12.zip";
+            var zipPath = TestHelper.GetDataDir() + @"\LSM1_0.lit\12.zip";
 
             TestHelper.PerformActionInTemporaryDirectory(tempDir =>
             {

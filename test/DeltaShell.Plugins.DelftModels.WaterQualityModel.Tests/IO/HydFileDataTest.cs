@@ -118,7 +118,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
 
             try
             {
-                FileUtils.CopyDirectory(Path.Combine(TestHelper.GetTestDataDirectory(), @"IO\square\"), targetDirectory);
+                FileUtils.CopyDirectory(Path.Combine(TestHelper.GetDataDir(), @"IO\square\"), targetDirectory);
 
                 var newFilePath = Path.Combine(targetDirectory, hydFileName);
                 

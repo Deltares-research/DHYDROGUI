@@ -11,7 +11,7 @@ using SharpMap.Extensions.Data.Providers;
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
 {
     [TestFixture]
-    [Category(TestCategory.X86)]
+    [Category("Geodatabase_x86")]
     public class PumpFromGisImporterTest
     {
         private ChannelFromGisImporter channelImporter;

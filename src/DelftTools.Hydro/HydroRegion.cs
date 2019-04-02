@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using DelftTools.Utils;
@@ -241,20 +240,20 @@ namespace DelftTools.Hydro
         }
 
         [EditAction]
-        private void OnLinksCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void OnLinksCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
             if (isCloning)
             {
                 return;
             }
-            var link = e.GetRemovedOrAddedItem() as HydroLink;
+            var link = e.Item as HydroLink;
 
-            if (e.Action == NotifyCollectionChangedAction.Remove)
+            if (e.Action == NotifyCollectionChangeAction.Remove)
             {
                 link.Source.Links.Remove(link);
                 link.Target.Links.Remove(link);
             }
-            else if (e.Action == NotifyCollectionChangedAction.Add)
+            else if (e.Action == NotifyCollectionChangeAction.Add)
             {
                 link.Source.Links.Add(link);
                 link.Target.Links.Add(link);

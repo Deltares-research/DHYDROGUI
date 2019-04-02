@@ -4,7 +4,6 @@ using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils;
-using DelftTools.Utils.Reflection;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -57,9 +56,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             // Then
             Assert.That(quantities.Length, Is.EqualTo(3));
-            Assert.That(quantities.Contains(KnownGeneralStructureProperties.LevelCenter.GetDescription()));
-            Assert.That(quantities.Contains(KnownGeneralStructureProperties.GateHeight.GetDescription()));
-            Assert.That(quantities.Contains(KnownGeneralStructureProperties.HorizontalDoorOpeningWidth.GetDescription()));
+            Assert.That(quantities.Contains(EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.LevelCenter)));
+            Assert.That(quantities.Contains(EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.GateHeight)));
+            Assert.That(quantities.Contains(EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.HorizontalDoorOpeningWidth)));
         }
 
         [TestCase(true)]

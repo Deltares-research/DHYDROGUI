@@ -53,11 +53,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             get { return "Water Flow Model 1D"; }
         }
 
-        public string Description
-        {
-            get { return string.Empty; }
-        }
-
         public IEnumerable<Type> SourceTypes()
         {
             yield return typeof(WaterFlowModel1D);

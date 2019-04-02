@@ -1,5 +1,4 @@
-﻿using System.Collections.Specialized;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
 using DelftTools.Utils.Collections.Generic;
@@ -95,7 +94,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             }
         }
 
-        void MeteoStationsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        void MeteoStationsCollectionChanged(object sender, DelftTools.Utils.Collections.NotifyCollectionChangingEventArgs e)
         {
             ResetStationComboBox();
         }

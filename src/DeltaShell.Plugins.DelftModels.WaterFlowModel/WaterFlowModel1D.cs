@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
@@ -1866,7 +1865,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
         /// <param name="sender"></param>
         /// <param name="e"></param>
         [EditAction]
-        private void NetworkCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void NetworkCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
             // Manual call of OnInputCollectionChanged if the model is not owner of the network, i.e. the network is wrapped in a linked data item:
             if (GetDataItemByTag(WaterFlowModel1DDataSet.NetworkTag).LinkedTo != null)
@@ -1875,28 +1874,27 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             }
 
             // when node is added or removed - check if boundary conditions are updated
-            var removedOrAddedItem = e.GetRemovedOrAddedItem();
-            if (removedOrAddedItem is IHydroNode)
+            if (e.Item is IHydroNode)
             {
                 UpdateBoundaryCondition(e);
             }
-            else if (removedOrAddedItem is LateralSource && !(Network.CurrentEditAction is BranchMergeAction))
+            else if (e.Item is LateralSource && !(Network.CurrentEditAction is BranchMergeAction))
             {
                 UpdateLateralSource(e);
             }
-            else if (removedOrAddedItem is CrossSectionSectionType)
+            else if (e.Item is CrossSectionSectionType)
             {
                 UpdateCrossSectionSectionType(e);
             }
-            else if (removedOrAddedItem is IChannel)
+            else if (e.Item is IChannel)
             {
                 if (Equals(sender, Network.Branches))
                 {
                     switch (e.Action)
                     {
-                        case NotifyCollectionChangedAction.Remove:
+                        case NotifyCollectionChangeAction.Remove:
                             {
-                        var channel = (IChannel)removedOrAddedItem;
+                        var channel = (IChannel)e.Item;
                         foreach (var lateralSource in channel.BranchSources)
                         {
                             RemoveLateralSourceData(lateralSource);
@@ -1932,9 +1930,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
                         }
                     }
                             break;
-                        case NotifyCollectionChangedAction.Add:
+                        case NotifyCollectionChangeAction.Add:
                     {
-                        var channel = (IChannel)removedOrAddedItem;
+                        var channel = (IChannel)e.Item;
                         foreach (var lateralSource in channel.BranchSources)
                         {
                             AddLateralSourceData(new WaterFlowModel1DLateralSourceData { Feature = lateralSource });
@@ -1948,15 +1946,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             }
             
             // check if removed item is used in the child data items
-            if (removedOrAddedItem is IFeature && e.Action == NotifyCollectionChangedAction.Remove)
+            if (e.Item is IFeature && e.Action == NotifyCollectionChangeAction.Remove)
             {
-                var asNetworkFeature = removedOrAddedItem as INetworkFeature;
+                var asNetworkFeature = e.Item as INetworkFeature;
                 if (asNetworkFeature != null && asNetworkFeature.IsBeingMoved())
                 {
                     return;
                 }
 
-                var childDataItems = AllDataItems.Where(di => di.Parent != null && di.ValueConverter != null && di.ValueConverter.OriginalValue == removedOrAddedItem).ToList();
+                var childDataItems = AllDataItems.Where(di => di.Parent != null && di.ValueConverter != null && di.ValueConverter.OriginalValue == e.Item).ToList();
 
                 foreach (var childDataItem in childDataItems)
                 {
@@ -1994,57 +1992,57 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             }
         }
 
-        private void UpdateLateralSource(NotifyCollectionChangedEventArgs e)
+        private void UpdateLateralSource(NotifyCollectionChangingEventArgs e)
         {
-            var lateralSource = (LateralSource)e.GetRemovedOrAddedItem();
+            var lateralSource = (LateralSource)e.Item;
             if (lateralSource.IsBeingMoved()) return;
 
             switch (e.Action)
             {
-                case NotifyCollectionChangedAction.Replace:
+                case NotifyCollectionChangeAction.Replace:
                     throw new NotImplementedException();
 
-                case NotifyCollectionChangedAction.Add:
+                case NotifyCollectionChangeAction.Add:
                     AddLateralSourceData(new WaterFlowModel1DLateralSourceData { Feature = lateralSource });
                     break;
-                case NotifyCollectionChangedAction.Remove:
+                case NotifyCollectionChangeAction.Remove:
                     RemoveLateralSourceData(lateralSource);
                     break;
             }
         }
 
-        private void UpdateBoundaryCondition(NotifyCollectionChangedEventArgs e)
+        private void UpdateBoundaryCondition(NotifyCollectionChangingEventArgs e)
         {
-            var node = (IHydroNode)e.GetRemovedOrAddedItem();
+            var node = (IHydroNode)e.Item;
 
             switch (e.Action)
             {
-                case NotifyCollectionChangedAction.Replace:
+                case NotifyCollectionChangeAction.Replace:
                     throw new NotImplementedException();
 
-                case NotifyCollectionChangedAction.Add:
+                case NotifyCollectionChangeAction.Add:
                     AddBoundaryCondition(WaterFlowModel1DHelper.CreateDefaultBoundaryCondition(node, UseSalt, UseTemperature));
                     break;
 
-                case NotifyCollectionChangedAction.Remove:
+                case NotifyCollectionChangeAction.Remove:
                     RemoveBoundaryCondition(node);
                     break;
             }
         }
 
-        private void UpdateCrossSectionSectionType(NotifyCollectionChangedEventArgs e)
+        private void UpdateCrossSectionSectionType(NotifyCollectionChangingEventArgs e)
         {
-            var sectionType = (CrossSectionSectionType)e.GetRemovedOrAddedItem();
+            var sectionType = (CrossSectionSectionType)e.Item;
 
             switch (e.Action)
             {
-                case NotifyCollectionChangedAction.Replace:
+                case NotifyCollectionChangeAction.Replace:
                     throw new NotImplementedException();
-                case NotifyCollectionChangedAction.Add:
+                case NotifyCollectionChangeAction.Add:
                     if (RoughnessSections.Any(rs => rs.Name == sectionType.Name)) break;
                     AddRoughnessSections(sectionType);
                     break;
-                case NotifyCollectionChangedAction.Remove:
+                case NotifyCollectionChangeAction.Remove:
                     var roughnessSection = RoughnessSections.FirstOrDefault(rs => rs.CrossSectionSectionType.Name == sectionType.Name);
                     if (roughnessSection != null)
                     {
@@ -3141,7 +3139,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
         }
 
         [EditAction]
-        protected override void OnInputCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        protected override void OnInputCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
             if (!created)
             {

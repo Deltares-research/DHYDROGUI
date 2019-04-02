@@ -104,7 +104,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             var boundCond = fbcFactory.CreateBoundaryCondition(boundary,
                 FlowBoundaryQuantityType.WaterLevel.ToString(),
                 BoundaryConditionDataType.TimeSeries,
-                FlowBoundaryQuantityType.WaterLevel.GetDescription());
+                EnumDescriptionAttributeTypeConverter.GetEnumDescription(FlowBoundaryQuantityType.WaterLevel));
 
             model.BoundaryConditionSets[0].BoundaryConditions.Add(boundCond);
             
@@ -144,7 +144,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             var boundCond = fbcFactory.CreateBoundaryCondition(boundary,
                 FlowBoundaryQuantityType.WaterLevel.ToString(),
                 BoundaryConditionDataType.TimeSeries,
-                FlowBoundaryQuantityType.WaterLevel.GetDescription());
+                EnumDescriptionAttributeTypeConverter.GetEnumDescription(FlowBoundaryQuantityType.WaterLevel));
 
             model.BoundaryConditionSets[0].BoundaryConditions.Add(boundCond);
             
@@ -175,7 +175,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             var boundCond = fbcFactory.CreateBoundaryCondition(boundary1,
                 FlowBoundaryQuantityType.MorphologyBedLevelPrescribed.ToString(),
                 BoundaryConditionDataType.TimeSeries,
-                FlowBoundaryQuantityType.MorphologyBedLevelPrescribed.GetDescription());
+                EnumDescriptionAttributeTypeConverter.GetEnumDescription(FlowBoundaryQuantityType.MorphologyBedLevelPrescribed));
             
             importer.ImportItem(null, boundCond);
             var data = boundCond.GetDataAtPoint(0);

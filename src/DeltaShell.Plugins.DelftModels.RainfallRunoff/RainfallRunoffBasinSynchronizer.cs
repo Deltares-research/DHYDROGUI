@@ -1,5 +1,4 @@
-﻿using System.Collections.Specialized;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow.DataItems;
@@ -190,7 +189,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         }
 
         [EditAction]
-        private void BasinCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void BasinCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
             var catchmentList = sender as IEventedList<Catchment>;
             if (catchmentList != null) //basin catchments or subcatchments
@@ -207,29 +206,29 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             }
         }
 
-        private void CatchmentsCollectionChanged(NotifyCollectionChangedEventArgs e)
+        private void CatchmentsCollectionChanged(NotifyCollectionChangingEventArgs e)
         {
-            var catchment = (Catchment) e.GetRemovedOrAddedItem();
+            var catchment = (Catchment) e.Item;
             switch (e.Action)
             {
-                case NotifyCollectionChangedAction.Add:
+                case NotifyCollectionChangeAction.Add:
                     OnCatchmentAdded(catchment);
                     break;
-                case NotifyCollectionChangedAction.Remove:
+                case NotifyCollectionChangeAction.Remove:
                     OnCatchmentRemoved(catchment);
                     break;
             }
         }
 
-        private void BoundariesCollectionChanged(NotifyCollectionChangedEventArgs e)
+        private void BoundariesCollectionChanged(NotifyCollectionChangingEventArgs e)
         {
-            var runoffBoundary = (RunoffBoundary)e.GetRemovedOrAddedItem();
+            var runoffBoundary = (RunoffBoundary)e.Item;
             switch (e.Action)
             {
-                case NotifyCollectionChangedAction.Add:
+                case NotifyCollectionChangeAction.Add:
                     OnBoundaryAdded(runoffBoundary);
                     break;
-                case NotifyCollectionChangedAction.Remove:
+                case NotifyCollectionChangeAction.Remove:
                     OnBoundaryRemoved(runoffBoundary);
                     break;
             }

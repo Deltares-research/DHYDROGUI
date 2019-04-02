@@ -7,6 +7,7 @@ using DelftTools.Utils.Collections;
 using GeoAPI.Extensions.Feature;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Geometries;
+using FixedWeir = DelftTools.Hydro.Structures.FixedWeir;
 
 namespace DeltaShell.Plugins.FMSuite.Common.IO
 {
@@ -39,7 +40,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                 throw new NotSupportedException("Cannot write *.pliz because no geometry is defined");
             }
             var zValues = f.Geometry.Coordinates.Select(c => c.Z).ToList();
-            if (double.IsNaN(zValues[0])) return f;
+            if (Double.IsNaN(zValues[0])) return f;
             if (f.Attributes == null)
             {
                 f.Attributes = new DictionaryFeatureAttributeCollection();
@@ -110,6 +111,21 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             }
 
             return newFeature;
+        }
+
+        private List<double> RetrieveColumn3Values(T f)
+        {
+            List<double> column3;
+            try
+            {
+                column3 = ((GeometryPointsSyncedList<double>) f.Attributes[NumericColumnAttributesKeys[0]])
+                    .ToList();
+            }
+            catch (Exception e)
+            {
+                column3 = (List<double>) f.Attributes[NumericColumnAttributesKeys[0]];
+            }
+            return column3;
         }
     }
 }

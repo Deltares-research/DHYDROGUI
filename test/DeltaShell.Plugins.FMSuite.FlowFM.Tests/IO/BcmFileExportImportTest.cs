@@ -6,7 +6,6 @@ using NUnit.Framework;
 using DelftTools.TestUtils;
 using DelftTools.Units;
 using DelftTools.Utils;
-using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
@@ -128,7 +127,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var boundCond = fbcFactory.CreateBoundaryCondition(boundary,
                 FlowBoundaryQuantityType.MorphologyBedLoadTransport.ToString(),
                 BoundaryConditionDataType.TimeSeries,
-                FlowBoundaryQuantityType.MorphologyBedLoadTransport.GetDescription());
+                EnumDescriptionAttributeTypeConverter.GetEnumDescription(FlowBoundaryQuantityType.MorphologyBedLoadTransport));
 
             model.BoundaryConditionSets[0].BoundaryConditions.Add(boundCond);
 

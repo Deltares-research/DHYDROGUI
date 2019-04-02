@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using DelftTools.Functions;
@@ -151,7 +150,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects
             }
         }
 
-        private void LinkCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void LinkCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
             if (DataType == WaterFlowModel1DBoundaryNodeDataType.None)
             {
@@ -469,7 +468,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects
         }
 
         [EditAction]
-        private void BranchCollectionChanged(object sender, NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs)
+        private void BranchCollectionChanged(object sender, NotifyCollectionChangingEventArgs notifyCollectionChangingEventArgs)
         {
             if (WaterLevelOnly != Feature.IsConnectedToMultipleBranches)
             {

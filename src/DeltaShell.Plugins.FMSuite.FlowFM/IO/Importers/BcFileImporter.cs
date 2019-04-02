@@ -30,11 +30,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             get { return "Boundary data"; }
         }
 
-        public string Description
-        {
-            get { return string.Empty; }
-        }
-
         public Bitmap Image
         {
             get { return Properties.Resources.TextDocument; }

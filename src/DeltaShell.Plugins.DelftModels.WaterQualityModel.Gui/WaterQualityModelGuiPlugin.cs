@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
@@ -517,26 +516,25 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
             project.RootFolder.CollectionChanged -= RootFolderCollectionChanged;
         }
 
-        private void RootFolderCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void RootFolderCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
-            var removedOrAddedItem = e.GetRemovedOrAddedItem();
-            var model = removedOrAddedItem as WaterQualityModel;
+            var model = e.Item as WaterQualityModel;
             if (model != null)
             {
                 model.HydroDataChanged += ModelOnHydroDataChanged;
             }
 
-            if (removedOrAddedItem is IDataItemSet && ((IDataItemSet)removedOrAddedItem).Value is IEventedList<WaterQualityObservationVariableOutput>)
+            if (e.Item is IDataItemSet && ((IDataItemSet) e.Item).Value is IEventedList<WaterQualityObservationVariableOutput>)
             {
                 // Close any opened view for observation points/areas data if the corresponding model output is removed
-                CloseMonitoringOutputViews((IDataItemSet)removedOrAddedItem);
+                CloseMonitoringOutputViews((IDataItemSet) e.Item);
                 return;
             }
 
-            if (removedOrAddedItem is IDataItem && ((IDataItem)removedOrAddedItem).Value is WaterQualityObservationVariableOutput)
+            if (e.Item is IDataItem && ((IDataItem) e.Item).Value is WaterQualityObservationVariableOutput)
             {
                 // Close any opened view for observation points/areas data if the corresponding model output is removed
-                CloseMonitoringOutputViews((WaterQualityObservationVariableOutput) ((IDataItem)removedOrAddedItem).Value);
+                CloseMonitoringOutputViews((WaterQualityObservationVariableOutput) ((IDataItem) e.Item).Value);
                 return;
             }
         }

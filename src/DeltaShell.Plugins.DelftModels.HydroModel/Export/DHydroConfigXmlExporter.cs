@@ -150,11 +150,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
             get { return "DIMR"; }
         }
 
-        public string Description
-        {
-            get { return string.Empty; }
-        }
-
         public IEnumerable<Type> SourceTypes()
         {
             yield return typeof (HydroModel);

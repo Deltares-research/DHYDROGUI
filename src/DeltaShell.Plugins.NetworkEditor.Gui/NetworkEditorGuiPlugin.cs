@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
@@ -49,11 +48,15 @@ using Mono.Addins;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
 using SharpMap;
-using SharpMap.Api;
 using SharpMap.Api.Layers;
 using SharpMap.Layers;
 using SharpMap.UI.Forms;
+using FixedWeir = DelftTools.Hydro.Structures.FixedWeir;
+using LandBoundary2D = DelftTools.Hydro.LandBoundary2D;
+using ObservationCrossSection2D = DelftTools.Hydro.ObservationCrossSection2D;
 using PropertyInfo = DelftTools.Shell.Gui.PropertyInfo;
+using ThinDam2D = DelftTools.Hydro.Structures.ThinDam2D;
+using BridgePillar = DelftTools.Hydro.Structures.BridgePillar;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui
 {
@@ -576,7 +579,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             };
 
             generateCalculationGridLocationsToolStripMenuItem.Click += GenerateCalculationGridLocationsToolStripMenuItemClick;
-            removeCalculationGridLocationsToolStripMenuItem.Click += RemoveCalculationGridLocationsToolStripMenuItem_Click;
+            removeCalculationGridLocationsToolStripMenuItem.Click += removeCalculationGridLocationsToolStripMenuItem_Click;
             addNewHydroRegionToolStripMenuItem.Click += AddNewHydroRegionToolStripMenuItemClick;
             convertCoordinateSystemToolStripMenuItem.Click += ConvertCoordinateSystemToolStripMenuItemClick;
             
@@ -756,7 +759,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             }
         }
 
-        void NetworkSideViewSelectionChanged(object sender, SelectedItemChangedEventArgs e)
+        void NetworkSideViewSelectionChanged(object sender, SelectedItemChangedEventArgs<IFeature> e)
         {
             Gui.Selection = e.Item;
         }
@@ -806,7 +809,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             }
         }
 
-        private void RefreshNetworkMapLayers(INetworkCoverage networkCoverage, IMap map)
+        private void RefreshNetworkMapLayers(INetworkCoverage networkCoverage, Map map)
         {
             var hydroNetworkMapLayer = map.Layers.OfType<HydroRegionMapLayer>().FirstOrDefault(l => l.Region is IHydroNetwork);
             if (hydroNetworkMapLayer != null)
@@ -829,26 +832,25 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         /// <param name="sender"></param>
         /// <param name="e"></param>
         [EditAction]
-        void RootFolderCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        void RootFolderCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
-            var removedOrAddedItem = e.GetRemovedOrAddedItem();
-            if (!(removedOrAddedItem is IProjectItem)) // NB IModel and IDataItem derive from IProjectItem
+            if (!(e.Item is IProjectItem)) // NB IModel and IDataItem derive from IProjectItem
             {
                 return;
             }
             object value;
-            if ((removedOrAddedItem is IDataItem)) // NB IModel and IDataItem derive from IProjectItem
+            if ((e.Item is IDataItem)) // NB IModel and IDataItem derive from IProjectItem
             {
-                value = ((IDataItem)removedOrAddedItem).Value;
+                value = ((IDataItem)e.Item).Value;
             }
             else
             {
-                value = removedOrAddedItem;
+                value = e.Item;
             }
             //IEnumerable<object> 
             switch (e.Action)
             {
-                case NotifyCollectionChangedAction.Remove:
+                case NotifyCollectionChangeAction.Remove:
                     // if network is removed - remove views for all items within the network (not obvious on a higher level since it has no knowledge about child items of the network)
                     if (value is INetwork)
                     {
@@ -859,7 +861,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     {
                         // only close views for networks 
                         var networks =
-                            (removedOrAddedItem as IProjectItem).GetAllItemsRecursive().Where(
+                            (e.Item as IProjectItem).GetAllItemsRecursive().Where(
                                 i =>
                                 ((i is IDataItem) && (((IDataItem) i).Value is INetwork) && (!((IDataItem) i).IsLinked)))
                                 .ToList();
@@ -870,11 +872,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                         return;
                     }
                     break;
-                case NotifyCollectionChangedAction.Replace:
+                case NotifyCollectionChangeAction.Replace:
                     //throw new NotImplementedException();
                     break;
 
-                case NotifyCollectionChangedAction.Add:
+                case NotifyCollectionChangeAction.Add:
                     break;
             }
         }
@@ -969,10 +971,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private void OnDocumentViewAdded(IView view)
         {
             var coverageView = view as CoverageView;
-            if (coverageView == null && view is ICompositeView)
+            if ((coverageView == null) && (view is ICompositeView))
             {
-                coverageView = ((ICompositeView) view).ChildViews.OfType<CoverageView>().FirstOrDefault();
+                coverageView = (view as ICompositeView).ChildViews.OfType<CoverageView>().FirstOrDefault();
             }
+
 
             if (coverageView != null)
             {
@@ -981,7 +984,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 var map = mapView.Map;
 
                 // add network as a layer
-                // TODO: move to (Network)CoverageView this part should temporary stay here, before we will make network coverage independent from hydro network editor
+                // TODO: move to (Netowork)CoverageView this part should temporary stay here, before we will make network coverage independent from hydro network editor
                 if (coverageView.Coverage is INetworkCoverage)
                 {
                     var networkCoverage = (INetworkCoverage)coverageView.Coverage;
@@ -1007,13 +1010,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 }
             }
 
-            if (view is NetworkSideView sideView)
+            var sideView = view as NetworkSideView;
+            if (sideView != null)
             {
                 sideView.SelectionChanged += NetworkSideViewSelectionChanged;
             }
         }
 
-        private void AddRegionLayer(IRegion region, IMap map)
+        private void AddRegionLayer(IRegion region, Map map)
         {
             var layer = MapLayerProviderHelper.CreateLayersRecursive(region, null, Gui.Plugins.Select(p => p.MapLayerProvider).ToList());
             map.DoWithLayerRecursive(layer, l =>
@@ -1053,8 +1057,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
         internal static MapView GetFocusedMapView()
         {
-            var viewToSearch = Instance.Gui?.DocumentViews?.ActiveView;
-            return viewToSearch.GetViewsOfType<MapView>().FirstOrDefault();
+            return Instance.Gui.GetFocusedMapView();
         }
 
         private IHydroRegion GetRegionFromActiveView()
@@ -1203,30 +1206,30 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             if (hasRun)
             {
                 Gui.CommandHandler.OpenView(discretization);
-                RefreshMapViewSelection();
+                var mapView = Gui.DocumentViews.GetActiveViews<MapView>().FirstOrDefault();
+                if (mapView != null)
+                {
+                    mapView.MapControl.SelectTool.RefreshSelection();
+                }
             }
         }
 
-        private void RemoveCalculationGridLocationsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void removeCalculationGridLocationsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var discretization = (IDiscretization)((ToolStripMenuItem)sender).Tag;
             discretization.Clear();
-            
             //this should not be necessary...but collectionchanged is not properly handled in map
-            RefreshMapViewSelection();
-        }
-
-        private void RefreshMapViewSelection()
-        {
-            var mapView = Gui.DocumentViews.ActiveView.GetViewsOfType<MapView>().FirstOrDefault();
-            mapView?.MapControl.SelectTool.RefreshSelection();
+            var mapView = Gui.DocumentViews.GetActiveViews<MapView>().FirstOrDefault();
+            if (mapView != null)
+            {
+                mapView.MapControl.SelectTool.RefreshSelection();
+            }
         }
 
         private void AddNewHydroRegionToolStripMenuItemClick(object sender, EventArgs e)
         {
             var region = (HydroRegion)((ToolStripMenuItem)sender).Tag;
-            Gui.CommandHandler.AddNewProjectItem(region);
-   
+            Gui.CommandHandler.AddNewChildItem(region, new List<Type> { typeof(DrainageBasin), typeof(HydroNetwork), typeof(HydroArea) });
         }
 
         private void ConvertCoordinateSystemToolStripMenuItemClick(object sender, EventArgs e)
@@ -1238,7 +1241,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             if (NetworkCoordinateConvertor.Convert(network))
             {
                 var mapView = GetFocusedMapView();
-                mapView?.Map?.ZoomToExtents();
+                if (mapView != null && mapView.Map != null)
+                    mapView.Map.ZoomToExtents();
             }
         }
 

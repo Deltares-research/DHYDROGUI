@@ -44,15 +44,15 @@
     <Position X="10.75" Y="4.25" Width="1.75" />
     <TypeIdentifier />
   </Class>
-  <Class Name="DelftTools.Hydro.ObservationCrossSection2D" Collapsed="true">
+  <Class Name="NetTopologySuite.Extensions.Features.ObservationCrossSection2D" Collapsed="true">
     <Position X="10.75" Y="7.25" Width="1.75" />
     <TypeIdentifier />
   </Class>
-  <Class Name="DelftTools.Hydro.LandBoundary2D" Collapsed="true">
+  <Class Name="NetTopologySuite.Extensions.Features.LandBoundary2D" Collapsed="true">
     <Position X="10.75" Y="5.25" Width="1.75" />
     <TypeIdentifier />
   </Class>
-  <Class Name="DelftTools.Hydro.Structures.FixedWeir" Collapsed="true">
+  <Class Name="NetTopologySuite.Extensions.Features.FixedWeir" Collapsed="true">
     <Position X="10.75" Y="3.25" Width="1.75" />
     <TypeIdentifier />
   </Class>
@@ -70,7 +70,7 @@
     <TypeIdentifier />
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
-  <Class Name="DelftTools.Hydro.Structures.ThinDam2D" Collapsed="true">
+  <Class Name="NetTopologySuite.Extensions.Features.ThinDam2D" Collapsed="true">
     <Position X="10.75" Y="9.25" Width="1.75" />
     <TypeIdentifier />
   </Class>

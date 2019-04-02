@@ -25,7 +25,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         [Test]
         public void ImportSobekHydFileAndRun()
         {
-            var dataDir = TestHelper.GetTestDataDirectory();
+            var dataDir = TestHelper.GetDataDir();
             var hydFile = Path.Combine(dataDir, "IntegrationTests", "Flow1D", "sobek.hyd");
 
             using (var model = new WaterQualityModel())
@@ -57,7 +57,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         [Test]
         public void ImportFMHydFileAndRun()
         {
-            var dataDir = TestHelper.GetTestDataDirectory();
+            var dataDir = TestHelper.GetDataDir();
             var hydFile = Path.Combine(dataDir, "IntegrationTests", "FM", "FlowFM.hyd");
 
             using (var model = new WaterQualityModel())
@@ -91,7 +91,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         [Category(TestCategory.Slow)]
         public void ImportUgridHydFileAndRun()
         {
-            var dataDir = TestHelper.GetTestDataDirectory();
+            var dataDir = TestHelper.GetDataDir();
             var hydFile = Path.Combine(dataDir, "IntegrationTests", "UGrid", "f34.hyd");
 
             using (var model = new WaterQualityModel())
@@ -175,7 +175,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             var testDir = FileUtils.CreateTempDirectory();
             var projectFolder = Path.Combine(testDir, "BasicWaqProject.dsproj_data");
 
-            var dataDir = TestHelper.GetTestDataDirectory();
+            var dataDir = TestHelper.GetDataDir();
             var hydFilePath = Path.Combine(dataDir, "IntegrationTests", "FM", "FlowFM.hyd");
             var substanceFilePath = Path.Combine(dataDir, "IntegrationTests", "coli_04.sub");
 

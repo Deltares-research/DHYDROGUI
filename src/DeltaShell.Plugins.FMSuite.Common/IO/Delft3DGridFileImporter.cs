@@ -22,10 +22,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         }
 
         public string Category { get; private set; }
-        public string Description
-        {
-            get { return string.Empty; }
-        }
 
         public Bitmap Image { get; private set; }
 

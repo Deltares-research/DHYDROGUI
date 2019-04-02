@@ -13,7 +13,6 @@ using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
-using DelftTools.Utils.Reflection;
 using DeltaShell.Core;
 using DeltaShell.Gui;
 using DeltaShell.Gui.Forms.MainWindow;
@@ -59,6 +58,7 @@ using NUnit.Framework;
 using SharpMap.Layers;
 using SharpMapTestUtils;
 using ComboBox = System.Windows.Controls.ComboBox;
+using FixedWeir = DelftTools.Hydro.Structures.FixedWeir;
 using Point = NetTopologySuite.Geometries.Point;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
@@ -133,7 +133,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             var modelImporter = new SobekWaterFlowModel1DImporter();
 
             var modelPath =
-                TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"ReModels\JAMM2010.sbk\40\DEFTOP.1");
+                TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"ReModels\JAMM2010.sbk\40\DEFTOP.1");
             var importedModel = (IModel)modelImporter.ImportItem(modelPath);
 
             app.Project.RootFolder.Items.Add(importedModel);
@@ -151,7 +151,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             const string projectPath = "HKTG.dsproj";
             var modelImporter = new SobekWaterFlowModel1DImporter();
 
-            var modelPath = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"HKTG.lit\1\NETWORK.TP");
+            var modelPath = TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"HKTG.lit\1\NETWORK.TP");
             var importedModel = (IModel)modelImporter.ImportItem(modelPath);
 
             app.Project.RootFolder.Items.Add(importedModel);
@@ -224,7 +224,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 gui.CommandHandler.OpenView(hydroModel, typeof(ProjectItemMapView));
 
                 /* get the coverages combo box from te ribbon */
-                var ribbon = (Fluent.Ribbon)TypeUtils.GetField(mainWindow, "MainWindowRibbon");
+                var ribbon = mainWindow.Ribbon;
                 var tab = ribbon.Tabs.First(t => t.Header.Equals("Map"));
                 var group = tab.Groups.First(g => g.Name.Equals("NetworkCoverage"));
                 var wrapPanel = group.Items.OfType<WrapPanel>().First();
@@ -307,7 +307,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 gui.CommandHandler.OpenView(hydroModel, typeof(ProjectItemMapView));
 
                 // get the coverages combo box from te ribbon */
-                var ribbon = (Fluent.Ribbon)TypeUtils.GetField(mainWindow, "MainWindowRibbon");
+                var ribbon = mainWindow.Ribbon;
                 var tab = ribbon.Tabs.First(t => t.Header.Equals("Map"));
                 var group = tab.Groups.First(g => g.Name.Equals("NetworkCoverage"));
                 var wrapPanel = group.Items.OfType<WrapPanel>().First();

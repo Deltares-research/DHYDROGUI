@@ -16,7 +16,7 @@ namespace Deltares.IO.FewsPI.Tests
         [TestFixtureSetUp]
         public void FixtureSetUp()
         {
-            testFolderName = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(FewsAdapterTest).Assembly);
+            testFolderName = TestHelper.GetTestDataPath(typeof(FewsAdapterTest).Assembly);
             fewsTestWorkFolderName = Path.Combine(testFolderName, "LWM");
             fewsTestInputFolderName = Path.Combine(fewsTestWorkFolderName, "Input");
             Assert.IsTrue(Directory.Exists(testFolderName));

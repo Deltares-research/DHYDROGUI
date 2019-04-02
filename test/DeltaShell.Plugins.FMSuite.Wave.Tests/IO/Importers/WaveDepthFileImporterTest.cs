@@ -173,7 +173,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
             var model = new WaveModel();
             Func<IEnumerable<WaveModel>> getModelsFunc = () => new List<WaveModel>() {model};
             var importerWithFunc = new WaveDepthFileImporter("Waves Model", getModelsFunc);
-            var fileDataPath = Path.Combine(TestHelper.GetTestDataDirectory(), "SimpleBathemetry");
+            var fileDataPath = Path.Combine(TestHelper.GetDataDir(), "SimpleBathemetry");
 
             TestHelper.PerformActionInTemporaryDirectory(tempDir =>
             {

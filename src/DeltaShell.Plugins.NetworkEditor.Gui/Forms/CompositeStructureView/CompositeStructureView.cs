@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
@@ -15,6 +14,7 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView;
+using DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
 {
@@ -23,51 +23,51 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
         private CompositeStructureViewPresenter presenter;
         private ICompositeBranchStructure data;
         private IStructure1D selectedStructure;
-        private static Control PreviousFocusedControl;
+        private static Control previousFocusedControl;
 
         private bool settingFormsView;
         private bool locked;
+        private readonly IEventedList<IView> childViews = new EventedList<IView>();
         
         public CompositeStructureView()
         {
-            ChildViews = new EventedList<IView>();
             Text = "Composite structure view";
             InitializeComponent();
             Load += delegate
                         {
                             //presenter.ViewReady(); // <- should always be called first
-                            tabControl.SelectedIndexChanged += TabControl_SelectedIndexChanged;
-                            CrossSectionStructureView.SelectionChanged += CrossSectionStructureView_SelectionChanged;
-                            networkSideView.SelectionChanged += NetworkSideView_SelectionChanged;
+                            tabControl1.SelectedIndexChanged += TabControl1SelectedIndexChanged;
+                            CrossSectionStructureView.SelectionChanged += CrossSectionStructureViewSelectionChanged;
+                            networkSideView1.SelectionChanged += networkSideView1_SelectionChanged;
                             //presenter.ViewReady(); // <- should always be called first
                         };
             //hide chart header in this view.
-            networkSideView.AllowFeatureVisibilityChanges = false;
-            networkSideView.ChartHeaderVisible = false;
-            networkSideView.ChartLegendVisible = false;
+            networkSideView1.AllowFeatureVisibilityChanges = false;
+            networkSideView1.ChartHeaderVisible = false;
+            networkSideView1.ChartLegendVisible = false;
             //disable context menu in side (with show coverages etc)
-            networkSideView.ContextMenuStripEnabled = false;
+            networkSideView1.ContextMenuStripEnabled = false;
         }
 
-        private void NetworkSideView_SelectionChanged(object sender, SelectedItemChangedEventArgs e)
+        void networkSideView1_SelectionChanged(object sender, SelectedItemChangedEventArgs<GeoAPI.Extensions.Feature.IFeature> e)
         {
             SetSelection(e.Item);
         }
 
-        private void CrossSectionStructureView_SelectionChanged(object sender, SelectedItemChangedEventArgs e)
+        void CrossSectionStructureViewSelectionChanged(object sender, SelectedItemChangedEventArgs e)
         {
             SetSelection(e.Item);
         }
 
-        private void TabControl_SelectedIndexChanged(object sender, EventArgs e)
+        void TabControl1SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (tabControl.SelectedIndex != -1)
+            if (tabControl1.SelectedIndex != -1)
             {
-                SetSelection(tabControl.TabPages[tabControl.SelectedIndex].Tag);
+                SetSelection(tabControl1.TabPages[tabControl1.SelectedIndex].Tag);
             }
         }
 
-        public sealed override string Text
+        public override sealed string Text
         {
             get { return base.Text; }
             set { base.Text = value; }
@@ -82,8 +82,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
 
                 if (value == null)
                 {
-                    networkSideView.Data = null;
-                    structureView.Data = null;
+                    networkSideView1.Data = null;
+                    structureView1.Data = null;
                 }
 
                 // TODO: subscribe to the CompositeStructure.CollectionChange here!
@@ -118,7 +118,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
             }
         }
 
-        private void NetworkPropertyChanged(object sender, PropertyChangedEventArgs e)
+        void NetworkPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             var network = Data.Network;
 
@@ -133,19 +133,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
             var structure = sender as IStructure1D;
             if ( structure == null) return;
 
-            UpdateStructure(structure,e.PropertyName);
+            UpdateStucture(structure,e.PropertyName);
         }
 
-        private void UpdateStructure(IStructure1D structure, string propertyName)
+        private void UpdateStucture(IStructure1D structure, string propertyName)
         {
             if (!Data.Structures.Contains(structure)) return;
 
             Presenter.GenerateViewTitle();
-            structureView.Refresh();
+            structureView1.Refresh();
 
             if (propertyName != "Name" && propertyName != "LongName") return;
 
-            var tabPage = tabControl.TabPages.OfType<TabPage>().FirstOrDefault(t => t.Tag == structure);
+            var tabPage = tabControl1.TabPages.OfType<TabPage>().FirstOrDefault(t => t.Tag == structure);
             if (tabPage == null) return;
 
             tabPage.Text = structure.Name;
@@ -166,14 +166,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void NetworkCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        void NetworkCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
-            var removedOrAddedItem = e.GetRemovedOrAddedItem();
-            if (!(removedOrAddedItem is IStructure1D))
+            if (!(e.Item is IStructure1D))
             {
                 return;
             }
-            var structure = (IStructure1D)removedOrAddedItem;
+            var structure = (IStructure1D) e.Item;
             if (structure.Network != null && structure.Network.IsEditing)
             {
                 return;//TODO: wait for finish and refresh
@@ -183,7 +182,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
             {
                 return;
             }
-            if (((e.Action == NotifyCollectionChangedAction.Remove)) || (e.Action == NotifyCollectionChangedAction.Add))
+            if (((e.Action == NotifyCollectionChangeAction.Remove)) || (e.Action == NotifyCollectionChangeAction.Add))
             {
                 Presenter.SetModelIntoView();
             }
@@ -217,7 +216,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
 
         public IStructureView CrossSectionStructureView
         {
-            get { return structureView; }
+            get { return structureView1; }
         }
 
         /// <summary>
@@ -225,15 +224,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
         /// </summary>
         public INetworkSideView SideView
         {
-            get { return networkSideView; }
+            get { return networkSideView1; }
         }
 
         public new void Dispose()
         {
-            PreviousFocusedControl = null;
-            tabControl.SelectedIndexChanged -= TabControl_SelectedIndexChanged;
-            CrossSectionStructureView.SelectionChanged -= CrossSectionStructureView_SelectionChanged;
-            networkSideView.SelectionChanged -= NetworkSideView_SelectionChanged;
+            previousFocusedControl = null;
+            tabControl1.SelectedIndexChanged -= TabControl1SelectedIndexChanged;
+            CrossSectionStructureView.SelectionChanged -= CrossSectionStructureViewSelectionChanged;
+            networkSideView1.SelectionChanged -= networkSideView1_SelectionChanged;
 
 
             base.Dispose();
@@ -246,9 +245,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
 
             if (Data != null)
             {
-                tabControl.Enabled = false; // prevent firing Enter event
-                tabControl.TabPages.Clear();
-                ChildViews.Clear();
+                tabControl1.Enabled = false; // prevent firing Enter event
+                tabControl1.TabPages.Clear();
+                childViews.Clear();
 
                 IEnumerable<IStructure1D> structures = Data.Structures;
                 
@@ -274,15 +273,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
                     tabPage.AutoScrollMinSize = new Size(control.Width, (int)(control.Height * 1.3));
                     tabPage.Controls.Add(control);
 
-                    tabControl.TabPages.Add(tabPage);
-                    ChildViews.Add(view);
+                    tabControl1.TabPages.Add(tabPage);
+                    childViews.Add(view);
                 }
-                if (tabControl.SelectedTab != null)
+                if (tabControl1.SelectedTab != null)
                 {
-                    SelectedStructure = Data.Structures.ElementAt(tabControl.SelectedTab.TabIndex);
+                    SelectedStructure = Data.Structures.ElementAt(tabControl1.SelectedTab.TabIndex);
                 }
 
-                tabControl.Enabled = true;
+                tabControl1.Enabled = true;
             }
             
             settingFormsView = false;
@@ -297,19 +296,22 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
         {
             RememberPreviouslyFocusedControl();
 
-            var pageKey = structure.Name;
-            if (tabControl.TabPages.ContainsKey(pageKey))
+            //this.tabControl1.TabIndexChanged -= OnTabIndexChanged;
+            string pageKey = structure.Name;
+            if (tabControl1.TabPages.ContainsKey(pageKey))
             {
-                tabControl.SelectedIndexChanged -= TabControl_SelectedIndexChanged;
+                tabControl1.SelectedIndexChanged -= TabControl1SelectedIndexChanged;
                 
-                tabControl.Enabled = false;
-                tabControl.SelectTab(pageKey);
-                tabControl.Enabled = true;
+                tabControl1.Enabled = false;
+                tabControl1.SelectTab(pageKey);
+                tabControl1.Enabled = true;
 
                 SelectedStructure = structure;
-                tabControl.SelectedIndexChanged += TabControl_SelectedIndexChanged;
+                tabControl1.SelectedIndexChanged += TabControl1SelectedIndexChanged;
             }
-            
+
+            //this.tabControl1.TabIndexChanged += OnTabIndexChanged;
+
             RestorePreviouslyFocusedControl();
         }
 
@@ -320,42 +322,45 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
         {
             if (settingFormsView) return; // Prevent unwanted/unexpected control remembering
 
-            PreviousFocusedControl = ControlHelper.GetFocusControl();
+            previousFocusedControl = ControlHelper.GetFocusControl();
         }
 
         private void RestorePreviouslyFocusedControl()
         {
-            if (PreviousFocusedControl != null && !settingFormsView) // Prevent unwanted/unexpected control restoring
+            if (previousFocusedControl != null && !settingFormsView) // Prevent unwanted/unexpected control restoring
             {
-                PreviousFocusedControl.Focus();
+                previousFocusedControl.Focus();
             }
         }
 
-        public IEventedList<IView> ChildViews { get; }
+        public IEventedList<IView> ChildViews
+        {
+            get { return childViews; }
+        }
 
         public bool HandlesChildViews { get { return true; } }
         
         public void ActivateChildView(IView childView)
         {
-            if (childView.Data is IStructure1D structure)
+            var structure = childView.Data as IStructure1D;
+            if (structure == null) return;
+
+            RememberPreviouslyFocusedControl();
+
+            var pageKey = structure.Name;
+            if (tabControl1.TabPages.ContainsKey(pageKey))
             {
-                RememberPreviouslyFocusedControl();
+                tabControl1.SelectedIndexChanged -= TabControl1SelectedIndexChanged;
 
-                var pageKey = structure.Name;
-                if (tabControl.TabPages.ContainsKey(pageKey))
-                {
-                    tabControl.SelectedIndexChanged -= TabControl_SelectedIndexChanged;
+                tabControl1.Enabled = false;
+                tabControl1.SelectTab(pageKey);
+                tabControl1.Enabled = true;
 
-                    tabControl.Enabled = false;
-                    tabControl.SelectTab(pageKey);
-                    tabControl.Enabled = true;
-
-                    SelectedStructure = structure;
-                    tabControl.SelectedIndexChanged += TabControl_SelectedIndexChanged;
-                }
-
-                RestorePreviouslyFocusedControl();
+                SelectedStructure = structure;
+                tabControl1.SelectedIndexChanged += TabControl1SelectedIndexChanged;
             }
+
+            RestorePreviouslyFocusedControl();
         }
 
         /// <summary>
@@ -364,7 +369,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void tabControl_DrawItem(object sender, DrawItemEventArgs e)
+        private void tabControl1_DrawItem(object sender, DrawItemEventArgs e)
         {
             e.Graphics.FillRectangle(SystemBrushes.Control, e.Bounds);
             var stringFormat = new StringFormat
@@ -372,7 +377,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
                                                 Alignment = StringAlignment.Center,
                                                 LineAlignment = StringAlignment.Center
                                            };
-            e.Graphics.DrawString(tabControl.TabPages[e.Index].Text, tabControl.Font, SystemBrushes.ControlText,
+            e.Graphics.DrawString(tabControl1.TabPages[e.Index].Text, tabControl1.Font, SystemBrushes.ControlText,
                                   e.Bounds, stringFormat);
         }
 

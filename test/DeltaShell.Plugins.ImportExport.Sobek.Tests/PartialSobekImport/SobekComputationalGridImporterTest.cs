@@ -9,13 +9,14 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
 {
     [TestFixture]
-    public class SobekComputationalGridImporterTest
+    public class 
+        SobekComputationalGridImporterTest
     {
         [Test]
         [Category(TestCategory.DataAccess)]
         public void ImportComputationalGrid()
         {
-            var pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\ReModels\JAMM2010.sbk\40\DEFTOP.1";
+            var pathToSobekNetwork = TestHelper.GetDataDir() + @"\ReModels\JAMM2010.sbk\40\DEFTOP.1";
             var waterFlowModel1DModel = new WaterFlowModel1D("water flow 1d");
 
             var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekNetwork,
@@ -37,7 +38,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         [Category(TestCategory.DataAccess)]
         public void ImportComputationalGridReWithOptionOnCrossSectionsOnly()
         {
-            var pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\ReModels\JAMM2010.sbk\40\DEFTOP.1";
+            var pathToSobekNetwork = TestHelper.GetDataDir() + @"\ReModels\JAMM2010.sbk\40\DEFTOP.1";
             var waterFlowModel1DModel = new WaterFlowModel1D("water flow 1d");
 
             var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekNetwork,

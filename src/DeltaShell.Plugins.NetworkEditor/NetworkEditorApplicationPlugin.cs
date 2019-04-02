@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Drawing;
 using System.Linq;
 using System.Reflection;
@@ -16,6 +15,7 @@ using DeltaShell.NGHS.IO.FunctionStores;
 using DeltaShell.Plugins.NetworkEditor.Import;
 using DeltaShell.Plugins.NetworkEditor.ImportExportCsv;
 using GeoAPI.Extensions.Feature;
+using GeoAPI.Extensions.Networks;
 using Mono.Addins;
 using NetTopologySuite.IO;
 
@@ -35,7 +35,7 @@ namespace DeltaShell.Plugins.NetworkEditor
 
         public override string Name
         {
-            get { return "Network"; }
+            get { return Properties.Resources.NetworkEditorApplicationPlugin_GetDataItemInfos_Network; }
         }
 
         public override string DisplayName
@@ -56,6 +56,11 @@ namespace DeltaShell.Plugins.NetworkEditor
         public override string FileFormatVersion
         {
             get { return "3.5.2.0"; }
+        }
+
+        public override Image Image
+        {
+            get { return new Bitmap(32, 32); }
         }
 
         public override IEnumerable<Assembly> GetPersistentAssemblies()
@@ -241,7 +246,7 @@ namespace DeltaShell.Plugins.NetworkEditor
                 SetOwnerForDataItem(child, dataItemOwner);
         }
 
-        private void OnProjectCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void OnProjectCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
             HandleSubRegionCollectionChanged(sender, e);
 
@@ -254,16 +259,16 @@ namespace DeltaShell.Plugins.NetworkEditor
         /// <param name="sender"></param>
         /// <param name="e"></param>
         [EditAction]
-        private void HandleRegionDataItemCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void HandleRegionDataItemCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
-            var regionDataItem = e.GetRemovedOrAddedItem() as IDataItem;
+            var regionDataItem = e.Item as IDataItem;
 
             if (regionDataItem == null || !(regionDataItem.Value is IHydroRegion))
             {
                 return;
             }
 
-            if (e.Action == NotifyCollectionChangedAction.Add)
+            if (e.Action == NotifyCollectionChangeAction.Add)
             {
                 if(!(sender is IEventedList<IProjectItem>))
                 {
@@ -274,7 +279,7 @@ namespace DeltaShell.Plugins.NetworkEditor
                 return;
             }
 
-            if (e.Action == NotifyCollectionChangedAction.Remove)
+            if (e.Action == NotifyCollectionChangeAction.Remove)
             {
                 // handle child data item removed
                 var region = (IHydroRegion)regionDataItem.Value;
@@ -295,24 +300,24 @@ namespace DeltaShell.Plugins.NetworkEditor
         /// <param name="sender"></param>
         /// <param name="e"></param>
         [EditAction]
-        private void HandleSubRegionCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void HandleSubRegionCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
             var subRegions = sender as IEventedList<IRegion>;
-            var subRegion = e.GetRemovedOrAddedItem() as IRegion;
+            var subRegion = e.Item as IRegion;
 
             if (subRegions == null || subRegion == null || subRegion.Parent == null)
             {
                 return;
             }
 
-            if (e.Action == NotifyCollectionChangedAction.Add)
+            if (e.Action == NotifyCollectionChangeAction.Add)
             {
                 var parentRegionDataItem = Application.DataItemService.GetDataItemByValue(Application.Project, subRegion.Parent);
                 AddChildRegionDataItems(parentRegionDataItem);
                 return;
             }
 
-            if (e.Action == NotifyCollectionChangedAction.Remove)
+            if (e.Action == NotifyCollectionChangeAction.Remove)
             {
                 var parentRegionDataItem = Application.DataItemService.GetDataItemByValue(Application.Project, subRegion.Parent);
                 var regionDataItem = parentRegionDataItem.Children.FirstOrDefault(di => Equals(di.Value, subRegion));

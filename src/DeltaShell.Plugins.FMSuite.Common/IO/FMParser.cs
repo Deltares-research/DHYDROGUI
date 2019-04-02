@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
-using System.Reflection;
 using DelftTools.Utils;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
@@ -154,7 +152,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             }
             if (dataType.IsEnum)
             {
-                return ((Enum) obj).GetDisplayName();
+                return EnumDescriptionAttributeTypeConverter.GetEnumDisplayName((Enum) obj);
             }
             if (dataType == typeof (Steerable))
             {
@@ -252,8 +250,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             }
             if (dataType.IsEnum)
             {
-                var enumValue = GetEnumValueFromDisplayName(dataType, str);
-                if(enumValue == null) throw new FormatException($"Value of '{str}' not valid.");
+                var enumValue = EnumDescriptionAttributeTypeConverter.GetEnumValueFromDisplayName(dataType, str);
+                if(enumValue == null) throw new FormatException(String.Format("Value of '{0}' not valid.", str));
                 return enumValue;
             }
             if (dataType == typeof (Steerable))
@@ -320,34 +318,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             var actualString = valuesAsString.Replace("d-", "e-").Replace("d+", "e+");
             actualString = actualString.Replace("d", "e+");
             return Double.Parse(actualString, CultureInfo.InvariantCulture);
-        }
-
-        /// <summary>
-        /// <remarks>This method is copied over from the framework where it was removed from. see issue D3DFMIQ-722</remarks>
-        /// Gets the display name of the enum value
-        /// </summary>
-        /// <param name="value">The value you want the display name for</param>
-        /// <returns>The display name, if any, else it's .ToString()</returns>
-        private static string GetEnumDisplayName(Enum value)
-        {
-            FieldInfo fi = value.GetType().GetField(value.ToString());
-            var attributes =
-                (DisplayNameAttribute[])fi.GetCustomAttributes(
-                    typeof(DisplayNameAttribute), false);
-            return (attributes.Length > 0) ? attributes[0].DisplayName : value.ToString();
-        }
-
-        /// <summary>
-        /// <remarks>This method is copied over from the framework where it was removed from. see issue D3DFMIQ-722</remarks>
-        /// </summary>
-        /// <param name="enumType"></param>
-        /// <param name="displayNameString"></param>
-        /// <returns>Null if no match was found in <paramref name="enumType"/> with <paramref name="displayNameString"/>; Value otherwise.</returns>
-        private static object GetEnumValueFromDisplayName(Type enumType, string displayNameString)
-        {
-            return Enum.GetValues(enumType)
-                .Cast<Enum>()
-                .FirstOrDefault(value => GetEnumDisplayName(value) == displayNameString);
         }
     }
 }

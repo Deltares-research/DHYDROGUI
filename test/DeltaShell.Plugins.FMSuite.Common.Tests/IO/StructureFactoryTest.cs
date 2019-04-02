@@ -7,7 +7,6 @@ using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
-using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
@@ -42,27 +41,27 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 [KnownStructureProperties.GateLowerEdgeLevel] = 16.0,
                 [KnownStructureProperties.GateDoorHeight] = 32.0,
 
-                [KnownGeneralStructureProperties.WidthLeftW1.GetDescription()]    = 64.0,
-                [KnownGeneralStructureProperties.WidthLeftWsdl.GetDescription()]  = 128.0,
-                [KnownGeneralStructureProperties.WidthRightWsdr.GetDescription()] = 256.0,
-                [KnownGeneralStructureProperties.WidthRightW2.GetDescription()]   = 512.0,
+                [EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.WidthLeftW1)]    = 64.0,
+                [EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.WidthLeftWsdl)]  = 128.0,
+                [EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.WidthRightWsdr)] = 256.0,
+                [EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.WidthRightW2)]   = 512.0,
 
-                [KnownGeneralStructureProperties.LevelLeftZb1.GetDescription()]   = 1024.0,
-                [KnownGeneralStructureProperties.LevelLeftZbsl.GetDescription()]  = 2048.0,
-                [KnownGeneralStructureProperties.LevelRightZbsr.GetDescription()] = 4096.0,
-                [KnownGeneralStructureProperties.LevelRightZb2.GetDescription()]  = 8192.0,
+                [EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.LevelLeftZb1)]   = 1024.0,
+                [EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.LevelLeftZbsl)]  = 2048.0,
+                [EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.LevelRightZbsr)] = 4096.0,
+                [EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.LevelRightZb2)]  = 8192.0,
 
-                [KnownGeneralStructureProperties.PositiveFreeGateFlowCoefficient.GetDescription()]  = 16384.0,
-                [KnownGeneralStructureProperties.PositiveDrownGateFlowCoefficient.GetDescription()] = 32768.0,
-                [KnownGeneralStructureProperties.PositiveFreeWeirFlowCoefficient.GetDescription()]  = 65536.0,
-                [KnownGeneralStructureProperties.PositiveDrownWeirFlowCoefficient.GetDescription()] = 131072.0,
+                [EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.PositiveFreeGateFlowCoefficient)]  = 16384.0,
+                [EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.PositiveDrownGateFlowCoefficient)] = 32768.0,
+                [EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.PositiveFreeWeirFlowCoefficient)]  = 65536.0,
+                [EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.PositiveDrownWeirFlowCoefficient)] = 131072.0,
 
-                [KnownGeneralStructureProperties.NegativeFreeGateFlowCoefficient.GetDescription()]  = 262144.0,
-                [KnownGeneralStructureProperties.NegativeDrownGateFlowCoefficient.GetDescription()] = 524288.0,
-                [KnownGeneralStructureProperties.NegativeFreeWeirFlowCoefficient.GetDescription()]  = 1048576.0,
-                [KnownGeneralStructureProperties.NegativeDrownWeirFlowCoefficient.GetDescription()] = 2097152.0,
+                [EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.NegativeFreeGateFlowCoefficient)]  = 262144.0,
+                [EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.NegativeDrownGateFlowCoefficient)] = 524288.0,
+                [EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.NegativeFreeWeirFlowCoefficient)]  = 1048576.0,
+                [EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.NegativeDrownWeirFlowCoefficient)] = 2097152.0,
 
-                [KnownGeneralStructureProperties.ExtraResistance.GetDescription()] = 41927.0,
+                [EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.ExtraResistance)] = 41927.0,
             };
 
             timeSeriesLookUpTable = new Dictionary<string, string>()
@@ -92,12 +91,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 [StructureRegion.StructureTypeName.GeneralStructure] = new Dictionary<string, string>()
                 {
 
-                    [KnownStructureProperties.CrestLevel]         = KnownGeneralStructureProperties.LevelCenter.GetDescription(),
-                    [KnownStructureProperties.CrestWidth]         = KnownGeneralStructureProperties.WidthCenter.GetDescription(),
-                    [KnownStructureProperties.GateOpeningWidth]   = KnownGeneralStructureProperties.HorizontalDoorOpeningWidth.GetDescription(),
-                    [KnownStructureProperties.GateLowerEdgeLevel] = KnownGeneralStructureProperties.GateHeight.GetDescription(),
-                    [KnownStructureProperties.GateDoorHeight]     = KnownGeneralStructureProperties.GateDoorHeightGeneralStructure.GetDescription(),
-                    [KnownStructureProperties.GateHorizontalOpeningDirection] = KnownGeneralStructureProperties.HorizontalDoorOpeningDirection.GetDescription(),
+                    [KnownStructureProperties.CrestLevel]         = EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.LevelCenter),
+                    [KnownStructureProperties.CrestWidth]         = EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.WidthCenter),
+                    [KnownStructureProperties.GateOpeningWidth]   = EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.HorizontalDoorOpeningWidth),
+                    [KnownStructureProperties.GateLowerEdgeLevel] = EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.GateHeight),
+                    [KnownStructureProperties.GateDoorHeight]     = EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.GateDoorHeightGeneralStructure),
+                    [KnownStructureProperties.GateHorizontalOpeningDirection] =
+                        EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.HorizontalDoorOpeningDirection),
                 }
             };
 
@@ -214,7 +214,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                     property == KnownGeneralStructureProperties.GateHeight ||
                     property == KnownGeneralStructureProperties.LevelCenter)
                 {
-                    generalStructure.AddProperty(property.GetDescription(), typeof(Steerable), "12.34");
+                    generalStructure.AddProperty(EnumDescriptionAttributeTypeConverter.GetEnumDescription(property), typeof(Steerable), "12.34");
                 }
                 else if (property == KnownGeneralStructureProperties.HorizontalDoorOpeningDirection)
                 {
@@ -222,7 +222,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 }
                 else 
                 {
-                    generalStructure.AddProperty(property.GetDescription(), typeof(double), "12.34");
+                    generalStructure.AddProperty(EnumDescriptionAttributeTypeConverter.GetEnumDescription(property), typeof(double), "12.34");
                 }
                 
                 var resultingStructure = StructureFactory.CreateStructure(generalStructure, null, new DateTime());
@@ -230,7 +230,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 Assert.NotNull(weir);
             
                 var weirFormulaValueDictionary = ConstructWeirFormulaValueDictionary(weir);
-                Assert.That(weirFormulaValueDictionary[property], Is.EqualTo(12.34), property.GetDescription());
+                Assert.That(weirFormulaValueDictionary[property], Is.EqualTo(12.34), EnumDescriptionAttributeTypeConverter.GetEnumDescription(property));
             }
         }
 
@@ -238,7 +238,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         public void GivenGeneralStructureAsStructure2DWithExtraResistanceEqualToZero_WhenCreatingStructure_ThenUseExtraResistanceIsFalse()
         {
             var generalStructure = new Structure2D(StructureRegion.StructureTypeName.GeneralStructure);
-            generalStructure.AddProperty(KnownGeneralStructureProperties.ExtraResistance.GetDescription(), typeof(double), "0.0");
+            generalStructure.AddProperty(EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.ExtraResistance), typeof(double), "0.0");
 
             var resultingStructure = StructureFactory.CreateStructure(generalStructure, null, new DateTime());
             var weir = resultingStructure as Weir;
@@ -579,27 +579,27 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             // GeneralStructure specific
             var generalStructureProperties = new List<string>()
             {
-                KnownGeneralStructureProperties.WidthLeftW1.GetDescription(),
-                KnownGeneralStructureProperties.WidthLeftWsdl.GetDescription(),
-                KnownGeneralStructureProperties.WidthRightWsdr.GetDescription(),
-                KnownGeneralStructureProperties.WidthRightW2.GetDescription(),
+                EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.WidthLeftW1),
+                EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.WidthLeftWsdl),
+                EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.WidthRightWsdr),
+                EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.WidthRightW2),
 
-                KnownGeneralStructureProperties.LevelLeftZb1.GetDescription(),
-                KnownGeneralStructureProperties.LevelLeftZbsl.GetDescription(),
-                KnownGeneralStructureProperties.LevelRightZbsr.GetDescription(),
-                KnownGeneralStructureProperties.LevelRightZb2.GetDescription(),
+                EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.LevelLeftZb1),
+                EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.LevelLeftZbsl),
+                EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.LevelRightZbsr),
+                EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.LevelRightZb2),
 
-                KnownGeneralStructureProperties.PositiveFreeGateFlowCoefficient.GetDescription(),
-                KnownGeneralStructureProperties.PositiveDrownGateFlowCoefficient.GetDescription(),
-                KnownGeneralStructureProperties.PositiveFreeWeirFlowCoefficient.GetDescription(),
-                KnownGeneralStructureProperties.PositiveDrownWeirFlowCoefficient.GetDescription(),
+                EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.PositiveFreeGateFlowCoefficient),
+                EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.PositiveDrownGateFlowCoefficient),
+                EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.PositiveFreeWeirFlowCoefficient),
+                EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.PositiveDrownWeirFlowCoefficient),
 
-                KnownGeneralStructureProperties.NegativeFreeGateFlowCoefficient.GetDescription(),
-                KnownGeneralStructureProperties.NegativeDrownGateFlowCoefficient.GetDescription(),
-                KnownGeneralStructureProperties.NegativeFreeWeirFlowCoefficient.GetDescription(),
-                KnownGeneralStructureProperties.NegativeDrownWeirFlowCoefficient.GetDescription(),
+                EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.NegativeFreeGateFlowCoefficient),
+                EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.NegativeDrownGateFlowCoefficient),
+                EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.NegativeFreeWeirFlowCoefficient),
+                EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.NegativeDrownWeirFlowCoefficient),
 
-                KnownGeneralStructureProperties.ExtraResistance.GetDescription(),
+                EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.ExtraResistance),
             };
 
             foreach (var generalStructureProperty in generalStructureProperties)
@@ -722,28 +722,27 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             var generalStructureFormula = weir.WeirFormula as GeneralStructureWeirFormula;
             Assert.That(generalStructureFormula, Is.Not.Null, "Expected the weir formula to be a general structure:");
 
-            Assert.That(generalStructureFormula.WidthLeftSideOfStructure,  Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.WidthLeftW1.GetDescription()]    ));
-            Assert.That(generalStructureFormula.WidthStructureLeftSide,    Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.WidthLeftWsdl.GetDescription()]  ));
-            Assert.That(generalStructureFormula.WidthStructureRightSide,   Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.WidthRightWsdr.GetDescription()] ));
-            Assert.That(generalStructureFormula.WidthRightSideOfStructure, Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.WidthRightW2.GetDescription()]   ));
+            Assert.That(generalStructureFormula.WidthLeftSideOfStructure,  Is.EqualTo(constValLookUpTable[EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.WidthLeftW1)]    ));
+            Assert.That(generalStructureFormula.WidthStructureLeftSide,    Is.EqualTo(constValLookUpTable[EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.WidthLeftWsdl)]  ));
+            Assert.That(generalStructureFormula.WidthStructureRightSide,   Is.EqualTo(constValLookUpTable[EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.WidthRightWsdr)] ));
+            Assert.That(generalStructureFormula.WidthRightSideOfStructure, Is.EqualTo(constValLookUpTable[EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.WidthRightW2)]   ));
 
-            Assert.That(generalStructureFormula.BedLevelLeftSideOfStructure,  Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.LevelLeftZb1.GetDescription()]   ));
-            Assert.That(generalStructureFormula.BedLevelLeftSideStructure,    Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.LevelLeftZbsl.GetDescription()]  ));
-            Assert.That(generalStructureFormula.BedLevelRightSideStructure,   Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.LevelRightZbsr.GetDescription()] ));
-            Assert.That(generalStructureFormula.BedLevelRightSideOfStructure, Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.LevelRightZb2.GetDescription()]  ));
+            Assert.That(generalStructureFormula.BedLevelLeftSideOfStructure,  Is.EqualTo(constValLookUpTable[EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.LevelLeftZb1)]   ));
+            Assert.That(generalStructureFormula.BedLevelLeftSideStructure,    Is.EqualTo(constValLookUpTable[EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.LevelLeftZbsl)]  ));
+            Assert.That(generalStructureFormula.BedLevelRightSideStructure,   Is.EqualTo(constValLookUpTable[EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.LevelRightZbsr)] ));
+            Assert.That(generalStructureFormula.BedLevelRightSideOfStructure, Is.EqualTo(constValLookUpTable[EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.LevelRightZb2)]  ));
 
-            Assert.That(generalStructureFormula.PositiveFreeGateFlow,    Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.PositiveFreeGateFlowCoefficient.GetDescription()]   ));
-            Assert.That(generalStructureFormula.PositiveDrownedGateFlow, Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.PositiveDrownGateFlowCoefficient.GetDescription()]  ));
-            if (constValLookUpTable.ContainsKey(KnownGeneralStructureProperties.PositiveFreeWeirFlowCoefficient.GetDescription()))
-                Assert.That(generalStructureFormula.PositiveFreeWeirFlow,    Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.PositiveFreeWeirFlowCoefficient.GetDescription()]   ));
-            Assert.That(generalStructureFormula.PositiveDrownedWeirFlow, Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.PositiveDrownWeirFlowCoefficient.GetDescription()]  ));
+            Assert.That(generalStructureFormula.PositiveFreeGateFlow,    Is.EqualTo(constValLookUpTable[EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.PositiveFreeGateFlowCoefficient)]   ));
+            Assert.That(generalStructureFormula.PositiveDrownedGateFlow, Is.EqualTo(constValLookUpTable[EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.PositiveDrownGateFlowCoefficient)]  ));
+            Assert.That(generalStructureFormula.PositiveFreeWeirFlow,    Is.EqualTo(constValLookUpTable[EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.PositiveFreeWeirFlowCoefficient)]   ));
+            Assert.That(generalStructureFormula.PositiveDrownedWeirFlow, Is.EqualTo(constValLookUpTable[EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.PositiveDrownWeirFlowCoefficient)]  ));
 
-            Assert.That(generalStructureFormula.NegativeFreeGateFlow,    Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.NegativeFreeGateFlowCoefficient.GetDescription()]   ));
-            Assert.That(generalStructureFormula.NegativeDrownedGateFlow, Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.NegativeDrownGateFlowCoefficient.GetDescription()]  ));
-            Assert.That(generalStructureFormula.NegativeFreeWeirFlow,    Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.NegativeFreeWeirFlowCoefficient.GetDescription()]   ));
-            Assert.That(generalStructureFormula.NegativeDrownedWeirFlow, Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.NegativeDrownWeirFlowCoefficient.GetDescription()]  ));
+            Assert.That(generalStructureFormula.NegativeFreeGateFlow,    Is.EqualTo(constValLookUpTable[EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.NegativeFreeGateFlowCoefficient)]   ));
+            Assert.That(generalStructureFormula.NegativeDrownedGateFlow, Is.EqualTo(constValLookUpTable[EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.NegativeDrownGateFlowCoefficient)]  ));
+            Assert.That(generalStructureFormula.NegativeFreeWeirFlow,    Is.EqualTo(constValLookUpTable[EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.NegativeFreeWeirFlowCoefficient)]   ));
+            Assert.That(generalStructureFormula.NegativeDrownedWeirFlow, Is.EqualTo(constValLookUpTable[EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.NegativeDrownWeirFlowCoefficient)]  ));
 
-            Assert.That(generalStructureFormula.ExtraResistance, Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.ExtraResistance.GetDescription()]));
+            Assert.That(generalStructureFormula.ExtraResistance, Is.EqualTo(constValLookUpTable[EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.ExtraResistance)]));
         }
 
         private void VerifyCommon(IWeir weir, bool isConstCrestLevel)

@@ -63,7 +63,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         [Category(TestCategory.DataAccess)]
         public void ReadLaterSourcesWithRationalMethodFile()
         {
-            var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"Tholen.lit\29\Lateral.DAT");
+            var path = TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"Tholen.lit\29\Lateral.DAT");
             var lstOpenWater = new SobekRROpenWaterFromRationalMethodReader().Read(path);
             Assert.AreEqual(16, lstOpenWater.Count()); 
         }

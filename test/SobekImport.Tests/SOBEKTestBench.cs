@@ -26,7 +26,7 @@ namespace SobekImport.Tests
         public void FixtureSetup()
         {
             //set the testcases dir
-            TestDataDir = TestHelper.GetTestDataDirectory(); 
+            TestDataDir = TestHelper.GetDataDir(); 
             TestCasesDirectory = Path.Combine(TestDataDir, TestCasesDirectoryName);
 
             //create a lookup of nr->testdirectory which we can use in the separate tests.

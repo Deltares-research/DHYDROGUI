@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using NUnit.Framework;
 
@@ -7,17 +8,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.FeatureData
     [TestFixture]
     public class Structure2DTest
     {
-        [Test]
-        [TestCase("Pump", StructureType.Pump)]
-        [TestCase("Gate", StructureType.Gate)]
-        [TestCase("GeneralStructure", StructureType.GeneralStructure)]
-        [TestCase("Weir", StructureType.Weir)]
-        public void GivenAStructure2DWithACorrectName_WhenCallingConstructor_StructureIsCreated(string structureName, StructureType type)
-        {
-            var structure = new Structure2D(structureName);
-            Assert.That(structure.StructureType, Is.EqualTo(type));
-        }
-
         [Test]
         public void GetPropertyTest()
         {

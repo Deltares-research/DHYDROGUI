@@ -21,8 +21,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         public void Setup()
         {
             mocks = new MockRepository();
-            var localPath = TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath(@"HydroAreaCollection/MduFileProjects"));
-            mduFilePath = Path.Combine(localPath, @"MduFileWithoutFeatureFileReferences/FlowFM.mdu");
+            const string filePath = @"HydroAreaCollection/MduFileProjects/MduFileWithoutFeatureFileReferences/FlowFM.mdu";
+            TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath(@"HydroAreaCollection/MduFileProjects"));
+            mduFilePath = Path.Combine(Directory.GetCurrentDirectory(), filePath);
             fmModel = new WaterFlowFMModel(mduFilePath);
         }
 

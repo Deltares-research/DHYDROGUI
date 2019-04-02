@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using DelftTools.Hydro;
@@ -86,12 +85,11 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Providers
                 FireFeaturesChanged();
         }
 
-        private void HydroNetworkFeatureCollectionCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void HydroNetworkFeatureCollectionCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
             envelope = null;
 
-            var removedOrAddedItem = e.GetRemovedOrAddedItem();
-            if (removedOrAddedItem == null || (removedOrAddedItem.GetType() != FeatureType && (RefreshForChangedItem != null && !RefreshForChangedItem(removedOrAddedItem))))
+            if (e.Item == null || (e.Item.GetType() != FeatureType && (RefreshForChangedItem != null && !RefreshForChangedItem(e.Item))))
             {
                 return;
             }

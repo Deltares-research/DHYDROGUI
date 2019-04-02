@@ -35,6 +35,11 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.HisData
             factory.AddPlugin(new SobekImportApplicationPlugin());
             factory.AddPlugin(new NetworkEditorApplicationPlugin());
         }
+
+        [TestFixtureTearDown]
+        public void TestFixtureTearDown()
+        {
+        }
         
         [SetUp]
         public void SetUp()
@@ -53,7 +58,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.HisData
         public void SaveAndRetrieveFunctionWithHisFunctionStore()
         {
             var pathProject = TestHelper.GetCurrentMethodName() + ".dsproj";
-            var pathHis = Path.Combine(TestHelper.GetTestDataDirectory(), "HisData", "flowhis.his");
+            var pathHis = Path.Combine(TestHelper.GetDataDir(), "HisData", "flowhis.his");
             var hisFunctionStore = new HisFunctionStore(pathHis);
             
             Assert.AreEqual(6,hisFunctionStore.Functions.Count);
@@ -87,7 +92,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.HisData
         public void SaveAndRetrieveNetworkCoverageWithHisFunctionStore()
         {
             var pathProject = TestHelper.GetCurrentMethodName() + ".dsproj";
-            var pathHis = Path.Combine(TestHelper.GetTestDataDirectory(), "HisData", "HisAndNetwork", "CALCPNT.HIS");
+            var pathHis = Path.Combine(TestHelper.GetDataDir(), "HisData", "HisAndNetwork", "CALCPNT.HIS");
             var hisFunctionStore = new HisFunctionStore(pathHis);
             var networkCoverage = hisFunctionStore.Functions.OfType<INetworkCoverage>().First();
             var name = networkCoverage.Name;

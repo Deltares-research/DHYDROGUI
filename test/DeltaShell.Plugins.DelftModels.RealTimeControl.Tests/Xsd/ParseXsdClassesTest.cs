@@ -37,7 +37,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Xsd
         {
             // Given
             const string fileName = "timeseries_import.xml";
-            var path = Path.GetFullPath(Path.Combine(TestHelper.GetTestDataDirectory(), Directory, fileName));
+            var path = Path.GetFullPath(Path.Combine(TestHelper.GetDataDir(), Directory, fileName));
             Assert.True(File.Exists(path), $"File path '{path}' should exist.");
 
             SetExpectationReportedInfoMessageLogHandler(fileName);
@@ -55,7 +55,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Xsd
         {
             // Given
             const string fileName = "rtcToolsConfig.xml";
-            var path = Path.GetFullPath(Path.Combine(TestHelper.GetTestDataDirectory(), Directory, fileName));
+            var path = Path.GetFullPath(Path.Combine(TestHelper.GetDataDir(), Directory, fileName));
             Assert.True(File.Exists(path), $"File path '{path}' should exist.");
 
             SetExpectationReportedInfoMessageLogHandler(fileName);
@@ -73,7 +73,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Xsd
         {
             // Given
             const string fileName = "rtcRuntimeConfig.xml";
-            var path = Path.GetFullPath(Path.Combine(TestHelper.GetTestDataDirectory(), Directory, fileName));
+            var path = Path.GetFullPath(Path.Combine(TestHelper.GetDataDir(), Directory, fileName));
             Assert.True(File.Exists(path), $"File path '{path}' should exist.");
 
             SetExpectationReportedInfoMessageLogHandler(fileName);
@@ -91,7 +91,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Xsd
         {
             // Given
             const string fileName = "rtcDataConfig.xml";
-            var path = Path.GetFullPath(Path.Combine(TestHelper.GetTestDataDirectory(), Directory, fileName));
+            var path = Path.GetFullPath(Path.Combine(TestHelper.GetDataDir(), Directory, fileName));
             Assert.True(File.Exists(path), $"File path '{path}' should exist.");
 
             SetExpectationReportedInfoMessageLogHandler(fileName);

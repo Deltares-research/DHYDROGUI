@@ -36,13 +36,13 @@ namespace DeltaShell.Plugins.Fews
             {
                 while (reader.Read())
                 {
-                    IDictionary<string, object> attributes = new Dictionary<string, object>();
+                    IDictionary<string,object> attributes = new Dictionary<string, object>();
                     if (!IgnoreAttributeData)
                     {
-                        for (var i = 0; i < reader.DbaseHeader.NumFields; i++)
+                        for (int i = 0; i < reader.DbaseHeader.NumFields; i++)
                         {
-                            var colName = reader.DbaseHeader.Fields[i].Name;
-                            var rowValue = reader.GetValue(i+1);
+                            string colName = reader.DbaseHeader.Fields[i].Name;
+                            object rowValue = reader.GetValue(i);
                             if (!attributes.ContainsKey(colName))
                                 attributes.Add(colName, rowValue);
                         }

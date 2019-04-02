@@ -202,7 +202,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             {
                 using (var deltaShell = GetRunningDSApplication(true))
                 {
-                    var dataDir = TestHelper.GetTestDataDirectory();
+                    var dataDir = TestHelper.GetDataDir();
                     var realHydFile = Path.Combine(dataDir, "IO", "real", "uni3d.hyd");
 
                     var model = CreateWaqModelWithData(realHydFile, false);
@@ -241,7 +241,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 
             if (useCompletingModel)
             {
-                var dataDir = TestHelper.GetTestDataDirectory();
+                var dataDir = TestHelper.GetDataDir();
                 var realHydFile = Path.Combine(dataDir, "IO", "real", "uni3d.hyd");
 
                 model = CreateWaqModelWithData(realHydFile, false);    
@@ -341,7 +341,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         {
             if (hydFile == null)
             {
-                var dataDir = TestHelper.GetTestDataDirectory();
+                var dataDir = TestHelper.GetDataDir();
                 var squareHydFile = Path.Combine(dataDir, "IO", "square", "square.hyd");
 
                 hydFile = squareHydFile;

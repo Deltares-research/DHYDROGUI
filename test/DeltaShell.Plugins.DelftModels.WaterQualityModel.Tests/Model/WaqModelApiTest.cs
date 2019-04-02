@@ -37,7 +37,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
         [Ignore("TODO: Api should always be ran via a remote instance container")]
         public void InitializeByWorkFiles()
         {
-            var workdir = Path.Combine(TestHelper.GetTestDataDirectory(), "TestModelApi");
+            var workdir = Path.Combine(TestHelper.GetDataDir(), "TestModelApi");
 
             try
             {
@@ -63,7 +63,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
         [Ignore("TODO: Api should always be ran via a remote instance container")]
         public void RunDelwaq2ApiTwice()
         {
-            var workdir = Path.Combine(TestHelper.GetTestDataDirectory(), "TestModelApi");
+            var workdir = Path.Combine(TestHelper.GetDataDir(), "TestModelApi");
 
             var oxyValuesRun1 = new double[20];
             var oxyValuesRun2 = new double[20];

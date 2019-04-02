@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Specialized;
 using System.Linq;
 using System.Windows.Forms;
 using DelftTools.Utils.Collections.Generic;
@@ -33,7 +32,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Controls
             }
         }
 
-        void DataCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        void DataCollectionChanged(object sender, DelftTools.Utils.Collections.NotifyCollectionChangingEventArgs e)
         {
             if (!Equals(sender, data))
                 return;

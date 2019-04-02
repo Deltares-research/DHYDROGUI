@@ -22,7 +22,7 @@ namespace Sobek.IntegrationTests
         [Ignore("In Progress")]
         public void RunHollandsNoorderKwartierAP()
         {
-            var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly,
+            var path = TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly,
                                @"HolandseNoorderkwartier\AP.lit\9\NETWORK.TP");
 
             var hydroModelImporter = new SobekHydroModelImporter(true, false);

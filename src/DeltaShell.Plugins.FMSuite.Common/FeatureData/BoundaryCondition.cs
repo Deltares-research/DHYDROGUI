@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using DelftTools.Functions;
@@ -409,23 +408,21 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
         private bool syncing;
 
         [EditAction]
-        private void DataPointIndicesCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void DataPointIndicesCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
-            var removedOrAddedItem = e.GetRemovedOrAddedItem();
-            var removedOrAddedIndex = e.GetRemovedOrAddedIndex();
             if (syncing)
             {
                 return;
             }
             switch (e.Action)
             {
-                case NotifyCollectionChangedAction.Add:
+                case NotifyCollectionChangeAction.Add:
 
-                    if (!ValidIndex((int) removedOrAddedItem))
+                    if (!ValidIndex((int) e.Item))
                     {
                         throw new ArgumentException("Attempt to add invalid support point");
                     }
-                    if (DataPointIndices.Count(p => p == (int)removedOrAddedItem) > 1)
+                    if (DataPointIndices.Count(p => p == (int) e.Item) > 1)
                     {
                         throw new ArgumentException("Attempt to duplicate support point");
                     }
@@ -435,33 +432,33 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
                     syncing = true;
                     PointDepthLayerDefinitions.Add(verticalProfileDefinition);
                     verticalProfileDefinition.PointDepths.CollectionChanged += VerticalProfilePointsChanged;
-                    PointData.Add(CreateMultiLayerFunction((int)removedOrAddedItem));
+                    PointData.Add(CreateMultiLayerFunction((int) e.Item));
                     syncing = false;
 
                     break;
 
-                case NotifyCollectionChangedAction.Remove:
+                case NotifyCollectionChangeAction.Remove:
 
                     syncing = true;
-                    PointData.RemoveAt(removedOrAddedIndex);
-                    var profileDefinition = PointDepthLayerDefinitions.ElementAtOrDefault(removedOrAddedIndex);
+                    PointData.RemoveAt(e.Index);
+                    var profileDefinition = PointDepthLayerDefinitions.ElementAtOrDefault(e.Index);
                     if (profileDefinition != null)
                     {
                         profileDefinition.PointDepths.CollectionChanged -= VerticalProfilePointsChanged;
                     }
-                    PointDepthLayerDefinitions.RemoveAt(removedOrAddedIndex);
+                    PointDepthLayerDefinitions.RemoveAt(e.Index);
                     syncing = false;
 
                     break;
 
-                case NotifyCollectionChangedAction.Replace:
+                case NotifyCollectionChangeAction.Replace:
 
                     throw new NotImplementedException("Replacing point indices is not supported.");
             }
         }
 
         [EditAction]
-        private void PointDataCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void PointDataCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
             if (syncing)
             {
@@ -469,84 +466,78 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
             }
             switch (e.Action)
             {
-                case NotifyCollectionChangedAction.Add:
+                case NotifyCollectionChangeAction.Add:
 
                     throw new NotImplementedException("Adding data without specifying support point is not allowed.");
 
-                case NotifyCollectionChangedAction.Remove:
+                case NotifyCollectionChangeAction.Remove:
 
                     syncing = true;
-                    var removedOrAddedIndex = e.GetRemovedOrAddedIndex();
-                    DataPointIndices.RemoveAt(removedOrAddedIndex);
-                    var profileDefinition = PointDepthLayerDefinitions.ElementAtOrDefault(removedOrAddedIndex);
+                    DataPointIndices.RemoveAt(e.Index);
+                    var profileDefinition = PointDepthLayerDefinitions.ElementAtOrDefault(e.Index);
                     if (profileDefinition != null)
                     {
                         profileDefinition.PointDepths.CollectionChanged -= VerticalProfilePointsChanged;
                     }
-                    PointDepthLayerDefinitions.RemoveAt(removedOrAddedIndex);
+                    PointDepthLayerDefinitions.RemoveAt(e.Index);
                     syncing = false;
 
                     break;
 
-                case NotifyCollectionChangedAction.Replace:
+                case NotifyCollectionChangeAction.Replace:
 
                     throw new NotImplementedException("Replacing data in boundary condition is not allowed.");
             }
         }
 
         [EditAction]
-        private void PointDepthLayerDefinitionsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void PointDepthLayerDefinitionsCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
             if (syncing)
             {
                 return;
             }
-
-            var removedOrAddedItem = e.GetRemovedOrAddedItem();
-            var removedOrAddedIndex = e.GetRemovedOrAddedIndex();
             switch (e.Action)
             {
-                case NotifyCollectionChangedAction.Add:
+                case NotifyCollectionChangeAction.Add:
 
                     throw new NotImplementedException("Adding layers without specifying support point is not allowed.");
 
-                case NotifyCollectionChangedAction.Remove:
+                case NotifyCollectionChangeAction.Remove:
 
                     syncing = true;
-                    
-                    if (removedOrAddedItem != null)
+                    if (e.Item != null)
                     {
-                        ((VerticalProfileDefinition)removedOrAddedItem).PointDepths.CollectionChanged -=
+                        ((VerticalProfileDefinition) e.Item).PointDepths.CollectionChanged -=
                             VerticalProfilePointsChanged;
                     }
-                    DataPointIndices.RemoveAt(removedOrAddedIndex);
-                    PointData.RemoveAt(removedOrAddedIndex);
+                    DataPointIndices.RemoveAt(e.Index);
+                    PointData.RemoveAt(e.Index);
                     syncing = false;
 
                     break;
 
-                case NotifyCollectionChangedAction.Replace:
+                case NotifyCollectionChangeAction.Replace:
 
-                    if (IsVerticallyUniform && ((VerticalProfileDefinition) removedOrAddedItem).ProfilePoints > 1)
+                    if (IsVerticallyUniform && ((VerticalProfileDefinition) e.Item).ProfilePoints > 1)
                     {
                         throw new ArgumentException("Multi-layered data is not allowed for this boundary condition");
                     }
 
                     syncing = true;
-                    if (e.OldItems[0] != null)
+                    if (e.OldItem != null)
                     {
-                        ((VerticalProfileDefinition)removedOrAddedItem).PointDepths.CollectionChanged -=
+                        ((VerticalProfileDefinition) e.Item).PointDepths.CollectionChanged -=
                             VerticalProfilePointsChanged;
                     }
-                    if (removedOrAddedItem != null)
+                    if (e.Item != null)
                     {
-                        ((VerticalProfileDefinition)removedOrAddedItem).PointDepths.CollectionChanged +=
+                        ((VerticalProfileDefinition) e.Item).PointDepths.CollectionChanged +=
                             VerticalProfilePointsChanged;
                     }
+                    var data = PointData[e.Index];
 
-                    var data = PointData[removedOrAddedIndex];
-
-                    var functionTemplate = CreateMultiLayerFunction(DataPointIndices[removedOrAddedIndex]);
+                    var functionTemplate = CreateMultiLayerFunction(DataPointIndices[e.Index]);
 
                     var oldComponentsCount = data.Components.Count;
                     var newComponentsCount = functionTemplate.Components.Count;
@@ -575,7 +566,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
                         {
                             data.Components.Remove(variable);
                         }
-                        if (removedOrAddedItem != null && ((VerticalProfileDefinition) removedOrAddedItem).ProfilePoints < 2)
+                        if (((VerticalProfileDefinition) e.Item).ProfilePoints < 2)
                         {
                             foreach (var component in data.Components)
                             {
@@ -669,7 +660,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
             return name.EndsWith("(1)") ? name.Substring(0, name.Length - 3) : name;
         }
 
-        private void VerticalProfilePointsChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void VerticalProfilePointsChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
             var verticalProfile = PointDepthLayerDefinitions.FirstOrDefault(vp => vp.PointDepths.Equals(sender));
             if (verticalProfile == null) return;
@@ -677,11 +668,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
             var data = PointData.ElementAtOrDefault(PointDepthLayerDefinitions.IndexOf(verticalProfile));
             if (data == null) return;
             data.BeginEdit(new DefaultEditAction("Fixing layer components"));
-            var removedOrAddedItem = e.GetRemovedOrAddedItem();
 
             switch (e.Action)
             {
-                case NotifyCollectionChangedAction.Add:
+                case NotifyCollectionChangeAction.Add:
                     var compCount = data.Components.Count;
                     var function = CreateFunction();
                     foreach (var component in function.Components)
@@ -699,11 +689,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
                         }
                     }
                     break;
-                case NotifyCollectionChangedAction.Remove:
+                case NotifyCollectionChangeAction.Remove:
                     var sortedPointDepths = verticalProfile.SortedPointDepths.ToList();
-                    sortedPointDepths.Add((double)removedOrAddedItem);
+                    sortedPointDepths.Add((double) e.Item);
                     sortedPointDepths.Sort();
-                    var index = sortedPointDepths.IndexOf((double)removedOrAddedItem);
+                    var index = sortedPointDepths.IndexOf((double) e.Item);
                     var componentCount = CreateFunction().Components.Count;
                     for (var i = 0; i < componentCount; ++i)
                     {
@@ -717,14 +707,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
                         }
                     }
                     break;
-                case NotifyCollectionChangedAction.Replace:
+                case NotifyCollectionChangeAction.Replace:
                     sortedPointDepths = verticalProfile.SortedPointDepths.ToList();
-                    index = sortedPointDepths.IndexOf((double)removedOrAddedItem);
+                    index = sortedPointDepths.IndexOf((double) e.Item);
                     sortedPointDepths.RemoveAt(index);
-                    var oldItem = e.OldItems[0];
-                    sortedPointDepths.Add((double)oldItem);
+                    sortedPointDepths.Add((double) e.OldItem);
                     sortedPointDepths = verticalProfile.SortDepths(sortedPointDepths).ToList();
-                    var oldIndex = sortedPointDepths.IndexOf((double)oldItem);
+                    var oldIndex = sortedPointDepths.IndexOf((double) e.OldItem);
                     if (oldIndex != index)
                     {
                         componentCount = CreateFunction().Components.Count;

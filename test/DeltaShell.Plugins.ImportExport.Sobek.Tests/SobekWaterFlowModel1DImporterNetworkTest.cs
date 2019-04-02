@@ -53,7 +53,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             //   GS = General Structure
             //   DS = Database structure
 
-            string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\LinkageNodes\network.tp";
+            string pathToSobekNetwork = TestHelper.GetDataDir() + @"\LinkageNodes\network.tp";
             var modelImporter = new SobekWaterFlowModel1DImporter();
 
             // The expected result is that the original branch 1 is split in 5 branches
@@ -106,7 +106,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Category(TestCategory.DataAccess)]
         public void ImportReadsAllCrossSections()
         {
-            string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\NetworkWithStructures\network.tp";
+            string pathToSobekNetwork = TestHelper.GetDataDir() + @"\NetworkWithStructures\network.tp";
             var modelImporter = new SobekWaterFlowModel1DImporter();
             
             var waterFlowModel1D = (WaterFlowModel1D)modelImporter.ImportItem(pathToSobekNetwork);
@@ -129,7 +129,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Category(TestCategory.DataAccess)]
         public void ImportNetworkWithWeirs()
         {
-            string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\NetworkWithStructures\network.tp";
+            string pathToSobekNetwork = TestHelper.GetDataDir() + @"\NetworkWithStructures\network.tp";
             var modelImporter = new SobekWaterFlowModel1DImporter();
             var waterFlowModel1D = (WaterFlowModel1D)modelImporter.ImportItem(pathToSobekNetwork);
             IHydroNetwork network = waterFlowModel1D.Network;
@@ -146,7 +146,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         {
             //STFR id '5' ci '5' mf 3 mt cp 0 35 0 mr cp 0 35 0 s1 6 s2 6 sf 4 st cp 0 0.003 0 sr cp 0 0.003 stfr
             //STFR id '4' ci '4' mf 1 mt cp 0 0.022 0 mr cp 0 0.022 0 s1 6 s2 6 sf 4 st cp 0 0.003 0 sr cp 0 0.003 stfr
-            var path = TestHelper.GetTestDataDirectory() + @"\StrucFr2.lit\2\NETWORK.TP";
+            var path = TestHelper.GetDataDir() + @"\StrucFr2.lit\2\NETWORK.TP";
             var importer = new SobekNetworkImporter();
             var network = (HydroNetwork)importer.ImportItem(path);
 

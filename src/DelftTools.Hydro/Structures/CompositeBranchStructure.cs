@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Linq;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Utils.Aop;
@@ -85,19 +84,19 @@ namespace DelftTools.Hydro.Structures
         public virtual int Count { get; set; }
 
         [EditAction]
-        void StructuresCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        void StructuresCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
-            var structure = (IStructure1D)e.GetRemovedOrAddedItem();
+            var structure = (IStructure1D)e.Item;
             switch (e.Action)
             {
-                case NotifyCollectionChangedAction.Replace:
+                case NotifyCollectionChangeAction.Replace:
                     throw new NotImplementedException();
 
-                case NotifyCollectionChangedAction.Remove:
+                case NotifyCollectionChangeAction.Remove:
                     //structure.ParentStructure = null;
                     break;
 
-                case NotifyCollectionChangedAction.Add:
+                case NotifyCollectionChangeAction.Add:
                     //structure.ParentStructure = this;
                     break;
             }

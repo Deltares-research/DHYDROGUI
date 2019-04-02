@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Data;
 using System.Drawing;
 using System.IO;
@@ -106,7 +105,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Wizard
             }
         }
 
-        private void importers_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void importers_CollectionChanged(object sender, DelftTools.Utils.Collections.NotifyCollectionChangingEventArgs e)
         {
             SetDataToTableViewImportList();
         }

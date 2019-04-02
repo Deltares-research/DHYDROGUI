@@ -42,7 +42,7 @@ namespace SobekCompare.Tests
         public void FixtureSetup()
         {
             // Set the testcases dir
-            testCasesDirectory = Path.Combine(TestHelper.GetTestDataDirectory(), "testbench\\testcases_waq");
+            testCasesDirectory = Path.Combine(TestHelper.GetDataDir(), "testbench\\testcases_waq");
 
             // Create a lookup of nr (=> testdirectory which we can use in the separate tests)
             testDictionary = SobekTestBenchHelper.GetTestsDictionary(testCasesDirectory);

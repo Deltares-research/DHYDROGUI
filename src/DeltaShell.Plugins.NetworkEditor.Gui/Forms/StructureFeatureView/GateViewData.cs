@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils;
-using DelftTools.Utils.Reflection;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
 {
@@ -17,7 +16,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             gateOpeningDirections = new Dictionary<string, GateOpeningDirection>();
             foreach (var dir in Enum.GetValues(typeof(GateOpeningDirection)))
             {
-                var name = ((GateOpeningDirection)dir).GetDescription();
+                var name = EnumDescriptionAttributeTypeConverter.GetEnumDescription((GateOpeningDirection)dir);
                 gateOpeningDirections[name] = (GateOpeningDirection)dir;
             }
         }

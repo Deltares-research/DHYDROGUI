@@ -25,10 +25,6 @@ namespace DeltaShell.Plugins.Fews
         }
 
         public string Category { get { return "General"; } }
-        public string Description
-        {
-            get { return string.Empty; }
-        }
 
         public bool Export(object item, string path)
         {

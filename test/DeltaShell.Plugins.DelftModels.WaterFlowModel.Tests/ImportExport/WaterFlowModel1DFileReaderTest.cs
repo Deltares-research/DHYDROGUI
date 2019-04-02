@@ -21,7 +21,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
         [TestFixtureSetUp]
         public void FixtureSetup()
         {
-           var testFolder = TestHelper.GetTestDataDirectoryPathForAssembly(Assembly.GetExecutingAssembly(), @"Md1dReading");
+           var testFolder = TestHelper.GetTestDataPath(Assembly.GetExecutingAssembly(), @"Md1dReading");
            tempFolderPath = TestHelper.CreateLocalCopy(testFolder);
         }
 
@@ -69,7 +69,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
             Assert.IsTrue(waterFlowModel1D.UseReverseRoughnessInCalculation);
         }
 
-        [Test]
         [TestCase(SpatialDataFileNames.InitialWaterLevel)]
         [TestCase(SpatialDataFileNames.Dispersion)]
         [TestCase(SpatialDataFileNames.InitialDischarge)]

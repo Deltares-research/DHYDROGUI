@@ -69,7 +69,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         [Category(TestCategory.Integration)]
         public void ReadSaltBoundaryFile()
         {
-            var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"ReModels\NatSobek.sbk\6\DEFCND.6");
+            var path = TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"ReModels\NatSobek.sbk\6\DEFCND.6");
             var saltBoundaries = new SaltNodeBoundaryReader().Read(path);
             Assert.AreEqual(44, saltBoundaries.Count());
             // STBO id 'P_P_5603879' ty 1 co co 0 9.9999e+009 9.9999e+009 tl 9.9999e+009 tu 0 stbo

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using DelftTools.Utils.Collections;
@@ -235,14 +234,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             RoughnessFiles.CollectionChanged += RoughnessFiles_CollectionChanged;
         }
 
-        private void RoughnessFiles_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void RoughnessFiles_CollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
-            if (e.Action == NotifyCollectionChangedAction.Add)
+            if (e.Action == NotifyCollectionChangeAction.Add)
             {
                 var files = sender as IList<string>;
                 if (files == null) 
                     throw new FileReadingException("Reading roughness files list from md1d file went wrong.");
-                files[files.Count-1] = Path.Combine(targetPath, e.GetRemovedOrAddedItem().ToString());
+                files[files.Count-1] = Path.Combine(targetPath, e.Item.ToString());
             }
         }
         

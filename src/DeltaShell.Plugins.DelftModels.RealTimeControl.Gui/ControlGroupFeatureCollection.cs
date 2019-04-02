@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using DelftTools.Hydro.Helpers;
@@ -33,7 +32,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
             UseConnections = false;
         }
 
-        private void ControlGroupsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void ControlGroupsCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
             // Immediate action needed: Attribute table needs to be updated. 
             RefreshEventedList();

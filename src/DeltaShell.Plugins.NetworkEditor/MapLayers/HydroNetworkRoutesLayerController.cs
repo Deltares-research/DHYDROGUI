@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Specialized;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Utils.Collections;
@@ -43,7 +42,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers
             }
         }
 
-        void NetworkRoutesCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        void NetworkRoutesCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
             if (network == null || sender != network.Routes)
             {
@@ -51,23 +50,23 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers
             }
 
             RoutesLayer.LayersReadOnly = false;
-            var removedOrAddedItem = e.GetRemovedOrAddedItem();
+
             switch (e.Action)
             {
-                case NotifyCollectionChangedAction.Add:
-                    var route = removedOrAddedItem as Route;
+                case NotifyCollectionChangeAction.Add:
+                    var route = e.Item as Route;
                     if (!RoutesLayer.Layers.OfType<NetworkCoverageGroupLayer>().Any(l => Equals(route, l.NetworkCoverage)))
                     {
-                        AddRouteLayer(route, RoutesLayer.Layers.Count, e.GetRemovedOrAddedIndex());
+                        AddRouteLayer(route, RoutesLayer.Layers.Count, e.Index);
                     }
                     break;
-                case NotifyCollectionChangedAction.Remove:
-                    var routeLayer = RoutesLayer.Layers.OfType<NetworkCoverageGroupLayer>().FirstOrDefault(rl => ReferenceEquals(rl.NetworkCoverage, removedOrAddedItem));
+                case NotifyCollectionChangeAction.Remove:
+                    var routeLayer = RoutesLayer.Layers.OfType<NetworkCoverageGroupLayer>().FirstOrDefault(rl => ReferenceEquals(rl.NetworkCoverage, e.Item));
                     RoutesLayer.Layers.Remove(routeLayer);
                     break;
-                case NotifyCollectionChangedAction.Replace:
+                case NotifyCollectionChangeAction.Replace:
                     throw new NotImplementedException();
-                case NotifyCollectionChangedAction.Reset:
+                case NotifyCollectionChangeAction.Reset:
                     GenerateLayersForRoutes();
                     break;
                 default:

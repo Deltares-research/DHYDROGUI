@@ -40,7 +40,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
         private static void ComboBoxFormat(object sender, ListControlConvertEventArgs e)
         {
-            e.Value = ((Enum)e.Value).GetDescription();
+            e.Value = EnumDescriptionAttributeTypeConverter.GetEnumDescription((Enum)e.Value);
         }
 
         public FlowBoundaryConditionPropertiesControl()

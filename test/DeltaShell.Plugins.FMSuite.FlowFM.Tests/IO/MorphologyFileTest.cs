@@ -1,5 +1,4 @@
 ﻿using DelftTools.Functions;
-using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;

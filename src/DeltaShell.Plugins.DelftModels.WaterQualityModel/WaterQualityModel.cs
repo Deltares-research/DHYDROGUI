@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
@@ -1358,7 +1357,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         # endregion
         
         [EditAction]
-        protected override void OnInputCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        protected override void OnInputCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
             if (!enableMarkOutputOutOfSync) return;
 

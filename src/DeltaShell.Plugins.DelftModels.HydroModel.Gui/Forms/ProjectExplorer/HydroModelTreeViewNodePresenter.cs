@@ -13,10 +13,12 @@ using log4net;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
+using System.Windows.Forms;
+using DelftTools.Controls.Swf;
+using DelftTools.Hydro;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.ProjectExplorer
 {
@@ -194,19 +196,19 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.ProjectExplorer
             }
         }
 
-        protected override void OnCollectionChanged(HydroModel childNodeData, ITreeNode parentNode, NotifyCollectionChangedEventArgs e, int newNodeIndex)
+        protected override void OnCollectionChanged(HydroModel childNodeData, ITreeNode parentNode, NotifyCollectionChangingEventArgs e, int newNodeIndex)
         {
             base.OnCollectionChanged(childNodeData, parentNode, e, newNodeIndex);
 
             switch (e.Action)
             {
-                case NotifyCollectionChangedAction.Add:
+                case NotifyCollectionChangeAction.Add:
                     //make model node selected node in treeview.
                     ITreeNode node = TreeView.GetNodeByTag(childNodeData);
                     if (node != null) TreeView.SelectedNode = node;
                     break;
 
-                case NotifyCollectionChangedAction.Replace:
+                case NotifyCollectionChangeAction.Replace:
                     throw new NotImplementedException();
             }
         }

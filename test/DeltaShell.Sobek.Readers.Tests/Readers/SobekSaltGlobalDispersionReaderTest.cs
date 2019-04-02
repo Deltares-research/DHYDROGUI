@@ -47,7 +47,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         public void ReadFile()
         {
             // see also test ReadThatcherHarlemann; some values modified for test
-            var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"ReModels\NatSobek.sbk\6\DEFDIS.1");
+            var path = TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"ReModels\NatSobek.sbk\6\DEFDIS.1");
             var globalDispersion = new SobekSaltGlobalDispersionReader().Read(path).First();
             Assert.AreEqual(DispersionOptionType.ThatcherHarlemann, globalDispersion.DispersionOptionType);
             var localDispersion = globalDispersion.SobekSaltLocalDispersion;

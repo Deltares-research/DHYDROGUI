@@ -21,10 +21,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
     {
         public abstract string Name { get; }
         public string Category { get { return "Hydro"; } }
-        public string Description
-        {
-            get { return string.Empty; }
-        }
         public abstract Bitmap Image { get; }
         public IEnumerable<Type> SupportedItemTypes { get { yield return typeof (IEventedList<T>); } }
         public bool CanImportOn(object targetObject)

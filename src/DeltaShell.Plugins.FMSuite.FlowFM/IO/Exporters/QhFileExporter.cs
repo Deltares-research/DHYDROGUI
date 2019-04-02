@@ -17,10 +17,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
         public string Name { get { return "Boundary data to .qh file"; } }
 
         public string Category { get { return "General"; } }
-        public string Description
-        {
-            get { return string.Empty; }
-        }
 
         public bool Export(object item, string path)
         {

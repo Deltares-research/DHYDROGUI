@@ -1,5 +1,4 @@
-﻿using System.Collections.Specialized;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -50,9 +49,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView.WeirFo
             }
         }
 
-        void YZTableViewCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        void YZTableViewCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
-            if (e.Action == NotifyCollectionChangedAction.Add || e.Action == NotifyCollectionChangedAction.Remove)
+            if (e.Action == NotifyCollectionChangeAction.Add || e.Action == NotifyCollectionChangeAction.Remove)
             {
                 SetTableToWeirFormula();
             }

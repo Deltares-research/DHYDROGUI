@@ -255,7 +255,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         public void ImportFromSquareModelAndThenFromRealModelShouldNotUpdateAllData()
         {
             // Setup
-            var commonFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "IO");
+            var commonFilePath = Path.Combine(TestHelper.GetDataDir(), "IO");
             var hydPath = Path.Combine(commonFilePath, "square", "square.hyd");
 
             using (var model = new WaterQualityModel())
@@ -407,7 +407,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         public void Import_ChangeVerticalDiffusion_Import_ShouldNotChange()
         {
             // Setup
-            var commonFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "IO");
+            var commonFilePath = Path.Combine(TestHelper.GetDataDir(), "IO");
             var hydPath = Path.Combine(commonFilePath, "real", "uni3d.hyd");
 
             // 1st import:

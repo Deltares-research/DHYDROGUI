@@ -43,7 +43,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         public void ImportItem_NoTargetSpecified_ThrowNotSupportedException()
         {
             // setup
-            var path = Path.Combine(TestHelper.GetTestDataDirectory(), "IO", "observationAreas", "3areas_epsg4326.shp");
+            var path = Path.Combine(TestHelper.GetDataDir(), "IO", "observationAreas", "3areas_epsg4326.shp");
             var importer = new WaterQualityObservationAreaImporter();
 
             // call
@@ -58,7 +58,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         public void ImportItem_TargetIncorrect_ThrowNotSupportedException()
         {
             // setup
-            var path = Path.Combine(TestHelper.GetTestDataDirectory(), "IO", "observationAreas", "3areas_epsg4326.shp");
+            var path = Path.Combine(TestHelper.GetDataDir(), "IO", "observationAreas", "3areas_epsg4326.shp");
             var importer = new WaterQualityObservationAreaImporter();
             var target = new object();
 
@@ -74,7 +74,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         public void ImportItem_TargetIsWaterQualityObservationAreaCoverageWithoutSpatialOperations_AddSpatialOperationsBasedOnPolygonShapes()
         {
             // setup
-            var path = Path.Combine(TestHelper.GetTestDataDirectory(), "IO", "observationAreas", "3areas_epsg4326.shp");
+            var path = Path.Combine(TestHelper.GetDataDir(), "IO", "observationAreas", "3areas_epsg4326.shp");
 
             var grid = UnstructuredGridTestHelper.GenerateRegularGrid(20, 20, 1, 1);
             var target = new WaterQualityObservationAreaCoverage(grid);

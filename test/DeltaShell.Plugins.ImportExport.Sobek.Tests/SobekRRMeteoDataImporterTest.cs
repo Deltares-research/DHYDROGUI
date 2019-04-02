@@ -44,7 +44,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             // sorry, but this is for performance (load once)
             if (tholen29Model == null)
             {
-                SetImporterForFile(TestHelper.GetTestDataDirectory() + @"\Tholen.lit\29\NETWORK.TP");
+                SetImporterForFile(TestHelper.GetDataDir() + @"\Tholen.lit\29\NETWORK.TP");
                 importerTholen29.Import();
                 tholen29Model = rrModel;
             }
@@ -93,7 +93,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Category(TestCategory.Integration)]
         public void ImportMultipleMeteoStationsDataEvaporationForOneStationMissing()
         {
-            SetImporterForFile(TestHelper.GetTestDataDirectory() + @"\RRMiniTestModels\DRRSA.lit\9\NETWORK.TP");
+            SetImporterForFile(TestHelper.GetDataDir() + @"\RRMiniTestModels\DRRSA.lit\9\NETWORK.TP");
 
             importer.Import();
             Assert.AreEqual(MeteoDataDistributionType.PerStation, rrModel.Evaporation.DataDistributionType);
@@ -114,7 +114,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Category(TestCategory.VerySlow)]
         public void ImportMultipleMeteoStationsData()
         {
-            SetImporterForFile(TestHelper.GetTestDataDirectory() + @"\Tholen.lit\30\NETWORK.TP");
+            SetImporterForFile(TestHelper.GetDataDir() + @"\Tholen.lit\30\NETWORK.TP");
 
             importer.Import();
             Assert.AreEqual(MeteoDataDistributionType.PerStation, rrModel.Precipitation.DataDistributionType);

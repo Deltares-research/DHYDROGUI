@@ -30,7 +30,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekWaqReaders
         [Test]
         public void ReadConstantValuesFromSobek212ForFractions()
         {
-            var path = TestHelper.GetTestDataDirectory() + "\\WaqReaders\\Test0.Dat";
+            var path = TestHelper.GetDataDir() + "\\WaqReaders\\Test0.Dat";
             
             var dataDictionary = (Dictionary<string, Dictionary<string, double>>)TypeUtils.CallPrivateStaticMethod(typeof(SobekWaqBoundaryConditionsReader), "ParseConstantValuesFromSobek212", new object[] { path, false, "fraction" });
             Assert.AreEqual(2, dataDictionary.Values.Count);
@@ -51,7 +51,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekWaqReaders
         [Test]
         public void ReadConstantValuesFromSobek212ForBoundaries()
         {
-            var path = TestHelper.GetTestDataDirectory() + "\\WaqReaders\\Test1.Dat";
+            var path = TestHelper.GetDataDir() + "\\WaqReaders\\Test1.Dat";
 
             var dataDictionary = (Dictionary<string, Dictionary<string, double>>)TypeUtils.CallPrivateStaticMethod(typeof(SobekWaqBoundaryConditionsReader), "ParseConstantValuesFromSobek212", new object[] { path, true, "boundary" });
             Assert.AreEqual(2, dataDictionary.Values.Count);
@@ -72,7 +72,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekWaqReaders
         [Test]
         public void ReadConstantValuesFromSobek212WithExtraStartingAndEndingBlankSpace()
         {
-            var path = TestHelper.GetTestDataDirectory() + "\\WaqReaders\\Test2.Dat";
+            var path = TestHelper.GetDataDir() + "\\WaqReaders\\Test2.Dat";
             
             var dataDictionary = (Dictionary<string, Dictionary<string, double>>)TypeUtils.CallPrivateStaticMethod(typeof(SobekWaqBoundaryConditionsReader), "ParseConstantValuesFromSobek212", new object[] { path, true, "boundary" });
             Assert.AreEqual(2, dataDictionary.Values.Count);
@@ -93,7 +93,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekWaqReaders
         [Test]
         public void ReadConstantValuesFromSobek212LogsWarningWhenNoNameCanBeFound()
         {
-            var path = TestHelper.GetTestDataDirectory() + "\\WaqReaders\\Test3.Dat";
+            var path = TestHelper.GetDataDir() + "\\WaqReaders\\Test3.Dat";
 
             var log = SobekWaqReaderTestHelper.PerformActionAndGetLog(() => TypeUtils.CallPrivateStaticMethod(typeof(SobekWaqBoundaryConditionsReader), "ParseConstantValuesFromSobek212", new object[] { path, false, "fraction" }));
             Assert.IsTrue(log.Contains("A fraction data block is skipped because no valid fraction name could be retrieved"));
@@ -102,7 +102,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekWaqReaders
         [Test]
         public void ReadConstantValuesFromSobek212LogsWarningWhenBoundaryNameIsInvalid()
         {
-            var path = TestHelper.GetTestDataDirectory() + "\\WaqReaders\\Test4.Dat";
+            var path = TestHelper.GetDataDir() + "\\WaqReaders\\Test4.Dat";
             
             var log = SobekWaqReaderTestHelper.PerformActionAndGetLog(() => TypeUtils.CallPrivateStaticMethod(typeof(SobekWaqBoundaryConditionsReader), "ParseConstantValuesFromSobek212", new object[] { path, true, "boundary" }));
             Assert.IsTrue(log.Contains("A boundary data block is skipped because the boundary name is invalid (needs to start with 'n' or 'bl_')"));
@@ -111,7 +111,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekWaqReaders
         [Test]
         public void ReadConstantValuesFromSobek212LogsWarningWhenNoSubstancesAndConcentrationsCanBeFound()
         {
-            var path = TestHelper.GetTestDataDirectory() + "\\WaqReaders\\Test5.Dat";
+            var path = TestHelper.GetDataDir() + "\\WaqReaders\\Test5.Dat";
 
             var log = SobekWaqReaderTestHelper.PerformActionAndGetLog(() => TypeUtils.CallPrivateStaticMethod(typeof(SobekWaqBoundaryConditionsReader), "ParseConstantValuesFromSobek212", new object[] { path, false, "fraction" }));
             Assert.IsTrue(log.Contains("The fraction data block for 'MyOwnLittleFraction' is skipped because no valid substances/concentrations block could be found"));
@@ -120,7 +120,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekWaqReaders
         [Test]
         public void ReadConstantValuesFromSobek212LogsWarningWhenNumberOfConcentrationsIsLessThanNumberOfSubstances()
         {
-            var path = TestHelper.GetTestDataDirectory() + "\\WaqReaders\\Test6.Dat";
+            var path = TestHelper.GetDataDir() + "\\WaqReaders\\Test6.Dat";
             
             var log = SobekWaqReaderTestHelper.PerformActionAndGetLog(() => TypeUtils.CallPrivateStaticMethod(typeof(SobekWaqBoundaryConditionsReader), "ParseConstantValuesFromSobek212", new object[] { path, true, "boundary" }));
             Assert.IsTrue(log.Contains("The boundary data block for 'L1' is partially imported because the number of substances did not equal the number of concentrations"));
@@ -136,7 +136,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekWaqReaders
         [Test]
         public void ReadConstantValuesFromSobek212LogsWarningWhenNumberOfSubstancesIsLessThanNumberOfConcentrations()
         {
-            var path = TestHelper.GetTestDataDirectory() + "\\WaqReaders\\Test7.Dat";
+            var path = TestHelper.GetDataDir() + "\\WaqReaders\\Test7.Dat";
 
             var log = SobekWaqReaderTestHelper.PerformActionAndGetLog(() => TypeUtils.CallPrivateStaticMethod(typeof(SobekWaqBoundaryConditionsReader), "ParseConstantValuesFromSobek212", new object[] { path, false, "fraction" }));
             Assert.IsTrue(log.Contains("The fraction data block for 'MyOwnLittleFraction' is partially imported because the number of substances did not equal the number of concentrations"));
@@ -156,7 +156,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekWaqReaders
         [Test]
         public void ReadTimeDependentValuesWithBlockInterpolationFromSobek212ForFractions()
         {
-            var path = TestHelper.GetTestDataDirectory() + "\\WaqReaders\\Test8.Dat";
+            var path = TestHelper.GetDataDir() + "\\WaqReaders\\Test8.Dat";
 
             var dateTime1 = new DateTime(2010, 1, 1, 0, 0, 0);
             var dateTime2 = new DateTime(2010, 1, 2, 0, 0, 0);
@@ -190,7 +190,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekWaqReaders
         [Test]
         public void ReadTimeDependentValuesWithBlockInterpolationFromSobek212ForBoundaries()
         {
-            var path = TestHelper.GetTestDataDirectory() + "\\WaqReaders\\Test9.Dat";
+            var path = TestHelper.GetDataDir() + "\\WaqReaders\\Test9.Dat";
 
             var dateTime1 = new DateTime(2010, 1, 1, 0, 0, 0);
             var dateTime2 = new DateTime(2010, 1, 2, 0, 0, 0);
@@ -224,7 +224,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekWaqReaders
         [Test]
         public void ReadTimeDependentValuesWithBlockInterpolationFromSobek212WithExtraStartingAndEndingBlankSpace()
         {
-            var path = TestHelper.GetTestDataDirectory() + "\\WaqReaders\\Test10.Dat";
+            var path = TestHelper.GetDataDir() + "\\WaqReaders\\Test10.Dat";
             
             var dateTime1 = new DateTime(2010, 1, 1, 0, 0, 0);
             var dateTime2 = new DateTime(2010, 1, 2, 0, 0, 0);
@@ -259,7 +259,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekWaqReaders
         [Test]
         public void ReadTimeDependentValuesWithBlockInterpolationFromSobek212LogsWarningWhenNoBoundaryNameCanBeFound()
         {
-            var path = TestHelper.GetTestDataDirectory() + "\\WaqReaders\\Test11.Dat";
+            var path = TestHelper.GetDataDir() + "\\WaqReaders\\Test11.Dat";
             
             var log = SobekWaqReaderTestHelper.PerformActionAndGetLog(() => TypeUtils.CallPrivateStaticMethod(typeof(SobekWaqBoundaryConditionsReader), "ParseTimeDependentValuesWithBlockInterpolationFromSobek212", new object[] { path, false, "fraction" }));
             Assert.IsTrue(log.Contains("A fraction data block is skipped because no valid fraction name could be retrieved"));
@@ -268,7 +268,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekWaqReaders
         [Test]
         public void ReadTimeDependentValuesWithBlockInterpolationFromSobek212LogsWarningWhenBoundaryNameIsInvalid()
         {
-            var path = TestHelper.GetTestDataDirectory() + "\\WaqReaders\\Test12.Dat";
+            var path = TestHelper.GetDataDir() + "\\WaqReaders\\Test12.Dat";
             
             var log = SobekWaqReaderTestHelper.PerformActionAndGetLog(() => TypeUtils.CallPrivateStaticMethod(typeof(SobekWaqBoundaryConditionsReader), "ParseTimeDependentValuesWithBlockInterpolationFromSobek212", new object[] { path, true, "boundary" }));
             Assert.IsTrue(log.Contains("A boundary data block is skipped because the boundary name is invalid (needs to start with 'n' or 'bl_')"));
@@ -277,7 +277,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekWaqReaders
         [Test]
         public void ReadTimeDependentValuesWithBlockInterpolationFromSobek212LogsWarningWhenNoSubstancesAndConcentrationsCanBeFound()
         {
-            var path = TestHelper.GetTestDataDirectory() + "\\WaqReaders\\Test13.Dat";
+            var path = TestHelper.GetDataDir() + "\\WaqReaders\\Test13.Dat";
 
             var log = SobekWaqReaderTestHelper.PerformActionAndGetLog(() => TypeUtils.CallPrivateStaticMethod(typeof(SobekWaqBoundaryConditionsReader), "ParseTimeDependentValuesWithBlockInterpolationFromSobek212", new object[] { path, true, "boundary" }));
             Assert.IsTrue(log.Contains("The boundary data block for 'N2' is skipped because no valid substances/concentrations block could be found"));
@@ -286,7 +286,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekWaqReaders
         [Test]
         public void ReadTimeDependentValuesWithBlockInterpolationFromSobek212LogsWarningWhenNoConcentrationValuesCanBeFound()
         {
-            var path = TestHelper.GetTestDataDirectory() + "\\WaqReaders\\Test14.Dat";
+            var path = TestHelper.GetDataDir() + "\\WaqReaders\\Test14.Dat";
 
             var log = SobekWaqReaderTestHelper.PerformActionAndGetLog(() => TypeUtils.CallPrivateStaticMethod(typeof(SobekWaqBoundaryConditionsReader), "ParseTimeDependentValuesWithBlockInterpolationFromSobek212", new object[] { path, false, "fraction" }));
             Assert.IsTrue(log.Contains("The fraction data block for 'MyOwnLittleFraction' is skipped because no time dependent substances/concentrations values could be found"));
@@ -295,7 +295,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekWaqReaders
         [Test]
         public void ReadTimeDependentValuesWithBlockInterpolationFromSobek212LogsWarningWhenTimeDependentLineFormatIsInvalid()
         {
-            var path = TestHelper.GetTestDataDirectory() + "\\WaqReaders\\Test15.Dat";
+            var path = TestHelper.GetDataDir() + "\\WaqReaders\\Test15.Dat";
 
             var log = SobekWaqReaderTestHelper.PerformActionAndGetLog(() => TypeUtils.CallPrivateStaticMethod(typeof(SobekWaqBoundaryConditionsReader), "ParseTimeDependentValuesWithBlockInterpolationFromSobek212", new object[] { path, true, "boundary" }));
             Assert.IsTrue(log.Contains("A line in the time dependent boundary data block for 'N2' is skipped because its format is invalid"));
@@ -304,7 +304,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekWaqReaders
         [Test]
         public void ReadTimeDependentValuesWithBlockInterpolationFromSobek212LogsWarningWhenNumberOfConcentrationsIsLessThanNumberOfSubstances()
         {
-            var path = TestHelper.GetTestDataDirectory() + "\\WaqReaders\\Test16.Dat";
+            var path = TestHelper.GetDataDir() + "\\WaqReaders\\Test16.Dat";
  
             var dateTime = new DateTime(2010, 1, 1, 0, 0, 0);
 
@@ -324,7 +324,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekWaqReaders
         [Test]
         public void ReadTimeDependentValuesWithBlockInterpolationFromSobek212LogsWarningWhenNumberOfSubstancesIsLessThanNumberOfConcentrations()
         {
-            var path = TestHelper.GetTestDataDirectory() + "\\WaqReaders\\Test17.Dat";
+            var path = TestHelper.GetDataDir() + "\\WaqReaders\\Test17.Dat";
             
             var dateTime = new DateTime(2010, 1, 1, 0, 0, 0);
 
@@ -348,7 +348,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekWaqReaders
         [Test]
         public void ReadTimeDependentValuesWithLinearInterpolationFromSobek212ForFractions()
         {
-            var path = TestHelper.GetTestDataDirectory() + "\\WaqReaders\\Test18.Dat";
+            var path = TestHelper.GetDataDir() + "\\WaqReaders\\Test18.Dat";
 
             var dateTime1 = new DateTime(2010, 1, 1, 0, 0, 0);
             var dateTime2 = new DateTime(2010, 1, 2, 0, 0, 0);
@@ -382,7 +382,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekWaqReaders
         [Test]
         public void ReadTimeDependentValuesWithLinearInterpolationFromSobek212ForBoundaries()
         {
-            var path = TestHelper.GetTestDataDirectory() + "\\WaqReaders\\Test19.Dat";
+            var path = TestHelper.GetDataDir() + "\\WaqReaders\\Test19.Dat";
 
             var dateTime1 = new DateTime(2010, 1, 1, 0, 0, 0);
             var dateTime2 = new DateTime(2010, 1, 2, 0, 0, 0);
@@ -416,7 +416,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekWaqReaders
         [Test]
         public void ReadTimeDependentValuesWithLinearInterpolationFromSobek212WithExtraStartingAndEndingBlankSpace()
         {
-            var path = TestHelper.GetTestDataDirectory() + "\\WaqReaders\\Test20.Dat";
+            var path = TestHelper.GetDataDir() + "\\WaqReaders\\Test20.Dat";
             
             var dateTime1 = new DateTime(2010, 1, 1, 0, 0, 0);
             var dateTime2 = new DateTime(2010, 1, 2, 0, 0, 0);
@@ -451,7 +451,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekWaqReaders
         [Test]
         public void ReadTimeDependentValuesWithLinearInterpolationFromSobek212LogsWarningWhenNoBoundaryNameCanBeFound()
         {
-            var path = TestHelper.GetTestDataDirectory() + "\\WaqReaders\\Test21.Dat";
+            var path = TestHelper.GetDataDir() + "\\WaqReaders\\Test21.Dat";
 
             var log = SobekWaqReaderTestHelper.PerformActionAndGetLog(() => TypeUtils.CallPrivateStaticMethod(typeof(SobekWaqBoundaryConditionsReader), "ParseTimeDependentValuesWithLinearInterpolationFromSobek212", new object[] { path, true, "boundary" }));
             Assert.IsTrue(log.Contains("A boundary data block is skipped because no valid boundary name could be retrieved"));
@@ -460,7 +460,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekWaqReaders
         [Test]
         public void ReadTimeDependentValuesWithLinearInterpolationFromSobek212LogsWarningWhenBoundaryNameIsInvalid()
         {
-            var path = TestHelper.GetTestDataDirectory() + "\\WaqReaders\\Test22.Dat";
+            var path = TestHelper.GetDataDir() + "\\WaqReaders\\Test22.Dat";
 
             var log = SobekWaqReaderTestHelper.PerformActionAndGetLog(() => TypeUtils.CallPrivateStaticMethod(typeof(SobekWaqBoundaryConditionsReader), "ParseTimeDependentValuesWithLinearInterpolationFromSobek212", new object[] { path, true, "boundary" }));
             Assert.IsTrue(log.Contains("A boundary data block is skipped because the boundary name is invalid (needs to start with 'n' or 'bl_')"));
@@ -469,7 +469,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekWaqReaders
         [Test]
         public void ReadTimeDependentValuesWithLinearInterpolationFromSobek212LogsInfoWhenNoSubstancesAndConcentrationsCanBeFound()
         {
-            var path = TestHelper.GetTestDataDirectory() + "\\WaqReaders\\Test23.Dat";
+            var path = TestHelper.GetDataDir() + "\\WaqReaders\\Test23.Dat";
 
             var log = SobekWaqReaderTestHelper.PerformActionAndGetLog(() => TypeUtils.CallPrivateStaticMethod(typeof(SobekWaqBoundaryConditionsReader), "ParseTimeDependentValuesWithLinearInterpolationFromSobek212", new object[] { path, false, "fraction" }));
             Assert.IsTrue(log.Contains("No time dependent fraction data with linear interpolation was found"));
@@ -478,7 +478,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekWaqReaders
         [Test]
         public void ReadTimeDependentValuesWithLinearInterpolationFromSobek212LogsWarningWhenNoConcentrationValuesCanBeFound()
         {
-            var path = TestHelper.GetTestDataDirectory() + "\\WaqReaders\\Test24.Dat";
+            var path = TestHelper.GetDataDir() + "\\WaqReaders\\Test24.Dat";
 
             var log = SobekWaqReaderTestHelper.PerformActionAndGetLog(() => TypeUtils.CallPrivateStaticMethod(typeof(SobekWaqBoundaryConditionsReader), "ParseTimeDependentValuesWithLinearInterpolationFromSobek212", new object[] { path, true, "boundary" }));
             Assert.IsTrue(log.Contains("The boundary data block for 'N2' is skipped because no time dependent substances/concentrations values could be found"));
@@ -487,7 +487,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekWaqReaders
         [Test]
         public void ReadTimeDependentValuesWithLinearInterpolationFromSobek212LogsWarningWhenTimeDependentLineFormatIsInvalid()
         {
-            var path = TestHelper.GetTestDataDirectory() + "\\WaqReaders\\Test25.Dat";
+            var path = TestHelper.GetDataDir() + "\\WaqReaders\\Test25.Dat";
 
             var log = SobekWaqReaderTestHelper.PerformActionAndGetLog(() => TypeUtils.CallPrivateStaticMethod(typeof(SobekWaqBoundaryConditionsReader), "ParseTimeDependentValuesWithLinearInterpolationFromSobek212", new object[] { path, false, "fraction" }));
             Assert.IsTrue(log.Contains("A line in the time dependent fraction data block for 'MyOwnLittleFraction' is skipped because its format is invalid"));
@@ -496,7 +496,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekWaqReaders
         [Test]
         public void ReadTimeDependentValuesWithLinearInterpolationFromSobek212LogsWarningWhenNumberOfConcentrationsIsLessThanNumberOfSubstances()
         {
-            var path = TestHelper.GetTestDataDirectory() + "\\WaqReaders\\Test26.Dat";
+            var path = TestHelper.GetDataDir() + "\\WaqReaders\\Test26.Dat";
 
             var dateTime = new DateTime(2010, 1, 1, 0, 0, 0);
 
@@ -517,7 +517,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekWaqReaders
         [Test]
         public void ReadTimeDependentValuesWithLinearInterpolationFromSobek212LogsWarningWhenNumberOfSubstancesIsLessThanNumberOfConcentrations()
         {
-            var path = TestHelper.GetTestDataDirectory() + "\\WaqReaders\\Test27.Dat";
+            var path = TestHelper.GetDataDir() + "\\WaqReaders\\Test27.Dat";
 
             var dateTime = new DateTime(2010, 1, 1, 0, 0, 0);
 
@@ -540,7 +540,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekWaqReaders
         [Test]
         public void ReadAllValuesFromSobek212ForFractions()
         {
-            var path = TestHelper.GetTestDataDirectory() + "\\WaqReaders\\Test28.Dat";
+            var path = TestHelper.GetDataDir() + "\\WaqReaders\\Test28.Dat";
 
             var constantDataDictionary = (Dictionary<string, Dictionary<string, double>>)TypeUtils.CallPrivateStaticMethod(typeof(SobekWaqBoundaryConditionsReader), "ParseConstantValuesFromSobek212", new object[] { path, false, "fraction" });
             Assert.AreEqual(2, constantDataDictionary.Values.Count);
@@ -614,7 +614,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekWaqReaders
         [Test]
         public void ReadAllValuesFromSobek212ForBoundaries()
         {
-            var path = TestHelper.GetTestDataDirectory() + "\\WaqReaders\\Test29.Dat";
+            var path = TestHelper.GetDataDir() + "\\WaqReaders\\Test29.Dat";
 
             var constantDataDictionary = (Dictionary<string, Dictionary<string, double>>)TypeUtils.CallPrivateStaticMethod(typeof(SobekWaqBoundaryConditionsReader), "ParseConstantValuesFromSobek212", new object[] { path, true, "boundary" });
             Assert.AreEqual(2, constantDataDictionary.Values.Count);

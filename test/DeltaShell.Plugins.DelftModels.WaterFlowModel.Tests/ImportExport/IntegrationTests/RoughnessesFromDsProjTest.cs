@@ -45,7 +45,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Integ
         {
             const string testDataDirName = "VariousRoughnesses";
 
-            var sourcePath = Path.GetFullPath(Path.Combine(TestHelper.GetTestDataDirectory(), @"FileWriters\IntegrationTests", testDataDirName));
+            var sourcePath = Path.GetFullPath(Path.Combine(TestHelper.GetDataDir(), @"FileWriters\IntegrationTests", testDataDirName));
             FileUtils.CopyDirectory(sourcePath, testDataDirName, ".svn");
             var relativePathSpatialRoughnessesExpectedFile =
                     TestHelper.GetTestFilePath(
@@ -80,7 +80,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Integ
         {
             string testDataDirName = "VariousRoughnesses";
 
-            string sourcePath = Path.GetFullPath(Path.Combine(TestHelper.GetTestDataDirectory(), @"FileWriters\IntegrationTests", testDataDirName));
+            string sourcePath = Path.GetFullPath(Path.Combine(TestHelper.GetDataDir(), @"FileWriters\IntegrationTests", testDataDirName));
             FileUtils.CopyDirectory(sourcePath, testDataDirName, ".svn");
                 
             string dsProjPath = Path.Combine(testDataDirName, "VariousSpatialRoughnesses.dsproj");

@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
@@ -8,6 +10,7 @@ using DeltaShell.Gui;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.DelftModels.HydroModel;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters;
 using DeltaShell.Plugins.ImportExport.Sobek;
 using DeltaShell.Plugins.ImportExport.Sobek.Tests;
 using DeltaShell.Plugins.NetCDF;
@@ -22,7 +25,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.UI
     {
         public static string GetSobekImportTestDir()
         {
-            return TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly);
+            return TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly);
         }
 
         public static ICompositeActivity ImportModel(string file)
@@ -37,6 +40,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.UI
                 compositeModel.Activities.Remove(activity);
             }
             return compositeModel;
+        }
+        private static IEnumerable<IFileExporter> GetFileExporters()
+        {
+            yield return new RainfallRunoffModelExporter();
         }
 
         public static void RunModel(IActivity model)

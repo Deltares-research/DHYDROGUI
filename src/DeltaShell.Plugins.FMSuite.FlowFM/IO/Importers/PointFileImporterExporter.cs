@@ -35,11 +35,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             get { return "Feature geometries"; }
         }
 
-        public override string Description
-        {
-            get { return string.Empty; }
-        }
-
         public override Bitmap Image
         {
             get { return Resources.Observation; }

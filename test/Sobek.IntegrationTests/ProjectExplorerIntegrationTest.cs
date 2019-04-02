@@ -44,7 +44,6 @@ namespace Sobek.IntegrationTests
 
         [Test]
         [Category(TestCategory.WindowsForms)]
-        [SetCulture("en-us")]
         public void RunFlowModelWithOutputFolderCollapsedInProjectExplorerShouldNotResultInDuplicateRunReport()
         {
             //HACK: inside this constructor singleton magic happens, this should not be required

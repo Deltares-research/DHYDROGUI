@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Specialized;
 using System.Linq;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
@@ -24,18 +23,17 @@ namespace DeltaShell.Plugins.FMSuite.Common
             modelData.CollectionChanged += OnDataCollectionChanged;
         }
         
-        private void OnFeaturesCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void OnFeaturesCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
             if (synchronizing) return;
-            var removedOrAddedItem = e.GetRemovedOrAddedItem();
+            
             switch (e.Action)
             {
-                case NotifyCollectionChangedAction.Add:
+                case NotifyCollectionChangeAction.Add:
                     synchronizing = true;
                     try
                     {
-                        
-                        ModelData.Add(CreateDataForFeature((TFeat) removedOrAddedItem));
+                        ModelData.Add(CreateDataForFeature((TFeat) e.Item));
                     }
                     finally
                     {
@@ -43,7 +41,7 @@ namespace DeltaShell.Plugins.FMSuite.Common
                     }
                     
                     break;
-                case NotifyCollectionChangedAction.Remove:
+                case NotifyCollectionChangeAction.Remove:
                     synchronizing = true;
                     try
                     {
@@ -52,13 +50,13 @@ namespace DeltaShell.Plugins.FMSuite.Common
                             var featureData = md as IFeatureData;
                             if (featureData != null)
                             {
-                                return Equals(featureData.Feature, removedOrAddedItem);
+                                return Equals(featureData.Feature, e.Item);
                             }
 
                             var feature = md as IFeature;
                             if (feature != null)
                             {
-                                return Equals(feature, removedOrAddedItem);
+                                return Equals(feature, e.Item);
                             }
 
                             return false;
@@ -74,15 +72,15 @@ namespace DeltaShell.Plugins.FMSuite.Common
             }
         }
 
-        private void OnDataCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void OnDataCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
             if (synchronizing) return;
-            var featureData = e.GetRemovedOrAddedItem() as IFeatureData;
+            var featureData = e.Item as IFeatureData;
             if (featureData == null) return;
             if (!(featureData.Feature is TFeat)) return;
             switch (e.Action)
             {
-                case NotifyCollectionChangedAction.Add:
+                case NotifyCollectionChangeAction.Add:
                     synchronizing = true;
                     try
                     {
@@ -97,7 +95,7 @@ namespace DeltaShell.Plugins.FMSuite.Common
                     }
 
                     break;
-                case NotifyCollectionChangedAction.Remove:
+                case NotifyCollectionChangeAction.Remove:
                     synchronizing = true;
                     try
                     {
@@ -108,12 +106,12 @@ namespace DeltaShell.Plugins.FMSuite.Common
                         synchronizing = false;
                     }
                     break;
-                case NotifyCollectionChangedAction.Replace:
+                case NotifyCollectionChangeAction.Replace:
                     synchronizing = true;
                     try
                     {
                         bool replaced = false;
-                        var feature = ((IFeatureData) e.OldItems[0]).Feature;
+                        var feature = ((IFeatureData) e.OldItem).Feature;
                         if (feature is TFeat)
                         {
                             var featureIndex = Features.IndexOf((TFeat) feature);

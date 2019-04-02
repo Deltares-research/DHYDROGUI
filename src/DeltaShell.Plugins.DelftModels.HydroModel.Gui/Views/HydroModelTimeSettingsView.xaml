@@ -88,7 +88,7 @@
                                      IsEnabled="{Binding StopTimeSynchronisationEnabled}"
                                      Style="{StaticResource DateTimePickerStyle}"
                                      Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="1" Margin="0,1,28,1"/>
-                <xctk:TimeSpanUpDown
+                <settingsWpf:WpfCustomTimeSpan
                     Grid.Column="2" 
                     Grid.ColumnSpan="2"
                     Grid.Row="2"
@@ -142,7 +142,7 @@
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal" Margin="2">
                                     <TextBlock Text="Time step" Margin="5,0" FontWeight="Normal"/>
-                                    <xctk:TimeSpanUpDown
+                                    <settingsWpf:WpfCustomTimeSpan
                                         Margin="0,1,28,1"
                                         FractionalSecondsDigitsCount="3" 
                                         Value="{Binding TimeStep, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"

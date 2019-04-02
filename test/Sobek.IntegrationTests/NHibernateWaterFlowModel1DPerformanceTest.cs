@@ -135,7 +135,7 @@ namespace Sobek.IntegrationTests
         private static HydroNetwork GetBypassNetwork()
         {
             var modelPath =
-                TestHelper.GetTestDataDirectoryPathForAssembly(
+                TestHelper.GetTestDataPath(
                     typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"BYPASS.lit\3\Network.TP");
             var importer = new SobekNetworkImporter();
             var network = (HydroNetwork)importer.ImportItem(modelPath);
@@ -144,7 +144,7 @@ namespace Sobek.IntegrationTests
         private static WaterFlowModel1D GetMaasModel()
         {
             var modelPath =
-                TestHelper.GetTestDataDirectoryPathForAssembly(
+                TestHelper.GetTestDataPath(
                     typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"Maas.lit\5\Network.TP");
             var importer = new SobekWaterFlowModel1DImporter();
             importer.TargetItem = new WaterFlowModel1D();
@@ -170,7 +170,7 @@ namespace Sobek.IntegrationTests
         {
             //import by pass
             var modelPath =
-                TestHelper.GetTestDataDirectoryPathForAssembly(
+                TestHelper.GetTestDataPath(
                     typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"BYPASS.lit\3\Network.TP");
 
             var importedModel = (HydroModel)new SobekHydroModelImporter().ImportItem(modelPath);
@@ -214,6 +214,33 @@ namespace Sobek.IntegrationTests
             return project;
         }
 
+        protected T SaveAndRetrieveObject<T>(T objectToSave) where T : class
+        {
+            var path = TestHelper.GetCurrentMethodName() + "1.dsproj";
+            var project = new Project();
+            project.RootFolder.Add(objectToSave);
+
+            projectRepository.Create(path);
+            projectRepository.SaveOrUpdate(project);
+            projectRepository.Close();
+
+            var np = projectRepository.Open(path);
+            Assert.IsNotNull(np.RootFolder.Items[0]);
+
+            var retrievedEntry = np.RootFolder.Items[0];
+
+            if (retrievedEntry is IDataItem)
+            {
+                return ((IDataItem)np.RootFolder.Items[0]).Value as T;
+            }
+
+            if (retrievedEntry is IModel || retrievedEntry is Folder)
+            {
+                return retrievedEntry as T;
+            }
+            return null;
+        }
+
         private void SaveProjectItem(IProjectItem model1, string path)
         {
             using (var repository = factory.CreateNew())
@@ -229,7 +256,7 @@ namespace Sobek.IntegrationTests
         public void SaveImportedZwolleModelShouldBeFast()
         {
             var modelPath = 
-                TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"SW_max_1.lit\3\Network.TP");
+                TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"SW_max_1.lit\3\Network.TP");
 
             var importedModel = (HydroModel)new SobekHydroModelImporter().ImportItem(modelPath);
             projectRepository.Create(TestHelper.GetCurrentMethodName()+".dsproj");
@@ -353,7 +380,7 @@ namespace Sobek.IntegrationTests
                                              {
 
                                                  var modelPath =
-                                                     TestHelper.GetTestDataDirectoryPathForAssembly(
+                                                     TestHelper.GetTestDataPath(
                                                          typeof(SobekWaterFlowModel1DImporterTest).Assembly,
                                                          @"SW_max_1.lit\3\Network.TP");
                                                  //what a cumbersome syntax here..
@@ -385,7 +412,7 @@ namespace Sobek.IntegrationTests
                 IApplication app = gui.Application;
                 
                 var modelPath =
-                    TestHelper.GetTestDataDirectoryPathForAssembly(
+                    TestHelper.GetTestDataPath(
                         typeof(SobekWaterFlowModel1DImporterTest).Assembly,
                         @"3testjz\Network.TP");
                 //what a cumbersome syntax here..
@@ -438,7 +465,7 @@ namespace Sobek.IntegrationTests
 
             //import by pass
             var modelPath =
-                TestHelper.GetTestDataDirectoryPathForAssembly(
+                TestHelper.GetTestDataPath(
                     typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"DS_Salt.lit\2\Network.TP");
 
             var importedModel = (HydroModel)new SobekHydroModelImporter().ImportItem(modelPath);
@@ -460,7 +487,7 @@ namespace Sobek.IntegrationTests
 
             //import by pass
             var modelPath =
-                TestHelper.GetTestDataDirectoryPathForAssembly(
+                TestHelper.GetTestDataPath(
                     typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"DS_Salt.lit\2\Network.TP");
 
             var modelImporter = new SobekWaterFlowModel1DImporter();

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
@@ -52,10 +51,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             }
         }
 
-        private void ModelCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void ModelCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
-            var removedOrAddedItem = e.GetRemovedOrAddedItem();
-            var ruleBase = removedOrAddedItem as RuleBase;
+            var ruleBase = e.Item as RuleBase;
             if (sender is IEventedList<RuleBase> && ruleBase != null)
             {
                 var ruleToRemove = rulesList.FirstOrDefault(rw => rw.GetRuleBase().Equals(ruleBase));
@@ -64,16 +62,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                     rulesList.Remove(ruleToRemove);
                 }
 
-                if (e.Action == NotifyCollectionChangedAction.Add && !rulesList.Any(w => w.GetRuleBase().Equals(ruleBase)))
+                if (e.Action == NotifyCollectionChangeAction.Add && !rulesList.Any(w => w.GetRuleBase().Equals(ruleBase)))
                 {
                     rulesList.Add(new ControlGroupRuleWrapper(ruleBase));
                 }
             }
 
-            var conditionBase = removedOrAddedItem as ConditionBase;
+            var conditionBase = e.Item as ConditionBase;
             if (sender is IEventedList<ConditionBase> && conditionBase != null)
             {
-                if (e.Action == NotifyCollectionChangedAction.Remove)
+                if (e.Action == NotifyCollectionChangeAction.Remove)
                 {
                     var conditionToRemove = conditionsList.FirstOrDefault(rw => rw.GetConditionBase().Equals(conditionBase));
                     if (conditionToRemove != null)
@@ -82,7 +80,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                     }
                 }
                 
-                if (e.Action == NotifyCollectionChangedAction.Add && !conditionsList.Any(w => w.GetConditionBase().Equals(conditionBase)))
+                if (e.Action == NotifyCollectionChangeAction.Add && !conditionsList.Any(w => w.GetConditionBase().Equals(conditionBase)))
                 {
                     conditionsList.Add(new ControlGroupConditionWrapper(conditionBase)); 
                 }
@@ -196,18 +194,18 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             }
         }
 
-        private void ControlGroupsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void ControlGroupsCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
-            var controlGroup = e.GetRemovedOrAddedItem() as ControlGroup;
+            var controlGroup = e.Item as ControlGroup;
             if (controlGroup == null) return;
 
             switch (e.Action)
             {
-                case NotifyCollectionChangedAction.Add:
+                case NotifyCollectionChangeAction.Add:
                     rulesList.AddRange(controlGroup.Rules.Select(r => new ControlGroupRuleWrapper(r)));
                     conditionsList.AddRange(controlGroup.Conditions.Select(c => new ControlGroupConditionWrapper(c)));
                     break;
-                case NotifyCollectionChangedAction.Remove:
+                case NotifyCollectionChangeAction.Remove:
                     var rulesToRemove = rulesList.Where(rw => controlGroup.Rules.Contains(rw.GetRuleBase())).ToList();
                     var conditionsToRemove = conditionsList.Where(cw => controlGroup.Conditions.Contains(cw.GetConditionBase())).ToList();
 

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Timers;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.ImportExport.Sobek.Tests;
 using DeltaShell.Sobek.Readers.Readers.SobekRrReaders;
@@ -8,7 +9,7 @@ using DeltaShell.Sobek.Readers.SobekDataObjects;
 using log4net;
 using NUnit.Framework;
 
-namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekRrReaders
+namespace DeltaShell.Sobek.Readers.Tests.Readers
 {
     [TestFixture]
     [Category(TestCategory.DataAccess)]
@@ -32,7 +33,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekRrReaders
         [Category(TestCategory.DataAccess)]
         public void ReadBuiFile()
         {
-            string buiFilePath = TestHelper.GetTestDataDirectory() + @"\Meteo\STNBUI09.BUI";
+            string buiFilePath = TestHelper.GetDataDir() + @"\Meteo\STNBUI09.BUI";
             var reader = new SobekRRBuiFileReader();
             var measurements = reader.ReadMeasurementData(buiFilePath).ToList();
 
@@ -41,12 +42,14 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekRrReaders
             Assert.AreEqual(2.7, measurements[1].MeasuredValues[0], 1e-8);
         }
 
+
+
         [Test]
         [Category(TestCategory.DataAccess)]
         public void ReadBuiFile1()
         {
             var t = DateTime.Now;
-            string buiFilePath = TestHelper.GetTestDataDirectory() + @"\RD-02X.bui";
+            string buiFilePath = TestHelper.GetDataDir() + @"\RD-02X.bui";
             var reader = new SobekRRBuiFileReader();
             var measurements = reader.ReadMeasurementData(buiFilePath).ToList();
 
@@ -64,7 +67,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekRrReaders
         [Category(TestCategory.Slow)]
         public void ReadBuiFileTholen()
         {
-            string buiFilePath = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"FIXED\THOL2010.BUI");
+            string buiFilePath = TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"FIXED\THOL2010.BUI");
             var reader = new SobekRRBuiFileReader();
 
             reader.ReadMeasurementData(buiFilePath).ToList();
@@ -76,7 +79,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekRrReaders
         [Category(TestCategory.DataAccess)]
         public void ReadMultipleStationsBuiFileAndCheckData()
         {
-            string buiFilePath = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"FIXED\Test2Stations4TimeSteps.BUI");
+            string buiFilePath = TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"FIXED\Test2Stations4TimeSteps.BUI");
             var reader = new SobekRRBuiFileReader();
             var measurements = reader.ReadMeasurementData(buiFilePath).ToList();
 

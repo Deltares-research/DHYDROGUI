@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Filters;
@@ -25,21 +24,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             Functions.CollectionChanged += FunctionsOnCollectionChanged;
         }
 
-        private void FunctionsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs args)
+        private void FunctionsOnCollectionChanged(object sender, NotifyCollectionChangingEventArgs args)
         {
-            var removedOrAddedItem = args.GetRemovedOrAddedItem();
-            var arguments = ((IFunction) removedOrAddedItem).Arguments;
+            var arguments = ((IFunction) args.Item).Arguments;
             if (!arguments.Any()) return;
             if (arguments[0].ValueType != typeof(T)) return;
 
             switch (args.Action)
             {
-                case NotifyCollectionChangedAction.Add: 
-                    ((IFunction)removedOrAddedItem).Arguments[0].ValuesChanged += FunctionTimeValuesChanged;
-                    OnFunctionAdded(((IFunction)removedOrAddedItem));
+                case NotifyCollectionChangeAction.Add: 
+                    ((IFunction)args.Item).Arguments[0].ValuesChanged += FunctionTimeValuesChanged;
+                    OnFunctionAdded(((IFunction)args.Item));
                     break;
-                case NotifyCollectionChangedAction.Remove:
-                    ((IFunction)removedOrAddedItem).Arguments[0].ValuesChanged -= FunctionTimeValuesChanged;
+                case NotifyCollectionChangeAction.Remove:
+                    ((IFunction)args.Item).Arguments[0].ValuesChanged -= FunctionTimeValuesChanged;
                     break;
                 default:
                     return;

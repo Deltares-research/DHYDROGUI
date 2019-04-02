@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using DelftTools.Functions;
@@ -656,7 +655,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness
 
         public event RoughnessTypeChangedHandler RoughnessTypeChanged;
 
-        void NetworkCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        void NetworkCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
             //changes should be handled by EditAction handler
             if (isInKnownEditAction)
@@ -666,19 +665,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness
             {
                 switch (e.Action)
                 {
-                    case NotifyCollectionChangedAction.Add:
+                    case NotifyCollectionChangeAction.Add:
                         // default is constant; thus already ok
                         break;
-                    case NotifyCollectionChangedAction.Remove:
+                    case NotifyCollectionChangeAction.Remove:
 
-                        var removedOrAddedItem = e.GetRemovedOrAddedItem();
-                        if (FunctionOfHPerBranch.ContainsKey((IBranch)removedOrAddedItem))
+                        if (FunctionOfHPerBranch.ContainsKey((IBranch)e.Item))
                         {
-                            FunctionOfHPerBranch.Remove((IBranch)removedOrAddedItem);
+                            FunctionOfHPerBranch.Remove((IBranch)e.Item);
                         }
-                        if (FunctionOfQPerBranch.ContainsKey((IBranch)removedOrAddedItem))
+                        if (FunctionOfQPerBranch.ContainsKey((IBranch)e.Item))
                         {
-                            FunctionOfQPerBranch.Remove((IBranch)removedOrAddedItem);
+                            FunctionOfQPerBranch.Remove((IBranch)e.Item);
                         }
                         break;
                     default:

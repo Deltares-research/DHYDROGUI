@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
@@ -312,7 +311,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Controls
             }
         }
 
-        void StationsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        void StationsCollectionChanged(object sender, DelftTools.Utils.Collections.NotifyCollectionChangingEventArgs e)
         {
             if (meteoData.DataDistributionType == MeteoDataDistributionType.PerStation)
             {

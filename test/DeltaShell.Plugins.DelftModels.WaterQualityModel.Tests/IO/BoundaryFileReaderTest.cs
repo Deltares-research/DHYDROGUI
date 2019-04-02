@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
 using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
@@ -18,7 +20,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         [TestFixtureSetUp]
         public void FixtureSetup()
         {
-            commonFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "IO");
+            commonFilePath = Path.Combine(TestHelper.GetDataDir(), "IO");
         }
 
         [Test]

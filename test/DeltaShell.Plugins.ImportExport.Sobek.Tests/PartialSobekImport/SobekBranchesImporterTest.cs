@@ -16,7 +16,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         [Category(TestCategory.DataAccess)]
         public void ImportNetworkWithNodeWithEqualsSymbolInName()
         {
-            var pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\network3\Network.TP";
+            var pathToSobekNetwork = TestHelper.GetDataDir() + @"\network3\Network.TP";
             var branchesFromSobekImporter = new SobekBranchesImporter
                                                 {
                                                     TargetObject = new HydroNetwork(), 
@@ -35,7 +35,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         [Category(TestCategory.DataAccess)]
         public void ImportBranches()
         {
-            var pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\network1\Network.TP";
+            var pathToSobekNetwork = TestHelper.GetDataDir() + @"\network1\Network.TP";
             var branchesFromSobekImporter = new SobekBranchesImporter
                                                 {
                                                     TargetObject = new HydroNetwork(), 
@@ -54,7 +54,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         [Category(TestCategory.DataAccess)]
         public void ImportBranchesWithNonUniqueNamesExpectUsefulErrorMessage()
         {
-            var pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\network4\Network.TP";
+            var pathToSobekNetwork = TestHelper.GetDataDir() + @"\network4\Network.TP";
             var branchesFromSobekImporter = new SobekBranchesImporter
             {
                 TargetObject = new HydroNetwork(),
@@ -80,7 +80,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         [Category(TestCategory.DataAccess)]
         public void ImportBranchesToExistingNetwork()
         {
-            var pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\network1\Network.TP";
+            var pathToSobekNetwork = TestHelper.GetDataDir() + @"\network1\Network.TP";
             var branchesFromSobekImporter = new SobekBranchesImporter();
             var hydroNetwork = PartialSobekImporterTestHelper.GetTestNetwork();
             var branchName = hydroNetwork.Branches.First().Name;
@@ -99,7 +99,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         [Category(TestCategory.DataAccess)]
         public void UpdateExistingBranch()
         {
-            var pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\network1\Network.TP";
+            var pathToSobekNetwork = TestHelper.GetDataDir() + @"\network1\Network.TP";
             var branchesFromSobekImporter = new SobekBranchesImporter
                                                 {
                                                     TargetObject = new HydroNetwork(), 
@@ -130,7 +130,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         [Category(TestCategory.DataAccess)] // Nodes.dat 2124 - 213
         public void ImportBranchesWithInterpolationOverNodes()
         {
-            var pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\39_000.lit\Network.TP";
+            var pathToSobekNetwork = TestHelper.GetDataDir() + @"\39_000.lit\Network.TP";
             var branchesFromSobekImporter = new SobekBranchesImporter
                                                 {
                                                     TargetObject = new HydroNetwork(), 

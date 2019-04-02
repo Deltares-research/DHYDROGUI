@@ -20,7 +20,7 @@ namespace Sobek.IntegrationTests
         [Category(TestCategory.Slow)]
         public void RunRRInDWAQ_AC1()
         {
-            var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"DWAQ_AC1.lit\14\NETWORK.TP");
+            var path = TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"DWAQ_AC1.lit\14\NETWORK.TP");
 
             var hydroModelImporter = new SobekHydroModelImporter(true, false);
             var hydroModel = (HydroModel)hydroModelImporter.ImportItem(path);

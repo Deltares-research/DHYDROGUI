@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using DelftTools.Shell.Core.Workflow;
@@ -116,7 +115,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             ((INotifyCollectionChanged)controlGroup).CollectionChanged += (s, e) =>
             {
                 count++;
-                Console.WriteLine("Property = " + ((INameable)e.GetRemovedOrAddedItem()).Name + " (" + count + ")");
+                Console.WriteLine("Property = " + ((INameable)e.Item).Name + " (" + count + ")");
             };
 
             controlGroup.Rules.Add(rule);

@@ -21,7 +21,7 @@ using Point = NetTopologySuite.Geometries.Point;
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
 {
     [TestFixture]
-    [Category(TestCategory.X86)]
+    [Category("Geodatabase_x86")]
     public class ChannelFromGisImporterTest
     {
         private readonly MockRepository mocks = new MockRepository();

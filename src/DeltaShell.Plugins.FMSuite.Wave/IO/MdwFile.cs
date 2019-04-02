@@ -8,7 +8,6 @@ using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.Collections.Generic;
-using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.Common;
@@ -374,7 +373,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 if (!domain.SpectralDomainData.UseDefaultDirectionalSpace)
                 {
                     domainCategory.AddProperty("DirSpace",
-                        domain.SpectralDomainData.DirectionalSpaceType.GetDescription().ToLower());
+                                           EnumDescriptionAttributeTypeConverter.GetEnumDescription(
+                                               domain.SpectralDomainData.DirectionalSpaceType).ToLower());
                     domainCategory.AddProperty("NDir", domain.SpectralDomainData.NDir);
                     domainCategory.AddProperty("StartDir", domain.SpectralDomainData.StartDir);
                     domainCategory.AddProperty("EndDir", domain.SpectralDomainData.EndDir);
@@ -397,7 +397,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                     domainCategory.AddProperty("FlowWaterLevel", (int) domain.HydroFromFlowData.WaterLevelUsage);
                     domainCategory.AddProperty("FlowVelocity", (int) domain.HydroFromFlowData.VelocityUsage);
                     domainCategory.AddProperty("FlowVelocityType",
-                        domain.HydroFromFlowData.VelocityUsageType.GetDescription());
+                                               EnumDescriptionAttributeTypeConverter.GetEnumDescription(
+                                                   domain.HydroFromFlowData.VelocityUsageType));
                     domainCategory.AddProperty("FlowWind", (int) domain.HydroFromFlowData.WindUsage);
                 }
 
@@ -490,11 +491,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 if (bc.DataType != BoundaryConditionDataType.SpectrumFromFile)
                 {
                     boundaryCategory.AddProperty(KnownWaveProperties.ShapeType,
-                        bc.ShapeType.GetDescription().ToLower());
+                                                 EnumDescriptionAttributeTypeConverter.GetEnumDescription(
+                                                     bc.ShapeType).ToLower());
                     boundaryCategory.AddProperty(KnownWaveProperties.PeriodType,
-                        bc.PeriodType.GetDescription().ToLower());
+                                                 EnumDescriptionAttributeTypeConverter.GetEnumDescription(
+                                                     bc.PeriodType).ToLower());
                     boundaryCategory.AddProperty(KnownWaveProperties.DirectionalSpreadingType,
-                        bc.DirectionalSpreadingType.GetDescription().ToLower());
+                                                 EnumDescriptionAttributeTypeConverter.GetEnumDescription(
+                                                     bc.DirectionalSpreadingType).ToLower());
                     boundaryCategory.AddProperty(KnownWaveProperties.PeakEnhancementFactor, bc.PeakEnhancementFactor);
                     boundaryCategory.AddProperty(KnownWaveProperties.GaussianSpreading, bc.GaussianSpreadingValue);
                 }

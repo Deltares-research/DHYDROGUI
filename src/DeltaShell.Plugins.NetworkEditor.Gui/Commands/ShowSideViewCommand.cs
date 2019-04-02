@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using DelftTools.Controls;
 using DelftTools.Shell.Gui;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView;
 using DeltaShell.Plugins.NetworkEditor.Gui.MapTools;
@@ -9,8 +8,10 @@ using NetTopologySuite.Extensions.Coverages;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Commands
 {
+    /// TODO: get this class under test.
     public class ShowSideViewCommand : NetworkEditorCommand,IGuiCommand
     {
+        private const string WaterLevelTag =  "Water level";//"water level";
         private static readonly ILog log = LogManager.GetLogger(typeof(ShowSideViewCommand));
 
         protected override void OnExecute(params object[] arguments)
@@ -45,12 +46,23 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Commands
             var mapControl = mapView.MapControl;
             var hydroNetworkEditorMapTool = mapControl.GetToolByType<IHydroNetworkEditorMapTool>();
 
-            return hydroNetworkEditorMapTool?.ActiveNetworkCoverageGroupLayer?.NetworkCoverage as Route;
+            if (null == hydroNetworkEditorMapTool)
+            {
+                return null;
+            }
+
+            if (null == hydroNetworkEditorMapTool.ActiveNetworkCoverageGroupLayer)
+            {
+                return null;
+            }
+
+            return hydroNetworkEditorMapTool.ActiveNetworkCoverageGroupLayer.NetworkCoverage as Route;
         }
 
         private MapView GetMapView()
         {
-            return Gui.DocumentViews.ActiveView?.GetViewsOfType<MapView>().FirstOrDefault();
+            //no mapview should give an exception..
+            return Gui.DocumentViews.GetActiveViews<MapView>().FirstOrDefault();
         }
 
         public IGui Gui { get; set; }

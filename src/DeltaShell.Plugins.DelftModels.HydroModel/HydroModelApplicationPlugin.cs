@@ -32,7 +32,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         public override string Name
         {
-            get { return "Hydro Model"; }
+            get { return DelftTools.Shell.Core.Properties.Resources.HydroModelApplicationPlugin_Name_Hydro_Model; }
         }
 
         public override string DisplayName
@@ -55,7 +55,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         {
             get { return "1.1.1.0"; }
         }
-        
+
+        public override Image Image
+        {
+            get { return null; }
+        }
+
         public override IApplication Application
         {
             get

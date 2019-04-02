@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Utils.Reflection;
@@ -30,7 +29,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             FirePropertyChanged(TypeUtils.GetMemberName(() => CanSelectSharedDefinitions));
         }
 
-        void CrossSectionDefinitionsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        void CrossSectionDefinitionsCollectionChanged(object sender, DelftTools.Utils.Collections.NotifyCollectionChangingEventArgs e)
         {
             if (SharedDefinitionsChanged != null)
             {

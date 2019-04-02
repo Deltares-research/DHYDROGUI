@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Specialized;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
@@ -98,22 +97,22 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils
         public bool ReadOnly { get; set; }
 
         [EditAction]
-        private void OnActivitiesCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void OnActivitiesCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
             if (!Equals(sender, activities))
             {
                 return;
             }
 
-            var model = (IModel)e.GetRemovedOrAddedItem();
+            var model = (IModel)e.Item;
             if (model != null)
             {
                 switch (e.Action)
                 {
-                    case NotifyCollectionChangedAction.Add:
+                    case NotifyCollectionChangeAction.Add:
                         model.Owner = this;
                         break;
-                    case NotifyCollectionChangedAction.Remove:
+                    case NotifyCollectionChangeAction.Remove:
                         model.Owner = null;
                         break;
                     default:

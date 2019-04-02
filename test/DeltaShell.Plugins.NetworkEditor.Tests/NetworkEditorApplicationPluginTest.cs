@@ -153,9 +153,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             Assert.That(applicationPlugin.Version,
                 Is.EqualTo(applicationPlugin.GetType().Assembly.GetName().Version.ToString()));
             Assert.IsTrue(new Regex(@"\d.\d.\d.\d").IsMatch(applicationPlugin.FileFormatVersion));
-            var persistentAssemblies = applicationPlugin.GetPersistentAssemblies();
-            var assemblies = persistentAssemblies.ToList();
-            Assert.That(assemblies.Count, Is.EqualTo(3));
+            Assert.That(applicationPlugin.Image, Is.InstanceOf(typeof(Bitmap)));
+            Assert.That(applicationPlugin.Image.Height, Is.EqualTo(32));
+            Assert.That(applicationPlugin.Image.Width, Is.EqualTo(32));
+            var persistantAssemblies = applicationPlugin.GetPersistentAssemblies();
+            var assemblies = persistantAssemblies.ToList();
+            Assert.That(assemblies.Count(), Is.EqualTo(3));
         }
 
         [Test]

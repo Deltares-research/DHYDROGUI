@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using DelftTools.Functions;
@@ -242,18 +241,17 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
 
         #region Meteo/Temperature Stations
 
-        void StationsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        void StationsCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
-            var removedOrAddedItem = e.GetRemovedOrAddedItem();
             if (modelIsUpdating)
             {
                 return;
             }
             if (Equals(sender, Model.MeteoStations))
             {
-                if (e.Action == NotifyCollectionChangedAction.Remove)
+                if (e.Action == NotifyCollectionChangeAction.Remove)
                 {
-                    var affectedStation = (string) removedOrAddedItem;
+                    var affectedStation = (string) e.Item;
                     var affectedCatchmentDatas =
                         Model.GetAllModelData().Where(md => Equals(md.MeteoStationName, affectedStation));
                     affectedCatchmentDatas.ForEach(md => { md.MeteoStationName = ""; }); //clear
@@ -269,9 +267,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             }
             if (Equals(sender, Model.TemperatureStations))
             {
-                if (e.Action == NotifyCollectionChangedAction.Remove)
+                if (e.Action == NotifyCollectionChangeAction.Remove)
                 {
-                    var affectedStation = (string)removedOrAddedItem;
+                    var affectedStation = (string)e.Item;
                     var affectedCatchmentDatas =
                         Model.GetAllModelData().Where(md => Equals(md.TemperatureStationName, affectedStation));
                     affectedCatchmentDatas.ForEach(md => { md.TemperatureStationName = ""; }); //clear
@@ -289,17 +287,17 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             data.Arguments[1].Values.AddRange(meteoStations.ToList());
         }
 
-        private static void OnStationsCollectionChanged(MeteoData meteoData, NotifyCollectionChangedEventArgs e)
+        private static void OnStationsCollectionChanged(MeteoData meteoData, NotifyCollectionChangingEventArgs e)
         {
             var function = meteoData.Data;
-            var affectedStation = (string)e.GetRemovedOrAddedItem();
+            var affectedStation = (string)e.Item;
 
             switch (e.Action)
             {
-                case NotifyCollectionChangedAction.Add:
+                case NotifyCollectionChangeAction.Add:
                     function.Arguments[1].Values.Add(affectedStation);
                     break;
-                case NotifyCollectionChangedAction.Remove:
+                case NotifyCollectionChangeAction.Remove:
                     function.Arguments[1].Values.Remove(affectedStation);
                     break;
                 default:

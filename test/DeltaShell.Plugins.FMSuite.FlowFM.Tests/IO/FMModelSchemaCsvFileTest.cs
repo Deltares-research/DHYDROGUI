@@ -5,7 +5,6 @@ using System.Linq;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.IO;
-using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using NUnit.Framework;
@@ -25,7 +24,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var tunitEnum = tunitProperty.DataType;
             var values = GetEnumValues(tunitEnum);
 
-            Assert.AreEqual("H", values[0].GetDisplayName());
+            Assert.AreEqual("H", EnumDescriptionAttributeTypeConverter.GetEnumDisplayName(values[0]));
             Assert.AreEqual("S", tunitProperty.DefaultValueAsString);
         }
 
@@ -112,8 +111,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var convEnum = convProperty.DataType;
             var values = GetEnumValues(convEnum);
 
-            Assert.AreEqual("-1", values[0].GetDisplayName());
-            Assert.AreEqual("R=HU", values[0].GetDescription());
+            Assert.AreEqual("-1", EnumDescriptionAttributeTypeConverter.GetEnumDisplayName(values[0]));
+            Assert.AreEqual("R=HU", EnumDescriptionAttributeTypeConverter.GetEnumDescription(values[0]));
             Assert.AreEqual("-1", convProperty.DefaultValueAsString);
         }
 
@@ -127,16 +126,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var convEnum = convProperty.DataType;
             var values = GetEnumValues(convEnum);
             Assert.AreEqual(5, values.Count, "The enum size of "+ KnownProperties.Conveyance2d + " has changed!");
-            Assert.AreEqual("R=HU", values[0].GetDescription());
-            Assert.AreEqual(((int)Conveyance2DType.RisHU).ToString(), values[0].GetDisplayName());
-            Assert.AreEqual("R=H", values[1].GetDescription());
-            Assert.AreEqual(((int)Conveyance2DType.RisH).ToString(), values[1].GetDisplayName());
-            Assert.AreEqual("R=A/P", values[2].GetDescription());
-            Assert.AreEqual(((int)Conveyance2DType.RisAperP).ToString(), values[2].GetDisplayName());
-            Assert.AreEqual("K=analytic-1D conv", values[3].GetDescription());
-            Assert.AreEqual(((int)Conveyance2DType.Kisanalytic1Dconv).ToString(), values[3].GetDisplayName());
-            Assert.AreEqual("K=analytic-2D conv", values[4].GetDescription());
-            Assert.AreEqual(((int)Conveyance2DType.Kisanalytic2Dconv).ToString(), values[4].GetDisplayName());
+            Assert.AreEqual("R=HU", EnumDescriptionAttributeTypeConverter.GetEnumDescription(values[0]));
+            Assert.AreEqual(((int)Conveyance2DType.RisHU).ToString(), EnumDescriptionAttributeTypeConverter.GetEnumDisplayName(values[0]));
+            Assert.AreEqual("R=H", EnumDescriptionAttributeTypeConverter.GetEnumDescription(values[1]));
+            Assert.AreEqual(((int)Conveyance2DType.RisH).ToString(), EnumDescriptionAttributeTypeConverter.GetEnumDisplayName(values[1]));
+            Assert.AreEqual("R=A/P", EnumDescriptionAttributeTypeConverter.GetEnumDescription(values[2]));
+            Assert.AreEqual(((int)Conveyance2DType.RisAperP).ToString(), EnumDescriptionAttributeTypeConverter.GetEnumDisplayName(values[2]));
+            Assert.AreEqual("K=analytic-1D conv", EnumDescriptionAttributeTypeConverter.GetEnumDescription(values[3]));
+            Assert.AreEqual(((int)Conveyance2DType.Kisanalytic1Dconv).ToString(), EnumDescriptionAttributeTypeConverter.GetEnumDisplayName(values[3]));
+            Assert.AreEqual("K=analytic-2D conv", EnumDescriptionAttributeTypeConverter.GetEnumDescription(values[4]));
+            Assert.AreEqual(((int)Conveyance2DType.Kisanalytic2Dconv).ToString(), EnumDescriptionAttributeTypeConverter.GetEnumDisplayName(values[4]));
         }
 
         [Test]
@@ -149,8 +148,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var convEnum = convProperty.DataType;
             var values = GetEnumValues(convEnum);
 
-            Assert.AreEqual("1", values[0].GetDisplayName());
-            Assert.AreEqual("sobekGS_OMP", values[0].GetDescription());
+            Assert.AreEqual("1", EnumDescriptionAttributeTypeConverter.GetEnumDisplayName(values[0]));
+            Assert.AreEqual("sobekGS_OMP", EnumDescriptionAttributeTypeConverter.GetEnumDescription(values[0]));
             Assert.AreEqual("4", convProperty.DefaultValueAsString);
         }
 

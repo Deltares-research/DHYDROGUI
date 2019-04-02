@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Specialized;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -60,19 +59,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             }
         }
 
-        private void WindItemsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void WindItemsCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
-            var removedOrAddedItem = e.GetRemovedOrAddedItem();
-            var removedOrAddedIndex = e.GetRemovedOrAddedIndex();
             switch (e.Action)
             {
-                case NotifyCollectionChangedAction.Add:
-                    windItemsListBox.Items.Insert(removedOrAddedIndex, removedOrAddedItem);
-                    windItemsListBox.SelectedIndex = removedOrAddedIndex;
+                case NotifyCollectionChangeAction.Add:
+                    windItemsListBox.Items.Insert(e.Index, e.Item);
+                    windItemsListBox.SelectedIndex = e.Index;
                     break;
-                case NotifyCollectionChangedAction.Remove:
+                case NotifyCollectionChangeAction.Remove:
                     var oldIndex = windItemsListBox.SelectedIndex;
-                    windItemsListBox.Items.Remove(removedOrAddedItem);
+                    windItemsListBox.Items.Remove(e.Item);
                     windItemsListBox.SelectedIndex = windItems.Any()
                         ? -1
                         : Math.Min(oldIndex, windItemsListBox.Items.Count - 1);

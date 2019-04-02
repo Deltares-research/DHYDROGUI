@@ -45,6 +45,9 @@ using System.Resources;
 using SharpMap.Api.Layers;
 using BridgePillar = DelftTools.Hydro.Structures.BridgePillar;
 using FeatureCollectionViewInfoHelper = DeltaShell.Plugins.FMSuite.Common.Gui.FeatureCollectionViewInfoHelper;
+using FixedWeir = DelftTools.Hydro.Structures.FixedWeir;
+using ObservationCrossSection2D = DelftTools.Hydro.ObservationCrossSection2D;
+using ThinDam2D = DelftTools.Hydro.Structures.ThinDam2D;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 {

@@ -25,7 +25,6 @@ using SharpMap.Data.Providers;
 using SharpMap.SpatialOperations;
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -245,14 +244,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             }
         }
 
-        private void OnWaterFlowFMCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void OnWaterFlowFMCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
-            if (e.Action == NotifyCollectionChangedAction.Add)
+            if (e.Action == NotifyCollectionChangeAction.Add)
             {
-                var removedOrAddedItem = e.GetRemovedOrAddedItem();
-                if (removedOrAddedItem == GetModelProperty(KnownProperties.Temperature))
+                if (e.Item == GetModelProperty(KnownProperties.Temperature))
                 {
-                    var prop = (WaterFlowFMProperty)removedOrAddedItem;
+                    var prop = (WaterFlowFMProperty) e.Item;
                     HeatFluxModel.Type = (HeatFluxModelType) ((int)prop.Value);
                 }
             }

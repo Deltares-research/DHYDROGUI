@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Input;
@@ -214,18 +213,18 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.ViewModels
             return HydroModel != null;
         }
 
-        private void OnModelCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void OnModelCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
-            var timeDependentModel = e.GetRemovedOrAddedItem() as ITimeDependentModel;
+            var timeDependentModel = e.Item as ITimeDependentModel;
             if (sender != HydroModel.Activities || timeDependentModel == null) return;
 
             switch (e.Action)
             {
-                case NotifyCollectionChangedAction.Add:
+                case NotifyCollectionChangeAction.Add:
                     if (Models.Any(m => m.Model == timeDependentModel)) return;
                     Models.Add(new TimeDependentModelBaseViewModel(timeDependentModel));
                     break;
-                case NotifyCollectionChangedAction.Remove:
+                case NotifyCollectionChangeAction.Remove:
                     var tdViewModel = Models.FirstOrDefault(m => m.Model == timeDependentModel);
                     if (tdViewModel == null) return;
                     Models.Remove(tdViewModel);

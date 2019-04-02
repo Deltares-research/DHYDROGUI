@@ -15,10 +15,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         public string Name { get { return "Input file exporter"; } }
 
         public string Category { get { return "Water quality"; } }
-        public string Description
-        {
-            get { return string.Empty; }
-        }
 
         public string FileFilter { get { return "input file and includes|*.inp"; } }
 

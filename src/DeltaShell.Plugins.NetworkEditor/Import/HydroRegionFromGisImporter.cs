@@ -69,11 +69,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Import
             get { return "Data Import"; }
         }
 
-        public string Description
-        {
-            get { return string.Empty; }
-        }
-
         public Bitmap Image
         {
             get { return Properties.Resources.HydroRegion; }

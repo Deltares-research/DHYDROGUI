@@ -28,6 +28,7 @@ using DeltaShell.Plugins.DelftModels.RainfallRunoff.Validation;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui;
@@ -586,7 +587,7 @@ namespace Sobek.IntegrationTests
 
                 var modelImporter = new SobekHydroModelImporter();
                 string pathToSobekNetwork =
-                    TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly,
+                    TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly,
                                                @"DWAQ_AC1\DWAQ_AC1.lit\37\network.tp");
                 modelImporter.PathSobek = pathToSobekNetwork;
                 modelImporter.useFlow = true;
@@ -626,7 +627,6 @@ namespace Sobek.IntegrationTests
         [Test]
         [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]
-        [SetCulture("en-us")]
         public void OpenProjectAndCentralMapShouldNotCauseInefficientLazyLoadingTools19994()
         {
             using (var gui = new DeltaShellGui())
@@ -652,7 +652,7 @@ namespace Sobek.IntegrationTests
                 gui.Plugins.Add(new RealTimeControlGuiPlugin());
                 gui.Run();
 
-                var path = TestHelper.GetTestFilePath(@"LazyLoadPerformance\ap_perf.dsproj");
+                var path = TestHelper.GetTestFilePath("LazyLoadPerformance\\ap_perf.dsproj");
 
                 // Note: is this test failing? perhaps the project is now going through migration?
                 //       consider updating the test-data such that the project no longer migrates

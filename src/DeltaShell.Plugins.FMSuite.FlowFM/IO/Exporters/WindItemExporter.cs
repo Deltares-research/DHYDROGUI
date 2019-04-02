@@ -174,10 +174,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
         }
 
         public string Category { get; private set; }
-        public string Description
-        {
-            get { return string.Empty; }
-        }
 
         public IEnumerable<Type> SourceTypes()
         {
