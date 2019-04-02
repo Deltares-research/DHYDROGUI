@@ -310,7 +310,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 {
                     var quantityName = quantityData.Quantity.ToLower();
 
-                    quantityName = CorrectIfTracerQuantityName(quantityName, quantityData);
+                    quantityName = CorrectQuantityNameIfTracer(quantityName, quantityData);
 
                     // if it's an argument quantity, add it to the argVariables and continue
                     if (forcingTypeDefinition.ArgumentDefinitions.Contains(quantityName))
@@ -406,9 +406,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         if (CanCreateNewBoundaryCondition && !isCorrection)
                         {
                             var timelag = TimeSpan.Zero;
-                            if (thatcherHarlemanTimeLag != null)
-                                if (double.TryParse(thatcherHarlemanTimeLag, out var timelagdouble))
-                                    timelag = TimeSpan.FromSeconds(timelagdouble);
+                            if (thatcherHarlemanTimeLag != null && double.TryParse(thatcherHarlemanTimeLag, out var timelagdouble))
+                            {
+                                timelag = TimeSpan.FromSeconds(timelagdouble);
+                            }
 
                             boundaryCondition = CreateNewBoundaryCondition(quantity.Value.Quantity, flowQuantityEnum,
                                 forcingTypeDefinition.ForcingType, matchingBoundaryConditionSet.Feature, timelag, quantityGroup);
@@ -595,7 +596,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             return quantityName;
         }
 
-        private static string CorrectIfTracerQuantityName(string quantityName, BcQuantityData quantityData)
+        private static string CorrectQuantityNameIfTracer(string quantityName, BcQuantityData quantityData)
         {
             if (quantityName.StartsWith("tracerbnd_"))
             {
