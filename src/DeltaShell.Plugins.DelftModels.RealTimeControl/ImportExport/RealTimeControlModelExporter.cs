@@ -55,7 +55,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 
         public IEnumerable<Type> SourceTypes()
         {
-            yield return typeof(RealTimeControlModel);
+            yield break;
         }
 
         public string FileFilter => "xml files|*.xml";
@@ -64,7 +64,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 
         public bool CanExportFor(object item)
         {
-            return true;
+            return false;
         }
 
         private static void WriteEngineXmlFiles(RealTimeControlModel model, string path)
