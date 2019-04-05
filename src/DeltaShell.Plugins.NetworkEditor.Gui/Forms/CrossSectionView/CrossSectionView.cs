@@ -253,16 +253,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             CrossSectionViewModel.ShareDefinition();
         }
 
-        public event EventHandler<SelectedItemChangedEventArgs<ICrossSectionDefinition>> EditDefinitionClicked;
+        public event EventHandler<SelectedItemChangedEventArgs> EditDefinitionClicked;
 
         private void BtnEditClick(object sender, EventArgs e)
         {
-            if (EditDefinitionClicked != null)
-            {
-                var args =
-                    new SelectedItemChangedEventArgs<ICrossSectionDefinition>(CrossSectionViewModel.SharedDefinition);
-                EditDefinitionClicked(this, args);
-            }
+            EditDefinitionClicked?.Invoke(this, new SelectedItemChangedEventArgs(CrossSectionViewModel.SharedDefinition));
         }
 
         public bool HistoryToolEnabled

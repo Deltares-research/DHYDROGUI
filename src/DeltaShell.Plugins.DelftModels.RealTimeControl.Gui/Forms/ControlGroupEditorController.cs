@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -278,7 +279,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             }
         }
 
-        private void ControlGroupCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        private void ControlGroupCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (graphControl != null)
             {
@@ -293,27 +294,28 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                     RefreshConnections();
                     return;
                 }
-
-                if (e.Action == NotifyCollectionChangeAction.Add)
+                var removedOrAddedItem = e.GetRemovedOrAddedItem();
+                if (e.Action == NotifyCollectionChangedAction.Add)
                 {
                     DesubscribeGraphControlEvents();
-                    var shape = ObjectToShape(e.Item);
+                    
+                    var shape = ObjectToShape(removedOrAddedItem);
                     graphControl.AddShape(shape);
                     SubscribeGraphControlEvents();
                 }
-                if (e.Action == NotifyCollectionChangeAction.Remove)
+                if (e.Action == NotifyCollectionChangedAction.Remove)
                 {
                     DesubscribeGraphControlEvents();
-                    var shape = FindShapeByObject(e.Item);
+                    var shape = FindShapeByObject(removedOrAddedItem);
                     graphControl.Shapes.Remove(shape);
                     SubscribeGraphControlEvents();
                 }
-                if (e.Action == NotifyCollectionChangeAction.Replace)
+                if (e.Action == NotifyCollectionChangedAction.Replace)
                 {
                     if (replaceable != null)
                     {
                         var shape = FindShapeByObject(replaceable);
-                        shape.Tag = e.Item;
+                        shape.Tag = removedOrAddedItem;
                         replaceable = null;
                     }
                 }

@@ -41,7 +41,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Integ
         public void VariousCrossSectionsFromDsProj()
         {
             const string testDataDirName = "VariousCrossSects";
-            var sourcePath = Path.GetFullPath(Path.Combine(TestHelper.GetDataDir(), @"FileWriters\IntegrationTests", testDataDirName));
+            var sourcePath = Path.GetFullPath(Path.Combine(TestHelper.GetTestDataDirectory(), @"FileWriters\IntegrationTests", testDataDirName));
             FileUtils.CopyDirectory(sourcePath, testDataDirName, ".svn");
 
             var dsProjPath = Path.Combine(testDataDirName, "VariousCrossSects.dsproj");

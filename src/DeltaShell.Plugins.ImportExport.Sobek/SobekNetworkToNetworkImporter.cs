@@ -10,6 +10,11 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             get { return "SOBEK Network (import to existing network)"; }
         }
 
+        public string Description
+        {
+            get { return string.Empty; }
+        }
+
         public override bool CanImportOnRootLevel
         {
             get { return false; }

@@ -1,8 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
@@ -10,12 +8,9 @@ using DeltaShell.Core;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.DelftModels.HydroModel;
-using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.CompareSobek.Tests;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
 using DeltaShell.Plugins.ImportExport.Sobek.HisData;
 using DeltaShell.Plugins.NetCDF;
 using DeltaShell.Plugins.NetworkEditor;
@@ -39,7 +34,7 @@ namespace SobekCompare.Tests
         [Test]
         public void TestRetentions()
         {
-            var testPath = Path.Combine(TestHelper.GetDataDir(), @"dsprojTests\TestRetentions");
+            var testPath = Path.Combine(TestHelper.GetTestDataDirectory(), @"dsprojTests\TestRetentions");
             var dsProjPath = Path.Combine(testPath, "RetentionTest.dsproj");
 
             RunDsProjInWaterFlow1D(dsProjPath);
@@ -56,7 +51,7 @@ namespace SobekCompare.Tests
         [Test]
         public void TestCompoundCulvertDiffBob()
         {
-            var testPath = Path.Combine(TestHelper.GetDataDir(), @"dsprojTests\TestCompoundCulvertDiffBob");
+            var testPath = Path.Combine(TestHelper.GetTestDataDirectory(), @"dsprojTests\TestCompoundCulvertDiffBob");
             var dsProjPath = Path.Combine(testPath, "TestCompoundCulvertDiffBob.dsproj");
 
             RunDsProjInWaterFlow1D(dsProjPath);
@@ -73,7 +68,7 @@ namespace SobekCompare.Tests
         [Test]
         public void TestCompoundCulvertSameBob()
         {
-            var testPath = Path.Combine(TestHelper.GetDataDir(), @"dsprojTests\TestCompoundCulvertSameBob");
+            var testPath = Path.Combine(TestHelper.GetTestDataDirectory(), @"dsprojTests\TestCompoundCulvertSameBob");
             var dsProjPath = Path.Combine(testPath, "TestCompoundCulvertSameBob.dsproj");
 
             RunDsProjInWaterFlow1D(dsProjPath);
@@ -85,13 +80,6 @@ namespace SobekCompare.Tests
             compareHisFile(resultPath, referencePath, "reachseg.his");
             compareHisFile(resultPath, referencePath, "struc.his");
 
-        }
-
-        private IEnumerable<IFileExporter> GetFileExporters()
-        {
-            yield return new WaterFlowModel1DExporter();
-            yield return new RealTimeControlModelExporter();
-            yield return new DHydroConfigXmlExporter();
         }
 
         private void RunDsProjInWaterFlow1D(string dsProjPath)

@@ -16,7 +16,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         [Category(TestCategory.DataAccess)]
         public void ImportLateralSourcesData()
         {
-            var pathToSobekNetwork = TestHelper.GetDataDir() + @"\ReModels\JAMM2010.sbk\40\DEFTOP.1";
+            var pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\ReModels\JAMM2010.sbk\40\DEFTOP.1";
             var waterFlowModel1DModel = new WaterFlowModel1D("water flow 1d");
 
             var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekNetwork, waterFlowModel1DModel, new IPartialSobekImporter[] { new SobekBranchesImporter(), new SobekLateralSourcesImporter(), new SobekLateralSourcesDataImporter() });
@@ -32,7 +32,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         [Category(TestCategory.Slow)]
         public void ImportLateralSourcesDataOnExistingModel()
         {
-            var pathToSobekNetwork = TestHelper.GetDataDir() + @"\ReModels\JAMM2010.sbk\40\DEFTOP.1";
+            var pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\ReModels\JAMM2010.sbk\40\DEFTOP.1";
             var waterFlowModel1DModel = new WaterFlowModel1D("water flow 1d");
 
             var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekNetwork, waterFlowModel1DModel, new IPartialSobekImporter[] { new SobekBranchesImporter(), new SobekLateralSourcesImporter(), new SobekLateralSourcesDataImporter() });
@@ -64,7 +64,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         [Category(TestCategory.DataAccess)]
         public void ImportLateralSourcesWithDischarges()
         {
-            string pathToSobekNetwork = TestHelper.GetDataDir() + @"\263_000.lit\1\NETWORK.TP";
+            string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\263_000.lit\1\NETWORK.TP";
             var flowModel1D = new WaterFlowModel1D();
 
             var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekNetwork, flowModel1D, new IPartialSobekImporter[] { new SobekBranchesImporter(), new SobekLateralSourcesImporter(), new SobekLateralSourcesDataImporter() });
@@ -79,7 +79,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         [Category(TestCategory.DataAccess)]
         public void ImportDiffuseLateralSourcesData_Testbench_272()
         {
-            string pathToSobekNetwork = TestHelper.GetDataDir() + @"\272_000.lit\NETWORK.TP";
+            string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\272_000.lit\NETWORK.TP";
             var waterFlowModel1DModel = new WaterFlowModel1D("water flow 1d");
 
             var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekNetwork, waterFlowModel1DModel, new IPartialSobekImporter[] { new SobekBranchesImporter(), new SobekLateralSourcesImporter(), new SobekLateralSourcesDataImporter() });

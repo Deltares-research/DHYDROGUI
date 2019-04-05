@@ -7,8 +7,6 @@ using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Properties;
 using GeoAPI.Geometries;
 using SharpMap.Api.Layers;
-using SharpMap.Data.Providers;
-using SharpMap.Layers;
 using SharpMap.UI.Tools;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools

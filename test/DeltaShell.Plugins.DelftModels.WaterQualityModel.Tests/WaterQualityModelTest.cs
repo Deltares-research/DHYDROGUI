@@ -35,11 +35,9 @@ using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
-
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Grids;
-
 using NUnit.Framework;
 using Rhino.Mocks;
 using SharpMap.Extensions.CoordinateSystems;
@@ -1025,7 +1023,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             model.ImportHydroData(hydroData);
 
 
-            var subFilePath = Path.Combine(TestHelper.GetDataDir(), "IO", "03d_Tewor2003.sub");
+            var subFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "IO", "03d_Tewor2003.sub");
             new SubFileImporter().Import(model.SubstanceProcessLibrary, subFilePath);
 
             FunctionTypeCreator.ReplaceFunctionUsingCreator(

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using DelftTools.Hydro.CrossSections;
@@ -51,19 +52,19 @@ namespace DelftTools.Hydro
         }
 
         [EditAction]
-        void RoutesCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        void RoutesCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            var route = e.Item as Route;
+            var route = e.GetRemovedOrAddedItem() as Route;
 
             if (route == null)
                 return;
 
             switch(e.Action)
             {
-                case NotifyCollectionChangeAction.Add:
+                case NotifyCollectionChangedAction.Add:
                     route.Network = this;
                     break;
-                case NotifyCollectionChangeAction.Remove:
+                case NotifyCollectionChangedAction.Remove:
                     route.Network = null;
                     break;
                 default:

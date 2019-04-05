@@ -17,7 +17,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileConverters
         [Category(TestCategory.DataAccess)]
         public void ConvertDimr()
         {
-            var xmlFilePath = Path.Combine(TestHelper.GetDataDir(), @"FileReaders\ConfigXmlReader", "dimr.xml");
+            var xmlFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), @"FileReaders\ConfigXmlReader", "dimr.xml");
             using (var reader = File.OpenText(xmlFilePath))
             {
                 var dimrXml = DelftXmlFileConverter.Convert<dimrXML>(reader, new List<string>());
@@ -36,7 +36,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileConverters
         [Category(TestCategory.DataAccess)]
         public void ConvertDimrWithExtraElementsOnRootLevel()
         {
-            var xmlFilePath = Path.Combine(TestHelper.GetDataDir(), @"FileReaders\ConfigXmlReader", "dimrwithextrainfo.xml");
+            var xmlFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), @"FileReaders\ConfigXmlReader", "dimrwithextrainfo.xml");
             using (var reader = File.OpenText(xmlFilePath))
             {
                 var dimrXml = DelftXmlFileConverter.Convert<dimrXML>(reader, new List<string>());

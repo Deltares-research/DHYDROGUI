@@ -6,9 +6,9 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf;
-using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Drawing;
+using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Properties;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness;
@@ -222,7 +222,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui
             return new CategorialThemeItem
                        {
                            Value = value,
-                           Label = EnumDescriptionAttributeTypeConverter.GetEnumDescription(value),
+                           Label = value.GetDescription(),
                            Style = new VectorStyle
                                        {
                                            Symbol = new Bitmap(Resources.Boundary.AddOverlayImage(overlayImage, 1, 1))

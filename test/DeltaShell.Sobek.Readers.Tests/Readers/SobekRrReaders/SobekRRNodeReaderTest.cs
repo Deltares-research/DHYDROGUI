@@ -1,19 +1,16 @@
 ﻿using System.Linq;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.ImportExport.Sobek.Tests;
-using DeltaShell.Sobek.Readers.Readers;
 using DeltaShell.Sobek.Readers.Readers.SobekRrReaders;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
 using NUnit.Framework;
 
-namespace DeltaShell.Sobek.Readers.Tests.Readers
+namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekRrReaders
 {
     [TestFixture]
     public class SobekRRNodeReaderTest
     {
 
-
- 
       //id   =          node identification
       //nm  =          name of the node 
       //ri    =          reach identification 
@@ -46,7 +43,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         [Category(TestCategory.DataAccess)]
         public void ReadSobekRRNodeFile()
         {
-            var path = TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"Tholen.lit\29\3B_Nod.tp");
+            var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"Tholen.lit\29\3B_Nod.tp");
             var lstRRNode = new SobekRRNodeReader().Read(path);
             Assert.AreEqual(680, lstRRNode.Count());
         }

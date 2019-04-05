@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using DelftTools.Utils.Aop;
@@ -62,14 +63,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
             Feature = default(TFeature);
         }
 
-        private void DataColumnsCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        private void DataColumnsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             switch (e.Action)
             {
-                case NotifyCollectionChangeAction.Add:
-                    SyncDataColumnValueList((IDataColumn)e.Item);
+                case NotifyCollectionChangedAction.Add:
+                    SyncDataColumnValueList((IDataColumn)e.GetRemovedOrAddedItem());
                     break;
-                case NotifyCollectionChangeAction.Remove:
+                case NotifyCollectionChangedAction.Remove:
                     break;
                 default:
                     throw new NotImplementedException();

@@ -8,7 +8,6 @@ using System.Threading;
 using DelftTools.Functions.Filters;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
-using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Shell.Core.Workflow;
@@ -24,7 +23,6 @@ using DeltaShell.Sobek.Readers.SobekDataObjects;
 using GeoAPI.Extensions.Coverages;
 using log4net;
 using NetTopologySuite.Extensions.Coverages;
-using NetTopologySuite.Extensions.Networks;
 using NUnit.Framework;
 using SharpTestsEx;
 using BridgeType = DelftTools.Hydro.Structures.BridgeType;
@@ -48,7 +46,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Test]
         public void ReadTabulatedCrossSectionDefinition()
         {
-            string definitionFile = TestHelper.GetDataDir() + @"\CrossSection\tabulated.def";
+            string definitionFile = TestHelper.GetTestDataDirectory() + @"\CrossSection\tabulated.def";
             
             var crossSectionDefinitionReader = new CrossSectionDefinitionReader();
             IList<SobekCrossSectionDefinition> cs =
@@ -88,7 +86,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Test]
         public void ReadCSWithAmpersand()
         {
-            string mappingFile = TestHelper.GetDataDir() + @"\CrossSection\crosssectionswithampersand.cr";
+            string mappingFile = TestHelper.GetTestDataDirectory() + @"\CrossSection\crosssectionswithampersand.cr";
             IList<SobekCrossSectionMapping> mappings = new SobekProfileDatFileReader().Read(mappingFile).ToList();
 
             Assert.AreEqual(16, mappings.Count());
@@ -99,7 +97,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Category(TestCategory.Slow)]
         public void ReadTabulatedCSWithSummerdike()
         {
-            string pathToSobekNetwork = TestHelper.GetDataDir() + @"\REModels\JAMM2010.sbk\40\Deftop.1";
+            string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\REModels\JAMM2010.sbk\40\Deftop.1";
             var importer = new SobekNetworkImporter();
             var network = (HydroNetwork)importer.ImportItem(pathToSobekNetwork);
 
@@ -147,7 +145,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Test]
         public void ReadSimpleNetwork()
         {
-            string pathToSobekNetwork = TestHelper.GetDataDir() + @"\network1\Network.TP";
+            string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\network1\Network.TP";
             var importer = new SobekNetworkImporter();
             var network = (HydroNetwork)importer.ImportItem(pathToSobekNetwork);
 
@@ -164,7 +162,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Test]
         public void ReadReferenceNetwork()
         {
-            string pathToSobekNetwork = TestHelper.GetDataDir() + @"\SW_max_1.lit\3\Network.TP";
+            string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\SW_max_1.lit\3\Network.TP";
             var importer = new SobekNetworkImporter();
             var network = (HydroNetwork)importer.ImportItem(pathToSobekNetwork);
 
@@ -183,7 +181,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Test]
         public void ReadCrossSectionTypes()
         {
-            string pathToSobekNetwork = TestHelper.GetDataDir() + @"\network2\Network.TP";
+            string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\network2\Network.TP";
             var importer = new SobekNetworkImporter();
             var network = (HydroNetwork)importer.ImportItem(pathToSobekNetwork);
 
@@ -209,7 +207,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Category(TestCategory.Slow)]
         public void ReadNetworkWithRoughnessSections()
         {
-            string pathToSobekNetwork = TestHelper.GetDataDir() + @"\SW_max_1.lit\3\NETWORK.TP";
+            string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\SW_max_1.lit\3\NETWORK.TP";
             var importer = new SobekNetworkImporter();
             var network = (HydroNetwork)importer.ImportItem(pathToSobekNetwork);
 
@@ -236,7 +234,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Test]
         public void ReadRiverProfileWithMainChannelAnFloodplain1()
         {
-            var pathToSobekNetwork = TestHelper.GetDataDir() + @"\ReModels\20110331_BfgRhein.sbk\1\DEFTOP.1";
+            var pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\ReModels\20110331_BfgRhein.sbk\1\DEFTOP.1";
             var importer = new SobekWaterFlowModel1DImporter();
             var rtcMmodel = ((ICompositeActivity) importer.ImportItem(pathToSobekNetwork)).Activities.OfType<RealTimeControlModel>().First();
             var model = rtcMmodel.ControlledModels.OfType<WaterFlowModel1D>().First();
@@ -376,7 +374,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         public void ReadCrossSectionZW()
         {
             // offset for branchfeature are always relative to the geometry of the branch
-            var pathToSobekNetwork = TestHelper.GetDataDir() + @"\ReModels\20110331_BfgRhein.sbk\1\DEFTOP.1";
+            var pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\ReModels\20110331_BfgRhein.sbk\1\DEFTOP.1";
             var importer = new SobekNetworkImporter();
             var network = (HydroNetwork)importer.ImportItem(pathToSobekNetwork);
 
@@ -395,7 +393,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         public void AllProfileChainagesShouldFitChannelGeometry()
         {
             // offset for branchfeature are always relative to the geometry of the branch
-            var pathToSobekNetwork = TestHelper.GetDataDir() + @"\ReModels\20110331_BfgRhein.sbk\1\DEFTOP.1";
+            var pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\ReModels\20110331_BfgRhein.sbk\1\DEFTOP.1";
             var importer = new SobekNetworkImporter();
             var network = (HydroNetwork)importer.ImportItem(pathToSobekNetwork);
 
@@ -406,7 +404,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         public void AllStructureChainagesShouldFitChannelGeometry()
         {
             // offset for branchfeature are always relative to the geometry of the branch
-            var pathToSobekNetwork = TestHelper.GetDataDir() + @"\ReModels\20110331_NDB.sbk\6\DEFTOP.1";
+            var pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\ReModels\20110331_NDB.sbk\6\DEFTOP.1";
             var importer = new SobekNetworkImporter();
             var network = (HydroNetwork)importer.ImportItem(pathToSobekNetwork);
 
@@ -418,7 +416,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         public void ReadNetworkWithBridgesAndStructureFrictions()
         {
             //STFR id 'brug_27' ci 'brug_27' mf 3 mt cp 0 30.000 30.000 mr cp 0 30.000 30.000 s1 6 s2 6 sf 3 st cp 0 30.000 30.000 sr cp 0 30.000 stfr
-            string pathToSobekNetwork = TestHelper.GetDataDir() + @"\SW_max_1.lit\3\NETWORK.TP";
+            string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\SW_max_1.lit\3\NETWORK.TP";
             var importer = new SobekNetworkImporter();
             var network = (HydroNetwork)importer.ImportItem(pathToSobekNetwork);
 
@@ -431,7 +429,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Test]
         public void ReadNetworkWithRetentions212()
         {
-            string pathToSobekNetwork = TestHelper.GetDataDir() + @"\Retent.lit\2\NETWORK.TP";
+            string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\Retent.lit\2\NETWORK.TP";
             var importer = new SobekNetworkImporter();
             var network = (HydroNetwork)importer.ImportItem(pathToSobekNetwork);
 
@@ -443,7 +441,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Category(TestCategory.Slow)]
         public void ReadNetworkWithRetentionsRE()
         {
-            string pathToSobekNetwork = TestHelper.GetDataDir() + @"\REModels\JAMM2010.sbk\5\DEFTOP.1";
+            string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\REModels\JAMM2010.sbk\5\DEFTOP.1";
             var importer = new SobekNetworkImporter();
             var network = (HydroNetwork)importer.ImportItem(pathToSobekNetwork);
 
@@ -479,7 +477,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             //pretty coarse test...jist import a network with that crossections at retententions locations.
             //TODO: make this code better UNIT testable by giving it a list of Sobek entities ...read files -> Sobek Entities -> DS Entities
             //so we can test with predefined sobek entities
-            string pathToSobekNetwork = TestHelper.GetDataDir() + @"\REModels\J_10BANK_v2.sbk\5\DEFTOP.1";
+            string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\REModels\J_10BANK_v2.sbk\5\DEFTOP.1";
             var importer = new SobekNetworkImporter();
             var network = (HydroNetwork)importer.ImportItem(pathToSobekNetwork);
 
@@ -493,7 +491,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Category(TestCategory.Slow)]
         public void ReadNetworkWithExtraResistanceRe()
         {
-            var pathToSobekNetwork = TestHelper.GetDataDir() + @"\REModels\JAMM2010.sbk\5\DEFTOP.1";
+            var pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\REModels\JAMM2010.sbk\5\DEFTOP.1";
             var importer = new SobekNetworkImporter();
             var network = (HydroNetwork)importer.ImportItem(pathToSobekNetwork);
 
@@ -512,7 +510,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Test]
         public void ReadStructureNames()
         {
-            string pathToSobekNetwork = TestHelper.GetDataDir() + @"\NetworkWithStructures\Network.TP";
+            string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\NetworkWithStructures\Network.TP";
             var importer = new SobekNetworkImporter();
             var network = (HydroNetwork)importer.ImportItem(pathToSobekNetwork);
 
@@ -530,7 +528,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Test]
         public void ReadExtraResistances()
         {
-            string pathToSobekNetwork = TestHelper.GetDataDir() + @"\TestXRST.lit\4\network.tp";
+            string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\TestXRST.lit\4\network.tp";
             var importer = new SobekNetworkImporter();
             var network = (HydroNetwork)importer.ImportItem(pathToSobekNetwork);
 
@@ -548,15 +546,15 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Test]
         public void ReadStructures()
         {
-            var structureLocationFile = TestHelper.GetDataDir() + @"\vsa.lit\network.st";
+            var structureLocationFile = TestHelper.GetTestDataDirectory() + @"\vsa.lit\network.st";
             var structures = new SobekNetworkStructureReader().Read(structureLocationFile);
             Assert.AreEqual(62, structures.Count());
 
-            string structureMappingFile = TestHelper.GetDataDir() + @"\vsa.lit\struct.dat";
+            string structureMappingFile = TestHelper.GetTestDataDirectory() + @"\vsa.lit\struct.dat";
             var structureMappings = new SobekStructureDatFileReader().Read(structureMappingFile).ToList();
             Assert.AreEqual(62, structureMappings.Count);
             //Assert.Fail();
-            string structureDefinitionFile = TestHelper.GetDataDir() + @"\vsa.lit\struct.def";
+            string structureDefinitionFile = TestHelper.GetTestDataDirectory() + @"\vsa.lit\struct.def";
 
             var reader = new SobekStructureDefFileReader(SobekType.Sobek212);
 
@@ -572,17 +570,17 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Test]
         public void ReadCompoundStructures()
         {
-            var structureLocationFile = TestHelper.GetDataDir() + @"\compound.lit\2\network.st";
+            var structureLocationFile = TestHelper.GetTestDataDirectory() + @"\compound.lit\2\network.st";
             var structures = new SobekNetworkStructureReader().Read(structureLocationFile);
 
             // 1 compound structure with 2 sub structures and 2 'normal' structures
             Assert.AreEqual(3, structures.Count());
 
-            var structureMappingFile = TestHelper.GetDataDir() + @"\compound.lit\2\struct.dat";
+            var structureMappingFile = TestHelper.GetTestDataDirectory() + @"\compound.lit\2\struct.dat";
             var structureMappings = new SobekStructureDatFileReader().Read(structureMappingFile).ToList();
             Assert.AreEqual(4, structureMappings.Count);
 
-            var structureDefinitionFile = TestHelper.GetDataDir() + @"\compound.lit\2\struct.def";
+            var structureDefinitionFile = TestHelper.GetTestDataDirectory() + @"\compound.lit\2\struct.def";
 
             var reader = new SobekStructureDefFileReader(SobekType.Sobek212);
 
@@ -596,7 +594,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Test]
         public void ReadNetworkWithCompoundStructures()
         {
-            var networkTopologyFile = TestHelper.GetDataDir() + @"\compound.lit\2\network.tp";
+            var networkTopologyFile = TestHelper.GetTestDataDirectory() + @"\compound.lit\2\network.tp";
             var importer = new SobekNetworkImporter();
             var network = (HydroNetwork)importer.ImportItem(networkTopologyFile);
 
@@ -615,7 +613,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         public void TestReadNetworkWithCompoundStructures_CompositeStructureNamesAreUnique()
         {
             // we use this test-data since it contains composite structures with non-unique names
-            var pathToSobekNetwork = TestHelper.GetDataDir() + @"\ReModels\20110331_NDB.sbk\6\DEFTOP.1";
+            var pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\ReModels\20110331_NDB.sbk\6\DEFTOP.1";
             var importer = new SobekNetworkImporter();
             var network = (HydroNetwork)importer.ImportItem(pathToSobekNetwork);
             var compositeStructures = network.CompositeBranchStructures.ToList();
@@ -629,7 +627,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         public void ReadLargeNetwork()
         {
             var t = DateTime.Now;
-            string pathToSobekNetwork = TestHelper.GetDataDir() + @"\eindhoven\network.tp";
+            string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\eindhoven\network.tp";
             var importer = new SobekNetworkImporter();
             var network = (HydroNetwork)importer.ImportItem(pathToSobekNetwork);
 
@@ -691,7 +689,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         public void UpdateCalcGridForLinkageNodes()
         {
             // import model and network.
-            var pathToSobekModel = TestHelper.GetDataDir() + @"\LinkageNodes\network.tp";
+            var pathToSobekModel = TestHelper.GetTestDataDirectory() + @"\LinkageNodes\network.tp";
 
             var importer = new SobekWaterFlowModel1DImporter();
             var flowModel1D = (WaterFlowModel1D)importer.ImportItem(pathToSobekModel);
@@ -722,7 +720,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Category(TestCategory.DataAccess)]
         public void ReadNotSupportedEngelundAndSetToDefault()
         {
-            string pathToSobekNetwork = TestHelper.GetDataDir() + @"\120_001.lit\3\network.tp";
+            string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\120_001.lit\3\network.tp";
             var importer = new SobekWaterFlowModel1DImporter();
             var model = (WaterFlowModel1D)importer.ImportItem(pathToSobekNetwork);
 
@@ -740,7 +738,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Category(TestCategory.DataAccess)]
         public void ReadComplexNetwork()
         {
-            string pathToSobekModel = TestHelper.GetDataDir() + @"\network2\network.tp";
+            string pathToSobekModel = TestHelper.GetTestDataDirectory() + @"\network2\network.tp";
             var importer = new SobekWaterFlowModel1DImporter();
             var flowModel1D = (WaterFlowModel1D)importer.ImportItem(pathToSobekModel);
 
@@ -866,7 +864,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             //runs the test with a altered version of the sw_max model.
             //in this version the crossection on branch '4' is replaced by a YZ-crossection (this was a rectangle)
             var modelImporter = new SobekWaterFlowModel1DImporter();
-            string pathToSobekNetwork = TestHelper.GetDataDir() + @"\SW_zRect.lit\3\network.tp";
+            string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\SW_zRect.lit\3\network.tp";
             var importedModel = (WaterFlowModel1D)modelImporter.ImportItem(pathToSobekNetwork);
             Assert.AreEqual(importedModel.LateralSourceData.Count, importedModel.Network.LateralSources.Count());
         }
@@ -888,7 +886,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Category(TestCategory.Slow)]
         public void ReadNetworkWithChineseNames()
         {
-            string path = TestHelper.GetDataDir() + @"\Tanshui.lit\3\network.tp";
+            string path = TestHelper.GetTestDataDirectory() + @"\Tanshui.lit\3\network.tp";
             var importer = new SobekNetworkImporter();
             var network = (HydroNetwork)importer.ImportItem(path);
         }
@@ -897,7 +895,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Category(TestCategory.Slow)]
         public void ReadNetworkJkfl2009()
         {
-            string path = TestHelper.GetDataDir() + @"\JKFL2009.LIT\31\NETWORK.TP";
+            string path = TestHelper.GetTestDataDirectory() + @"\JKFL2009.LIT\31\NETWORK.TP";
             var importer = new SobekNetworkImporter();
             var network = (HydroNetwork)importer.ImportItem(path);
         }
@@ -906,7 +904,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         //[Category(TestCategory.Performance)]
         //public void ImportElbeNetwork()
         //{
-        //    string path = TestHelper.GetDataDir() + @"\elbe\NETWORK.TP";
+        //    string path = TestHelper.GetTestDataDirectory() + @"\elbe\NETWORK.TP";
 
         //    //import existing network and model + default boundary conditions
         //    SobekNetworkBranchFileReader reader = new SobekNetworkBranchFileReader(path);
@@ -917,7 +915,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Category(TestCategory.Integration)]
         public void ReadReferenceNetworkAndClone()
         {
-            string pathToSobekNetwork = TestHelper.GetDataDir() + @"\SW_max_1.lit\3\Network.TP";
+            string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\SW_max_1.lit\3\Network.TP";
             var importer = new SobekNetworkImporter();
             var network = (HydroNetwork)importer.ImportItem(pathToSobekNetwork);
 
@@ -932,7 +930,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Category(TestCategory.DataAccess)]
         public void ReadNetworkWithBridges()
         {
-            string path = TestHelper.GetDataDir() + @"\BrugRect.lit\1\NETWORK.TP";
+            string path = TestHelper.GetTestDataDirectory() + @"\BrugRect.lit\1\NETWORK.TP";
 
             //import existing network and model + default boundary conditions
             IHydroNetwork network = GetNetwork(path);
@@ -962,7 +960,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Category(TestCategory.DataAccess)]
         public void ReadNetworkWithAsymTrapezium()
         {
-            string path = TestHelper.GetDataDir() + @"\AsymTrap.lit\1\NETWORK.TP";
+            string path = TestHelper.GetTestDataDirectory() + @"\AsymTrap.lit\1\NETWORK.TP";
             var network = GetNetwork(path);
 
             Assert.AreEqual(2, network.CrossSections.Count());
@@ -994,7 +992,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Category(TestCategory.DataAccess)]
         public void ReadNetworkWithCulverts()
         {
-            string path = TestHelper.GetDataDir() + @"\Culverts.lit\1\NETWORK.TP";
+            string path = TestHelper.GetTestDataDirectory() + @"\Culverts.lit\1\NETWORK.TP";
             var network = GetNetwork(path);
 
             var culverts = network.Culverts.ToList();
@@ -1090,7 +1088,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Category(TestCategory.DataAccess)]
         public void ReadNetworkWithRiverFriction()
         {
-            var path = TestHelper.GetDataDir() + @"\Friction.lit\1\NETWORK.TP";
+            var path = TestHelper.GetTestDataDirectory() + @"\Friction.lit\1\NETWORK.TP";
             var importer = new SobekWaterFlowModel1DImporter();
             var model = (WaterFlowModel1D)importer.ImportItem(path);
             var network = model.Network;
@@ -1149,7 +1147,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Category(TestCategory.DataAccess)]
         public void ReadNetworkWithYzFriction()
         {
-            var path = TestHelper.GetDataDir() + @"\Friction.lit\1\NETWORK.TP";
+            var path = TestHelper.GetTestDataDirectory() + @"\Friction.lit\1\NETWORK.TP";
             var importer = new SobekWaterFlowModel1DImporter();
             var flowModel1D = (WaterFlowModel1D)importer.ImportItem(path);
 
@@ -1194,12 +1192,12 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Category(TestCategory.Slow)]
         public void IgnoreOrphanedBDFRrecords()
         {
-            var path = TestHelper.GetDataDir() + @"\profshft.lit\1\friction.dat";
+            var path = TestHelper.GetTestDataDirectory() + @"\profshft.lit\1\friction.dat";
             var defFileText = File.ReadAllText(path, Encoding.Default);
             var sobekFriction = SobekFrictionDatFileReader.GetSobekFriction(defFileText);
             Assert.AreEqual(2, sobekFriction.SobekBedFrictionList.Count); // 2 BDFR records
 
-            path = TestHelper.GetDataDir() + @"\profshft.lit\1\network.tp";
+            path = TestHelper.GetTestDataDirectory() + @"\profshft.lit\1\network.tp";
             var importer = new SobekWaterFlowModel1DImporter();
             var flowModel1D = (WaterFlowModel1D)importer.ImportItem(path);
 
@@ -1211,7 +1209,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Test]
         public void ReadNetworkWithGeneralStructure()
         {
-            var network = GetNetwork(TestHelper.GetDataDir() + @"\GenaStru.lit\1\NETWORK.TP");
+            var network = GetNetwork(TestHelper.GetTestDataDirectory() + @"\GenaStru.lit\1\NETWORK.TP");
             var weir = network.Structures.OfType<Weir>().First(w => w.WeirFormula is GeneralStructureWeirFormula);
             
             //check the parameters of the forumale
@@ -1247,14 +1245,14 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Category(TestCategory.Integration)]
         public void IgnoreRectangularCrossSectionDefinition()
         {
-            string definitionFile = TestHelper.GetDataDir() + @"\SW_max_1.lit\3\profile.def";
+            string definitionFile = TestHelper.GetTestDataDirectory() + @"\SW_max_1.lit\3\profile.def";
 
             IList<SobekCrossSectionDefinition> sobekCrossSectionDefinitions =
                 new CrossSectionDefinitionReader().Read(definitionFile).ToList();
 
             //IList<SobekCrossSectionDefinition> sobekCrossSectionDefinitions = ProfileDefFileScanner.ReadCrossSectionLayer(definitionFile);
 
-            string pathToSobekNetwork = TestHelper.GetDataDir() + @"\SW_max_1.lit\3\Network.TP";
+            string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\SW_max_1.lit\3\Network.TP";
             var importer = new SobekNetworkImporter();
             var network = (HydroNetwork)importer.ImportItem(pathToSobekNetwork);
 

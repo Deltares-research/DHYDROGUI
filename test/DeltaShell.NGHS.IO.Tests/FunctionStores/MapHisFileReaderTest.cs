@@ -13,7 +13,7 @@ namespace DeltaShell.NGHS.IO.Tests.FunctionStores
         [Category(TestCategory.DataAccess)]
         public void TestMapFileReaderReadMetaData()
         {
-            var mapFilePath = Path.Combine(TestHelper.GetDataDir(), "FunctionStores", "deltashell.map");
+            var mapFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "FunctionStores", "deltashell.map");
             var mapFileMetaData = MapHisFileReader.ReadMetaData(mapFilePath);
 
             Assert.AreEqual(25, mapFileMetaData.NumberOfTimeSteps);
@@ -37,7 +37,7 @@ namespace DeltaShell.NGHS.IO.Tests.FunctionStores
         [Category(TestCategory.DataAccess)]
         public void TestMapFileReaderReadTimeStep()
         {
-            var mapFilePath = Path.Combine(TestHelper.GetDataDir(), "FunctionStores", "deltashell.map");
+            var mapFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "FunctionStores", "deltashell.map");
             var mapFileMetaData = MapHisFileReader.ReadMetaData(mapFilePath);
             var valuesSalinity = MapHisFileReader.GetTimeStepData(mapFilePath, mapFileMetaData, 6, "Salinity");
 
@@ -69,7 +69,7 @@ namespace DeltaShell.NGHS.IO.Tests.FunctionStores
         [Category(TestCategory.DataAccess)]
         public void TestMapFileReaderReadTimeStepForOneSegment()
         {
-            var mapFilePath = Path.Combine(TestHelper.GetDataDir(), "FunctionStores", "deltashell.map");
+            var mapFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "FunctionStores", "deltashell.map");
             var mapFileMetaData = MapHisFileReader.ReadMetaData(mapFilePath);
             var valuesSalinity = MapHisFileReader.GetTimeStepData(mapFilePath, mapFileMetaData, 6, "Salinity", 1);
 
@@ -96,7 +96,7 @@ namespace DeltaShell.NGHS.IO.Tests.FunctionStores
         [Test]
         public void ReadHisFileMetaData()
         {
-            var path = Path.Combine(TestHelper.GetDataDir(), "FunctionStores", "flowhis.his");
+            var path = Path.Combine(TestHelper.GetTestDataDirectory(), "FunctionStores", "flowhis.his");
             var metaData = MapHisFileReader.ReadMetaData(path);
 
             Assert.AreEqual(3, metaData.NumberOfParameters);
@@ -258,7 +258,7 @@ namespace DeltaShell.NGHS.IO.Tests.FunctionStores
 
             #endregion
 
-            var path = Path.Combine(TestHelper.GetDataDir(), "FunctionStores", "flowhis.his");
+            var path = Path.Combine(TestHelper.GetTestDataDirectory(), "FunctionStores", "flowhis.his");
             var mapHisFileMetaData = MapHisFileReader.ReadMetaData(path);
 
             var hisValues = MapHisFileReader.GetTimeSeriesData(path, mapHisFileMetaData, "Water level", mapHisFileMetaData.Locations.IndexOf("branch1_9000.00"));
@@ -284,7 +284,7 @@ namespace DeltaShell.NGHS.IO.Tests.FunctionStores
                                     0.10005170
                                 };
 
-            var path = Path.Combine(TestHelper.GetDataDir(), "FunctionStores", "flowhis.his");
+            var path = Path.Combine(TestHelper.GetTestDataDirectory(), "FunctionStores", "flowhis.his");
             var mapHisFileMetaData = MapHisFileReader.ReadMetaData(path);
 
             var lstTimeStepValues = MapHisFileReader.GetTimeStepData(path, mapHisFileMetaData, 5, "Water level");
@@ -455,7 +455,7 @@ namespace DeltaShell.NGHS.IO.Tests.FunctionStores
 
             #endregion
 
-            var path = Path.Combine(TestHelper.GetDataDir(), "FunctionStores", "flowhis.his");
+            var path = Path.Combine(TestHelper.GetTestDataDirectory(), "FunctionStores", "flowhis.his");
             var mapHisFileMetaData = MapHisFileReader.ReadMetaData(path);
 
             var lstLocationValues = MapHisFileReader.GetTimeSeriesData(path,mapHisFileMetaData, "Water level", 4);
@@ -626,7 +626,7 @@ namespace DeltaShell.NGHS.IO.Tests.FunctionStores
 
             #endregion
 
-            var path = Path.Combine(TestHelper.GetDataDir(), "FunctionStores", "flowhis.his");
+            var path = Path.Combine(TestHelper.GetTestDataDirectory(), "FunctionStores", "flowhis.his");
             var mapHisFileMetaData = MapHisFileReader.ReadMetaData(path);
 
             var lstLocationValues = MapHisFileReader.GetTimeSeriesData(path, mapHisFileMetaData, "Total Area", 5);

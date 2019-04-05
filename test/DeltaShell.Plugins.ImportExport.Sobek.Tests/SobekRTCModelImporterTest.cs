@@ -11,19 +11,14 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
     [TestFixture]
     public class SobekRTCModelImporterTest
     {
-        private RealTimeControlModel rtcMmodel;
-
-        [SetUp]
-        public void SetUp()
-        {
-        }
+        private RealTimeControlModel rtcModel;
 
         [Test]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.Slow)]
         public void ImportREModel_NDB_Check_Structure13()
         {
-            rtcMmodel = GetRtcModel(@"\ReModels\20110331_NDB.sbk\6\deftop.1");
+            rtcModel = GetRtcModel(@"\ReModels\20110331_NDB.sbk\6\deftop.1");
             //condition0(13:head difference > 0) - rule2212(P_003_0:waterlevel) --|
             //                                                                    |
             //                                                                     --structure13
@@ -68,7 +63,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Category(TestCategory.Slow)]
         public void ImportREModel_NDB_Check_Structure24()
         {
-            rtcMmodel = GetRtcModel(@"\ReModels\20110331_NDB.sbk\6\deftop.1");
+            rtcModel = GetRtcModel(@"\ReModels\20110331_NDB.sbk\6\deftop.1");
 
             //condition4(28_200:water level > 1.8) AND condition20770(24:head difference < 0) - rule68                --|
             //                                                                                                               |
@@ -130,7 +125,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Category(TestCategory.Integration)]
         public void ImportControllerWithHeadDifference()
         {
-            rtcMmodel = GetRtcModel(@"\164_000.lit\2\network.tp");
+            rtcModel = GetRtcModel(@"\164_000.lit\2\network.tp");
 
             var controlGroup = GetControlGroupOfStructure("5");
             Assert.IsNotNull(controlGroup);
@@ -144,7 +139,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Category(TestCategory.Integration)]
         public void ImportPidControllerFrom212()
         {
-            rtcMmodel = GetRtcModel(@"\171_001.lit\2\network.tp");
+            rtcModel = GetRtcModel(@"\171_001.lit\2\network.tp");
 
             var controlGroup = GetControlGroupOfStructure("5");
             Assert.IsNotNull(controlGroup);
@@ -165,12 +160,12 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
 
         private ControlGroup GetControlGroupOfStructure(string structureName)
         {
-            return rtcMmodel.ControlGroups.FirstOrDefault(c => c.Outputs.First().Name.StartsWith(structureName + "_")); 
+            return rtcModel.ControlGroups.FirstOrDefault(c => c.Outputs.First().Name.StartsWith(structureName + "_")); 
         }
 
         private RealTimeControlModel GetRtcModel(string path)
         {
-            var pathToSobekNetwork =TestHelper.GetDataDir() + path;
+            var pathToSobekNetwork =TestHelper.GetTestDataDirectory() + path;
             var importer = new SobekHydroModelImporter(false);
             var model = ((ICompositeActivity)importer.ImportItem(pathToSobekNetwork)).Activities.OfType<RealTimeControlModel>().First();
             return model;

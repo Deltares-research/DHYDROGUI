@@ -937,17 +937,17 @@ namespace Sobek.IntegrationTests
         {
             onMainWindowShown = () =>
                 {
-                    mapView.MapView.Map.Layers.Add(new OpenStreetMapLayer());
+                    mapView.MapView.Map.Layers.Add(new KnownTileSourceLayer());
 
                     Assert.AreEqual(1, gui.UndoRedoManager.UndoStack.Count());
 
                     gui.UndoRedoManager.Undo();
 
-                    Assert.AreEqual(0, mapView.MapView.Map.Layers.OfType<OpenStreetMapLayer>().Count());
+                    Assert.AreEqual(0, mapView.MapView.Map.Layers.OfType<KnownTileSourceLayer>().Count());
 
                     gui.UndoRedoManager.Redo();
 
-                    Assert.AreEqual(1, mapView.MapView.Map.Layers.OfType<OpenStreetMapLayer>().Count());
+                    Assert.AreEqual(1, mapView.MapView.Map.Layers.OfType<KnownTileSourceLayer>().Count());
                 };
 
             WpfTestHelper.ShowModal(mainWindow, mainWindowShown);

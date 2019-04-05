@@ -104,6 +104,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Import
         public Bitmap Image { get; private set; }
 
         public string Category { get; private set; }
+        public string Description
+        {
+            get { return string.Empty; }
+        }
 
         public IEnumerable<Type> SupportedItemTypes
         {

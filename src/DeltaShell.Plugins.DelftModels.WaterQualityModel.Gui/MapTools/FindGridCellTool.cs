@@ -3,18 +3,18 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Text;
 using System.Linq;
+using System.Windows;
 using System.Windows.Forms;
-
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils;
 using NetTopologySuite.Extensions.Grids;
 using NetTopologySuite.Geometries;
-using SharpMap;
 using SharpMap.Api.Layers;
 using SharpMap.CoordinateSystems.Transformations;
 using SharpMap.Layers;
 using SharpMap.Rendering;
 using SharpMap.UI.Tools;
+using Point = System.Windows.Point;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.MapTools
 {
@@ -146,13 +146,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.MapTools
             base.Cancel();
         }
 
-        public override void OnPaint(PaintEventArgs e) // Override to ensure drawing always happens, not only during drag/drop
+        public override void OnPaint(Graphics graphics) // Override to ensure drawing always happens, not only during drag/drop
         {
-            base.OnPaint(e);
-            Render(e.Graphics, MapControl.Map);
+            base.OnPaint(graphics);
+            Render(graphics);
         }
 
-        public override void Render(Graphics graphics, Map mapBox)
+        public override void Render(Graphics graphics)
         {
             if (chosenCellPolygon == null)
                 return;
@@ -168,7 +168,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.MapTools
         {
             using (var renderer = new WorldToScreenRendererWrapper(new GdiPrimitivesRenderer()))
             {
-                renderer.BeginDraw(graphics, Map.Size, new RectangleF(
+                renderer.BeginDraw(graphics, Map.Size, new Rect(
                     Convert.ToSingle(Map.WorldLeft),
                     Convert.ToSingle(Map.WorldTop - Map.WorldHeight),
                     Convert.ToSingle(Map.Zoom),
@@ -176,7 +176,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.MapTools
                 renderer.SetFillColor(Color.Purple);
 
                 renderer.FillPolygon(
-                    projectedCell.Coordinates.Select(c => new PointF(Convert.ToSingle(c.X), Convert.ToSingle(c.Y))).ToArray());
+                    projectedCell.Coordinates.Select(c => new Point(Convert.ToSingle(c.X), Convert.ToSingle(c.Y))).ToArray());
 
                 renderer.EndDraw();
             }

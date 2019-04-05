@@ -5,7 +5,6 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using BasicModelInterface;
-using DeltaShell.Dimr;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
 {

@@ -18,7 +18,6 @@ using NetTopologySuite.Extensions.Geometries;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using SharpMap.Extensions.CoordinateSystems;
-using FixedWeir = DelftTools.Hydro.Structures.FixedWeir;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 {
@@ -531,7 +530,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 mduFile.Write(savePath, originalMD, originalArea, allFixedWeirsAndCorrespondingProperties.Values, switchTo: false);
 
-                var generatedResultsContent = File.ReadAllLines(@"FlowFMFixedWeirs\MduFileReadsAndWritesTest\TwoFixedWeirs_fxw2_fxw.pliz");
+                var twoFixedWeirsFxwPliz = "TwoFixedWeirs_fxw2_fxw.pliz";
+                var generatedResultsContent = File.ReadAllLines(Path.Combine(newMduDir, twoFixedWeirsFxwPliz));
 
                 var expectedResultsContent = 
                     new string[]{
@@ -569,12 +569,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 mduDir = Path.GetDirectoryName(mduFilePath);
                 Assert.NotNull(mduDir);
                 modelName = Path.GetFileName(mduFilePath);
-
-            saveDirectory = Path.Combine(mduDir, "MduFileReadsAndWritesTest");
-            Directory.CreateDirectory(saveDirectory);
-            savePath = Path.Combine(saveDirectory, "FlowFM3.mdu");
-            newMduDir = Path.GetDirectoryName(savePath);
-            Assert.NotNull(newMduDir);
+                saveDirectory = Path.Combine(mduDir, "MduFileReadsAndWritesTest");
+                Directory.CreateDirectory(saveDirectory);
+                savePath = Path.Combine(saveDirectory, "FlowFM3.mdu");
+                newMduDir = Path.GetDirectoryName(savePath);
+                Assert.NotNull(newMduDir);
 
             try
                 {
@@ -604,7 +603,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                     mduFile.Write(savePath, originalMD, originalArea, allFixedWeirsAndCorrespondingProperties.Values, switchTo: false);
 
-                    var generatedResultsContent = File.ReadAllLines(@"FlowFMFixedWeirs\MduFileReadsAndWritesTest\TwoFixedWeirs_fxw.pliz");
+                    var twoFixedWeirsFxwPliz = "TwoFixedWeirs_fxw.pliz";
+                    var generatedResultsContent = File.ReadAllLines(Path.Combine(newMduDir, twoFixedWeirsFxwPliz));
 
                     var expectedResultsContent =
                         new string[]{

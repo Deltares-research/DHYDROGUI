@@ -20,6 +20,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Importers
             get { return importer.Category; }
         }
 
+        public string Description
+        {
+            get { return string.Empty; }
+        }
+
         public Bitmap Image
         {
             get { return importer.Image; }

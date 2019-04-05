@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
@@ -68,7 +69,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             }
         }
 
-        private void OnModelCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        private void OnModelCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             // return if there is no editor.
             if (Editor == null || model == null) return;
@@ -284,8 +285,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
         {
             FlowBoundaryQuantityType flowBoundaryQuantityType;
 
-            if (category != EnumDescriptionAttributeTypeConverter.GetEnumDescription(FlowBoundaryQuantityType.Tracer) && // Do not try to match Tracers to enum descriptions
-                category != EnumDescriptionAttributeTypeConverter.GetEnumDescription(FlowBoundaryQuantityType.SedimentConcentration) && // Do not try to match Fraction names to enum descriptions
+            if (category != FlowBoundaryQuantityType.Tracer.GetDescription() && // Do not try to match Tracers to enum descriptions
+                category != FlowBoundaryQuantityType.SedimentConcentration.GetDescription() && // Do not try to match Fraction names to enum descriptions
                 Enum.TryParse(variable, out flowBoundaryQuantityType))
             {
                 return FlowBoundaryCondition.GetDescription(flowBoundaryQuantityType);

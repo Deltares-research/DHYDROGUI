@@ -26,9 +26,6 @@ using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using SharpMap.Api.Layers;
 using SharpMap.Layers;
-using FixedWeir = DelftTools.Hydro.Structures.FixedWeir;
-using ObservationCrossSection2D = DelftTools.Hydro.ObservationCrossSection2D;
-using ThinDam2D = DelftTools.Hydro.Structures.ThinDam2D;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 {

@@ -20,7 +20,6 @@ using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Helpers;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport;
 using DeltaShell.Plugins.DelftModels.RTCShapes.Shapes;
-using DeltaShell.Plugins.SharpMapGis.Gui;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms.CoverageViews;
 using GeoAPI.Extensions.Coverages;
@@ -308,12 +307,17 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
 
             if (RTCModelCoordinateConvertor.Convert(realTimeControlModel))
             {
-                var mapView = gui.GetFocusedMapView();
-                if (mapView != null && mapView.Map != null)
-                    mapView.Map.ZoomToExtents();
+                var mapView = GetFocusedMapView();
+                mapView?.Map?.ZoomToExtents();
             }
         }
-       
+
+        private MapView GetFocusedMapView()
+        {
+            var viewToSearch = gui?.DocumentViews?.ActiveView;
+            return viewToSearch.GetViewsOfType<MapView>().FirstOrDefault();
+        }
+
         private void Application_ProjectClosing(Project project)
         {
             RealTimeControlModelCopyPasteHelper.CopiedShapes = null;

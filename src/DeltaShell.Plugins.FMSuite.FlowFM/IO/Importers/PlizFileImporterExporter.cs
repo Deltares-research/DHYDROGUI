@@ -54,6 +54,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             get { return "Feature geometries"; }
         }
 
+        public override string Description
+        {
+            get { return string.Empty; }
+        }
+
         /// <summary>
         /// Gets the file filter.
         /// </summary>

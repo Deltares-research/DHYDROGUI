@@ -25,7 +25,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         {
             IEventedList<WaterQualityLoad> loads = new EventedList<WaterQualityLoad>();
 
-            string path = Path.Combine(TestHelper.GetDataDir(), "IO", "dry_loads_shp_file", "sfb_testlocationsinput.shp");
+            string path = Path.Combine(TestHelper.GetTestDataDirectory(), "IO", "dry_loads_shp_file", "sfb_testlocationsinput.shp");
             LoadsImporter importer = new LoadsImporter();
             importer.ImportItem(path, loads);
 
@@ -67,7 +67,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         {
             IEventedList<WaterQualityLoad> loads = new EventedList<WaterQualityLoad>();
 
-            string path = Path.Combine(TestHelper.GetDataDir(), "IO", "shape_files", "loads", "load.shp");
+            string path = Path.Combine(TestHelper.GetTestDataDirectory(), "IO", "shape_files", "loads", "load.shp");
             LoadsImporter importer = new LoadsImporter();
             importer.ImportItem(path, loads);
 
@@ -96,7 +96,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         {
             IEventedList<WaterQualityLoad> loads = new EventedList<WaterQualityLoad>();
 
-            string path = Path.Combine(TestHelper.GetDataDir(), "IO", "idontexist.shp");
+            string path = Path.Combine(TestHelper.GetTestDataDirectory(), "IO", "idontexist.shp");
             LoadsImporter importer = new LoadsImporter();
             importer.ImportItem(path, loads);
 

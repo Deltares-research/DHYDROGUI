@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
@@ -183,17 +184,17 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CaseAnalysis
             yield return new NetworkCoverageOperations.CoverageLessThanDurationAsDoubleOperation();
         }
 
-        private void ProjectCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        private void ProjectCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            IEnumerable<INetworkCoverage> coverages = findNetworkCoverages(e.Item);
-            if (e.Action == NotifyCollectionChangeAction.Add)
+            IEnumerable<INetworkCoverage> coverages = findNetworkCoverages(e.GetRemovedOrAddedItem());
+            if (e.Action == NotifyCollectionChangedAction.Add)
             {
                 foreach (var cov in coverages)
                 {
                     OnNetworkCoverageAdded(cov);
                 }
             }
-            else if (e.Action == NotifyCollectionChangeAction.Remove)
+            else if (e.Action == NotifyCollectionChangedAction.Remove)
             {
                 foreach (var cov in coverages)
                 {

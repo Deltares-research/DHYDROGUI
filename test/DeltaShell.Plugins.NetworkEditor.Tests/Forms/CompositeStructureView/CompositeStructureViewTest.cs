@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using DelftTools.Hydro;
@@ -12,21 +11,16 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Editing;
-using DelftTools.Utils.Reflection;
-using DeltaShell.Gui;
 using DeltaShell.Gui.Forms.ViewManager;
 using DeltaShell.Plugins.NetworkEditor.Gui;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
-using NetTopologySuite.Geometries;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Networks;
 using NUnit.Framework;
 using Rhino.Mocks;
-using Control = System.Windows.Controls.Control;
-using System.Windows.Forms.Integration;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CompositeStructureView
 {

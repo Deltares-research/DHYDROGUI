@@ -12,7 +12,6 @@ using DeltaShell.Plugins.SharpMapGis.Gui.Forms.CoverageViews;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
-using SharpMap;
 using SharpMap.Layers;
 using SharpMap.Rendering;
 
@@ -202,7 +201,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Controls
         {
             if (primaryAttributeLayer == null)
             {
-                Map map = coverageView.ChildViews.OfType<MapView>().First().Map;
+                var map = coverageView.ChildViews.OfType<MapView>().First().Map;
                 coverageView.Data = featureCoverage;
                 primaryAttributeLayer = map.Layers.OfType<FeatureCoverageLayer>().FirstOrDefault();
             }
@@ -210,7 +209,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Controls
 
         private void CreateSecondaryLayerIfNonExisting()
         {
-            Map map = coverageView.ChildViews.OfType<MapView>().First().Map;
+            var map = coverageView.ChildViews.OfType<MapView>().First().Map;
 
             if (secondaryAttributeLayer == null || !map.Layers.Contains(secondaryAttributeLayer))
             {

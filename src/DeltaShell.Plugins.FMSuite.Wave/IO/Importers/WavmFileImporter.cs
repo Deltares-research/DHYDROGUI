@@ -9,6 +9,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Importers
     {
         public string Name { get { return "Wave Output (WAVM)"; } }
         public string Category { get { return "D-Flow FM 2D/3D"; } }
+        public string Description
+        {
+            get { return string.Empty; }
+        }
         public Bitmap Image { get { return Properties.Resources.wave; } }
 
         public IEnumerable<Type> SupportedItemTypes { get { yield return typeof (WavmFileFunctionStore); } }

@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
         public void GivenDataModelWithCategoryThatHasAnUnknownHeader_WhenSettingProperties_ThenLogMessageIsReturned()
         {
             // Given
-            var md1dFilePath = TestHelper.GetTestDataPath(Assembly.GetExecutingAssembly(),
+            var md1dFilePath = TestHelper.GetTestDataDirectoryPathForAssembly(Assembly.GetExecutingAssembly(),
                 @"ModelDefinitionFileReaderTest\modelDefinitionWithUnknownCategory.md1d");
             var testFilePath = TestHelper.CreateLocalCopy(md1dFilePath);
 
@@ -204,7 +204,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
                 eParam.AggregationOptions = AggregationOptions.None;
 
             // When
-            var md1dFilePath = TestHelper.GetTestDataPath(Assembly.GetExecutingAssembly(),
+            var md1dFilePath = TestHelper.GetTestDataDirectoryPathForAssembly(Assembly.GetExecutingAssembly(),
                 @"ModelDefinitionFileReaderTest\rmm_model.md1d");
             var testFilePath = TestHelper.CreateLocalCopy(md1dFilePath);
             ModelDefinitionFileReader.SetWaterFlowModelProperties(testFilePath, model, someErrorReportFunction);

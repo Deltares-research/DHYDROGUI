@@ -23,7 +23,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Test]
         public void TestImportDefault()
         {
-            var file = TestHelper.GetDataDir() + @"\FIXED\DEFAULT.WND";
+            var file = TestHelper.GetTestDataDirectory() + @"\FIXED\DEFAULT.WND";
             var retrievedWindFunction = importer.ImportItem(file, windFunction);
 
             Assert.AreSame(retrievedWindFunction, windFunction); //target item, so should be same instance
@@ -39,7 +39,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Test]
         public void TestImportOtherFile()
         {
-            var retrievedWindFunction = importer.ImportItem(TestHelper.GetDataDir() + windFile, windFunction);
+            var retrievedWindFunction = importer.ImportItem(TestHelper.GetTestDataDirectory() + windFile, windFunction);
 
             Assert.AreSame(retrievedWindFunction, windFunction); //target item, so should be same instance
 
@@ -61,7 +61,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             Assert.AreEqual(1, windFunction.Velocity.Values.Count);
             Assert.AreEqual(1, windFunction.Arguments.First().Values.Count);
 
-            var retrievedWindFunction = importer.ImportItem(TestHelper.GetDataDir() + windFile, windFunction);
+            var retrievedWindFunction = importer.ImportItem(TestHelper.GetTestDataDirectory() + windFile, windFunction);
 
             Assert.AreSame(retrievedWindFunction, windFunction); //target item, so should be same instance
 

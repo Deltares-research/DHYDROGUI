@@ -1,4 +1,5 @@
 ﻿using System;
+using DelftTools.TestUtils;
 using DeltaShell.Dimr;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi;
@@ -6,6 +7,8 @@ using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ModelApiControllers
 {
+    [TestFixture]
+    [Category(TestCategory.Jira)] // See issue D3DFMIQ-795
     public class ModelApiControllersTest
     {
         #region RemoteModelApiWrapperTest

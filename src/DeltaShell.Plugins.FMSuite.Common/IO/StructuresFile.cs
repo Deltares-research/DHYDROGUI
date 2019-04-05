@@ -9,6 +9,7 @@ using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils;
+using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
@@ -366,14 +367,14 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             {
                 ConstructTimeSeriesProperty(path, properties,
                                             weirStructure,
-                                            EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.HorizontalDoorOpeningWidth),
+                                            KnownGeneralStructureProperties.HorizontalDoorOpeningWidth.GetDescription(),
                                             structureType,
                                             generalStructureFormula.HorizontalDoorOpeningWidthTimeSeries,
                                             refDate);
             }
             else
             {
-                properties.Add(ConstructProperty(EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.HorizontalDoorOpeningWidth),
+                properties.Add(ConstructProperty(KnownGeneralStructureProperties.HorizontalDoorOpeningWidth.GetDescription(),
                     generalStructureFormula.HorizontalDoorOpeningWidth,
                     structureType));
             }
@@ -391,7 +392,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                     throw new ArgumentException("We can't write " +
                                                 generalStructureFormula.HorizontalDoorOpeningDirection);
             }
-            properties.Add(ConstructProperty(EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.HorizontalDoorOpeningDirection),
+            properties.Add(ConstructProperty(KnownGeneralStructureProperties.HorizontalDoorOpeningDirection.GetDescription(),
                                              horizontalDoorOpeningDirection,
                                              structureType));
 

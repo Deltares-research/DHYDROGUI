@@ -14,7 +14,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         [Category(TestCategory.Slow)] // TOOLS-22280
         public void RunDelwaqModelWithDoubleAliasEntries()
         {
-            var dataDir = TestHelper.GetDataDir();
+            var dataDir = TestHelper.GetTestDataDirectory();
             var hydFile = Path.Combine(dataDir, "IO", "real", "uni3d.hyd");
 
             using (var model = new WaterQualityModel())

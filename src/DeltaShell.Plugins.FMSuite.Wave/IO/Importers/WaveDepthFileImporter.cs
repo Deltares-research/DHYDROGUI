@@ -22,6 +22,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Importers
         public string Name => "Delft3D Depth File";
 
         public string Category { get; private set; }
+        public string Description
+        {
+            get { return string.Empty; }
+        }
 
         [ExcludeFromCodeCoverage]
         public Bitmap Image { get; private set; }

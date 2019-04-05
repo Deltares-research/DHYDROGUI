@@ -21,6 +21,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
         [ExcludeFromCodeCoverage]
         public string Category { get { return "General"; } }
 
+        public string Description
+        {
+            get { return string.Empty; }
+        }
+
         public bool Export(object item, string path)
         {
             var boundaryCondition = item as IBoundaryCondition;

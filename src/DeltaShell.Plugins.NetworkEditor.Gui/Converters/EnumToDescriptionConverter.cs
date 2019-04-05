@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 using DelftTools.Utils;
+using DelftTools.Utils.Reflection;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Converters
 {
@@ -12,7 +13,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Converters
         {
             if (value == null) return DependencyProperty.UnsetValue;
 
-            var description = EnumDescriptionAttributeTypeConverter.GetEnumDescription((Enum)value);
+            var description = ((Enum)value).GetDescription();
             return description;
         }
 

@@ -25,10 +25,6 @@ using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Geometries;
 using SharpMap;
 using SharpMap.Api.SpatialOperations;
-using FixedWeir = DelftTools.Hydro.Structures.FixedWeir;
-using ObservationCrossSection2D = DelftTools.Hydro.ObservationCrossSection2D;
-using ThinDam2D = DelftTools.Hydro.Structures.ThinDam2D;
-using BridgePillar = DelftTools.Hydro.Structures.BridgePillar;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {

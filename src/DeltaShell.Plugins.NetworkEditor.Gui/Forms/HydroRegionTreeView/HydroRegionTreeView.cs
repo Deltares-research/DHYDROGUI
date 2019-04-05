@@ -25,9 +25,8 @@ using TreeView = DelftTools.Controls.Swf.TreeViewControls.TreeView;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
 {
-    public partial class HydroRegionTreeView : UserControl, IView, ISuspendibleView
+    public partial class HydroRegionTreeView : UserControl, IView
     {
-        private readonly TreeView treeView;
         private readonly IGui gui;
         private IContainer components;
         private ContextMenuStrip contextMenuFeature;
@@ -56,7 +55,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
             gui = guiPlugin.Gui;
             gui.SelectionChanged += GuiSelectionChanged;
 
-            treeView = new TreeView
+            TreeView = new TreeView
                            {
                                AllowDrop = true, 
                                Dock = DockStyle.Fill,
@@ -64,8 +63,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
 
             AddNodePresenters(guiPlugin);
 
-            treeView.KeyDown += TreeViewKeyDown;
-            Controls.Add(treeView);
+            TreeView.KeyDown += TreeViewKeyDown;
+            Controls.Add(TreeView);
         }
 
         public new void Dispose()
@@ -137,12 +136,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
             if (selectedFeature == null) return;
 
             // Search by comparing the feature to all the node tags
-            var treeNode = treeView.GetNodeByTag(selectedFeature);
+            var treeNode = TreeView.GetNodeByTag(selectedFeature);
             if (treeNode == null) return;
 
             // The node correspoinding to the feature was found: select it
             SynchronizingGuiSelection = true;
-            treeView.SelectedNode = treeNode;
+            TreeView.SelectedNode = treeNode;
             SynchronizingGuiSelection = false;
         }
 
@@ -150,25 +149,25 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
         {          
             if (e.KeyCode == Keys.Control | e.KeyCode == Keys.C)
             {
-                if (treeView.SelectedNode.Tag is IBranch || treeView.SelectedNode.Tag is IBranchFeature)
+                if (TreeView.SelectedNode.Tag is IBranch || TreeView.SelectedNode.Tag is IBranchFeature)
                 {
-                    HydroNetworkCopyAndPasteHelper.SetNetworkFeatureToClipBoard((INetworkFeature) treeView.SelectedNode.Tag);
+                    HydroNetworkCopyAndPasteHelper.SetNetworkFeatureToClipBoard((INetworkFeature) TreeView.SelectedNode.Tag);
                 }
             }
 
             if (e.KeyCode == Keys.Control | e.KeyCode == Keys.V)
             {
-                if (treeView.SelectedNode.Tag is IBranchFeature && HydroNetworkCopyAndPasteHelper.IsBranchFeatureSetToClipBoard())
+                if (TreeView.SelectedNode.Tag is IBranchFeature && HydroNetworkCopyAndPasteHelper.IsBranchFeatureSetToClipBoard())
                 {
                     ButtonMenuFeaturePasteIntoClick(sender, e);   
                 }
 
-                if (treeView.SelectedNode.Tag is IChannel && HydroNetworkCopyAndPasteHelper.IsBranchFeatureSetToClipBoard())
+                if (TreeView.SelectedNode.Tag is IChannel && HydroNetworkCopyAndPasteHelper.IsBranchFeatureSetToClipBoard())
                 {
                     ButtonMenuBranchPasteClick(sender, e);
                 }
 
-                if (treeView.SelectedNode.Tag is IHydroNetwork && HydroNetworkCopyAndPasteHelper.IsChannelSetToClipBoard())
+                if (TreeView.SelectedNode.Tag is IHydroNetwork && HydroNetworkCopyAndPasteHelper.IsChannelSetToClipBoard())
                 {
                     handleButtonPaste_Click(sender, e);
                 }
@@ -196,7 +195,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
                 SynchronizingGuiSelection = true;
                 region = value;
 
-                treeView.Data = Region;
+                TreeView.Data = Region;
 
                 SynchronizingGuiSelection = false;
             }
@@ -211,10 +210,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
         public void EnsureVisible(object item) { }
         public ViewInfo ViewInfo { get; set; }
 
-        public TreeView TreeView
-        {
-            get { return treeView; }
-        }
+        public TreeView TreeView { get; }
 
         #endregion
 
@@ -223,7 +219,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
             ITreeNode treeNode = (ITreeNode)node;
             SelectedRegion = GetParentRegionFromNode(node);
 
-            var isActiveViewMapView = gui.DocumentViews.GetActiveViews<MapView>().Any() ;
+            var isActiveViewMapView = gui.DocumentViews.ActiveView.GetViewsOfType<MapView>().Any();
             if (tag is IHydroNetwork)
             {
                 buttonMenuNetworkPaste.Enabled = HydroNetworkCopyAndPasteHelper.IsChannelSetToClipBoard();
@@ -262,7 +258,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
                 var strip = new ContextMenuStrip();
                 strip.Items.Add(buttonMenuFeatureDelete);
                 ITreeNodePresenter p = treeNode.Presenter;
-                var parentNodeData = treeView.SelectedNode.Parent.Tag;
+                var parentNodeData = TreeView.SelectedNode.Parent.Tag;
                 buttonMenuFeatureDelete.Enabled = p.CanRemove(parentNodeData, tag);
                 return new MenuItemContextMenuStripAdapter(strip);
             }
@@ -276,11 +272,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
             {
                 return NetworkEditorGuiPlugin.Instance.GetContextMenu(node, tag);
             }
-            if (tag is IFeature && treeView.SelectedNode.Parent != null)
+            if (tag is IFeature && TreeView.SelectedNode.Parent != null)
             {
                 ITreeNodePresenter p = treeNode.Presenter;
                 
-                var parentNodeData = treeView.SelectedNode.Parent.Tag;
+                var parentNodeData = TreeView.SelectedNode.Parent.Tag;
                 var clipBoardFeature = HydroNetworkCopyAndPasteHelper.GetBranchFeatureFromClipBoard();
                 buttonMenuFeatureDelete.Enabled = p.CanRemove(parentNodeData, tag);
                 buttonMenuFeatureCut.Enabled = p.CanRemove(parentNodeData, tag);
@@ -350,7 +346,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
 
         private void handleButtonAddBranch_Click(object sender, EventArgs e)
         {
-            object selectedObject = treeView.SelectedNode.Tag;
+            object selectedObject = TreeView.SelectedNode.Tag;
             var network = (selectedObject as IHydroNetwork);
 
             if (network != null)
@@ -387,7 +383,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
 
         private void handleButtonRename_Click(object sender, EventArgs e)
         {
-            treeView.StartLabelEdit();
+            TreeView.StartLabelEdit();
         }
 
         private void handleButtonOpenWith_Click(object sender, EventArgs e)
@@ -397,7 +393,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
 
         private void handleButtonAddLateralSource_Click(object sender, EventArgs e)
         {
-            var channel = treeView.SelectedNode.Tag as IChannel;
+            var channel = TreeView.SelectedNode.Tag as IChannel;
             if (channel != null)
             {
                 channel.BranchFeatures.Add(LateralSource.CreateDefault(channel));
@@ -406,7 +402,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
 
         private void handleButtonAddBridge_Click(object sender, EventArgs e)
         {
-            var channel = treeView.SelectedNode.Tag as IChannel;
+            var channel = TreeView.SelectedNode.Tag as IChannel;
             if (channel != null)
             {
                 AddBranchFeatureToBranch(Bridge.CreateDefault(channel));
@@ -415,7 +411,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
 
         private void handleButtonAddPump_Click(object sender, EventArgs e)
         {
-            var channel = treeView.SelectedNode.Tag as IChannel;
+            var channel = TreeView.SelectedNode.Tag as IChannel;
             if (channel == null) return;
 
             var branchFeature = new Pump(false);
@@ -426,7 +422,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
 
         private void handleButtonAddWeir_Click(object sender, EventArgs e)
         {
-            var channel = treeView.SelectedNode.Tag as IChannel;
+            var channel = TreeView.SelectedNode.Tag as IChannel;
             if (channel != null)
             {
                 var branchFeature = new Weir();
@@ -436,7 +432,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
 
         private void handleButtonAddCulvert_Click(object sender, EventArgs e)
         {
-            var channel = treeView.SelectedNode.Tag as IChannel;
+            var channel = TreeView.SelectedNode.Tag as IChannel;
             if (channel != null)
             {
                 AddBranchFeatureToBranch(Culvert.CreateDefault(channel));
@@ -445,7 +441,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
 
         private void handleButtonAddExtraResistance_Click(object sender, EventArgs e)
         {
-            var channel = treeView.SelectedNode.Tag as IChannel;
+            var channel = TreeView.SelectedNode.Tag as IChannel;
             if (channel != null)
             {
                 AddBranchFeatureToBranch(ExtraResistance.CreateDefault(channel));
@@ -454,7 +450,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
 
         private void handleButtonAddObservationPoint_Click(object sender, EventArgs e)
         {
-            var channel = treeView.SelectedNode.Tag as IChannel;
+            var channel = TreeView.SelectedNode.Tag as IChannel;
             if (channel != null)
             {
                 channel.BranchFeatures.Add(ObservationPoint.CreateDefault(channel));
@@ -473,7 +469,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
 
         private void handleButtonZoomToItem_Click(object sender, EventArgs e)
         {
-            var feature = treeView.SelectedNode.Tag as IFeature;
+            var feature = TreeView.SelectedNode.Tag as IFeature;
             if (feature != null)
             {
                 var cmd = new MapZoomToFeatureCommand();
@@ -483,7 +479,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
 
         private void ButtonMenuFeatureCopyClick(object sender, EventArgs e)
         {
-            var branchFeature = treeView.SelectedNode.Tag as IBranchFeature;
+            var branchFeature = TreeView.SelectedNode.Tag as IBranchFeature;
             if (branchFeature != null)
             {
                 HydroNetworkCopyAndPasteHelper.SetNetworkFeatureToClipBoard(branchFeature);
@@ -497,7 +493,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
 
         private void HandleButtonAddCrossSectionClick(object sender, EventArgs e)
         {
-            var channel = treeView.SelectedNode.Tag as IChannel;
+            var channel = TreeView.SelectedNode.Tag as IChannel;
             if (channel == null)
             {
                 return;
@@ -527,7 +523,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
 
         private void ButtonMenuBranchCopyClick(object sender, EventArgs e)
         {
-            var branch = treeView.SelectedNode.Tag as IBranch;
+            var branch = TreeView.SelectedNode.Tag as IBranch;
             if (branch != null)
             {
                 HydroNetworkCopyAndPasteHelper.SetNetworkFeatureToClipBoard(branch);
@@ -536,7 +532,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
 
         private void ButtonMenuBranchPasteClick(object sender, EventArgs e)
         {
-            var branch = treeView.SelectedNode.Tag as IChannel;
+            var branch = TreeView.SelectedNode.Tag as IChannel;
             if (branch == null) return;
 
             var source = HydroNetworkCopyAndPasteHelper.GetBranchFeatureFromClipBoard();
@@ -566,7 +562,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
 
         private void ButtonMenuFeaturePasteIntoClick(object sender, EventArgs e)
         {
-            var branchFeature = treeView.SelectedNode.Tag as IBranchFeature;
+            var branchFeature = TreeView.SelectedNode.Tag as IBranchFeature;
             if (branchFeature == null) return;
 
             string errorMessage;
@@ -620,19 +616,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
             }
         }
 
-        public void SuspendUpdates()
-        {
-            treeView.Data = null;
-        }
-
-        public void ResumeUpdates()
-        {
-            treeView.Data = region;
-        }
-
         private void ShowUsageToolStripMenuItemClick(object sender, EventArgs e)
         {
-            var definition = treeView.SelectedNode.Tag as ICrossSectionDefinition;
+            var definition = TreeView.SelectedNode.Tag as ICrossSectionDefinition;
 
             if (definition != null && SelectedNetwork != null)
             {
@@ -661,7 +647,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
 
         private void SetAsDefaultToolStripMenuItemClick(object sender, EventArgs e)
         {
-            var definition = treeView.SelectedNode.Tag as ICrossSectionDefinition;
+            var definition = TreeView.SelectedNode.Tag as ICrossSectionDefinition;
 
             if (definition != null && SelectedNetwork != null)
             {
@@ -672,7 +658,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
         //todo: move this to validation quick-fix someday
         private void PlaceOnEmptyBranchesToolStripMenuItemClick(object sender, EventArgs e)
         {
-            var definition = treeView.SelectedNode.Tag as ICrossSectionDefinition;
+            var definition = TreeView.SelectedNode.Tag as ICrossSectionDefinition;
 
             if (definition != null && SelectedNetwork != null)
             {
@@ -697,7 +683,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
 
         public void WaitUntilAllEventsAreProcessed()
         {
-            treeView.WaitUntilAllEventsAreProcessed();
+            TreeView.WaitUntilAllEventsAreProcessed();
         }
     }
 }

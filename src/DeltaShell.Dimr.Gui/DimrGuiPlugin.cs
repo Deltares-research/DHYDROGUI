@@ -7,7 +7,6 @@ using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Forms;
-using DeltaShell.Plugins.SharpMapGis.Gui;
 using Mono.Addins;
 
 namespace DeltaShell.Dimr.Gui

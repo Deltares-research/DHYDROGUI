@@ -193,7 +193,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
 
                 var project = new Project(); // Project is pretty lightweight don't need to mock here
 
-                Expect.Call(documentViews.GetActiveViews<MapView>()).Return(new[] { mapView });
+                Expect.Call(documentViews.ActiveView).Return(mapView);
                 Expect.Call(gui.DocumentViews).Return(documentViews).Repeat.Any();
                 Expect.Call(gui.ToolWindowViews).Return(documentViews).Repeat.Any();
                 Expect.Call(gui.Application).Return(application).Repeat.Any();

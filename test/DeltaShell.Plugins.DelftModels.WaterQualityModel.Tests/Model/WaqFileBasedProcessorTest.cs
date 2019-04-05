@@ -77,7 +77,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
         [Category(TestCategory.Integration)]
         public void AddOutputShouldAddTextDocuments()
         {
-            var workDirectory = TestHelper.GetDataDir();
+            var workDirectory = TestHelper.GetTestDataDirectory();
             var substanceNames = new[] { "CBOD5", "CBOD5_2", "Continuity", "NH4", "OXY", "SOD" };
             var mocks = new MockRepository();
             

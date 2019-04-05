@@ -40,6 +40,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             get { return "Time series"; }
         }
 
+        public string Description
+        {
+            get { return string.Empty; }
+        }
+
         public Bitmap Image
         {
             get { return Properties.Resources.TimeSeries; }

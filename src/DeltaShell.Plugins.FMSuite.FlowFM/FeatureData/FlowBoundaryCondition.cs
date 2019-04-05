@@ -226,12 +226,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
 
         public static string GetDescription(FlowBoundaryQuantityType flowQuantity)
         {
-            return EnumDescriptionAttributeTypeConverter.GetEnumDescription(flowQuantity);
+            return flowQuantity.GetDescription();
         }
 
         public static string GetDescription(BoundaryConditionDataType boundaryConditionDataType)
         {
-            return EnumDescriptionAttributeTypeConverter.GetEnumDescription(boundaryConditionDataType);
+            return boundaryConditionDataType.GetDescription();
         }
 
         public static string GetDescription(FlowBoundaryQuantityType flowBoundaryQuantityType,

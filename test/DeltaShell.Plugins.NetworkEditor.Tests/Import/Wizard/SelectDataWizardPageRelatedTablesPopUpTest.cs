@@ -7,25 +7,17 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Import.Wizard
 {
     [TestFixture]
-    [Category("OleDbSchema_x86")]
+    [Category(TestCategory.X86)]
     public class SelectDataWizardPageRelatedTablesPopUpTest
     {
-        private SelectDataWizardPageRelatedTablesPopUp page;
-        private ISchemaReader schemaReader;
-
-
-        [SetUp]
-        public void SetUp()
-        {
-            schemaReader = new OleDbSchemaReader();
-            page = new SelectDataWizardPageRelatedTablesPopUp();
-        }
-
         [Test]
         [Category(TestCategory.WindowsForms)]
         public void ShowSelectDataWizardPageRelatedTablesPopUp()
         {
-            var path = TestHelper.GetTestFilePath("HydroBaseCF_Basis.mdb");
+            var schemaReader = new OleDbSchemaReader();
+            var page = new SelectDataWizardPageRelatedTablesPopUp();
+
+            string path = TestHelper.GetTestFilePath("HydroBaseCF_Basis.mdb");
             schemaReader.Path = path;
             schemaReader.OpenConnection();
 

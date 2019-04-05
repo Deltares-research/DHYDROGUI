@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using DelftTools.Functions;
@@ -736,7 +737,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             }
         }
 
-        private void RouteNetworkCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        private void RouteNetworkCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if ((null == Network) || (Network.IsEditing))
             {

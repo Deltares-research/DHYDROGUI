@@ -30,7 +30,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         [Test]
         public void ReadProfileDatForFHM()
         {
-            var path = TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"FHM2011F.lit\1\PROFILE.DAT");
+            var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"FHM2011F.lit\1\PROFILE.DAT");
             var reader = new SobekProfileDatFileReader();
             var mappings = reader.Read(path).ToList();
             Assert.AreEqual(2552, mappings.Count);
@@ -52,7 +52,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         [Test]
         public void ReadProfileDatForPo()
         {
-            var path = TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"POup_GV.lit\7\PROFILE.DAT");
+            var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"POup_GV.lit\7\PROFILE.DAT");
             var reader = new SobekProfileDatFileReader();
             var mappings = reader.Read(path).ToList();
             Assert.AreEqual(4195, mappings.Count);
@@ -69,7 +69,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         [Test]
         public void TestReModel()
         {
-            var path = TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"ReModels\J_10BANK.sbk\4\DEFCRS.3");
+            var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"ReModels\J_10BANK.sbk\4\DEFCRS.3");
             var reader = new SobekProfileDatFileReader();
             var mappings = reader.Read(path).ToList();
             Assert.AreEqual(810, mappings.Count);

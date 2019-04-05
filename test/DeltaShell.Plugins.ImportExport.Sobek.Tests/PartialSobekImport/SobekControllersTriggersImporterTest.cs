@@ -11,11 +11,12 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
     [TestFixture]
     public class SobekControllersTriggersImporterTest
     {
-        [Test, Category(TestCategory.DataAccess)]
+        [Test]
+        [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]
         public void ImportControllerAndTriggers()
         {
-            var pathToSobekNetwork = TestHelper.GetDataDir() + @"\ReModels\JAMM2010.sbk\40\DEFTOP.1";
+            var pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\ReModels\JAMM2010.sbk\40\DEFTOP.1";
             var realTimeControlModel = new RealTimeControlModel();
             realTimeControlModel.ControlGroups.Clear();
 

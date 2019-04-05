@@ -12,8 +12,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
     [Extension(typeof(IPlugin))]
     public class SobekImportApplicationPlugin : ApplicationPlugin
     {
-        private Image image;
-
         public override string Name
         {
             get { return "Sobek import"; }
@@ -38,12 +36,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
         {
             get { return "3.5.0.0"; }
         }
-
-        public override Image Image
-        {
-            get { return image; }
-        }
-
+        
         public override IEnumerable<IFileImporter> GetFileImporters()
         {
             yield return new SobekHydroModelImporter();

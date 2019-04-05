@@ -60,7 +60,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         [Test]
         public void ReadAlfaFileLandelijkSobekModel()
         {
-            var path = TestHelper.GetDataDir() + @"..\DeltaShell.Plugins.ImportExport.Sobek.Tests\LSM1_0.lit\12\Unpaved.Alf";
+            var path = TestHelper.GetTestDataDirectory() + @"..\DeltaShell.Plugins.ImportExport.Sobek.Tests\LSM1_0.lit\12\Unpaved.Alf";
             var lstErnst = new SobekRRAlfaReader().Read(path);
 
             Assert.IsFalse(lstErnst.Any(alfa => alfa.Id == null));

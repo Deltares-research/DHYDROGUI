@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Utils;
+using DelftTools.Utils.Collections;
+using DelftTools.Utils.Reflection;
 
 namespace DeltaShell.Plugins.FMSuite.Common.IO
 {
@@ -115,11 +117,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                 errorMessage = String.Format("Structure '{0}' does not have a type specified.", name);
                 return true;
             }
-            
-            if (EnumerableExtensions.GetValueFromDescription<StructureType>(typeAsString) != structureType)
+            var structureTypeFromString = (StructureType)typeof(StructureType).GetEnumValueFromDescription(typeAsString);
+            if (structureTypeFromString != structureType)
             {
                 errorMessage = String.Format("Structure '{0}' has conflicting types: '{1}' and '{2}' are stated.",
-                                    name, EnumDescriptionAttributeTypeConverter.GetEnumDescription(structureType), typeAsString);
+                                    name, structureType.GetDescription(), typeAsString);
                 return true;
             }
 

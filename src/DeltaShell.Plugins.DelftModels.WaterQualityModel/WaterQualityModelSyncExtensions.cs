@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using DelftTools.Functions;
@@ -83,7 +84,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             }
         }
 
-        public static void InputCollectionChanged(this WaterQualityModel waterQualityModel, object sender, NotifyCollectionChangingEventArgs e)
+        public static void InputCollectionChanged(this WaterQualityModel waterQualityModel, object sender, NotifyCollectionChangedEventArgs e)
         {
             if (syncing) return;
 
@@ -91,7 +92,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
 
             try
             {
-                var dataItem = e.Item as IDataItem;
+                var removedOrAddedItem = e.GetRemovedOrAddedItem();
+                var dataItem = removedOrAddedItem as IDataItem;
                 if (dataItem != null)
                 {
                     if (IsChildOfWaterQualityModelDataItemSet(waterQualityModel, dataItem))
@@ -100,7 +102,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                     }
                 }
 
-                var substance = e.Item as WaterQualitySubstance;
+                var substance = removedOrAddedItem as WaterQualitySubstance;
                 if (substance != null)
                 {
                     UpdateInitialConditions(waterQualityModel, substance, e.Action);
@@ -108,26 +110,26 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                     UpdateMonitoringOutputDataItems(waterQualityModel, e);
                 }
 
-                var parameter = e.Item as WaterQualityParameter;
+                var parameter = removedOrAddedItem as WaterQualityParameter;
                 if (parameter != null)
                 {
                     UpdateProcessCoefficients(waterQualityModel, parameter, e.Action);
                 }
 
-                var observationPoint = e.Item as WaterQualityObservationPoint;
+                var observationPoint = removedOrAddedItem as WaterQualityObservationPoint;
                 if (observationPoint != null)
                 {
                     UpdateMonitoringOutputDataItems(waterQualityModel, e);
                 }
 
-                var outputParameter = e.Item as WaterQualityOutputParameter;
+                var outputParameter = removedOrAddedItem as WaterQualityOutputParameter;
                 if (outputParameter != null)
                 {
                     UpdateOutputParameterOutputCoverageDataItems(waterQualityModel, e);
                     UpdateMonitoringOutputDataItems(waterQualityModel, e);
                 }
 
-                var coverage = e.Item as UnstructuredGridCoverage;
+                var coverage = removedOrAddedItem as UnstructuredGridCoverage;
                 if (coverage != null)
                 {
                     // Occurs while adding/removing a Coverage by one of the function list views (initial conditions, process coefficients, etc.)
@@ -168,21 +170,21 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             }
         }
 
-        private static void UpdateOutputParameterOutputCoverageDataItems(WaterQualityModel waterQualityModel, NotifyCollectionChangingEventArgs e)
+        private static void UpdateOutputParameterOutputCoverageDataItems(WaterQualityModel waterQualityModel, NotifyCollectionChangedEventArgs e)
         {
-            var outputParameter = (WaterQualityOutputParameter)e.Item;
+            var outputParameter = (WaterQualityOutputParameter)e.GetRemovedOrAddedItem();
             if (!outputParameter.ShowInMap) return; // Only perform output parameter output coverage updates for output parameters that should be shown in map
 
             switch (e.Action)
             {
-                case NotifyCollectionChangeAction.Add:
+                case NotifyCollectionChangedAction.Add:
                     {
                         // Add a new output parameter output coverage data item
                         var insertPosition = waterQualityModel.SubstanceProcessLibrary.OutputParameters.Where(op => op.ShowInMap).ToList().IndexOf(outputParameter);
                         AddOutputCoverageDataItem(waterQualityModel, waterQualityModel.OutputParametersDataItemSet, insertPosition, outputParameter.Name);
                         break;
                     }
-                case NotifyCollectionChangeAction.Remove:
+                case NotifyCollectionChangedAction.Remove:
                     {
                         // Remove the existing output parameter output coverage data item
                         RemoveOutputCoverageDataItem(waterQualityModel, outputParameter.Name, waterQualityModel.OutputParametersDataItemSet.DataItems);
@@ -261,37 +263,38 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             return waterQualityModel.ObservationAreas.GetLabelList();
         }
         
-        private static void UpdateMonitoringOutputDataItems(WaterQualityModel waterQualityModel, NotifyCollectionChangingEventArgs e)
+        private static void UpdateMonitoringOutputDataItems(WaterQualityModel waterQualityModel, NotifyCollectionChangedEventArgs e)
         {
             // Add/remove a monitoring output data item for added/removed observation points
-            var observationPoint = e.Item as WaterQualityObservationPoint;
+            var removedOrAddedItem = e.GetRemovedOrAddedItem();
+            var observationPoint = removedOrAddedItem as WaterQualityObservationPoint;
             if (observationPoint != null && (waterQualityModel.ModelSettings.MonitoringOutputLevel == MonitoringOutputLevel.Points || waterQualityModel.ModelSettings.MonitoringOutputLevel == MonitoringOutputLevel.PointsAndAreas)) // Only perform observation variable output item updates for monitoring output level "Points" or "PointsAndAreas"
             {
                 switch (e.Action)
                 {
-                    case NotifyCollectionChangeAction.Add:
+                    case NotifyCollectionChangedAction.Add:
                         AddMonitoringOutputDataItem(waterQualityModel, observationPoint, GetMonitoringOutputVariables(waterQualityModel));
                         break;
-                    case NotifyCollectionChangeAction.Remove:
+                    case NotifyCollectionChangedAction.Remove:
                         RemoveMonitoringOutputDataItem(waterQualityModel, observationPoint);
                         break;
                 }
             }
 
             // Update all monitoring output data item time series for added/removed substances
-            var substance = e.Item as WaterQualitySubstance;
+            var substance = removedOrAddedItem as WaterQualitySubstance;
             if (substance != null) // Only perform monitoring output data item substance time series updates for substance calculations
             {
                 switch (e.Action)
                 {
-                    case NotifyCollectionChangeAction.Add:
+                    case NotifyCollectionChangedAction.Add:
                         {
                             // Add a new substance time series to all monitoring output data items
                             AddMonitoringOutputDataItemTimeSeries(waterQualityModel, substance, "");
 
                             break;
                         }
-                    case NotifyCollectionChangeAction.Remove:
+                    case NotifyCollectionChangedAction.Remove:
                         {
                             // Remove the existing substance time series from all monitoring output data items
                             RemoveMonitoringOutputDataItemTimeSeries(waterQualityModel, substance.Name);
@@ -302,19 +305,19 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             }
 
             // Update all monitoring output data item time series for added/removed output parameters that should be shown in his
-            var outputParameter = e.Item as WaterQualityOutputParameter;
+            var outputParameter = removedOrAddedItem as WaterQualityOutputParameter;
             if (outputParameter != null && outputParameter.ShowInHis) // Only perform monitoring output data item output parameter time series updates for substance calculations
             {
                 switch (e.Action)
                 {
-                    case NotifyCollectionChangeAction.Add:
+                    case NotifyCollectionChangedAction.Add:
                         {
                             // Add a new output parameter time series to all monitoring output data items
                             AddMonitoringOutputDataItemTimeSeries(waterQualityModel, outputParameter, "");
 
                             break;
                         }
-                    case NotifyCollectionChangeAction.Remove:
+                    case NotifyCollectionChangedAction.Remove:
                         {
                             // Remove the existing output parameter time series from all monitoring output data items
                             RemoveMonitoringOutputDataItemTimeSeries(waterQualityModel, outputParameter.Name);
@@ -475,11 +478,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                    waterQualityModel.GetDataItemByTag(WaterQualityModel.ProcessCoefficientsDataItemMetaData.Tag).Equals(dataItem.Owner);
         }
 
-        private static void HandleFunctionListCollectionChanged(UnstructuredGrid grid, NotifyCollectionChangeAction notifyCollectionChangeAction, IDataItem dataItem)
+        private static void HandleFunctionListCollectionChanged(UnstructuredGrid grid, NotifyCollectionChangedAction notifyCollectionChangeAction, IDataItem dataItem)
         {
             switch (notifyCollectionChangeAction)
             {
-                case NotifyCollectionChangeAction.Add:
+                case NotifyCollectionChangedAction.Add:
                     {
                         var unstructuredGridCoverage = dataItem.Value as UnstructuredGridCellCoverage;
                         // when an initial condition or other list of functions/coverages was altered (changed from constant to coverage in this case)
@@ -535,16 +538,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             operation.SetInputData(SpatialOperation.MaskInputName, polygonCollection);
         }
 
-        private static void UpdateUnstructuredGridCoverage(WaterQualityModel waterQualityModel, UnstructuredGridCoverage coverage, NotifyCollectionChangingEventArgs e)
+        private static void UpdateUnstructuredGridCoverage(WaterQualityModel waterQualityModel, UnstructuredGridCoverage coverage, NotifyCollectionChangedEventArgs e)
         {
             switch (e.Action)
             {
-                case NotifyCollectionChangeAction.Add:
+                case NotifyCollectionChangedAction.Add:
                     {
                         coverage.Grid = waterQualityModel.Grid;
                         break;
                     }
-                case NotifyCollectionChangeAction.Remove:
+                case NotifyCollectionChangedAction.Remove:
                     {
                         coverage.Grid = null;
                         break;
@@ -552,14 +555,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             }
         }
 
-        private static void UpdateProcessCoefficients(WaterQualityModel waterQualityModel, WaterQualityParameter parameter, NotifyCollectionChangeAction action)
+        private static void UpdateProcessCoefficients(WaterQualityModel waterQualityModel, WaterQualityParameter parameter, NotifyCollectionChangedAction action)
         {
             var name = parameter.Name;
             var defaultValue = parameter.DefaultValue;
             var unit = parameter.Unit;
             var description = parameter.Description;
 
-            if (action == NotifyCollectionChangeAction.Add && waterQualityModel.HasDataInHydroDynamics(name))
+            if (action == NotifyCollectionChangedAction.Add && waterQualityModel.HasDataInHydroDynamics(name))
             {
                 var functionFromHydroData = WaterQualityFunctionFactory.CreateFunctionFromHydroDynamics(name, defaultValue, unit, unit, description);
                 functionFromHydroData.FilePath = waterQualityModel.GetFilePathFromHydroDynamics(functionFromHydroData);
@@ -572,22 +575,22 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             }
         }
 
-        private static void UpdateInitialConditions(WaterQualityModel waterQualityModel, WaterQualitySubstance substanceVariable, NotifyCollectionChangeAction action)
+        private static void UpdateInitialConditions(WaterQualityModel waterQualityModel, WaterQualitySubstance substanceVariable, NotifyCollectionChangedAction action)
         {
             UpdateFunctionCollection(action, waterQualityModel.InitialConditions, substanceVariable.Name,
                 substanceVariable.InitialValue, substanceVariable.ConcentrationUnit, substanceVariable.Description);
         }
 
-        private static void UpdateFunctionCollection(NotifyCollectionChangeAction action, ICollection<IFunction> functionCollection, string functionName, double defaultValue, string componentUnitName, string description)
+        private static void UpdateFunctionCollection(NotifyCollectionChangedAction action, ICollection<IFunction> functionCollection, string functionName, double defaultValue, string componentUnitName, string description)
         {
             switch (action)
             {
-                case NotifyCollectionChangeAction.Add:
+                case NotifyCollectionChangedAction.Add:
                     {
                         AddNewConstantFunction(functionCollection, functionName, defaultValue, componentUnitName, description);
                         break;
                     }
-                case NotifyCollectionChangeAction.Remove:
+                case NotifyCollectionChangedAction.Remove:
                     {
                         RemoveFunction(functionCollection, functionName);
                         break;
@@ -610,17 +613,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             }
         }
 
-        private static void UpdateSubstanceOutputCoverageDataItems(WaterQualityModel waterQualityModel, WaterQualitySubstance substance, NotifyCollectionChangeAction action)
+        private static void UpdateSubstanceOutputCoverageDataItems(WaterQualityModel waterQualityModel, WaterQualitySubstance substance, NotifyCollectionChangedAction action)
         {
             switch (action)
             {
-                case NotifyCollectionChangeAction.Add:
+                case NotifyCollectionChangedAction.Add:
                     {
                         // Add a new substance output coverage data item
                         AddOutputCoverageDataItem(waterQualityModel, waterQualityModel.OutputSubstancesDataItemSet, waterQualityModel.SubstanceProcessLibrary.Substances.IndexOf(substance), substance.Name, substance.ConcentrationUnit);
                         break;
                     }
-                case NotifyCollectionChangeAction.Remove:
+                case NotifyCollectionChangedAction.Remove:
                     {
                         // Remove the existing substance output coverage data item
                         RemoveOutputCoverageDataItem(waterQualityModel, substance.Name, waterQualityModel.OutputSubstancesDataItemSet.DataItems);

@@ -58,7 +58,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         [Category(TestCategory.Integration)]
         public void ReadSaltBoundaryFile()
         {
-            var path = TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"ReModels\NatSobek.sbk\6\DEFICN.4");
+            var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"ReModels\NatSobek.sbk\6\DEFICN.4");
             var saltInitialConditions = new InitalSaltConditionsReader().Read(path);
             Assert.AreEqual(126, saltInitialConditions.Count());
             var initialCondition = saltInitialConditions.FirstOrDefault(sb => sb.Id == "P_4");

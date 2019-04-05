@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
@@ -15,7 +16,7 @@ using IEditableObject = DelftTools.Utils.Editing.IEditableObject;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
 {
-    public partial class YZTableView : UserControl, IView, INotifyCollectionChange, INotifyPropertyChange
+    public partial class YZTableView : UserControl, IView, INotifyCollectionChanged, INotifyPropertyChange
     {
         private const int YZTableYColumnIndex = 0;
         private const int YZTableZColumnIndex = 1;
@@ -159,15 +160,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             }
         }
 
-        void DataCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        void DataCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (!Equals(sender, data)) return;
 
-            if (e.Action == NotifyCollectionChangeAction.Add)
+            if (e.Action == NotifyCollectionChangedAction.Add)
             {
                 if (data.Count > 1)
                 {
-                    Coordinate coordinate = (Coordinate)e.Item;
+                    Coordinate coordinate = (Coordinate)e.GetRemovedOrAddedItem();
                     UnSubscribeToData();
                     // item is already added to internal list
                     coordinate.X = data[data.Count - 2].X;
@@ -175,10 +176,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
                     SubscribeToData();
                 }
             }
-            if (null != CollectionChanged)
-            {
-                CollectionChanged(sender, e);
-            }
+            CollectionChanged?.Invoke(sender, e);
         }
 
         void TableViewYZSelectionChanged(object sender, TableSelectionChangedEventArgs e)

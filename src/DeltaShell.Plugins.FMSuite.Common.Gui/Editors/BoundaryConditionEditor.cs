@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
@@ -695,7 +696,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
         }
 
         private bool geometryPanelRefreshRequired;
-        private void OnDataPointsChanged(object sender, NotifyCollectionChangingEventArgs e)
+        private void OnDataPointsChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (SelectedBoundaryCondition == null)
             {
@@ -709,9 +710,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
             UpdateSupportPointsListBox();
         }
 
-        private void BoundaryConditionsCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        private void BoundaryConditionsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            var boundaryConditionData = e.Item as IBoundaryCondition;
+            var removedOrAddedItem = e.GetRemovedOrAddedItem();
+            var boundaryConditionData = removedOrAddedItem as IBoundaryCondition;
             
             if (boundaryConditionData == null ||
                 boundaryConditionData.ProcessName != (string) categoryComboBox.SelectedItem)
@@ -719,13 +721,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
                 return;
             }
 
-            if (e.Action == NotifyCollectionChangeAction.Add)
+            if (e.Action == NotifyCollectionChangedAction.Add)
             {
-                conditionsListBox.Items.Add(e.Item);
+                conditionsListBox.Items.Add(removedOrAddedItem);
             }
-            if (e.Action == NotifyCollectionChangeAction.Remove)
+            if (e.Action == NotifyCollectionChangedAction.Remove)
             {
-                conditionsListBox.Items.Remove(e.Item);
+                conditionsListBox.Items.Remove(removedOrAddedItem);
             }
 
             RefreshQuantitiesComboBox();

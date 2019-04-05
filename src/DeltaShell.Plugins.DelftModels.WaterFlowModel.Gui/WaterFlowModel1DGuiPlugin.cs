@@ -200,17 +200,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui
             base.Deactivate();
         }
 
-        public override IMenuItem GetContextMenu(object sender, object dataobject)
+        public override IMenuItem GetContextMenu(object sender, object dataObject)
         {
             //TODO: method is a mess clean up.
 
             IFunction function;
-            bool activeViewIsMapView = Gui != null && Gui.DocumentViews.GetActiveViews<MapView>().Count()==1;
+            var activeViewIsMapView = Gui?.DocumentViews?.ActiveView?.GetViewsOfType<MapView>().Count() == 1;
 
-            if (dataobject is WaterFlowModel1DBoundaryNodeData)
+            if (dataObject is WaterFlowModel1DBoundaryNodeData waterFlowModel1DBoundaryNodeData)
             {
                 //add zoom to functionality to context menu
-                var waterFlowModel1DBoundaryNodeData = (WaterFlowModel1DBoundaryNodeData) dataobject;
                 if (waterFlowModel1DBoundaryNodeData.IsLinked || 
                     waterFlowModel1DBoundaryNodeData.DataType == WaterFlowModel1DBoundaryNodeDataType.FlowConstant ||
                     waterFlowModel1DBoundaryNodeData.DataType == WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant)
@@ -225,9 +224,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui
                 }
                 function = waterFlowModel1DBoundaryNodeData.Data;
             }
-            else if (dataobject is WaterFlowModel1DLateralSourceData)
+            else if (dataObject is WaterFlowModel1DLateralSourceData)
             {
-                var waterFlowModel1DLateralSourceData = (WaterFlowModel1DLateralSourceData)dataobject;
+                var waterFlowModel1DLateralSourceData = (WaterFlowModel1DLateralSourceData)dataObject;
                 if (waterFlowModel1DLateralSourceData.IsLinked || 
                     waterFlowModel1DLateralSourceData.DataType == WaterFlowModel1DLateralDataType.FlowConstant)
                 {
@@ -556,10 +555,5 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui
                 Gui?.MainWindow?.ProjectExplorer?.TreeView?.Refresh();
             }
         }
-    }
-
-    public interface IHydroModelGuiPlugin
-    {
-        Window GetValidationReportControl(object o);
     }
 }

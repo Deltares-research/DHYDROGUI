@@ -13,7 +13,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Category(TestCategory.Slow)]
         public void ReadPoNetwork()
         {
-            var pathToSobekNetwork = TestHelper.GetDataDir() + @"\POup_GV.lit\7\network.tp";
+            var pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\POup_GV.lit\7\network.tp";
             var importer = new SobekNetworkImporter();
 
             HydroNetwork network = null;

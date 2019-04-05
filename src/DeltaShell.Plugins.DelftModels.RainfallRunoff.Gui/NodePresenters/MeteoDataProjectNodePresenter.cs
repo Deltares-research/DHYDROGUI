@@ -3,6 +3,7 @@ using DelftTools.Controls;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf;
 using DelftTools.Utils;
+using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.NodePresenters
@@ -24,8 +25,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.NodePresenters
             node.Image = GetImageForType(meteoData);
 
             node.Text = meteoData.Name + " (" +
-                        EnumDescriptionAttributeTypeConverter.GetEnumDescription(
-                            meteoData.DataDistributionType) + ")";
+                        meteoData.DataDistributionType.GetDescription() + ")";
         }
 
         private static Image GetImageForType(MeteoData meteoData)

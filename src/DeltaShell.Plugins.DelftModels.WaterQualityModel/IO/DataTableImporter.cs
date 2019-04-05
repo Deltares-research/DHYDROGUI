@@ -14,6 +14,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         public string Name { get { return "Data table importer"; } }
 
         public string Category { get { return "WAQ data tables"; } }
+        public string Description
+        {
+            get { return string.Empty; }
+        }
 
         public Bitmap Image {  get { return null; } }
 

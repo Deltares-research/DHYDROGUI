@@ -22,6 +22,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
         [ExcludeFromCodeCoverage]
         public string Category { get { return "General"; } }
 
+        public string Description
+        {
+            get { return string.Empty; }
+        }
+
         public Func<IBoundaryCondition, DateTime?> GetRefDateForBoundaryCondition { private get; set; }
 
         public bool Export(object item, string path)

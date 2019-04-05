@@ -16,7 +16,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         [Test]
         public void ImportDrainageBasinWithSacramentoCatchments()
         {
-            var pathToNetwork = TestHelper.GetDataDir() + @"\TEST_SAC.lit\2\NETWORK.TP";
+            var pathToNetwork = TestHelper.GetTestDataDirectory() + @"\TEST_SAC.lit\2\NETWORK.TP";
             var rrDrainageBasinImporter = new SobekRRDrainageBasinImporter() { TargetObject = new DrainageBasin(), PathSobek = pathToNetwork };
             rrDrainageBasinImporter.Import();
 
@@ -29,7 +29,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         [Test]
         public void ImportDrainageBasinWithHbvCatchments()
         {
-            var pathToNetwork = TestHelper.GetDataDir() + @"\TEST_HBV.lit\2\NETWORK.TP";
+            var pathToNetwork = TestHelper.GetTestDataDirectory() + @"\TEST_HBV.lit\2\NETWORK.TP";
             var rrDrainageBasinImporter = new SobekRRDrainageBasinImporter()
                 {
                     TargetObject = new DrainageBasin(),

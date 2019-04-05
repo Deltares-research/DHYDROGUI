@@ -29,6 +29,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         public string Name => "RTC-Tools xml files";
 
         public string Category => "Xml files";
+        public string Description
+        {
+            get { return string.Empty; }
+        }
 
         [ExcludeFromCodeCoverage] public Bitmap Image => Resources.brick_add;
 

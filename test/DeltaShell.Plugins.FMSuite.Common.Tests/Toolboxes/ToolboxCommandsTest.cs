@@ -12,7 +12,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.Toolboxes
         [Test]
         public void LoadScriptsFromDisk()
         {
-            var toolboxDirectory = Path.Combine(TestHelper.GetDataDir(), "toolboxes");
+            var toolboxDirectory = Path.Combine(TestHelper.GetTestDataDirectory(), "toolboxes");
             var commands = ToolboxCommands.LoadFrom(toolboxDirectory).OrderBy(c => c.Title).ToList();
 
             Assert.AreEqual(2, commands.Count);
