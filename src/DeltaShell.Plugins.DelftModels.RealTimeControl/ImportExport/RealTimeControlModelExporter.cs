@@ -55,7 +55,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 
         public IEnumerable<Type> SourceTypes()
         {
-            yield break;
+            yield return typeof(RealTimeControlModel);
         }
 
         public string FileFilter => "xml files|*.xml";
