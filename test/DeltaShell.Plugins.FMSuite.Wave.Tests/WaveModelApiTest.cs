@@ -40,6 +40,7 @@ public class WaveModelApiTest
     }
 
     [Test]
+    [Category(TestCategory.Jira)] // See issue D3DFMIQ-795
     [Category(TestCategory.Integration)]
     [Category(TestCategory.Slow)]
     public void WaveModelApiInitAndRunTest()
