@@ -11,7 +11,6 @@ using NUnit.Framework;
 namespace DeltaShell.Dimr.Tests
 {
     [TestFixture]
-    [Category(TestCategory.Jira)] // See issue D3DFMIQ-795
     public class DimrApiTests
     {
         [SetUp]

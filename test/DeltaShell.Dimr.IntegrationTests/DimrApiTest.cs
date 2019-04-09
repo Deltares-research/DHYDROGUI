@@ -17,7 +17,7 @@ namespace DeltaShell.Dimr.IntegrationTests
         }
 
         [Test]
-        [Category(TestCategory.Jira)] // See issue D3DFMIQ-795
+        [Category(TestCategory.Jira)] // See issue D3DFMIQ-816
         public void GivenDimrApiWhenFinalizeThenNoExceptionThrown()
         {
             using (var dimrApi = DimrApiFactory.CreateNew())
@@ -70,7 +70,7 @@ namespace DeltaShell.Dimr.IntegrationTests
         }
 
         [Test]
-        [Category(TestCategory.Jira)] // See issue D3DFMIQ-795
+        [Category(TestCategory.Jira)] // See issue D3DFMIQ-816
         public void GivenDimrApiWhenUpdateThenNoExceptionThrown()
         {
             using (var dimrApi = DimrApiFactory.CreateNew())

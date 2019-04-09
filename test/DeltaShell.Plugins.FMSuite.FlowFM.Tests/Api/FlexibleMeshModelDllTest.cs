@@ -406,7 +406,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         }
 
         [Test]
-        [Category(TestCategory.Jira)] // See issue D3DFMIQ-795
         public void TestGetSnappedFeaturesWorksAfterFailure()
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
