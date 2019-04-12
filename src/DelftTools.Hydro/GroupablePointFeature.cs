@@ -29,7 +29,11 @@ namespace DelftTools.Hydro
 
         public override object Clone()
         {
-            var instance = (GroupablePointFeature) base.Clone();
+            var instance = new GroupablePointFeature()
+            {
+                Geometry = Geometry,
+                Attributes = Attributes?.Clone() as IFeatureAttributeCollection
+            };
             return this.CloneGroupableFeature(instance);
         }
     }

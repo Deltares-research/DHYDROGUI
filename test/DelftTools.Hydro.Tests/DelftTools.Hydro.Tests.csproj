@@ -58,6 +58,7 @@
     <Compile Include="Forms\NetworkCoverageFunctionViewTest.cs" />
     <Compile Include="GroupableFeatureComparerTest.cs" />
     <Compile Include="GroupableFeatureExtensionsTest.cs" />
+    <Compile Include="GroupablePointFeatureTest.cs" />
     <Compile Include="Helpers\CrossSectionConverterTest.cs" />
     <Compile Include="Helpers\CrossSectionHelperTest.cs" />
     <Compile Include="Helpers\CrossSectionValidatorTest.cs" />
