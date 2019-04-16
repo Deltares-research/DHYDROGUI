@@ -563,4 +563,10 @@ Manhole with unique id '{4}' is not imported.</value>
   <data name="WaterFlowFMModel_ChangingWeirFormulaWhenAlsoUsedInRTC_Structure_component__0__has_been_removed_from_RTC_Control_Group__1__due_to_type_change" xml:space="preserve">
     <value> Structure component'{0}' has been removed from Control Group '{1}' due to type change.</value>
   </data>
+  <data name="ExtForceFile_StoreUnknownQuantities_File__0__could_not_be_found_for_quantity___1___in_the_external_force_file__2__" xml:space="preserve">
+    <value>File {0} could not be found for quantity '{1}' in the external force file {2}.</value>
+  </data>
+  <data name="ExtForceFile_StoreUnknownQuantities_Quantity___0___detected_in_the_external_force_file_and_will_be_passed_to_the_computational_core__This_may_affect_your_simulation_" xml:space="preserve">
+    <value>Quantity '{0}' detected in the external force file and will be passed to the computational core. This may affect your simulation.</value>
+  </data>
 </root>

@@ -53,7 +53,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public const string EmbankmentBnd = "1d2dbnd";
         public const string EmbankmentForcingFile = "REALTIME";
 
-
         public const string PliFileExtension = "pli";
         public const string PolFileExtension = "pol";
         public const string TimFileExtension = "tim";
@@ -61,6 +60,46 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public const string QhFileExtension = "qh";
         public const string T3DFileExtension = "t3d";
         public const string XyzFileExtension = "xyz";
+
+        public static IEnumerable<string> KnownQuantities = new List<string>
+        {
+            WaterLevelAtBound,
+            DischargeAtBound,
+            QhAtBound,
+            VelocityAtBound,
+            NormalVelocityAtBound,
+            TangentialVelocityAtBound,
+            NeumannConditionAtBound,
+            RiemannConditionAtBound,
+            RiemannVelocityAtBound,
+            OpenFlowConditionAtBound,
+            SalinityAtBound,
+            TemperatureAtBound,
+            TracerAtBound,
+            ConcentrationAtBound,
+            LowerGateLevel,
+            DamLevel,
+            SourceAndSink,
+            FrictCoef,
+            HorEddyViscCoef,
+            HorEddyDiffCoef,
+            AdvectionType,
+            InitialWaterLevel,
+            InitialSalinity,
+            InitialSalinityTop,
+            InitialTemperature,
+            WindX,
+            WindY,
+            WindXY,
+            Rain,
+            AtmosphericPressure,
+            PressureWindXWindY,
+            SpiderWeb,
+            MeteoData,
+            MeteoDataWithRadiation,
+            EmbankmentBnd,
+            EmbankmentForcingFile
+        };
 
         public static readonly IDictionary<BoundaryConditionDataType, string> ForcingToFileExtensionMapping =
             new Dictionary<BoundaryConditionDataType, string>

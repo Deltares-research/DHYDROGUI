@@ -30,17 +30,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
     [Category(TestCategory.DataAccess)]
     public class ExtForceFileTest
     {
-        private void CheckInternalTidesFrictionCoefficient(WaterFlowFMModelDefinition def)
+        private static void ValidateUnknownQuantity(WaterFlowFMModelDefinition def)
         {
-            Assert.AreEqual(1, def.UnsupportedFileBasedExtForceFileItems.Count);
-            Assert.AreEqual("surroundingDomain.pol",
-                def.UnsupportedFileBasedExtForceFileItems[0].UnsupportedExtForceFileItem.FileName);
-            Assert.AreEqual("surroundingDomain.pol",
-                def.UnsupportedFileBasedExtForceFileItems[0].UnsupportedExtForceFileItem.FileName);
-            Assert.AreEqual(10, def.UnsupportedFileBasedExtForceFileItems[0].UnsupportedExtForceFileItem.FileType);
-            Assert.AreEqual(4, def.UnsupportedFileBasedExtForceFileItems[0].UnsupportedExtForceFileItem.Method);
-            Assert.AreEqual("*", def.UnsupportedFileBasedExtForceFileItems[0].UnsupportedExtForceFileItem.Operand);
-            Assert.AreEqual(0.0125, def.UnsupportedFileBasedExtForceFileItems[0].UnsupportedExtForceFileItem.Value);
+            Assert.AreEqual(1, def.UnsupportedFileBasedExtForceFileItems.Count, 
+                            "One unknown quantity was expected to be stored on the model definition.");
+
+            ExtForceFileItem unsupportedQuantity = def.UnsupportedFileBasedExtForceFileItems.First().UnsupportedExtForceFileItem;
+
+            Assert.AreEqual("surroundingDomain.pol", unsupportedQuantity.FileName,
+                            "File name of quantity was not as expected.");
+            Assert.AreEqual(10, unsupportedQuantity.FileType, 
+                            "File type of quantity was not as expected.");
+            Assert.AreEqual(4, unsupportedQuantity.Method, 
+                            "Method type of quantity was not as expected.");
+            Assert.AreEqual("*", unsupportedQuantity.Operand, 
+                            "Operand of quantity was not as expected.");
+            Assert.AreEqual(0.0125, unsupportedQuantity.Value, 
+                            "Value of quantity was not as expected.");
         }
 
         private static void AddBoundaryCondition(WaterFlowFMModel model, FlowBoundaryCondition bc)
@@ -171,7 +177,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             extPath = TestHelper.CreateLocalCopy(extPath);
             Assert.IsTrue(File.Exists(extPath));
 
-            var expectedMessage = string.Format(Resources.ExtForceFile_ReadPolyLineData_Unsupported_quantity_type___0___in_the__ext_file__1__detected__It_will_not_be_imported_, "generalstructure", extPath);
+            var expectedMessage = string.Format(Resources.ExtForceFile_StoreUnknownQuantities_Quantity___0___detected_in_the_external_force_file_and_will_be_passed_to_the_computational_core__This_may_affect_your_simulation_, "generalstructure");
             var extForceFile = new ExtForceFile();
             TestHelper.AssertAtLeastOneLogMessagesContains(() => extForceFile.Read(extPath, def), expectedMessage);
         }
@@ -186,7 +192,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             extPath = TestHelper.CreateLocalCopy(extPath);
             Assert.IsTrue(File.Exists(extPath));
 
-            var expectedMessage = string.Format(Resources.ExtForceFile_ReadPolyLineData_Unsupported_quantity_type___0___in_the__ext_file__1__detected__It_will_not_be_imported_, "generalstructure", extPath);
+            var expectedMessage = string.Format(Resources.ExtForceFile_StoreUnknownQuantities_Quantity___0___detected_in_the_external_force_file_and_will_be_passed_to_the_computational_core__This_may_affect_your_simulation_, "generalstructure");
             var extForceFile = new ExtForceFile();
 
             Assert.IsFalse(def.BoundaryConditions.Any());
@@ -200,7 +206,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
-        public void GivenAnExtFileWithInternalTidesFrictionCoefficient_WhenImportingItAndExportingIt_ThenThisQuantityShouldBeReadAndWritten()
+        public void GivenAnExtFileWithAnUnknownQuantity_WhenImportingItAndExportingIt_ThenThisQuantityShouldBeReadAndWritten()
         {
             var def = new WaterFlowFMModelDefinition();
             var extPath = TestHelper.GetTestFilePath(@"ExtFileTest\withInternalTidesFrictionCoefficientAndKnownQuantities.ext");
@@ -211,10 +217,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             var extForceFile = new ExtForceFile();
             var expectedMessage =
-                string.Format(
-                    "Spatial varying quantity {0} detected in the external force file and will be passed to the computational core. This may affect your simulation.",
-                    extForceFile.UnsupportedQuantityInMemory);
-           
+                string.Format(Resources.ExtForceFile_StoreUnknownQuantities_Quantity___0___detected_in_the_external_force_file_and_will_be_passed_to_the_computational_core__This_may_affect_your_simulation_, "internaltidesfrictioncoefficient");
 
             Assert.IsFalse(def.BoundaryConditions.Any());
             TestHelper.AssertAtLeastOneLogMessagesContains(() => extForceFile.Read(extPath, def), expectedMessage);
@@ -226,7 +229,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.AreEqual("OB_001_orgsize-Water level", boundaryCondition.Name);
 
             // Check if the internaltidesfrictioncoefficient is in memory
-            CheckInternalTidesFrictionCoefficient(def);
+            ValidateUnknownQuantity(def);
 
             Assert.That(File.Exists(Path.Combine(Path.GetDirectoryName(extPath),def.UnsupportedFileBasedExtForceFileItems[0].UnsupportedExtForceFileItem.FileName)));
 
@@ -241,13 +244,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             newExtFile.Read(newPath, newDef); // load written definition back
             // Check if the internaltidesfrictioncoefficient is in memory again, so that the write method is correct.
-            CheckInternalTidesFrictionCoefficient(newDef);
+            ValidateUnknownQuantity(newDef);
         }
 
         [Test]
-        public void GivenAnExtFileWithInternalTidesFrictionCoefficient_WhenImportingItAndCorrespondingFileIsMissing_ThenThisQuantityShouldNotBeImported()
+        public void GivenAnExtFileWithAnUnknownQuantity_WhenImportingAndCorrespondingFileIsMissing_ThenThisQuantityShouldBeImported()
         {
-            var def = new WaterFlowFMModelDefinition();
+            // Given
+            var modelDefinition = new WaterFlowFMModelDefinition();
             var extPath =
                 TestHelper.GetTestFilePath(@"ExtFileTest\ExtFileWithInternalTidesFrictionCoefficientAndMissingFile\withInternalTidesFrictionCoefficientAndKnownQuantities.ext");
             Assert.IsTrue(File.Exists(extPath));
@@ -256,32 +260,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.IsTrue(File.Exists(extPath));
 
             var extForceFile = new ExtForceFile();
-            var expectedMessage =
-                string.Format(
-                    "Spatial varying quantity {0} detected in the external force file and will be passed to the computational core. This may affect your simulation.",
-                    extForceFile.UnsupportedQuantityInMemory);
+            var expectedMessage = string.Format(Resources.ExtForceFile_StoreUnknownQuantities_Quantity___0___detected_in_the_external_force_file_and_will_be_passed_to_the_computational_core__This_may_affect_your_simulation_, "internaltidesfrictioncoefficient");
 
-            var correspondingFile = Path.Combine(Path.GetDirectoryName(extPath), "surroundingDomain.pol");
-            var expectedMessage2 = string.Format("File {0} could not be found for an internaltidesfrictioncoefficient quantity in the external force file", correspondingFile);
+            Assert.IsFalse(modelDefinition.BoundaryConditions.Any());
 
-            List< string> messages = new List<string>();
-            messages.Add(expectedMessage);
-            messages.Add(expectedMessage2);
+            // When
+            TestHelper.AssertLogMessageIsGenerated(() => extForceFile.Read(extPath, modelDefinition), expectedMessage);
 
-            IEnumerable<string> messagesExpected = messages;
-
-            Assert.IsFalse(def.BoundaryConditions.Any());
-            TestHelper.AssertLogMessagesAreGenerated(() => extForceFile.Read(extPath, def), messagesExpected);
-            
-            Assert.IsTrue(def.BoundaryConditions.Any());
-
-            /* Just check the boundary has been imported. */
-            var boundaryCondition = def.BoundaryConditions.First();
+            // Then
+            ValidateUnknownQuantity(modelDefinition);
+            Assert.IsTrue(modelDefinition.BoundaryConditions.Any());
+            var boundaryCondition = modelDefinition.BoundaryConditions.First();
             Assert.AreEqual("WaterLevel", boundaryCondition.VariableName);
             Assert.AreEqual("OB_001_orgsize-Water level", boundaryCondition.Name);
-
-            // Check if the internaltidesfrictioncoefficient is not in memory
-            Assert.AreEqual(0, def.UnsupportedFileBasedExtForceFileItems.Count);
         }
 
         [Test]

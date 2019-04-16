@@ -149,6 +149,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to File {0} could not be found for quantity &apos;{1}&apos; in the external force file {2}..
+        /// </summary>
+        public static string ExtForceFile_StoreUnknownQuantities_File__0__could_not_be_found_for_quantity___1___in_the_external_force_file__2__ {
+            get {
+                return ResourceManager.GetString("ExtForceFile_StoreUnknownQuantities_File__0__could_not_be_found_for_quantity___1_" +
+                        "__in_the_external_force_file__2__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Quantity &apos;{0}&apos; detected in the external force file and will be passed to the computational core. This may affect your simulation..
+        /// </summary>
+        public static string ExtForceFile_StoreUnknownQuantities_Quantity___0___detected_in_the_external_force_file_and_will_be_passed_to_the_computational_core__This_may_affect_your_simulation_ {
+            get {
+                return ResourceManager.GetString("ExtForceFile_StoreUnknownQuantities_Quantity___0___detected_in_the_external_force" +
+                        "_file_and_will_be_passed_to_the_computational_core__This_may_affect_your_simulat" +
+                        "ion_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to File import failed: {0}.
         /// </summary>
         public static string File_import_failed___0_ {
