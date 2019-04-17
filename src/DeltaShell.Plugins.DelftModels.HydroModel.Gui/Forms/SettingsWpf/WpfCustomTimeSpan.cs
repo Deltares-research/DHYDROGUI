@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Xceed.Wpf.Toolkit;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
@@ -38,13 +39,19 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
                 return new TimeSpan(0);
 
             var d = int.Parse(dhhmmssfff[0]);
-            var hh = int.Parse(dhhmmssfff[1]);
-            var mm = int.Parse(dhhmmssfff[2]);
-            var ss = int.Parse(dhhmmssfff[3]);
-            var fff = int.Parse(dhhmmssfff[4]);
+            var hh = ConvertToValidDigit(dhhmmssfff[1]);
+            var mm = ConvertToValidDigit(dhhmmssfff[2]);
+            var ss = ConvertToValidDigit(dhhmmssfff[3]);
+            var fff = ConvertToValidDigit(dhhmmssfff[4]);
             
             var currentTimeSpan = new TimeSpan(d, hh, mm, ss, fff);
             return currentTimeSpan;
+        }
+
+        private static int ConvertToValidDigit(string textInput)
+        {
+            var digitsOnly = new Regex(@"[^\d]");
+            return Convert.ToInt32(digitsOnly.Replace(textInput, ""));
         }
 
         /// <summary>

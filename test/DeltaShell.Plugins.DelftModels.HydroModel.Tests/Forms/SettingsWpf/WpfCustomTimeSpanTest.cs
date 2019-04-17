@@ -5,10 +5,18 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
 {
     [TestFixture]
-    public class WpfCustomTimeSpanTest:WpfCustomTimeSpan
+    public class WpfCustomTimeSpanTest : WpfCustomTimeSpan
     {
         [Test]
         public void Test_CreateWpfCustomTimeSpan()
+        {
+            var control = new WpfCustomTimeSpan();
+
+            Assert.IsNotNull(control);
+        }
+
+        [Test]
+        public void Test2_CreateWpfCustomTimeSpan()
         {
             var control = new WpfCustomTimeSpan();
             Assert.IsNotNull(control);
@@ -19,6 +27,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
         [Test]
         [TestCase("thisIsNotATimeSpanValue")]
         [TestCase("0d 00h:00m:00s.000f")]
+        [TestCase("23d 13 01:61:61.1001")]
         [TestCase("10.10.10")]
         [TestCase("10:10:10:10")]
         [TestCase("10:10")]
@@ -26,13 +35,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
         {
             var control = new WpfCustomTimeSpan();
             Assert.IsNotNull(control);
-            
+
             //Expected:
             var expectedResult = new TimeSpan(0);
 
             //Ensure the value is converted as expected
             TimeSpan? convertedValue = null;
-            Assert.DoesNotThrow( () => convertedValue = base.ConvertTextToValue(text));
+            Assert.DoesNotThrow(() => convertedValue = base.ConvertTextToValue(text));
             Assert.IsNotNull(convertedValue);
             Assert.AreEqual(expectedResult, convertedValue);
         }
@@ -41,7 +50,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
         [TestCase("0d 00:00:00.000", 0, 0, 0, 0, 0)]
         [TestCase("0d 25:61:61.1001", 1, 2, 2, 2, 1)]
         [TestCase("23 01:61:61.1001", 23, 2, 2, 2, 1)]
-        [TestCase("23d 13 01:61:61.1001", 23, 2, 2, 2, 1)]
         public void Test_WpfCustomTimeSpan_ConvertTextToValue_Given_Valid_Input(string text, int d, int hh, int mm, int ss, int fff)
         {
             var control = new WpfCustomTimeSpan();
