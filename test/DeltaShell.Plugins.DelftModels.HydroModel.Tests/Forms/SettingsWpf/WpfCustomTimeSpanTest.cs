@@ -1,6 +1,8 @@
 ﻿using System;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
 using NUnit.Framework;
+using PostSharp.Aspects.Advices;
+using Xceed.Wpf.Toolkit;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
 {
@@ -104,6 +106,32 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
             var convertedValue = string.Empty;
             Assert.DoesNotThrow(() => convertedValue = base.ConvertValueToText());
             Assert.AreEqual(expectedValue, convertedValue);
+        }
+        #endregion
+
+        #region DateTimePartSelection
+
+        [Test]
+        [TestCase("Day")]
+        [TestCase(1, 3, 5, 6, 7, "1d 03:05:06.007")]
+        [TestCase(0, 25, 61, 61, 1001, "1d 02:02:02.001")]
+        public void GivenWpfCustomTimeSpanValue_WhenSelectingCurrentDateTimePart_TheSelectedTimeSpanValueIsUpdatedOnlyOnce()
+        {
+            Value = new TimeSpan(0,0,0,0,0);
+            var timeSpanValue = Value.Value;
+           
+            //Current selected date time part is wrong at first selection
+            CurrentDateTimePart = DateTimePart.Day;
+            Assert.True(Value.HasValue);
+            Assert.DoesNotThrow(OnIncrement);
+
+            CurrentDateTimePart = DateTimePart.Day;
+            Assert.That(timeSpanValue.Milliseconds, Is.EqualTo(1));
+
+            //Day time part is selected for the second time but now correct value is updated
+            CurrentDateTimePart = DateTimePart.Day;
+            OnIncrement();
+            Assert.That(timeSpanValue.Days, Is.EqualTo(1));
         }
         #endregion
     }

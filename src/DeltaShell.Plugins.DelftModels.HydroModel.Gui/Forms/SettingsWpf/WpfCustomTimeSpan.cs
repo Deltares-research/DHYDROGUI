@@ -100,6 +100,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
             }
         }
 
+        /// <summary>
+        /// Event that fires when the value of an selected date time part of <see cref="TimeSpan"/> is increased".
+        /// </summary>
         protected override void OnIncrement()
         {
             if (Value.HasValue)
@@ -109,6 +112,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
             }
         }
 
+        /// <summary>
+        /// Event that fires when the value of an selected date time part of <see cref="TimeSpan"/> is decreased".
+        /// </summary>
         protected override void OnDecrement()
         {
             if (Value.HasValue)
