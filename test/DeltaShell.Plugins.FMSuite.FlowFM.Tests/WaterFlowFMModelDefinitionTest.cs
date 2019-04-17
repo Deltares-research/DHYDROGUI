@@ -240,8 +240,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var extForceFileContent = File.ReadAllText("readWriteMdu/fm_files.ext");
             Assert.IsTrue(extForceFileContent.Contains(
                 "* FACTOR  =   : Conversion factor for this provider"));
-            Assert.IsFalse(extForceFileContent.Contains(
-                "* This comment line will be removed (shiptxy not yet supported and thus not read)"));
+            Assert.IsTrue(extForceFileContent.Contains(
+                "* This comment line will not be removed, eventhough shiptxy is not yet supported."));
             Assert.IsTrue(mduContent.Contains(
                 "! comment line on initial water level"));
             Assert.IsTrue(mduContent.Contains(
