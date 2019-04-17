@@ -100,7 +100,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     Resources
                         .ExtForceFile_ReadSpatialData_The_model_may_not_run__Spatial_varying_quantity__0__could_not_be_imported_because_the_prefix_does_not_match__1__for_Tracers_or__2__for_Spatial_Varying_Sediments_,
                     "initialspatialvaryingsedimentSediment_sand_SedConc",
-                    ExtForceFile.InitialTracerPrefix, ExtForceFile.InitialSpatialVaryingSedimentPrefix));
+                    ExtForceQuantNames.InitialTracerPrefix, ExtForceQuantNames.InitialSpatialVaryingSedimentPrefix));
 
             FileUtils.DeleteIfExists(extPath);
         }
@@ -121,7 +121,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                         Resources
                             .ExtForceFile_ReadSpatialData_The_model_may_not_run__Spatial_varying_quantity__0__could_not_be_imported_because_the_prefix_does_not_match__1__for_Tracers_or__2__for_Spatial_Varying_Sediments_,
                         ExtForceQuantNames.InitialWaterLevel,
-                        ExtForceFile.InitialTracerPrefix, ExtForceFile.InitialSpatialVaryingSedimentPrefix)),
+                        ExtForceQuantNames.InitialTracerPrefix, ExtForceQuantNames.InitialSpatialVaryingSedimentPrefix)),
                 "The warn message was logged, but we were not expecting it to appear");
 
             FileUtils.DeleteIfExists(extPath);

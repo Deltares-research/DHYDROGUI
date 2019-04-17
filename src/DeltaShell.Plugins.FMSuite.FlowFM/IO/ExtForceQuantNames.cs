@@ -61,6 +61,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public const string T3DFileExtension = "t3d";
         public const string XyzFileExtension = "xyz";
 
+        public const string InitialTracerPrefix = "initialtracer";
+        public const string InitialSpatialVaryingSedimentPrefix = "initialsedfrac";
+
         public static IEnumerable<string> KnownQuantities = new List<string>
         {
             WaterLevelAtBound,
@@ -98,7 +101,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             MeteoData,
             MeteoDataWithRadiation,
             EmbankmentBnd,
-            EmbankmentForcingFile
+            EmbankmentForcingFile,
+            InitialTracerPrefix,
+            InitialSpatialVaryingSedimentPrefix
         };
 
         public static readonly IDictionary<BoundaryConditionDataType, string> ForcingToFileExtensionMapping =
@@ -162,8 +167,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         }
 
         // wind quantities
-        public static readonly IDictionary<WindQuantity, string> WindQuantityNames = new Dictionary
-            <WindQuantity, string>
+        public static readonly IDictionary<WindQuantity, string> WindQuantityNames = new Dictionary<WindQuantity, string>
         {
             {WindQuantity.VelocityX, WindX},
             {WindQuantity.VelocityY, WindY},

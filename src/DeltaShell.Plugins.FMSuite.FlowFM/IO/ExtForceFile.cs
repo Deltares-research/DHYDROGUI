@@ -32,8 +32,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public const string AreaKey = "AREA";
         public const string AveragingTypeKey = "AVERAGINGTYPE";
         public const string RelSearchCellSizeKey = "RELATIVESEARCHCELLSIZE";
-        public const string InitialTracerPrefix = "initialtracer";
-        public const string InitialSpatialVaryingSedimentPrefix = "initialsedfrac";
 
         // general keywords in file
         private const string DisabledQuantityKey = "DISABLED_QUANTITY";
@@ -352,10 +350,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
 
             //Read tracer items.
-            var initialTracerItems = unReadExtForceFileItems.Where(fi => fi.Quantity.StartsWith(InitialTracerPrefix)).ToList();
+            var initialTracerItems = unReadExtForceFileItems.Where(fi => fi.Quantity.StartsWith(ExtForceQuantNames.InitialTracerPrefix)).ToList();
             foreach (var tracerItem in initialTracerItems)
             {
-                string tracerName = tracerItem.Quantity.Substring(InitialTracerPrefix.Length);
+                string tracerName = tracerItem.Quantity.Substring(ExtForceQuantNames.InitialTracerPrefix.Length);
                 ReadSpatialOperationData(initialTracerItems, modelDefinition, tracerItem.Quantity, tracerName);
             }
 
@@ -363,14 +361,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             if (!unReadExtForceFileItems.Any()) return;
 
             //Read sediment items.
-            var initialSedimentItems = unReadExtForceFileItems.Where(fi => fi.Quantity.StartsWith(InitialSpatialVaryingSedimentPrefix)).ToList();
+            var initialSedimentItems = unReadExtForceFileItems.Where(fi => fi.Quantity.StartsWith(ExtForceQuantNames.InitialSpatialVaryingSedimentPrefix)).ToList();
             foreach (var sedimentItem in initialSedimentItems)
             {
                 /* DELFT3DFM-1112
                  * The only Spatially Varying Sediment that gets read from the ExtForces file is
                  * SedimentConcentration. We could simply remove its prefix, however, due to the 
                  * way it's meant to be written in said file, we need to add the postfix */
-                string spatialvaryingSedConc = sedimentItem.Quantity.Substring(InitialSpatialVaryingSedimentPrefix.Length) + SedConcPostfix;
+                string spatialvaryingSedConc = sedimentItem.Quantity.Substring(ExtForceQuantNames.InitialSpatialVaryingSedimentPrefix.Length) + SedConcPostfix;
                 ReadSpatialOperationData(initialSedimentItems, modelDefinition, sedimentItem.Quantity, spatialvaryingSedConc);
             }
 
@@ -384,7 +382,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 log.WarnFormat(
                     Resources
                         .ExtForceFile_ReadSpatialData_The_model_may_not_run__Spatial_varying_quantity__0__could_not_be_imported_because_the_prefix_does_not_match__1__for_Tracers_or__2__for_Spatial_Varying_Sediments_,
-                    xyzItem.Quantity, InitialTracerPrefix, InitialSpatialVaryingSedimentPrefix);
+                    xyzItem.Quantity, ExtForceQuantNames.InitialTracerPrefix, ExtForceQuantNames.InitialSpatialVaryingSedimentPrefix);
             }
         }
 
@@ -754,7 +752,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             foreach (var tracerName in modelDefinition.InitialTracerNames)
             {
                 extForceFileItems.AddRange(
-                    WriteSpatialData(InitialTracerPrefix + tracerName,
+                    WriteSpatialData(ExtForceQuantNames.InitialTracerPrefix + tracerName,
                                      modelDefinition.GetSpatialOperations(tracerName))
                         .Distinct());
             }
@@ -785,7 +783,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 }
 
                 var forceFileItems = WriteSpatialData(spatiallyVaryingSedimentPropertyName,
-                                                      spatialOperations, InitialSpatialVaryingSedimentPrefix)
+                                                      spatialOperations, ExtForceQuantNames.InitialSpatialVaryingSedimentPrefix)
                                      .Distinct().ToList();
 
                 //Remove the postfix from the quantity (it is not accepted by the kernel)
