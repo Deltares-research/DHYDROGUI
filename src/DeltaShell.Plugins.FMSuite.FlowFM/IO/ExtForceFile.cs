@@ -61,6 +61,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private readonly IDictionary<ExtForceFileItem, object> existingForceFileItems;
         private readonly IDictionary<IFeatureData, ExtForceFileItem> polylineForceFileItems;
 
+        private string currentLine;
+
         public ExtForceFile() : base(true)
         {
             existingForceFileItems = new Dictionary<ExtForceFileItem, object>();
@@ -1001,9 +1003,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             try
             {
-                GetNextLine();
+                currentLine = GetNextLine();
 
-                while (CurrentLine != null && IsNewEntry(CurrentLine))
+                while (currentLine != null && IsNewEntry(currentLine))
                 {
                     var startLineNumber = LineNumber;
 
@@ -1027,8 +1029,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private ExtForceFileItem ReadQuantityBlock(int startLineNumber)
         {
-            var propertyName = GetKeyPart(CurrentLine);
-            var extForceFileItem = new ExtForceFileItem(GetValuePart(CurrentLine));
+            var propertyName = GetKeyPart(currentLine);
+            var extForceFileItem = new ExtForceFileItem(GetValuePart(currentLine));
 
             if (propertyName != QuantityKey)
             {
@@ -1036,14 +1038,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 extForceFileItem.Enabled = false;
             }
 
-            GetNextLine();
+            currentLine = GetNextLine();
 
             try
             {
-                while (CurrentLine != null && !IsNewEntry(CurrentLine))
+                while (currentLine != null && !IsNewEntry(currentLine))
                 {
                     ReadQuantityProperty(extForceFileItem);
-                    GetNextLine();
+                    currentLine = GetNextLine();
                 }
             }
             catch (FormatException e)
@@ -1056,7 +1058,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private void ReadQuantityProperty(ExtForceFileItem extForceFileItem)
         {
-            var propertyName = GetKeyPart(CurrentLine);
+            var propertyName = GetKeyPart(currentLine);
 
             switch (propertyName)
             {
@@ -1094,7 +1096,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     SetFrictionType(extForceFileItem);
                     break;
                 default:
-                    log.WarnFormat(Resources.ExtForceFile_ReadQuantityProperty_Unexpected_line___0___on_line__1__in_file__2__and_will_be_ignored_, CurrentLine, LineNumber, FilePath);
+                    log.WarnFormat(Resources.ExtForceFile_ReadQuantityProperty_Unexpected_line___0___on_line__1__in_file__2__and_will_be_ignored_, currentLine, LineNumber, FilePath);
                     break;
             }
         }
@@ -1103,7 +1105,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             if (string.IsNullOrEmpty(extForceFileItem.FileName))
             {
-                extForceFileItem.FileName = GetValuePart(CurrentLine);
+                extForceFileItem.FileName = GetValuePart(currentLine);
             }
             else
             {
@@ -1120,7 +1122,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             if (extForceFileItem.FileType == int.MinValue)
             {
-                extForceFileItem.FileType = GetIntegerPropertyValue(CurrentLine);
+                extForceFileItem.FileType = GetIntegerPropertyValue(currentLine);
             }
             else
             {
@@ -1137,7 +1139,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             if (extForceFileItem.Method == int.MinValue)
             {
-                extForceFileItem.Method = GetIntegerPropertyValue(CurrentLine);
+                extForceFileItem.Method = GetIntegerPropertyValue(currentLine);
 
                 // backward compatibility: samples triangulation changed from 4 to 5 in #30984
                 if (extForceFileItem.FileType == ExtForceQuantNames.FileTypes.Triangulation && extForceFileItem.Method == 4)
@@ -1160,7 +1162,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             if (extForceFileItem.Operand == null)
             {
-                extForceFileItem.Operand = GetValuePart(CurrentLine);
+                extForceFileItem.Operand = GetValuePart(currentLine);
             }
             else
             {
@@ -1172,7 +1174,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             if (double.IsNaN(extForceFileItem.Value))
             {
-                extForceFileItem.Value = GetDouble(GetValuePart(CurrentLine));
+                extForceFileItem.Value = GetDouble(GetValuePart(currentLine));
             }
             else
             {
@@ -1184,7 +1186,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             if (double.IsNaN(extForceFileItem.Factor))
             {
-                extForceFileItem.Factor = GetDouble(GetValuePart(CurrentLine));
+                extForceFileItem.Factor = GetDouble(GetValuePart(currentLine));
             }
             else
             {
@@ -1201,7 +1203,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             if (double.IsNaN(extForceFileItem.Offset))
             {
-                extForceFileItem.Offset = GetDouble(GetValuePart(CurrentLine));
+                extForceFileItem.Offset = GetDouble(GetValuePart(currentLine));
             }
             else
             {
@@ -1221,7 +1223,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 LogWarningQuantityPropertyAlreadySet(AreaKey);
             }
 
-            extForceFileItem.ModelData[AreaKey] = GetDoublePropertyValue(CurrentLine);
+            extForceFileItem.ModelData[AreaKey] = GetDoublePropertyValue(currentLine);
         }
 
         private void SetAveragingType(ExtForceFileItem extForceFileItem)
@@ -1236,7 +1238,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 LogWarningQuantityPropertyAlreadySet(AveragingTypeKey);
             }
 
-            extForceFileItem.ModelData[AveragingTypeKey] = GetIntegerPropertyValue(CurrentLine);
+            extForceFileItem.ModelData[AveragingTypeKey] = GetIntegerPropertyValue(currentLine);
         }
 
         private void SetRelativeSearchCellSize(ExtForceFileItem extForceFileItem)
@@ -1251,7 +1253,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 LogWarningQuantityPropertyAlreadySet(RelSearchCellSizeKey);
             }
 
-            extForceFileItem.ModelData[RelSearchCellSizeKey] = GetDoublePropertyValue(CurrentLine);
+            extForceFileItem.ModelData[RelSearchCellSizeKey] = GetDoublePropertyValue(currentLine);
         }
 
         private void SetFrictionType(ExtForceFileItem extForceFileItem)
@@ -1261,7 +1263,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 LogWarningQuantityPropertyAlreadySet(FricTypeKey);
             }
 
-            extForceFileItem.ModelData[FricTypeKey] = GetIntegerPropertyValue(CurrentLine);
+            extForceFileItem.ModelData[FricTypeKey] = GetIntegerPropertyValue(currentLine);
         }
 
         private void LogWarningQuantityPropertyAlreadySet(string quantityName)
