@@ -57,7 +57,7 @@ namespace DelftTools.Hydro.Structures
             {
                 // For performance: initialize lazy
                 if (CrestLevelTimeSeries == null)
-                    CrestLevelTimeSeries = HydroTimeSeriesFactory.CreateTimeSeries("Crest level", "Crest level", "m AD");
+                    CrestLevelTimeSeries = HydroTimeSeriesFactory.CreateTimeSeries(ParameterNames.CrestLevel, ParameterNames.CrestLevel, "m AD");
             }
             else
             {

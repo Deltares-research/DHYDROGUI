@@ -482,7 +482,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
         {
             var editFunctionDialog = new EditFunctionDialog { Text = "Time dependent crest level for Weir" };
             var dialogData = (TimeSeries)data.CrestLevelTimeSeries.Clone();
-            editFunctionDialog.ColumnNames = new[] { "Date time", String.Format("Crest level [{0}]", CrestLevelUnitLabel.Text) };
+            editFunctionDialog.ColumnNames = new[] { "Date time", String.Format($"{ParameterNames.CrestLevel} [{0}]", CrestLevelUnitLabel.Text) };
             editFunctionDialog.Data = dialogData;
             if (DialogResult.OK == editFunctionDialog.ShowDialog())
             {

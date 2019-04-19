@@ -150,7 +150,7 @@ namespace DelftTools.Hydro.Structures.WeirFormula
                 useHorizontalDoorOpeningWidthTimeSeries = value;
                 if (useHorizontalDoorOpeningWidthTimeSeries && HorizontalDoorOpeningWidthTimeSeries == null)
                 {
-                    HorizontalDoorOpeningWidthTimeSeries = HydroTimeSeriesFactory.CreateTimeSeries("Horizontal opening width", "Horizontal opening width", "m AD");
+                    HorizontalDoorOpeningWidthTimeSeries = HydroTimeSeriesFactory.CreateTimeSeries(ParameterNames.HorizontalOpeningWidth, ParameterNames.HorizontalOpeningWidth, "m AD");
                 }
             }
         }
@@ -171,7 +171,7 @@ namespace DelftTools.Hydro.Structures.WeirFormula
                 useLowerEdgeLevelTimeSeries = value;
                 if (useLowerEdgeLevelTimeSeries && LowerEdgeLevelTimeSeries == null)
                 {
-                    LowerEdgeLevelTimeSeries = HydroTimeSeriesFactory.CreateTimeSeries("Gate lower edge level", "Gate lower edge level", "m AD");
+                    LowerEdgeLevelTimeSeries = HydroTimeSeriesFactory.CreateTimeSeries(ParameterNames.GateLowerEdgeLevel, ParameterNames.GateLowerEdgeLevel, "m AD");
                 };
             }
         }
