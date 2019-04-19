@@ -65,8 +65,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
 
             var editFunctionDialog = new EditFunctionDialog
             {
-                Text = $@"Edge level time series for {weirName}",
-                ColumnNames = new[] { "Date time", "Lower edge level [m]" },
+                Text = $@"Gate lower edge level time series for {weirName}",
+                ColumnNames = new[] { "Date time", "Gate lower edge level [m]" },
                 ChartViewOption = ChartViewOptions.AllSeries,
                 Data = dialogData
             };
@@ -84,8 +84,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
 
             var editFunctionDialog = new EditFunctionDialog
             {
-                Text = $@"Horizontal door opening width time series for {weirName}",
-                ColumnNames = new[] { "Date time", "Horizontal door opening width [m]" },
+                Text = $@"Horizontal opening width time series for {weirName}",
+                ColumnNames = new[] { "Date time", "Horizontal opening width [m]" },
                 ChartViewOption = ChartViewOptions.AllSeries,
                 Data = dialogData
             };
