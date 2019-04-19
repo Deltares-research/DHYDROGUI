@@ -258,7 +258,7 @@
                     </Grid.ColumnDefinitions>
                     <Label Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center" Content="Time Series" />
 
-                    <Label Grid.Row="1" Grid.Column="0" Content="Lower edge level"/>
+                    <Label Grid.Row="1" Grid.Column="0" Content="Gate lower edge level"/>
                     <ContentControl Grid.Row="1" Grid.Column="1">
                         <ContentControl.Style>
                             <Style TargetType="ContentControl">
@@ -288,7 +288,7 @@
                     </ContentControl>
 
                     <CheckBox Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding EnableLowerEdgeLevelTimeSeries}"/>
-                    <Label Grid.Row="2" Grid.Column="0" Content="Door opening height" Visibility="{Binding GatedVisibility}" IsEnabled="False"/>
+                    <Label Grid.Row="2" Grid.Column="0" Content="Gate opening height" Visibility="{Binding GatedVisibility}" IsEnabled="False"/>
 
                     <Grid Grid.Row="2" Grid.Column="1" ToolTip="Calculated value from: Gate Lower edge level - Sill Crest level" >
                         <Grid.ColumnDefinitions>
@@ -298,7 +298,7 @@
                         <Label Content="{Binding GateOpeningHeight, Mode=OneWay}" Visibility="{Binding GatedVisibility}" VerticalAlignment="Center" Foreground="Gray"/>
                         <TextBlock Grid.Column="1" Text="m"  Visibility="{Binding GatedVisibility}" Width="{StaticResource UnitWidth}" Margin="3" Foreground="Gray"/>
                     </Grid>
-                    <Label Grid.Row="3" Grid.Column="0" Content="Door height"/>
+                    <Label Grid.Row="3" Grid.Column="0" Content="Gate height"/>
 
                     <Grid Grid.Row="3" Grid.Column="1">
                         <Grid.ColumnDefinitions>
