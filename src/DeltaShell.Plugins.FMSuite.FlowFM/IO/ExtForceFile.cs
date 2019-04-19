@@ -307,9 +307,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             yield return extForceFileItem;
         }
 
-        private void ReadSpatialData(IEnumerable<ExtForceFileItem> extForceFileItems, WaterFlowFMModelDefinition modelDefinition)
+        private void ReadSpatialData(IList<ExtForceFileItem> extForceFileItems, WaterFlowFMModelDefinition modelDefinition)
         {
-            var unReadExtForceFileItems = extForceFileItems.ToList();
+            var unReadExtForceFileItems = extForceFileItems;
 
             var knownQuantities = new Dictionary<string, string>
             {
