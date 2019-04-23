@@ -975,7 +975,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private static bool IsUnknownQuantity(ExtForceFileItem extForceFileItem)
         {
             var quantityName = extForceFileItem.Quantity;
-            return !ExtForceQuantNames.KnownQuantities.Any(n => quantityName.StartsWith(n)) && !quantityName.EndsWith(SedConcPostfix);
+            return !(ExtForceQuantNames.KnownQuantities.Any(q => quantityName.Equals(q))
+                     || ExtForceQuantNames.KnownQuantityPrefixes.Any(p=>quantityName.StartsWith(p))
+                     || quantityName.EndsWith(SedConcPostfix));
         }
 
         private void StoreUnknownQuantities(IEnumerable<ExtForceFileItem> unknownForceFileItems, WaterFlowFMModelDefinition modelDefinition)

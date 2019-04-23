@@ -78,8 +78,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             OpenFlowConditionAtBound,
             SalinityAtBound,
             TemperatureAtBound,
-            TracerAtBound,
-            ConcentrationAtBound,
             LowerGateLevel,
             DamLevel,
             SourceAndSink,
@@ -102,6 +100,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             MeteoDataWithRadiation,
             EmbankmentBnd,
             EmbankmentForcingFile,
+        };
+
+        public static IEnumerable<string> KnownQuantityPrefixes = new List<string>
+        {
+            TracerAtBound,
+            ConcentrationAtBound,
             InitialTracerPrefix,
             InitialSpatialVaryingSedimentPrefix
         };
