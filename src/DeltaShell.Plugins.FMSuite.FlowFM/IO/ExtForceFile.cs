@@ -516,6 +516,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     throw new Exception($"Invalid interpolation method {extForceFileItem.Method} for file {extForceFileItem.FileName}");
             }
 
+            existingForceFileItems[extForceFileItem] = operation;
+
             return operation;
         }
 
@@ -952,36 +954,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             var extForceFileItems = ParseExtForceFile();
             var forceFileItems = extForceFileItems as IList<ExtForceFileItem> ?? extForceFileItems.ToList();
 
-            var unknownQuantities = FilterOutUnknownQuantities(forceFileItems).ToList();
-            StoreUnknownQuantities(unknownQuantities, modelDefinition);
-
             ReadPolyLineData(forceFileItems, modelDefinition);
             ReadWindItems(forceFileItems, modelDefinition);
             ReadHeatFluxModelData(forceFileItems, modelDefinition);
             ReadSpatialData(forceFileItems, modelDefinition);
+            StoreUnknownQuantities(forceFileItems, modelDefinition);
         }
 
-        private static IEnumerable<ExtForceFileItem> FilterOutUnknownQuantities(ICollection<ExtForceFileItem> extForceFileItems)
+        private IEnumerable<ExtForceFileItem> GetUnknownExtForceFileItems(IEnumerable<ExtForceFileItem> allExtForceFileItems)
         {
-            IEnumerable<ExtForceFileItem> unknownQuantities = extForceFileItems.Where(IsUnknownQuantity).ToList();
-
-            foreach (ExtForceFileItem unknownQuantity in unknownQuantities)
-            {
-                extForceFileItems.Remove(unknownQuantity);
-                yield return unknownQuantity;
-            }
+            return allExtForceFileItems.Except(existingForceFileItems.Select(e => e.Key));
         }
 
-        private static bool IsUnknownQuantity(ExtForceFileItem extForceFileItem)
+        private void StoreUnknownQuantities(IEnumerable<ExtForceFileItem> allExtForceFileItems, WaterFlowFMModelDefinition modelDefinition)
         {
-            var quantityName = extForceFileItem.Quantity;
-            return !(ExtForceQuantNames.KnownQuantities.Any(q => quantityName.Equals(q))
-                     || ExtForceQuantNames.KnownQuantityPrefixes.Any(p=>quantityName.StartsWith(p))
-                     || quantityName.EndsWith(SedConcPostfix));
-        }
-
-        private void StoreUnknownQuantities(IEnumerable<ExtForceFileItem> unknownForceFileItems, WaterFlowFMModelDefinition modelDefinition)
-        {
+            var unknownForceFileItems = GetUnknownExtForceFileItems(allExtForceFileItems).ToList();
             foreach (var unknownForceFileItem in unknownForceFileItems)
             {
                 log.WarnFormat(
