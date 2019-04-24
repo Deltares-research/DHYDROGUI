@@ -32,6 +32,7 @@ model,Version,,,,String,,,,TRUE,,,,,,FM kernel Version
 model,MDUFormatVersion,,,,String,1.02,,,TRUE,,,,,,File format version (do not edit this)
 model,GuiVersion,,,,String,,,,TRUE,,,,,,DeltaShell FM suite version
 model,AutoStart,,,AutoStart:0|1|2,0|1|2,0,0,2,TRUE,,,,,,"Autostart simulation after loading MDU (0: no, 1: autostart, 2: autostartstop)"
+model,PathsRelativeToParent,,,,0|1,0,,,TRUE,,,,,,"Default: 0. Whether or not (1/0) to resolve file names (e.g. inside the *.ext file) relative to their direct parent, instead of to the toplevel MDU working dir."
 geometry,NetFile,,,,FileName,,,,TRUE,,,,,,Unstructured grid file *_net.nc
 geometry,BathymetryFile,,,,FileName,,,,TRUE,,,,,,Bathymetry points file *.xyb
 geometry,DryPointsFile,,,,MultipleEntriesFileName,,,,TRUE,,,,,,"Dry points file *.xyz (third column dummy z values), or dry areas polygon file *.pol (third column 1/-1: inside/outside)"
