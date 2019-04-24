@@ -188,8 +188,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.AreEqual("WaterLevel", boundaryCondition.VariableName);
             Assert.AreEqual("OB_001_orgsize-Water level", boundaryCondition.Name);
 
-            // Check if the internaltidesfrictioncoefficient is in memory
-            ValidateUnknownQuantity(def);
+            ValidateUnknownQuantities(def);
 
             Assert.That(File.Exists(Path.Combine(Path.GetDirectoryName(extPath), def.UnsupportedFileBasedExtForceFileItems[0].UnsupportedExtForceFileItem.FileName)));
 
@@ -203,8 +202,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var newDef = new WaterFlowFMModelDefinition();
 
             newExtFile.Read(newPath, newDef); // load written definition back
-            // Check if the internaltidesfrictioncoefficient is in memory again, so that the write method is correct.
-            ValidateUnknownQuantity(newDef);
+            ValidateUnknownQuantities(newDef);
         }
 
         [Test]
@@ -228,7 +226,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             TestHelper.AssertLogMessageIsGenerated(() => extForceFile.Read(extPath, modelDefinition), expectedMessage);
 
             // Then
-            ValidateUnknownQuantity(modelDefinition);
+            ValidateUnknownQuantities(modelDefinition);
             Assert.IsTrue(modelDefinition.BoundaryConditions.Any());
             var boundaryCondition = modelDefinition.BoundaryConditions.First();
             Assert.AreEqual("WaterLevel", boundaryCondition.VariableName);
@@ -926,23 +924,38 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.IsTrue(File.Exists("chan2_east_outflow.tim"));
         }
 
-        private static void ValidateUnknownQuantity(WaterFlowFMModelDefinition def)
+        private static void ValidateUnknownQuantities(WaterFlowFMModelDefinition def)
         {
-            Assert.AreEqual(1, def.UnsupportedFileBasedExtForceFileItems.Count,
-                            "One unknown quantity was expected to be stored on the model definition.");
+            Assert.AreEqual(2, def.UnsupportedFileBasedExtForceFileItems.Count,
+                            "Two unknown quantities were expected to be stored on the model definition.");
 
-            ExtForceFileItem unsupportedQuantity = def.UnsupportedFileBasedExtForceFileItems.First().UnsupportedExtForceFileItem;
+            ExtForceFileItem unsupportedQuantity1 = def.UnsupportedFileBasedExtForceFileItems.First().UnsupportedExtForceFileItem;
 
-            Assert.AreEqual("surroundingDomain.pol", unsupportedQuantity.FileName,
+            Assert.AreEqual("internaltidesfrictioncoefficient", unsupportedQuantity1.Quantity,
+                            "Quantity name was not as expected.");
+            Assert.AreEqual("surroundingDomain.pol", unsupportedQuantity1.FileName,
                             "File name of quantity was not as expected.");
-            Assert.AreEqual(10, unsupportedQuantity.FileType,
+            Assert.AreEqual(10, unsupportedQuantity1.FileType,
                             "File type of quantity was not as expected.");
-            Assert.AreEqual(4, unsupportedQuantity.Method,
+            Assert.AreEqual(4, unsupportedQuantity1.Method,
                             "Method type of quantity was not as expected.");
-            Assert.AreEqual("*", unsupportedQuantity.Operand,
+            Assert.AreEqual("*", unsupportedQuantity1.Operand,
                             "Operand of quantity was not as expected.");
-            Assert.AreEqual(0.0125, unsupportedQuantity.Value,
+            Assert.AreEqual(0.0125, unsupportedQuantity1.Value,
                             "Value of quantity was not as expected.");
+
+            ExtForceFileItem unsupportedQuantity2 = def.UnsupportedFileBasedExtForceFileItems.Last().UnsupportedExtForceFileItem;
+
+            Assert.AreEqual("rainfall_rate", unsupportedQuantity2.Quantity,
+                            "Quantity name was not as expected.");
+            Assert.AreEqual("RAD_NL25_RAC_MFBS_5min.nc", unsupportedQuantity2.FileName,
+                            "File name of quantity was not as expected.");
+            Assert.AreEqual(11, unsupportedQuantity2.FileType,
+                            "File type of quantity was not as expected.");
+            Assert.AreEqual(3, unsupportedQuantity2.Method,
+                            "Method type of quantity was not as expected.");
+            Assert.AreEqual("O", unsupportedQuantity2.Operand,
+                            "Operand of quantity was not as expected.");
         }
 
         private static void AddBoundaryCondition(WaterFlowFMModel model, FlowBoundaryCondition bc)
