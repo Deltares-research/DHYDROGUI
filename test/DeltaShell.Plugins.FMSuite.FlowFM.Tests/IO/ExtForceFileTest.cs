@@ -169,7 +169,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         public void GivenAnExtFileWithAnUnknownQuantity_WhenImportingItAndExportingIt_ThenThisQuantityShouldBeReadAndWritten()
         {
             var def = new WaterFlowFMModelDefinition();
-            var extPath = TestHelper.GetTestFilePath(@"ExtFileTest\withInternalTidesFrictionCoefficientAndKnownQuantities.ext");
+            var extPath = TestHelper.GetTestFilePath(@"ExtFileTest\withKnownAndUnknownQuantities.ext");
             Assert.IsTrue(File.Exists(extPath));
 
             extPath = TestHelper.CreateLocalCopy(extPath);
@@ -211,7 +211,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             // Given
             var modelDefinition = new WaterFlowFMModelDefinition();
             var extPath =
-                TestHelper.GetTestFilePath(@"ExtFileTest\ExtFileWithInternalTidesFrictionCoefficientAndMissingFile\withInternalTidesFrictionCoefficientAndKnownQuantities.ext");
+                TestHelper.GetTestFilePath(@"ExtFileTest\ExtFileWithInternalTidesFrictionCoefficientAndMissingFile\withKnownAndUnknownQuantities.ext");
             Assert.IsTrue(File.Exists(extPath));
 
             extPath = TestHelper.CreateLocalCopy(extPath);
