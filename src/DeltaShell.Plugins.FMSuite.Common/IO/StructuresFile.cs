@@ -8,7 +8,6 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Hydro.Structures.WeirFormula;
-using DelftTools.Utils;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
@@ -26,33 +25,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
     public class StructuresFile : FMSuiteFileBase, IFeature2DFileBase<IStructure>
     {
         private const string StructureCategoryName = "structure";
-        private static readonly ILog Log = LogManager.GetLogger(typeof (StructuresFile));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(StructuresFile));
 
-        public StructureSchema<ModelPropertyDefinition> StructureSchema { private get; set; }
-
-        public DateTime ReferenceDate { private get; set; }
-
-        private string TimFolder { get; set; }
-
-        public IList<IStructure> Read(string filePath)
-        {
-            return
-                ReadStructures2D(filePath)
-                    .Select(s => ConvertStructure(s, filePath))
-                    .Where(s => s != null)
-                    .ToList();
-        }
-
-        public IList<IStructure> CopyFileAndRead(string filePath, string oldFilePath)
-        {
-            return
-                ReadStructures2D(filePath)
-                    .Select(s => ConvertStructure(s, filePath, oldFilePath))
-                    .Where(s => s != null)
-                    .ToList();
-        }
-
-        private Dictionary<string, string> BackwardsCompatibilityMapping = new Dictionary<string, string>
+        private readonly Dictionary<string, string> backwardsCompatibilityMapping = new Dictionary<string, string>
         {
             {
                 "levelcenter", KnownStructureProperties.CrestLevel
@@ -119,6 +94,19 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             }
         };
 
+        public StructureSchema<ModelPropertyDefinition> StructureSchema { private get; set; }
+
+        public DateTime ReferenceDate { private get; set; }
+
+        public IList<IStructure> CopyFileAndRead(string filePath, string oldFilePath)
+        {
+            return
+                ReadStructures2D(filePath)
+                    .Select(s => ConvertStructure(s, filePath, oldFilePath))
+                    .Where(s => s != null)
+                    .ToList();
+        }
+
         public IEnumerable<Structure2D> ReadStructures2D(string filePath)
         {
             var categories = new DelftIniReader().ReadDelftIniFile(filePath);
@@ -157,15 +145,23 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             }
         }
 
-        private void RenameBackwardsCompatibleProperties(DelftIniCategory category)
+        public static void WriteStructures2D(string path, IEnumerable<Structure2D> structures)
         {
-            foreach (DelftIniProperty property in category.Properties)
-            {
-                if (BackwardsCompatibilityMapping.TryGetValue(property.Name, out string newName))
-                {
-                    property.Name = newName;
-                }
-            }
+            new DelftIniWriter().WriteDelftIniFile(structures.Select(CreateDelftIniCategory), path);
+        }
+
+        public static void ParseStructure(FMSuiteFileBase fmSuiteFileBase)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IList<IStructure> Read(string filePath)
+        {
+            return
+                ReadStructures2D(filePath)
+                    .Select(s => ConvertStructure(s, filePath))
+                    .Where(s => s != null)
+                    .ToList();
         }
 
         public void Write(string filePath, IEnumerable<IStructure> structures)
@@ -175,16 +171,24 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                     .Select(s => CreateDelftIniCategory(s, filePath, ReferenceDate)), filePath);
         }
 
-        public static void WriteStructures2D(string path, IEnumerable<Structure2D> structures)
+        private string TimFolder { get; set; }
+
+        private void RenameBackwardsCompatibleProperties(DelftIniCategory category)
         {
-            new DelftIniWriter().WriteDelftIniFile(structures.Select(CreateDelftIniCategory),path);
+            foreach (DelftIniProperty property in category.Properties)
+            {
+                if (backwardsCompatibilityMapping.TryGetValue(property.Name, out string newName))
+                {
+                    property.Name = newName;
+                }
+            }
         }
 
         private IStructure ConvertStructure(Structure2D structure, string filePath, string oldFilePath = null)
         {
             try
             {
-                if(oldFilePath != null && !filePath.Equals(oldFilePath))
+                if (oldFilePath != null && !filePath.Equals(oldFilePath))
                     CopyPolylineFile(structure.GetProperty(KnownStructureProperties.PolylineFile).GetValueAsString(), Path.GetDirectoryName(filePath), Path.GetDirectoryName(oldFilePath));
                 return StructureFactory.CreateStructure(structure, filePath, ReferenceDate, oldFilePath);
             }
@@ -231,9 +235,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                     Log.ErrorFormat("Structure '{0}' is of unsupported type and therefore skipped.", structure.Name);
                 }
             }
+
             return list;
         }
-        
+
         private static DelftIniCategory CreateDelftIniCategory(Structure2D structure)
         {
             var delftIniCategory = new DelftIniCategory(StructureCategoryName);
@@ -245,16 +250,16 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                 {
                     continue;
                 }
+
                 if (property.PropertyDefinition.FilePropertyName == KnownStructureProperties.CrestLevel &&
                     FMParser.FromString<double>(property.GetValueAsString()) <= 0.0)
                 {
                     continue;
                 }
+
                 delftIniCategory.Properties.Add(new DelftIniProperty
                 {
-                    Name = property.PropertyDefinition.FilePropertyName,
-                    Value = property.GetValueAsString(),
-                    Comment = property.PropertyDefinition.Description
+                    Name = property.PropertyDefinition.FilePropertyName, Value = property.GetValueAsString(), Comment = property.PropertyDefinition.Description
                 });
             }
 
@@ -272,6 +277,81 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             }
 
             return delftIniCategory;
+        }
+
+        private Structure2D CreateStructure2D(StructureSchema<ModelPropertyDefinition> schema, string structureType,
+                                              DelftIniCategory category, string filePath)
+        {
+            var newStructure = new Structure2D(structureType);
+
+            foreach (var property in category.Properties)
+            {
+                var modelPropertyDefinition = schema.GetDefinition(structureType, property.Name);
+                if (modelPropertyDefinition == null)
+                {
+                    Log.WarnFormat("Property '{0}' not supported for structures of type '{1}' and is skipped. (Line {2} of file {3})",
+                                   property.Name, structureType, property.LineNumber, filePath);
+                    continue;
+                }
+
+                try
+                {
+                    var structureProperty = new StructureProperty(modelPropertyDefinition, property.Value);
+                    var propertyValue = structureProperty.Value as Steerable;
+                    if (propertyValue != null && propertyValue.Mode == SteerableMode.TimeSeries)
+                    {
+                        var directory = Path.GetDirectoryName(propertyValue.TimeSeriesFilename);
+                        if (directory != TimFolder)
+                        {
+                            if (string.IsNullOrEmpty(directory) && TimFolder != null)
+                            {
+                                Log.WarnFormat(
+                                    "Structure time series {0} will be written to the time series folder {1}",
+                                    propertyValue.TimeSeriesFilename, TimFolder);
+                            }
+                            else
+                            {
+                                if (TimFolder != null)
+                                {
+                                    Log.WarnFormat(
+                                        "Replacing structure time series folder {0} with {1}... all structure time series will be written to this folder",
+                                        TimFolder, directory);
+                                }
+
+                                if (!string.IsNullOrEmpty(directory))
+                                {
+                                    TimFolder = directory;
+                                }
+                            }
+                        }
+                    }
+
+                    newStructure.Properties.Add(structureProperty);
+                }
+                catch (FormatException e)
+                {
+                    throw new FormatException(String.Format("An invalid value{0} was encountered (expected {1}) for property '{2}' on line {3} of file {4}",
+                                                            e.InnerException is OverflowException ? " (too large/small)" : "",
+                                                            GetValueTypeDescription(modelPropertyDefinition.DataType, modelPropertyDefinition),
+                                                            property.Name, property.LineNumber, filePath), e);
+                }
+            }
+
+            return newStructure;
+        }
+
+        private static object GetValueTypeDescription(Type dataType, ModelPropertyDefinition modelPropertyDefinition)
+        {
+            if (dataType == typeof(int)) return "a whole number";
+            if (dataType == typeof(double)) return "a number";
+            if (dataType == typeof(IList<double>)) return "a series of space separated numbers";
+            if (dataType == typeof(TimeSpan)) return "a time span in seconds";
+            if (dataType == typeof(bool)) return "a '1' or '0'";
+            if (dataType == typeof(DateTime)) return "a date in yyyyMMdd or yyyyMMdHHmmss format";
+            if (dataType == typeof(Steerable)) return "a number or a filepath to a time series";
+            if (dataType.IsEnum) return "Any of the following values: " + String.Join(", ", Enum.GetValues(modelPropertyDefinition.DataType));
+
+            throw new NotImplementedException();
         }
 
         #region Sobek Structure to DelftIni related methods:
@@ -322,15 +402,15 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                 Log.ErrorFormat("Geometry type '{0}' for structure '{1}' not supported and therefore not written.", structure.Geometry.GetType(), structure.Name);
             }
         }
-        
+
         private IEnumerable<DelftIniProperty> ConstructStructureProperties(IStructure structure, string structureType, string path, DateTime refDate)
         {
             var pump = structure as IPump;
-            if(pump != null)
+            if (pump != null)
                 return ConstructPumpProperties(pump, structureType, path, refDate);
 
             var weir = structure as IWeir;
-            if(weir != null)
+            if (weir != null)
                 return ConstructWeirProperties(weir, structureType, path, refDate);
 
             var gate = structure as IGate;
@@ -342,7 +422,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 
         private IEnumerable<DelftIniProperty> ConstructWeirProperties(IStructure1D structure, string structureType, string path, DateTime refDate)
         {
-            var weir = (IWeir)structure;
+            var weir = (IWeir) structure;
             var weirFormula = weir.WeirFormula;
             if (weirFormula is SimpleWeirFormula) return ConstructSimpleWeirProperties(weir, path, structureType, refDate);
             if (weirFormula is GeneralStructureWeirFormula) return ConstructGeneralStructureProperties(weir, path, structureType, refDate);
@@ -355,38 +435,38 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         {
             var properties = new List<DelftIniProperty>();
 
-            var weirStructure =  structure as IWeir;
+            var weirStructure = structure as IWeir;
             var generalStructureFormula = weirStructure.WeirFormula as GeneralStructureWeirFormula;
 
             // Width
-            AddDoubleOrEmptyPropertyConditionally(properties, 
-                                                  StructureRegion.WidthLeftW1.Key, 
+            AddDoubleOrEmptyPropertyConditionally(properties,
+                                                  StructureRegion.WidthLeftW1.Key,
                                                   generalStructureFormula
-                                                      .WidthLeftSideOfStructure, 
-                                                  structureType);
-            AddDoubleOrEmptyPropertyConditionally(properties, 
-                                                  StructureRegion.WidthLeftWsdl.Key, 
-                                                  generalStructureFormula
-                                                      .WidthStructureLeftSide, 
-                                                  structureType);
-            AddDoubleOrEmptyPropertyConditionally(properties, 
-                                                  StructureRegion.WidthCenter.Key, 
-                                                  weirStructure.CrestWidth, 
+                                                      .WidthLeftSideOfStructure,
                                                   structureType);
             AddDoubleOrEmptyPropertyConditionally(properties,
-                                                  StructureRegion.WidthRightWsdr.Key, 
+                                                  StructureRegion.WidthLeftWsdl.Key,
                                                   generalStructureFormula
-                                                      .WidthStructureRightSide, 
+                                                      .WidthStructureLeftSide,
                                                   structureType);
-            AddDoubleOrEmptyPropertyConditionally(properties, 
-                                                  StructureRegion.WidthRightW2.Key, 
+            AddDoubleOrEmptyPropertyConditionally(properties,
+                                                  StructureRegion.WidthCenter.Key,
+                                                  weirStructure.CrestWidth,
+                                                  structureType);
+            AddDoubleOrEmptyPropertyConditionally(properties,
+                                                  StructureRegion.WidthRightWsdr.Key,
                                                   generalStructureFormula
-                                                      .WidthRightSideOfStructure, 
+                                                      .WidthStructureRightSide,
+                                                  structureType);
+            AddDoubleOrEmptyPropertyConditionally(properties,
+                                                  StructureRegion.WidthRightW2.Key,
+                                                  generalStructureFormula
+                                                      .WidthRightSideOfStructure,
                                                   structureType);
 
             // Level
-            properties.Add(ConstructProperty(StructureRegion.LevelLeftZb1.Key,   generalStructureFormula.BedLevelLeftSideOfStructure,  structureType));
-            properties.Add(ConstructProperty(StructureRegion.LevelLeftZbsl.Key,  generalStructureFormula.BedLevelLeftSideStructure,    structureType));
+            properties.Add(ConstructProperty(StructureRegion.LevelLeftZb1.Key, generalStructureFormula.BedLevelLeftSideOfStructure, structureType));
+            properties.Add(ConstructProperty(StructureRegion.LevelLeftZbsl.Key, generalStructureFormula.BedLevelLeftSideStructure, structureType));
 
             if (weirStructure.CanBeTimedependent && weirStructure.UseCrestLevelTimeSeries)
             {
@@ -402,8 +482,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                 properties.Add(ConstructProperty(StructureRegion.LevelCenter.Key, generalStructureFormula.BedLevelStructureCentre, structureType));
             }
 
-            properties.Add(ConstructProperty(StructureRegion.LevelRightZbsr.Key, generalStructureFormula.BedLevelRightSideStructure,   structureType));
-            properties.Add(ConstructProperty(StructureRegion.LevelRightZb2.Key,  generalStructureFormula.BedLevelRightSideOfStructure, structureType));
+            properties.Add(ConstructProperty(StructureRegion.LevelRightZbsr.Key, generalStructureFormula.BedLevelRightSideStructure, structureType));
+            properties.Add(ConstructProperty(StructureRegion.LevelRightZb2.Key, generalStructureFormula.BedLevelRightSideOfStructure, structureType));
 
             // LowerEdgeLevel
             if (generalStructureFormula.UseLowerEdgeLevelTimeSeries)
@@ -454,23 +534,27 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             else
             {
                 properties.Add(ConstructProperty(KnownGeneralStructureProperties.GateOpeningWidth.GetDescription(),
-                    generalStructureFormula.HorizontalDoorOpeningWidth,
-                    structureType));
+                                                 generalStructureFormula.HorizontalDoorOpeningWidth,
+                                                 structureType));
             }
 
             string horizontalDoorOpeningDirection;
             switch (generalStructureFormula.HorizontalDoorOpeningDirection)
             {
                 case GateOpeningDirection.Symmetric:
-                    horizontalDoorOpeningDirection = "symmetric"; break;
+                    horizontalDoorOpeningDirection = "symmetric";
+                    break;
                 case GateOpeningDirection.FromLeft:
-                    horizontalDoorOpeningDirection = "from_left"; break;
+                    horizontalDoorOpeningDirection = "from_left";
+                    break;
                 case GateOpeningDirection.FromRight:
-                    horizontalDoorOpeningDirection = "from_right"; break;
+                    horizontalDoorOpeningDirection = "from_right";
+                    break;
                 default:
                     throw new ArgumentException("We can't write " +
                                                 generalStructureFormula.HorizontalDoorOpeningDirection);
             }
+
             properties.Add(ConstructProperty(KnownGeneralStructureProperties.GateOpeningHorizontalDirection.GetDescription(),
                                              horizontalDoorOpeningDirection,
                                              structureType));
@@ -480,7 +564,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 
         private IEnumerable<DelftIniProperty> ConstructPumpProperties(IStructure1D structure, string structureType, string path, DateTime refDate)
         {
-            var pump = (IPump)structure;
+            var pump = (IPump) structure;
             var properties = new List<DelftIniProperty>();
 
             if (pump.CanBeTimedependent && pump.UseCapacityTimeSeries)
@@ -521,7 +605,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 
             AddDoubleOrEmptyPropertyConditionally(properties, KnownStructureProperties.CrestWidth, weir.CrestWidth, structureType);
 
-            var formula = (SimpleWeirFormula)((IWeir)structure).WeirFormula;
+            var formula = (SimpleWeirFormula) ((IWeir) structure).WeirFormula;
             properties.Add(ConstructProperty(KnownStructureProperties.LateralContractionCoefficient, formula.LateralContraction, structureType));
             return properties;
         }
@@ -539,9 +623,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         /// If <paramref name="value"/> is NaN then an empty value field will be written.
         /// Properties is not null
         /// </remarks>
-        private void AddDoubleOrEmptyPropertyConditionally(ICollection<DelftIniProperty> properties, 
+        private void AddDoubleOrEmptyPropertyConditionally(ICollection<DelftIniProperty> properties,
                                                            string propertyName,
-                                                           double value, 
+                                                           double value,
                                                            string structureType)
         {
             if (double.IsNaN(value))
@@ -553,7 +637,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 
         private IEnumerable<DelftIniProperty> ConstructGateProperties(IStructure1D structure, string structureType, string path, DateTime refDate)
         {
-            var gate = (IGate)structure;
+            var gate = (IGate) structure;
             var properties = new List<DelftIniProperty>();
 
             if (gate.UseSillLevelTimeSeries)
@@ -578,7 +662,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                 properties.Add(ConstructProperty(KnownStructureProperties.GateLowerEdgeLevel, gate.LowerEdgeLevel, structureType));
             }
 
-
             if (gate.UseOpeningWidthTimeSeries)
             {
                 var timeFilePath = ConstructTimeFilePath(gate, KnownStructureProperties.GateOpeningWidth);
@@ -597,11 +680,14 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             switch (gate.HorizontalOpeningDirection)
             {
                 case GateOpeningDirection.Symmetric:
-                    horizontalDirection = "symmetric"; break;
+                    horizontalDirection = "symmetric";
+                    break;
                 case GateOpeningDirection.FromLeft:
-                    horizontalDirection = "from_left"; break;
+                    horizontalDirection = "from_left";
+                    break;
                 case GateOpeningDirection.FromRight:
-                    horizontalDirection = "from_right"; break;
+                    horizontalDirection = "from_right";
+                    break;
                 default:
                     throw new ArgumentException("We can't write " + gate.HorizontalOpeningDirection);
             }
@@ -628,7 +714,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                                                                            string path,
                                                                            DateTime refDate)
         {
-            var gatedWeir = (IWeir)structure;
+            var gatedWeir = (IWeir) structure;
             var gatedWeirFormula = (IGatedWeirFormula) gatedWeir.WeirFormula;
 
             var properties = new List<DelftIniProperty>();
@@ -636,16 +722,16 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             if (gatedWeir.UseCrestLevelTimeSeries)
             {
                 ConstructTimeSeriesProperty(path, properties,
-                                            gatedWeir, 
+                                            gatedWeir,
                                             KnownStructureProperties.CrestLevel,
-                                            structureType, 
-                                            gatedWeir.CrestLevelTimeSeries, 
+                                            structureType,
+                                            gatedWeir.CrestLevelTimeSeries,
                                             refDate);
             }
             else
             {
-                properties.Add(ConstructProperty(KnownStructureProperties.CrestLevel, 
-                                                 gatedWeir.CrestLevel, 
+                properties.Add(ConstructProperty(KnownStructureProperties.CrestLevel,
+                                                 gatedWeir.CrestLevel,
                                                  structureType));
             }
 
@@ -660,11 +746,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             }
             else
             {
-                properties.Add(ConstructProperty(KnownStructureProperties.GateLowerEdgeLevel, 
-                                                 gatedWeirFormula.LowerEdgeLevel, 
+                properties.Add(ConstructProperty(KnownStructureProperties.GateLowerEdgeLevel,
+                                                 gatedWeirFormula.LowerEdgeLevel,
                                                  structureType));
             }
-
 
             if (gatedWeirFormula.UseHorizontalDoorOpeningWidthTimeSeries)
             {
@@ -677,30 +762,34 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             }
             else
             {
-                properties.Add(ConstructProperty(KnownStructureProperties.GateOpeningWidth, 
-                                                 gatedWeirFormula.HorizontalDoorOpeningWidth, 
+                properties.Add(ConstructProperty(KnownStructureProperties.GateOpeningWidth,
+                                                 gatedWeirFormula.HorizontalDoorOpeningWidth,
                                                  structureType));
             }
 
-            properties.Add(ConstructProperty(KnownStructureProperties.GateHeight, 
-                                             gatedWeirFormula.DoorHeight, 
+            properties.Add(ConstructProperty(KnownStructureProperties.GateHeight,
+                                             gatedWeirFormula.DoorHeight,
                                              structureType));
 
             string horizontalDoorOpeningDirection;
             switch (gatedWeirFormula.HorizontalDoorOpeningDirection)
             {
                 case GateOpeningDirection.Symmetric:
-                    horizontalDoorOpeningDirection = "symmetric"; break;
+                    horizontalDoorOpeningDirection = "symmetric";
+                    break;
                 case GateOpeningDirection.FromLeft:
-                    horizontalDoorOpeningDirection = "from_left"; break;
+                    horizontalDoorOpeningDirection = "from_left";
+                    break;
                 case GateOpeningDirection.FromRight:
-                    horizontalDoorOpeningDirection = "from_right"; break;
+                    horizontalDoorOpeningDirection = "from_right";
+                    break;
                 default:
-                    throw new ArgumentException("We can't write " + 
+                    throw new ArgumentException("We can't write " +
                                                 gatedWeirFormula.HorizontalDoorOpeningDirection);
             }
-            properties.Add(ConstructProperty(KnownStructureProperties.GateOpeningHorizontalDirection, 
-                                             horizontalDoorOpeningDirection, 
+
+            properties.Add(ConstructProperty(KnownStructureProperties.GateOpeningHorizontalDirection,
+                                             horizontalDoorOpeningDirection,
                                              structureType));
 
             AddDoubleOrEmptyPropertyConditionally(properties, KnownStructureProperties.CrestWidth, gatedWeir.CrestWidth, structureType);
@@ -718,8 +807,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             var timeFilePath = ConstructTimeFilePath(structure, propertyName);
             properties.Add(
                 ConstructProperty(propertyName,
-                                 timeFilePath,
-                                 structureType));
+                                  timeFilePath,
+                                  structureType));
             WriteTimeFile(GetOtherFilePathInSameDirectory(path, timeFilePath),
                           timeSeries,
                           refDate);
@@ -734,7 +823,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             else if (pump.ReductionTable.Arguments[0].Values.Count == 1)
             {
                 properties.Add(ConstructProperty(KnownStructureProperties.NrOfReductionFactors, 1, structureType));
-                properties.Add(ConstructProperty(KnownStructureProperties.ReductionFactor, (double)pump.ReductionTable.Components[0].DefaultValue, structureType));
+                properties.Add(ConstructProperty(KnownStructureProperties.ReductionFactor, (double) pump.ReductionTable.Components[0].DefaultValue, structureType));
             }
             else
             {
@@ -774,11 +863,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         {
             var definition = StructureSchema.GetDefinition(structureType, propertyName);
             var delftIniProperty = new DelftIniProperty
-                {
-                    Name = definition.FilePropertyName,
-                    Value = FMParser.ToString(value, value is ICollection ? typeof(IList<double>) : value.GetType()),
-                    Comment = definition.Description
-                };
+            {
+                Name = definition.FilePropertyName, Value = FMParser.ToString(value, value is ICollection ? typeof(IList<double>) : value.GetType()), Comment = definition.Description
+            };
             return delftIniProperty;
         }
 
@@ -802,15 +889,17 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         #endregion
 
         #region FileWriting
-        
+
         private static void WritePliFile(string pliFilePath, IStructure structure)
         {
             var pliFile = new PliFile<Feature2D>();
-            pliFile.Write(pliFilePath, new[]{new Feature2D
+            pliFile.Write(pliFilePath, new[]
             {
-                Name = structure.Name,
-                Geometry = structure.Geometry
-            }});
+                new Feature2D
+                {
+                    Name = structure.Name, Geometry = structure.Geometry
+                }
+            });
         }
 
         private string ConstructTimeFilePath(IStructure1D structure, string propertyName)
@@ -820,6 +909,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             {
                 filePath = Path.Combine(TimFolder, filePath);
             }
+
             return filePath;
         }
 
@@ -831,85 +921,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             {
                 Directory.CreateDirectory(directory);
             }
+
             timeFile.Write(filePath, capacityTimeSeries, refDate);
         }
+
         #endregion
-
-        private Structure2D CreateStructure2D(StructureSchema<ModelPropertyDefinition> schema, string structureType,
-                                                     DelftIniCategory category, string filePath)
-        {
-            var newStructure = new Structure2D(structureType);
-
-            foreach (var property in category.Properties)
-            {
-                var modelPropertyDefinition = schema.GetDefinition(structureType, property.Name);
-                if (modelPropertyDefinition == null)
-                {
-                    Log.WarnFormat("Property '{0}' not supported for structures of type '{1}' and is skipped. (Line {2} of file {3})",
-                                   property.Name, structureType, property.LineNumber, filePath);
-                    continue;
-                }
-                try
-                {
-                    var structureProperty = new StructureProperty(modelPropertyDefinition, property.Value);
-                    var propertyValue = structureProperty.Value as Steerable;
-                    if (propertyValue!=null && propertyValue.Mode == SteerableMode.TimeSeries)
-                    {
-                        var directory = Path.GetDirectoryName(propertyValue.TimeSeriesFilename);
-                        if (directory != TimFolder)
-                        {
-                            if (string.IsNullOrEmpty(directory) && TimFolder != null)
-                            {
-                                Log.WarnFormat(
-                                    "Structure time series {0} will be written to the time series folder {1}",
-                                    propertyValue.TimeSeriesFilename, TimFolder);
-                            }
-                            else
-                            {
-                                if (TimFolder != null)
-                                {
-                                    Log.WarnFormat(
-                                        "Replacing structure time series folder {0} with {1}... all structure time series will be written to this folder",
-                                        TimFolder, directory);
-                                }
-                                if (!string.IsNullOrEmpty(directory))
-                                {
-                                    TimFolder = directory;
-                                }
-                            }
-                        }
-                    }
-                    newStructure.Properties.Add(structureProperty);
-                }
-                catch (FormatException e)
-                {
-                    throw new FormatException(String.Format("An invalid value{0} was encountered (expected {1}) for property '{2}' on line {3} of file {4}",
-                                                            e.InnerException is OverflowException ? " (too large/small)" : "", 
-                                                            GetValueTypeDescription(modelPropertyDefinition.DataType, modelPropertyDefinition), 
-                                                            property.Name, property.LineNumber, filePath),e);
-                }
-            }
-
-            return newStructure;
-        }
-
-        private static object GetValueTypeDescription(Type dataType, ModelPropertyDefinition modelPropertyDefinition)
-        {
-            if (dataType == typeof(int)) return "a whole number";
-            if (dataType == typeof(double)) return "a number";
-            if (dataType == typeof(IList<double>)) return "a series of space separated numbers";
-            if (dataType == typeof(TimeSpan)) return "a time span in seconds";
-            if (dataType == typeof(bool)) return "a '1' or '0'";
-            if (dataType == typeof(DateTime)) return "a date in yyyyMMdd or yyyyMMdHHmmss format";
-            if (dataType == typeof(Steerable)) return "a number or a filepath to a time series";
-            if (dataType.IsEnum) return "Any of the following values: "+ String.Join(", ", Enum.GetValues(modelPropertyDefinition.DataType));
-
-            throw new NotImplementedException();
-        }
-
-        public static void ParseStructure(FMSuiteFileBase fmSuiteFileBase)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
