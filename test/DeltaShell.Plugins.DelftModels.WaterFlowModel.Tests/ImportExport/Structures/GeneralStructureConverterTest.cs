@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
@@ -92,17 +93,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
         }
 
         [Test]
-        [TestCase("widthleftW1")]
-        [TestCase("widthleftWsdl")]
-        [TestCase("widthcenter")]
-        [TestCase("widthrightWsdr")]
-        [TestCase("widthrightW2")]
-        [TestCase("levelleftZb1")]
-        [TestCase("levelleftZbsl")]
-        [TestCase("levelcenter")]
-        [TestCase("levelrightZbsr")]
-        [TestCase("levelrightZb2")]
-        [TestCase("gateheight")]
+        [TestCase("Upstream2Width")]
+        [TestCase("Upstream1Width")]
+        [TestCase(KnownStructureProperties.CrestWidth)]
+        [TestCase("Downstream1Width")]
+        [TestCase("Downstream2Width")]
+        [TestCase("Upstream2Level")]
+        [TestCase("Upstream1Level")]
+        [TestCase(KnownStructureProperties.CrestLevel)]
+        [TestCase("Downstream1Level")]
+        [TestCase("Downstream2Level")]
+        [TestCase(KnownStructureProperties.GateLowerEdgeLevel)]
         [TestCase("pos_freegateflowcoeff")]
         [TestCase("pos_drowngateflowcoeff")]
         [TestCase("pos_freeweirflowcoeff")]

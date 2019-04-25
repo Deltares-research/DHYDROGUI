@@ -1,20 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using DelftTools.Functions;
+﻿using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.TestUtils;
+using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO;
+using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
+using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using Point = NetTopologySuite.Geometries.Point;
 using StructureType = DeltaShell.Plugins.FMSuite.Common.IO.StructureType;
 
@@ -56,7 +59,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             var generalStructure = structures.First(s => s.Name == "gs_01");
             Assert.That(generalStructure.Properties.Count, Is.EqualTo(4));
             Assert.That(generalStructure.GetProperty(KnownStructureProperties.PolylineFile).GetValueAsString(), Is.EqualTo("gs_01.pli"));
-            Assert.That(generalStructure.GetProperty(KnownGeneralStructureProperties.WidthCenter).GetValueAsString(), Is.EqualTo("2.3"));
+            Assert.That(generalStructure.GetProperty(KnownGeneralStructureProperties.CrestWidth).GetValueAsString(), Is.EqualTo("2.3"));
         }
 
         [Test]
@@ -178,7 +181,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 {
                     weir
                 };
-            var structuresFile = new StructuresFile();
+
            StructuresFile.WriteStructures2D(exportFilePath, structures);
 
             var fileContents = File.ReadAllText(exportFilePath);
@@ -188,7 +191,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 "    id                    = Weir_down           "  +Environment.NewLine+
                 "    x                     = 680                 "  +Environment.NewLine+
                 "    y                     = 360                 "  +Environment.NewLine+
-                "    crest_level           = 2                   "  +Environment.NewLine+
+                "    CrestLevel            = 2                   "  +Environment.NewLine+
                 "    lat_contr_coeff       = 1                   "  +Environment.NewLine, fileContents);
 
             File.Delete(exportFilePath);
@@ -480,18 +483,18 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 "    type                  = weir                # Type of structure" + Environment.NewLine +
                 "    id                    = weir1               # Name of the structure" + Environment.NewLine +
                 "    polylinefile          = weir1.pli           # *.pli; Polyline geometry definition for 2D structure" + Environment.NewLine +
-                "    crest_level           = 2                   # Weir crest height (in [m])" + Environment.NewLine +
-                "    crest_width           = 25                  # Weir crest width (in [m])" + Environment.NewLine +
+                "    CrestLevel            = 2                   # Weir crest height (in [m])" + Environment.NewLine +
+                "    CrestWidth            = 25                  # Weir crest width (in [m])" + Environment.NewLine +
                 "    lat_contr_coeff       = 0.7                 # Lateral contraction coefficient" + Environment.NewLine +
                 "[structure]" + Environment.NewLine +
                 "    type                  = gate                # Type of structure" + Environment.NewLine +
                 "    id                    = gate1               # Name of the structure" + Environment.NewLine +
                 "    polylinefile          = gate1.pli           # *.pli; Polyline geometry definition for 2D structure" + Environment.NewLine +
-                "    sill_level            = 1                   # Gate sill level (in [m])" + Environment.NewLine +
-                "    lower_edge_level      = 4                   # Gate lower edge level (in [m])" + Environment.NewLine +
-                "    opening_width         = 12                  # Gate opening width (in [m])" + Environment.NewLine +
-                "    door_height           = 3                   # Gate door height (in [m])" + Environment.NewLine +
-                "    horizontal_opening_direction= from_left           # Horizontal direction of the opening doors" + Environment.NewLine, fileContents);
+                "    CrestLevel            = 1                   # Gate sill level (in [m])" + Environment.NewLine +
+                "    GateLowerEdgeLevel    = 4                   # Gate lower edge level (in [m])" + Environment.NewLine +
+                "    GateOpeningWidth      = 12                  # Gate opening width (in [m])" + Environment.NewLine +
+                "    GateHeight            = 3                   # Gate door height (in [m])" + Environment.NewLine +
+                "    GateOpeningHorizontalDirection= from_left           # Horizontal direction of the opening doors" + Environment.NewLine, fileContents);
 
             foreach (var expectedFileName in expectedFileNames)
             {
@@ -520,8 +523,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 {
                     "pump1.pli", "weir1.pli", "gate1.pli", 
                     "pump1_capacity.tim", 
-                    "weir1_crest_level.tim",
-                    "gate1_lower_edge_level.tim", "gate1_opening_width.tim"
+                    "weir1_CrestLevel.tim",
+                    "gate1_GateLowerEdgeLevel.tim", "gate1_GateOpeningWidth.tim"
                 };
             foreach (var expectedFileName in expectedFileNames)
             {
@@ -609,7 +612,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 "    id                    = weir1               # Name of the structure" + Environment.NewLine +
                 "    polylinefile          = weir1.pli           # *.pli; Polyline geometry definition for 2D structure" +
                 Environment.NewLine +
-                "    crest_level           = weir1_crest_level.tim# Weir crest height (in [m])" + Environment.NewLine +
+                "    CrestLevel            = weir1_CrestLevel.tim# Weir crest height (in [m])" + Environment.NewLine +
                 "    lat_contr_coeff       = 0.7                 # Lateral contraction coefficient" +
                 Environment.NewLine +
                 "[structure]" + Environment.NewLine +
@@ -617,15 +620,15 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 "    id                    = gate1               # Name of the structure" + Environment.NewLine +
                 "    polylinefile          = gate1.pli           # *.pli; Polyline geometry definition for 2D structure" +
                 Environment.NewLine +
-                "    sill_level            = gate1_sill_level.tim# Gate sill level (in [m])" +
+                "    CrestLevel            = gate1_CrestLevel.tim# Gate sill level (in [m])" +
                 Environment.NewLine +
-                "    lower_edge_level      = gate1_lower_edge_level.tim# Gate lower edge level (in [m])" +
+                "    GateLowerEdgeLevel    = gate1_GateLowerEdgeLevel.tim# Gate lower edge level (in [m])" +
                 Environment.NewLine +
-                "    opening_width         = gate1_opening_width.tim# Gate opening width (in [m])" + Environment.NewLine +
-                "    door_height           = 3                   # Gate door height (in [m])" + Environment.NewLine +
-                "    horizontal_opening_direction= symmetric           # Horizontal direction of the opening doors" +
+                "    GateOpeningWidth      = gate1_GateOpeningWidth.tim# Gate opening width (in [m])" + Environment.NewLine +
+                "    GateHeight            = 3                   # Gate door height (in [m])" + Environment.NewLine +
+                "    GateOpeningHorizontalDirection= symmetric           # Horizontal direction of the opening doors" +
                 Environment.NewLine +
-                "    sill_width            = 15.5                # Gate sill width (in [m])" + Environment.NewLine, fileContents);
+                "    CrestWidth            = 15.5                # Gate sill width (in [m])" + Environment.NewLine, fileContents);
 
             foreach (var expectedFileName in expectedFileNames)
             {
@@ -639,8 +642,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
         #endregion
 
-        private const string ExpectedCrestLevelValue =      "    crest_level           = 10                  # Weir crest height (in [m])";
-        private const string ExpectedCrestLevelTimeSeries = "    crest_level           = TestStructure_crest_level.tim# Weir crest height (in [m])";
+        private const string ExpectedCrestLevelValue =      "    CrestLevel            = 10                  # Weir crest height (in [m])";
+        private const string ExpectedCrestLevelTimeSeries = "    CrestLevel            = TestStructure_CrestLevel.tim# Weir crest height (in [m])";
 
         // Tests added in relation to DELFT3DFM
         [TestCase(false, ExpectedCrestLevelValue)]
@@ -676,7 +679,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                     "    type                  = weir                # Type of structure"          + Environment.NewLine +
                     "    id                    = TestStructure       # Name of the structure"      + Environment.NewLine +
                     expectedCrestLevelVal                                                          + Environment.NewLine + 
-                    "    crest_width           = 20                  # Weir crest width (in [m])"  + Environment.NewLine +
+                    "    CrestWidth            = 20                  # Weir crest width (in [m])"  + Environment.NewLine +
                     "    lat_contr_coeff       = 1                   # Lateral contraction coefficient" + Environment.NewLine;
 
                 var fileContents = File.ReadAllText(writePath);
@@ -686,14 +689,14 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         }
 
 
-        private const string ExpectedSillLevelValue =      "    sill_level            = 10                  # Gate sill level (in [m])";
-        private const string ExpectedSillLevelTimeSeries = "    sill_level            = TestStructure_sill_level.tim# Gate sill level (in [m])";
+        private const string ExpectedSillLevelValue =      "    CrestLevel            = 10                  # Gate sill level (in [m])";
+        private const string ExpectedSillLevelTimeSeries = "    CrestLevel            = TestStructure_CrestLevel.tim# Gate sill level (in [m])";
 
-        private const string ExpectedLowerEdgeLevelValueGatedFormula =      "    lower_edge_level      = 40                  # Gate lower edge level (in [m])";
-        private const string ExpectedLowerEdgeLevelTimeSeriesGatedFormula = "    lower_edge_level      = TestStructure_lower_edge_level.tim# Gate lower edge level (in [m])";
+        private const string ExpectedLowerEdgeLevelValueGatedFormula =      "    GateLowerEdgeLevel    = 40                  # Gate lower edge level (in [m])";
+        private const string ExpectedLowerEdgeLevelTimeSeriesGatedFormula = "    GateLowerEdgeLevel    = TestStructure_GateLowerEdgeLevel.tim# Gate lower edge level (in [m])";
 
-        private const string ExpectedDoorOpeningValueGatedFormula =      "    opening_width         = 30                  # Gate opening width (in [m])";
-        private const string ExpectedDoorOpeningTimeSeriesGatedFormula = "    opening_width         = TestStructure_opening_width.tim# Gate opening width (in [m])";
+        private const string ExpectedDoorOpeningValueGatedFormula = "    GateOpeningWidth      = 30                  # Gate opening width (in [m])";
+        private const string ExpectedDoorOpeningTimeSeriesGatedFormula = "    GateOpeningWidth      = TestStructure_GateOpeningWidth.tim# Gate opening width (in [m])";
 
         [TestCase(false, ExpectedSillLevelValue,      
                   false, ExpectedLowerEdgeLevelValueGatedFormula, 
@@ -766,9 +769,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                     expectedSillLevelVal + Environment.NewLine +
                     expectedLowerEdgeLevelVal + Environment.NewLine +
                     expectedHorizontalDoorOpeningWidthVal + Environment.NewLine +
-                    "    door_height           = 50                  # Gate door height (in [m])" + Environment.NewLine +
-                    "    horizontal_opening_direction= symmetric           # Horizontal direction of the opening doors" + Environment.NewLine +
-                    "    sill_width            = 20                  # Gate sill width (in [m])" + Environment.NewLine;
+                    "    GateHeight            = 50                  # Gate door height (in [m])" + Environment.NewLine +
+                    "    GateOpeningHorizontalDirection= symmetric           # Horizontal direction of the opening doors" + Environment.NewLine +
+                    "    CrestWidth            = 20                  # Gate sill width (in [m])" + Environment.NewLine;
 
                 var fileContents = File.ReadAllText(writePath);
 
@@ -776,14 +779,14 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             });
         }
 
-        private const string ExpectedGSCrestLevelValue      = "    levelcenter           = 10                  # Bed level at centre of structure (m AD)";
-        private const string ExpectedGSCrestLevelTimeSeries = "    levelcenter           = TestStructure_levelcenter.tim# Bed level at centre of structure (m AD)";
+        private const string ExpectedGSCrestLevelValue      = "    CrestLevel            = 10                  # Bed level at centre of structure (m AD)";
+        private const string ExpectedGSCrestLevelTimeSeries = "    CrestLevel            = TestStructure_CrestLevel.tim# Bed level at centre of structure (m AD)";
 
-        private const string ExpectedLowerEdgeLevelValueGeneralStructureFormula      = "    gateheight            = 40                  # Gate lower edge level (m AD)";
-        private const string ExpectedLowerEdgeLevelTimeSeriesGeneralStructureFormula = "    gateheight            = TestStructure_gateheight.tim# Gate lower edge level (m AD)";
+        private const string ExpectedLowerEdgeLevelValueGeneralStructureFormula      = "    GateLowerEdgeLevel    = 40                  # Gate lower edge level (m AD)";
+        private const string ExpectedLowerEdgeLevelTimeSeriesGeneralStructureFormula = "    GateLowerEdgeLevel    = TestStructure_GateLowerEdgeLevel.tim# Gate lower edge level (m AD)";
 
-        private const string ExpectedDoorOpeningValueGeneralStructureFormula      = "    door_opening_width    = 30                  # Horizontal opening width between the doors (m)";
-        private const string ExpectedDoorOpeningTimeSeriesGeneralStructureFormula = "    door_opening_width    = TestStructure_door_opening_width.tim# Horizontal opening width between the doors (m)";
+        private const string ExpectedDoorOpeningValueGeneralStructureFormula      = "    GateOpeningWidth      = 30                  # Horizontal opening width between the doors (m)";
+        private const string ExpectedDoorOpeningTimeSeriesGeneralStructureFormula = "    GateOpeningWidth      = TestStructure_GateOpeningWidth.tim# Horizontal opening width between the doors (m)";
 
         [TestCase(false, ExpectedGSCrestLevelValue, 
                   false, ExpectedLowerEdgeLevelValueGeneralStructureFormula, 
@@ -878,16 +881,16 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                     "[structure]" + Environment.NewLine +
                     "    type                  = generalstructure    # Type of structure" + Environment.NewLine +
                     "    id                    = TestStructure       # Name of the structure" + Environment.NewLine +
-                    "    widthleftW1           = 1                   # Width left side of structure (m)" + Environment.NewLine +
-                    "    widthleftWsdl         = 2                   # Width structure left side (m)" + Environment.NewLine +
-                    "    widthcenter           = 20                  # Width structure centre (m)" + Environment.NewLine +
-                    "    widthrightWsdr        = 3                   # Width structure right side (m)" + Environment.NewLine +
-                    "    widthrightW2          = 4                   # Width right side of structure (m)" + Environment.NewLine +
-                    "    levelleftZb1          = 5                   # Bed level left side of structure (m AD)" + Environment.NewLine +
-                    "    levelleftZbsl         = 6                   # Bed level left side structure (m AD)" + Environment.NewLine +
+                    "    Upstream2Width        = 1                   # Width left side of structure (m)" + Environment.NewLine +
+                    "    Upstream1Width        = 2                   # Width structure left side (m)" + Environment.NewLine +
+                    "    CrestWidth            = 20                  # Width structure centre (m)" + Environment.NewLine +
+                    "    Downstream1Width      = 3                   # Width structure right side (m)" + Environment.NewLine +
+                    "    Downstream2Width      = 4                   # Width right side of structure (m)" + Environment.NewLine +
+                    "    Upstream2Level        = 5                   # Bed level left side of structure (m AD)" + Environment.NewLine +
+                    "    Upstream1Level        = 6                   # Bed level left side structure (m AD)" + Environment.NewLine +
                     expectedCrestLevelVal + Environment.NewLine +
-                    "    levelrightZbsr        = 7                   # Bed level right side structure (m AD)" + Environment.NewLine +
-                    "    levelrightZb2         = 8                   # Bed level right side of structure (m AD)" + Environment.NewLine +
+                    "    Downstream1Level      = 7                   # Bed level right side structure (m AD)" + Environment.NewLine +
+                    "    Downstream2Level      = 8                   # Bed level right side of structure (m AD)" + Environment.NewLine +
                     expectedLowerEdgeLevelVal + Environment.NewLine +
                     "    pos_freegateflowcoeff = 9                   # Positive free gate flow (-)" + Environment.NewLine +
                     "    pos_drowngateflowcoeff= 11                  # Positive drowned gate flow (-)" + Environment.NewLine +
@@ -900,9 +903,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                     "    neg_drownweirflowcoeff= 18                  # Negative drowned weir flow (-)" + Environment.NewLine +
                     "    neg_contrcoeffreegate = 19                  # Negative flow contraction coefficient (-)" + Environment.NewLine +
                     "    extraresistance       = 21                  # Extra resistance (-)" + Environment.NewLine +
-                    "    gatedoorheight        = 50                  # Vertical gate door height (m)" + Environment.NewLine +
+                    "    GateHeight            = 50                  # Vertical gate door height (m)" + Environment.NewLine +
                     expectedHorizontalDoorOpeningWidthVal + Environment.NewLine +
-                    "    horizontal_opening_direction= symmetric           # Horizontal direction of the opening doors" + Environment.NewLine;
+                    "    GateOpeningHorizontalDirection= symmetric           # Horizontal direction of the opening doors" + Environment.NewLine;
                 var fileContents = File.ReadAllText(writePath);
 
                 Assert.That(fileContents, Is.EqualTo(expectedFileContents));
@@ -941,6 +944,347 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
                 Assert.That(fileContents, Is.EqualTo(expectedFileContents));
             });
+        }
+
+        [Test]
+        public void GivenAStructuresFileWithOldVariableNames_WhenReadingAndWriting_ThenPropertiesAreRenamed()
+        {
+            TestHelper.PerformActionInTemporaryDirectory(tempDirectory =>
+            {
+                // Given
+                var structuresFilePath = CreateStructuresFileWithPliFiles(
+                    tempDirectory,
+                    CreateWeirDelftIniCategory(),
+                    CreateGateDelftIniCategory(),
+                    CreateGeneralStructureDelftIniCategory());
+
+                var structuresFile = new StructuresFile
+                {
+                    StructureSchema = schema
+                };
+
+                // When
+                var structures = structuresFile.Read(structuresFilePath);
+                structuresFile.Write(structuresFilePath, structures);
+
+                // Then
+                ValidateWrittenStructuresFile(structuresFilePath);
+            });
+        }
+
+        [Test]
+        public void GivenAStructuresFileWithASimpleWeir_WhenReading_CorrectStructureIsCreated()
+        {
+            TestHelper.PerformActionInTemporaryDirectory(tempDirectory =>
+            {
+                // Given
+                var weirCategory = CreateWeirDelftIniCategory();
+
+                var structuresFilePath = CreateStructuresFileWithPliFiles(
+                    tempDirectory,
+                    weirCategory);
+
+                var structuresFile = new StructuresFile
+                {
+                    StructureSchema = schema
+                };
+
+                // When
+                var structures = structuresFile.Read(structuresFilePath);
+
+                // Then
+                Weir2D weir = ValidatedWeir(structures);
+                ValidateCommonWeirProperties(weir, "simple_weir");
+            });
+        }
+
+        private static Weir2D ValidatedWeir(IList<IStructure> structures)
+        {
+            Assert.AreEqual(1, structures.Count, "One structure was expected to be created.");
+            var weir = structures.FirstOrDefault() as Weir2D;
+            Assert.NotNull(weir, "The structure was expected to be a weir.");
+            return weir;
+        }
+
+        [Test]
+        public void GivenAStructuresFileWithAGatedWeir_WhenReading_CorrectStructureIsCreated()
+        {
+            TestHelper.PerformActionInTemporaryDirectory(tempDirectory =>
+            {
+                // Given
+                var gateCategory = CreateGateDelftIniCategory();
+                var structuresFilePath = CreateStructuresFileWithPliFiles(
+                    tempDirectory,
+                    gateCategory);
+
+                var structuresFile = new StructuresFile
+                {
+                    StructureSchema = new WaterFlowFMModelDefinition().StructureSchema
+                };
+
+                // When
+                var structures = structuresFile.Read(structuresFilePath);
+
+                // Then
+                Weir2D weir = ValidatedWeir(structures);
+                ValidateGatedWeirFormulaProperties(weir, "gated_weir");
+            });
+        }
+
+        [Test]
+        public void GivenAStructuresFileWithAGeneralStructure_WhenReading_CorrectStructureIsCreated()
+        {
+            TestHelper.PerformActionInTemporaryDirectory(tempDirectory =>
+            {
+                // Given
+                var generalStructureCategory = CreateGeneralStructureDelftIniCategory();
+                var structuresFilePath = CreateStructuresFileWithPliFiles(
+                    tempDirectory,
+                    generalStructureCategory);
+
+                var structuresFile = new StructuresFile
+                {
+                    StructureSchema = new WaterFlowFMModelDefinition().StructureSchema
+                };
+
+                // When
+                var structures = structuresFile.Read(structuresFilePath);
+
+                // Then
+                Weir2D weir = ValidatedWeir(structures);
+                ValidateGeneralWeirFormulaProperties(weir, "general_structure");
+            });
+        }
+
+        private static void ValidateCommonWeirProperties(Weir2D weir, string expectedWeirName)
+        {
+            Assert.AreEqual(expectedWeirName, weir.Name,
+                            "Name of weir was different than expected.");
+            Assert.AreEqual(1, weir.CrestLevel,
+                            "Crest level of weir was different than expected.");
+            Assert.AreEqual(2, weir.CrestWidth,
+                            "Crest width of weir was different than expected.");
+        }
+
+        private static void ValidateGatedWeirFormulaProperties(Weir2D weir, string expectedWeirName)
+        {
+            ValidateCommonWeirProperties(weir, expectedWeirName);
+
+            var gatedWeirFormula = weir.WeirFormula as IGatedWeirFormula;
+            Assert.NotNull(gatedWeirFormula,
+                           "Expected a gated weir formula for weir.");
+            Assert.AreEqual(3, gatedWeirFormula.LowerEdgeLevel,
+                            "Lower edge level of weir was different than expected.");
+            Assert.AreEqual(4, gatedWeirFormula.HorizontalDoorOpeningWidth,
+                            "Horizontal gate opening width of weir was different than expected.");
+            Assert.AreEqual(5, gatedWeirFormula.DoorHeight,
+                            "Gate height of weir was different than expected.");
+            Assert.AreEqual(GateOpeningDirection.Symmetric, gatedWeirFormula.HorizontalDoorOpeningDirection, 
+                            "Gate opening direction of weir was different than expected.");
+        }
+
+        private void ValidateGeneralWeirFormulaProperties(Weir2D weir, string expectedWeirName)
+        {
+            ValidateGatedWeirFormulaProperties(weir, expectedWeirName);
+
+            var generalStructureFormula = weir.WeirFormula as GeneralStructureWeirFormula;
+            Assert.NotNull(generalStructureFormula,
+                           "Expected a general structure weir formula for weir.");
+            Assert.AreEqual(6, generalStructureFormula.WidthLeftSideOfStructure, 
+                            "Upstream 2 Width of weir was different than expected.");
+            Assert.AreEqual(7, generalStructureFormula.WidthStructureLeftSide, 
+                            "Upstream 1 Width of weir was different than expected.");
+            Assert.AreEqual(8, generalStructureFormula.WidthStructureRightSide, 
+                            "Downstream 1 Width of weir was different than expected.");
+            Assert.AreEqual(9, generalStructureFormula.WidthRightSideOfStructure, 
+                            "Downstream 2 Width of weir was different than expected.");
+            Assert.AreEqual(10, generalStructureFormula.BedLevelLeftSideOfStructure, 
+                            "Upstream 2 Level of weir was different than expected.");
+            Assert.AreEqual(11, generalStructureFormula.BedLevelLeftSideStructure, 
+                            "Upstream 1 Level of weir was different than expected.");
+            Assert.AreEqual(12, generalStructureFormula.BedLevelRightSideStructure, 
+                            "Downstream 1 Level of weir was different than expected.");
+            Assert.AreEqual(13, generalStructureFormula.BedLevelRightSideOfStructure, 
+                            "Downstream 2 Level of weir was different than expected.");
+        }
+
+        private void ValidateWrittenStructuresFile(string filePath)
+        {
+            var iniReader = new DelftIniReader();
+            var categories = iniReader.ReadDelftIniFile(filePath);
+
+            Assert.AreEqual(3, categories.Count, 
+                            "3 categories were expected to be read from the structures file.");
+            var weirCategory = GetCategoryForStructureType(categories, StructureRegion.StructureTypeName.Weir);
+            Assert.IsNotNull(weirCategory, 
+                             $"There was no delft ini catageory with structure type {StructureRegion.StructureTypeName.Weir}");
+            ValidateCommonWeirIniProperties(weirCategory);
+
+            var gateCategory = GetCategoryForStructureType(categories, StructureRegion.StructureTypeName.Gate);
+            Assert.IsNotNull(weirCategory, 
+                             $"There was no delft ini catageory with structure type {StructureRegion.StructureTypeName.Gate}");
+            ValidateCommonWeirIniProperties(gateCategory);
+            ValidateGateIniProperties(gateCategory);
+
+            var generalStructureCategory = GetCategoryForStructureType(categories, StructureRegion.StructureTypeName.GeneralStructure);
+            Assert.IsNotNull(weirCategory, 
+                             $"There was no delft ini catageory with structure type {StructureRegion.StructureTypeName.GeneralStructure}");
+            ValidateCommonWeirIniProperties(generalStructureCategory);
+            ValidateGateIniProperties(gateCategory);
+            ValidateGeneralStructureIniProperties(generalStructureCategory);
+        }
+
+        private void ValidateGeneralStructureIniProperties(DelftIniCategory category)
+        {
+            ValidateProperty(category, KnownGeneralStructureProperties.Upstream2Width.GetDescription(), "6");
+            ValidateProperty(category, KnownGeneralStructureProperties.Upstream1Width.GetDescription(), "7");
+            ValidateProperty(category, KnownGeneralStructureProperties.Downstream1Width.GetDescription(), "8");
+            ValidateProperty(category, KnownGeneralStructureProperties.Downstream2Width.GetDescription(), "9");
+            ValidateProperty(category, KnownGeneralStructureProperties.Upstream2Level.GetDescription(), "10");
+            ValidateProperty(category, KnownGeneralStructureProperties.Upstream1Level.GetDescription(), "11");
+            ValidateProperty(category, KnownGeneralStructureProperties.Downstream1Level.GetDescription(), "12");
+            ValidateProperty(category, KnownGeneralStructureProperties.Downstream2Level.GetDescription(), "13");
+        }
+
+        private void ValidateGateIniProperties(DelftIniCategory category)
+        {
+            ValidateProperty(category, KnownStructureProperties.GateLowerEdgeLevel, "3");
+            ValidateProperty(category, KnownStructureProperties.GateOpeningWidth, "4");
+            ValidateProperty(category, KnownStructureProperties.GateHeight, "5");
+            ValidateProperty(category, KnownStructureProperties.GateOpeningHorizontalDirection, "symmetric");
+        }
+
+        private void ValidateCommonWeirIniProperties(DelftIniCategory category)
+        {
+            ValidateProperty(category, KnownStructureProperties.CrestLevel, "1");
+            ValidateProperty(category, KnownStructureProperties.CrestWidth, "2");
+        }
+
+        private static DelftIniCategory GetCategoryForStructureType(IList<DelftIniCategory> categories, string type)
+        {
+            return categories.FirstOrDefault(c => c.Properties.FirstOrDefault(p => p.Name.Equals(KnownStructureProperties.Type)).Value == type);
+        }
+
+        private void ValidateProperty(IDelftIniCategory category, string propertyName, string expectedValue)
+        {
+            var property = category.Properties.FirstOrDefault(p => p.Name.Equals(propertyName));
+            Assert.NotNull(property,
+                           $"There was no property '{propertyName}' in category '{category.Name}' in the structures file.");
+            Assert.AreEqual(expectedValue, property.Value,
+                            $"Value of property '{propertyName}' was not as expected.");
+        }
+
+        private string CreateStructuresFileWithPliFiles(string tempDirectoryPath, params DelftIniCategory[] delftIniCategories)
+        {
+            var filePath = Path.Combine(tempDirectoryPath, "structures.ini");
+
+            foreach (var category in delftIniCategories)
+            {
+                var structureName = category.Properties.FirstOrDefault(p => p.Name.Equals("id")).Value;
+                WritePliFile(tempDirectoryPath, structureName);
+            }
+
+            new DelftIniWriter().WriteDelftIniFile(delftIniCategories, filePath);
+
+            return filePath;
+        }
+
+        private void WritePliFile(string tempDirectoryPath, string structureName)
+        {
+            File.WriteAllLines(Path.Combine(tempDirectoryPath, $"{structureName}.pli"), new[]
+            {
+                structureName,
+                "2 2",
+                "-1 1",
+                "-2 2"
+            });
+        }
+
+
+
+        private static DelftIniCategory CreateGeneralStructureDelftIniCategory()
+        {
+            const string structureName = "general_structure";
+            var generalStructureCategory = new DelftIniCategory("structure")
+            {
+                Properties =
+                {
+                    new DelftIniProperty("type", "generalstructure", ""),
+                    new DelftIniProperty("id", structureName, ""),
+                    new DelftIniProperty("polylinefile", $"{structureName}.pli", ""),
+                    new DelftIniProperty("pos_freegateflowcoeff", "0", ""),
+                    new DelftIniProperty("pos_drowngateflowcoeff", "0", ""),
+                    new DelftIniProperty("pos_freeweirflowcoeff", "0", ""),
+                    new DelftIniProperty("pos_drownweirflowcoeff", "0", ""),
+                    new DelftIniProperty("pos_contrcoeffreegate", "0", ""),
+                    new DelftIniProperty("neg_freegateflowcoeff", "0", ""),
+                    new DelftIniProperty("neg_drowngateflowcoeff", "0", ""),
+                    new DelftIniProperty("neg_freeweirflowcoeff", "0", ""),
+                    new DelftIniProperty("neg_drownweirflowcoeff", "0", ""),
+                    new DelftIniProperty("neg_contrcoeffreegate", "0", ""),
+                    new DelftIniProperty("extraresistance", "0", ""),
+
+                    new DelftIniProperty("levelcenter", "1", ""),
+                    new DelftIniProperty("widthcenter", "2", ""),
+
+                    new DelftIniProperty("gateheight", "3", ""),
+                    new DelftIniProperty("door_opening_width", "4", ""),
+                    new DelftIniProperty("gatedoorheight", "5", ""),
+                    new DelftIniProperty("horizontal_opening_direction", "symmetric", ""),
+
+                    new DelftIniProperty("widthleftW1", "6", ""),
+                    new DelftIniProperty("widthleftWsdl", "7", ""),
+                    new DelftIniProperty("widthrightWsdr", "8", ""),
+                    new DelftIniProperty("widthrightW2", "9", ""),
+                    new DelftIniProperty("levelleftZb1", "10", ""),
+                    new DelftIniProperty("levelleftZbsl", "11", ""),
+                    new DelftIniProperty("levelrightZbsr", "12", ""),
+                    new DelftIniProperty("levelrightZb2", "13", "")
+                }
+            };
+            return generalStructureCategory;
+        }
+
+        private static DelftIniCategory CreateGateDelftIniCategory()
+        {
+            const string structureName = "gated_weir";
+            var gateCategory = new DelftIniCategory("structure")
+            {
+                Properties =
+                {
+                    new DelftIniProperty("type", "gate", ""),
+                    new DelftIniProperty("id", structureName, ""),
+                    new DelftIniProperty("polylinefile", $"{structureName}.pli", ""),
+
+                    new DelftIniProperty("sill_level", "1", ""),
+                    new DelftIniProperty("sill_width", "2", ""),
+
+                    new DelftIniProperty("lower_edge_level", "3", ""),
+                    new DelftIniProperty("opening_width", "4", ""),
+                    new DelftIniProperty("door_height", "5", ""),
+                    new DelftIniProperty("horizontal_opening_direction", "symmetric", ""),
+                }
+            };
+            return gateCategory;
+        }
+
+        private static DelftIniCategory CreateWeirDelftIniCategory()
+        {
+            const string structureName = "simple_weir";
+            var weirCategory = new DelftIniCategory("structure")
+            {
+                Properties =
+                {
+                    new DelftIniProperty("type", "weir", ""),
+                    new DelftIniProperty("id", structureName, ""),
+                    new DelftIniProperty("polylinefile", $"{structureName}.pli", ""),
+                    new DelftIniProperty("lat_contr_coeff", "0", ""),
+
+                    new DelftIniProperty("crest_level", "1", ""),
+                    new DelftIniProperty("crest_width", "2", ""),
+                }
+            };
+            return weirCategory;
         }
 
         #region Comparison helper methods for .ini files:

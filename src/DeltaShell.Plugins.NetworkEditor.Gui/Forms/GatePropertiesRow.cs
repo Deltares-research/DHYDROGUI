@@ -74,7 +74,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
             set { Gate.DoorHeight = value; }
         }
 
-        [DisplayName(ParameterNames.HorizontalOpeningDirection)]
+        [DisplayName(GuiParameterNames.HorizontalOpeningDirection)]
         [PropertyOrder(4)]
         public GateOpeningDirection HorizontalOpeningDirection
         {

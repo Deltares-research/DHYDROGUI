@@ -52,12 +52,80 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                     .ToList();
         }
 
+        private Dictionary<string, string> BackwardsCompatibilityMapping = new Dictionary<string, string>
+        {
+            {
+                "levelcenter", KnownStructureProperties.CrestLevel
+            },
+            {
+                "widthcenter", KnownStructureProperties.CrestWidth
+            },
+            {
+                "widthleftWsdl", KnownGeneralStructureProperties.Upstream1Width.GetDescription()
+            },
+            {
+                "levelleftZbsl", KnownGeneralStructureProperties.Upstream1Level.GetDescription()
+            },
+            {
+                "widthleftW1", KnownGeneralStructureProperties.Upstream2Width.GetDescription()
+            },
+            {
+                "levelleftZb1", KnownGeneralStructureProperties.Upstream2Level.GetDescription()
+            },
+            {
+                "widthrightWsdr", KnownGeneralStructureProperties.Downstream1Width.GetDescription()
+            },
+            {
+                "levelrightZbsr", KnownGeneralStructureProperties.Downstream1Level.GetDescription()
+            },
+            {
+                "widthrightW2", KnownGeneralStructureProperties.Downstream2Width.GetDescription()
+            },
+            {
+                "levelrightZb2", KnownGeneralStructureProperties.Downstream2Level.GetDescription()
+            },
+            {
+                "gateheight", KnownStructureProperties.GateLowerEdgeLevel
+            },
+            {
+                "gatedoorheight", KnownStructureProperties.GateHeight
+            },
+            {
+                "door_opening_width", KnownStructureProperties.GateOpeningWidth
+            },
+            {
+                "sill_level", KnownStructureProperties.CrestLevel
+            },
+            {
+                "sill_width", KnownStructureProperties.CrestWidth
+            },
+            {
+                "lower_edge_level", KnownStructureProperties.GateLowerEdgeLevel
+            },
+            {
+                "door_height", KnownStructureProperties.GateHeight
+            },
+            {
+                "opening_width", KnownStructureProperties.GateOpeningWidth
+            },
+            {
+                "horizontal_opening_direction", KnownStructureProperties.GateOpeningHorizontalDirection
+            },
+            {
+                "crest_level", KnownStructureProperties.CrestLevel
+            },
+            {
+                "crest_width", KnownStructureProperties.CrestWidth
+            }
+        };
+
         public IEnumerable<Structure2D> ReadStructures2D(string filePath)
         {
             var categories = new DelftIniReader().ReadDelftIniFile(filePath);
 
             foreach (var category in categories)
             {
+                RenameBackwardsCompatibleProperties(category);
                 // Filter out unexpected .ini categories:
                 if (category.Name != StructureCategoryName)
                 {
@@ -86,6 +154,17 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                 }
 
                 yield return structure2D;
+            }
+        }
+
+        private void RenameBackwardsCompatibleProperties(DelftIniCategory category)
+        {
+            foreach (DelftIniProperty property in category.Properties)
+            {
+                if (BackwardsCompatibilityMapping.TryGetValue(property.Name, out string newName))
+                {
+                    property.Name = newName;
+                }
             }
         }
 
@@ -161,7 +240,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 
             foreach (var property in structure.Properties)
             {
-                if (property.PropertyDefinition.FilePropertyName == KnownStructureProperties.GateSillWidth &&
+                if (property.PropertyDefinition.FilePropertyName == KnownStructureProperties.CrestWidth &&
                     FMParser.FromString<double>(property.GetValueAsString()) <= 0.0)
                 {
                     continue;
@@ -367,14 +446,14 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             {
                 ConstructTimeSeriesProperty(path, properties,
                                             weirStructure,
-                                            KnownGeneralStructureProperties.HorizontalDoorOpeningWidth.GetDescription(),
+                                            KnownGeneralStructureProperties.GateOpeningWidth.GetDescription(),
                                             structureType,
                                             generalStructureFormula.HorizontalDoorOpeningWidthTimeSeries,
                                             refDate);
             }
             else
             {
-                properties.Add(ConstructProperty(KnownGeneralStructureProperties.HorizontalDoorOpeningWidth.GetDescription(),
+                properties.Add(ConstructProperty(KnownGeneralStructureProperties.GateOpeningWidth.GetDescription(),
                     generalStructureFormula.HorizontalDoorOpeningWidth,
                     structureType));
             }
@@ -392,7 +471,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                     throw new ArgumentException("We can't write " +
                                                 generalStructureFormula.HorizontalDoorOpeningDirection);
             }
-            properties.Add(ConstructProperty(KnownGeneralStructureProperties.HorizontalDoorOpeningDirection.GetDescription(),
+            properties.Add(ConstructProperty(KnownGeneralStructureProperties.GateOpeningHorizontalDirection.GetDescription(),
                                              horizontalDoorOpeningDirection,
                                              structureType));
 
@@ -479,13 +558,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 
             if (gate.UseSillLevelTimeSeries)
             {
-                var timeFilePath = ConstructTimeFilePath(gate, KnownStructureProperties.GateSillLevel);
-                properties.Add(ConstructProperty(KnownStructureProperties.GateSillLevel, timeFilePath, structureType));
+                var timeFilePath = ConstructTimeFilePath(gate, KnownStructureProperties.CrestLevel);
+                properties.Add(ConstructProperty(KnownStructureProperties.CrestLevel, timeFilePath, structureType));
                 WriteTimeFile(GetOtherFilePathInSameDirectory(path, timeFilePath), gate.SillLevelTimeSeries, refDate);
             }
             else
             {
-                properties.Add(ConstructProperty(KnownStructureProperties.GateSillLevel, gate.SillLevel, structureType));
+                properties.Add(ConstructProperty(KnownStructureProperties.CrestLevel, gate.SillLevel, structureType));
             }
 
             if (gate.UseLowerEdgeLevelTimeSeries)
@@ -511,7 +590,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                 properties.Add(ConstructProperty(KnownStructureProperties.GateOpeningWidth, gate.OpeningWidth, structureType));
             }
 
-            properties.Add(ConstructProperty(KnownStructureProperties.GateDoorHeight, gate.DoorHeight, structureType));
+            properties.Add(ConstructProperty(KnownStructureProperties.GateHeight, gate.DoorHeight, structureType));
 
             // switch the horizontal direction, because enums aren't used very nicely in the csv file (structure definition).
             string horizontalDirection;
@@ -527,8 +606,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                     throw new ArgumentException("We can't write " + gate.HorizontalOpeningDirection);
             }
 
-            properties.Add(ConstructProperty(KnownStructureProperties.GateHorizontalOpeningDirection, horizontalDirection, structureType));
-            AddDoubleOrEmptyPropertyConditionally(properties, KnownStructureProperties.GateSillWidth, gate.SillWidth, structureType);
+            properties.Add(ConstructProperty(KnownStructureProperties.GateOpeningHorizontalDirection, horizontalDirection, structureType));
+            AddDoubleOrEmptyPropertyConditionally(properties, KnownStructureProperties.CrestWidth, gate.SillWidth, structureType);
 
             return properties;
         }
@@ -558,14 +637,14 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             {
                 ConstructTimeSeriesProperty(path, properties,
                                             gatedWeir, 
-                                            KnownStructureProperties.GateSillLevel,
+                                            KnownStructureProperties.CrestLevel,
                                             structureType, 
                                             gatedWeir.CrestLevelTimeSeries, 
                                             refDate);
             }
             else
             {
-                properties.Add(ConstructProperty(KnownStructureProperties.GateSillLevel, 
+                properties.Add(ConstructProperty(KnownStructureProperties.CrestLevel, 
                                                  gatedWeir.CrestLevel, 
                                                  structureType));
             }
@@ -603,7 +682,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                                                  structureType));
             }
 
-            properties.Add(ConstructProperty(KnownStructureProperties.GateDoorHeight, 
+            properties.Add(ConstructProperty(KnownStructureProperties.GateHeight, 
                                              gatedWeirFormula.DoorHeight, 
                                              structureType));
 
@@ -620,11 +699,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                     throw new ArgumentException("We can't write " + 
                                                 gatedWeirFormula.HorizontalDoorOpeningDirection);
             }
-            properties.Add(ConstructProperty(KnownStructureProperties.GateHorizontalOpeningDirection, 
+            properties.Add(ConstructProperty(KnownStructureProperties.GateOpeningHorizontalDirection, 
                                              horizontalDoorOpeningDirection, 
                                              structureType));
 
-            AddDoubleOrEmptyPropertyConditionally(properties, KnownStructureProperties.GateSillWidth, gatedWeir.CrestWidth, structureType);
+            AddDoubleOrEmptyPropertyConditionally(properties, KnownStructureProperties.CrestWidth, gatedWeir.CrestWidth, structureType);
             return properties;
         }
 

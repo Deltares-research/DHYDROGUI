@@ -320,9 +320,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             var generalStructureDataItems = new List<string>
             {
-                KnownGeneralStructureProperties.LevelCenter.GetDescription(),
-                KnownGeneralStructureProperties.GateHeight.GetDescription(),
-                KnownGeneralStructureProperties.HorizontalDoorOpeningWidth.GetDescription()
+                KnownGeneralStructureProperties.CrestLevel.GetDescription(),
+                KnownGeneralStructureProperties.GateLowerEdgeLevel.GetDescription(),
+                KnownGeneralStructureProperties.GateOpeningWidth.GetDescription()
             };
 
             for (var i = 0; i < dataItems.Count; ++i)

@@ -3,7 +3,7 @@ type             = weir
 id               = Weir_down
 x                = 680
 y                = 360
-crest_level      = 2
+CrestLevel       = 2
 lat_contr_coeff  = 1
 
 [structure]
@@ -18,8 +18,8 @@ type             = weir
 id               = Weir_up
 x                = 290
 y                = 360
-crest_level      = 2.8
-crest_width      = 26.8
+CrestLevel       = 2.8
+CrestWidth       = 26.8
 lat_contr_coeff  = 1
 
 [structure]
@@ -41,15 +41,15 @@ type             = gate
 id               = Orifice01
 x                = 500
 y                = 360
-sill_level       = 2
-sill_width       = 33
-opening_width    = 1
-lower_edge_level = 2.8
-door_height      = 5
-horizontal_opening_direction= symmetric
+CrestLevel       = 2
+CrestWidth       = 33
+GateOpeningWidth = 1
+GateLowerEdgeLevel= 2.8
+GateHeight       = 5
+GateOpeningHorizontalDirection= symmetric
 
 [structure]
 type             = generalstructure
 id               = gs_01
 polylinefile     = gs_01.pli
-widthcenter      = 2.3
+CrestWidth       = 2.3

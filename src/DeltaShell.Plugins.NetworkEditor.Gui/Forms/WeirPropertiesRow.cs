@@ -94,7 +94,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
 
         protected string CrestWidthTimeSeriesString = "Time series";
         [DynamicReadOnly]
-        [DisplayName(ParameterNames.CrestWidth)]
+        [DisplayName(GuiParameterNames.CrestWidth)]
         public string CrestWidth
         {
             get
@@ -109,7 +109,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
 
         protected string CrestLevelTimeSeriesString = "Time series";
         [DynamicReadOnly]
-        [DisplayName(ParameterNames.CrestLevel)]
+        [DisplayName(GuiParameterNames.CrestLevel)]
         public string CrestLevel
         {
             get

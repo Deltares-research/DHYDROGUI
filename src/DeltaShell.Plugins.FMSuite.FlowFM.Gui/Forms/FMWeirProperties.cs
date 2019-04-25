@@ -117,7 +117,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
         /// in order to obtain an empty field.
         /// </remarks>
         [Category("General")]
-        [DisplayName(ParameterNames.CrestWidth)]
+        [DisplayName(GuiParameterNames.CrestWidth)]
         [PropertyOrder(4)]
         [Description("Width (in [m]) of the weir crest")]
         [DynamicReadOnly]

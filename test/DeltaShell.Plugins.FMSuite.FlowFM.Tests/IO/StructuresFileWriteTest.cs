@@ -94,17 +94,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 "[structure]" + Environment.NewLine +
                 "    type                  = generalstructure    # Type of structure" + Environment.NewLine +
                 "    id                    = weir01              # Name of the structure" + Environment.NewLine +
-                "    widthleftW1           = 1                   # Width left side of structure (m)" + Environment.NewLine +
-                "    widthleftWsdl         = 2                   # Width structure left side (m)" + Environment.NewLine +
-                "    widthcenter           = 3                   # Width structure centre (m)" + Environment.NewLine +
-                "    widthrightWsdr        = 4                   # Width structure right side (m)" + Environment.NewLine +
-                "    widthrightW2          = 5                   # Width right side of structure (m)" + Environment.NewLine +
-                "    levelleftZb1          = 6                   # Bed level left side of structure (m AD)" + Environment.NewLine +
-                "    levelleftZbsl         = 7                   # Bed level left side structure (m AD)" + Environment.NewLine +
-                "    levelcenter           = 8                   # Bed level at centre of structure (m AD)" + Environment.NewLine +
-                "    levelrightZbsr        = 9                   # Bed level right side structure (m AD)" + Environment.NewLine +
-                "    levelrightZb2         = 10                  # Bed level right side of structure (m AD)" + Environment.NewLine +
-                "    gateheight            = 31                  # Gate lower edge level (m AD)" + Environment.NewLine +
+                "    Upstream2Width        = 1                   # Width left side of structure (m)" + Environment.NewLine +
+                "    Upstream1Width        = 2                   # Width structure left side (m)" + Environment.NewLine +
+                "    CrestWidth            = 3                   # Width structure centre (m)" + Environment.NewLine +
+                "    Downstream1Width      = 4                   # Width structure right side (m)" + Environment.NewLine +
+                "    Downstream2Width      = 5                   # Width right side of structure (m)" + Environment.NewLine +
+                "    Upstream2Level        = 6                   # Bed level left side of structure (m AD)" + Environment.NewLine +
+                "    Upstream1Level        = 7                   # Bed level left side structure (m AD)" + Environment.NewLine +
+                "    CrestLevel            = 8                   # Bed level at centre of structure (m AD)" + Environment.NewLine +
+                "    Downstream1Level      = 9                   # Bed level right side structure (m AD)" + Environment.NewLine +
+                "    Downstream2Level      = 10                  # Bed level right side of structure (m AD)" + Environment.NewLine +
+                "    GateLowerEdgeLevel    = 31                  # Gate lower edge level (m AD)" + Environment.NewLine +
                 "    pos_freegateflowcoeff = 12                  # Positive free gate flow (-)" + Environment.NewLine +
                 "    pos_drowngateflowcoeff= 13                  # Positive drowned gate flow (-)" + Environment.NewLine +
                 "    pos_freeweirflowcoeff = 14                  # Positive free weir flow (-)" + Environment.NewLine +
@@ -116,14 +116,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 "    neg_drownweirflowcoeff= 20                  # Negative drowned weir flow (-)" + Environment.NewLine +
                 "    neg_contrcoeffreegate = 21                  # Negative flow contraction coefficient (-)" + Environment.NewLine +
                 "    extraresistance       = 22                  # Extra resistance (-)" + Environment.NewLine +
-                "    gatedoorheight        = 11                  # Vertical gate door height (m)" + Environment.NewLine +
-                "    door_opening_width    = 30                  # Horizontal opening width between the doors (m)" + Environment.NewLine +
-                "    horizontal_opening_direction= symmetric           # Horizontal direction of the opening doors" + Environment.NewLine +
+                "    GateHeight            = 11                  # Vertical gate door height (m)" + Environment.NewLine +
+                "    GateOpeningWidth      = 30                  # Horizontal opening width between the doors (m)" + Environment.NewLine +
+                "    GateOpeningHorizontalDirection= symmetric           # Horizontal direction of the opening doors" + Environment.NewLine +
                 "[structure]" + Environment.NewLine +
                 "    type                  = weir                # Type of structure" + Environment.NewLine +
                 "    id                    = weir02              # Name of the structure" + Environment.NewLine +
-                "    crest_level           = 0                   # Weir crest height (in [m])" + Environment.NewLine +
-                "    crest_width           = 5                   # Weir crest width (in [m])" + Environment.NewLine +
+                "    CrestLevel            = 0                   # Weir crest height (in [m])" + Environment.NewLine +
+                "    CrestWidth            = 5                   # Weir crest width (in [m])" + Environment.NewLine +
                 "    lat_contr_coeff       = 1                   # Lateral contraction coefficient" + Environment.NewLine, fileContents);
             }
             finally
@@ -208,7 +208,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 // Read file with ini reader again.
                 var category = AssertThatStructureCategoryExistsInFileAndReturn(exportFilePath);
-                AssertThatPropertyExistsAndIsEmpty(category, KnownStructureProperties.GateSillWidth);
+                AssertThatPropertyExistsAndIsEmpty(category, KnownStructureProperties.CrestWidth);
             });
         }
 
@@ -258,11 +258,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 // Read file with ini reader again.
                 var category = AssertThatStructureCategoryExistsInFileAndReturn(exportFilePath);
 
-                AssertThatPropertyExistsAndIsEmpty(category, GetName(KnownGeneralStructureProperties.WidthLeftW1));
-                AssertThatPropertyExistsAndIsEmpty(category, GetName(KnownGeneralStructureProperties.WidthLeftWsdl));
-                AssertThatPropertyExistsAndIsEmpty(category, GetName(KnownGeneralStructureProperties.WidthCenter));
-                AssertThatPropertyExistsAndIsEmpty(category, GetName(KnownGeneralStructureProperties.WidthRightWsdr));
-                AssertThatPropertyExistsAndIsEmpty(category, GetName(KnownGeneralStructureProperties.WidthRightW2));
+                AssertThatPropertyExistsAndIsEmpty(category, GetName(KnownGeneralStructureProperties.Upstream2Width));
+                AssertThatPropertyExistsAndIsEmpty(category, GetName(KnownGeneralStructureProperties.Upstream1Width));
+                AssertThatPropertyExistsAndIsEmpty(category, GetName(KnownGeneralStructureProperties.CrestWidth));
+                AssertThatPropertyExistsAndIsEmpty(category, GetName(KnownGeneralStructureProperties.Downstream1Width));
+                AssertThatPropertyExistsAndIsEmpty(category, GetName(KnownGeneralStructureProperties.Downstream2Width));
             });
         }
 

@@ -45,7 +45,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors
 
         protected string CrestLevelTimeSeriesString = "Time series";
         [DynamicReadOnly]
-        [DisplayName(ParameterNames.CrestLevel)]
+        [DisplayName(GuiParameterNames.CrestLevel)]
         public string CrestLevel
         {
             get
@@ -67,7 +67,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors
         }
 
         [DynamicReadOnly]
-        [DisplayName(ParameterNames.CrestWidth + " [m]")]
+        [DisplayName(GuiParameterNames.CrestWidth + " [m]")]
         public string CrestWidth
         {
             get { return weir.CrestWidth.ToString("0.00", CultureInfo.CurrentCulture); }

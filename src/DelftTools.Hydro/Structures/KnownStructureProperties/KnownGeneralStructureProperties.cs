@@ -4,17 +4,16 @@ namespace DelftTools.Hydro.Structures.KnownStructureProperties
 {
     public enum KnownGeneralStructureProperties
     {
-        [Description("widthleftW1")] WidthLeftW1,
-        [Description("widthleftWsdl")] WidthLeftWsdl,
-        [Description("widthcenter")] WidthCenter,
-        [Description("widthrightWsdr")] WidthRightWsdr,
-        [Description("widthrightW2")] WidthRightW2,
-        [Description("levelleftZb1")] LevelLeftZb1,
-        [Description("levelleftZbsl")] LevelLeftZbsl,
-        [Description("levelcenter")] LevelCenter,
-        [Description("levelrightZbsr")] LevelRightZbsr,
-        [Description("levelrightZb2")] LevelRightZb2,
-        [Description("gateheight")] GateHeight,
+        [Description("Upstream2Width")] Upstream2Width,
+        [Description("Upstream1Width")] Upstream1Width,
+        [Description(KnownStructureProperties.CrestWidth)] CrestWidth,
+        [Description("Downstream1Width")] Downstream1Width,
+        [Description("Downstream2Width")] Downstream2Width,
+        [Description("Upstream2Level")] Upstream2Level,
+        [Description("Upstream1Level")] Upstream1Level,
+        [Description(KnownStructureProperties.CrestLevel)] CrestLevel,
+        [Description("Downstream1Level")] Downstream1Level,
+        [Description("Downstream2Level")] Downstream2Level,
         [Description("pos_freegateflowcoeff")] PositiveFreeGateFlowCoefficient,
         [Description("pos_drowngateflowcoeff")] PositiveDrownGateFlowCoefficient,
         [Description("pos_freeweirflowcoeff")] PositiveFreeWeirFlowCoefficient,
@@ -26,8 +25,9 @@ namespace DelftTools.Hydro.Structures.KnownStructureProperties
         [Description("neg_drownweirflowcoeff")] NegativeDrownWeirFlowCoefficient,
         [Description("neg_contrcoeffreegate")] NegativeContractionCoefficientFreeGate,
         [Description("extraresistance")] ExtraResistance,
-        [Description("gatedoorheight")] GateDoorHeightGeneralStructure,
-        [Description("horizontal_opening_direction")] HorizontalDoorOpeningDirection,
-        [Description("door_opening_width")] HorizontalDoorOpeningWidth
+        [Description(KnownStructureProperties.GateLowerEdgeLevel)] GateLowerEdgeLevel,
+        [Description(KnownStructureProperties.GateHeight)] GateHeight,
+        [Description(KnownStructureProperties.GateOpeningHorizontalDirection)] GateOpeningHorizontalDirection,
+        [Description(KnownStructureProperties.GateOpeningWidth)] GateOpeningWidth
     }
 }

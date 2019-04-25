@@ -58,10 +58,10 @@ namespace DelftTools.Hydro.Structures.WeirFormula
             {
                 // For Performance: initialize lazy
                 if (LowerEdgeLevelTimeSeries == null)
-                    LowerEdgeLevelTimeSeries = HydroTimeSeriesFactory.CreateTimeSeries(ParameterNames.GateLowerEdgeLevel, ParameterNames.GateLowerEdgeLevel, "m AD");
+                    LowerEdgeLevelTimeSeries = HydroTimeSeriesFactory.CreateTimeSeries(GuiParameterNames.GateLowerEdgeLevel, GuiParameterNames.GateLowerEdgeLevel, "m AD");
 
                 if (HorizontalDoorOpeningWidthTimeSeries == null)
-                    HorizontalDoorOpeningWidthTimeSeries = HydroTimeSeriesFactory.CreateTimeSeries(ParameterNames.HorizontalOpeningWidth, ParameterNames.HorizontalOpeningWidth, "m AD");
+                    HorizontalDoorOpeningWidthTimeSeries = HydroTimeSeriesFactory.CreateTimeSeries(GuiParameterNames.HorizontalOpeningWidth, GuiParameterNames.HorizontalOpeningWidth, "m AD");
 
             }
             else

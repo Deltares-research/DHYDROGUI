@@ -13,14 +13,14 @@ namespace DelftTools.Hydro.Structures.WeirFormula
     {
         private readonly Dictionary<KnownGeneralStructureProperties, Action<GeneralStructureWeirFormula, double>> SetKnownGeneralStructureProperty = new Dictionary<KnownGeneralStructureProperties, Action<GeneralStructureWeirFormula, double>>
         {
-            { KnownGeneralStructureProperties.WidthLeftW1, (f, v) => f.WidthLeftSideOfStructure = v },
-            { KnownGeneralStructureProperties.WidthLeftWsdl, (f, v) => f.WidthStructureLeftSide = v },
-            { KnownGeneralStructureProperties.WidthRightWsdr, (f, v) => f.WidthStructureRightSide = v },
-            { KnownGeneralStructureProperties.WidthRightW2, (f, v) => f.WidthRightSideOfStructure = v },
-            { KnownGeneralStructureProperties.LevelLeftZb1, (f, v) => f.BedLevelLeftSideOfStructure = v },
-            { KnownGeneralStructureProperties.LevelLeftZbsl, (f, v) => f.BedLevelLeftSideStructure = v },
-            { KnownGeneralStructureProperties.LevelRightZbsr, (f, v) => f.BedLevelRightSideStructure = v },
-            { KnownGeneralStructureProperties.LevelRightZb2, (f, v) => f.BedLevelRightSideOfStructure = v },
+            { KnownGeneralStructureProperties.Upstream2Width, (f, v) => f.WidthLeftSideOfStructure = v },
+            { KnownGeneralStructureProperties.Upstream1Width, (f, v) => f.WidthStructureLeftSide = v },
+            { KnownGeneralStructureProperties.Downstream1Width, (f, v) => f.WidthStructureRightSide = v },
+            { KnownGeneralStructureProperties.Downstream2Width, (f, v) => f.WidthRightSideOfStructure = v },
+            { KnownGeneralStructureProperties.Upstream2Level, (f, v) => f.BedLevelLeftSideOfStructure = v },
+            { KnownGeneralStructureProperties.Upstream1Level, (f, v) => f.BedLevelLeftSideStructure = v },
+            { KnownGeneralStructureProperties.Downstream1Level, (f, v) => f.BedLevelRightSideStructure = v },
+            { KnownGeneralStructureProperties.Downstream2Level, (f, v) => f.BedLevelRightSideOfStructure = v },
             { KnownGeneralStructureProperties.PositiveFreeGateFlowCoefficient, (f, v) => f.PositiveFreeGateFlow = v },
             { KnownGeneralStructureProperties.PositiveDrownGateFlowCoefficient, (f, v) => f.PositiveDrownedGateFlow = v },
             { KnownGeneralStructureProperties.PositiveFreeWeirFlowCoefficient, (f, v) => f.PositiveFreeWeirFlow = v },
@@ -32,7 +32,7 @@ namespace DelftTools.Hydro.Structures.WeirFormula
             { KnownGeneralStructureProperties.NegativeDrownWeirFlowCoefficient, (f, v) => f.NegativeDrownedWeirFlow = v },
             { KnownGeneralStructureProperties.NegativeContractionCoefficientFreeGate, (f, v) => f.NegativeContractionCoefficient = v },
             { KnownGeneralStructureProperties.ExtraResistance, (f, v) => { f.ExtraResistance = v; if (v == 0.0) f.UseExtraResistance = false; } },
-            { KnownGeneralStructureProperties.GateDoorHeightGeneralStructure, (f, v) => f.DoorHeight = v }
+            { KnownGeneralStructureProperties.GateHeight, (f, v) => f.DoorHeight = v }
         };
 
         public GeneralStructureWeirFormula()
@@ -150,7 +150,7 @@ namespace DelftTools.Hydro.Structures.WeirFormula
                 useHorizontalDoorOpeningWidthTimeSeries = value;
                 if (useHorizontalDoorOpeningWidthTimeSeries && HorizontalDoorOpeningWidthTimeSeries == null)
                 {
-                    HorizontalDoorOpeningWidthTimeSeries = HydroTimeSeriesFactory.CreateTimeSeries(ParameterNames.HorizontalOpeningWidth, ParameterNames.HorizontalOpeningWidth, "m AD");
+                    HorizontalDoorOpeningWidthTimeSeries = HydroTimeSeriesFactory.CreateTimeSeries(GuiParameterNames.HorizontalOpeningWidth, GuiParameterNames.HorizontalOpeningWidth, "m AD");
                 }
             }
         }
@@ -171,7 +171,7 @@ namespace DelftTools.Hydro.Structures.WeirFormula
                 useLowerEdgeLevelTimeSeries = value;
                 if (useLowerEdgeLevelTimeSeries && LowerEdgeLevelTimeSeries == null)
                 {
-                    LowerEdgeLevelTimeSeries = HydroTimeSeriesFactory.CreateTimeSeries(ParameterNames.GateLowerEdgeLevel, ParameterNames.GateLowerEdgeLevel, "m AD");
+                    LowerEdgeLevelTimeSeries = HydroTimeSeriesFactory.CreateTimeSeries(GuiParameterNames.GateLowerEdgeLevel, GuiParameterNames.GateLowerEdgeLevel, "m AD");
                 };
             }
         }

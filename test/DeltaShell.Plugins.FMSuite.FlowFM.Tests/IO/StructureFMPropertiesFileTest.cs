@@ -13,9 +13,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         {
             // StructureType,   attributeName,  Caption,            Type,       Default,    Min,    Max,    StructureFileOnly,  Description
             // structure,       id,             Name,               String,     ,           ,       ,       FALSE,              Name of the structure
-            // weir,            crest_level,    Crest level,        Double,     ,           ,       ,       FALSE,              Crest height in [m]
+            // weir,            CrestLevel,     Crest level,        Double,     ,           ,       ,       FALSE,              Crest height in [m]
             // pump,            nrstages,       Number of stages,   Integer,    1,          1,      ,       FALSE,              Number of pump stages
-            // gate,            sill_level,     Sill level,         Double,     ,           ,       ,       FALSE,              Sill level in [m]
+            // gate,            CrestLevel,     Sill level,         Double,     ,           ,       ,       FALSE,              Sill level in [m]
 
             var filePath = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(WaterFlowFMModelTest).Assembly,
                                                       @"structures\structure-properties_TEST.csv");

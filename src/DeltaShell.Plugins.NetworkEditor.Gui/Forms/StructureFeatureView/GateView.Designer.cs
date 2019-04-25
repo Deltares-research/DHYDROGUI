@@ -176,7 +176,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             this.openingDirectionLabel.Name = "openingDirectionLabel";
             this.openingDirectionLabel.Size = new System.Drawing.Size(138, 27);
             this.openingDirectionLabel.TabIndex = 4;
-            this.openingDirectionLabel.Text = ParameterNames.HorizontalOpeningDirection;
+            this.openingDirectionLabel.Text = GuiParameterNames.HorizontalOpeningDirection;
             this.openingDirectionLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // openingDirectionComboBox
