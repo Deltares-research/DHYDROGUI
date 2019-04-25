@@ -1,4 +1,0 @@
-TP_1.0
-NODE id 'N_36' nm '' px 516510 py 5463900 node
-NODE id 'N_117' nm '' px 514165 py 5452580 node
-BRCH id 'R_CoqR_1' nm 'Lwr' bn 'N_36' en 'N_117' al 14410.1246935256 vc_opt 1 vc_equi -1 vc_len 100 brch

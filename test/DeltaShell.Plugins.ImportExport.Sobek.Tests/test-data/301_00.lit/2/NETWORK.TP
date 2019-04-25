@@ -1,4 +1,0 @@
-TP_1.0
-NODE id 'N_1' nm 'Sea_bnd' px 0 py 0 node
-NODE id 'N_3' nm 'River_bnd' px 115000 py 0 node
-BRCH id 'R_39' nm 'B1' bn 'N_1' en 'N_3' al 115000 vc_opt 1 vc_equi -1 vc_len 1000 brch

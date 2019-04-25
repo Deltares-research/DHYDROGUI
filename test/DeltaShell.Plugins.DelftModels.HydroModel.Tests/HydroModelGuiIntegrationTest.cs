@@ -42,7 +42,6 @@ using DeltaShell.Plugins.FMSuite.Wave;
 using DeltaShell.Plugins.FMSuite.Wave.Gui;
 using DeltaShell.Plugins.FMSuite.Wave.IO.Importers;
 using DeltaShell.Plugins.ImportExport.Sobek;
-using DeltaShell.Plugins.ImportExport.Sobek.Tests;
 using DeltaShell.Plugins.NetCDF;
 using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.NetworkEditor.Gui;
@@ -123,44 +122,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
             gui = null;
             app = null;
-        }
-
-        [Test]
-        [Category(TestCategory.VerySlow)]
-        public void ImportMaasModelSaveAndLoadGivesException_Tools4693()
-        {
-            const string projectPath = "Maas.dsproj";
-            var modelImporter = new SobekWaterFlowModel1DImporter();
-
-            var modelPath =
-                TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"ReModels\JAMM2010.sbk\40\DEFTOP.1");
-            var importedModel = (IModel)modelImporter.ImportItem(modelPath);
-
-            app.Project.RootFolder.Items.Add(importedModel);
-
-            app.SaveProjectAs(projectPath);
-
-            app.CloseProject();
-
-            app.OpenProject(projectPath); // bang, exception!
-        }
-
-        [Test]
-        public void ImportHKTGModelSaveAndLoadGivesException_Tools6984()
-        {
-            const string projectPath = "HKTG.dsproj";
-            var modelImporter = new SobekWaterFlowModel1DImporter();
-
-            var modelPath = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"HKTG.lit\1\NETWORK.TP");
-            var importedModel = (IModel)modelImporter.ImportItem(modelPath);
-
-            app.Project.RootFolder.Items.Add(importedModel);
-
-            app.SaveProjectAs(projectPath);
-
-            app.CloseProject();
-
-            app.OpenProject(projectPath); // bang, exception!
         }
 
         [Test]

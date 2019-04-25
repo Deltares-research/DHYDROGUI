@@ -1,4 +1,0 @@
- ;                         dispersions
-     1                 ;  dispersions in this file
-     1.0 1.0 1.0       ;  scale factors for 3 directions
-       5 0.0 0.0       ;  values (m2/s) for 3 directions

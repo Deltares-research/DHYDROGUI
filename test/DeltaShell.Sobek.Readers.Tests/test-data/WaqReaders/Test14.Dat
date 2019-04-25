@@ -1,8 +1,0 @@
-ITEM
-USEFOR 'MyOwnLittleFraction' 'MyOwnLittleFraction'
-ABSOLUTE TIME
-CONCENTRATION
-USEFOR 'COBD5' 'COBD5'
-USEFOR 'COBD5_2' 'COBD5_2'
-DATA                   'COBD5'         'COBD5_2'
-

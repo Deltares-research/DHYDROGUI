@@ -1,4 +1,0 @@
-TP_1.0
-NODE id '1' nm '' px 99610.0504558258 py 472341.274098328 node
-NODE id '2' nm '' px 106444.705926565 py 468050.73701249 node
-BRCH id '1' nm '' bn '1' en '2' al 8069.77223276202 vc_opt 0 vc_equi -1 vc_len 5000 brch
