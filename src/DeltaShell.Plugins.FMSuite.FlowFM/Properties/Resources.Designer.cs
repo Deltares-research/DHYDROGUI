@@ -148,16 +148,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unsupported quantity type: {0}, in the .ext file {1} detected. It will not be imported..
-        /// </summary>
-        public static string ExtForceFile_ReadPolyLineData_Unsupported_quantity_type___0___in_the__ext_file__1__detected__It_will_not_be_imported_ {
-            get {
-                return ResourceManager.GetString("ExtForceFile_ReadPolyLineData_Unsupported_quantity_type___0___in_the__ext_file__1" +
-                        "__detected__It_will_not_be_imported_", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Unexpected line &quot;{0}&quot; on line {1} in file {2} and will be ignored..
         /// </summary>
         public static string ExtForceFile_ReadQuantityProperty_Unexpected_line___0___on_line__1__in_file__2__and_will_be_ignored_ {

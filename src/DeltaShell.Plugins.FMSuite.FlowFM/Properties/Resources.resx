@@ -464,9 +464,6 @@ Manhole with unique id '{4}' is not imported.</value>
   <data name="WaterFlowFMModel_ReadDiaFile_Could_not_find_log_file___0__at_expected_path___1_" xml:space="preserve">
     <value>Could not find log file: {0} at expected path: {1}</value>
   </data>
-  <data name="ExtForceFile_ReadPolyLineData_Unsupported_quantity_type___0___in_the__ext_file__1__detected__It_will_not_be_imported_" xml:space="preserve">
-    <value>Unsupported quantity type: {0}, in the .ext file {1} detected. It will not be imported.</value>
-  </data>
   <data name="UnstrucGridOperationApi_DisposeApiIfNotReachable_API_failed_to_generate_snapped_feature__0___Try_reopening_the_project_if_the_problem_persists_" xml:space="preserve">
     <value>API failed to generate snapped feature {0}. Try reopening the project if the problem persists.</value>
   </data>
