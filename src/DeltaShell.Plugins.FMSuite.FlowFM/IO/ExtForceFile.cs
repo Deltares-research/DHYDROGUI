@@ -314,7 +314,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private void ReadSpatialData(IList<ExtForceFileItem> extForceFileItems, WaterFlowFMModelDefinition modelDefinition)
         {
-            var unReadExtForceFileItems = extForceFileItems;
+            var unreadExtForceFileItems = extForceFileItems;
 
             var knownQuantities = new Dictionary<string, string>
             {
@@ -343,30 +343,30 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             foreach (var quantityPair in knownQuantities)
             {
-                var readItems = unReadExtForceFileItems.Where(i => i.Quantity == quantityPair.Key).ToList();
+                var readItems = unreadExtForceFileItems.Where(i => i.Quantity == quantityPair.Key).ToList();
                 if (quantityPair.Key.Equals(ExtForceQuantNames.FrictCoef))
-                    readItems = FilterByFrictionType(unReadExtForceFileItems, modelDefinition).ToList();
+                    readItems = FilterByFrictionType(unreadExtForceFileItems, modelDefinition).ToList();
 
                 ReadSpatialOperationData(readItems, modelDefinition, quantityPair.Key, quantityPair.Value);
 
                 //Remove read items.
-                unReadExtForceFileItems = unReadExtForceFileItems.Except(readItems).ToList();
-                if (!unReadExtForceFileItems.Any()) return;
+                unreadExtForceFileItems = unreadExtForceFileItems.Except(readItems).ToList();
+                if (!unreadExtForceFileItems.Any()) return;
             }
 
             //Read tracer items.
-            var initialTracerItems = unReadExtForceFileItems.Where(fi => fi.Quantity.StartsWith(ExtForceQuantNames.InitialTracerPrefix)).ToList();
+            var initialTracerItems = unreadExtForceFileItems.Where(fi => fi.Quantity.StartsWith(ExtForceQuantNames.InitialTracerPrefix)).ToList();
             foreach (var tracerItem in initialTracerItems)
             {
                 string tracerName = tracerItem.Quantity.Substring(ExtForceQuantNames.InitialTracerPrefix.Length);
                 ReadSpatialOperationData(initialTracerItems, modelDefinition, tracerItem.Quantity, tracerName);
             }
 
-            unReadExtForceFileItems = unReadExtForceFileItems.Except(initialTracerItems).ToList();
-            if (!unReadExtForceFileItems.Any()) return;
+            unreadExtForceFileItems = unreadExtForceFileItems.Except(initialTracerItems).ToList();
+            if (!unreadExtForceFileItems.Any()) return;
 
             //Read sediment items.
-            var initialSedimentItems = unReadExtForceFileItems.Where(fi => fi.Quantity.StartsWith(ExtForceQuantNames.InitialSpatialVaryingSedimentPrefix)).ToList();
+            var initialSedimentItems = unreadExtForceFileItems.Where(fi => fi.Quantity.StartsWith(ExtForceQuantNames.InitialSpatialVaryingSedimentPrefix)).ToList();
             foreach (var sedimentItem in initialSedimentItems)
             {
                 /* DELFT3DFM-1112
@@ -375,19 +375,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                  * way it's meant to be written in said file, we need to add the postfix */
                 string spatialvaryingSedConc = sedimentItem.Quantity.Substring(ExtForceQuantNames.InitialSpatialVaryingSedimentPrefix.Length) + SedConcPostfix;
                 ReadSpatialOperationData(initialSedimentItems, modelDefinition, sedimentItem.Quantity, spatialvaryingSedConc);
-            }
-
-            unReadExtForceFileItems = unReadExtForceFileItems.Except(initialSedimentItems).ToList();
-            if (!unReadExtForceFileItems.Any()) return;
-
-            //If there are any XYZ items left means they are not a known quantity.
-            var xyzUnreadItems = unReadExtForceFileItems.Where(fi => fi.FileName.EndsWith(XyzFile.Extension));
-            foreach (var xyzItem in xyzUnreadItems)
-            {
-                log.WarnFormat(
-                    Resources
-                        .ExtForceFile_ReadSpatialData_The_model_may_not_run__Spatial_varying_quantity__0__could_not_be_imported_because_the_prefix_does_not_match__1__for_Tracers_or__2__for_Spatial_Varying_Sediments_,
-                    xyzItem.Quantity, ExtForceQuantNames.InitialTracerPrefix, ExtForceQuantNames.InitialSpatialVaryingSedimentPrefix);
             }
         }
 
