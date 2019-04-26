@@ -688,17 +688,5 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
             rtcModel.ControlGroups.Add(controlGroup1);
             return rtcModel;
         }
-
-        private static void AddStructureToF1DModel(WaterFlowModel1D myWaterFlowModel1D, IBranch branch, BranchStructure structure, int chainage)
-        {
-            var compositeStructure = new CompositeBranchStructure
-            {
-                Network = myWaterFlowModel1D.Network,
-                Geometry = new Point(chainage, 0),
-                Chainage = chainage
-            };
-            NetworkHelper.AddBranchFeatureToBranch(compositeStructure, branch, compositeStructure.Chainage);
-            HydroNetworkHelper.AddStructureToComposite(compositeStructure, structure);
-        }
     }
 }
