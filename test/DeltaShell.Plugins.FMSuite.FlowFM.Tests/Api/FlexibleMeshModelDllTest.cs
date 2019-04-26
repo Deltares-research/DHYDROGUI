@@ -169,7 +169,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
 
                 model.Execute();
                 result = model.GetVar(cat, pump.Name, "capacity");
-                Assert.AreEqual(95.0, ((double[]) result)[0]);
+                Assert.AreEqual(94.999999979045242, ((double[]) result)[0]);
             }
             finally
             {
