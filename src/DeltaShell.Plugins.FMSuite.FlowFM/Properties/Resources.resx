@@ -558,9 +558,12 @@ Manhole with unique id '{4}' is not imported.</value>
     <value>fixed weir '{0}' not within grid extent.</value>
   </data>
   <data name="FixedWeirValidator_ValidateSillDepths_fixed_weir___0___has_unphysical_sill_depths__parts_will_be_ignored_by_dflow_fm_" xml:space="preserve">
-    <value>fixed weir '{0}' has unphysical sill depths, parts will be ignored by dflow-fm.</value>
+    <value>'{0}': Fixed weir has ground heights smaller than 0.00 m. A minimum of 0.00 m will be applied by the computational core.</value>
   </data>
   <data name="WaterFlowFMModel_ChangingWeirFormulaWhenAlsoUsedInRTC_Structure_component__0__has_been_removed_from_RTC_Control_Group__1__due_to_type_change" xml:space="preserve">
     <value> Structure component'{0}' has been removed from Control Group '{1}' due to type change.</value>
+  </data>
+  <data name="FixedWeirValidator_ValidateSillDepths__0___Fixed_weir_with_type_1_have_a_ground_heights_smaller_than_0_10_m__A_minimum_of_0_10_m_will_be_applied_by_the_computational_core_" xml:space="preserve">
+    <value>'{0}': Fixed weir with type 'TabellenBoek' have a ground heights smaller than 0.10 m. A minimum of 0.10 m will be applied by the computational core.</value>
   </data>
 </root>

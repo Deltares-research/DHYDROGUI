@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using DelftTools.Utils.Validation;
+using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
@@ -14,10 +15,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
         public static ValidationReport Validate(WaterFlowFMModel model)
         {
             var area = model.Area;
+            var fixedWeirScheme = model.ModelDefinition.GetModelProperty(KnownProperties.FixedWeirScheme).GetValueAsString();
 
             var issues = area.ThinDams.Validate(model.GridExtent)
                 .Concat(model.SourcesAndSinks.Validate(model.GridExtent, model.StartTime, model.StopTime))
-                .Concat(area.FixedWeirs.Validate(model.GridExtent, model.FixedWeirsProperties))
+                .Concat(area.FixedWeirs.Validate(model.GridExtent, model.FixedWeirsProperties, fixedWeirScheme))
                 .Concat(area.Weirs.Validate(model.GridExtent, model.StartTime, model.StopTime))
                 .Concat(area.Pumps.Validate(model.GridExtent, model.StartTime, model.StopTime));
 

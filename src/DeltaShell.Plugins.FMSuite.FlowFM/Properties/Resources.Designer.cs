@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -158,7 +158,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to fixed weir &apos;{0}&apos; has unphysical sill depths, parts will be ignored by dflow-fm..
+        ///   Looks up a localized string similar to &apos;{0}&apos;: Fixed weir with type &apos;TabellenBoek&apos; have a ground heights smaller than 0.10 m. A minimum of 0.10 m will be applied by the computational core..
+        /// </summary>
+        public static string FixedWeirValidator_ValidateSillDepths__0___Fixed_weir_with_type_1_have_a_ground_heights_smaller_than_0_10_m__A_minimum_of_0_10_m_will_be_applied_by_the_computational_core_ {
+            get {
+                return ResourceManager.GetString("FixedWeirValidator_ValidateSillDepths__0___Fixed_weir_with_type_1_have_a_ground_h" +
+                        "eights_smaller_than_0_10_m__A_minimum_of_0_10_m_will_be_applied_by_the_computati" +
+                        "onal_core_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &apos;{0}&apos;: Fixed weir has ground heights smaller than 0.00 m. A minimum of 0.00 m will be applied by the computational core..
         /// </summary>
         public static string FixedWeirValidator_ValidateSillDepths_fixed_weir___0___has_unphysical_sill_depths__parts_will_be_ignored_by_dflow_fm_ {
             get {
