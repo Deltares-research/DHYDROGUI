@@ -351,11 +351,6 @@
       <Name>DeltaShell.Plugins.DelftModels.WaterQualityModel</Name>
       <Private>False</Private>
     </ProjectReference>
-    <ProjectReference Include="..\..\src\DeltaShell.Plugins.Fews\DeltaShell.Plugins.Fews.csproj">
-      <Project>{df36566f-25e2-4514-9715-163b50b87aac}</Project>
-      <Name>DeltaShell.Plugins.Fews</Name>
-      <Private>False</Private>
-    </ProjectReference>
     <ProjectReference Include="..\..\src\DeltaShell.Plugins.FMSuite.Common.Gui\DeltaShell.Plugins.FMSuite.Common.Gui.csproj">
       <Project>{7f3d15d6-3425-47a6-afd4-9b6e054ee8be}</Project>
       <Name>DeltaShell.Plugins.FMSuite.Common.Gui</Name>
