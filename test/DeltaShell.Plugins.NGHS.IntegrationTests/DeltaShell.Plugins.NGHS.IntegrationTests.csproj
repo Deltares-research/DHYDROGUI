@@ -206,11 +206,6 @@
       <Name>DeltaShell.Plugins.NetworkEditor</Name>
       <Private>False</Private>
     </ProjectReference>
-    <ProjectReference Include="..\DeltaShell.Plugins.DelftModels.WaterFlowModel.TestUtils\DeltaShell.Plugins.DelftModels.WaterFlowModel.TestUtils.csproj">
-      <Project>{CA5F0591-734F-4B4B-9B64-38F811E5B068}</Project>
-      <Name>DeltaShell.Plugins.DelftModels.WaterFlowModel.TestUtils</Name>
-      <Private>False</Private>
-    </ProjectReference>
     <ProjectReference Include="..\DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests\DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.csproj">
       <Project>{E4E30624-F4E6-4DAF-97A7-08E131E0C598}</Project>
       <Name>DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests</Name>
