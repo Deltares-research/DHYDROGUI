@@ -47,7 +47,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public const string ObsCrossExtension = "_crs.pli";
         public const string ObsCrossAlternativeExtension = "_crs.pliz";
         public const string DryAreaExtension = "_dry.pol";
-        public const string DryPointExtension = "_dry.xyz";
+        public const string DryPointExtension = ".xyz";
         public const string EnclosureExtension = "_enc.pol";
         public const string MorphologyExtension = ".mor";
         public const string SedimentExtension = ".sed";
