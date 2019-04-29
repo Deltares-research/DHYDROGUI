@@ -1306,7 +1306,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             });
 
             var obsGroupName = "MyObsPoints_obs.xyn";
-            var dryGroupName = "MyDryPoints_dry.xyz";
+            var dryGroupName = "MyDryPoints.xyz";
             var crsGroupName = modelName + "_crs.pli";
             var gateGroupName = "MyStructures_structures.ini";
 
