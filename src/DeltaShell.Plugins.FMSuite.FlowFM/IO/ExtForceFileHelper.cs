@@ -639,12 +639,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     try
                     {
                         importSamplesOperation.SwitchToDirectory(targetDirectory);
+                        if (existingExtForceFileItem != null)
+                        {
+                            existingExtForceFileItem.FileName = targetDirectory != null ? 
+                                                                    importSamplesOperation.FilePath.Replace(targetDirectory + "\\", "") : importSamplesOperation.FilePath;
+                        }
+
                     }
                     catch (Exception e)
                     {
-                        log.Warn("Unable to import samples "+ e.Message);
+                        log.Warn("Unable to import samples " + e.Message);
                     }
-                    
+
                 }
             }
 

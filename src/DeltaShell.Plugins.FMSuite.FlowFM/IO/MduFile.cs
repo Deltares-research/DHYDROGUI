@@ -982,7 +982,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 if (forceFilePath != null && File.Exists(forceFilePath))
                 {
                     ExternalForcingsFile = new ExtForceFile();
-                    ExternalForcingsFile.Read(forceFilePath, modelDefinition);
+
+                    ExternalForcingsFile.Read(forceFilePath, modelDefinition, filePath);
                 }
             }
 
