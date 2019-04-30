@@ -42,7 +42,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model
             MonitoringOutputLevel = MonitoringOutputLevel.None;
             CorrectForEvaporation = true;
             ClosureErrorCorrection = true;
-            NrOfThreads = 0;
+            NrOfThreads = 2;
             DryCellThreshold = 0.001;
             IterationMaximum = 100;
             Tolerance = 1e-7;
