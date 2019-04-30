@@ -139,7 +139,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             var loadedModelDefinition = new WaterFlowFMModelDefinition();
             loadedModelDefinition.GetModelProperty(KnownProperties.RefDate).Value = refDate;
-            writer.Read("testmodel", loadedModelDefinition);
+            writer.Read("testmodel", loadedModelDefinition, "testmodel");
 
             Assert.AreEqual(modelDefinition.WindFields.Count, loadedModelDefinition.WindFields.Count);
             for (var i = 0; i < loadedModelDefinition.WindFields.Count; ++i)
@@ -166,7 +166,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             var loadedModelDefinition = new WaterFlowFMModelDefinition();
             loadedModelDefinition.GetModelProperty(KnownProperties.RefDate).Value = refDate;
-            writer.Read("testmodel", loadedModelDefinition);
+            writer.Read("testmodel", loadedModelDefinition, "testmodel");
 
             Assert.AreEqual(modelDefinition.WindFields.Count, loadedModelDefinition.WindFields.Count);
             for (var i = 0; i < loadedModelDefinition.WindFields.Count; ++i)
@@ -197,7 +197,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             var loadedModelDefinition = new WaterFlowFMModelDefinition();
             loadedModelDefinition.GetModelProperty(KnownProperties.RefDate).Value = refDate;
-            writer.Read("testmodel", loadedModelDefinition);
+            writer.Read("testmodel", loadedModelDefinition, "testmodel");
 
             Assert.AreEqual(modelDefinition.WindFields.Count, loadedModelDefinition.WindFields.Count);
             for (var i = 0; i < loadedModelDefinition.WindFields.Count; ++i)

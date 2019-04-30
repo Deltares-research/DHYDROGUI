@@ -960,15 +960,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         #region Read logic
 
-        public void Read(string extForceFilePath, WaterFlowFMModelDefinition modelDefinition, string mduFilePath = null)
+        public void Read(string extForceFilePath, WaterFlowFMModelDefinition modelDefinition, string mduFilePath)
         {
-            MduFilePath = mduFilePath ?? extForceFilePath;
+            MduFilePath = mduFilePath;
 
             PathsRelativeToExtDuringReading = (bool) modelDefinition.GetModelProperty(KnownProperties.PathsRelativeToParent).Value;
             ExtFilePath = extForceFilePath;
             Read(modelDefinition);
         }
-
+        
         private void Read(WaterFlowFMModelDefinition modelDefinition)
         {
             var extForceFileItems = ParseExtForceFile();

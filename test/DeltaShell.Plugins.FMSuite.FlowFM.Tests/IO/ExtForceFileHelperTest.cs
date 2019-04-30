@@ -20,16 +20,46 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
     [TestFixture]
     public class ExtForceFileHelperTest
     {
-        [TestCase("C:\\Folder\\AnotherFolder\\MoreFolder\\HW1995", "\\filename_something.xyz", "HW1995\\filename_something.xyz")]
-        [TestCase("C:\\Folder\\AnotherFolder\\MoreFolder\\HW1995","\\YesThereIsAnotherFolder\\filename_something.xyz", "HW1995\\YesThereIsAnotherFolder\\filename_something.xyz")]
-        public void WriteInitialConditionsSamplesTest(string extForceFilePath, string fileName, string expectedFileName)
+        [TestCase(true, @"chezy_samples\subfolder\chezy.xyz")]
+        [TestCase(true, @"chezy_samples\chezy.xyz")]
+        [TestCase(false, @"chezy_samples\subfolder\chezy.xyz")]
+        [TestCase(false, @"chezy_samples\chezy.xyz")]
+        public void GivenASampleForcingFile_WhenWritingToAnotherDirectory_ThenTheFileShouldBeCopiedToTheSameDirectoryAsTheWrittenExtFile(bool existingExtForceFileItemFound, string relativeFilePath)
         {
+            // Given
+            var samplePath = TestHelper.GetTestFilePath(relativeFilePath);
+
+            samplePath = TestHelper.CreateLocalCopy(samplePath);
+            var saveDirectory = Path.Combine(Path.GetDirectoryName(samplePath), "..", "chezy_samples_saved");
+
+            FileUtils.DeleteIfExists(saveDirectory);
+            Directory.CreateDirectory(saveDirectory);
+
+            string targetPath = Path.Combine(saveDirectory ,"chezy.ext");
+
+            ExtForceFileItem extForceFileItem;
+            if (existingExtForceFileItemFound)
+            {
+                extForceFileItem = new ExtForceFileItem(ExtForceQuantNames.FrictCoef)
+                {
+                    FileName = relativeFilePath.Replace("chezy_samples",".")
+                };
+            }
+            else
+            {
+                extForceFileItem = null;
+            }
+
             var importSamplesOperation = new ImportSamplesSpatialOperationExtension
             {
-                                FilePath = Path.GetFullPath(extForceFilePath + fileName),
+                                FilePath = samplePath,
             };
-            ExtForceFileItem item = ExtForceFileHelper.WriteInitialConditionsSamples(extForceFilePath, "quantity", importSamplesOperation, null, true);
-            Assert.AreEqual(expectedFileName, item.FileName);
+            
+            // When
+            ExtForceFileItem item = ExtForceFileHelper.WriteInitialConditionsSamples(targetPath, "quantity", importSamplesOperation, extForceFileItem, true);
+
+            // Then
+            Assert.AreEqual("chezy.xyz", item.FileName);
         }
 
         [Test]
