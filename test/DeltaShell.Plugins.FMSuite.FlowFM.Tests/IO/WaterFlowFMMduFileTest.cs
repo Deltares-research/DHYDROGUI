@@ -1306,7 +1306,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             });
 
             var obsGroupName = "MyObsPoints_obs.xyn";
-            var dryGroupName = "MyDryPoints.xyz";
+            var dryGroupName = "MyDryPoints_dry.xyz";
             var crsGroupName = modelName + "_crs.pli";
             var gateGroupName = "MyStructures_structures.ini";
 
@@ -1335,6 +1335,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.NotNull(dryFileEntries);
             Assert.That(dryFileEntries.Count, Is.EqualTo(1));
             Assert.That(area.DryPoints.FirstOrDefault().GroupName, Is.EqualTo("MyDryPoints.xyz"));
+
             Assert.That(dryFileEntries.FirstOrDefault(), Is.EqualTo(dryGroupName));
             Assert.That(File.Exists(dryFilePath));
 
