@@ -824,24 +824,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         public void CreateNumericalOptionsIncludeTestDefaultNumberOfCoresIs2()
         {
             // setup
-            var initSettings = new WaqInitializationSettings
-            {
-                Settings =
-                {
-                    NumericalScheme = NumericalScheme.Scheme15,
-                    ClosureErrorCorrection = true,
-                    IterationMaximum = 123,
-                    Tolerance = 1e-6,
-                    WriteIterationReport = false,
-                    DryCellThreshold = 0.01
-                }
-            };
+            var initSettings = new WaqInitializationSettings();
 
             // call
             var numericalOptionsInclude = IncludeFileFactory.CreateNumericalOptionsInclude(initSettings);
 
             // assert
-            Assert.That(numericalOptionsInclude, Contains.Substring("CONSTANTS 'NOTHREADS' DATA 2 ; Number of threads used by delwaq"));
+            var expectedText = "CONSTANTS 'NOTHREADS' DATA 2 ; Number of threads used by delwaq";
+            Assert.IsTrue(numericalOptionsInclude.Contains(expectedText));
         }
 
         [Test]
