@@ -735,5 +735,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 FileUtils.DeleteIfExists(mduDir);
             }
         }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        [TestCase(@"ModelWithDrypointData\FlowFM\input_without_drysuffix\FlowFM.mdu")]
+        [TestCase(@"ModelWithDrypointData\FlowFM\input_with_drysuffix\FlowFM.mdu")]
+        public void GivenAnMduToReadWithDryPoints_WhenReadingTheDryPointFile_ThenAreaHasDryPoints(string mduFileName)
+        {
+            mduFileName = TestHelper.GetTestFilePath(mduFileName);
+            mduFileName = TestHelper.CreateLocalCopy(mduFileName);
+            mduDir = Path.GetDirectoryName(mduFileName);
+            Assert.NotNull(mduDir);
+            modelName = Path.GetFileName(mduFileName);
+           
+            var mduFile = new MduFile();
+            var originalArea = new HydroArea();
+            var originalModelDefinition = new WaterFlowFMModelDefinition(mduDir, modelName);
+            var allFixedWeirsAndCorrespondingProperties = new Dictionary<FixedWeir, ModelFeatureCoordinateData<FixedWeir>>();
+
+            mduFile.Read(mduFileName, originalModelDefinition, originalArea, allFixedWeirsAndCorrespondingProperties);
+
+            var dryPointsOnArea = originalArea.DryPoints;
+            Assert.AreEqual(8, dryPointsOnArea.Count);
+        }
     }
 }
