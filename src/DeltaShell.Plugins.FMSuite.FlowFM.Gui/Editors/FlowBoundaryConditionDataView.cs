@@ -767,10 +767,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
         private void TimeSeriesDialog()
         {
             var generateDialog = new TimeSeriesGeneratorDialog {ApplyOnAccept = false};
-
             var startTime = ModelStartTime;
             var stopTime = ModelStopTime;
-            var timeStep = ModelTimeStep;
+            var timeStep = new TimeSpan(0, 12, 0, 0);
+
             generateDialog.StartPosition = FormStartPosition.CenterScreen;
             generateDialog.SetData(null, startTime, stopTime, timeStep);
 
