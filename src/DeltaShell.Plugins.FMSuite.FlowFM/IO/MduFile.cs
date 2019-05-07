@@ -1316,6 +1316,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 var featureFilePathExtension = System.IO.Path.GetExtension(featureFilePath);
                 var groupName = FileUtils.GetRelativePath(System.IO.Path.GetDirectoryName(mduFilePath), featureFilePath, true);
 
+                //By checking if the feature file path only ends with .xyz (without the _dry suffix),
+                //we can assure that backwards compatibility is ensured i.e. some old mdu files still refer to the dry point file without the _dry suffix.
                 if (featureFilePathExtension != null && featureFilePath.EndsWith(DryPointExtensionWithoutSuffix))
                 {
                     var pointValues = dryPointFile.Read(featureFilePath);
