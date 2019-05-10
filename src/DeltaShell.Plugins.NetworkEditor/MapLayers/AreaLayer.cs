@@ -24,6 +24,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers
                 hydroArea = value;
                 Name = hydroArea.Name;
                 layersInitialized = false;
+                ShowInLegend = false;
             }
         }
 

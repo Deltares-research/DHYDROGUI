@@ -98,7 +98,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                                         AllowRemovePoint = new RemoveBoundaryPointDialog(fmModel).ShowDialogForFeature
                                     },
                             Style = AreaLayerStyles.BoundariesStyle,
-                            NameIsReadOnly = true
+                            NameIsReadOnly = true,
+                            ShowInLegend = false 
                         };
                 }
                 if (Equals(feature2Ds, fmModel.Pipes))
@@ -112,7 +113,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                             Style = AreaLayerStyles.SourcesAndSinksStyle,
                             NameIsReadOnly = true,
                             CustomRenderers =
-                                new[] {new ArrowLineStringAdornerRenderer {Orientation = Orientation.Forward, Opacity = 1}}
+                                new[] {new ArrowLineStringAdornerRenderer {Orientation = Orientation.Forward, Opacity = 1}},
+                            ShowInLegend = false
                         };
                 }
             }
@@ -186,6 +188,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                             DataSource = snappedFeatures,
                             Selectable = false,
                             NameIsReadOnly = true,
+                            ShowInLegend = false
                         };
                     groupLayer.Layers.Add(layer);
                     snappedFeatures.Layer = layer;
