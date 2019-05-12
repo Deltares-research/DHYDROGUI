@@ -57,7 +57,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 
         public object ImportItem(string path, object target = null)
         {
-            return new FMHisFileFunctionStore(path);
+            return new FMHisFileFunctionStore(path, new WaterFlowFMModelDTO());
         }
     }
 }

@@ -2585,6 +2585,83 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             BeginEdit(new DefaultEditAction("Reconnect output files"));
 
             // deal with issue that kernel doesn't understand any coordinate systems other than RD & WGS84 :
+            CheckIfMapFileExists(mapFilePath, switchTo, existsMapFile);
+
+            CheckIfHisFileExists(hisFilePath, switchTo, existsHisFile);
+
+            CheckIfClassMapFileExists(classMapFilePath, switchTo, existsClassMapFile);
+
+            CheckIfWaqFolderExists(waqFolderPath, existsWaqFolder);
+
+            CheckIfSnappedFolderExists(snappedFolderPath, existsSnappedFolder);
+
+            OutputIsEmpty = false;
+
+            EndEdit();
+        }
+
+        private void CheckIfSnappedFolderExists(string snappedFolderPath, bool existsSnappedFolder)
+        {
+            if (existsSnappedFolder)
+            {
+                OutputSnappedFeaturesPath = snappedFolderPath;
+            }
+        }
+
+        private void CheckIfWaqFolderExists(string waqFolderPath, bool existsWaqFolder)
+        {
+            if (existsWaqFolder)
+            {
+                DelwaqOutputDirectoryPath = waqFolderPath;
+            }
+        }
+
+        private void CheckIfClassMapFileExists(string classMapFilePath, bool switchTo, bool existsClassMapFile)
+        {
+            if (existsClassMapFile)
+            {
+                ReportProgressText("Reading class map file");
+                FireImportProgressChanged(this, "Reading output files - Reading Class Map file", 1, 2);
+                if (switchTo && OutputClassMapFileStore != null)
+                {
+                    OutputClassMapFileStore.Path = classMapFilePath;
+                }
+                else
+                {
+                    OutputClassMapFileStore = new FMClassMapFileFunctionStore(classMapFilePath);
+                }
+            }
+        }
+
+        private void CheckIfHisFileExists(string hisFilePath, bool switchTo, bool existsHisFile)
+        {
+            if (existsHisFile)
+            {
+                ReportProgressText("Reading his file");
+                FireImportProgressChanged(this, "Reading output files - Reading His file", 1, 2);
+                if (switchTo && OutputHisFileStore != null)
+                {
+                    OutputHisFileStore.Path = hisFilePath;
+                }
+                else
+                {
+                    var generalStructures = Area.Weirs.Where(w => w.WeirFormula is GeneralStructureWeirFormula);
+                    var hisFunctionStoreDTO = new WaterFlowFMModelDTO()
+                    {
+                        CoordinateSystem = this.CoordinateSystem,
+                        ObservationPoints = Area.ObservationPoints,
+                        ObservationCrossSections = Area.ObservationCrossSections,
+                        Weirs = generalStructures,
+                        Pumps = Area.Pumps
+                    };
+
+                    OutputHisFileStore = new FMHisFileFunctionStore(hisFilePath, hisFunctionStoreDTO);
+                }
+            }
+        }
+
+        private void CheckIfMapFileExists(string mapFilePath, bool switchTo, bool existsMapFile)
+        {
             if (existsMapFile)
             {
                 ReportProgressText("Reading map file");
@@ -2605,52 +2682,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     OutputMapFileStore.Path = mapFilePath;
                 }
             }
-
-            if (existsHisFile)
-            {
-                ReportProgressText("Reading his file");
-                FireImportProgressChanged(this, "Reading output files - Reading His file", 1, 2);
-                if (switchTo && OutputHisFileStore != null)
-                {
-                    OutputHisFileStore.Path = hisFilePath;
-                }
-                else
-                {
-                    OutputHisFileStore = new FMHisFileFunctionStore(hisFilePath, CoordinateSystem,
-                        Area.ObservationPoints,
-                        Area.ObservationCrossSections,
-                        Area.Weirs.Where( w => w.WeirFormula is GeneralStructureWeirFormula));
-                }
-            }
-
-            if (existsClassMapFile)
-            {
-                ReportProgressText("Reading class map file");
-                FireImportProgressChanged(this, "Reading output files - Reading Class Map file", 1, 2);
-                if (switchTo && OutputClassMapFileStore != null)
-                {
-                    OutputClassMapFileStore.Path = classMapFilePath;
-                }
-                else
-                {
-                    OutputClassMapFileStore = new FMClassMapFileFunctionStore(classMapFilePath);
-                }
-            }
-
-            if (existsWaqFolder)
-            {
-                DelwaqOutputDirectoryPath = waqFolderPath;
-            }
-
-            if (existsSnappedFolder)
-            {
-                OutputSnappedFeaturesPath = snappedFolderPath;
-            }
-
-            OutputIsEmpty = false;
-
-            EndEdit();
         }
+
         #endregion
 
         #region Coupling
@@ -3485,5 +3518,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             ModelDefinition.GetModelProperty(KnownProperties.OutputDir).SetValueAsString(string.Empty);
             ModelDefinition.GetModelProperty(KnownProperties.WaqOutputDir).SetValueAsString(string.Empty);
         }
+    }
+
+    public class WaterFlowFMModelDTO
+    {
+        public ICoordinateSystem CoordinateSystem { get; set; }
+
+        public IEnumerable<Feature2D> ObservationPoints { get; set; }
+
+        public IEnumerable<Feature2D> ObservationCrossSections { get; set; }
+
+        public IEnumerable<Weir2D> Weirs { get; set; }
+
+        public IEnumerable<Pump2D> Pumps { get; set; }
+
+
     }
 }
