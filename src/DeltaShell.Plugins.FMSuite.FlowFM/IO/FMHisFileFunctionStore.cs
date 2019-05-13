@@ -277,7 +277,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private IMultiDimensionalArray<IFeature> cachedStationsArray;
         private IMultiDimensionalArray<IFeature> cachedCrossSectionsArray;
         private IMultiDimensionalArray<IFeature> cachedGeneralStructures;
-        private IMultiDimensionalArray<IFeature> cachedPumpsStructures;
+        private IMultiDimensionalArray<IFeature> cachedPumpsArray;
 
         protected override IMultiDimensionalArray<T> GetVariableValuesCore<T>(IVariable function, DelftTools.Functions.Filters.IVariableFilter[] filters)
         {
@@ -308,12 +308,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         }
                         return (MultiDimensionalArray<T>)cachedGeneralStructures;
                     case "pumps":
-                        if (cachedPumpsStructures == null)
+                        if (cachedPumpsArray == null)
                         {
-                            cachedPumpsStructures = new MultiDimensionalArray<IFeature>(pumpsFeatures,
+                            cachedPumpsArray = new MultiDimensionalArray<IFeature>(pumpsFeatures,
                                 new[] { GetSize(function) });
                         }
-                        return (MultiDimensionalArray<T>)cachedPumpsStructures;
+                        return (MultiDimensionalArray<T>)cachedPumpsArray;
                     default:
                         throw new ArgumentException(string.Format("Unexpected dimension name: {0}", dimensionName));
                 }
