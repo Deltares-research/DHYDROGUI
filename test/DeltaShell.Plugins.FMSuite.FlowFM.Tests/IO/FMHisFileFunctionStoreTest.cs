@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Hydro.Structures;
@@ -26,6 +27,63 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         {
             var store = new FMHisFileFunctionStore(TestHelper.GetTestFilePath("output_hisfiles\\sfbay_his.nc"), new WaterFlowFMModelDTO());
             Assert.AreEqual(10, store.Functions.Count);
+        }
+        
+        [Test]
+        public void GivenAPumpsConfiguration_WhenOutputHisFileStoreContainsPumpFunction_ThenPumpFunctionTimeSeriesIsPresent()
+        {
+            //Given
+            var pumps = CreateTwoPumps();
+            var dto = new WaterFlowFMModelDTO(){ Pumps = pumps };
+
+            //When
+            var store = new FMHisFileFunctionStore(TestHelper.GetTestFilePath("output_hisfiles\\FlowFM_his.nc"), dto);
+
+            //Then
+            var pumpFunction = (FeatureCoverage)store.Functions.FirstOrDefault(f => f.Components[0].Name == "pump_discharge");
+            Assert.IsNotNull(pumpFunction);
+            Assert.AreEqual(289, pumpFunction.GetValues().Count);
+            Assert.AreEqual(289, pumpFunction.Time.Values.Count);
+            Assert.AreEqual(new DateTime(2001, 01, 01, 00,00,00), pumpFunction.Time.Values.First());
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        [Category(TestCategory.Slow)]
+        public void GivenAFmModelWithTwoPumps_WhenOutPutHisFileStoreContainsPumpFunctions_ThenPumpFunctionsContainOutputParameters()
+        {
+            //Given
+            var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
+            var localMduFilePath = TestHelper.CreateLocalCopy(mduPath);
+            var model = new WaterFlowFMModel(localMduFilePath);
+            var defaultFunctionsWithoutPumps = model.OutputHisFileStore.Functions;
+            Assert.IsNotNull(defaultFunctionsWithoutPumps);
+
+            var pumps = CreateTwoPumps();
+
+            model.Area.Pumps.AddRange(pumps);
+
+            //When
+            ActivityRunner.RunActivity(model);
+            
+            var pumpDischargeFunction = (FeatureCoverage) model.OutputHisFileStore.Functions.FirstOrDefault(f => f.Components.Any(c => c.Name == "pump_discharge"));
+            var pumpCapacityFunction = (FeatureCoverage) model.OutputHisFileStore.Functions.FirstOrDefault(f => f.Components.Any(c=> c.Name == "pump_capacity"));
+            var pumpWaterLevelUpFunction = (FeatureCoverage) model.OutputHisFileStore.Functions.FirstOrDefault(f => f.Components.Any(c => c.Name == "pump_s1up"));
+            var pumpWaterLevelDownFunction = (FeatureCoverage) model.OutputHisFileStore.Functions.FirstOrDefault(f => f.Components.Any(c => c.Name == "pump_s1dn"));
+            Assert.IsNotNull(pumpDischargeFunction);
+            Assert.IsNotNull(pumpCapacityFunction);
+            Assert.IsNotNull(pumpWaterLevelUpFunction);
+            Assert.IsNotNull(pumpWaterLevelDownFunction);
+
+            //Then
+            var pumpDischargeFeatures = pumpDischargeFunction.Features;
+            var pumpCapacityFeatures = pumpCapacityFunction.Features;
+            var pumpWaterLevelUpFeatures= pumpWaterLevelUpFunction.Features;
+            var pumpWaterLevelDownFeatures= pumpWaterLevelDownFunction.Features;
+            Assert.That(pumpDischargeFeatures.OfType<Pump2D>().Count(), Is.EqualTo(2));
+            Assert.That(pumpCapacityFeatures.OfType<Pump2D>().Count(), Is.EqualTo(2));
+            Assert.That(pumpWaterLevelUpFeatures.OfType<Pump2D>().Count(), Is.EqualTo(2));
+            Assert.That(pumpWaterLevelDownFeatures.OfType<Pump2D>().Count(), Is.EqualTo(2));
         }
 
         [Test]
@@ -83,7 +141,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.AreEqual(388, timeSeriesForPoint.GetValues().Count);
             Assert.AreEqual(0.1957, (double) timeSeriesForPoint.GetValues()[50], 0.001);
         }
-        
+
         [Test]
         public void OpenCrossSectionDischargeTimeSeries()
         {
@@ -107,7 +165,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     }),
                 dischargeFunction.Features.OfType<Feature2D>().First().Geometry);
         }
-
 
         [Test]
         public void OpenGeneralStructureTimeSeries()
@@ -147,7 +204,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                            dischargeFunction.Features.First(), "feat discharge2");
         }
 
-
         [Test]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.Slow)]
@@ -182,7 +238,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                            waterLevelFunction.FeatureVariable.Values.OfType<IFeature>().First(), "feature waterlevel1");
             Assert.AreSame(model.Area.ObservationPoints.First(),waterLevelFunction.Features.First());
         }
-
 
         [Test]
         [Category(TestCategory.Slow)]
@@ -282,6 +337,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.AreEqual(2, dischargeFunction.Arguments[1].Values.Count);
 
             // TODO: check structure output, once we support it.
+        }
+
+        private static List<Pump2D> CreateTwoPumps()
+        {
+            var pump1 = new Pump2D() {Name = "addedPump1", GroupName = "addedPumps", Geometry = new LineString(new[]
+                {
+                    new Coordinate(0.0, 51.5), new Coordinate(0.0, 81.2)
+                })
+            };
+            var pump2 = new Pump2D() { Name = "addedPump2", GroupName = "addedPumps", Geometry = new LineString(new[]
+                {
+                    new Coordinate(0.0, 49.5), new Coordinate(0.0, 80.1)
+                })
+            };
+            var pumps = new List<Pump2D>() { pump1, pump2 };
+
+            return pumps;
         }
     }
 }

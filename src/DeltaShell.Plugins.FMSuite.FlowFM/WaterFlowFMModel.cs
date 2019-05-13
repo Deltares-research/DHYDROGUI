@@ -2646,7 +2646,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 else
                 {
                     var generalStructures = Area.Weirs.Where(w => w.WeirFormula is GeneralStructureWeirFormula);
-                    var hisFunctionStoreDTO = new WaterFlowFMModelDTO()
+                    var waterFlowFmModelDto = new WaterFlowFMModelDTO()
                     {
                         CoordinateSystem = this.CoordinateSystem,
                         ObservationPoints = Area.ObservationPoints,
@@ -2655,7 +2655,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                         Pumps = Area.Pumps
                     };
 
-                    OutputHisFileStore = new FMHisFileFunctionStore(hisFilePath, hisFunctionStoreDTO);
+                    OutputHisFileStore = new FMHisFileFunctionStore(hisFilePath, waterFlowFmModelDto);
                 }
             }
         }
