@@ -112,10 +112,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         }
 
         private string ExtFilePath { get; set; }
-
-        private bool PathsRelativeToExtDuringReading { get; set; }
-
-        private string MduFilePath { get; set; }
+        
+        private string ExtSubFilesReferenceFilePath { get; set; }
 
         private static bool IsNewEntry(string line)
         {
@@ -156,7 +154,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 supportedExtForceFileItems.Add(extForceFileItem);
 
                 // read the pli file
-                string pliFilePath = RetrieveAbsoluteFilePath(extForceFileItem.FileName);
+                string pliFilePath = GetOtherFilePathInSameDirectory(ExtSubFilesReferenceFilePath, extForceFileItem.FileName);
 
                 var reader = new PliFile<Feature2D>();
                 if (isSourceAndSink)
@@ -262,21 +260,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             modelDefinition.Pipes.AddRange(sourcesAndSinks.Select(ss => ss.Feature).Distinct());
         }
 
-        private string RetrieveAbsoluteFilePath(string fileName)
-        {
-            string filePath;
-            if (PathsRelativeToExtDuringReading)
-            {
-                filePath = GetOtherFilePathInSameDirectory(ExtFilePath, fileName);
-            }
-            else
-            {
-                filePath = GetOtherFilePathInSameDirectory(MduFilePath, fileName);
-            }
-
-            return filePath;
-        }
-
         private void ReadHeatFluxModelData(IEnumerable<ExtForceFileItem> extForceFileItems, WaterFlowFMModelDefinition modelDefinition)
         {
             var modelReferenceDate = (DateTime) modelDefinition.GetModelProperty(KnownProperties.RefDate).Value;
@@ -304,7 +287,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             heatFluxModel.ContainsSolarRadiation = forceFileItem.Quantity == ExtForceQuantNames.MeteoDataWithRadiation;
 
-            string filePath = RetrieveAbsoluteFilePath(forceFileItem.FileName);
+            string filePath = GetOtherFilePathInSameDirectory(ExtSubFilesReferenceFilePath, forceFileItem.FileName);
 
             new TimFile().Read(filePath, heatFluxModel.MeteoData, modelReferenceDate);
             existingForceFileItems[forceFileItem] = heatFluxModel.MeteoData;
@@ -479,7 +462,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private ISpatialOperation CreatePolygonOperation(ExtForceFileItem extForceFileItem)
         {
-            string path = RetrieveAbsoluteFilePath(extForceFileItem.FileName);
+            string path = GetOtherFilePathInSameDirectory(ExtSubFilesReferenceFilePath, extForceFileItem.FileName);
 
             var features = new PolFile<Feature2DPolygon>().Read(path).Select(f => new Feature
             {
@@ -505,7 +488,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             var operation = new ImportSamplesSpatialOperationExtension
             {
-                Name = operationName, FilePath = RetrieveAbsoluteFilePath(extForceFileItem.FileName)
+                Name = operationName, FilePath = GetOtherFilePathInSameDirectory(ExtSubFilesReferenceFilePath, extForceFileItem.FileName)
             };
 
             if (extForceFileItem.ModelData.TryGetValue(AveragingTypeKey, out object value))
@@ -548,7 +531,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 {
                     var windField = ExtForceFileHelper.CreateWindField(extForceFileItem, ExtFilePath);
 
-                    string windFile = RetrieveAbsoluteFilePath(extForceFileItem.FileName);
+                    string windFile = GetOtherFilePathInSameDirectory(ExtSubFilesReferenceFilePath, extForceFileItem.FileName);
 
                     if (!File.Exists(windFile))
                     {
@@ -960,12 +943,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         #region Read logic
 
-        public void Read(string extForceFilePath, WaterFlowFMModelDefinition modelDefinition, string mduFilePath)
+        public void Read(string extForceFilePath, WaterFlowFMModelDefinition modelDefinition, string extSubFilesReferenceFilePath)
         {
-            MduFilePath = mduFilePath;
-
-            PathsRelativeToExtDuringReading = (bool) modelDefinition.GetModelProperty(KnownProperties.PathsRelativeToParent).Value;
+            ExtSubFilesReferenceFilePath = extSubFilesReferenceFilePath;
             ExtFilePath = extForceFilePath;
+
             Read(modelDefinition);
         }
         
@@ -996,7 +978,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         .ExtForceFile_StoreUnknownQuantities_Quantity___0___detected_in_the_external_force_file_and_will_be_passed_to_the_computational_core__This_may_affect_your_simulation_,
                     unknownForceFileItem.Quantity);
 
-                string referencedFilePath = RetrieveAbsoluteFilePath(unknownForceFileItem.FileName);
+                string referencedFilePath = GetOtherFilePathInSameDirectory(ExtSubFilesReferenceFilePath, unknownForceFileItem.FileName);
 
                 var unsupportedFileBasedExtForceFileItem = new UnsupportedFileBasedExtForceFileItem(referencedFilePath, unknownForceFileItem);
 

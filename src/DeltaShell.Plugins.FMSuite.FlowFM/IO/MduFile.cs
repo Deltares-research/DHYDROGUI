@@ -983,7 +983,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 {
                     ExternalForcingsFile = new ExtForceFile();
 
-                    ExternalForcingsFile.Read(forceFilePath, modelDefinition, filePath);
+                    var pathsRelativeToParent = (bool)modelDefinition.GetModelProperty(KnownProperties.PathsRelativeToParent).Value;
+                    string extSubFilesReferenceFilePath = pathsRelativeToParent ? forceFilePath : filePath;
+                   
+                    ExternalForcingsFile.Read(forceFilePath, modelDefinition, extSubFilesReferenceFilePath);
                 }
             }
 
