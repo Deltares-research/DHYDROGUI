@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Functions;
+using DelftTools.Functions.Generic;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Shell.Core.Workflow;
@@ -28,16 +29,37 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var store = new FMHisFileFunctionStore(TestHelper.GetTestFilePath("output_hisfiles\\sfbay_his.nc"), new WaterFlowFMModelDTO());
             Assert.AreEqual(10, store.Functions.Count);
         }
-        
+
         [Test]
-        public void GivenAPumpsConfiguration_WhenOutputHisFileStoreContainsPumpFunction_ThenPumpFunctionTimeSeriesIsPresent()
+        public void GivenAGatesConfiguration_WhenOutputHisFileStoreContainsGateFunction_ThenGateFunctionTimeSeriesIsPresent()
         {
             //Given
-            var pumps = CreateTwoPumps();
-            var dto = new WaterFlowFMModelDTO(){ Pumps = pumps };
+            var gatedWeirs = CreateGates();
+
+            var dto = new WaterFlowFMModelDTO() { Weirs = gatedWeirs};
 
             //When
-            var store = new FMHisFileFunctionStore(TestHelper.GetTestFilePath("output_hisfiles\\FlowFM_his.nc"), dto);
+            var store = new FMHisFileFunctionStore(TestHelper.GetTestFilePath("output_hisfiles\\FlowFM_his.nc"), new WaterFlowFMModelDTO());
+
+            //Then
+            var pumpFunction = (FeatureCoverage)store.Functions.FirstOrDefault(f => f.Components[0].Name == "pump_discharge");
+            Assert.IsNotNull(pumpFunction);
+            Assert.AreEqual(289, pumpFunction.GetValues().Count);
+            Assert.AreEqual(289, pumpFunction.Time.Values.Count);
+            Assert.AreEqual(new DateTime(2001, 01, 01, 00, 00, 00), pumpFunction.Time.Values.First());
+        }
+
+        private IEnumerable<Weir2D> CreateGates()
+        {
+            var gatedWeir = new Weir2D { WeirFormula = new GeneralStructureWeirFormula() };
+            return new List<Weir2D>() { gatedWeir };
+        }
+
+        [Test]
+        public void GivenAHisFileStore_WhenOutputHisFileStoreContainsPumpFunction_ThenPumpFunctionTimeSeriesIsPresent()
+        {
+            //Given/When
+            var store = new FMHisFileFunctionStore(TestHelper.GetTestFilePath("output_hisfiles\\FlowFM_his.nc"), new WaterFlowFMModelDTO());
 
             //Then
             var pumpFunction = (FeatureCoverage)store.Functions.FirstOrDefault(f => f.Components[0].Name == "pump_discharge");
