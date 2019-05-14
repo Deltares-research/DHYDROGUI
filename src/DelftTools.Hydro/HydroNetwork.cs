@@ -1,18 +1,16 @@
-using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.ComponentModel;
-using System.Linq;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Aop;
-using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
 using log4net;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Networks;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
 
 namespace DelftTools.Hydro
 {
@@ -21,7 +19,7 @@ namespace DelftTools.Hydro
     /// </summary>
     [DisplayName("Hydro Network")]
     [Entity]
-    public class HydroNetwork : Network, IHydroNetwork
+    public partial class HydroNetwork : Network, IHydroNetwork
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(HydroNetwork));
         public static string CrossSectionSectionFormat = "Section{0:D3}";
@@ -51,27 +49,6 @@ namespace DelftTools.Hydro
             }
         }
 
-        [EditAction]
-        void RoutesCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            var route = e.GetRemovedOrAddedItem() as Route;
-
-            if (route == null)
-                return;
-
-            switch(e.Action)
-            {
-                case NotifyCollectionChangedAction.Add:
-                    route.Network = this;
-                    break;
-                case NotifyCollectionChangedAction.Remove:
-                    route.Network = null;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
-
         private IEventedList<ICrossSectionDefinition> sharedCrossSectionDefinitions;
 
         public virtual IEventedList<ICrossSectionDefinition> SharedCrossSectionDefinitions
@@ -87,47 +64,6 @@ namespace DelftTools.Hydro
                 if (sharedCrossSectionDefinitions != null)
                 {
                     sharedCrossSectionDefinitions.CollectionChanging += SharedCrossSectionDefinitionsCollectionChanging;
-                }
-            }
-        }
-        
-        [EditAction]
-        void SharedCrossSectionDefinitionsCollectionChanging(object sender, NotifyCollectionChangingEventArgs e)
-        {
-            //check if the section is in use somewhere..the deletion is not allowed
-            if ((e.Action == NotifyCollectionChangeAction.Replace) || (e.Action == NotifyCollectionChangeAction.Remove))
-            {
-                var definitionBeingRemoved = e.Item as ICrossSectionDefinition;
-
-                if(definitionBeingRemoved == null)
-                {
-                    return;
-                }
-
-                if (definitionBeingRemoved == DefaultCrossSectionDefinition)
-                {
-                    DefaultCrossSectionDefinition = null;
-                }
-
-                var crossSectionsUsingDefinitionBeingRemoved =
-                    CrossSections.Where(
-                        cs => cs.Definition.IsProxy &&
-                              ((CrossSectionDefinitionProxy) cs.Definition).InnerDefinition == definitionBeingRemoved);
-
-                if (crossSectionsUsingDefinitionBeingRemoved.Any())
-                {
-                    log.ErrorFormat(
-                        "Cannot remove definition '{0}', it is in use by {1} cross section(s). (For example cross section: '{2}').",
-                        definitionBeingRemoved.Name, crossSectionsUsingDefinitionBeingRemoved.Count(),
-                        crossSectionsUsingDefinitionBeingRemoved.First().Name);
-                    e.Cancel = true;
-                }
-            }
-            else if (e.Action == NotifyCollectionChangeAction.Add)
-            {
-                if (e.Item is CrossSectionDefinitionXYZ)
-                {
-                    throw new NotSupportedException("XYZ cross sections cannot be added as definitions.");
                 }
             }
         }
@@ -153,51 +89,6 @@ namespace DelftTools.Hydro
             }
         }
 
-        [EditAction]
-        void SectionTypesPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == "Name")
-            {
-                var sectionName = ((CrossSectionSectionType) sender).Name;
-                if (crossSectionSectionTypes.Count(sec => sec.Name == sectionName) > 1)
-                {
-                    ((CrossSectionSectionType) sender).Name = sectionName + "_1";
-                    return;
-                }
-                CrossSections.Select(cs => cs.Definition)
-                             .OfType<CrossSectionDefinitionZW>().ForEach(csd => csd.RemoveInvalidSections());
-            }
-        }
-
-        [EditAction]
-        void SectionTypesCollectionChanging(object sender, NotifyCollectionChangingEventArgs e)
-        {
-            //check if the section is in use somewhere..the deletion is not allowed
-            if ((e.Action == NotifyCollectionChangeAction.Replace) || (e.Action == NotifyCollectionChangeAction.Remove))
-            {
-                var crossSectionSectionType = (CrossSectionSectionType) e.Item;
-
-                var crossSection =
-                    CrossSections.FirstOrDefault(
-                        c => c.Definition.Sections.Any(sec => sec.SectionType == crossSectionSectionType));
-                if (crossSection != null)
-                {
-                    log.ErrorFormat("Unable to remove section type. It is in use in cross section {0}.",
-                                    crossSection.Name);
-                    e.Cancel = true;
-                }
-            }
-            if (e.Action == NotifyCollectionChangeAction.Add)
-            {
-                var sectionName = ((CrossSectionSectionType) e.Item).Name;
-                if (crossSectionSectionTypes.Select(sec => sec.Name).Contains(sectionName))
-                {
-                    log.ErrorFormat("Unable to add cross section section type with non-identical name {0}.", sectionName);
-                    e.Cancel = true;
-                }
-            }
-        }
-        
         public HydroNetwork()
         {
             Name = "network1";
