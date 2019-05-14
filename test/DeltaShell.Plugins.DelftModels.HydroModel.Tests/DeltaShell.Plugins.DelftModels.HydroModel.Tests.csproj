@@ -255,6 +255,7 @@
     <Compile Include="Forms\WorkflowEditorControlTest.cs" />
     <Compile Include="HydroModelApplicationPluginTest.cs" />
     <Compile Include="HydroModelGuiIntegrationTest.cs" />
+    <Compile Include="HydroModelHelperTest.cs" />
     <Compile Include="HydroModelTest.cs" />
     <Compile Include="Import\RtcXmlDirectoryLookupTest.cs" />
     <Compile Include="Import\WaterFlowModel1DFileImporterHydroTest.cs" />

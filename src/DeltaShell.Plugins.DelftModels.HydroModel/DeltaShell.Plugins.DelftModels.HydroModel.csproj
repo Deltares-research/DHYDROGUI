@@ -55,6 +55,7 @@
     <Compile Include="Export\IDimrConfigModelCouplerProvider.cs" />
     <Compile Include="Export\Iterative1D2DCouplerExporter.cs" />
     <Compile Include="Export\Iterative1D2DCouplerFileWriter.cs" />
+    <Compile Include="HydroModelHelper.cs" />
     <Compile Include="Import\DHydroConfigXmlImporter.cs" />
     <Compile Include="Import\HydroModelConverter.cs" />
     <Compile Include="Import\HydroModelReader.cs" />
