@@ -6,18 +6,12 @@ using GeoAPI.Geometries;
 
 namespace DelftTools.Hydro.CrossSections.StandardShapes
 {
-    [Entity(FireOnCollectionChange=false)]
+    [Entity(FireOnCollectionChange = false)]
     public abstract class CrossSectionStandardShapeBase : Unique<long>, ICrossSectionStandardShape
     {
         public abstract CrossSectionStandardShapeType Type { get; }
 
-        public virtual IEnumerable<Coordinate> Profile
-        {
-            get
-            {
-                return GetTabulatedDefinition().Profile;
-            }
-        }
+        public virtual IEnumerable<Coordinate> Profile => GetTabulatedDefinition().Profile;
 
         public abstract CrossSectionDefinitionZW GetTabulatedDefinition();
 

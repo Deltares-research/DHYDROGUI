@@ -3,25 +3,15 @@ using DelftTools.Utils.Aop;
 
 namespace DelftTools.Hydro.CrossSections.StandardShapes
 {
-    [Entity(FireOnCollectionChange=false)]
+    [Entity(FireOnCollectionChange = false)]
     public class CrossSectionStandardShapeRound : CrossSectionStandardShapeBase
     {
         public static CrossSectionStandardShapeRound CreateDefault()
         {
-            return new CrossSectionStandardShapeRound
-                       {
-                           Diameter = 0.160d
-                       };
+            return new CrossSectionStandardShapeRound {Diameter = 0.160d};
         }
 
-        public override CrossSectionStandardShapeType Type
-        {
-            get
-            {
-                return CrossSectionStandardShapeType.Round;
-                //throw new NotImplementedException("Not implemented yet. Wait for closed cross-sections");
-            }
-        }
+        public override CrossSectionStandardShapeType Type => CrossSectionStandardShapeType.Round;
 
         public override CrossSectionDefinitionZW GetTabulatedDefinition()
         {
@@ -29,6 +19,5 @@ namespace DelftTools.Hydro.CrossSections.StandardShapes
         }
 
         public virtual double Diameter { get; set; }
-
     }
 }

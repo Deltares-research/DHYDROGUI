@@ -9,7 +9,7 @@ using NetTopologySuite.Geometries;
 
 namespace DelftTools.Hydro
 {
-    [Entity(FireOnCollectionChange=false)]
+    [Entity(FireOnCollectionChange = false)]
     public abstract class BranchStructure : BranchFeatureHydroObject, IStructure1D
     {
         // TODO: check if we need composite structure here, maybe better via Owner, so that child structures will exist only in composite structures
@@ -18,35 +18,28 @@ namespace DelftTools.Hydro
         [Aggregation]
         public virtual ICompositeBranchStructure ParentStructure
         {
-            get { return parentStructure; }
-            set { parentStructure = value; }
+            get => parentStructure;
+            set => parentStructure = value;
         }
 
         [NoNotifyPropertyChange]
         public virtual IChannel Channel
         {
-            get { return (IChannel) Branch; }
-            set { Branch = value; }
+            get => (IChannel) Branch;
+            set => Branch = value;
         }
 
         [NoNotifyPropertyChange]
-        public virtual double OffsetY
-        { 
-            get; set;
-        }
+        public virtual double OffsetY { get; set; }
 
         [Aggregation]
         public virtual IHydroNetwork HydroNetwork
         {
-            get { return (IHydroNetwork) base.Network; }
-            set { base.Network = value; }
+            get => (IHydroNetwork) base.Network;
+            set => base.Network = value;
         }
 
-        public virtual string Description
-        {
-            get;
-            set;
-        }
+        public virtual string Description { get; set; }
 
         [DisplayName("Long name")]
         [FeatureAttribute(Order = 1)]
@@ -55,8 +48,8 @@ namespace DelftTools.Hydro
         public override void CopyFrom(object source)
         {
             base.CopyFrom(source);
-            OffsetY = ((BranchStructure)source).OffsetY;
-            LongName = ((BranchStructure)source).LongName;
+            OffsetY = ((BranchStructure) source).OffsetY;
+            LongName = ((BranchStructure) source).LongName;
         }
 
         //TODO: get this out..this is not something a branchstructure has to do.
@@ -67,29 +60,34 @@ namespace DelftTools.Hydro
             branchFeature.Chainage = 0;
 
             branchFeature.Geometry = new Point(branch.Geometry.Coordinates[0]);
-            branchFeature.Name = HydroNetworkHelper.GetUniqueFeatureName(branchFeature.Network as HydroNetwork, branchFeature);
+            branchFeature.Name =
+                HydroNetworkHelper.GetUniqueFeatureName(branchFeature.Network as HydroNetwork, branchFeature);
         }
 
         public virtual int CompareTo(BranchStructure other)
         {
             if (parentStructure == null)
-                return CompareTo((IBranchFeature)other);
+            {
+                return CompareTo((IBranchFeature) other);
+            }
+
             if (parentStructure != other.parentStructure)
-                return CompareTo((IBranchFeature)other);
+            {
+                return CompareTo((IBranchFeature) other);
+            }
+
             if (parentStructure.Structures.IndexOf(this) > parentStructure.Structures.IndexOf(other))
             {
                 return 1;
             }
+
             return -1;
         }
 
         [NoNotifyPropertyChange] // this is handled in the base class (BranchFeature)
         public override double Chainage
         {
-            get
-            {
-                return ParentStructure != null ? ParentStructure.Chainage : base.Chainage;
-            }
+            get => ParentStructure != null ? ParentStructure.Chainage : base.Chainage;
             set
             {
                 if (ParentStructure != null && Math.Abs(ParentStructure.Chainage - value) >= double.Epsilon)
@@ -106,7 +104,7 @@ namespace DelftTools.Hydro
 
         public override int CompareTo(object obj)
         {
-            var other = (BranchStructure)obj;
+            var other = (BranchStructure) obj;
             return CompareTo(other);
         }
 

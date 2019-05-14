@@ -6,18 +6,15 @@ namespace DelftTools.Hydro.Structures.WeirFormula
     /// <summary>
     /// Weir with piers (Advanced weir)
     /// </summary>
-    [Entity(FireOnCollectionChange=false)]
+    [Entity(FireOnCollectionChange = false)]
     public class PierWeirFormula : Unique<long>, IWeirFormula
     {
-        public virtual string Name
-        {
-            get { return "Weir with piers (Advanced weir)"; }
-        }
+        public virtual string Name => "Weir with piers (Advanced weir)";
 
         /// <summary>
         /// Number of piers N (npiers)
         /// </summary>
-        public virtual int NumberOfPiers{ get; set;}
+        public virtual int NumberOfPiers { get; set; }
 
         /// <summary>
         /// Upstream face flow direction P (pos_height)
@@ -58,39 +55,30 @@ namespace DelftTools.Hydro.Structures.WeirFormula
         /// Abutment contraction coefficient reverse direction Ka (neg_abutcontractcoef)
         /// </summary>
         public virtual double AbutmentContractionNeg { get; set; }
-        
-        public virtual bool IsRectangle
-        {
-            get { return true; }
-        }
 
-        public virtual bool IsGated
-        {
-            get { return false; }
-        }
+        public virtual bool IsRectangle => true;
 
-        public virtual bool HasFlowDirection
-        {
-            get { return false; }
-        }
+        public virtual bool IsGated => false;
+
+        public virtual bool HasFlowDirection => false;
 
         /// <summary>
         /// Creates a PierWeirFormula with default values as found in Sobek.
-        /// <returns></returns>
+        /// <returns> </returns>
         public static PierWeirFormula CreateDefault()
         {
             return new PierWeirFormula
-                {
-                    AbutmentContractionNeg = 0.1,
-                    AbutmentContractionPos = 0.1,
-                    DesignHeadNeg = 3,
-                    DesignHeadPos = 3,
-                    NumberOfPiers = 0,
-                    PierContractionNeg = 0.01,
-                    PierContractionPos = 0.01,
-                    UpstreamFaceNeg = 10,
-                    UpstreamFacePos = 10
-                };
+            {
+                AbutmentContractionNeg = 0.1,
+                AbutmentContractionPos = 0.1,
+                DesignHeadNeg = 3,
+                DesignHeadPos = 3,
+                NumberOfPiers = 0,
+                PierContractionNeg = 0.01,
+                PierContractionPos = 0.01,
+                UpstreamFaceNeg = 10,
+                UpstreamFacePos = 10
+            };
         }
 
         public virtual object Clone()

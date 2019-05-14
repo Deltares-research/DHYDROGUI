@@ -3,7 +3,7 @@ using NetTopologySuite.Extensions.Networks;
 
 namespace DelftTools.Hydro.Structures
 {
-    public class Manhole: BranchFeature
+    public class Manhole : BranchFeature
     {
         public override void CopyFrom(object source)
         {

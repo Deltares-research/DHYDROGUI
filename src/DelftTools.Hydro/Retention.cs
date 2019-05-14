@@ -11,15 +11,14 @@ namespace DelftTools.Hydro
     public enum RetentionType
     {
         Reservoir = 2,
-        Closed  = 3 ,
+        Closed = 3,
         Loss = 4
     }
 
-
-    ///<summary>
+    /// <summary>
     /// Implements a retention area.
-    ///</summary>
-    [Entity(FireOnCollectionChange=false)]
+    /// </summary>
+    [Entity(FireOnCollectionChange = false)]
     public class Retention : BranchFeatureHydroObject, IRetention, IItemContainer
     {
         public Retention()
@@ -49,25 +48,22 @@ namespace DelftTools.Hydro
         [DisplayName("Street level")]
         [FeatureAttribute(ExportName = "StreetLvl")]
         public virtual double StreetLevel { get; set; }
-    
+
         public override void CopyFrom(object source)
         {
             base.CopyFrom(source);
             Type = ((Retention) source).Type;
             StorageArea = ((Retention) source).StorageArea;
-            StreetStorageArea = ((Retention)source).StreetStorageArea;
+            StreetStorageArea = ((Retention) source).StreetStorageArea;
             BedLevel = ((Retention) source).BedLevel;
             LevelBL = ((Retention) source).LevelBL;
-            StreetLevel = ((Retention)source).StreetLevel;
-            Data = (IFunction) ((Retention)source).Data.Clone(true);
+            StreetLevel = ((Retention) source).StreetLevel;
+            Data = (IFunction) ((Retention) source).Data.Clone(true);
         }
 
         public virtual IFunction Data { get; set; }
 
-        public virtual IHydroNetwork HydroNetwork
-        {
-            get { return Network as IHydroNetwork; }
-        }
+        public virtual IHydroNetwork HydroNetwork => Network as IHydroNetwork;
 
         [DisplayName("LongName")]
         [FeatureAttribute(Order = 2)]
@@ -78,7 +74,9 @@ namespace DelftTools.Hydro
         public virtual IEnumerable<object> GetDirectChildren()
         {
             if (Data != null)
+            {
                 yield return Data;
+            }
         }
     }
 }

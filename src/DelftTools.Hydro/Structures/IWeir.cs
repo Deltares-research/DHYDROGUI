@@ -10,6 +10,7 @@ namespace DelftTools.Hydro.Structures
         Round,
         Triangular,
         Broad,
+
         [Description("User defined")]
         UserDefined
     }
@@ -24,7 +25,7 @@ namespace DelftTools.Hydro.Structures
         /// Indicates if time dependent parameters can be used.
         /// </summary>
         bool CanBeTimedependent { get; }
-        
+
         /// <summary>
         /// Formule for sobek
         /// </summary>
@@ -46,16 +47,18 @@ namespace DelftTools.Hydro.Structures
         double CrestWidth { get; set; }
 
         /// <summary>
-        /// When true, use <see cref="CrestLevelTimeSeries"/> otherwise use <see cref="CrestLevel"/>.
+        /// When true, use <see cref="CrestLevelTimeSeries" /> otherwise use <see cref="CrestLevel" />.
         /// </summary>
-        /// <exception cref="InvalidOperationException">When setting to true while <see cref="CanBeTimedependent"/> is false.</exception>
+        /// <exception cref="InvalidOperationException"> When setting to true while <see cref="CanBeTimedependent" /> is false. </exception>
         bool UseCrestLevelTimeSeries { get; set; }
+
         /// <summary>
         /// Crest level
         /// </summary>
         double CrestLevel { get; set; }
+
         /// <summary>
-        /// Time varying crest level. Will be null when <see cref="CanBeTimedependent"/> is false.
+        /// Time varying crest level. Will be null when <see cref="CanBeTimedependent" /> is false.
         /// </summary>
         TimeSeries CrestLevelTimeSeries { get; }
 
@@ -75,9 +78,9 @@ namespace DelftTools.Hydro.Structures
         CrestShape CrestShape { get; set; }
 
         FlowDirection FlowDirection { get; set; }
-        
+
         /// <summary>
-        /// Determines whether controls should let the user set crest level and crest width. 
+        /// Determines whether controls should let the user set crest level and crest width.
         /// For a general structure this is disabled since it is part of the formula.
         /// </summary>
         bool SpecifyCrestLevelAndWidthOnWeir { get; }

@@ -3,9 +3,9 @@ using DelftTools.Utils.Data;
 
 namespace DelftTools.Hydro.Structures.WeirFormula
 {
-    ///<summary>
+    /// <summary>
     /// Class to manage properties specific for the Sobek Simple Weir
-    ///</summary>
+    /// </summary>
     [Entity(FireOnCollectionChange = false)]
     public class SimpleWeirFormula : Unique<long>, IWeirFormula
     {
@@ -28,7 +28,8 @@ namespace DelftTools.Hydro.Structures.WeirFormula
         {
             return new SimpleWeirFormula
             {
-                DischargeCoefficient = DischargeCoefficient, LateralContraction = LateralContraction
+                DischargeCoefficient = DischargeCoefficient,
+                LateralContraction = LateralContraction
             };
         }
 
@@ -40,37 +41,13 @@ namespace DelftTools.Hydro.Structures.WeirFormula
 
         #region IWeirFormula Members
 
-        public virtual string Name
-        {
-            get
-            {
-                return "Simple weir (Weir)";
-            }
-        }
+        public virtual string Name => "Simple weir (Weir)";
 
-        public virtual bool IsRectangle
-        {
-            get
-            {
-                return true;
-            }
-        }
+        public virtual bool IsRectangle => true;
 
-        public virtual bool IsGated
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public virtual bool IsGated => false;
 
-        public virtual bool HasFlowDirection
-        {
-            get
-            {
-                return true;
-            }
-        }
+        public virtual bool HasFlowDirection => true;
 
         #endregion
     }

@@ -17,7 +17,7 @@ namespace DelftTools.Hydro.Structures
         /// Secondary property: Freeform/Rectangle
         /// </summary>
         bool IsRectangle { get; }
-        
+
         /// <summary>
         /// Secondary property: Has flowdirection
         /// </summary>

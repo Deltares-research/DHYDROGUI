@@ -7,7 +7,7 @@ using GeoAPI.Extensions.Networks;
 namespace DelftTools.Hydro
 {
     [Entity]
-    public class LateralSourceGridCell: BranchFeatureHydroObject
+    public class LateralSourceGridCell : BranchFeatureHydroObject
     {
         public LateralSourceGridCell()
         {
@@ -17,7 +17,11 @@ namespace DelftTools.Hydro
         public static LateralSourceGridCell CreateDefault(IBranch branch, double chainage, ILateralSource lateralSource)
         {
             var lateralSourceLocation = new LateralSourceGridCell()
-                                            {Branch = branch, Chainage = chainage, LateralSource = lateralSource};
+            {
+                Branch = branch,
+                Chainage = chainage,
+                LateralSource = lateralSource
+            };
             lateralSourceLocation.Name =
                 HydroNetworkHelper.GetUniqueFeatureName(lateralSourceLocation.Network as HydroNetwork,
                                                         lateralSourceLocation);
@@ -29,29 +33,20 @@ namespace DelftTools.Hydro
 
         public override object Clone()
         {
-            var clone = (LateralSourceGridCell)base.Clone();
+            var clone = (LateralSourceGridCell) base.Clone();
             clone.LateralSource = LateralSource;
             clone.Branch = Branch;
             return clone;
         }
 
-        public virtual IHydroNetwork HydroNetwork
-        {
-            get { return Network as IHydroNetwork; }
-        }
+        public virtual IHydroNetwork HydroNetwork => Network as IHydroNetwork;
 
         [DisplayName("LongName")]
         [FeatureAttribute]
         public virtual string LongName
         {
-            get
-            {
-                return Description;
-            }
-            set
-            {
-                SetLongNameToDescription(value);
-            }
+            get => Description;
+            set => SetLongNameToDescription(value);
         }
 
         [EditAction]
@@ -60,9 +55,6 @@ namespace DelftTools.Hydro
             Description = value;
         }
 
-        public override bool CanBeLinkTarget
-        {
-            get { return false; }
-        }
+        public override bool CanBeLinkTarget => false;
     }
 }

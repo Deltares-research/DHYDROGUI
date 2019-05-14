@@ -20,29 +20,19 @@ namespace DelftTools.Hydro
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(Channel));
 
-        public Channel() : this(null, null)
-        {
-        }
+        public Channel() : this(null, null) {}
 
         public Channel(INode fromNode, INode toNode)
-            : this("channel", fromNode, toNode, double.NaN)
-        {
-        }
+            : this("channel", fromNode, toNode, double.NaN) {}
 
         public Channel(string name, INode fromNode, INode toNode)
-            : this(name, fromNode, toNode, double.NaN)
-        {
-        }
+            : this(name, fromNode, toNode, double.NaN) {}
 
         public Channel(INode fromNode, INode toNode, double length)
-            : this("channel", fromNode, toNode, length)
-        {
-        }
+            : this("channel", fromNode, toNode, length) {}
 
         public Channel(string name, INode fromNode, INode toNode, double length) :
-            base(name, fromNode, toNode, length)
-        {
-        }
+            base(name, fromNode, toNode, length) {}
 
         [FeatureAttribute(Order = 4)]
         public override double Length
@@ -56,14 +46,16 @@ namespace DelftTools.Hydro
                 }
                 else
                 {
-                    Log.ErrorFormat(Resources.Channel_Length_Channel_length_must_be_positive__Length_of_channel___0___remains__1__, Name, Length);
+                    Log.ErrorFormat(
+                        Resources.Channel_Length_Channel_length_must_be_positive__Length_of_channel___0___remains__1__,
+                        Name, Length);
                 }
             }
         }
 
         public override IEventedList<IBranchFeature> BranchFeatures
         {
-            get { return base.BranchFeatures; }
+            get => base.BranchFeatures;
             set
             {
                 base.BranchFeatures = value;
@@ -92,27 +84,27 @@ namespace DelftTools.Hydro
         private IEnumerable<ICulvert> culverts;
         private IEnumerable<IBridge> bridges;
         private IEnumerable<IWeir> weirs;
-        private IEnumerable<IGate> gates; 
+        private IEnumerable<IGate> gates;
         private IEnumerable<LateralSource> branchSources;
         private IEnumerable<ObservationPoint> observationPoints;
 
-        public virtual IEnumerable<ICrossSection> CrossSections { get { return crossSections; } }
+        public virtual IEnumerable<ICrossSection> CrossSections => crossSections;
 
-        public virtual IEnumerable<IStructure1D> Structures { get { return structures; } }
+        public virtual IEnumerable<IStructure1D> Structures => structures;
 
-        public virtual IEnumerable<IPump> Pumps { get { return pumps; } }
+        public virtual IEnumerable<IPump> Pumps => pumps;
 
-        public virtual IEnumerable<ICulvert> Culverts { get { return culverts; } }
+        public virtual IEnumerable<ICulvert> Culverts => culverts;
 
-        public virtual IEnumerable<IBridge> Bridges { get { return bridges; } }
+        public virtual IEnumerable<IBridge> Bridges => bridges;
 
-        public virtual IEnumerable<IWeir> Weirs { get { return weirs; } }
+        public virtual IEnumerable<IWeir> Weirs => weirs;
 
-        public virtual IEnumerable<IGate> Gates { get { return gates; } } 
+        public virtual IEnumerable<IGate> Gates => gates;
 
-        public virtual IEnumerable<LateralSource> BranchSources { get { return branchSources; } }
-        
-        public virtual IEnumerable<ObservationPoint> ObservationPoints { get { return observationPoints; } }
+        public virtual IEnumerable<LateralSource> BranchSources => branchSources;
+
+        public virtual IEnumerable<ObservationPoint> ObservationPoints => observationPoints;
 
         [DisplayName("LongName")]
         [FeatureAttribute(Order = 2)]
@@ -120,31 +112,31 @@ namespace DelftTools.Hydro
 
         public override object Clone()
         {
-            Channel clone = (Channel) base.Clone();
+            var clone = (Channel) base.Clone();
 
             // TODO: remove structures from BranchFeatures if they are part of CompositeBranchStructure, clone child structures in CompositeBranchStructure and then remove this foreach!
-            foreach (var compositeBranchStructure in Structures.OfType<ICompositeBranchStructure>())
+            foreach (ICompositeBranchStructure compositeBranchStructure in
+                Structures.OfType<ICompositeBranchStructure>())
             {
-                var compositeBranchStructureClone = (ICompositeBranchStructure)clone.BranchFeatures[BranchFeatures.IndexOf(compositeBranchStructure)];
-                foreach (var structure in compositeBranchStructure.Structures)
+                var compositeBranchStructureClone =
+                    (ICompositeBranchStructure) clone.BranchFeatures[BranchFeatures.IndexOf(compositeBranchStructure)];
+                foreach (IStructure1D structure in compositeBranchStructure.Structures)
                 {
-                    var structureClone = (IStructure1D)clone.BranchFeatures[BranchFeatures.IndexOf(structure)];
+                    var structureClone = (IStructure1D) clone.BranchFeatures[BranchFeatures.IndexOf(structure)];
                     structureClone.ParentStructure = compositeBranchStructureClone;
                     compositeBranchStructureClone.Structures.Add(structureClone);
                 }
             }
+
             clone.LongName = LongName;
 
             return clone;
         }
 
-        public virtual IHydroNetwork HydroNetwork
-        {
-            get { return (IHydroNetwork) Network; }
-        }
+        public virtual IHydroNetwork HydroNetwork => (IHydroNetwork) Network;
 
         //public string Description { get; set; }
-        
+
         #endregion
 
         public virtual int CompareTo(IChannel other)
@@ -165,14 +157,8 @@ namespace DelftTools.Hydro
         [NoNotifyPropertyChange] //handled by baseclass
         public override string Name
         {
-            get
-            {
-                return base.Name;
-            }
-            set
-            {
-                base.Name = value;
-            }
+            get => base.Name;
+            set => base.Name = value;
         }
 
         public virtual IEnumerable<object> GetDirectChildren()
@@ -180,14 +166,14 @@ namespace DelftTools.Hydro
             return BranchFeatures.Cast<object>();
         }
 
-        public virtual IHydroRegion Region { get { return HydroNetwork; } }
+        public virtual IHydroRegion Region => HydroNetwork;
 
         [Aggregation]
         public virtual IEventedList<HydroLink> Links { get; set; }
 
-        public virtual bool CanBeLinkSource { get { return false; } }
+        public virtual bool CanBeLinkSource => false;
 
-        public virtual bool CanBeLinkTarget { get { return false; } }
+        public virtual bool CanBeLinkTarget => false;
 
         public virtual HydroLink LinkTo(IHydroObject target)
         {

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
@@ -7,7 +8,8 @@ using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using NetTopologySuite.Extensions.Coverages;
 
-namespace DelftTools.Hydro {
+namespace DelftTools.Hydro
+{
     public partial class HydroNetwork
     {
         [EditAction]
@@ -16,7 +18,9 @@ namespace DelftTools.Hydro {
             var route = e.GetRemovedOrAddedItem() as Route;
 
             if (route == null)
+            {
                 return;
+            }
 
             switch (e.Action)
             {
@@ -35,7 +39,7 @@ namespace DelftTools.Hydro {
         private void SharedCrossSectionDefinitionsCollectionChanging(object sender, NotifyCollectionChangingEventArgs e)
         {
             //check if the section is in use somewhere..the deletion is not allowed
-            if ((e.Action == NotifyCollectionChangeAction.Replace) || (e.Action == NotifyCollectionChangeAction.Remove))
+            if (e.Action == NotifyCollectionChangeAction.Replace || e.Action == NotifyCollectionChangeAction.Remove)
             {
                 var definitionBeingRemoved = e.Item as ICrossSectionDefinition;
 
@@ -49,7 +53,7 @@ namespace DelftTools.Hydro {
                     DefaultCrossSectionDefinition = null;
                 }
 
-                var crossSectionsUsingDefinitionBeingRemoved =
+                IEnumerable<ICrossSection> crossSectionsUsingDefinitionBeingRemoved =
                     CrossSections.Where(
                         cs => cs.Definition.IsProxy &&
                               ((CrossSectionDefinitionProxy) cs.Definition).InnerDefinition == definitionBeingRemoved);
@@ -77,7 +81,7 @@ namespace DelftTools.Hydro {
         {
             if (e.PropertyName == "Name")
             {
-                var sectionName = ((CrossSectionSectionType) sender).Name;
+                string sectionName = ((CrossSectionSectionType) sender).Name;
                 if (crossSectionSectionTypes.Count(sec => sec.Name == sectionName) > 1)
                 {
                     ((CrossSectionSectionType) sender).Name = sectionName + "_1";
@@ -93,11 +97,11 @@ namespace DelftTools.Hydro {
         private void SectionTypesCollectionChanging(object sender, NotifyCollectionChangingEventArgs e)
         {
             //check if the section is in use somewhere..the deletion is not allowed
-            if ((e.Action == NotifyCollectionChangeAction.Replace) || (e.Action == NotifyCollectionChangeAction.Remove))
+            if (e.Action == NotifyCollectionChangeAction.Replace || e.Action == NotifyCollectionChangeAction.Remove)
             {
                 var crossSectionSectionType = (CrossSectionSectionType) e.Item;
 
-                var crossSection =
+                ICrossSection crossSection =
                     CrossSections.FirstOrDefault(
                         c => c.Definition.Sections.Any(sec => sec.SectionType == crossSectionSectionType));
                 if (crossSection != null)
@@ -110,10 +114,11 @@ namespace DelftTools.Hydro {
 
             if (e.Action == NotifyCollectionChangeAction.Add)
             {
-                var sectionName = ((CrossSectionSectionType) e.Item).Name;
+                string sectionName = ((CrossSectionSectionType) e.Item).Name;
                 if (crossSectionSectionTypes.Select(sec => sec.Name).Contains(sectionName))
                 {
-                    log.ErrorFormat("Unable to add cross section section type with non-identical name {0}.", sectionName);
+                    log.ErrorFormat("Unable to add cross section section type with non-identical name {0}.",
+                                    sectionName);
                     e.Cancel = true;
                 }
             }

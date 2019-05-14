@@ -5,7 +5,7 @@ using DelftTools.Utils.Data;
 namespace DelftTools.Hydro.CrossSections
 {
     [Serializable]
-    [Entity(FireOnCollectionChange=false)]
+    [Entity(FireOnCollectionChange = false)]
     public class CrossSectionSection : Unique<long>
     {
         public virtual double MinY { get; set; }
@@ -19,7 +19,6 @@ namespace DelftTools.Hydro.CrossSections
         /// The Width is equal to the total width of the cross section that is covered by this
         /// cross section section. See the drawing above for an explanation.
         /// </summary>
-
         public override string ToString()
         {
             return string.Format("{0}: {1} - {2}", SectionType, MinY, MaxY);

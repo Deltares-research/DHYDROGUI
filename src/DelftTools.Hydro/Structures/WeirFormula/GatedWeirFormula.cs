@@ -42,10 +42,7 @@ namespace DelftTools.Hydro.Structures.WeirFormula
         /// </summary>
         public virtual bool CanBeTimedependent
         {
-            get
-            {
-                return canBeTimedependent;
-            }
+            get => canBeTimedependent;
             protected set
             {
                 canBeTimedependent = value;
@@ -84,40 +81,27 @@ namespace DelftTools.Hydro.Structures.WeirFormula
         /// </summary>
         public virtual bool UseMaxFlowNeg { get; set; }
 
-        public virtual string Name
-        {
-            get
-            {
-                return "Gated weir (Orifice)";
-            }
-        }
+        public virtual string Name => "Gated weir (Orifice)";
 
-        public virtual bool IsRectangle
-        {
-            get
-            {
-                return true;
-            }
-        }
+        public virtual bool IsRectangle => true;
 
-        public virtual bool HasFlowDirection
-        {
-            get
-            {
-                return true;
-            }
-        }
+        public virtual bool HasFlowDirection => true;
 
         /// <summary>
         /// Gate opening (openlevel)
         /// </summary>
-        public virtual double GateOpening { get; set; } // LowerEdgeLevel, this should be replaced with LowerEdgeLevel value, see LowerEdgeLevelTimeSeries documentation
+        public virtual double
+            GateOpening
+        {
+            get;
+            set;
+        } // LowerEdgeLevel, this should be replaced with LowerEdgeLevel value, see LowerEdgeLevelTimeSeries documentation
 
         public virtual double DoorHeight { get; set; }
 
         /// <summary>
         /// The direction in which the door will open.
-        /// Left and right are defined by the flow direction of the gate, 
+        /// Left and right are defined by the flow direction of the gate,
         /// indicated in the gui by a small arrow.
         /// </summary>
         public virtual GateOpeningDirection HorizontalDoorOpeningDirection { get; set; }
@@ -126,14 +110,15 @@ namespace DelftTools.Hydro.Structures.WeirFormula
 
         public virtual bool UseHorizontalDoorOpeningWidthTimeSeries
         {
-            get
-            {
-                return useHorizontalDoorOpeningWidthTimeSeries;
-            }
+            get => useHorizontalDoorOpeningWidthTimeSeries;
             set
             {
                 if (!canBeTimedependent && value)
-                    throw new InvalidOperationException("Cannot use time series for gate horizontal door opening width when time varying data is not allowed.");
+                {
+                    throw new InvalidOperationException(
+                        "Cannot use time series for gate horizontal door opening width when time varying data is not allowed.");
+                }
+
                 useHorizontalDoorOpeningWidthTimeSeries = value;
             }
         }
@@ -143,18 +128,19 @@ namespace DelftTools.Hydro.Structures.WeirFormula
         public virtual double LowerEdgeLevel { get; set; }
 
         /// <summary>
-        /// When true, use <see cref="LowerEdgeLevelTimeSeries"/>, else use <see cref="GateOpening"/>.
+        /// When true, use <see cref="LowerEdgeLevelTimeSeries" />, else use <see cref="GateOpening" />.
         /// </summary>
         public virtual bool UseLowerEdgeLevelTimeSeries
         {
-            get
-            {
-                return useLowerEdgeLevelTimeSeries;
-            }
+            get => useLowerEdgeLevelTimeSeries;
             set
             {
                 if (!canBeTimedependent && value)
-                    throw new InvalidOperationException("Cannot use time series for gate opening when time varying data is not allowed.");
+                {
+                    throw new InvalidOperationException(
+                        "Cannot use time series for gate opening when time varying data is not allowed.");
+                }
+
                 useLowerEdgeLevelTimeSeries = value;
             }
         }
@@ -184,9 +170,16 @@ namespace DelftTools.Hydro.Structures.WeirFormula
             };
 
             if (gatedWeirFormula.UseLowerEdgeLevelTimeSeries)
+            {
                 gatedWeirFormula.LowerEdgeLevelTimeSeries = (TimeSeries) LowerEdgeLevelTimeSeries.Clone(true);
+            }
+
             if (gatedWeirFormula.UseHorizontalDoorOpeningWidthTimeSeries)
-                gatedWeirFormula.HorizontalDoorOpeningWidthTimeSeries = (TimeSeries) HorizontalDoorOpeningWidthTimeSeries.Clone(true);
+            {
+                gatedWeirFormula.HorizontalDoorOpeningWidthTimeSeries =
+                    (TimeSeries) HorizontalDoorOpeningWidthTimeSeries.Clone(true);
+            }
+
             return gatedWeirFormula;
         }
 
@@ -197,10 +190,16 @@ namespace DelftTools.Hydro.Structures.WeirFormula
             {
                 // For Performance: initialize lazy
                 if (LowerEdgeLevelTimeSeries == null)
-                    LowerEdgeLevelTimeSeries = HydroTimeSeriesFactory.CreateTimeSeries(GuiParameterNames.GateLowerEdgeLevel, GuiParameterNames.GateLowerEdgeLevel, "m AD");
+                {
+                    LowerEdgeLevelTimeSeries = HydroTimeSeriesFactory.CreateTimeSeries(
+                        GuiParameterNames.GateLowerEdgeLevel, GuiParameterNames.GateLowerEdgeLevel, "m AD");
+                }
 
                 if (HorizontalDoorOpeningWidthTimeSeries == null)
-                    HorizontalDoorOpeningWidthTimeSeries = HydroTimeSeriesFactory.CreateTimeSeries(GuiParameterNames.HorizontalOpeningWidth, GuiParameterNames.HorizontalOpeningWidth, "m AD");
+                {
+                    HorizontalDoorOpeningWidthTimeSeries = HydroTimeSeriesFactory.CreateTimeSeries(
+                        GuiParameterNames.HorizontalOpeningWidth, GuiParameterNames.HorizontalOpeningWidth, "m AD");
+                }
             }
             else
             {

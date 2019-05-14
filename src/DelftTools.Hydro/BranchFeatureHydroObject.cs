@@ -7,14 +7,14 @@ namespace DelftTools.Hydro
     [Entity]
     public abstract class BranchFeatureHydroObject : BranchFeature, IHydroObject
     {
-        public virtual IHydroRegion Region { get { return (IHydroRegion)Network; } }
+        public virtual IHydroRegion Region => (IHydroRegion) Network;
 
         [Aggregation]
         public virtual IEventedList<HydroLink> Links { get; set; }
 
-        public virtual bool CanBeLinkSource { get { return false; } }
+        public virtual bool CanBeLinkSource => false;
 
-        public virtual bool CanBeLinkTarget { get { return false; } }
+        public virtual bool CanBeLinkTarget => false;
 
         public virtual HydroLink LinkTo(IHydroObject target)
         {

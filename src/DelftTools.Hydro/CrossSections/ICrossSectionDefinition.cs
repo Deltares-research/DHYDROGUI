@@ -18,10 +18,10 @@ namespace DelftTools.Hydro.CrossSections
         /// as a linestring in the network/map.
         /// </summary>
         bool GeometryBased { get; }
-        
-        ///<summary>
+
+        /// <summary>
         /// YZ representation of the current geometry. Y is distance perpendicular to the branch
-        ///</summary>
+        /// </summary>
         IEnumerable<Coordinate> Profile { get; }
 
         /// <summary>
@@ -61,12 +61,12 @@ namespace DelftTools.Hydro.CrossSections
         /// </summary>
         double Width { get; }
 
-        ///<summary>
+        /// <summary>
         /// For cross sections of GeometryBased this is exactly the position where cross section intersect channel.
         /// For YZ and ZW this is user defined value.
         /// The thalWeg currently has no meaning for the calculation. It is used for drawing the cross section on the map.
         /// The thalWeg is the intersection with the channel.
-        ///</summary>
+        /// </summary>
         double Thalweg { get; set; }
 
         /// <summary>
@@ -76,18 +76,18 @@ namespace DelftTools.Hydro.CrossSections
 
         [FeatureAttribute]
         string Description { get; set; }
-        
+
         /// <summary>
-        /// Indicates whether or not sections should be shrunk and/or expanded to keep spanning the entire cross 
+        /// Indicates whether or not sections should be shrunk and/or expanded to keep spanning the entire cross
         /// section width, each time a change to the cross section is made.
         /// </summary>
         bool ForceSectionsSpanFullWidth { get; set; }
 
-        ///<summary>
+        /// <summary>
         /// Adds delta to all z-levels of the cross-section
-        ///</summary>
-        ///<param name="delta"></param>
-        ///<exception cref="ArgumentException"></exception>
+        /// </summary>
+        /// <param name="delta"> </param>
+        /// <exception cref="ArgumentException"> </exception>
         void ShiftLevel(double delta);
 
         IGeometry GetGeometry(ICrossSection crossSection);
@@ -104,10 +104,10 @@ namespace DelftTools.Hydro.CrossSections
         /// <summary>
         /// Validates the cell value.
         /// </summary>
-        /// <param name="rowIndex">The row index (unsorted)</param>
-        /// <param name="columnIndex">The column index</param>
-        /// <param name="cellValue">The value to be validated.</param>
-        /// <returns>The validation result.</returns>
+        /// <param name="rowIndex"> The row index (unsorted) </param>
+        /// <param name="columnIndex"> The column index </param>
+        /// <param name="cellValue"> The value to be validated. </param>
+        /// <returns> The validation result. </returns>
         Utils.Tuple<string, bool> ValidateCellValue(int rowIndex, int columnIndex, object cellValue);
     }
 }
