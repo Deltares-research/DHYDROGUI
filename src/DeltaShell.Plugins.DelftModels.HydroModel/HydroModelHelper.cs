@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using DelftTools.Hydro.Structures.KnownStructureProperties;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel
@@ -34,7 +35,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         {
             string [] partsTargetName = targetName.Split('.');
 
-            if (partsTargetName.Length > 1 && backwardsCompatibilityMapping.TryGetValue(partsTargetName[partsTargetName.Length - 1], out string newName))
+            if (partsTargetName.Length > 1 && backwardsCompatibilityMapping.TryGetValue(partsTargetName.Last(), out string newName))
             {
                 partsTargetName[partsTargetName.Length - 1] = newName;
                 targetName = string.Join(".", partsTargetName);
