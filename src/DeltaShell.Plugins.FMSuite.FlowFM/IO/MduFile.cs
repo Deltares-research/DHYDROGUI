@@ -879,6 +879,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             reportProgress("Reading properties", 1, totalSteps);
             ReadProperties(filePath, modelDefinition);
 
+            var pathsRelativeToParent = (bool)modelDefinition.GetModelProperty(KnownProperties.PathsRelativeToParent).Value;
+
             reportProgress("Reading morphology properties", 2, totalSteps);
             MorphologyFile.Read(filePath, modelDefinition);
 
@@ -982,8 +984,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 if (forceFilePath != null && File.Exists(forceFilePath))
                 {
                     ExternalForcingsFile = new ExtForceFile();
-
-                    var pathsRelativeToParent = (bool)modelDefinition.GetModelProperty(KnownProperties.PathsRelativeToParent).Value;
+                    
                     string extSubFilesReferenceFilePath = pathsRelativeToParent ? forceFilePath : filePath;
                    
                     ExternalForcingsFile.Read(forceFilePath, modelDefinition, extSubFilesReferenceFilePath);

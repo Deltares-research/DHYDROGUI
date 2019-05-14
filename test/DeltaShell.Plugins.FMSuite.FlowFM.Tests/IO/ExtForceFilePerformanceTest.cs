@@ -28,10 +28,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 var mduFileName = "dcsmv6.mdu";
 
                 var externalForcingFile = Path.Combine(tempDir, externalForcingFileName);
-                var mduFile = Path.Combine(tempDir, mduFileName);
+                var extSubFilesReferenceFilePath = Path.Combine(tempDir, mduFileName);
 
                 var extForceFile = new ExtForceFile();
-                TestHelper.AssertIsFasterThan(30000, () => extForceFile.Read(externalForcingFile, def, mduFile));
+                TestHelper.AssertIsFasterThan(30000, () => extForceFile.Read(externalForcingFile, def, extSubFilesReferenceFilePath));
             });
         }
     }

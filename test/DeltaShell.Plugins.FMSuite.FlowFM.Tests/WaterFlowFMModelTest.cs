@@ -2055,27 +2055,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void GivenAnMduWithoutOrZeroValueForPropertyPathsRelativeToParent_WhenImportAndExportThisModel_ThenThisPropertyShouldChangedToOneDuringAnExport()
         {
             // Given
-            var mduFilePath = TestHelper.GetTestFilePath(@"small\small.mdu");
+            string mduFilePath = TestHelper.GetTestFilePath(@"small\small.mdu");
             mduFilePath = TestHelper.CreateLocalCopy(mduFilePath);
 
             var model = new WaterFlowFMModel(mduFilePath);
 
-            var pathsRelativeToParent = model.ModelDefinition.GetModelProperty(KnownProperties.PathsRelativeToParent).GetValueAsString();
-            Assert.AreEqual("0", pathsRelativeToParent);
+            string pathsRelativeToParent = model.ModelDefinition.GetModelProperty(KnownProperties.PathsRelativeToParent).GetValueAsString();
+            Assert.AreEqual("0", pathsRelativeToParent, "The property for PathsRelativeToParent is {0} instead of 0. This is incorrect, because it was not written in the Mdu file", pathsRelativeToParent);
 
-            var saveDirectory = Path.Combine(Path.GetDirectoryName(mduFilePath), "..", "small_saved");
+            string saveDirectory = Path.Combine(Path.GetDirectoryName(mduFilePath), "..", "small_saved");
 
             FileUtils.DeleteIfExists(saveDirectory);
             Directory.CreateDirectory(saveDirectory);
 
-            var targetmduFilePath = Path.Combine(saveDirectory, "small.mdu");
+            string targetMduFilePath = Path.Combine(saveDirectory, "small.mdu");
 
             // When
-            model.ExportTo(targetmduFilePath);
+            model.ExportTo(targetMduFilePath);
 
             pathsRelativeToParent = model.ModelDefinition.GetModelProperty(KnownProperties.PathsRelativeToParent).GetValueAsString();
             // Then
-            Assert.AreEqual("1", pathsRelativeToParent);
+            Assert.AreEqual("1", pathsRelativeToParent, "The property for PathsRelativeToParent is {0} instead of 1. This is incorrect, because it should change to 1 during an export", pathsRelativeToParent);
         }
 
         private static WaterFlowFMModel CreateFMModelWithStructureLinkedToRTC(out DataItem rtcDataItem, out IDataItem dataItemWaterFlowFmModel)
