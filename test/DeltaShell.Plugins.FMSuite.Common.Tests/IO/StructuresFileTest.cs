@@ -419,9 +419,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 // Given
                 var structuresFilePath = CreateStructuresFileWithPliFiles(
                     tempDirectory,
-                    CreateWeirDelftIniCategory(),
-                    CreateGateDelftIniCategory(),
-                    CreateGeneralStructureDelftIniCategory());
+                    CreateOldWeirDelftIniCategory(),
+                    CreateOldGateDelftIniCategory(),
+                    CreateOldGeneralStructureDelftIniCategory());
 
                 var structuresFile = new StructuresFile
                 {
@@ -443,11 +443,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             TestHelper.PerformActionInTemporaryDirectory(tempDirectory =>
             {
                 // Given
-                var weirCategory = CreateWeirDelftIniCategory();
-
                 var structuresFilePath = CreateStructuresFileWithPliFiles(
                     tempDirectory,
-                    weirCategory);
+                    CreateOldWeirDelftIniCategory());
 
                 var structuresFile = new StructuresFile
                 {
@@ -469,10 +467,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             TestHelper.PerformActionInTemporaryDirectory(tempDirectory =>
             {
                 // Given
-                var gateCategory = CreateGateDelftIniCategory();
                 var structuresFilePath = CreateStructuresFileWithPliFiles(
                     tempDirectory,
-                    gateCategory);
+                    CreateOldGateDelftIniCategory());
 
                 var structuresFile = new StructuresFile
                 {
@@ -494,10 +491,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             TestHelper.PerformActionInTemporaryDirectory(tempDirectory =>
             {
                 // Given
-                var generalStructureCategory = CreateGeneralStructureDelftIniCategory();
                 var structuresFilePath = CreateStructuresFileWithPliFiles(
                     tempDirectory,
-                    generalStructureCategory);
+                    CreateOldGeneralStructureDelftIniCategory());
 
                 var structuresFile = new StructuresFile
                 {
@@ -910,7 +906,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             });
         }
 
-        private static DelftIniCategory CreateGeneralStructureDelftIniCategory()
+        private static DelftIniCategory CreateOldGeneralStructureDelftIniCategory()
         {
             const string structureName = "general_structure";
             var generalStructureCategory = new DelftIniCategory("structure")
@@ -950,7 +946,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             return generalStructureCategory;
         }
 
-        private static DelftIniCategory CreateGateDelftIniCategory()
+        private static DelftIniCategory CreateOldGateDelftIniCategory()
         {
             const string structureName = "gated_weir";
             var gateCategory = new DelftIniCategory("structure")
@@ -971,7 +967,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             return gateCategory;
         }
 
-        private static DelftIniCategory CreateWeirDelftIniCategory()
+        private static DelftIniCategory CreateOldWeirDelftIniCategory()
         {
             const string structureName = "simple_weir";
             var weirCategory = new DelftIniCategory("structure")
