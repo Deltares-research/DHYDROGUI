@@ -2646,15 +2646,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 else
                 {
                     var generalStructures = Area.Weirs.Where(w => w.WeirFormula is GeneralStructureWeirFormula);
+                    var gates = Area.Weirs.Where(w => w.WeirFormula is GatedWeirFormula);
+                    var simpleWeirs = Area.Weirs.Where(w => w.WeirFormula is SimpleWeirFormula);
+
                     var waterFlowFmModelDto = new WaterFlowFMModelDTO()
                     {
                         CoordinateSystem = this.CoordinateSystem,
                         ObservationPoints = Area.ObservationPoints,
                         ObservationCrossSections = Area.ObservationCrossSections,
-                        Weirs = generalStructures,
-                        Pumps = Area.Pumps
+                        SimpleWeirs = simpleWeirs,
+                        GeneralStructureWeirs = generalStructures,
+                        GatedWeirs = gates,
+                        Pumps = Area.Pumps,
                     };
-
                     OutputHisFileStore = new FMHisFileFunctionStore(hisFilePath, waterFlowFmModelDto);
                 }
             }
@@ -3518,20 +3522,5 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             ModelDefinition.GetModelProperty(KnownProperties.OutputDir).SetValueAsString(string.Empty);
             ModelDefinition.GetModelProperty(KnownProperties.WaqOutputDir).SetValueAsString(string.Empty);
         }
-    }
-
-    public class WaterFlowFMModelDTO
-    {
-        public ICoordinateSystem CoordinateSystem { get; set; }
-
-        public IEnumerable<Feature2D> ObservationPoints { get; set; }
-
-        public IEnumerable<Feature2D> ObservationCrossSections { get; set; }
-
-        public IEnumerable<Weir2D> Weirs { get; set; }
-
-        public IEnumerable<Pump2D> Pumps { get; set; }
-
-
     }
 }
