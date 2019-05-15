@@ -257,6 +257,7 @@
     <Compile Include="IO\SedMorDelftIniWriter.cs" />
     <Compile Include="QuantityGenerator.cs" />
     <Compile Include="SedimentModelDataItem.cs" />
+    <Compile Include="WaterFlowFMModel.TDMB.cs" />
     <Compile Include="Validation\Area\FixedWeirValidator.cs" />
     <Compile Include="Validation\Area\PumpValidator.cs" />
     <Compile Include="Validation\Area\SourceAndSinkValidator.cs" />

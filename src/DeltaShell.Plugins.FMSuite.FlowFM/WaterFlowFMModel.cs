@@ -1,11 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.ComponentModel;
-using System.IO;
-using System.Linq;
-using BasicModelInterface;
 using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
@@ -53,6 +45,13 @@ using SharpMap.Api;
 using SharpMap.Api.SpatialOperations;
 using SharpMap.Data.Providers;
 using SharpMap.SpatialOperations;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.ComponentModel;
+using System.IO;
+using System.Linq;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM
 {
@@ -204,8 +203,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 }
             }
         }
-
-        public override IBasicModelInterface BMIEngine => runner.Api;
 
         public DepthLayerDefinition DepthLayerDefinition
         {
@@ -1411,41 +1408,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             foreach (IDataItem di in items)
             {
                 yield return di;
-            }
-        }
-
-        [NoNotifyPropertyChange]
-        public override DateTime StartTime
-        {
-            get => (DateTime) ModelDefinition.GetModelProperty(GuiProperties.StartTime).Value;
-            set
-            {
-                ModelDefinition.GetModelProperty(GuiProperties.StartTime).Value = value;
-                // This base model setting is made to make the base logic right
-                base.StartTime = value;
-            }
-        }
-
-        [NoNotifyPropertyChange]
-        public override DateTime StopTime
-        {
-            get => (DateTime) ModelDefinition.GetModelProperty(GuiProperties.StopTime).Value;
-            set
-            {
-                ModelDefinition.GetModelProperty(GuiProperties.StopTime).Value = value;
-                // This base model setting is made to make the base logic right
-                base.StopTime = value;
-            }
-        }
-
-        public override TimeSpan TimeStep
-        {
-            get => (TimeSpan) ModelDefinition.GetModelProperty(KnownProperties.DtUser).Value;
-            set
-            {
-                ModelDefinition.GetModelProperty(KnownProperties.DtUser).Value = value;
-                // This base model setting is made to make the base logic right
-                base.TimeStep = value;
             }
         }
 
@@ -3674,8 +3636,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             runner.OnProgressChanged();
             base.OnProgressChanged();
         }
-
-        public override string ProgressText => string.IsNullOrEmpty(progressText) ? base.ProgressText : progressText;
 
         private void ReportProgressText(string text = null)
         {
