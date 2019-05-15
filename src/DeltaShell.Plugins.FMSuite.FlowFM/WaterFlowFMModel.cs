@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -289,56 +288,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         [DisplayName("Show model run console")]
         [Category("Run mode")]
         public bool ShowModelRunConsole { get; set; }
-
-        protected override void OnAfterDataItemsSet()
-        {
-            base.OnAfterDataItemsSet();
-
-            IDataItem areaDataItem = GetDataItemByTag(HydroAreaTag);
-            if (areaDataItem != null)
-            {
-                ((INotifyCollectionChange) areaDataItem.Value).CollectionChanged += HydroAreaCollectionChanged;
-                ((INotifyPropertyChanged) areaDataItem.Value).PropertyChanged += HydroAreaPropertyChanged;
-            }
-        }
-
-        protected override void OnBeforeDataItemsSet()
-        {
-            base.OnBeforeDataItemsSet();
-
-            areaDataItem = GetDataItemByTag(HydroAreaTag);
-            if (areaDataItem != null)
-            {
-                ((INotifyCollectionChange) areaDataItem.Value).CollectionChanged -= HydroAreaCollectionChanged;
-                ((INotifyPropertyChanged) areaDataItem.Value).PropertyChanged -= HydroAreaPropertyChanged;
-            }
-        }
-
-        protected override void OnDataItemLinked(object sender, LinkedUnlinkedEventArgs<IDataItem> e)
-        {
-            // subscribe to newly linked hydro area:
-            IDataItem areaDataItem = GetDataItemByTag(HydroAreaTag);
-            if (Equals(e.Target, areaDataItem) && !e.Relinking)
-            {
-                ((INotifyCollectionChange) areaDataItem.Value).CollectionChanged += HydroAreaCollectionChanged;
-                ((INotifyPropertyChanged) areaDataItem.Value).PropertyChanged += HydroAreaPropertyChanged;
-            }
-
-            base.OnDataItemLinked(sender, e);
-        }
-
-        protected override void OnDataItemUnlinking(object sender, LinkingUnlinkingEventArgs<IDataItem> e)
-        {
-            // unsubscribe from area before unlink
-            areaDataItem = GetDataItemByTag(HydroAreaTag);
-            if (Equals(e.Target, areaDataItem))
-            {
-                ((INotifyCollectionChange) areaDataItem.Value).CollectionChanged -= HydroAreaCollectionChanged;
-                ((INotifyPropertyChanged) areaDataItem.Value).PropertyChanged -= HydroAreaPropertyChanged;
-            }
-
-            base.OnDataItemUnlinking(sender, e);
-        }
 
         private void LoadStateFromMdu(string mduFilePath)
         {
@@ -1066,14 +1015,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
 
-        public override IEnumerable<IDataItem> AllDataItems
-        {
-            get
-            {
-                return base.AllDataItems.Concat(areaDataItems.Values.SelectMany(v => v));
-            }
-        }
-
         private void OnModelDefinitionPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             var prop = (WaterFlowFMProperty) sender;
@@ -1290,158 +1231,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         #region TimedependentModelBase
 
-        /// <summary>
-        /// Gets the direct children of the parent object
-        /// </summary>
-        /// <returns> </returns>
-        public override IEnumerable<object> GetDirectChildren()
-        {
-            foreach (object item in base.GetDirectChildren())
-            {
-                yield return item;
-            }
-
-            foreach (Feature2D boundary in Boundaries)
-            {
-                yield return boundary;
-            }
-
-            foreach (Feature2D pipe in Pipes)
-            {
-                yield return pipe;
-            }
-
-            foreach (BoundaryConditionSet boundaryConditionSet in BoundaryConditionSets)
-            {
-                yield return boundaryConditionSet;
-            }
-
-            foreach (SourceAndSink sourcesAndSink in SourcesAndSinks)
-            {
-                yield return sourcesAndSink;
-            }
-
-            if (ModelDefinition.HeatFluxModel.MeteoData != null)
-            {
-                yield return ModelDefinition.HeatFluxModel;
-            }
-
-            yield return WindFields;
-
-            foreach (IWindField windField in WindFields)
-            {
-                yield return windField;
-            }
-
-            //uncomment when required:
-            //yield return Grid;
-
-            yield return InitialSalinity;
-            yield return Viscosity;
-            yield return Diffusivity;
-            yield return Roughness;
-            yield return InitialWaterLevel;
-            yield return InitialTemperature;
-            yield return InitialTracers;
-            yield return InitialFractions;
-
-            //for QueryTimeSeries tool:
-            if (OutputHisFileStore != null)
-            {
-                foreach (IFunction function in OutputHisFileStore.Functions)
-                {
-                    yield return function;
-                }
-            }
-
-            if (OutputMapFileStore != null)
-            {
-                foreach (IFunction function in OutputMapFileStore.Functions)
-                {
-                    yield return function;
-                }
-            }
-
-            if (OutputClassMapFileStore != null)
-            {
-                foreach (IFunction function in OutputClassMapFileStore.Functions)
-                {
-                    yield return function;
-                }
-            }
-        }
-
-        public override IEnumerable<IFeature> GetChildDataItemLocations(DataItemRole role)
-        {
-            if ((role & DataItemRole.Input) == DataItemRole.Input)
-            {
-                return InputFeatureCollections.OfType<IList>().SelectMany(l => l.OfType<IFeature>());
-            }
-
-            if ((role & DataItemRole.Output) == DataItemRole.Output)
-            {
-                return OutputFeatureCollections.OfType<IList>().SelectMany(l => l.OfType<IFeature>());
-            }
-
-            return Enumerable.Empty<IFeature>();
-        }
-
-        public override IEnumerable<IDataItem> GetChildDataItems(IFeature location)
-        {
-            if (location == null)
-            {
-                yield break;
-            }
-
-            List<IDataItem> items;
-            areaDataItems.TryGetValue(location, out items);
-
-            if (items == null)
-            {
-                yield break;
-            }
-
-            foreach (IDataItem di in items)
-            {
-                yield return di;
-            }
-        }
-
         private IList<ExplicitValueConverterLookupItem> explicitValueConverterLookupItems;
 
         // Do not remove...used in HydroModelBuilder.py
         public void SetWaveForcing()
         {
             ModelDefinition.GetModelProperty(KnownProperties.WaveModelNr).SetValueAsString("3");
-        }
-
-        protected override void OnInputCollectionChanged(object sender, NotifyCollectionChangedEventArgs e) {}
-
-        // [TOOLS-22813] Override OnInputPropertyChanged to stop base class (ModelBase) from clearing the output
-        protected override void OnInputPropertyChanged(object sender, PropertyChangedEventArgs e) {}
-
-        /// <summary>
-        /// Called when [clear output]. Clears all output of the model.
-        /// </summary>
-        protected override void OnClearOutput()
-        {
-            if (OutputMapFileStore != null)
-            {
-                ClearFunctionStore(OutputMapFileStore);
-                OutputMapFileStore = null;
-            }
-
-            if (OutputHisFileStore != null)
-            {
-                ClearFunctionStore(OutputHisFileStore);
-                OutputHisFileStore = null;
-            }
-
-            if (OutputClassMapFileStore != null)
-            {
-                ClearFunctionStore(OutputClassMapFileStore);
-                OutputClassMapFileStore = null;
-            }
         }
 
         private void ClearFunctionStore(ReadOnlyNetCdfFunctionStoreBase functionStore)
@@ -1452,16 +1247,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private bool HasOpenFunctionStores =>
             OutputMapFileStore != null || OutputHisFileStore != null || OutputClassMapFileStore != null;
-
-        public override IProjectItem DeepClone()
-        {
-            string tempDir = FileUtils.CreateTempDirectory();
-            string mduFileName = MduFilePath != null ? Path.GetFileName(MduFilePath) : "some_temp.mdu";
-            string tempFilePath = Path.Combine(tempDir, mduFileName);
-            ExportTo(tempFilePath, false);
-
-            return new WaterFlowFMModel(tempFilePath);
-        }
 
         public event EventHandler AfterExecute;
 
