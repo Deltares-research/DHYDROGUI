@@ -308,6 +308,7 @@
     <Compile Include="IO\ExtForceFilePerformanceTest.cs" />
     <Compile Include="IO\ExtForceFileTest.cs" />
     <Compile Include="IO\FMClassMapFileFunctionStoreTest.cs" />
+    <Compile Include="IO\FMHisFileFunctionStoreIntegrationTest.cs" />
     <Compile Include="IO\FMHisFileFunctionStoreTest.cs" />
     <Compile Include="IO\FMPartitionExporterTest.cs" />
     <Compile Include="IO\GroupablePointCloudImporterTest.cs" />

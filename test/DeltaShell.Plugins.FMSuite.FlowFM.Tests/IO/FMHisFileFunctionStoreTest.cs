@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Functions;
-using DelftTools.Functions.Generic;
-using DelftTools.Hydro.Structures;
-using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.TestUtils.TestReferenceHelper;
@@ -31,81 +27,59 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
-        public void GivenAGatesConfiguration_WhenOutputHisFileStoreContainsGateFunction_ThenGateFunctionTimeSeriesIsPresent()
+        public void GivenAHisFileStore_WhenOutputHisFileStoreContainsGeneralStructureFunction_ThenGeneralStructureFunctionTimeSeriesIsPresent()
         {
-            //Given
-            var gatedWeirs = CreateGates();
-
-            var dto = new WaterFlowFMModelDTO() { Weirs = gatedWeirs};
-
-            //When
-            var store = new FMHisFileFunctionStore(TestHelper.GetTestFilePath("output_hisfiles\\FlowFM_his.nc"), new WaterFlowFMModelDTO());
+            //Given/When
+            var store = new FMHisFileFunctionStore(TestHelper.GetTestFilePath("output_hisfiles\\generalStructure_his.nc"), new WaterFlowFMModelDTO());
+            /* We use any of the components of general structure, just to check it has been created. */
+            var generalStructureFunction = (FeatureCoverage)store.Functions.FirstOrDefault(f => f.Components[0].Name == "general_structure_discharge");
 
             //Then
-            var pumpFunction = (FeatureCoverage)store.Functions.FirstOrDefault(f => f.Components[0].Name == "pump_discharge");
-            Assert.IsNotNull(pumpFunction);
-            Assert.AreEqual(289, pumpFunction.GetValues().Count);
-            Assert.AreEqual(289, pumpFunction.Time.Values.Count);
-            Assert.AreEqual(new DateTime(2001, 01, 01, 00, 00, 00), pumpFunction.Time.Values.First());
-        }
-
-        private IEnumerable<Weir2D> CreateGates()
-        {
-            var gatedWeir = new Weir2D { WeirFormula = new GeneralStructureWeirFormula() };
-            return new List<Weir2D>() { gatedWeir };
+            Assert.IsNotNull(generalStructureFunction);
+            Assert.AreEqual(73, generalStructureFunction.GetValues().Count);
+            Assert.AreEqual(73, generalStructureFunction.Time.Values.Count);
         }
 
         [Test]
-        public void GivenAHisFileStore_WhenOutputHisFileStoreContainsPumpFunction_ThenPumpFunctionTimeSeriesIsPresent()
+        public void GivenAHisFileStore_WhenOutputHisFileStoreContainsGatedWeirFunction_ThenGatedWeirFunctionTimeSeriesIsPresent()
         {
             //Given/When
             var store = new FMHisFileFunctionStore(TestHelper.GetTestFilePath("output_hisfiles\\FlowFM_his.nc"), new WaterFlowFMModelDTO());
+            /* We use any of the components of gated weir, just to check it has been created. */
+            var gatedWeirFunction = (FeatureCoverage)store.Functions.FirstOrDefault(f => f.Components[0].Name == "gategen_discharge");
 
             //Then
-            var pumpFunction = (FeatureCoverage)store.Functions.FirstOrDefault(f => f.Components[0].Name == "pump_discharge");
-            Assert.IsNotNull(pumpFunction);
-            Assert.AreEqual(289, pumpFunction.GetValues().Count);
-            Assert.AreEqual(289, pumpFunction.Time.Values.Count);
-            Assert.AreEqual(new DateTime(2001, 01, 01, 00,00,00), pumpFunction.Time.Values.First());
+            Assert.IsNotNull(gatedWeirFunction);
+            Assert.AreEqual(289, gatedWeirFunction.GetValues().Count);
+            Assert.AreEqual(289, gatedWeirFunction.Time.Values.Count);
         }
 
         [Test]
-        [Category(TestCategory.Integration)]
-        [Category(TestCategory.Slow)]
-        public void GivenAFmModelWithTwoPumps_WhenOutPutHisFileStoreContainsPumpFunctions_ThenPumpFunctionsContainOutputParameters()
+        public void GivenAHisFileStore_WhenOutputHisFileStoreContainsSimpleWeirFunction_ThenSimpleWeirFunctionTimeSeriesIsPresent3()
         {
-            //Given
-            var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
-            var localMduFilePath = TestHelper.CreateLocalCopy(mduPath);
-            var model = new WaterFlowFMModel(localMduFilePath);
-            var defaultFunctionsWithoutPumps = model.OutputHisFileStore.Functions;
-            Assert.IsNotNull(defaultFunctionsWithoutPumps);
-
-            var pumps = CreateTwoPumps();
-
-            model.Area.Pumps.AddRange(pumps);
-
-            //When
-            ActivityRunner.RunActivity(model);
-            
-            var pumpDischargeFunction = (FeatureCoverage) model.OutputHisFileStore.Functions.FirstOrDefault(f => f.Components.Any(c => c.Name == "pump_discharge"));
-            var pumpCapacityFunction = (FeatureCoverage) model.OutputHisFileStore.Functions.FirstOrDefault(f => f.Components.Any(c=> c.Name == "pump_capacity"));
-            var pumpWaterLevelUpFunction = (FeatureCoverage) model.OutputHisFileStore.Functions.FirstOrDefault(f => f.Components.Any(c => c.Name == "pump_s1up"));
-            var pumpWaterLevelDownFunction = (FeatureCoverage) model.OutputHisFileStore.Functions.FirstOrDefault(f => f.Components.Any(c => c.Name == "pump_s1dn"));
-            Assert.IsNotNull(pumpDischargeFunction);
-            Assert.IsNotNull(pumpCapacityFunction);
-            Assert.IsNotNull(pumpWaterLevelUpFunction);
-            Assert.IsNotNull(pumpWaterLevelDownFunction);
+            //Given/When
+            var store = new FMHisFileFunctionStore(TestHelper.GetTestFilePath("output_hisfiles\\TestModel_his.nc"), new WaterFlowFMModelDTO());
+            /* We use any of the components of simple weir, just to check it has been created. */
+            var simpleWeirFunction = (FeatureCoverage)store.Functions.FirstOrDefault(f => f.Components[0].Name == "weirgen_discharge");
 
             //Then
-            var pumpDischargeFeatures = pumpDischargeFunction.Features;
-            var pumpCapacityFeatures = pumpCapacityFunction.Features;
-            var pumpWaterLevelUpFeatures= pumpWaterLevelUpFunction.Features;
-            var pumpWaterLevelDownFeatures= pumpWaterLevelDownFunction.Features;
-            Assert.That(pumpDischargeFeatures.OfType<Pump2D>().Count(), Is.EqualTo(2));
-            Assert.That(pumpCapacityFeatures.OfType<Pump2D>().Count(), Is.EqualTo(2));
-            Assert.That(pumpWaterLevelUpFeatures.OfType<Pump2D>().Count(), Is.EqualTo(2));
-            Assert.That(pumpWaterLevelDownFeatures.OfType<Pump2D>().Count(), Is.EqualTo(2));
+            Assert.IsNotNull(simpleWeirFunction);
+            Assert.AreEqual(289, simpleWeirFunction.GetValues().Count);
+            Assert.AreEqual(289, simpleWeirFunction.Time.Values.Count);
+        }
+
+        [Test]
+        public void GivenAHisFileStore_WhenOutputHisFileStoreContainsPumpFunction_ThenPumpTimeSeriesIsPresent()
+        {
+            //Given/When
+            var store = new FMHisFileFunctionStore(TestHelper.GetTestFilePath("output_hisfiles\\FlowFM_his.nc"), new WaterFlowFMModelDTO());
+            /* We use any of the components of pumps, just to check it has been created. */
+            var pumpFunction = (FeatureCoverage)store.Functions.FirstOrDefault(f => f.Components[0].Name == "pump_discharge");
+
+            //Then
+            Assert.IsNotNull(pumpFunction);
+            Assert.AreEqual(289, pumpFunction.GetValues().Count);
+            Assert.AreEqual(289, pumpFunction.Time.Values.Count);
         }
 
         [Test]
@@ -189,79 +163,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
-        public void OpenGeneralStructureTimeSeries()
-        {
-            var store = new FMHisFileFunctionStore(TestHelper.GetTestFilePath("output_hisfiles\\generalStructure_his.nc"), new WaterFlowFMModelDTO());
-
-            /* We use any of the components of general structure, just to check it has been created. */
-            var generalStructureFunction = (FeatureCoverage)store.Functions.FirstOrDefault(f => f.Components[0].Name == "general_structure_discharge");
-
-            Assert.IsNotNull(generalStructureFunction);
-        }
-
-        [Test]
-        [Category(TestCategory.Integration)]
-        [Category(TestCategory.Slow)]
-        public void OpenHisFileInModelContextAndExpectFeaturesToBeSameInstance()
-        {
-            var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
-            var localMduFilePath = TestHelper.CreateLocalCopy(mduPath);
-
-            var model = new WaterFlowFMModel(localMduFilePath);
-
-            ActivityRunner.RunActivity(model);
-
-            var waterLevelFunction = (FeatureCoverage)model.OutputHisFileStore.Functions.FirstOrDefault(f => f.Components[0].Name == "waterlevel");
-            Assert.IsNotNull(waterLevelFunction);
-            Assert.AreSame(model.Area.ObservationPoints.First(),
-                           waterLevelFunction.Arguments[1].Values.OfType<IFeature>().First(), "feature waterlevel1");
-            Assert.AreSame(model.Area.ObservationPoints.First(),
-                           waterLevelFunction.Features.First(), "feature waterlevel2");
-
-            var dischargeFunction = (FeatureCoverage)model.OutputHisFileStore.Functions.FirstOrDefault(f => f.Components[0].Name == "cross_section_discharge");
-            Assert.IsNotNull(dischargeFunction);
-            Assert.AreSame(model.Area.ObservationCrossSections.First(),
-                           dischargeFunction.Arguments[1].Values.OfType<IFeature>().First(),"feat discharge1");
-            Assert.AreSame(model.Area.ObservationCrossSections.First(),
-                           dischargeFunction.Features.First(), "feat discharge2");
-        }
-
-        [Test]
-        [Category(TestCategory.Integration)]
-        [Category(TestCategory.Slow)]
-        public void RunModelDeleteObservationPointsRunAgain()
-        {
-            var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
-            var localMduFilePath = TestHelper.CreateLocalCopy(mduPath);
-
-            var model = new WaterFlowFMModel(localMduFilePath);
-
-            ActivityRunner.RunActivity(model);
-
-            var waterLevelFunction = (FeatureCoverage)model.OutputHisFileStore.Functions.FirstOrDefault(f => f.Components[0].Name == "waterlevel");
-            Assert.IsNotNull(waterLevelFunction);
-            Assert.AreSame(model.Area.ObservationPoints.First(),
-                           waterLevelFunction.Arguments[1].Values.OfType<IFeature>().First(), "feature waterlevel1");
-            Assert.AreSame(model.Area.ObservationPoints.First(),
-                           waterLevelFunction.Features.First(), "feature waterlevel2");
-
-            for (int i = 0; i < 100; ++i)
-            {
-                model.Area.ObservationPoints.RemoveAt(0);
-            }
-
-            ActivityRunner.RunActivity(model);
-
-            waterLevelFunction =
-                (FeatureCoverage)
-                    model.OutputHisFileStore.Functions.FirstOrDefault(f => f.Components[0].Name == "waterlevel");
-            Assert.IsNotNull(waterLevelFunction);
-            Assert.AreSame(model.Area.ObservationPoints.First(),
-                           waterLevelFunction.FeatureVariable.Values.OfType<IFeature>().First(), "feature waterlevel1");
-            Assert.AreSame(model.Area.ObservationPoints.First(),waterLevelFunction.Features.First());
-        }
-
-        [Test]
         [Category(TestCategory.Slow)]
         public void OpenHisFile()
         {
@@ -287,95 +188,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var numEventsAfter = TestReferenceHelper.FindEventSubscriptions(observationPoint, true);
 
             Assert.IsTrue(numEventsAfter <= numEventsBefore + 2);
-        }
-
-        [Test]
-        [Category(TestCategory.Slow)]
-        public void RunFMModelWithStructuresReadHisFile()
-        {
-            var mduPath = TestHelper.GetTestFilePath(@"roughness\bendprof.mdu");
-            var localMduFilePath = TestHelper.CreateLocalCopy(mduPath);
-
-            var model = new WaterFlowFMModel(localMduFilePath);
-
-            var weir = new Weir2D("weir", true)
-            {
-                Geometry = new LineString(new[] {new Coordinate(51.0, -180.0), new Coordinate(150.0, -180.0)}),
-                CrestWidth = 42.0,
-                UseCrestLevelTimeSeries = true
-            };
-            weir.CrestLevelTimeSeries[model.StartTime] = 10.0;
-            weir.CrestLevelTimeSeries[model.StartTime.AddHours(1)] = 7.5;
-            weir.CrestLevelTimeSeries[model.StartTime.AddHours(2)] = 2.5;
-            weir.CrestLevelTimeSeries[model.StopTime.AddSeconds(1)] = 5.5;
-            model.Area.Weirs.Add(weir);
-
-            var gate = new Weir2D("weir",true)
-            {
-                Geometry = new LineString(new[] {new Coordinate(-149.1, -180.0), new Coordinate(-50.1, -180.0)}),
-                WeirFormula = new GatedWeirFormula(true)
-                {
-                    UseHorizontalDoorOpeningWidthTimeSeries = true,
-                    UseLowerEdgeLevelTimeSeries = true
-                },
-                CrestLevel = 102.0,
-                CrestWidth = 42.0
-            };
-
-            var gatedWeirFormula = gate.WeirFormula as GatedWeirFormula;
-
-            Assert.NotNull(gatedWeirFormula);
-
-            gatedWeirFormula.HorizontalDoorOpeningWidthTimeSeries[model.StartTime] = 0.0;
-            gatedWeirFormula.HorizontalDoorOpeningWidthTimeSeries[model.StartTime.AddHours(1)] = 0.0;
-            gatedWeirFormula.HorizontalDoorOpeningWidthTimeSeries[model.StartTime.AddHours(2)] = 25.0;
-            gatedWeirFormula.HorizontalDoorOpeningWidthTimeSeries[model.StopTime.AddSeconds(1)] = 25.0;
-
-            gatedWeirFormula.LowerEdgeLevelTimeSeries[model.StartTime] = 8.5;
-            gatedWeirFormula.LowerEdgeLevelTimeSeries[model.StartTime.AddHours(1)] = 6.5;
-            gatedWeirFormula.LowerEdgeLevelTimeSeries[model.StartTime.AddHours(2)] = 0.0;
-            gatedWeirFormula.LowerEdgeLevelTimeSeries[model.StopTime.AddSeconds(1)] = -10.0;
-            model.Area.Weirs.Add(gate);
-
-            var pump = new Pump2D("pump", true)
-            {
-                Geometry = new LineString(new[] {new Coordinate(0.0, 51.5), new Coordinate(0.0, 81.2)}),
-                UseCapacityTimeSeries = true
-            };
-            pump.CapacityTimeSeries[model.StartTime] = 5.0;
-            pump.CapacityTimeSeries[model.StartTime.AddHours(1)] = 20.0;
-            pump.CapacityTimeSeries[model.StartTime.AddHours(2)] = 10.4;
-            pump.CapacityTimeSeries[model.StopTime.AddSeconds(1)] = 0.0;
-            model.Area.Pumps.Add(pump);
-
-            ActivityRunner.RunActivity(model);
-
-            Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
-
-            var dischargeFunction =
-                model.OutputHisFileStore.Functions.FirstOrDefault(f => f.Components[0].Name == "cross_section_discharge") as
-                    FeatureCoverage;
-            Assert.IsNotNull(dischargeFunction);
-            Assert.AreEqual(2, dischargeFunction.Arguments[1].Values.Count);
-
-            // TODO: check structure output, once we support it.
-        }
-
-        private static List<Pump2D> CreateTwoPumps()
-        {
-            var pump1 = new Pump2D() {Name = "addedPump1", GroupName = "addedPumps", Geometry = new LineString(new[]
-                {
-                    new Coordinate(0.0, 51.5), new Coordinate(0.0, 81.2)
-                })
-            };
-            var pump2 = new Pump2D() { Name = "addedPump2", GroupName = "addedPumps", Geometry = new LineString(new[]
-                {
-                    new Coordinate(0.0, 49.5), new Coordinate(0.0, 80.1)
-                })
-            };
-            var pumps = new List<Pump2D>() { pump1, pump2 };
-
-            return pumps;
         }
     }
 }
