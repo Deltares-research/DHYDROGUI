@@ -2,25 +2,25 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
+using DelftTools.Functions;
 using DelftTools.Shell.Core;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
 {
-    public class QhFileExporter: BoundaryDataExporterBase, IFileExporter
+    public class QhFileExporter : BoundaryDataExporterBase, IFileExporter
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(QhFileExporter));
 
         #region IFileExporter
 
-        public string Name { get { return "Boundary data to .qh file"; } }
+        public string Name => "Boundary data to .qh file";
 
-        public string Category { get { return "General"; } }
-        public string Description
-        {
-            get { return string.Empty; }
-        }
+        public string Category => "General";
+
+        public string Description => string.Empty;
 
         public bool Export(object item, string path)
         {
@@ -28,7 +28,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
             if (boundaryCondition != null && boundaryCondition.DataType == BoundaryConditionDataType.Qh)
             {
                 var writer = new QhFile();
-                var data = SeriesToExport(boundaryCondition);
+                IFunction data = SeriesToExport(boundaryCondition);
                 if (data != null)
                 {
                     try
@@ -43,6 +43,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
                     }
                 }
             }
+
             return false;
         }
 
@@ -51,13 +52,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
             yield break;
         }
 
-        public string FileFilter
-        {
-            get { return "Q-h series series file|*.qh"; }
-        }
+        public string FileFilter => "Q-h series series file|*.qh";
 
         [ExcludeFromCodeCoverage]
-        public Bitmap Icon { get { return Properties.Resources.TextDocument; } }
+        public Bitmap Icon => Resources.TextDocument;
+
         public bool CanExportFor(object item)
         {
             return true;
@@ -67,7 +66,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
 
         public override IEnumerable<BoundaryConditionDataType> ForcingTypes
         {
-            get { yield return BoundaryConditionDataType.Qh; }
+            get
+            {
+                yield return BoundaryConditionDataType.Qh;
+            }
         }
     }
 }

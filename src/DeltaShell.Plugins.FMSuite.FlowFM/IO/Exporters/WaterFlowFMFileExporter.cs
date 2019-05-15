@@ -9,20 +9,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
 {
     public class WaterFlowFMFileExporter : IFileExporter
     {
-        public string Name { get { return "Flow Flexible Mesh model"; } }
+        public string Name => "Flow Flexible Mesh model";
 
-        public string Category { get { return "General"; } }
-        public string Description
-        {
-            get { return string.Empty; }
-        }
+        public string Category => "General";
+
+        public string Description => string.Empty;
 
         public bool Export(object item, string path)
         {
             // Check if the item is set
             if (item == null)
             {
-                throw new Exception("Item not set") ;
+                throw new Exception("Item not set");
             }
 
             // Check if the item is set
@@ -31,11 +29,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
             {
                 throw new Exception("Unexpected object type: " + item.GetType());
             }
-            var fullPath = path;
+
+            string fullPath = path;
             if (Directory.Exists(path))
             {
                 fullPath = Path.Combine(path, waterFlowFMModel.Name + ".mdu");
             }
+
             return waterFlowFMModel.ExportTo(fullPath, false);
         }
 
@@ -52,6 +52,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
             return true;
         }
 
-        public string FileFilter { get { return "Flexible Mesh Model Definition|*.mdu"; } }
+        public string FileFilter => "Flexible Mesh Model Definition|*.mdu";
     }
 }

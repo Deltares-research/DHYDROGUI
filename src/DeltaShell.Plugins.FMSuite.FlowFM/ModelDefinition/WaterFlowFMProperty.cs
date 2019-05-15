@@ -6,11 +6,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
     public class WaterFlowFMProperty : ModelProperty
     {
         public WaterFlowFMProperty(ModelPropertyDefinition propertyDefinition, string valueAsString) :
-            base(propertyDefinition, valueAsString)
-        {
-        }
+            base(propertyDefinition, valueAsString) {}
 
-        public static WaterFlowFMPropertyDefinition CreatePropertyDefinitionForUnknownProperty(string mduGroupName, string mduPropertyName, string comment, PropertySource propertySource = PropertySource.MduFile)
+        public static WaterFlowFMPropertyDefinition CreatePropertyDefinitionForUnknownProperty(
+            string mduGroupName, string mduPropertyName, string comment,
+            PropertySource propertySource = PropertySource.MduFile)
         {
             return new WaterFlowFMPropertyDefinition
             {
@@ -20,7 +20,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                 FilePropertyName = mduPropertyName,
                 Category = ModelSchemaCsvFile.DefaultGUIGroupCaption,
                 SubCategory = null,
-                DataType = typeof (string),
+                DataType = typeof(string),
                 DefaultValueAsString = "",
                 EnabledDependencies = "",
                 VisibleDependencies = "",
@@ -31,7 +31,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             };
         }
 
-        public new WaterFlowFMPropertyDefinition PropertyDefinition => (WaterFlowFMPropertyDefinition) base.PropertyDefinition;
+        public new WaterFlowFMPropertyDefinition PropertyDefinition =>
+            (WaterFlowFMPropertyDefinition) base.PropertyDefinition;
 
         public override object Clone()
         {

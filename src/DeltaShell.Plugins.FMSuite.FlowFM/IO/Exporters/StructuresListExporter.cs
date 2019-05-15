@@ -12,6 +12,7 @@ using DelftTools.Shell.Core;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
@@ -49,35 +50,35 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
 
         #region IFileExporter
 
-        public string Name { get { return GetStructuresName(); } }
-        
-        public string Category { get { return "General"; } }
-        public string Description
-        {
-            get { return string.Empty; }
-        }
+        public string Name => GetStructuresName();
+
+        public string Category => "General";
+
+        public string Description => string.Empty;
 
         public bool Export(object item, string path)
         {
-            if (String.IsNullOrEmpty(path))
+            if (string.IsNullOrEmpty(path))
             {
                 Log.ErrorFormat("No file was presented to import from.");
                 return false;
             }
+
             if (item == null)
             {
-                Log.ErrorFormat("No target was presented to import to (requires a Flexible Mesh Water Flow model or Area.");
+                Log.ErrorFormat(
+                    "No target was presented to import to (requires a Flexible Mesh Water Flow model or Area.");
                 return false;
             }
 
-            var list = (IList)item;
-            var model = GetModelForList(list);
+            var list = (IList) item;
+            WaterFlowFMModel model = GetModelForList(list);
 
             var structuresFile = new StructuresFile
-                {
-                    StructureSchema = model.ModelDefinition.StructureSchema,
-                    ReferenceDate = (DateTime) model.ModelDefinition.GetModelProperty(KnownProperties.RefDate).Value
-                };
+            {
+                StructureSchema = model.ModelDefinition.StructureSchema,
+                ReferenceDate = (DateTime) model.ModelDefinition.GetModelProperty(KnownProperties.RefDate).Value
+            };
             try
             {
                 structuresFile.Write(path, list.OfType<IStructure1D>());
@@ -89,9 +90,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
                 if (e is ArgumentException || e is UnauthorizedAccessException || e is DirectoryNotFoundException ||
                     e is PathTooLongException || e is IOException || e is SecurityException)
                 {
-                    Log.Error(String.Format("An error occurred while exporting structures, export stopped; Cause: "), e);
+                    Log.Error(string.Format("An error occurred while exporting structures, export stopped; Cause: "),
+                              e);
                     return false;
                 }
+
                 // Unexpected exception, let it bubble:
                 throw;
             }
@@ -110,19 +113,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
                     yield return typeof(IEventedList<IWeir>);
                     break;
                 case StructuresListType.Gates:
-                    yield return typeof (IList<IGate>);
-                    yield return typeof (IEventedList<IGate>);
+                    yield return typeof(IList<IGate>);
+                    yield return typeof(IEventedList<IGate>);
                     break;
             }
         }
 
-        public string FileFilter { get { return "Structures file|*.ini"; } }
+        public string FileFilter => "Structures file|*.ini";
 
         [ExcludeFromCodeCoverage]
-        public Bitmap Icon
-        {
-            get { return Properties.Resources.StructureFeatureSmall; }
-        }
+        public Bitmap Icon => Resources.StructureFeatureSmall;
 
         public bool CanExportFor(object item)
         {

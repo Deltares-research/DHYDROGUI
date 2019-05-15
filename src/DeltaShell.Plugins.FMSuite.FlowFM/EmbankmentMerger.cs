@@ -6,43 +6,42 @@ using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
-using Point = NetTopologySuite.Geometries.Point;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM
 {
     public static class EmbankmentMerger
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof (EmbankmentMerger));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(EmbankmentMerger));
 
-        public static Embankment MergeSelectedEmbankments(IList<Embankment> embankmentDefinitions, Embankment embankment1,
-            Embankment embankment2)
+        public static Embankment MergeSelectedEmbankments(IList<Embankment> embankmentDefinitions,
+                                                          Embankment embankment1,
+                                                          Embankment embankment2)
         {
-
-            var intersections = embankment1.Geometry.Intersection(embankment2.Geometry);
+            IGeometry intersections = embankment1.Geometry.Intersection(embankment2.Geometry);
             Embankment mergedEmbankment;
             if (intersections.NumPoints == 1)
             {
                 mergedEmbankment = MergeSelectedEmbankmentsWithOneIntersection(embankmentDefinitions, embankment1,
-                    embankment2);
+                                                                               embankment2);
             }
             else if (intersections.NumPoints == 0)
             {
-                mergedEmbankment = MergeSelectedEmbankmentsWithNoIntersection(embankmentDefinitions, embankment1, embankment2);
+                mergedEmbankment =
+                    MergeSelectedEmbankmentsWithNoIntersection(embankmentDefinitions, embankment1, embankment2);
             }
             else
             {
                 Log.Warn("Embankments with more than one intersection cannot be merged. Merge cancelled.");
-                return null; 
+                return null;
             }
 
-                         
             return mergedEmbankment;
         }
 
-        private static Embankment MergeSelectedEmbankmentsWithNoIntersection(IList<Embankment> embankmentDefinitions, Embankment embankment1,
+        private static Embankment MergeSelectedEmbankmentsWithNoIntersection(
+            IList<Embankment> embankmentDefinitions, Embankment embankment1,
             Embankment embankment2)
         {
-
             // Step 1: Make sure that order of coordinates in the embankments' geometries are such, that only
             // ascending for loops are necessary. That is: the _end_ of Embankment1 will be connected to the _beginning_ of Embankment2.
             var embankment1FirstCoord = new Point(embankment1.Geometry.Coordinates.First());
@@ -58,45 +57,49 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 embankment1LastCoord.Distance(embankment2LastCoord)
             };
 
-            var indexMinDistance = distances.IndexOf(distances.Min());
-            IEnumerable<Coordinate> embankment1Coordinates = (indexMinDistance == 0 || indexMinDistance == 1)
-                ? embankment1.Geometry.Coordinates.Reverse()
-                : embankment1.Geometry.Coordinates;
+            int indexMinDistance = distances.IndexOf(distances.Min());
+            IEnumerable<Coordinate> embankment1Coordinates = indexMinDistance == 0 || indexMinDistance == 1
+                                                                 ? embankment1.Geometry.Coordinates.Reverse()
+                                                                 : embankment1.Geometry.Coordinates;
 
-            IEnumerable<Coordinate> embankment2Coordinates = (indexMinDistance == 1 || indexMinDistance == 3)
-                ? embankment2.Geometry.Coordinates.Reverse()
-                : embankment2.Geometry.Coordinates;
+            IEnumerable<Coordinate> embankment2Coordinates = indexMinDistance == 1 || indexMinDistance == 3
+                                                                 ? embankment2.Geometry.Coordinates.Reverse()
+                                                                 : embankment2.Geometry.Coordinates;
 
             // Step 2: merge embankments. 
             var mergedEmbankment = new Embankment
             {
-                Name = NetworkHelper.GetUniqueName("MergedEmbankment{0:D2}", embankmentDefinitions, "Embankment"), 
+                Name = NetworkHelper.GetUniqueName("MergedEmbankment{0:D2}", embankmentDefinitions, "Embankment"),
                 Geometry = new LineString(embankment1Coordinates.Concat(embankment2Coordinates).ToArray())
             };
 
-            return mergedEmbankment; 
+            return mergedEmbankment;
         }
 
-        private static Embankment MergeSelectedEmbankmentsWithOneIntersection(IList<Embankment> embankmentDefinitions, Embankment embankment1,
+        private static Embankment MergeSelectedEmbankmentsWithOneIntersection(
+            IList<Embankment> embankmentDefinitions, Embankment embankment1,
             Embankment embankment2)
         {
-
             // Step 1: Make sure that order of coordinates in the embankments' geometries are such, that only
             // ascending for loops are necessary. That is: the _end_ of Embankment1 will be connected to the _beginning_ of Embankment2.
-            var embankment1FirstCoord = embankment1.Geometry.Coordinates.First();
-            var embankment1LastCoord = embankment1.Geometry.Coordinates.Last();
-            var embankment2FirstCoord = embankment2.Geometry.Coordinates.First();
-            var embankment2LastCoord = embankment2.Geometry.Coordinates.Last();
+            Coordinate embankment1FirstCoord = embankment1.Geometry.Coordinates.First();
+            Coordinate embankment1LastCoord = embankment1.Geometry.Coordinates.Last();
+            Coordinate embankment2FirstCoord = embankment2.Geometry.Coordinates.First();
+            Coordinate embankment2LastCoord = embankment2.Geometry.Coordinates.Last();
 
-            var intersections = embankment1.Geometry.Intersection(embankment2.Geometry);
-            var intersectionCoordinate = intersections.GetGeometryN(0).Coordinate;
-            Coordinate[] embankment1Coordinates = (intersectionCoordinate.Distance(embankment1FirstCoord) < intersectionCoordinate.Distance(embankment1LastCoord))
-                ? embankment1.Geometry.Coordinates.Reverse().ToArray()
-                : embankment1.Geometry.Coordinates.ToArray();
+            IGeometry intersections = embankment1.Geometry.Intersection(embankment2.Geometry);
+            Coordinate intersectionCoordinate = intersections.GetGeometryN(0).Coordinate;
+            Coordinate[] embankment1Coordinates =
+                intersectionCoordinate.Distance(embankment1FirstCoord) <
+                intersectionCoordinate.Distance(embankment1LastCoord)
+                    ? embankment1.Geometry.Coordinates.Reverse().ToArray()
+                    : embankment1.Geometry.Coordinates.ToArray();
 
-            Coordinate[] embankment2Coordinates = (intersectionCoordinate.Distance(embankment2FirstCoord) > intersectionCoordinate.Distance(embankment2LastCoord))
-                ? embankment2.Geometry.Coordinates.Reverse().ToArray()
-                : embankment2.Geometry.Coordinates.ToArray();
+            Coordinate[] embankment2Coordinates =
+                intersectionCoordinate.Distance(embankment2FirstCoord) >
+                intersectionCoordinate.Distance(embankment2LastCoord)
+                    ? embankment2.Geometry.Coordinates.Reverse().ToArray()
+                    : embankment2.Geometry.Coordinates.ToArray();
 
             // Step 2: merge embankments. 
             var mergedEmbankment = new Embankment
@@ -123,6 +126,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     // Reached the intersection, so stop adding points to pointList. 
                     break;
                 }
+
                 pointList.Add(embankment1Coordinates[i]);
             }
 
@@ -145,6 +149,5 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             mergedEmbankment.Geometry = new LineString(pointList.ToArray());
             return mergedEmbankment;
         }
-
     }
 }

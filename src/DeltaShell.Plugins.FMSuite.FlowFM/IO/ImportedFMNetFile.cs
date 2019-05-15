@@ -8,9 +8,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
     public class ImportedFMNetFile : Unique<long>
     {
         // nhib
-        protected ImportedFMNetFile()
-        {
-        }
+        protected ImportedFMNetFile() {}
 
         public ImportedFMNetFile(string path)
         {
@@ -18,12 +16,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         }
 
         private UnstructuredGrid grid;
+
         public UnstructuredGrid Grid
         {
             get
             {
                 if (grid == null)
+                {
                     LoadGrid();
+                }
+
                 return grid;
             }
         }

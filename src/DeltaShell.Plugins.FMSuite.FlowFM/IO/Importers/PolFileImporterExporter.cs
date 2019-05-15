@@ -2,20 +2,15 @@
 using System.Drawing;
 using DelftTools.Hydro;
 using DeltaShell.Plugins.FMSuite.Common.IO;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 {
-    public class PolFileImporterExporter: Feature2DImportExportBase<GroupableFeature2DPolygon>
+    public class PolFileImporterExporter : Feature2DImportExportBase<GroupableFeature2DPolygon>
     {
-        protected override string ExporterName
-        {
-            get { return "Features to .pol file"; }
-        }
+        protected override string ExporterName => "Features to .pol file";
 
-        protected override string ImporterName
-        {
-            get { return "Features from .pol file"; }
-        }
+        protected override string ImporterName => "Features from .pol file";
 
         protected override IEnumerable<GroupableFeature2DPolygon> Import(string path)
         {
@@ -29,24 +24,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             writer.Write(path, features);
         }
 
-        public override string Category
-        {
-            get { return "Feature geometries"; }
-        }
+        public override string Category => "Feature geometries";
 
-        public override string Description
-        {
-            get { return string.Empty; }
-        }
+        public override string Description => string.Empty;
 
-        public override string FileFilter
-        {
-            get { return "Feature polygon file|*.pol"; }
-        }
+        public override string FileFilter => "Feature polygon file|*.pol";
 
-        public override Bitmap Image
-        {
-            get { return Properties.Resources.TextDocument; }
-        }
+        public override Bitmap Image => Resources.TextDocument;
     }
 }

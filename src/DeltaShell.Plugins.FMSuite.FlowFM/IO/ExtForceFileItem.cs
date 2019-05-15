@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
@@ -32,9 +31,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             Method = int.MinValue;
 
             // optional additional data
-            Value = Double.NaN;
-            Factor = Double.NaN;
-            Offset = Double.NaN;
+            Value = double.NaN;
+            Factor = double.NaN;
+            Offset = double.NaN;
         }
     }
 }

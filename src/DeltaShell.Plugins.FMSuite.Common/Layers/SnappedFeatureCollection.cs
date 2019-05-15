@@ -31,15 +31,23 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
         private static readonly ILog Log = LogManager.GetLogger(typeof(SnappedFeatureCollection));
 
         /// <summary>
-        /// A <see cref="FeatureCollection"/> for <see cref="IFeature"/> objects that are being
-        /// snapped with <see cref="IGridOperationApi"/>.
+        /// A <see cref="FeatureCollection" /> for <see cref="IFeature" /> objects that are being
+        /// snapped with <see cref="IGridOperationApi" />.
         /// </summary>
-        /// <param name="operationApi">snap api</param>
-        /// <param name="originalFeatures">Expected to be a collection of <see cref="IFeature"/>, where collection implements <see cref="INotifyCollectionChanged"/> and <see cref="INotifyPropertyChanged"/>.</param>
-        /// <param name="originalFeaturesLayerStyle">Style of the layer from which <paramref name="originalFeatures"/> are coming from.</param>
-        /// <param name="layerName">Name of the layer.</param>
-        /// <param name="snapApiFeatureType">The feature type name for the snapping api</param>
-        public SnappedFeatureCollection(IGridOperationApi operationApi, ICoordinateSystem coordinateSystem, IList originalFeatures, VectorStyle originalFeaturesLayerStyle, string layerName, string snapApiFeatureType)
+        /// <param name="operationApi"> snap api </param>
+        /// <param name="originalFeatures">
+        /// Expected to be a collection of <see cref="IFeature" />, where collection implements
+        /// <see cref="INotifyCollectionChanged" /> and <see cref="INotifyPropertyChanged" />.
+        /// </param>
+        /// <param name="originalFeaturesLayerStyle">
+        /// Style of the layer from which <paramref name="originalFeatures" /> are coming
+        /// from.
+        /// </param>
+        /// <param name="layerName"> Name of the layer. </param>
+        /// <param name="snapApiFeatureType"> The feature type name for the snapping api </param>
+        public SnappedFeatureCollection(IGridOperationApi operationApi, ICoordinateSystem coordinateSystem,
+                                        IList originalFeatures, VectorStyle originalFeaturesLayerStyle,
+                                        string layerName, string snapApiFeatureType)
         {
             OperationApi = operationApi;
             FeatureType = typeof(Feature2D);
@@ -57,7 +65,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
         {
             get
             {
-                if ( LayerIsShown && dirty)
+                if (LayerIsShown && dirty)
                 {
                     try
                     {
@@ -71,6 +79,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
                         dirty = true;
                     }
                 }
+
                 return SnappedFeatures;
             }
         }
@@ -82,20 +91,22 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
         {
             get
             {
-                var snappedStyle = (VectorStyle)OriginalFeaturesLayerStyle.Clone();
+                var snappedStyle = (VectorStyle) OriginalFeaturesLayerStyle.Clone();
 
                 if (typeof(IPoint).IsAssignableFrom(snappedStyle.GeometryType))
                 {
                     if (snappedStyle.HasCustomSymbol)
+                    {
                         snappedStyle.Symbol = null; //reset
+                    }
 
-                    snappedStyle.GeometryType = typeof (ILineString);
+                    snappedStyle.GeometryType = typeof(ILineString);
                     snappedStyle.Line = new Pen(Color.Gray) {EndCap = LineCap.DiamondAnchor};
                 }
                 else if (typeof(IMultiPoint).IsAssignableFrom(snappedStyle.GeometryType))
                 {
                     snappedStyle.GeometryType = typeof(IMultiLineString);
-                    snappedStyle.Line = new Pen(Color.Gray) { EndCap = LineCap.Round };
+                    snappedStyle.Line = new Pen(Color.Gray) {EndCap = LineCap.Round};
                 }
                 else if (typeof(ILineString).IsAssignableFrom(snappedStyle.GeometryType))
                 {
@@ -120,44 +131,47 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
 
         private IList OriginalFeatures
         {
-            get { return originalFeatures; }
+            get => originalFeatures;
             set
             {
                 if (originalFeatures != null)
                 {
-                    ((INotifyCollectionChanged)originalFeatures).CollectionChanged -= OriginalFeaturesCollectionChanged;
-                    ((INotifyPropertyChanged)originalFeatures).PropertyChanged -= OriginalFeaturesPropertyChanged;
+                    ((INotifyCollectionChanged) originalFeatures).CollectionChanged -=
+                        OriginalFeaturesCollectionChanged;
+                    ((INotifyPropertyChanged) originalFeatures).PropertyChanged -= OriginalFeaturesPropertyChanged;
                 }
 
                 originalFeatures = value;
 
                 if (originalFeatures != null)
                 {
-                    ((INotifyCollectionChanged)originalFeatures).CollectionChanged += OriginalFeaturesCollectionChanged;
-                    ((INotifyPropertyChanged)originalFeatures).PropertyChanged += OriginalFeaturesPropertyChanged;
+                    ((INotifyCollectionChanged) originalFeatures).CollectionChanged +=
+                        OriginalFeaturesCollectionChanged;
+                    ((INotifyPropertyChanged) originalFeatures).PropertyChanged += OriginalFeaturesPropertyChanged;
                 }
             }
         }
 
         public ILayer Layer { get; set; }
-        private bool LayerIsShown
-        {
-            get { return Layer != null && Layer.Map != null && Layer.Map.GetAllVisibleLayers(false).Contains(Layer); }
-        }
-        
-        void OriginalFeaturesPropertyChanged(object sender, PropertyChangedEventArgs e)
+
+        private bool LayerIsShown =>
+            Layer != null && Layer.Map != null && Layer.Map.GetAllVisibleLayers(false).Contains(Layer);
+
+        private void OriginalFeaturesPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (dirty)
+            {
                 return; //list already dirty, so don't update
+            }
 
             if (e.PropertyName == "Geometry")
             {
-                var indexInOriginal = OriginalFeatures.IndexOf(sender);
+                int indexInOriginal = OriginalFeatures.IndexOf(sender);
                 if (indexInOriginal >= 0)
                 {
                     SnappedFeatures.RemoveAt(indexInOriginal);
                     var originalFeature = (IFeature) OriginalFeatures[indexInOriginal];
-                    var snappedFeature = GetSnappedFeature(originalFeature);
+                    Feature2D snappedFeature = GetSnappedFeature(originalFeature);
                     SnappedFeatures.Insert(indexInOriginal, snappedFeature);
                 }
 
@@ -165,7 +179,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
             }
         }
 
-        private Feature2D GetSnappedFeature(IFeature feature, IGeometry snappedGeometry=null)
+        private Feature2D GetSnappedFeature(IFeature feature, IGeometry snappedGeometry = null)
         {
             if (snappedGeometry == null || snappedGeometry.IsEmpty)
             {
@@ -174,19 +188,25 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
                     snappedGeometry = OperationApi.GetGridSnappedGeometry(SnapApiFeatureType, feature.Geometry);
                     if (snappedGeometry == null || snappedGeometry.IsEmpty)
                     {
-                        Log.WarnFormat(Resources.SnappedFeatureCollection_GetSnappedFeature_No_snapped_geometry_was_generated_for_type__0__,feature.Geometry.GeometryType);
+                        Log.WarnFormat(
+                            Resources
+                                .SnappedFeatureCollection_GetSnappedFeature_No_snapped_geometry_was_generated_for_type__0__,
+                            feature.Geometry.GeometryType);
                     }
                 }
-                catch (Exception)
-                {
-                }
+                catch (Exception) {}
             }
 
             var feature2D = new Feature2D();
             if (feature.Attributes != null)
+            {
                 feature2D.Attributes = (IFeatureAttributeCollection) feature.Attributes.Clone();
+            }
+
             if (feature is INameable)
+            {
                 feature2D.Name = ((INameable) feature).Name;
+            }
 
             if (snappedGeometry == null)
             {
@@ -197,33 +217,40 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
             {
                 //hack: line to snapped point
                 snappedGeometry = GetSnappedGeometryForPoint(snappedGeometry, feature.Geometry.Coordinate);
-            }     
+            }
 
-            if (snappedGeometry is MultiPoint && typeof(IMultiLineString).IsAssignableFrom(SnappedLayerStyle.GeometryType))
+            if (snappedGeometry is MultiPoint &&
+                typeof(IMultiLineString).IsAssignableFrom(SnappedLayerStyle.GeometryType))
             {
                 var points = snappedGeometry as MultiPoint;
                 var auxGeom = new List<ILineString>();
 
                 if (points.Count == 1)
-                { 
-                    var coordinateSnappedPoint = points.Coordinate;
+                {
+                    Coordinate coordinateSnappedPoint = points.Coordinate;
                     var distances = new List<double>();
-                    
-                    foreach (var coord in feature.Geometry.Coordinates)
+
+                    foreach (Coordinate coord in feature.Geometry.Coordinates)
                     {
                         distances.Add(coord.Distance(points.Coordinate));
                     }
 
-                    var smallestNumberIndex = distances.IndexOf(distances.Min());
+                    int smallestNumberIndex = distances.IndexOf(distances.Min());
 
-                    auxGeom.Add((LineString)GetSnappedGeometryForPoint(points, feature.Geometry.Coordinates[smallestNumberIndex]));
+                    auxGeom.Add(
+                        (LineString) GetSnappedGeometryForPoint(
+                            points, feature.Geometry.Coordinates[smallestNumberIndex]));
                     snappedGeometry = new MultiLineString(auxGeom.ToArray());
                 }
-            
+
                 if (points.Count == 2)
                 {
-                    auxGeom.Add((LineString)GetSnappedGeometryForPoint(points.FirstOrDefault(), feature.Geometry.Coordinates.FirstOrDefault()));
-                    auxGeom.Add((LineString)GetSnappedGeometryForPoint(points.LastOrDefault(), feature.Geometry.Coordinates.LastOrDefault()));
+                    auxGeom.Add(
+                        (LineString) GetSnappedGeometryForPoint(points.FirstOrDefault(),
+                                                                feature.Geometry.Coordinates.FirstOrDefault()));
+                    auxGeom.Add(
+                        (LineString) GetSnappedGeometryForPoint(points.LastOrDefault(),
+                                                                feature.Geometry.Coordinates.LastOrDefault()));
                     snappedGeometry = new MultiLineString(auxGeom.ToArray());
                 }
             }
@@ -235,28 +262,33 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
         private static IGeometry GetSnappedGeometryForPoint(IGeometry snappedGeometry, Coordinate featureCoordinate)
         {
             return snappedGeometry.IsEmpty
-                ? snappedGeometry
-                : new LineString(new[]
-                {
-                    (Coordinate) featureCoordinate.Clone(),
-                    snappedGeometry.Coordinate
-                });
+                       ? snappedGeometry
+                       : new LineString(new[]
+                       {
+                           (Coordinate) featureCoordinate.Clone(),
+                           snappedGeometry.Coordinate
+                       });
         }
 
-        void OriginalFeaturesCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void OriginalFeaturesCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (dirty)
+            {
                 return; //list already dirty, so don't update
+            }
 
-            var removedOrAddedItem = e.GetRemovedOrAddedItem();
+            object removedOrAddedItem = e.GetRemovedOrAddedItem();
             var data = removedOrAddedItem as IFeatureData;
-            var feature = data != null 
-                ? data.Feature 
-                : removedOrAddedItem as IFeature;
+            IFeature feature = data != null
+                                   ? data.Feature
+                                   : removedOrAddedItem as IFeature;
 
-            if (feature == null) return;
+            if (feature == null)
+            {
+                return;
+            }
 
-            var removedOrAddedIndex = e.GetRemovedOrAddedIndex();
+            int removedOrAddedIndex = e.GetRemovedOrAddedIndex();
             switch (e.Action)
             {
                 case NotifyCollectionChangedAction.Add:
@@ -274,28 +306,34 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+
             FireFeaturesChanged();
         }
 
         private void CalculateSnappedFeatures()
         {
             SnappedFeatures.Clear();
-            
-            if (OriginalFeatures.Count <= 0) 
+
+            if (OriginalFeatures.Count <= 0)
+            {
                 return;
+            }
 
             var originalGeometries = new List<IGeometry>();
             originalGeometries.AddRange(OriginalFeatures.OfType<IFeature>().Select(f => f.Geometry));
             //SourceSink is a FeatureData, so we need to extract the feature geometry from it.
             originalGeometries.AddRange(OriginalFeatures.OfType<IFeatureData>().Select(f => f.Feature.Geometry));
-            
-            var snappedGeometries = OperationApi.GetGridSnappedGeometry(SnapApiFeatureType, originalGeometries).ToArray();
+
+            IGeometry[] snappedGeometries =
+                OperationApi.GetGridSnappedGeometry(SnapApiFeatureType, originalGeometries).ToArray();
 
             for (var i = 0; i < OriginalFeatures.Count; i++)
             {
-                var feature = OriginalFeatures[i];
+                object feature = OriginalFeatures[i];
                 if (feature is IFeatureData)
+                {
                     feature = ((IFeatureData) feature).Feature;
+                }
 
                 SnappedFeatures.Add(GetSnappedFeature((IFeature) feature, snappedGeometries[i]));
             }

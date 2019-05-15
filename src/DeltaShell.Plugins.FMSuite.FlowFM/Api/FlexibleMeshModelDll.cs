@@ -7,7 +7,7 @@ using DeltaShell.Dimr;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
 {
-    [GeneratedCode("to silence fxcop","1.0")]
+    [GeneratedCode("to silence fxcop", "1.0")]
     public static class FlexibleMeshModelDll
     {
         //repos/ds/trunk/additional/unstruc/src/unstruc_bmi.f90
@@ -46,10 +46,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
         public static extern int update([In] double dt);
 
         [DllImport(DFLOWFM_DLL_NAME, EntryPoint = "get_var", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void get_var([In] string variable, [In, Out] ref IntPtr ptr);
+        public static extern void get_var([In] string variable, [In] [Out] ref IntPtr ptr);
 
         [DllImport(DFLOWFM_DLL_NAME, EntryPoint = "get_var_count", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void get_var_count([In, Out] ref int count);
+        public static extern void get_var_count([In] [Out] ref int count);
 
         [DllImport(DFLOWFM_DLL_NAME, EntryPoint = "get_var_name", CallingConvention = CallingConvention.Cdecl)]
         public static extern void get_var_name([In] int index, [Out] StringBuilder variable);
@@ -67,49 +67,59 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
         public static extern void get_var_type([In] string variable, [Out] StringBuilder value);
 
         [DllImport(DFLOWFM_DLL_NAME, EntryPoint = "set_var", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void set_var([In] string variable, [In, Out] double [] values);
+        public static extern void set_var([In] string variable, [In] [Out] double[] values);
 
         [DllImport(DFLOWFM_DLL_NAME, EntryPoint = "set_compound_field", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void set_compound_field([In] string featureCategory, [In] string featureName, [In] string parameterName, [In] IntPtr value);
+        public static extern void set_compound_field([In] string featureCategory, [In] string featureName,
+                                                     [In] string parameterName, [In] IntPtr value);
 
         [DllImport(DFLOWFM_DLL_NAME, EntryPoint = "get_compound_field", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void get_compound_field([In] string featureCategory, [In] string featureName, [In] string parameterName, [In, Out] ref IntPtr value);
-        
-        [DllImport(DFLOWFM_DLL_NAME, EntryPoint = "dfm_init_user_timestep", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int dfm_init_user_timestep([In, Out] ref double targetTime);
+        public static extern void get_compound_field([In] string featureCategory, [In] string featureName,
+                                                     [In] string parameterName, [In] [Out] ref IntPtr value);
 
-        [DllImport(DFLOWFM_DLL_NAME, EntryPoint = "dfm_finalize_user_timestep", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(DFLOWFM_DLL_NAME, EntryPoint = "dfm_init_user_timestep",
+            CallingConvention = CallingConvention.Cdecl)]
+        public static extern int dfm_init_user_timestep([In] [Out] ref double targetTime);
+
+        [DllImport(DFLOWFM_DLL_NAME, EntryPoint = "dfm_finalize_user_timestep",
+            CallingConvention = CallingConvention.Cdecl)]
         public static extern int dfm_finalize_user_timestep();
 
-        [DllImport(DFLOWFM_DLL_NAME, EntryPoint = "dfm_init_computational_timestep", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int dfm_init_computational_timestep([In, Out] ref double targetTime, [In, Out] ref double timeStep);
+        [DllImport(DFLOWFM_DLL_NAME, EntryPoint = "dfm_init_computational_timestep",
+            CallingConvention = CallingConvention.Cdecl)]
+        public static extern int dfm_init_computational_timestep([In] [Out] ref double targetTime,
+                                                                 [In] [Out] ref double timeStep);
 
-        [DllImport(DFLOWFM_DLL_NAME, EntryPoint = "dfm_compute_1d2d_coefficients", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(DFLOWFM_DLL_NAME, EntryPoint = "dfm_compute_1d2d_coefficients",
+            CallingConvention = CallingConvention.Cdecl)]
         public static extern int dfm_compute_1d2d_coefficients();
 
-        [DllImport(DFLOWFM_DLL_NAME, EntryPoint = "dfm_run_computational_timestep", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int dfm_run_computational_timestep([In, Out] ref double actualTimeStep);
+        [DllImport(DFLOWFM_DLL_NAME, EntryPoint = "dfm_run_computational_timestep",
+            CallingConvention = CallingConvention.Cdecl)]
+        public static extern int dfm_run_computational_timestep([In] [Out] ref double actualTimeStep);
 
-        [DllImport(DFLOWFM_DLL_NAME, EntryPoint = "dfm_finalize_computational_timestep", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(DFLOWFM_DLL_NAME, EntryPoint = "dfm_finalize_computational_timestep",
+            CallingConvention = CallingConvention.Cdecl)]
         public static extern int dfm_finalize_computational_timestep();
 
         [DllImport(DFLOWFM_DLL_NAME, EntryPoint = "get_snapped_feature", CallingConvention = CallingConvention.Cdecl)]
         public static extern void get_snapped_feature([In] string featureType, [In] ref int numIn, [In] ref IntPtr xin,
-                                                      [In] ref IntPtr yin, [In, Out] ref int numOut,
-                                                      [In, Out] ref IntPtr xout, [In, Out] ref IntPtr yout,
-                                                      [In, Out] ref IntPtr featureIds, ref int errorCode);
+                                                      [In] ref IntPtr yin, [In] [Out] ref int numOut,
+                                                      [In] [Out] ref IntPtr xout, [In] [Out] ref IntPtr yout,
+                                                      [In] [Out] ref IntPtr featureIds, ref int errorCode);
 
         [DllImport(DFLOWFM_DLL_NAME, EntryPoint = "write_netgeom", CallingConvention = CallingConvention.Cdecl)]
         public static extern void write_net_geom([In] string filePath);
 
         [DllImport(DFLOWFM_DLL_NAME, EntryPoint = "write_partition_metis", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void write_partition_metis([In] string inputfilePath, [In] string outputFilePath, [In] ref int numDomains, [In] ref int contiguous);
+        public static extern void write_partition_metis([In] string inputfilePath, [In] string outputFilePath,
+                                                        [In] ref int numDomains, [In] ref int contiguous);
 
         [DllImport(DFLOWFM_DLL_NAME, EntryPoint = "write_partition_pol", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void write_partition_pol([In] string inputfilePath, [In] string outputFilePath, [In] string polFilePath);
-        
+        public static extern void write_partition_pol([In] string inputfilePath, [In] string outputFilePath,
+                                                      [In] string polFilePath);
+
         [DllImport(DFLOWFM_DLL_NAME, EntryPoint = "finalize", CallingConvention = CallingConvention.Cdecl)]
         public static extern void finalize();
-
     }
 }

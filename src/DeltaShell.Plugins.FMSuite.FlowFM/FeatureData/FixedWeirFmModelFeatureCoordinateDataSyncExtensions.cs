@@ -19,26 +19,29 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
         public static void UpdateDataColumns(this ModelFeatureCoordinateData<FixedWeir> data, string fixedWeirScheme)
         {
             FixedWeirSchemes scheme;
-            if (!Enum.TryParse(fixedWeirScheme, true, out scheme)) return; // Todo : error ??
+            if (!Enum.TryParse(fixedWeirScheme, true, out scheme))
+            {
+                return; // Todo : error ??
+            }
 
-            var expectedColumns = GetExpectedColumns(scheme).ToList();
+            List<IDataColumn> expectedColumns = GetExpectedColumns(scheme).ToList();
 
             var nameComparer = new DataColumnsNameComparer();
 
-            var missingDataColumns = expectedColumns.Except(data.DataColumns, nameComparer);
-            var unexpectedColumns = data.DataColumns.Except(expectedColumns, nameComparer);
+            IEnumerable<IDataColumn> missingDataColumns = expectedColumns.Except(data.DataColumns, nameComparer);
+            IEnumerable<IDataColumn> unexpectedColumns = data.DataColumns.Except(expectedColumns, nameComparer);
 
-            foreach (var missingDataColumn in missingDataColumns)
+            foreach (IDataColumn missingDataColumn in missingDataColumns)
             {
-                var index = expectedColumns.IndexOf(missingDataColumn);
+                int index = expectedColumns.IndexOf(missingDataColumn);
                 data.DataColumns.Insert(index, missingDataColumn);
             }
 
             unexpectedColumns.ForEach(c => c.IsActive = false);
 
-           data.DataColumns
-               .Where(c => expectedColumns.Contains(c, nameComparer))
-               .ForEach(c => c.IsActive = true);
+            data.DataColumns
+                .Where(c => expectedColumns.Contains(c, nameComparer))
+                .ForEach(c => c.IsActive = true);
         }
 
         private static IEnumerable<IDataColumn> GetExpectedColumns(FixedWeirSchemes scheme)

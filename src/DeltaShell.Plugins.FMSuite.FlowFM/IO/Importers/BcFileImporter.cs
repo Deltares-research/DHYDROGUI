@@ -6,6 +6,7 @@ using DelftTools.Shell.Core;
 using DelftTools.Utils.Editing;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 {
@@ -20,33 +21,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 
         #region IFileImporter
 
-        public string Name
-        {
-            get { return "Boundary data from .bc file"; }
-        }
+        public string Name => "Boundary data from .bc file";
 
-        public string Category
-        {
-            get { return "Boundary data"; }
-        }
+        public string Category => "Boundary data";
 
-        public string Description
-        {
-            get { return string.Empty; }
-        }
+        public string Description => string.Empty;
 
-        public Bitmap Image
-        {
-            get { return Properties.Resources.TextDocument; }
-        }
+        public Bitmap Image => Resources.TextDocument;
 
         public IEnumerable<Type> SupportedItemTypes
         {
             get
             {
-                yield return typeof (IList<BoundaryConditionSet>);
-                yield return typeof (BoundaryConditionSet);
-                yield return typeof (BoundaryCondition);
+                yield return typeof(IList<BoundaryConditionSet>);
+                yield return typeof(BoundaryConditionSet);
+                yield return typeof(BoundaryCondition);
             }
         }
 
@@ -55,15 +44,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             return true;
         }
 
-        public bool CanImportOnRootLevel
-        {
-            get { return false; }
-        }
+        public bool CanImportOnRootLevel => false;
 
-        public override string FileFilter
-        {
-            get { return "Boundary conditions file|*.bc"; }
-        }
+        public override string FileFilter => "Boundary conditions file|*.bc";
 
         public string TargetDataDirectory { get; set; }
 
@@ -77,7 +60,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 
         public object ImportItem(string filePath, object target = null)
         {
-            var filePaths = filePath == null ? FilePaths : new[] {filePath};
+            string[] filePaths = filePath == null
+                                     ? FilePaths
+                                     : new[]
+                                     {
+                                         filePath
+                                     };
 
             if (filePaths == null)
             {
@@ -87,20 +75,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             var bcSetList = target as IList<BoundaryConditionSet>;
             if (bcSetList != null)
             {
-                foreach (var path in filePaths)
+                foreach (string path in filePaths)
                 {
-                    if (ShouldCancel) return bcSetList;
+                    if (ShouldCancel)
+                    {
+                        return bcSetList;
+                    }
+
                     if (DeleteDataBeforeImport)
                     {
                         foreach (
-                            var boundaryCondition in
-                                bcSetList.SelectMany(bc => bc.BoundaryConditions).OfType<FlowBoundaryCondition>())
+                            FlowBoundaryCondition boundaryCondition in
+                            bcSetList.SelectMany(bc => bc.BoundaryConditions).OfType<FlowBoundaryCondition>())
                         {
                             boundaryCondition.ClearData();
                         }
                     }
+
                     ImportTo(path, bcSetList, true);
                 }
+
                 OpenViewAfterImport = false;
                 return bcSetList;
             }
@@ -108,18 +102,29 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             var bcSet = target as BoundaryConditionSet;
             if (bcSet != null)
             {
-                foreach (var path in filePaths)
+                foreach (string path in filePaths)
                 {
-                    if (ShouldCancel) return bcSet;
+                    if (ShouldCancel)
+                    {
+                        return bcSet;
+                    }
+
                     if (DeleteDataBeforeImport)
                     {
-                        foreach (var boundaryCondition in bcSet.BoundaryConditions.OfType<FlowBoundaryCondition>())
+                        foreach (FlowBoundaryCondition boundaryCondition in bcSet
+                                                                            .BoundaryConditions
+                                                                            .OfType<FlowBoundaryCondition>())
                         {
                             boundaryCondition.ClearData();
                         }
                     }
-                    ImportTo(path, new[] {bcSet}, true);
+
+                    ImportTo(path, new[]
+                    {
+                        bcSet
+                    }, true);
                 }
+
                 OpenViewAfterImport = true;
                 return bcSet;
             }
@@ -127,20 +132,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             var condition = target as FlowBoundaryCondition;
             if (condition != null)
             {
-                var tempSet = new BoundaryConditionSet
-                    {
-                        Feature = condition.Feature
-                    };
+                var tempSet = new BoundaryConditionSet {Feature = condition.Feature};
                 tempSet.BoundaryConditions.Add(condition);
-                foreach (var path in filePaths)
+                foreach (string path in filePaths)
                 {
-                    if (ShouldCancel) return condition;
+                    if (ShouldCancel)
+                    {
+                        return condition;
+                    }
+
                     if (DeleteDataBeforeImport)
                     {
                         condition.ClearData();
                     }
-                    ImportTo(path, new[] {tempSet}, false);
+
+                    ImportTo(path, new[]
+                    {
+                        tempSet
+                    }, false);
                 }
+
                 OpenViewAfterImport = true;
                 return condition;
             }
@@ -156,31 +167,41 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             {
                 ProgressChanged("parsing file...", 0, 2);
             }
+
             var fileReader = new BcFile();
-            var dataBlocks = fileReader.Read(filePath).ToList();
+            List<BcBlockData> dataBlocks = fileReader.Read(filePath).ToList();
             var builder = new BcFileFlowBoundaryDataBuilder
-                {
-                    ExcludedDataTypes = ExcludedDataTypes,
-                    ExcludedQuantities = ExcludedQuantities,
-                    OverwriteExistingData = OverwriteExistingData,
-                    CanCreateNewBoundaryCondition = createNew
-                };
-            var blockCount = dataBlocks.Count;
-            int i = 0;
-            foreach (var boundaryCondition in boundaryConditionSets.SelectMany(bcs => bcs.BoundaryConditions))
+            {
+                ExcludedDataTypes = ExcludedDataTypes,
+                ExcludedQuantities = ExcludedQuantities,
+                OverwriteExistingData = OverwriteExistingData,
+                CanCreateNewBoundaryCondition = createNew
+            };
+            int blockCount = dataBlocks.Count;
+            var i = 0;
+            foreach (IBoundaryCondition boundaryCondition in boundaryConditionSets.SelectMany(
+                bcs => bcs.BoundaryConditions))
             {
                 boundaryCondition.BeginEdit(new DefaultEditAction("Begin import bc data..."));
             }
-            foreach (var bcBlockData in dataBlocks)
+
+            foreach (BcBlockData bcBlockData in dataBlocks)
             {
-                if (ShouldCancel) return;
+                if (ShouldCancel)
+                {
+                    return;
+                }
+
                 if (ProgressChanged != null)
                 {
                     ProgressChanged("importing data block...", i++, blockCount);
                 }
+
                 builder.InsertBoundaryData(boundaryConditionSets, bcBlockData);
             }
-            foreach (var boundaryCondition in boundaryConditionSets.SelectMany(bcs => bcs.BoundaryConditions))
+
+            foreach (IBoundaryCondition boundaryCondition in boundaryConditionSets.SelectMany(
+                bcs => bcs.BoundaryConditions))
             {
                 if (boundaryCondition.IsEditing)
                 {

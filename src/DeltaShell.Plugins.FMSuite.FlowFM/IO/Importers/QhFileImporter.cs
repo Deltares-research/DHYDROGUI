@@ -7,39 +7,31 @@ using DelftTools.Shell.Core;
 using DelftTools.Utils.Editing;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 {
-    public class QhFileImporter: BoundaryDataImporterBase, IFileImporter
+    public class QhFileImporter : BoundaryDataImporterBase, IFileImporter
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof (QhFileImporter));
-        
+        private static readonly ILog Log = LogManager.GetLogger(typeof(QhFileImporter));
+
         #region IFileImporter
 
-        public string Name
-        {
-            get { return "Boundary data from .qh file"; }
-        }
+        public string Name => "Boundary data from .qh file";
 
-        public string Category
-        {
-            get { return "Boundary data"; }
-        }
+        public string Category => "Boundary data";
 
-        public string Description
-        {
-            get { return string.Empty; }
-        }
+        public string Description => string.Empty;
 
-        public Bitmap Image
-        {
-            get { return Properties.Resources.TextDocument; }
-        }
+        public Bitmap Image => Resources.TextDocument;
 
         public IEnumerable<Type> SupportedItemTypes
         {
-            get { yield return typeof(BoundaryCondition); }
+            get
+            {
+                yield return typeof(BoundaryCondition);
+            }
         }
 
         public bool CanImportOn(object targetObject)
@@ -47,12 +39,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             return true;
         }
 
-        public bool CanImportOnRootLevel { get { return false; } }
+        public bool CanImportOnRootLevel => false;
 
-        public override string FileFilter
-        {
-            get { return "Q-h series file|*.qh"; }
-        }
+        public override string FileFilter => "Q-h series file|*.qh";
 
         public string TargetDataDirectory { get; set; }
 
@@ -60,22 +49,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 
         public ImportProgressChangedDelegate ProgressChanged { get; set; }
 
-        public bool OpenViewAfterImport { get { return true; } }
+        public bool OpenViewAfterImport => true;
 
         public object ImportItem(string path, object target = null)
         {
             var boundaryCondition = target as IBoundaryCondition;
 
-            if (boundaryCondition == null) return target;
+            if (boundaryCondition == null)
+            {
+                return target;
+            }
 
-            if (boundaryCondition.DataType != BoundaryConditionDataType.Qh) return target;
+            if (boundaryCondition.DataType != BoundaryConditionDataType.Qh)
+            {
+                return target;
+            }
 
             var fileReader = new QhFile();
             try
             {
-                var function = fileReader.Read(path);
+                IFunction function = fileReader.Read(path);
 
-                foreach (var data in SeriesToFill(boundaryCondition))
+                foreach (IFunction data in SeriesToFill(boundaryCondition))
                 {
                     data.BeginEdit(new DefaultEditAction("Importing data to boundary condition"));
                     FunctionHelper.SetValuesRaw<double>(data.Arguments[0], function.Arguments[0].Values);
@@ -95,7 +90,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 
         public override IEnumerable<BoundaryConditionDataType> ForcingTypes
         {
-            get { yield return BoundaryConditionDataType.Qh; }
+            get
+            {
+                yield return BoundaryConditionDataType.Qh;
+            }
         }
 
         public override void Import(string fileName, FlowBoundaryCondition boundaryCondition)

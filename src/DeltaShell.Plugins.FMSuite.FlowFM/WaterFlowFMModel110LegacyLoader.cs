@@ -1,12 +1,13 @@
-﻿using DelftTools.Shell.Core;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
-using System.IO;
-using System.Linq;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM
 {
@@ -21,15 +22,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         /// <summary>
         /// Called when [after project migrated]. Performs directory restructuring on old WaterFlowFM models.
         /// </summary>
-        /// <param name="project">The project.</param>
+        /// <param name="project"> The project. </param>
         public override void OnAfterProjectMigrated(Project project)
         {
-            var existingFMModels = project.RootFolder.GetAllItemsRecursive().OfType<WaterFlowFMModel>();
+            IEnumerable<WaterFlowFMModel> existingFMModels =
+                project.RootFolder.GetAllItemsRecursive().OfType<WaterFlowFMModel>();
 
-            foreach (var waterFlowFmModel in existingFMModels)
+            foreach (WaterFlowFMModel waterFlowFmModel in existingFMModels)
             {
-                var projectDataDirectoryInfo = RecursivelyGetDsProjDataDirectoryFromMduPath(project, waterFlowFmModel);
-                var oldWorkingDirPath = Path.Combine(projectDataDirectoryInfo.FullName, waterFlowFmModel.Name + OldWorkingDirectoryPostfix);
+                DirectoryInfo projectDataDirectoryInfo =
+                    RecursivelyGetDsProjDataDirectoryFromMduPath(project, waterFlowFmModel);
+                string oldWorkingDirPath = Path.Combine(projectDataDirectoryInfo.FullName,
+                                                        waterFlowFmModel.Name + OldWorkingDirectoryPostfix);
 
                 PerformDirectoryRestructuring(waterFlowFmModel, oldWorkingDirPath);
 
@@ -45,11 +49,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private static void PerformDirectoryRestructuring(WaterFlowFMModel waterFlowFMModel, string oldWorkingDirPath)
         {
             if (waterFlowFMModel.MduFilePath != waterFlowFMModel.MduSavePath)
+            {
                 waterFlowFMModel.ExportTo(waterFlowFMModel.MduSavePath);
+            }
 
             // Move existing output
-            var currentOutputDirName = GetOldOutputDirectoryName(waterFlowFMModel.ModelDefinition);
-            var currentWaqOutputDirName = $"DFM_DELWAQ_{waterFlowFMModel.Name}";
+            string currentOutputDirName = GetOldOutputDirectoryName(waterFlowFMModel.ModelDefinition);
+            string currentWaqOutputDirName = $"DFM_DELWAQ_{waterFlowFMModel.Name}";
 
             var modelDirectoryInfo = new DirectoryInfo(waterFlowFMModel.MduFilePath);
             while (modelDirectoryInfo != null && modelDirectoryInfo.Name != waterFlowFMModel.Name)
@@ -57,10 +63,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 modelDirectoryInfo = modelDirectoryInfo.Parent;
             }
 
-            var modelDirPath = modelDirectoryInfo?.FullName ?? Path.GetDirectoryName(waterFlowFMModel.MduFilePath);
+            string modelDirPath = modelDirectoryInfo?.FullName ?? Path.GetDirectoryName(waterFlowFMModel.MduFilePath);
 
-            var currentOutputDirPath = Path.Combine(modelDirPath, currentOutputDirName);
-            var targetOutputDirPath = Path.Combine(modelDirPath, NewOutputDirectoryName);
+            string currentOutputDirPath = Path.Combine(modelDirPath, currentOutputDirName);
+            string targetOutputDirPath = Path.Combine(modelDirPath, NewOutputDirectoryName);
 
             FileUtils.CreateDirectoryIfNotExists(targetOutputDirPath, true);
 
@@ -71,7 +77,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             MoveSnappedOutputDirectoryToNewLocation(oldWorkingDirPath, currentOutputDirName, targetOutputDirPath);
         }
 
-        private static void MoveOutputFromPreviousOutputDirectoryToNewLocation(string currentOutputDirPath, string modelDirPath,
+        private static void MoveOutputFromPreviousOutputDirectoryToNewLocation(
+            string currentOutputDirPath, string modelDirPath,
             string targetOutputDirPath)
         {
             if (currentOutputDirPath != modelDirPath)
@@ -85,14 +92,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
 
-        private static void MoveOutputFilesAndDirectoriesInModelDirectoryToNewLocation(string modelDirPath, string targetOutputDirPath)
+        private static void MoveOutputFilesAndDirectoriesInModelDirectoryToNewLocation(
+            string modelDirPath, string targetOutputDirPath)
         {
             Directory.GetFiles(modelDirPath).ForEach(filePath =>
             {
                 if (IsOutputFile(filePath))
+                {
                     File.Move(filePath, Path.Combine(targetOutputDirPath, Path.GetFileName(filePath)));
+                }
             });
-            var snappedDirectory = Directory.GetDirectories(modelDirPath).FirstOrDefault(d => Path.GetFileName(d) == SnappedDirectoryName);
+            string snappedDirectory = Directory.GetDirectories(modelDirPath)
+                                               .FirstOrDefault(d => Path.GetFileName(d) == SnappedDirectoryName);
             if (snappedDirectory != null)
             {
                 Directory.Move(snappedDirectory, Path.Combine(targetOutputDirPath, SnappedDirectoryName));
@@ -100,52 +111,66 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         }
 
         private static void MoveWaqOutputDirectoryToNewLocation(string modelDirPath, string outputWAQDirName,
-            string targetOutputDirPath)
+                                                                string targetOutputDirPath)
         {
-            var currentOutputWAQDirPath = Path.Combine(modelDirPath, outputWAQDirName);
-            var targetOutputWaqDirPath = Path.Combine(targetOutputDirPath, outputWAQDirName);
+            string currentOutputWAQDirPath = Path.Combine(modelDirPath, outputWAQDirName);
+            string targetOutputWaqDirPath = Path.Combine(targetOutputDirPath, outputWAQDirName);
 
             if (Directory.Exists(currentOutputWAQDirPath))
+            {
                 Directory.Move(currentOutputWAQDirPath, targetOutputWaqDirPath);
+            }
         }
 
-        private static void MoveSnappedOutputDirectoryToNewLocation(string oldWorkingDirPath, string outputDirectoryName, string targetOutputDirPath)
+        private static void MoveSnappedOutputDirectoryToNewLocation(string oldWorkingDirPath,
+                                                                    string outputDirectoryName,
+                                                                    string targetOutputDirPath)
         {
-            var sourceSnappedDirectoryPath = Path.Combine(oldWorkingDirPath, dflowfmDirectoryName, outputDirectoryName, SnappedDirectoryName);
-            var targetDirectoryPath = Path.Combine(targetOutputDirPath, SnappedDirectoryName);
+            string sourceSnappedDirectoryPath =
+                Path.Combine(oldWorkingDirPath, dflowfmDirectoryName, outputDirectoryName, SnappedDirectoryName);
+            string targetDirectoryPath = Path.Combine(targetOutputDirPath, SnappedDirectoryName);
 
-            if (!Directory.Exists(sourceSnappedDirectoryPath) || Directory.Exists(targetDirectoryPath)) return;
+            if (!Directory.Exists(sourceSnappedDirectoryPath) || Directory.Exists(targetDirectoryPath))
+            {
+                return;
+            }
 
             Directory.Move(sourceSnappedDirectoryPath, targetDirectoryPath);
         }
 
-        private static void MoveAllContentOfOldOutputDirectoryToNewLocation(string currentOutputFMDirPath, string targetOutputDirPath)
+        private static void MoveAllContentOfOldOutputDirectoryToNewLocation(
+            string currentOutputFMDirPath, string targetOutputDirPath)
         {
-            if (!Directory.Exists(currentOutputFMDirPath)) return;
+            if (!Directory.Exists(currentOutputFMDirPath))
+            {
+                return;
+            }
 
             Directory.GetFiles(currentOutputFMDirPath).ForEach(sourceFilePath =>
             {
-                var targetFilePath = Path.Combine(targetOutputDirPath, Path.GetFileName(sourceFilePath));
+                string targetFilePath = Path.Combine(targetOutputDirPath, Path.GetFileName(sourceFilePath));
                 File.Move(sourceFilePath, targetFilePath);
             });
 
             Directory.GetDirectories(currentOutputFMDirPath).ForEach(directoryPath =>
             {
-                var targetDirectoryPath = Path.Combine(targetOutputDirPath, Path.GetFileName(directoryPath));
+                string targetDirectoryPath = Path.Combine(targetOutputDirPath, Path.GetFileName(directoryPath));
                 Directory.Move(directoryPath, targetDirectoryPath);
             });
         }
 
-        private static void CleanUpDirectories(DirectoryInfo projectDataDirectoryInfo, WaterFlowFMModel waterFlowFmModel, string oldWorkingDir)
+        private static void CleanUpDirectories(DirectoryInfo projectDataDirectoryInfo,
+                                               WaterFlowFMModel waterFlowFmModel, string oldWorkingDir)
         {
             FileBasedUtils.CleanPersistentDirectories(projectDataDirectoryInfo, waterFlowFmModel);
             FileUtils.DeleteIfExists(oldWorkingDir);
             FileUtils.CreateDirectoryIfNotExists(oldWorkingDir);
         }
 
-        private static DirectoryInfo RecursivelyGetDsProjDataDirectoryFromMduPath(Project project, WaterFlowFMModel waterFlowFmModel)
+        private static DirectoryInfo RecursivelyGetDsProjDataDirectoryFromMduPath(
+            Project project, WaterFlowFMModel waterFlowFmModel)
         {
-            var dsprojDataDirName = $"{project.Name}.dsproj_data";
+            string dsprojDataDirName = $"{project.Name}.dsproj_data";
             var projectDataDirectoryInfo = new DirectoryInfo(waterFlowFmModel.MduFilePath);
             while (projectDataDirectoryInfo != null && projectDataDirectoryInfo.Name != dsprojDataDirName)
             {
@@ -174,18 +199,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private static string GetOldOutputDirectoryName(WaterFlowFMModelDefinition modelDefinition)
         {
-            var defaultName = OldOutputDirectoryNamePrefix + modelDefinition.ModelName;
+            string defaultName = OldOutputDirectoryNamePrefix + modelDefinition.ModelName;
 
             if (!modelDefinition.ContainsProperty(KnownProperties.OutputDir))
+            {
                 return defaultName;
+            }
 
-            var mduOutputDir = modelDefinition.GetModelProperty(KnownProperties.OutputDir).GetValueAsString()?.Trim();
+            string mduOutputDir =
+                modelDefinition.GetModelProperty(KnownProperties.OutputDir).GetValueAsString()?.Trim();
 
             if (string.IsNullOrEmpty(mduOutputDir))
+            {
                 return defaultName;
+            }
 
             if (string.Equals(mduOutputDir, "."))
+            {
                 return "";
+            }
 
             return mduOutputDir;
         }

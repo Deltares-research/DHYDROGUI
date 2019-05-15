@@ -11,10 +11,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
     internal static class MorphologySedimentIniFileGenerator
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(MorphologySedimentIniFileGenerator));
-        private static readonly string FMSuiteFlowModelVersion = typeof(WaterFlowFMModel).Assembly.GetName().Version.ToString();
+
+        private static readonly string FMSuiteFlowModelVersion =
+            typeof(WaterFlowFMModel).Assembly.GetName().Version.ToString();
+
         private static string fmDllVersion;
 
-        private static readonly string createdBy = "Deltares, FM-Suite DFlowFM Model Version " + FMSuiteFlowModelVersion + ", DFlow FM Version " + FMDllVersion;
+        private static readonly string createdBy = "Deltares, FM-Suite DFlowFM Model Version " +
+                                                   FMSuiteFlowModelVersion + ", DFlow FM Version " + FMDllVersion;
 
         private const string SEDFILEVERSION = "02.00";
 
@@ -36,15 +40,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             DateTime creationTime = DateTime.Now;
             generalDelftIniCategory.AddProperty(SedimentFile.FileCreatedBy, createdBy);
-            generalDelftIniCategory.AddProperty(SedimentFile.FileCreationDate, creationTime.ToString("ddd MMM dd yyyy, HH:mm:ss"));
+            generalDelftIniCategory.AddProperty(SedimentFile.FileCreationDate,
+                                                creationTime.ToString("ddd MMM dd yyyy, HH:mm:ss"));
             generalDelftIniCategory.AddProperty(SedimentFile.FileVersion, SEDFILEVERSION);
         }
 
-        public static DelftIniCategory CreateSedimentOverallDelftIniCategory(IEnumerable<ISedimentProperty> sedimentOverallProperties)
+        public static DelftIniCategory CreateSedimentOverallDelftIniCategory(
+            IEnumerable<ISedimentProperty> sedimentOverallProperties)
         {
             var overallDelftIniCategory = new DelftIniCategory(SedimentFile.OverallHeader);
 
-            foreach (var sedimentOverallProperty in sedimentOverallProperties)
+            foreach (ISedimentProperty sedimentOverallProperty in sedimentOverallProperties)
             {
                 sedimentOverallProperty.SedimentPropertyWrite(overallDelftIniCategory);
             }
@@ -52,13 +58,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             return overallDelftIniCategory;
         }
 
-        public static IEnumerable<DelftIniCategory> CreateDelftIniCategoriesFromModelProperties(IEnumerable<WaterFlowFMProperty> customPropertiesOfCustomGroups)
+        public static IEnumerable<DelftIniCategory> CreateDelftIniCategoriesFromModelProperties(
+            IEnumerable<WaterFlowFMProperty> customPropertiesOfCustomGroups)
         {
-            var categories = customPropertiesOfCustomGroups.GroupBy(p => p.PropertyDefinition.FileCategoryName);
+            IEnumerable<IGrouping<string, WaterFlowFMProperty>> categories =
+                customPropertiesOfCustomGroups.GroupBy(p => p.PropertyDefinition.FileCategoryName);
 
-            foreach (var category in categories)
+            foreach (IGrouping<string, WaterFlowFMProperty> category in categories)
             {
-                var categoryName = category.Key;
+                string categoryName = category.Key;
                 if (categoryName.Equals(KnownProperties.morphology))
                 {
                     categoryName = MorphologyFile.Header;
@@ -68,7 +76,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
                 foreach (WaterFlowFMProperty property in category)
                 {
-                    delftIniCategory.AddProperty(property.PropertyDefinition.FilePropertyName, property.GetValueAsString());
+                    delftIniCategory.AddProperty(property.PropertyDefinition.FilePropertyName,
+                                                 property.GetValueAsString());
                 }
 
                 yield return delftIniCategory;
@@ -80,12 +89,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             get
             {
                 if (fmDllVersion != null)
+                {
                     return fmDllVersion; // do it once
+                }
 
                 fmDllVersion = "Unknown";
 
-                var api = FlexibleMeshModelApiFactory.CreateNew();
-                if (api == null) return fmDllVersion;
+                IFlexibleMeshModelApi api = FlexibleMeshModelApiFactory.CreateNew();
+                if (api == null)
+                {
+                    return fmDllVersion;
+                }
 
                 using (api)
                 {
@@ -95,7 +109,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     }
                     catch (Exception ex)
                     {
-                        var exception = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
+                        string exception = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
                         Log.ErrorFormat("Error retrieving FM Dll version: {0}", exception);
 
                         fmDllVersion = "Unknown";

@@ -8,8 +8,8 @@ using DelftTools.Hydro.Helpers;
 using DelftTools.Units;
 using DelftTools.Utils.NetCdf;
 using DeltaShell.NGHS.IO.Grid;
-using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.FMSuite.Common.IO;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Geometries;
 using log4net;
@@ -23,6 +23,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private readonly WaterFlowFMModel waterFlowFmModel;
 
         #region Map file constants
+
         private const string FlowLinkNrsName = "1d2d_flowlinknrs";
         private const string FlowLinkName = "FlowLink";
         private const string TimeVariableName = "time";
@@ -47,27 +48,33 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private const string EastwardSeaWaterVelocityStandardName = "eastward_sea_water_velocity";
         private const string NorthwardSeaWaterVelocityStandardName = "northward_sea_water_velocity";
-        
+
         // For Backwards compatibility: since the fm kernel keeps changing between the two
         private const string SeaWaterXVelocityStandardName = "sea_water_x_velocity";
         private const string SeaWaterYVelocityStandardName = "sea_water_y_velocity";
-        
+
         private const string SedIndexAttributeName = "SedIndex";
+
         #endregion
 
         private static readonly ILog log = LogManager.GetLogger(typeof(FMMapFileFunctionStore));
-        private static readonly IList<string> DeprecatedVariables = new[] { "s0", "u0" };
+
+        private static readonly IList<string> DeprecatedVariables = new[]
+        {
+            "s0",
+            "u0"
+        };
 
         private DateTime[] ncDatetimes;
         private IList<FlowLink> flowLinks1D2D;
         private UnstructuredGrid grid;
         private readonly IList<ITimeSeries> boundaryCellValues = new List<ITimeSeries>();
-        private Dictionary<string, UnstructuredGridCoverage> velocityCoverages = new Dictionary<string, UnstructuredGridCoverage>();
+
+        private Dictionary<string, UnstructuredGridCoverage> velocityCoverages =
+            new Dictionary<string, UnstructuredGridCoverage>();
 
         // nhib
-        protected FMMapFileFunctionStore()
-        {
-        }
+        protected FMMapFileFunctionStore() {}
 
         public FMMapFileFunctionStore(WaterFlowFMModel waterFlowFmModel)
         {
@@ -75,10 +82,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             DisableCaching = true;
         }
 
-        public UnstructuredGrid Grid
-        {
-            get { return grid; }
-        }
+        public UnstructuredGrid Grid => grid;
 
         public ICoordinateSystem CoordinateSystem
         {
@@ -90,25 +94,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 }
                 else
                 {
-                    log.Warn(Resources.FMMapFileFunctionStore_CoordinateSystem_Could_not_set_coordinate_system_in_output_map_because_grid_is_not_set);
+                    log.Warn(Resources
+                                 .FMMapFileFunctionStore_CoordinateSystem_Could_not_set_coordinate_system_in_output_map_because_grid_is_not_set);
                 }
             }
         }
 
-        public IList<ITimeSeries> BoundaryCellValues
-        {
-            get { return boundaryCellValues; }
-        }
+        public IList<ITimeSeries> BoundaryCellValues => boundaryCellValues;
 
         public IFunction CustomVelocityCoverage
         {
-            get { return Functions.FirstOrDefault(f => f.Name == VelocityCoverageName); }
+            get
+            {
+                return Functions.FirstOrDefault(f => f.Name == VelocityCoverageName);
+            }
         }
 
         public IEnumerable<IGrouping<string, IFunction>> GetFunctionGrouping()
         {
             // Filter out custom velocity coverage
-            var regularFunctions = Functions.Where(f => f.Name != VelocityCoverageName);
+            IEnumerable<IFunction> regularFunctions = Functions.Where(f => f.Name != VelocityCoverageName);
             return regularFunctions.GroupBy(f => f.Components[0].Attributes[NcNameAttribute]);
         }
 
@@ -116,9 +121,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             boundaryCellValues.Clear();
             UpdateGrid();
-            var isUgridConvention = GetNcFileConvention() == GridApiDataSet.DataSetConventions.CONV_UGRID;
+            bool isUgridConvention = GetNcFileConvention() == GridApiDataSet.DataSetConventions.CONV_UGRID;
 
-            var functions = GetFunctions(dataVariables, isUgridConvention);
+            List<UnstructuredGridCoverage> functions = GetFunctions(dataVariables, isUgridConvention);
             if (!isUgridConvention)
             {
                 LogWarningsForExcludedTimeDependentVariables(dataVariables);
@@ -127,56 +132,66 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             return functions;
         }
 
-        private List<UnstructuredGridCoverage> GetFunctions(IEnumerable<NetCdfVariableInfo> dataVariables, bool isUgridConvention)
+        private List<UnstructuredGridCoverage> GetFunctions(IEnumerable<NetCdfVariableInfo> dataVariables,
+                                                            bool isUgridConvention)
         {
             // Construct UnstructuredGridCoverages from file
-            var timeDepVarSelectionCriteria = isUgridConvention
-                ? (Func<NetCdfVariableInfo, bool>)(v => v.IsTimeDependent && v.NumDimensions > 1) : (v => v.IsTimeDependent && v.NumDimensions > 1 && v.NumDimensions <= 2);
-            var timeDepVariables = dataVariables.Where(timeDepVarSelectionCriteria).ToList();
-            var functions = timeDepVariables.SelectMany(ProcessTimeDependentVariable).Where(c => c != null).ToList();
+            Func<NetCdfVariableInfo, bool> timeDepVarSelectionCriteria = isUgridConvention
+                                                                             ? (Func<NetCdfVariableInfo, bool>)
+                                                                             (v => v.IsTimeDependent &&
+                                                                                   v.NumDimensions > 1)
+                                                                             : v => v.IsTimeDependent &&
+                                                                                    v.NumDimensions > 1 &&
+                                                                                    v.NumDimensions <= 2;
+            List<NetCdfVariableInfo> timeDepVariables = dataVariables.Where(timeDepVarSelectionCriteria).ToList();
+            List<UnstructuredGridCoverage> functions =
+                timeDepVariables.SelectMany(ProcessTimeDependentVariable).Where(c => c != null).ToList();
 
             // Construct custom Velocity Coverage
             if (velocityCoverages.ContainsKey(EastwardSeaWaterVelocityStandardName) &&
                 velocityCoverages.ContainsKey(NorthwardSeaWaterVelocityStandardName))
             {
-                functions.Add(AddCustomVelocityCoverage(velocityCoverages[EastwardSeaWaterVelocityStandardName], velocityCoverages[NorthwardSeaWaterVelocityStandardName]));
+                functions.Add(AddCustomVelocityCoverage(velocityCoverages[EastwardSeaWaterVelocityStandardName],
+                                                        velocityCoverages[NorthwardSeaWaterVelocityStandardName]));
             }
 
             // Backwards compatibility...
             if (velocityCoverages.ContainsKey(SeaWaterXVelocityStandardName) &&
                 velocityCoverages.ContainsKey(SeaWaterYVelocityStandardName))
             {
-                functions.Add(AddCustomVelocityCoverage(velocityCoverages[SeaWaterXVelocityStandardName], velocityCoverages[SeaWaterYVelocityStandardName]));
+                functions.Add(AddCustomVelocityCoverage(velocityCoverages[SeaWaterXVelocityStandardName],
+                                                        velocityCoverages[SeaWaterYVelocityStandardName]));
             }
 
             return functions;
         }
-        
+
         private void LogWarningsForExcludedTimeDependentVariables(IEnumerable<NetCdfVariableInfo> dataVariables)
         {
             // When the NetCDF file is not UGRID1+, log a warning for the time dependent variables that have been filtered out
-            var filteredTimeDepVariables = dataVariables.Where(v => v.IsTimeDependent && v.NumDimensions > 2).ToList();
-            var timeDepVariablesNames = 
+            List<NetCdfVariableInfo> filteredTimeDepVariables =
+                dataVariables.Where(v => v.IsTimeDependent && v.NumDimensions > 2).ToList();
+            IEnumerable<string> timeDepVariablesNames =
                 filteredTimeDepVariables.Select(v => netCdfFile.GetVariableName(v.NetCdfDataVariable));
-            foreach (var timeDepVarName in timeDepVariablesNames)
+            foreach (string timeDepVarName in timeDepVariablesNames)
             {
                 log.WarnFormat(
-                    Resources.FMMapFileFunctionStore_ConstructFunctions_Time_dependent_variable___0___has_been_filtered_out,
+                    Resources
+                        .FMMapFileFunctionStore_ConstructFunctions_Time_dependent_variable___0___has_been_filtered_out,
                     timeDepVarName);
             }
-            
         }
 
         protected override int GetVariableValuesCount(IVariable function, IVariableFilter[] filters)
         {
-            var variableValuesCount = base.GetVariableValuesCount(function, filters);
-            
+            int variableValuesCount = base.GetVariableValuesCount(function, filters);
+
             if (function.IsIndependent)
             {
                 return variableValuesCount;
             }
 
-            var coverage = Functions.FirstOrDefault(f => f.Components.Contains(function));
+            IFunction coverage = Functions.FirstOrDefault(f => f.Components.Contains(function));
 
             if (coverage == null || !coverage.Attributes.ContainsKey(SedIndexAttributeName))
             {
@@ -187,14 +202,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             using (ReconnectToMapFile())
             {
-                var netcdfVariable = netCdfFile.GetVariableByName(function.Components[0].Attributes[NcNameAttribute]);
-                if (netcdfVariable == null) throw new Exception("Missing NetCdf name");
+                NetCdfVariable netcdfVariable =
+                    netCdfFile.GetVariableByName(function.Components[0].Attributes[NcNameAttribute]);
+                if (netcdfVariable == null)
+                {
+                    throw new Exception("Missing NetCdf name");
+                }
 
-                var dimensions = netCdfFile.GetDimensions(netcdfVariable).ToList();
-                var dimensionNames = dimensions.Select(d => netCdfFile.GetDimensionName(d)).ToList();
+                List<NetCdfDimension> dimensions = netCdfFile.GetDimensions(netcdfVariable).ToList();
+                List<string> dimensionNames = dimensions.Select(d => netCdfFile.GetDimensionName(d)).ToList();
 
-                var sedSusVarIndex = dimensionNames.IndexOf(NSedSusName);
-                var sedTotVarIndex = dimensionNames.IndexOf(NSedTotName);
+                int sedSusVarIndex = dimensionNames.IndexOf(NSedSusName);
+                int sedTotVarIndex = dimensionNames.IndexOf(NSedTotName);
 
                 if ((sedSusVarIndex != -1 || sedTotVarIndex != -1) && dimensions.Count != 3)
                 {
@@ -209,23 +228,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 {
                     netcdfVariableDimensionLength = netCdfFile.GetDimensionLength(NSedTotName);
                 }
-                else return variableValuesCount;
+                else
+                {
+                    return variableValuesCount;
+                }
             }
 
             return variableValuesCount / netcdfVariableDimensionLength;
         }
 
-
-
         protected override void GetShapeAndOrigin(IVariable function, IVariableFilter[] filters, out int[] shape,
-            out int[] origin, out int[] stride)
+                                                  out int[] origin, out int[] stride)
         {
             base.GetShapeAndOrigin(function, filters, out shape, out origin, out stride);
-            
+
             if (function.IsIndependent)
+            {
                 return;
-            
-            var coverage = Functions.FirstOrDefault(f => f.Components.Contains(function));
+            }
+
+            IFunction coverage = Functions.FirstOrDefault(f => f.Components.Contains(function));
 
             if (coverage == null)
             {
@@ -244,14 +266,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 }
             }
 
-            var netcdfVariable = netCdfFile.GetVariableByName(function.Components[0].Attributes[NcNameAttribute]);
-            if (netcdfVariable == null) throw new Exception("Missing NetCdf name");
+            NetCdfVariable netcdfVariable =
+                netCdfFile.GetVariableByName(function.Components[0].Attributes[NcNameAttribute]);
+            if (netcdfVariable == null)
+            {
+                throw new Exception("Missing NetCdf name");
+            }
 
-            var dimensions = netCdfFile.GetDimensions(netcdfVariable).ToList();
-            
-            var dimensionNames = dimensions.Select(d => netCdfFile.GetDimensionName(d)).ToList();
-            var sedSusVarIndex = dimensionNames.IndexOf(NSedSusName);
-            var sedTotVarIndex = dimensionNames.IndexOf(NSedTotName);
+            List<NetCdfDimension> dimensions = netCdfFile.GetDimensions(netcdfVariable).ToList();
+
+            List<string> dimensionNames = dimensions.Select(d => netCdfFile.GetDimensionName(d)).ToList();
+            int sedSusVarIndex = dimensionNames.IndexOf(NSedSusName);
+            int sedTotVarIndex = dimensionNames.IndexOf(NSedTotName);
 
             if ((sedSusVarIndex != -1 || sedTotVarIndex != -1) && dimensions.Count != 3)
             {
@@ -259,14 +285,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
 
             var sedIndex = 0;
-            if(!Int32.TryParse(coverage.Attributes[SedIndexAttributeName], out sedIndex))
+            if (!int.TryParse(coverage.Attributes[SedIndexAttributeName], out sedIndex))
             {
                 throw new Exception("Sediment Index is not of integer type");
             }
 
-            var dimensionIndex = Math.Max(sedTotVarIndex, sedSusVarIndex);
+            int dimensionIndex = Math.Max(sedTotVarIndex, sedSusVarIndex);
             var sedShape = 1;
-            var sedOrigin = sedIndex;
+            int sedOrigin = sedIndex;
             var sedStride = 1;
 
             if (filters.Length == 0)
@@ -282,32 +308,38 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 stride = InsertItem(stride, dimensionIndex, sedStride);
             }
         }
-        
-        protected override IMultiDimensionalArray<T> GetVariableValuesCore<T>(IVariable function, IVariableFilter[] filters)
+
+        protected override IMultiDimensionalArray<T> GetVariableValuesCore<T>(
+            IVariable function, IVariableFilter[] filters)
         {
-            if (function.Attributes[NcUseVariableSizeAttribute] == "false") // has no explicit variable (for example nFlowElem, which is only a dimension)
+            if (function.Attributes[NcUseVariableSizeAttribute] == "false"
+            ) // has no explicit variable (for example nFlowElem, which is only a dimension)
             {
                 int size = GetSize(function);
-                return new MultiDimensionalArray<T>(Enumerable.Range(0, size).Cast<T>().ToList(), new[] { size });
+                return new MultiDimensionalArray<T>(Enumerable.Range(0, size).Cast<T>().ToList(), new[]
+                {
+                    size
+                });
             }
-            
+
             //if this is a component find the coverage in Functions and apply filter
             if (!function.IsIndependent)
             {
                 // is component or coverage
-                var coverage = Functions.FirstOrDefault(f => f.Components.Contains(function)); // check if function is component
+                IFunction coverage =
+                    Functions.FirstOrDefault(f => f.Components.Contains(function)); // check if function is component
                 if (coverage == null)
                 {
-                    coverage = Functions.FirstOrDefault(f => f == function);//check if function is coverage
+                    coverage = Functions.FirstOrDefault(f => f == function); //check if function is coverage
 
                     if (coverage != null)
                     {
                         // is coverage
                         //check if there are multidimensional sedimentnames
-                        var indexOfSedimentToRender = string.Empty;
+                        string indexOfSedimentToRender = string.Empty;
                         if (coverage.Attributes.TryGetValue(SedIndexAttributeName, out indexOfSedimentToRender))
                         {
-                            var nIndex = -1;
+                            int nIndex = -1;
                             if (int.TryParse(indexOfSedimentToRender, out nIndex))
                             {
                                 var filter = new VariableIndexFilter(function.Components[0], 0);
@@ -321,10 +353,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 {
                     // is component
                     //check if there are multidimensional sedimentnames
-                    var indexOfSedimentToRender = string.Empty;
+                    string indexOfSedimentToRender = string.Empty;
                     if (coverage.Attributes.TryGetValue(SedIndexAttributeName, out indexOfSedimentToRender))
                     {
-                        var nIndex = -1;
+                        int nIndex = -1;
                         if (int.TryParse(indexOfSedimentToRender, out nIndex))
                         {
                             var filter = new VariableIndexFilter(function, 0);
@@ -332,15 +364,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                             filters[filters.Length - 1] = filter;
                         }
                     }
-                }             
+                }
             }
 
             return base.GetVariableValuesCore<T>(function, filters);
         }
-        
-        private UnstructuredGridCoverage AddCustomVelocityCoverage(UnstructuredGridCoverage ucxCoverage, UnstructuredGridCoverage ucyCoverage)
+
+        private UnstructuredGridCoverage AddCustomVelocityCoverage(UnstructuredGridCoverage ucxCoverage,
+                                                                   UnstructuredGridCoverage ucyCoverage)
         {
-            var coverage = CreateCoverage(GridApiDataSet.UGridAttributeConstants.LocationValues.Face, VelocityCoverageName);
+            UnstructuredGridCoverage coverage =
+                CreateCoverage(GridApiDataSet.UGridAttributeConstants.LocationValues.Face, VelocityCoverageName);
 
             coverage.Components.Add(new Variable<double>()); // add 2nd component
             coverage.Components[1].Name = ucyCoverage.Components[0].Name;
@@ -357,33 +391,37 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private UnstructuredGridCoverage CreateCoverage(string location, string coverageLongName, int number = -1)
         {
             // TODO : Suffix should not be the sediment index but the actual name of the sediment - this is not currently available in the map file
-            var suffix = number < 0 ? string.Empty : string.Format(" ({0})", number);
-            var coverageName = coverageLongName + suffix;
+            string suffix = number < 0 ? string.Empty : string.Format(" ({0})", number);
+            string coverageName = coverageLongName + suffix;
             switch (location)
             {
                 // UGrid standard
                 case GridApiDataSet.UGridAttributeConstants.LocationValues.Face:
-                    return new UnstructuredGridCellCoverage(grid, true) { Name = coverageName };
+                    return new UnstructuredGridCellCoverage(grid, true) {Name = coverageName};
                 case GridApiDataSet.UGridAttributeConstants.LocationValues.Edge:
-                    return new UnstructuredGridEdgeCoverage(grid, true) { Name = coverageName };
+                    return new UnstructuredGridEdgeCoverage(grid, true) {Name = coverageName};
                 case GridApiDataSet.UGridAttributeConstants.LocationValues.Node:
-                    return new UnstructuredGridVertexCoverage(grid, true) { Name = coverageName };
+                    return new UnstructuredGridVertexCoverage(grid, true) {Name = coverageName};
                 case GridApiDataSet.UGridAttributeConstants.LocationValues.Volume:
-                    log.WarnFormat(Resources.FMMapFileFunctionStore_CreateCoverage_CannotCreateSpatialDataOnVolumeLocation, coverageName);
+                    log.WarnFormat(
+                        Resources.FMMapFileFunctionStore_CreateCoverage_CannotCreateSpatialDataOnVolumeLocation,
+                        coverageName);
                     return null;
 
                 // backwards compatibility
                 case NFlowElemName:
-                    return new UnstructuredGridCellCoverage(grid, true) { Name = coverageName };
+                    return new UnstructuredGridCellCoverage(grid, true) {Name = coverageName};
                 case NFlowLinkName:
-                    return new UnstructuredGridFlowLinkCoverage(grid, true) { Name = coverageName };
+                    return new UnstructuredGridFlowLinkCoverage(grid, true) {Name = coverageName};
                 case NNetLinkName:
                 case NFlowElemBndName:
-                    log.WarnFormat(Resources.FMMapFileFunctionStore_CreateCoverage_NetlinkDimensionCurrentyNotSupported, coverageName);
+                    log.WarnFormat(Resources.FMMapFileFunctionStore_CreateCoverage_NetlinkDimensionCurrentyNotSupported,
+                                   coverageName);
                     return null;
                 default:
                     throw new NotImplementedException(
-                        string.Format(Resources.FMMapFileFunctionStore_CreateCoverage_UnexpectedLocationDimension, location));
+                        string.Format(Resources.FMMapFileFunctionStore_CreateCoverage_UnexpectedLocationDimension,
+                                      location));
             }
         }
 
@@ -392,46 +430,46 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             // some variables need to be read only once
             if (flowLinks1D2D == null)
             {
-                var ncFlowlinks = (int[,])netCdfFile.Read(netCdfFile.GetVariableByName(FlowLinkName));
-                var ncFlowlink1D2Dlinknrs = (int[])netCdfFile.Read(netCdfFile.GetVariableByName(FlowLinkNrsName));
-                var ncFlowlinkXu = (double[])netCdfFile.Read(netCdfFile.GetVariableByName(FlowlinkXu));
-                var ncFlowlinkYu = (double[])netCdfFile.Read(netCdfFile.GetVariableByName(FlowlinkYu));
+                var ncFlowlinks = (int[,]) netCdfFile.Read(netCdfFile.GetVariableByName(FlowLinkName));
+                var ncFlowlink1D2Dlinknrs = (int[]) netCdfFile.Read(netCdfFile.GetVariableByName(FlowLinkNrsName));
+                var ncFlowlinkXu = (double[]) netCdfFile.Read(netCdfFile.GetVariableByName(FlowlinkXu));
+                var ncFlowlinkYu = (double[]) netCdfFile.Read(netCdfFile.GetVariableByName(FlowlinkYu));
 
-                var coordinates = ncFlowlinkXu.Zip(ncFlowlinkYu, (x, y) => new Coordinate(x, y)).ToArray();
+                Coordinate[] coordinates = ncFlowlinkXu.Zip(ncFlowlinkYu, (x, y) => new Coordinate(x, y)).ToArray();
 
                 flowLinks1D2D = ncFlowlink1D2Dlinknrs.ConvertMultiThreaded(nr =>
                 {
-                    var cellFromIndex = ncFlowlinks[nr - 1, 0] - 1;
-                    var cellToIndex = ncFlowlinks[nr - 1, 1] - 1;
+                    int cellFromIndex = ncFlowlinks[nr - 1, 0] - 1;
+                    int cellToIndex = ncFlowlinks[nr - 1, 1] - 1;
 
-                    var cellEdges = grid.GetCellEdgeIndices(grid.Cells[cellToIndex])
-                        .Concat(grid.GetCellEdgeIndices(grid.Cells[cellToIndex]))
-                        .Distinct()
-                        .Select(edgeIndex => grid.Edges[edgeIndex])
-                        .ToList();
+                    List<Edge> cellEdges = grid.GetCellEdgeIndices(grid.Cells[cellToIndex])
+                                               .Concat(grid.GetCellEdgeIndices(grid.Cells[cellToIndex]))
+                                               .Distinct()
+                                               .Select(edgeIndex => grid.Edges[edgeIndex])
+                                               .ToList();
 
-                    var nearestEdge = grid.Edges[grid.IndexOfNearestEdge(coordinates[nr - 1], cellEdges)];
+                    Edge nearestEdge = grid.Edges[grid.IndexOfNearestEdge(coordinates[nr - 1], cellEdges)];
                     return new FlowLink(cellFromIndex, cellToIndex, nearestEdge);
                 });
             }
 
             if (ncDatetimes == null)
             {
-                var time = netCdfFile.GetVariableByName(TimeVariableName);
-                var times = (double[])netCdfFile.Read(time);
+                NetCdfVariable time = netCdfFile.GetVariableByName(TimeVariableName);
+                var times = (double[]) netCdfFile.Read(time);
 
-                var rds = ReadReferenceDateFromFile(TimeVariableName);
+                string rds = ReadReferenceDateFromFile(TimeVariableName);
 
                 ncDatetimes = times.Select(d => DateTime.Parse(rds).AddSeconds(d)).ToArray();
             }
 
-            var variable = netCdfFile.GetVariableByName(variableName);
+            NetCdfVariable variable = netCdfFile.GetVariableByName(variableName);
 
-            var totalValuesArray = (double[,])netCdfFile.Read(variable);
-            var unit = netCdfFile.GetAttributeValue(variable, UnitsName);
+            var totalValuesArray = (double[,]) netCdfFile.Read(variable);
+            string unit = netCdfFile.GetAttributeValue(variable, UnitsName);
 
             // create timeseries with a component for every flowlink (cell index)
-            var function = new TimeSeries() { Name = variableName };
+            var function = new TimeSeries() {Name = variableName};
             var flowLinkVariable = new Variable<FlowLink>()
             {
                 Name = "FlowLink",
@@ -459,41 +497,46 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             try
             {
-                var api = GridApiFactory.CreateNew();
+                IUGridApi api = GridApiFactory.CreateNew();
                 if (api != null)
                 {
                     using (api)
                     {
                         GridApiDataSet.DataSetConventions convention;
-                        var ierr = api.GetConvention(netCdfFile.Path, out convention);
+                        int ierr = api.GetConvention(netCdfFile.Path, out convention);
                         if (ierr != GridApiDataSet.GridConstants.NOERR)
                         {
                             throw new Exception("Couldn't get the nc file convention because of error number: " + ierr);
                         }
+
                         return convention;
                     }
                 }
             }
             catch (Exception e)
             {
-                log.ErrorFormat(Resources.FMMapFileFunctionStore_CreateCoverageFromNetCdfVariable_FailedToConstructGridSpatialData, e.Message);
+                log.ErrorFormat(
+                    Resources.FMMapFileFunctionStore_CreateCoverageFromNetCdfVariable_FailedToConstructGridSpatialData,
+                    e.Message);
             }
 
             return GridApiDataSet.DataSetConventions.CONV_NULL;
         }
 
-        private void InitializeCoverage(IFunction coverage, string secondDimensionName, string variableName, string unitSymbol, string refDate, IEnumerable<Tuple<string, string>> secondDimensionAdditionalAttributes = null)
+        private void InitializeCoverage(IFunction coverage, string secondDimensionName, string variableName,
+                                        string unitSymbol, string refDate,
+                                        IEnumerable<Tuple<string, string>> secondDimensionAdditionalAttributes = null)
         {
             coverage.Store = this;
 
-            var timeDimension = coverage.Arguments[0];
+            IVariable timeDimension = coverage.Arguments[0];
             timeDimension.Name = "Time";
             timeDimension.Attributes[NcNameAttribute] = TimeVariableNames[0];
             timeDimension.Attributes[NcUseVariableSizeAttribute] = "true";
             timeDimension.Attributes[NcRefDateAttribute] = refDate;
             timeDimension.IsEditable = false;
 
-            var secondDimension = coverage.Arguments[1];
+            IVariable secondDimension = coverage.Arguments[1];
             secondDimension.Name = secondDimensionName;
             secondDimension.Attributes[NcNameAttribute] = secondDimensionName;
             secondDimension.Attributes[NcUseVariableSizeAttribute] = "false";
@@ -501,16 +544,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             // Allowing us to add additional attributes (e.g. sedimentation related)
             if (secondDimensionAdditionalAttributes != null)
             {
-                foreach (var secondDimensionAdditionalAttribute in secondDimensionAdditionalAttributes)
+                foreach (Tuple<string, string> secondDimensionAdditionalAttribute in secondDimensionAdditionalAttributes
+                )
                 {
-                    if (string.IsNullOrEmpty(secondDimensionAdditionalAttribute.Item1)) continue;
-                    coverage.Attributes[secondDimensionAdditionalAttribute.Item1] = secondDimensionAdditionalAttribute.Item2;
+                    if (string.IsNullOrEmpty(secondDimensionAdditionalAttribute.Item1))
+                    {
+                        continue;
+                    }
+
+                    coverage.Attributes[secondDimensionAdditionalAttribute.Item1] =
+                        secondDimensionAdditionalAttribute.Item2;
                 }
             }
 
             secondDimension.IsEditable = false;
 
-            var coverageComponent = coverage.Components[0];
+            IVariable coverageComponent = coverage.Components[0];
             coverageComponent.Name = variableName;
             coverageComponent.Attributes[NcNameAttribute] = variableName;
             coverageComponent.Attributes[NcUseVariableSizeAttribute] = "true";
@@ -523,7 +572,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private int[] InsertItem(int[] original, int index, int value)
         {
-            var list = original.ToList();
+            List<int> list = original.ToList();
             if (index < list.Count && index >= 0)
             {
                 list.Insert(index, value);
@@ -532,74 +581,91 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 list.Add(value);
             }
+
             return list.ToArray();
         }
 
-        private IEnumerable<UnstructuredGridCoverage> ProcessTimeDependentVariable(NetCdfVariableInfo timeDependentVariable)
+        private IEnumerable<UnstructuredGridCoverage> ProcessTimeDependentVariable(
+            NetCdfVariableInfo timeDependentVariable)
         {
             UnstructuredGridCoverage coverage = null;
-            var netcdfVariable = timeDependentVariable.NetCdfDataVariable;
+            NetCdfVariable netcdfVariable = timeDependentVariable.NetCdfDataVariable;
 
-            var netCdfVariableName = netCdfFile.GetVariableName(netcdfVariable);
-            if (DeprecatedVariables.Contains(netCdfVariableName)) yield break;
+            string netCdfVariableName = netCdfFile.GetVariableName(netcdfVariable);
+            if (DeprecatedVariables.Contains(netCdfVariableName))
+            {
+                yield break;
+            }
 
-            var netCdfVariableType = netCdfFile.GetVariableDataType(netcdfVariable);
+            NetCdfDataType netCdfVariableType = netCdfFile.GetVariableDataType(netcdfVariable);
             if (netCdfVariableType != NetCdfDataType.NcDoublePrecision)
             {
-                log.WarnFormat(Resources.FMMapFileFunctionStore_CreateCoverageFromNetCdfVariable_FailedToConstructGridSpatialData,
+                log.WarnFormat(
+                    Resources.FMMapFileFunctionStore_CreateCoverageFromNetCdfVariable_FailedToConstructGridSpatialData,
                     netCdfVariableName, netCdfVariableType);
                 yield break;
             }
 
-            var dimensions = netCdfFile.GetDimensions(netcdfVariable).ToList();
+            List<NetCdfDimension> dimensions = netCdfFile.GetDimensions(netcdfVariable).ToList();
 
-            var secondDimensionName = netCdfFile.GetDimensionName(dimensions[1]);
+            string secondDimensionName = netCdfFile.GetDimensionName(dimensions[1]);
             if (secondDimensionName.Equals(NBnd1D2DName)) // Not supported by UGrid yet
             {
                 GetBoundaryLinkValues(netCdfVariableName);
                 yield break;
             }
 
-            var longName = netCdfFile.GetAttributeValue(netcdfVariable, LongNameAttribute) ??
-                           netCdfFile.GetAttributeValue(netcdfVariable, StandardNameAttribute);
+            string longName = netCdfFile.GetAttributeValue(netcdfVariable, LongNameAttribute) ??
+                              netCdfFile.GetAttributeValue(netcdfVariable, StandardNameAttribute);
 
-            var coverageLongName = (longName != null)
-                ? string.Format("{0} ({1})", longName, netCdfVariableName)
-                : netCdfVariableName;
+            string coverageLongName = longName != null
+                                          ? string.Format("{0} ({1})", longName, netCdfVariableName)
+                                          : netCdfVariableName;
 
-            var convention = GetNcFileConvention();
+            GridApiDataSet.DataSetConventions convention = GetNcFileConvention();
 
-            var location = convention == GridApiDataSet.DataSetConventions.CONV_UGRID
-                ? netCdfFile.GetAttributeValue(netcdfVariable, GridApiDataSet.UGridAttributeConstants.Names.Location)
-                : secondDimensionName; // backwards compatibility
+            string location = convention == GridApiDataSet.DataSetConventions.CONV_UGRID
+                                  ? netCdfFile.GetAttributeValue(netcdfVariable,
+                                                                 GridApiDataSet.UGridAttributeConstants.Names.Location)
+                                  : secondDimensionName; // backwards compatibility
 
-            var unitSymbol = netCdfFile.GetAttributeValue(netcdfVariable, UnitAttribute);
+            string unitSymbol = netCdfFile.GetAttributeValue(netcdfVariable, UnitAttribute);
 
             // Depending on the NetCdfVariable, Sediment dimension can be SedSus (suspended) or SedTot (total)
-            var dimensionNameList = dimensions.Select(d => netCdfFile.GetDimensionName(d)).ToList();
-            var sedSusVarIndex = dimensionNameList.IndexOf(NSedSusName);
-            var sedTotVarIndex = dimensionNameList.IndexOf(NSedTotName);
+            List<string> dimensionNameList = dimensions.Select(d => netCdfFile.GetDimensionName(d)).ToList();
+            int sedSusVarIndex = dimensionNameList.IndexOf(NSedSusName);
+            int sedTotVarIndex = dimensionNameList.IndexOf(NSedTotName);
 
             if ((sedSusVarIndex != -1 || sedTotVarIndex != -1) && dimensions.Count == 3)
             {
                 //Process variable as three dimensional time dependent variable
-                var sedimentDimensionIndex = Math.Max(sedTotVarIndex, sedSusVarIndex);
-                foreach (var unstructuredGridCoverage in ProcessThreeDimensionalTimeDependentVariable(timeDependentVariable, dimensions, sedimentDimensionIndex, location, coverageLongName, netCdfVariableName, unitSymbol))
+                int sedimentDimensionIndex = Math.Max(sedTotVarIndex, sedSusVarIndex);
+                foreach (UnstructuredGridCoverage unstructuredGridCoverage in
+                    ProcessThreeDimensionalTimeDependentVariable(timeDependentVariable, dimensions,
+                                                                 sedimentDimensionIndex, location, coverageLongName,
+                                                                 netCdfVariableName, unitSymbol))
+                {
                     yield return unstructuredGridCoverage;
+                }
+
                 yield break;
             }
-            
+
             coverage = CreateCoverage(location, coverageLongName);
-                
+
             if (coverage != null)
             {
-                InitializeCoverage(coverage, secondDimensionName, netCdfVariableName, unitSymbol, timeDependentVariable.ReferenceDate);
+                InitializeCoverage(coverage, secondDimensionName, netCdfVariableName, unitSymbol,
+                                   timeDependentVariable.ReferenceDate);
             }
 
-            var standardName = netCdfFile.GetAttributeValue(timeDependentVariable.NetCdfDataVariable, StandardNameAttribute);
+            string standardName =
+                netCdfFile.GetAttributeValue(timeDependentVariable.NetCdfDataVariable, StandardNameAttribute);
 
-            if (standardName == EastwardSeaWaterVelocityStandardName || standardName == NorthwardSeaWaterVelocityStandardName ||
-                standardName == SeaWaterXVelocityStandardName || standardName == SeaWaterYVelocityStandardName) // Backwards compatibility *ugh*
+            if (standardName == EastwardSeaWaterVelocityStandardName ||
+                standardName == NorthwardSeaWaterVelocityStandardName ||
+                standardName == SeaWaterXVelocityStandardName ||
+                standardName == SeaWaterYVelocityStandardName) // Backwards compatibility *ugh*
             {
                 velocityCoverages[standardName] = coverage;
             }
@@ -607,23 +673,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             yield return coverage;
         }
 
-        private IEnumerable<UnstructuredGridCoverage> ProcessThreeDimensionalTimeDependentVariable(NetCdfVariableInfo timeDependentVariable, IList<NetCdfDimension> dimensions, int sedimentDimensionIndex, string location, string coverageLongName, string netCdfVariableName, string unitSymbol)
+        private IEnumerable<UnstructuredGridCoverage> ProcessThreeDimensionalTimeDependentVariable(
+            NetCdfVariableInfo timeDependentVariable, IList<NetCdfDimension> dimensions, int sedimentDimensionIndex,
+            string location, string coverageLongName, string netCdfVariableName, string unitSymbol)
         {
-            var numberOfSedLayers = netCdfFile.GetDimensionLength(dimensions[sedimentDimensionIndex]);
+            int numberOfSedLayers = netCdfFile.GetDimensionLength(dimensions[sedimentDimensionIndex]);
 
-            for (int index = 0; index < numberOfSedLayers; index++)
+            for (var index = 0; index < numberOfSedLayers; index++)
             {
                 // TODO : Replace index with values (i.e. sediment names) - this is not currently available in the map file
-                var sedCoverage = CreateCoverage(location, coverageLongName, index);
+                UnstructuredGridCoverage sedCoverage = CreateCoverage(location, coverageLongName, index);
                 if (sedCoverage != null)
                 {
-                    var secondDimensionName = netCdfFile.GetDimensionName(sedimentDimensionIndex != 1 ? dimensions[1] : dimensions[2]);
+                    string secondDimensionName =
+                        netCdfFile.GetDimensionName(sedimentDimensionIndex != 1 ? dimensions[1] : dimensions[2]);
                     InitializeCoverage(sedCoverage, secondDimensionName, netCdfVariableName, unitSymbol,
-                        timeDependentVariable.ReferenceDate, new[]
-                        {
-                            new Tuple<string, string>(SedIndexAttributeName, index.ToString()),
-                        });
+                                       timeDependentVariable.ReferenceDate, new[]
+                                       {
+                                           new Tuple<string, string>(SedIndexAttributeName, index.ToString()),
+                                       });
                 }
+
                 yield return sedCoverage;
             }
         }
@@ -633,6 +703,5 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             // import the grid from the map file if there is no model grid available
             grid = UnstructuredGridFileHelper.LoadFromFile(netCdfFile.Path, true);
         }
-
     }
 }

@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Units;
 using DelftTools.Utils.Aop;
-using System.Linq;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 {
@@ -24,23 +24,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 
         public HeatFluxModelType Type
         {
-            get { return modelType; }
-            set { modelType = value;
+            get => modelType;
+            set
+            {
+                modelType = value;
                 switch (modelType)
                 {
                     case HeatFluxModelType.None:
                     case HeatFluxModelType.TransportOnly:
                     case HeatFluxModelType.ExcessTemperature:
-                        {
-                            meteoData = null;
-                            containsSolarRadiation = false;
-                        }
+                    {
+                        meteoData = null;
+                        containsSolarRadiation = false;
+                    }
                         break;
                     case HeatFluxModelType.Composite:
-                        {
-                            meteoData = CreateTimeseriesMeteoData();
-                            UpdateSolarRadiationInMeteoData();
-                        }
+                    {
+                        meteoData = CreateTimeseriesMeteoData();
+                        UpdateSolarRadiationInMeteoData();
+                    }
                         break;
                     default:
                         throw new NotImplementedException("Type of heat flux model is not yet implemented.");
@@ -48,14 +50,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             }
         }
 
-        public bool CanHaveSolarRadiation
-        {
-            get { return Type == HeatFluxModelType.ExcessTemperature || Type == HeatFluxModelType.Composite; }
-        }
+        public bool CanHaveSolarRadiation =>
+            Type == HeatFluxModelType.ExcessTemperature || Type == HeatFluxModelType.Composite;
 
         public bool ContainsSolarRadiation
         {
-            get { return containsSolarRadiation; }
+            get => containsSolarRadiation;
             set
             {
                 containsSolarRadiation = value;
@@ -66,8 +66,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         [EditAction]
         private void UpdateSolarRadiationInMeteoData()
         {
-            if (MeteoData == null) return;
-            var solarVariable = MeteoData.Components.FirstOrDefault(v => v.Name.Equals("Solar radiation"));
+            if (MeteoData == null)
+            {
+                return;
+            }
+
+            IVariable solarVariable = MeteoData.Components.FirstOrDefault(v => v.Name.Equals("Solar radiation"));
 
             if (containsSolarRadiation)
             {
@@ -89,7 +93,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             }
         }
 
-        public IFunction MeteoData { get { return meteoData; } }
+        public IFunction MeteoData => meteoData;
 
         [EditAction]
         private IFunction CreateTimeseriesMeteoData()
@@ -102,10 +106,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                 MinValidValue = 0d,
                 MaxValidValue = 100d
             });
-            result.Components.Add(new Variable<double>("Air temperature")
-            {
-                Unit = new Unit("degree celsius", "°C")
-            });
+            result.Components.Add(new Variable<double>("Air temperature") {Unit = new Unit("degree celsius", "°C")});
             result.Components.Add(new Variable<double>("Cloud coverage")
             {
                 Unit = new Unit("percent", "%"),

@@ -32,18 +32,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
         void WritePartitioning(string inputFileName, string outputFileName, int numDomains, bool contiguous);
 
         bool GetSnappedFeature(string featureType, double[] xin, double[] yin, ref double[] xout, ref double[] yout,
-            ref int[] featureIds);
+                               ref int[] featureIds);
 
         void SetValuesDouble(string variable, double[] values);
-        
+
         void SetValuesDouble(string variable, int[] start, int[] count, double[] values);
-        
+
         void SetValuesDouble(string variable, int[] index, double[] values);
-        
+
         void SetValuesInt(string variable, int[] values);
-        
+
         void SetValuesInt(string variable, int[] start, int[] count, int[] values);
-        
+
         void SetValuesInt(string variable, int[] index, int[] values);
 
         void Compute1d2dCoefficients();

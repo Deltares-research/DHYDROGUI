@@ -16,8 +16,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         string Description { get; set; }
         string DataTemplateName { get; }
         void SedimentPropertyLoad(IDelftIniCategory category);
-        void SedimentPropertyWrite(IDelftIniCategory category); 
+        void SedimentPropertyWrite(IDelftIniCategory category);
     }
+
     public interface ISedimentProperty<T> : ISedimentProperty
     {
         T Value { get; set; }
@@ -34,7 +35,5 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         string SpatiallyVaryingName { get; set; }
     }
 
-    public interface ISpatiallyVaryingSedimentProperty<T> : ISpatiallyVaryingSedimentProperty, ISedimentProperty<T>
-    {
-    }
+    public interface ISpatiallyVaryingSedimentProperty<T> : ISpatiallyVaryingSedimentProperty, ISedimentProperty<T> {}
 }

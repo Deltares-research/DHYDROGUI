@@ -2,16 +2,14 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
-using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 
 namespace DeltaShell.NGHS.IO
 {
     public class BcmFile : BcFile
-    {       
+    {
         public const string Extension = ".bcm";
 
         private const string BlockKey = "table-name";
@@ -38,30 +36,38 @@ namespace DeltaShell.NGHS.IO
 
         private readonly int columnWidth = RecordsInTableKey.Length + 1; /* Largest string length */
 
-        static string[] SplitString(string str)
+        private static string[] SplitString(string str)
         {
             return str.Split('\'')
-                .Select((element, index) => index % 2 == 0 // If even index
-                    ? element.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries) // Split the item
-                    : new string[] { element }) // Keep the entire item
-                .SelectMany(element => element).ToArray();
+                      .Select((element, index) => index % 2 == 0 // If even index
+                                                      ? element.Split(new[]
+                                                      {
+                                                          ' '
+                                                      }, StringSplitOptions.RemoveEmptyEntries) // Split the item
+                                                      : new string[]
+                                                      {
+                                                          element
+                                                      }) // Keep the entire item
+                      .SelectMany(element => element).ToArray();
         }
 
         protected override List<string> SupportedProcesses
         {
             get
             {
-                return supportedProcesses.Select(sp => FlowBoundaryCondition.GetProcessNameForQuantity(sp)).Distinct().ToList();
+                return supportedProcesses.Select(sp => FlowBoundaryCondition.GetProcessNameForQuantity(sp)).Distinct()
+                                         .ToList();
             }
         }
 
         private void WriteKyeValuePairParameterLine(string parameter, string unit)
         {
-            var valueString = WriteBetweenCommas(parameter);
+            string valueString = WriteBetweenCommas(parameter);
             if (unit != null)
             {
                 valueString = valueString + " " + UnitKey + " " + WriteBetweenCommas(unit);
             }
+
             WriteKeyValuePairLine(ParameterKey, valueString);
         }
 
@@ -82,12 +88,14 @@ namespace DeltaShell.NGHS.IO
             blocknr = 0;
             base.Write(boundaryConditions, filePath, boundaryDataBuilder, refDate);
         }
-        
 
         protected override void WriteBlock(BcBlockData block)
         {
             var bcmBlock = block as BcmBlockData;
-            if (bcmBlock == null) return;
+            if (bcmBlock == null)
+            {
+                return;
+            }
 
             var startDateTime = new DateTime();
             blocknr++;
@@ -103,12 +111,14 @@ namespace DeltaShell.NGHS.IO
 
             if (bcmBlock.Quantities != null && bcmBlock.Quantities.Count > 0)
             {
-
                 //Extract start time reference.
                 var bcmBlockQuantity = bcmBlock.Quantities[0] as BcmQuantityData;
-                if (bcmBlockQuantity == null) return;
+                if (bcmBlockQuantity == null)
+                {
+                    return;
+                }
 
-                var strFullTime = bcmBlockQuantity.Values.FirstOrDefault();
+                string strFullTime = bcmBlockQuantity.Values.FirstOrDefault();
                 var timeReference = "";
                 if (bcmBlockQuantity.ReferenceTime != null)
                 {
@@ -117,35 +127,46 @@ namespace DeltaShell.NGHS.IO
                     WriteKeyValuePairLine(ReferenceTimeKey, timeReference);
                     WriteKeyValuePairLine(TimeUnitKey, WriteBetweenCommas(TimeUnit));
                 }
+
                 if (strFullTime != null && strFullTime.Length == 8)
                 {
-                    timeReference = strFullTime.Substring(0,8); //yyyymmdd (we do not include the hhmmss when writing the time reference
+                    timeReference =
+                        strFullTime.Substring(
+                            0, 8); //yyyymmdd (we do not include the hhmmss when writing the time reference
                     WriteKeyValuePairLine(ReferenceTimeKey, timeReference);
 
                     WriteKeyValuePairLine(TimeUnitKey, WriteBetweenCommas(TimeUnit));
                 }
-                
             }
 
-            foreach (var quantity in bcmBlock.Quantities)
+            foreach (BcQuantityData quantity in bcmBlock.Quantities)
             {
                 WriteKyeValuePairParameterLine(quantity.Quantity, quantity.Unit);
             }
 
-            var rowCount = bcmBlock.Quantities.Select(q => q.Values.Count).Min();
-            if (rowCount == 0) return;
+            int rowCount = bcmBlock.Quantities.Select(q => q.Values.Count).Min();
+            if (rowCount == 0)
+            {
+                return;
+            }
+
             if (bcmBlock.Quantities != null)
             {
                 WriteKeyValuePairLine(RecordsInTableKey, rowCount.ToString());
             }
 
-            var columnWidths =
+            List<int> columnWidths =
                 bcmBlock.Quantities.Select(q => q.Values.Take(rowCount).Select(s => s.Length).Max() + 1).ToList();
 
             for (var i = 0; i < rowCount; ++i)
             {
                 var j = 0;
-                WriteLine(string.Join(" ", bcmBlock.Quantities.Select(q => GetTimeStep(q.Values[i], j, startDateTime, TimeUnit).PadRight(columnWidths[j++]))).TrimEnd());
+                WriteLine(
+                    string
+                        .Join(
+                            " ",
+                            bcmBlock.Quantities.Select(q => GetTimeStep(q.Values[i], j, startDateTime, TimeUnit)
+                                                           .PadRight(columnWidths[j++]))).TrimEnd());
             }
         }
 
@@ -153,8 +174,8 @@ namespace DeltaShell.NGHS.IO
         {
             if (i == 0)
             {
-                var dateValue = StringDateToDateTime(value, "yyyyMMddHHmmss");
-                var diff = (dateValue - startTime);
+                DateTime dateValue = StringDateToDateTime(value, "yyyyMMddHHmmss");
+                TimeSpan diff = dateValue - startTime;
                 switch (timeUnit)
                 {
                     case "seconds":
@@ -167,6 +188,7 @@ namespace DeltaShell.NGHS.IO
                         return diff.TotalDays.ToString();
                 }
             }
+
             return value;
         }
 
@@ -179,18 +201,20 @@ namespace DeltaShell.NGHS.IO
             }
             catch (Exception e)
             {
-                log.Error("Could not load the reference time correctly, check the format. Using Now as a time reference instead.");
+                log.Error(
+                    "Could not load the reference time correctly, check the format. Using Now as a time reference instead.");
                 date = DateTime.Now;
             }
 
             return date;
         }
+
         public override IEnumerable<BcBlockData> Read(string inputFile)
         {
-                OpenInputFile(inputFile);
+            OpenInputFile(inputFile);
             try
             {
-                var line = GetNextLine();
+                string line = GetNextLine();
                 while (line != null)
                 {
                     if (line.StartsWith(BlockKey))
@@ -200,9 +224,9 @@ namespace DeltaShell.NGHS.IO
 
                     if (line.StartsWith(LocationKey))
                     {
-                        var splitHeader = SplitString(line);
-                        var boundaryName = splitHeader.Length == 2 ? splitHeader[1] : "BoundaryName";
-                        var block = ReadDataBlock(out line, boundaryName);
+                        string[] splitHeader = SplitString(line);
+                        string boundaryName = splitHeader.Length == 2 ? splitHeader[1] : "BoundaryName";
+                        BcmBlockData block = ReadDataBlock(out line, boundaryName);
                         if (block != null)
                         {
                             yield return block;
@@ -227,8 +251,9 @@ namespace DeltaShell.NGHS.IO
             string contentsValue = null;
             string verticalProfileDefinition = null;
             string locationValue = blockName;
-            string timeFunctionValue = "timeseries"; //time-function
-            DateTime referenceTimeValue = new DateTime(); //with the timeUnitValue helps determine the time reference and time steps for each entry.
+            var timeFunctionValue = "timeseries"; //time-function
+            var referenceTimeValue =
+                new DateTime(); //with the timeUnitValue helps determine the time reference and time steps for each entry.
             string timeUnitValue = null;
             string interpolationValue = null; //timeInterpolationType
             string parameterValue = null;
@@ -240,13 +265,13 @@ namespace DeltaShell.NGHS.IO
 
             BcmQuantityData quantityData = null;
 
-            var lineNumber = LineNumber;
+            int lineNumber = LineNumber;
 
             line = GetNextLine();
 
             while (line != null)
             {
-                var split = SplitString(line);
+                string[] split = SplitString(line);
                 if (split.Length < 2)
                 {
                     break;
@@ -267,22 +292,27 @@ namespace DeltaShell.NGHS.IO
 
                     quantityDataList.Add(quantityData);
                 }
+
                 if (split[0] == ContentsKey)
                 {
                     contentsValue = timeFunctionValue;
                 }
+
                 if (split[0] == InterpolationKey)
                 {
                     interpolationValue = split[1];
                 }
+
                 if (split[0] == ReferenceTimeKey)
                 {
                     referenceTimeValue = StringDateToDateTime(split[1], "yyyyMMdd");
                 }
+
                 if (split[0] == TimeUnitKey)
                 {
                     timeUnitValue = split[1];
                 }
+
                 if (split[0] == RecordsInTableKey)
                 {
                     if (split.Length == 2)
@@ -294,17 +324,23 @@ namespace DeltaShell.NGHS.IO
                         while (recordNumber > 0)
                         {
                             line = GetNextLine();
-                            if (line == null) break;
+                            if (line == null)
+                            {
+                                break;
+                            }
+
                             recordNumber -= 1;
 
-                            var columns = SplitString(line);
+                            string[] columns = SplitString(line);
                             if (columns.Length < parameterCount)
                             {
-                                log.WarnFormat("Omitting line {0} with less than {1} columns", LineNumber, parameterCount);
+                                log.WarnFormat("Omitting line {0} with less than {1} columns", LineNumber,
+                                               parameterCount);
                             }
                             else if (columns.Length > parameterCount)
                             {
-                                log.WarnFormat("Omitting line {0} with more than {1} columns", LineNumber, parameterCount);
+                                log.WarnFormat("Omitting line {0} with more than {1} columns", LineNumber,
+                                               parameterCount);
                             }
                             else
                             {
@@ -316,26 +352,31 @@ namespace DeltaShell.NGHS.IO
                         }
                     }
                 }
+
                 line = GetNextLine();
-                if (line == null || line.StartsWith(BlockKey)) break;
+                if (line == null || line.StartsWith(BlockKey))
+                {
+                    break;
+                }
             }
-            
-            if (blockName == null || !quantityDataList.Any()) //FunctionType cannot be null! but for now we are hardcoding it.
+
+            if (blockName == null || !quantityDataList.Any()
+            ) //FunctionType cannot be null! but for now we are hardcoding it.
             {
                 return null;
             }
+
             return
-                new BcmBlockData 
+                new BcmBlockData
                 {
                     FilePath = InputFilePath,
                     SupportPoint = blockName,
-                    FunctionType = contentsValue, //Forced, for the moment we did not receive the format of the bcm file and we do not know what to map this to.
+                    FunctionType =
+                        contentsValue, //Forced, for the moment we did not receive the format of the bcm file and we do not know what to map this to.
                     TimeInterpolationType = interpolationValue,
                     Location = locationValue,
                     Quantities = quantityDataList
                 };
         }
-
-        
     }
 }

@@ -17,7 +17,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Toolboxes
             Image = image;
             ScriptPath = scriptPath;
         }
-        
+
         public void Execute(IScriptLogger scriptLogger = null, Dictionary<string, object> predefVariables = null)
         {
             var host = new ScriptHost(true, true);
@@ -25,8 +25,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.Toolboxes
             // add any additional variables to scope
             if (predefVariables != null)
             {
-                foreach (var keyValue in predefVariables)
+                foreach (KeyValuePair<string, object> keyValue in predefVariables)
+                {
                     host.Scope.SetVariable(keyValue.Key, keyValue.Value);
+                }
             }
 
             // execute
@@ -38,23 +40,25 @@ namespace DeltaShell.Plugins.FMSuite.Common.Toolboxes
         private void RedirectOutputToLogger(ScriptHost host, IScriptLogger scriptLogger)
         {
             if (scriptLogger == null)
+            {
                 return;
+            }
 
-            var output = host.ReadOutput();
+            string output = host.ReadOutput();
 
             if (!string.IsNullOrEmpty(output))
             {
-                foreach (var str in output.Split('\n'))
+                foreach (string str in output.Split('\n'))
                 {
                     scriptLogger.Info(str);
                 }
             }
 
-            var errors = host.ReadError();
+            string errors = host.ReadError();
 
             if (!string.IsNullOrEmpty(errors))
             {
-                foreach (var str in errors.Split('\n'))
+                foreach (string str in errors.Split('\n'))
                 {
                     scriptLogger.Error(str);
                 }

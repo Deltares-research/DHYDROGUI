@@ -7,8 +7,6 @@ using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
-using Point = NetTopologySuite.Geometries.Point;
-
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM
 {
@@ -16,57 +14,63 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(EmbankmentGenerator));
 
-        const int DoLeft = 1;
-        const int DoRight = -1;
+        private const int DoLeft = 1;
+        private const int DoRight = -1;
 
         private static Dictionary<string, Embankment> ChannelToLeftEmbankments { get; set; }
         private static Dictionary<string, Embankment> ChannelToRightEmbankments { get; set; }
 
-        public static bool GenerateEmbankments(IList<Channel> branches, IList<Embankment> embankmentDefinitions, bool crossSectionBased, double constantDistance, bool generateLeftEmbankments, bool generateRightEmbankments, bool mergeAutomatically)
+        public static bool GenerateEmbankments(IList<Channel> branches, IList<Embankment> embankmentDefinitions,
+                                               bool crossSectionBased, double constantDistance,
+                                               bool generateLeftEmbankments, bool generateRightEmbankments,
+                                               bool mergeAutomatically)
         {
             ChannelToLeftEmbankments = new Dictionary<string, Embankment>();
             ChannelToRightEmbankments = new Dictionary<string, Embankment>();
 
-            bool result = false;
+            var result = false;
             if (!crossSectionBased)
             {
-                result = GenerateEmbankmentsAtConstantDistance(branches, embankmentDefinitions, constantDistance, generateLeftEmbankments, generateRightEmbankments);
+                result = GenerateEmbankmentsAtConstantDistance(branches, embankmentDefinitions, constantDistance,
+                                                               generateLeftEmbankments, generateRightEmbankments);
             }
             else
             {
-                result = GenerateEmbankmentsBasedOnCrossSection(branches, embankmentDefinitions, generateLeftEmbankments, generateRightEmbankments);
+                result = GenerateEmbankmentsBasedOnCrossSection(branches, embankmentDefinitions,
+                                                                generateLeftEmbankments, generateRightEmbankments);
             }
+
             if (mergeAutomatically)
             {
                 MergeAllEmbankments(branches, embankmentDefinitions);
             }
-            return result;
 
+            return result;
         }
 
         private static void MergeAllEmbankments(IList<Channel> branches, IList<Embankment> embankmentDefinitions)
         {
             var branchesMutableCopy = new List<Channel>(branches);
-            foreach (var branch in branches)
+            foreach (Channel branch in branches)
             {
-                var targetCount = (branch.Target.IncomingBranches == null ? 0 : branch.Target.IncomingBranches.Count) +
+                int targetCount = (branch.Target.IncomingBranches == null ? 0 : branch.Target.IncomingBranches.Count) +
                                   (branch.Target.OutgoingBranches == null ? 0 : branch.Target.OutgoingBranches.Count);
-                var sourceCount = (branch.Source.IncomingBranches == null ? 0 : branch.Source.IncomingBranches.Count) +
+                int sourceCount = (branch.Source.IncomingBranches == null ? 0 : branch.Source.IncomingBranches.Count) +
                                   (branch.Source.OutgoingBranches == null ? 0 : branch.Source.OutgoingBranches.Count);
                 if (targetCount > 2 || sourceCount > 2)
                 {
                     continue; // TODO: allow this situation
                 }
 
-                var connectedBranchesSameDirection =
+                IEnumerable<Channel> connectedBranchesSameDirection =
                     branchesMutableCopy.Where(b => b.Source == branch.Target || b.Target == branch.Source);
 
                 MergeBranchesToThisBranch(embankmentDefinitions, connectedBranchesSameDirection, branch);
 
-                var connectedBranchesOppositeDirection =
+                IEnumerable<Channel> connectedBranchesOppositeDirection =
                     branchesMutableCopy.Where(
                         b => b != branch &&
-                            (b.Source == branch.Source|| b.Target == branch.Target));
+                             (b.Source == branch.Source || b.Target == branch.Target));
 
                 MergeBranchesToThisBranch(embankmentDefinitions, connectedBranchesOppositeDirection, branch, true);
 
@@ -77,11 +81,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
 
-        private static void MergeBranchesToThisBranch(IList<Embankment> embankmentDefinitions, IEnumerable<Channel> connectedBranches,
-            Channel branch, bool connectedBranchesHaveOppositeDirection = false)
+        private static void MergeBranchesToThisBranch(IList<Embankment> embankmentDefinitions,
+                                                      IEnumerable<Channel> connectedBranches,
+                                                      Channel branch,
+                                                      bool connectedBranchesHaveOppositeDirection = false)
         {
             Embankment l1, l2, r1, r2;
-            foreach (var cb in connectedBranches)
+            foreach (Channel cb in connectedBranches)
             {
                 l1 = null;
                 l2 = null;
@@ -101,24 +107,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
                 if (l1 != null && l2 != null)
                 {
-                    var mergedEmbankment = EmbankmentMerger.MergeSelectedEmbankments(embankmentDefinitions, l1, l2);
+                    Embankment mergedEmbankment =
+                        EmbankmentMerger.MergeSelectedEmbankments(embankmentDefinitions, l1, l2);
                     if (mergedEmbankment != null)
                     {
                         embankmentDefinitions.Remove(l1);
-                        embankmentDefinitions.Remove(l2); 
+                        embankmentDefinitions.Remove(l2);
                         embankmentDefinitions.Add(mergedEmbankment);
                     }
 
-                    foreach (var c in ChannelToLeftEmbankments.Where(c => c.Value == l1).ToList())
+                    foreach (KeyValuePair<string, Embankment> c in ChannelToLeftEmbankments
+                                                                   .Where(c => c.Value == l1).ToList())
                     {
                         if (ChannelToLeftEmbankments.ContainsKey(c.Key))
                         {
                             ChannelToLeftEmbankments[c.Key] = mergedEmbankment;
                         }
                     }
+
                     if (!connectedBranchesHaveOppositeDirection)
                     {
-                        foreach (var c in ChannelToLeftEmbankments.Where(c => c.Value == l2).ToList())
+                        foreach (KeyValuePair<string, Embankment> c in ChannelToLeftEmbankments
+                                                                       .Where(c => c.Value == l2).ToList())
                         {
                             if (ChannelToLeftEmbankments.ContainsKey(c.Key))
                             {
@@ -128,7 +138,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     }
                     else
                     {
-                        foreach (var c in ChannelToRightEmbankments.Where(c => c.Value == l2).ToList())
+                        foreach (KeyValuePair<string, Embankment> c in ChannelToRightEmbankments
+                                                                       .Where(c => c.Value == l2).ToList())
                         {
                             if (ChannelToRightEmbankments.ContainsKey(c.Key))
                             {
@@ -137,25 +148,31 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                         }
                     }
                 }
+
                 if (r1 != null && r2 != null)
                 {
-                    var mergedEmbankment = EmbankmentMerger.MergeSelectedEmbankments(embankmentDefinitions, r1, r2);
+                    Embankment mergedEmbankment =
+                        EmbankmentMerger.MergeSelectedEmbankments(embankmentDefinitions, r1, r2);
                     if (mergedEmbankment != null)
                     {
                         embankmentDefinitions.Remove(r1);
                         embankmentDefinitions.Remove(r2);
                         embankmentDefinitions.Add(mergedEmbankment);
                     }
-                    foreach (var c in ChannelToRightEmbankments.Where(c => c.Value == r1).ToList())
+
+                    foreach (KeyValuePair<string, Embankment> c in ChannelToRightEmbankments
+                                                                   .Where(c => c.Value == r1).ToList())
                     {
                         if (ChannelToRightEmbankments.ContainsKey(c.Key))
                         {
                             ChannelToRightEmbankments[c.Key] = mergedEmbankment;
                         }
                     }
+
                     if (!connectedBranchesHaveOppositeDirection)
                     {
-                        foreach (var c in ChannelToRightEmbankments.Where(c => c.Value == r2).ToList())
+                        foreach (KeyValuePair<string, Embankment> c in ChannelToRightEmbankments
+                                                                       .Where(c => c.Value == r2).ToList())
                         {
                             if (ChannelToRightEmbankments.ContainsKey(c.Key))
                             {
@@ -165,7 +182,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     }
                     else
                     {
-                        foreach (var c in ChannelToLeftEmbankments.Where(c => c.Value == r2).ToList())
+                        foreach (KeyValuePair<string, Embankment> c in ChannelToLeftEmbankments
+                                                                       .Where(c => c.Value == r2).ToList())
                         {
                             if (ChannelToLeftEmbankments.ContainsKey(c.Key))
                             {
@@ -173,13 +191,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                             }
                         }
                     }
-
                 }
             }
         }
 
-        public static bool GenerateEmbankmentsAtConstantDistance(IList<Channel> channels, IList<Embankment> embankmentDefinitions,
-                                                           double distance, bool generateLeftEmbankment, bool generateRightEmbankment)
+        public static bool GenerateEmbankmentsAtConstantDistance(IList<Channel> channels,
+                                                                 IList<Embankment> embankmentDefinitions,
+                                                                 double distance, bool generateLeftEmbankment,
+                                                                 bool generateRightEmbankment)
         {
             if (distance <= 0.0)
             {
@@ -193,7 +212,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 return false;
             }
 
-            foreach (var channel in channels)
+            foreach (Channel channel in channels)
             {
                 var coordinatesLeft = new List<Coordinate>();
                 var coordinatesRight = new List<Coordinate>();
@@ -204,9 +223,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 var radiansUp = 0.0;
 
                 var prevRadians = 0.0;
-                var prevPoint = channel.Geometry.Coordinates[0];
+                Coordinate prevPoint = channel.Geometry.Coordinates[0];
                 var prevChainage = 0.0;
-                var turningDirection = 0;  // -1: Left, 1:Right, 0:Straight
+                var turningDirection = 0; // -1: Left, 1:Right, 0:Straight
 
                 var skipLeftPoint = false;
                 var skipRightPoint = false;
@@ -225,7 +244,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                         point2 = channel.Geometry.Coordinates[i + 1];
                         refPoint = point1;
 
-                        pointChainage = NetworkHelper.GetBranchFeatureChainageFromGeometry(channel, new Point(refPoint));
+                        pointChainage =
+                            NetworkHelper.GetBranchFeatureChainageFromGeometry(channel, new Point(refPoint));
                     }
                     else
                     {
@@ -236,11 +256,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                         pointChainage = channel.Length;
                     }
 
-                    var x = point2.X - point1.X;
-                    var y = point2.Y - point1.Y;
+                    double x = point2.X - point1.X;
+                    double y = point2.Y - point1.Y;
 
-                    var radiansDown = Math.Atan2(y, x);
-                    if (radiansDown < 0.0) radiansDown = Math.PI * 2.0 + radiansDown;
+                    double radiansDown = Math.Atan2(y, x);
+                    if (radiansDown < 0.0)
+                    {
+                        radiansDown = (Math.PI * 2.0) + radiansDown;
+                    }
 
                     if (i == channel.Geometry.Coordinates.Count() - 1)
                     {
@@ -248,14 +271,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                         skipLeftPoint = false;
                         if (generateLeftEmbankment && turningDirection == -1)
                         {
-                            var beta = (radiansDown - prevRadians) / 2.0;
+                            double beta = (radiansDown - prevRadians) / 2.0;
                             skipLeftPoint = (pointChainage - prevChainage) / distance < Math.Tan(beta);
                         }
 
                         skipRightPoint = false;
                         if (generateRightEmbankment && turningDirection == 1)
                         {
-                            var beta = (prevRadians - radiansDown) / 2.0;
+                            double beta = (prevRadians - radiansDown) / 2.0;
                             skipRightPoint = (pointChainage - prevChainage) / distance < Math.Tan(beta);
                         }
                     }
@@ -267,13 +290,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
                     if (generateLeftEmbankment && !skipLeftPoint)
                     {
-                        var leftPoint = GetPoint(radiansUp, radiansDown, refPoint, distance, DoLeft);
+                        Coordinate leftPoint = GetPoint(radiansUp, radiansDown, refPoint, distance, DoLeft);
                         coordinatesLeft.Add(leftPoint);
                     }
 
                     if (generateRightEmbankment && !skipRightPoint)
                     {
-                        var rightPoint = GetPoint(radiansUp, radiansDown, refPoint, distance, DoRight);
+                        Coordinate rightPoint = GetPoint(radiansUp, radiansDown, refPoint, distance, DoRight);
                         coordinatesRight.Add(rightPoint);
                     }
 
@@ -292,14 +315,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 if (generateLeftEmbankment)
                 {
                     leftEmbankment.Geometry = new LineString(coordinatesLeft.ToArray());
-                    leftEmbankment.Name = NetworkHelper.GetUniqueName("Embankment{0:D2}", embankmentDefinitions, "Embankment");
+                    leftEmbankment.Name =
+                        NetworkHelper.GetUniqueName("Embankment{0:D2}", embankmentDefinitions, "Embankment");
                     embankmentDefinitions.Add(leftEmbankment);
                     ChannelToLeftEmbankments[channel.Name] = leftEmbankment;
                 }
+
                 if (generateRightEmbankment)
                 {
                     rightEmbankment.Geometry = new LineString(coordinatesRight.ToArray());
-                    rightEmbankment.Name = NetworkHelper.GetUniqueName("Embankment{0:D2}", embankmentDefinitions, "Embankment");
+                    rightEmbankment.Name =
+                        NetworkHelper.GetUniqueName("Embankment{0:D2}", embankmentDefinitions, "Embankment");
                     embankmentDefinitions.Add(rightEmbankment);
                     ChannelToRightEmbankments[channel.Name] = rightEmbankment;
                 }
@@ -308,26 +334,32 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             return true;
         }
 
-        private static Coordinate GetPoint(double radiansUp, double radiansDn, Coordinate refPoint, double distance, int side)
+        private static Coordinate GetPoint(double radiansUp, double radiansDn, Coordinate refPoint, double distance,
+                                           int side)
         {
+            var point = new Coordinate();
+            point.Z = 0.0d; // Default value: NaN, which should be avoided. 
 
-            Coordinate point = new Coordinate();
-            point.Z = 0.0d;   // Default value: NaN, which should be avoided. 
+            double radiansSideUp = radiansUp + (Math.PI * side * 0.5);
+            if (radiansSideUp < 0.0)
+            {
+                radiansSideUp = (Math.PI * 2.0) + radiansSideUp;
+            }
 
-            var radiansSideUp = radiansUp + (Math.PI * side * 0.5);
-            if (radiansSideUp < 0.0) radiansSideUp = Math.PI * 2.0 + radiansSideUp;
+            double radiansSideDn = radiansDn + (Math.PI * side * 0.5);
+            if (radiansSideDn < 0.0)
+            {
+                radiansSideDn = (Math.PI * 2.0) + radiansSideDn;
+            }
 
-            var radiansSideDn = radiansDn + (Math.PI * side * 0.5);
-            if (radiansSideDn < 0.0) radiansSideDn = Math.PI * 2.0 + radiansSideDn;
+            double radiansSide = (radiansSideUp + radiansSideDn) / 2.0;
 
-            var radiansSide = (radiansSideUp + radiansSideDn) / 2.0;
+            double radians = Math.Abs(radiansSideUp - radiansSideDn);
 
-            var radians = Math.Abs(radiansSideUp - radiansSideDn);
+            double length = distance / Math.Cos(radians / 2.0);
 
-            var length = distance / Math.Cos(radians/2.0);
-
-            point.X = length * Math.Cos(radiansSide) + refPoint.X;
-            point.Y = length * Math.Sin(radiansSide) + refPoint.Y;
+            point.X = (length * Math.Cos(radiansSide)) + refPoint.X;
+            point.Y = (length * Math.Sin(radiansSide)) + refPoint.Y;
 
             return point;
         }
@@ -354,20 +386,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 leftHeight = new List<double>();
                 rightHeight = new List<double>();
 
-                var sortedCrossSections = channel.CrossSections.Where(c => c.CrossSectionType == CrossSectionType.YZ ||
-                                                                           c.CrossSectionType == CrossSectionType.ZW).OrderBy(c => c.Chainage).ToList();
-                foreach (var cross in sortedCrossSections)
+                List<ICrossSection> sortedCrossSections = channel.CrossSections.Where(
+                                                                     c => c.CrossSectionType == CrossSectionType.YZ ||
+                                                                          c.CrossSectionType == CrossSectionType.ZW)
+                                                                 .OrderBy(c => c.Chainage).ToList();
+                foreach (ICrossSection cross in sortedCrossSections)
                 {
                     chainage.Add(cross.Chainage);
 
                     leftSide.Add(Math.Abs(cross.Definition.Left - cross.Definition.Thalweg));
-                    rightSide.Add(Math.Abs(cross.Definition.Left + cross.Definition.Width - cross.Definition.Thalweg));
+                    rightSide.Add(Math.Abs((cross.Definition.Left + cross.Definition.Width) -
+                                           cross.Definition.Thalweg));
 
                     leftHeight.Add(cross.Definition.LeftEmbankment);
                     rightHeight.Add(cross.Definition.RightEmbankment);
                 }
 
-                passedFirst= false;
+                passedFirst = false;
                 lastReached = false;
                 begChainage = chainage.First();
                 if (chainage.Count == 1)
@@ -385,12 +420,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                         lastReached = false;
                     }
                 }
-
             }
 
-            public bool GetValuesForChainage(ref double actualChainage, out double leftDistance, out double rightDistance, out double leftLevel, out double rightLevel)
+            public bool GetValuesForChainage(ref double actualChainage, out double leftDistance,
+                                             out double rightDistance, out double leftLevel, out double rightLevel)
             {
-
                 // ExtraPolation before first Cross-Section
                 if (actualChainage < chainage.First())
                 {
@@ -411,7 +445,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                         leftDistance = leftSide.ElementAt(indexEndChain - 1);
                         rightDistance = rightSide.ElementAt(indexEndChain - 1);
 
-                        leftLevel= leftHeight.ElementAt(indexEndChain - 1);
+                        leftLevel = leftHeight.ElementAt(indexEndChain - 1);
                         rightLevel = rightHeight.ElementAt(indexEndChain - 1);
                     }
                     else
@@ -442,20 +476,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     return true;
                 }
 
-
                 // Cross-Section at endChainage
                 if (Math.Abs(actualChainage - endChainage) < 1.0E-8)
                 {
                     leftDistance = leftSide.ElementAt(indexEndChain);
                     rightDistance = rightSide.ElementAt(indexEndChain);
 
-                    leftLevel= leftHeight.ElementAt(indexEndChain);
+                    leftLevel = leftHeight.ElementAt(indexEndChain);
                     rightLevel = rightHeight.ElementAt(indexEndChain);
 
                     if (indexEndChain == chainage.Count - 1)
                     {
                         lastReached = true;
                     }
+
                     return false;
                 }
 
@@ -472,14 +506,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 }
 
                 // Move up te next cross-section
-                if (actualChainage > endChainage  && !lastReached)
+                if (actualChainage > endChainage && !lastReached)
                 {
                     // We passed a cross-section, add that to embankment
                     actualChainage = endChainage;
                     leftDistance = leftSide.ElementAt(indexEndChain);
                     rightDistance = rightSide.ElementAt(indexEndChain);
 
-                    leftLevel= leftHeight.ElementAt(indexEndChain);
+                    leftLevel = leftHeight.ElementAt(indexEndChain);
                     rightLevel = rightHeight.ElementAt(indexEndChain);
 
                     // Shift to next one if not at the end
@@ -493,7 +527,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                         lastReached = true;
                     }
 
-                     return true;
+                    return true;
                 }
 
                 // Regular interpolation
@@ -504,45 +538,52 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 }
 
                 leftDistance = leftSide.ElementAt(indexEndChain - 1) +
-                                fraction * (leftSide.ElementAt(indexEndChain) - leftSide.ElementAt(indexEndChain - 1));
+                               (fraction * (leftSide.ElementAt(indexEndChain) - leftSide.ElementAt(indexEndChain - 1)));
 
                 rightDistance = rightSide.ElementAt(indexEndChain - 1) +
-                                fraction * (rightSide.ElementAt(indexEndChain) - rightSide.ElementAt(indexEndChain - 1));
+                                (fraction *
+                                 (rightSide.ElementAt(indexEndChain) - rightSide.ElementAt(indexEndChain - 1)));
 
                 leftLevel = leftHeight.ElementAt(indexEndChain - 1) +
-                            fraction * (leftHeight.ElementAt(indexEndChain) - leftHeight.ElementAt(indexEndChain - 1));
+                            (fraction * (leftHeight.ElementAt(indexEndChain) -
+                                         leftHeight.ElementAt(indexEndChain - 1)));
 
                 rightLevel = rightHeight.ElementAt(indexEndChain - 1) +
-                                fraction * (rightHeight.ElementAt(indexEndChain) - rightHeight.ElementAt(indexEndChain - 1));
+                             (fraction * (rightHeight.ElementAt(indexEndChain) -
+                                          rightHeight.ElementAt(indexEndChain - 1)));
 
                 return false;
             }
-
         }
 
-        public static bool GenerateEmbankmentsBasedOnCrossSection(IList<Channel> channels, IList<Embankment> embankmentDefinitions,
-                                                            bool generateLeftEmbankment, bool generateRightEmbankment)
+        public static bool GenerateEmbankmentsBasedOnCrossSection(IList<Channel> channels,
+                                                                  IList<Embankment> embankmentDefinitions,
+                                                                  bool generateLeftEmbankment,
+                                                                  bool generateRightEmbankment)
         {
-
-            foreach (var channel in channels)
+            foreach (Channel channel in channels)
             {
-
                 var crossData = new CrossData();
 
                 if (!channel.CrossSections.Any())
                 {
-                    Log.Warn(String.Format("Channel '{0}' has no cross-sections; no embankments created for this channel.", channel.Name));
+                    Log.Warn(string.Format(
+                                 "Channel '{0}' has no cross-sections; no embankments created for this channel.",
+                                 channel.Name));
                     continue;
                 }
 
-                var crossFound = channel.CrossSections.Any(c => c.CrossSectionType == CrossSectionType.YZ || c.CrossSectionType == CrossSectionType.ZW);
+                bool crossFound = channel.CrossSections.Any(
+                    c => c.CrossSectionType == CrossSectionType.YZ ||
+                         c.CrossSectionType == CrossSectionType.ZW);
 
                 if (!crossFound)
                 {
-                    Log.Warn(String.Format("No suitable cross-sectons found in channel '{0}'; no embankments created for this channel.", channel.Name));
+                    Log.Warn(string.Format(
+                                 "No suitable cross-sectons found in channel '{0}'; no embankments created for this channel.",
+                                 channel.Name));
                     continue;
                 }
-
 
                 var coordinatesLeft = new List<Coordinate>();
                 var coordinatesRight = new List<Coordinate>();
@@ -553,10 +594,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 var radiansUp = 0.0;
 
                 var prevRadians = 0.0;
-                var prevPoint = channel.Geometry.Coordinates[0];
+                Coordinate prevPoint = channel.Geometry.Coordinates[0];
                 var prevChainage = 0.0;
                 var lastChainage = 0.0;
-                var turningDirection = 0;  // -1: Left, 1:Right, 0:Straight
+                var turningDirection = 0; // -1: Left, 1:Right, 0:Straight
 
                 crossData.Initialize(channel);
 
@@ -573,7 +614,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                         point1 = channel.Geometry.Coordinates[i];
                         point2 = channel.Geometry.Coordinates[i + 1];
                         refPoint = point1;
-                        pointChainage = NetworkHelper.GetBranchFeatureChainageFromGeometry(channel, new Point(refPoint));
+                        pointChainage =
+                            NetworkHelper.GetBranchFeatureChainageFromGeometry(channel, new Point(refPoint));
                     }
                     else
                     {
@@ -582,12 +624,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                         refPoint = point2;
                         pointChainage = channel.Length;
                     }
-                    
-                    var x = point2.X - point1.X;
-                    var y = point2.Y - point1.Y;
 
-                    var radiansDown = Math.Atan2(y, x);
-                    if (radiansDown < 0.0) radiansDown = Math.PI * 2.0 + radiansDown;
+                    double x = point2.X - point1.X;
+                    double y = point2.Y - point1.Y;
+
+                    double radiansDown = Math.Atan2(y, x);
+                    if (radiansDown < 0.0)
+                    {
+                        radiansDown = (Math.PI * 2.0) + radiansDown;
+                    }
 
                     if (i == 0 || i == channel.Geometry.Coordinates.Count() - 1)
                     {
@@ -603,42 +648,45 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                         double rightDistance;
                         double rightHeight;
 
-                        var actualChainage = pointChainage;
+                        double actualChainage = pointChainage;
                         lastChainage = prevChainage;
 
-                        doAgain = crossData.GetValuesForChainage(ref actualChainage, out leftDistance, out rightDistance,
+                        doAgain = crossData.GetValuesForChainage(ref actualChainage, out leftDistance,
+                                                                 out rightDistance,
                                                                  out leftHeight, out rightHeight);
 
                         // Skip if necessary according the Rodriguez Aguilera criterium (TOOLS-22145)
                         var skipLeftPoint = false;
                         if (generateLeftEmbankment && turningDirection == -1)
                         {
-                            var beta = (radiansDown - prevRadians) / 2.0;
+                            double beta = (radiansDown - prevRadians) / 2.0;
                             skipLeftPoint = (actualChainage - lastChainage) / leftDistance < Math.Tan(beta);
                         }
 
                         var skipRightPoint = false;
                         if (generateRightEmbankment && turningDirection == 1)
                         {
-                            var beta = (prevRadians - radiansDown) / 2.0;
+                            double beta = (prevRadians - radiansDown) / 2.0;
                             skipRightPoint = (actualChainage - lastChainage) / rightDistance < Math.Tan(beta);
                         }
 
                         if (doAgain)
                         {
-                            var crossPoint = GetPointFromChainage(NetworkHelper.GetBranchFeatureChainageFromGeometry(channel, new Point(prevPoint)),
-                                                                  actualChainage, prevPoint, refPoint);
-                            
+                            Coordinate crossPoint = GetPointFromChainage(
+                                NetworkHelper.GetBranchFeatureChainageFromGeometry(channel, new Point(prevPoint)),
+                                actualChainage, prevPoint, refPoint);
+
                             if (generateLeftEmbankment && !skipLeftPoint)
                             {
-                                var leftPoint = GetPoint(radiansUp, radiansUp, crossPoint, leftDistance, DoLeft);
+                                Coordinate leftPoint = GetPoint(radiansUp, radiansUp, crossPoint, leftDistance, DoLeft);
                                 leftPoint.Z = leftHeight;
                                 coordinatesLeft.Add(leftPoint);
                             }
 
                             if (generateRightEmbankment && !skipRightPoint)
                             {
-                                var rightPoint = GetPoint(radiansUp, radiansUp, crossPoint, rightDistance, DoRight);
+                                Coordinate rightPoint =
+                                    GetPoint(radiansUp, radiansUp, crossPoint, rightDistance, DoRight);
                                 rightPoint.Z = rightHeight;
                                 coordinatesRight.Add(rightPoint);
                             }
@@ -649,14 +697,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                         {
                             if (generateLeftEmbankment && !skipLeftPoint)
                             {
-                                var leftPoint = GetPoint(radiansUp, radiansDown, refPoint, leftDistance, DoLeft);
+                                Coordinate leftPoint = GetPoint(radiansUp, radiansDown, refPoint, leftDistance, DoLeft);
                                 leftPoint.Z = leftHeight;
                                 coordinatesLeft.Add(leftPoint);
                             }
 
                             if (generateRightEmbankment && !skipRightPoint)
                             {
-                                var rightPoint = GetPoint(radiansUp, radiansDown, refPoint, rightDistance, DoRight);
+                                Coordinate rightPoint =
+                                    GetPoint(radiansUp, radiansDown, refPoint, rightDistance, DoRight);
                                 rightPoint.Z = rightHeight;
                                 coordinatesRight.Add(rightPoint);
                             }
@@ -678,14 +727,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 if (generateLeftEmbankment)
                 {
                     leftEmbankment.Geometry = new LineString(coordinatesLeft.ToArray());
-                    leftEmbankment.Name = NetworkHelper.GetUniqueName("Embankment{0:D2}", embankmentDefinitions, "Embankment");
+                    leftEmbankment.Name =
+                        NetworkHelper.GetUniqueName("Embankment{0:D2}", embankmentDefinitions, "Embankment");
                     embankmentDefinitions.Add(leftEmbankment);
                 }
 
                 if (generateRightEmbankment)
                 {
                     rightEmbankment.Geometry = new LineString(coordinatesRight.ToArray());
-                    rightEmbankment.Name = NetworkHelper.GetUniqueName("Embankment{0:D2}", embankmentDefinitions, "Embankment");
+                    rightEmbankment.Name =
+                        NetworkHelper.GetUniqueName("Embankment{0:D2}", embankmentDefinitions, "Embankment");
                     embankmentDefinitions.Add(rightEmbankment);
                 }
             }
@@ -702,19 +753,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             // function ccw(p1, p2, p3):
             // return (p2.x - p1.x)*(p3.y - p1.y) - (p2.y - p1.y)*(p3.x - p1.x)
 
-            var ccw = (p2.X - p1.X)*(p3.Y - p1.Y) - (p2.Y - p1.Y)*(p3.X - p1.X);
+            double ccw = ((p2.X - p1.X) * (p3.Y - p1.Y)) - ((p2.Y - p1.Y) * (p3.X - p1.X));
 
-            if (ccw > 0.0) return -1;
+            if (ccw > 0.0)
+            {
+                return -1;
+            }
 
-            if (ccw < 0.0) return 1;
+            if (ccw < 0.0)
+            {
+                return 1;
+            }
 
             return 0;
         }
 
-        private static Coordinate GetPointFromChainage(double startchainage, double chainage, Coordinate point1, Coordinate point2)
+        private static Coordinate GetPointFromChainage(double startchainage, double chainage, Coordinate point1,
+                                                       Coordinate point2)
         {
             var chainagePoint = new Coordinate();
-            var factor = (chainage - startchainage) / point1.Distance(point2);
+            double factor = (chainage - startchainage) / point1.Distance(point2);
 
             if (Math.Abs(point2.X - point1.X) < 1.0E-8)
             {
@@ -722,7 +780,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
             else
             {
-                chainagePoint.X = point1.X + (point2.X - point1.X) * factor;
+                chainagePoint.X = point1.X + ((point2.X - point1.X) * factor);
             }
 
             if (Math.Abs(point2.Y - point1.Y) < 1.0E-8)
@@ -731,7 +789,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
             else
             {
-                chainagePoint.Y = point1.Y + (point2.Y - point1.Y) * factor;
+                chainagePoint.Y = point1.Y + ((point2.Y - point1.Y) * factor);
             }
 
             return chainagePoint;

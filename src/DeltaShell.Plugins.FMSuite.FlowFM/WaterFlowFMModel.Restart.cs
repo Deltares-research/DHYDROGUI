@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-﻿using System.Xml.Serialization;
+using System.Xml.Serialization;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Core.Workflow.Restart;
@@ -17,20 +17,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
     public partial class WaterFlowFMModel
     {
         private const string ModelTypeId = "FMModel";
-        
+
         private ModelFileBasedStateHandler modelStateHandler;
-        private readonly IList<DelftTools.Utils.Tuple<string, string>> outAndInFileNames = new List<DelftTools.Utils.Tuple<string, string>>();
-        private static readonly int[] SupportedMetaDataVersions = new[] { 1 };
-        
+
+        private readonly IList<DelftTools.Utils.Tuple<string, string>> outAndInFileNames =
+            new List<DelftTools.Utils.Tuple<string, string>>();
+
+        private static readonly int[] SupportedMetaDataVersions = new[]
+        {
+            1
+        };
+
         private const string RestartInfoPath = "restart.meta";
-        
+
         private void SaveRestartInfo(string mduPath)
         {
             var restartInfo = new SerializableStatesInfo
-                {
-                    InState = CreateStateInfo(RestartInput),
-                    OutStates = GetRestartOutputStates().Where(r => !r.IsEmpty).Select(CreateStateInfo).ToArray()
-                };
+            {
+                InState = CreateStateInfo(RestartInput),
+                OutStates = GetRestartOutputStates().Where(r => !r.IsEmpty).Select(CreateStateInfo).ToArray()
+            };
 
             restartInfo.Save(GetFilePathFromMduPath(mduPath, RestartInfoPath));
         }
@@ -38,33 +44,40 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private StateInfo CreateStateInfo(FileBasedRestartState fileBasedRestartState)
         {
             if (fileBasedRestartState.IsEmpty)
+            {
                 return null;
+            }
+
             return new StateInfo(fileBasedRestartState.Name, fileBasedRestartState.Path);
         }
 
         private void LoadRestartInfo(string mduPath)
         {
-            var infoPath = GetFilePathFromMduPath(mduPath, RestartInfoPath);
+            string infoPath = GetFilePathFromMduPath(mduPath, RestartInfoPath);
 
             if (File.Exists(infoPath))
             {
-                var restartInfo = SerializableStatesInfo.Load(infoPath);
+                SerializableStatesInfo restartInfo = SerializableStatesInfo.Load(infoPath);
 
-                var state = GetFileBasedStateFromStateInfo(restartInfo.InState);
+                FileBasedRestartState state = GetFileBasedStateFromStateInfo(restartInfo.InState);
                 if (state != null)
+                {
                     RestartInput = state;
+                }
 
                 // remove any existing ones first:
-                var toRemove = dataItems.Where(di => di.Tag == RestartOutputStateTag).ToArray();
+                IDataItem[] toRemove = dataItems.Where(di => di.Tag == RestartOutputStateTag).ToArray();
                 toRemove.ForEach(di => dataItems.Remove(di));
 
                 if (restartInfo.OutStates != null)
                 {
-                    foreach (var outStatePath in restartInfo.OutStates)
+                    foreach (StateInfo outStatePath in restartInfo.OutStates)
                     {
-                        var outState = GetFileBasedStateFromStateInfo(outStatePath);
+                        FileBasedRestartState outState = GetFileBasedStateFromStateInfo(outStatePath);
                         if (outState != null)
+                        {
                             AddRestartOutputDataItem(outState);
+                        }
                     }
                 }
             }
@@ -72,27 +85,34 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private void LoadRestartFile(string mduPath)
         {
-            if (mduPath == null) return;
-            var restartFile = ModelDefinition.GetModelProperty(KnownProperties.RestartFile).GetValueAsString();
-            var restartPath = GetFilePathFromMduPath(mduPath, restartFile);
+            if (mduPath == null)
+            {
+                return;
+            }
+
+            string restartFile = ModelDefinition.GetModelProperty(KnownProperties.RestartFile).GetValueAsString();
+            string restartPath = GetFilePathFromMduPath(mduPath, restartFile);
             if (File.Exists(restartPath))
             {
                 ImportRestartFile(restartPath);
-            }            
+            }
         }
 
         private static FileBasedRestartState GetFileBasedStateFromStateInfo(StateInfo stateInfo)
         {
             if (stateInfo == null)
+            {
                 return null;
+            }
 
-            var zipFilePath = stateInfo.ZipPath;
-            if (!String.IsNullOrEmpty(zipFilePath) && File.Exists(zipFilePath))
+            string zipFilePath = stateInfo.ZipPath;
+            if (!string.IsNullOrEmpty(zipFilePath) && File.Exists(zipFilePath))
             {
                 var fileBasedState = new FileBasedRestartState(stateInfo.Name, zipFilePath);
                 ((IFileBased) fileBasedState).Path = zipFilePath;
                 return fileBasedState;
             }
+
             return null;
         }
 
@@ -111,10 +131,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 ModelDefinition.GetModelProperty(KnownProperties.RestartFile).SetValueAsString("");
                 return;
             }
-            
+
             // copies file to correct directory and set RestartFile property in mdu
-            var unpackedState = ModelStateHandler.CreateStateFromFile(Name, RestartInput.Path);
-            var restartFileName = Path.GetFileName(((ModelStateFilesImpl)unpackedState).GetFilesInModelState().FirstOrDefault(f=> f.EndsWith("_rst.nc")));
+            IModelState unpackedState = ModelStateHandler.CreateStateFromFile(Name, RestartInput.Path);
+            string restartFileName = Path.GetFileName(((ModelStateFilesImpl) unpackedState)
+                                                      .GetFilesInModelState()
+                                                      .FirstOrDefault(f => f.EndsWith("_rst.nc")));
             if (ModelStateHandler.FeedStateToModel(unpackedState))
             {
                 ModelDefinition.GetModelProperty(KnownProperties.RestartFile).SetValueAsString(restartFileName);
@@ -127,9 +149,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         public void ImportRestartFile(string restartFilePath)
         {
-            var fileName = Path.GetFileName(restartFilePath);
-            var splitFileName = fileName.Split(new[] {'_', '.'}, StringSplitOptions.RemoveEmptyEntries);
-            var length = splitFileName.Length;
+            string fileName = Path.GetFileName(restartFilePath);
+            string[] splitFileName = fileName.Split(new[]
+            {
+                '_',
+                '.'
+            }, StringSplitOptions.RemoveEmptyEntries);
+            int length = splitFileName.Length;
             if (length < 5 || splitFileName[length - 2] != "rst")
             {
                 throw new ArgumentException(
@@ -137,26 +163,30 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                         "Invalid restart file name {0}: your file should be formatted as <name>_yyyyMMdd_HHmmss_rst.nc",
                         fileName));
             }
+
             if (splitFileName.Last() != "nc")
             {
                 throw new ArgumentException(string.Format("Invalid restart file {0}: not a NetCDF file.", fileName));
             }
-            var dateTimeString = string.Concat(splitFileName[length - 4], splitFileName[length - 3]);
+
+            string dateTimeString = string.Concat(splitFileName[length - 4], splitFileName[length - 3]);
             DateTime dateTime;
             if (!DateTime.TryParseExact(dateTimeString, "yyyyMMddhhmmss", CultureInfo.InvariantCulture,
-                    DateTimeStyles.None, out dateTime))
+                                        DateTimeStyles.None, out dateTime))
             {
                 throw new ArgumentException(
                     string.Format(
                         "Invalid restart file name {0}: your file should be formatted as <name>_yyyyMMdd_HHmmss_rst.nc",
                         fileName));
             }
+
             ModelStateHandler.ModelWorkingDirectory = Path.GetDirectoryName(Path.GetFullPath(MduFilePath));
-            var destFileName = Path.Combine(ModelStateHandler.ModelWorkingDirectory, fileName);
+            string destFileName = Path.Combine(ModelStateHandler.ModelWorkingDirectory, fileName);
             if (Path.GetFullPath(restartFilePath) != Path.GetFullPath(destFileName))
             {
                 File.Copy(restartFilePath, destFileName, true);
             }
+
             outAndInFileNames[0].First = Path.GetFullPath(destFileName);
             outAndInFileNames[0].Second = fileName;
             RestartInput = CreateRestartState(this, ModelStateHandler.GetState(), dateTime);
@@ -165,17 +195,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         IModelState IStateAwareModelEngine.GetCopyOfCurrentState()
         {
-            var modelFileBasedStateHandler = ModelStateHandler;
+            ModelFileBasedStateHandler modelFileBasedStateHandler = ModelStateHandler;
 
             // modify Out filename list to account for CurrentTime (instance is same as used inside ModelStateHandler)
-            var restartFileName = string.Format("{0}_{1}_rst.nc", Name,
-                                                CurrentTime.ToString("yyyyMMdd_HHmmss"));
+            string restartFileName = string.Format("{0}_{1}_rst.nc", Name,
+                                                   CurrentTime.ToString("yyyyMMdd_HHmmss"));
             outAndInFileNames[0].First = Path.Combine(ModelDefinition.OutputDirectoryName, restartFileName);
             outAndInFileNames[0].Second = restartFileName; //out and in is the same
 
             return modelFileBasedStateHandler.GetState();
         }
-        
+
         void IStateAwareModelEngine.SetState(IModelState modelState)
         {
             ModelStateHandler.FeedStateToModel(modelState);
@@ -193,14 +223,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         public override bool WriteRestart
         {
-            get { return (bool)ModelDefinition.GetModelProperty(GuiProperties.WriteRstFile).Value; }
-            set { ModelDefinition.GetModelProperty(GuiProperties.WriteRstFile).Value = value; }
+            get => (bool) ModelDefinition.GetModelProperty(GuiProperties.WriteRstFile).Value;
+            set => ModelDefinition.GetModelProperty(GuiProperties.WriteRstFile).Value = value;
         }
 
         public virtual bool UseSaveStateTimeRange
         {
-            get { return WriteRestart; } // always when writing restart (interval is always choosable)
-            set { }
+            get => WriteRestart;
+// always when writing restart (interval is always choosable)
+            set {}
         }
 
         public virtual DateTime SaveStateStartTime
@@ -208,16 +239,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             get
             {
                 if (UserSpecifiedRestartStartTime)
+                {
                     return (DateTime) ModelDefinition.GetModelProperty(GuiProperties.RstOutputStartTime).Value;
+                }
+
                 return StartTime;
             }
             set
             {
                 if (value != StartTime)
+                {
                     UserSpecifiedRestartStartTime = true;
+                }
 
                 if (UserSpecifiedRestartStartTime)
+                {
                     ModelDefinition.GetModelProperty(GuiProperties.RstOutputStartTime).Value = value;
+                }
             }
         }
 
@@ -226,35 +264,42 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             get
             {
                 if (UserSpecifiedRestartStopTime)
-                    return (DateTime)ModelDefinition.GetModelProperty(GuiProperties.RstOutputStopTime).Value;
+                {
+                    return (DateTime) ModelDefinition.GetModelProperty(GuiProperties.RstOutputStopTime).Value;
+                }
+
                 return StopTime;
             }
             set
             {
                 if (value != StopTime)
+                {
                     UserSpecifiedRestartStopTime = true;
+                }
 
                 if (UserSpecifiedRestartStopTime)
+                {
                     ModelDefinition.GetModelProperty(GuiProperties.RstOutputStopTime).Value = value;
+                }
             }
         }
 
         public virtual TimeSpan SaveStateTimeStep
         {
-            get { return (TimeSpan) ModelDefinition.GetModelProperty(GuiProperties.RstOutputDeltaT).Value; }
-            set { ModelDefinition.GetModelProperty(GuiProperties.RstOutputDeltaT).Value = value; }
+            get => (TimeSpan) ModelDefinition.GetModelProperty(GuiProperties.RstOutputDeltaT).Value;
+            set => ModelDefinition.GetModelProperty(GuiProperties.RstOutputDeltaT).Value = value;
         }
 
         private bool UserSpecifiedRestartStartTime
         {
-            get { return (bool)ModelDefinition.GetModelProperty(GuiProperties.SpecifyRstStart).Value; }
-            set { ModelDefinition.GetModelProperty(GuiProperties.SpecifyRstStart).Value = value; }
+            get => (bool) ModelDefinition.GetModelProperty(GuiProperties.SpecifyRstStart).Value;
+            set => ModelDefinition.GetModelProperty(GuiProperties.SpecifyRstStart).Value = value;
         }
 
         private bool UserSpecifiedRestartStopTime
         {
-            get { return (bool)ModelDefinition.GetModelProperty(GuiProperties.SpecifyRstStop).Value; }
-            set { ModelDefinition.GetModelProperty(GuiProperties.SpecifyRstStop).Value = value; }
+            get => (bool) ModelDefinition.GetModelProperty(GuiProperties.SpecifyRstStop).Value;
+            set => ModelDefinition.GetModelProperty(GuiProperties.SpecifyRstStop).Value = value;
         }
 
         public virtual IEnumerable<DateTime> GetRestartWriteTimes()
@@ -262,9 +307,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (UseSaveStateTimeRange)
             {
                 if (SaveStateTimeStep.Ticks == 0L)
+                {
                     yield break; //interval 0 would cause infinite loop; break
+                }
 
-                var time = SaveStateStartTime;
+                DateTime time = SaveStateStartTime;
                 while (time <= SaveStateStopTime)
                 {
                     yield return time;
@@ -277,7 +324,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         public override bool IsDataItemActive(IDataItem dataItem)
         {
             if (dataItem.Tag == RestartInputStateTag)
+            {
                 return UseRestart;
+            }
+
             return base.IsDataItemActive(dataItem);
         }
 
@@ -296,13 +346,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             try
             {
-                var modelState = (ModelStateFilesImpl)ModelStateHandler.CreateStateFromFile("validate", RestartInput.Path);
-                errors = ModelStateValidator.ValidateInputState(modelState, SupportedMetaDataVersions, GetMetaDataRequirements, ModelTypeId);
+                var modelState =
+                    (ModelStateFilesImpl) ModelStateHandler.CreateStateFromFile("validate", RestartInput.Path);
+                errors = ModelStateValidator.ValidateInputState(modelState, SupportedMetaDataVersions,
+                                                                GetMetaDataRequirements, ModelTypeId);
                 warnings = Enumerable.Empty<string>();
             }
             catch (ArgumentException e)
             {
-                errors = new[] { e.Message };
+                errors = new[]
+                {
+                    e.Message
+                };
                 warnings = Enumerable.Empty<string>();
             }
         }
@@ -312,14 +367,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (version == 1)
             {
                 return new Dictionary<string, string>
-                    {
-                        {"NrOfVertices", Grid.Vertices.Count.ToString(CultureInfo.InvariantCulture)},
-                        {"NrOfEdges", Grid.Edges.Count.ToString(CultureInfo.InvariantCulture)},
-                        // todo
-                    };
+                {
+                    {"NrOfVertices", Grid.Vertices.Count.ToString(CultureInfo.InvariantCulture)},
+                    {"NrOfEdges", Grid.Edges.Count.ToString(CultureInfo.InvariantCulture)},
+                    // todo
+                };
             }
 
-            throw new NotImplementedException(String.Format("Meta data version {0} for model type {1} is not supported",
+            throw new NotImplementedException(string.Format("Meta data version {0} for model type {1} is not supported",
                                                             version, ModelTypeId));
         }
 
@@ -329,17 +384,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 if (modelStateHandler == null)
                 {
-                    outAndInFileNames.Add(new DelftTools.Utils.Tuple<string, string>("<filled in GetCopyOfCurrentState>", "<filled in GetCopyOfCurrentState>"));
+                    outAndInFileNames.Add(new DelftTools.Utils.Tuple<string, string>(
+                                              "<filled in GetCopyOfCurrentState>",
+                                              "<filled in GetCopyOfCurrentState>"));
                     modelStateHandler = new ModelFileBasedStateHandler(Name, outAndInFileNames);
                 }
+
                 return modelStateHandler;
             }
         }
+
         #region Implementation of IDimrStateAwareModel
 
         public virtual void PrepareRestart()
         {
-            var workDirectory = ExplicitWorkingDirectory ?? FileUtils.CreateTempDirectory();
+            string workDirectory = ExplicitWorkingDirectory ?? FileUtils.CreateTempDirectory();
             InitializeRestart(workDirectory);
             ClearStatesIfRequired();
         }
@@ -362,10 +421,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
     {
         public StateInfo InState { get; set; }
         public StateInfo[] OutStates { get; set; }
-        
+
         public void Save(string file)
         {
-            using(var writer = new StreamWriter(file))
+            using (var writer = new StreamWriter(file))
             {
                 var serializer = new XmlSerializer(GetType());
                 serializer.Serialize(writer, this);
@@ -402,7 +461,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         public string ZipPath;
 
         // for deserializer
-        protected StateInfo() {  }
+        protected StateInfo() {}
 
         public StateInfo(string name, string zipPath)
         {

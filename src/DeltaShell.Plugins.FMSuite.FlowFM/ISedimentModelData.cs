@@ -1,4 +1,3 @@
-using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 

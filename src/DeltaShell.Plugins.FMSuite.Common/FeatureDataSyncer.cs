@@ -7,15 +7,16 @@ using GeoAPI.Extensions.Feature;
 
 namespace DeltaShell.Plugins.FMSuite.Common
 {
-    public class FeatureDataSyncer<TFeat,TData> : IDisposable where TFeat : IFeature
+    public class FeatureDataSyncer<TFeat, TData> : IDisposable where TFeat : IFeature
     {
         private IEventedList<TFeat> Features { get; set; }
         private IEventedList<TData> ModelData { get; set; }
         private Func<TFeat, TData> CreateDataForFeature { get; set; }
- 
+
         private bool synchronizing;
 
-        public FeatureDataSyncer(IEventedList<TFeat> features, IEventedList<TData> modelData, Func<TFeat, TData> createDataForFeature)
+        public FeatureDataSyncer(IEventedList<TFeat> features, IEventedList<TData> modelData,
+                                 Func<TFeat, TData> createDataForFeature)
         {
             Features = features;
             ModelData = modelData;
@@ -23,25 +24,28 @@ namespace DeltaShell.Plugins.FMSuite.Common
             features.CollectionChanged += OnFeaturesCollectionChanged;
             modelData.CollectionChanged += OnDataCollectionChanged;
         }
-        
+
         private void OnFeaturesCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            if (synchronizing) return;
-            var removedOrAddedItem = e.GetRemovedOrAddedItem();
+            if (synchronizing)
+            {
+                return;
+            }
+
+            object removedOrAddedItem = e.GetRemovedOrAddedItem();
             switch (e.Action)
             {
                 case NotifyCollectionChangedAction.Add:
                     synchronizing = true;
                     try
                     {
-                        
                         ModelData.Add(CreateDataForFeature((TFeat) removedOrAddedItem));
                     }
                     finally
                     {
                         synchronizing = false;
                     }
-                    
+
                     break;
                 case NotifyCollectionChangedAction.Remove:
                     synchronizing = true;
@@ -68,6 +72,7 @@ namespace DeltaShell.Plugins.FMSuite.Common
                     {
                         synchronizing = false;
                     }
+
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -76,10 +81,22 @@ namespace DeltaShell.Plugins.FMSuite.Common
 
         private void OnDataCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            if (synchronizing) return;
+            if (synchronizing)
+            {
+                return;
+            }
+
             var featureData = e.GetRemovedOrAddedItem() as IFeatureData;
-            if (featureData == null) return;
-            if (!(featureData.Feature is TFeat)) return;
+            if (featureData == null)
+            {
+                return;
+            }
+
+            if (!(featureData.Feature is TFeat))
+            {
+                return;
+            }
+
             switch (e.Action)
             {
                 case NotifyCollectionChangedAction.Add:
@@ -107,22 +124,24 @@ namespace DeltaShell.Plugins.FMSuite.Common
                     {
                         synchronizing = false;
                     }
+
                     break;
                 case NotifyCollectionChangedAction.Replace:
                     synchronizing = true;
                     try
                     {
-                        bool replaced = false;
-                        var feature = ((IFeatureData) e.OldItems[0]).Feature;
+                        var replaced = false;
+                        IFeature feature = ((IFeatureData) e.OldItems[0]).Feature;
                         if (feature is TFeat)
                         {
-                            var featureIndex = Features.IndexOf((TFeat) feature);
+                            int featureIndex = Features.IndexOf((TFeat) feature);
                             if (featureIndex != -1 && !Features.Contains((TFeat) featureData.Feature))
                             {
                                 Features[featureIndex] = (TFeat) featureData.Feature;
                                 replaced = true;
                             }
                         }
+
                         if (!replaced && !Features.Contains((TFeat) featureData.Feature))
                         {
                             Features.Add((TFeat) featureData.Feature);
@@ -132,6 +151,7 @@ namespace DeltaShell.Plugins.FMSuite.Common
                     {
                         synchronizing = false;
                     }
+
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -144,10 +164,12 @@ namespace DeltaShell.Plugins.FMSuite.Common
             {
                 Features.CollectionChanged -= OnFeaturesCollectionChanged;
             }
+
             if (ModelData != null)
             {
                 ModelData.CollectionChanged -= OnDataCollectionChanged;
             }
+
             Features = null;
             ModelData = null;
             CreateDataForFeature = null;

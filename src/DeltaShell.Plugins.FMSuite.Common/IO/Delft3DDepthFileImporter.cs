@@ -17,57 +17,50 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             Category = category;
         }
 
-        public string Name
-        {
-            get { return "Delft3D Depth File"; }
-        }
+        public string Name => "Delft3D Depth File";
 
         public string Category { get; private set; }
-        public string Description
-        {
-            get { return string.Empty; }
-        }
+        public string Description => string.Empty;
 
         public Bitmap Image { get; private set; }
 
         public IEnumerable<Type> SupportedItemTypes
         {
-            get { yield return typeof (CurvilinearCoverage); }
+            get
+            {
+                yield return typeof(CurvilinearCoverage);
+            }
         }
 
-        public bool OpenViewAfterImport { get { return false; } }
+        public bool OpenViewAfterImport => false;
 
         public bool CanImportOn(object targetObject)
         {
             return true;
         }
 
-        public bool CanImportOnRootLevel
-        {
-            get { return false; }
-        }
+        public bool CanImportOnRootLevel => false;
 
-        public string FileFilter
-        {
-            get { return "Delft3D Depth Files (*.dep)|*.dep|All files (*.*)|*.*"; }
-        }
+        public string FileFilter => "Delft3D Depth Files (*.dep)|*.dep|All files (*.*)|*.*";
 
         public string TargetDataDirectory { get; set; }
-        
+
         public bool ShouldCancel { get; set; }
 
         public ImportProgressChangedDelegate ProgressChanged { get; set; }
-        
+
         public object ImportItem(string path, object target)
         {
             var targetBathy = target as CurvilinearCoverage;
 
             if (targetBathy == null)
+            {
                 throw new NotSupportedException("Cannot import depth file (.dep) without a non-null target bed level");
+            }
 
-            var values = Delft3DDepthFileReader.Read(path, targetBathy.Size1, targetBathy.Size2).ToList();
-            
-            if (values.Count != targetBathy.Size1*targetBathy.Size2)
+            List<double> values = Delft3DDepthFileReader.Read(path, targetBathy.Size1, targetBathy.Size2).ToList();
+
+            if (values.Count != targetBathy.Size1 * targetBathy.Size2)
             {
                 Log.ErrorFormat(
                     "Failed to import bed level from depth file; data in file does not match the target grid: {0}x{1}",

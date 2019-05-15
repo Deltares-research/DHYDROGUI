@@ -2,6 +2,8 @@
 {
     public enum StructuresListType
     {
-        Pumps, Weirs, Gates
+        Pumps,
+        Weirs,
+        Gates
     }
 }

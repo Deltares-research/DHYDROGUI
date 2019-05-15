@@ -9,7 +9,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
         bool IsActive { get; set; }
 
         Type DataType { get; }
-        
+
         object DefaultValue { get; set; }
 
         IList ValueList { get; set; }

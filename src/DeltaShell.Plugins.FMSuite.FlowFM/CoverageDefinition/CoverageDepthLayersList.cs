@@ -10,8 +10,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.CoverageDefinition
     public class CoverageDepthLayersList
     {
         private VerticalProfileDefinition verticalProfileDefinition;
-        private readonly Func<string,ICoverage> createCoverageFunc;
-        
+        private readonly Func<string, ICoverage> createCoverageFunc;
+
         public string Name { get; set; }
 
         public IEventedList<ICoverage> Coverages { get; private set; }
@@ -20,7 +20,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.CoverageDefinition
 
         public VerticalProfileDefinition VerticalProfile
         {
-            get { return verticalProfileDefinition; }
+            get => verticalProfileDefinition;
             set
             {
                 verticalProfileDefinition = value;
@@ -31,14 +31,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.CoverageDefinition
         [EditAction]
         private void AfterVerticalProfileSet()
         {
-            var layerCount = verticalProfileDefinition.ProfilePoints;
+            int layerCount = verticalProfileDefinition.ProfilePoints;
             if (layerCount < Coverages.Count)
             {
                 if (layerCount == 1)
                 {
                     Coverages[0].Name = Name;
                 }
-                for (var i = Coverages.Count - 1; i >= layerCount; i--)
+
+                for (int i = Coverages.Count - 1; i >= layerCount; i--)
                 {
                     Coverages.RemoveAt(i);
                 }
@@ -49,7 +50,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.CoverageDefinition
                 {
                     Coverages[0].Name = Name + " (layer 1)";
                 }
-                for (var i = Coverages.Count; i < layerCount; i++)
+
+                for (int i = Coverages.Count; i < layerCount; i++)
                 {
                     AddDepthLayer(i);
                 }
@@ -67,14 +69,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.CoverageDefinition
         private void AddDepthLayer(int layer)
         {
             if (IsDepthIndependent && Coverages.Count >= 1)
-                throw new InvalidOperationException("Not allowed to add a depth layer to this definition; not depth dependent");
+            {
+                throw new InvalidOperationException(
+                    "Not allowed to add a depth layer to this definition; not depth dependent");
+            }
 
-            if(createCoverageFunc==null)
-                throw new InvalidOperationException("Cannot create new spatial data because the creation method has not been specified");
+            if (createCoverageFunc == null)
+            {
+                throw new InvalidOperationException(
+                    "Cannot create new spatial data because the creation method has not been specified");
+            }
 
-            var name = verticalProfileDefinition.Type == VerticalProfileType.Uniform
-                ? Name
-                : Name + " (layer " + (layer + 1) + ")";
+            string name = verticalProfileDefinition.Type == VerticalProfileType.Uniform
+                              ? Name
+                              : Name + " (layer " + (layer + 1) + ")";
 
             Coverages.Add(createCoverageFunc(name));
         }

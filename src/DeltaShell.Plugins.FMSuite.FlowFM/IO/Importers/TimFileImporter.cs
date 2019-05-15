@@ -16,9 +16,9 @@ using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 {
-    public class TimFileImporter: BoundaryDataImporterBase, IFileImporter
+    public class TimFileImporter : BoundaryDataImporterBase, IFileImporter
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof (TimFileImporter));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(TimFileImporter));
 
         public Func<SourceAndSink, WaterFlowFMModel> GetModelForSourceAndSink { private get; set; }
 
@@ -30,38 +30,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 
         #region IFileImporter
 
-        public string Name
-        {
-            get { return WindFileImporter ? "Time series file" : "Time series .tim file"; }
-        }
-        
-        public string Category
-        {
-            get { return "Time series"; }
-        }
+        public string Name => WindFileImporter ? "Time series file" : "Time series .tim file";
 
-        public string Description
-        {
-            get { return string.Empty; }
-        }
+        public string Category => "Time series";
 
-        public Bitmap Image
-        {
-            get { return Properties.Resources.TimeSeries; }
-        }
-        
+        public string Description => string.Empty;
+
+        public Bitmap Image => Resources.TimeSeries;
+
         public IEnumerable<Type> SupportedItemTypes
         {
             get
             {
                 if (WindFileImporter)
                 {
-                    yield return typeof (UniformWindField);
+                    yield return typeof(UniformWindField);
                 }
                 else
                 {
                     yield return typeof(SourceAndSink);
-                    yield return typeof(HeatFluxModel);                    
+                    yield return typeof(HeatFluxModel);
                 }
             }
         }
@@ -71,34 +59,32 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             return true;
         }
 
-        public bool CanImportOnRootLevel { get { return false; } }
+        public bool CanImportOnRootLevel => false;
 
-        public override string FileFilter
-        {
-            get
-            {
-                return WindFileImporter
-                    ? "Time series file (*.tim)|*.tim|Wind file (*.wnd)|*.wnd"
-                    : "Time series file (*.tim)|*.tim";
-            }
-        }
+        public override string FileFilter =>
+            WindFileImporter
+                ? "Time series file (*.tim)|*.tim|Wind file (*.wnd)|*.wnd"
+                : "Time series file (*.tim)|*.tim";
 
         public string TargetDataDirectory { get; set; }
-        
+
         public bool ShouldCancel { get; set; }
 
         public ImportProgressChangedDelegate ProgressChanged { get; set; }
 
-        public bool OpenViewAfterImport { get { return true; } }
-        
+        public bool OpenViewAfterImport => true;
+
         public object ImportItem(string path, object target = null)
         {
             if (WindFileImporter)
             {
                 var windItem = target as UniformWindField;
 
-                if (windItem == null) return target;
-                
+                if (windItem == null)
+                {
+                    return target;
+                }
+
                 try
                 {
                     InsertTimeSeries(path, windItem.Data, GetModelForWindTimeSeries(windItem).ReferenceTime);
@@ -118,11 +104,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             {
                 try
                 {
-                    var seriesToFill = SeriesToFill(boundaryCondition).ToList();
+                    List<IFunction> seriesToFill = SeriesToFill(boundaryCondition).ToList();
                     if (seriesToFill.Any())
                     {
                         InsertTimeSeries(path, seriesToFill.First(), ModelReferenceDate);
-                        foreach (var function in seriesToFill.Skip(1))
+                        foreach (IFunction function in seriesToFill.Skip(1))
                         {
                             CopyTimeSeries(seriesToFill.First(), function);
                         }
@@ -141,28 +127,32 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             {
                 try
                 {
-                    var model = GetModelForSourceAndSink(sourceAndSink);
+                    WaterFlowFMModel model = GetModelForSourceAndSink(sourceAndSink);
                     if (model == null)
                     {
-                        Log.ErrorFormat(Resources.Tim_file_import_failed__could_not_retrieve_model_for_SourceAndSink___0_, sourceAndSink.Name);
-                        return sourceAndSink;
-                    }
-                    
-                    var sourceAndSinkFunction = sourceAndSink.Function;
-                    if (sourceAndSinkFunction == null)
-                    {
-                        Log.ErrorFormat(Resources.Tim_file_import_failed__could_not_retrieve_function_for_SourceAndSink___0_, sourceAndSink.Name);
+                        Log.ErrorFormat(
+                            Resources.Tim_file_import_failed__could_not_retrieve_model_for_SourceAndSink___0_,
+                            sourceAndSink.Name);
                         return sourceAndSink;
                     }
 
-                    var readFunction = new TimFile().Read(path, model.ReferenceTime);
+                    IFunction sourceAndSinkFunction = sourceAndSink.Function;
+                    if (sourceAndSinkFunction == null)
+                    {
+                        Log.ErrorFormat(
+                            Resources.Tim_file_import_failed__could_not_retrieve_function_for_SourceAndSink___0_,
+                            sourceAndSink.Name);
+                        return sourceAndSink;
+                    }
+
+                    TimeSeries readFunction = new TimFile().Read(path, model.ReferenceTime);
                     sourceAndSink.CopyValuesFromFileToSourceAndSinkAttributes(readFunction);
-                    
+
                     var componentSettings = new Dictionary<string, bool>()
                     {
                         {SourceAndSink.SalinityVariableName, model.UseSalinity},
                         {SourceAndSink.TemperatureVariableName, model.UseTemperature},
-                        {SourceAndSink.SecondaryFlowVariableName, model.UseSecondaryFlow }
+                        {SourceAndSink.SecondaryFlowVariableName, model.UseSecondaryFlow}
                     };
 
                     sourceAndSink.SedimentFractionNames.ForEach(sfn => componentSettings.Add(sfn, model.UseMorSed));
@@ -184,7 +174,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             {
                 try
                 {
-                    InsertTimeSeries(path, heatFluxModel.MeteoData, GetModelForHeatFluxModel(heatFluxModel).ReferenceTime);
+                    InsertTimeSeries(path, heatFluxModel.MeteoData,
+                                     GetModelForHeatFluxModel(heatFluxModel).ReferenceTime);
                 }
                 catch (Exception e)
                 {
@@ -207,12 +198,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         {
             functionTo.BeginEdit(new DefaultEditAction("Copying time series from file"));
             functionTo.Clear();
-            FunctionHelper.SetValuesRaw<DateTime>(functionTo.Arguments[0], functionFrom.Arguments[0].GetValues<DateTime>());
+            FunctionHelper.SetValuesRaw<DateTime>(functionTo.Arguments[0],
+                                                  functionFrom.Arguments[0].GetValues<DateTime>());
             for (var i = 0; i < functionTo.Components.Count; ++i)
             {
                 FunctionHelper.SetValuesRaw<double>(functionTo.Components[i],
-                    functionFrom.Components[i].GetValues<double>());
+                                                    functionFrom.Components[i].GetValues<double>());
             }
+
             functionTo.EndEdit();
         }
 
@@ -220,7 +213,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 
         public override IEnumerable<BoundaryConditionDataType> ForcingTypes
         {
-            get { yield return BoundaryConditionDataType.TimeSeries; }
+            get
+            {
+                yield return BoundaryConditionDataType.TimeSeries;
+            }
         }
 
         public override void Import(string fileName, FlowBoundaryCondition boundaryCondition)

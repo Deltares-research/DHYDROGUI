@@ -7,52 +7,61 @@ using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 namespace DeltaShell.Plugins.FMSuite.Common.Dependency
 {
     /// <summary>
-    /// Represents a dependency expression in the form of "<c>propertyA is enabled if propertyB exists,
-    /// is boolean and set to true</c>".
+    /// Represents a dependency expression in the form of "
+    /// <c>
+    /// propertyA is enabled if propertyB exists,
+    /// is boolean and set to true
+    /// </c>
+    /// ".
     /// </summary>
     public class BooleanIsTrueDependencyExpression : DependencyExpressionBase
     {
         /// <summary>
         /// Matches the pattern: start with model property key, end.
         /// </summary>
-        protected override string Regex { get { return @"^\w+$"; } }
+        protected override string Regex => @"^\w+$";
 
-        protected internal override string OnValidate(ModelProperty evaluatedProperty, IEnumerable<ModelProperty> allProperties, string dependencyExpression)
+        protected internal override string OnValidate(ModelProperty evaluatedProperty,
+                                                      IEnumerable<ModelProperty> allProperties,
+                                                      string dependencyExpression)
         {
-            var dependencyProperty =
-                        allProperties.FirstOrDefault(
-                            p =>
-                            p.PropertyDefinition.FilePropertyName.Equals(dependencyExpression,
-                                                                         StringComparison.InvariantCultureIgnoreCase));
+            ModelProperty dependencyProperty =
+                allProperties.FirstOrDefault(
+                    p =>
+                        p.PropertyDefinition.FilePropertyName.Equals(dependencyExpression,
+                                                                     StringComparison.InvariantCultureIgnoreCase));
 
             if (dependencyProperty != null)
             {
                 if (dependencyProperty.PropertyDefinition.DataType != typeof(bool))
                 {
-                    return String.Format("Model property '{0}' should be have 'boolean' data type.", dependencyExpression);
+                    return string.Format("Model property '{0}' should be have 'boolean' data type.",
+                                         dependencyExpression);
                 }
             }
 
             return null;
         }
 
-        protected internal override Func<IEnumerable<ModelProperty>, bool> OnCompile(ModelProperty evaluatedProperty, IEnumerable<ModelProperty> allProperties, string dependencyExpression)
+        protected internal override Func<IEnumerable<ModelProperty>, bool> OnCompile(
+            ModelProperty evaluatedProperty, IEnumerable<ModelProperty> allProperties, string dependencyExpression)
         {
             return properties =>
-                {
-                    var dependencyProperty =
-                        properties?.FirstOrDefault(
-                            p =>
+            {
+                ModelProperty dependencyProperty =
+                    properties?.FirstOrDefault(
+                        p =>
                             p.PropertyDefinition.FilePropertyName.Equals(dependencyExpression,
                                                                          StringComparison.InvariantCultureIgnoreCase));
 
-                    if (dependencyProperty != null)
-                    {
-                        return FMParser.FromString<bool>(dependencyProperty.GetValueAsString());
-                    }
-                    // Property does not exist -> Do not enable!
-                    return false;
-                };
+                if (dependencyProperty != null)
+                {
+                    return FMParser.FromString<bool>(dependencyProperty.GetValueAsString());
+                }
+
+                // Property does not exist -> Do not enable!
+                return false;
+            };
         }
     }
 }

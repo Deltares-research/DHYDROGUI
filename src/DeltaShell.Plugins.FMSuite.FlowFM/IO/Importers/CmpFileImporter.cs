@@ -7,39 +7,31 @@ using DelftTools.Shell.Core;
 using DelftTools.Utils.Editing;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 {
-    public class CmpFileImporter: BoundaryDataImporterBase, IFileImporter
+    public class CmpFileImporter : BoundaryDataImporterBase, IFileImporter
     {
-        private static ILog Log = LogManager.GetLogger(typeof (CmpFileImporter));
+        private static ILog Log = LogManager.GetLogger(typeof(CmpFileImporter));
 
         #region IFileImporter
 
-        public string Name
-        {
-            get { return "Boundary data from .cmp file"; }
-        }
+        public string Name => "Boundary data from .cmp file";
 
-        public string Category
-        {
-            get { return "Boundary data"; }
-        }
+        public string Category => "Boundary data";
 
-        public string Description
-        {
-            get { return string.Empty; }
-        }
+        public string Description => string.Empty;
 
-        public Bitmap Image
-        {
-            get { return Properties.Resources.TextDocument; }
-        }
+        public Bitmap Image => Resources.TextDocument;
 
         public IEnumerable<Type> SupportedItemTypes
         {
-            get { yield return typeof(BoundaryCondition); }
+            get
+            {
+                yield return typeof(BoundaryCondition);
+            }
         }
 
         public bool CanImportOn(object targetObject)
@@ -47,9 +39,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             return true;
         }
 
-        public bool CanImportOnRootLevel { get { return false; } }
+        public bool CanImportOnRootLevel => false;
 
-        public override string FileFilter { get { return "Harmonic series file|*.cmp"; } }
+        public override string FileFilter => "Harmonic series file|*.cmp";
 
         public string TargetDataDirectory { get; set; }
 
@@ -57,24 +49,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 
         public ImportProgressChangedDelegate ProgressChanged { get; set; }
 
-        public bool OpenViewAfterImport { get { return true; } }
+        public bool OpenViewAfterImport => true;
 
         public object ImportItem(string path, object target = null)
         {
             var boundaryCondition = target as IBoundaryCondition;
 
-            if (boundaryCondition == null) return target;
+            if (boundaryCondition == null)
+            {
+                return target;
+            }
 
             var fileReader = new CmpFile();
             try
             {
-                var harmonicComponents = fileReader.Read(path);
-                
+                IList<HarmonicComponent> harmonicComponents = fileReader.Read(path);
+
                 switch (boundaryCondition.DataType)
                 {
                     case BoundaryConditionDataType.AstroComponents:
-                        var astroComponents = harmonicComponents.Where(h => h.Name != null).ToList();
-                        foreach (var data in SeriesToFill(boundaryCondition))
+                        List<HarmonicComponent> astroComponents =
+                            harmonicComponents.Where(h => h.Name != null).ToList();
+                        foreach (IFunction data in SeriesToFill(boundaryCondition))
                         {
                             data.BeginEdit(new DefaultEditAction("Importing data to boundary condition"));
                             FunctionHelper.SetValuesRaw(data.Arguments[0], astroComponents.Select(h => h.Name));
@@ -82,10 +78,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                             FunctionHelper.SetValuesRaw(data.Components[1], astroComponents.Select(h => h.Phase));
                             data.EndEdit();
                         }
+
                         break;
                     case BoundaryConditionDataType.AstroCorrection:
                         astroComponents = harmonicComponents.Where(h => h.Name != null).ToList();
-                        foreach (var data in SeriesToFill(boundaryCondition))
+                        foreach (IFunction data in SeriesToFill(boundaryCondition))
                         {
                             data.BeginEdit(new DefaultEditAction("Importing data to boundary condition"));
                             FunctionHelper.SetValuesRaw(data.Arguments[0], astroComponents.Select(h => h.Name));
@@ -93,28 +90,33 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                             FunctionHelper.SetValuesRaw(data.Components[2], astroComponents.Select(h => h.Phase));
                             data.EndEdit();
                         }
+
                         break;
                     case BoundaryConditionDataType.Harmonics:
-                        foreach (var data in SeriesToFill(boundaryCondition))
+                        foreach (IFunction data in SeriesToFill(boundaryCondition))
                         {
                             data.BeginEdit(new DefaultEditAction("Importing data to boundary condition"));
-                            var orderedComponents = harmonicComponents.OrderBy(h => h.Frequency);
+                            IOrderedEnumerable<HarmonicComponent> orderedComponents =
+                                harmonicComponents.OrderBy(h => h.Frequency);
                             FunctionHelper.SetValuesRaw(data.Arguments[0], orderedComponents.Select(h => h.Frequency));
                             FunctionHelper.SetValuesRaw(data.Components[0], orderedComponents.Select(h => h.Amplitude));
                             FunctionHelper.SetValuesRaw(data.Components[1], orderedComponents.Select(h => h.Phase));
                             data.EndEdit();
                         }
+
                         break;
                     case BoundaryConditionDataType.HarmonicCorrection:
-                        foreach (var data in SeriesToFill(boundaryCondition))
+                        foreach (IFunction data in SeriesToFill(boundaryCondition))
                         {
                             data.BeginEdit(new DefaultEditAction("Importing data to boundary condition"));
-                            var orderedComponents = harmonicComponents.OrderBy(h => h.Frequency);
+                            IOrderedEnumerable<HarmonicComponent> orderedComponents =
+                                harmonicComponents.OrderBy(h => h.Frequency);
                             FunctionHelper.SetValuesRaw(data.Arguments[0], orderedComponents.Select(h => h.Frequency));
                             FunctionHelper.SetValuesRaw(data.Components[0], orderedComponents.Select(h => h.Amplitude));
                             FunctionHelper.SetValuesRaw(data.Components[2], orderedComponents.Select(h => h.Phase));
                             data.EndEdit();
                         }
+
                         break;
                 }
             }
@@ -122,6 +124,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             {
                 Log.ErrorFormat("Cmp-file import failed: {0}", e.Message);
             }
+
             return boundaryCondition;
         }
 

@@ -2,34 +2,29 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using DelftTools.Shell.Core;
 using DelftTools.Utils.IO;
-using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.FlowFM.Api;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
-using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using log4net;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
 {
-    public class GeometryZipExporter: IFileExporter
+    public class GeometryZipExporter : IFileExporter
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof (GeometryZipExporter));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(GeometryZipExporter));
 
         public Func<UnstructuredGrid, WaterFlowFMModel> GetModelForGrid { get; set; }
 
         #region IFileExporter
 
-        public string Name { get { return "Net-geometry exporter"; } }
+        public string Name => "Net-geometry exporter";
 
-        public string Category { get { return "General"; } }
-        public string Description
-        {
-            get { return string.Empty; }
-        }
+        public string Category => "General";
+
+        public string Description => string.Empty;
 
         public bool Export(object item, string path)
         {
@@ -61,29 +56,31 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
                 throw new NotImplementedException("Exporting netcdf file of non-filebased grid not supported yet");
             }
 
-            var model = GetModelForGrid(grid);
+            WaterFlowFMModel model = GetModelForGrid(grid);
 
-            var targetDirectory = Path.GetDirectoryName(filePath);
-            var netFileName = Path.GetFileName(model.NetFilePath);
-            var targetNetFilePath = Path.Combine(targetDirectory, netFileName);
+            string targetDirectory = Path.GetDirectoryName(filePath);
+            string netFileName = Path.GetFileName(model.NetFilePath);
+            string targetNetFilePath = Path.Combine(targetDirectory, netFileName);
 
             var k = 2;
             while (File.Exists(targetNetFilePath))
             {
-                var newNetFileName = string.Concat(Path.GetFileNameWithoutExtension(netFileName), "(", k++, ")", ".nc");
+                string newNetFileName =
+                    string.Concat(Path.GetFileNameWithoutExtension(netFileName), "(", k++, ")", ".nc");
                 targetNetFilePath = Path.Combine(targetDirectory, newNetFileName);
             }
 
-            var geomFileName = string.Concat(Path.GetFileNameWithoutExtension(netFileName), "geom.nc");
-            var targetGeomFilePath = Path.Combine(targetDirectory, geomFileName);
+            string geomFileName = string.Concat(Path.GetFileNameWithoutExtension(netFileName), "geom.nc");
+            string targetGeomFilePath = Path.Combine(targetDirectory, geomFileName);
             k = 2;
             while (File.Exists(targetGeomFilePath))
             {
-                var newGeomFileName = string.Concat(Path.GetFileNameWithoutExtension(geomFileName), "(", k++, ")", ".nc");
+                string newGeomFileName =
+                    string.Concat(Path.GetFileNameWithoutExtension(geomFileName), "(", k++, ")", ".nc");
                 targetGeomFilePath = Path.Combine(targetDirectory, newGeomFileName);
             }
 
-            var currentDirectory = Directory.GetCurrentDirectory();
+            string currentDirectory = Directory.GetCurrentDirectory();
             try
             {
                 WriteNetGeomApi.WriteNetGeometryFile(model, targetGeomFilePath);
@@ -91,14 +88,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
                 {
                     return false;
                 }
+
                 File.Copy(model.NetFilePath, targetNetFilePath, true);
 
-                if(model.MduFile != null)
+                if (model.MduFile != null)
+                {
                     model.MduFile.WriteBathymetry(model.ModelDefinition, targetGeomFilePath);
-                
+                }
+
                 Directory.SetCurrentDirectory(targetDirectory);
                 ZipFileUtils.Create(filePath,
-                    new List<string> {Path.GetFileName(targetNetFilePath), Path.GetFileName(targetGeomFilePath)});
+                                    new List<string>
+                                    {
+                                        Path.GetFileName(targetNetFilePath),
+                                        Path.GetFileName(targetGeomFilePath)
+                                    });
             }
             catch (Exception e)
             {
@@ -111,12 +115,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
                 {
                     File.Delete(targetNetFilePath);
                 }
+
                 if (File.Exists(targetGeomFilePath))
                 {
                     File.Delete(targetGeomFilePath);
                 }
+
                 Directory.SetCurrentDirectory(currentDirectory);
             }
+
             return true;
         }
 
@@ -126,9 +133,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
             yield return typeof(UnstructuredGridCoverage);
         }
 
-        public string FileFilter { get { return "Zip file|*.zip"; } }
+        public string FileFilter => "Zip file|*.zip";
 
-        public Bitmap Icon { get { return Properties.Resources.unstruc; } }
+        public Bitmap Icon => Resources.unstruc;
 
         public bool CanExportFor(object item)
         {
@@ -136,8 +143,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
             var unstructuredGridCoverage = item as UnstructuredGridCoverage;
 
             return unstructuredGridCoverage == null ||
-                   (GetModelForGrid != null && (GetModelForGrid(unstructuredGridCoverage.Grid) == null 
-                   || GetModelForGrid(unstructuredGridCoverage.Grid).Bathymetry == unstructuredGridCoverage));
+                   GetModelForGrid != null && (GetModelForGrid(unstructuredGridCoverage.Grid) == null
+                                               || GetModelForGrid(unstructuredGridCoverage.Grid).Bathymetry ==
+                                               unstructuredGridCoverage);
         }
 
         #endregion

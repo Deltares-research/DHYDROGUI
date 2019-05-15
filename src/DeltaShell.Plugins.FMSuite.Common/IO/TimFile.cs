@@ -12,6 +12,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
     public class TimFile : FMSuiteFileBase
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(TimFile));
+
         // if modelStartTime is null, we write absolute time values. 
         public void Write(string timFilePath, IFunction timeSeries, DateTime? modelReferenceDate)
         {
@@ -20,25 +21,34 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                 OpenOutputFile(timFilePath);
                 try
                 {
-                    var timeArgument = timeSeries.Arguments.OfType<IVariable<DateTime>>().FirstOrDefault();
+                    IVariable<DateTime> timeArgument =
+                        timeSeries.Arguments.OfType<IVariable<DateTime>>().FirstOrDefault();
                     if (timeArgument == null)
                     {
                         throw new ArgumentException("Incorrect function type: can only write time series to tim files");
                     }
-                    var timeValues = timeArgument.Values.ToArray();
 
-                    var components = timeSeries.Components.OfType<IVariable<double>>().ToList();
-                   
-                    for (int i = 0; i < timeValues.Length; i++)
+                    DateTime[] timeValues = timeArgument.Values.ToArray();
+
+                    List<IVariable<double>> components = timeSeries.Components.OfType<IVariable<double>>().ToList();
+
+                    for (var i = 0; i < timeValues.Length; i++)
                     {
-                        var timeString = modelReferenceDate == null
-                            ? string.Format("{0:yyyyMMddhhmm}", timeValues[i])
-                            : string.Format("{0:0.0000000e+00}", (timeValues[i] - modelReferenceDate.Value).TotalMinutes);
+                        string timeString = modelReferenceDate == null
+                                                ? string.Format("{0:yyyyMMddhhmm}", timeValues[i])
+                                                : string.Format("{0:0.0000000e+00}",
+                                                                (timeValues[i] - modelReferenceDate.Value)
+                                                                .TotalMinutes);
 
-                        var valueStrings = components.Select(c => 
-                            string.Format("{0:0.0000000e+00}", c.Values[i])).ToList();
+                        List<string> valueStrings = components.Select(c =>
+                                                                          string.Format(
+                                                                              "{0:0.0000000e+00}", c.Values[i]))
+                                                              .ToList();
 
-                        WriteLine(string.Join(" ", (new[] { timeString }).Concat(valueStrings)));
+                        WriteLine(string.Join(" ", new[]
+                        {
+                            timeString
+                        }.Concat(valueStrings)));
                     }
                 }
                 finally
@@ -50,18 +60,21 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 
         public void Read(string timFilePath, IFunction function, DateTime? refDate)
         {
-            if (function == null || !(function.Arguments.Count == 1 && function.Arguments.First() is IVariable<DateTime>))
+            if (function == null ||
+                !(function.Arguments.Count == 1 && function.Arguments.First() is IVariable<DateTime>))
             {
                 throw new ArgumentException(
                     string.Format("Cannot import time series data from {0} onto non-timeseries function {1}",
-                        timFilePath, function == null ? string.Empty : function.Name));
+                                  timFilePath, function == null ? string.Empty : function.Name));
             }
+
             var minutes = new List<double>();
             var componentValues = new List<List<double>>();
-            for (int i = 0; i < function.Components.Count; ++i)
+            for (var i = 0; i < function.Components.Count; ++i)
             {
                 componentValues.Add(new List<double>());
             }
+
             Read(timFilePath, minutes, componentValues);
 
             function.BeginEdit(new DefaultEditAction("Inserting time series from tim-file"));
@@ -71,6 +84,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             {
                 FunctionHelper.SetValuesRaw<double>(function.Components[i], componentValues[i]);
             }
+
             function.EndEdit();
         }
 
@@ -81,27 +95,30 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             {
                 try
                 {
-                    var line = GetNextLine();
+                    string line = GetNextLine();
                     var additionalValuesDetected = false;
 
                     while (line != null)
                     {
-                        var lineFields = (IList<string>) SplitLine(line).ToList();    
+                        var lineFields = (IList<string>) SplitLine(line).ToList();
                         minutes.Add(GetDouble(lineFields[0], "time"));
 
-                        var actualNumberOfValueColumns = lineFields.Count - 1;
-                        var expectedNumberOfValueColumns = values.Count;
+                        int actualNumberOfValueColumns = lineFields.Count - 1;
+                        int expectedNumberOfValueColumns = values.Count;
 
-                        if (expectedNumberOfValueColumns < actualNumberOfValueColumns) additionalValuesDetected = true;
+                        if (expectedNumberOfValueColumns < actualNumberOfValueColumns)
+                        {
+                            additionalValuesDetected = true;
+                        }
 
-                        var numberOfValuesRead = Math.Min(actualNumberOfValueColumns, expectedNumberOfValueColumns);
-                        
+                        int numberOfValuesRead = Math.Min(actualNumberOfValueColumns, expectedNumberOfValueColumns);
+
                         for (var i = 0; i < numberOfValuesRead; i++)
                         {
                             values[i].Add(GetDouble(lineFields[i + 1], "value"));
                         }
 
-                        var missingValueColumns = expectedNumberOfValueColumns - actualNumberOfValueColumns;
+                        int missingValueColumns = expectedNumberOfValueColumns - actualNumberOfValueColumns;
                         for (var i = 0; i < missingValueColumns; i++)
                         {
                             values[actualNumberOfValueColumns + i].Add(0.0);
@@ -116,7 +133,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                                        "{1}Expected number of value columns is {2}, all additional values have been ignored.",
                                        timFilePath, Environment.NewLine, values.Count);
                     }
-                    
                 }
                 finally
                 {
@@ -135,23 +151,27 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 
                 var timeSeries = new TimeSeries();
 
-                var line = GetNextLine();
-                if (line == null) return timeSeries;
+                string line = GetNextLine();
+                if (line == null)
+                {
+                    return timeSeries;
+                }
 
-                var componentColumns = line.Split(' ').Length - 1;
+                int componentColumns = line.Split(' ').Length - 1;
 
                 for (var i = 0; i < componentColumns; i++)
                 {
                     values.Add(new List<double>());
                 }
-                
+
                 while (line != null)
                 {
                     var lineFields = (IList<string>) SplitLine(line).ToList();
 
                     if (lineFields.Count < componentColumns + 1)
                     {
-                        throw new FormatException(String.Format("Invalid time/value row on line {0} in file {1}", LineNumber, timFilePath));
+                        throw new FormatException(string.Format("Invalid time/value row on line {0} in file {1}",
+                                                                LineNumber, timFilePath));
                     }
 
                     dateTimes.Add(GetDateTime(lineFields[0], modelReferenceDate, "time"));
@@ -168,11 +188,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                 {
                     timeSeries.Components.Add(new Variable<double>());
                 }
+
                 FunctionHelper.SetValuesRaw<DateTime?>(timeSeries.Time, dateTimes);
                 for (var i = 0; i < componentColumns; ++i)
                 {
                     FunctionHelper.SetValuesRaw<double>(timeSeries.Components[i], values[i]);
                 }
+
                 return timeSeries;
             }
             finally
@@ -183,7 +205,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 
         public DateTime? GetDateTime(string lineField, DateTime? reference, string errorMessageKey = null)
         {
-            var value = GetDouble(lineField, errorMessageKey);
+            double value = GetDouble(lineField, errorMessageKey);
             return GetDateTime(value, reference);
         }
 
@@ -192,23 +214,24 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             if (value > 189912312359.0d) // TODO: remove magic number... ?
             {
                 // parse as absolute time
-                var remainder = (long)value;
-                var years = remainder / 100000000;
-                remainder -= (years * 100000000);
-                var months = remainder / 1000000;
+                var remainder = (long) value;
+                long years = remainder / 100000000;
+                remainder -= years * 100000000;
+                long months = remainder / 1000000;
                 remainder -= months * 1000000;
-                var days = remainder / 10000;
+                long days = remainder / 10000;
                 remainder -= days * 10000;
-                var hours = remainder / 100;
+                long hours = remainder / 100;
                 remainder -= hours * 100;
-                return new DateTime((int)years, (int)months, (int)days, (int)hours, (int)remainder, 0);
+                return new DateTime((int) years, (int) months, (int) days, (int) hours, (int) remainder, 0);
             }
+
             if (value >= 999999999) //assume the actual value is irrelevant
             {
                 return reference + new TimeSpan(0, 999999999, 0);
             }
 
-            var ticks = (long)(value * TimeSpan.TicksPerSecond) * 60; // tim-file is always in minutes!
+            long ticks = (long) (value * TimeSpan.TicksPerSecond) * 60; // tim-file is always in minutes!
             return reference + new TimeSpan(ticks);
         }
     }

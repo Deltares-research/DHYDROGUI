@@ -15,21 +15,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
         public static ValidationReport Validate(WaterFlowFMModel model)
         {
             var issues = new List<ValidationIssue>();
-            foreach (var windField in model.WindFields)
+            foreach (IWindField windField in model.WindFields)
             {
                 if (windField.Data != null && windField.Data.Arguments[0] is IVariable<DateTime>)
                 {
-                    var times = windField.Data.Arguments[0].GetValues<DateTime>();
+                    IMultiDimensionalArray<DateTime> times = windField.Data.Arguments[0].GetValues<DateTime>();
                     if (!times.Any())
                     {
                         issues.Add(new ValidationIssue(subject, ValidationSeverity.Error,
-                            string.Format("No data defined in wind time series {0}", windField.Name), windField));
+                                                       string.Format("No data defined in wind time series {0}",
+                                                                     windField.Name), windField));
                     }
                     else if (times.First() > model.StartTime || times.Last() < model.StopTime)
                     {
                         issues.Add(new ValidationIssue(subject, ValidationSeverity.Error,
-                            string.Format("Time series interval does not span model run time for {0}", windField.Name),
-                            windField));
+                                                       string.Format(
+                                                           "Time series interval does not span model run time for {0}",
+                                                           windField.Name),
+                                                       windField));
                     }
                 }
 
@@ -39,14 +42,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                     if (!File.Exists(griddedWindField.WindFilePath))
                     {
                         issues.Add(new ValidationIssue(subject, ValidationSeverity.Error,
-                            string.Format("Could not find wind file {0} for {1}", griddedWindField.WindFilePath,
-                                griddedWindField.Name), griddedWindField));
+                                                       string.Format("Could not find wind file {0} for {1}",
+                                                                     griddedWindField.WindFilePath,
+                                                                     griddedWindField.Name), griddedWindField));
                     }
+
                     if (griddedWindField.SeparateGridFile && !File.Exists(griddedWindField.GridFilePath))
                     {
                         issues.Add(new ValidationIssue(subject, ValidationSeverity.Error,
-                            string.Format("Could not find grid file {0} for {1}", griddedWindField.GridFilePath,
-                                griddedWindField.Name), griddedWindField));
+                                                       string.Format("Could not find grid file {0} for {1}",
+                                                                     griddedWindField.GridFilePath,
+                                                                     griddedWindField.Name), griddedWindField));
                     }
                 }
 
@@ -56,8 +62,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                     if (!File.Exists(spiderWebWindField.WindFilePath))
                     {
                         issues.Add(new ValidationIssue(subject, ValidationSeverity.Error,
-                            string.Format("Could not find wind file {0} for {1}", spiderWebWindField.WindFilePath,
-                                spiderWebWindField.Name), spiderWebWindField));
+                                                       string.Format("Could not find wind file {0} for {1}",
+                                                                     spiderWebWindField.WindFilePath,
+                                                                     spiderWebWindField.Name), spiderWebWindField));
                     }
                 }
             }

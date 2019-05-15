@@ -10,7 +10,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
     {
         private ISedimentFormulaType currentFormulaType;
         private readonly List<ISedimentFormulaType> AvailableFormulaTypes;
-        
 
         public SedimentFraction()
         {
@@ -29,32 +28,36 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             {
                 if (currentFormulaType == null || !SupportedFormulaTypes.Contains(currentFormulaType))
                 {
-                    var traFrm = CurrentSedimentType.Properties.OfType<ISedimentProperty<int>>().FirstOrDefault(p => p.Name == "TraFrm");
+                    ISedimentProperty<int> traFrm = CurrentSedimentType
+                                                    .Properties.OfType<ISedimentProperty<int>>()
+                                                    .FirstOrDefault(p => p.Name == "TraFrm");
                     if (traFrm != null)
                     {
                         // Always use default if possible
-                        currentFormulaType = SupportedFormulaTypes.FirstOrDefault(sft => sft.TraFrm == traFrm.DefaultValue) ??
-                                             SupportedFormulaTypes.FirstOrDefault();
+                        currentFormulaType =
+                            SupportedFormulaTypes.FirstOrDefault(sft => sft.TraFrm == traFrm.DefaultValue) ??
+                            SupportedFormulaTypes.FirstOrDefault();
                     }
                 }
+
                 return currentFormulaType;
             }
-            set
-            {
-                currentFormulaType = value;
-            }
+            set => currentFormulaType = value;
         }
-        
+
         public List<ISedimentType> AvailableSedimentTypes { get; set; }
 
         public List<ISedimentFormulaType> SupportedFormulaTypes
         {
             get
             {
-                var currentFormulaRange = CurrentSedimentType.Properties.FirstOrDefault(p => p.Name == "TraFrm") as ISedimentProperty<int>;
+                var currentFormulaRange =
+                    CurrentSedimentType.Properties.FirstOrDefault(p => p.Name == "TraFrm") as ISedimentProperty<int>;
                 return currentFormulaRange != null
-                    ? AvailableFormulaTypes.Where(f => f.TraFrm >= currentFormulaRange.MinValue && f.TraFrm <= currentFormulaRange.MaxValue).ToList()
-                    : new List<ISedimentFormulaType>();
+                           ? AvailableFormulaTypes
+                             .Where(f => f.TraFrm >= currentFormulaRange.MinValue &&
+                                         f.TraFrm <= currentFormulaRange.MaxValue).ToList()
+                           : new List<ISedimentFormulaType>();
             }
         }
 
@@ -68,14 +71,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             var setOfLayers = new List<string>();
             if (AvailableSedimentTypes != null)
             {
-                setOfLayers.AddRange(AvailableSedimentTypes.SelectMany(st => st.Properties.OfType<ISpatiallyVaryingSedimentProperty>())
-                    .Select(p => p.SpatiallyVaryingName));
-                    
+                setOfLayers.AddRange(AvailableSedimentTypes
+                                     .SelectMany(st => st.Properties.OfType<ISpatiallyVaryingSedimentProperty>())
+                                     .Select(p => p.SpatiallyVaryingName));
             }
+
             if (AvailableFormulaTypes != null)
             {
-                setOfLayers.AddRange(AvailableFormulaTypes.SelectMany(sft => sft.Properties.OfType<ISpatiallyVaryingSedimentProperty>())
-                    .Select(p=> p.SpatiallyVaryingName));
+                setOfLayers.AddRange(AvailableFormulaTypes
+                                     .SelectMany(sft => sft.Properties.OfType<ISpatiallyVaryingSedimentProperty>())
+                                     .Select(p => p.SpatiallyVaryingName));
             }
 
             return setOfLayers;
@@ -87,21 +92,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             if (CurrentSedimentType != null)
             {
                 setOfActiveLayers.AddRange(CurrentSedimentType.Properties.OfType<ISpatiallyVaryingSedimentProperty>()
-                    .Where(p => p.IsSpatiallyVarying)
-                    .Select(p => p.SpatiallyVaryingName)
-                    .Where(n => !string.IsNullOrEmpty(n)));
-
+                                                              .Where(p => p.IsSpatiallyVarying)
+                                                              .Select(p => p.SpatiallyVaryingName)
+                                                              .Where(n => !string.IsNullOrEmpty(n)));
             }
+
             if (CurrentFormulaType != null)
             {
                 setOfActiveLayers.AddRange(CurrentFormulaType.Properties.OfType<ISpatiallyVaryingSedimentProperty>()
-                    .Where(p => p.IsSpatiallyVarying)
-                    .Select(p => p.SpatiallyVaryingName)
-                    .Where(n => !string.IsNullOrEmpty(n)));
+                                                             .Where(p => p.IsSpatiallyVarying)
+                                                             .Select(p => p.SpatiallyVaryingName)
+                                                             .Where(n => !string.IsNullOrEmpty(n)));
             }
 
             return setOfActiveLayers;
-
         }
     }
 
@@ -131,5 +135,4 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             return Name;
         }
     }
-    
 }

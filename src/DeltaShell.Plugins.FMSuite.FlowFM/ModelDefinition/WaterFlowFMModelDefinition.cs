@@ -1,4 +1,11 @@
-﻿using DelftTools.Functions.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.ComponentModel;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils;
@@ -23,12 +30,6 @@ using NetTopologySuite.Extensions.Features;
 using SharpMap.Api.SpatialOperations;
 using SharpMap.Data.Providers;
 using SharpMap.SpatialOperations;
-using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.ComponentModel;
-using System.IO;
-using System.Linq;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 {
@@ -81,30 +82,31 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         {
             get
             {
-                var modelPropertyGroups =
+                IEnumerable<KeyValuePair<string, ModelPropertyGroup>> modelPropertyGroups =
                     ModelPropertySchema?.GuiPropertyGroups?
                         .Union(MorphologyModelPropertySchema.GuiPropertyGroups);
-                    
+
                 return modelPropertyGroups?
-                    .GroupBy(kvp => kvp.Key)
-                    .Select(grp => grp.First())
-                    .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+                       .GroupBy(kvp => kvp.Key)
+                       .Select(grp => grp.First())
+                       .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
             }
         }
+
         public string ModelDirectory { get; set; }
         public string ModelName { get; set; }
         public ICoordinateSystem CoordinateSystem { get; set; }
 
         public readonly IDictionary<string, IList<ISpatialOperation>> SpatialOperations;
-        public UnstructuredGridCoverage Bathymetry { get; set; } 
-        
+        public UnstructuredGridCoverage Bathymetry { get; set; }
+
         public IList<ISpatialOperation> GetSpatialOperations(string quantityName)
         {
             IList<ISpatialOperation> result;
             SpatialOperations.TryGetValue(quantityName, out result);
             return result;
         }
-        
+
         public IEventedList<IWindField> WindFields { get; private set; }
 
         public IList<IUnsupportedFileBasedExtForceFileItem> UnsupportedFileBasedExtForceFileItems { get; private set; }
@@ -115,17 +117,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 
         public IEventedList<BoundaryConditionSet> BoundaryConditionSets { get; private set; }
 
-        public StructureSchema<ModelPropertyDefinition> StructureSchema { get { return StructureSchemaInstance; } }
+        public StructureSchema<ModelPropertyDefinition> StructureSchema => StructureSchemaInstance;
 
         public IEnumerable<IBoundaryCondition> BoundaryConditions
         {
-            get { return BoundaryConditionSets.SelectMany(bcs => bcs.BoundaryConditions); }
+            get
+            {
+                return BoundaryConditionSets.SelectMany(bcs => bcs.BoundaryConditions);
+            }
         }
 
         public IEventedList<Feature2D> Pipes { get; private set; }
-        
+
         public IEventedList<SourceAndSink> SourcesAndSinks { get; private set; }
-        
+
         public IList<Embankment> Embankments { get; set; }
 
         static WaterFlowFMModelDefinition()
@@ -133,24 +138,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             const string dflowfmPropertiesCsvFileName = "dflowfm-properties.csv";
             const string dflowfmStructurePropertiesCsvFileName = "structure-properties.csv";
             const string dflowfmMorPropertiesCsvFileName = "dflowfm-mor-properties.csv";
-            var assembly = typeof (WaterFlowFMModelDefinition).Assembly;
-            var assemblyLocation = assembly.Location;
-            var directoryInfo = new FileInfo(assemblyLocation).Directory;
+            Assembly assembly = typeof(WaterFlowFMModelDefinition).Assembly;
+            string assemblyLocation = assembly.Location;
+            DirectoryInfo directoryInfo = new FileInfo(assemblyLocation).Directory;
             if (directoryInfo != null)
             {
-                var path = directoryInfo.FullName;
-                var propertiesDefinitionFile = Path.Combine(path, dflowfmPropertiesCsvFileName);
+                string path = directoryInfo.FullName;
+                string propertiesDefinitionFile = Path.Combine(path, dflowfmPropertiesCsvFileName);
                 ModelPropertySchema =
                     new ModelSchemaCsvFile().ReadModelSchema<WaterFlowFMPropertyDefinition>(propertiesDefinitionFile,
-                        "MduGroup");
+                                                                                            "MduGroup");
 
-                var structurePropertiesDefinitionFile = Path.Combine(path, dflowfmStructurePropertiesCsvFileName);
+                string structurePropertiesDefinitionFile = Path.Combine(path, dflowfmStructurePropertiesCsvFileName);
                 StructureSchemaInstance =
                     new StructureFMPropertiesFile().ReadProperties(structurePropertiesDefinitionFile);
 
-                var morPropertiesDefinitionFile = Path.Combine(path, dflowfmMorPropertiesCsvFileName);
+                string morPropertiesDefinitionFile = Path.Combine(path, dflowfmMorPropertiesCsvFileName);
                 MorphologyModelPropertySchema = new ModelSchemaCsvFile().ReadModelSchema<WaterFlowFMPropertyDefinition>(
-                        morPropertiesDefinitionFile, "MduGroup");
+                    morPropertiesDefinitionFile, "MduGroup");
             }
             else
             {
@@ -163,16 +168,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             HeatFluxModel = new HeatFluxModel();
             Properties = new EventedList<WaterFlowFMProperty>();
 
-            ((INotifyPropertyChange)Properties).PropertyChanged += OnWaterFlowFMPropertyChanged;
+            ((INotifyPropertyChange) Properties).PropertyChanged += OnWaterFlowFMPropertyChanged;
             Properties.CollectionChanged += OnWaterFlowFMCollectionChanged;
 
-            foreach (var propertyDefinition in ModelPropertySchema.PropertyDefinitions.Values)
+            foreach (WaterFlowFMPropertyDefinition propertyDefinition in ModelPropertySchema.PropertyDefinitions.Values)
             {
                 SetModelProperty(propertyDefinition.MduPropertyName,
                                  new WaterFlowFMProperty(propertyDefinition, propertyDefinition.DefaultValueAsString));
             }
-            
-            foreach (var propertyDefinition in MorphologyModelPropertySchema.PropertyDefinitions.Values)
+
+            foreach (WaterFlowFMPropertyDefinition propertyDefinition in MorphologyModelPropertySchema
+                                                                         .PropertyDefinitions.Values)
             {
                 SetModelProperty(propertyDefinition.MduPropertyName,
                                  new WaterFlowFMProperty(propertyDefinition, propertyDefinition.DefaultValueAsString));
@@ -206,28 +212,32 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             UpdateWriteOutputSnappedFeatures();
         }
 
-        /// <summary>Sets the default GUI time properties that are derived from the properties (.csv) file.</summary>
+        /// <summary> Sets the default GUI time properties that are derived from the properties (.csv) file. </summary>
         private void SetDefaultGuiTimeProperties()
         {
-            var modelStartTime = (double)GetModelProperty(KnownProperties.TStart).Value;
+            var modelStartTime = (double) GetModelProperty(KnownProperties.TStart).Value;
             GetModelProperty(GuiProperties.StartTime).Value = GetAbsoluteDateTime(modelStartTime, true);
 
-            var modelStopTime = (double)GetModelProperty(KnownProperties.TStop).Value;
+            var modelStopTime = (double) GetModelProperty(KnownProperties.TStop).Value;
             GetModelProperty(GuiProperties.StopTime).Value = GetAbsoluteDateTime(modelStopTime, true);
 
-            SetDefaultTimeProperties(KnownProperties.HisInterval, GuiProperties.HisOutputDeltaT, GuiProperties.HisOutputStartTime, GuiProperties.HisOutputStopTime);
-            SetDefaultTimeProperties(KnownProperties.MapInterval, GuiProperties.MapOutputDeltaT, GuiProperties.MapOutputStartTime, GuiProperties.MapOutputStopTime);
+            SetDefaultTimeProperties(KnownProperties.HisInterval, GuiProperties.HisOutputDeltaT,
+                                     GuiProperties.HisOutputStartTime, GuiProperties.HisOutputStopTime);
+            SetDefaultTimeProperties(KnownProperties.MapInterval, GuiProperties.MapOutputDeltaT,
+                                     GuiProperties.MapOutputStartTime, GuiProperties.MapOutputStopTime);
             SetDefaultTimeProperties(KnownProperties.ClassMapInterval, GuiProperties.ClassMapOutputDeltaT);
-            SetDefaultTimeProperties(KnownProperties.RstInterval, GuiProperties.RstOutputDeltaT, GuiProperties.RstOutputStartTime, GuiProperties.RstOutputStopTime);
-            SetDefaultTimeProperties(KnownProperties.WaqInterval, GuiProperties.WaqOutputDeltaT, GuiProperties.WaqOutputStartTime, GuiProperties.WaqOutputStopTime);
+            SetDefaultTimeProperties(KnownProperties.RstInterval, GuiProperties.RstOutputDeltaT,
+                                     GuiProperties.RstOutputStartTime, GuiProperties.RstOutputStopTime);
+            SetDefaultTimeProperties(KnownProperties.WaqInterval, GuiProperties.WaqOutputDeltaT,
+                                     GuiProperties.WaqOutputStartTime, GuiProperties.WaqOutputStopTime);
         }
 
         private void SetDefaultTimeProperties(string intervalPropertyName,
-                                  string deltaTPropertyName,
-                                  string startTimePropertyName = null,
-                                  string stopTimePropertyName = null)
+                                              string deltaTPropertyName,
+                                              string startTimePropertyName = null,
+                                              string stopTimePropertyName = null)
         {
-            var intervalInSeconds = ((IList<double>)GetModelProperty(intervalPropertyName).Value)[0];
+            double intervalInSeconds = ((IList<double>) GetModelProperty(intervalPropertyName).Value)[0];
             if (intervalInSeconds > 0)
             {
                 var seconds = (int) Math.Floor(intervalInSeconds);
@@ -249,11 +259,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         {
             if (e.Action == NotifyCollectionChangedAction.Add)
             {
-                var removedOrAddedItem = e.GetRemovedOrAddedItem();
+                object removedOrAddedItem = e.GetRemovedOrAddedItem();
                 if (removedOrAddedItem == GetModelProperty(KnownProperties.Temperature))
                 {
-                    var prop = (WaterFlowFMProperty)removedOrAddedItem;
-                    HeatFluxModel.Type = (HeatFluxModelType) ((int)prop.Value);
+                    var prop = (WaterFlowFMProperty) removedOrAddedItem;
+                    HeatFluxModel.Type = (HeatFluxModelType) (int) prop.Value;
                 }
             }
         }
@@ -264,16 +274,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         [EditAction]
         private void OnWaterFlowFMPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (handlingPropertyChanged) return; //prevent recursion in syncing useTemperature with heat flux model type
+            if (handlingPropertyChanged)
+            {
+                return; //prevent recursion in syncing useTemperature with heat flux model type
+            }
 
             handlingPropertyChanged = true;
 
             try
             {
                 var prop = (WaterFlowFMProperty) sender;
-                var propName = prop.PropertyDefinition.MduPropertyName.ToLower();
+                string propName = prop.PropertyDefinition.MduPropertyName.ToLower();
                 if (waterFlowFmPropertyChangedHandler.ContainsKey(propName))
+                {
                     waterFlowFmPropertyChangedHandler[propName](prop);
+                }
             }
             finally
             {
@@ -286,10 +301,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             var icdtyp = (int) icdtypProp.Value;
             if (icdtyp == 2 || icdtyp == 3)
             {
-                var cdbreakpointsProperty = GetModelProperty(KnownProperties.Cdbreakpoints);
+                WaterFlowFMProperty cdbreakpointsProperty = GetModelProperty(KnownProperties.Cdbreakpoints);
                 CorrectWindDragCoefficientBreakpointsCollection(cdbreakpointsProperty, icdtyp);
 
-                var windspeedbreakpointsProperty = GetModelProperty(KnownProperties.Windspeedbreakpoints);
+                WaterFlowFMProperty windspeedbreakpointsProperty =
+                    GetModelProperty(KnownProperties.Windspeedbreakpoints);
                 CorrectWindDragCoefficientBreakpointsCollection(windspeedbreakpointsProperty, icdtyp);
             }
         }
@@ -301,9 +317,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 
         private void OnTemperaturePropertyChanged(WaterFlowFMProperty temperatureProp)
         {
-            HeatFluxModel.Type = (HeatFluxModelType) ((int) temperatureProp.Value);
+            HeatFluxModel.Type = (HeatFluxModelType) (int) temperatureProp.Value;
         }
-        
+
         public readonly List<string> KnownWriteOutputSnappedFeatures = new List<string>()
         {
             KnownProperties.Wrishp_crs,
@@ -321,7 +337,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 
         private void OnWriteSnappedFeaturesPropertyChanged(WaterFlowFMProperty prop)
         {
-            foreach (var writeProp in KnownWriteOutputSnappedFeatures)
+            foreach (string writeProp in KnownWriteOutputSnappedFeatures)
             {
                 GetModelProperty(writeProp).Value = WriteSnappedFeatures;
             }
@@ -329,13 +345,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 
         private void OnMorphologySedimentPropertyChanged(WaterFlowFMProperty prop)
         {
-            if(prop.PropertyDefinition.MduPropertyName != GuiProperties.UseMorSed) return;
+            if (prop.PropertyDefinition.MduPropertyName != GuiProperties.UseMorSed)
+            {
+                return;
+            }
+
             SetMapFormatPropertyValue();
         }
 
         private void SetModelProperty(string mduPropertyName, WaterFlowFMProperty property)
         {
-            var prop = GetModelProperty(mduPropertyName);
+            WaterFlowFMProperty prop = GetModelProperty(mduPropertyName);
             if (prop != null)
             {
                 Properties[Properties.IndexOf(prop)] = property;
@@ -352,7 +372,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                 Properties.FirstOrDefault(
                     p =>
                         p.PropertyDefinition.MduPropertyName.Equals(propertyName,
-                            StringComparison.InvariantCultureIgnoreCase));
+                                                                    StringComparison.InvariantCultureIgnoreCase));
         }
 
         public WaterFlowFMModelDefinition(string modelDir, string modelName) : this()
@@ -363,69 +383,68 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 
         public int Kmx
         {
-            get { return (int) GetModelProperty(KnownProperties.Kmx).Value; }
-            set { GetModelProperty(KnownProperties.Kmx).Value = value; }
+            get => (int) GetModelProperty(KnownProperties.Kmx).Value;
+            set => GetModelProperty(KnownProperties.Kmx).Value = value;
         }
 
         public MapFormatType MapFormat
         {
             get
             {
-                var mapFormatStringValue = GetModelProperty(KnownProperties.MapFormat).GetValueAsString();
+                string mapFormatStringValue = GetModelProperty(KnownProperties.MapFormat).GetValueAsString();
                 MapFormatType mapFormatValue;
                 return Enum.TryParse(mapFormatStringValue, out mapFormatValue) ? mapFormatValue : MapFormatType.Unknown;
             }
-            set { GetModelProperty(KnownProperties.MapFormat).SetValueAsString(((int)value).ToString()); }
+            set => GetModelProperty(KnownProperties.MapFormat).SetValueAsString(((int) value).ToString());
         }
 
         public void SetMapFormatPropertyValue()
         {
-            var isPartOf1D2DModel = (bool)GetModelProperty(GuiProperties.PartOf1D2DModel).Value;
+            var isPartOf1D2DModel = (bool) GetModelProperty(GuiProperties.PartOf1D2DModel).Value;
             if (isPartOf1D2DModel && MapFormat != MapFormatType.NetCdf)
             {
                 MapFormat = MapFormatType.NetCdf;
-                Log.InfoFormat(Resources.WaterFlowFMModelDefinition_SetMapFormatPropertyValue_MapFormat_property_value_of_FlowFM_model__0__is_changed_to_1__because_it_is_part_of_an_1D2D_integrated_model_, ModelName);
+                Log.InfoFormat(
+                    Resources
+                        .WaterFlowFMModelDefinition_SetMapFormatPropertyValue_MapFormat_property_value_of_FlowFM_model__0__is_changed_to_1__because_it_is_part_of_an_1D2D_integrated_model_,
+                    ModelName);
             }
             else if (!isPartOf1D2DModel && UseMorphologySediment && MapFormat != MapFormatType.Ugrid)
             {
                 MapFormat = MapFormatType.Ugrid;
-                Log.InfoFormat(Resources.WaterFlowFMModelDefinition_SetMapFormatPropertyValue_MapFormat_property_value_of_FlowFM_model__0__is_changed_to_4_due_to_activation_of_Morphology_, ModelName);
+                Log.InfoFormat(
+                    Resources
+                        .WaterFlowFMModelDefinition_SetMapFormatPropertyValue_MapFormat_property_value_of_FlowFM_model__0__is_changed_to_4_due_to_activation_of_Morphology_,
+                    ModelName);
             }
         }
 
         public bool WriteSnappedFeatures
         {
-            get { return (bool)GetModelProperty(GuiProperties.WriteSnappedFeatures).Value; }
-            set { GetModelProperty(GuiProperties.WriteSnappedFeatures).Value = value; }
+            get => (bool) GetModelProperty(GuiProperties.WriteSnappedFeatures).Value;
+            set => GetModelProperty(GuiProperties.WriteSnappedFeatures).Value = value;
         }
 
         public bool UseMorphologySediment
         {
-            get { return (bool)GetModelProperty(GuiProperties.UseMorSed).Value; }
-            set { GetModelProperty(GuiProperties.UseMorSed).Value = value; }
+            get => (bool) GetModelProperty(GuiProperties.UseMorSed).Value;
+            set => GetModelProperty(GuiProperties.UseMorSed).Value = value;
         }
 
-        public string MapFileName
-        {
-            get { return GetFileNameFromProperty(MapFilePropertyName, ModelName + MapFileExtension); }
-        }
+        public string MapFileName => GetFileNameFromProperty(MapFilePropertyName, ModelName + MapFileExtension);
 
-        public string HisFileName
-        {
-            get { return GetFileNameFromProperty(HisFilePropertyName, ModelName + HisFileExtension); }
-        }
+        public string HisFileName => GetFileNameFromProperty(HisFilePropertyName, ModelName + HisFileExtension);
 
-        /// <summary>Gets the relative class map file path.</summary>
-        /// <value>The relative class map file path.</value>
-        public string ClassMapFileName
-        {
-            get { return GetFileNameFromProperty(ClassMapFilePropertyName, ModelName + ClassMapFileExtension); }
-        }
+        /// <summary> Gets the relative class map file path. </summary>
+        /// <value> The relative class map file path. </value>
+        public string ClassMapFileName =>
+            GetFileNameFromProperty(ClassMapFilePropertyName, ModelName + ClassMapFileExtension);
 
         private string GetFileNameFromProperty(string propertyName, string defaultName)
         {
-            var property = Properties.FirstOrDefault(p => p.PropertyDefinition.MduPropertyName == propertyName);
-            var fileName = property != null ? (string) property.Value : defaultName;
+            WaterFlowFMProperty property =
+                Properties.FirstOrDefault(p => p.PropertyDefinition.MduPropertyName == propertyName);
+            string fileName = property != null ? (string) property.Value : defaultName;
 
             return string.IsNullOrEmpty(fileName) ? defaultName : fileName;
         }
@@ -434,7 +453,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         {
             get
             {
-                var comFileName = ModelName + "_com.nc";
+                string comFileName = ModelName + "_com.nc";
                 return Path.Combine(OutputDirectoryName, comFileName);
             }
         }
@@ -445,22 +464,31 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         /// <value>
         /// The name of the output directory.
         /// </value>
-        /// <remarks>If the property does not exist or the value of the property is null or an empty string we use the default output directory name.</remarks>
-        /// <remarks>If the value of the property is a dot (.) it means output files are in the model directory.</remarks>
+        /// <remarks>
+        /// If the property does not exist or the value of the property is null or an empty string we use the default
+        /// output directory name.
+        /// </remarks>
+        /// <remarks> If the value of the property is a dot (.) it means output files are in the model directory. </remarks>
         public string OutputDirectoryName
         {
             get
             {
                 if (!ContainsProperty(KnownProperties.OutputDir))
+                {
                     return DefaultOutputDirectoryName;
+                }
 
-                var mduOutputDir = GetModelProperty(KnownProperties.OutputDir).GetValueAsString()?.Trim();
+                string mduOutputDir = GetModelProperty(KnownProperties.OutputDir).GetValueAsString()?.Trim();
 
                 if (string.IsNullOrEmpty(mduOutputDir))
+                {
                     return DefaultOutputDirectoryName;
+                }
 
                 if (string.Equals(mduOutputDir, "."))
+                {
                     return "";
+                }
 
                 return mduOutputDir;
             }
@@ -477,17 +505,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         }
 
         // Enable when kernel supports non-equidistant layering
-        public static bool CanSpecifyLayerThicknesses { get { return false; } }
+        public static bool CanSpecifyLayerThicknesses => false;
 
         /// <summary>
-        /// Sets the mdu time properties from GUI properties for writing his, map, class map, restart and waq files. 
+        /// Sets the mdu time properties from GUI properties for writing his, map, class map, restart and waq files.
         /// </summary>
         public void SetMduTimePropertiesFromGuiProperties()
         {
-            var originalStartTime = GetAbsoluteDateTime((double)GetModelProperty(KnownProperties.TStart).Value, true);
-            var originalStopTime = GetAbsoluteDateTime((double)GetModelProperty(KnownProperties.TStop).Value, true);
-            var modelStartTime = (DateTime)GetModelProperty(GuiProperties.StartTime).Value;
-            var modelStopTime = (DateTime)GetModelProperty(GuiProperties.StopTime).Value;
+            DateTime originalStartTime =
+                GetAbsoluteDateTime((double) GetModelProperty(KnownProperties.TStart).Value, true);
+            DateTime originalStopTime =
+                GetAbsoluteDateTime((double) GetModelProperty(KnownProperties.TStop).Value, true);
+            var modelStartTime = (DateTime) GetModelProperty(GuiProperties.StartTime).Value;
+            var modelStopTime = (DateTime) GetModelProperty(GuiProperties.StopTime).Value;
 
             if (modelStartTime != originalStartTime
                 || modelStopTime != originalStopTime)
@@ -496,37 +526,39 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                 GetModelProperty(KnownProperties.TStop).Value = GetRelativeDateTime(modelStopTime, true);
             }
 
-            SetMduStartStopDeltaTFromGui(KnownProperties.HisInterval, GuiProperties.WriteHisFile, 
-                                         GuiProperties.HisOutputDeltaT, GuiProperties.SpecifyHisStart, 
-                                         GuiProperties.HisOutputStartTime, GuiProperties.SpecifyHisStop, 
+            SetMduStartStopDeltaTFromGui(KnownProperties.HisInterval, GuiProperties.WriteHisFile,
+                                         GuiProperties.HisOutputDeltaT, GuiProperties.SpecifyHisStart,
+                                         GuiProperties.HisOutputStartTime, GuiProperties.SpecifyHisStop,
                                          GuiProperties.HisOutputStopTime);
 
-            SetMduStartStopDeltaTFromGui(KnownProperties.MapInterval, GuiProperties.WriteMapFile, 
-                                         GuiProperties.MapOutputDeltaT, GuiProperties.SpecifyMapStart, 
-                                         GuiProperties.MapOutputStartTime, GuiProperties.SpecifyMapStop, 
+            SetMduStartStopDeltaTFromGui(KnownProperties.MapInterval, GuiProperties.WriteMapFile,
+                                         GuiProperties.MapOutputDeltaT, GuiProperties.SpecifyMapStart,
+                                         GuiProperties.MapOutputStartTime, GuiProperties.SpecifyMapStop,
                                          GuiProperties.MapOutputStopTime);
 
-            SetMduStartStopDeltaTFromGui(KnownProperties.RstInterval, GuiProperties.WriteRstFile, 
-                                         GuiProperties.RstOutputDeltaT, GuiProperties.SpecifyRstStart, 
-                                         GuiProperties.RstOutputStartTime, GuiProperties.SpecifyRstStop, 
+            SetMduStartStopDeltaTFromGui(KnownProperties.RstInterval, GuiProperties.WriteRstFile,
+                                         GuiProperties.RstOutputDeltaT, GuiProperties.SpecifyRstStart,
+                                         GuiProperties.RstOutputStartTime, GuiProperties.SpecifyRstStop,
                                          GuiProperties.RstOutputStopTime);
 
             SetMduStartStopDeltaTFromGui(KnownProperties.WaqInterval, GuiProperties.SpecifyWaqOutputInterval,
-                             GuiProperties.WaqOutputDeltaT, GuiProperties.SpecifyWaqOutputStartTime,
-                             GuiProperties.WaqOutputStartTime, GuiProperties.SpecifyWaqOutputStopTime,
-                             GuiProperties.WaqOutputStopTime);
+                                         GuiProperties.WaqOutputDeltaT, GuiProperties.SpecifyWaqOutputStartTime,
+                                         GuiProperties.WaqOutputStartTime, GuiProperties.SpecifyWaqOutputStopTime,
+                                         GuiProperties.WaqOutputStopTime);
 
-            SetMduIntervalFromGuiProperty(KnownProperties.ClassMapInterval, GuiProperties.WriteClassMapFile, GuiProperties.ClassMapOutputDeltaT);
+            SetMduIntervalFromGuiProperty(KnownProperties.ClassMapInterval, GuiProperties.WriteClassMapFile,
+                                          GuiProperties.ClassMapOutputDeltaT);
         }
 
-        private void SetMduIntervalFromGuiProperty(string intervalPropName, string doWritePropName, string deltaTPropName)
+        private void SetMduIntervalFromGuiProperty(string intervalPropName, string doWritePropName,
+                                                   string deltaTPropName)
         {
             var timeFrame = new List<double>();
             var writePropName = (bool) GetModelProperty(doWritePropName).Value;
             if (writePropName)
             {
                 var timeSpan = (TimeSpan) GetModelProperty(deltaTPropName).Value;
-                double secondsInInterval = (double)timeSpan.Ticks / TimeSpan.TicksPerSecond;
+                double secondsInInterval = (double) timeSpan.Ticks / TimeSpan.TicksPerSecond;
                 if (secondsInInterval > 0)
                 {
                     timeFrame.Add(secondsInInterval);
@@ -536,18 +568,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             {
                 timeFrame.Add(0.0);
             }
+
             GetModelProperty(intervalPropName).Value = timeFrame;
         }
 
-        private void SetMduStartStopDeltaTFromGui(string intervalPropName, string doWritePropName, string deltaTPropName, 
-                                                  string specifyStartPropName, string startTimePropName, 
+        private void SetMduStartStopDeltaTFromGui(string intervalPropName, string doWritePropName,
+                                                  string deltaTPropName,
+                                                  string specifyStartPropName, string startTimePropName,
                                                   string specifyStopPropName, string stopTimePropName)
         {
             SetMduIntervalFromGuiProperty(intervalPropName, doWritePropName, deltaTPropName);
 
-            var timeFrame = (List<double>)GetModelProperty(intervalPropName).Value;
+            var timeFrame = (List<double>) GetModelProperty(intervalPropName).Value;
 
-            var writePropName = (bool)GetModelProperty(doWritePropName).Value;
+            var writePropName = (bool) GetModelProperty(doWritePropName).Value;
             var specifyStartTime = (bool) GetModelProperty(specifyStartPropName).Value;
             if (writePropName && specifyStartTime)
             {
@@ -559,6 +593,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                     AddRelativeTimeFromPropertyToList(stopTimePropName, timeFrame);
                 }
             }
+
             GetModelProperty(intervalPropName).Value = timeFrame;
         }
 
@@ -569,7 +604,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         }
 
         /// <summary>
-        /// Sets the GUI time properties from mdu properties for writing his, map, class map, restart and waq files. 
+        /// Sets the GUI time properties from mdu properties for writing his, map, class map, restart and waq files.
         /// </summary>
         public void SetGuiTimePropertiesFromMduProperties()
         {
@@ -580,17 +615,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             GetModelProperty(GuiProperties.StopTime).Value = GetAbsoluteDateTime(mduStopTime, true);
 
             SetGuiStartStopDeltaTFromMdu(KnownProperties.HisInterval, GuiProperties.WriteHisFile,
-                                         GuiProperties.HisOutputDeltaT, GuiProperties.SpecifyHisStart, 
+                                         GuiProperties.HisOutputDeltaT, GuiProperties.SpecifyHisStart,
                                          GuiProperties.HisOutputStartTime, GuiProperties.SpecifyHisStop,
                                          GuiProperties.HisOutputStopTime);
 
             SetGuiStartStopDeltaTFromMdu(KnownProperties.MapInterval, GuiProperties.WriteMapFile,
-                                         GuiProperties.MapOutputDeltaT, GuiProperties.SpecifyMapStart, 
+                                         GuiProperties.MapOutputDeltaT, GuiProperties.SpecifyMapStart,
                                          GuiProperties.MapOutputStartTime, GuiProperties.SpecifyMapStop,
                                          GuiProperties.MapOutputStopTime);
 
             SetGuiStartStopDeltaTFromMdu(KnownProperties.RstInterval, GuiProperties.WriteRstFile,
-                                         GuiProperties.RstOutputDeltaT, GuiProperties.SpecifyRstStart, 
+                                         GuiProperties.RstOutputDeltaT, GuiProperties.SpecifyRstStart,
                                          GuiProperties.RstOutputStartTime, GuiProperties.SpecifyRstStop,
                                          GuiProperties.RstOutputStopTime);
 
@@ -599,12 +634,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                                          GuiProperties.WaqOutputStartTime, GuiProperties.SpecifyWaqOutputStopTime,
                                          GuiProperties.WaqOutputStopTime);
 
-            SetDefaultGuiIntervalFromMdu(KnownProperties.ClassMapInterval, GuiProperties.WriteClassMapFile, GuiProperties.ClassMapOutputDeltaT);
+            SetDefaultGuiIntervalFromMdu(KnownProperties.ClassMapInterval, GuiProperties.WriteClassMapFile,
+                                         GuiProperties.ClassMapOutputDeltaT);
         }
 
-        private void SetDefaultGuiIntervalFromMdu(string intervalPropName, string doWritePropName, string deltaTPropName)
+        private void SetDefaultGuiIntervalFromMdu(string intervalPropName, string doWritePropName,
+                                                  string deltaTPropName)
         {
-            var timeFrame = (IList<double>)GetModelProperty(intervalPropName).Value;
+            var timeFrame = (IList<double>) GetModelProperty(intervalPropName).Value;
             if (timeFrame.Count == 0)
             {
                 GetModelProperty(deltaTPropName).Value = new TimeSpan(0, 0, 5, 0);
@@ -617,8 +654,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             }
         }
 
-        private void SetGuiStartStopDeltaTFromMdu(string intervalPropName, string doWritePropName, string deltaTPropName,
-            string specifyStartPropName, string startTimePropName, string specifyStopPropName, string stopTimePropName)
+        private void SetGuiStartStopDeltaTFromMdu(string intervalPropName, string doWritePropName,
+                                                  string deltaTPropName,
+                                                  string specifyStartPropName, string startTimePropName,
+                                                  string specifyStopPropName, string stopTimePropName)
         {
             var timeFrame = (IList<double>) GetModelProperty(intervalPropName).Value;
             if (timeFrame.Count == 0)
@@ -628,16 +667,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                     GetModelProperty(deltaTPropName).Value = new TimeSpan(0, 0, 20, 0);
                     GetModelProperty(doWritePropName).Value = true;
                 }
+
                 if (intervalPropName == KnownProperties.HisInterval)
                 {
                     GetModelProperty(deltaTPropName).Value = new TimeSpan(0, 0, 5, 0);
                     GetModelProperty(doWritePropName).Value = true;
                 }
+
                 if (intervalPropName == KnownProperties.RstInterval)
                 {
                     GetModelProperty(deltaTPropName).Value = new TimeSpan(0, 24, 0, 0);
                     GetModelProperty(doWritePropName).Value = true;
                 }
+
                 if (intervalPropName == KnownProperties.WaqInterval)
                 {
                     GetModelProperty(deltaTPropName).Value = new TimeSpan(0, 0, 0, 0);
@@ -676,8 +718,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             }
         }
 
-        private void SetGuiIntervalFromMduProperty(string doWritePropName, string deltaTPropName, IList<double> timeFrame)
-        {                 
+        private void SetGuiIntervalFromMduProperty(string doWritePropName, string deltaTPropName,
+                                                   IList<double> timeFrame)
+        {
             var seconds = (int) Math.Floor(timeFrame[0]);
             var millis = (int) ((timeFrame[0] - seconds) * 1000d);
             var interval = new TimeSpan(0, 0, 0, seconds, millis);
@@ -688,7 +731,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 
         private DateTime GetAbsoluteDateTime(double relativeTime, bool useTUnit)
         {
-            var unitString = GetModelProperty(KnownProperties.Tunit).GetValueAsString();
+            string unitString = GetModelProperty(KnownProperties.Tunit).GetValueAsString();
 
             double timeUnitInSeconds = 1;
             if (useTUnit)
@@ -702,14 +745,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                     timeUnitInSeconds = 3600d;
                 }
             }
-            var ticks = (long)(TimeSpan.TicksPerSecond * relativeTime * timeUnitInSeconds);
-            var referenceDate = (DateTime)GetModelProperty(KnownProperties.RefDate).Value;
+
+            var ticks = (long) (TimeSpan.TicksPerSecond * relativeTime * timeUnitInSeconds);
+            var referenceDate = (DateTime) GetModelProperty(KnownProperties.RefDate).Value;
             return referenceDate.AddTicks(ticks);
         }
 
         private double GetRelativeDateTime(DateTime dateTime, bool useTUnit)
         {
-            var unitString = GetModelProperty(KnownProperties.Tunit).GetValueAsString();
+            string unitString = GetModelProperty(KnownProperties.Tunit).GetValueAsString();
 
             long numSecondsInTimeStep = 1;
             if (useTUnit)
@@ -723,7 +767,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                     numSecondsInTimeStep = 3600;
                 }
             }
-            var referenceDate = (DateTime)GetModelProperty(KnownProperties.RefDate).Value;
+
+            var referenceDate = (DateTime) GetModelProperty(KnownProperties.RefDate).Value;
             double ticks = dateTime.Ticks - referenceDate.Ticks;
             return ticks / TimeSpan.TicksPerSecond / numSecondsInTimeStep;
         }
@@ -731,13 +776,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         private void UpdateOutputTimes()
         {
             UpdateOutputTimesFromSimulationPeriod(GuiProperties.SpecifyHisStart, GuiProperties.HisOutputStartTime,
-                GuiProperties.SpecifyHisStop, GuiProperties.HisOutputStopTime);
+                                                  GuiProperties.SpecifyHisStop, GuiProperties.HisOutputStopTime);
             UpdateOutputTimesFromSimulationPeriod(GuiProperties.SpecifyMapStart, GuiProperties.MapOutputStartTime,
-                GuiProperties.SpecifyMapStop, GuiProperties.MapOutputStopTime);
+                                                  GuiProperties.SpecifyMapStop, GuiProperties.MapOutputStopTime);
             UpdateOutputTimesFromSimulationPeriod(GuiProperties.SpecifyRstStart, GuiProperties.RstOutputStartTime,
-                GuiProperties.SpecifyRstStop, GuiProperties.RstOutputStopTime);
-            UpdateOutputTimesFromSimulationPeriod(GuiProperties.SpecifyWaqOutputStartTime, GuiProperties.WaqOutputStartTime,
-                GuiProperties.SpecifyWaqOutputStopTime, GuiProperties.WaqOutputStopTime);/*rstoutput needs to be replaced */
+                                                  GuiProperties.SpecifyRstStop, GuiProperties.RstOutputStopTime);
+            UpdateOutputTimesFromSimulationPeriod(GuiProperties.SpecifyWaqOutputStartTime,
+                                                  GuiProperties.WaqOutputStartTime,
+                                                  GuiProperties.SpecifyWaqOutputStopTime,
+                                                  GuiProperties.WaqOutputStopTime); /*rstoutput needs to be replaced */
         }
 
         private void UpdateOutputTimesFromSimulationPeriod(string specifyStartPropName, string startTimePropName,
@@ -747,6 +794,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             {
                 GetModelProperty(startTimePropName).Value = GetModelProperty(GuiProperties.StartTime).Value;
             }
+
             if (!(bool) GetModelProperty(specifyStopPropName).Value)
             {
                 GetModelProperty(stopTimePropName).Value = GetModelProperty(GuiProperties.StopTime).Value;
@@ -766,12 +814,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         private void CorrectWindDragCoefficientBreakpointsCollection(WaterFlowFMProperty breakPointsProperty,
                                                                      int icdtyp)
         {
-            var cdbreakpoints = (IList<double>)breakPointsProperty.Value;
+            var cdbreakpoints = (IList<double>) breakPointsProperty.Value;
             // Append new values:
             if (cdbreakpoints.Count < icdtyp)
             {
-                breakPointsProperty.Value = new List<double>(cdbreakpoints.Concat(Enumerable.Repeat(0.0, icdtyp - cdbreakpoints.Count)));
+                breakPointsProperty.Value =
+                    new List<double>(cdbreakpoints.Concat(Enumerable.Repeat(0.0, icdtyp - cdbreakpoints.Count)));
             }
+
             // Remove obsolete values:
             if (cdbreakpoints.Count > icdtyp)
             {
@@ -785,7 +835,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         /// </summary>
         public void UpdateWriteOutputSnappedFeatures()
         {
-            WriteSnappedFeatures = KnownWriteOutputSnappedFeatures.Any(ws => (bool)GetModelProperty(ws).Value);
+            WriteSnappedFeatures = KnownWriteOutputSnappedFeatures.Any(ws => (bool) GetModelProperty(ws).Value);
         }
 
         /// <summary>
@@ -794,16 +844,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         /// </summary>
         public void UpdateHeatFluxModel()
         {
-            HeatFluxModel.Type = (HeatFluxModelType) ((int) GetModelProperty(KnownProperties.Temperature).Value);
+            HeatFluxModel.Type = (HeatFluxModelType) (int) GetModelProperty(KnownProperties.Temperature).Value;
         }
 
-        public void SelectSpatialOperations(IEventedList<IDataItem> dataItems, IEnumerable<string> tracerDefinitions, IEnumerable<string> spatiallyVaryingSedimentDefinitions = null)
+        public void SelectSpatialOperations(IEventedList<IDataItem> dataItems, IEnumerable<string> tracerDefinitions,
+                                            IEnumerable<string> spatiallyVaryingSedimentDefinitions = null)
         {
             InitialTracerNames.Clear();
             InitialTracerNames.AddRange(tracerDefinitions);
-            var sedimentDefinitionList = spatiallyVaryingSedimentDefinitions?.ToList();
+            List<string> sedimentDefinitionList = spatiallyVaryingSedimentDefinitions?.ToList();
 
-            if ((sedimentDefinitionList != null) && sedimentDefinitionList.Any(sd => sd != null))
+            if (sedimentDefinitionList != null && sedimentDefinitionList.Any(sd => sd != null))
             {
                 InitialSpatiallyVaryingSedimentPropertyNames.Clear();
                 InitialSpatiallyVaryingSedimentPropertyNames.AddRange(sedimentDefinitionList);
@@ -811,21 +862,29 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 
             SpatialOperations.Clear();
 
-            var combinedSpatialDataItemNames = SpatialDataItemNames.Concat(InitialTracerNames).Concat(InitialSpatiallyVaryingSedimentPropertyNames);
-            var dataItemsFound = combinedSpatialDataItemNames.SelectMany(n => dataItems.Where(di => di.Name.StartsWith(n))).ToArray();
-            var dataItemsWithConverter = dataItemsFound.Where(d => d.ValueConverter is SpatialOperationSetValueConverter).Distinct().ToList();
-            var dataItemsWithOutConverter = dataItemsFound.Except(dataItemsWithConverter).Distinct().ToList();
+            IEnumerable<string> combinedSpatialDataItemNames = SpatialDataItemNames
+                                                               .Concat(InitialTracerNames)
+                                                               .Concat(InitialSpatiallyVaryingSedimentPropertyNames);
+            IDataItem[] dataItemsFound = combinedSpatialDataItemNames
+                                         .SelectMany(n => dataItems.Where(di => di.Name.StartsWith(n))).ToArray();
+            List<IDataItem> dataItemsWithConverter = dataItemsFound
+                                                     .Where(d => d.ValueConverter is SpatialOperationSetValueConverter)
+                                                     .Distinct().ToList();
+            List<IDataItem> dataItemsWithOutConverter =
+                dataItemsFound.Except(dataItemsWithConverter).Distinct().ToList();
 
-            foreach (var dataItem in dataItemsWithConverter)
+            foreach (IDataItem dataItem in dataItemsWithConverter)
             {
                 var spatialOperationValueConverter = (SpatialOperationSetValueConverter) dataItem.ValueConverter;
                 if (spatialOperationValueConverter.SpatialOperationSet.Operations.All(SupportedByExtForceFile))
                 {
                     // put in everything except spatial operation sets,
                     // because we only use interpolate commands that will grab the importsamplesoperation via the input parameters.
-                    var spatialOperations = spatialOperationValueConverter.SpatialOperationSet.Operations
-                        .Where(s => !( s is ISpatialOperationSet )).Select(ConvertSpatialOperation)
-                        .ToList();
+                    List<ISpatialOperation> spatialOperations = spatialOperationValueConverter
+                                                                .SpatialOperationSet.Operations
+                                                                .Where(s => !(s is ISpatialOperationSet))
+                                                                .Select(ConvertSpatialOperation)
+                                                                .ToList();
 
                     SpatialOperations.Add(dataItem.Name, spatialOperations);
                 }
@@ -833,14 +892,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                 else if (spatialOperationValueConverter.SpatialOperationSet.Output.Provider != null)
                 {
                     // unsupported operations are converted to sample operations that are saved with an xyz file via the model definition.
-                    var coverage = spatialOperationValueConverter.SpatialOperationSet.Output.Provider.Features[0] as UnstructuredGridCoverage;
+                    var coverage =
+                        spatialOperationValueConverter.SpatialOperationSet.Output.Provider.Features[0] as
+                            UnstructuredGridCoverage;
 
                     // In the event that the coverage is comprised entirely of non-data values, ignore it and continue
                     // (This can happen when exporting spatial operations that comprise of added points but no interpolation
                     // - we're not interested in these for the mdu, they will be saved as dataitems to the dsproj)
-                    if (coverage == null || ( coverage.Components[0].NoDataValues != null &&
-                    coverage.GetValues<double>().All(v => coverage.Components[0].NoDataValues.Contains(v)) ) &&
-                    spatialOperationValueConverter.SpatialOperationSet.Operations.Any(op => !(op is EraseOperation)))
+                    if (coverage == null || coverage.Components[0].NoDataValues != null &&
+                        coverage.GetValues<double>().All(v => coverage.Components[0].NoDataValues.Contains(v)) &&
+                        spatialOperationValueConverter.SpatialOperationSet.Operations.Any(op => !(op is EraseOperation))
+                    )
                     {
                         continue;
                     }
@@ -850,45 +912,59 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                         Name = spatialOperationValueConverter.SpatialOperationSet.Name
                     };
                     newOperation.SetInputData(AddSamplesOperation.SamplesInputName,
-                        new PointCloudFeatureProvider
-                        {
-                            PointCloud = coverage.ToPointCloud(0, true),
-                        });
+                                              new PointCloudFeatureProvider
+                                              {
+                                                  PointCloud = coverage.ToPointCloud(0, true),
+                                              });
 
                     if (SpatialOperations.ContainsKey(dataItem.Name))
                     {
-                        Log.WarnFormat(Resources.WaterFlowFMModelDefinition_SelectSpatialOperations_Duplication_of_spatial_operations_for__0___Please_verify_the_model_after_saving_, dataItem.Name);
+                        Log.WarnFormat(
+                            Resources
+                                .WaterFlowFMModelDefinition_SelectSpatialOperations_Duplication_of_spatial_operations_for__0___Please_verify_the_model_after_saving_,
+                            dataItem.Name);
                     }
                     else
                     {
-                        SpatialOperations.Add(dataItem.Name, new[] { newOperation });
+                        SpatialOperations.Add(dataItem.Name, new[]
+                        {
+                            newOperation
+                        });
                     }
                 }
             }
 
-            var coverageByType = dataItemsWithOutConverter.Select(di => di.Value).OfType<UnstructuredGridCoverage>().GroupBy(c => c.GetType()).ToList();
-            
-            var dataItemNameLookup = dataItemsWithOutConverter
-                                        .GroupBy(o => o.Name).Select(o => o.FirstOrDefault())   //Removing duplicates.
-                                        .ToDictionary(di => di.Value,di => di.Name);
+            List<IGrouping<Type, UnstructuredGridCoverage>> coverageByType = dataItemsWithOutConverter
+                                                                             .Select(di => di.Value)
+                                                                             .OfType<UnstructuredGridCoverage>()
+                                                                             .GroupBy(c => c.GetType()).ToList();
 
-            foreach (var coverageGrouping in coverageByType)
+            Dictionary<object, string> dataItemNameLookup = dataItemsWithOutConverter
+                                                            .GroupBy(o => o.Name)
+                                                            .Select(o => o.FirstOrDefault()) //Removing duplicates.
+                                                            .ToDictionary(di => di.Value, di => di.Name);
+
+            foreach (IGrouping<Type, UnstructuredGridCoverage> coverageGrouping in coverageByType)
             {
                 Coordinate[] coordinates = null;
 
-                foreach (var coverage in coverageGrouping)
+                foreach (UnstructuredGridCoverage coverage in coverageGrouping)
                 {
                     if (coverage.IsTimeDependent)
-                        throw new NotSupportedException("Converting time dependent spatial data to samples is not supported");
+                    {
+                        throw new NotSupportedException(
+                            "Converting time dependent spatial data to samples is not supported");
+                    }
 
                     var component = coverage.Components[0] as IVariable<double>;
                     if (component == null)
                     {
-                        throw new NotSupportedException("Converting a non-double valued coverage component to a point cloud is not supported");
+                        throw new NotSupportedException(
+                            "Converting a non-double valued coverage component to a point cloud is not supported");
                     }
 
-                    var values = component.Values;
-                    double? noDataValue = (double?) component.NoDataValue;
+                    IMultiDimensionalArray<double> values = component.Values;
+                    var noDataValue = (double?) component.NoDataValue;
 
                     var pointCloud = new PointCloud();
                     var i = 0;
@@ -905,11 +981,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                             coordinates = coverage.Coordinates.ToArray();
 
                             if (coordinates.Length != values.Count)
-                                throw new InvalidOperationException("Spatial data is not consistent: number of coordinate does not match number of values");
+                            {
+                                throw new InvalidOperationException(
+                                    "Spatial data is not consistent: number of coordinate does not match number of values");
+                            }
                         }
 
-                        var coord = coordinates[i];
-                        pointCloud.PointValues.Add(new PointValue { X = coord.X, Y = coord.Y, Value = v });
+                        Coordinate coord = coordinates[i];
+                        pointCloud.PointValues.Add(new PointValue
+                        {
+                            X = coord.X,
+                            Y = coord.Y,
+                            Value = v
+                        });
                         i++;
                     }
 
@@ -917,22 +1001,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                     {
                         continue;
                     }
-                                    
-                    var pointCloudFeatureProvider = new PointCloudFeatureProvider
-                    {
-                        PointCloud = pointCloud
-                    };
 
-                    var newOperation = new AddSamplesOperation(false) { Name = coverage.Name };
+                    var pointCloudFeatureProvider = new PointCloudFeatureProvider {PointCloud = pointCloud};
+
+                    var newOperation = new AddSamplesOperation(false) {Name = coverage.Name};
                     newOperation.SetInputData(AddSamplesOperation.SamplesInputName, pointCloudFeatureProvider);
 
                     if (SpatialOperations.ContainsKey(dataItemNameLookup[coverage]))
                     {
-                        Log.WarnFormat(Resources.WaterFlowFMModelDefinition_SelectSpatialOperations_Duplication_of_spatial_operations_for__0___Please_verify_the_model_after_saving_, dataItemNameLookup[coverage]);
+                        Log.WarnFormat(
+                            Resources
+                                .WaterFlowFMModelDefinition_SelectSpatialOperations_Duplication_of_spatial_operations_for__0___Please_verify_the_model_after_saving_,
+                            dataItemNameLookup[coverage]);
                     }
                     else
                     {
-                        SpatialOperations.Add(dataItemNameLookup[coverage], new[] {newOperation});
+                        SpatialOperations.Add(dataItemNameLookup[coverage], new[]
+                        {
+                            newOperation
+                        });
                     }
                 }
             }
@@ -950,7 +1037,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             if (interpolateOperation != null)
             {
                 // only write interpolate operations that contain an importsamplesoperation as input samples
-                return interpolateOperation.GetInput(InterpolateOperation.InputSamplesName).Source.Operation is ImportSamplesOperation;
+                return interpolateOperation.GetInput(InterpolateOperation.InputSamplesName).Source.Operation is
+                           ImportSamplesOperation;
             }
 
             // subsets are supported when only an importsamplesoperation is contained
@@ -971,7 +1059,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                 // only write interpolate operations that contain an importsamplesoperation as input samples
                 var importSamplesOperation =
                     (ImportSamplesOperation)
-                        interpolateOperation.GetInput(InterpolateOperation.InputSamplesName).Source.Operation;
+                    interpolateOperation.GetInput(InterpolateOperation.InputSamplesName).Source.Operation;
 
                 operation = new ImportSamplesSpatialOperationExtension
                 {
@@ -983,37 +1071,48 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                     RelativeSearchCellSize = interpolateOperation.RelativeSearchCellSize
                 };
             }
+
             return operation;
         }
 
         /// <summary>
         /// Gets the name of the tab.
         /// </summary>
-        /// <param name="key">The key.</param>
-        /// <param name="messageKey">The message key.</param>
-        /// <param name="fmModel">The fm model.</param>
-        /// <returns></returns>
+        /// <param name="key"> The key. </param>
+        /// <param name="messageKey"> The message key. </param>
+        /// <param name="fmModel"> The fm model. </param>
+        /// <returns> </returns>
         public static string GetTabName(string key, string messageKey = null, WaterFlowFMModel fmModel = null)
         {
             if (key == KnownProperties.SedFile)
             {
-                if (fmModel == null) return String.Empty;
+                if (fmModel == null)
+                {
+                    return string.Empty;
+                }
 
-                var useSedFileFlowFmProperty = fmModel.ModelDefinition.GetModelProperty(KnownProperties.SedFile);
-                var guiSedimentGroupId = String.IsNullOrEmpty(useSedFileFlowFmProperty.PropertyDefinition.FileCategoryName)
-                    ? "sediment"
-                    : useSedFileFlowFmProperty.PropertyDefinition.FileCategoryName;
+                WaterFlowFMProperty useSedFileFlowFmProperty =
+                    fmModel.ModelDefinition.GetModelProperty(KnownProperties.SedFile);
+                string guiSedimentGroupId =
+                    string.IsNullOrEmpty(useSedFileFlowFmProperty.PropertyDefinition.FileCategoryName)
+                        ? "sediment"
+                        : useSedFileFlowFmProperty.PropertyDefinition.FileCategoryName;
 
                 key = guiSedimentGroupId;
                 messageKey = "sediment file";
             }
 
-            if (GuiPropertyGroups.ContainsKey(key)) return GuiPropertyGroups[key].Name;
+            if (GuiPropertyGroups.ContainsKey(key))
+            {
+                return GuiPropertyGroups[key].Name;
+            }
 
             Log.ErrorFormat(
-                Resources.WaterFlowFMModelDefinition_GetTabName_Invalid_gui_group_id_for___0___in_the_scheme_of_dflowfmmorpropertiescsv___1_, messageKey, key);
+                Resources
+                    .WaterFlowFMModelDefinition_GetTabName_Invalid_gui_group_id_for___0___in_the_scheme_of_dflowfmmorpropertiescsv___1_,
+                messageKey, key);
 
-            return String.Empty;
+            return string.Empty;
         }
     }
 }

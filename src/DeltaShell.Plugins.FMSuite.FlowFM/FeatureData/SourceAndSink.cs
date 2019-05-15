@@ -12,6 +12,7 @@ using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using NetTopologySuite.Extensions.Features;
+using NetTopologySuite.Extensions.Features.Generic;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
 {
@@ -35,11 +36,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
         public const string TracersUnitDescription = "kilograms per cubic meter";
         public const string TracerUnitSymbol = "kg/m³";
     }
+
     /// <summary>
     /// SourceAndSink represents a timeseries on a polyline.
     /// </summary>
     [Entity]
-    public class SourceAndSink : NetTopologySuite.Extensions.Features.Generic.FeatureData<IFunction, Feature2D>
+    public class SourceAndSink : FeatureData<IFunction, Feature2D>
     {
         public const string TimeVariableName = "Time";
         public const string DischargeVariableName = "Discharge";
@@ -57,46 +59,36 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
             TracerNames = new EventedList<string>();
         }
 
-        public bool IsPointSource
-        {
-            get { return Feature.Geometry.Coordinates.Count() == 1; }
-        }
+        public bool IsPointSource => Feature.Geometry.Coordinates.Count() == 1;
 
         public double Area { get; set; }
 
-        public bool MomentumSource
-        {
-            get { return Area > 0; }
-        }
+        public bool MomentumSource => Area > 0;
 
-        public bool CanIncludeMomentum
-        {
-            get { return !IsPointSource; }
-        }
+        public bool CanIncludeMomentum => !IsPointSource;
 
         public IFunction Function
         {
-            get { return Data; }
-            private set { Data = value; }
+            get => Data;
+            private set => Data = value;
         }
 
         public override Feature2D Feature
         {
-            get
-            {
-                return base.Feature;
-            }
+            get => base.Feature;
             set
             {
                 if (Feature != null)
                 {
-                    ((INotifyPropertyChange)Feature).PropertyChanged -= FeaturePropertyChanged;
+                    ((INotifyPropertyChange) Feature).PropertyChanged -= FeaturePropertyChanged;
                 }
+
                 base.Feature = value;
                 if (Feature != null)
                 {
                     ((INotifyPropertyChange) Feature).PropertyChanged += FeaturePropertyChanged;
                 }
+
                 AfterFeatureSet();
             }
         }
@@ -112,13 +104,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
 
         public IEventedList<string> SedimentFractionNames
         {
-            get{ return sedimentFractionNames; }
+            get => sedimentFractionNames;
             set
             {
                 if (sedimentFractionNames != null)
                 {
                     SedimentFractionNames.CollectionChanged -= SedimentFractionNamesCollectionChanged;
                 }
+
                 sedimentFractionNames = value;
                 if (sedimentFractionNames != null)
                 {
@@ -129,13 +122,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
 
         public IEventedList<string> TracerNames
         {
-            get { return tracerNames; }
+            get => tracerNames;
             set
             {
                 if (tracerNames != null)
                 {
                     TracerNames.CollectionChanged -= TracerNamesCollectionChanged;
                 }
+
                 tracerNames = value;
                 if (tracerNames != null)
                 {
@@ -149,8 +143,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
             var sedimentFractionName = e.GetRemovedOrAddedItem() as string;
 
             if (sedimentFractionName == null)
+            {
                 return;
-            
+            }
+
             switch (e.Action)
             {
                 //Column Order: Time | Discharge | Salinity | Temperature | SedimentFractions | Secondary Flow | Tracers
@@ -171,21 +167,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
 
         private void AddSedimentFractionToComponents(string name)
         {
-            var secondaryFlow =
+            IVariable secondaryFlow =
                 Function.Components.FirstOrDefault(c => c.Name.Equals(SecondaryFlowVariableName));
-            var firstTracer = tracerNames.Any()
-                ? Function.Components.FirstOrDefault(c => c.Name.Equals(tracerNames.First()))
-                : null;
+            IVariable firstTracer = tracerNames.Any()
+                                        ? Function.Components.FirstOrDefault(c => c.Name.Equals(tracerNames.First()))
+                                        : null;
 
             if (secondaryFlow != null)
             {
                 Function.Components.Insert(Function.Components.IndexOf(secondaryFlow),
-                    CreateSedimentFractionVariable(name));
+                                           CreateSedimentFractionVariable(name));
             }
             else if (firstTracer != null)
             {
                 Function.Components.Insert(Function.Components.IndexOf(firstTracer),
-                    CreateSedimentFractionVariable(name));
+                                           CreateSedimentFractionVariable(name));
             }
             else
             {
@@ -198,20 +194,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
             return new Variable<double>(name)
             {
                 Unit = new Unit(SourceSinkVariableInfo.SedimentFractionUnitDescription,
-                    SourceSinkVariableInfo.SedimentFractionUnitSymbol)
+                                SourceSinkVariableInfo.SedimentFractionUnitSymbol)
             };
         }
 
         public void TracerNamesCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             var tracerName = e.GetRemovedOrAddedItem() as string;
-            if (tracerName == null) return;
+            if (tracerName == null)
+            {
+                return;
+            }
+
             switch (e.Action)
             {
                 case NotifyCollectionChangedAction.Add:
                     Function.Components.Add(new Variable<double>(tracerName)
                     {
-                        Unit = new Unit(SourceSinkVariableInfo.TracersUnitDescription, SourceSinkVariableInfo.TracerUnitSymbol)
+                        Unit = new Unit(SourceSinkVariableInfo.TracersUnitDescription,
+                                        SourceSinkVariableInfo.TracerUnitSymbol)
                     });
                     break;
                 case NotifyCollectionChangedAction.Remove:
@@ -219,10 +220,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
                     break;
                 case NotifyCollectionChangedAction.Replace:
                     var previousTracerName = e.OldItems[0] as string;
-                    if (previousTracerName == null) break;
+                    if (previousTracerName == null)
+                    {
+                        break;
+                    }
 
-                    var matchingComponent = Function.Components.FirstOrDefault(c => c.Name == previousTracerName);
-                    if (matchingComponent == null) break;
+                    IVariable matchingComponent = Function.Components.FirstOrDefault(c => c.Name == previousTracerName);
+                    if (matchingComponent == null)
+                    {
+                        break;
+                    }
 
                     matchingComponent.Name = tracerName;
                     break;
@@ -245,19 +252,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
             function.Arguments.Add(new Variable<DateTime>(TimeVariableName));
             function.Components.Add(new Variable<double>(DischargeVariableName)
             {
-                Unit = new Unit(SourceSinkVariableInfo.DischargeUnitDescription, SourceSinkVariableInfo.DischargeUnitSymbol)
+                Unit = new Unit(SourceSinkVariableInfo.DischargeUnitDescription,
+                                SourceSinkVariableInfo.DischargeUnitSymbol)
             });
             function.Components.Add(new Variable<double>(SalinityVariableName)
             {
-                Unit = new Unit(SourceSinkVariableInfo.SalinityUnitDescription, SourceSinkVariableInfo.SalinityUnitSymbol)
+                Unit = new Unit(SourceSinkVariableInfo.SalinityUnitDescription,
+                                SourceSinkVariableInfo.SalinityUnitSymbol)
             });
             function.Components.Add(new Variable<double>(TemperatureVariableName)
             {
-                Unit = new Unit(SourceSinkVariableInfo.TemperatureUnitDescription, SourceSinkVariableInfo.TemperatureUnitSymbol)
+                Unit = new Unit(SourceSinkVariableInfo.TemperatureUnitDescription,
+                                SourceSinkVariableInfo.TemperatureUnitSymbol)
             });
             function.Components.Add(new Variable<double>(SecondaryFlowVariableName)
             {
-                Unit = new Unit(SourceSinkVariableInfo.SecondaryFlowUnitDescription, SourceSinkVariableInfo.SecondaryFlowUnitSymbol)
+                Unit = new Unit(SourceSinkVariableInfo.SecondaryFlowUnitDescription,
+                                SourceSinkVariableInfo.SecondaryFlowUnitSymbol)
             });
             return function;
         }
