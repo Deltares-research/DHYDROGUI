@@ -258,6 +258,8 @@
     <Compile Include="QuantityGenerator.cs" />
     <Compile Include="SedimentModelDataItem.cs" />
     <Compile Include="WaterFlowFMModel.FileBased.cs" />
+    <Compile Include="WaterFlowFMModel.IO.cs" />
+    <Compile Include="WaterFlowFMModel.Output.cs" />
     <Compile Include="WaterFlowFMModel.TDMB.cs" />
     <Compile Include="Validation\Area\FixedWeirValidator.cs" />
     <Compile Include="Validation\Area\PumpValidator.cs" />

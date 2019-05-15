@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
+using DeltaShell.Dimr;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
@@ -178,6 +179,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             OutputSnappedFeaturesPathPropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
 
+        public virtual string KernelDirectoryLocation => DimrApiDataSet.DFlowFmDllPath;
+
         public string DelwaqOutputDirectoryName => PrefixDelwaqDirectoryName + Name;
 
         /// <summary>
@@ -203,6 +206,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             Path.Combine(WorkingDirectoryPath, DirectoryName, OutputDirectoryName);
 
         public string PersistentOutputDirectoryPath => Path.Combine(ModelDirectoryPath, OutputDirectoryName);
+
+        public virtual string MduFilePath { get; protected set; }
 
         public string HydFilePath
         {
@@ -454,6 +459,70 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
 
-        #endregion
+        private void RenameSubFilesIfApplicable()
+        {
+            foreach (KeyValuePair<WaterFlowFMProperty, string> subFile in SubFiles)
+            {
+                WaterFlowFMProperty waterFlowFMProperty = subFile.Key;
+
+                if (waterFlowFMProperty.GetValueAsString().Equals(subFile.Value))
+                {
+                    continue;
+                }
+
+                if (waterFlowFMProperty.Equals(ModelDefinition.GetModelProperty(KnownProperties.NetFile)))
+                {
+                    string oldPath = NetFilePath;
+                    waterFlowFMProperty.SetValueAsString(subFile.Value);
+                    string newPath = NetFilePath;
+
+                    if (!File.Exists(oldPath) ||
+                        string.Equals(Path.GetFullPath(oldPath), Path.GetFullPath(newPath),
+                                      StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        continue;
+                    }
+
+                    File.Copy(oldPath, newPath, true);
+                    File.Delete(oldPath);
+                }
+                else
+                {
+                    waterFlowFMProperty.SetValueAsString(subFile.Value);
+                }
+            }
+
+            ModelDefinition.ModelName = Name;
+        }
+
+        #region Implementation of IDimrModel
+
+        public virtual string LibraryName => "dflowfm";
+        public virtual string InputFile => Path.GetFileName(MduSavePath);
+        public virtual string DirectoryName => "dflowfm";
+
+        public virtual string GetExporterPath(string directoryName)
+        {
+            return Path.Combine(directoryName, InputFile == null ? Name + mduExtension : Path.GetFileName(InputFile));
+        }
+
+        public virtual string DimrExportDirectoryPath
+        {
+            get => WorkingDirectoryPath;
+            set => WorkingDirectoryPath = value;
+        }
+
+        public virtual string DimrModelRelativeWorkingDirectory => Path.Combine(DirectoryName, InputDirectoryName);
+
+        public virtual string DimrModelRelativeOutputDirectory => Path.Combine(DirectoryName, OutputDirectoryName);
+
+        public void SetModelStateHandlerModelWorkingDirectory(string modelExplicitWorkingDirectory)
+        {
+            ModelStateHandler.ModelWorkingDirectory = modelExplicitWorkingDirectory;
+        }
+
+        #endregion Implementation of IDimrModel
+
+        #endregion Files, folders and paths
     }
 }
