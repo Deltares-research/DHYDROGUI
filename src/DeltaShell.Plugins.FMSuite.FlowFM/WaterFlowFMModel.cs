@@ -3135,65 +3135,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         #endregion
 
-        #region TimeDependentModelBase
-
-        protected override void OnInitialize()
-        {
-            previousProgress = 0;
-            DataItems.RemoveAllWhere(di => di.Tag == DiaFileDataItemTag);
-
-            ReportProgressText("Initializing");
-
-            // Force fm kernel to write output to 'output' Directory
-            SetOutputDirAndWaqDirProperty();
-
-            if (Directory.Exists(WorkingOutputDirectoryPath))
-            {
-                DisconnectOutput();
-                FileUtils.DeleteIfExists(WorkingOutputDirectoryPath);
-                FileUtils.CreateDirectoryIfNotExists(WorkingOutputDirectoryPath);
-            }
-
-            runner.OnInitialize();
-
-            ReportProgressText();
-        }
-
-        protected override void OnCleanup()
-        {
-            snapApiInErrorMode = false;
-            base.OnCleanup();
-            runner.OnCleanup();
-
-            ReportProgressText();
-        }
-
-        protected override void OnExecute()
-        {
-            runner.OnExecute();
-        }
-
-        protected override void OnFinish()
-        {
-            runner.OnFinish();
-            currentOutputDirectoryPath = WorkingOutputDirectoryPath;
-        }
-
-        #endregion
-
-        protected override void OnProgressChanged()
-        {
-            // Only update gui for every 1 percent progress (performance)
-            if (ProgressPercentage - previousProgress < 0.01)
-            {
-                return;
-            }
-
-            previousProgress = ProgressPercentage;
-            runner.OnProgressChanged();
-            base.OnProgressChanged();
-        }
-
         private void ReportProgressText(string text = null)
         {
             progressText = text;
