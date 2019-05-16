@@ -312,13 +312,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                         foreach (var condition in pointData)
                         {
                             if (!CanCreateTimeSeries(condition)) continue;
-
                             var summedComponents = condition.FilterLayersAndComponents(0, i).ToList();
-
-                            summedComponents = new List<IVariable>() { summedComponents[comp] };
-                            // only use zeroth layer for sum.
-                            FillValues(condition.ForcingType, condition.Function.Arguments[0], summedComponents, times,
-                                  values, condition.BoundaryCondition.Factor, condition.BoundaryCondition.Offset);
+                            
+                            //component index cannot exceeded the total number of summedComponents
+                            var totalSummedComponents = summedComponents.Count;
+                            if (comp <= (totalSummedComponents - 1))
+                            {
+                                summedComponents = new List<IVariable>() { summedComponents[comp] };
+                                // only use zeroth layer for sum.
+                                FillValues(condition.ForcingType, condition.Function.Arguments[0], summedComponents, times,
+                                           values, condition.BoundaryCondition.Factor, condition.BoundaryCondition.Offset);
+                            }
+;
+                            
                         }
                         function.Components.Add(new Variable<double>(firstWrapper.Function.Components[comp].Name, unit));
                         function.Components.Last().SetValues(values);
