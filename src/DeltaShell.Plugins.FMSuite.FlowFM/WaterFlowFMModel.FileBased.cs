@@ -155,6 +155,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
 
+        private void OnAddedToProject(string mduPath)
+        {
+            MduFilePath = mduPath;
+            ExportTo(MduFilePath);
+        }
+
         #endregion
 
         #region Files, folders and paths

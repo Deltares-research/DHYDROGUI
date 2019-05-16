@@ -257,6 +257,7 @@
     <Compile Include="IO\SedMorDelftIniWriter.cs" />
     <Compile Include="QuantityGenerator.cs" />
     <Compile Include="SedimentModelDataItem.cs" />
+    <Compile Include="WaterFlowFMModel.Eventing.cs" />
     <Compile Include="WaterFlowFMModel.FileBased.cs" />
     <Compile Include="WaterFlowFMModel.IO.cs" />
     <Compile Include="WaterFlowFMModel.Output.cs" />

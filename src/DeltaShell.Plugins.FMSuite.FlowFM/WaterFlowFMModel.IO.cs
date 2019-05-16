@@ -8,6 +8,7 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.Common.DepthLayers;
+using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters;
@@ -30,6 +31,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         public MduFile MduFile => mduFile;
 
+        internal void SyncModelTimesWithBase()
+        {
+            base.StartTime = StartTime;
+            base.StopTime = StopTime;
+            base.TimeStep = TimeStep;
+        }
+
+        private void InitializeAreaDataColumns()
+        {
+            MduFile.SetBridgePillarAttributes(Area.BridgePillars, BridgePillarsDataModel);
+        }
+
+        private void RestoreAreaDataColumns()
+        {
+            MduFile.CleanBridgePillarAttributes(Area.BridgePillars);
+        }
+
         #region Import/Load
 
         private bool isLoading;
@@ -50,6 +68,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             model.ClearOutputDirAndWaqDirProperty();
 
             return model;
+        }
+
+        private void OnLoad(string mduPath)
+        {
+            LoadStateFromMdu(mduPath);
+            ImportSpatialOperationsAfterLoading();
         }
 
         private void LoadStateFromMdu(string mduFilePath)
@@ -285,6 +309,63 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
 
             model.ImportProgressChanged(currentStepName, currentStep, totalSteps);
+        }
+
+        private void AssembleTracerDefinitions()
+        {
+            foreach (IBoundaryCondition boundaryCondition in BoundaryConditions)
+            {
+                var flowCondition = boundaryCondition as FlowBoundaryCondition;
+                if (flowCondition != null)
+                {
+                    if (flowCondition.FlowQuantity == FlowBoundaryQuantityType.Tracer)
+                    {
+                        if (!TracerDefinitions.Contains(flowCondition.TracerName))
+                        {
+                            TracerDefinitions.Add(flowCondition.TracerName);
+                        }
+
+                        AddTracerToSourcesAndSink(flowCondition.TracerName);
+                    }
+                }
+            }
+
+            IEnumerable<string> sp = SedimentFractions
+                                     .SelectMany(sf => sf.GetAllActiveSpatiallyVaryingPropertyNames()).Distinct();
+            foreach (string quantity in ModelDefinition
+                                        .SpatialOperations.Keys.Except(WaterFlowFMModelDefinition.SpatialDataItemNames)
+                                        .Except(sp))
+            {
+                if (!TracerDefinitions.Contains(quantity))
+                {
+                    TracerDefinitions.Add(quantity);
+                }
+            }
+        }
+
+        private void AssembleSpatiallyVaryingSedimentProperties()
+        {
+            List<ISpatiallyVaryingSedimentProperty> spatiallyVaryingSedimentProperties = SedimentFractions
+                                                                                         .SelectMany(
+                                                                                             f => f.CurrentSedimentType
+                                                                                                   .Properties
+                                                                                                   .OfType<
+                                                                                                       ISpatiallyVaryingSedimentProperty
+                                                                                                   >().Where(
+                                                                                                       sp => sp
+                                                                                                           .IsSpatiallyVarying))
+                                                                                         .ToList();
+            spatiallyVaryingSedimentProperties.AddRange(SedimentFractions
+                                                        .Where(f => f.CurrentFormulaType != null)
+                                                        .SelectMany(
+                                                            f => f.CurrentFormulaType.Properties
+                                                                  .OfType<ISpatiallyVaryingSedimentProperty>()
+                                                                  .Where(sp => sp.IsSpatiallyVarying)));
+            foreach (ISpatiallyVaryingSedimentProperty spatiallyVaryingSedimentProperty in
+                spatiallyVaryingSedimentProperties)
+            {
+                AddToIntialFractions(spatiallyVaryingSedimentProperty.SpatiallyVaryingName);
+            }
         }
 
         #endregion

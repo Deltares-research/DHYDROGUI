@@ -22,10 +22,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 {
     public partial class WaterFlowFMModel
     {
-        public override string ProgressText => string.IsNullOrEmpty(progressText) ? base.ProgressText : progressText;
-
-        public override IBasicModelInterface BMIEngine => runner.Api;
-
         [NoNotifyPropertyChange]
         public override DateTime StartTime
         {
@@ -37,6 +33,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 base.StartTime = value;
             }
         }
+
+        public override string ProgressText => string.IsNullOrEmpty(progressText) ? base.ProgressText : progressText;
+
+        public override IEnumerable<IDataItem> AllDataItems
+        {
+            get
+            {
+                return base.AllDataItems.Concat(areaDataItems.Values.SelectMany(v => v));
+            }
+        }
+
+        public override IBasicModelInterface BMIEngine => runner.Api;
 
         [NoNotifyPropertyChange]
         public override DateTime StopTime
@@ -61,117 +69,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
 
-        protected override void OnInitialize()
+        public override IProjectItem DeepClone()
         {
-            previousProgress = 0;
-            DataItems.RemoveAllWhere(di => di.Tag == DiaFileDataItemTag);
+            string tempDir = FileUtils.CreateTempDirectory();
+            string mduFileName = MduFilePath != null ? Path.GetFileName(MduFilePath) : "some_temp.mdu";
+            string tempFilePath = Path.Combine(tempDir, mduFileName);
+            ExportTo(tempFilePath, false);
 
-            ReportProgressText("Initializing");
-
-            // Force fm kernel to write output to 'output' Directory
-            SetOutputDirAndWaqDirProperty();
-
-            if (Directory.Exists(WorkingOutputDirectoryPath))
-            {
-                DisconnectOutput();
-                FileUtils.DeleteIfExists(WorkingOutputDirectoryPath);
-                FileUtils.CreateDirectoryIfNotExists(WorkingOutputDirectoryPath);
-            }
-
-            runner.OnInitialize();
-
-            ReportProgressText();
-        }
-
-        protected override void OnCleanup()
-        {
-            snapApiInErrorMode = false;
-            base.OnCleanup();
-            runner.OnCleanup();
-
-            ReportProgressText();
-        }
-
-        protected override void OnExecute()
-        {
-            runner.OnExecute();
-        }
-
-        protected override void OnFinish()
-        {
-            runner.OnFinish();
-            currentOutputDirectoryPath = WorkingOutputDirectoryPath;
-        }
-
-        protected override void OnProgressChanged()
-        {
-            // Only update gui for every 1 percent progress (performance)
-            if (ProgressPercentage - previousProgress < 0.01)
-            {
-                return;
-            }
-
-            previousProgress = ProgressPercentage;
-            runner.OnProgressChanged();
-            base.OnProgressChanged();
-        }
-
-        protected override void OnAfterDataItemsSet()
-        {
-            base.OnAfterDataItemsSet();
-
-            IDataItem areaDataItem = GetDataItemByTag(HydroAreaTag);
-            if (areaDataItem != null)
-            {
-                ((INotifyCollectionChange) areaDataItem.Value).CollectionChanged += HydroAreaCollectionChanged;
-                ((INotifyPropertyChanged) areaDataItem.Value).PropertyChanged += HydroAreaPropertyChanged;
-            }
-        }
-
-        protected override void OnBeforeDataItemsSet()
-        {
-            base.OnBeforeDataItemsSet();
-
-            areaDataItem = GetDataItemByTag(HydroAreaTag);
-            if (areaDataItem != null)
-            {
-                ((INotifyCollectionChange) areaDataItem.Value).CollectionChanged -= HydroAreaCollectionChanged;
-                ((INotifyPropertyChanged) areaDataItem.Value).PropertyChanged -= HydroAreaPropertyChanged;
-            }
-        }
-
-        protected override void OnDataItemLinked(object sender, LinkedUnlinkedEventArgs<IDataItem> e)
-        {
-            // subscribe to newly linked hydro area:
-            IDataItem areaDataItem = GetDataItemByTag(HydroAreaTag);
-            if (Equals(e.Target, areaDataItem) && !e.Relinking)
-            {
-                ((INotifyCollectionChange) areaDataItem.Value).CollectionChanged += HydroAreaCollectionChanged;
-                ((INotifyPropertyChanged) areaDataItem.Value).PropertyChanged += HydroAreaPropertyChanged;
-            }
-
-            base.OnDataItemLinked(sender, e);
-        }
-
-        protected override void OnDataItemUnlinking(object sender, LinkingUnlinkingEventArgs<IDataItem> e)
-        {
-            // unsubscribe from area before unlink
-            areaDataItem = GetDataItemByTag(HydroAreaTag);
-            if (Equals(e.Target, areaDataItem))
-            {
-                ((INotifyCollectionChange) areaDataItem.Value).CollectionChanged -= HydroAreaCollectionChanged;
-                ((INotifyPropertyChanged) areaDataItem.Value).PropertyChanged -= HydroAreaPropertyChanged;
-            }
-
-            base.OnDataItemUnlinking(sender, e);
-        }
-
-        public override IEnumerable<IDataItem> AllDataItems
-        {
-            get
-            {
-                return base.AllDataItems.Concat(areaDataItems.Values.SelectMany(v => v));
-            }
+            return new WaterFlowFMModel(tempFilePath);
         }
 
         /// <summary>
@@ -291,6 +196,111 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
 
+        protected override void OnInitialize()
+        {
+            previousProgress = 0;
+            DataItems.RemoveAllWhere(di => di.Tag == DiaFileDataItemTag);
+
+            ReportProgressText("Initializing");
+
+            // Force fm kernel to write output to 'output' Directory
+            SetOutputDirAndWaqDirProperty();
+
+            if (Directory.Exists(WorkingOutputDirectoryPath))
+            {
+                DisconnectOutput();
+                FileUtils.DeleteIfExists(WorkingOutputDirectoryPath);
+                FileUtils.CreateDirectoryIfNotExists(WorkingOutputDirectoryPath);
+            }
+
+            runner.OnInitialize();
+
+            ReportProgressText();
+        }
+
+        protected override void OnCleanup()
+        {
+            snapApiInErrorMode = false;
+            base.OnCleanup();
+            runner.OnCleanup();
+
+            ReportProgressText();
+        }
+
+        protected override void OnExecute()
+        {
+            runner.OnExecute();
+        }
+
+        protected override void OnFinish()
+        {
+            runner.OnFinish();
+            currentOutputDirectoryPath = WorkingOutputDirectoryPath;
+        }
+
+        protected override void OnProgressChanged()
+        {
+            // Only update gui for every 1 percent progress (performance)
+            if (ProgressPercentage - previousProgress < 0.01)
+            {
+                return;
+            }
+
+            previousProgress = ProgressPercentage;
+            runner.OnProgressChanged();
+            base.OnProgressChanged();
+        }
+
+        protected override void OnAfterDataItemsSet()
+        {
+            base.OnAfterDataItemsSet();
+
+            IDataItem areaDataItem = GetDataItemByTag(HydroAreaTag);
+            if (areaDataItem != null)
+            {
+                ((INotifyCollectionChange) areaDataItem.Value).CollectionChanged += HydroAreaCollectionChanged;
+                ((INotifyPropertyChanged) areaDataItem.Value).PropertyChanged += HydroAreaPropertyChanged;
+            }
+        }
+
+        protected override void OnBeforeDataItemsSet()
+        {
+            base.OnBeforeDataItemsSet();
+
+            areaDataItem = GetDataItemByTag(HydroAreaTag);
+            if (areaDataItem != null)
+            {
+                ((INotifyCollectionChange) areaDataItem.Value).CollectionChanged -= HydroAreaCollectionChanged;
+                ((INotifyPropertyChanged) areaDataItem.Value).PropertyChanged -= HydroAreaPropertyChanged;
+            }
+        }
+
+        protected override void OnDataItemLinked(object sender, LinkedUnlinkedEventArgs<IDataItem> e)
+        {
+            // subscribe to newly linked hydro area:
+            IDataItem areaDataItem = GetDataItemByTag(HydroAreaTag);
+            if (Equals(e.Target, areaDataItem) && !e.Relinking)
+            {
+                ((INotifyCollectionChange) areaDataItem.Value).CollectionChanged += HydroAreaCollectionChanged;
+                ((INotifyPropertyChanged) areaDataItem.Value).PropertyChanged += HydroAreaPropertyChanged;
+            }
+
+            base.OnDataItemLinked(sender, e);
+        }
+
+        protected override void OnDataItemUnlinking(object sender, LinkingUnlinkingEventArgs<IDataItem> e)
+        {
+            // unsubscribe from area before unlink
+            areaDataItem = GetDataItemByTag(HydroAreaTag);
+            if (Equals(e.Target, areaDataItem))
+            {
+                ((INotifyCollectionChange) areaDataItem.Value).CollectionChanged -= HydroAreaCollectionChanged;
+                ((INotifyPropertyChanged) areaDataItem.Value).PropertyChanged -= HydroAreaPropertyChanged;
+            }
+
+            base.OnDataItemUnlinking(sender, e);
+        }
+
         protected override void OnInputCollectionChanged(object sender, NotifyCollectionChangedEventArgs e) {}
 
         // [TOOLS-22813] Override OnInputPropertyChanged to stop base class (ModelBase) from clearing the output
@@ -320,14 +330,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
 
-        public override IProjectItem DeepClone()
+        private IEnumerable<object> InputFeatureCollections
         {
-            string tempDir = FileUtils.CreateTempDirectory();
-            string mduFileName = MduFilePath != null ? Path.GetFileName(MduFilePath) : "some_temp.mdu";
-            string tempFilePath = Path.Combine(tempDir, mduFileName);
-            ExportTo(tempFilePath, false);
+            get
+            {
+                yield return Area.Pumps;
+                yield return Area.Weirs;
+            }
+        }
 
-            return new WaterFlowFMModel(tempFilePath);
+        private IEnumerable<object> OutputFeatureCollections
+        {
+            get
+            {
+                yield return Area.ObservationPoints;
+                yield return Area.ObservationCrossSections;
+            }
         }
     }
 }
