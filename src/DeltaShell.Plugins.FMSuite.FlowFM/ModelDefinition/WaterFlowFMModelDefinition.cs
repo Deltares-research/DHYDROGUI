@@ -20,9 +20,6 @@ using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccess;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using GeoAPI.Extensions.CoordinateSystems;
@@ -138,7 +135,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 
         static WaterFlowFMModelDefinition()
         {
-            const string propertyCsvFilesDirectoryName = "PropertyCsvFiles";
             const string dflowfmPropertiesCsvFileName = "dflowfm-properties.csv";
             const string dflowfmStructurePropertiesCsvFileName = "structure-properties.csv";
             const string dflowfmMorPropertiesCsvFileName = "dflowfm-mor-properties.csv";
@@ -147,7 +143,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             DirectoryInfo directoryInfo = new FileInfo(assemblyLocation).Directory;
             if (directoryInfo != null)
             {
-                string path = Path.Combine(directoryInfo.FullName, propertyCsvFilesDirectoryName);
+                string path = directoryInfo.FullName;
                 string propertiesDefinitionFile = Path.Combine(path, dflowfmPropertiesCsvFileName);
                 ModelPropertySchema =
                     new ModelSchemaCsvFile().ReadModelSchema<WaterFlowFMPropertyDefinition>(propertiesDefinitionFile,
@@ -1086,7 +1082,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         /// <param name="messageKey"> The message key. </param>
         /// <param name="fmModel"> The fm model. </param>
         /// <returns> </returns>
-        public static string GetTabName(string key, string messageKey = null, WaterFlowFMModel.WaterFlowFMModel fmModel = null)
+        public static string GetTabName(string key, string messageKey = null, WaterFlowFMModel fmModel = null)
         {
             if (key == KnownProperties.SedFile)
             {

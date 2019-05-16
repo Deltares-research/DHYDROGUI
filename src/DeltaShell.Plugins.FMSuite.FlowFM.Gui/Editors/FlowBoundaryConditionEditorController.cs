@@ -18,7 +18,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
     public class FlowBoundaryConditionEditorController : BoundaryConditionEditorController
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(FlowBoundaryConditionEditorController));
-        private WaterFlowFMModel.WaterFlowFMModel model;
+        private WaterFlowFMModel model;
 
         public override BoundaryConditionEditor Editor
         {
@@ -45,7 +45,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             }
         }
 
-        public WaterFlowFMModel.WaterFlowFMModel Model
+        public WaterFlowFMModel Model
         {
             get { return model; }
             set

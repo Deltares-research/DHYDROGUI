@@ -9,9 +9,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
     public class WaterFlowFMFeatureValueConverter : ParameterValueConverter, IExplicitValueConverter
     {
         [Aggregation]
-        public WaterFlowFMModel.WaterFlowFMModel Model { get; set; }
+        public WaterFlowFMModel Model { get; set; }
 
-        public WaterFlowFMFeatureValueConverter(WaterFlowFMModel.WaterFlowFMModel model, IFeature feature, string parameterName,
+        public WaterFlowFMFeatureValueConverter(WaterFlowFMModel model, IFeature feature, string parameterName,
                                                 string unit)
         {
             Location = feature;

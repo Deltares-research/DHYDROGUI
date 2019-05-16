@@ -8,7 +8,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
     {
         protected override string GetToolBoxesDirectory()
         {
-            return Path.Combine(Path.GetDirectoryName(typeof (WaterFlowFMModel.WaterFlowFMModel).Assembly.Location), "toolboxes");
+            return Path.Combine(Path.GetDirectoryName(typeof (WaterFlowFMModel).Assembly.Location), "toolboxes");
         }
 
         protected override Dictionary<string, object> GetScriptPredefinedVariables()
@@ -16,7 +16,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             return new Dictionary<string, object>
                 {
                     {"Model", Model},
-                    {"ModelDirectory", ((WaterFlowFMModel.WaterFlowFMModel) Model).ModelDefinition.ModelDirectory},
+                    {"ModelDirectory", ((WaterFlowFMModel) Model).ModelDefinition.ModelDirectory},
                     {"MapControl", FlowFMGuiPlugin.ActiveMapView != null ? FlowFMGuiPlugin.ActiveMapView.MapControl : null},
                 };
         }

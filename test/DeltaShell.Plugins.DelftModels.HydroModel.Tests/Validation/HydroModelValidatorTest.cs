@@ -16,7 +16,6 @@ using Rhino.Mocks;
 using SharpMapTestUtils;
 using Resources = DeltaShell.Plugins.DelftModels.HydroModel.Properties.Resources;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
-using DeltaShell.Plugins.FMSuite.FlowFM.WaterFlowFMModel;
 using SharpMap.Extensions.CoordinateSystems;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Validation

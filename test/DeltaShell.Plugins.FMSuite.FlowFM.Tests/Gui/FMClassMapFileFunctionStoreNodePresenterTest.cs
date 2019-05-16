@@ -9,7 +9,6 @@ using NetTopologySuite.Extensions.Grids;
 using NUnit.Framework;
 using Rhino.Mocks;
 using System.Linq;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.FunctionStores;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 {

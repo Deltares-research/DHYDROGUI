@@ -231,9 +231,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             }
         }
 
-        private WaterFlowFMModel.WaterFlowFMModel CreateWaterFlowFMModelWithValidTimers()
+        private WaterFlowFMModel CreateWaterFlowFMModelWithValidTimers()
         {
-            return new WaterFlowFMModel.WaterFlowFMModel();
+            return new WaterFlowFMModel();
         }
     }
 }

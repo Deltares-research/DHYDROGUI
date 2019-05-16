@@ -165,9 +165,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             Assert.AreEqual(0, issues.InfoCount);
         }
 
-        static WaterFlowFMModel.WaterFlowFMModel CreateSimpleModel()
+        static WaterFlowFMModel CreateSimpleModel()
         {
-            var model = new WaterFlowFMModel.WaterFlowFMModel();
+            var model = new WaterFlowFMModel();
             var vertices = new[]
                 {
                     new Coordinate(0, 0),
@@ -186,7 +186,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             return model;
         }
 
-        public static WaterFlowFMModel.WaterFlowFMModel CreateValidModel()
+        public static WaterFlowFMModel CreateValidModel()
         {
             var model = CreateSimpleModel();
             model.TimeStep = new TimeSpan(0, 0, 1, 0);

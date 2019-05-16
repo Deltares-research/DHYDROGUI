@@ -28,7 +28,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         internal const string MergeEmbankmentsToolName = "Merge embankments";
         internal const string GridWizardToolName = "Grid wizard";
 
-        private static readonly string ModelName = typeof (WaterFlowFMModel.WaterFlowFMModel).Name;
+        private static readonly string ModelName = typeof (WaterFlowFMModel).Name;
 
         public static void AddMapToolsIfMissing(MapView mapView)
         {

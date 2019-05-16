@@ -7,7 +7,6 @@ using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
 {

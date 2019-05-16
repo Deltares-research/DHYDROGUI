@@ -3,7 +3,6 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area;
-using DeltaShell.Plugins.FMSuite.FlowFM.WaterFlowFMModel;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 {
@@ -15,7 +14,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
         /// </summary>
         /// <param name="model"> The <see cref="WaterFlowFMModel" /> object of which the structures are to be validated. </param>
         /// <returns> ValidationReport that contains the validation messages which can be Info, Warning or Error </returns>
-        public static ValidationReport Validate(WaterFlowFMModel.WaterFlowFMModel model)
+        public static ValidationReport Validate(WaterFlowFMModel model)
         {
             HydroArea area = model.Area;
 

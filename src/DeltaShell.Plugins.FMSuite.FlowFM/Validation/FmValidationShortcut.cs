@@ -8,7 +8,7 @@
         /// <summary>
         /// The FM model that is used as data for the view that is to be opened.
         /// </summary>
-        public WaterFlowFMModel.WaterFlowFMModel FlowFmModel { get; set; }
+        public WaterFlowFMModel FlowFmModel { get; set; }
 
         /// <summary>
         /// The tab name of the FM settings view that needs to be opened.

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using GeoAPI.Extensions.Coverages;
 

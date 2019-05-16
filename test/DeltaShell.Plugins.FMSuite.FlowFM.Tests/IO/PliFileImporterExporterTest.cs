@@ -13,7 +13,6 @@ using DeltaShell.Plugins.FMSuite.Common.Tests.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportersExporters;
 using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.NetworkEditor.Gui;
 using DeltaShell.Plugins.ProjectExplorer;
@@ -62,7 +61,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 gui.Run();
 
-                var model = new WaterFlowFMModel.WaterFlowFMModel();
+                var model = new WaterFlowFMModel();
 
                 gui.Application.Project.RootFolder.Add(model);
 
@@ -91,7 +90,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var exportToFilePath = Path.Combine(testDir, "ExportedFixedWeirs_fxw.pliz");
             try
             {
-                var fmModel = new WaterFlowFMModel.WaterFlowFMModel();
+                var fmModel = new WaterFlowFMModel();
                 var importer = new PliFileImporterExporter<FixedWeir, FixedWeir>();
                 importer.ImportItem(filePath, fmModel.Area.FixedWeirs);
 
@@ -107,7 +106,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             }
         }
 
-        private static void CheckImportedFixedWeirs(WaterFlowFMModel.WaterFlowFMModel fmModel)
+        private static void CheckImportedFixedWeirs(WaterFlowFMModel fmModel)
         {
             var fixedWeirs = fmModel.Area.FixedWeirs;
             Assert.That(fixedWeirs.Count, Is.EqualTo(2));

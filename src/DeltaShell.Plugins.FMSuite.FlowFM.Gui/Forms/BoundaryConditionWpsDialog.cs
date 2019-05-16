@@ -6,7 +6,6 @@ using DelftTools.Controls;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils.Web;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using GeoAPI.Extensions.CoordinateSystems;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms

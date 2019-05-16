@@ -29,7 +29,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         {
             var mduPath = TestHelper.GetTestFilePath(@"csm_extended\csma82n4.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
-            var model = new WaterFlowFMModel.WaterFlowFMModel(mduPath);
+            var model = new WaterFlowFMModel(mduPath);
             
             // TODO: Fix this statement
             //Assert.AreEqual(2453301*2, ((SpatialOperationSetValueConverter)model.GetDataItemByValue(model.Roughness).ValueConverter).SpatialOperationSet.Operations[0]);

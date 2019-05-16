@@ -20,11 +20,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(TimFileImporter));
 
-        public Func<SourceAndSink, WaterFlowFMModel.WaterFlowFMModel> GetModelForSourceAndSink { private get; set; }
+        public Func<SourceAndSink, WaterFlowFMModel> GetModelForSourceAndSink { private get; set; }
 
-        public Func<HeatFluxModel, WaterFlowFMModel.WaterFlowFMModel> GetModelForHeatFluxModel { private get; set; }
+        public Func<HeatFluxModel, WaterFlowFMModel> GetModelForHeatFluxModel { private get; set; }
 
-        public Func<UniformWindField, WaterFlowFMModel.WaterFlowFMModel> GetModelForWindTimeSeries { private get; set; }
+        public Func<UniformWindField, WaterFlowFMModel> GetModelForWindTimeSeries { private get; set; }
 
         public bool WindFileImporter { get; set; }
 
@@ -127,7 +127,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             {
                 try
                 {
-                    WaterFlowFMModel.WaterFlowFMModel model = GetModelForSourceAndSink(sourceAndSink);
+                    WaterFlowFMModel model = GetModelForSourceAndSink(sourceAndSink);
                     if (model == null)
                     {
                         Log.ErrorFormat(

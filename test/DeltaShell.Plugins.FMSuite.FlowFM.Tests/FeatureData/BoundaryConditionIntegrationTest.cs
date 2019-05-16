@@ -22,12 +22,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
     [Category(TestCategory.Slow)]
     public class BoundaryConditionIntegrationTest
     {
-        private static WaterFlowFMModel.WaterFlowFMModel CreateWaterFlowFMModel()
+        private static WaterFlowFMModel CreateWaterFlowFMModel()
         {
             var mduPath = TestHelper.GetTestFilePath(@"simpleBox\simplebox.mdu");
             var localCopy = TestHelper.CreateLocalCopy(mduPath);
 
-            var model = new WaterFlowFMModel.WaterFlowFMModel(localCopy);
+            var model = new WaterFlowFMModel(localCopy);
             model.StopTime = model.StartTime.AddMinutes(2);
 
             var left = model.Grid.Vertices.Min(v => v.X);
@@ -105,7 +105,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
 
             model.ExportTo("boundaries/test.mdu");
 
-            var importedModel = new WaterFlowFMModel.WaterFlowFMModel("boundaries/test.mdu");
+            var importedModel = new WaterFlowFMModel("boundaries/test.mdu");
 
             Assert.AreEqual(2, importedModel.Boundaries.Count);
             Assert.AreEqual(2, importedModel.BoundaryConditions.Count());
@@ -146,7 +146,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
 
             model.ExportTo("boundaries/test.mdu");
 
-            var importedModel = new WaterFlowFMModel.WaterFlowFMModel("boundaries/test.mdu");
+            var importedModel = new WaterFlowFMModel("boundaries/test.mdu");
 
             Assert.AreEqual(2, importedModel.Boundaries.Count);
             Assert.AreEqual(BoundaryConditionDataType.Harmonics, importedModel.BoundaryConditions.First().DataType);
@@ -195,7 +195,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
 
             model.ExportTo("boundaries/test.mdu");
 
-            var importedModel = new WaterFlowFMModel.WaterFlowFMModel("boundaries/test.mdu");
+            var importedModel = new WaterFlowFMModel("boundaries/test.mdu");
 
             Assert.AreEqual(2, importedModel.Boundaries.Count);
 
@@ -375,7 +375,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
             var sandName = "SandFraction";
             var mudName = "MudFraction";
             var bedloadName = "BedLoadFraction";
-            var fmModel = new WaterFlowFMModel.WaterFlowFMModel
+            var fmModel = new WaterFlowFMModel
             {
                 SedimentFractions = new EventedList<ISedimentFraction>
                 {

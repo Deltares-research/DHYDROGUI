@@ -8,14 +8,47 @@ using DelftTools.Utils;
 using DelftTools.Utils.Editing;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccess;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using GeoAPI.Extensions.Feature;
 using log4net;
 using NetTopologySuite.Extensions.Features;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
+    public class BcBlockData
+    {
+        public BcBlockData()
+        {
+            Quantities = new List<BcQuantityData>();
+        }
+
+        public string FilePath { get; set; }
+        public int LineNumber { get; set; }
+        public string SupportPoint { get; set; }
+        public string FunctionType { get; set; }
+        public string SeriesIndex { get; set; }
+        public string TimeInterpolationType { get; set; }
+        public string VerticalPositionType { get; set; }
+        public string VerticalPositionDefinition { get; set; }
+        public string VerticalInterpolationType { get; set; }
+        public string Offset { get; set; }
+        public string Factor { get; set; }
+        public IList<BcQuantityData> Quantities { get; set; }
+    }
+
+    public class BcQuantityData
+    {
+        public BcQuantityData()
+        {
+            Values = new List<string>();
+        }
+
+        public string Quantity { get; set; }
+        public string Unit { get; set; }
+        public string VerticalPosition { get; set; }
+        public string TracerName { get; set; }
+        public IList<string> Values;
+    }
+
     // TODO: this class is a mess, needs refactoring
     public class BcFileFlowBoundaryDataBuilder
     {

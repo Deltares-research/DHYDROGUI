@@ -4,7 +4,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.IO;
 using DelftTools.Shell.Core;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using log4net;
@@ -17,7 +16,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
     {
         private ILog Log = LogManager.GetLogger(typeof(FlowFMNetFileExporter));
 
-        public Func<UnstructuredGrid, WaterFlowFMModel.WaterFlowFMModel> GetModelForGrid { private get; set; }
+        public Func<UnstructuredGrid, WaterFlowFMModel> GetModelForGrid { private get; set; }
 
         #region IFileExporter
 
@@ -80,7 +79,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
                 return true;
             }
 
-            WaterFlowFMModel.WaterFlowFMModel model = GetModelForGrid(grid);
+            WaterFlowFMModel model = GetModelForGrid(grid);
 
             if (path != model.NetFilePath)
             {

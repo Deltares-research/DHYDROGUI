@@ -6,7 +6,6 @@ using DelftTools.Controls;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui.Swf;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.FunctionStores;
 using NetTopologySuite.Extensions.Coverages;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
@@ -22,7 +21,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
         public override IEnumerable GetChildNodeObjects(FMMapFileFunctionStore parent, ITreeNode node)
         {
             var model =
-                Gui.Application.Project.RootFolder.Models.OfType<WaterFlowFMModel.WaterFlowFMModel>()
+                Gui.Application.Project.RootFolder.Models.OfType<WaterFlowFMModel>()
                     .FirstOrDefault(m => Equals(m.OutputMapFileStore, parent));
 
             if (model == null)
@@ -42,7 +41,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
         private IDataItem WrapIntoOutputItem(object o, FMMapFileFunctionStore store, string tag)
         {
             var model =
-                Gui.Application.Project.RootFolder.Models.OfType<WaterFlowFMModel.WaterFlowFMModel>()
+                Gui.Application.Project.RootFolder.Models.OfType<WaterFlowFMModel>()
                     .FirstOrDefault(m => Equals(m.OutputMapFileStore, store));
 
             var existingItem = DataItems.FirstOrDefault(di => Equals(di.Tag, tag) && Equals(di.Owner, model));

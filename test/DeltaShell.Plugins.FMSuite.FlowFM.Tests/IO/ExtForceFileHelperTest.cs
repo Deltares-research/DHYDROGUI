@@ -8,8 +8,6 @@ using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccess;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
@@ -113,7 +111,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 }
             };
 
-            var fmModel = new WaterFlowFMModel.WaterFlowFMModel();
+            var fmModel = new WaterFlowFMModel();
             fmModel.SourcesAndSinks.Add(sourceAndSink);
 
             var modelDefinition = fmModel.ModelDefinition;
@@ -173,7 +171,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 Data = null
             };
 
-            var fmModel = new WaterFlowFMModel.WaterFlowFMModel();
+            var fmModel = new WaterFlowFMModel();
             fmModel.SourcesAndSinks.Add(sourceAndSink);
             var modelDefinition = fmModel.ModelDefinition;
 

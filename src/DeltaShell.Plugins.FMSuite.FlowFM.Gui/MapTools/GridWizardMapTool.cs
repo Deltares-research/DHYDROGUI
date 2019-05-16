@@ -140,7 +140,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
             }
 
             // Check whether FM group layer can be found. 
-            var fmLayer = Map.GetAllLayers(true).OfType<ModelGroupLayer>().FirstOrDefault(l => l.Model is WaterFlowFMModel.WaterFlowFMModel);
+            var fmLayer = Map.GetAllLayers(true).OfType<ModelGroupLayer>().FirstOrDefault(l => l.Model is WaterFlowFMModel);
             if (fmLayer == null)
             {
                 log.Error("Can not find the FM layer to create the grid on.");
@@ -148,7 +148,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
                 return;
             }
 
-            var fmModel = (WaterFlowFMModel.WaterFlowFMModel)fmLayer.Model;
+            var fmModel = (WaterFlowFMModel)fmLayer.Model;
 
             RgfGridEditor.OpenGrid(fmModel.NetFilePath, fmModel.Grid == null || fmModel.Grid.IsEmpty, rgfgridPolygons, "polygon.pol");
             try

@@ -16,7 +16,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(GeometryZipExporter));
 
-        public Func<UnstructuredGrid, WaterFlowFMModel.WaterFlowFMModel> GetModelForGrid { get; set; }
+        public Func<UnstructuredGrid, WaterFlowFMModel> GetModelForGrid { get; set; }
 
         #region IFileExporter
 
@@ -56,7 +56,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
                 throw new NotImplementedException("Exporting netcdf file of non-filebased grid not supported yet");
             }
 
-            WaterFlowFMModel.WaterFlowFMModel model = GetModelForGrid(grid);
+            WaterFlowFMModel model = GetModelForGrid(grid);
 
             string targetDirectory = Path.GetDirectoryName(filePath);
             string netFileName = Path.GetFileName(model.NetFilePath);

@@ -11,7 +11,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 {
     public class WaterFlowFMEnclosureValidator
     {
-        public static ValidationReport Validate(WaterFlowFMModel.WaterFlowFMModel model)
+        public static ValidationReport Validate(WaterFlowFMModel model)
         {
             var issues = new List<ValidationIssue>();
             var report = new ValidationReport("Enclosure", issues);
@@ -46,7 +46,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             return report;
         }
 
-        private static void CreateIssuesIfInvalidGeometry(List<ValidationIssue> issues, WaterFlowFMModel.WaterFlowFMModel model,
+        private static void CreateIssuesIfInvalidGeometry(List<ValidationIssue> issues, WaterFlowFMModel model,
                                                           Feature2DPolygon feature)
         {
             var featureAsPolygon = feature.Geometry as Polygon;

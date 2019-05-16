@@ -16,7 +16,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
 
         public override bool SupportsMultipleConditionsPerSet => true;
 
-        public WaterFlowFMModel.WaterFlowFMModel Model { set; private get; }
+        public WaterFlowFMModel Model { set; private get; }
 
         public override IBoundaryCondition CreateBoundaryCondition(Feature2D feature, string variable,
                                                                    BoundaryConditionDataType dataType,

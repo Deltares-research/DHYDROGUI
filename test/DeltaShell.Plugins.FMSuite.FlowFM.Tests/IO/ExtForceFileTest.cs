@@ -9,8 +9,6 @@ using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccess;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
@@ -242,7 +240,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             try
             {
                 /* Define new model */
-                var fmModel = new WaterFlowFMModel.WaterFlowFMModel(sedFile)
+                var fmModel = new WaterFlowFMModel(sedFile)
                 {
                     ModelDefinition =
                     {
@@ -415,7 +413,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             {
                 /* Define new model */
                 var grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
-                var fmModel = new WaterFlowFMModel.WaterFlowFMModel(sedFile)
+                var fmModel = new WaterFlowFMModel(sedFile)
                 {
                     ModelDefinition =
                     {
@@ -612,7 +610,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Category(TestCategory.Slow)]
         public void ExportImportBoundaryConditionWithOffsetAndFactor()
         {
-            var model = new WaterFlowFMModel.WaterFlowFMModel();
+            var model = new WaterFlowFMModel();
 
             var feature = new Feature2D
             {
@@ -653,7 +651,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             model.ExportTo(mduPath);
 
-            var importedModel = new WaterFlowFMModel.WaterFlowFMModel(mduPath);
+            var importedModel = new WaterFlowFMModel(mduPath);
             var boundaries = importedModel.Boundaries;
             Assert.AreEqual(1, boundaries.Count);
             Assert.AreEqual(feature.Geometry, boundaries.First().Geometry);
@@ -696,7 +694,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Test]
         public void ExportImportMultipleBoundaryConditionsOnSameFeature()
         {
-            var model = new WaterFlowFMModel.WaterFlowFMModel();
+            var model = new WaterFlowFMModel();
 
             var feature = new Feature2D
             {
@@ -756,7 +754,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             model.ExportTo(mduPath);
 
-            var importedModel = new WaterFlowFMModel.WaterFlowFMModel(mduPath);
+            var importedModel = new WaterFlowFMModel(mduPath);
             var boundaries = importedModel.Boundaries;
             Assert.AreEqual(1, boundaries.Count);
             Assert.AreEqual(feature.Geometry, boundaries.First().Geometry);
@@ -824,7 +822,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Test]
         public void ExportImportSummedWaterLevelsOnSameFeature()
         {
-            var model = new WaterFlowFMModel.WaterFlowFMModel
+            var model = new WaterFlowFMModel
             {
                 Name = "test"
             };
@@ -950,7 +948,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                             "Operand of quantity was not as expected.");
         }
 
-        private static void AddBoundaryCondition(WaterFlowFMModel.WaterFlowFMModel model, FlowBoundaryCondition bc)
+        private static void AddBoundaryCondition(WaterFlowFMModel model, FlowBoundaryCondition bc)
         {
             var modelDefinition = model.ModelDefinition;
             var set =

@@ -3,7 +3,6 @@ using System.IO;
 using DelftTools.Controls;
 using DelftTools.Shell.Gui.Swf;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
 {

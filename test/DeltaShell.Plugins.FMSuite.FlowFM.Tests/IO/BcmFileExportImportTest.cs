@@ -12,7 +12,6 @@ using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using GeoAPI.Geometries;
@@ -108,7 +107,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         public void ExportImportSedimentBedLoadToSingleFile()
         {
             //Note, for the moment we assume these type of sediments are compatible with waterflowfm.
-            var model = new WaterFlowFMModel.WaterFlowFMModel(TestHelper.GetTestFilePath(@"simplebox/simplebox.mdu"));
+            var model = new WaterFlowFMModel(TestHelper.GetTestFilePath(@"simplebox/simplebox.mdu"));
             model.Name = "newname";
 
             model.ModelDefinition.UseMorphologySediment = true;

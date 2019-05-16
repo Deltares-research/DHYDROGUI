@@ -10,12 +10,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
     [TestFixture]
     public class FMStructuresValidatorTest
     {
-        private WaterFlowFMModel.WaterFlowFMModel model;
+        private WaterFlowFMModel model;
 
         [SetUp]
         public void SetUp()
         {
-            model = new WaterFlowFMModel.WaterFlowFMModel();
+            model = new WaterFlowFMModel();
         }
 
         [Test]

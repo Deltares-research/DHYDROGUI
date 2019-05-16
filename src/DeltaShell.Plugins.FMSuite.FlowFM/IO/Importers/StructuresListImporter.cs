@@ -32,7 +32,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         /// </summary>
         public StructuresListType Type { get; set; }
 
-        public Func<IEnumerable, WaterFlowFMModel.WaterFlowFMModel> GetModelForList { get; set; }
+        public Func<IEnumerable, WaterFlowFMModel> GetModelForList { get; set; }
 
         public override bool OpenViewAfterImport => false;
 
@@ -125,7 +125,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             }
 
             var list = (IList) target;
-            WaterFlowFMModel.WaterFlowFMModel model = GetModelForList(list);
+            WaterFlowFMModel model = GetModelForList(list);
 
             var structuresFile = new StructuresFile()
             {

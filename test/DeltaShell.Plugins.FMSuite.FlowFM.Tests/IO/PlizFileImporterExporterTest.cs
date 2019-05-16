@@ -11,9 +11,7 @@ using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportersExporters;
 using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.SharpMapGis;
 using GeoAPI.Extensions.Feature;
@@ -161,7 +159,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 app.Run();
 
                 //Setup new model and pillars.
-                var model = new WaterFlowFMModel.WaterFlowFMModel();
+                var model = new WaterFlowFMModel();
                 app.Project.RootFolder.Add(model);
 
                 //Create some dummy bridge pillaras
@@ -252,7 +250,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 app.Run();
 
                 //Setup new model and pillars.
-                var model = new WaterFlowFMModel.WaterFlowFMModel();
+                var model = new WaterFlowFMModel();
                 app.Project.RootFolder.Add(model);
 
                 //Create some dummy bridge pillaras
@@ -377,7 +375,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 app.Run();
 
                 //Setup new model and pillars.
-                var model = new WaterFlowFMModel.WaterFlowFMModel();
+                var model = new WaterFlowFMModel();
                 app.Project.RootFolder.Add(model);
 
                 var importer =

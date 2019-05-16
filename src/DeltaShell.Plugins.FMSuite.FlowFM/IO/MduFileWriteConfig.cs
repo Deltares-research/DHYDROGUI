@@ -1,6 +1,4 @@
-﻿using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
-
-namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
+﻿namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
     /// <summary>
     /// IMduFileWriteConfig collects a set of boolean values used to configure

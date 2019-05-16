@@ -14,7 +14,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.Buttons
 
         public static void ButtonAction(object inputObject)
         {
-            var model = inputObject as WaterFlowFMModel.WaterFlowFMModel;
+            var model = inputObject as WaterFlowFMModel;
             if (model == null) return;
 
             var depthLayerDefinition = model.InitialSalinity;
@@ -35,7 +35,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.Buttons
 
         public static string DepthLayersToString(object inputObject)
         {
-            var model = inputObject as WaterFlowFMModel.WaterFlowFMModel;
+            var model = inputObject as WaterFlowFMModel;
             if (model == null) return string.Empty;
 
             return model.InitialSalinity?.VerticalProfile.Type.ToString() ?? string.Empty;

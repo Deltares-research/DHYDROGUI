@@ -5,7 +5,6 @@ using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
 using NUnit.Framework;
 using System;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.FunctionStores;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 {

@@ -4,8 +4,6 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
 using NUnit.Framework;
 using Rhino.Mocks;
 
