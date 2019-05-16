@@ -30,6 +30,7 @@ using DeltaShell.Plugins.FMSuite.Common.Gui.Forms;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using GeoAPI.Extensions.CoordinateSystems;
 using log4net;
 
@@ -249,7 +250,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
         public int SupportPointIndex { private get; set; }
 
-        private WaterFlowFMModel model;
+        private WaterFlowFMModel.WaterFlowFMModel model;
 
         private readonly AddSeriesTool addSeriesTool;
 
@@ -346,7 +347,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             }
         }
 
-        public WaterFlowFMModel Model
+        public WaterFlowFMModel.WaterFlowFMModel Model
         {
             private get { return model; }
             set

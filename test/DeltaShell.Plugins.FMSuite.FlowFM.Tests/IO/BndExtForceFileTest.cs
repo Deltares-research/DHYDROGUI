@@ -17,6 +17,7 @@ using System.Text.RegularExpressions;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 {
@@ -777,7 +778,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             //Note, for the moment we assume these type of sediments are compatible with waterflowfm.
             var testFilePath = TestHelper.GetTestFilePath(@"simplebox/simplebox.mdu");
             testFilePath = TestHelper.CreateLocalCopy(testFilePath);
-            var model = new WaterFlowFMModel(testFilePath)
+            var model = new WaterFlowFMModel.WaterFlowFMModel(testFilePath)
             {
                 Name = "newname", ModelDefinition = {UseMorphologySediment = true}
             };
@@ -838,7 +839,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             //Note, for the moment we assume these type of sediments are compatible with waterflowfm.
             var testFilePath = TestHelper.GetTestFilePath(@"simplebox/simplebox.mdu");
             testFilePath = TestHelper.CreateLocalCopy(testFilePath);
-            var model = new WaterFlowFMModel(testFilePath);
+            var model = new WaterFlowFMModel.WaterFlowFMModel(testFilePath);
             model.Name = "newname";
 
             model.ModelDefinition.UseMorphologySediment = true;

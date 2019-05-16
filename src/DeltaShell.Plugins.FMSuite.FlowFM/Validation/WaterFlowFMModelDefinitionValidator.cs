@@ -10,7 +10,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 {
     public static class WaterFlowFMModelDefinitionValidator
     {
-        public static ValidationReport Validate(WaterFlowFMModel model)
+        public static ValidationReport Validate(WaterFlowFMModel.WaterFlowFMModel model)
         {
             WaterFlowFMModelDefinition modelDefinition = model.ModelDefinition;
             var groupReports = new List<ValidationReport>();

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DeltaShell.Plugins.FMSuite.FlowFM.Api;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
@@ -18,11 +19,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
                 return false;
             }
 
-            var waterFlowFMModel = item as WaterFlowFMModel;
+            var waterFlowFMModel = item as WaterFlowFMModel.WaterFlowFMModel;
             return waterFlowFMModel != null && ExportPartitionMdu(waterFlowFMModel, path);
         }
 
-        private bool ExportPartitionMdu(WaterFlowFMModel waterFlowFMModel, string path)
+        private bool ExportPartitionMdu(WaterFlowFMModel.WaterFlowFMModel waterFlowFMModel, string path)
         {
             IFlexibleMeshModelApi api = FlexibleMeshModelApiFactory.CreateNew();
             if (api == null)
@@ -128,7 +129,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
 
         public override IEnumerable<Type> SourceTypes()
         {
-            yield return typeof(WaterFlowFMModel);
+            yield return typeof(WaterFlowFMModel.WaterFlowFMModel);
         }
 
         public override string FileFilter => "Flexible Mesh Model Definition|*.mdu";

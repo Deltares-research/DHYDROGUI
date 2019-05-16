@@ -18,7 +18,9 @@ using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportersExporters;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.NetworkEditor.Import;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
@@ -70,7 +72,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private void Application_ProjectOpened(Project project)
         {
-            project?.RootFolder.GetAllModelsRecursive().OfType<WaterFlowFMModel>().ForEach(
+            project?.RootFolder.GetAllModelsRecursive().OfType<WaterFlowFMModel.WaterFlowFMModel>().ForEach(
                 m => m.WorkingDirectoryPathFunc =
                          () => application.WorkDirectory);
         }
@@ -84,9 +86,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 Image = Properties.Resources.unstrucModel,
                 AdditionalOwnerCheck = owner =>
                     !(owner is ICompositeActivity) // Allow "standalone" flow models
-                    || !((ICompositeActivity) owner).Activities.OfType<WaterFlowFMModel>().Any() &&
+                    || !((ICompositeActivity) owner).Activities.OfType<WaterFlowFMModel.WaterFlowFMModel>().Any() &&
                     owner is IHydroModel, // Don't allow multiple flow models in one composite activity
-                CreateModel = owner => new WaterFlowFMModel()
+                CreateModel = owner => new WaterFlowFMModel.WaterFlowFMModel()
                 {
                     WorkingDirectoryPathFunc = () => Application.WorkDirectory
                 }
@@ -109,8 +111,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 GetBaseFolder = list =>
                 {
-                    WaterFlowFMModel model = Application
-                                             .GetAllModelsInProject().OfType<WaterFlowFMModel>()
+                    WaterFlowFMModel.WaterFlowFMModel model = Application
+                                             .GetAllModelsInProject().OfType<WaterFlowFMModel.WaterFlowFMModel>()
                                              .FirstOrDefault(m => Equals(m.Area.DryPoints, list));
                     return model == null ? string.Empty : Path.GetDirectoryName(model.MduFilePath);
                 }
@@ -146,7 +148,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 EqualityComparer = new GroupableFeatureComparer<FixedWeir>(),
                 AfterImportAction = featureList =>
                 {
-                    WaterFlowFMModel waterFlowFmModel = GetModelFor(featureList, a => a.FixedWeirs);
+                    WaterFlowFMModel.WaterFlowFMModel waterFlowFmModel = GetModelFor(featureList, a => a.FixedWeirs);
                     string scheme = waterFlowFmModel
                                     .ModelDefinition.GetModelProperty(KnownProperties.FixedWeirScheme)
                                     .GetValueAsString();
@@ -213,7 +215,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 },
                 AfterCreateAction = (featureList, fixedWeir) =>
                 {
-                    WaterFlowFMModel waterFlowFmModel = GetModelFor(featureList, a => a.FixedWeirs);
+                    WaterFlowFMModel.WaterFlowFMModel waterFlowFmModel = GetModelFor(featureList, a => a.FixedWeirs);
                     fixedWeir.UpdateGroupName(waterFlowFmModel);
                 },
                 GetEditableObject = target => GetModelFor(target, a => a.FixedWeirs).Area
@@ -230,7 +232,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 EqualityComparer = new GroupableFeatureComparer<BridgePillar>(),
                 AfterCreateAction = delegate(object featureList, BridgePillar bridgePillar)
                 {
-                    WaterFlowFMModel waterFlowFmModel = GetModelFor(featureList, a => a.BridgePillars);
+                    WaterFlowFMModel.WaterFlowFMModel waterFlowFmModel = GetModelFor(featureList, a => a.BridgePillars);
                     if (waterFlowFmModel == null)
                     {
                         return;
@@ -359,18 +361,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             };
         }
 
-        private WaterFlowFMModel GetModelFor<T>(object target, params Func<HydroArea, IEnumerable<T>>[] listSelectors)
+        private WaterFlowFMModel.WaterFlowFMModel GetModelFor<T>(object target, params Func<HydroArea, IEnumerable<T>>[] listSelectors)
             where T : IFeature, INameable
         {
             return Application?.Project?.RootFolder.GetAllModelsRecursive()
-                              .OfType<WaterFlowFMModel>()
+                              .OfType<WaterFlowFMModel.WaterFlowFMModel>()
                               .FirstOrDefault(m => listSelectors.Any(s => Equals(s(m.Area), target)));
         }
 
-        private WaterFlowFMModel GetFMModelForRestartState(FileBasedRestartState fileBasedRestartState)
+        private WaterFlowFMModel.WaterFlowFMModel GetFMModelForRestartState(FileBasedRestartState fileBasedRestartState)
         {
             return
-                Application.GetAllModelsInProject().OfType<WaterFlowFMModel>()
+                Application.GetAllModelsInProject().OfType<WaterFlowFMModel.WaterFlowFMModel>()
                            .FirstOrDefault(m => Equals(m.RestartInput, fileBasedRestartState));
         }
 
@@ -388,7 +390,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 Mode = Feature2DImportExportMode.Export,
                 BeforeExportActionDelegate = delegate(object featureList)
                 {
-                    WaterFlowFMModel waterFlowFmModel = GetModelFor(featureList, a => a.FixedWeirs);
+                    WaterFlowFMModel.WaterFlowFMModel waterFlowFmModel = GetModelFor(featureList, a => a.FixedWeirs);
                     var fixedWeirs = featureList as IEnumerable<FixedWeir>;
                     if (fixedWeirs == null || waterFlowFmModel == null)
                     {
@@ -447,7 +449,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 Mode = Feature2DImportExportMode.Export,
                 BeforeExportActionDelegate = delegate(object featureList)
                 {
-                    WaterFlowFMModel waterFlowFmModel = GetModelFor(featureList, a => a.BridgePillars);
+                    WaterFlowFMModel.WaterFlowFMModel waterFlowFmModel = GetModelFor(featureList, a => a.BridgePillars);
                     var bridgePillars = featureList as IEnumerable<BridgePillar>;
                     if (bridgePillars == null || waterFlowFmModel == null)
                     {
@@ -550,56 +552,56 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         public override IEnumerable<Assembly> GetPersistentAssemblies()
         {
-            yield return typeof(WaterFlowFMModel).Assembly;
+            yield return typeof(WaterFlowFMModel.WaterFlowFMModel).Assembly;
         }
 
-        private WaterFlowFMModel GetModelForArea(HydroArea hydroArea)
+        private WaterFlowFMModel.WaterFlowFMModel GetModelForArea(HydroArea hydroArea)
         {
             return FlowModels.FirstOrDefault(m => Equals(m.Area, hydroArea));
         }
 
-        private WaterFlowFMModel GetModelForHeatFluxModel(HeatFluxModel heatFluxModel)
+        private WaterFlowFMModel.WaterFlowFMModel GetModelForHeatFluxModel(HeatFluxModel heatFluxModel)
         {
             return FlowModels.FirstOrDefault(m => Equals(m.ModelDefinition.HeatFluxModel, heatFluxModel));
         }
 
-        private WaterFlowFMModel GetModelForSourceAndSink(SourceAndSink sourceAndSink)
+        private WaterFlowFMModel.WaterFlowFMModel GetModelForSourceAndSink(SourceAndSink sourceAndSink)
         {
             return FlowModels.FirstOrDefault(m => m.SourcesAndSinks.Contains(sourceAndSink));
         }
 
-        private WaterFlowFMModel GetModelForBridgePillar(BridgePillar bridgePillar)
+        private WaterFlowFMModel.WaterFlowFMModel GetModelForBridgePillar(BridgePillar bridgePillar)
         {
             return FlowModels.FirstOrDefault(m => m.Area.BridgePillars.Contains(bridgePillar));
         }
 
-        private WaterFlowFMModel GetModelForWindField(IWindField windField)
+        private WaterFlowFMModel.WaterFlowFMModel GetModelForWindField(IWindField windField)
         {
             return FlowModels.FirstOrDefault(m => m.WindFields.Contains(windField));
         }
 
-        private WaterFlowFMModel GetModelForCollection(IEnumerable list)
+        private WaterFlowFMModel.WaterFlowFMModel GetModelForCollection(IEnumerable list)
         {
             return FlowModels.FirstOrDefault(m => GetAvailableLists(m, list));
         }
 
         private DateTime? GetRefDateForBoundaryCondition(IBoundaryCondition boundaryCondition)
         {
-            WaterFlowFMModel waterFlowFMModel = FlowModels.FirstOrDefault();
+            WaterFlowFMModel.WaterFlowFMModel waterFlowFMModel = FlowModels.FirstOrDefault();
             return waterFlowFMModel == null ? (DateTime?) null : waterFlowFMModel.ReferenceTime;
         }
 
-        private WaterFlowFMModel GetModelForGrid(UnstructuredGrid grid)
+        private WaterFlowFMModel.WaterFlowFMModel GetModelForGrid(UnstructuredGrid grid)
         {
             return FlowModels.FirstOrDefault(m => m.Grid.Equals(grid));
         }
 
-        private IEnumerable<WaterFlowFMModel> FlowModels =>
+        private IEnumerable<WaterFlowFMModel.WaterFlowFMModel> FlowModels =>
             Application != null
-                ? Application.GetAllModelsInProject().OfType<WaterFlowFMModel>()
-                : Enumerable.Empty<WaterFlowFMModel>();
+                ? Application.GetAllModelsInProject().OfType<WaterFlowFMModel.WaterFlowFMModel>()
+                : Enumerable.Empty<WaterFlowFMModel.WaterFlowFMModel>();
 
-        private static bool GetAvailableLists(WaterFlowFMModel model, IEnumerable list)
+        private static bool GetAvailableLists(WaterFlowFMModel.WaterFlowFMModel model, IEnumerable list)
         {
             if (Equals(model.Area.Weirs, list))
             {

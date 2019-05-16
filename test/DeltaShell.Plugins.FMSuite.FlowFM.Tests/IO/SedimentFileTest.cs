@@ -19,6 +19,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 {
@@ -37,7 +39,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var mduFilePath = TestHelper.GetTestFilePath(@"sedmor\FlowFMCustomProperties\FlowFMCustomPropertiesSedMor.mdu");
 
             // When
-            var importedModel = new WaterFlowFMModel(mduFilePath);
+            var importedModel = new WaterFlowFMModel.WaterFlowFMModel(mduFilePath);
 
             // Then
             Assert.NotNull(importedModel, "Model was not imported.");
@@ -55,7 +57,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 // When
                 new MduFile().Write(mduFilePath, modelDefinition, importedModel.Area, importedModel.FixedWeirsProperties, sedimentModelData: importedModel);
-                importedModel = new WaterFlowFMModel(mduFilePath);
+                importedModel = new WaterFlowFMModel.WaterFlowFMModel(mduFilePath);
 
                 // Then
                 Assert.NotNull(importedModel);
@@ -71,7 +73,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         public void GivenASedimentFileWithUnknownProperties_WhenReading_ThenOnlyUnknownAndCorrectSedimentPropertiesAreAddedToModelDefinition()
         {
             // Given
-            var model = new WaterFlowFMModel();
+            var model = new WaterFlowFMModel.WaterFlowFMModel();
             var properties = model.ModelDefinition.Properties;
             var originalNumberOfProperties = properties.Count;
             var sedFilePath = TestHelper.GetTestFilePath(@"sedmor\FlowFMCustomProperties\SedCustomProperties.sed");
@@ -129,7 +131,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             try
             {
                 /* Define new model */
-                var fmModel = new WaterFlowFMModel();
+                var fmModel = new WaterFlowFMModel.WaterFlowFMModel();
                 fmModel.ModelDefinition.UseMorphologySediment = true;
 
                 /*  Definition of properties   */
@@ -195,7 +197,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             try
             {
                 /* Define new model */
-                var fmModel = new WaterFlowFMModel();
+                var fmModel = new WaterFlowFMModel.WaterFlowFMModel();
                 fmModel.ModelDefinition.UseMorphologySediment = true;
 
                 /*Add the fraction to the model*/
@@ -220,7 +222,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 var modelDefinition = fmModel.ModelDefinition;
                 SedimentFile.Save(sedFile, modelDefinition, fmModel);
 
-                var model = new WaterFlowFMModel();
+                var model = new WaterFlowFMModel.WaterFlowFMModel();
                 LogHelper.ConfigureLogging(Level.Error);
                 try
                 {
@@ -248,7 +250,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             try
             {
                 /* Define new model */
-                var fmModel = new WaterFlowFMModel();
+                var fmModel = new WaterFlowFMModel.WaterFlowFMModel();
                 fmModel.ModelDefinition.UseMorphologySediment = true;
 
                 /* Define test properties */
@@ -293,7 +295,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 /* Test */
                 SedimentFile.Save(sedFile, modelDefinition, fmModel);
-                var model = new WaterFlowFMModel();
+                var model = new WaterFlowFMModel.WaterFlowFMModel();
                 SedimentFile.LoadSediments(sedFile, model);
 
                 var loadedOverallProp = model.SedimentOverallProperties.FirstOrDefault() as ISedimentProperty<double>;
@@ -351,7 +353,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             try
             {
                 /* Define new model */
-                var fmModel = new WaterFlowFMModel(sedFile);
+                var fmModel = new WaterFlowFMModel.WaterFlowFMModel(sedFile);
                 fmModel.ModelDefinition.UseMorphologySediment = true;
 
                 //Area 
@@ -490,7 +492,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             try
             {
                 /* Define new model */
-                var fmModel = new WaterFlowFMModel(sedFile);
+                var fmModel = new WaterFlowFMModel.WaterFlowFMModel(sedFile);
                 fmModel.ModelDefinition.UseMorphologySediment = true;
                 var grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
                 fmModel.Grid = grid;
@@ -560,7 +562,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             try
             {
                 /* Define new model */
-                var fmModel = new WaterFlowFMModel(sedFile);
+                var fmModel = new WaterFlowFMModel.WaterFlowFMModel(sedFile);
                 fmModel.ModelDefinition.UseMorphologySediment = true;
                 var grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
                 fmModel.Grid = grid;
@@ -666,7 +668,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var mduPath = TestHelper.GetTestFilePath(@"SpatiallyVarying_MudFraction\FlowFM.mdu");
             var localCopy = TestHelper.CreateLocalCopy(mduPath);
 
-            using (var model = new WaterFlowFMModel(localCopy))
+            using (var model = new WaterFlowFMModel.WaterFlowFMModel(localCopy))
             {
                 var fraction = model.SedimentFractions.FirstOrDefault(sf => sf.Name == "mudFraction");
                 Assert.IsNotNull(fraction);
@@ -739,7 +741,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var mduPath = TestHelper.GetTestFilePath(@"spatially_varying_sediment_properties_in_model\FlowFM.mdu");
             var localCopy = TestHelper.CreateLocalCopy(mduPath);
 
-            using (var model = new WaterFlowFMModel(localCopy))
+            using (var model = new WaterFlowFMModel.WaterFlowFMModel(localCopy))
             {
                 var fraction = model.SedimentFractions.FirstOrDefault(sf => sf.Name == "gouwe");
                 Assert.IsNotNull(fraction);
@@ -776,7 +778,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             try
             {
                 /* Define new model */
-                var fmModel = new WaterFlowFMModel(sedFile);
+                var fmModel = new WaterFlowFMModel.WaterFlowFMModel(sedFile);
                 fmModel.ModelDefinition.UseMorphologySediment = true;
 
                 /* Define test properties */
@@ -853,17 +855,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             TestHelper.GetTestFilePath(@"spatially_varying_sediment_properties_in_model\FlowFM.mdu");
             var localCopy = TestHelper.CreateLocalCopy(mduPath);
 
-            using (var orgModel = new WaterFlowFMModel(localCopy))
+            using (var orgModel = new WaterFlowFMModel.WaterFlowFMModel(localCopy))
             {
                 CheckModelCoverageValues(orgModel);
-                using (var model = (WaterFlowFMModel)orgModel.DeepClone())
+                using (var model = (WaterFlowFMModel.WaterFlowFMModel)orgModel.DeepClone())
                 {
                     CheckModelCoverageValues(model);
                 }
             }
         }
 
-        private static void CheckModelCoverageValues(WaterFlowFMModel model)
+        private static void CheckModelCoverageValues(WaterFlowFMModel.WaterFlowFMModel model)
         {
             var fraction = model.SedimentFractions.FirstOrDefault(sf => sf.Name == "gouwe");
             Assert.IsNotNull(fraction);

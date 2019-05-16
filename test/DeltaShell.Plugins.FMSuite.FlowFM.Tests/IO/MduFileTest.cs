@@ -10,6 +10,7 @@ using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Geometries;
@@ -54,7 +55,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var testFile = "ModelWithMorphology.mdu";
             var mduFile = new MduFile();
             var hydroArea = new HydroArea();
-            var model = new WaterFlowFMModel();
+            var model = new WaterFlowFMModel.WaterFlowFMModel();
             var sedimentData = model as ISedimentModelData;
             var modelDefinition = model.ModelDefinition;
             modelDefinition.UseMorphologySediment = true;

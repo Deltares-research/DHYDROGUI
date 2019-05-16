@@ -11,6 +11,7 @@ using System;
 using System.IO;
 using System.Linq;
 using DelftTools.Utils.IO;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.FunctionStores;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 {

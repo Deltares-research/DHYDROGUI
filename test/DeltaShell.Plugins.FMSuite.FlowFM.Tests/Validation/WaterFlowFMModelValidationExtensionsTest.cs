@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         [Test]
         public void CheckCoordinateSystemInfoMessageIsGivenIfNoCoordinateSystemIsSpecified()
         {
-            var model = new WaterFlowFMModel();
+            var model = new WaterFlowFMModel.WaterFlowFMModel();
 
             var report = model.Validate();
 
@@ -32,7 +32,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         public void CheckThatInitializingFmModelWithSalinityAndTemperatureEnabledNoWarningMessagesAreGiven()
         {
 
-            var model = new WaterFlowFMModel();
+            var model = new WaterFlowFMModel.WaterFlowFMModel();
             //Enable Salinity and Temperature checkboxes
             var salinityProperty = model.ModelDefinition.GetModelProperty(KnownProperties.UseSalinity);
             var temperatureProperty = model.ModelDefinition.GetModelProperty(KnownProperties.Temperature);
@@ -54,7 +54,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         [Test]
         public void CheckPumpCapacityIsNotNegative()
         {
-            var model = new WaterFlowFMModel();
+            var model = new WaterFlowFMModel.WaterFlowFMModel();
             model.Area.Pumps.Add(new Pump2D("A", true){ Capacity = -1.2, Branch = null});
 
             var report = model.Validate();
@@ -69,7 +69,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         [Test]
         public void CheckPumpCapacityTimeSeriesIsNotNegative()
         {
-            var model = new WaterFlowFMModel();
+            var model = new WaterFlowFMModel.WaterFlowFMModel();
             var pump = new Pump2D("A", true) {Branch = null, UseCapacityTimeSeries = true};
             pump.CapacityTimeSeries[new DateTime(2000, 1, 2)] = -1.2;
             model.Area.Pumps.Add(pump);
@@ -88,7 +88,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         [Test]
         public void CheckPumpSuctionAndDeliverySideControl()
         {
-            var model = new WaterFlowFMModel();
+            var model = new WaterFlowFMModel.WaterFlowFMModel();
             var pump = new Pump2D("A", true) { 
                 Branch = null, ControlDirection = PumpControlDirection.SuctionAndDeliverySideControl,
                 StartDelivery = 1.2, StopDelivery = -1.2,
@@ -113,7 +113,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         [Test]
         public void CheckCoordinateSystemValidation()
         {
-            var model = new WaterFlowFMModel {CoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(3824)};
+            var model = new WaterFlowFMModel.WaterFlowFMModel {CoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(3824)};
 
             var report = model.Validate();
 
@@ -125,7 +125,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         [Test]
         public void CheckSolverTypeValidation()
         {
-            var model = new WaterFlowFMModel { CoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(3824) };
+            var model = new WaterFlowFMModel.WaterFlowFMModel { CoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(3824) };
             model.ModelDefinition.GetModelProperty(KnownProperties.SolverType).SetValueAsString("7");
 
             var report = model.Validate();
@@ -138,7 +138,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         [Test]
         public void ValidateRestartInputReportTestRestartIsEmpty()
         {
-            var model = new WaterFlowFMModel();
+            var model = new WaterFlowFMModel.WaterFlowFMModel();
             model.Grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
             model.UseRestart = true;
 
@@ -155,7 +155,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         public void ValidateWithSpaciallyVariantFullCoverage()
         {
             //Arrange
-            var model = new WaterFlowFMModel(TestHelper.GetTestFilePath(@"spatiallyVariantSediment\fullGridCoverage\FlowFM.mdu"));
+            var model = new WaterFlowFMModel.WaterFlowFMModel(TestHelper.GetTestFilePath(@"spatiallyVariantSediment\fullGridCoverage\FlowFM.mdu"));
 
             //Act
             var report = model.Validate();
@@ -171,7 +171,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         public void ValidateWithSpaciallyVariantPartialCoverage()
         {
             //Arrange
-            var model = new WaterFlowFMModel(TestHelper.GetTestFilePath(@"spatiallyVariantSediment\fullGridCoverage\FlowFM.mdu"));
+            var model = new WaterFlowFMModel.WaterFlowFMModel(TestHelper.GetTestFilePath(@"spatiallyVariantSediment\fullGridCoverage\FlowFM.mdu"));
 
             //Act
             var report = model.Validate();
@@ -185,7 +185,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         public void ModelBuildUpWithFullCoverage()
         {
             //Arrange
-            var fmModel = new WaterFlowFMModel();
+            var fmModel = new WaterFlowFMModel.WaterFlowFMModel();
             fmModel.ModelDefinition.UseMorphologySediment = true;
             var grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
             fmModel.Grid = grid;
@@ -214,7 +214,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         {
             //Arrange
             //Arrange
-            var fmModel = new WaterFlowFMModel();
+            var fmModel = new WaterFlowFMModel.WaterFlowFMModel();
             fmModel.ModelDefinition.UseMorphologySediment = true;
             var grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
             fmModel.Grid = grid;
@@ -243,7 +243,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         public void ModelBuildUpSpaciallyVaryingOff()
         {
             //Arrange
-            var fmModel = new WaterFlowFMModel();
+            var fmModel = new WaterFlowFMModel.WaterFlowFMModel();
             fmModel.ModelDefinition.UseMorphologySediment = true;
             var grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
             fmModel.Grid = grid;
@@ -269,7 +269,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             Assert.IsFalse(recursive.Any(m => m.Message.Contains("SedimentThickness is not fully covering the grid, please cover entire grid")));
         }
 
-        private static void CreateSedimentFraction(SpatiallyVaryingSedimentProperty<double> thickProp, WaterFlowFMModel fmModel)
+        private static void CreateSedimentFraction(SpatiallyVaryingSedimentProperty<double> thickProp, WaterFlowFMModel.WaterFlowFMModel fmModel)
         {
             var testSedimentType = new SedimentType
             {

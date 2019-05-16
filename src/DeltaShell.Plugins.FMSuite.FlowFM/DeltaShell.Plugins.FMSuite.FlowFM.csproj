@@ -160,7 +160,9 @@
     <Compile Include="FixedWeirSchemes.cs" />
     <Compile Include="FlowFMApplicationPlugin.cs" />
     <Compile Include="GridSnappingExtensions.cs" />
-    <Compile Include="IO\BcmFile.cs" />
+    <Compile Include="IO\DataAccess\BcBlockData.cs" />
+    <Compile Include="IO\DataAccess\BcQuantityData.cs" />
+    <Compile Include="IO\Files\BcmFile.cs" />
     <Compile Include="IO\BcmFileFlowBoundaryDataBuilder.cs" />
     <Compile Include="IO\DelftIniCategoryExtension.cs" />
     <Compile Include="IO\Exporters\BcmFileExporter.cs" />
@@ -170,23 +172,23 @@
     <Compile Include="IO\Exporters\GeometryZipExporter.cs" />
     <Compile Include="IO\Exporters\ImportedNetFileXyzExporter.cs" />
     <Compile Include="IO\Exporters\WindItemExporter.cs" />
-    <Compile Include="IO\FMClassMapFileFunctionStore.cs" />
+    <Compile Include="IO\FunctionStores\FMClassMapFileFunctionStore.cs" />
     <Compile Include="IO\Importers\BcmFileImporter.cs" />
-    <Compile Include="IO\Importers\ObsFileImporterExporter.cs" />
-    <Compile Include="IO\Importers\PlizFileImporterExporter.cs" />
+    <Compile Include="IO\ImportersExporters\ObsFileImporterExporter.cs" />
+    <Compile Include="IO\ImportersExporters\PlizFileImporterExporter.cs" />
     <Compile Include="IO\Importers\SourceAndSinkImportExtensions.cs" />
-    <Compile Include="IO\IUnsupportedFileBasedExtForceFileItem.cs" />
+    <Compile Include="IO\DataAccess\IUnsupportedFileBasedExtForceFileItem.cs" />
     <Compile Include="IO\MduFileWriteConfig.cs" />
     <Compile Include="IO\MorphologyBoundaryConditionQuantityType.cs" />
     <Compile Include="IO\MorphologySedimentIniFileGenerator.cs" />
     <Compile Include="IO\Importers\FMRstFileImporter.cs" />
-    <Compile Include="IO\Importers\PolFileImporterExporter.cs" />
+    <Compile Include="IO\ImportersExporters\PolFileImporterExporter.cs" />
     <Compile Include="IO\LinkCoveragesDoneReadingEventArgs.cs" />
-    <Compile Include="IO\UnsupportedFileBasedExtForceFileItem.cs" />
+    <Compile Include="IO\DataAccess\UnsupportedFileBasedExtForceFileItem.cs" />
     <Compile Include="IO\Operator.cs" />
-    <Compile Include="IO\BcFile.cs" />
-    <Compile Include="IO\BndExtForceFile.cs" />
-    <Compile Include="IO\BoundaryConditionWpsImporter.cs" />
+    <Compile Include="IO\Files\BcFile.cs" />
+    <Compile Include="IO\Files\BndExtForceFile.cs" />
+    <Compile Include="IO\Importers\BoundaryConditionWpsImporter.cs" />
     <Compile Include="IO\Exporters\Area2DStructuresExporter.cs" />
     <Compile Include="IO\Exporters\BcFileExporter.cs" />
     <Compile Include="IO\Exporters\BoundaryDataExporterBase.cs" />
@@ -195,40 +197,40 @@
     <Compile Include="IO\Exporters\QhFileExporter.cs" />
     <Compile Include="IO\Exporters\StructuresListExporter.cs" />
     <Compile Include="IO\Exporters\TimFileExporter.cs" />
-    <Compile Include="IO\ExtForceFileHelper.cs" />
-    <Compile Include="IO\CmpFile.cs" />
-    <Compile Include="IO\ExtForceFile.cs" />
-    <Compile Include="IO\ExtForceFileItem.cs" />
+    <Compile Include="IO\Files\Helpers\ExtForceFileHelper.cs" />
+    <Compile Include="IO\Files\CmpFile.cs" />
+    <Compile Include="IO\Files\ExtForceFile.cs" />
+    <Compile Include="IO\DataAccess\ExtForceFileItem.cs" />
     <Compile Include="IO\ExtForceQuantNames.cs" />
     <Compile Include="IO\BcFileFlowBoundaryDataBuilder.cs" />
-    <Compile Include="IO\FMHisFileFunctionStore.cs" />
+    <Compile Include="IO\FunctionStores\FMHisFileFunctionStore.cs" />
     <Compile Include="IO\Importers\Area2DStructuresImporter.cs" />
     <Compile Include="IO\Importers\BcFileImporter.cs" />
     <Compile Include="IO\Importers\BoundaryDataImporterBase.cs" />
     <Compile Include="IO\Importers\CmpFileImporter.cs" />
     <Compile Include="IO\Importers\FMHisFileImporter.cs" />
     <Compile Include="IO\Importers\FMMapFileImporter.cs" />
-    <Compile Include="IO\ImportedFMNetFile.cs" />
-    <Compile Include="IO\Importers\LdbFileImporterExporter.cs" />
-    <Compile Include="IO\Importers\PointFileImporterExporter.cs" />
-    <Compile Include="IO\Importers\PliFileImporterExporter.cs" />
+    <Compile Include="IO\Files\ImportedFMNetFile.cs" />
+    <Compile Include="IO\ImportersExporters\LdbFileImporterExporter.cs" />
+    <Compile Include="IO\ImportersExporters\PointFileImporterExporter.cs" />
+    <Compile Include="IO\ImportersExporters\PliFileImporterExporter.cs" />
     <Compile Include="IO\Importers\QhFileImporter.cs" />
     <Compile Include="IO\Importers\StructuresListImporter.cs" />
     <Compile Include="IO\Importers\TimFileImporter.cs" />
     <Compile Include="IO\Importers\FlowFMNetFileImporter.cs" />
-    <Compile Include="IO\LdbFile.cs" />
-    <Compile Include="IO\FMMapFileFunctionStore.cs" />
-    <Compile Include="IO\QhFile.cs" />
-    <Compile Include="IO\MduFile.cs" />
-    <Compile Include="IO\MduFileHelper.cs" />
-    <Compile Include="IO\StructureFMPropertiesFile.cs" />
+    <Compile Include="IO\Files\LdbFile.cs" />
+    <Compile Include="IO\FunctionStores\FMMapFileFunctionStore.cs" />
+    <Compile Include="IO\Files\QhFile.cs" />
+    <Compile Include="IO\Files\MduFile.cs" />
+    <Compile Include="IO\Files\Helpers\MduFileHelper.cs" />
+    <Compile Include="IO\Files\StructureFMPropertiesFile.cs" />
     <Compile Include="IO\Importers\MapFileImporter.cs" />
     <Compile Include="IO\StructuresListType.cs" />
     <Compile Include="IO\Exporters\WaterFlowFMFileExporter.cs" />
     <Compile Include="IO\Importers\WaterFlowFMFileImporter.cs" />
     <Compile Include="IO\WaterFlowFMModelHydroAreaExtensions.cs" />
     <Compile Include="ISedimentModelData.cs" />
-    <Compile Include="IWaterFlowFMModel.cs" />
+    <Compile Include="WaterFlowFMModel\IWaterFlowFMModel.cs" />
     <Compile Include="KnownFeatureCategories.cs" />
     <Compile Include="Layers\FMOutputSnappedFeaturesGroupLayerData.cs" />
     <Compile Include="Layers\FMSnappedFeaturesGroupLayerData.cs" />
@@ -251,18 +253,18 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="IO\MorphologyFile.cs" />
-    <Compile Include="IO\SedimentFile.cs" />
+    <Compile Include="IO\Files\MorphologyFile.cs" />
+    <Compile Include="IO\Files\SedimentFile.cs" />
     <Compile Include="IO\SedMorDelftIniReader.cs" />
     <Compile Include="IO\SedMorDelftIniWriter.cs" />
     <Compile Include="QuantityGenerator.cs" />
     <Compile Include="SedimentModelDataItem.cs" />
-    <Compile Include="WaterFlowFMModel.DimrModel.cs" />
-    <Compile Include="WaterFlowFMModel.Eventing.cs" />
-    <Compile Include="WaterFlowFMModel.FileBased.cs" />
-    <Compile Include="WaterFlowFMModel.IO.cs" />
-    <Compile Include="WaterFlowFMModel.Output.cs" />
-    <Compile Include="WaterFlowFMModel.TDMB.cs" />
+    <Compile Include="WaterFlowFMModel\WaterFlowFMModel.DimrModel.cs" />
+    <Compile Include="WaterFlowFMModel\WaterFlowFMModel.Eventing.cs" />
+    <Compile Include="WaterFlowFMModel\WaterFlowFMModel.FileBased.cs" />
+    <Compile Include="WaterFlowFMModel\WaterFlowFMModel.IO.cs" />
+    <Compile Include="WaterFlowFMModel\WaterFlowFMModel.Output.cs" />
+    <Compile Include="WaterFlowFMModel\WaterFlowFMModel.TDMB.cs" />
     <Compile Include="Validation\Area\FixedWeirValidator.cs" />
     <Compile Include="Validation\Area\PumpValidator.cs" />
     <Compile Include="Validation\Area\SourceAndSinkValidator.cs" />
@@ -282,8 +284,8 @@
     <Compile Include="Validation\WaterFlowFMWindValidator.cs" />
     <Compile Include="WaterFlowFMDataAccessListener.cs" />
     <Compile Include="WaterFlowFMFeatureValueConverter.cs" />
-    <Compile Include="WaterFlowFMModel.Restart.cs" />
-    <Compile Include="WaterFlowFMModel.cs" />
+    <Compile Include="WaterFlowFMModel\WaterFlowFMModel.Restart.cs" />
+    <Compile Include="WaterFlowFMModel\WaterFlowFMModel.cs" />
     <Compile Include="ModelDefinition\WaterFlowFMModelDefinition.cs" />
     <Compile Include="ModelDefinition\WaterFlowFMProperty.cs" />
     <Compile Include="ModelDefinition\WaterFlowFMPropertyDefinition.cs" />
@@ -317,34 +319,34 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="dflowfm-mor-properties.csv">
+    <None Include="PropertyCsvFiles\dflowfm-mor-properties.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="dflowfm-properties.csv">
+    <None Include="PropertyCsvFiles\dflowfm-properties.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="mor-properties.csv">
+    <None Include="PropertyCsvFiles\mor-properties.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="sed-properties.csv">
+    <None Include="PropertyCsvFiles\sed-properties.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="structure-properties.csv">
+    <None Include="PropertyCsvFiles\structure-properties.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="toolboxes\Statistics.py">
+    <None Include="Toolboxes\Statistics.py">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="toolboxes\User input example.py">
+    <None Include="Toolboxes\User input example.py">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="tra-properties.csv">
+    <None Include="PropertyCsvFiles\tra-properties.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
     <None Include="Uml\HydroAreaCollection.cd" />
     <None Include="Uml\FlowBoundaryConditions.cd" />
-    <Compile Include="WaterFlowFMModel.Spatial.cs" />
+    <Compile Include="WaterFlowFMModel\WaterFlowFMModel.Spatial.cs" />
     <Compile Include="WaterFlowFMModel110LegacyLoader.cs" />
     <Compile Include="WaterFlowFMModelCoordinateConversion.cs" />
     <None Include="Uml\FlowFMOverview.cd" />
@@ -370,7 +372,7 @@
     <None Include="Resources\unstrucWater.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="WaterFlowFMModel.hbm.xml">
+    <EmbeddedResource Include="WaterFlowFMModel\WaterFlowFMModel.hbm.xml">
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
@@ -378,7 +380,7 @@
     <None Include="Resources\validation.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="IO\FMMapFileFunctionStore.hbm.xml" />
+    <EmbeddedResource Include="IO\FunctionStores\FMMapFileFunctionStore.hbm.xml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\unstrucmodel.png" />
@@ -399,27 +401,25 @@
     <None Include="Resources\textdocument.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="IO\ImportedFMNetFile.hbm.xml" />
+    <EmbeddedResource Include="IO\Files\ImportedFMNetFile.hbm.xml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\dry_point.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="WaterFlowFMModel.1.1.0.hbm.xml" />
+    <EmbeddedResource Include="WaterFlowFMModel\WaterFlowFMModel.1.1.0.hbm.xml" />
     <Resource Include="Resources\function_timeseries.png" />
-    <Content Include="toolboxes\Statistics.png">
+    <Content Include="Toolboxes\Statistics.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="toolboxes\User input example.png">
+    <Content Include="Toolboxes\User input example.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\GateSmall.png" />
     <Resource Include="Resources\hurricane2.png" />
     <Resource Include="Resources\grid_2d.png" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="SedMor\IO\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>

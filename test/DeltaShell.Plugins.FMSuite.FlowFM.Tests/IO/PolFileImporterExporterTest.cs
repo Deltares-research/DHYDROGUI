@@ -7,6 +7,7 @@ using System;
 using NetTopologySuite.Extensions.Features;
 using System.Collections.Generic;
 using DelftTools.Utils.IO;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportersExporters;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 {

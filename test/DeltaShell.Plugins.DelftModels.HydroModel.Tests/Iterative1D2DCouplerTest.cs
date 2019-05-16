@@ -24,6 +24,7 @@ using NUnit.Framework;
 using Rhino.Mocks;
 using Point = NetTopologySuite.Geometries.Point;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DeltaShell.Plugins.FMSuite.FlowFM.WaterFlowFMModel;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 {

@@ -49,7 +49,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Ribbon
         public void ValidateItems()
         {
             var mapView = FlowFMGuiPlugin.ActiveMapView;
-            var visible = mapView != null && mapView.Map != null && mapView.Map.GetAllLayers(true).OfType<ModelGroupLayer>().Any(l => l.Model is WaterFlowFMModel);
+            var visible = mapView != null && mapView.Map != null && mapView.Map.GetAllLayers(true).OfType<ModelGroupLayer>().Any(l => l.Model is WaterFlowFMModel.WaterFlowFMModel);
 
             foreach (var buttonCommandPair in buttonCommands)
             {

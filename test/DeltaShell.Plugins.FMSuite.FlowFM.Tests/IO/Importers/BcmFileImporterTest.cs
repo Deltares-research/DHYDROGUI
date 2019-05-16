@@ -90,7 +90,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
                 DeleteDataBeforeImport = true,
             };
 
-            var model = new WaterFlowFMModel();
+            var model = new WaterFlowFMModel.WaterFlowFMModel();
             model.Name = "newname";
             var boundary = new Feature2D
             {
@@ -123,7 +123,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
                 DeleteDataBeforeImport = true,
             };
 
-            var model = new WaterFlowFMModel();
+            var model = new WaterFlowFMModel.WaterFlowFMModel();
             model.Name = "newname";
             var boundary = new Feature2D
             {

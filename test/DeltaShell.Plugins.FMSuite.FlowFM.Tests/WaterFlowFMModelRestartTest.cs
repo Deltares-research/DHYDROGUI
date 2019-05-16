@@ -30,11 +30,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.NotNull(model.RestartInput);
         }
 
-        private static WaterFlowFMModel LoadBendProfModelWithWriteRestart()
+        private static WaterFlowFMModel.WaterFlowFMModel LoadBendProfModelWithWriteRestart()
         {
             var mduPath = TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
-            var model = new WaterFlowFMModel(mduPath)
+            var model = new WaterFlowFMModel.WaterFlowFMModel(mduPath)
             {
                 WriteRestart = true,
                 OutputTimeStep = new TimeSpan(0, 0, 15)

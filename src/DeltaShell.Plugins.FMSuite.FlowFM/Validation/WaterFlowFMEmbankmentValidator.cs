@@ -10,7 +10,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 {
     public static class WaterFlowFMEmbankmentValidator
     {
-        public static ValidationReport Validate(WaterFlowFMModel model)
+        public static ValidationReport Validate(WaterFlowFMModel.WaterFlowFMModel model)
         {
             if (model.Area.Embankments.Count == 0)
             {

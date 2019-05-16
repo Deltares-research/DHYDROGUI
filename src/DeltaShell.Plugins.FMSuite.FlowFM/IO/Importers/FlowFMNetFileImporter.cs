@@ -5,6 +5,7 @@ using System.Drawing;
 using System.IO;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow.DataItems;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Geometries;
@@ -18,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(FlowFMNetFileImporter));
 
-        public Func<UnstructuredGrid, WaterFlowFMModel> GetModelForGrid { get; set; }
+        public Func<UnstructuredGrid, WaterFlowFMModel.WaterFlowFMModel> GetModelForGrid { get; set; }
 
         #region IFileImporter 
 
@@ -89,7 +90,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                 };
             }
 
-            var flowModel = target as WaterFlowFMModel;
+            var flowModel = target as WaterFlowFMModel.WaterFlowFMModel;
 
             var grid = target as UnstructuredGrid;
 

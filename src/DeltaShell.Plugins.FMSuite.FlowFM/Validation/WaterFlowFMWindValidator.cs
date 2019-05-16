@@ -12,7 +12,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
     {
         private const string subject = "Wind";
 
-        public static ValidationReport Validate(WaterFlowFMModel model)
+        public static ValidationReport Validate(WaterFlowFMModel.WaterFlowFMModel model)
         {
             var issues = new List<ValidationIssue>();
             foreach (IWindField windField in model.WindFields)

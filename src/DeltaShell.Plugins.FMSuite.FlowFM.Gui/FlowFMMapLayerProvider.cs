@@ -35,21 +35,23 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.FunctionStores;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 {
     public class FlowFMMapLayerProvider : IMapLayerProvider
     {
-        private static readonly ConditionalWeakTable<WaterFlowFMModel, FMSnappedFeaturesGroupLayerData> snappedGroupLayerDataMapping =
-            new ConditionalWeakTable<WaterFlowFMModel, FMSnappedFeaturesGroupLayerData>();
+        private static readonly ConditionalWeakTable<WaterFlowFMModel.WaterFlowFMModel, FMSnappedFeaturesGroupLayerData> snappedGroupLayerDataMapping =
+            new ConditionalWeakTable<WaterFlowFMModel.WaterFlowFMModel, FMSnappedFeaturesGroupLayerData>();
 
-        private static readonly ConditionalWeakTable<WaterFlowFMModel, FMOutputSnappedFeaturesGroupLayerData> outputSnappedGroupLayerDataMapping =
-            new ConditionalWeakTable<WaterFlowFMModel, FMOutputSnappedFeaturesGroupLayerData>();
+        private static readonly ConditionalWeakTable<WaterFlowFMModel.WaterFlowFMModel, FMOutputSnappedFeaturesGroupLayerData> outputSnappedGroupLayerDataMapping =
+            new ConditionalWeakTable<WaterFlowFMModel.WaterFlowFMModel, FMOutputSnappedFeaturesGroupLayerData>();
 
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(FlowFMMapLayerProvider));
 
-        private static readonly string ModelName = typeof (WaterFlowFMModel).Name;
+        private static readonly string ModelName = typeof (WaterFlowFMModel.WaterFlowFMModel).Name;
 
         public const string BoundariesLayerName = "Boundaries";
         public const string BoundaryConditionsLayerName = "Boundary Conditions";
@@ -65,7 +67,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         /// <returns>The layer that is created for the data object.</returns>
         public ILayer CreateLayer(object data, object parent)
         {
-            var waterFlowFmModel = data as WaterFlowFMModel;
+            var waterFlowFmModel = data as WaterFlowFMModel.WaterFlowFMModel;
             if (waterFlowFmModel != null)
             {
                 return new ModelGroupLayer { Name = waterFlowFmModel.Name, Model = waterFlowFmModel, NameIsReadOnly = true};
@@ -83,9 +85,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             }
 
             var feature2Ds = data as IEventedList<Feature2D>;
-            if (feature2Ds != null && parent is WaterFlowFMModel)
+            if (feature2Ds != null && parent is WaterFlowFMModel.WaterFlowFMModel)
             {
-                var fmModel = (WaterFlowFMModel) parent;
+                var fmModel = (WaterFlowFMModel.WaterFlowFMModel) parent;
                 if (Equals(feature2Ds, fmModel.Boundaries))
                 {
                     return new VectorLayer(BoundariesLayerName)
@@ -118,9 +120,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             }
 
             var allBoundaryConditionSets = data as IEventedList<BoundaryConditionSet>;
-            if (allBoundaryConditionSets != null && parent is WaterFlowFMModel)
+            if (allBoundaryConditionSets != null && parent is WaterFlowFMModel.WaterFlowFMModel)
             {
-                var fmModel = (WaterFlowFMModel) parent;
+                var fmModel = (WaterFlowFMModel.WaterFlowFMModel) parent;
                 var theme = CreateBoundaryConditionsTheme();
                 return new VectorLayer(BoundaryConditionsLayerName)
                     {
@@ -245,13 +247,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         /// </returns>
         public bool CanCreateLayerFor(object data, object parentObject)
         {
-            return data is WaterFlowFMModel
+            return data is WaterFlowFMModel.WaterFlowFMModel
                    || data is IGrouping<string, IFunction>
                    || data is FMMapFileFunctionStore
                    || data is FMHisFileFunctionStore
                    || data is FMClassMapFileFunctionStore
                    || data is ImportedFMNetFile
-                   || (data is IEventedList<BoundaryConditionSet> && parentObject is WaterFlowFMModel)
+                   || (data is IEventedList<BoundaryConditionSet> && parentObject is WaterFlowFMModel.WaterFlowFMModel)
                    || data is FMSnappedFeaturesGroupLayerData
                    || data is FMOutputSnappedFeaturesGroupLayerData
                    || data is CoverageDepthLayersList
@@ -268,11 +270,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         /// </returns>
         public IEnumerable<object> ChildLayerObjects(object data)
         {
-            var model = data as WaterFlowFMModel;
+            var model = data as WaterFlowFMModel.WaterFlowFMModel;
             if (model != null)
             {
                 var rootModel = GetRootModel(model);
-                if (rootModel == null || rootModel is WaterFlowFMModel || model.GetDataItemByValue(model.Area).LinkedTo == null)
+                if (rootModel == null || rootModel is WaterFlowFMModel.WaterFlowFMModel || model.GetDataItemByValue(model.Area).LinkedTo == null)
                 {
                     if( model.Area.Enclosures.Count > 0 )
                     {

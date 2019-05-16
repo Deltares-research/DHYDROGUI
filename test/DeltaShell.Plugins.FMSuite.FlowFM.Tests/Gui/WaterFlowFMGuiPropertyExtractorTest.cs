@@ -12,7 +12,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Test]
         public void CheckExtraction()
         {
-            var model = new WaterFlowFMModel();
+            var model = new WaterFlowFMModel.WaterFlowFMModel();
 
             var extractor = new WaterFlowFMGuiPropertyExtractor(model);
             var objectDescription = extractor.ExtractObjectDescription(new string[0]);
@@ -25,7 +25,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Test]
         public void CheckTooltips()
         {
-            var model = new WaterFlowFMModel();
+            var model = new WaterFlowFMModel.WaterFlowFMModel();
 
             var extractor = new WaterFlowFMGuiPropertyExtractor(model);
             var objectDescription = extractor.ExtractObjectDescription(new string[0]);

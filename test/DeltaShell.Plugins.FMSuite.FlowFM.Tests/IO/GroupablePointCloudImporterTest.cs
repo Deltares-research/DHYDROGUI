@@ -52,8 +52,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                     Action mainWindowShown = delegate
                     {
-                        app.Project.RootFolder.Add(new WaterFlowFMModel());
-                        var targetModel = app.Project.RootFolder.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
+                        app.Project.RootFolder.Add(new WaterFlowFMModel.WaterFlowFMModel());
+                        var targetModel = app.Project.RootFolder.Models.OfType<WaterFlowFMModel.WaterFlowFMModel>().FirstOrDefault();
                         Assert.IsNotNull(targetModel);
 
                         var dryPointsImporter =

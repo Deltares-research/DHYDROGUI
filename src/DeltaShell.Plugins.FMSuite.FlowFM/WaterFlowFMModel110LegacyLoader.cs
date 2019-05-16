@@ -25,10 +25,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         /// <param name="project"> The project. </param>
         public override void OnAfterProjectMigrated(Project project)
         {
-            IEnumerable<WaterFlowFMModel> existingFMModels =
-                project.RootFolder.GetAllItemsRecursive().OfType<WaterFlowFMModel>();
+            IEnumerable<WaterFlowFMModel.WaterFlowFMModel> existingFMModels =
+                project.RootFolder.GetAllItemsRecursive().OfType<WaterFlowFMModel.WaterFlowFMModel>();
 
-            foreach (WaterFlowFMModel waterFlowFmModel in existingFMModels)
+            foreach (WaterFlowFMModel.WaterFlowFMModel waterFlowFmModel in existingFMModels)
             {
                 DirectoryInfo projectDataDirectoryInfo =
                     RecursivelyGetDsProjDataDirectoryFromMduPath(project, waterFlowFmModel);
@@ -46,7 +46,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
 
-        private static void PerformDirectoryRestructuring(WaterFlowFMModel waterFlowFMModel, string oldWorkingDirPath)
+        private static void PerformDirectoryRestructuring(WaterFlowFMModel.WaterFlowFMModel waterFlowFMModel, string oldWorkingDirPath)
         {
             if (waterFlowFMModel.MduFilePath != waterFlowFMModel.MduSavePath)
             {
@@ -160,7 +160,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         }
 
         private static void CleanUpDirectories(DirectoryInfo projectDataDirectoryInfo,
-                                               WaterFlowFMModel waterFlowFmModel, string oldWorkingDir)
+                                               WaterFlowFMModel.WaterFlowFMModel waterFlowFmModel, string oldWorkingDir)
         {
             FileBasedUtils.CleanPersistentDirectories(projectDataDirectoryInfo, waterFlowFmModel);
             FileUtils.DeleteIfExists(oldWorkingDir);
@@ -168,7 +168,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         }
 
         private static DirectoryInfo RecursivelyGetDsProjDataDirectoryFromMduPath(
-            Project project, WaterFlowFMModel waterFlowFmModel)
+            Project project, WaterFlowFMModel.WaterFlowFMModel waterFlowFmModel)
         {
             string dsprojDataDirName = $"{project.Name}.dsproj_data";
             var projectDataDirectoryInfo = new DirectoryInfo(waterFlowFmModel.MduFilePath);

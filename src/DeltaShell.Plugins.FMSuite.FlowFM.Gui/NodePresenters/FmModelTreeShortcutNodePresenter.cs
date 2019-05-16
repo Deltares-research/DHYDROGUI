@@ -7,6 +7,7 @@ using DeltaShell.Plugins.FMSuite.Common.Gui.NodePresenters;
 using DeltaShell.Plugins.FMSuite.Common.Gui.RgfGrid;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
@@ -33,7 +34,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
             ReloadGrid(flowFmModel);
         }
 
-        private void ReloadGrid(WaterFlowFMModel model)
+        private void ReloadGrid(WaterFlowFMModel.WaterFlowFMModel model)
         {
             try
             {

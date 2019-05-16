@@ -91,7 +91,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
 
             var item = new List<IStructure1D>();
 
-            var fmModel = new WaterFlowFMModel();
+            var fmModel = new WaterFlowFMModel.WaterFlowFMModel();
             var exporter = new StructuresListExporter(StructuresListType.Gates)
             {
                 GetModelForList = input => fmModel
@@ -127,7 +127,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
 
             var item = new List<IStructure1D>();
 
-            var fmModel = new WaterFlowFMModel();
+            var fmModel = new WaterFlowFMModel.WaterFlowFMModel();
             var exporter = new StructuresListExporter(StructuresListType.Gates)
             {
                 GetModelForList = input => fmModel

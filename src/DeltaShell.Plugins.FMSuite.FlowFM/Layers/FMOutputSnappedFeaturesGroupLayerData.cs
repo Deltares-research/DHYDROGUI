@@ -32,7 +32,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Layers
             {"Sources", "_src"},
         };
 
-        public FMOutputSnappedFeaturesGroupLayerData(WaterFlowFMModel model)
+        public FMOutputSnappedFeaturesGroupLayerData(WaterFlowFMModel.WaterFlowFMModel model)
         {
             modelOutputSnappedFeaturesPath = model.OutputSnappedFeaturesPath;
             modelMduFilePath = model.MduFilePath;
