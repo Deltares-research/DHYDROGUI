@@ -852,5 +852,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         public event EventHandler AfterExecute;
 
         #endregion
+
+        public object WaveModel
+        {
+            // cannot actually return anything, because it's a dynamic enum
+            get => null;
+            private set
+            {
+                // empty, but just used for event bubbling
+            }
+        }
     }
 }
