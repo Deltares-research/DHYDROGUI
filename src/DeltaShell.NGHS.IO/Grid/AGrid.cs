@@ -248,5 +248,16 @@ namespace DeltaShell.NGHS.IO.Grid
 
             disposed = true;
         }
+        public virtual int[] GetMeshIds(UGridMeshType type)
+        {
+            int nMesh;
+            int[] meshIds;
+            var uGridApi = GetValidGridApi("Couldn\'t get number of mesh");
+            var ierr = uGridApi.GetNumberOfMeshByType(type, out nMesh);
+            ThrowIfError(ierr, "Couldn\'t get number of mesh");
+            ierr = GridApi.GetMeshIdsByMeshType(type, nMesh, out meshIds);
+            ThrowIfError(ierr, "Couldn\'t get mesh \'s");
+            return meshIds;
+        }
     }
 }

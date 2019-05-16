@@ -156,40 +156,59 @@ namespace DeltaShell.NGHS.IO.Grid
             // Note: Temporary solution - UGrid v2 will likely change the way the coordinate systems are written in the NetFile
             if (convention == GridApiDataSet.DataSetConventions.CONV_UGRID)
             {
-                string meshName;
+                var meshNames = new List<string>();
                 using (var uGrid = new UGrid(path))
                 {
-                    var ids = uGrid.GetMesh2DIds();
-                    meshName = uGrid.GetMeshName(ids[0]);
+                    var meshIds = new List<int>();
+
+                    foreach (var type in (UGridMeshType[]) Enum.GetValues(typeof(UGridMeshType)))
+                    {
+                        meshIds.AddRange(uGrid.GetMeshIds(type));
+                    }
+
+                    foreach (var id in meshIds)
+                    {
+                        meshNames.Add(uGrid.GetMeshName(meshIds[id]));
+                    }
                 }
-                if (string.IsNullOrEmpty(meshName))
+
+                if (!meshNames.Any())
                     return;
 
                 const string gridMappingAttributeName = "grid_mapping";
                 const string projectedCoordinateSystemAttributeValue = "projected_coordinate_system";
                 const string nodeZVariableName = "_node_z";
-
+                
                 NetCdfFile netCdfFile = null;
                 try
                 {
                     netCdfFile = NetCdfFile.OpenExisting(path, true);
-                    var netCdfVariable = netCdfFile.GetVariableByName(meshName + nodeZVariableName);
-                    if (netCdfVariable == null)
-                        return;
+                    foreach (var meshName in meshNames)
+                    {
 
-                    netCdfFile.ReDefine();
-                    // when updating the coordinate system in a UGrid file we must also update the grid-mapping attribute of the node_Z variable
-                    netCdfFile.AddAttribute(netCdfVariable, new NetCdfAttribute(gridMappingAttributeName, projectedCoordinateSystemAttributeValue));
+                        var netCdfVariable = netCdfFile.GetVariableByName(meshName + nodeZVariableName);
+                        if (netCdfVariable == null)
+                            return;
 
-                    netCdfFile.EndDefine();
-                    netCdfFile.Flush();
+                        netCdfFile.ReDefine();
+
+                        // When updating the coordinate system in a UGrid file
+                        // we must also update the grid-mapping attribute of only the node_Z variable
+                        // to refer to the coordinate system
+                        // This is because the CF commission is locked down on the node_x and node_y variables
+                        // and we can't set the grid_mapping attribute on these
+                        netCdfFile.AddAttribute(netCdfVariable,
+                            new NetCdfAttribute(gridMappingAttributeName, projectedCoordinateSystemAttributeValue));
+
+                        netCdfFile.EndDefine();
+                        netCdfFile.Flush();
+                    }
                 }
                 finally
                 {
                     netCdfFile?.Close();
                 }
             }
-
             NetFile.WriteCoordinateSystem(path, coordinateSystem);
         }
 
