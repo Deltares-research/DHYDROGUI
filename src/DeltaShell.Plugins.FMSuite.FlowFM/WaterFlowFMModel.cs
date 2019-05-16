@@ -52,7 +52,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private readonly IList<IDisposable> syncers = new List<IDisposable>();
         private readonly DimrRunner runner;
         private WaterFlowFMModelDefinition modelDefinition;
-        private IList<ExplicitValueConverterLookupItem> explicitValueConverterLookupItems;
 
         public WaterFlowFMModel() : this(null)
         {
