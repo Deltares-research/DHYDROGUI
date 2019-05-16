@@ -32,7 +32,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             {
                 new HydFileImporter().ImportItem(hydFile, model);
 
-                var subFilePath = Path.Combine(dataDir, "IntegrationTests", "Eutrof_simple.sub");
+                var subFilePath = Path.Combine(dataDir, "IntegrationTests", "Eutrof_simple_sobek.sub");
                 new SubFileImporter().Import(model.SubstanceProcessLibrary, subFilePath);
 
                 // Send the model to delwaq
@@ -98,7 +98,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             {
                 new HydFileImporter().ImportItem(hydFile, model);
 
-                var subFilePath = Path.Combine(dataDir, "IntegrationTests", "Eutrof_simple.sub");
+                var subFilePath = Path.Combine(dataDir, "IntegrationTests", "Eutrof_simple_fm.sub");
                 new SubFileImporter().Import(model.SubstanceProcessLibrary, subFilePath);
 
                 // Send the model to delwaq
