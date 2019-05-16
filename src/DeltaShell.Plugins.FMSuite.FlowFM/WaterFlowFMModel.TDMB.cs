@@ -22,6 +22,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 {
     public partial class WaterFlowFMModel
     {
+        private double previousProgress = 0;
+        private string progressText;
+
         [NoNotifyPropertyChange]
         public override DateTime StartTime
         {
@@ -346,6 +349,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 yield return Area.ObservationPoints;
                 yield return Area.ObservationCrossSections;
             }
+        }
+
+        private void ReportProgressText(string text = null)
+        {
+            progressText = text;
+            base.OnProgressChanged();
         }
     }
 }

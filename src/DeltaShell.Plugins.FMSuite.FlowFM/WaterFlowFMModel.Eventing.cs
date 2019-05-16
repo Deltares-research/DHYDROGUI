@@ -24,6 +24,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 {
     public partial class WaterFlowFMModel
     {
+        private bool updatingGroupName;
+
         private void SourcesAndSinksCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             var sourceAndSink = e.GetRemovedOrAddedItem() as SourceAndSink;
