@@ -52,9 +52,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private readonly IList<IDisposable> syncers = new List<IDisposable>();
         private readonly DimrRunner runner;
         private WaterFlowFMModelDefinition modelDefinition;
-
-        private int dirtyCounter; //tells NHibernate we need to be saved
-
         private IList<ExplicitValueConverterLookupItem> explicitValueConverterLookupItems;
 
         public WaterFlowFMModel() : this(null)
@@ -853,6 +850,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         #endregion
 
+        #region NHibernate
+
+        private int dirtyCounter; //tells NHibernate we need to be saved
+
         private void MarkDirty()
         {
             unchecked
@@ -860,6 +861,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 dirtyCounter++;
             } //unchecked is default, but its here to declare intent
         }
+
+        #endregion
+
 
         public Type SupportedRegionType => typeof(HydroArea);
 
