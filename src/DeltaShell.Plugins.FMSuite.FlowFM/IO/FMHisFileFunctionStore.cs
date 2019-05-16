@@ -344,7 +344,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                             });
                         }
                  
-                        return (MultiDimensionalArray<T>) cachedSimpleWeirArray;
+                        return (MultiDimensionalArray<T>) cachedGatesArray;
                     case "weirgens":
                         if (cachedSimpleWeirArray == null)
                         {

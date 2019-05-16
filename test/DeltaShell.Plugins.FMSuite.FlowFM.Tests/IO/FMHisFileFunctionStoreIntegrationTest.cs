@@ -24,31 +24,47 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var localMduFilePath = TestHelper.CreateLocalCopy(mduPath);
             var model = new WaterFlowFMModel(localMduFilePath);
 
-            //var weir = CreateSimpleWeir(model);
-            //model.Area.Weirs.Add(weir);
+            var gate = CreateGatedWeir(model);
+            model.Area.Weirs.Add(gate);
 
-            //var gate = CreateGatedWeir(model);
-            //model.Area.Weirs.Add(gate);
+            var pump = CreatePump(model);
+            model.Area.Pumps.Add(pump);
 
-            //var pump = CreatePump(model);
-            //model.Area.Pumps.Add(pump);
-
-            var gs = CreateGeneralStructure(model);
-            model.Area.Weirs.Add(gs);
+            var weir = CreateSimpleWeir(model);
+            model.Area.Weirs.Add(weir);
 
             //When
             ActivityRunner.RunActivity(model);
-            Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
 
             //Then
-            var dischargeFunction =
-                model.OutputHisFileStore.Functions.FirstOrDefault(f => f.Components[0].Name == "cross_section_discharge") as
-                    FeatureCoverage;
-            Assert.IsNotNull(dischargeFunction);
-            Assert.AreEqual(2, dischargeFunction.Arguments[1].Values.Count);
-
             GateFunctionsAndFeaturesArePresent(model);
             PumpFunctionsAndFeaturesArePresent(model);
+            WeirFunctionsAndFeaturesArePresent(model);
+        }
+
+        private void WeirFunctionsAndFeaturesArePresent(WaterFlowFMModel model)
+        {
+            var weirDischargeFunction = (FeatureCoverage)model.OutputHisFileStore.Functions.FirstOrDefault(f => f.Components.Any(c => c.Name == "weirgen_discharge"));
+            var weirCrestLevelFunction = (FeatureCoverage)model.OutputHisFileStore.Functions.FirstOrDefault(f => f.Components.Any(c => c.Name == "weirgen_crest_level"));
+            var weirCrestWidthFunction = (FeatureCoverage)model.OutputHisFileStore.Functions.FirstOrDefault(f => f.Components.Any(c => c.Name == "weirgen_crest_width"));
+            var weirWaterlevelUpFunction = (FeatureCoverage)model.OutputHisFileStore.Functions.FirstOrDefault(f => f.Components.Any(c => c.Name == "weirgen_s1up"));
+            var weirWaterLevelDownFunction = (FeatureCoverage)model.OutputHisFileStore.Functions.FirstOrDefault(f => f.Components.Any(c => c.Name == "weirgen_s1dn"));
+            Assert.IsNotNull(weirDischargeFunction, "The outputHisFileStore does not contain the weir discharge function");
+            Assert.IsNotNull(weirCrestLevelFunction, "The outputHisFileStore does not contain the weir crest level function");
+            Assert.IsNotNull(weirCrestWidthFunction, "The outputHisFileStore does not contain the weir crest width function");
+            Assert.IsNotNull(weirWaterlevelUpFunction, "The outputHisFileStore does not contain the weir water level up function");
+            Assert.IsNotNull(weirWaterLevelDownFunction, "The outputHisFileStore does not contain the weir water level down function");
+
+            var weirDischargeFeatures = weirDischargeFunction.Features;
+            var weirCrestLevelFeatures = weirCrestLevelFunction.Features;
+            var weirCrestWidthFeatures = weirCrestWidthFunction.Features;
+            var weirWaterLevelUpFeatures = weirWaterlevelUpFunction.Features;
+            var weirWaterLevelDownFeatures = weirWaterLevelDownFunction.Features;
+            Assert.That(weirDischargeFeatures.OfType<Weir2D>().Count(), Is.EqualTo(1), "The function does not contain any weir discharge features");
+            Assert.That(weirCrestLevelFeatures.OfType<Weir2D>().Count(), Is.EqualTo(1), "The function does not contain any weir crest level features");
+            Assert.That(weirCrestWidthFeatures.OfType<Weir2D>().Count(), Is.EqualTo(1), "The function does not contain any weir crest width features");
+            Assert.That(weirWaterLevelDownFeatures.OfType<Weir2D>().Count(), Is.EqualTo(1), "The function does not contain any weir water level up features");
+            Assert.That(weirWaterLevelUpFeatures.OfType<Weir2D>().Count(), Is.EqualTo(1), "The function does not contain any weir water level down features");
         }
 
         [Test]
@@ -110,15 +126,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         #region Helper methods
-        private void GeneralStructureFunctionsAndFeaturesArePresent(WaterFlowFMModel model)
-        {
-            var generalStructureFunction = (FeatureCoverage)model.OutputHisFileStore.Functions.FirstOrDefault(f => f.Components[0].Name == "general_structure_discharge");
-            Assert.IsNotNull(generalStructureFunction, "The general structure discharge function does not exist");
-
-            var generalStructureDischargeFeatures = generalStructureFunction.Features;
-            Assert.That(generalStructureDischargeFeatures.OfType<Weir2D>().Count(), Is.EqualTo(1), "The function does not contain any general structure discharge features");
-        }
-
         private static void PumpFunctionsAndFeaturesArePresent(WaterFlowFMModel model)
         {
             var pumpDischargeFunction = (FeatureCoverage) model.OutputHisFileStore.Functions.FirstOrDefault(f => f.Components.Any(c => c.Name == "pump_discharge"));
