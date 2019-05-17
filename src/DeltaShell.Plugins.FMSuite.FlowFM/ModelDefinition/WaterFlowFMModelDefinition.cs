@@ -138,15 +138,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 
         static WaterFlowFMModelDefinition()
         {
+            const string dflowfmCsvFileDirectoryName = "CsvFiles";
             const string dflowfmPropertiesCsvFileName = "dflowfm-properties.csv";
             const string dflowfmStructurePropertiesCsvFileName = "structure-properties.csv";
             const string dflowfmMorPropertiesCsvFileName = "dflowfm-mor-properties.csv";
+
             Assembly assembly = typeof(WaterFlowFMModelDefinition).Assembly;
             string assemblyLocation = assembly.Location;
             DirectoryInfo directoryInfo = new FileInfo(assemblyLocation).Directory;
             if (directoryInfo != null)
             {
-                string path = directoryInfo.FullName;
+                string path = Path.Combine(directoryInfo.FullName, dflowfmCsvFileDirectoryName);
                 string propertiesDefinitionFile = Path.Combine(path, dflowfmPropertiesCsvFileName);
                 ModelPropertySchema =
                     new ModelSchemaCsvFile().ReadModelSchema<WaterFlowFMPropertyDefinition>(propertiesDefinitionFile,

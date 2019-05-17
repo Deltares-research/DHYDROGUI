@@ -317,13 +317,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="dflowfm-mor-properties.csv">
+    <None Include="CsvFiles\dflowfm-mor-properties.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="dflowfm-properties.csv">
+    <None Include="CsvFiles\dflowfm-properties.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="structure-properties.csv">
+    <None Include="CsvFiles\structure-properties.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="toolboxes\Statistics.py">
