@@ -31,14 +31,14 @@
  *
  */
 
-using System;
-using System.IO;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.Grid;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using NetTopologySuite.Extensions.Grids;
+using System;
+using System.IO;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Api.TempImpl
 {

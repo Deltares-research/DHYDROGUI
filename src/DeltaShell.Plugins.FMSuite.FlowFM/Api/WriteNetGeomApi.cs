@@ -1,10 +1,10 @@
-﻿using System;
-using System.IO;
-using DelftTools.Utils.IO;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO;
+﻿using DelftTools.Utils.IO;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using log4net;
 using NetTopologySuite.Extensions.Grids;
+using System;
+using System.IO;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
 {

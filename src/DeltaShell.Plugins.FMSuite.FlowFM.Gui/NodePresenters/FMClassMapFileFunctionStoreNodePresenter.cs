@@ -1,7 +1,7 @@
 ﻿using DelftTools.Controls;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui.Swf;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.FunctionStores;
 using NetTopologySuite.Extensions.Coverages;
 using System.Collections;
 using System.Collections.Generic;
