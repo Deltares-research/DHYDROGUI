@@ -1,12 +1,9 @@
-using System;
-using System.Collections.Generic;
 using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.TestUtils;
-using DelftTools.Utils;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.Plugins.FMSuite.Common.IO;
@@ -15,6 +12,8 @@ using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using Rhino.Mocks;
+using System;
+using System.Collections.Generic;
 using Point = NetTopologySuite.Geometries.Point;
 
 
