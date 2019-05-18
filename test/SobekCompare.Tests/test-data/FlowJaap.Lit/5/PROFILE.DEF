@@ -1,6 +1,0 @@
-CRDS id 'Rectangle1' nm 'r_Width=20; Height=5' ty 0 wm 20 w1 0 w2 0 lt lw
-TBLE
-0  20  20 <
-5  20  20 <
-5.0001  .0001  .0001 <
-tble  crds
