@@ -117,7 +117,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             mduFile.WriteProperties(mduFilePath,
                                     fullExport ? model.ModelDefinition.Properties.ToList() : adjustedMduProperties,
                                     mduFileWriteConfig,
-                                    useNetCDFMapFormat: isPartOf1D2DModel);
+                                    useNetCdfMapFormat: isPartOf1D2DModel);
 
             TryInitializeApi();
         }
