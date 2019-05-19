@@ -1,0 +1,68 @@
+ Last residues before crash or continuation without
+ convergence. Each record contains:
+  - Time step number
+  - Iteration step number
+  - Maximum waterlevel residue with corresponding position
+  - Maximum discharge residue with corresponding position
+  
+ Time step =     1 Nr iter. = 500
+    Getijms2                       X=   9455.00 DH=  -0.00295
+    Getijms4                       X=  12564.00 DQ=    -3.152
+ Time step =     1 Nr iter. = 499
+    Getijms2                       X=   9455.00 DH=  -0.00298
+    Getijms4                       X=  12564.00 DQ=    -3.194
+ Time step =     1 Nr iter. = 498
+    Getijms2                       X=   9455.00 DH=  -0.00302
+    Getijms4                       X=  12564.00 DQ=    -3.237
+ Time step =     1 Nr iter. = 497
+    Getijms2                       X=   9455.00 DH=  -0.00306
+    Getijms4                       X=  12564.00 DQ=    -3.279
+ Time step =     1 Nr iter. = 496
+    Getijms2                       X=   9455.00 DH=  -0.00310
+    Getijms4                       X=  12564.00 DQ=    -3.324
+ Time step =     1 Nr iter. = 495
+    Getijms2                       X=   9455.00 DH=  -0.00314
+    Getijms4                       X=  12564.00 DQ=    -3.369
+ Time step =     1 Nr iter. = 494
+    Getijms2                       X=   9455.00 DH=  -0.00318
+    Getijms4                       X=  12564.00 DQ=    -3.415
+ Time step =     1 Nr iter. = 493
+    Getijms2                       X=   9455.00 DH=  -0.00322
+    Getijms4                       X=  12564.00 DQ=    -3.464
+ Time step =     1 Nr iter. = 492
+    Getijms2                       X=   9455.00 DH=  -0.00326
+    Getijms4                       X=  12564.00 DQ=    -3.510
+ Time step =     1 Nr iter. = 491
+    Getijms2                       X=   9455.00 DH=  -0.00330
+    Getijms4                       X=  12564.00 DQ=    -3.558
+ Time step =     1 Nr iter. = 490
+    Getijms2                       X=   9455.00 DH=  -0.00334
+    Getijms4                       X=  12564.00 DQ=    -3.606
+ Time step =     1 Nr iter. = 489
+    Getijms2                       X=   9455.00 DH=  -0.00338
+    Getijms4                       X=  12564.00 DQ=    -3.656
+ Time step =     1 Nr iter. = 488
+    Getijms2                       X=   9455.00 DH=  -0.00343
+    Getijms4                       X=  12564.00 DQ=    -3.707
+ Time step =     1 Nr iter. = 487
+    Getijms2                       X=   9455.00 DH=  -0.00347
+    Getijms4                       X=  12564.00 DQ=    -3.762
+ Time step =     1 Nr iter. = 486
+    Getijms2                       X=   9455.00 DH=  -0.00351
+    Getijms4                       X=  12564.00 DQ=    -3.836
+ Time step =     1 Nr iter. = 485
+    Getijms2                       X=   9455.00 DH=  -0.00355
+    Getijms4                       X=  12564.00 DQ=    -3.785
+ Time step =     1 Nr iter. = 484
+    Getijms1                       X=   9894.00 DH=  -0.00359
+    Getijms4                       X=  12564.00 DQ=    -3.833
+ Time step =     1 Nr iter. = 483
+    Getijms1                       X=   9894.00 DH=  -0.00364
+    Getijms4                       X=  12564.00 DQ=    -3.882
+ Time step =     1 Nr iter. = 482
+    Getijms1                       X=   9894.00 DH=  -0.00369
+    Getijms4                       X=  12564.00 DQ=    -3.931
+ Time step =     1 Nr iter. = 481
+    Getijms1                       X=   9894.00 DH=  -0.00374
+    Getijms4                       X=  12564.00 DQ=    -3.979
+  

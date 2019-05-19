@@ -251,41 +251,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             weir.CrestLevelTimeSeries[model.StopTime.AddSeconds(1)] = 5.5;
             return weir;
         }
-
-        private static Weir2D CreateGeneralStructure(WaterFlowFMModel model)
-        {
-            var generalStructure = new Weir2D("weir", true)
-            {
-                Geometry = new LineString(new[]
-                {
-                    new Coordinate(-149.1, -180.0),
-                    new Coordinate(-50.1, -180.0)
-                }),
-                WeirFormula = new GeneralStructureWeirFormula()
-                {
-                    UseHorizontalDoorOpeningWidthTimeSeries = true,
-                    UseLowerEdgeLevelTimeSeries = true
-                },
-                CrestLevel = 102.0,
-                CrestWidth = 42.0
-            };
-
-            var generalStructureWeirFormula = generalStructure.WeirFormula as GeneralStructureWeirFormula;
-
-            Assert.NotNull(generalStructureWeirFormula);
-
-            generalStructureWeirFormula.HorizontalDoorOpeningWidthTimeSeries[model.StartTime] = 0.0;
-            generalStructureWeirFormula.HorizontalDoorOpeningWidthTimeSeries[model.StartTime.AddHours(1)] = 0.0;
-            generalStructureWeirFormula.HorizontalDoorOpeningWidthTimeSeries[model.StartTime.AddHours(2)] = 25.0;
-            generalStructureWeirFormula.HorizontalDoorOpeningWidthTimeSeries[model.StopTime.AddSeconds(1)] = 25.0;
-
-            generalStructureWeirFormula.LowerEdgeLevelTimeSeries[model.StartTime] = 8.5;
-            generalStructureWeirFormula.LowerEdgeLevelTimeSeries[model.StartTime.AddHours(1)] = 6.5;
-            generalStructureWeirFormula.LowerEdgeLevelTimeSeries[model.StartTime.AddHours(2)] = 0.0;
-            generalStructureWeirFormula.LowerEdgeLevelTimeSeries[model.StopTime.AddSeconds(1)] = -10.0;
-
-            return generalStructure;
-        }
         #endregion
     }
 }

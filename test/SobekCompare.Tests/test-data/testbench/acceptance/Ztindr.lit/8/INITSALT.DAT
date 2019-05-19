@@ -1,0 +1,160 @@
+GLIN STIN id '-1' nm 'initial salt' ci '-1' ty 0 co co 0 0.2 stin glin
+STIN id 'R_0' nm 'initial salt' ci 'R_0' ty 0 co co 0 0.4 stin
+STIN id 'R_2' nm 'initial salt' ci 'R_2' ty 0 co co 0 0.4 stin
+STIN id 'R_1' nm 'initial salt' ci 'R_1' ty 0 co co 0 0.4 stin
+STIN id 'R_3' nm 'initial salt' ci 'R_3' ty 0 co co 0 0.4 stin
+STIN id 'R_5' nm 'initial salt' ci 'R_5' ty 0 co co 0 0.4 stin
+STIN id 'R_6' nm 'initial salt' ci 'R_6' ty 0 co co 0 0.4 stin
+STIN id 'R_7' nm 'initial salt' ci 'R_7' ty 0 co co 0 0.4 stin
+STIN id 'R_8' nm 'initial salt' ci 'R_8' ty 0 co co 0 0.4 stin
+STIN id 'R_9' nm 'initial salt' ci 'R_9' ty 0 co co 0 0.4 stin
+STIN id 'R_10' nm 'initial salt' ci 'R_10' ty 0 co co 0 0.4 stin
+STIN id 'R_11' nm 'initial salt' ci 'R_11' ty 0 co co 1 PDIN 0 0 '' pdin
+TBLE
+0 0.4 <
+1741 0.4 <
+tble stin
+STIN id 'R_12' nm 'initial salt' ci 'R_12' ty 0 co co 0 0.4 stin
+STIN id 'R_13' nm 'initial salt' ci 'R_13' ty 0 co co 0 0.4 stin
+STIN id 'R_14' nm 'initial salt' ci 'R_14' ty 0 co co 1 PDIN 0 0 '' pdin
+TBLE
+0 0.4 <
+2016 0.4 <
+tble stin
+STIN id 'R_15' nm 'initial salt' ci 'R_15' ty 0 co co 0 0.4 stin
+STIN id 'R_16' nm 'initial salt' ci 'R_16' ty 0 co co 1 PDIN 0 0 '' pdin
+TBLE
+0 0.4 <
+3076 0.4 <
+tble stin
+STIN id 'R_17' nm 'initial salt' ci 'R_17' ty 0 co co 0 0.4 stin
+STIN id 'R_18' nm 'initial salt' ci 'R_18' ty 1 co co 1 PDIN 0 0 '' pdin
+TBLE
+0 0.4 <
+2077 0.4 <
+tble stin
+STIN id 'R_19' nm 'initial salt' ci 'R_19' ty 0 co co 0 0.4 stin
+STIN id 'R_20' nm 'initial salt' ci 'R_20' ty 0 co co 0 0.4 stin
+STIN id 'R_21' nm 'initial salt' ci 'R_21' ty 0 co co 0 0.4 stin
+STIN id 'R_22' nm 'initial salt' ci 'R_22' ty 0 co co 0 0.4 stin
+STIN id 'R_23' nm 'initial salt' ci 'R_23' ty 0 co co 0 0.4 stin
+STIN id 'R_24' nm 'initial salt' ci 'R_24' ty 0 co co 0 0.4 stin
+STIN id 'R_25' nm 'initial salt' ci 'R_25' ty 0 co co 0 0.4 stin
+STIN id 'R_26' nm 'initial salt' ci 'R_26' ty 0 co co 0 0.4 stin
+STIN id 'R_27' nm 'initial salt' ci 'R_27' ty 0 co co 0 0.4 stin
+STIN id 'R_28' nm 'initial salt' ci 'R_28' ty 0 co co 1 PDIN 0 0 '' pdin
+TBLE
+0 0.4 <
+2114 0.4 <
+tble stin
+STIN id 'R_29' nm 'initial salt' ci 'R_29' ty 0 co co 1 PDIN 0 0 '' pdin
+TBLE
+0 0.4 <
+18109 0.4 <
+tble stin
+STIN id 'R_33' nm 'initial salt' ci 'R_33' ty 0 co co 0 0.4 stin
+STIN id 'R_34' nm 'initial salt' ci 'R_34' ty 0 co co 0 0.4 stin
+STIN id 'R_35' nm 'initial salt' ci 'R_35' ty 0 co co 0 0.4 stin
+STIN id 'R_36' nm 'initial salt' ci 'R_36' ty 0 co co 0 0.4 stin
+STIN id 'R_37' nm 'initial salt' ci 'R_37' ty 0 co co 0 0.4 stin
+STIN id 'R_38' nm 'initial salt' ci 'R_38' ty 0 co co 0 0.4 stin
+STIN id 'R_43' nm 'initial salt' ci 'R_43' ty 0 co co 0 0.4 stin
+STIN id 'R_44' nm 'initial salt' ci 'R_44' ty 0 co co 0 0.4 stin
+STIN id 'R_45' nm 'initial salt' ci 'R_45' ty 0 co co 0 0.4 stin
+STIN id 'R_46' nm 'initial salt' ci 'R_46' ty 0 co co 0 0.4 stin
+STIN id 'R_47' nm 'initial salt' ci 'R_47' ty 0 co co 0 0.4 stin
+STIN id 'R_49' nm 'initial salt' ci 'R_49' ty 0 co co 0 0.4 stin
+STIN id 'R_48' nm 'initial salt' ci 'R_48' ty 0 co co 0 0.4 stin
+STIN id 'R_50' nm 'initial salt' ci 'R_50' ty 0 co co 0 0.4 stin
+STIN id 'R_51' nm 'initial salt' ci 'R_51' ty 0 co co 0 0.4 stin
+STIN id 'R_52' nm 'initial salt' ci 'R_52' ty 0 co co 0 0.4 stin
+STIN id 'R_53' nm 'initial salt' ci 'R_53' ty 0 co co 0 0.4 stin
+STIN id 'R_55' nm 'initial salt' ci 'R_55' ty 0 co co 0 0.4 stin
+STIN id 'R_56' nm 'initial salt' ci 'R_56' ty 0 co co 0 0.4 stin
+STIN id 'R_57' nm 'initial salt' ci 'R_57' ty 0 co co 0 0.4 stin
+STIN id 'R_58' nm 'initial salt' ci 'R_58' ty 0 co co 0 0.4 stin
+STIN id 'R_73' nm 'initial salt' ci 'R_73' ty 0 co co 0 0.4 stin
+STIN id 'R_75' nm 'initial salt' ci 'R_75' ty 0 co co 0 0.4 stin
+STIN id 'R_76' nm 'initial salt' ci 'R_76' ty 0 co co 0 0.4 stin
+STIN id 'R_77' nm 'initial salt' ci 'R_77' ty 0 co co 0 0.4 stin
+STIN id 'R_78' nm 'initial salt' ci 'R_78' ty 0 co co 0 0.4 stin
+STIN id 'R_80' nm 'initial salt' ci 'R_80' ty 0 co co 0 0.4 stin
+STIN id 'R_83' nm 'initial salt' ci 'R_83' ty 0 co co 0 0.4 stin
+STIN id 'R_84' nm 'initial salt' ci 'R_84' ty 0 co co 0 0.4 stin
+STIN id 'R_86' nm 'initial salt' ci 'R_86' ty 0 co co 0 0.4 stin
+STIN id 'R_87' nm 'initial salt' ci 'R_87' ty 0 co co 0 0.4 stin
+STIN id 'R_88' nm 'initial salt' ci 'R_88' ty 0 co co 0 0.4 stin
+STIN id 'R_89' nm 'initial salt' ci 'R_89' ty 0 co co 0 0.4 stin
+STIN id 'R_90' nm 'initial salt' ci 'R_90' ty 0 co co 0 0.4 stin
+STIN id 'R_91' nm 'initial salt' ci 'R_91' ty 0 co co 0 0.4 stin
+STIN id 'R_92' nm 'initial salt' ci 'R_92' ty 0 co co 0 0.4 stin
+STIN id 'R_93' nm 'initial salt' ci 'R_93' ty 0 co co 0 0.4 stin
+STIN id 'R_95' nm 'initial salt' ci 'R_95' ty 0 co co 0 0.4 stin
+STIN id 'R_96' nm 'initial salt' ci 'R_96' ty 0 co co 0 0.4 stin
+STIN id 'R_97' nm 'initial salt' ci 'R_97' ty 0 co co 0 0.4 stin
+STIN id 'R_98' nm 'initial salt' ci 'R_98' ty 0 co co 1 PDIN 0 0 '' pdin
+TBLE
+0 0.4 <
+6411 0.4 <
+6412 0.4 <
+6611 0.4 <
+tble stin
+STIN id 'R_100' nm 'initial salt' ci 'R_100' ty 0 co co 0 0.4 stin
+STIN id 'R_101' nm 'initial salt' ci 'R_101' ty 0 co co 0 0.4 stin
+STIN id 'R_102' nm 'initial salt' ci 'R_102' ty 0 co co 0 0.4 stin
+STIN id 'R_103' nm 'initial salt' ci 'R_103' ty 0 co co 0 0.4 stin
+STIN id 'R_104' nm 'initial salt' ci 'R_104' ty 0 co co 0 0.4 stin
+STIN id 'R_106' nm 'initial salt' ci 'R_106' ty 0 co co 0 0.4 stin
+STIN id 'R_105' nm 'initial salt' ci 'R_105' ty 0 co co 0 0.4 stin
+STIN id 'R_107' nm 'initial salt' ci 'R_107' ty 0 co co 0 0.4 stin
+STIN id 'R_109' nm 'initial salt' ci 'R_109' ty 0 co co 0 0.4 stin
+STIN id 'R_110' nm 'initial salt' ci 'R_110' ty 0 co co 0 0.4 stin
+STIN id 'R_111' nm 'initial salt' ci 'R_111' ty 0 co co 0 0.4 stin
+STIN id 'R_113' nm 'initial salt' ci 'R_113' ty 0 co co 0 0.4 stin
+STIN id 'R_4066' nm 'initial salt' ci 'R_4066' ty 0 co co 0 0.4 stin
+STIN id 'R_4067' nm 'initial salt' ci 'R_4067' ty 0 co co 0 0.4 stin
+STIN id 'R_9445' nm 'initial salt' ci 'R_9445' ty 0 co co 0 0.4 stin
+STIN id 'R_14478' nm 'initial salt' ci 'R_14478' ty 0 co co 0 0.4 stin
+STIN id 'R_P_P_63' nm 'initial salt' ci 'R_P_P_63' ty 0 co co 0 0.4 stin
+STIN id 'R_P_P_23051' nm 'initial salt' ci 'R_P_P_23051' ty 0 co co 0 0.4 stin
+STIN id 'R_P_P_5582704' nm 'initial salt' ci 'R_P_P_5582704' ty 0 co co 0 0.4 stin
+STIN id 'R_P_P_5582705' nm 'initial salt' ci 'R_P_P_5582705' ty 0 co co 0 0.4 stin
+STIN id 'R_P_P_5581286' nm 'initial salt' ci 'R_P_P_5581286' ty 0 co co 0 0.4 stin
+STIN id 'R_P_P_5582718' nm 'initial salt' ci 'R_P_P_5582718' ty 0 co co 0 0.4 stin
+STIN id 'R_P_P_5582721' nm 'initial salt' ci 'R_P_P_5582721' ty 0 co co 0 0.4 stin
+STIN id 'R_P_P_P_54' nm 'initial salt' ci 'R_P_P_P_54' ty 0 co co 0 0.4 stin
+STIN id 'R_P_P_5579897' nm 'initial salt' ci 'R_P_P_5579897' ty 0 co co 0 0.4 stin
+STIN id 'R_P_P_5582714' nm 'initial salt' ci 'R_P_P_5582714' ty 0 co co 0 0.4 stin
+STIN id 'R_P_P_P_74' nm 'initial salt' ci 'R_P_P_P_74' ty 0 co co 0 0.4 stin
+STIN id 'R_P_P_5582709' nm 'initial salt' ci 'R_P_P_5582709' ty 0 co co 0 0.4 stin
+STIN id 'R_P_P_5581291' nm 'initial salt' ci 'R_P_P_5581291' ty 0 co co 0 0.4 stin
+STIN id 'R_P_P_5579909' nm 'initial salt' ci 'R_P_P_5579909' ty 0 co co 0 0.4 stin
+STIN id 'R_5579416' nm 'initial salt' ci 'R_5579416' ty 0 co co 0 0.4 stin
+STIN id 'R_5579425' nm 'initial salt' ci 'R_5579425' ty 0 co co 0 0.4 stin
+STIN id 'R_5579434' nm 'initial salt' ci 'R_5579434' ty 0 co co 0 0.4 stin
+STIN id 'R_5585170' nm 'initial salt' ci 'R_5585170' ty 0 co co 0 0.4 stin
+STIN id 'R_P_5586721' nm 'initial salt' ci 'R_P_5586721' ty 0 co co 0 0.4 stin
+STIN id 'R_P_5586722' nm 'initial salt' ci 'R_P_5586722' ty 0 co co 0 0.4 stin
+STIN id 'R_P_5586723' nm 'initial salt' ci 'R_P_5586723' ty 0 co co 0 0.4 stin
+STIN id 'R_P_5586720' nm 'initial salt' ci 'R_P_5586720' ty 0 co co 0 0.4 stin
+STIN id 'R_P_P_P_5582700' nm 'initial salt' ci 'R_P_P_P_5582700' ty 0 co co 0 0.4 stin
+STIN id 'R_P_P_P_5582707' nm 'initial salt' ci 'R_P_P_P_5582707' ty 0 co co 0 0.4 stin
+STIN id 'R_P_5598164' nm 'initial salt' ci 'R_P_5598164' ty 0 co co 0 0.4 stin
+STIN id 'R_5591112' nm 'initial salt' ci 'R_5591112' ty 0 co co 0 0.4 stin
+STIN id 'R_5591122' nm 'initial salt' ci 'R_5591122' ty 0 co co 0 0.4 stin
+STIN id 'R_5591132' nm 'initial salt' ci 'R_5591132' ty 0 co co 0 0.4 stin
+STIN id 'R_5594767' nm 'initial salt' ci 'R_5594767' ty 0 co co 0 0.4 stin
+STIN id 'R_P_P_P_5582715' nm 'initial salt' ci 'R_P_P_P_5582715' ty 0 co co 0 0.4 stin
+STIN id 'R_P_5610761' nm 'initial salt' ci 'R_P_5610761' ty 0 co co 0 0.4 stin
+STIN id 'R_P_5610771' nm 'initial salt' ci 'R_P_5610771' ty 0 co co 0 0.4 stin
+STIN id 'R_P_5614026' nm 'initial salt' ci 'R_P_5614026' ty 0 co co 0 0.4 stin
+STIN id 'R_P_5614027' nm 'initial salt' ci 'R_P_5614027' ty 0 co co 0 0.4 stin
+STIN id 'R_P_5614028' nm 'initial salt' ci 'R_P_5614028' ty 0 co co 0 0.4 stin
+STIN id 'R_P_4' nm 'initial salt' ci 'R_P_4' ty 0 co co 0 0.4 stin
+STIN id 'R_P_108' nm 'initial salt' ci 'R_P_108' ty 0 co co 1 PDIN 0 0 '' pdin
+TBLE
+0 0.4 <
+7472 0.4 <
+tble stin
+STIN id 'R_P_P_P_P_5582702' nm 'initial salt' ci 'R_P_P_P_P_5582702' ty 0 co co 0 0.4 stin
+STIN id 'R_P_P_5683144' nm 'initial salt' ci 'R_P_P_5683144' ty 0 co co 0 0.4 stin

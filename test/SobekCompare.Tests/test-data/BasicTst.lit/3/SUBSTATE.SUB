@@ -1,0 +1,7 @@
+substance 'Cl' active
+   description        'Chloride'
+   concentration-unit '(g/m3)'
+   waste-load-unit    '-'
+end-substance
+active-processes
+end-active-processes
