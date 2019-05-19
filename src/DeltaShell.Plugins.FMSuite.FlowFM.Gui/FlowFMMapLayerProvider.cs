@@ -35,6 +35,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using SharpMap.Api;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 {
@@ -47,9 +48,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             new ConditionalWeakTable<WaterFlowFMModel, FMOutputSnappedFeaturesGroupLayerData>();
 
 
-        private static readonly ILog Log = LogManager.GetLogger(typeof(FlowFMMapLayerProvider));
+        private static readonly ILog log = LogManager.GetLogger(typeof(FlowFMMapLayerProvider));
 
-        private static readonly string ModelName = typeof (WaterFlowFMModel).Name;
+        private static readonly string modelName = typeof (WaterFlowFMModel).Name;
 
         public const string BoundariesLayerName = "Boundaries";
         public const string BoundaryConditionsLayerName = "Boundary Conditions";
@@ -91,7 +92,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     return new VectorLayer(BoundariesLayerName)
                         {
                             DataSource =
-                                new Feature2DCollection().Init(feature2Ds, "Boundary", ModelName, fmModel.CoordinateSystem),
+                                new Feature2DCollection().Init(feature2Ds, "Boundary", modelName, fmModel.CoordinateSystem),
                             FeatureEditor =
                                 new Boundary2DEditor(fmModel)
                                     {
@@ -107,13 +108,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     return new VectorLayer(SourcesAndSinksLayerName)
                         {
                             DataSource =
-                                new Feature2DCollection().Init(feature2Ds, "SourceSink", ModelName, fmModel.CoordinateSystem),
+                                new Feature2DCollection().Init(feature2Ds, "SourceSink", modelName, fmModel.CoordinateSystem),
                             FeatureEditor =
                                 new Feature2DEditor(fmModel),
                             Style = AreaLayerStyles.SourcesAndSinksStyle,
                             NameIsReadOnly = true,
                             CustomRenderers =
-                                new[] {new ArrowLineStringAdornerRenderer {Orientation = Orientation.Forward, Opacity = 1}},
+                                new IFeatureRenderer[] {new ArrowLineStringAdornerRenderer {Orientation = Orientation.Forward, Opacity = 1}},
                             ShowInLegend = false
                         };
                 }
@@ -126,7 +127,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 var theme = CreateBoundaryConditionsTheme();
                 return new VectorLayer(BoundaryConditionsLayerName)
                     {
-                        DataSource = new Feature2DCollection().Init(allBoundaryConditionSets, "BoundaryCondition", ModelName, fmModel.CoordinateSystem),
+                        DataSource = new Feature2DCollection().Init(allBoundaryConditionSets, "BoundaryCondition", modelName, fmModel.CoordinateSystem),
                         Theme = theme,
                         Style = (VectorStyle) theme.DefaultStyle,
                         NameIsReadOnly = true,
@@ -188,7 +189,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                             DataSource = snappedFeatures,
                             Selectable = false,
                             NameIsReadOnly = true,
-                            ShowInLegend = false
                         };
                     groupLayer.Layers.Add(layer);
                     snappedFeatures.Layer = layer;
@@ -284,7 +284,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                             var geoAsPol = enclosure.Geometry as Polygon;
                             if( geoAsPol == null || !geoAsPol.IsValid)
                             {
-                                Log.WarnFormat(Resources.WaterFlowFMEnclosureValidator_Validate_Drawn_polygon_not__0__not_valid, enclosure.Name);
+                                log.WarnFormat(Resources.WaterFlowFMEnclosureValidator_Validate_Drawn_polygon_not__0__not_valid, enclosure.Name);
                             }
                         }
                     }
