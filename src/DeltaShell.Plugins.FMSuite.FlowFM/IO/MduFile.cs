@@ -25,8 +25,6 @@ using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Geometries;
 using SharpMap;
 using SharpMap.Api.SpatialOperations;
-using static System.IO.Path;
-using static DelftTools.Utils.NamingHelper;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
@@ -171,7 +169,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             if (config.WriteFeatures)
             {
-                WriteAreaFeatures(targetMduFilePath, modelDefinition, hydroArea, allFixedWeirsAndCorrespondingProperties);
+                WriteAreaFeatures(targetMduFilePath, modelDefinition, hydroArea, allFixedWeirsAndCorrespondingProperties.ToList());
             }
 
             if (config.WriteExtForcings)
@@ -267,7 +265,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private static string VerifyTargetDirectory(string targetMduFilePath)
         {
-            var targetDir = GetDirectoryName(targetMduFilePath);
+            var targetDir = System.IO.Path.GetDirectoryName(targetMduFilePath);
             if (targetDir != string.Empty && !Directory.Exists(targetDir))
             {
                 throw new Exception("Non existing directory in file path: " + targetMduFilePath);
@@ -289,13 +287,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 if (File.Exists(sourceFile) && targetFile != null)
                 {
-                    var targetNcDir = GetDirectoryName(targetFile);
+                    var targetNcDir = System.IO.Path.GetDirectoryName(targetFile);
                     Directory.CreateDirectory(targetNcDir ?? throw new InvalidOperationException());
 
                     var fullSourcePath =
-                        string.IsNullOrEmpty(sourceFile) ? string.Empty : GetFullPath(sourceFile);
+                        string.IsNullOrEmpty(sourceFile) ? string.Empty : System.IO.Path.GetFullPath(sourceFile);
                     var fullTargetPath =
-                        string.IsNullOrEmpty(targetFile) ? string.Empty : GetFullPath(targetFile);
+                        string.IsNullOrEmpty(targetFile) ? string.Empty : System.IO.Path.GetFullPath(targetFile);
 
                     if (fullSourcePath.ToLower() != fullTargetPath.ToLower())
                     {
@@ -337,7 +335,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
                 if (relativeSourcePath == null) continue;
 
-                var relativeTargetPath = GetFileName(relativeSourcePath);
+                var relativeTargetPath = System.IO.Path.GetFileName(relativeSourcePath);
 
                 if (relativeSourcePath != relativeTargetPath)
                 {
@@ -347,17 +345,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                             relativeTargetPath);
                 }
 
-                var absoluteSourcePath = Combine(GetDirectoryName(Path) ?? throw new InvalidOperationException(), relativeSourcePath);
-                var absoluteTargetPath = Combine(targetDir, relativeTargetPath);
+                var absoluteSourcePath = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Path) ?? throw new InvalidOperationException(), relativeSourcePath);
+                var absoluteTargetPath = System.IO.Path.Combine(targetDir, relativeTargetPath);
 
                 if (File.Exists(absoluteSourcePath))
                 {
                     var fullAbsoluteSourcePath = string.IsNullOrEmpty(absoluteSourcePath)
                         ? string.Empty
-                        : GetFullPath(absoluteSourcePath);
+                        : System.IO.Path.GetFullPath(absoluteSourcePath);
                     var fullAbsoluteTargetPath = string.IsNullOrEmpty(absoluteTargetPath)
                         ? string.Empty
-                        : GetFullPath(absoluteTargetPath);
+                        : System.IO.Path.GetFullPath(absoluteTargetPath);
                     if (fullAbsoluteSourcePath != fullAbsoluteTargetPath)
                     {
                         File.Copy(absoluteSourcePath, absoluteTargetPath, true);
@@ -369,12 +367,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private void WriteExternalForcings(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition,
             HydroArea hydroArea)
         {
-            var exportDirectory = GetDirectoryName(targetMduFilePath);
+            var exportDirectory = System.IO.Path.GetDirectoryName(targetMduFilePath);
 
             var extFileName = modelDefinition.GetModelProperty(KnownProperties.ExtForceFile).GetValueAsString();
             if (string.IsNullOrEmpty(extFileName))
                 extFileName = modelDefinition.ModelName + ExtForceFile.Extension;
-            var extForceFilePath = Combine(exportDirectory ?? throw new InvalidOperationException(), extFileName);
+            var extForceFilePath = System.IO.Path.Combine(exportDirectory ?? throw new InvalidOperationException(), extFileName);
 
             if (ExternalForcingsFile == null)
             {
@@ -401,8 +399,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 var bndExtFileName =
                     modelDefinition.GetModelProperty(KnownProperties.BndExtForceFile).GetValueAsString();
                 if (string.IsNullOrEmpty(bndExtFileName))
-                    bndExtFileName = GetFileNameWithoutExtension(extFileName) + "_bnd" + ExtForceFile.Extension;
-                var bndExtForceFilePath = Combine(exportDirectory, bndExtFileName);
+                    bndExtFileName = System.IO.Path.GetFileNameWithoutExtension(extFileName) + "_bnd" + ExtForceFile.Extension;
+                var bndExtForceFilePath = System.IO.Path.Combine(exportDirectory, bndExtFileName);
 
                 if (BoundaryExternalForcingsFile == null)
                 {
@@ -419,10 +417,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private void WriteMorSedFiles(string mduPath, WaterFlowFMModelDefinition modelDefinition, ISedimentModelData sedimentModelData)
         {
-            var morPath = ChangeExtension(mduPath, "mor");
+            var morPath = System.IO.Path.ChangeExtension(mduPath, "mor");
             MorphologyFile.Save(morPath, modelDefinition);
 
-            var sedPath = ChangeExtension(mduPath, "sed");
+            var sedPath = System.IO.Path.ChangeExtension(mduPath, "sed");
             if (sedimentModelData != null) SedimentFile.Save(sedPath, modelDefinition, sedimentModelData);
         }
 
@@ -555,7 +553,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             if (modelDefinition == null) return;
 
-            var targetDirPath = GetDirectoryName(mduFilePath);
+            var targetDirPath = System.IO.Path.GetDirectoryName(mduFilePath);
             var targetMorFilePath = ReplaceMduExtension(mduFilePath, MorphologyExtension);
             var targetSedFilePath = ReplaceMduExtension(mduFilePath, SedimentExtension);
 
@@ -570,19 +568,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     StringComparison.InvariantCultureIgnoreCase));
             var sedFilePropValue = sedFileProperty != null ? sedFileProperty.GetValueAsString() : string.Empty;
 
-            var currentMorFilePath = Combine(targetDirPath ?? throw new InvalidOperationException(), morFilePropValue);
-            var currentSedFilePath = Combine(targetDirPath, sedFilePropValue);
+            var currentMorFilePath = System.IO.Path.Combine(targetDirPath ?? throw new InvalidOperationException(), morFilePropValue);
+            var currentSedFilePath = System.IO.Path.Combine(targetDirPath, sedFilePropValue);
 
             if (currentMorFilePath != targetMorFilePath)
             {
                 if (morFilePropValue != String.Empty) FileUtils.DeleteIfExists(currentMorFilePath);
-                SetValueToPropertyIfExists(waterFlowFmProperties, KnownProperties.MorFile, GetFileName(targetMorFilePath));
+                SetValueToPropertyIfExists(waterFlowFmProperties, KnownProperties.MorFile, System.IO.Path.GetFileName(targetMorFilePath));
             }
 
             if (currentSedFilePath != targetSedFilePath)
             {
                 if (sedFilePropValue != string.Empty) FileUtils.DeleteIfExists(currentSedFilePath);
-                SetValueToPropertyIfExists(waterFlowFmProperties, KnownProperties.SedFile, GetFileName(targetSedFilePath));
+                SetValueToPropertyIfExists(waterFlowFmProperties, KnownProperties.SedFile, System.IO.Path.GetFileName(targetSedFilePath));
             }
         }
 
@@ -634,12 +632,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
                 foreach (var filePath in featuresFilePaths)
                 {
-                    var fileName = FileUtils.GetRelativePath(GetDirectoryName(targetMduFilePath), filePath, true);
+                    var fileName = FileUtils.GetRelativePath(System.IO.Path.GetDirectoryName(targetMduFilePath), filePath, true);
                     var fileNameWithoutExtension = string.IsNullOrEmpty(extension) ? fileName : fileName.Replace(extension, string.Empty);
                     var groupFeatures = grouping.FirstOrDefault(g => g.Key.ToLowerInvariant().Equals(fileName.ToLowerInvariant())
                         || g.Key.ToLowerInvariant().Equals(fileNameWithoutExtension.ToLowerInvariant())
                         || !string.IsNullOrEmpty(extension)
-                            && g.Key.ToLowerInvariant().Replace(GetExtension(extension), string.Empty).Equals(fileNameWithoutExtension.ToLowerInvariant()));
+                            && g.Key.ToLowerInvariant().Replace(System.IO.Path.GetExtension(extension), string.Empty).Equals(fileNameWithoutExtension.ToLowerInvariant()));
                     var featuresToWrite = grouping.Count > 0 && groupFeatures != null
                         ? groupFeatures.Cast<TFeat>().ToList()
                         : features;
@@ -655,19 +653,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private static void InitializeFeatureWriter<TFeat>(string targetMduFilePath, IList<TFeat> features, string extension,
             WaterFlowFMProperty waterFlowFmProperty, out List<IGrouping<string, IGroupableFeature>> grouping, params string[] alternativeExtensions)
         {
-            var defaultGroup = GetFileNameWithoutExtension(targetMduFilePath);
+            var defaultGroup = System.IO.Path.GetFileNameWithoutExtension(targetMduFilePath);
             MduFileHelper.UpdateFeatures(features, extension, defaultGroup);
             var writeToRelativeFilePaths = MduFileHelper.GetUniqueFilePathsForWindows(targetMduFilePath, features, extension, alternativeExtensions).Where(fp => MduFileHelper.IsValidFilePath(fp, targetMduFilePath));
 
             grouping = features.OfType<IGroupableFeature>().GroupBy(f => f.GroupName, StringComparer.InvariantCultureIgnoreCase).ToList();
 
-            waterFlowFmProperty.SetValueAsString(string.Join(" ", writeToRelativeFilePaths.Select(f => HasExtension(f) ? f : string.Concat(f, extension))));
+            waterFlowFmProperty.SetValueAsString(string.Join(" ", writeToRelativeFilePaths.Select(f => System.IO.Path.HasExtension(f) ? f : string.Concat(f, extension))));
         }
 
         private static void AddDryAreasToWriter(string targetMduFilePath, IList<GroupableFeature2DPolygon> features, string extension,
             WaterFlowFMProperty waterFlowFmProperty, out List<IGrouping<string, IGroupableFeature>> grouping)
         {
-            var defaultGroup = GetFileNameWithoutExtension(targetMduFilePath);
+            var defaultGroup = System.IO.Path.GetFileNameWithoutExtension(targetMduFilePath);
             MduFileHelper.UpdateFeatures(features, extension, defaultGroup);
             var writeToRelativeFilePaths = MduFileHelper.GetUniqueFilePathsForWindows(targetMduFilePath, features, extension).Where(fp => MduFileHelper.IsValidFilePath(fp, targetMduFilePath)).ToList();
 
@@ -676,7 +674,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             if (writeToRelativeFilePaths.Any())
             {
                 var currentStringValue = waterFlowFmProperty.GetValueAsString();
-                waterFlowFmProperty.SetValueAsString(currentStringValue + " " + string.Join(" ", writeToRelativeFilePaths.Select(f => HasExtension(f)
+                waterFlowFmProperty.SetValueAsString(currentStringValue + " " + string.Join(" ", writeToRelativeFilePaths.Select(f => System.IO.Path.HasExtension(f)
                                                                  ? f
                                                                  : string.Concat(f, extension))));
             }
@@ -702,13 +700,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     if (featuresFilePath.EndsWith(DryPointExtension))
                     {
                         // Create the directory to which the file is being written, because XyzFile class does not handle this.
-                        var writeDirectory = GetDirectoryName(featuresFilePath);
+                        var writeDirectory = System.IO.Path.GetDirectoryName(featuresFilePath);
                         if (!string.IsNullOrEmpty(writeDirectory) && !Directory.Exists(writeDirectory))
                         {
                             Directory.CreateDirectory(writeDirectory);
                         }
 
-                        var fileName = FileUtils.GetRelativePath(GetDirectoryName(targetMduFilePath), featuresFilePath, true);
+                        var fileName = FileUtils.GetRelativePath(System.IO.Path.GetDirectoryName(targetMduFilePath), featuresFilePath, true);
                         var fileNameWithoutExtension = fileName.Replace(DryPointExtension, string.Empty);
                         var groupFeatures = GetAllGroupadFeaturesFromFile<GroupablePointFeature>(dryPointsPerGroup, fileName, fileNameWithoutExtension);
                         var featuresToWrite = dryPoints.Count > 0 && groupFeatures != null ? groupFeatures : dryPoints;
@@ -716,7 +714,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     }
                     else if (featuresFilePath.EndsWith(DryAreaExtension))
                     {
-                        var fileName = FileUtils.GetRelativePath(GetDirectoryName(targetMduFilePath), featuresFilePath, true);
+                        var fileName = FileUtils.GetRelativePath(System.IO.Path.GetDirectoryName(targetMduFilePath), featuresFilePath, true);
                         var fileNameWithoutExtension = fileName.Replace(DryAreaExtension, string.Empty);
                         var groupFeatures = GetAllGroupadFeaturesFromFile<GroupableFeature2DPolygon>(dryAreasPerGroup, fileName, fileNameWithoutExtension);
                         var featuresToWrite = dryAreas.Count > 0 && groupFeatures != null ? groupFeatures : dryAreas;
@@ -775,7 +773,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             return feature;
         }
 
-        private void WriteAreaFeatures(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, HydroArea hydroArea, IEnumerable<ModelFeatureCoordinateData<FixedWeir>> allFixedWeirsAndCorrespondingProperties)
+        private void WriteAreaFeatures(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, HydroArea hydroArea, IList<ModelFeatureCoordinateData<FixedWeir>> allFixedWeirsAndCorrespondingProperties)
         {
             WriteFeatures(targetMduFilePath, modelDefinition, KnownProperties.LandBoundaryFile,
                 hydroArea.LandBoundaries, ref landBoundariesFile, LandBoundariesExtension);
@@ -860,7 +858,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             var groupFeatures =
                 grouping.FirstOrDefault(g => g.Key.ToLowerInvariant().Equals(fileName.ToLowerInvariant())
                                              || g.Key.ToLowerInvariant().Equals(fileNameWithoutExtension.ToLowerInvariant())
-                                             || g.Key.ToLowerInvariant().Replace(GetExtension(DryAreaExtension), string.Empty).Equals(fileNameWithoutExtension.ToLowerInvariant()));
+                                             || g.Key.ToLowerInvariant().Replace(System.IO.Path.GetExtension(DryAreaExtension), string.Empty).Equals(fileNameWithoutExtension.ToLowerInvariant()));
             if (groupFeatures == null) return null;
 
             try
@@ -970,7 +968,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     if (modelFeatureCoordinateData.DataColumns.Count > bridgePillar.Attributes.Count)
                     {
                         log.Warn(
-                            string.Format(Resources.MduFile_Read_Based_on_the_Bridge_Pillar_file__0___there_are_not_enough_column_s__defined_for__1___The_last__2__column_s__have_been_generated_using_default_values, bpFile, arg1: bridgePillar?.Name, arg2: difference));
+                            string.Format(Resources.MduFile_Read_Based_on_the_Bridge_Pillar_file__0___there_are_not_enough_column_s__defined_for__1___The_last__2__column_s__have_been_generated_using_default_values, bpFile, bridgePillar.Name, arg2: difference));
                     }
 
                     SetBridgePillarDataModel(allBridgePillarsAndCorrespondingProperties, modelFeatureCoordinateData, bridgePillar);
@@ -1237,8 +1235,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 {
                     //make sure the features have the right group name.
                     var asGroupable = featuresToAdd.OfType<IGroupableFeature>().ToList();
-                    var featurePathName = FileUtils.GetRelativePath(GetDirectoryName(mduFilePath), featuresFilePath, true);
-                    var mduPathName = GetFileNameWithoutExtension(mduFilePath);
+                    var featurePathName = FileUtils.GetRelativePath(System.IO.Path.GetDirectoryName(mduFilePath), featuresFilePath, true);
+                    var mduPathName = System.IO.Path.GetFileNameWithoutExtension(mduFilePath);
                     asGroupable.ForEach(f =>
                     {
                         f.GroupName = featurePathName;
@@ -1249,7 +1247,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 readFeatures.AddRange(featuresToAdd);
             }
 
-            MakeNamesUnique(readFeatures.Cast<INameable>().ToList());
+#pragma warning disable 618
+            NamingHelper.MakeNamesUnique(readFeatures.Cast<INameable>().ToList());
+#pragma warning restore 618
 
             features.AddRange(readFeatures);
         }
@@ -1313,7 +1313,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             var replacedFilePaths = new Dictionary<string, string>();
             var dryPointsPropertyKey = KnownProperties.DryPointsFile;
-            var mduPathName = GetFileNameWithoutExtension(mduFilePath);
+            var mduPathName = System.IO.Path.GetFileNameWithoutExtension(mduFilePath);
             var modelProperty = modelDefinition.GetModelProperty(dryPointsPropertyKey);
             var featureFilePaths = MduFileHelper.GetMultipleSubfilePath(mduFilePath, modelProperty);
 
@@ -1327,8 +1327,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             foreach (var featureFilePath in featureFilePaths)
             {
-                var featureFilePathExtension = GetExtension(featureFilePath);
-                var groupName = FileUtils.GetRelativePath(GetDirectoryName(mduFilePath), featureFilePath, true);
+                var featureFilePathExtension = System.IO.Path.GetExtension(featureFilePath);
+                var groupName = FileUtils.GetRelativePath(System.IO.Path.GetDirectoryName(mduFilePath), featureFilePath, true);
 
                 //By checking if the feature file path only ends with .xyz (without the _dry suffix),
                 //we can assure that backwards compatibility is ensured i.e. some old mdu files still refer to the dry point file without the _dry suffix.
@@ -1390,7 +1390,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         /// <param name="propertyKey">The key that corresponds to the type of file that is being read.</param>
         private static void RemoveAllNonExistentFilePaths(ICollection<string> featureFilePaths, string mduFilePath, WaterFlowFMModelDefinition modelDefinition, string propertyKey)
         {
-            var nonExistentFilePaths = featureFilePaths.Where(fp => fp != null && !File.Exists(Combine(GetDirectoryName(mduFilePath) ?? throw new InvalidOperationException(), fp)));
+            var nonExistentFilePaths = featureFilePaths.Where(fp => fp != null && !File.Exists(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(mduFilePath) ?? throw new InvalidOperationException(), fp)));
             var existentFilePaths = nonExistentFilePaths.ToList();
             foreach (var filePath in existentFilePaths)
             {
@@ -1410,7 +1410,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             var structureFilesWithBadReferences = new List<string>();
             foreach (var filePath in featureFilePaths.Where(fp => fp.EndsWith(StructuresExtension)))
             {
-                var structureFilePath = GetFullPath(filePath);
+                var structureFilePath = System.IO.Path.GetFullPath(filePath);
                 var fileReader = new StructuresFile
                 {
                     StructureSchema = modelDefinition.StructureSchema,
@@ -1421,7 +1421,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 featuresToAdd.ForEach(f =>
                 {
                     var featureFileName = f.GetProperty(KnownStructureProperties.PolylineFile).GetValueAsString();
-                    var featureFilePath = Combine(GetDirectoryName(structureFilePath) ?? throw new InvalidOperationException(), featureFileName);
+                    var featureFilePath = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(structureFilePath) ?? throw new InvalidOperationException(), featureFileName);
                     if (!File.Exists(featureFilePath))
                     {
                         referencesToNonExistentFilesExist = true;
@@ -1445,10 +1445,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         /// <param name="oldFilePaths">Dictionary that relates the resulting file paths to their original file paths.</param>
         private static void CopyFilesToProjectFolderIfNeeded(IList<string> featureGroupNames, string mduFilePath, WaterFlowFMModelDefinition modelDefinition, string propertyKey, ref Dictionary<string, string> oldFilePaths)
         {
-            var mduDirectory = GetDirectoryName(GetFullPath(mduFilePath));
+            var mduDirectory = System.IO.Path.GetDirectoryName(System.IO.Path.GetFullPath(mduFilePath));
             for (var i = 0; i < featureGroupNames.Count; i++)
             {
-                var filePath = GetFullPath(Combine(mduDirectory ?? throw new InvalidOperationException(), featureGroupNames[i]));
+                var filePath = System.IO.Path.GetFullPath(System.IO.Path.Combine(mduDirectory ?? throw new InvalidOperationException(), featureGroupNames[i]));
                 var isOutsideMduFolderMatch = new Regex(@"\.{2,}").Match(FileUtils.GetRelativePath(mduDirectory, filePath, true));
                 if (!isOutsideMduFolderMatch.Success) // File is situated inside mdu-folder or in a subfolder
                 {
@@ -1457,7 +1457,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 }
                 else // File is situated outside of mdu-folder
                 {
-                    var newFilePath = Combine(mduDirectory, GetFileName(filePath));
+                    var newFilePath = System.IO.Path.Combine(mduDirectory, System.IO.Path.GetFileName(filePath));
                     if (File.Exists(newFilePath))
                     {
                         log.ErrorFormat(
