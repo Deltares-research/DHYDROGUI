@@ -227,6 +227,9 @@
     <Compile Include="IO\Exporters\WaterFlowFMFileExporter.cs" />
     <Compile Include="IO\Importers\WaterFlowFMFileImporter.cs" />
     <Compile Include="IO\WaterFlowFMModelHydroAreaExtensions.cs" />
+    <Compile Include="Model\WaterFlowFMModel.IO.Export.cs" />
+    <Compile Include="Model\WaterFlowFMModel.IO.Import.cs" />
+    <Compile Include="Model\WaterFlowFMModel.IO.Output.cs" />
     <Compile Include="Sediment\ISedimentModelData.cs" />
     <Compile Include="Model\IWaterFlowFMModel.cs" />
     <Compile Include="FeatureData\KnownFeatureCategories.cs" />
@@ -260,7 +263,6 @@
     <Compile Include="Model\WaterFlowFMModel.DimrModel.cs" />
     <Compile Include="Model\WaterFlowFMModel.Eventing.cs" />
     <Compile Include="Model\WaterFlowFMModel.FileBased.cs" />
-    <Compile Include="Model\WaterFlowFMModel.IO.cs" />
     <Compile Include="Model\WaterFlowFMModel.Output.cs" />
     <Compile Include="Model\WaterFlowFMModel.TDMB.cs" />
     <Compile Include="Validation\Area\FixedWeirValidator.cs" />

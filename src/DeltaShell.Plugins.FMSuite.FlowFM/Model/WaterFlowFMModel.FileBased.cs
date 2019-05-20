@@ -177,6 +177,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         private string outputSnappedFeaturesPath;
         private string inputFolder;
 
+        private readonly MduFile mduFile = new MduFile();
+        public MduFile MduFile => mduFile;
+
         public Func<string> WorkingDirectoryPathFunc =
             () => Path.Combine(Path.GetTempPath(), "DeltaShell_Working_Directory");
 
