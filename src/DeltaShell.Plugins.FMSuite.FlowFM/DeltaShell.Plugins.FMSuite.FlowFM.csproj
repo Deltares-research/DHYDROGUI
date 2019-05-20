@@ -227,6 +227,7 @@
     <Compile Include="IO\Exporters\WaterFlowFMFileExporter.cs" />
     <Compile Include="IO\Importers\WaterFlowFMFileImporter.cs" />
     <Compile Include="IO\WaterFlowFMModelHydroAreaExtensions.cs" />
+    <Compile Include="ModelDefinition\WaterFlowFMModelDefinition.Eventing.cs" />
     <Compile Include="Model\WaterFlowFMModel.IO.Export.cs" />
     <Compile Include="Model\WaterFlowFMModel.IO.Import.cs" />
     <Compile Include="Model\WaterFlowFMModel.IO.Output.cs" />
