@@ -4,6 +4,7 @@ using System.Linq;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -58,7 +59,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
             //delegate bool mockFunc(string p, bool b0, bool b1, bool b2) = (p, b0, b1, b2) => { return true; };
             Func<string, bool, bool, bool, bool> emptyFunc = (p, b0, b1, b2) => true;
 
-            var model = mocks.PartialMock<WaterFlowFMModel.WaterFlowFMModel>();
+            var model = mocks.PartialMock<WaterFlowFMModel>();
             model
                 .Expect(n => n.ExportTo(Arg<string>.Is.Equal(path),
                                         Arg<bool>.Is.Equal(false), 
@@ -87,7 +88,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
             //delegate bool mockFunc(string p, bool b0, bool b1, bool b2) = (p, b0, b1, b2) => { return true; };
             Func<string, bool, bool, bool, bool> emptyFunc = (p, b0, b1, b2) => true;
 
-            var model = mocks.PartialMock<WaterFlowFMModel.WaterFlowFMModel>();
+            var model = mocks.PartialMock<WaterFlowFMModel>();
             model
                 .Expect(n => n.ExportTo(Arg<string>.Is.Equal(expectedPath),
                                         Arg<bool>.Is.Equal(false), 
@@ -111,7 +112,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
         public void GivenAnWaterFlowFMFileExporter_WhenSourceTypesIsCalled_ThenWaterFlowFMModelIsReturned()
         {
             Assert.That(exporter.SourceTypes().Count(), Is.EqualTo(1));
-            Assert.That(exporter.SourceTypes().Contains(typeof(WaterFlowFMModel.WaterFlowFMModel)));
+            Assert.That(exporter.SourceTypes().Contains(typeof(WaterFlowFMModel)));
         }
 
         [Test]

@@ -2,6 +2,7 @@ using System;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Core.Workflow.DataItems.ValueConverters;
 using DelftTools.Utils.Aop;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using GeoAPI.Extensions.Feature;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
@@ -9,9 +10,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
     public class WaterFlowFMFeatureValueConverter : ParameterValueConverter, IExplicitValueConverter
     {
         [Aggregation]
-        public WaterFlowFMModel.WaterFlowFMModel Model { get; set; }
+        public WaterFlowFMModel Model { get; set; }
 
-        public WaterFlowFMFeatureValueConverter(WaterFlowFMModel.WaterFlowFMModel model, IFeature feature, string parameterName,
+        public WaterFlowFMFeatureValueConverter(WaterFlowFMModel model, IFeature feature, string parameterName,
                                                 string unit)
         {
             Location = feature;

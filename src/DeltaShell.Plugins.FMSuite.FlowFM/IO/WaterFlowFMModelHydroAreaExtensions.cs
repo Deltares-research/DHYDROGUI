@@ -7,6 +7,7 @@ using DelftTools.Hydro.Structures;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Common.IO;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using log4net;
 
@@ -113,14 +114,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         #endregion
 
-        public static void UpdateGroupName(this IGroupableFeature groupableFeature, WaterFlowFMModel.WaterFlowFMModel model)
+        public static void UpdateGroupName(this IGroupableFeature groupableFeature, WaterFlowFMModel model)
         {
             groupableFeature.RenameStructureGroupNameToStructureFilePath(model);
             groupableFeature.MakeGroupNameRelative(model.MduFilePath);
         }
 
         private static void RenameStructureGroupNameToStructureFilePath(this IGroupableFeature hydroAreaFeature,
-                                                                        WaterFlowFMModel.WaterFlowFMModel model)
+                                                                        WaterFlowFMModel model)
         {
             if (!(hydroAreaFeature is Weir2D) && !(hydroAreaFeature is Pump2D))
             {
@@ -131,7 +132,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             ChangeStructureGroupName<Pump2D>(hydroAreaFeature, model);
         }
 
-        private static void ChangeStructureGroupName<TFeat>(IGroupableFeature hydroAreaFeature, WaterFlowFMModel.WaterFlowFMModel model)
+        private static void ChangeStructureGroupName<TFeat>(IGroupableFeature hydroAreaFeature, WaterFlowFMModel model)
             where TFeat : class, IGroupableFeature
         {
             var structure = hydroAreaFeature as TFeat;

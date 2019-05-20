@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Windows.Forms;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using NetTopologySuite.Extensions.Features;
 using MessageBox = DelftTools.Controls.Swf.MessageBox;
 
@@ -7,9 +8,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
 {
     class RemoveBoundaryPointDialog
     {
-        private readonly WaterFlowFMModel.WaterFlowFMModel waterFlowFMModel;
+        private readonly WaterFlowFMModel waterFlowFMModel;
 
-        public RemoveBoundaryPointDialog(WaterFlowFMModel.WaterFlowFMModel waterFlowFMModel)
+        public RemoveBoundaryPointDialog(WaterFlowFMModel waterFlowFMModel)
         {
             this.waterFlowFMModel = waterFlowFMModel;
         }

@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Api;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using NetTopologySuite.Extensions.Grids;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
 {
     public class FMGridPartitionExporter : FMPartitionExporterBase
     {
-        public Func<UnstructuredGrid, WaterFlowFMModel.WaterFlowFMModel> GetModelForGrid { private get; set; }
+        public Func<UnstructuredGrid, WaterFlowFMModel> GetModelForGrid { private get; set; }
 
         #region IFileExporter
 
@@ -35,7 +36,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
                         "Cannot export unstructured grid to partition without parent FM model");
                 }
 
-                WaterFlowFMModel.WaterFlowFMModel model = GetModelForGrid(unstructuredGrid);
+                WaterFlowFMModel model = GetModelForGrid(unstructuredGrid);
                 string netFilePath = Path.Combine(Path.GetDirectoryName(model.MduFilePath), model.NetFilePath);
                 return ExportPartitionGrid(Path.GetFullPath(netFilePath), path);
             }

@@ -6,6 +6,7 @@ using DelftTools.Utils.IO;
 using DeltaShell.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
@@ -27,7 +28,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
                 app.Plugins.Add(new FlowFMApplicationPlugin());
                 app.Run();
 
-                var waterFlowFmModel = new WaterFlowFMModel.WaterFlowFMModel();
+                var waterFlowFmModel = new WaterFlowFMModel();
                 app.Project.RootFolder.Add(waterFlowFmModel);
                 var importHandler = new GuiImportHandler(gui);
 
@@ -51,7 +52,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
                 app.Run();
                 
                 var integratedModel = new CompositeModel(); // hydromodel is a composite model
-                var waterFlowFmModel = new WaterFlowFMModel.WaterFlowFMModel();
+                var waterFlowFmModel = new WaterFlowFMModel();
                 integratedModel.Activities.Add(waterFlowFmModel);
                 
                 app.Project.RootFolder.Add(integratedModel);
@@ -79,7 +80,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             
                 var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
                 
-                var waterFlowFmModel = new WaterFlowFMModel.WaterFlowFMModel(TestHelper.CreateLocalCopy(mduPath));
+                var waterFlowFmModel = new WaterFlowFMModel(TestHelper.CreateLocalCopy(mduPath));
                 app.Project.RootFolder.Add(waterFlowFmModel);
                 
                 var importHandler = new GuiImportHandler(gui);

@@ -10,6 +10,7 @@ using DelftTools.Functions.Generic;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.Api;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using GeoAPI.Extensions.Coverages;
 using NetTopologySuite.Extensions.Coverages;
@@ -48,7 +49,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
             api = model.BMIEngine;
         }
 
-        public void AfterExecute(WaterFlowFMModel.WaterFlowFMModel model)
+        public void AfterExecute(WaterFlowFMModel model)
         {
             var currentTime = model.CurrentTime;
 
@@ -82,7 +83,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
             }
         }
 
-        private void GetOutputGrid(WaterFlowFMModel.WaterFlowFMModel model)
+        private void GetOutputGrid(WaterFlowFMModel model)
         {
             var mapFilePath = Path.Combine(model.WorkingOutputDirectoryPath, model.ModelDefinition.MapFileName);
 
@@ -93,7 +94,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
                 : model.Grid;
         }
 
-        private void InitializeMap(WaterFlowFMModel.WaterFlowFMModel model)
+        private void InitializeMap(WaterFlowFMModel model)
         {
             map = new Map();
             map.MapRendered += map_MapRendered;
@@ -140,7 +141,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
             map.ZoomToExtents();
         }
 
-        private GroupLayer GetGroupCoverageLayer(WaterFlowFMModel.WaterFlowFMModel model, IEnumerable<KeyValuePair<string, QuantityInfo>> quantities, string groupLayerName)
+        private GroupLayer GetGroupCoverageLayer(WaterFlowFMModel model, IEnumerable<KeyValuePair<string, QuantityInfo>> quantities, string groupLayerName)
         {
             var groupedCoverages = new GroupLayer(groupLayerName);
             foreach (var quantity in quantities)

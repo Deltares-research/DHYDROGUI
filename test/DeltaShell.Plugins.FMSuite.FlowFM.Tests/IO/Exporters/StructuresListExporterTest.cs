@@ -8,6 +8,7 @@ using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using NUnit.Framework;
 using Rhino.Mocks;
 using Is = NUnit.Framework.Is;
@@ -91,7 +92,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
 
             var item = new List<IStructure1D>();
 
-            var fmModel = new WaterFlowFMModel.WaterFlowFMModel();
+            var fmModel = new WaterFlowFMModel();
             var exporter = new StructuresListExporter(StructuresListType.Gates)
             {
                 GetModelForList = input => fmModel
@@ -127,7 +128,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
 
             var item = new List<IStructure1D>();
 
-            var fmModel = new WaterFlowFMModel.WaterFlowFMModel();
+            var fmModel = new WaterFlowFMModel();
             var exporter = new StructuresListExporter(StructuresListType.Gates)
             {
                 GetModelForList = input => fmModel

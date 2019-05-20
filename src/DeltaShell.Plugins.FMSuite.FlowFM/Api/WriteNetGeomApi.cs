@@ -5,6 +5,7 @@ using log4net;
 using NetTopologySuite.Extensions.Grids;
 using System;
 using System.IO;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
 {
@@ -12,7 +13,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(WriteNetGeomApi));
 
-        public static void WriteNetGeometryFile(WaterFlowFMModel.WaterFlowFMModel model, string geomFile)
+        public static void WriteNetGeometryFile(WaterFlowFMModel model, string geomFile)
         {
             UnstructuredGrid grid = model.Grid;
             if (grid.IsEmpty || grid.Cells.Count == 1)
@@ -24,7 +25,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             string tempPath = FileUtils.CreateTempDirectory();
             try
             {
-                var tempModel = new WaterFlowFMModel.WaterFlowFMModel {Name = "temp"};
+                var tempModel = new WaterFlowFMModel {Name = "temp"};
 
                 tempModel.ModelDefinition.GetModelProperty(KnownProperties.NetFile)
                          .SetValueAsString(Path.GetFileName(model.NetFilePath));

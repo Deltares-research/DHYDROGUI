@@ -10,7 +10,8 @@ using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
 ﻿using DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters;
 ﻿using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
-﻿using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
+using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.SharpMapGis;
 using GeoAPI.Geometries;
@@ -71,7 +72,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                     app.CloseProject();
                     app.OpenProject(newPath);
 
-                    var retrievedModel = (WaterFlowFMModel.WaterFlowFMModel) app.Project.RootFolder.Items[0];
+                    var retrievedModel = (WaterFlowFMModel) app.Project.RootFolder.Items[0];
 
                     Assert.AreEqual(countBefore, retrievedModel.GetRestartOutputStates().Count());
                     Assert.AreEqual(nameBefore, retrievedModel.GetRestartOutputStates().First().Name);
@@ -113,7 +114,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                     app.CloseProject();
                     app.OpenProject(newPath);
 
-                    var retrievedModel = (WaterFlowFMModel.WaterFlowFMModel) app.Project.RootFolder.Items[0];
+                    var retrievedModel = (WaterFlowFMModel) app.Project.RootFolder.Items[0];
 
                     Assert.IsNotNull(retrievedModel.RestartInput);
                     Assert.IsTrue(retrievedModel.RestartInput.IsEmpty);
@@ -125,7 +126,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void LoadModelWithRestartOptionsSetCheckThem()
         {
             var mduPath = TestHelper.GetTestFilePath(@"restart\bendprof.mdu");
-            var model = new WaterFlowFMModel.WaterFlowFMModel(TestHelper.CreateLocalCopy(mduPath));
+            var model = new WaterFlowFMModel(TestHelper.CreateLocalCopy(mduPath));
 
             Assert.AreEqual(true, model.WriteRestart);
             Assert.AreEqual(true, model.UseSaveStateTimeRange);
@@ -213,7 +214,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
                 var temp = FileUtils.CreateTempDirectory();
                 var importer = new WaterFlowFMFileImporter(delegate() { return temp; });
-                var importedModel = (WaterFlowFMModel.WaterFlowFMModel) importer.ImportItem("restartmodel/bendprof.mdu");
+                var importedModel = (WaterFlowFMModel) importer.ImportItem("restartmodel/bendprof.mdu");
 
                 Assert.IsTrue(importedModel.UseRestart);
                 Assert.AreEqual(Path.GetFileName(importedModel.RestartInput.Path),
@@ -293,7 +294,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             }
         }
 
-        private static IList<double> GetWaterLevelValuesAtPoint(WaterFlowFMModel.WaterFlowFMModel model, Coordinate measureLocation)
+        private static IList<double> GetWaterLevelValuesAtPoint(WaterFlowFMModel model, Coordinate measureLocation)
         {
             var result = new List<double>();
             if (model == null || model.OutputWaterLevel == null || model.OutputWaterLevel.Time == null) return result;
@@ -304,11 +305,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             return result;
         }
 
-        private static WaterFlowFMModel.WaterFlowFMModel LoadBendProfModelWithWriteRestart()
+        private static WaterFlowFMModel LoadBendProfModelWithWriteRestart()
         {
             var mduPath = TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
-            var model = new WaterFlowFMModel.WaterFlowFMModel(mduPath);
+            var model = new WaterFlowFMModel(mduPath);
 
             model.WriteRestart = true;
             model.StopTime = model.StartTime.AddMinutes(2); //6 sec timestep

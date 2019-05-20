@@ -8,6 +8,7 @@ using System.Linq;
 using DelftTools.Shell.Core.Workflow;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 {
@@ -33,7 +34,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
             FileUtils.CopyFile(originalNetFilePath, Path.Combine(workDir, "grid.nc"));
 
-            var model = new WaterFlowFMModel.WaterFlowFMModel(mduFilePath);
+            var model = new WaterFlowFMModel(mduFilePath);
             var originalCoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(originalEpsg);
 
             Assert.IsTrue(model.CoordinateSystem.EqualsTo(originalCoordinateSystem));
@@ -63,7 +64,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         {
             //Given
             var mduFilePath = GetMduFilePathWithoutGrid();
-            var model = new WaterFlowFMModel.WaterFlowFMModel(mduFilePath)
+            var model = new WaterFlowFMModel(mduFilePath)
             {
                 ValidateBeforeRun = false,
                 Status = ActivityStatus.None
@@ -84,7 +85,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         {
             //Given
             var mduFilePath = GetMduFilePathWithoutGrid();
-            var model = new WaterFlowFMModel.WaterFlowFMModel(mduFilePath)
+            var model = new WaterFlowFMModel(mduFilePath)
             {
                 ValidateBeforeRun = false,
                 Status = ActivityStatus.Initializing

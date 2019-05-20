@@ -8,6 +8,7 @@ using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 {
@@ -35,7 +36,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             sourceSink.Feature = new Feature2D {Geometry = new Point(0, 0)};
 
             var temperatureString = ((int)Temperature).ToString();
-            var model = new WaterFlowFMModel.WaterFlowFMModel();
+            var model = new WaterFlowFMModel();
             model.ModelDefinition.GetModelProperty(KnownProperties.UseSalinity).Value = useSalinity;
             model.ModelDefinition.GetModelProperty(KnownProperties.Temperature).SetValueAsString(temperatureString);
             model.ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value = useMorSed;

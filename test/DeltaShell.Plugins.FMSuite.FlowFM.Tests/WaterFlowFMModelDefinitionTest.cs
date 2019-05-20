@@ -31,6 +31,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 {
@@ -851,7 +852,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Category(TestCategory.Integration)]
         public void MduSubFilesShouldChangeNamesAfterModelRename()
         {
-            var model = new WaterFlowFMModel.WaterFlowFMModel();
+            var model = new WaterFlowFMModel();
 
             Assert.AreEqual(model.ModelDefinition.ModelName, model.Name);
             Assert.AreEqual(model.Name + ExtForceFile.Extension,
@@ -870,7 +871,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             const string newnameMdu = "RenameIO/newname.mdu";
             model.ExportTo(newnameMdu);
 
-            var newModel = new WaterFlowFMModel.WaterFlowFMModel(newnameMdu);
+            var newModel = new WaterFlowFMModel(newnameMdu);
 
             Assert.AreEqual(model.Name, newModel.ModelDefinition.ModelName);
             Assert.AreEqual(model.Name + "_bnd" + ExtForceFile.Extension,
@@ -884,7 +885,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
 
-            var model = new WaterFlowFMModel.WaterFlowFMModel(mduPath);
+            var model = new WaterFlowFMModel(mduPath);
 
             Assert.AreEqual(model.ModelDefinition.ModelName, model.Name);
             Assert.AreNotEqual(model.Name + ExtForceFile.Extension,
@@ -901,7 +902,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var fullDirectoryPath = Path.Combine(Directory.GetCurrentDirectory(), newnameMdu);
             model.ExportTo(fullDirectoryPath);
 
-            var newModel = new WaterFlowFMModel.WaterFlowFMModel(fullDirectoryPath);
+            var newModel = new WaterFlowFMModel(fullDirectoryPath);
 
             Assert.AreEqual(model.Name, newModel.ModelDefinition.ModelName);
             Assert.AreNotEqual(model.Name + ExtForceFile.Extension,
@@ -912,7 +913,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Category(TestCategory.DataAccess)]
         public void SaveLoadTracerTest()
         {
-            var model = new WaterFlowFMModel.WaterFlowFMModel {Name = "feest"};
+            var model = new WaterFlowFMModel {Name = "feest"};
 
             var geometry = new LineString(
                 new []
@@ -941,7 +942,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             Assert.IsTrue(File.Exists(@"tracer\feest.mdu"));
 
-            var loadedModel = new WaterFlowFMModel.WaterFlowFMModel(@"tracer\feest.mdu");
+            var loadedModel = new WaterFlowFMModel(@"tracer\feest.mdu");
 
             Assert.AreEqual(1, loadedModel.BoundaryConditions.Count());
             Assert.AreEqual("feest", ((FlowBoundaryCondition)loadedModel.BoundaryConditions.First()).TracerName);
@@ -958,7 +959,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             // - we're not interested in these for the mdu, they will be saved as dataitems to the dsproj)
 
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
-            var model = new WaterFlowFMModel.WaterFlowFMModel(mduPath);
+            var model = new WaterFlowFMModel(mduPath);
             
             // update model definition (called during export)
             model.ModelDefinition.SelectSpatialOperations(model.DataItems, model.TracerDefinitions);
@@ -1017,7 +1018,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
 
-            var model = new WaterFlowFMModel.WaterFlowFMModel(mduPath);
+            var model = new WaterFlowFMModel(mduPath);
 
             // Set values in coverage
             model.Viscosity.SetValues(new[]{500.0});       
@@ -1054,7 +1055,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         public void ChangeHeatFluxModelTypeShouldChangeUseTemperature()
         {
-            var waterFlowFMModel = new WaterFlowFMModel.WaterFlowFMModel();
+            var waterFlowFMModel = new WaterFlowFMModel();
 
             waterFlowFMModel.ModelDefinition.GetModelProperty(KnownProperties.Temperature).SetValueAsString("1");
             Assert.AreEqual(HeatFluxModelType.TransportOnly, waterFlowFMModel.HeatFluxModelType);
@@ -1185,7 +1186,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         public void WriteSnappedFeaturesTest()
         {
-            var model = new WaterFlowFMModel.WaterFlowFMModel();
+            var model = new WaterFlowFMModel();
             var md = model.ModelDefinition;
 
             /* Default is false */
@@ -1200,7 +1201,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         public void UpdateWriteOutputSnappedFeaturesWaterfallTest()
         {
-            var model = new WaterFlowFMModel.WaterFlowFMModel();
+            var model = new WaterFlowFMModel();
             var md = model.ModelDefinition;
 
             /* Default is false */
@@ -1241,7 +1242,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var workingMduFileInfo = new FileInfo(workingMduFilePath);
             Assert.IsTrue(workingMduFileInfo.Exists);
 
-            var model = new WaterFlowFMModel.WaterFlowFMModel(workingMduFilePath);
+            var model = new WaterFlowFMModel(workingMduFilePath);
             var md = model.ModelDefinition;
 
             Assert.IsFalse(md.WriteSnappedFeatures);
@@ -1271,7 +1272,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             mduFile.Write(saveToPath, md, new HydroArea(), new List<ModelFeatureCoordinateData<FixedWeir>>());
             Assert.IsTrue(saveToFileInfo.Exists);
 
-            var modelFromSavedMduFile = new WaterFlowFMModel.WaterFlowFMModel();        
+            var modelFromSavedMduFile = new WaterFlowFMModel();        
             var mdFromSavedMduFile = modelFromSavedMduFile.ModelDefinition;
             mduFile.Read(saveToPath, mdFromSavedMduFile, new HydroArea(), new Dictionary<FixedWeir, ModelFeatureCoordinateData<FixedWeir>>());
 
@@ -1289,7 +1290,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         {
             var mduPath = TestHelper.GetTestFilePath(@"outputSnappedFeatures\outputSnappedFeatures.dsproj_data\FlowFM\FlowFM.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
-            var model = new WaterFlowFMModel.WaterFlowFMModel(mduPath);
+            var model = new WaterFlowFMModel(mduPath);
             var md = model.ModelDefinition;
 
             Assert.IsTrue(md.WriteSnappedFeatures);
@@ -1493,7 +1494,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var cloudCoverage = "Cloud coverage";
             var solarRadiation = "Solar radiation";
 
-            var fmModel = new WaterFlowFMModel.WaterFlowFMModel();
+            var fmModel = new WaterFlowFMModel();
             Assert.IsNull(fmModel.ModelDefinition.HeatFluxModel.MeteoData);
             fmModel.ModelDefinition.HeatFluxModel.Type = HeatFluxModelType.Composite;
 
@@ -1532,7 +1533,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.DoesNotThrow(() =>
                 {
                     TestHelper.AssertLogMessagesCount(
-                        () => tabName = WaterFlowFMModelDefinition.GetTabName(key, fmModel:new WaterFlowFMModel.WaterFlowFMModel()), 0);
+                        () => tabName = WaterFlowFMModelDefinition.GetTabName(key, fmModel:new WaterFlowFMModel()), 0);
                 }
             );
             Assert.NotNull(tabName);

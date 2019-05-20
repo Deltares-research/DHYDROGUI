@@ -5,6 +5,7 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Sediment;
 using NetTopologySuite.Extensions.Features;
@@ -17,7 +18,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
 
         public override bool SupportsMultipleConditionsPerSet => true;
 
-        public WaterFlowFMModel.WaterFlowFMModel Model { set; private get; }
+        public WaterFlowFMModel Model { set; private get; }
 
         public override IBoundaryCondition CreateBoundaryCondition(Feature2D feature, string variable,
                                                                    BoundaryConditionDataType dataType,

@@ -2,6 +2,7 @@
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.Validation;
 using NUnit.Framework;
 
@@ -11,12 +12,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
     [TestFixture]
     public class FMStructuresValidatorTest
     {
-        private WaterFlowFMModel.WaterFlowFMModel model;
+        private WaterFlowFMModel model;
 
         [SetUp]
         public void SetUp()
         {
-            model = new WaterFlowFMModel.WaterFlowFMModel();
+            model = new WaterFlowFMModel();
         }
 
         [Test]

@@ -8,6 +8,7 @@ using DelftTools.Utils.Collections;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using log4net;
@@ -18,9 +19,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(TimFileExporter));
 
-        public Func<SourceAndSink, WaterFlowFMModel.WaterFlowFMModel> GetModelForSourceAndSink { private get; set; }
+        public Func<SourceAndSink, WaterFlowFMModel> GetModelForSourceAndSink { private get; set; }
 
-        public Func<HeatFluxModel, WaterFlowFMModel.WaterFlowFMModel> GetModelForHeatFluxModel { private get; set; }
+        public Func<HeatFluxModel, WaterFlowFMModel> GetModelForHeatFluxModel { private get; set; }
 
         #region IFileExporter
 
@@ -55,7 +56,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
 
                 data = (IFunction) function.Clone(true);
 
-                WaterFlowFMModel.WaterFlowFMModel model = GetModelForSourceAndSink(sourceAndSink);
+                WaterFlowFMModel model = GetModelForSourceAndSink(sourceAndSink);
                 if (model != null)
                 {
                     refDate = model.ReferenceTime;

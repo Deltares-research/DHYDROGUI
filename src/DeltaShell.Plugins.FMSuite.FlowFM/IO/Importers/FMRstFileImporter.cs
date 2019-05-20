@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Drawing;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 {
     public class FMRstFileImporter : IFileImporter
     {
-        public Func<FileBasedRestartState, WaterFlowFMModel.WaterFlowFMModel> GetFMModelForRestartState { get; set; }
+        public Func<FileBasedRestartState, WaterFlowFMModel> GetFMModelForRestartState { get; set; }
 
         public string Name => "Restart File";
 
@@ -47,7 +48,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 
         public object ImportItem(string path, object target = null)
         {
-            WaterFlowFMModel.WaterFlowFMModel model = GetFMModelForRestartState == null
+            WaterFlowFMModel model = GetFMModelForRestartState == null
                                          ? null
                                          : GetFMModelForRestartState(target as FileBasedRestartState);
 

@@ -3,17 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using DeltaShell.Plugins.FMSuite.Common.Layers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Api;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.NetworkEditor.MapLayers;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Layers
 {
     public class FMSnappedFeaturesGroupLayerData
     {
-        private readonly WaterFlowFMModel.WaterFlowFMModel model;
+        private readonly WaterFlowFMModel model;
         private IList<SnappedFeatureCollection> childData;
         private int SnapVersion { get; set; }
 
-        public FMSnappedFeaturesGroupLayerData(WaterFlowFMModel.WaterFlowFMModel model)
+        public FMSnappedFeaturesGroupLayerData(WaterFlowFMModel model)
         {
             this.model = model;
             SnapVersion = model.SnapVersion;
@@ -40,7 +41,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Layers
             }
         }
 
-        private static IEnumerable<SnappedFeatureCollection> GetChildDataForModel(WaterFlowFMModel.WaterFlowFMModel model)
+        private static IEnumerable<SnappedFeatureCollection> GetChildDataForModel(WaterFlowFMModel model)
         {
             yield return new SnappedFeatureCollection(model, model.CoordinateSystem,
                                                       (IList) model.Area.ObservationPoints,

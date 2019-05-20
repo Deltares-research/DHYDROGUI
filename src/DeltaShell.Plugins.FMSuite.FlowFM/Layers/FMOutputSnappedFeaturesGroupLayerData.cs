@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.SharpMapGis;
 using GeoAPI.Extensions.CoordinateSystems;
@@ -32,7 +33,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Layers
             {"Sources", "_src"},
         };
 
-        public FMOutputSnappedFeaturesGroupLayerData(WaterFlowFMModel.WaterFlowFMModel model)
+        public FMOutputSnappedFeaturesGroupLayerData(WaterFlowFMModel model)
         {
             modelOutputSnappedFeaturesPath = model.OutputSnappedFeaturesPath;
             modelMduFilePath = model.MduFilePath;

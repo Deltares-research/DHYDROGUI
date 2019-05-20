@@ -14,6 +14,7 @@ using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.NetworkEditor.Gui;
 using DeltaShell.Plugins.ProjectExplorer;
@@ -59,7 +60,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
                 gui.MainWindow.Show();
 
-                var model = new WaterFlowFMModel.WaterFlowFMModel(mduPath);
+                var model = new WaterFlowFMModel(mduPath);
 
                 app.Project.RootFolder.Add(model);
 
@@ -85,7 +86,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         {
             var mduPath = GetBendProfPath();
             mduPath = TestHelper.CreateLocalCopy(mduPath);
-            var model = new WaterFlowFMModel.WaterFlowFMModel(mduPath);
+            var model = new WaterFlowFMModel(mduPath);
 
             using (var gui = new DeltaShellGui())
             {
@@ -120,7 +121,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         {
             var mduPath = GetBendProfPath();
             mduPath = TestHelper.CreateLocalCopy(mduPath);
-            var model = new WaterFlowFMModel.WaterFlowFMModel(mduPath);
+            var model = new WaterFlowFMModel(mduPath);
 
             using (var gui = new DeltaShellGui())
             {
@@ -165,7 +166,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         {
             var mduPath = TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
-            var model = new WaterFlowFMModel.WaterFlowFMModel(mduPath);
+            var model = new WaterFlowFMModel(mduPath);
 
             using (var gui = new DeltaShellGui())
             {
@@ -242,7 +243,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 Action mainWindowShown = () =>
                 {
                     var project = app.Project;
-                    var model = new WaterFlowFMModel.WaterFlowFMModel(mduPath);
+                    var model = new WaterFlowFMModel(mduPath);
                     project.RootFolder.Add(model);
                     gui.CommandHandler.OpenView(model, typeof (ProjectItemMapView));
                     var mapView = gui.DocumentViews.OfType<ProjectItemMapView>().FirstOrDefault();
@@ -326,7 +327,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 Action mainWindowShown = () =>
                 {
                     var project = app.Project;
-                    var model = new WaterFlowFMModel.WaterFlowFMModel(mduPath);
+                    var model = new WaterFlowFMModel(mduPath);
                     project.RootFolder.Add(model);
                     gui.CommandHandler.OpenView(model, typeof(ProjectItemMapView));
                     var view = gui.DocumentViews.OfType<ProjectItemMapView>().FirstOrDefault();
@@ -366,7 +367,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 Action mainWindowShown = () =>
                 {
                     var project = app.Project;
-                    var model = new WaterFlowFMModel.WaterFlowFMModel(mduPath);
+                    var model = new WaterFlowFMModel(mduPath);
                     ActivityRunner.RunActivity(model);
                     project.RootFolder.Add(model);
                     gui.CommandHandler.OpenView(model, typeof(ProjectItemMapView));
@@ -387,7 +388,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
         private static WeakReference AddMduToProject(Project project, string mduPath)
         {
-            var model = new WaterFlowFMModel.WaterFlowFMModel(mduPath);
+            var model = new WaterFlowFMModel(mduPath);
             var weakRef = new WeakReference(model);
             project.RootFolder.Add(model);
             return weakRef;

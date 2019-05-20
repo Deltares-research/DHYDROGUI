@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DeltaShell.Plugins.FMSuite.FlowFM.Validation;
 using DelftTools.Hydro;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
@@ -15,7 +16,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         [Test]
         public void NoSelfIntersectionTest()
         {
-            var model = new WaterFlowFMModel.WaterFlowFMModel();
+            var model = new WaterFlowFMModel();
 
             var pointList = new List<Coordinate>
             {
@@ -46,7 +47,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         [Test]
         public void SelfIntersectionTest()
         {
-            var model = new WaterFlowFMModel.WaterFlowFMModel();
+            var model = new WaterFlowFMModel();
 
             var pointList = new List<Coordinate>
             {
@@ -80,7 +81,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         [Test]
         public void SelfIntersectionTest2()
         {
-            var model = new WaterFlowFMModel.WaterFlowFMModel();
+            var model = new WaterFlowFMModel();
 
             var pointList = new List<Coordinate>
             {
@@ -111,7 +112,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         [Test]
         public void NoEmbankmentIntersectionTest()
         {
-            var model = new WaterFlowFMModel.WaterFlowFMModel();
+            var model = new WaterFlowFMModel();
 
             var pointList1 = new List<Coordinate>
             {
@@ -155,7 +156,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         [Test]
         public void EmbankmentIntersectionTest()
         {
-            var model = new WaterFlowFMModel.WaterFlowFMModel();
+            var model = new WaterFlowFMModel();
 
             var pointList1 = new List<Coordinate>
             {
@@ -233,7 +234,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
                 Name = "Embankment01"
             };
 
-            var fmmodel = new WaterFlowFMModel.WaterFlowFMModel();
+            var fmmodel = new WaterFlowFMModel();
             fmmodel.Area.Embankments.Clear();
             fmmodel.Area.Embankments.Add(testEmbankment1);
 
@@ -277,7 +278,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
                 Name = "Embankment01"
             };
 
-            var fmmodel = new WaterFlowFMModel.WaterFlowFMModel();
+            var fmmodel = new WaterFlowFMModel();
             fmmodel.Area.Embankments.Clear();
             fmmodel.Area.Embankments.Add(testEmbankment);
 

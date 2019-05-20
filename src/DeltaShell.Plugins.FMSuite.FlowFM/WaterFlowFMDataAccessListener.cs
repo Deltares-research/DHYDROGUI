@@ -8,6 +8,7 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils.Aop;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using GeoAPI.Extensions.Coverages;
@@ -35,7 +36,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             base.OnPostLoad(entity, state, propertyNames);
 
-            var model = entity as WaterFlowFMModel.WaterFlowFMModel;
+            var model = entity as WaterFlowFMModel;
             if (model != null)
             {
                 UpdateDataItemNames(model);
@@ -66,7 +67,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
 
-        private static void FixImportFilePaths(WaterFlowFMModel.WaterFlowFMModel model)
+        private static void FixImportFilePaths(WaterFlowFMModel model)
         {
             // check if ImportSamplesOperations of model have valid paths otherwise try to correct using mdu file directory
             // this is needed in for backward compatibility (previously FilePath used to be relative to mdu path)
@@ -109,7 +110,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
 
-        private void UpdateDataItemNames(WaterFlowFMModel.WaterFlowFMModel model)
+        private void UpdateDataItemNames(WaterFlowFMModel model)
         {
             foreach (IDataItem dataItem in model.AllDataItems)
             {
@@ -121,7 +122,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
 
-        private static bool SynchronizeDataItemValue(WaterFlowFMModel.WaterFlowFMModel model, string name, object value)
+        private static bool SynchronizeDataItemValue(WaterFlowFMModel model, string name, object value)
         {
             IDataItem dataItem = model.DataItems.FirstOrDefault(di => di.Name == name);
 
@@ -161,7 +162,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             return true;
         }
 
-        private static bool SynchronizeDataItemValues(WaterFlowFMModel.WaterFlowFMModel model, string baseName,
+        private static bool SynchronizeDataItemValues(WaterFlowFMModel model, string baseName,
                                                       CoverageDepthLayersList coverageDepthLayersList)
         {
             if (coverageDepthLayersList.Coverages.Count == 1)
@@ -175,7 +176,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                                         .Any();
         }
 
-        private static void LoadSpatialData(WaterFlowFMModel.WaterFlowFMModel waterFlowFMModel)
+        private static void LoadSpatialData(WaterFlowFMModel waterFlowFMModel)
         {
             SynchronizeDataItemValue(waterFlowFMModel, WaterFlowFMModelDefinition.BathymetryDataItemName,
                                      waterFlowFMModel.Bathymetry);

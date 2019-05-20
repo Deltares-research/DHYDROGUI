@@ -19,11 +19,12 @@ using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
 using DeltaShell.Plugins.FMSuite.Common.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Properties;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
 {
-    public class WaterFlowFMModelNodePresenter : ModelNodePresenterBase<WaterFlowFMModel.WaterFlowFMModel>
+    public class WaterFlowFMModelNodePresenter : ModelNodePresenterBase<WaterFlowFMModel>
     {
         public static readonly Bitmap UnstrucModelIcon = new Bitmap(Resources.unstrucmodel, 16, 16);
         public static readonly Bitmap ThinDamIcon = new Bitmap(Resources.thindam, 16, 16);
@@ -50,7 +51,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
         {
         }
 
-        public override void UpdateNode(ITreeNode parentNode, ITreeNode node, WaterFlowFMModel.WaterFlowFMModel nodeData)
+        public override void UpdateNode(ITreeNode parentNode, ITreeNode node, WaterFlowFMModel nodeData)
         {
             if (firstTimeCreate)
             {
@@ -62,12 +63,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
             node.Image = UnstrucModelIcon;
         }
 
-        public override DragOperations CanDrag(WaterFlowFMModel.WaterFlowFMModel nodeData)
+        public override DragOperations CanDrag(WaterFlowFMModel nodeData)
         {
             return DragOperations.Move | DragOperations.Copy;
         }
 
-        public override IEnumerable GetChildNodeObjects(WaterFlowFMModel.WaterFlowFMModel parentNodeData, ITreeNode node)
+        public override IEnumerable GetChildNodeObjects(WaterFlowFMModel parentNodeData, ITreeNode node)
         {
             // experimental: don't have 'Input' folder..
             foreach (var input in GetInputItems(parentNodeData))
@@ -77,17 +78,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
             yield return new TreeFolder(parentNodeData, GetOutputItems(parentNodeData), "Output", FolderImageType.Output);
         }
 
-        protected override void OnPropertyChanged(WaterFlowFMModel.WaterFlowFMModel model, ITreeNode node, PropertyChangedEventArgs e)
+        protected override void OnPropertyChanged(WaterFlowFMModel model, ITreeNode node, PropertyChangedEventArgs e)
         {
             base.OnPropertyChanged(model, node, e);
 
-            if (e.PropertyName == TypeUtils.GetMemberName<WaterFlowFMModel.WaterFlowFMModel>(m => m.InitialCoverageSetChanged))
+            if (e.PropertyName == TypeUtils.GetMemberName<WaterFlowFMModel>(m => m.InitialCoverageSetChanged))
             {
                 TreeView.RefreshChildNodes(node);
             }
         }
 
-        private IEnumerable GetInputItems(WaterFlowFMModel.WaterFlowFMModel model)
+        private IEnumerable GetInputItems(WaterFlowFMModel model)
         {
             // some of these are shortcuts because they have not specific data object
             // others are wrapped in shortcuts because they are not IProjectItem
@@ -106,7 +107,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
             yield return new FmModelTreeShortcut("Output Parameters", OutParamIcon, model, "Output Parameters");
         }
 
-        private static IEnumerable<object> GetInitialConditionsItems(WaterFlowFMModel.WaterFlowFMModel model)
+        private static IEnumerable<object> GetInitialConditionsItems(WaterFlowFMModel model)
         {
             yield return model.GetDataItemByValue(model.RestartInput);
 
@@ -135,7 +136,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
             }
         }
 
-        private static IEnumerable<object> GetPhysicalSubItems(WaterFlowFMModel.WaterFlowFMModel model)
+        private static IEnumerable<object> GetPhysicalSubItems(WaterFlowFMModel model)
         {
             yield return new FmModelTreeShortcut(WaterFlowFMModelDefinition.RoughnessDataItemName, Resources.Roughness, model, model.Roughness, ShortCutType.SpatialCoverage);
             yield return new FmModelTreeShortcut(WaterFlowFMModelDefinition.ViscosityDataItemName, Resources.tube, model, model.Viscosity, ShortCutType.SpatialCoverage);
@@ -149,13 +150,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
             yield return model.WindFields;
         }
 
-        private IEnumerable GetOutputItems(WaterFlowFMModel.WaterFlowFMModel model)
+        private IEnumerable GetOutputItems(WaterFlowFMModel model)
         {
             yield return new TreeFolder(model, GetRestartStates(model), "States", FolderImageType.None);
             var dimrLogDataItem = model.GetDataItems<TextDocument>(DataItemRole.Output).FirstOrDefault(di => di.Tag == DimrRunner.DimrRunLogfileDataItemTag);
             if (dimrLogDataItem != null) yield return dimrLogDataItem;
 
-            var diaLogDataItem = model.GetDataItems<TextDocument>(DataItemRole.Output).FirstOrDefault(di => di.Tag == WaterFlowFMModel.WaterFlowFMModel.DiaFileDataItemTag);
+            var diaLogDataItem = model.GetDataItems<TextDocument>(DataItemRole.Output).FirstOrDefault(di => di.Tag == WaterFlowFMModel.DiaFileDataItemTag);
             if (diaLogDataItem != null) yield return diaLogDataItem;
 
             foreach (var p in GetOutputDataItemsCore(model))
@@ -164,7 +165,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
             }
         }
 
-        private IEnumerable GetOutputDataItemsCore(WaterFlowFMModel.WaterFlowFMModel model)
+        private IEnumerable GetOutputDataItemsCore(WaterFlowFMModel model)
         {
             if (model.OutputMapFileStore != null)
             {
@@ -209,7 +210,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
 
         private static readonly IList<DataItem> DataItems = new List<DataItem>();
 
-        private static IEnumerable GetRestartStates(WaterFlowFMModel.WaterFlowFMModel data)
+        private static IEnumerable GetRestartStates(WaterFlowFMModel data)
         {
             var restartStates =
                 data.DataItems.Where(
@@ -221,7 +222,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
         {
             var menu = base.GetContextMenu(sender, nodeData);
 
-            var model = nodeData as WaterFlowFMModel.WaterFlowFMModel;
+            var model = nodeData as WaterFlowFMModel;
             if (model == null) return menu;
 
             var contextMenu = new ContextMenuStrip();
@@ -255,7 +256,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
             return menu;
         }
 
-        private ClonableToolStripMenuItem CreateWpfSettingsMenuItem(WaterFlowFMModel.WaterFlowFMModel model)
+        private ClonableToolStripMenuItem CreateWpfSettingsMenuItem(WaterFlowFMModel model)
         {
             var item = new ClonableToolStripMenuItem
             {
@@ -266,7 +267,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
             return item;
         }
 
-        private ClonableToolStripMenuItem CreateValidationMenuItem(WaterFlowFMModel.WaterFlowFMModel model)
+        private ClonableToolStripMenuItem CreateValidationMenuItem(WaterFlowFMModel model)
         {
             var item = new ClonableToolStripMenuItem
             {
@@ -278,7 +279,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
             return item;
         }
 
-        private ClonableToolStripMenuItem CreateFileStructureItem(WaterFlowFMModel.WaterFlowFMModel model)
+        private ClonableToolStripMenuItem CreateFileStructureItem(WaterFlowFMModel model)
         {
             var item = new ClonableToolStripMenuItem
             {
@@ -292,19 +293,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
 
         private void OnSettingsClicked(object sender, EventArgs args)
         {
-            var model = (WaterFlowFMModel.WaterFlowFMModel)((ToolStripItem)sender).Tag;
+            var model = (WaterFlowFMModel)((ToolStripItem)sender).Tag;
             Gui.DocumentViewsResolver.OpenViewForData(model, typeof(WpfSettingsView));
         }
 
         private void OnValidateClicked(object sender, EventArgs args)
         {
-            var model = (WaterFlowFMModel.WaterFlowFMModel)((ToolStripItem)sender).Tag;
+            var model = (WaterFlowFMModel)((ToolStripItem)sender).Tag;
             Gui.DocumentViewsResolver.OpenViewForData(model, typeof(ValidationView));
         }
 
         private void OnFileStructureClicked(object sender, EventArgs args)
         {
-            var model = (WaterFlowFMModel.WaterFlowFMModel)((ToolStripItem)sender).Tag;
+            var model = (WaterFlowFMModel)((ToolStripItem)sender).Tag;
             Gui.DocumentViewsResolver.OpenViewForData(model, typeof(WaterFlowFMFileStructureView));
         }
     }

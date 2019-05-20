@@ -3,6 +3,7 @@ using System.Linq;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
@@ -17,12 +18,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
     [Category(TestCategory.Slow)]
     public class WaterFlowFMModelTracersTest
     {
-        private static WaterFlowFMModel.WaterFlowFMModel CreateSimpleBoxModel()
+        private static WaterFlowFMModel CreateSimpleBoxModel()
         {
             var mduPath = TestHelper.GetTestFilePath(@"simpleBox\simplebox.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
 
-            return new WaterFlowFMModel.WaterFlowFMModel(mduPath);
+            return new WaterFlowFMModel(mduPath);
         }
 
         [Test]
@@ -82,7 +83,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             //reload
             model.ExportTo("tracertest/simplebox.mdu", false);
-            var newModel = new WaterFlowFMModel.WaterFlowFMModel("tracertest/simplebox.mdu");
+            var newModel = new WaterFlowFMModel("tracertest/simplebox.mdu");
             Assert.AreEqual(new[] {"substance_1"}, newModel.TracerDefinitions);
             var boundaryCondition = newModel.BoundaryConditions.OfType<FlowBoundaryCondition>()
                 .FirstOrDefault(bc => bc.FlowQuantity == FlowBoundaryQuantityType.Tracer);
@@ -140,7 +141,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             
             // reload
             model.ExportTo("tracertest/simplebox.mdu", false);
-            var newModel = new WaterFlowFMModel.WaterFlowFMModel("tracertest/simplebox.mdu");
+            var newModel = new WaterFlowFMModel("tracertest/simplebox.mdu");
             Assert.AreEqual(new[] { "substance_1" }, newModel.TracerDefinitions);
             Assert.AreEqual(1, newModel.InitialTracers.Count);
             var newDataItem = newModel.DataItems.FirstOrDefault(di => di.Value == newModel.InitialTracers[0]);
@@ -203,7 +204,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             //reload
             model.ExportTo("tracertest/simplebox.mdu", false);
-            var newModel = new WaterFlowFMModel.WaterFlowFMModel("tracertest/simplebox.mdu");
+            var newModel = new WaterFlowFMModel("tracertest/simplebox.mdu");
             Assert.AreEqual(new[] { "substance_1" }, newModel.TracerDefinitions);
             var boundaryCondition = newModel.BoundaryConditions.OfType<FlowBoundaryCondition>()
                 .FirstOrDefault(bc => bc.FlowQuantity == FlowBoundaryQuantityType.Tracer);
@@ -273,7 +274,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             //reload
             model.ExportTo("tracertest/simplebox.mdu", false);
-            var newModel = new WaterFlowFMModel.WaterFlowFMModel("tracertest/simplebox.mdu");
+            var newModel = new WaterFlowFMModel("tracertest/simplebox.mdu");
             Assert.AreEqual(new[] {"substance_1", "substance_2"}, newModel.TracerDefinitions);
             var boundaryCondition = newModel.BoundaryConditions.OfType<FlowBoundaryCondition>()
                 .FirstOrDefault(bc => bc.FlowQuantity == FlowBoundaryQuantityType.Tracer);

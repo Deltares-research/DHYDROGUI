@@ -18,7 +18,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using GeoAPI.Extensions.Feature;
 using NetTopologySuite.Extensions.Features;
 
-namespace DeltaShell.Plugins.FMSuite.FlowFM.WaterFlowFMModel
+namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 {
     public partial class WaterFlowFMModel
     {

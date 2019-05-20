@@ -9,6 +9,7 @@ using DelftTools.Utils.Validation;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.FMSuite.FlowFM.Sediment;
@@ -381,16 +382,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
         #region Read logic
 
-        private static readonly Dictionary<string, Action<IDelftIniCategory, string, WaterFlowFMModel.WaterFlowFMModel>> SectionLoaders =
+        private static readonly Dictionary<string, Action<IDelftIniCategory, string, WaterFlowFMModel>> SectionLoaders =
             new Dictionary
-                <string, Action<IDelftIniCategory, string, WaterFlowFMModel.WaterFlowFMModel>>
+                <string, Action<IDelftIniCategory, string, WaterFlowFMModel>>
                 {
                     {Header, SedimentSectionLoader},
                     {OverallHeader, SedimentOverallSectionLoader}
                 };
 
         private static void SedimentOverallSectionLoader(IDelftIniCategory category, string path,
-                                                         WaterFlowFMModel.WaterFlowFMModel model)
+                                                         WaterFlowFMModel model)
         {
             foreach (ISedimentProperty sedimentProperty in model.SedimentOverallProperties)
             {
@@ -398,7 +399,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
         }
 
-        private static void SedimentSectionLoader(IDelftIniCategory category, string path, WaterFlowFMModel.WaterFlowFMModel model)
+        private static void SedimentSectionLoader(IDelftIniCategory category, string path, WaterFlowFMModel model)
         {
             string name = category.GetPropertyValue(Name.Key);
 
@@ -456,7 +457,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
          * But when importing there is no other way but to do it like this as
          * the ExtForceFile.cs only loads the SedConc spatially varying operations.
          */
-        private static void LoadSpatiallyVaryingOperationForProperty(ISedimentProperty property, WaterFlowFMModel.WaterFlowFMModel model,
+        private static void LoadSpatiallyVaryingOperationForProperty(ISedimentProperty property, WaterFlowFMModel model,
                                                                      string path)
         {
             var varyingProp = property as ISpatiallyVaryingSedimentProperty;
@@ -498,7 +499,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             spatialOperations.Add(operation);
         }
 
-        public static void LoadSediments(string path, WaterFlowFMModel.WaterFlowFMModel model)
+        public static void LoadSediments(string path, WaterFlowFMModel model)
         {
             try
             {
@@ -515,7 +516,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
                     /*Load paramaters related to the model*/
                     if (SectionLoaders.TryGetValue(categoryName,
-                                                   out Action<IDelftIniCategory, string, WaterFlowFMModel.WaterFlowFMModel> loader))
+                                                   out Action<IDelftIniCategory, string, WaterFlowFMModel> loader))
                     {
                         loader(category, path, model);
                     }
@@ -542,7 +543,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
         }
 
-        private static void StoreUnknownPropertiesForOverallCategory(WaterFlowFMModel.WaterFlowFMModel model, DelftIniCategory category,
+        private static void StoreUnknownPropertiesForOverallCategory(WaterFlowFMModel model, DelftIniCategory category,
                                                                      WaterFlowFMModelDefinition definition)
         {
             IEventedList<ISedimentProperty> overallProps = model.SedimentOverallProperties;
@@ -570,7 +571,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         }
 
         private static void StoreUnknownPropertiesForSedimentFractionCategory(
-            WaterFlowFMModel.WaterFlowFMModel model, DelftIniCategory category, WaterFlowFMModelDefinition definition)
+            WaterFlowFMModel model, DelftIniCategory category, WaterFlowFMModelDefinition definition)
         {
             DelftIniProperty sedimentNameProperty = category.Properties.FirstOrDefault(p => p.Name.Equals(Name.Key));
             string sedimentFractionName = sedimentNameProperty?.Value;

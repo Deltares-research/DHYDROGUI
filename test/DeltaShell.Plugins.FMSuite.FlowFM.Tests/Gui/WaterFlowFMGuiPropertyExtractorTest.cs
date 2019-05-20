@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
@@ -12,7 +13,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Test]
         public void CheckExtraction()
         {
-            var model = new WaterFlowFMModel.WaterFlowFMModel();
+            var model = new WaterFlowFMModel();
 
             var extractor = new WaterFlowFMGuiPropertyExtractor(model);
             var objectDescription = extractor.ExtractObjectDescription(new string[0]);
@@ -25,7 +26,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Test]
         public void CheckTooltips()
         {
-            var model = new WaterFlowFMModel.WaterFlowFMModel();
+            var model = new WaterFlowFMModel();
 
             var extractor = new WaterFlowFMGuiPropertyExtractor(model);
             var objectDescription = extractor.ExtractObjectDescription(new string[0]);

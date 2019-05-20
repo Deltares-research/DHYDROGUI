@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.Sediment;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
@@ -56,7 +57,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var testFile = "ModelWithMorphology.mdu";
             var mduFile = new MduFile();
             var hydroArea = new HydroArea();
-            var model = new WaterFlowFMModel.WaterFlowFMModel();
+            var model = new WaterFlowFMModel();
             var sedimentData = model as ISedimentModelData;
             var modelDefinition = model.ModelDefinition;
             modelDefinition.UseMorphologySediment = true;

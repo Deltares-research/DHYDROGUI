@@ -6,6 +6,7 @@ using System.Threading;
 using DelftTools.Utils.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Geometries;
@@ -74,7 +75,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
         /// <param name="model"> </param>
         /// <param name="fullExport"> When false makes an export without extForces or features </param>
         /// <returns> </returns>
-        public UnstrucGridOperationApi(WaterFlowFMModel.WaterFlowFMModel model, bool fullExport = true)
+        public UnstrucGridOperationApi(WaterFlowFMModel model, bool fullExport = true)
         {
             tempPath = FileUtils.CreateTempDirectory();
 

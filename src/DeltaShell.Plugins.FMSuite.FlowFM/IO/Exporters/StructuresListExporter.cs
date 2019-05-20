@@ -11,6 +11,7 @@ using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Common.IO;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using log4net;
@@ -31,7 +32,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
         /// </summary>
         public StructuresListType Type { get; set; }
 
-        public Func<IEnumerable, WaterFlowFMModel.WaterFlowFMModel> GetModelForList { get; set; }
+        public Func<IEnumerable, WaterFlowFMModel> GetModelForList { get; set; }
 
         private string GetStructuresName()
         {
@@ -72,7 +73,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
             }
 
             var list = (IList) item;
-            WaterFlowFMModel.WaterFlowFMModel model = GetModelForList(list);
+            WaterFlowFMModel model = GetModelForList(list);
 
             var structuresFile = new StructuresFile
             {

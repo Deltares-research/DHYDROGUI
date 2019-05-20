@@ -31,6 +31,7 @@ using System.Linq;
 using System.Net;
 using System.Runtime.Remoting;
 using System.Windows.Forms;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 {
@@ -248,7 +249,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
         public int SupportPointIndex { private get; set; }
 
-        private WaterFlowFMModel.WaterFlowFMModel model;
+        private WaterFlowFMModel model;
 
         private readonly AddSeriesTool addSeriesTool;
 
@@ -345,7 +346,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             }
         }
 
-        public WaterFlowFMModel.WaterFlowFMModel Model
+        public WaterFlowFMModel Model
         {
             private get { return model; }
             set

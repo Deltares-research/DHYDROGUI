@@ -9,6 +9,7 @@ using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using NetTopologySuite.Extensions.Coverages;
@@ -246,7 +247,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
                 destFilePath = Path.Combine(inputPath, Path.GetFileName(ncFilePath));
                 File.Copy(ncFilePath, destFilePath, true);
 
-                var model = new WaterFlowFMModel.WaterFlowFMModel(mduFilePath);
+                var model = new WaterFlowFMModel(mduFilePath);
 
                 // Construct Path
                 var outputFilePath = Path.Combine(outputFolderPath, "output.zip");
@@ -323,7 +324,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
                     tempWriter.Flush();
                 }
 
-                var model = new WaterFlowFMModel.WaterFlowFMModel(mduFilePath);
+                var model = new WaterFlowFMModel(mduFilePath);
 
                 // Construct Path
                 var outputFilePath = Path.Combine(outputFolderPath, "output.zip");

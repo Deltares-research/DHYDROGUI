@@ -2,7 +2,7 @@ using DelftTools.Shell.Core.Workflow;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using NetTopologySuite.Extensions.Grids;
 
-namespace DeltaShell.Plugins.FMSuite.FlowFM.WaterFlowFMModel
+namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 {
     public interface IWaterFlowFMModel : ITimeDependentModel
     {

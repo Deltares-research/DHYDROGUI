@@ -12,15 +12,16 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 {
     [TestFixture]
     public class WaterFlowFMBoundaryConditionValidatorTest
     {
-        private static WaterFlowFMModel.WaterFlowFMModel CreateValidModel()
+        private static WaterFlowFMModel CreateValidModel()
         {
-            return new WaterFlowFMModel.WaterFlowFMModel
+            return new WaterFlowFMModel
             {
                 TimeStep = new TimeSpan(0, 0, 1, 0),
                 StartTime = new DateTime(2000, 1, 1),
@@ -29,7 +30,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             };
         }
 
-        private static WaterFlowFMModel.WaterFlowFMModel CreateValidMorphologyModel()
+        private static WaterFlowFMModel CreateValidMorphologyModel()
         {
             var model = CreateValidModel();
             model.ModelDefinition.UseMorphologySediment = true;
@@ -275,7 +276,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             Assert.AreEqual(1, report.ErrorCount);
         }
 
-        private static void AddPointDataToBoundaryCondition(FlowBoundaryCondition boundaryCondition, WaterFlowFMModel.WaterFlowFMModel fmModel)
+        private static void AddPointDataToBoundaryCondition(FlowBoundaryCondition boundaryCondition, WaterFlowFMModel fmModel)
         {
             boundaryCondition.DataPointIndices.Add(0);
             boundaryCondition.PointData[0].Arguments[0].SetValues(new[] {fmModel.StartTime, fmModel.StopTime});

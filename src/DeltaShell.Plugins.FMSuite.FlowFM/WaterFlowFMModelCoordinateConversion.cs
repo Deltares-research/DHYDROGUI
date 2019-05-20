@@ -4,6 +4,7 @@ using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DeltaShell.NGHS.IO.Grid;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using GeoAPI.CoordinateSystems.Transformations;
 using GeoAPI.Extensions.CoordinateSystems;
@@ -19,7 +20,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 {
     public static class WaterFlowFMModelCoordinateConversion
     {
-        public static bool CanAssignCoordinateSystem(WaterFlowFMModel.WaterFlowFMModel model, ICoordinateSystem coordinateSystem)
+        public static bool CanAssignCoordinateSystem(WaterFlowFMModel model, ICoordinateSystem coordinateSystem)
         {
             Envelope gridEnvelope = model.GridExtent;
             if (!CoordinateSystemValidator.CanAssignCoordinateSystem(gridEnvelope, coordinateSystem))
@@ -31,7 +32,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             return CoordinateSystemValidator.CanAssignCoordinateSystem(modelCoordinates, coordinateSystem);
         }
 
-        private static bool CanConvertModel(WaterFlowFMModel.WaterFlowFMModel model, ICoordinateTransformation transformation)
+        private static bool CanConvertModel(WaterFlowFMModel model, ICoordinateTransformation transformation)
         {
             Envelope gridEnvelope = model.GridExtent;
             if (!CoordinateSystemValidator.CanConvertByTransformation(gridEnvelope, transformation))
@@ -61,7 +62,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                         .ToList();
         }
 
-        public static void ConvertModel(WaterFlowFMModel.WaterFlowFMModel model, ICoordinateTransformation transformation)
+        public static void ConvertModel(WaterFlowFMModel model, ICoordinateTransformation transformation)
         {
             if (!CanConvertModel(model, transformation))
             {
@@ -121,7 +122,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
 
-        private static IEnumerable<IFeature> GetAllModelFeatures(WaterFlowFMModel.WaterFlowFMModel model)
+        private static IEnumerable<IFeature> GetAllModelFeatures(WaterFlowFMModel model)
         {
             HydroArea area = model.Area;
             return area.ObservationCrossSections.OfType<IFeature>()

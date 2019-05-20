@@ -9,6 +9,7 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.NetworkEditor.Gui;
 using DeltaShell.Plugins.NetworkEditor.Import;
@@ -52,8 +53,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                     Action mainWindowShown = delegate
                     {
-                        app.Project.RootFolder.Add(new WaterFlowFMModel.WaterFlowFMModel());
-                        var targetModel = app.Project.RootFolder.Models.OfType<WaterFlowFMModel.WaterFlowFMModel>().FirstOrDefault();
+                        app.Project.RootFolder.Add(new WaterFlowFMModel());
+                        var targetModel = app.Project.RootFolder.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
                         Assert.IsNotNull(targetModel);
 
                         var dryPointsImporter =

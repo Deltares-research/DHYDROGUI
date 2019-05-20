@@ -12,7 +12,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
 
-namespace DeltaShell.Plugins.FMSuite.FlowFM.WaterFlowFMModel
+namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 {
     public partial class WaterFlowFMModel
     {

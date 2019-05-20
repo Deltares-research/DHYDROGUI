@@ -14,7 +14,7 @@ using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel;
 using DeltaShell.Plugins.FMSuite.FlowFM;
-using DeltaShell.Plugins.FMSuite.FlowFM.WaterFlowFMModel;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.NetCDF;
 using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.Scripting;

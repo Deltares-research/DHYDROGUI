@@ -26,6 +26,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.Sediment;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
@@ -42,7 +43,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
               so it could happen the Spatially Varying operations are not loaded. */
             var mduPath = TestHelper.GetTestFilePath(@"spatially_varying_sediment_properties_in_model\FlowFM.mdu");
             var localMduFilePath = TestHelper.CreateLocalCopy(mduPath);
-            var model = new WaterFlowFMModel.WaterFlowFMModel(localMduFilePath);
+            var model = new WaterFlowFMModel(localMduFilePath);
 
             var fraction = model.SedimentFractions.FirstOrDefault(sf => sf.Name == "gouwe");
             Assert.IsNotNull(fraction);
@@ -74,7 +75,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 var mduFileName = "par16.mdu";
                 var localMduFilePath = Path.Combine(tempDir, mduFileName);
             
-                 var model = new WaterFlowFMModel.WaterFlowFMModel(localMduFilePath);
+                 var model = new WaterFlowFMModel(localMduFilePath);
 
                  Assert.IsNotNull(model);
             });
@@ -89,7 +90,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var localMduFilePath = TestHelper.CreateLocalCopy(mduPath);
             var localMduDir = Path.GetDirectoryName(localMduFilePath);
 
-            var model = new WaterFlowFMModel.WaterFlowFMModel(localMduFilePath);
+            var model = new WaterFlowFMModel(localMduFilePath);
 
             ActivityRunner.RunActivity(model);
 
@@ -104,14 +105,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         public void ExportImportAssertUseTemperatureIsSetCorrectly()
         {
-            var waterFlowFMModel = new WaterFlowFMModel.WaterFlowFMModel();
+            var waterFlowFMModel = new WaterFlowFMModel();
             waterFlowFMModel.ModelDefinition.GetModelProperty(KnownProperties.Temperature).SetValueAsString("3");
             const string dir = "temptest";
             Directory.CreateDirectory(dir);
             const string mduFileName = "excesstemp.mdu";
             var mduPath = Path.Combine(Path.GetFullPath(dir), mduFileName);
             waterFlowFMModel.ExportTo(mduPath);
-            var importedModel = new WaterFlowFMModel.WaterFlowFMModel(mduPath);
+            var importedModel = new WaterFlowFMModel(mduPath);
             Assert.IsTrue(importedModel.UseTemperature);
         }
 
@@ -125,7 +126,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             try
             {
-                var newFmModel = new WaterFlowFMModel.WaterFlowFMModel();
+                var newFmModel = new WaterFlowFMModel();
                 newFmModel.ModelDefinition.HeatFluxModel.Type = HeatFluxModelType.Composite;
                 if (useSolarRadiation) newFmModel.ModelDefinition.HeatFluxModel.ContainsSolarRadiation = true;
 
@@ -224,7 +225,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 timFileImporterExporter.Write(timFilePath, meteoData, fmModel.ReferenceTime);
 
                 // Create new fm model
-                var newFmModel = new WaterFlowFMModel.WaterFlowFMModel();
+                var newFmModel = new WaterFlowFMModel();
                 newFmModel.ModelDefinition.HeatFluxModel.Type = HeatFluxModelType.Composite;
                 if (useSolarRadiation) newFmModel.ModelDefinition.HeatFluxModel.ContainsSolarRadiation = true;
 
@@ -259,7 +260,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             FileUtils.DeleteIfExists(exportPath);
             try
             {
-                var fmModel = new WaterFlowFMModel.WaterFlowFMModel();
+                var fmModel = new WaterFlowFMModel();
 
                 #region Set Pillar and DataModel
 
@@ -343,7 +344,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             {
                 using (var app = GetConfiguredApplication(tempProjectFilePath))
                 {
-                    using (var model = new WaterFlowFMModel.WaterFlowFMModel())
+                    using (var model = new WaterFlowFMModel())
                     {
                         model.Grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
                         var cellsValue = ((int)UnstructuredGridFileHelper.BedLevelLocation.Faces).ToString();
@@ -356,7 +357,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                         model.ReloadGrid(true, true);
                     }
 
-                    using (var model = new WaterFlowFMModel.WaterFlowFMModel(tempMduFilePath))
+                    using (var model = new WaterFlowFMModel(tempMduFilePath))
                     {
                         TypeUtils.CallPrivateMethod(model, "UpdateBathymetryCoverage", UnstructuredGridFileHelper.BedLevelLocation.Faces);
 
@@ -428,9 +429,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             return app;
         }
 
-        private static WaterFlowFMModel.WaterFlowFMModel GetWaterFlowFmModelWithMeteoData(bool useSolarRadiation)
+        private static WaterFlowFMModel GetWaterFlowFmModelWithMeteoData(bool useSolarRadiation)
         {
-            var fmModel = new WaterFlowFMModel.WaterFlowFMModel();
+            var fmModel = new WaterFlowFMModel();
             Assert.IsNull(fmModel.ModelDefinition.HeatFluxModel.MeteoData);
             fmModel.ModelDefinition.HeatFluxModel.Type = HeatFluxModelType.Composite;
 
@@ -547,7 +548,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             {
                 using (var app = GetConfiguredApplication(tempProjectFilePath))
                 {
-                    using (var model = new WaterFlowFMModel.WaterFlowFMModel())
+                    using (var model = new WaterFlowFMModel())
                     {
                         model.ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value = true;
 

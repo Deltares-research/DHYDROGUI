@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.Sediment;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
@@ -107,7 +108,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         public void ExportImportSedimentBedLoadToSingleFile()
         {
             //Note, for the moment we assume these type of sediments are compatible with waterflowfm.
-            var model = new WaterFlowFMModel.WaterFlowFMModel(TestHelper.GetTestFilePath(@"simplebox/simplebox.mdu"));
+            var model = new WaterFlowFMModel(TestHelper.GetTestFilePath(@"simplebox/simplebox.mdu"));
             model.Name = "newname";
 
             model.ModelDefinition.UseMorphologySediment = true;

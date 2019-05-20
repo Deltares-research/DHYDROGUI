@@ -8,6 +8,7 @@ using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.DelftModels.HydroModel.Validation;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.FMSuite.FlowFM;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.Wave;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 using NetTopologySuite.Extensions.Grids;
@@ -16,7 +17,6 @@ using Rhino.Mocks;
 using SharpMapTestUtils;
 using Resources = DeltaShell.Plugins.DelftModels.HydroModel.Properties.Resources;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
-using DeltaShell.Plugins.FMSuite.FlowFM.WaterFlowFMModel;
 using SharpMap.Extensions.CoordinateSystems;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Validation

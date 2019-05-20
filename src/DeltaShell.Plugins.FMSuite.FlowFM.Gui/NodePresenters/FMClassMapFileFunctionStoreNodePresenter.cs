@@ -7,6 +7,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
 {
@@ -66,9 +67,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
             return existingItem;
         }
 
-        private WaterFlowFMModel.WaterFlowFMModel GetModelByFunctionStore(FMClassMapFileFunctionStore store)
+        private WaterFlowFMModel GetModelByFunctionStore(FMClassMapFileFunctionStore store)
         {
-            return Gui?.Application?.Project?.RootFolder?.Models?.OfType<WaterFlowFMModel.WaterFlowFMModel>()
+            return Gui?.Application?.Project?.RootFolder?.Models?.OfType<WaterFlowFMModel>()
                 .FirstOrDefault(m => Equals(m.OutputClassMapFileStore, store));
         }
 

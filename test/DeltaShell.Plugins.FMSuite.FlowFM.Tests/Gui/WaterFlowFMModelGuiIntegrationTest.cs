@@ -34,6 +34,7 @@ using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 using DelftTools.Utils.IO;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using Control = System.Windows.Controls.Control;
 using ObservationCrossSection2D = DelftTools.Hydro.ObservationCrossSection2D;
 
@@ -50,7 +51,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             var mduPath = TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
 
-            var model = new WaterFlowFMModel.WaterFlowFMModel(mduPath);
+            var model = new WaterFlowFMModel(mduPath);
 
             using (var gui = new DeltaShellGui())
             {
@@ -117,10 +118,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 {
                     // Add water flow model to project
                     var project = app.Project;
-                    project.RootFolder.Add(new WaterFlowFMModel.WaterFlowFMModel());
+                    project.RootFolder.Add(new WaterFlowFMModel());
 
                     // Check model name
-                    var targetModel = project.RootFolder.Models.OfType<WaterFlowFMModel.WaterFlowFMModel>().FirstOrDefault();
+                    var targetModel = project.RootFolder.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
                     Assert.IsNotNull(targetModel);
                     Assert.That(targetModel.Name, Is.StringContaining("FlowFM"));
 
@@ -130,7 +131,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     importer.ImportItem(mduPath, targetModel);
 
                     // Check name of imported water flow model
-                    targetModel = project.RootFolder.Models.OfType<WaterFlowFMModel.WaterFlowFMModel>().FirstOrDefault();
+                    targetModel = project.RootFolder.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
                     Assert.IsNotNull(targetModel);
                     Assert.That(targetModel.Name, Is.StringContaining("har"));
                 };
@@ -168,9 +169,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     Assert.That(testFolder.Name, Is.StringContaining("Test Folder"));
 
                     // Add new water flow model to the new folder and check its name
-                    testFolder.Add(new WaterFlowFMModel.WaterFlowFMModel());
+                    testFolder.Add(new WaterFlowFMModel());
                     var targetModel =
-                        testFolder.Models.OfType<WaterFlowFMModel.WaterFlowFMModel>().FirstOrDefault();
+                        testFolder.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
                     Assert.IsNotNull(targetModel);
                     Assert.That(targetModel.Name, Is.StringContaining("FlowFM"));
 
@@ -180,7 +181,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     importer.ImportItem(mduPath, targetModel);
 
                     // Check name of imported water flow model
-                    targetModel = testFolder.Models.OfType<WaterFlowFMModel.WaterFlowFMModel>().FirstOrDefault();
+                    targetModel = testFolder.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
                     Assert.IsNotNull(targetModel);
                     Assert.That(targetModel.Name, Is.StringContaining("har"));
                 };
@@ -197,7 +198,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Category(TestCategory.WindowsForms)]
         public void GivenWaterFlowFmModel_WhenOnChange_CloseHeatFluxModelViewIsTested()
         {
-            var model = new WaterFlowFMModel.WaterFlowFMModel();
+            var model = new WaterFlowFMModel();
 
             using (var gui = new DeltaShellGui())
             {
@@ -241,7 +242,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             var mduPath = TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
 
-            var model = new WaterFlowFMModel.WaterFlowFMModel(mduPath);
+            var model = new WaterFlowFMModel(mduPath);
 
             using (var gui = new DeltaShellGui())
             {
@@ -288,7 +289,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
 
-            var model = new WaterFlowFMModel.WaterFlowFMModel(mduPath) {ShowModelRunConsole = true};
+            var model = new WaterFlowFMModel(mduPath) {ShowModelRunConsole = true};
             model.ExplicitWorkingDirectory = model.WorkingDirectoryPath;
             using (var gui = new DeltaShellGui())
             {
@@ -338,7 +339,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 TestHelper.GetTestFilePath(@"harlingen\har.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
 
-            var model = new WaterFlowFMModel.WaterFlowFMModel(mduPath) {ShowModelRunConsole = true};
+            var model = new WaterFlowFMModel(mduPath) {ShowModelRunConsole = true};
 
             using (var gui = new DeltaShellGui())
             {
@@ -380,7 +381,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 TestHelper.GetTestFilePath(@"harlingen\har.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
 
-            var model = new WaterFlowFMModel.WaterFlowFMModel(mduPath) { ShowModelRunConsole = true };
+            var model = new WaterFlowFMModel(mduPath) { ShowModelRunConsole = true };
             ActivityRunner.RunActivity(model);
 
             using (var gui = new DeltaShellGui())
@@ -546,7 +547,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 var testFilePath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
                 testFilePath = TestHelper.CreateLocalCopy(testFilePath);
 
-                var model = new WaterFlowFMModel.WaterFlowFMModel(testFilePath);
+                var model = new WaterFlowFMModel(testFilePath);
 
                 gui.Application.Project.RootFolder.Add(model);
 
@@ -677,14 +678,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             Console.WriteLine($"Import time = : {timer.Elapsed}");
         }
 
-        private static WaterFlowFMModel.WaterFlowFMModel ImportModelFromTemporaryDirectory(string tempDir, string mduFileName)
+        private static WaterFlowFMModel ImportModelFromTemporaryDirectory(string tempDir, string mduFileName)
         {
             var mduPath = Path.Combine(tempDir, mduFileName);
-            var model = new WaterFlowFMModel.WaterFlowFMModel(mduPath);
+            var model = new WaterFlowFMModel(mduPath);
             return model;
         }
 
-        private static void DoubleClickOutputItemAndAssertLayerIsOn(WaterFlowFMModel.WaterFlowFMModel model, IGui gui, string itemName)
+        private static void DoubleClickOutputItemAndAssertLayerIsOn(WaterFlowFMModel model, IGui gui, string itemName)
         {
             // retrieve the data object for the output waterlevel through the node 
             // presenter (to make sure we use the path double clicking would follow):

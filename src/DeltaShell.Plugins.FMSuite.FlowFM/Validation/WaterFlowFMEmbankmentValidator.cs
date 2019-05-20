@@ -3,6 +3,7 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Validation;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using GeoAPI.Extensions.Feature;
 using NetTopologySuite.Geometries;
 
@@ -10,7 +11,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 {
     public static class WaterFlowFMEmbankmentValidator
     {
-        public static ValidationReport Validate(WaterFlowFMModel.WaterFlowFMModel model)
+        public static ValidationReport Validate(WaterFlowFMModel model)
         {
             if (model.Area.Embankments.Count == 0)
             {

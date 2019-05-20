@@ -33,6 +33,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 {
@@ -1087,7 +1088,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         /// <param name="messageKey"> The message key. </param>
         /// <param name="fmModel"> The fm model. </param>
         /// <returns> </returns>
-        public static string GetTabName(string key, string messageKey = null, WaterFlowFMModel.WaterFlowFMModel fmModel = null)
+        public static string GetTabName(string key, string messageKey = null, WaterFlowFMModel fmModel = null)
         {
             if (key == KnownProperties.SedFile)
             {

@@ -4,6 +4,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccess;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using System.Collections.Generic;
 using System.Linq;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 {
@@ -13,7 +14,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         public const string HisFileProperty = "Output his file";
         public const string MapFileProperty = "Output map file";
 
-        public static FileBasedModelItem CreateParentNode(WaterFlowFMModel.WaterFlowFMModel model)
+        public static FileBasedModelItem CreateParentNode(WaterFlowFMModel model)
         {
             var parentNode = new FileBasedModelItem(MduFileProperty, model.MduSavePath);
 

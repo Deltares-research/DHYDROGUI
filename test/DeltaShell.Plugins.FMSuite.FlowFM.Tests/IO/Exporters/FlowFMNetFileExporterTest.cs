@@ -13,6 +13,7 @@ using NetTopologySuite.Extensions.Grids;
 using NUnit.Framework;
 using System.IO;
 using System.Linq;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
 {
@@ -30,7 +31,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
         [Test]
         public void CanExport()
         {
-            var fmModel = new WaterFlowFMModel.WaterFlowFMModel();
+            var fmModel = new WaterFlowFMModel();
 
             exporter.GetModelForGrid = g => fmModel;
             
@@ -54,7 +55,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
                 app.Run();
 
                 // create FM Model
-                var fmModel = new WaterFlowFMModel.WaterFlowFMModel();
+                var fmModel = new WaterFlowFMModel();
                 app.Project.RootFolder.Add(fmModel);
 
                 app.SaveProjectAs(Path.Combine(testDir, "TestExport.dsproj")); // save to initialize file repository..
@@ -107,7 +108,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
                 app.Run();
 
                 // create FM Model
-                var fmModel = new WaterFlowFMModel.WaterFlowFMModel();
+                var fmModel = new WaterFlowFMModel();
 
                 // set bed level location to faces
                 var cellsValue = ((int)UnstructuredGridFileHelper.BedLevelLocation.Faces).ToString();
@@ -200,7 +201,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
                 app.Run();
 
                 // create FM Model
-                var fmModel = new WaterFlowFMModel.WaterFlowFMModel();
+                var fmModel = new WaterFlowFMModel();
 
                 // set bed level location to faces
                 var cellsValue = ((int) UnstructuredGridFileHelper.BedLevelLocation.Faces).ToString();

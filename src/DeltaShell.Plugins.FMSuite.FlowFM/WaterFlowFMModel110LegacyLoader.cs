@@ -7,6 +7,7 @@ using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM
@@ -25,10 +26,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         /// <param name="project"> The project. </param>
         public override void OnAfterProjectMigrated(Project project)
         {
-            IEnumerable<WaterFlowFMModel.WaterFlowFMModel> existingFMModels =
-                project.RootFolder.GetAllItemsRecursive().OfType<WaterFlowFMModel.WaterFlowFMModel>();
+            IEnumerable<WaterFlowFMModel> existingFMModels =
+                project.RootFolder.GetAllItemsRecursive().OfType<WaterFlowFMModel>();
 
-            foreach (WaterFlowFMModel.WaterFlowFMModel waterFlowFmModel in existingFMModels)
+            foreach (WaterFlowFMModel waterFlowFmModel in existingFMModels)
             {
                 DirectoryInfo projectDataDirectoryInfo =
                     RecursivelyGetDsProjDataDirectoryFromMduPath(project, waterFlowFmModel);
@@ -46,7 +47,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
 
-        private static void PerformDirectoryRestructuring(WaterFlowFMModel.WaterFlowFMModel waterFlowFMModel, string oldWorkingDirPath)
+        private static void PerformDirectoryRestructuring(WaterFlowFMModel waterFlowFMModel, string oldWorkingDirPath)
         {
             if (waterFlowFMModel.MduFilePath != waterFlowFMModel.MduSavePath)
             {
@@ -160,7 +161,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         }
 
         private static void CleanUpDirectories(DirectoryInfo projectDataDirectoryInfo,
-                                               WaterFlowFMModel.WaterFlowFMModel waterFlowFmModel, string oldWorkingDir)
+                                               WaterFlowFMModel waterFlowFmModel, string oldWorkingDir)
         {
             FileBasedUtils.CleanPersistentDirectories(projectDataDirectoryInfo, waterFlowFmModel);
             FileUtils.DeleteIfExists(oldWorkingDir);
@@ -168,7 +169,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         }
 
         private static DirectoryInfo RecursivelyGetDsProjDataDirectoryFromMduPath(
-            Project project, WaterFlowFMModel.WaterFlowFMModel waterFlowFmModel)
+            Project project, WaterFlowFMModel waterFlowFmModel)
         {
             string dsprojDataDirName = $"{project.Name}.dsproj_data";
             var projectDataDirectoryInfo = new DirectoryInfo(waterFlowFmModel.MduFilePath);

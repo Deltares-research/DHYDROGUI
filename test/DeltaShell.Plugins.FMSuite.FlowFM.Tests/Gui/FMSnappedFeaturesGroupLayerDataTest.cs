@@ -14,6 +14,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.Api;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.NetworkEditor.Gui;
 using DeltaShell.Plugins.ProjectExplorer;
@@ -93,7 +94,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             {
                 var snappedLayers = SnappedLayers(gui, netFile);
 
-                var model = gui.Application.GetAllModelsInProject().OfType<WaterFlowFMModel.WaterFlowFMModel>().FirstOrDefault();
+                var model = gui.Application.GetAllModelsInProject().OfType<WaterFlowFMModel>().FirstOrDefault();
                 Assert.IsNotNull(model);
 
                 var gridExtent = model.GridExtent;
@@ -116,7 +117,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             {
                 var snappedLayers = SnappedLayers(gui, netFile);
 
-                var model = gui.Application.GetAllModelsInProject().OfType<WaterFlowFMModel.WaterFlowFMModel>().FirstOrDefault();
+                var model = gui.Application.GetAllModelsInProject().OfType<WaterFlowFMModel>().FirstOrDefault();
                 Assert.IsNotNull( model );
 
                 var gridExtent = model.GridExtent;
@@ -139,7 +140,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             {
                 var snappedLayers = SnappedLayers(gui, netFile);
 
-                var model = gui.Application.GetAllModelsInProject().OfType<WaterFlowFMModel.WaterFlowFMModel>().FirstOrDefault();
+                var model = gui.Application.GetAllModelsInProject().OfType<WaterFlowFMModel>().FirstOrDefault();
                 Assert.IsNotNull(model);
 
                 var gridExtent = model.GridExtent;
@@ -163,7 +164,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             {
                 var snappedLayers = SnappedLayers(gui, netFile);
 
-                var model = gui.Application.GetAllModelsInProject().OfType<WaterFlowFMModel.WaterFlowFMModel>().FirstOrDefault();
+                var model = gui.Application.GetAllModelsInProject().OfType<WaterFlowFMModel>().FirstOrDefault();
                 Assert.IsNotNull(model);
 
                 var gridExtent = model.GridExtent;
@@ -187,7 +188,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             {
                 var snappedLayers = SnappedLayers(gui, netFile);
 
-                var model = gui.Application.GetAllModelsInProject().OfType<WaterFlowFMModel.WaterFlowFMModel>().FirstOrDefault();
+                var model = gui.Application.GetAllModelsInProject().OfType<WaterFlowFMModel>().FirstOrDefault();
                 Assert.IsNotNull(model);
 
                 var gridExtent = model.GridExtent;
@@ -211,7 +212,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             {
                 var snappedLayers = SnappedLayers(gui, netFile);
 
-                var model = gui.Application.GetAllModelsInProject().OfType<WaterFlowFMModel.WaterFlowFMModel>().FirstOrDefault();
+                var model = gui.Application.GetAllModelsInProject().OfType<WaterFlowFMModel>().FirstOrDefault();
                 Assert.IsNotNull(model);
 
                 var gridExtent = model.GridExtent;
@@ -235,7 +236,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             {
                 var snappedLayers = SnappedLayers(gui, netFile);
 
-                var model = gui.Application.GetAllModelsInProject().OfType<WaterFlowFMModel.WaterFlowFMModel>().FirstOrDefault();
+                var model = gui.Application.GetAllModelsInProject().OfType<WaterFlowFMModel>().FirstOrDefault();
                 Assert.IsNotNull(model);
 
                 var gridExtent = model.GridExtent;
@@ -259,7 +260,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             {
                 var snappedLayers = SnappedLayers(gui, netFile);
 
-                var model = gui.Application.GetAllModelsInProject().OfType<WaterFlowFMModel.WaterFlowFMModel>().FirstOrDefault();
+                var model = gui.Application.GetAllModelsInProject().OfType<WaterFlowFMModel>().FirstOrDefault();
                 Assert.IsNotNull(model);
 
                 var gridExtent = model.GridExtent;
@@ -283,7 +284,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             {
                 var snappedLayers = SnappedLayers(gui, netFile);
 
-                var model = gui.Application.GetAllModelsInProject().OfType<WaterFlowFMModel.WaterFlowFMModel>().FirstOrDefault();
+                var model = gui.Application.GetAllModelsInProject().OfType<WaterFlowFMModel>().FirstOrDefault();
                 Assert.IsNotNull(model);
 
                 var gridExtent = model.GridExtent;
@@ -307,7 +308,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             {
                 var snappedLayers = SnappedLayers(gui, netFile);
 
-                var model = gui.Application.GetAllModelsInProject().OfType<WaterFlowFMModel.WaterFlowFMModel>().FirstOrDefault();
+                var model = gui.Application.GetAllModelsInProject().OfType<WaterFlowFMModel>().FirstOrDefault();
                 Assert.IsNotNull(model);
 
                 var gridExtent = model.GridExtent;
@@ -331,7 +332,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             {
                 var snappedLayers = SnappedLayers(gui, netFile);
 
-                var model = gui.Application.GetAllModelsInProject().OfType<WaterFlowFMModel.WaterFlowFMModel>().FirstOrDefault();
+                var model = gui.Application.GetAllModelsInProject().OfType<WaterFlowFMModel>().FirstOrDefault();
                 Assert.IsNotNull(model);
 
                 var gridExtent = model.GridExtent;
@@ -359,7 +360,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 var snappedLayers = SnappedLayers(gui, netFile);
 
 
-                var model = gui.Application.GetAllModelsInProject().OfType<WaterFlowFMModel.WaterFlowFMModel>().FirstOrDefault();
+                var model = gui.Application.GetAllModelsInProject().OfType<WaterFlowFMModel>().FirstOrDefault();
                 Assert.IsNotNull(model);
 
                 model.Boundaries.Add(
@@ -425,20 +426,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         {
             return layers.Any() && layers.Any(l => ((SnappedFeatureCollection) l.DataSource).SnapApiFeatureType == operationApiName && l.Name == layerName);
         }
-        private static WaterFlowFMModel.WaterFlowFMModel AddFMModelToProject(IApplication app)
+        private static WaterFlowFMModel AddFMModelToProject(IApplication app)
         {
             // Add water flow model to project
             var project = app.Project;
-            project.RootFolder.Add(new WaterFlowFMModel.WaterFlowFMModel());
+            project.RootFolder.Add(new WaterFlowFMModel());
 
             // Check model name
-            var targetModel = project.RootFolder.Models.OfType<WaterFlowFMModel.WaterFlowFMModel>().FirstOrDefault();
+            var targetModel = project.RootFolder.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
             Assert.IsNotNull(targetModel);
             Assert.IsFalse(targetModel.Area.LandBoundaries.Any());
             return targetModel;
         }
 
-        private static void ImportGrid(IApplication app, string netFile, WaterFlowFMModel.WaterFlowFMModel targetModel)
+        private static void ImportGrid(IApplication app, string netFile, WaterFlowFMModel targetModel)
         {
             //Import grid
             var importerGrid = app.FileImporters.OfType<FlowFMNetFileImporter>().FirstOrDefault();

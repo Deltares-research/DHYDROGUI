@@ -9,6 +9,7 @@ using DelftTools.Utils.Collections;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
 using DeltaShell.Plugins.FMSuite.Common.Gui.Editors.Buttons;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.Buttons;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 {
@@ -20,7 +21,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
         /// <param name="model">The model.</param>
         /// <param name="gui">The GUI.</param>
         /// <returns></returns>
-        public static ObservableCollection<WpfGuiCategory> GetWpfGuiCategories(WaterFlowFMModel.WaterFlowFMModel model, IGui gui)
+        public static ObservableCollection<WpfGuiCategory> GetWpfGuiCategories(WaterFlowFMModel model, IGui gui)
         {
             var wpfGuiCategories = new List<WpfGuiCategory>();
             if (model != null)
@@ -35,7 +36,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             return new ObservableCollection<WpfGuiCategory>(wpfGuiCategories);
         }
 
-        private static ObjectUIDescription GetWaterFlowFmSettings(WaterFlowFMModel.WaterFlowFMModel model)
+        private static ObjectUIDescription GetWaterFlowFmSettings(WaterFlowFMModel model)
         {
             //Extract the UiDescription
             var groupsToSkip = new List<string>(0);
@@ -46,9 +47,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
         private static void SetFlowFmExtraSettings(IModel model, IGui gui, IList<WpfGuiCategory> wpfCategories)
         {
-            if (!(model is WaterFlowFMModel.WaterFlowFMModel)) return;
+            if (!(model is WaterFlowFMModel)) return;
 
-            var fmModel = model as WaterFlowFMModel.WaterFlowFMModel;
+            var fmModel = model as WaterFlowFMModel;
             //General settings
             var generalCategory = wpfCategories.FirstOrDefault(c => c.CategoryName.ToLower().Equals("general"));
             if (generalCategory != null)
@@ -82,7 +83,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                 });
 
                 coordSys.CustomCommand.ButtonFunction =
-                    (o) => SetCoordinateSystemButton.ButtonAction(o, gui, WaterFlowFMModel.WaterFlowFMModel.IsValidCoordinateSystem);
+                    (o) => SetCoordinateSystemButton.ButtonAction(o, gui, WaterFlowFMModel.IsValidCoordinateSystem);
                 coordSys.CustomCommand.ButtonImage = SetCoordinateSystemButton.ButtonImage;
                 generalCategory.AddWpfGuiProperty(coordSys);
             }
@@ -109,7 +110,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             //Add more settings
             //Use the FieldUIDescription to generate the getters and the enable / disable functions.
             Func<object, bool> isEnabledFunc = o => true;
-            Func<object, bool> isVisibleFunc = o => (o is WaterFlowFMModel.WaterFlowFMModel) && (o as WaterFlowFMModel.WaterFlowFMModel).UseMorSed;
+            Func<object, bool> isVisibleFunc = o => (o is WaterFlowFMModel) && (o as WaterFlowFMModel).UseMorSed;
             var fieldUi = new FieldUIDescription(null, null, isEnabledFunc, isVisibleFunc);
             var fieldUiDescriptions = new List<FieldUIDescription>();
             fieldUiDescriptions.Add(fieldUi);
@@ -141,7 +142,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
         }
 
         /*Extraced from WaterFlowFMModelView.cs */
-        private static ObjectUIDescription ExtendedUiProperties(WaterFlowFMModel.WaterFlowFMModel data, ObjectUIDescription objectDescription)
+        private static ObjectUIDescription ExtendedUiProperties(WaterFlowFMModel data, ObjectUIDescription objectDescription)
         {
             if (data == null) return objectDescription;
 
@@ -167,7 +168,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
             objectDescription.FieldDescriptions.First(f => f.Name == "StopTime").ValidationMethod =
                 (m, t) =>
-                    ((WaterFlowFMModel.WaterFlowFMModel) m).StartTime < (DateTime) t
+                    ((WaterFlowFMModel) m).StartTime < (DateTime) t
                         ? ""
                         : "Start time must be smaller than stop time";
 

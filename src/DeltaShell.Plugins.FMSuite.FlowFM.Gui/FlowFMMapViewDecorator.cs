@@ -7,6 +7,7 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Extensions;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Properties;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using SharpMap.Api.Layers;
 using SharpMap.Data.Providers;
@@ -28,7 +29,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         internal const string MergeEmbankmentsToolName = "Merge embankments";
         internal const string GridWizardToolName = "Grid wizard";
 
-        private static readonly string ModelName = typeof (WaterFlowFMModel.WaterFlowFMModel).Name;
+        private static readonly string ModelName = typeof (WaterFlowFMModel).Name;
 
         public static void AddMapToolsIfMissing(MapView mapView)
         {

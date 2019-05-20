@@ -9,6 +9,7 @@ using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.Sediment;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
@@ -85,7 +86,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
             var sourceSink = new SourceAndSink();
             var boundarySet = new BoundaryConditionSet();
 
-            var model = new WaterFlowFMModel.WaterFlowFMModel
+            var model = new WaterFlowFMModel
             {
                 SourcesAndSinks = {sourceSink},
                 BoundaryConditionSets = {boundarySet}
@@ -114,7 +115,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
             var sourceSink = new SourceAndSink();
             var boundarySet = new BoundaryConditionSet();
 
-            var model = new WaterFlowFMModel.WaterFlowFMModel
+            var model = new WaterFlowFMModel
             {
                 SourcesAndSinks = { sourceSink },
                 BoundaryConditionSets = { boundarySet }
@@ -144,7 +145,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
             var firstSourceSink = new SourceAndSink();
             var boundarySet = new BoundaryConditionSet();
 
-            var model = new WaterFlowFMModel.WaterFlowFMModel
+            var model = new WaterFlowFMModel
             {
                 SourcesAndSinks = { firstSourceSink },
                 BoundaryConditionSets = { boundarySet }

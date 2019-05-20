@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.IO;
 using DelftTools.Shell.Core;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
 {
@@ -24,7 +25,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
             }
 
             // Check if the item is set
-            var waterFlowFMModel = item as WaterFlowFMModel.WaterFlowFMModel;
+            var waterFlowFMModel = item as WaterFlowFMModel;
             if (waterFlowFMModel == null)
             {
                 throw new Exception("Unexpected object type: " + item.GetType());
@@ -41,7 +42,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
 
         public IEnumerable<Type> SourceTypes()
         {
-            yield return typeof(WaterFlowFMModel.WaterFlowFMModel);
+            yield return typeof(WaterFlowFMModel);
         }
 
         [ExcludeFromCodeCoverage]

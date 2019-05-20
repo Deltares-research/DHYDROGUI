@@ -10,7 +10,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.FMSuite.FlowFM.Validation;
 
-namespace DeltaShell.Plugins.FMSuite.FlowFM.WaterFlowFMModel
+namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 {
     public partial class WaterFlowFMModel
     {

@@ -11,6 +11,7 @@ using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.NetCDF;
 using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.NetworkEditor.Gui;
@@ -57,7 +58,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.ScriptingTest
                              "GenerateRegularGridForModel(fmModel, 10, 22, 50, 50, 500, 0, True)";
                 var tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
                 Directory.CreateDirectory(tempDirectory);
-                var waterFlowFmModel = new WaterFlowFMModel.WaterFlowFMModel { ExplicitWorkingDirectory = tempDirectory };
+                var waterFlowFmModel = new WaterFlowFMModel { ExplicitWorkingDirectory = tempDirectory };
 
                 TypeUtils.SetPrivatePropertyValue(waterFlowFmModel, TypeUtils.GetMemberName(() => waterFlowFmModel.MduFilePath), "Test.mdu");
 
@@ -73,7 +74,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.ScriptingTest
                     try
                     {
                         var declaredVariables = app.ScriptRunner.RunScript(script, variables);
-                        var fmModel = declaredVariables.FirstOrDefault(kvp => kvp.Key == "fmModel").Value as WaterFlowFMModel.WaterFlowFMModel;
+                        var fmModel = declaredVariables.FirstOrDefault(kvp => kvp.Key == "fmModel").Value as WaterFlowFMModel;
                         Assert.That(fmModel, Is.Not.Null);
                         Assert.That(fmModel.Grid, Is.Not.Null);
                         Assert.That(fmModel.Grid.Vertices.Count, Is.EqualTo(325));

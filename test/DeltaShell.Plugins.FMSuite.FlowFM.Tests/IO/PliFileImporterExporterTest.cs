@@ -19,6 +19,7 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 {
@@ -61,7 +62,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 gui.Run();
 
-                var model = new WaterFlowFMModel.WaterFlowFMModel();
+                var model = new WaterFlowFMModel();
 
                 gui.Application.Project.RootFolder.Add(model);
 
@@ -90,7 +91,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var exportToFilePath = Path.Combine(testDir, "ExportedFixedWeirs_fxw.pliz");
             try
             {
-                var fmModel = new WaterFlowFMModel.WaterFlowFMModel();
+                var fmModel = new WaterFlowFMModel();
                 var importer = new PliFileImporterExporter<FixedWeir, FixedWeir>();
                 importer.ImportItem(filePath, fmModel.Area.FixedWeirs);
 
@@ -106,7 +107,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             }
         }
 
-        private static void CheckImportedFixedWeirs(WaterFlowFMModel.WaterFlowFMModel fmModel)
+        private static void CheckImportedFixedWeirs(WaterFlowFMModel fmModel)
         {
             var fixedWeirs = fmModel.Area.FixedWeirs;
             Assert.That(fixedWeirs.Count, Is.EqualTo(2));

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using DelftTools.Hydro;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.FMSuite.FlowFM.Validation;
 using NUnit.Framework;
@@ -11,13 +12,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
     [TestFixture]
     public class WaterFlowFMEnclosureValidationTest
     {
-        private WaterFlowFMModel.WaterFlowFMModel flowFmModel;
+        private WaterFlowFMModel flowFmModel;
         private GroupableFeature2DPolygon validEnclosureFeature;
         
         [SetUp]
         public void Setup()
         {
-            flowFmModel = new WaterFlowFMModel.WaterFlowFMModel();
+            flowFmModel = new WaterFlowFMModel();
             flowFmModel.Grid = UnstructuredGridTestHelper.GenerateRegularGrid(10, 10, 10, 10);
             validEnclosureFeature = FlowFMTestHelper.CreateFeature2DPolygonFromGeometry(
                                     "Enclosure01", 

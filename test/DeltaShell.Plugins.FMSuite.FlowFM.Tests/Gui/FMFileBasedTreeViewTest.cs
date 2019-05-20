@@ -6,6 +6,7 @@ using DelftTools.TestUtils;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
@@ -72,7 +73,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
-            var model = new WaterFlowFMModel.WaterFlowFMModel(mduPath);
+            var model = new WaterFlowFMModel(mduPath);
             var view = new WaterFlowFMFileStructureView {Data = model};
             WindowsFormsTestHelper.ShowModal(view);
         }

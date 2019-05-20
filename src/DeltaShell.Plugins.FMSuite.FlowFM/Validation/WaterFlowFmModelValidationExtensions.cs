@@ -6,6 +6,7 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.Validation;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using NetTopologySuite.Extensions.Coverages;
 
@@ -13,7 +14,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 {
     public static class WaterFlowFmModelValidationExtensions
     {
-        public static ValidationReport Validate(this WaterFlowFMModel.WaterFlowFMModel model)
+        public static ValidationReport Validate(this WaterFlowFMModel model)
         {
             ValidationReport[] validationReports = new[]
             {
@@ -43,7 +44,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             return validationReport;
         }
 
-        private static ValidationReport ValidateSpatiallyVaryingSedimentCoverage(WaterFlowFMModel.WaterFlowFMModel model)
+        private static ValidationReport ValidateSpatiallyVaryingSedimentCoverage(WaterFlowFMModel model)
         {
             IEnumerable<UnstructuredGridCoverage> unstructuredGridCoverages =
                 GetSpatiallyVaryingSedimentCoveragesWithTag(model, "IniSedThick");
@@ -76,7 +77,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
         }
 
         private static IEnumerable<UnstructuredGridCoverage> GetSpatiallyVaryingSedimentCoveragesWithTag(
-            WaterFlowFMModel.WaterFlowFMModel model, string tag)
+            WaterFlowFMModel model, string tag)
         {
             IEnumerable<string> spatiallyVaryingSedimentPropertyNames = model.SedimentFractions
                                                                              .SelectMany(
@@ -95,7 +96,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             return sedimentThicknessDataItems.Select(di => di.Value as UnstructuredGridCoverage).Where(c => c != null);
         }
 
-        private static ValidationReport ValidatePhysicalProcesses(WaterFlowFMModel.WaterFlowFMModel model)
+        private static ValidationReport ValidatePhysicalProcesses(WaterFlowFMModel model)
         {
             var issues = new List<ValidationIssue>();
 
@@ -126,7 +127,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             return new ValidationReport("Physical Processes", issues);
         }
 
-        private static ValidationReport ValidateBathymetry(WaterFlowFMModel.WaterFlowFMModel model)
+        private static ValidationReport ValidateBathymetry(WaterFlowFMModel model)
         {
             var issues = new List<ValidationIssue>();
 
@@ -141,7 +142,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             return new ValidationReport("Bathymetry", issues);
         }
 
-        private static ValidationReport ValidateCoordinateSystem(WaterFlowFMModel.WaterFlowFMModel model)
+        private static ValidationReport ValidateCoordinateSystem(WaterFlowFMModel model)
         {
             var issues = new List<ValidationIssue>();
 
@@ -159,7 +160,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             return new ValidationReport("Coordinate System", issues);
         }
 
-        private static ValidationReport ValidateRestartInput(WaterFlowFMModel.WaterFlowFMModel model)
+        private static ValidationReport ValidateRestartInput(WaterFlowFMModel model)
         {
             if (!model.UseRestart)
             {

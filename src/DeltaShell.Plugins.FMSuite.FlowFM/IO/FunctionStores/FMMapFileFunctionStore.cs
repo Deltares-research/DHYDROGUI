@@ -9,6 +9,7 @@ using DelftTools.Units;
 using DelftTools.Utils.NetCdf;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.Common.IO;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Geometries;
@@ -20,7 +21,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.FunctionStores
 {
     public class FMMapFileFunctionStore : FMNetCdfFileFunctionStore
     {
-        private readonly WaterFlowFMModel.WaterFlowFMModel waterFlowFmModel;
+        private readonly WaterFlowFMModel waterFlowFmModel;
 
         #region Map file constants
 
@@ -76,7 +77,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.FunctionStores
         // nhib
         protected FMMapFileFunctionStore() {}
 
-        public FMMapFileFunctionStore(WaterFlowFMModel.WaterFlowFMModel waterFlowFmModel)
+        public FMMapFileFunctionStore(WaterFlowFMModel waterFlowFmModel)
         {
             this.waterFlowFmModel = waterFlowFmModel;
             DisableCaching = true;

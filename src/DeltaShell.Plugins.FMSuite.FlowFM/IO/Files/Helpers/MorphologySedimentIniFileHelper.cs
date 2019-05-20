@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Api;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using log4net;
 
@@ -13,7 +14,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
         private static readonly ILog Log = LogManager.GetLogger(typeof(MorphologySedimentIniFileHelper));
 
         private static readonly string FMSuiteFlowModelVersion =
-            typeof(WaterFlowFMModel.WaterFlowFMModel).Assembly.GetName().Version.ToString();
+            typeof(WaterFlowFMModel).Assembly.GetName().Version.ToString();
 
         private static string fmDllVersion;
 

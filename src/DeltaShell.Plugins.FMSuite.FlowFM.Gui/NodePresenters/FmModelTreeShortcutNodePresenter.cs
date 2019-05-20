@@ -11,6 +11,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
 {
@@ -33,7 +34,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
             ReloadGrid(flowFmModel);
         }
 
-        private void ReloadGrid(WaterFlowFMModel.WaterFlowFMModel model)
+        private void ReloadGrid(WaterFlowFMModel model)
         {
             try
             {

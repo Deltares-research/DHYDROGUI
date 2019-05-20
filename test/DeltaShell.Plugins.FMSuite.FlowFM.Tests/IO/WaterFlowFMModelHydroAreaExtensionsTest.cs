@@ -5,6 +5,7 @@ using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -14,7 +15,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
     public class WaterFlowFMModelHydroAreaExtensionsTest
     {
         private MockRepository mocks;
-        private WaterFlowFMModel.WaterFlowFMModel fmModel;
+        private WaterFlowFMModel fmModel;
         private string mduFilePath;
 
         [SetUp]
@@ -23,7 +24,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             mocks = new MockRepository();
             var localPath = TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath(@"HydroAreaCollection/MduFileProjects"));
             mduFilePath = Path.Combine(localPath, @"MduFileWithoutFeatureFileReferences/FlowFM.mdu");
-            fmModel = new WaterFlowFMModel.WaterFlowFMModel(mduFilePath);
+            fmModel = new WaterFlowFMModel(mduFilePath);
         }
 
         [TearDown]

@@ -10,6 +10,7 @@ using DeltaShell.Plugins.FMSuite.Common.Gui.Editors;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.NetworkEditor.Gui;
@@ -194,7 +195,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     Controller = new FlowBoundaryConditionEditorController
                         {
                             Model =
-                                new WaterFlowFMModel.WaterFlowFMModel
+                                new WaterFlowFMModel
                                     {
                                         StartTime = new DateTime(2000, 1, 1),
                                         StopTime = new DateTime(2000, 1, 10),
@@ -236,7 +237,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                         new FlowBoundaryConditionEditorController
                             {
                                 Model =
-                                    new WaterFlowFMModel.WaterFlowFMModel
+                                    new WaterFlowFMModel
                                         {
                                             StartTime = new DateTime(2000, 1, 1),
                                             StopTime = new DateTime(2000, 1, 10),
@@ -278,7 +279,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     new FlowBoundaryConditionEditorController
                     {
                         Model =
-                            new WaterFlowFMModel.WaterFlowFMModel
+                            new WaterFlowFMModel
                             {
                                 StartTime = new DateTime(2000, 1, 1),
                                 StopTime = new DateTime(2000, 1, 10),
@@ -334,7 +335,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     Controller = new FlowBoundaryConditionEditorController
                         {
                             Model =
-                                new WaterFlowFMModel.WaterFlowFMModel
+                                new WaterFlowFMModel
                                     {
                                         StartTime = new DateTime(2000, 1, 1),
                                         StopTime = new DateTime(2000, 1, 10),
@@ -376,7 +377,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     Controller = new FlowBoundaryConditionEditorController()
                         {
                             Model =
-                                new WaterFlowFMModel.WaterFlowFMModel
+                                new WaterFlowFMModel
                                     {
                                         StartTime = new DateTime(2000, 1, 1),
                                         StopTime = new DateTime(2000, 1, 10),
@@ -416,7 +417,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 Controller = new FlowBoundaryConditionEditorController()
                 {
                     Model =
-                        new WaterFlowFMModel.WaterFlowFMModel
+                        new WaterFlowFMModel
                         {
                             StartTime = new DateTime(2000, 1, 1),
                             StopTime = new DateTime(2000, 1, 10),
@@ -440,7 +441,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         {
             string mduPath = TestHelper.GetTestFilePath(@"roughness\bendprof.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
-            var model = new WaterFlowFMModel.WaterFlowFMModel(mduPath);
+            var model = new WaterFlowFMModel(mduPath);
 
             using (var gui = new DeltaShellGui())
             {
@@ -476,7 +477,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         {
             string mduPath = TestHelper.GetTestFilePath(@"roughness\bendprof.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
-            var model = new WaterFlowFMModel.WaterFlowFMModel(mduPath);
+            var model = new WaterFlowFMModel(mduPath);
 
             using (var gui = new DeltaShellGui())
             {

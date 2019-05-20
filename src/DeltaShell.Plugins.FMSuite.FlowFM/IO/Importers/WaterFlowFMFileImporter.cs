@@ -6,6 +6,7 @@ using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using log4net;
 
@@ -46,7 +47,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 
         public bool CanImportOn(object targetObject)
         {
-            return targetObject is ICompositeActivity || targetObject is WaterFlowFMModel.WaterFlowFMModel;
+            return targetObject is ICompositeActivity || targetObject is WaterFlowFMModel;
         }
 
         public bool CanImportOnRootLevel => true;
@@ -63,11 +64,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         {
             try
             {
-                WaterFlowFMModel.WaterFlowFMModel importedFmModel = WaterFlowFMModel.WaterFlowFMModel.Import(path, ProgressChanged);
+                WaterFlowFMModel importedFmModel = WaterFlowFMModel.Import(path, ProgressChanged);
                 importedFmModel.WorkingDirectoryPathFunc = StoreWorkingDirectoryPathFunc;
 
                 //replace the FM Model
-                var targetFmModel = target as WaterFlowFMModel.WaterFlowFMModel;
+                var targetFmModel = target as WaterFlowFMModel;
                 if (targetFmModel != null)
                 {
                     IProjectItem parent = targetFmModel.Owner();

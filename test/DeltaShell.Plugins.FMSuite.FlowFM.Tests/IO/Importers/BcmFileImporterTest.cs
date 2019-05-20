@@ -9,6 +9,7 @@ using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;
@@ -90,7 +91,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
                 DeleteDataBeforeImport = true,
             };
 
-            var model = new WaterFlowFMModel.WaterFlowFMModel();
+            var model = new WaterFlowFMModel();
             model.Name = "newname";
             var boundary = new Feature2D
             {
@@ -123,7 +124,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
                 DeleteDataBeforeImport = true,
             };
 
-            var model = new WaterFlowFMModel.WaterFlowFMModel();
+            var model = new WaterFlowFMModel();
             model.Name = "newname";
             var boundary = new Feature2D
             {

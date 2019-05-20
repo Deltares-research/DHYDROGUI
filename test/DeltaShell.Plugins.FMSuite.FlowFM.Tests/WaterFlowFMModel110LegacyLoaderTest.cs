@@ -6,6 +6,7 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
@@ -104,7 +105,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 // Get model for test
                 var mduFilePath = Path.Combine(modelDirPath, mduFileName);
                 Assert.That(File.Exists(mduFilePath));
-                var model = new WaterFlowFMModel.WaterFlowFMModel(mduFilePath);
+                var model = new WaterFlowFMModel(mduFilePath);
 
                 // Get all output files in the model directory before migration
                 var outputFilesBeforeMigration = GetAllFilesByFilter(filters, modelDirPath);
@@ -205,7 +206,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 // Get model for test
                 var mduFilePath = Path.Combine(modelDirPath, mduFileName);
                 Assert.That(File.Exists(mduFilePath));
-                var model = new WaterFlowFMModel.WaterFlowFMModel(mduFilePath);
+                var model = new WaterFlowFMModel(mduFilePath);
 
                 // Perform migration
                 TypeUtils.CallPrivateStaticMethod(typeof(WaterFlowFMModel110LegacyLoader),

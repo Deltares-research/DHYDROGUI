@@ -4,7 +4,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO.FunctionStores;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using NetTopologySuite.Extensions.Coverages;
 
-namespace DeltaShell.Plugins.FMSuite.FlowFM.WaterFlowFMModel
+namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 {
     public partial class WaterFlowFMModel
     {

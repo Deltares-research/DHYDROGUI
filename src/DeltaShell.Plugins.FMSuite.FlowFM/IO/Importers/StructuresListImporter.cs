@@ -11,6 +11,7 @@ using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Common.IO;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
@@ -32,7 +33,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         /// </summary>
         public StructuresListType Type { get; set; }
 
-        public Func<IEnumerable, WaterFlowFMModel.WaterFlowFMModel> GetModelForList { get; set; }
+        public Func<IEnumerable, WaterFlowFMModel> GetModelForList { get; set; }
 
         public override bool OpenViewAfterImport => false;
 
@@ -125,7 +126,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             }
 
             var list = (IList) target;
-            WaterFlowFMModel.WaterFlowFMModel model = GetModelForList(list);
+            WaterFlowFMModel model = GetModelForList(list);
 
             var structuresFile = new StructuresFile()
             {

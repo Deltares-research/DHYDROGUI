@@ -5,6 +5,7 @@ using System.Windows.Controls.Primitives;
 using DelftTools.Controls;
 using DelftTools.Shell.Gui.Forms;
 using DeltaShell.Plugins.FMSuite.Common.Layers;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.NetworkEditor.MapLayers;
 using DeltaShell.Plugins.SharpMapGis.Gui.Commands;
 using Fluent;
@@ -49,7 +50,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Ribbon
         public void ValidateItems()
         {
             var mapView = FlowFMGuiPlugin.ActiveMapView;
-            var visible = mapView != null && mapView.Map != null && mapView.Map.GetAllLayers(true).OfType<ModelGroupLayer>().Any(l => l.Model is WaterFlowFMModel.WaterFlowFMModel);
+            var visible = mapView != null && mapView.Map != null && mapView.Map.GetAllLayers(true).OfType<ModelGroupLayer>().Any(l => l.Model is WaterFlowFMModel);
 
             foreach (var buttonCommandPair in buttonCommands)
             {

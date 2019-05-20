@@ -228,7 +228,7 @@
     <Compile Include="IO\Importers\WaterFlowFMFileImporter.cs" />
     <Compile Include="IO\WaterFlowFMModelHydroAreaExtensions.cs" />
     <Compile Include="Sediment\ISedimentModelData.cs" />
-    <Compile Include="WaterFlowFMModel\IWaterFlowFMModel.cs" />
+    <Compile Include="Model\IWaterFlowFMModel.cs" />
     <Compile Include="FeatureData\KnownFeatureCategories.cs" />
     <Compile Include="Layers\FMOutputSnappedFeaturesGroupLayerData.cs" />
     <Compile Include="Layers\FMSnappedFeaturesGroupLayerData.cs" />
@@ -257,12 +257,12 @@
     <Compile Include="IO\SedMorDelftIniWriter.cs" />
     <Compile Include="FeatureData\QuantityGenerator.cs" />
     <Compile Include="Sediment\SedimentModelDataItem.cs" />
-    <Compile Include="WaterFlowFMModel\WaterFlowFMModel.DimrModel.cs" />
-    <Compile Include="WaterFlowFMModel\WaterFlowFMModel.Eventing.cs" />
-    <Compile Include="WaterFlowFMModel\WaterFlowFMModel.FileBased.cs" />
-    <Compile Include="WaterFlowFMModel\WaterFlowFMModel.IO.cs" />
-    <Compile Include="WaterFlowFMModel\WaterFlowFMModel.Output.cs" />
-    <Compile Include="WaterFlowFMModel\WaterFlowFMModel.TDMB.cs" />
+    <Compile Include="Model\WaterFlowFMModel.DimrModel.cs" />
+    <Compile Include="Model\WaterFlowFMModel.Eventing.cs" />
+    <Compile Include="Model\WaterFlowFMModel.FileBased.cs" />
+    <Compile Include="Model\WaterFlowFMModel.IO.cs" />
+    <Compile Include="Model\WaterFlowFMModel.Output.cs" />
+    <Compile Include="Model\WaterFlowFMModel.TDMB.cs" />
     <Compile Include="Validation\Area\FixedWeirValidator.cs" />
     <Compile Include="Validation\Area\PumpValidator.cs" />
     <Compile Include="Validation\Area\SourceAndSinkValidator.cs" />
@@ -282,8 +282,8 @@
     <Compile Include="Validation\WaterFlowFMWindValidator.cs" />
     <Compile Include="WaterFlowFMDataAccessListener.cs" />
     <Compile Include="FeatureData\WaterFlowFMFeatureValueConverter.cs" />
-    <Compile Include="WaterFlowFMModel\WaterFlowFMModel.Restart.cs" />
-    <Compile Include="WaterFlowFMModel\WaterFlowFMModel.cs" />
+    <Compile Include="Model\WaterFlowFMModel.Restart.cs" />
+    <Compile Include="Model\WaterFlowFMModel.cs" />
     <Compile Include="ModelDefinition\WaterFlowFMModelDefinition.cs" />
     <Compile Include="ModelDefinition\WaterFlowFMProperty.cs" />
     <Compile Include="ModelDefinition\WaterFlowFMPropertyDefinition.cs" />
@@ -335,7 +335,7 @@
     <None Include="packages.config" />
     <None Include="Uml\HydroAreaCollection.cd" />
     <None Include="Uml\FlowBoundaryConditions.cd" />
-    <Compile Include="WaterFlowFMModel\WaterFlowFMModel.Spatial.cs" />
+    <Compile Include="Model\WaterFlowFMModel.Spatial.cs" />
     <Compile Include="WaterFlowFMModel110LegacyLoader.cs" />
     <Compile Include="WaterFlowFMModelCoordinateConversion.cs" />
     <None Include="Uml\FlowFMOverview.cd" />
@@ -361,7 +361,7 @@
     <None Include="Resources\unstrucWater.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="WaterFlowFMModel\WaterFlowFMModel.hbm.xml">
+    <EmbeddedResource Include="Model\WaterFlowFMModel.hbm.xml">
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
@@ -396,7 +396,7 @@
     <None Include="Resources\dry_point.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="WaterFlowFMModel\WaterFlowFMModel.1.1.0.hbm.xml" />
+    <EmbeddedResource Include="Model\WaterFlowFMModel.1.1.0.hbm.xml" />
     <Resource Include="Resources\function_timeseries.png" />
     <Content Include="toolboxes\Statistics.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

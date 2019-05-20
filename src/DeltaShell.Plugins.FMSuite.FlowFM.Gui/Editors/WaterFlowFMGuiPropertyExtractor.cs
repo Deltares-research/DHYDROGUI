@@ -4,18 +4,19 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using DelftTools.Controls.Swf.DataEditorGenerator.Metadata;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 {
     public class WaterFlowFMGuiPropertyExtractor
     {
-        public WaterFlowFMGuiPropertyExtractor(WaterFlowFMModel.WaterFlowFMModel model = null)
+        public WaterFlowFMGuiPropertyExtractor(WaterFlowFMModel model = null)
         {
             Model = model;
         }
 
-        private WaterFlowFMModel.WaterFlowFMModel Model { get; set; }
+        private WaterFlowFMModel Model { get; set; }
 
         public ObjectUIDescription ExtractObjectDescription(IEnumerable<string> groupsToSkip)
         {
@@ -50,8 +51,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             Func<object, bool> isVisible = null;
             if (Model != null)
             {
-                isEnabled = o => prop.IsEnabled(((WaterFlowFMModel.WaterFlowFMModel) o)?.ModelDefinition.Properties.ToList());
-                isVisible = o => prop.IsVisible(((WaterFlowFMModel.WaterFlowFMModel) o)?.ModelDefinition.Properties.ToList());
+                isEnabled = o => prop.IsEnabled(((WaterFlowFMModel) o)?.ModelDefinition.Properties.ToList());
+                isVisible = o => prop.IsVisible(((WaterFlowFMModel) o)?.ModelDefinition.Properties.ToList());
             }
 
             var label = string.IsNullOrEmpty(prop.PropertyDefinition.Caption)

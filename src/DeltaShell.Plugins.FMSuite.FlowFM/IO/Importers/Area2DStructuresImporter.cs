@@ -7,6 +7,7 @@ using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
 using DelftTools.Utils.Aop;
 using DeltaShell.Plugins.FMSuite.Common.IO;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using log4net;
@@ -66,7 +67,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             }
 
             HydroArea targetHydroArea;
-            var model = target as WaterFlowFMModel.WaterFlowFMModel;
+            var model = target as WaterFlowFMModel;
             if (model != null)
             {
                 targetHydroArea = model.Area;
@@ -145,6 +146,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 
         public bool OpenViewAfterImport => false;
 
-        public Func<HydroArea, WaterFlowFMModel.WaterFlowFMModel> GetModelForArea { get; set; }
+        public Func<HydroArea, WaterFlowFMModel> GetModelForArea { get; set; }
     }
 }

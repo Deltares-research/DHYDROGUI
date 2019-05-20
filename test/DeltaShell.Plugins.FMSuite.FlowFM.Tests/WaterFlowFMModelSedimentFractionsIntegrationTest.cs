@@ -4,6 +4,7 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Sediment;
 using NUnit.Framework;
@@ -14,12 +15,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
     [Category(TestCategory.Slow)]
     public class WaterFlowFMModelSedimentFractionsIntegrationTest
     {
-        private static WaterFlowFMModel.WaterFlowFMModel CreateSimpleBoxModel()
+        private static WaterFlowFMModel CreateSimpleBoxModel()
         {
             var mduPath = TestHelper.GetTestFilePath(@"simpleBox\simplebox.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
 
-            return new WaterFlowFMModel.WaterFlowFMModel(mduPath);
+            return new WaterFlowFMModel(mduPath);
         }
 
         [Test]
@@ -237,7 +238,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             }
         }
 
-        private static void CheckInitialConditionWithName(List<ISpatiallyVaryingSedimentProperty> svProps, WaterFlowFMModel.WaterFlowFMModel model, SedimentFraction fraction, int svPropsCount)
+        private static void CheckInitialConditionWithName(List<ISpatiallyVaryingSedimentProperty> svProps, WaterFlowFMModel model, SedimentFraction fraction, int svPropsCount)
         {
             if (svProps.Count > 0)
             {

@@ -1,4 +1,4 @@
-﻿using DeltaShell.Plugins.FMSuite.FlowFM.WaterFlowFMModel;
+﻿using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
 {

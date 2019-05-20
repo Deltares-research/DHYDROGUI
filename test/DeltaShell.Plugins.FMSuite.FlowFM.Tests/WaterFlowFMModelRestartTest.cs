@@ -2,6 +2,7 @@
 using System.Linq;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using NUnit.Framework;
 
@@ -30,11 +31,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.NotNull(model.RestartInput);
         }
 
-        private static WaterFlowFMModel.WaterFlowFMModel LoadBendProfModelWithWriteRestart()
+        private static WaterFlowFMModel LoadBendProfModelWithWriteRestart()
         {
             var mduPath = TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
-            var model = new WaterFlowFMModel.WaterFlowFMModel(mduPath)
+            var model = new WaterFlowFMModel(mduPath)
             {
                 WriteRestart = true,
                 OutputTimeStep = new TimeSpan(0, 0, 15)
