@@ -3,7 +3,7 @@
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="DeltaShell.Plugins.FMSuite.FlowFM.Model"
                    assembly="DeltaShell.Plugins.FMSuite.FlowFM">
 
-  <joined-subclass name="DeltaShell.Plugins.FMSuite.FlowFM.WaterFlowFMModel.Model" lazy="false"
+  <joined-subclass name="DeltaShell.Plugins.FMSuite.FlowFM.Model.WaterFlowFMModel" lazy="false"
                    extends="DelftTools.Shell.Core.Workflow.IModel, DelftTools.Shell.Core" table="fm_model">
     <key column="project_item_id" />
     
