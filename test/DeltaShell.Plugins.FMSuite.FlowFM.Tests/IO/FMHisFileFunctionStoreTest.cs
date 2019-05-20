@@ -128,7 +128,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
             var localMduFilePath = TestHelper.CreateLocalCopy(mduPath);
 
-            var model = new WaterFlowFMModel(localMduFilePath);
+            var model = new WaterFlowFMModel.WaterFlowFMModel(localMduFilePath);
 
             ActivityRunner.RunActivity(model);
 
@@ -156,7 +156,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
             var localMduFilePath = TestHelper.CreateLocalCopy(mduPath);
 
-            var model = new WaterFlowFMModel(localMduFilePath);
+            var model = new WaterFlowFMModel.WaterFlowFMModel(localMduFilePath);
 
             ActivityRunner.RunActivity(model);
 
@@ -191,7 +191,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
             var localMduFilePath = TestHelper.CreateLocalCopy(mduPath);
 
-            var model = new WaterFlowFMModel(localMduFilePath);
+            var model = new WaterFlowFMModel.WaterFlowFMModel(localMduFilePath);
 
             ActivityRunner.RunActivity(model);
 
@@ -219,7 +219,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var mduPath = TestHelper.GetTestFilePath(@"roughness\bendprof.mdu");
             var localMduFilePath = TestHelper.CreateLocalCopy(mduPath);
 
-            var model = new WaterFlowFMModel(localMduFilePath);
+            var model = new WaterFlowFMModel.WaterFlowFMModel(localMduFilePath);
 
             var weir = new Weir2D("weir", true)
             {

@@ -11,7 +11,7 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 
-namespace DeltaShell.Plugins.FMSuite.FlowFM
+namespace DeltaShell.Plugins.FMSuite.FlowFM.WaterFlowFMModel
 {
     // The Restart related code for WaterFlowFM..
     public partial class WaterFlowFMModel

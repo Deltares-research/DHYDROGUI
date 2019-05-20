@@ -37,6 +37,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Controls;
+using DeltaShell.Plugins.FMSuite.FlowFM.WaterFlowFMModel;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 {

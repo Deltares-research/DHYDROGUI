@@ -113,7 +113,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
         {
             // setup
             var sourceAndSink = new SourceAndSink() { Data = null };
-            var fmModel = new WaterFlowFMModel();
+            var fmModel = new WaterFlowFMModel.WaterFlowFMModel();
             fmModel.SourcesAndSinks.Add(sourceAndSink);
 
             // do the export
@@ -201,7 +201,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
                 Type = HeatFluxModelType.Composite
             };
 
-            var fmModel = new WaterFlowFMModel();
+            var fmModel = new WaterFlowFMModel.WaterFlowFMModel();
             exporter.GetModelForHeatFluxModel = input => fmModel;
             
             try
@@ -285,14 +285,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
             Assert.That(exporter.ForcingTypes.Contains(BoundaryConditionDataType.TimeSeries));
         }
 
-        private static WaterFlowFMModel ConstructSourceAndSinkFlowFMModel(SourceAndSink sourceAndSink, 
+        private static WaterFlowFMModel.WaterFlowFMModel ConstructSourceAndSinkFlowFMModel(SourceAndSink sourceAndSink, 
                                                                           bool useSalinity, 
                                                                           HeatFluxModelType temperature, 
                                                                           bool useMorSed, 
                                                                           bool useSecFlow, 
                                                                           bool tracersPresent)
         {
-            var fmModel = new WaterFlowFMModel();
+            var fmModel = new WaterFlowFMModel.WaterFlowFMModel();
             fmModel.SourcesAndSinks.Add(sourceAndSink);
 
             var fractionList = new List<SedimentFraction>
@@ -310,7 +310,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
 
             var boundarySet = new BoundaryConditionSet();
 
-            var model = new WaterFlowFMModel
+            var model = new WaterFlowFMModel.WaterFlowFMModel
             {
                 SourcesAndSinks = { sourceAndSink },
                 BoundaryConditionSets = { boundarySet },

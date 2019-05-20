@@ -32,7 +32,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var mduFilePath = TestHelper.GetTestFilePath(@"sedmor\FlowFMCustomProperties\FlowFMCustomPropertiesSedMor.mdu");
 
             // When
-            var importedModel = new WaterFlowFMModel(mduFilePath);
+            var importedModel = new WaterFlowFMModel.WaterFlowFMModel(mduFilePath);
 
             // Then
             Assert.NotNull(importedModel, "Model was not imported.");
@@ -50,7 +50,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 // When
                 new MduFile().Write(mduFilePath, modelDefinition, importedModel.Area, importedModel.FixedWeirsProperties, sedimentModelData: importedModel);
-                importedModel = new WaterFlowFMModel(mduFilePath);
+                importedModel = new WaterFlowFMModel.WaterFlowFMModel(mduFilePath);
 
                 // Then
                 Assert.NotNull(importedModel);

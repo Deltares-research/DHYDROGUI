@@ -51,6 +51,7 @@ if rtcPlugin.loaded:
 
 if fmPlugin.loaded:
     from DeltaShell.Plugins.FMSuite.FlowFM import *
+    from DeltaShell.Plugins.FMSuite.FlowFM.WaterFlowFMModel import *
     
 if wavePlugin.loaded:
     from DeltaShell.Plugins.FMSuite.Wave import *

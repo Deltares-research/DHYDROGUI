@@ -20,7 +20,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.FunctionStores
 {
     public class FMMapFileFunctionStore : FMNetCdfFileFunctionStore
     {
-        private readonly WaterFlowFMModel waterFlowFmModel;
+        private readonly WaterFlowFMModel.WaterFlowFMModel waterFlowFmModel;
 
         #region Map file constants
 
@@ -76,7 +76,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.FunctionStores
         // nhib
         protected FMMapFileFunctionStore() {}
 
-        public FMMapFileFunctionStore(WaterFlowFMModel waterFlowFmModel)
+        public FMMapFileFunctionStore(WaterFlowFMModel.WaterFlowFMModel waterFlowFmModel)
         {
             this.waterFlowFmModel = waterFlowFmModel;
             DisableCaching = true;

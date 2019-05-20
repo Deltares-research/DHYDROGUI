@@ -248,7 +248,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
         public int SupportPointIndex { private get; set; }
 
-        private WaterFlowFMModel model;
+        private WaterFlowFMModel.WaterFlowFMModel model;
 
         private readonly AddSeriesTool addSeriesTool;
 
@@ -345,7 +345,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             }
         }
 
-        public WaterFlowFMModel Model
+        public WaterFlowFMModel.WaterFlowFMModel Model
         {
             private get { return model; }
             set

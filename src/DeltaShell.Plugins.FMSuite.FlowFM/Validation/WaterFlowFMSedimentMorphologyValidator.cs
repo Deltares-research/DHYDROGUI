@@ -28,7 +28,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             return null;
         }
 
-        public static ValidationReport ValidateMorphology(WaterFlowFMModel model)
+        public static ValidationReport ValidateMorphology(WaterFlowFMModel.WaterFlowFMModel model)
         {
             if (!model.UseMorSed)
             {
@@ -59,7 +59,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
         /// </summary>
         /// <param name="model"> The WaterFlowFM model. </param>
         /// <returns> </returns>
-        private static IEnumerable<ValidationIssue> ValidateAtLeastOneSedimentFractionInModel(WaterFlowFMModel model)
+        private static IEnumerable<ValidationIssue> ValidateAtLeastOneSedimentFractionInModel(WaterFlowFMModel.WaterFlowFMModel model)
         {
             var issues = new List<ValidationIssue>();
 
@@ -79,7 +79,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
         }
 
         private static IEnumerable<ValidationIssue> ValidateInitialSedimentThicknessOfSedimentFractionsInModel(
-            WaterFlowFMModel model)
+            WaterFlowFMModel.WaterFlowFMModel model)
         {
             var issues = new List<ValidationIssue>();
 
@@ -111,7 +111,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
         /// <param name="model"> The WaterFlowFMModel that is being </param>
         /// <returns> </returns>
         private static IEnumerable<ValidationIssue> ValidateSpaciallyVaryingSedimentFractionProperties(
-            WaterFlowFMModel model)
+            WaterFlowFMModel.WaterFlowFMModel model)
         {
             List<string> spaciallyVaryingPropertyNames = model.SedimentFractions
                                                               .SelectMany(

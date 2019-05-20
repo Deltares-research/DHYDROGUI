@@ -113,7 +113,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 }
             };
 
-            var fmModel = new WaterFlowFMModel();
+            var fmModel = new WaterFlowFMModel.WaterFlowFMModel();
             fmModel.SourcesAndSinks.Add(sourceAndSink);
 
             var modelDefinition = fmModel.ModelDefinition;
@@ -173,7 +173,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 Data = null
             };
 
-            var fmModel = new WaterFlowFMModel();
+            var fmModel = new WaterFlowFMModel.WaterFlowFMModel();
             fmModel.SourcesAndSinks.Add(sourceAndSink);
             var modelDefinition = fmModel.ModelDefinition;
 

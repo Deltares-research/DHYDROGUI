@@ -1087,7 +1087,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         /// <param name="messageKey"> The message key. </param>
         /// <param name="fmModel"> The fm model. </param>
         /// <returns> </returns>
-        public static string GetTabName(string key, string messageKey = null, WaterFlowFMModel fmModel = null)
+        public static string GetTabName(string key, string messageKey = null, WaterFlowFMModel.WaterFlowFMModel fmModel = null)
         {
             if (key == KnownProperties.SedFile)
             {

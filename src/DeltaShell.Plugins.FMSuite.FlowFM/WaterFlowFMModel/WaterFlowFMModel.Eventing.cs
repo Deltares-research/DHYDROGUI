@@ -21,7 +21,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.Sediment;
 using GeoAPI.Extensions.Feature;
 using NetTopologySuite.Extensions.Coverages;
 
-namespace DeltaShell.Plugins.FMSuite.FlowFM
+namespace DeltaShell.Plugins.FMSuite.FlowFM.WaterFlowFMModel
 {
     public partial class WaterFlowFMModel
     {

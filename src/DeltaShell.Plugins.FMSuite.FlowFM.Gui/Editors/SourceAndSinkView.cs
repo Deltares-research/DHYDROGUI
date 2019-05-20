@@ -17,7 +17,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
     {
         private SourceAndSink sourceAndSink;
         private bool locked;
-        private WaterFlowFMModel model;
+        private WaterFlowFMModel.WaterFlowFMModel model;
 
         public SourceAndSinkView()
         {
@@ -87,7 +87,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             FillAreaPanel();
         }
 
-        public WaterFlowFMModel Model
+        public WaterFlowFMModel.WaterFlowFMModel Model
         {
             get { return model; }
             set

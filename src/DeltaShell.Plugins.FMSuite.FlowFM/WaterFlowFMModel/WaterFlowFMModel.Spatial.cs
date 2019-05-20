@@ -24,7 +24,7 @@ using NetTopologySuite.Extensions.Grids;
 using SharpMap.Api;
 using SharpMap.Data.Providers;
 
-namespace DeltaShell.Plugins.FMSuite.FlowFM
+namespace DeltaShell.Plugins.FMSuite.FlowFM.WaterFlowFMModel
 {
     public partial class WaterFlowFMModel
     {

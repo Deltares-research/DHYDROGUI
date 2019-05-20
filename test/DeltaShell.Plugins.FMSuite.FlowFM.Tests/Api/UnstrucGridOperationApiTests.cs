@@ -50,7 +50,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             try
             {
                 // Given
-                var model = new WaterFlowFMModel();
+                var model = new WaterFlowFMModel.WaterFlowFMModel();
                 model.ExportTo(Path.Combine(tempFolder, TestHelper.GetCurrentMethodName() + ".mdu"), true, false, false);
                 File.Copy(netFile, model.NetFilePath, true);
 
@@ -61,7 +61,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 var tempMduPath = (string)TypeUtils.GetField<UnstrucGridOperationApi, string>(api, "mduFilePath");
 
                 var mduFileDir = Path.GetDirectoryName(tempMduPath);
-                var fmModelUsedByApi = new WaterFlowFMModel(Path.Combine(mduFileDir,tempMduPath));
+                var fmModelUsedByApi = new WaterFlowFMModel.WaterFlowFMModel(Path.Combine(mduFileDir,tempMduPath));
 
                 var trtRouUsedInOriginalFMModel = model.ModelDefinition.GetModelProperty(KnownProperties.TrtRou).GetValueAsString();
                 Assert.That(trtRouUsedInOriginalFMModel, Is.EqualTo("Y"));
@@ -89,7 +89,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             TestHelper.PerformActionInTemporaryDirectory(tempDir =>
             {
                 var mduPath = Path.Combine(tempDir, "morph_test.mdu");
-                using (var model = new WaterFlowFMModel())
+                using (var model = new WaterFlowFMModel.WaterFlowFMModel())
                 {
                     // Given
                     model.ExportTo(mduPath, true, false, false);
@@ -113,7 +113,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                     Assert.That(tempMduPath, Is.Not.Null,
                                 "Expected the API to return a mdu path.");
                     var mduFileDir = Path.GetDirectoryName(tempMduPath);
-                    var fmModelUsedByApi = new WaterFlowFMModel(Path.Combine(mduFileDir, tempMduPath));
+                    var fmModelUsedByApi = new WaterFlowFMModel.WaterFlowFMModel(Path.Combine(mduFileDir, tempMduPath));
 
                     Assert.That(fmModelUsedByApi.UseMorSed, Is.False,
                                 "Expected the used model not to have morphology.");
@@ -125,7 +125,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         /// Enable morphology in the specified model.
         /// </summary>
         /// <param name="model">The model on which morphology is enabled.</param>
-        private static void EnableMorphology(WaterFlowFMModel model)
+        private static void EnableMorphology(WaterFlowFMModel.WaterFlowFMModel model)
         {
             // Morphology
             model.ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value = true;
@@ -143,7 +143,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         /// Add a morphology boundary to the specified model.
         /// </summary>
         /// <param name="model">The model to which the boundary is added.</param>
-        private static void AddMorphologyBoundary(WaterFlowFMModel model)
+        private static void AddMorphologyBoundary(WaterFlowFMModel.WaterFlowFMModel model)
         {
             var feature = new Feature2D
             {
@@ -195,7 +195,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             try
 
             {
-                var model = new WaterFlowFMModel();
+                var model = new WaterFlowFMModel.WaterFlowFMModel();
                 model.ExportTo(Path.Combine(tempFolder, TestHelper.GetCurrentMethodName() + ".mdu"), true, false, false);
                 File.Copy(netFile, model.NetFilePath, true);
                 model.ModelDefinition.GetModelProperty(KnownProperties.NetFile).SetValueAsString(Path.GetFileName(model.NetFilePath));
@@ -207,7 +207,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
 
                 var mduFileDir = Path.GetDirectoryName(tempMduPath);
                 var name = Path.GetFileNameWithoutExtension(tempMduPath);
-                var fmModelUsedByApi = new WaterFlowFMModel(Path.Combine(mduFileDir, tempMduPath));
+                var fmModelUsedByApi = new WaterFlowFMModel.WaterFlowFMModel(Path.Combine(mduFileDir, tempMduPath));
                 var FileUsedInOriginalFMModel = model.ModelDefinition.GetModelProperty(knownProperties).GetValueAsString();
                 Assert.That(FileUsedInOriginalFMModel, Is.EqualTo(file));
                 var FileUsedInFMModelByApi = fmModelUsedByApi.ModelDefinition.GetModelProperty(knownProperties).GetValueAsString();
@@ -231,7 +231,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             var tempFolder = FileUtils.CreateTempDirectory();
             try
             {
-                var model = new WaterFlowFMModel();
+                var model = new WaterFlowFMModel.WaterFlowFMModel();
                 model.ExportTo(Path.Combine(tempFolder, TestHelper.GetCurrentMethodName() + ".mdu"), true, false,
                     false);
                 File.Copy(netFile, model.NetFilePath, true);
@@ -286,7 +286,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             var tempFolder = FileUtils.CreateTempDirectory();
             try
             {
-                var model = new WaterFlowFMModel();
+                var model = new WaterFlowFMModel.WaterFlowFMModel();
                 model.ExportTo(Path.Combine(tempFolder, TestHelper.GetCurrentMethodName() + ".mdu"), true, false,
                     false);
                 File.Copy(netFile, model.NetFilePath, true);
@@ -344,7 +344,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             var tempFolder = FileUtils.CreateTempDirectory();
             try
             {
-                var model = new WaterFlowFMModel();
+                var model = new WaterFlowFMModel.WaterFlowFMModel();
                 model.ExportTo(Path.Combine(tempFolder, TestHelper.GetCurrentMethodName() + ".mdu"), true, false,
                     false);
                 File.Copy(netFile, model.NetFilePath, true);
@@ -420,7 +420,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             var tempFolder = FileUtils.CreateTempDirectory();
             try
             {
-                var model = new WaterFlowFMModel();
+                var model = new WaterFlowFMModel.WaterFlowFMModel();
                 model.ExportTo(Path.Combine(tempFolder, TestHelper.GetCurrentMethodName() + ".mdu"), true, false,
                     false);
                 File.Copy(netFile, model.NetFilePath, true);

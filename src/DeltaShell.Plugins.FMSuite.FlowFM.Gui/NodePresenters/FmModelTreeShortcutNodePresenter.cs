@@ -33,7 +33,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
             ReloadGrid(flowFmModel);
         }
 
-        private void ReloadGrid(WaterFlowFMModel model)
+        private void ReloadGrid(WaterFlowFMModel.WaterFlowFMModel model)
         {
             try
             {

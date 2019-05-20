@@ -14,7 +14,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.Buttons
 
         public static void ButtonAction(object inputObject)
         {
-            var model = inputObject as WaterFlowFMModel;
+            var model = inputObject as WaterFlowFMModel.WaterFlowFMModel;
             if (model == null) return;
             var view = new DepthLayerDialog(WaterFlowFMModelDefinition.SupportedDepthLayerTypes)
                 {

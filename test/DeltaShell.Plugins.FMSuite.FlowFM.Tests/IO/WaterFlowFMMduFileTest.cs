@@ -179,7 +179,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var group1NameWE = String.Concat("Group1", MduFile.ObsExtension);
             var fileObsPointsDefault = Path.Combine(mduDir, defaultNameWE);
             var fileObsPointsGroup1 = Path.Combine(mduDir, group1NameWE);
-            using (var model = new WaterFlowFMModel(mduFilePath){ Area = new HydroArea()})
+            using (var model = new WaterFlowFMModel.WaterFlowFMModel(mduFilePath){ Area = new HydroArea()})
             {
                 var area = model.Area;
                 /*Observation points, we create 2 with keys and one default. Thus, three expected output files*/

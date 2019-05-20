@@ -72,7 +72,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
-            var model = new WaterFlowFMModel(mduPath);
+            var model = new WaterFlowFMModel.WaterFlowFMModel(mduPath);
             var view = new WaterFlowFMFileStructureView {Data = model};
             WindowsFormsTestHelper.ShowModal(view);
         }

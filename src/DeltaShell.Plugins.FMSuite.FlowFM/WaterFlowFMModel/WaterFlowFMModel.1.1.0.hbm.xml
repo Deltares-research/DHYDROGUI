@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 
-<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="DeltaShell.Plugins.FMSuite.FlowFM"
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="DeltaShell.Plugins.FMSuite.FlowFM.WaterFlowFMModel"
                    assembly="DeltaShell.Plugins.FMSuite.FlowFM">
 
-  <joined-subclass name="DeltaShell.Plugins.FMSuite.FlowFM.WaterFlowFMModel" 
+  <joined-subclass name="DeltaShell.Plugins.FMSuite.FlowFM.WaterFlowFMModel.WaterFlowFMModel" 
                    lazy="false"
                    extends="DelftTools.Shell.Core.Workflow.IModel, DelftTools.Shell.Core" 
                    table="fm_model"

@@ -31,7 +31,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
     public partial class WaterFlowFMFileStructureView : UserControl, IAdditionalView
     {
-        private WaterFlowFMModel model;
+        private WaterFlowFMModel.WaterFlowFMModel model;
 
         public WaterFlowFMFileStructureView()
         {
@@ -46,7 +46,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             propertyGrid1.SelectedObject = item == null ? null : new FileBasedItemProperties(item);
         }
 
-        public WaterFlowFMModel Model
+        public WaterFlowFMModel.WaterFlowFMModel Model
         {
             get { return model; }
             set
@@ -109,7 +109,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
         #region IView
 
-        public object Data { get { return Model; } set { Model = value as WaterFlowFMModel; } }
+        public object Data { get { return Model; } set { Model = value as WaterFlowFMModel.WaterFlowFMModel; } }
         
         public Image Image { get; set; }
 

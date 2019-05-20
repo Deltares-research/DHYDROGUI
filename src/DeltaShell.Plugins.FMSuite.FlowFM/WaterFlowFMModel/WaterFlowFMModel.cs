@@ -1,3 +1,8 @@
+using System;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.ComponentModel;
+using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
@@ -19,6 +24,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccess;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DeltaShell.Plugins.FMSuite.FlowFM.Sediment;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using GeoAPI.CoordinateSystems.Transformations;
@@ -33,14 +39,8 @@ using SharpMap.Api;
 using SharpMap.Api.SpatialOperations;
 using SharpMap.Data.Providers;
 using SharpMap.SpatialOperations;
-using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.ComponentModel;
-using System.Linq;
-using DeltaShell.Plugins.FMSuite.FlowFM.Sediment;
 
-namespace DeltaShell.Plugins.FMSuite.FlowFM
+namespace DeltaShell.Plugins.FMSuite.FlowFM.WaterFlowFMModel
 {
     [Entity]
     public partial class WaterFlowFMModel : TimeDependentModelBase, IDimrStateAwareModel, IFileBased,
@@ -456,7 +456,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 if (value != null)
                 {
                     value.FixedWeirs.ForEach(
-                        fw => fixedWeirProperties.Add(fw, CreateModelFeatureCoordinateDataFor(fw)));
+                        fw => fixedWeirProperties.Add(fw, CreateModelFeatureCoordinateDataFor((FixedWeir) fw)));
                     value.BridgePillars.ForEach(
                         bp => BridgePillarsDataModel.Add(CreateModelFeatureCoordinateDataFor(bp)));
 

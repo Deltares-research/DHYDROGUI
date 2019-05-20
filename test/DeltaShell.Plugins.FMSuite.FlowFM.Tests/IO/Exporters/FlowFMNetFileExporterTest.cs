@@ -30,7 +30,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
         [Test]
         public void CanExport()
         {
-            var fmModel = new WaterFlowFMModel();
+            var fmModel = new WaterFlowFMModel.WaterFlowFMModel();
 
             exporter.GetModelForGrid = g => fmModel;
             
@@ -54,7 +54,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
                 app.Run();
 
                 // create FM Model
-                var fmModel = new WaterFlowFMModel();
+                var fmModel = new WaterFlowFMModel.WaterFlowFMModel();
                 app.Project.RootFolder.Add(fmModel);
 
                 app.SaveProjectAs(Path.Combine(testDir, "TestExport.dsproj")); // save to initialize file repository..
@@ -107,7 +107,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
                 app.Run();
 
                 // create FM Model
-                var fmModel = new WaterFlowFMModel();
+                var fmModel = new WaterFlowFMModel.WaterFlowFMModel();
 
                 // set bed level location to faces
                 var cellsValue = ((int)UnstructuredGridFileHelper.BedLevelLocation.Faces).ToString();
@@ -200,7 +200,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
                 app.Run();
 
                 // create FM Model
-                var fmModel = new WaterFlowFMModel();
+                var fmModel = new WaterFlowFMModel.WaterFlowFMModel();
 
                 // set bed level location to faces
                 var cellsValue = ((int) UnstructuredGridFileHelper.BedLevelLocation.Faces).ToString();

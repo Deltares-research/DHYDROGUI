@@ -46,7 +46,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 
         public bool CanImportOn(object targetObject)
         {
-            return targetObject is ICompositeActivity || targetObject is WaterFlowFMModel;
+            return targetObject is ICompositeActivity || targetObject is WaterFlowFMModel.WaterFlowFMModel;
         }
 
         public bool CanImportOnRootLevel => true;
@@ -63,11 +63,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         {
             try
             {
-                WaterFlowFMModel importedFmModel = WaterFlowFMModel.Import(path, ProgressChanged);
+                WaterFlowFMModel.WaterFlowFMModel importedFmModel = WaterFlowFMModel.WaterFlowFMModel.Import(path, ProgressChanged);
                 importedFmModel.WorkingDirectoryPathFunc = StoreWorkingDirectoryPathFunc;
 
                 //replace the FM Model
-                var targetFmModel = target as WaterFlowFMModel;
+                var targetFmModel = target as WaterFlowFMModel.WaterFlowFMModel;
                 if (targetFmModel != null)
                 {
                     IProjectItem parent = targetFmModel.Owner();

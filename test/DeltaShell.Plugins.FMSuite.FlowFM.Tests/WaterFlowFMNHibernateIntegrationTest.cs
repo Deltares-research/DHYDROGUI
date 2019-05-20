@@ -57,7 +57,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 var bridgepillarsDsproj = "bridgePillars.dsproj";
                 app.SaveProjectAs(bridgepillarsDsproj); // save to initialize file repository..
 
-                var model = new WaterFlowFMModel();
+                var model = new WaterFlowFMModel.WaterFlowFMModel();
                 app.Project.RootFolder.Add(model);
 
                 var pillar = new BridgePillar()
@@ -137,7 +137,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 Assert.IsTrue(File.Exists(path));
                 app.OpenProject(path);
 
-                var loadedModel = app.Project.RootFolder.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
+                var loadedModel = app.Project.RootFolder.Models.OfType<WaterFlowFMModel.WaterFlowFMModel>().FirstOrDefault();
 
                 Assert.IsNotNull(loadedModel);
                 Assert.IsTrue(loadedModel.Area.BridgePillars.Any());
@@ -164,7 +164,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 var bridgepillarsDsproj = "bridgePillars.dsproj";
                 app.SaveProjectAs(bridgepillarsDsproj); // save to initialize file repository..
                 //create model and set the pillar
-                var model = new WaterFlowFMModel();
+                var model = new WaterFlowFMModel.WaterFlowFMModel();
                 app.Project.RootFolder.Add(model);
 
                 var pillar = new BridgePillar()
@@ -206,7 +206,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 app.CloseProject();
                 app.OpenProject(bridgepillarsDsproj);
 
-                var loadedModel = app.GetAllModelsInProject().OfType<WaterFlowFMModel>().FirstOrDefault();
+                var loadedModel = app.GetAllModelsInProject().OfType<WaterFlowFMModel.WaterFlowFMModel>().FirstOrDefault();
                 Assert.IsNotNull(loadedModel);
                 Assert.IsNotNull(loadedModel.Area);
                 Assert.IsNotNull(loadedModel.Area.BridgePillars);
@@ -238,7 +238,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
                 var mduFilePath = TestHelper.CreateLocalCopy(mduPath);
 
-                var model = new WaterFlowFMModel(mduFilePath);
+                var model = new WaterFlowFMModel.WaterFlowFMModel(mduFilePath);
 
                 var di = model.GetDataItemByValue(model.Bathymetry);
                 var coverageValueConverter = SpatialOperationValueConverterFactory.Create(di.Value, di.Value.GetType());
@@ -288,7 +288,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 app.CloseProject();
                 app.OpenProject("spatial_hibernate.dsproj");
 
-                var loadedModel = (WaterFlowFMModel)app.Project.RootFolder.Items[0];
+                var loadedModel = (WaterFlowFMModel.WaterFlowFMModel)app.Project.RootFolder.Items[0];
                 var loadedDi = loadedModel.GetDataItemByValue(loadedModel.Bathymetry);
                 var loadedOperations = ((SpatialOperationSetValueConverter)loadedDi.ValueConverter).SpatialOperationSet.Operations;
 
@@ -326,7 +326,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
                     app.Project.RootFolder.Add(model);
 
-                    var loadedModel = (WaterFlowFMModel)app.Project.RootFolder.Items[0];
+                    var loadedModel = (WaterFlowFMModel.WaterFlowFMModel)app.Project.RootFolder.Items[0];
                     loadedModel.ClearOutput();
                     Assert.NotNull(loadedModel);
                     Assert.IsTrue(loadedModel.OutputIsEmpty);
@@ -340,10 +340,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             }
         }
 
-        private static WaterFlowFMModel ImportModelFromTemporaryDirectory(string tempDir, string mduFileName)
+        private static WaterFlowFMModel.WaterFlowFMModel ImportModelFromTemporaryDirectory(string tempDir, string mduFileName)
         {
             var mduFilePath = Path.Combine(tempDir, mduFileName);
-            var model = new WaterFlowFMModel(mduFilePath);
+            var model = new WaterFlowFMModel.WaterFlowFMModel(mduFilePath);
             return model;
         }
 
@@ -365,7 +365,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 app.IsProjectCreatedInTemporaryDirectory = true;
                 app.Run();
 
-                var model = new WaterFlowFMModel(TestHelper.GetTestFilePath(@"chezy_samples\chezy.mdu"));               
+                var model = new WaterFlowFMModel.WaterFlowFMModel(TestHelper.GetTestFilePath(@"chezy_samples\chezy.mdu"));               
                 app.Project.RootFolder.Add(model);
                 app.SaveProjectAs(dsprojName); // save to initialize file repository..
 
@@ -373,7 +373,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
                 app.OpenProject(dsprojName);
 
-                model = app.Project.RootFolder.Models.OfType<WaterFlowFMModel>().First();
+                model = app.Project.RootFolder.Models.OfType<WaterFlowFMModel.WaterFlowFMModel>().First();
 
                 var valueConverter = model.GetDataItemByValue(model.Roughness).ValueConverter;
                 var spatialOperationValueConverter = valueConverter as SpatialOperationSetValueConverter;
@@ -415,7 +415,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
                 var mduFilePath = TestHelper.CreateLocalCopy(mduPath);
 
-                var model = new WaterFlowFMModel(mduFilePath);
+                var model = new WaterFlowFMModel.WaterFlowFMModel(mduFilePath);
                 var modelDir = model.ModelDefinition.ModelDirectory;
                 gui.Application.Project.RootFolder.Add(model);
 
@@ -457,7 +457,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
                 var mduFilePath = TestHelper.CreateLocalCopy(mduPath);
 
-                var model = new WaterFlowFMModel(mduFilePath);
+                var model = new WaterFlowFMModel.WaterFlowFMModel(mduFilePath);
                 app.Project.RootFolder.Add(model);
 
                 app.SaveProjectAs(dsprojName); // save to initialize file repository..
@@ -506,7 +506,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
                 var mduFilePath = TestHelper.CreateLocalCopy(mduPath);
 
-                var model = new WaterFlowFMModel(mduFilePath);
+                var model = new WaterFlowFMModel.WaterFlowFMModel(mduFilePath);
                 gui.Application.Project.RootFolder.Add(model);
 
                 app.SaveProjectAs(dsprojName); // save to initialize file repository..
@@ -567,7 +567,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
                 var mduFilePath = TestHelper.CreateLocalCopy(mduPath);
 
-                var model = new WaterFlowFMModel(mduFilePath);
+                var model = new WaterFlowFMModel.WaterFlowFMModel(mduFilePath);
                 gui.Application.Project.RootFolder.Add(model);
 
                 app.SaveProjectAs(dsprojName); // save to initialize file repository..

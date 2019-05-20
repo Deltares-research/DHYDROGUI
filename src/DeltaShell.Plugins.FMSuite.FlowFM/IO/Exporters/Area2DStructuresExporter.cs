@@ -18,7 +18,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(Area2DStructuresExporter));
 
-        public Func<HydroArea, WaterFlowFMModel> GetModelForArea { get; set; }
+        public Func<HydroArea, WaterFlowFMModel.WaterFlowFMModel> GetModelForArea { get; set; }
 
         #region IFileExporter
 
@@ -44,7 +44,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
             }
 
             HydroArea targetHydroArea;
-            var model = item as WaterFlowFMModel;
+            var model = item as WaterFlowFMModel.WaterFlowFMModel;
             if (model != null)
             {
                 targetHydroArea = model.Area;

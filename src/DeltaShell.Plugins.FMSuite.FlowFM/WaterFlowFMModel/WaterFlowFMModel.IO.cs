@@ -33,7 +33,7 @@ using SharpMap;
 using SharpMap.Api.SpatialOperations;
 using SharpMap.SpatialOperations;
 
-namespace DeltaShell.Plugins.FMSuite.FlowFM
+namespace DeltaShell.Plugins.FMSuite.FlowFM.WaterFlowFMModel
 {
     public partial class WaterFlowFMModel
     {

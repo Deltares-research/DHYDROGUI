@@ -58,7 +58,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         {
             // setup
             var sourceAndSink = new SourceAndSink() { Data = null };
-            var fmModel = new WaterFlowFMModel();
+            var fmModel = new WaterFlowFMModel.WaterFlowFMModel();
             fmModel.SourcesAndSinks.Add(sourceAndSink);
 
             // do the import & check results
@@ -124,10 +124,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             ValidateImportedSourceAndSinkFunction(sourceAndSink.Function, useSalinity, useTemperature, useSecondaryFlow);
         }
 
-        private WaterFlowFMModel SetupFMModelWithSourceAndSink(bool useSalinity, HeatFluxModelType temperature, bool useSedimentMorphology, bool useSecondaryFlow, bool useTracers)
+        private WaterFlowFMModel.WaterFlowFMModel SetupFMModelWithSourceAndSink(bool useSalinity, HeatFluxModelType temperature, bool useSedimentMorphology, bool useSecondaryFlow, bool useTracers)
         {
             var expectedNumberOfComponents = 4; // Discharge, Salinity, Tmeperature, SecondaryFlow
-            var fmModel = new WaterFlowFMModel();
+            var fmModel = new WaterFlowFMModel.WaterFlowFMModel();
 
             var geometry = new LineString(new[]
             {

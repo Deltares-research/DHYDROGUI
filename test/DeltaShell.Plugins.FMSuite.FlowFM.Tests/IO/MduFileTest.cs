@@ -56,7 +56,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var testFile = "ModelWithMorphology.mdu";
             var mduFile = new MduFile();
             var hydroArea = new HydroArea();
-            var model = new WaterFlowFMModel();
+            var model = new WaterFlowFMModel.WaterFlowFMModel();
             var sedimentData = model as ISedimentModelData;
             var modelDefinition = model.ModelDefinition;
             modelDefinition.UseMorphologySediment = true;

@@ -32,7 +32,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         [Test]
         public void Test_ValidateMorphology_WithoutSediments_Returns_ValidationIssue_With_ExpectedMessage()
         {
-            var model = new WaterFlowFMModel() {ModelDefinition = {UseMorphologySediment = true}};
+            var model = new WaterFlowFMModel.WaterFlowFMModel() {ModelDefinition = {UseMorphologySediment = true}};
             var expectedMessage = Resources
                 .WaterFlowFMSedimentMorphologyValidator_ValidateAtLeastOneSedimentFractionInModel_At_least_one_sediment_fraction_is_required_when_using_morphology;
 
@@ -44,7 +44,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         [Test]
         public void Test_ValidateMorphology_WithSediments_Returns_No_ValidationIssue()
         {
-            var model = new WaterFlowFMModel() { ModelDefinition = { UseMorphologySediment = true } };
+            var model = new WaterFlowFMModel.WaterFlowFMModel() { ModelDefinition = { UseMorphologySediment = true } };
             var expectedMessage = Resources
                 .WaterFlowFMSedimentMorphologyValidator_ValidateAtLeastOneSedimentFractionInModel_At_least_one_sediment_fraction_is_required_when_using_morphology;
 
@@ -59,7 +59,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         public void TestValidateInitialSedimentThicknessOfSedimentFractionsInModel_WithNoSedimentFractions()
         {
             var mduPath = TestHelper.GetTestFilePath(@"MyFmModel");
-            var fmModel = new WaterFlowFMModel(mduPath) { ModelDefinition = { UseMorphologySediment = true } };
+            var fmModel = new WaterFlowFMModel.WaterFlowFMModel(mduPath) { ModelDefinition = { UseMorphologySediment = true } };
             var issues = GetValidationIssuesWithMessages(fmModel, new List<string>(){ Resources.WaterFlowFMSedimentMorphologyValidator_ValidateInitialSedimentThicknessOfSedimentFractionsInModel_At_least_one_sediment_fraction_should_have_a_positive_thickness});
             Assert.AreEqual(0, issues.Count());
         }
@@ -208,10 +208,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         }
 
         #region Test helper methods
-        private static WaterFlowFMModel GetFMModelWithDefaultSandAndMudFractions()
+        private static WaterFlowFMModel.WaterFlowFMModel GetFMModelWithDefaultSandAndMudFractions()
         {
             var mduPath = TestHelper.GetTestFilePath(@"MyFmModel");
-            var fmModel = new WaterFlowFMModel(mduPath)
+            var fmModel = new WaterFlowFMModel.WaterFlowFMModel(mduPath)
             {
                 ModelDefinition = { UseMorphologySediment = true },
                 SedimentFractions = new EventedList<ISedimentFraction>()
@@ -232,10 +232,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             return fmModel;
         }
 
-        private static WaterFlowFMModel GetFmModelWithSedimentFraction(IEventedList<ISedimentProperty> sedimentProperties)
+        private static WaterFlowFMModel.WaterFlowFMModel GetFmModelWithSedimentFraction(IEventedList<ISedimentProperty> sedimentProperties)
         {
             var mduPath = TestHelper.GetTestFilePath(@"MyFmModel");
-            var fmModel = new WaterFlowFMModel(mduPath) {ModelDefinition = {UseMorphologySediment = true}};
+            var fmModel = new WaterFlowFMModel.WaterFlowFMModel(mduPath) {ModelDefinition = {UseMorphologySediment = true}};
             var sedimentFraction = new SedimentFraction
             {
                 Name = "Sand",
@@ -248,7 +248,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             return fmModel;
         }
 
-        private static void SetDataItemValueConverters(WaterFlowFMModel fmModel, List<string> spatiallyVaryingNames)
+        private static void SetDataItemValueConverters(WaterFlowFMModel.WaterFlowFMModel fmModel, List<string> spatiallyVaryingNames)
         {
             var iniSedThickDataItems = fmModel.AllDataItems.Where(d => spatiallyVaryingNames.Contains(d.Name));
             foreach (var iniSedThickDataItem in iniSedThickDataItems)
@@ -259,7 +259,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             }
         }
 
-        private static IEnumerable<ValidationIssue> GetValidationIssuesWithMessages(WaterFlowFMModel fmModel, List<string> messages)
+        private static IEnumerable<ValidationIssue> GetValidationIssuesWithMessages(WaterFlowFMModel.WaterFlowFMModel fmModel, List<string> messages)
         {
             var validationReport = fmModel.Validate();
             var morSedValidationReport =

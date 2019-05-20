@@ -136,7 +136,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 }
             }
 
-            Assembly waterFlowFMAssembly = typeof(WaterFlowFMModel).Assembly;
+            Assembly waterFlowFMAssembly = typeof(WaterFlowFMModel.WaterFlowFMModel).Assembly;
             FMSuiteFlowModelVersion = waterFlowFMAssembly.GetName().Version.ToString();
         }
 

@@ -29,7 +29,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.RgfGrid
         {
             var mduPath = TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
-            var model = new WaterFlowFMModel(mduPath);
+            var model = new WaterFlowFMModel.WaterFlowFMModel(mduPath);
 
             PerformActionWithCancellationThread(MaxTimeOut, () => 
                 RgfGridEditor.OpenGrid(model.NetFilePath));
@@ -40,7 +40,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.RgfGrid
         [Ignore("Times-out on Build Server, needs to be run manually :(")]
         public void ShowWithEmptyGrid()
         {
-            var model = new WaterFlowFMModel();
+            var model = new WaterFlowFMModel.WaterFlowFMModel();
             ((IFileBased) model).CreateNew(Path.Combine(Path.GetTempPath(), "model"));
             model.ModelDefinition.GetModelProperty(KnownProperties.NetFile)
                 .SetValueAsString(model.Name + "_net.nc");
@@ -56,7 +56,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.RgfGrid
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
-            var model = new WaterFlowFMModel(mduPath);
+            var model = new WaterFlowFMModel.WaterFlowFMModel(mduPath);
 
             PerformActionWithCancellationThread(MaxTimeOut, () => 
                 RgfGridEditor.OpenGrid(model.NetFilePath, false, new[] {TestHelper.GetTestFilePath(@"harlingen\Harlingen_haven.ldb")}));

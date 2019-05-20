@@ -40,7 +40,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             var mduPath =
                 TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
-            ShowModelLayers(new WaterFlowFMModel(mduPath));
+            ShowModelLayers(new WaterFlowFMModel.WaterFlowFMModel(mduPath));
         }
         
         [Test]
@@ -49,7 +49,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             var mduPath =
                 TestHelper.GetTestFilePath(@"mdu_ivoorkust\ivk.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
-            ShowModelLayers(new WaterFlowFMModel(mduPath));
+            ShowModelLayers(new WaterFlowFMModel.WaterFlowFMModel(mduPath));
         }
 
         [Test]
@@ -58,7 +58,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             var mduPath =
                 TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
-            var model = new WaterFlowFMModel(mduPath);
+            var model = new WaterFlowFMModel.WaterFlowFMModel(mduPath);
 
             model.Area.DredgingLocations.Add(new GroupableFeature2D
             {
@@ -78,7 +78,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         {
             var mduPath = TestHelper.GetTestFilePath(@"roughness\bendprof.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
-            var model = new WaterFlowFMModel(mduPath);
+            var model = new WaterFlowFMModel.WaterFlowFMModel(mduPath);
 
             using (var gui = new DeltaShellGui())
             {
@@ -121,7 +121,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Test]
         public void CheckFMEnclosureLayerIsCreated()
         {
-            var model = new WaterFlowFMModel();
+            var model = new WaterFlowFMModel.WaterFlowFMModel();
 
             using (var gui = new DeltaShellGui())
             {
@@ -156,7 +156,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Test]
         public void CheckFMBridgePillarLayerIsCreated()
         {
-            var model = new WaterFlowFMModel();
+            var model = new WaterFlowFMModel.WaterFlowFMModel();
 
             using (var gui = new DeltaShellGui())
             {
@@ -225,7 +225,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             var filePath = Path.Combine(outputDirectoryPath, "FlowFM_clm.nc");
             Assert.IsTrue(File.Exists(filePath));
 
-            var model = new WaterFlowFMModel();
+            var model = new WaterFlowFMModel.WaterFlowFMModel();
             model.ConnectOutput(outputDirectoryPath);
             var outputClassMapFileStore = model.OutputClassMapFileStore;
             Assert.NotNull(outputClassMapFileStore);
@@ -268,7 +268,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Test]
         public void CheckFMLayerProviderGivesAWarningWithInvalidGeometryForEnclosure()
         {
-            var model = new WaterFlowFMModel();
+            var model = new WaterFlowFMModel.WaterFlowFMModel();
 
             using (var gui = new DeltaShellGui())
             {
@@ -306,7 +306,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             }
         }
 
-        private static void ShowModelLayers(WaterFlowFMModel model)
+        private static void ShowModelLayers(WaterFlowFMModel.WaterFlowFMModel model)
         {
             var providers = new IMapLayerProvider[] { new FlowFMMapLayerProvider(), new SharpMapLayerProvider() };
 

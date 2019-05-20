@@ -83,7 +83,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
             {
                 var list =
                     GuiPlugin.Gui.Application.GetAllModelsInProject()
-                        .OfType<WaterFlowFMModel>()
+                        .OfType<WaterFlowFMModel.WaterFlowFMModel>()
                         .First(m => m.WindFields.Contains(data))
                         .WindFields;
 

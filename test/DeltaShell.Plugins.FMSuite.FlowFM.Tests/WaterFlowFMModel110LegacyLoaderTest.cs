@@ -104,7 +104,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 // Get model for test
                 var mduFilePath = Path.Combine(modelDirPath, mduFileName);
                 Assert.That(File.Exists(mduFilePath));
-                var model = new WaterFlowFMModel(mduFilePath);
+                var model = new WaterFlowFMModel.WaterFlowFMModel(mduFilePath);
 
                 // Get all output files in the model directory before migration
                 var outputFilesBeforeMigration = GetAllFilesByFilter(filters, modelDirPath);
@@ -205,7 +205,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 // Get model for test
                 var mduFilePath = Path.Combine(modelDirPath, mduFileName);
                 Assert.That(File.Exists(mduFilePath));
-                var model = new WaterFlowFMModel(mduFilePath);
+                var model = new WaterFlowFMModel.WaterFlowFMModel(mduFilePath);
 
                 // Perform migration
                 TypeUtils.CallPrivateStaticMethod(typeof(WaterFlowFMModel110LegacyLoader),

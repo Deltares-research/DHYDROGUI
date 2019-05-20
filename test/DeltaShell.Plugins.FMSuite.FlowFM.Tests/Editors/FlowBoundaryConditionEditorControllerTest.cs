@@ -46,7 +46,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Editors
 
             mocks.ReplayAll();
 
-            var model = new WaterFlowFMModel();
+            var model = new WaterFlowFMModel.WaterFlowFMModel();
             model.ModelDefinition.GetModelProperty(KnownProperties.UseSalinity).Value = false;
 
             // Controller should call BoundaryConditionEditor.RefreshAvailableCategories on 
@@ -64,7 +64,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Editors
         [Test]
         public void GetVariablesForProcessForSalinityTest()
         {
-            var model = new WaterFlowFMModel();
+            var model = new WaterFlowFMModel.WaterFlowFMModel();
             model.ModelDefinition.GetModelProperty(KnownProperties.UseSalinity).Value = true;
 
             var controller = new FlowBoundaryConditionEditorController
@@ -82,7 +82,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Editors
         [Test]
         public void SupportedProcessNamesForSalinity()
         {
-            var model = new WaterFlowFMModel();
+            var model = new WaterFlowFMModel.WaterFlowFMModel();
             model.ModelDefinition.GetModelProperty(KnownProperties.UseSalinity).Value = true;
 
             var controller = new FlowBoundaryConditionEditorController
@@ -110,7 +110,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Editors
 
             mocks.ReplayAll();
 
-            var model = new WaterFlowFMModel();
+            var model = new WaterFlowFMModel.WaterFlowFMModel();
             model.ModelDefinition.UseMorphologySediment = false;
 
             // Controller should call BoundaryConditionEditor.RefreshAvailableCategories on 
@@ -128,7 +128,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Editors
         [Test]
         public void SupportedProcessNamesForSediment()
         {
-            var model = new WaterFlowFMModel();
+            var model = new WaterFlowFMModel.WaterFlowFMModel();
             model.ModelDefinition.UseMorphologySediment = true;
 
             var controller = new FlowBoundaryConditionEditorController
@@ -152,7 +152,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Editors
         public void TestGetAllowedVariablesFor_SedimentFractions()
         {
             // setup
-            var model = new WaterFlowFMModel();
+            var model = new WaterFlowFMModel.WaterFlowFMModel();
             model.ModelDefinition.UseMorphologySediment = true;
 
             var controller = new FlowBoundaryConditionEditorController{ Model = model };

@@ -7,9 +7,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
 {
     class RemoveBoundaryPointDialog
     {
-        private readonly WaterFlowFMModel waterFlowFMModel;
+        private readonly WaterFlowFMModel.WaterFlowFMModel waterFlowFMModel;
 
-        public RemoveBoundaryPointDialog(WaterFlowFMModel waterFlowFMModel)
+        public RemoveBoundaryPointDialog(WaterFlowFMModel.WaterFlowFMModel waterFlowFMModel)
         {
             this.waterFlowFMModel = waterFlowFMModel;
         }

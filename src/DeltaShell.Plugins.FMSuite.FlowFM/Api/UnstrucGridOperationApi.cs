@@ -74,7 +74,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
         /// <param name="model"> </param>
         /// <param name="fullExport"> When false makes an export without extForces or features </param>
         /// <returns> </returns>
-        public UnstrucGridOperationApi(WaterFlowFMModel model, bool fullExport = true)
+        public UnstrucGridOperationApi(WaterFlowFMModel.WaterFlowFMModel model, bool fullExport = true)
         {
             tempPath = FileUtils.CreateTempDirectory();
 

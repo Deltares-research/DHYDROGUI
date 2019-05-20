@@ -53,7 +53,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         public void GivenFlowBoundaryConditionWhenImportedWithoutOpenFileDialogThenThrowException()
         {
             FlowBoundaryCondition flowBoundaryCondition = new FlowBoundaryCondition(FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed, BoundaryConditionDataType.TimeSeries);
-            WaterFlowFMModel wfmodel = new WaterFlowFMModel();
+            WaterFlowFMModel.WaterFlowFMModel wfmodel = new WaterFlowFMModel.WaterFlowFMModel();
 
             BoundaryConditionDialogLauncher.LaunchImporterDialog(null, flowBoundaryCondition, 1, wfmodel.ReferenceTime);
         }
@@ -77,7 +77,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         public void GivenAMorphologyFlowBoundaryQuantityTypeWithTimeSeriesWhenImportDialogIsOpenedThenValidExtentionsArePresent(FlowBoundaryQuantityType flowBoundaryQuantityType)
         {
             FlowBoundaryCondition flowBoundaryCondition = new FlowBoundaryCondition(flowBoundaryQuantityType, BoundaryConditionDataType.TimeSeries);
-            WaterFlowFMModel wfmodel = new WaterFlowFMModel();
+            WaterFlowFMModel.WaterFlowFMModel wfmodel = new WaterFlowFMModel.WaterFlowFMModel();
 
             BoundaryConditionDialogLauncher.LaunchImporterDialog(fileDialogMock, flowBoundaryCondition, 1, wfmodel.ReferenceTime);
 
@@ -89,7 +89,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         public void GivenAFlowBoundaryQuantityTypeWithTimeSeriesWhenImportDialogIsOpenedThenValidExtentionsArePresent(FlowBoundaryQuantityType flowBoundaryQuantityType, BoundaryConditionDataType timeSeries)
         {
             FlowBoundaryCondition flowBoundaryCondition = new FlowBoundaryCondition(flowBoundaryQuantityType, timeSeries);
-            WaterFlowFMModel wfmodel = new WaterFlowFMModel();
+            WaterFlowFMModel.WaterFlowFMModel wfmodel = new WaterFlowFMModel.WaterFlowFMModel();
 
             BoundaryConditionDialogLauncher.LaunchImporterDialog(fileDialogMock, flowBoundaryCondition, 1, wfmodel.ReferenceTime);
             
@@ -103,7 +103,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         public void GivenAFlowBoundaryQuantityTypeWithHarmonicsCorrectionWhenImportDialogIsOpenedThenValidExtentionsArePresent(FlowBoundaryQuantityType flowBoundaryQuantityType, BoundaryConditionDataType harmonicsCorrection)
         {
             FlowBoundaryCondition flowBoundaryCondition = new FlowBoundaryCondition(flowBoundaryQuantityType, harmonicsCorrection);
-            WaterFlowFMModel wfmodel = new WaterFlowFMModel();
+            WaterFlowFMModel.WaterFlowFMModel wfmodel = new WaterFlowFMModel.WaterFlowFMModel();
 
             BoundaryConditionDialogLauncher.LaunchImporterDialog(fileDialogMock, flowBoundaryCondition, 1, wfmodel.ReferenceTime);
             
@@ -114,7 +114,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         public void GivenAFlowBoundaryQuantityTypeWithQhWhenImportDialogIsOpenedThenValidExtentionsArePresent(FlowBoundaryQuantityType flowBoundaryQuantityType, BoundaryConditionDataType Qh)
         {
             FlowBoundaryCondition flowBoundaryCondition = new FlowBoundaryCondition(flowBoundaryQuantityType, Qh);
-            WaterFlowFMModel wfmodel = new WaterFlowFMModel();
+            WaterFlowFMModel.WaterFlowFMModel wfmodel = new WaterFlowFMModel.WaterFlowFMModel();
 
             BoundaryConditionDialogLauncher.LaunchImporterDialog(fileDialogMock, flowBoundaryCondition, 1, wfmodel.ReferenceTime);
 

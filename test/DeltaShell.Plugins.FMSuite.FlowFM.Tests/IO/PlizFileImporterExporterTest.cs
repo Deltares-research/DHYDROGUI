@@ -159,7 +159,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 app.Run();
 
                 //Setup new model and pillars.
-                var model = new WaterFlowFMModel();
+                var model = new WaterFlowFMModel.WaterFlowFMModel();
                 app.Project.RootFolder.Add(model);
 
                 //Create some dummy bridge pillaras
@@ -250,7 +250,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 app.Run();
 
                 //Setup new model and pillars.
-                var model = new WaterFlowFMModel();
+                var model = new WaterFlowFMModel.WaterFlowFMModel();
                 app.Project.RootFolder.Add(model);
 
                 //Create some dummy bridge pillaras
@@ -375,7 +375,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 app.Run();
 
                 //Setup new model and pillars.
-                var model = new WaterFlowFMModel();
+                var model = new WaterFlowFMModel.WaterFlowFMModel();
                 app.Project.RootFolder.Add(model);
 
                 var importer =

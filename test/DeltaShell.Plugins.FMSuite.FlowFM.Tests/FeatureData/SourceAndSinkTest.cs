@@ -85,7 +85,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
             var sourceSink = new SourceAndSink();
             var boundarySet = new BoundaryConditionSet();
 
-            var model = new WaterFlowFMModel
+            var model = new WaterFlowFMModel.WaterFlowFMModel
             {
                 SourcesAndSinks = {sourceSink},
                 BoundaryConditionSets = {boundarySet}
@@ -114,7 +114,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
             var sourceSink = new SourceAndSink();
             var boundarySet = new BoundaryConditionSet();
 
-            var model = new WaterFlowFMModel
+            var model = new WaterFlowFMModel.WaterFlowFMModel
             {
                 SourcesAndSinks = { sourceSink },
                 BoundaryConditionSets = { boundarySet }
@@ -144,7 +144,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
             var firstSourceSink = new SourceAndSink();
             var boundarySet = new BoundaryConditionSet();
 
-            var model = new WaterFlowFMModel
+            var model = new WaterFlowFMModel.WaterFlowFMModel
             {
                 SourcesAndSinks = { firstSourceSink },
                 BoundaryConditionSets = { boundarySet }

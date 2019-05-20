@@ -66,9 +66,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
             return existingItem;
         }
 
-        private WaterFlowFMModel GetModelByFunctionStore(FMClassMapFileFunctionStore store)
+        private WaterFlowFMModel.WaterFlowFMModel GetModelByFunctionStore(FMClassMapFileFunctionStore store)
         {
-            return Gui?.Application?.Project?.RootFolder?.Models?.OfType<WaterFlowFMModel>()
+            return Gui?.Application?.Project?.RootFolder?.Models?.OfType<WaterFlowFMModel.WaterFlowFMModel>()
                 .FirstOrDefault(m => Equals(m.OutputClassMapFileStore, store));
         }
 

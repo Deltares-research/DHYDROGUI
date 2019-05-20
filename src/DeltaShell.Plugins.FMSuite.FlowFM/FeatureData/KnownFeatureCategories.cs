@@ -1,4 +1,6 @@
-﻿namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
+﻿using DeltaShell.Plugins.FMSuite.FlowFM.WaterFlowFMModel;
+
+namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
 {
     /// <summary>
     /// This class contains constants which represent all categories which can be returned during execution of

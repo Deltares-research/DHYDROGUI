@@ -1,10 +1,10 @@
+using System;
+using System.Linq;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.FunctionStores;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using NetTopologySuite.Extensions.Coverages;
-using System;
-using System.Linq;
 
-namespace DeltaShell.Plugins.FMSuite.FlowFM
+namespace DeltaShell.Plugins.FMSuite.FlowFM.WaterFlowFMModel
 {
     public partial class WaterFlowFMModel
     {

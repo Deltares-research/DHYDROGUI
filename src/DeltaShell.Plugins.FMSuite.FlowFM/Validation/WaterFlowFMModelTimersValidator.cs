@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
         public override IEnumerable<ValidationIssue> ValidateModelTimers(
             ITimeDependentModel model, TimeSpan outputTimeStep, object viewData = null)
         {
-            var waterFlowFmModel = model as WaterFlowFMModel;
+            var waterFlowFmModel = model as WaterFlowFMModel.WaterFlowFMModel;
             if (waterFlowFmModel == null)
             {
                 yield break;
@@ -52,7 +52,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             {
                 var validationShortcut = new FmValidationShortcut
                 {
-                    FlowFmModel = (WaterFlowFMModel) model,
+                    FlowFmModel = (WaterFlowFMModel.WaterFlowFMModel) model,
                     TabName = "Time Frame"
                 };
                 yield return new ValidationIssue(timerCategory, ValidationSeverity.Error,
@@ -80,7 +80,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
         }
 
         private static ValidationIssue CreateMultipleOfModelTimeStepIssue(
-            WaterFlowFMModel waterFlowFmModel, string guiTimeSpanParameter, string outputName)
+            WaterFlowFMModel.WaterFlowFMModel waterFlowFmModel, string guiTimeSpanParameter, string outputName)
         {
             WaterFlowFMProperty waterFlowFmProperty =
                 waterFlowFmModel.ModelDefinition.GetModelProperty(guiTimeSpanParameter);

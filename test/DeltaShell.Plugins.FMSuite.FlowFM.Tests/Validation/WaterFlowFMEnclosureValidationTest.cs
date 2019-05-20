@@ -11,13 +11,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
     [TestFixture]
     public class WaterFlowFMEnclosureValidationTest
     {
-        private WaterFlowFMModel flowFmModel;
+        private WaterFlowFMModel.WaterFlowFMModel flowFmModel;
         private GroupableFeature2DPolygon validEnclosureFeature;
         
         [SetUp]
         public void Setup()
         {
-            flowFmModel = new WaterFlowFMModel();
+            flowFmModel = new WaterFlowFMModel.WaterFlowFMModel();
             flowFmModel.Grid = UnstructuredGridTestHelper.GenerateRegularGrid(10, 10, 10, 10);
             validEnclosureFeature = FlowFMTestHelper.CreateFeature2DPolygonFromGeometry(
                                     "Enclosure01", 

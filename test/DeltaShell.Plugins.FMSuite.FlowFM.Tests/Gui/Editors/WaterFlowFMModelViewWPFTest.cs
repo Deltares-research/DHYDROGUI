@@ -20,7 +20,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Editors
         [Category(TestCategory.WindowsForms)]
         public void Test_WaterFlowFMModelViewWPF()
         {
-            var fmModel = new WaterFlowFMModel();
+            var fmModel = new WaterFlowFMModel.WaterFlowFMModel();
             var fmViewWPF = new WpfSettingsView()
             {
                 Data = fmModel,
@@ -39,7 +39,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Editors
         [Category(TestCategory.WindowsForms)]
         public void Test_WaterFlowFMModelViewWPF_AddExtras_Category_Sediment()
         {
-            var fmModel = new WaterFlowFMModel();
+            var fmModel = new WaterFlowFMModel.WaterFlowFMModel();
             var fmViewWpf = new WpfSettingsView
             {
                 Data = fmModel,
@@ -49,7 +49,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Editors
             SetUiProperties(fmModel, wpfSettingsViewModel);
             var fieldUi = new FieldUIDescription(o => fmModel.UseMorSed, null, o => true, o =>
             {
-                var waterFlowFmModel = o as WaterFlowFMModel;
+                var waterFlowFmModel = o as WaterFlowFMModel.WaterFlowFMModel;
                 return waterFlowFmModel != null && waterFlowFmModel.UseMorSed;
             });
 
@@ -75,7 +75,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Editors
         [Category(TestCategory.WindowsForms)]
         public void Test_WaterFlowFMModelViewWPF_AddExtras_Property()
         {
-            var fmModel = new WaterFlowFMModel();
+            var fmModel = new WaterFlowFMModel.WaterFlowFMModel();
             var fmViewWpf = new WpfSettingsView
             {
                 Data = fmModel
@@ -83,7 +83,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Editors
 
             var wpfSettingsViewModel = (WpfSettingsViewModel)fmViewWpf.DataContext;
             Func<object, bool> isEnabledFunc = o => true;
-            Func<object, bool> isVisibleFunc = o => (o is WaterFlowFMModel) && (o as WaterFlowFMModel).DepthLayerDefinition != null;
+            Func<object, bool> isVisibleFunc = o => (o is WaterFlowFMModel.WaterFlowFMModel) && (o as WaterFlowFMModel.WaterFlowFMModel).DepthLayerDefinition != null;
             var depthlayers = new FieldUIDescription(d => fmModel.DepthLayerDefinition?.Description, null, isEnabledFunc, isVisibleFunc)
             {
                 Category = "General",
@@ -115,7 +115,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Editors
         [Category(TestCategory.WindowsForms)]
         public void Test_IsEnabled_WaterFlowFMModelViewWPF()
         {
-            var fmModel = new WaterFlowFMModel();
+            var fmModel = new WaterFlowFMModel.WaterFlowFMModel();
             var fmViewWPF = new WpfSettingsView()
             {
                 Data = fmModel,
@@ -136,7 +136,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Editors
         [Category(TestCategory.WindowsForms)]
         public void Test_IsVisible_WaterFlowFMModelViewWPF()
         {
-            var fmModel = new WaterFlowFMModel();
+            var fmModel = new WaterFlowFMModel.WaterFlowFMModel();
             var fmViewWPF = new WpfSettingsView()
             {
                 Data = fmModel,
@@ -153,7 +153,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Editors
             Assert.IsNotNull(props);
         }
 
-        private void SetUiProperties(WaterFlowFMModel model, WpfSettingsViewModel settings)
+        private void SetUiProperties(WaterFlowFMModel.WaterFlowFMModel model, WpfSettingsViewModel settings)
         {
             settings.SettingsCategories = WaterFlowFmSettingsHelper.GetWpfGuiCategories(model, null);
         }

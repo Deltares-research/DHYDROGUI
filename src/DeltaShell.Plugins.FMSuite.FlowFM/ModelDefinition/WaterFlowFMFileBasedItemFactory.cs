@@ -13,7 +13,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         public const string HisFileProperty = "Output his file";
         public const string MapFileProperty = "Output map file";
 
-        public static FileBasedModelItem CreateParentNode(WaterFlowFMModel model)
+        public static FileBasedModelItem CreateParentNode(WaterFlowFMModel.WaterFlowFMModel model)
         {
             var parentNode = new FileBasedModelItem(MduFileProperty, model.MduSavePath);
 

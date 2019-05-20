@@ -113,14 +113,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         #endregion
 
-        public static void UpdateGroupName(this IGroupableFeature groupableFeature, WaterFlowFMModel model)
+        public static void UpdateGroupName(this IGroupableFeature groupableFeature, WaterFlowFMModel.WaterFlowFMModel model)
         {
             groupableFeature.RenameStructureGroupNameToStructureFilePath(model);
             groupableFeature.MakeGroupNameRelative(model.MduFilePath);
         }
 
         private static void RenameStructureGroupNameToStructureFilePath(this IGroupableFeature hydroAreaFeature,
-                                                                        WaterFlowFMModel model)
+                                                                        WaterFlowFMModel.WaterFlowFMModel model)
         {
             if (!(hydroAreaFeature is Weir2D) && !(hydroAreaFeature is Pump2D))
             {
@@ -131,7 +131,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             ChangeStructureGroupName<Pump2D>(hydroAreaFeature, model);
         }
 
-        private static void ChangeStructureGroupName<TFeat>(IGroupableFeature hydroAreaFeature, WaterFlowFMModel model)
+        private static void ChangeStructureGroupName<TFeat>(IGroupableFeature hydroAreaFeature, WaterFlowFMModel.WaterFlowFMModel model)
             where TFeat : class, IGroupableFeature
         {
             var structure = hydroAreaFeature as TFeat;

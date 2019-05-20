@@ -13,7 +13,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
         private static readonly ILog Log = LogManager.GetLogger(typeof(MorphologySedimentIniFileHelper));
 
         private static readonly string FMSuiteFlowModelVersion =
-            typeof(WaterFlowFMModel).Assembly.GetName().Version.ToString();
+            typeof(WaterFlowFMModel.WaterFlowFMModel).Assembly.GetName().Version.ToString();
 
         private static string fmDllVersion;
 

@@ -17,7 +17,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
     {
         private ILog Log = LogManager.GetLogger(typeof(FlowFMNetFileExporter));
 
-        public Func<UnstructuredGrid, WaterFlowFMModel> GetModelForGrid { private get; set; }
+        public Func<UnstructuredGrid, WaterFlowFMModel.WaterFlowFMModel> GetModelForGrid { private get; set; }
 
         #region IFileExporter
 
@@ -80,7 +80,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
                 return true;
             }
 
-            WaterFlowFMModel model = GetModelForGrid(grid);
+            WaterFlowFMModel.WaterFlowFMModel model = GetModelForGrid(grid);
 
             if (path != model.NetFilePath)
             {

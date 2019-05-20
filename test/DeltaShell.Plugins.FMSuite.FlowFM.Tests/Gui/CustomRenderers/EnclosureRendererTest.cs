@@ -14,7 +14,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.CustomRenderers
         [Test]
         public void EnclosureRendererReturnsFalseWithInvalidGeometryTest()
         {
-            var model = new WaterFlowFMModel();
+            var model = new WaterFlowFMModel.WaterFlowFMModel();
             var enclosureFeature =
                 FlowFMTestHelper.CreateFeature2DPolygonFromGeometry("Enclosure01",
                     FlowFMTestHelper.GetInvalidGeometryForEnclosureExample());
@@ -44,7 +44,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.CustomRenderers
         [TestCase(200,200)]
         public void EnclosureRendererReturnsTrueWithValidGeometryRegardlessOfTheMapSize(int mapWidth, int mapHeight)
         {
-            var model = new WaterFlowFMModel();
+            var model = new WaterFlowFMModel.WaterFlowFMModel();
 
             var originalGeometry = FlowFMTestHelper.GetValidGeometryForEnclosureExample();
             var enclosureFeature =
@@ -71,7 +71,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.CustomRenderers
         [Test]
         public void EnclosureRendererThrowsExceptionWhenFeatureIsNotFeature2DPolygonTest()
         {
-            var model = new WaterFlowFMModel();
+            var model = new WaterFlowFMModel.WaterFlowFMModel();
             var enclosureRenderer = new EnclosureRenderer();
             var ds = new HydroAreaFeature2DCollection(model.Area).Init(model.Area.Enclosures, "Enclosure", model.Name, model.Area.CoordinateSystem);
             var layer = new VectorLayer()
