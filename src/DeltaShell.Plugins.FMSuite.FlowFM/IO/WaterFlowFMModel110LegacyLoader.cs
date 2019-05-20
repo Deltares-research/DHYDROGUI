@@ -10,7 +10,7 @@ using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 
-namespace DeltaShell.Plugins.FMSuite.FlowFM
+namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
     public class WaterFlowFMModel110LegacyLoader : LegacyLoader
     {

@@ -159,9 +159,9 @@
     <Compile Include="FeatureData\FixedWeirFmModelFeatureCoordinateDataSyncExtensions.cs" />
     <Compile Include="FeatureData\FixedWeirSchemes.cs" />
     <Compile Include="FlowFMApplicationPlugin.cs" />
-    <Compile Include="GridSnappingExtensions.cs" />
+    <Compile Include="FeatureData\GeometryExtensions.cs" />
     <Compile Include="IO\Files\BcmFile.cs" />
-    <Compile Include="IO\BcmFileFlowBoundaryDataBuilder.cs" />
+    <Compile Include="IO\DataAccess\BcmFileFlowBoundaryDataBuilder.cs" />
     <Compile Include="IO\DelftIniCategoryExtension.cs" />
     <Compile Include="IO\Exporters\BcmFileExporter.cs" />
     <Compile Include="IO\Exporters\FMGridPartitionExporter.cs" />
@@ -200,7 +200,7 @@
     <Compile Include="IO\Files\ExtForceFile.cs" />
     <Compile Include="IO\DataAccess\ExtForceFileItem.cs" />
     <Compile Include="IO\ExtForceQuantNames.cs" />
-    <Compile Include="IO\BcFileFlowBoundaryDataBuilder.cs" />
+    <Compile Include="IO\DataAccess\BcFileFlowBoundaryDataBuilder.cs" />
     <Compile Include="IO\FunctionStores\FMHisFileFunctionStore.cs" />
     <Compile Include="IO\Importers\Area2DStructuresImporter.cs" />
     <Compile Include="IO\Importers\BcFileImporter.cs" />
@@ -253,8 +253,8 @@
     </Compile>
     <Compile Include="IO\Files\MorphologyFile.cs" />
     <Compile Include="IO\Files\SedimentFile.cs" />
-    <Compile Include="IO\SedMorDelftIniReader.cs" />
-    <Compile Include="IO\SedMorDelftIniWriter.cs" />
+    <Compile Include="IO\Readers\SedMorDelftIniReader.cs" />
+    <Compile Include="IO\Writers\SedMorDelftIniWriter.cs" />
     <Compile Include="FeatureData\QuantityGenerator.cs" />
     <Compile Include="Sediment\SedimentModelDataItem.cs" />
     <Compile Include="Model\WaterFlowFMModel.DimrModel.cs" />
@@ -280,7 +280,7 @@
     <Compile Include="Validation\WaterFlowFMModelDefinitionValidator.cs" />
     <Compile Include="Validation\WaterFlowFMSedimentMorphologyValidator.cs" />
     <Compile Include="Validation\WaterFlowFMWindValidator.cs" />
-    <Compile Include="WaterFlowFMDataAccessListener.cs" />
+    <Compile Include="IO\WaterFlowFMDataAccessListener.cs" />
     <Compile Include="FeatureData\WaterFlowFMFeatureValueConverter.cs" />
     <Compile Include="Model\WaterFlowFMModel.Restart.cs" />
     <Compile Include="Model\WaterFlowFMModel.cs" />
@@ -336,7 +336,7 @@
     <None Include="Uml\HydroAreaCollection.cd" />
     <None Include="Uml\FlowBoundaryConditions.cd" />
     <Compile Include="Model\WaterFlowFMModel.Spatial.cs" />
-    <Compile Include="WaterFlowFMModel110LegacyLoader.cs" />
+    <Compile Include="IO\WaterFlowFMModel110LegacyLoader.cs" />
     <Compile Include="WaterFlowFMModelCoordinateConversion.cs" />
     <None Include="Uml\FlowFMOverview.cd" />
   </ItemGroup>

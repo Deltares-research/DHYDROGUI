@@ -5,7 +5,7 @@ using System.Linq;
 using DelftTools.Functions;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 
-namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
+namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccess
 {
     public class BcmBlockData : BcBlockData
     {

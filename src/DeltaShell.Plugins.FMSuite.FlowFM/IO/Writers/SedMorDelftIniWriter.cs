@@ -1,7 +1,7 @@
 ﻿using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.Helpers;
 
-namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
+namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Writers
 {
     public class SedMorDelftIniWriter : DelftIniWriter
     {

@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 using DelftTools.Utils.RegularExpressions;
 using DeltaShell.NGHS.IO;
 
-namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
+namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Readers
 {
     public class SedMorDelftIniReader : DelftIniReader
     {

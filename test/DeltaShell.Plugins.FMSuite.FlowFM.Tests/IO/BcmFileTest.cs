@@ -6,6 +6,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccess;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 {

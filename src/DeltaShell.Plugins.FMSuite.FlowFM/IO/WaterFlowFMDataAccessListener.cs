@@ -16,7 +16,7 @@ using log4net;
 using NetTopologySuite.Extensions.Coverages;
 using SharpMap.SpatialOperations;
 
-namespace DeltaShell.Plugins.FMSuite.FlowFM
+namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
     public class WaterFlowFMDataAccessListener : DataAccessListenerBase
     {

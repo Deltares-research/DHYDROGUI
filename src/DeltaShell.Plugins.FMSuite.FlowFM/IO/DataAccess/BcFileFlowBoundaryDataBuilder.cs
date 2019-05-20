@@ -13,7 +13,7 @@ using GeoAPI.Extensions.Feature;
 using log4net;
 using NetTopologySuite.Extensions.Features;
 
-namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
+namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccess
 {
     public class BcBlockData
     {

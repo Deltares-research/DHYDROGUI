@@ -1,8 +1,8 @@
 ﻿using GeoAPI.Geometries;
 
-namespace DeltaShell.Plugins.FMSuite.FlowFM
+namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
 {
-    public static class GridSnappingExtensions
+    public static class GeometryExtensions
     {
         public static bool SnapsToFlowFmGrid(this IGeometry geometry, Envelope gridExtent)
         {
