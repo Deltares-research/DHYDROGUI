@@ -14,7 +14,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 {
     public partial class WaterFlowFMModel
     {
-        #region IDimrModel
+        #region Implementation of IDimrModel
 
         public const string CellsToFeaturesName = "CellsToFeatures";
         public const string GridPropertyName = "Grid";
@@ -49,7 +49,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             throw new NotImplementedException();
         }
 
-        public virtual bool CanRunParallel => true;
         public virtual string MpiCommunicatorString => "DFM_COMM_DFMWORLD";
 
         public virtual ValidationReport Validate()
@@ -58,15 +57,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                        ? WaterFlowFmModelValidationExtensions.Validate(this)
                        : new ValidationReport("", new List<ValidationIssue>());
         }
-
-        public new virtual ActivityStatus Status
-        {
-            get => base.Status;
-            set => base.Status = value;
-        }
-
-        [EditAction]
-        public virtual bool RunsInIntegratedModel { get; set; }
 
         [NoNotifyPropertyChange]
         public new virtual DateTime CurrentTime
@@ -158,8 +148,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
             runner.SetVar(string.Format("{0}/{1}", Name, category), values);
         }
-
-        public bool DisableFlowNodeRenumbering { get; set; }
 
         #endregion
     }

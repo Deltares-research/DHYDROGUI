@@ -1,29 +1,24 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.ComponentModel;
-using System.IO;
-using System.Linq;
-using BasicModelInterface;
 using DelftTools.Functions;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils.Aop;
-using DelftTools.Utils.Collections;
 using DelftTools.Utils.IO;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using GeoAPI.Extensions.Feature;
 using NetTopologySuite.Extensions.Features;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 {
     public partial class WaterFlowFMModel
     {
-        private double previousProgress = 0;
-        private string progressText;
+        #region Overrides of TimeDependentModelBase
 
         [NoNotifyPropertyChange]
         public override DateTime StartTime
@@ -37,8 +32,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             }
         }
 
-        public override string ProgressText => string.IsNullOrEmpty(progressText) ? base.ProgressText : progressText;
-
         public override IEnumerable<IDataItem> AllDataItems
         {
             get
@@ -46,8 +39,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 return base.AllDataItems.Concat(areaDataItems.Values.SelectMany(v => v));
             }
         }
-
-        public override IBasicModelInterface BMIEngine => runner.Api;
 
         [NoNotifyPropertyChange]
         public override DateTime StopTime
@@ -199,139 +190,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             }
         }
 
-        protected override void OnInitialize()
-        {
-            previousProgress = 0;
-            DataItems.RemoveAllWhere(di => di.Tag == DiaFileDataItemTag);
-
-            ReportProgressText("Initializing");
-
-            // Force fm kernel to write output to 'output' Directory
-            SetOutputDirAndWaqDirProperty();
-
-            if (Directory.Exists(WorkingOutputDirectoryPath))
-            {
-                DisconnectOutput();
-                FileUtils.DeleteIfExists(WorkingOutputDirectoryPath);
-                FileUtils.CreateDirectoryIfNotExists(WorkingOutputDirectoryPath);
-            }
-
-            runner.OnInitialize();
-
-            ReportProgressText();
-        }
-
-        protected override void OnCleanup()
-        {
-            snapApiInErrorMode = false;
-            base.OnCleanup();
-            runner.OnCleanup();
-
-            ReportProgressText();
-        }
-
-        protected override void OnExecute()
-        {
-            runner.OnExecute();
-        }
-
-        protected override void OnFinish()
-        {
-            runner.OnFinish();
-            currentOutputDirectoryPath = WorkingOutputDirectoryPath;
-        }
-
-        protected override void OnProgressChanged()
-        {
-            // Only update gui for every 1 percent progress (performance)
-            if (ProgressPercentage - previousProgress < 0.01)
-            {
-                return;
-            }
-
-            previousProgress = ProgressPercentage;
-            runner.OnProgressChanged();
-            base.OnProgressChanged();
-        }
-
-        protected override void OnAfterDataItemsSet()
-        {
-            base.OnAfterDataItemsSet();
-
-            IDataItem areaDataItem = GetDataItemByTag(HydroAreaTag);
-            if (areaDataItem != null)
-            {
-                ((INotifyCollectionChange) areaDataItem.Value).CollectionChanged += HydroAreaCollectionChanged;
-                ((INotifyPropertyChanged) areaDataItem.Value).PropertyChanged += HydroAreaPropertyChanged;
-            }
-        }
-
-        protected override void OnBeforeDataItemsSet()
-        {
-            base.OnBeforeDataItemsSet();
-
-            areaDataItem = GetDataItemByTag(HydroAreaTag);
-            if (areaDataItem != null)
-            {
-                ((INotifyCollectionChange) areaDataItem.Value).CollectionChanged -= HydroAreaCollectionChanged;
-                ((INotifyPropertyChanged) areaDataItem.Value).PropertyChanged -= HydroAreaPropertyChanged;
-            }
-        }
-
-        protected override void OnDataItemLinked(object sender, LinkedUnlinkedEventArgs<IDataItem> e)
-        {
-            // subscribe to newly linked hydro area:
-            IDataItem areaDataItem = GetDataItemByTag(HydroAreaTag);
-            if (Equals(e.Target, areaDataItem) && !e.Relinking)
-            {
-                ((INotifyCollectionChange) areaDataItem.Value).CollectionChanged += HydroAreaCollectionChanged;
-                ((INotifyPropertyChanged) areaDataItem.Value).PropertyChanged += HydroAreaPropertyChanged;
-            }
-
-            base.OnDataItemLinked(sender, e);
-        }
-
-        protected override void OnDataItemUnlinking(object sender, LinkingUnlinkingEventArgs<IDataItem> e)
-        {
-            // unsubscribe from area before unlink
-            areaDataItem = GetDataItemByTag(HydroAreaTag);
-            if (Equals(e.Target, areaDataItem))
-            {
-                ((INotifyCollectionChange) areaDataItem.Value).CollectionChanged -= HydroAreaCollectionChanged;
-                ((INotifyPropertyChanged) areaDataItem.Value).PropertyChanged -= HydroAreaPropertyChanged;
-            }
-
-            base.OnDataItemUnlinking(sender, e);
-        }
-
-        protected override void OnInputCollectionChanged(object sender, NotifyCollectionChangedEventArgs e) {}
-
         // [TOOLS-22813] Override OnInputPropertyChanged to stop base class (ModelBase) from clearing the output
-        protected override void OnInputPropertyChanged(object sender, PropertyChangedEventArgs e) {}
-
-        /// <summary>
-        /// Called when [clear output]. Clears all output of the model.
-        /// </summary>
-        protected override void OnClearOutput()
-        {
-            if (OutputMapFileStore != null)
-            {
-                ClearFunctionStore(OutputMapFileStore);
-                OutputMapFileStore = null;
-            }
-
-            if (OutputHisFileStore != null)
-            {
-                ClearFunctionStore(OutputHisFileStore);
-                OutputHisFileStore = null;
-            }
-
-            if (OutputClassMapFileStore != null)
-            {
-                ClearFunctionStore(OutputClassMapFileStore);
-                OutputClassMapFileStore = null;
-            }
-        }
 
         private IEnumerable<object> InputFeatureCollections
         {
@@ -351,10 +210,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             }
         }
 
-        private void ReportProgressText(string text = null)
-        {
-            progressText = text;
-            base.OnProgressChanged();
-        }
+        #endregion
     }
 }

@@ -848,12 +848,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         #endregion
 
-        #region TimedependentModelBase
-
-        public event EventHandler AfterExecute;
-
-        #endregion
-
         public object WaveModel
         {
             // cannot actually return anything, because it's a dynamic enum
@@ -863,5 +857,88 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 // empty, but just used for event bubbling
             }
         }
+
+        #region Overrides of TimeDependentModelBase
+
+        public event EventHandler AfterExecute;
+
+        protected override void OnAfterDataItemsSet()
+        {
+            base.OnAfterDataItemsSet();
+
+            IDataItem areaDataItem = GetDataItemByTag(HydroAreaTag);
+            if (areaDataItem != null)
+            {
+                ((INotifyCollectionChange) areaDataItem.Value).CollectionChanged += HydroAreaCollectionChanged;
+                ((INotifyPropertyChanged) areaDataItem.Value).PropertyChanged += HydroAreaPropertyChanged;
+            }
+        }
+
+        protected override void OnBeforeDataItemsSet()
+        {
+            base.OnBeforeDataItemsSet();
+
+            areaDataItem = GetDataItemByTag(HydroAreaTag);
+            if (areaDataItem != null)
+            {
+                ((INotifyCollectionChange) areaDataItem.Value).CollectionChanged -= HydroAreaCollectionChanged;
+                ((INotifyPropertyChanged) areaDataItem.Value).PropertyChanged -= HydroAreaPropertyChanged;
+            }
+        }
+
+        protected override void OnDataItemLinked(object sender, LinkedUnlinkedEventArgs<IDataItem> e)
+        {
+            // subscribe to newly linked hydro area:
+            IDataItem areaDataItem = GetDataItemByTag(HydroAreaTag);
+            if (Equals(e.Target, areaDataItem) && !e.Relinking)
+            {
+                ((INotifyCollectionChange) areaDataItem.Value).CollectionChanged += HydroAreaCollectionChanged;
+                ((INotifyPropertyChanged) areaDataItem.Value).PropertyChanged += HydroAreaPropertyChanged;
+            }
+
+            base.OnDataItemLinked(sender, e);
+        }
+
+        protected override void OnDataItemUnlinking(object sender, LinkingUnlinkingEventArgs<IDataItem> e)
+        {
+            // unsubscribe from area before unlink
+            areaDataItem = GetDataItemByTag(HydroAreaTag);
+            if (Equals(e.Target, areaDataItem))
+            {
+                ((INotifyCollectionChange) areaDataItem.Value).CollectionChanged -= HydroAreaCollectionChanged;
+                ((INotifyPropertyChanged) areaDataItem.Value).PropertyChanged -= HydroAreaPropertyChanged;
+            }
+
+            base.OnDataItemUnlinking(sender, e);
+        }
+
+        protected override void OnInputCollectionChanged(object sender, NotifyCollectionChangedEventArgs e) {}
+        protected override void OnInputPropertyChanged(object sender, PropertyChangedEventArgs e) {}
+
+        /// <summary>
+        /// Called when [clear output]. Clears all output of the model.
+        /// </summary>
+        protected override void OnClearOutput()
+        {
+            if (OutputMapFileStore != null)
+            {
+                ClearFunctionStore(OutputMapFileStore);
+                OutputMapFileStore = null;
+            }
+
+            if (OutputHisFileStore != null)
+            {
+                ClearFunctionStore(OutputHisFileStore);
+                OutputHisFileStore = null;
+            }
+
+            if (OutputClassMapFileStore != null)
+            {
+                ClearFunctionStore(OutputClassMapFileStore);
+                OutputClassMapFileStore = null;
+            }
+        }
+
+        #endregion
     }
 }

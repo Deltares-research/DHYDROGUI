@@ -994,5 +994,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         */
 
         #endregion
+
+        #region Implementation of IWaterFlowFMModel
+
+        public bool DisableFlowNodeRenumbering { get; set; }
+
+        #endregion
     }
 }

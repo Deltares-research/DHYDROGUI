@@ -228,9 +228,12 @@
     <Compile Include="IO\Importers\WaterFlowFMFileImporter.cs" />
     <Compile Include="IO\WaterFlowFMModelHydroAreaExtensions.cs" />
     <Compile Include="ModelDefinition\WaterFlowFMModelDefinition.Eventing.cs" />
+    <Compile Include="Model\WaterFlowFMModel.FileStructure.cs" />
     <Compile Include="Model\WaterFlowFMModel.IO.Export.cs" />
     <Compile Include="Model\WaterFlowFMModel.IO.Import.cs" />
-    <Compile Include="Model\WaterFlowFMModel.IO.Output.cs" />
+    <Compile Include="Model\WaterFlowFMModel.Output.Connecting.cs" />
+    <Compile Include="Model\WaterFlowFMModel.Running.cs" />
+    <Compile Include="Model\WaterFlowFMModel.Output.Saving.cs" />
     <Compile Include="Sediment\ISedimentModelData.cs" />
     <Compile Include="Model\IWaterFlowFMModel.cs" />
     <Compile Include="FeatureData\KnownFeatureCategories.cs" />
@@ -264,7 +267,7 @@
     <Compile Include="Model\WaterFlowFMModel.DimrModel.cs" />
     <Compile Include="Model\WaterFlowFMModel.Eventing.cs" />
     <Compile Include="Model\WaterFlowFMModel.FileBased.cs" />
-    <Compile Include="Model\WaterFlowFMModel.Output.cs" />
+    <Compile Include="Model\WaterFlowFMModel.Output.Data.cs" />
     <Compile Include="Model\WaterFlowFMModel.TDMB.cs" />
     <Compile Include="Validation\Area\FixedWeirValidator.cs" />
     <Compile Include="Validation\Area\PumpValidator.cs" />
