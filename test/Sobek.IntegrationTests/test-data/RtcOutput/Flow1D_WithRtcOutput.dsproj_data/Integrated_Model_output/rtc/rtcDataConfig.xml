@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rtcDataConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:rtc="http://www.wldelft.nl/fews" xmlns="http://www.wldelft.nl/fews" xsi:schemaLocation="http://www.wldelft.nl/fews D:\Deltares\NGHS\NGHS_Trunk\test\Sobek.IntegrationTests\test-data\RtcOutput\Flow1D_WithRtcOutput.dsproj_data\Integrated_Model_output\rtc\rtcDataConfig.xsd">
+  <importSeries>
+    <timeSeries id="input_ObservationPoint1_Water level (op)">
+      <OpenMIExchangeItem>
+        <elementId>ObservationPoint1</elementId>
+        <quantityId>Water level (op)</quantityId>
+        <unit>m</unit>
+      </OpenMIExchangeItem>
+    </timeSeries>
+    <timeSeries id="Control Group 1rule01_SP">
+      <PITimeSeries>
+        <locationId>Control Group 1rule01</locationId>
+        <parameterId>SP</parameterId>
+        <interpolationOption>LINEAR</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="input_ObservationPoint2_Water level (op)">
+      <OpenMIExchangeItem>
+        <elementId>ObservationPoint2</elementId>
+        <quantityId>Water level (op)</quantityId>
+        <unit>m</unit>
+      </OpenMIExchangeItem>
+    </timeSeries>
+    <timeSeries id="Control Group 2rule01_SP">
+      <PITimeSeries>
+        <locationId>Control Group 2rule01</locationId>
+        <parameterId>SP</parameterId>
+        <interpolationOption>LINEAR</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+  </importSeries>
+  <exportSeries>
+    <CSVTimeSeriesFile decimalSeparator="." delimiter="," adjointOutput="false"></CSVTimeSeriesFile>
+    <PITimeSeriesFile>
+      <timeSeriesFile>timeseries_export.xml</timeSeriesFile>
+      <useBinFile>false</useBinFile>
+    </PITimeSeriesFile>
+    <timeSeries id="output_Weir1_Crest level (s)">
+      <OpenMIExchangeItem>
+        <elementId>Weir1</elementId>
+        <quantityId>Crest level (s)</quantityId>
+        <unit>m</unit>
+      </OpenMIExchangeItem>
+    </timeSeries>
+    <timeSeries id="Control Group 1rule01_IP" />
+    <timeSeries id="Control Group 1rule01_DP" />
+    <timeSeries id="output_Pump1_Setpoint (s)">
+      <OpenMIExchangeItem>
+        <elementId>Pump1</elementId>
+        <quantityId>Setpoint (s)</quantityId>
+        <unit>m</unit>
+      </OpenMIExchangeItem>
+    </timeSeries>
+    <timeSeries id="Control Group 2rule01_IP" />
+    <timeSeries id="Control Group 2rule01_DP" />
+  </exportSeries>
+</rtcDataConfig>

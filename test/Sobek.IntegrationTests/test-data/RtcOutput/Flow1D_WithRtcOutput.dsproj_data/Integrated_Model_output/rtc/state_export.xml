@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<treeVectorFile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.openda.org" xsi:schemaLocation="http://www.openda.org ../../../xsd/treeVector.xsd">
+  <treeVector>
+    <treeVectorLeaf id="input_ObservationPoint1_Water level (op)">
+      <vector>-9.999</vector>
+    </treeVectorLeaf>
+    <treeVectorLeaf id="Control Group 1rule01_SP">
+      <vector>NaN</vector>
+    </treeVectorLeaf>
+    <treeVectorLeaf id="input_ObservationPoint2_Water level (op)">
+      <vector>-9.999</vector>
+    </treeVectorLeaf>
+    <treeVectorLeaf id="Control Group 2rule01_SP">
+      <vector>NaN</vector>
+    </treeVectorLeaf>
+    <treeVectorLeaf id="output_Weir1_Crest level (s)">
+      <vector>0</vector>
+    </treeVectorLeaf>
+    <treeVectorLeaf id="Control Group 1rule01_IP">
+      <vector>NaN</vector>
+    </treeVectorLeaf>
+    <treeVectorLeaf id="Control Group 1rule01_DP">
+      <vector>NaN</vector>
+    </treeVectorLeaf>
+    <treeVectorLeaf id="output_Pump1_Setpoint (s)">
+      <vector>0</vector>
+    </treeVectorLeaf>
+    <treeVectorLeaf id="Control Group 2rule01_IP">
+      <vector>NaN</vector>
+    </treeVectorLeaf>
+    <treeVectorLeaf id="Control Group 2rule01_DP">
+      <vector>NaN</vector>
+    </treeVectorLeaf>
+  </treeVector>
+</treeVectorFile>
