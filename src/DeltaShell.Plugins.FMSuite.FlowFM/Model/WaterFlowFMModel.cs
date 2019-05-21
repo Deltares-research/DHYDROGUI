@@ -968,33 +968,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             return null;
         }
 
-        #region Control computational timestep loop
-
-        /*
-        public override bool InitializeComputationalTimeStep(ref TimeSpan dt)
-        {
-            var targetTime = ((CurrentTime + TimeStep) - ReferenceTime).TotalSeconds;
-            
-            var timeStep = FlexibleMeshModelApi.InitializeComputationalTimeStep(targetTime, dt.TotalSeconds);
-            dt = TimeSpan.FromTicks((long)(timeStep*TimeSpan.TicksPerSecond));
-
-            return true;
-        }
-
-        public override bool RunComputationalTimeStep(ref TimeSpan dt)
-        {
-            var dtOld = dt;
-            var timeStep = dt.TotalSeconds;
-            timeStep = FlexibleMeshModelApi.RunComputationalTimeStep(timeStep);
-
-            FlexibleMeshModelApi.Compute1d2dCoefficients();
-            dt = TimeSpan.FromTicks((long)(timeStep * TimeSpan.TicksPerSecond));
-            return (timeStep == dtOld.TotalSeconds);
-        }
-        */
-
-        #endregion
-
         #region Implementation of IWaterFlowFMModel
 
         public bool DisableFlowNodeRenumbering { get; set; }

@@ -860,8 +860,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         #region Overrides of TimeDependentModelBase
 
-        public event EventHandler AfterExecute;
-
         protected override void OnAfterDataItemsSet()
         {
             base.OnAfterDataItemsSet();
