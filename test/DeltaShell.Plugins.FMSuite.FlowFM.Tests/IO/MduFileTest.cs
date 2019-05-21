@@ -748,7 +748,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             mduDir = Path.GetDirectoryName(mduFileName);
             Assert.NotNull(mduDir);
             modelName = Path.GetFileName(mduFileName);
-           
+
             var mduFile = new MduFile();
             var originalArea = new HydroArea();
             var originalModelDefinition = new WaterFlowFMModelDefinition(mduDir, modelName);
