@@ -5,7 +5,7 @@ import Libraries.MapFunctions as _mf
 from System import Convert as _Convert
 from System.Collections.Generic import List as _List
 
-from DeltaShell.Plugins.FMSuite.FlowFM import WaterFlowFMModel
+from DeltaShell.Plugins.FMSuite.FlowFM.Model import WaterFlowFMModel
 from DeltaShell.Plugins.FMSuite.FlowFM.FeatureData import FlowBoundaryCondition as _FlowBoundaryCondition
 from DeltaShell.Plugins.FMSuite.FlowFM.FeatureData import FlowBoundaryQuantityType
 from DeltaShell.Plugins.FMSuite.Common.FeatureData import BoundaryConditionDataType

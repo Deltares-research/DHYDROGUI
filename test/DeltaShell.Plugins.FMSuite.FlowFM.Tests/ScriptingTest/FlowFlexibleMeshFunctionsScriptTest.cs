@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Controls;
+using DelftTools.Shell.Core;
 using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Reflection;
@@ -45,7 +46,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.ScriptingTest
             ScriptHost.AdditionalSearchPaths.Clear();
         }
 
-        [Test, Category(TestCategory.WindowsForms)]
+        [Test]
+        [Category(TestCategory.WindowsForms)]
         public void ExpendingGridShouldWork()
         {
             using (var gui = new DeltaShellGui())
@@ -53,9 +55,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.ScriptingTest
                 AddPlugins(gui);
                 gui.Run();
 
-                var script = "from Libraries.FlowFlexibleMeshFunctions import *\n" +
-                             "GenerateRegularGridForModel(fmModel, 5, 11, 100, 100, 0, 0)\n" +
-                             "GenerateRegularGridForModel(fmModel, 10, 22, 50, 50, 500, 0, True)";
+                const string script = "from Libraries.FlowFlexibleMeshFunctions import *\n"           +
+                                      "GenerateRegularGridForModel(fmModel, 5, 11, 100, 100, 0, 0)\n" +
+                                      "GenerateRegularGridForModel(fmModel, 10, 22, 50, 50, 500, 0, True)";
                 var tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
                 Directory.CreateDirectory(tempDirectory);
                 var waterFlowFmModel = new WaterFlowFMModel { ExplicitWorkingDirectory = tempDirectory };
@@ -70,7 +72,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.ScriptingTest
 
                 WpfTestHelper.ShowModal((Control)gui.MainWindow, () =>
                 {
-                    var app = gui.Application;
+                    IApplication app = gui.Application;
                     try
                     {
                         var declaredVariables = app.ScriptRunner.RunScript(script, variables);
@@ -92,7 +94,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.ScriptingTest
         }
         private static void AddPlugins(IGui gui)
         {
-            var app = gui.Application;
+            IApplication app = gui.Application;
 
             app.Plugins.Add(new CommonToolsApplicationPlugin());
             app.Plugins.Add(new SharpMapGisApplicationPlugin());
