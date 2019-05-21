@@ -5,7 +5,8 @@ using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.IO;
 
-namespace DeltaShell.Plugins.FMSuite.FlowFM.Model {
+namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
+{
     public partial class WaterFlowFMModel
     {
         #region Overrides of TimeDependentModelBase
