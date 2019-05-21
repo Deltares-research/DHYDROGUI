@@ -7,7 +7,7 @@
                    lazy="false"
                    extends="DelftTools.Shell.Core.Workflow.IModel, DelftTools.Shell.Core" 
                    table="fm_model"
-                   persister="DeltaShell.Plugins.Data.NHibernate.LegacyLoaderInjector`1[[DeltaShell.Plugins.FMSuite.FlowFM.WaterFlowFMModel110LegacyLoader, DeltaShell.Plugins.FMSuite.FlowFM]], DeltaShell.Plugins.Data.NHibernate">
+                   persister="DeltaShell.Plugins.Data.NHibernate.LegacyLoaderInjector`1[[DeltaShell.Plugins.FMSuite.FlowFM.IO.WaterFlowFMModel110LegacyLoader, DeltaShell.Plugins.FMSuite.FlowFM]], DeltaShell.Plugins.Data.NHibernate">
     <key column="project_item_id" />
 
     <property name="Path"/>
