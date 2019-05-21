@@ -89,7 +89,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             foreach (string propertyToClear in propertiesToClear)
             {
                 WaterFlowFMProperty existingProperty = model.ModelDefinition.GetModelProperty(propertyToClear);
-                var clonedProperty = (WaterFlowFMProperty) existingProperty.Clone();
+                var clonedProperty = (WaterFlowFMProperty)existingProperty.Clone();
                 if (propertyToClear.ToLowerInvariant() == KnownProperties.TrtRou.ToLowerInvariant())
                 {
                     clonedProperty.SetValueAsString("N");
@@ -120,7 +120,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
 
             // Overwrite existing mdu to ignore the properties with adjusted properties
             var mduFile = new MduFile();
-            var isPartOf1D2DModel = (bool) model.ModelDefinition.GetModelProperty(GuiProperties.PartOf1D2DModel).Value;
+            var isPartOf1D2DModel = (bool)model.ModelDefinition.GetModelProperty(GuiProperties.PartOf1D2DModel).Value;
 
             var mduFileWriteConfig = new MduFileWriteConfig
             {
@@ -133,7 +133,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             mduFile.WriteProperties(mduFilePath,
                                     fullExport ? model.ModelDefinition.Properties.ToList() : adjustedMduProperties,
                                     mduFileWriteConfig,
-                                    useNetCdfMapFormat: isPartOf1D2DModel);
+                                    useNetCDFMapFormat: isPartOf1D2DModel);
 
             TryInitializeApi();
         }
@@ -228,7 +228,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             edgesAlongEmbankments = new int[edgeNumbers.Length];
             for (var i = 0; i < edgeNumbers.Length; i++)
             {
-                edgesAlongEmbankments[i] = (int) edgeNumbers.GetValue(i);
+                edgesAlongEmbankments[i] = (int)edgeNumbers.GetValue(i);
             }
 
             return edgesAlongEmbankments;
@@ -236,7 +236,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
 
         private static MultiPoint ConvertToMultiPoint(IGeometry geom)
         {
-            return new MultiPoint(geom.Coordinates.Select(c => (IPoint) new Point(c.X, c.Y)).ToArray());
+            return new MultiPoint(geom.Coordinates.Select(c => (IPoint)new Point(c.X, c.Y)).ToArray());
         }
 
         private IEnumerable<IGeometry> GetGridSnappedGeometryCore(string featureType, ICollection<IGeometry> geometries)

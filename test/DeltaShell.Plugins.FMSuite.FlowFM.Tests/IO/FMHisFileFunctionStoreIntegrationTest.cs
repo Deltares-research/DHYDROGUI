@@ -3,6 +3,7 @@ using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
@@ -128,10 +129,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         #region Helper methods
         private static void PumpFunctionsAndFeaturesArePresent(WaterFlowFMModel model)
         {
-            var pumpDischargeFunction = (FeatureCoverage) model.OutputHisFileStore.Functions.FirstOrDefault(f => f.Components.Any(c => c.Name == "pump_discharge"));
-            var pumpCapacityFunction = (FeatureCoverage) model.OutputHisFileStore.Functions.FirstOrDefault(f => f.Components.Any(c => c.Name == "pump_capacity"));
-            var pumpWaterLevelUpFunction = (FeatureCoverage) model.OutputHisFileStore.Functions.FirstOrDefault(f => f.Components.Any(c => c.Name == "pump_s1up"));
-            var pumpWaterLevelDownFunction = (FeatureCoverage) model.OutputHisFileStore.Functions.FirstOrDefault(f => f.Components.Any(c => c.Name == "pump_s1dn"));
+            var pumpDischargeFunction = (FeatureCoverage)model.OutputHisFileStore.Functions.FirstOrDefault(f => f.Components.Any(c => c.Name == "pump_discharge"));
+            var pumpCapacityFunction = (FeatureCoverage)model.OutputHisFileStore.Functions.FirstOrDefault(f => f.Components.Any(c => c.Name == "pump_capacity"));
+            var pumpWaterLevelUpFunction = (FeatureCoverage)model.OutputHisFileStore.Functions.FirstOrDefault(f => f.Components.Any(c => c.Name == "pump_s1up"));
+            var pumpWaterLevelDownFunction = (FeatureCoverage)model.OutputHisFileStore.Functions.FirstOrDefault(f => f.Components.Any(c => c.Name == "pump_s1dn"));
             Assert.IsNotNull(pumpDischargeFunction, "The pump discharge function does not exist");
             Assert.IsNotNull(pumpCapacityFunction, "The pump capacity function does not exist");
             Assert.IsNotNull(pumpWaterLevelUpFunction, "The pump water level up function does not exist");
@@ -150,13 +151,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
         private static void GateFunctionsAndFeaturesArePresent(WaterFlowFMModel model)
         {
-            var gateDischargeFunction = (FeatureCoverage) model.OutputHisFileStore.Functions.FirstOrDefault(f => f.Components.Any(c => c.Name == "gategen_discharge"));
-            var gateFlowFunction = (FeatureCoverage) model.OutputHisFileStore.Functions.FirstOrDefault(f => f.Components.Any(c => c.Name == "gategen_flow_through_height"));
-            var gateLowerEdgeLevelFunction = (FeatureCoverage) model.OutputHisFileStore.Functions.FirstOrDefault(f => f.Components.Any(c => c.Name == "gategen_lower_edge_level"));
-            var gateOpeningWidthFunction = (FeatureCoverage) model.OutputHisFileStore.Functions.FirstOrDefault(f => f.Components.Any(c => c.Name == "gategen_opening_width"));
-            var gateWaterLevelDownFunction = (FeatureCoverage) model.OutputHisFileStore.Functions.FirstOrDefault(f => f.Components.Any(c => c.Name == "gategen_s1dn"));
-            var gateWaterLevelUpFunction = (FeatureCoverage) model.OutputHisFileStore.Functions.FirstOrDefault(f => f.Components.Any(c => c.Name == "gategen_s1up"));
-            var gateSillLevelFunction = (FeatureCoverage) model.OutputHisFileStore.Functions.FirstOrDefault(f => f.Components.Any(c => c.Name == "gategen_sill_level"));
+            var gateDischargeFunction = (FeatureCoverage)model.OutputHisFileStore.Functions.FirstOrDefault(f => f.Components.Any(c => c.Name == "gategen_discharge"));
+            var gateFlowFunction = (FeatureCoverage)model.OutputHisFileStore.Functions.FirstOrDefault(f => f.Components.Any(c => c.Name == "gategen_flow_through_height"));
+            var gateLowerEdgeLevelFunction = (FeatureCoverage)model.OutputHisFileStore.Functions.FirstOrDefault(f => f.Components.Any(c => c.Name == "gategen_lower_edge_level"));
+            var gateOpeningWidthFunction = (FeatureCoverage)model.OutputHisFileStore.Functions.FirstOrDefault(f => f.Components.Any(c => c.Name == "gategen_opening_width"));
+            var gateWaterLevelDownFunction = (FeatureCoverage)model.OutputHisFileStore.Functions.FirstOrDefault(f => f.Components.Any(c => c.Name == "gategen_s1dn"));
+            var gateWaterLevelUpFunction = (FeatureCoverage)model.OutputHisFileStore.Functions.FirstOrDefault(f => f.Components.Any(c => c.Name == "gategen_s1up"));
+            var gateSillLevelFunction = (FeatureCoverage)model.OutputHisFileStore.Functions.FirstOrDefault(f => f.Components.Any(c => c.Name == "gategen_sill_level"));
             Assert.IsNotNull(gateDischargeFunction, "The outputHisFileStore does not contain the gate discharge function");
             Assert.IsNotNull(gateFlowFunction, "The outputHisFileStore does not contain the gate capacity function");
             Assert.IsNotNull(gateLowerEdgeLevelFunction, "The outputHisFileStore does not contain the gate lower edge level function");
@@ -210,7 +211,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 }),
                 WeirFormula = new GatedWeirFormula(true)
                 {
-                    UseHorizontalDoorOpeningWidthTimeSeries = true, UseLowerEdgeLevelTimeSeries = true
+                    UseHorizontalDoorOpeningWidthTimeSeries = true,
+                    UseLowerEdgeLevelTimeSeries = true
                 },
                 CrestLevel = 102.0,
                 CrestWidth = 42.0

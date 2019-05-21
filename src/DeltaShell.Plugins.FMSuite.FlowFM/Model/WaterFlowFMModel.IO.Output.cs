@@ -9,6 +9,7 @@ using DelftTools.Utils.Editing;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.Common.IO;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.FunctionStores;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
@@ -135,13 +136,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 }
                 else
                 {
-                    OutputHisFileStore = new FMHisFileFunctionStore(hisFilePath, CoordinateSystem,
-                                                                    Area.ObservationPoints,
-                                                                    Area.ObservationCrossSections,
-                                                                    Area.Weirs.Where(
-                                                                        w =>
-                                                                            w.WeirFormula is
-                                                                                GeneralStructureWeirFormula));
+                    var generalStructures = Area.Weirs.Where(w => w.WeirFormula is GeneralStructureWeirFormula);
+                    var gates = Area.Weirs.Where(w => w.WeirFormula is GatedWeirFormula);
+                    var simpleWeirs = Area.Weirs.Where(w => w.WeirFormula is SimpleWeirFormula);
+
+                    var waterFlowFmModelDto = new WaterFlowFMModelDTO()
+                    {
+                        CoordinateSystem = this.CoordinateSystem,
+                        ObservationPoints = Area.ObservationPoints,
+                        ObservationCrossSections = Area.ObservationCrossSections,
+                        SimpleWeirs = simpleWeirs,
+                        GeneralStructureWeirs = generalStructures,
+                        GatedWeirs = gates,
+                        Pumps = Area.Pumps,
+                    };
+                    OutputHisFileStore = new FMHisFileFunctionStore(hisFilePath, waterFlowFmModelDto);
                 }
             }
 
@@ -272,13 +281,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                     if (logDataItem == null)
                     {
                         // add logfile dataitem if not exists
-                        var textDocument = new TextDocument(true) {Name = diaFileName};
+                        var textDocument = new TextDocument(true) { Name = diaFileName };
                         logDataItem = new DataItem(textDocument, DataItemRole.Output, DiaFileDataItemTag);
                         DataItems.Add(logDataItem);
                     }
 
                     string log = DiaFileReader.Read(diaFilePath);
-                    ((TextDocument) logDataItem.Value).Content = log;
+                    ((TextDocument)logDataItem.Value).Content = log;
                 }
                 catch (Exception ex)
                 {
