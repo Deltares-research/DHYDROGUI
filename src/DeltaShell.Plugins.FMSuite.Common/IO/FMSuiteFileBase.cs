@@ -4,7 +4,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 {
     // TODO YAGNI: storing comment blocks with unique keys is too ambitious, just queue them and let inheritants make a dictionary, 
     // TODO: remove the extforcefile logic from this class
-    
+
     public class FMSuiteFileBase : NGHSFileBase
     {
         private const string ExtForcesFileQuantBlockStarter = "QUANTITY=";
@@ -19,19 +19,26 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         {
             var i = 0;
             var contentIdentifier = new char[line.Length];
-            foreach (var c in line.ToCharArray())
+            foreach (char c in line.ToCharArray())
             {
                 if (c == ' ' || c == '\t')
+                {
                     continue;
+                }
 
                 if (!fileIsExtForcesFile && c == '=')
+                {
                     break;
+                }
 
                 if (c == '#' || c == '!' || c == '*')
+                {
                     break;
+                }
 
                 contentIdentifier[i++] = c;
             }
+
             return new string(contentIdentifier, 0, i);
         }
 
@@ -45,7 +52,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                     storedNextInputLine = reader.ReadLine();
                     if (storedNextInputLine != null)
                     {
-                        var contentIdentifier = CreateContentIdentifier(CurrentLine.Trim() + storedNextInputLine.Trim());
+                        string contentIdentifier =
+                            CreateContentIdentifier(CurrentLine.Trim() + storedNextInputLine.Trim());
                         commentBlocks.Add(contentIdentifier, currentCommentBlock);
                     }
                 }
@@ -74,7 +82,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                 {
                     if (storedNextOutputLine != null)
                     {
-                        var contentIdentifier = CreateContentIdentifier(storedNextOutputLine + line.Trim());
+                        string contentIdentifier = CreateContentIdentifier(storedNextOutputLine + line.Trim());
                         if (commentBlocks.ContainsKey(contentIdentifier))
                         {
                             foreach (string commentLine in commentBlocks[contentIdentifier])
@@ -82,6 +90,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                                 writer.WriteLine(commentLine);
                             }
                         }
+
                         writer.WriteLine(storedNextOutputLine);
                         storedNextOutputLine = null;
                     }
@@ -91,6 +100,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             {
                 doWriteLine = base.WriteCommentBlock(line, doWriteLine);
             }
+
             return doWriteLine;
         }
     }

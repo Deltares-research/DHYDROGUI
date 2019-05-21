@@ -66,13 +66,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
                                                                   Line = Pens.Transparent,
                                                                   Fill = new SolidBrush(Color.FromArgb(100, Color.LightCyan)),
                                                               };
-                gatedWeirShape.AddHover(new HoverText("Crest level", string.Format("{0:f2}m.", weir.CrestLevel),
+                gatedWeirShape.AddHover(new HoverText(GuiParameterNames.CrestLevel, string.Format("{0:f2}m.", weir.CrestLevel),
                                                       gatedWeirShape.WeirShape, Color.Black, HoverPosition.Left,
                                                       ArrowHeadPosition.Top));
-                gatedWeirShape.AddHover(new HoverText("Crest width", string.Format("{0:f2}m.", weir.CrestWidth),
+                gatedWeirShape.AddHover(new HoverText(GuiParameterNames.CrestWidth, string.Format("{0:f2}m.", weir.CrestWidth),
                                                       gatedWeirShape.WeirShape, Color.Black, HoverPosition.Bottom,
                                                       ArrowHeadPosition.LeftRight));
-                gatedWeirShape.AddHover(new HoverText("Gate opening",
+                gatedWeirShape.AddHover(new HoverText(GuiParameterNames.GateLowerEdgeLevel,
                                                       string.Format("{0:f2}m.", gatedWeirFormula.GateOpening),
                                                       gatedWeirShape.WaterShape, Color.Black, HoverPosition.Left,
                                                       ArrowHeadPosition.TopDown));
@@ -100,10 +100,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
                                                                     }
                                                };
 
-                    weirShapeFeature.AddHover(new HoverText("Crest width", string.Format("{0:f2}m.", weir.CrestWidth),
+                    weirShapeFeature.AddHover(new HoverText(GuiParameterNames.CrestWidth, string.Format("{0:f2}m.", weir.CrestWidth),
                                                             weirShapeFeature.WaterShape, Color.Black, HoverPosition.Top,
                                                             ArrowHeadPosition.LeftRight));
-                    weirShapeFeature.AddHover(new HoverText("Crest level", string.Format("{0:f2}m.", weir.CrestLevel),
+                    weirShapeFeature.AddHover(new HoverText(GuiParameterNames.CrestLevel, string.Format("{0:f2}m.", weir.CrestLevel),
                                                             weirShapeFeature.WeirShape, Color.Black, HoverPosition.Left,
                                                             ArrowHeadPosition.Top));
                     weirShape = weirShapeFeature;
@@ -118,7 +118,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
                     {
                         Fill = new SolidBrush(Color.FromArgb(100, Color.LightCyan)),
                     };
-                    freeFormatWeirShapeFeature.AddHover(new HoverText("Crest width",
+                    freeFormatWeirShapeFeature.AddHover(new HoverText(GuiParameterNames.CrestWidth,
                                                                       string.Format("{0:f2}m.", weir.CrestWidth),
                                                                       freeFormatWeirShapeFeature.WaterShape,
                                                                       Color.Black, HoverPosition.Top,

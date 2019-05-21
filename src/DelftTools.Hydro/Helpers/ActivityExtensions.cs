@@ -11,16 +11,21 @@ namespace DelftTools.Hydro.Helpers
             {
                 activity = ((ActivityWrapper) activity).Activity;
             }
+
             if (activity is T)
             {
                 yield return (T) activity;
             }
-            var compActivity = activity as ICompositeActivity;
-            if (compActivity == null) yield break;
 
-            foreach (var subActivity in compActivity.Activities)
+            var compActivity = activity as ICompositeActivity;
+            if (compActivity == null)
             {
-                foreach (var typedSubActivity in GetActivitiesOfType<T>(subActivity))
+                yield break;
+            }
+
+            foreach (IActivity subActivity in compActivity.Activities)
+            {
+                foreach (T typedSubActivity in GetActivitiesOfType<T>(subActivity))
                 {
                     yield return typedSubActivity;
                 }

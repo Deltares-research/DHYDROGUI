@@ -6,7 +6,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
     /// <summary>
     /// A descriptor class for a property (key-value-comment pairs), mainly to be used in a Delft .ini formatted file.
     /// </summary>
-    /// <seealso cref="ModelProperty"/>
+    /// <seealso cref="ModelProperty" />
     public abstract class ModelPropertyDefinition
     {
         private Func<IEnumerable<ModelProperty>, bool> isEnabled;
@@ -22,10 +22,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
         }
 
         /// <summary>
-        /// The default implementation of <see cref="IsEnabled"/>.
+        /// The default implementation of <see cref="IsEnabled" />.
         /// </summary>
-        /// <param name="modelProperties">A lookup with all available properties, indexed on their <see cref="FilePropertyName"/>.</param>
-        /// <returns>True if this property is enabled; False when it's not.</returns>
+        /// <param name="modelProperties">
+        /// A lookup with all available properties, indexed on their <see cref="FilePropertyName" />
+        /// .
+        /// </param>
+        /// <returns> True if this property is enabled; False when it's not. </returns>
         private static bool IsTrue(IEnumerable<ModelProperty> modelProperties)
         {
             return true;
@@ -65,7 +68,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
         /// The default value of this property, represented in string format.
         /// </summary>
         public string DefaultValueAsString { get; set; }
-        
+
         public bool MultipleDefaultValuesAvailable { get; set; }
 
         public string DefaultValueDependentOn { get; set; }
@@ -101,7 +104,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
         /// Additional descriptive text for this property.
         /// </summary>
         public string Description { get; set; }
-        
+
         /// <summary>
         /// Optional descriptive text for this property
         /// </summary>
@@ -118,13 +121,19 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
         /// <summary>
         /// String expression of dependencies to enable this property.
         /// </summary>
-        /// <remarks>When setting this property, use <see cref="DeltaShell.Plugins.FMSuite.Common.Dependency.Dependencies"/> to update <see cref="IsEnabled"/>.</remarks>
+        /// <remarks>
+        /// When setting this property, use <see cref="DeltaShell.Plugins.FMSuite.Common.Dependency.Dependencies" /> to
+        /// update <see cref="IsEnabled" />.
+        /// </remarks>
         public string EnabledDependencies { get; set; }
 
         /// <summary>
         /// String expression of dependencies make this property visible.
         /// </summary>
-        /// <remarks>When setting this property, use <see cref="DeltaShell.Plugins.FMSuite.Common.Dependency.Dependencies"/> to update <see cref="IsVisible"/>.</remarks>
+        /// <remarks>
+        /// When setting this property, use <see cref="DeltaShell.Plugins.FMSuite.Common.Dependency.Dependencies" /> to
+        /// update <see cref="IsVisible" />.
+        /// </remarks>
         public string VisibleDependencies { get; set; }
 
         /// <summary>
@@ -133,14 +142,14 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
         /// </summary>
         public Func<IEnumerable<ModelProperty>, bool> IsEnabled
         {
-            get { return isEnabled; }
-            set { isEnabled = value ?? IsTrue; }
+            get => isEnabled;
+            set => isEnabled = value ?? IsTrue;
         }
 
         public Func<IEnumerable<ModelProperty>, bool> IsVisible
         {
-            get { return isVisible; }
-            set { isVisible = value ?? IsTrue; }
+            get => isVisible;
+            set => isVisible = value ?? IsTrue;
         }
 
         public string DocumentationSection { get; set; }
@@ -148,7 +157,5 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
         public int FromRevision { get; set; }
 
         public int UntilRevision { get; set; }
-
-        
     }
 }

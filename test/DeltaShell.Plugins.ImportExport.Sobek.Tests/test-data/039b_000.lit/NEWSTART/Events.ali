@@ -1,7 +1,0 @@
-event.*   \SB213_17\fixed\default.bui
-evapor.*  \SB213_17\fixed\3b\evapor.gem
-wind.*    \SB213_17\fixed\default.wdc
-delwaq.*  \SB213_17\fixed\default.qsc
-wq_wind.* \SB213_17\fixed\default.qwc
-temp.*    \SB213_17\fixed\default.tmp
-rnff.*    \SB213_17\fixed\default.rnf

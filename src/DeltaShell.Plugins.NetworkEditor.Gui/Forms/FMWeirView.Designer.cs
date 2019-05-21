@@ -132,7 +132,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
             this.crestLevelLabel.Name = "crestLevelLabel";
             this.crestLevelLabel.Size = new System.Drawing.Size(147, 26);
             this.crestLevelLabel.TabIndex = 3;
-            this.crestLevelLabel.Text = "Crest level";
+            this.crestLevelLabel.Text = GuiParameterNames.CrestLevel;
             this.crestLevelLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // lateralContractionLabel
@@ -209,7 +209,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
             this.labelCrestWidth.Name = "labelCrestWidth";
             this.labelCrestWidth.Size = new System.Drawing.Size(147, 26);
             this.labelCrestWidth.TabIndex = 11;
-            this.labelCrestWidth.Text = "Crest width";
+            this.labelCrestWidth.Text = GuiParameterNames.CrestWidth;
             this.labelCrestWidth.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // textBoxCrestWidth

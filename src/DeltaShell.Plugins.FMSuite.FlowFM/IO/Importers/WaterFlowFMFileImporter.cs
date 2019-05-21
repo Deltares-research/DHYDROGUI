@@ -6,6 +6,7 @@ using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using log4net;
 
@@ -16,7 +17,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         /// <summary>
         /// Constructor needed for connecting the Application.WorkingDirectory to the WaterFlowFMModel Working Directory.
         /// </summary>
-        /// <param name="getWorkingDirectoryPathFunc"></param>
+        /// <param name="getWorkingDirectoryPathFunc"> </param>
         public WaterFlowFMFileImporter(Func<string> getWorkingDirectoryPathFunc)
         {
             StoreWorkingDirectoryPathFunc = getWorkingDirectoryPathFunc;
@@ -24,52 +25,34 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 
         private Func<string> StoreWorkingDirectoryPathFunc;
 
-        private readonly ILog log = LogManager.GetLogger(typeof (WaterFlowFMFileImporter));
+        private readonly ILog log = LogManager.GetLogger(typeof(WaterFlowFMFileImporter));
 
-        public string Name
-        {
-            get { return "Flow Flexible Mesh Model"; }
-        }
+        public string Name => "Flow Flexible Mesh Model";
 
-        public string Category
-        {
-            get { return "D-Flow FM 2D/3D"; }
-        }
+        public string Category => "D-Flow FM 2D/3D";
 
-        public string Description
-        {
-            get { return string.Empty; }
-        }
+        public string Description => string.Empty;
 
-        public Bitmap Image
-        {
-            get { return Resources.unstrucModel; }
-        }
+        public Bitmap Image => Resources.unstrucModel;
 
         public IEnumerable<Type> SupportedItemTypes
         {
-            get { yield return typeof(IHydroModel); }
+            get
+            {
+                yield return typeof(IHydroModel);
+            }
         }
 
-        public bool OpenViewAfterImport
-        {
-            get { return true; }
-        }
+        public bool OpenViewAfterImport => true;
 
         public bool CanImportOn(object targetObject)
         {
-           return targetObject is ICompositeActivity || targetObject is WaterFlowFMModel;
+            return targetObject is ICompositeActivity || targetObject is WaterFlowFMModel;
         }
 
-        public bool CanImportOnRootLevel
-        {
-            get { return true; }
-        }
+        public bool CanImportOnRootLevel => true;
 
-        public string FileFilter
-        {
-            get { return "Flexible Mesh Model Definition|*.mdu"; }
-        }
+        public string FileFilter => "Flexible Mesh Model Definition|*.mdu";
 
         public string TargetDataDirectory { get; set; }
 
@@ -81,15 +64,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         {
             try
             {
-                var importedFmModel = WaterFlowFMModel.Import(path, ProgressChanged);
+                WaterFlowFMModel importedFmModel = WaterFlowFMModel.Import(path, ProgressChanged);
                 importedFmModel.WorkingDirectoryPathFunc = StoreWorkingDirectoryPathFunc;
-                
+
                 //replace the FM Model
                 var targetFmModel = target as WaterFlowFMModel;
                 if (targetFmModel != null)
                 {
-                    var parent = targetFmModel.Owner();
-                    
+                    IProjectItem parent = targetFmModel.Owner();
+
                     //add / replace the FM Model in the project
                     var folder = parent as Folder;
                     if (folder != null)
@@ -104,10 +87,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                     {
                         importedFmModel.MoveModelIntoIntegratedModel(null, compositeActivity);
                     }
+
                     FireProgressChanged("Import finished", 10, 10);
                     return ShouldCancel ? null : importedFmModel;
                 }
-                
+
                 //add / replace the FM Model in the integrated model
                 var hydroModel = target as ICompositeActivity;
                 if (hydroModel != null)
@@ -116,6 +100,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                     FireProgressChanged("Import finished", 10, 10);
                     return hydroModel;
                 }
+
                 FireProgressChanged("Import finished", 10, 10);
                 return ShouldCancel ? null : importedFmModel;
             }
@@ -124,8 +109,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                 if (e is ArgumentException || e is PathTooLongException || e is FormatException ||
                     e is OutOfMemoryException || e is IOException || e is InvalidOperationException)
                 {
-                    log.Error(String.Format("An error occurred while trying to import a {0}; Cause: ",
-                        Name), e);
+                    log.Error(string.Format("An error occurred while trying to import a {0}; Cause: ",
+                                            Name), e);
                     return null;
                 }
 
@@ -136,8 +121,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 
         private void FireProgressChanged(string currentStepName, int currentStep, int totalSteps)
         {
-            if (ProgressChanged == null) return;
-            
+            if (ProgressChanged == null)
+            {
+                return;
+            }
+
             ProgressChanged(currentStepName, currentStep, totalSteps);
         }
     }

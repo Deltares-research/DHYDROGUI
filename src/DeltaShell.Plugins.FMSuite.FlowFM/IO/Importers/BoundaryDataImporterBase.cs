@@ -17,9 +17,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 
         protected IEnumerable<IFunction> SeriesToFill(IBoundaryCondition boundaryCondition)
         {
-            var maxIndex = boundaryCondition.Feature.Geometry.Coordinates.Count();
+            int maxIndex = boundaryCondition.Feature.Geometry.Coordinates.Count();
 
-            foreach (var dataPointIndex in DataPointIndices.Where(i => i < maxIndex))
+            foreach (int dataPointIndex in DataPointIndices.Where(i => i < maxIndex))
             {
                 if (!boundaryCondition.DataPointIndices.Contains(dataPointIndex))
                 {

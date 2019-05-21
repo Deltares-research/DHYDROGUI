@@ -11,11 +11,7 @@ namespace DelftTools.Hydro.CrossSections
         public double TotalWidth { get; internal set; }
         public double FlowingWidth { get; internal set; }
 
-        public double  StorageWidth
-        {
-            get { return TotalWidth - FlowingWidth; }
-            
-        }
+        public double StorageWidth => TotalWidth - FlowingWidth;
 
         public HeightFlowStorageWidth(double height, double totalWidth, double flowingWidth)
         {

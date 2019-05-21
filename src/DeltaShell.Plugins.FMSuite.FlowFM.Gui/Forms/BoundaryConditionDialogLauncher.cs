@@ -1,22 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Windows.Forms;
-using BasicModelInterface;
-using DelftTools.Shell.Core;
-using DelftTools.Utils.Collections;
-using DelftTools.Utils.IO;
-using DelftTools.Utils.Reflection;
+﻿using DelftTools.Shell.Core;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportersExporters;
 using log4net;
 using NetTopologySuite.Extensions.Features;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Windows.Forms;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
 {

@@ -1,35 +1,44 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DelftTools.Functions;
+using DelftTools.Functions.Generic;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
+using NetTopologySuite.Extensions.Features;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 {
-    public static class WaterFlowFMBoundaryConditionValidator    
+    public static class WaterFlowFMBoundaryConditionValidator
     {
         public static ValidationReport Validate(WaterFlowFMModel model)
         {
             var issues = new List<ValidationIssue>();
 
-            var featureGroups = model.Boundaries.GroupBy(f => f.Name).Where(g => g.Count() > 1);
+            IEnumerable<IGrouping<string, Feature2D>> featureGroups =
+                model.Boundaries.GroupBy(f => f.Name).Where(g => g.Count() > 1);
 
             issues.AddRange(featureGroups.Select(g => new ValidationIssue("Boundaries", ValidationSeverity.Warning,
                                                                           string.Format(
                                                                               "Boundary name {0} occurs multiple times, this can cause unexpected results",
                                                                               g.Key), model.Boundaries)));
 
-            foreach (var boundaryConditionSet in model.BoundaryConditionSets)
+            foreach (BoundaryConditionSet boundaryConditionSet in model.BoundaryConditionSets)
             {
-                var flowBoundaryConditions = boundaryConditionSet.BoundaryConditions.OfType<FlowBoundaryCondition>().ToList();
+                List<FlowBoundaryCondition> flowBoundaryConditions =
+                    boundaryConditionSet.BoundaryConditions.OfType<FlowBoundaryCondition>().ToList();
 
                 if (!flowBoundaryConditions.Any())
                 {
                     issues.Add(new ValidationIssue(boundaryConditionSet.Name, ValidationSeverity.Error,
-                        string.Format(Resources.WaterFlowFMBoundaryConditionValidator_Validate_Boundary___0___does_not_contain_a_boundary_condition, boundaryConditionSet.Feature.Name),
-                        boundaryConditionSet));
+                                                   string.Format(
+                                                       Resources
+                                                           .WaterFlowFMBoundaryConditionValidator_Validate_Boundary___0___does_not_contain_a_boundary_condition,
+                                                       boundaryConditionSet.Feature.Name),
+                                                   boundaryConditionSet));
                     continue;
                 }
 
@@ -37,21 +46,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 issues.AddRange(ValidateMorphologyBoundaryHaveHydroBoundaries(boundaryConditionSet));
                 issues.AddRange(ValidateSedimentConcentrationBoundaryHaveHydroBoundaries(boundaryConditionSet));
 
-                var quantities = flowBoundaryConditions.Select(fbc => fbc.FlowQuantity);
+                IEnumerable<FlowBoundaryQuantityType> quantities =
+                    flowBoundaryConditions.Select(fbc => fbc.FlowQuantity);
 
-                var constrainedQuantities =
+                List<FlowBoundaryQuantityType> constrainedQuantities =
                     quantities.Except(FlowBoundaryCondition.AlwaysAllowedQuantities).OrderBy(q => q).ToList();
 
                 if (constrainedQuantities.Any())
                 {
                     if (FlowBoundaryCondition.ValidBoundaryConditionCombinations.Select(l => l.OrderBy(q => q))
-                        .Any(l => l.SequenceEqual(constrainedQuantities)))
+                                             .Any(l => l.SequenceEqual(constrainedQuantities)))
                     {
                         continue;
                     }
+
                     issues.Add(new ValidationIssue(boundaryConditionSet.Name, ValidationSeverity.Error,
-                        "Invalid combination of boundary condition quantities detected.",
-                        boundaryConditionSet));
+                                                   "Invalid combination of boundary condition quantities detected.",
+                                                   boundaryConditionSet));
                 }
             }
 
@@ -59,47 +70,66 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             return new ValidationReport("Water flow FM model boundary conditions", issues);
         }
 
-        private static IEnumerable<ValidationIssue> ValidateMorphologyBoundaryHaveHydroBoundaries(BoundaryConditionSet boundaryConditionSet)
+        private static IEnumerable<ValidationIssue> ValidateMorphologyBoundaryHaveHydroBoundaries(
+            BoundaryConditionSet boundaryConditionSet)
         {
             if (boundaryConditionSet.BoundaryConditions.All(bc => FlowBoundaryCondition.IsMorphologyBoundary(bc)))
+            {
                 yield return new ValidationIssue(boundaryConditionSet, ValidationSeverity.Error,
-                    Resources.WaterFlowFMBoundaryConditionValidator_ValidateMorphologyBoundaryHaveHydroBoundaries_Morphology_boundary_condition_must_have_a_Hydro_boundary_condition_);
+                                                 Resources
+                                                     .WaterFlowFMBoundaryConditionValidator_ValidateMorphologyBoundaryHaveHydroBoundaries_Morphology_boundary_condition_must_have_a_Hydro_boundary_condition_);
+            }
         }
 
-        private static IEnumerable<ValidationIssue> ValidateSedimentConcentrationBoundaryHaveHydroBoundaries(BoundaryConditionSet boundaryConditionSet)
+        private static IEnumerable<ValidationIssue> ValidateSedimentConcentrationBoundaryHaveHydroBoundaries(
+            BoundaryConditionSet boundaryConditionSet)
         {
             //Check if any other snapped boundary at this location have a flow boundary condition in it.
             yield break;
-            var flowBoundaryConditions = boundaryConditionSet.BoundaryConditions.Cast<FlowBoundaryCondition>().ToList();
-            if (flowBoundaryConditions.Count == boundaryConditionSet.BoundaryConditions.Count && flowBoundaryConditions.All(bc => bc.FlowQuantity == FlowBoundaryQuantityType.SedimentConcentration))
+            List<FlowBoundaryCondition> flowBoundaryConditions =
+                boundaryConditionSet.BoundaryConditions.Cast<FlowBoundaryCondition>().ToList();
+            if (flowBoundaryConditions.Count == boundaryConditionSet.BoundaryConditions.Count &&
+                flowBoundaryConditions.All(bc => bc.FlowQuantity == FlowBoundaryQuantityType.SedimentConcentration))
+            {
                 yield return new ValidationIssue(boundaryConditionSet, ValidationSeverity.Error,
-                    Resources.WaterFlowFMBoundaryConditionValidator_ValidateSedimentConcentrationBoundaryHaveHydroBoundaries_Sediment_concentration_boundary_condition_must_have_a_Hydro_boundary_condition_);
+                                                 Resources
+                                                     .WaterFlowFMBoundaryConditionValidator_ValidateSedimentConcentrationBoundaryHaveHydroBoundaries_Sediment_concentration_boundary_condition_must_have_a_Hydro_boundary_condition_);
+            }
         }
 
         private static void ValidateFlowBoundaryConditions(WaterFlowFMModel model, List<ValidationIssue> issues)
         {
-            foreach (var bcSet in model.BoundaryConditionSets)
+            foreach (BoundaryConditionSet bcSet in model.BoundaryConditionSets)
             {
-                if ( bcSet != null && 
-                    bcSet.BoundaryConditions.Where( bc => FlowBoundaryCondition.IsMorphologyBoundary(bc)).ToList().Count > 1)
+                if (bcSet != null &&
+                    bcSet.BoundaryConditions.Where(bc => FlowBoundaryCondition.IsMorphologyBoundary(bc)).ToList()
+                         .Count > 1)
                 {
                     issues.Add(new ValidationIssue(bcSet, ValidationSeverity.Error,
-                        Resources.WaterFlowFMBoundaryConditionValidator_ValidateFlowBoundaryConditions_A_morphology_boundary_condition_cannot_have_more_than_one_timeseries_per_boundary_, bcSet));
+                                                   Resources
+                                                       .WaterFlowFMBoundaryConditionValidator_ValidateFlowBoundaryConditions_A_morphology_boundary_condition_cannot_have_more_than_one_timeseries_per_boundary_,
+                                                   bcSet));
                 }
             }
 
-            foreach (var boundaryCondition in model.BoundaryConditions.OfType<FlowBoundaryCondition>().Where(fbc => fbc.DataType != BoundaryConditionDataType.Empty))
+            foreach (FlowBoundaryCondition boundaryCondition in model
+                                                                .BoundaryConditions.OfType<FlowBoundaryCondition>()
+                                                                .Where(fbc => fbc.DataType !=
+                                                                              BoundaryConditionDataType.Empty))
             {
-                var boundaryConditionName = boundaryCondition.VariableDescription;
+                string boundaryConditionName = boundaryCondition.VariableDescription;
 
-                var boundaryConditionSet =
+                BoundaryConditionSet boundaryConditionSet =
                     model.BoundaryConditionSets.First(bcs => bcs.BoundaryConditions.Contains(boundaryCondition));
 
                 if (!boundaryCondition.DataPointIndices.Any())
                 {
                     issues.Add(new ValidationIssue(boundaryConditionName, ValidationSeverity.Error,
-                        string.Format(Resources.WaterFlowFMBoundaryConditionValidator_ValidateFlowBoundaryConditions_No_data_defined_for_boundary_condition___0___at_boundary___1__, boundaryConditionName, boundaryCondition.FeatureName),
-                        boundaryCondition));
+                                                   string.Format(
+                                                       Resources
+                                                           .WaterFlowFMBoundaryConditionValidator_ValidateFlowBoundaryConditions_No_data_defined_for_boundary_condition___0___at_boundary___1__,
+                                                       boundaryConditionName, boundaryCondition.FeatureName),
+                                                   boundaryCondition));
                 }
                 else
                 {
@@ -108,52 +138,62 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                         if (boundaryCondition.PointData.Count(pd => pd.GetValues().Count > 0) > 1)
                         {
                             issues.Add(new ValidationIssue(boundaryConditionName, ValidationSeverity.Error,
-                                Resources.WaterFlowFMBoundaryConditionValidator_ValidateFlowBoundaryConditions_A_morphology_boundary_condition_cannot_have_more_than_one_point_with_generated_data_, boundaryCondition));
+                                                           Resources
+                                                               .WaterFlowFMBoundaryConditionValidator_ValidateFlowBoundaryConditions_A_morphology_boundary_condition_cannot_have_more_than_one_point_with_generated_data_,
+                                                           boundaryCondition));
                         }
                     }
                     else
                     {
-                        ValidateBoundaryConditionPointIndex(model, issues, boundaryCondition, boundaryConditionSet, boundaryConditionName);
+                        ValidateBoundaryConditionPointIndex(model, issues, boundaryCondition, boundaryConditionSet,
+                                                            boundaryConditionName);
                     }
                 }
             }
         }
 
         private static void ValidateBoundaryConditionPointIndex(WaterFlowFMModel model, List<ValidationIssue> issues,
-            FlowBoundaryCondition boundaryCondition, BoundaryConditionSet boundaryConditionSet, string boundaryConditionName)
+                                                                FlowBoundaryCondition boundaryCondition,
+                                                                BoundaryConditionSet boundaryConditionSet,
+                                                                string boundaryConditionName)
         {
-            foreach (var pointIndex in boundaryCondition.DataPointIndices)
+            foreach (int pointIndex in boundaryCondition.DataPointIndices)
             {
-                var function = boundaryCondition.GetDataAtPoint(pointIndex);
+                IFunction function = boundaryCondition.GetDataAtPoint(pointIndex);
 
-                var supportPointName = boundaryConditionSet.SupportPointNames[pointIndex];
+                string supportPointName = boundaryConditionSet.SupportPointNames[pointIndex];
 
                 if (boundaryCondition.DataType == BoundaryConditionDataType.TimeSeries)
                 {
-                    var timeValues =
+                    IMultiDimensionalArray<DateTime> timeValues =
                         function.Arguments.First(a => a.ValueType == typeof(DateTime)).GetValues<DateTime>();
                     if (timeValues.Any())
                     {
-                        var lowerBound = timeValues.First();
-                        var upperBound = timeValues.Last();
+                        DateTime lowerBound = timeValues.First();
+                        DateTime upperBound = timeValues.Last();
 
                         if (lowerBound > model.StartTime || upperBound < model.StopTime)
                         {
                             issues.Add(new ValidationIssue(boundaryConditionName, ValidationSeverity.Error,
-                                string.Format("Time series does not span model run interval for {0} at point {1}.",
-                                    boundaryConditionName, supportPointName), boundaryCondition));
+                                                           string.Format(
+                                                               "Time series does not span model run interval for {0} at point {1}.",
+                                                               boundaryConditionName, supportPointName),
+                                                           boundaryCondition));
                         }
+
                         if (boundaryCondition.StrictlyPositive)
                         {
-                            foreach (var component in function.Components)
+                            foreach (IVariable component in function.Components)
                             {
                                 if ((double) component.MinValue < 0.0)
                                 {
                                     issues.Add(new ValidationIssue(boundaryConditionName,
-                                        ValidationSeverity.Error,
-                                        string.Format(
-                                            Resources.WaterFlowFMBoundaryConditionValidator_ValidateBoundaryConditionPointIndex_Time_series_contains_forbidden_negative_values_for__0__at_point__1_,
-                                            boundaryConditionName, supportPointName), boundaryCondition));
+                                                                   ValidationSeverity.Error,
+                                                                   string.Format(
+                                                                       Resources
+                                                                           .WaterFlowFMBoundaryConditionValidator_ValidateBoundaryConditionPointIndex_Time_series_contains_forbidden_negative_values_for__0__at_point__1_,
+                                                                       boundaryConditionName, supportPointName),
+                                                                   boundaryCondition));
                                 }
                             }
                         }
@@ -161,16 +201,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                     else
                     {
                         issues.Add(new ValidationIssue(boundaryConditionName, ValidationSeverity.Error,
-                            string.Format(Resources.WaterFlowFMBoundaryConditionValidator_ValidateFlowBoundaryConditions_No_data_defined_for_boundary_condition___0___at_boundary___1__,
-                                boundaryConditionName, supportPointName),
-                            boundaryCondition));
+                                                       string.Format(
+                                                           Resources
+                                                               .WaterFlowFMBoundaryConditionValidator_ValidateFlowBoundaryConditions_No_data_defined_for_boundary_condition___0___at_boundary___1__,
+                                                           boundaryConditionName, supportPointName),
+                                                       boundaryCondition));
                     }
                 }
 
                 if (boundaryCondition.DataType == BoundaryConditionDataType.AstroComponents ||
                     boundaryCondition.DataType == BoundaryConditionDataType.AstroCorrection)
                 {
-                    foreach (var astroComponent in function.Arguments[0].Values.Cast<string>())
+                    foreach (string astroComponent in function.Arguments[0].Values.Cast<string>())
                     {
                         if (HarmonicComponent.DefaultAstroComponentsRadPerHour.Keys.Contains(astroComponent))
                         {
@@ -178,18 +220,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                         }
 
                         issues.Add(new ValidationIssue(boundaryConditionName, ValidationSeverity.Warning,
-                            string.Format("Unknown astronomical component {0} detected for {1} at point {2}",
-                                astroComponent, boundaryConditionName, supportPointName)));
+                                                       string.Format(
+                                                           "Unknown astronomical component {0} detected for {1} at point {2}",
+                                                           astroComponent, boundaryConditionName, supportPointName)));
                     }
                 }
 
-                var depthProfile = boundaryCondition.GetDepthLayerDefinitionAtPoint(pointIndex);
+                VerticalProfileDefinition depthProfile = boundaryCondition.GetDepthLayerDefinitionAtPoint(pointIndex);
 
-                if (depthProfile == null) continue;
+                if (depthProfile == null)
+                {
+                    continue;
+                }
 
                 issues.AddRange(VerticalProfileValidator.ValidateVerticalProfile(boundaryConditionName,
-                    depthProfile, boundaryCondition,
-                    supportPointName));
+                                                                                 depthProfile, boundaryCondition,
+                                                                                 supportPointName));
             }
         }
 
@@ -198,21 +244,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
         {
             for (var i = 0; i < boundaryConditionSet.SupportPointNames.Count; i++)
             {
-                var boundaryConditions = (i == 0)
-                    ? boundaryConditionSet.BoundaryConditions
-                    : boundaryConditionSet.BoundaryConditions.Where(bc => !bc.IsHorizontallyUniform);
-                
+                IEnumerable<IBoundaryCondition> boundaryConditions = i == 0
+                                                                         ? boundaryConditionSet.BoundaryConditions
+                                                                         : boundaryConditionSet
+                                                                           .BoundaryConditions
+                                                                           .Where(bc => !bc.IsHorizontallyUniform);
+
                 if (boundaryConditions.Any(bc => bc.GetDataAtPoint(i) != null))
                 {
-                    var expectedName = BoundaryConditionSet.DefaultLocationName(boundaryConditionSet.Feature, i);
+                    string expectedName = BoundaryConditionSet.DefaultLocationName(boundaryConditionSet.Feature, i);
                     if (boundaryConditionSet.SupportPointNames[i] != expectedName)
                     {
                         yield return
                             new ValidationIssue(boundaryConditionSet, ValidationSeverity.Error,
-                                string.Format(
-                                    Resources.WaterFlowFMBoundaryConditionValidator_ValidateSupportPointNames_Custom_support_point_name__0__is_not_yet_supported_by_the_dflow_fm_kernel__please_change_it_to__1_,
-                                    boundaryConditionSet.SupportPointNames[i], expectedName),
-                                boundaryConditionSet);
+                                                string.Format(
+                                                    Resources
+                                                        .WaterFlowFMBoundaryConditionValidator_ValidateSupportPointNames_Custom_support_point_name__0__is_not_yet_supported_by_the_dflow_fm_kernel__please_change_it_to__1_,
+                                                    boundaryConditionSet.SupportPointNames[i], expectedName),
+                                                boundaryConditionSet);
                     }
                 }
             }

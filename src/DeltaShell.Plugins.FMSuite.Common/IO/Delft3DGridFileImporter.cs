@@ -16,40 +16,31 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             Category = category;
         }
 
-        public string Name
-        {
-            get { return "Delft3D Grid"; }
-        }
+        public string Name => "Delft3D Grid";
 
         public string Category { get; private set; }
-        public string Description
-        {
-            get { return string.Empty; }
-        }
+        public string Description => string.Empty;
 
         public Bitmap Image { get; private set; }
 
         public IEnumerable<Type> SupportedItemTypes
         {
-            get { yield return typeof(CurvilinearGrid); }
+            get
+            {
+                yield return typeof(CurvilinearGrid);
+            }
         }
 
-        public bool OpenViewAfterImport { get { return false; } }
+        public bool OpenViewAfterImport => false;
 
         public bool CanImportOn(object targetObject)
         {
             return true;
         }
 
-        public bool CanImportOnRootLevel
-        {
-            get { return true; }
-        }
+        public bool CanImportOnRootLevel => true;
 
-        public string FileFilter
-        {
-            get { return "Delft3D Grid (*.grd)|*.grd|All Files (*.*)|*.*"; }
-        }
+        public string FileFilter => "Delft3D Grid (*.grd)|*.grd|All Files (*.*)|*.*";
 
         public string TargetDataDirectory { get; set; }
 

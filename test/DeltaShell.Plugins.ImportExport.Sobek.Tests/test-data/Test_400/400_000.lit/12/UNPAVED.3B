@@ -1,9 +1,0 @@
-UNPV id '1' na 16 ga 0 ar 10000 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 su 0 '1' lv 1.5 co 3 ad '2' rc 0 ed '1' sp '2' ic '2' sd '2' ig 0  0.52 gl 5 bt 110 is 0 ms 'Station1' aaf 1 unpv
-UNPV id '2' na  16 ar 10000 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 lv 1.5 co 3 rc 1 sd '5' ad '3' ed '9' sp '5' ic '3' bt 1 ig 0 .52 su 0 ' '  gl 5 mg 1.5 ms 'Station1' aaf 1 is 0 unpv
-UNPV id '5' na  16 ar 10000 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ga 0 lv 1.5 co 3 rc 0 sd '2' ad '2' ed '1' sp '2' ic '2' bt 1 ig 0 .42 su 0 ' '  gl 5 mg 1.5 ms 'Station1' aaf 1 is 0 unpv
-UNPV id '6' na  16 ar 10000 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ga 0 lv 1.5 co 3 rc 0 sd '2' ad '2' ed '3' sp '2' ic '2' bt 1 ig 0 .4 su 0 ' '  gl 5 mg 1.5 ms 'Station1' aaf 1 is 0 unpv
-UNPV id '7' na  16 ar 10000 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ga 0 lv 1.5 co 3 rc 0 sd '2' ad '2' ed '4' sp '2' ic '2' bt 1 ig 0 .32 su 0 ' '  gl 5 mg 1.5 ms 'Station1' aaf 1 is 0 unpv
-UNPV id '8' na  16 ar 10000 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ga 0 lv 1.5 co 3 rc 0 sd '2' ad '2' ed '5' sp '2' ic '2' bt 1 ig 0 0 su 0 ' '  gl 5 mg 1.5 ms 'Station1' aaf 1 is 0 unpv
-UNPV id '9' na  16 ar 10000 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ga 0 lv 1.5 co 3 rc 0 sd '4' ad '2' ed '6' sp '2' ic '2' bt 1 ig 0 0 su 0 ' '  gl 5 mg 1.5 ms 'Station1' aaf 1 is 0 unpv
-UNPV id '10' na  16 ar 10000 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ga 0 lv 1.5 co 3 rc 0 sd '3' ad '2' ed '7' sp '2' ic '2' bt 1 ig 0 0 su 0 ' '  gl 5 mg 1.5 ms 'Station1' aaf 1 is 0 unpv
-UNPV id '18' na  16 ar 10000 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ga 0 lv 1.5 co 3 rc 0 sd '3' ad '3' ed '8' sp '2' ic '2' bt 1 ig 0 0 su 0 ' '  gl 5 mg 1.5 ms 'Station1' aaf 1 is 0 unpv

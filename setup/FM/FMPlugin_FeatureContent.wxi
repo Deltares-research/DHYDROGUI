@@ -17,6 +17,7 @@
   <!-- Wanted to add this to a separate feature with conditions, but couldn't manage to get it to work.-->
   <ComponentRef Id="HydroModelPlugin"/>
   
+  <ComponentRef Id="FM_CsvFiles"/> 
   <ComponentRef Id="FM_toolboxes"/> 
 
   <Feature Id="FM_x64_Feature" Level="0" Absent="disallow" AllowAdvertise="no" Display="hidden">

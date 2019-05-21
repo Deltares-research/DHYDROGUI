@@ -46,7 +46,7 @@ FILETYPE=9
 METHOD=3
 OPERAND=O
 
-* This comment line will be removed (shiptxy not yet supported and thus not read)
+* This comment line will not be removed, eventhough shiptxy is not yet supported.
 
 QUANTITY=shiptxy
 FILENAME=dam1.txy

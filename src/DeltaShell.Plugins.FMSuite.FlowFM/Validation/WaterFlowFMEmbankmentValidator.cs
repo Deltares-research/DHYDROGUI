@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Validation;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using GeoAPI.Extensions.Feature;
 using NetTopologySuite.Geometries;
 
@@ -18,43 +20,45 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 
             var issues = new List<ValidationIssue>();
 
-            var channels = GetChannels(model.Area);
-            var embankments = model.Area.Embankments;
+            IEnumerable<IChannel> channels = GetChannels(model.Area);
+            IEventedList<Embankment> embankments = model.Area.Embankments;
 
             // Check for Intersections between Channels and Embankments
-            var intersectingChannels =
+            List<IChannel> intersectingChannels =
                 channels.Where(c => embankments.Any(b => b.Geometry.Intersects(c.Geometry))).ToList();
             if (intersectingChannels.Count != 0)
             {
-                foreach (var channel in intersectingChannels)
+                foreach (IChannel channel in intersectingChannels)
                 {
                     issues.Add(new ValidationIssue(model.GetDataItemByValue(model.Area), ValidationSeverity.Error,
-                        string.Format("Channel {0} intersects with the embankments", channel.Name)));
+                                                   string.Format("Channel {0} intersects with the embankments",
+                                                                 channel.Name)));
                 }
             }
 
             // Check for Intersections between Embankments
-            var intersectingEmbankments = embankments.Where(b => embankments.Any(b2 => b2 != b && b2.Geometry.Intersects(b.Geometry))).ToList();
+            List<Embankment> intersectingEmbankments = embankments
+                                                       .Where(b => embankments.Any(
+                                                                  b2 => b2 != b && b2.Geometry.Intersects(b.Geometry)))
+                                                       .ToList();
             if (intersectingEmbankments.Count != 0)
             {
-                foreach (var embankment in intersectingEmbankments)
+                foreach (Embankment embankment in intersectingEmbankments)
                 {
                     issues.Add(new ValidationIssue(model.GetDataItemByValue(model.Area), ValidationSeverity.Error,
-                        string.Format("Embankment {0} intersects with other embankments", embankment.Name)));
+                                                   string.Format("Embankment {0} intersects with other embankments",
+                                                                 embankment.Name)));
                 }
             }
 
             // Check for Intersections in the Embankment itself
             intersectingEmbankments.Clear();
-            foreach (var embankment in embankments)
+            foreach (Embankment embankment in embankments)
             {
-
                 if (embankment.Geometry.Coordinates.Count() > 2)
                 {
-
-                    for (int iLine1 = 0; iLine1 < embankment.Geometry.Coordinates.Count() - 2; iLine1++)
+                    for (var iLine1 = 0; iLine1 < embankment.Geometry.Coordinates.Count() - 2; iLine1++)
                     {
-
                         for (int iLine2 = iLine1 + 2; iLine2 < embankment.Geometry.Coordinates.Count() - 1; iLine2++)
                         {
                             var line1 = new LineSegment();
@@ -71,24 +75,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                                 intersectingEmbankments.Add(embankment);
                             }
                         }
-                        
                     }
-                    
                 }
-                
             }
+
             if (intersectingEmbankments.Count != 0)
             {
-                foreach (var embankment in intersectingEmbankments)
+                foreach (Embankment embankment in intersectingEmbankments)
                 {
                     issues.Add(new ValidationIssue(model.GetDataItemByValue(model.Area), ValidationSeverity.Error,
-                        string.Format("Embankment {0} intersects with itself", embankment.Name)));
+                                                   string.Format("Embankment {0} intersects with itself",
+                                                                 embankment.Name)));
                 }
             }
 
             return new ValidationReport("Embankment definitions", issues);
         }
-        
+
         private static IEnumerable<IChannel> GetChannels(IHydroRegion region)
         {
             return GetTopRegion(region).AllRegions.OfType<HydroNetwork>().SelectMany(n => n.Channels);
@@ -98,7 +101,5 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
         {
             return region.Parent == null ? region : GetTopRegion(region.Parent);
         }
-
     }
-
 }

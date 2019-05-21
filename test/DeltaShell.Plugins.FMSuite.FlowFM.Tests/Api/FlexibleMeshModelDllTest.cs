@@ -1,10 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.TestUtils;
 using DeltaShell.Dimr;
 using DeltaShell.Plugins.FMSuite.FlowFM.Api;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
+using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
@@ -167,7 +170,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
 
                 model.Execute();
                 result = model.GetVar(cat, pump.Name, "capacity");
-                Assert.AreEqual(95.0, ((double[]) result)[0]);
+                Assert.AreEqual(94.999999979045242, ((double[]) result)[0]);
             }
             finally
             {
@@ -197,12 +200,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 var weir = model.Area.Weirs.First(o => o.Name == "weir02");
 
                 var cat = model.GetFeatureCategory(weir);
-                var result = model.GetVar(cat, weir.Name, "crest_level");
+                var result = model.GetVar(cat, weir.Name, KnownStructureProperties.CrestLevel);
 
                 Assert.AreEqual(3.0, ((double[])result)[0]);
 
-                model.SetVar(new[] { -3.0 }, cat, weir.Name, "crest_level");
-                result = model.GetVar(cat, weir.Name, "crest_level");
+                model.SetVar(new[] { -3.0 }, cat, weir.Name, KnownStructureProperties.CrestLevel);
+                result = model.GetVar(cat, weir.Name, KnownStructureProperties.CrestLevel);
                 Assert.AreEqual(-3.0, ((double[])result)[0]);
 
             }

@@ -3,25 +3,19 @@ using DelftTools.Utils.Aop;
 
 namespace DelftTools.Hydro.CrossSections.StandardShapes
 {
-    [Entity(FireOnCollectionChange=false)]
+    [Entity(FireOnCollectionChange = false)]
     public class CrossSectionStandardShapeCunette : CrossSectionStandardShapeWidthHeightBase
     {
         public static CrossSectionStandardShapeCunette CreateDefault()
         {
-            return new CrossSectionStandardShapeCunette
-            {
-                Width = 1
-            };
+            return new CrossSectionStandardShapeCunette {Width = 1};
         }
 
-        public override CrossSectionStandardShapeType Type
-        {
-            get { return CrossSectionStandardShapeType.Cunette; }
-        }
+        public override CrossSectionStandardShapeType Type => CrossSectionStandardShapeType.Cunette;
 
         public override CrossSectionDefinitionZW GetTabulatedDefinition()
         {
-            return StandardCrossSectionsFactory.GetTabulatedCrossSectionFromCunette(Width,Height);
+            return StandardCrossSectionsFactory.GetTabulatedCrossSectionFromCunette(Width, Height);
         }
 
         private double height;
@@ -31,11 +25,11 @@ namespace DelftTools.Hydro.CrossSections.StandardShapes
         /// </summary>
         public override double Height
         {
-            get { return height; }
+            get => height;
             set
             {
                 height = value;
-                width = height * 1 / 0.634;
+                width = (height * 1) / 0.634;
             }
         }
 
@@ -46,13 +40,12 @@ namespace DelftTools.Hydro.CrossSections.StandardShapes
         /// </summary>
         public override double Width
         {
-            get { return width; }
+            get => width;
             set
             {
                 width = value;
                 height = 0.634 * width;
             }
         }
-
     }
 }

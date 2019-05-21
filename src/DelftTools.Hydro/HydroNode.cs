@@ -14,16 +14,14 @@ namespace DelftTools.Hydro
     [Entity]
     public class HydroNode : Node, IHydroNode
     {
-        public HydroNode() : this("hydro node")
-        {
-        }
+        public HydroNode() : this("hydro node") {}
 
         public HydroNode(string name) : base(name)
         {
             Links = new EventedList<HydroLink>();
         }
 
-        public virtual IHydroNetwork HydroNetwork { get { return (IHydroNetwork)network; } }
+        public virtual IHydroNetwork HydroNetwork => (IHydroNetwork) network;
 
         [DisplayName("Long name")]
         [FeatureAttribute(Order = 2)]
@@ -40,7 +38,6 @@ namespace DelftTools.Hydro
             }
         }
 
-
         [DisplayName("X")]
         [FeatureAttribute(Order = 3)]
         public virtual double XCoordinate
@@ -55,14 +52,14 @@ namespace DelftTools.Hydro
         [Aggregation]
         public override IEventedList<IBranch> IncomingBranches
         {
-            get { return base.IncomingBranches; }
+            get => base.IncomingBranches;
             set
             {
                 if (base.IncomingBranches != null)
                 {
                     base.IncomingBranches.CollectionChanged -= OnBranchesCollectionChanged;
                 }
-                
+
                 base.IncomingBranches = value;
 
                 if (base.IncomingBranches != null)
@@ -75,7 +72,7 @@ namespace DelftTools.Hydro
         [Aggregation]
         public override IEventedList<IBranch> OutgoingBranches
         {
-            get { return base.OutgoingBranches; }
+            get => base.OutgoingBranches;
             set
             {
                 if (base.OutgoingBranches != null)
@@ -116,7 +113,7 @@ namespace DelftTools.Hydro
             if (IsConnectedToMultipleBranches)
             {
                 // remove all links
-                foreach (var link in Links.ToArray())
+                foreach (HydroLink link in Links.ToArray())
                 {
                     link.Source.UnlinkFrom(link.Target);
                 }
@@ -126,7 +123,8 @@ namespace DelftTools.Hydro
         }
 
         [EditAction]
-        private void OnBranchesCollectionChanged(object sender, NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs)
+        private void OnBranchesCollectionChanged(object sender,
+                                                 NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs)
         {
             if (sender is IList<IBranch>)
             {
@@ -134,14 +132,14 @@ namespace DelftTools.Hydro
             }
         }
 
-        public virtual IHydroRegion Region { get { return HydroNetwork; } }
+        public virtual IHydroRegion Region => HydroNetwork;
 
         [Aggregation]
         public virtual IEventedList<HydroLink> Links { get; set; }
 
-        public virtual bool CanBeLinkSource { get { return false; } }
+        public virtual bool CanBeLinkSource => false;
 
-        public virtual bool CanBeLinkTarget { get { return !IsConnectedToMultipleBranches; } }
+        public virtual bool CanBeLinkTarget => !IsConnectedToMultipleBranches;
 
         public virtual HydroLink LinkTo(IHydroObject target)
         {

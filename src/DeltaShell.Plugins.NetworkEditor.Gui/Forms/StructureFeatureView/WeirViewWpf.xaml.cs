@@ -46,8 +46,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
 
             var editFunctionDialog = new EditFunctionDialog
             {
-                Text = $@"Crest level time series for {weirName}",
-                ColumnNames = new[] { "Date time", "Crest level [m]" },
+                Text = $@"{GuiParameterNames.CrestLevel} time series for {weirName}",
+                ColumnNames = new[] { "Date time", $"{GuiParameterNames.CrestLevel} [m]" },
                 ChartViewOption = ChartViewOptions.AllSeries,
                 Data = dialogData
             };
@@ -65,8 +65,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
 
             var editFunctionDialog = new EditFunctionDialog
             {
-                Text = $@"Edge level time series for {weirName}",
-                ColumnNames = new[] { "Date time", "Lower edge level [m]" },
+                Text = $@"{GuiParameterNames.GateLowerEdgeLevel} time series for {weirName}",
+                ColumnNames = new[] { "Date time", $"{GuiParameterNames.GateLowerEdgeLevel} [m]" },
                 ChartViewOption = ChartViewOptions.AllSeries,
                 Data = dialogData
             };
@@ -84,8 +84,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
 
             var editFunctionDialog = new EditFunctionDialog
             {
-                Text = $@"Horizontal door opening width time series for {weirName}",
-                ColumnNames = new[] { "Date time", "Horizontal door opening width [m]" },
+                Text = $@"{GuiParameterNames.HorizontalOpeningWidth} time series for {weirName}",
+                ColumnNames = new[] { "Date time", GuiParameterNames.HorizontalOpeningWidth},
                 ChartViewOption = ChartViewOptions.AllSeries,
                 Data = dialogData
             };

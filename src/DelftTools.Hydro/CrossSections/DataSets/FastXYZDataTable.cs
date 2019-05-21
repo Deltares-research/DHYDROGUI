@@ -6,13 +6,9 @@ namespace DelftTools.Hydro.CrossSections.DataSets
     [Serializable]
     public class FastXYZDataTable : CrossSectionDataSet.CrossSectionXYZDataTable
     {
-        public FastXYZDataTable()
-        {
-        }
+        public FastXYZDataTable() {}
 
         protected FastXYZDataTable(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
-        }
+            : base(info, context) {}
     }
 }

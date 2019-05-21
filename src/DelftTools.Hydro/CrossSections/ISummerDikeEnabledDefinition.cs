@@ -9,6 +9,6 @@
     {
         bool CanHaveSummerDike { get; }
 
-        SummerDike SummerDike { get;  }
+        SummerDike SummerDike { get; }
     }
 }

@@ -7,26 +7,26 @@ using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
 using DelftTools.Utils.Aop;
 using DeltaShell.Plugins.FMSuite.Common.IO;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 {
     public class Area2DStructuresImporter : IFileImporter
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof (Area2DStructuresImporter));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(Area2DStructuresImporter));
 
         #region IFileImporter
 
-        public string Name { get { return "2D structures"; } }
+        public string Name => "2D structures";
 
-        public string Category { get { return "D-Flow FM 2D/3D"; } }
-        public string Description
-        {
-            get { return string.Empty; }
-        }
+        public string Category => "D-Flow FM 2D/3D";
 
-        public Bitmap Image { get { return Properties.Resources.StructureFeatureSmall; } }
+        public string Description => string.Empty;
+
+        public Bitmap Image => Resources.StructureFeatureSmall;
 
         public IEnumerable<Type> SupportedItemTypes
         {
@@ -41,9 +41,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             return true;
         }
 
-        public bool CanImportOnRootLevel { get { return false; } }
+        public bool CanImportOnRootLevel => false;
 
-        public string FileFilter { get { return "Structures file|*.ini"; } }
+        public string FileFilter => "Structures file|*.ini";
 
         public string TargetDataDirectory { get; set; }
 
@@ -53,14 +53,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 
         public object ImportItem(string path, object target = null)
         {
-            if (String.IsNullOrEmpty(path))
+            if (string.IsNullOrEmpty(path))
             {
                 Log.ErrorFormat("No file was presented to import from.");
                 return null;
             }
+
             if (target == null)
             {
-                Log.ErrorFormat("No target was presented to import to (requires a Flexible Mesh Water Flow model or Area.");
+                Log.ErrorFormat(
+                    "No target was presented to import to (requires a Flexible Mesh Water Flow model or Area.");
                 return null;
             }
 
@@ -83,10 +85,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             }
 
             var structuresFile = new StructuresFile
-                {
-                    StructureSchema = model.ModelDefinition.StructureSchema,
-                    ReferenceDate = (DateTime) model.ModelDefinition.GetModelProperty(KnownProperties.RefDate).Value
-                };
+            {
+                StructureSchema = model.ModelDefinition.StructureSchema,
+                ReferenceDate = (DateTime) model.ModelDefinition.GetModelProperty(KnownProperties.RefDate).Value
+            };
 
             IEnumerable<IStructure> structures;
             try
@@ -98,9 +100,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                 if (e is ArgumentException || e is FileNotFoundException || e is DirectoryNotFoundException ||
                     e is IOException || e is FormatException || e is OverflowException)
                 {
-                    Log.Error(String.Format("An error occurred while importing structures file, import stopped; Cause: "), e);
+                    Log.Error(
+                        string.Format("An error occurred while importing structures file, import stopped; Cause: "), e);
                     return null;
                 }
+
                 // Unexpected exception, let it bubble:
                 throw;
             }
@@ -113,7 +117,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         private static void InsertStructures(IEnumerable<IStructure> structures, HydroArea targetHydroArea)
         {
             int pumpCount = 0, weirCount = 0;
-            foreach (var structure in structures)
+            foreach (IStructure structure in structures)
             {
                 if (structure is Pump2D)
                 {
@@ -133,14 +137,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 
             //TODO
             Log.InfoFormat("Read {0} structures (Pumps: {1}; Weirs: {2};).",
-                pumpCount + weirCount,
-                pumpCount, 
-                weirCount);
+                           pumpCount + weirCount,
+                           pumpCount,
+                           weirCount);
         }
 
         #endregion
 
-        public bool OpenViewAfterImport { get { return false; } }
+        public bool OpenViewAfterImport => false;
 
         public Func<HydroArea, WaterFlowFMModel> GetModelForArea { get; set; }
     }

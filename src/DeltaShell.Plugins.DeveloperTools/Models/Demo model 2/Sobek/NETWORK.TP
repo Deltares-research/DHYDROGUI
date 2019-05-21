@@ -1,8 +1,0 @@
-TP_1.0
-NODE id '1' nm '' px 1000 py 0 node
-NODE id '11' nm '' px 0 py 0 node
-NODE id '12' nm '' px 2000 py 0 node
-NODE id '26' nm '' px 1000 py -500 node
-BRCH id '1' nm '' bn '1' en '11' al 1000 vc_opt 1 vc_equi -1 vc_len 100 brch
-BRCH id '2' nm '' bn '12' en '1' al 1000 vc_opt 1 vc_equi -1 vc_len 100 brch
-BRCH id '3' nm '' bn '1' en '26' al 500 vc_opt 1 vc_equi -1 vc_len 100 brch

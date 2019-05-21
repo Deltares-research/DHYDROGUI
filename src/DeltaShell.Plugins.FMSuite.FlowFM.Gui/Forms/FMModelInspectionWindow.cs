@@ -10,6 +10,7 @@ using DelftTools.Functions.Generic;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.Api;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using GeoAPI.Extensions.Coverages;
 using NetTopologySuite.Extensions.Coverages;

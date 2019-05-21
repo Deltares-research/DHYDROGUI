@@ -1,17 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using DelftTools.Utils.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
-using GeoAPI.Geometries;
-using System.Collections.Generic;
-using System.Threading;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
+using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Geometries;
 using SharpMap.Api;
-using Point = NetTopologySuite.Geometries.Point;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
 {
@@ -41,13 +42,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
 
         private static readonly string[] propertiesToClear =
         {
-            KnownProperties.ExtForceFile, KnownProperties.ThinDamFile,
-            KnownProperties.FixedWeirFile, KnownProperties.DryPointsFile,
+            KnownProperties.ExtForceFile,
+            KnownProperties.ThinDamFile,
+            KnownProperties.FixedWeirFile,
+            KnownProperties.DryPointsFile,
             KnownProperties.BridgePillarFile,
-            KnownProperties.ObsCrsFile, KnownProperties.LandBoundaryFile, KnownProperties.ObsFile,
-            KnownProperties.StructuresFile, KnownProperties.PartitionFile, KnownProperties.ManholeFile,
-            KnownProperties.ProfdefFile, KnownProperties.ProflocFile, KnownProperties.RestartFile,
-            KnownProperties.WaterLevIniFile, KnownProperties.TrtRou, KnownProperties.TrtDef, KnownProperties.TrtL
+            KnownProperties.ObsCrsFile,
+            KnownProperties.LandBoundaryFile,
+            KnownProperties.ObsFile,
+            KnownProperties.StructuresFile,
+            KnownProperties.PartitionFile,
+            KnownProperties.ManholeFile,
+            KnownProperties.ProfdefFile,
+            KnownProperties.ProflocFile,
+            KnownProperties.RestartFile,
+            KnownProperties.WaterLevIniFile,
+            KnownProperties.TrtRou,
+            KnownProperties.TrtDef,
+            KnownProperties.TrtL
         };
 
         private bool disposed;
@@ -60,24 +72,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
         /// <summary>
         /// Gets an iterator for iterating over feature coverage time series
         /// </summary>
-        /// <param name="model"></param>
-        /// <param name="fullExport">When false makes an export without extForces or features</param>
-        /// <returns></returns>
+        /// <param name="model"> </param>
+        /// <param name="fullExport"> When false makes an export without extForces or features </param>
+        /// <returns> </returns>
         public UnstrucGridOperationApi(WaterFlowFMModel model, bool fullExport = true)
         {
             tempPath = FileUtils.CreateTempDirectory();
 
             // gather paths            
-            var mduName = model.Name + MduFile.MduExtension;
+            string mduName = model.Name + MduFile.MduExtension;
 
             mduFilePath = Path.Combine(tempPath, model.Name, "input", mduName);
 
             // make sure we initialize without: ext, thin dams, cross sections, etc..
-            var adjustedMduProperties = model.ModelDefinition.Properties.ToList();
-            foreach (var propertyToClear in propertiesToClear)
+            List<WaterFlowFMProperty> adjustedMduProperties = model.ModelDefinition.Properties.ToList();
+            foreach (string propertyToClear in propertiesToClear)
             {
-                var existingProperty = model.ModelDefinition.GetModelProperty(propertyToClear);
-                var clonedProperty = (WaterFlowFMProperty)existingProperty.Clone();
+                WaterFlowFMProperty existingProperty = model.ModelDefinition.GetModelProperty(propertyToClear);
+                var clonedProperty = (WaterFlowFMProperty) existingProperty.Clone();
                 if (propertyToClear.ToLowerInvariant() == KnownProperties.TrtRou.ToLowerInvariant())
                 {
                     clonedProperty.SetValueAsString("N");
@@ -86,25 +98,29 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
                 {
                     clonedProperty.SetValueAsString(string.Empty); //clear 
                 }
-                
 
-                var adjustedIndex = adjustedMduProperties.FindIndex(p => p.PropertyDefinition.MduPropertyName.Equals(propertyToClear, StringComparison.InvariantCultureIgnoreCase));
+                int adjustedIndex = adjustedMduProperties.FindIndex(
+                    p => p.PropertyDefinition.MduPropertyName.Equals(propertyToClear,
+                                                                     StringComparison.InvariantCultureIgnoreCase));
                 adjustedMduProperties[adjustedIndex] = clonedProperty;
             }
 
             // do write grid file
-            var gridFile = model.NetFilePath;
-            if (!File.Exists(gridFile)) 
+            string gridFile = model.NetFilePath;
+            if (!File.Exists(gridFile))
+            {
                 return;
+            }
 
             /* When initializing this api for GridSnap features, we are not interested in doing a full export, only in having
              the api running.*/
             model.ExportTo(mduFilePath, false, fullExport, fullExport);
-            model.SetModelStateHandlerModelWorkingDirectory(model.ExplicitWorkingDirectory??model.WorkingDirectoryPath??Environment.CurrentDirectory);
+            model.SetModelStateHandlerModelWorkingDirectory(model.ExplicitWorkingDirectory ??
+                                                            model.WorkingDirectoryPath ?? Environment.CurrentDirectory);
 
             // Overwrite existing mdu to ignore the properties with adjusted properties
             var mduFile = new MduFile();
-            var isPartOf1D2DModel = (bool)model.ModelDefinition.GetModelProperty(GuiProperties.PartOf1D2DModel).Value;
+            var isPartOf1D2DModel = (bool) model.ModelDefinition.GetModelProperty(GuiProperties.PartOf1D2DModel).Value;
 
             var mduFileWriteConfig = new MduFileWriteConfig
             {
@@ -121,37 +137,51 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
 
             TryInitializeApi();
         }
-        
+
         public bool SnapsToGrid(IGeometry geometry)
         {
             if (geometry == null)
+            {
                 return false;
+            }
+
             return !GetGridSnappedGeometry(ThinDams, geometry).IsEmpty;
         }
 
         public IGeometry GetGridSnappedGeometry(string featureType, IGeometry geometry)
         {
-            return GetGridSnappedGeometry(featureType, new[] {geometry}).Single();
+            return GetGridSnappedGeometry(featureType, new[]
+            {
+                geometry
+            }).Single();
         }
 
         public IEnumerable<IGeometry> GetGridSnappedGeometry(string featureType, ICollection<IGeometry> geometries)
         {
             if (api == null) // no grid?
+            {
                 return geometries;
+            }
 
             if (featureType == NoSnapping)
+            {
                 return geometries;
+            }
 
             if (geometries.Count == 0)
+            {
                 return geometries;
+            }
 
             try
             {
-                var snappedGeometries = GetGridSnappedGeometryCore(featureType, geometries);
+                IEnumerable<IGeometry> snappedGeometries = GetGridSnappedGeometryCore(featureType, geometries);
 
-                if (featureType == WaterLevelBnd || featureType == VelocityBnd || featureType == DischargeBnd 
+                if (featureType == WaterLevelBnd || featureType == VelocityBnd || featureType == DischargeBnd
                     || featureType == SourceSink)
+                {
                     snappedGeometries = snappedGeometries.Select(ConvertToMultiPoint).ToList();
+                }
 
                 return snappedGeometries;
             }
@@ -166,9 +196,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
 
         public int[] GetLinkedCells()
         {
-            int[] linkedCells = new int[0];
+            var linkedCells = new int[0];
 
-            if (api == null) return linkedCells; // no grid, return empty list
+            if (api == null)
+            {
+                return linkedCells; // no grid, return empty list
+            }
 
             try
             {
@@ -178,19 +211,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             {
                 Console.WriteLine(e);
             }
+
             return linkedCells;
         }
 
         private int[] GetLinkedCellsCore()
         {
-            int[] edgesAlongEmbankments = new int[0];
+            var edgesAlongEmbankments = new int[0];
 
-            var edgeNumbers = api.GetValues("edgenumbers1d2d");
-            if (edgeNumbers == null || edgeNumbers.Length == 0) return edgesAlongEmbankments;
-            edgesAlongEmbankments = new int[edgeNumbers.Length];
-            for (int i = 0; i < edgeNumbers.Length; i++)
+            Array edgeNumbers = api.GetValues("edgenumbers1d2d");
+            if (edgeNumbers == null || edgeNumbers.Length == 0)
             {
-                edgesAlongEmbankments[i] = (int)edgeNumbers.GetValue(i);
+                return edgesAlongEmbankments;
+            }
+
+            edgesAlongEmbankments = new int[edgeNumbers.Length];
+            for (var i = 0; i < edgeNumbers.Length; i++)
+            {
+                edgesAlongEmbankments[i] = (int) edgeNumbers.GetValue(i);
             }
 
             return edgesAlongEmbankments;
@@ -206,11 +244,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             var xin = new List<double>();
             var yin = new List<double>();
             double[] xout = new double[0], yout = new double[0];
-            int[] featureIds = new int[0];
+            var featureIds = new int[0];
 
-            foreach (var geom in geometries)
+            foreach (IGeometry geom in geometries)
             {
-                foreach (var coord in geom.Coordinates)
+                foreach (Coordinate coord in geom.Coordinates)
                 {
                     xin.Add(coord.X);
                     yin.Add(coord.Y);
@@ -225,7 +263,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             }
 
             if (!api.GetSnappedFeature(featureType, xin.ToArray(), yin.ToArray(), ref xout, ref yout, ref featureIds))
+            {
                 throw new InvalidOperationException("Error during snapping");
+            }
 
             // rebuild geometries:
             var outGeometries = new IGeometry[geometries.Count];
@@ -234,12 +274,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             {
                 for (var i = 0; i < xout.Length; i++)
                 {
-                    var x = xout[i];
-                    var y = yout[i];
+                    double x = xout[i];
+                    double y = yout[i];
                     if (IsMissingValue(x) && IsMissingValue(y))
+                    {
                         outGeometries[i] = GeometryCollection.Empty;
+                    }
                     else
+                    {
                         outGeometries[i] = new Point(x, y);
+                    }
                 }
             }
             else
@@ -257,19 +301,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
                         }
                     }
                     else
+                    {
                         lastCoordinates.Add(new Coordinate(xout[i], yout[i]));
+                    }
 
                     lastId = featureIds[i] - 1; //make it 0 based
                 }
 
                 if (lastCoordinates.Count > 0)
+                {
                     outGeometries[lastId] = CreateGeometry(lastCoordinates);
+                }
 
                 // replace null entries with empty geometry
                 for (var i = 0; i < outGeometries.Length; i++)
+                {
                     if (outGeometries[i] == null)
+                    {
                         outGeometries[i] = GeometryCollection.Empty;
+                    }
+                }
             }
+
             return outGeometries;
         }
 
@@ -286,7 +339,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
                 catch
                 {
                     api.Dispose(); //cleanup previous instance
-                    Log.WarnFormat(Resources.UnstrucGridOperationApi_DisposeApiIfNotReachable_API_failed_to_generate_snapped_feature__0___Try_reopening_the_project_if_the_problem_persists_, featureType);
+                    Log.WarnFormat(
+                        Resources
+                            .UnstrucGridOperationApi_DisposeApiIfNotReachable_API_failed_to_generate_snapped_feature__0___Try_reopening_the_project_if_the_problem_persists_,
+                        featureType);
                 }
             }
 
@@ -320,14 +376,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
         private static IGeometry CreateGeometry(IList<Coordinate> coordinates)
         {
             if (coordinates.Count == 0)
+            {
                 return null;
+            }
 
             if (coordinates.Count == 1)
+            {
                 return new Point(coordinates[0].X, coordinates[0].Y);
-            
+            }
+
             var geometries = new List<IGeometry>();
             var lastCoordinates = new List<Coordinate>();
-            foreach (var coord in coordinates)
+            foreach (Coordinate coord in coordinates)
             {
                 if (IsMissingValue(coord.X))
                 {
@@ -338,26 +398,41 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
                     }
                 }
                 else
+                {
                     lastCoordinates.Add(coord);
+                }
             }
+
             if (lastCoordinates.Count > 0)
+            {
                 geometries.Add(CreateGeometryCore(lastCoordinates));
+            }
 
             if (geometries.Count == 1)
+            {
                 return geometries.First();
+            }
+
             return new GeometryCollection(geometries.ToArray());
         }
 
         private static IGeometry CreateGeometryCore(IList<Coordinate> coordinates)
         {
             if (coordinates.Count == 1)
+            {
                 return new Point(coordinates[0].X, coordinates[0].Y);
+            }
+
             return new LineString(coordinates.ToArray());
         }
 
         public void Dispose()
         {
-            if(disposed) return;
+            if (disposed)
+            {
+                return;
+            }
+
             if (api != null)
             {
                 api.Finish();

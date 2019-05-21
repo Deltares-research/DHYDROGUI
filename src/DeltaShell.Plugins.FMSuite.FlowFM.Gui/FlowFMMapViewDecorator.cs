@@ -7,6 +7,7 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Extensions;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Properties;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using SharpMap.Api.Layers;
 using SharpMap.Data.Providers;

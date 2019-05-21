@@ -1,8 +1,0 @@
- 1   ; file option for initial values in this file
- 2   ; default option
-1*1.0 ; scale factors for substances, fixed at 1.0
-;* active substances:  Cl
- 0 ; initial values of active substances
-;* passive substances: 
- ; initial values of passive substances
- 0 ; number of overrides

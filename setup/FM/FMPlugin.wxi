@@ -6,10 +6,15 @@
     <Component Id="FMPlugin" Guid="DC83C067-D310-43EF-91B1-2FABAAC52721">
       <File Id="DeltaShell.Plugins.FMSuite.FlowFM.dll" Source="$(var.flowfm_plugin_bin)DeltaShell.Plugins.FMSuite.FlowFM.dll" />
       <File Id="DeltaShell.Plugins.FMSuite.FlowFM.Gui.dll" Source="$(var.deltashell_output_folder)plugins\DeltaShell.Plugins.FMSuite.FlowFM.Gui\DeltaShell.Plugins.FMSuite.FlowFM.Gui.dll" />
-      <File Id="dflowfmprop.csv" Source="$(var.flowfm_plugin_bin)dflowfm-properties.csv" />
-      <File Id="structureproperties.csv" Source="$(var.flowfm_plugin_bin)structure-properties.csv" />
-      <File Id="dflowfmmorprop.csv" Source="$(var.flowfm_plugin_bin)dflowfm-mor-properties.csv" />
-    </Component>
+	</Component>
+
+    <Directory Id="fmCsvFiles" Name="CsvFiles">
+      <Component Id="FM_CsvFiles" Guid="3CA6FB39-F6B0-453C-BC7B-1B27D49B3E86">
+		<File Id="dflowfmprop.csv" Source="$(var.flowfm_plugin_bin)CsvFiles\dflowfm-properties.csv" />
+		<File Id="structureproperties.csv" Source="$(var.flowfm_plugin_bin)CsvFiles\structure-properties.csv" />
+		<File Id="dflowfmmorprop.csv" Source="$(var.flowfm_plugin_bin)CsvFiles\dflowfm-mor-properties.csv" />
+      </Component>
+    </Directory>
 
     <Directory Id="fmtoolboxes" Name="toolboxes">
       <Component Id="FM_toolboxes" Guid="AF7228F4-F583-47C8-938D-4F6A8AA81F34">

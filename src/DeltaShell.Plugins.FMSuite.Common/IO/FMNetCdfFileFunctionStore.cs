@@ -7,27 +7,23 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
     public abstract class FMNetCdfFileFunctionStore : ReadOnlyNetCdfFunctionStoreBase, INameable
     {
         private const string TimeDimensionName = "time";
-        
-        protected override IList<string> TimeDimensionNames
-        {
-            get { return new[] {TimeDimensionName}; }
-        }
 
-        protected override IList<string> TimeVariableNames
+        protected override IList<string> TimeDimensionNames => new[]
         {
-            get { return new[] { GetTimeVariableName(TimeDimensionName) }; }
-        }
+            TimeDimensionName
+        };
+
+        protected override IList<string> TimeVariableNames => new[]
+        {
+            GetTimeVariableName(TimeDimensionName)
+        };
 
         public string Name { get; set; }
-        
-        //nhib
-        protected FMNetCdfFileFunctionStore()
-        {
-        }
 
-        protected FMNetCdfFileFunctionStore(string ncPath) : base(ncPath)
-        {
-        }
+        //nhib
+        protected FMNetCdfFileFunctionStore() {}
+
+        protected FMNetCdfFileFunctionStore(string ncPath) : base(ncPath) {}
 
         protected override string GetTimeVariableName(string dimName)
         {

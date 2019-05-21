@@ -5,7 +5,7 @@ using DelftTools.Utils.Collections.Extensions;
 
 namespace DeltaShell.Plugins.FMSuite.Common.DepthLayers
 {
-    public class DepthLayerDefinition: ICloneable
+    public class DepthLayerDefinition : ICloneable
     {
         private readonly IList<double> layerDepths;
 
@@ -15,10 +15,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.DepthLayers
             layerDepths = new List<double>();
             if (Type == DepthLayerType.Sigma)
             {
-                layerDepths.AddRange(Enumerable.Repeat((double) 1/numLayers, numLayers));
+                layerDepths.AddRange(Enumerable.Repeat((double) 1 / numLayers, numLayers));
             }
         }
-        
+
         public DepthLayerDefinition(DepthLayerType type, IEnumerable<double> values)
         {
             Type = type;
@@ -30,16 +30,22 @@ namespace DeltaShell.Plugins.FMSuite.Common.DepthLayers
                 case DepthLayerType.Sigma:
                     if (values.Any())
                     {
-                        var sum = values.Sum();
-                        layerDepths = values.Select(v => v/sum).ToList();
+                        double sum = values.Sum();
+                        layerDepths = values.Select(v => v / sum).ToList();
                     }
                     else
                     {
-                        layerDepths = new double[] {1};
+                        layerDepths = new double[]
+                        {
+                            1
+                        };
                     }
+
                     break;
                 case DepthLayerType.Z:
-                    layerDepths = !values.Any() ? (IList<double>) new double[] {1} : values.ToList();
+                    layerDepths = !values.Any()
+                                      ? (IList<double>) new double[] {1}
+                                      : values.ToList();
                     break;
                 default:
                     throw new NotImplementedException(string.Format("Depth layer type {0} not implemented", Type));
@@ -47,9 +53,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.DepthLayers
         }
 
         public DepthLayerDefinition(DepthLayerType type, params double[] values)
-            : this(type, values.AsEnumerable())
-        {
-        }
+            : this(type, values.AsEnumerable()) {}
 
         public DepthLayerType Type { get; private set; }
 
@@ -70,10 +74,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.DepthLayers
             }
         }
 
-        public bool UseLayers
-        {
-            get { return Type != DepthLayerType.Single || layerDepths.Count != 0; }
-        }
+        public bool UseLayers => Type != DepthLayerType.Single || layerDepths.Count != 0;
 
         public string Description
         {
@@ -93,10 +94,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.DepthLayers
             }
         }
 
-        public IEnumerable<double> LayerThicknesses
-        {
-            get { return layerDepths; }
-        }
+        public IEnumerable<double> LayerThicknesses => layerDepths;
 
         public object Clone()
         {

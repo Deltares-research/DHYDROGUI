@@ -12,7 +12,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         public static CurvilinearGrid Read(string path)
         {
             var dryCellValue = 0.0;
-            string coordinateSystem = "Cartesian";
+            var coordinateSystem = "Cartesian";
 
             var mSize = 0;
             var nSize = 0;
@@ -22,14 +22,14 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             using (var reader = new StreamReader(path))
             {
                 CheckIfFileIsEmpty(reader);
-                
+
                 var gridSizeLineRead = false;
-                var skipNextLine = false; 
+                var skipNextLine = false;
 
                 string line;
                 while ((line = reader.ReadLine()) != null)
                 {
-                    var currentLine = line.Trim();
+                    string currentLine = line.Trim();
                     if (skipNextLine)
                     {
                         skipNextLine = false;
@@ -37,30 +37,42 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                     }
 
                     if (string.IsNullOrEmpty(currentLine) || currentLine.StartsWith("*"))
+                    {
                         continue;
+                    }
 
                     if (currentLine.StartsWith("Coordinate"))
                     {
-                        var fields = currentLine.Split('=');
+                        string[] fields = currentLine.Split('=');
                         if (fields.Length == 2)
+                        {
                             coordinateSystem = fields[1].Trim();
+                        }
+
                         continue;
                     }
 
                     if (currentLine.StartsWith("Missing"))
                     {
-                        var fields = currentLine.Split('=');
+                        string[] fields = currentLine.Split('=');
                         if (fields.Length == 2)
+                        {
                             dryCellValue = double.Parse(fields[1], CultureInfo.InvariantCulture);
+                        }
+
                         continue;
                     }
 
                     if (!gridSizeLineRead)
                     {
-                        var lineValues = currentLine.Split(' ').Select(l => l.Trim()).Where(v => v.Length > 0);
-                        var gridSizeString = lineValues;
+                        IEnumerable<string> lineValues =
+                            currentLine.Split(' ').Select(l => l.Trim()).Where(v => v.Length > 0);
+                        IEnumerable<string> gridSizeString = lineValues;
                         if (gridSizeString.Count() != 2)
+                        {
                             throw new Exception("Unknown file format");
+                        }
+
                         mSize = int.Parse(gridSizeString.ElementAt(0), CultureInfo.InvariantCulture);
                         nSize = int.Parse(gridSizeString.ElementAt(1), CultureInfo.InvariantCulture);
 
@@ -70,8 +82,12 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                     }
 
                     if (currentLine.StartsWith("ETA"))
+                    {
                         currentLine = currentLine.Substring(11);
-                    var doubleValues = currentLine.Split(' ').Select(l => l.Trim()).Where(v => v.Length > 0);
+                    }
+
+                    IEnumerable<string> doubleValues =
+                        currentLine.Split(' ').Select(l => l.Trim()).Where(v => v.Length > 0);
 
                     if (xCoordinates.Count < mSize * nSize)
                     {
@@ -83,7 +99,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                 }
 
                 // set dry cell points
-                for (int i = 0; i < xCoordinates.Count; ++i)
+                for (var i = 0; i < xCoordinates.Count; ++i)
                 {
                     if (xCoordinates[i] == dryCellValue &&
                         yCoordinates[i] == dryCellValue)
@@ -96,8 +112,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 
             // [nSize,mSize] is the shape of the data, following our convention
             // in multidimensionalarray: [rows,columns]
-            var grid = new CurvilinearGrid(nSize, mSize, xCoordinates, yCoordinates, coordinateSystem) {IsTimeDependent = false};
-            
+            var grid = new CurvilinearGrid(nSize, mSize, xCoordinates, yCoordinates, coordinateSystem)
+            {
+                IsTimeDependent = false
+            };
+
             return grid;
         }
 

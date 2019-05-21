@@ -3,36 +3,29 @@ using System.Collections.Generic;
 using System.Drawing;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 {
-    public class FMRstFileImporter: IFileImporter
+    public class FMRstFileImporter : IFileImporter
     {
         public Func<FileBasedRestartState, WaterFlowFMModel> GetFMModelForRestartState { get; set; }
 
-        public string Name
-        {
-            get { return "Restart File"; }
-        }
+        public string Name => "Restart File";
 
-        public string Category
-        {
-            get { return "NetCdf"; }
-        }
+        public string Category => "NetCdf";
 
-        public string Description
-        {
-            get { return string.Empty; }
-        }
+        public string Description => string.Empty;
 
-        public Bitmap Image
-        {
-            get { return Properties.Resources.unstrucModel; }
-        }
+        public Bitmap Image => Resources.unstrucModel;
 
         public IEnumerable<Type> SupportedItemTypes
         {
-            get { yield return typeof (FileBasedRestartState); }
+            get
+            {
+                yield return typeof(FileBasedRestartState);
+            }
         }
 
         public bool CanImportOn(object targetObject)
@@ -41,29 +34,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                    GetFMModelForRestartState(targetObject as FileBasedRestartState) != null;
         }
 
-        public bool CanImportOnRootLevel
-        {
-            get { return false; }
-        }
+        public bool CanImportOnRootLevel => false;
 
-        public string FileFilter
-        {
-            get { return "FM restart files|*_rst.nc"; }
-        }
+        public string FileFilter => "FM restart files|*_rst.nc";
 
         public string TargetDataDirectory { get; set; }
-        
+
         public bool ShouldCancel { get; set; }
-        
+
         public ImportProgressChangedDelegate ProgressChanged { get; set; }
-        
+
         public bool OpenViewAfterImport { get; private set; }
-        
+
         public object ImportItem(string path, object target = null)
         {
-            var model = GetFMModelForRestartState == null
-                ? null
-                : GetFMModelForRestartState(target as FileBasedRestartState);
+            WaterFlowFMModel model = GetFMModelForRestartState == null
+                                         ? null
+                                         : GetFMModelForRestartState(target as FileBasedRestartState);
 
             if (model != null)
             {

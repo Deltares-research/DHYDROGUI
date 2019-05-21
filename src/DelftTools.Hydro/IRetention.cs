@@ -12,6 +12,7 @@ namespace DelftTools.Hydro
         double StorageArea { get; set; }
         double BedLevel { get; set; }
         double LevelBL { get; set; }
+
         /// <summary>
         /// Storage bed definition
         /// </summary>
@@ -19,6 +20,7 @@ namespace DelftTools.Hydro
 
         double StreetLevel { get; set; }
         double StreetStorageArea { get; set; }
+
         /// <summary>
         /// Use storage as function of level
         /// </summary>

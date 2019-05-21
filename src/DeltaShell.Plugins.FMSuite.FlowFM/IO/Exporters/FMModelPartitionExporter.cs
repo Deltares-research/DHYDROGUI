@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DeltaShell.Plugins.FMSuite.FlowFM.Api;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
@@ -13,7 +15,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
 
         public override bool Export(object item, string path)
         {
-            if (PolygonFile == null && NumDomains <= 0) return false;
+            if (PolygonFile == null && NumDomains <= 0)
+            {
+                return false;
+            }
 
             var waterFlowFMModel = item as WaterFlowFMModel;
             return waterFlowFMModel != null && ExportPartitionMdu(waterFlowFMModel, path);
@@ -21,7 +26,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
 
         private bool ExportPartitionMdu(WaterFlowFMModel waterFlowFMModel, string path)
         {
-            var api = FlexibleMeshModelApiFactory.CreateNew();
+            IFlexibleMeshModelApi api = FlexibleMeshModelApiFactory.CreateNew();
             if (api == null)
             {
                 return false;
@@ -29,51 +34,56 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
 
             using (api)
             {
-                var nonzeroPath = FilePath ?? path;
+                string nonzeroPath = FilePath ?? path;
 
-                var filePathWithoutExtension = Path.Combine(Path.GetDirectoryName(nonzeroPath),
-                    Path.GetFileNameWithoutExtension(nonzeroPath));
+                string filePathWithoutExtension = Path.Combine(Path.GetDirectoryName(nonzeroPath),
+                                                               Path.GetFileNameWithoutExtension(nonzeroPath));
 
-                var filePath = filePathWithoutExtension + ".mdu";
-                var modelDefinition = waterFlowFMModel.ModelDefinition;
-                var igcSolverProperty = modelDefinition.GetModelProperty(KnownProperties.SolverType);
-                var originalSolverType = igcSolverProperty.GetValueAsString();
+                string filePath = filePathWithoutExtension + ".mdu";
+                WaterFlowFMModelDefinition modelDefinition = waterFlowFMModel.ModelDefinition;
+                WaterFlowFMProperty igcSolverProperty = modelDefinition.GetModelProperty(KnownProperties.SolverType);
+                string originalSolverType = igcSolverProperty.GetValueAsString();
                 igcSolverProperty.SetValueAsString("2"); //ensure init works
 
                 waterFlowFMModel.ExportTo(filePath, false);
-                
-                if (PolygonFile == null && NumDomains == 1) return true;
+
+                if (PolygonFile == null && NumDomains == 1)
+                {
+                    return true;
+                }
 
                 SourceNetFilePath = waterFlowFMModel.NetFilePath;
 
-                var directory = Path.GetDirectoryName(filePath);
+                string directory = Path.GetDirectoryName(filePath);
 
                 TargetNetFilePath = directory == null
-                    ? waterFlowFMModel.NetFilePath
-                    : Path.Combine(directory, Path.GetFileName(waterFlowFMModel.NetFilePath));
+                                        ? waterFlowFMModel.NetFilePath
+                                        : Path.Combine(directory, Path.GetFileName(waterFlowFMModel.NetFilePath));
 
-                var partFileName = Path.GetFileNameWithoutExtension(TargetNetFilePath);
+                string partFileName = Path.GetFileNameWithoutExtension(TargetNetFilePath);
                 if (partFileName.EndsWith("_net"))
                 {
                     partFileName = partFileName.Substring(0, partFileName.Count() - 4);
                 }
+
                 partFileName += "_part.pol";
 
                 WriteNetPartition(api);
-                var netFileProperty = modelDefinition.GetModelProperty(KnownProperties.NetFile);
-                var partFileProperty = modelDefinition.GetModelProperty(KnownProperties.PartitionFile);
+                WaterFlowFMProperty netFileProperty = modelDefinition.GetModelProperty(KnownProperties.NetFile);
+                WaterFlowFMProperty partFileProperty = modelDefinition.GetModelProperty(KnownProperties.PartitionFile);
 
-                var originalNetFile = netFileProperty.GetValueAsString();
-                var originalPartFile = partFileProperty.GetValueAsString();
+                string originalNetFile = netFileProperty.GetValueAsString();
+                string originalPartFile = partFileProperty.GetValueAsString();
 
                 var i = 0;
-                foreach (var netFile in FindNetFiles(TargetNetFilePath))
+                foreach (string netFile in FindNetFiles(TargetNetFilePath))
                 {
                     filePath = filePathWithoutExtension + "_" + string.Format("{0:0000}", i++) + ".mdu";
 
                     netFileProperty.SetValueAsString(netFile);
                     igcSolverProperty.SetValueAsString(SolverType > 0 ? SolverType.ToString() : originalSolverType);
-                    var isPartOf1D2DModel = (bool)modelDefinition.GetModelProperty(GuiProperties.PartOf1D2DModel).Value;
+                    var isPartOf1D2DModel =
+                        (bool) modelDefinition.GetModelProperty(GuiProperties.PartOf1D2DModel).Value;
 
                     var mduWriteConfig = new MduFileWriteConfig
                     {
@@ -86,7 +96,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
                                                   mduWriteConfig,
                                                   false,
                                                   isPartOf1D2DModel);
-
                 }
 
                 netFileProperty.SetValueAsString(originalNetFile);
@@ -99,31 +108,31 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
 
         private static IEnumerable<string> FindNetFiles(string netFileName)
         {
-            var index = netFileName.LastIndexOf("_net.nc", StringComparison.InvariantCulture);
+            int index = netFileName.LastIndexOf("_net.nc", StringComparison.InvariantCulture);
             if (index < 0)
             {
                 yield break;
             }
-            var strippedName = netFileName.Substring(0, index);
+
+            string strippedName = netFileName.Substring(0, index);
             bool fileFound;
             var i = 0;
             do
             {
-                var fileName = strippedName + "_" + string.Format("{0:0000}", i++) + "_net.nc";
+                string fileName = strippedName + "_" + string.Format("{0:0000}", i++) + "_net.nc";
                 fileFound = File.Exists(fileName);
-                if (fileFound) yield return Path.GetFileName(fileName);
-            }
-            while (fileFound);
+                if (fileFound)
+                {
+                    yield return Path.GetFileName(fileName);
+                }
+            } while (fileFound);
         }
 
         public override IEnumerable<Type> SourceTypes()
         {
-            yield return typeof (WaterFlowFMModel);
+            yield return typeof(WaterFlowFMModel);
         }
 
-        public override string FileFilter
-        {
-            get { return "Flexible Mesh Model Definition|*.mdu"; }
-        }
+        public override string FileFilter => "Flexible Mesh Model Definition|*.mdu";
     }
 }

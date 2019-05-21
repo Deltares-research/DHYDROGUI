@@ -11,21 +11,19 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(Delft3DGridFileExporter));
 
-        public string Name
-        {
-            get { return "Delft3D Grid"; }
-        }
+        public string Name => "Delft3D Grid";
 
-        public string Category { get { return "General"; } }
-        public string Description
-        {
-            get { return string.Empty; }
-        }
+        public string Category => "General";
+
+        public string Description => string.Empty;
 
         public bool Export(object item, string path)
         {
             var grid = item as CurvilinearGrid;
-            if (grid == null) return false;
+            if (grid == null)
+            {
+                return false;
+            }
 
             try
             {
@@ -36,20 +34,19 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                 Log.ErrorFormat("Failed to export grid: {0}", e.Message);
                 return false;
             }
+
             return true;
         }
 
         public IEnumerable<Type> SourceTypes()
         {
-            yield return typeof (CurvilinearGrid);
+            yield return typeof(CurvilinearGrid);
         }
 
-        public string FileFilter
-        {
-            get { return "Delft3D Grid File (*.grd)|*.grd"; }
-        }
+        public string FileFilter => "Delft3D Grid File (*.grd)|*.grd";
 
         public Bitmap Icon { get; private set; }
+
         public bool CanExportFor(object item)
         {
             return true;

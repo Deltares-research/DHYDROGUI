@@ -1,6 +1,10 @@
-﻿using System.Linq;
+﻿using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccess;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
+using System.Collections.Generic;
+using System.Linq;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 {
@@ -14,38 +18,40 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         {
             var parentNode = new FileBasedModelItem(MduFileProperty, model.MduSavePath);
 
-            var extForceFile = model.MduFile.ExternalForcingsFile ?? new ExtForceFile();
+            ExtForceFile extForceFile = model.MduFile.ExternalForcingsFile ?? new ExtForceFile();
 
-            var newFormatBoundaryConditions =
+            bool newFormatBoundaryConditions =
                 model.BoundaryConditions.Except(extForceFile.ExistingBoundaryConditions).Any();
-            
-            foreach (var subFile in model.SubFiles)
-            {
-                var file = subFile.Value;
 
-                var newNode = parentNode.AddChildItem(subFile.Key.PropertyDefinition.Caption, file);
+            foreach (KeyValuePair<WaterFlowFMProperty, string> subFile in model.SubFiles)
+            {
+                string file = subFile.Value;
+
+                FileBasedModelItem newNode = parentNode.AddChildItem(subFile.Key.PropertyDefinition.Caption, file);
 
                 if (subFile.Key.Equals(model.ModelDefinition.GetModelProperty(KnownProperties.ExtForceFile)))
                 {
-                    var writeToDisk = extForceFile.WriteToDisk;
+                    bool writeToDisk = extForceFile.WriteToDisk;
 
                     extForceFile.WriteToDisk = false;
 
-                    var extForceFileItems =
+                    IEnumerable<ExtForceFileItem> extForceFileItems =
                         extForceFile.WriteExtForceFileSubFiles(model.ExtFilePath, model.ModelDefinition, false,
-                            !newFormatBoundaryConditions);
+                                                               !newFormatBoundaryConditions);
 
                     extForceFile.WriteToDisk = writeToDisk;
 
-                    foreach (var extForceFileItem in extForceFileItems)
+                    foreach (ExtForceFileItem extForceFileItem in extForceFileItems)
                     {
                         newNode.AddChildItem(extForceFileItem.Quantity, extForceFileItem.FileName);
                     }
+
                     if (!newFormatBoundaryConditions)
                     {
-                        var boundaryDataItems = extForceFile.GetFeatureDataFiles(model.ModelDefinition);
+                        IEnumerable<string[]> boundaryDataItems =
+                            extForceFile.GetFeatureDataFiles(model.ModelDefinition);
 
-                        foreach (var boundaryDataItem in boundaryDataItems)
+                        foreach (string[] boundaryDataItem in boundaryDataItems)
                         {
                             newNode.AddChildItem(boundaryDataItem[0], boundaryDataItem[1]);
                         }
@@ -54,29 +60,33 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 
                 if (subFile.Key.Equals(model.ModelDefinition.GetModelProperty(KnownProperties.BndExtForceFile)))
                 {
-                    var bndExtForceFile = model.MduFile.BoundaryExternalForcingsFile ?? new BndExtForceFile();
-                    
+                    BndExtForceFile bndExtForceFile =
+                        model.MduFile.BoundaryExternalForcingsFile ?? new BndExtForceFile();
+
                     if (newFormatBoundaryConditions)
                     {
-                        var writeToDisk = bndExtForceFile.WriteToDisk;
+                        bool writeToDisk = bndExtForceFile.WriteToDisk;
 
                         bndExtForceFile.WriteToDisk = false;
 
-                        var bndExtForceFileItems = bndExtForceFile.WriteBndExtForceFileSubFiles(model.Name, model.BoundaryConditionSets, model.ReferenceTime);
+                        IList<DelftIniCategory> bndExtForceFileItems =
+                            bndExtForceFile.WriteBndExtForceFileSubFiles(
+                                model.Name, model.BoundaryConditionSets, model.ReferenceTime);
 
-                        var locationFiles =
+                        List<string> locationFiles =
                             bndExtForceFileItems.Select(
-                                item => item.GetPropertyValue(BndExtForceFile.LocationFileKey)).ToList();
+                                                    item => item.GetPropertyValue(BndExtForceFile.LocationFileKey))
+                                                .ToList();
 
-                        foreach (var locationFile in locationFiles.Distinct())
+                        foreach (string locationFile in locationFiles.Distinct())
                         {
                             newNode.AddChildItem(BndExtForceFile.LocationFileKey, locationFile);
                         }
 
-                        var forcingFiles =
+                        IEnumerable<string> forcingFiles =
                             bndExtForceFileItems.Select(item => item.GetPropertyValue(BndExtForceFile.ForcingFileKey));
 
-                        foreach (var forcingFile in forcingFiles.Distinct())
+                        foreach (string forcingFile in forcingFiles.Distinct())
                         {
                             newNode.AddChildItem(BndExtForceFile.ForcingFileKey, forcingFile);
                         }

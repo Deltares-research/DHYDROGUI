@@ -1,7 +1,0 @@
-  86400 'DDHHMMSS' 'DDHHMMSS'  ; system clock, set from SIMULATE
-                         15.73 ; integration option
-           2010/01/01-00:00:00 ; simulation start time, set by simulate
-           2010/01/07-01:00:00 ; simulation end time, set by simulate
-                             0 ; timestep constant
-                     000001000 ; simulation timestep, set by simulate
-

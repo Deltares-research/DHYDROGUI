@@ -2,13 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
-using DelftTools.Hydro.Helpers;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
-using GeoAPI.Extensions.Networks;
 using log4net;
-using NetTopologySuite.Geometries;
 using ValidationAspects;
 using ValidationAspects.Exceptions;
 
@@ -16,8 +13,8 @@ namespace DelftTools.Hydro.Structures
 {
     /// <summary>
     /// A StructureFeature is a placeholder for 1 or more structures.
-    /// If the number of structures exceeds 1 it behaves as a compound 
-    /// structure 
+    /// If the number of structures exceeds 1 it behaves as a compound
+    /// structure
     /// </summary>
     [Entity]
     public class CompositeBranchStructure : BranchStructure, ICompositeBranchStructure
@@ -27,20 +24,20 @@ namespace DelftTools.Hydro.Structures
         private IEventedList<IStructure1D> structures;
         private ICompositeBranchStructure parentStructure;
 
-        ///<summary>
+        /// <summary>
         /// implements new ParentStructure to hide FeatureAttribute which is confusing for user for composite structure
-        ///</summary>
+        /// </summary>
         [Aggregation]
-        new public virtual ICompositeBranchStructure ParentStructure
+        public new virtual ICompositeBranchStructure ParentStructure
         {
-            get { return base.ParentStructure; }
-            set { base.ParentStructure = value; }
+            get => base.ParentStructure;
+            set => base.ParentStructure = value;
         }
 
         [NoNotifyPropertyChange]
         public override double Chainage
         {
-            get { return base.Chainage; }
+            get => base.Chainage;
             set
             {
                 base.Chainage = value;
@@ -63,13 +60,14 @@ namespace DelftTools.Hydro.Structures
         [Aggregation]
         public virtual IEventedList<IStructure1D> Structures
         {
-            get { return structures; }
+            get => structures;
             set
             {
                 if (structures != null)
                 {
                     structures.CollectionChanged -= StructuresCollectionChanged;
                 }
+
                 structures = value;
                 if (structures != null)
                 {
@@ -79,15 +77,15 @@ namespace DelftTools.Hydro.Structures
         }
 
         /// <summary>
-        /// Hack generate propertychanged for structures.Count change. CollectionChanged 
+        /// Hack generate propertychanged for structures.Count change. CollectionChanged
         /// breaks bubbling.
         /// </summary>
         public virtual int Count { get; set; }
 
         [EditAction]
-        void StructuresCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void StructuresCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            var structure = (IStructure1D)e.GetRemovedOrAddedItem();
+            var structure = (IStructure1D) e.GetRemovedOrAddedItem();
             switch (e.Action)
             {
                 case NotifyCollectionChangedAction.Replace:
@@ -101,12 +99,11 @@ namespace DelftTools.Hydro.Structures
                     //structure.ParentStructure = this;
                     break;
             }
+
             Count = structures.Count;
         }
 
-        public CompositeBranchStructure() : this("StructureFeature", 0)
-        {
-        }
+        public CompositeBranchStructure() : this("StructureFeature", 0) {}
 
         public CompositeBranchStructure(string name, double offset)
         {
@@ -117,20 +114,23 @@ namespace DelftTools.Hydro.Structures
 
         ICompositeBranchStructure IStructure1D.ParentStructure
         {
-            get { return parentStructure; }
-            set { parentStructure = value; }
+            get => parentStructure;
+            set => parentStructure = value;
         }
 
         /// <summary>
-        /// Do not clone members in EventedList<IStructure> Structures because:
-        ///  - they will be cloned by the channel
-        /// Do not add cloned structures to EventedList<IStructure> Structures because\
-        ///  - there is no garantee they are already cloned
+        /// Do not clone members in EventedList
+        /// <IStructure>
+        /// Structures because:
+        /// - they will be cloned by the channel
+        /// Do not add cloned structures to EventedList
+        /// <IStructure>
+        /// Structures because\
+        /// - there is no garantee they are already cloned
         /// Only solution now is relink in Channel Clone
         /// </summary>
-        /// <returns></returns>
+        /// <returns> </returns>
         /// public override object Clone()
-
         [ValidationMethod]
         public static void ValidateMe(CompositeBranchStructure structure)
         {
@@ -138,19 +138,24 @@ namespace DelftTools.Hydro.Structures
 
             if (structure.Structures.Count == 0)
             {
-                exceptions.Add(new ValidationException(string.Format("Composite structure {0} contains no structures", structure.Name)));
+                exceptions.Add(
+                    new ValidationException(string.Format("Composite structure {0} contains no structures",
+                                                          structure.Name)));
             }
 
             // Check for emptyness
             // Check for overlapping weirs
-            var weirs = structure.Structures.Where(s => s is IWeir).OrderBy(w => ((IWeir)w).OffsetY);
+            IOrderedEnumerable<IStructure1D> weirs =
+                structure.Structures.Where(s => s is IWeir).OrderBy(w => ((IWeir) w).OffsetY);
             //IWeir previousWeir = null;
             foreach (IWeir weir in weirs)
             {
-                var result = weir.Validate();
-                if(!result.IsValid)
+                ValidationResult result = weir.Validate();
+                if (!result.IsValid)
                 {
-                    exceptions.Add(new ValidationException(string.Format("{0}:{1}", weir.Name, result.ValidationException.Message), result.ValidationException));
+                    exceptions.Add(new ValidationException(
+                                       string.Format("{0}:{1}", weir.Name, result.ValidationException.Message),
+                                       result.ValidationException));
                 }
 
                 //if ((previousWeir != null) && (weir.OffsetY < previousWeir.CrestWidth + previousWeir.OffsetY))
@@ -161,13 +166,15 @@ namespace DelftTools.Hydro.Structures
                 //previousWeir = weir;
             }
 
-            var gates = structure.Structures.OfType<IGate>();
+            IEnumerable<IGate> gates = structure.Structures.OfType<IGate>();
             foreach (IGate gate in gates)
             {
-                var result = gate.Validate();
+                ValidationResult result = gate.Validate();
                 if (!result.IsValid)
                 {
-                    exceptions.Add(new ValidationException(string.Format("{0}:{1}", gate.Name, result.ValidationException.Message), result.ValidationException));
+                    exceptions.Add(new ValidationException(
+                                       string.Format("{0}:{1}", gate.Name, result.ValidationException.Message),
+                                       result.ValidationException));
                 }
             }
 

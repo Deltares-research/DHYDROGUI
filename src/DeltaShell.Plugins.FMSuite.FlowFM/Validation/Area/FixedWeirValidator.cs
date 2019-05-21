@@ -1,10 +1,10 @@
-﻿using DelftTools.Hydro.Structures;
+﻿using System.Collections.Generic;
+using System.Linq;
+using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
-using GeoAPI.Geometries;
-using System.Collections.Generic;
-using System.Linq;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
+using GeoAPI.Geometries;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area
 {
@@ -15,9 +15,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area
         /// <summary>
         /// Validate the fixed weirs and return any encountered issues.
         /// </summary>
-        /// <param name="fixedWeirs">The set of fixed weirs to be evaluated.</param>
-        /// <param name="gridExtent">The grid extent to which the fixed weir should be snapped.</param>
-        /// <param name="fixedWeirsProperties">The fixed weir properties</param>
+        /// <param name="fixedWeirs"> The set of fixed weirs to be evaluated. </param>
+        /// <param name="gridExtent"> The grid extent to which the fixed weir should be snapped. </param>
+        /// <param name="fixedWeirsProperties"> The fixed weir properties </param>
         /// <param name="scheme">Fixed weir scheme type (numerical, villemonte, tabellenboek or none)</param>
         /// <returns> A set of validation issues encountered. </returns>
         public static IEnumerable<ValidationIssue> Validate(this IEnumerable<FixedWeir> fixedWeirs, Envelope gridExtent, IEnumerable<ModelFeatureCoordinateData<FixedWeir>> fixedWeirsProperties, string scheme)
@@ -48,16 +48,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area
             if (!fixedWeir.Geometry.SnapsToFlowFmGrid(gridExtent))
             {
                 yield return new ValidationIssue(fixedWeir,
-                    ValidationSeverity.Warning,
-                    string.Format(Resources.FixedWeirValidator_ValidateSnapping_fixed_weir___0___not_within_grid_extent_, fixedWeir.Name),
-                    fixedWeir);
+                                                 ValidationSeverity.Warning,
+                                                 string.Format(
+                                                     Resources
+                                                         .FixedWeirValidator_ValidateSnapping_fixed_weir___0___not_within_grid_extent_,
+                                                     fixedWeir.Name),
+                                                 fixedWeir);
             }
         }
 
-        private static IEnumerable<ValidationIssue> ValidateSillDepths(this FixedWeir fixedWeir, IEnumerable<ModelFeatureCoordinateData<FixedWeir>> fixedWeirsProperties)
+        private static IEnumerable<ValidationIssue> ValidateSillDepths(this FixedWeir fixedWeir,
+                                                                       IEnumerable<ModelFeatureCoordinateData<FixedWeir>
+                                                                       > fixedWeirsProperties)
         {
-            var dataToCheck = fixedWeirsProperties.FirstOrDefault(d => d.Feature == fixedWeir);
-            if (dataToCheck == null) yield break;
+            ModelFeatureCoordinateData<FixedWeir> dataToCheck =
+                fixedWeirsProperties.FirstOrDefault(d => d.Feature == fixedWeir);
+            if (dataToCheck == null)
+            {
+                yield break;
+            }
 
             var numericalIsSelected = fixedWeirScheme == ((int)FixedWeirSchemes.Scheme6).ToString();
             var villemonteIsSelected = fixedWeirScheme == ((int)FixedWeirSchemes.Scheme9).ToString();

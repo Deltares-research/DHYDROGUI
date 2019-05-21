@@ -1,25 +1,35 @@
 ﻿using System;
+using System.IO;
 
 namespace DeltaShell.Plugins.FMSuite.Common.IO
 {
-    public static class WindFile 
+    public static class WindFile
     {
         public static string GetCorrespondingGridFilePath(string filePath)
         {
-            
-            if (filePath == null) return null;
+            if (filePath == null)
+            {
+                return null;
+            }
+
             try
             {
-                var fullPath = System.IO.Path.GetFullPath(filePath);
+                string fullPath = Path.GetFullPath(filePath);
                 var apwxwyFileReader = new ApwxwyFileReader(fullPath);
-                var fname = apwxwyFileReader.ReadGridFileNameWithExtension();
+                string fname = apwxwyFileReader.ReadGridFileNameWithExtension();
 
-                if (fname == null) return null;
+                if (fname == null)
+                {
+                    return null;
+                }
 
-                var apwxwyDir = System.IO.Path.GetDirectoryName(fullPath);
-                if (apwxwyDir == null) return null;
+                string apwxwyDir = Path.GetDirectoryName(fullPath);
+                if (apwxwyDir == null)
+                {
+                    return null;
+                }
 
-                return System.IO.Path.Combine(apwxwyDir, fname);
+                return Path.Combine(apwxwyDir, fname);
             }
             catch (Exception e)
             {

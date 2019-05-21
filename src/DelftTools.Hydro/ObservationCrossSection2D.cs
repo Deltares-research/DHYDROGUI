@@ -1,6 +1,4 @@
 ﻿namespace DelftTools.Hydro
 {
-    public class ObservationCrossSection2D : GroupableFeature2D
-    {
-    }
+    public class ObservationCrossSection2D : GroupableFeature2D {}
 }

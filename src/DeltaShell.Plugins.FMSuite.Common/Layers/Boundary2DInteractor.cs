@@ -9,12 +9,11 @@ using SharpMap.Styles;
 
 namespace DeltaShell.Plugins.FMSuite.Common.Layers
 {
-    internal class Boundary2DInteractor: Feature2DLineInteractor
+    internal class Boundary2DInteractor : Feature2DLineInteractor
     {
         public Boundary2DInteractor(ILayer layer, IFeature feature, VectorStyle vectorStyle,
-            IEditableObject editableObject) : base(layer, feature, vectorStyle, editableObject)
-        {
-        }
+                                    IEditableObject editableObject) :
+            base(layer, feature, vectorStyle, editableObject) {}
 
         public Func<Feature2D, int, bool> AllowRemovePoint { private get; set; }
 

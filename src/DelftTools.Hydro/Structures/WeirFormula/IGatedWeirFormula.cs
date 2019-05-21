@@ -15,16 +15,17 @@ namespace DelftTools.Hydro.Structures.WeirFormula
         // Gate.Door opening width (T)
         /// <summary>
         /// The direction in which the door will open.
-        /// Left and right are defined by the flow direction of the gate, 
+        /// Left and right are defined by the flow direction of the gate,
         /// indicated in the gui by a small arrow.
         /// </summary>
         GateOpeningDirection HorizontalDoorOpeningDirection { get; set; }
+
         double HorizontalDoorOpeningWidth { get; set; }
         bool UseHorizontalDoorOpeningWidthTimeSeries { get; set; }
         TimeSeries HorizontalDoorOpeningWidthTimeSeries { get; set; }
 
         // Gate.Lower Edge Level(T)
-        double LowerEdgeLevel { get; set; } 
+        double LowerEdgeLevel { get; set; }
         bool UseLowerEdgeLevelTimeSeries { get; set; }
         TimeSeries LowerEdgeLevelTimeSeries { get; set; }
     }

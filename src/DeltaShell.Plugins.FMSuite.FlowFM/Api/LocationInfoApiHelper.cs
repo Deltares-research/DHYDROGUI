@@ -1,33 +1,35 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using DelftTools.Utils.IO;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO;
+﻿using DelftTools.Utils.IO;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using log4net;
+using NetTopologySuite.Extensions.Grids;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
 {
     public static class LocationInfoApiHelper
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof (LocationInfoApiHelper));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(LocationInfoApiHelper));
 
         public static Dictionary<string, QuantityInfo> ReadQuantities(WaterFlowFMModel model, string[] variableNames)
         {
-            var grid = model.Grid;
+            UnstructuredGrid grid = model.Grid;
             if (grid.IsEmpty || grid.Cells.Count == 1)
             {
                 return null;
             }
 
             var skipDelete = false;
-            var tempPath = FileUtils.CreateTempDirectory();
+            string tempPath = FileUtils.CreateTempDirectory();
             try
             {
                 var tempModel = new WaterFlowFMModel {Name = "temp"};
 
                 tempModel.ModelDefinition.GetModelProperty(KnownProperties.NetFile)
-                    .SetValueAsString(Path.GetFileName(model.NetFilePath));
+                         .SetValueAsString(Path.GetFileName(model.NetFilePath));
 
                 tempModel.ModelDefinition.GetModelProperty(KnownProperties.ExtForceFile).SetValueAsString("");
                 tempModel.ModelDefinition.GetModelProperty(KnownProperties.BndExtForceFile).SetValueAsString("");
@@ -41,14 +43,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
 
                 File.Copy(model.NetFilePath, Path.Combine(tempPath, Path.GetFileName(model.NetFilePath)));
 
-                var mduName = tempModel.Name + MduFile.MduExtension;
-                var mduFilePath = Path.Combine(tempPath, mduName);
+                string mduName = tempModel.Name + MduFile.MduExtension;
+                string mduFilePath = Path.Combine(tempPath, mduName);
 
                 tempModel.ExportTo(mduFilePath, false, false, false);
 
                 var supportedQuantities = new Dictionary<string, QuantityInfo>();
 
-                var api = FlexibleMeshModelApiFactory.CreateNew();
+                IFlexibleMeshModelApi api = FlexibleMeshModelApiFactory.CreateNew();
                 if (api == null)
                 {
                     Log.ErrorFormat("Failed to initialise FlexibleMeshModelApi");
@@ -61,9 +63,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
                     api.Initialize(mduFilePath);
                     foreach (string variable in variableNames)
                     {
-                        var location = api.GetVariableLocation(variable);
+                        string location = api.GetVariableLocation(variable);
                         switch (location)
-                        // TODO: use more readable names as keys once available from the fm kernel (DELFT3DFM-431)
+                            // TODO: use more readable names as keys once available from the fm kernel (DELFT3DFM-431)
                         {
                             case "face":
                                 supportedQuantities.Add(variable, new QuantityInfo(variable, ElementType.Cell));
@@ -76,8 +78,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
                                 break;
                         }
                     }
+
                     api.Finish();
                 }
+
                 return supportedQuantities;
             }
             catch (Exception e)
@@ -90,16 +94,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
                 try
                 {
                     if (!skipDelete)
+                    {
                         FileUtils.DeleteIfExists(tempPath);
+                    }
                 }
                 catch (Exception e)
                 {
                     Console.WriteLine(e);
                 }
             }
+
             return null;
         }
     }
+
     public class QuantityInfo
     {
         public QuantityInfo(string bmiName, ElementType elementType)
@@ -107,6 +115,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             BmiName = bmiName;
             ElementType = elementType;
         }
+
         public readonly string BmiName;
         public readonly ElementType ElementType;
     }

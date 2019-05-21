@@ -1,4 +1,6 @@
-﻿namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
+﻿using DeltaShell.Plugins.FMSuite.FlowFM.Model;
+
+namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 {
     /// <summary>
     /// This class describes a shortcut that can be used to link a validation issue for FM to a tab on the FM settings view.

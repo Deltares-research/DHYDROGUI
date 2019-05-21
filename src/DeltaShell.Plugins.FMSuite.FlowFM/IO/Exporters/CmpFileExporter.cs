@@ -3,28 +3,29 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Linq;
+using DelftTools.Functions;
 using DelftTools.Shell.Core;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
 {
-    public class CmpFileExporter: BoundaryDataExporterBase, IFileExporter
+    public class CmpFileExporter : BoundaryDataExporterBase, IFileExporter
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(CmpFileExporter));
 
         #region IFileExporter
 
         [ExcludeFromCodeCoverage]
-        public string Name { get { return "Boundary data to .cmp file"; } }
+        public string Name => "Boundary data to .cmp file";
 
         [ExcludeFromCodeCoverage]
-        public string Category { get { return "General"; } }
+        public string Category => "General";
 
-        public string Description
-        {
-            get { return string.Empty; }
-        }
+        public string Description => string.Empty;
 
         public bool Export(object item, string path)
         {
@@ -32,7 +33,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
             if (boundaryCondition != null && ForcingTypes.Contains(boundaryCondition.DataType))
             {
                 var writer = new CmpFile();
-                var data = CreateHarmonicSeries(boundaryCondition, SelectedIndex);
+                IEnumerable<HarmonicComponent> data = CreateHarmonicSeries(boundaryCondition, SelectedIndex);
                 try
                 {
                     writer.Write(path, data);
@@ -44,6 +45,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
                     return false;
                 }
             }
+
             return false;
         }
 
@@ -51,14 +53,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
         {
             yield break;
         }
-        
-        public string FileFilter
-        {
-            get { return "Harmonic series file|*.cmp"; }
-        }
+
+        public string FileFilter => "Harmonic series file|*.cmp";
 
         [ExcludeFromCodeCoverage]
-        public Bitmap Icon { get { return Properties.Resources.TextDocument; } }
+        public Bitmap Icon => Resources.TextDocument;
 
         [ExcludeFromCodeCoverage]
         public bool CanExportFor(object item)
@@ -82,9 +81,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
         private IEnumerable<HarmonicComponent> CreateHarmonicSeries(IBoundaryCondition boundaryCondition,
                                                                     int selectedIndex)
         {
-            if (boundaryCondition == null) return Enumerable.Empty<HarmonicComponent>();
+            if (boundaryCondition == null)
+            {
+                return Enumerable.Empty<HarmonicComponent>();
+            }
 
-            var data = boundaryCondition.GetDataAtPoint(selectedIndex);
+            IFunction data = boundaryCondition.GetDataAtPoint(selectedIndex);
 
             if (data == null || !ForcingTypes.Contains(boundaryCondition.DataType))
             {

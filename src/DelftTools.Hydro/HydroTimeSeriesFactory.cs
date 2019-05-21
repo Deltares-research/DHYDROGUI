@@ -9,15 +9,16 @@ namespace DelftTools.Hydro
     {
         public static TimeSeries CreateFlowTimeSeries()
         {
-            var ts = CreateTimeSeries("flow time series", "flow", "m3/s");
+            TimeSeries ts = CreateTimeSeries("flow time series", "flow", "m3/s");
 
-            ts.Components[0].Attributes[FunctionAttributes.StandardName] = FunctionAttributes.StandardNames.WaterDischarge;
+            ts.Components[0].Attributes[FunctionAttributes.StandardName] =
+                FunctionAttributes.StandardNames.WaterDischarge;
             return ts;
         }
 
         public static TimeSeries CreateWaterLevelTimeSeries()
         {
-            var ts = CreateTimeSeries("water level time series", "level", "m AD");
+            TimeSeries ts = CreateTimeSeries("water level time series", "level", "m AD");
 
             ts.Components[0].Attributes[FunctionAttributes.StandardName] = FunctionAttributes.StandardNames.WaterLevel;
             return ts;
@@ -27,7 +28,7 @@ namespace DelftTools.Hydro
         {
             var ts = new TimeSeries
             {
-                Components = { new Variable<double>(componentName, new Unit(unit, unit)) },
+                Components = {new Variable<double>(componentName, new Unit(unit, unit))},
                 Name = seriesName
             };
 

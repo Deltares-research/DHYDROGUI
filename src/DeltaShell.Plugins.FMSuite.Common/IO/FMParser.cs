@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
-using DelftTools.Utils;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using log4net;
@@ -13,24 +12,25 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 {
     public static class FMParser
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof (FMParser));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(FMParser));
 
         /// <summary>
-        /// Returns the C# value <see cref="Type"/> for a property in the schema csv file.
+        /// Returns the C# value <see cref="Type" /> for a property in the schema csv file.
         /// </summary>
-        /// <param name="propertyKeyName">The name of property as it appears in the csv schema file.</param>
-        /// <param name="typeField">The value type as it appears in the csv schema file.</param>
-        /// <param name="captionField">The caption of how <paramref name="propertyKeyName"/> should be shown in the UI.</param>
-        /// <param name="schemaFileName">The schema file name.</param>
-        /// <param name="lineNumber">The line being evaluated in the schema file.</param>
-        /// <returns>The C# value <see cref="Type"/> of the variable.</returns>
-        /// <exception cref="FormatException">When there is a syntax error in the schema file.</exception>
-        /// <exception cref="ArgumentException">When <paramref name="typeField"/> cannot be translated to a type.</exception>
-        public static Type GetClrType(string propertyKeyName, string typeField, ref string captionField, string schemaFileName, int lineNumber)
+        /// <param name="propertyKeyName"> The name of property as it appears in the csv schema file. </param>
+        /// <param name="typeField"> The value type as it appears in the csv schema file. </param>
+        /// <param name="captionField"> The caption of how <paramref name="propertyKeyName" /> should be shown in the UI. </param>
+        /// <param name="schemaFileName"> The schema file name. </param>
+        /// <param name="lineNumber"> The line being evaluated in the schema file. </param>
+        /// <returns> The C# value <see cref="Type" /> of the variable. </returns>
+        /// <exception cref="FormatException"> When there is a syntax error in the schema file. </exception>
+        /// <exception cref="ArgumentException"> When <paramref name="typeField" /> cannot be translated to a type. </exception>
+        public static Type GetClrType(string propertyKeyName, string typeField, ref string captionField,
+                                      string schemaFileName, int lineNumber)
         {
             Type dataType;
 
-            var typeFieldLower = typeField.ToLower();
+            string typeFieldLower = typeField.ToLower();
 
             if (typeFieldLower.Equals("integer"))
             {
@@ -60,38 +60,40 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             {
                 dataType = typeof(string);
             }
-            else if (typeFieldLower.Equals("multipleentriesfilename")) /* Still only one string per entry, but multiple occurrences of the property name in the file*/
+            else if (typeFieldLower.Equals("multipleentriesfilename")
+            ) /* Still only one string per entry, but multiple occurrences of the property name in the file*/
             {
                 dataType = typeof(IList<string>);
             }
             else if (typeFieldLower.Equals("steerable"))
             {
-                dataType = typeof (Steerable);
+                dataType = typeof(Steerable);
             }
             else if (typeFieldLower.Contains("|"))
             {
                 if ((typeField.Equals("0|1") ||
                      typeField.Equals("1|0")) && !captionField.Contains("|") ||
-                     typeField.Equals("true|false"))
+                    typeField.Equals("true|false"))
                 {
-                    dataType = typeof (bool);
+                    dataType = typeof(bool);
                 }
                 else
                 {
-                    var captionFields = captionField.Split(':');
+                    string[] captionFields = captionField.Split(':');
                     if (captionFields.Length != 2)
                     {
                         throw new FormatException(
-                            String.Format("Invalid caption field {0} on line {1} of file {2}",
+                            string.Format("Invalid caption field {0} on line {1} of file {2}",
                                           captionField, lineNumber, schemaFileName));
                     }
+
                     captionField = captionFields[0];
-                    var captionChoices = captionFields[1].Split('|');
-                    var typeChoices = typeField.Split('|');
+                    string[] captionChoices = captionFields[1].Split('|');
+                    string[] typeChoices = typeField.Split('|');
                     if (captionChoices.Length != typeChoices.Length)
                     {
                         throw new FormatException(
-                            String.Format(
+                            string.Format(
                                 "Inconsistent caption and type field for {0} on line {1} of file {2}",
                                 captionField, lineNumber, schemaFileName));
                     }
@@ -108,8 +110,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             }
             else
             {
-                throw new ArgumentException(String.Format("Invalid type field on line {0} of file {1}", lineNumber, schemaFileName));
+                throw new ArgumentException(string.Format("Invalid type field on line {0} of file {1}", lineNumber,
+                                                          schemaFileName));
             }
+
             return dataType;
         }
 
@@ -117,120 +121,165 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         {
             if (dataType == typeof(string))
             {
-                return (string)obj;
+                return (string) obj;
             }
+
             if (dataType == typeof(double))
             {
-                return ((double)obj).ToString(CultureInfo.InvariantCulture);
+                return ((double) obj).ToString(CultureInfo.InvariantCulture);
             }
+
             if (dataType == typeof(int))
             {
-                return ((int)obj).ToString(CultureInfo.InvariantCulture);
+                return ((int) obj).ToString(CultureInfo.InvariantCulture);
             }
+
             if (dataType == typeof(bool))
             {
-                return ((bool)obj) ? "1" : "0";
+                return (bool) obj ? "1" : "0";
             }
+
             if (dataType == typeof(DateTime))
             {
-                return ((DateTime)obj).ToString("yyyyMMdd");
+                return ((DateTime) obj).ToString("yyyyMMdd");
             }
-            if (dataType == typeof (TimeSpan))
+
+            if (dataType == typeof(TimeSpan))
             {
                 if (obj is TimeSpan && ((TimeSpan) obj).Ticks != 0)
                 {
-                    var nrOfTicks = 1.0*((TimeSpan) obj).Ticks;
-                    return (nrOfTicks/TimeSpan.TicksPerSecond).ToString(CultureInfo.InvariantCulture);
+                    double nrOfTicks = 1.0 * ((TimeSpan) obj).Ticks;
+                    return (nrOfTicks / TimeSpan.TicksPerSecond).ToString(CultureInfo.InvariantCulture);
                 }
+
                 return "";
             }
-            if (dataType == typeof(IList<Double>))
+
+            if (dataType == typeof(IList<double>))
             {
-                return string.Join(" ", ((IList<Double>)obj).Select(d => d.ToString(CultureInfo.InvariantCulture)));
+                return string.Join(" ", ((IList<double>) obj).Select(d => d.ToString(CultureInfo.InvariantCulture)));
             }
+
             if (dataType == typeof(IList<string>))
             {
-                return string.Join(" ", (IList<string>)obj);
+                return string.Join(" ", (IList<string>) obj);
             }
+
             if (dataType.IsEnum)
             {
                 return ((Enum) obj).GetDisplayName();
             }
-            if (dataType == typeof (Steerable))
+
+            if (dataType == typeof(Steerable))
             {
                 var steerable = (Steerable) obj;
                 switch (steerable.Mode)
                 {
                     case SteerableMode.ConstantValue:
-                        return ToString(steerable.ConstantValue, typeof (double));
+                        return ToString(steerable.ConstantValue, typeof(double));
                     case SteerableMode.TimeSeries:
                         return steerable.TimeSeriesFilename;
                     case SteerableMode.External:
                         return "REALTIME";
                 }
             }
+
             throw new NotImplementedException("Unsupported data type: " + dataType);
         }
 
         /// <summary>
         /// Parses a string for a given value type.
         /// </summary>
-        /// <param name="str">String to be parsed.</param>
-        /// <param name="dataType">Expected data type represented by <paramref name="str"/>.</param>
-        /// <returns>The parsed object.</returns>
-        /// <seealso cref="FromString{T}(string)"/>
-        /// <exception cref="ArgumentNullException">Can occur for some <paramref name="dataType"/> when <paramref name="str"/> is null.</exception>
-        /// <exception cref="FormatException">Can occur for some <paramref name="dataType"/> when <paramref name="str"/> is in invalid format.</exception>
-        /// <exception cref="OverflowException">Can occur for some <paramref name="dataType"/> when <paramref name="str"/> represent a value that is too big or too small.</exception>
+        /// <param name="str"> String to be parsed. </param>
+        /// <param name="dataType"> Expected data type represented by <paramref name="str" />. </param>
+        /// <returns> The parsed object. </returns>
+        /// <seealso cref="FromString{T}(string)" />
+        /// <exception cref="ArgumentNullException">
+        /// Can occur for some <paramref name="dataType" /> when <paramref name="str" />
+        /// is null.
+        /// </exception>
+        /// <exception cref="FormatException">
+        /// Can occur for some <paramref name="dataType" /> when <paramref name="str" /> is in
+        /// invalid format.
+        /// </exception>
+        /// <exception cref="OverflowException">
+        /// Can occur for some <paramref name="dataType" /> when <paramref name="str" />
+        /// represent a value that is too big or too small.
+        /// </exception>
         public static object FromString(string str, Type dataType)
         {
             if (dataType == typeof(string))
             {
                 return str;
             }
+
             if (dataType == typeof(IList<string>))
             {
-                if (string.IsNullOrEmpty(str)) return new List<string>();
+                if (string.IsNullOrEmpty(str))
+                {
+                    return new List<string>();
+                }
 
-                var strings = str.Split(new[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                List<string> strings = str.Split(new[]
+                {
+                    ' ',
+                    '\t'
+                }, StringSplitOptions.RemoveEmptyEntries).ToList();
                 return strings;
             }
+
             if (dataType == typeof(double))
             {
                 return ParseDoubleValue(str);
             }
+
             if (dataType == typeof(int))
             {
-                return Int32.Parse(str);
+                return int.Parse(str);
             }
+
             if (dataType == typeof(bool))
             {
                 return str.Trim().Equals("1") || str.Trim().Equals("true"); //simple version
             }
+
             if (dataType == typeof(DateTime))
             {
                 return ParseFMDateTime(str);
             }
+
             if (dataType == typeof(TimeSpan))
             {
-                if (!String.IsNullOrWhiteSpace(str))
+                if (!string.IsNullOrWhiteSpace(str))
                 {
-                    var valueAsDouble = ParseDoubleValue(str);
-                    var ticks = (long) (TimeSpan.TicksPerSecond*valueAsDouble);
+                    double valueAsDouble = ParseDoubleValue(str);
+                    var ticks = (long) (TimeSpan.TicksPerSecond * valueAsDouble);
                     return new TimeSpan(ticks);
                 }
+
                 return new TimeSpan(0);
             }
-            if (dataType == typeof(IList<Double>))
+
+            if (dataType == typeof(IList<double>))
             {
-                if(str == null) throw new ArgumentNullException("str");
+                if (str == null)
+                {
+                    throw new ArgumentNullException("str");
+                }
 
-                var trimmedString = str.Replace('d', 'e').Trim();
-                if (string.IsNullOrEmpty(trimmedString)) return new List<double>(0);
+                string trimmedString = str.Replace('d', 'e').Trim();
+                if (string.IsNullOrEmpty(trimmedString))
+                {
+                    return new List<double>(0);
+                }
 
-                var numbers = trimmedString.Split(new[] {' ', '\t'}, StringSplitOptions.RemoveEmptyEntries);
-                var resultList = new List<Double>();
-                foreach (var number in numbers)
+                string[] numbers = trimmedString.Split(new[]
+                {
+                    ' ',
+                    '\t'
+                }, StringSplitOptions.RemoveEmptyEntries);
+                var resultList = new List<double>();
+                foreach (string number in numbers)
                 {
                     try
                     {
@@ -239,58 +288,87 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                     // ArgumentNullException won't occur in this scenario
                     catch (FormatException e)
                     {
-                        Log.WarnFormat("Value '{0}' in collection cannot be read (Cause: {1}) and is skipped. ", number, e.Message);
+                        Log.WarnFormat("Value '{0}' in collection cannot be read (Cause: {1}) and is skipped. ", number,
+                                       e.Message);
                         resultList.Add(double.NaN);
                     }
                     catch (OverflowException e)
                     {
-                        Log.WarnFormat("Value '{0}' in collection cannot be read (Cause: {1}) and is skipped. ", number, e.Message);
+                        Log.WarnFormat("Value '{0}' in collection cannot be read (Cause: {1}) and is skipped. ", number,
+                                       e.Message);
                         resultList.Add(double.NaN);
                     }
                 }
+
                 return resultList;
             }
+
             if (dataType.IsEnum)
             {
-                var enumValue = GetEnumValueFromDisplayName(dataType, str);
-                if(enumValue == null) throw new FormatException($"Value of '{str}' not valid.");
+                object enumValue = GetEnumValueFromDisplayName(dataType, str);
+                if (enumValue == null)
+                {
+                    throw new FormatException($"Value of '{str}' not valid.");
+                }
+
                 return enumValue;
             }
-            if (dataType == typeof (Steerable))
+
+            if (dataType == typeof(Steerable))
             {
-                throw new NotImplementedException("Try to parse the value of a Steerable as double, and when that fails as string.");
+                throw new NotImplementedException(
+                    "Try to parse the value of a Steerable as double, and when that fails as string.");
             }
+
             throw new NotImplementedException("Unsupported data type " + dataType);
         }
 
         /// <summary>
         /// Parses a string for a given value type.
         /// </summary>
-        /// <typeparam name="T">Expected data type represented by <paramref name="str"/>.</typeparam>
-        /// <param name="str">String to be parsed.</param>
-        /// <returns>The parsed object.</returns>
-        /// <remarks>This method cannot be used for enumerations</remarks>
-        /// <exception cref="ArgumentNullException">Can occur for some <typeparamref name="T"/> when <paramref name="str"/> is null.</exception>
-        /// <exception cref="FormatException">Can occur for some <typeparamref name="T"/> when <paramref name="str"/> is in invalid format.</exception>
-        /// <exception cref="OverflowException">Can occur for some <typeparamref name="T"/> when <paramref name="str"/> represent a value that is too big or too small.</exception>
-        /// <seealso cref="FromString(string,Type)"/>
+        /// <typeparam name="T"> Expected data type represented by <paramref name="str" />. </typeparam>
+        /// <param name="str"> String to be parsed. </param>
+        /// <returns> The parsed object. </returns>
+        /// <remarks> This method cannot be used for enumerations </remarks>
+        /// <exception cref="ArgumentNullException">
+        /// Can occur for some <typeparamref name="T" /> when <paramref name="str" /> is
+        /// null.
+        /// </exception>
+        /// <exception cref="FormatException">
+        /// Can occur for some <typeparamref name="T" /> when <paramref name="str" /> is in
+        /// invalid format.
+        /// </exception>
+        /// <exception cref="OverflowException">
+        /// Can occur for some <typeparamref name="T" /> when <paramref name="str" />
+        /// represent a value that is too big or too small.
+        /// </exception>
+        /// <seealso cref="FromString(string,Type)" />
         public static T FromString<T>(string str)
         {
-            var type = typeof (T);
-            if (type.IsEnum) throw new NotImplementedException("Use FromString(string str, Type dataType) instead!");
+            Type type = typeof(T);
+            if (type.IsEnum)
+            {
+                throw new NotImplementedException("Use FromString(string str, Type dataType) instead!");
+            }
 
             return (T) FromString(str, type);
         }
 
         /// <summary>
-        /// Parses a string to <see cref="DateTime"/> expecting 'yyyyMMdd' or 'yyyyMMddHHmmss' format.
+        /// Parses a string to <see cref="DateTime" /> expecting 'yyyyMMdd' or 'yyyyMMddHHmmss' format.
         /// </summary>
-        /// <param name="valueAsString">Value to be parsed.</param>
-        /// <returns>Parsed date-time, or <see cref="DateTime.Now"/> when <paramref name="valueAsString"/> empty or null.</returns>
-        /// <exception cref="FormatException">When <paramref name="valueAsString"/> does not represent a supported date-time format.</exception>
+        /// <param name="valueAsString"> Value to be parsed. </param>
+        /// <returns> Parsed date-time, or <see cref="DateTime.Now" /> when <paramref name="valueAsString" /> empty or null. </returns>
+        /// <exception cref="FormatException">
+        /// When <paramref name="valueAsString" /> does not represent a supported date-time
+        /// format.
+        /// </exception>
         public static DateTime ParseFMDateTime(string valueAsString)
         {
-            if (String.IsNullOrEmpty(valueAsString)) return DateTime.Now;
+            if (string.IsNullOrEmpty(valueAsString))
+            {
+                return DateTime.Now;
+            }
 
             DateTime value;
             if (!DateTime.TryParseExact(valueAsString, "yyyyMMdd", null, DateTimeStyles.None, out value))
@@ -303,51 +381,60 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                     }
                 }
             }
+
             return value;
         }
 
         /// <summary>
-        /// Parses a string as double, expecting <see cref="CultureInfo.InvariantCulture"/> format.
+        /// Parses a string as double, expecting <see cref="CultureInfo.InvariantCulture" /> format.
         /// </summary>
-        /// <param name="valuesAsString">Value to be parsed.</param>
-        /// <returns>Double value represented by <paramref name="valuesAsString"/></returns>
-        /// <exception cref="ArgumentNullException">When <paramref name="valuesAsString"/> is null.</exception>
-        /// <exception cref="FormatException">When <paramref name="valuesAsString"/> does not represent a number in a valid format.</exception>
-        /// <exception cref="OverflowException">When <paramref name="valuesAsString"/> represents a number that is less than 
-        ///     <see cref="double.MinValue"/> or greater than <see cref="double.MaxValue"/>.</exception>
+        /// <param name="valuesAsString"> Value to be parsed. </param>
+        /// <returns> Double value represented by <paramref name="valuesAsString" /> </returns>
+        /// <exception cref="ArgumentNullException"> When <paramref name="valuesAsString" /> is null. </exception>
+        /// <exception cref="FormatException">
+        /// When <paramref name="valuesAsString" /> does not represent a number in a valid
+        /// format.
+        /// </exception>
+        /// <exception cref="OverflowException">
+        /// When <paramref name="valuesAsString" /> represents a number that is less than
+        /// <see cref="double.MinValue" /> or greater than <see cref="double.MaxValue" />.
+        /// </exception>
         private static double ParseDoubleValue(string valuesAsString)
         {
-            var actualString = valuesAsString.Replace("d-", "e-").Replace("d+", "e+");
+            string actualString = valuesAsString.Replace("d-", "e-").Replace("d+", "e+");
             actualString = actualString.Replace("d", "e+");
-            return Double.Parse(actualString, CultureInfo.InvariantCulture);
+            return double.Parse(actualString, CultureInfo.InvariantCulture);
         }
 
         /// <summary>
-        /// <remarks>This method is copied over from the framework where it was removed from. see issue D3DFMIQ-722</remarks>
+        /// <remarks> This method is copied over from the framework where it was removed from. see issue D3DFMIQ-722 </remarks>
         /// Gets the display name of the enum value
         /// </summary>
-        /// <param name="value">The value you want the display name for</param>
-        /// <returns>The display name, if any, else it's .ToString()</returns>
+        /// <param name="value"> The value you want the display name for </param>
+        /// <returns> The display name, if any, else it's .ToString() </returns>
         private static string GetEnumDisplayName(Enum value)
         {
             FieldInfo fi = value.GetType().GetField(value.ToString());
             var attributes =
-                (DisplayNameAttribute[])fi.GetCustomAttributes(
+                (DisplayNameAttribute[]) fi.GetCustomAttributes(
                     typeof(DisplayNameAttribute), false);
-            return (attributes.Length > 0) ? attributes[0].DisplayName : value.ToString();
+            return attributes.Length > 0 ? attributes[0].DisplayName : value.ToString();
         }
 
         /// <summary>
-        /// <remarks>This method is copied over from the framework where it was removed from. see issue D3DFMIQ-722</remarks>
+        ///     <remarks> This method is copied over from the framework where it was removed from. see issue D3DFMIQ-722 </remarks>
         /// </summary>
-        /// <param name="enumType"></param>
-        /// <param name="displayNameString"></param>
-        /// <returns>Null if no match was found in <paramref name="enumType"/> with <paramref name="displayNameString"/>; Value otherwise.</returns>
+        /// <param name="enumType"> </param>
+        /// <param name="displayNameString"> </param>
+        /// <returns>
+        /// Null if no match was found in <paramref name="enumType" /> with <paramref name="displayNameString" />; Value
+        /// otherwise.
+        /// </returns>
         private static object GetEnumValueFromDisplayName(Type enumType, string displayNameString)
         {
             return Enum.GetValues(enumType)
-                .Cast<Enum>()
-                .FirstOrDefault(value => GetEnumDisplayName(value) == displayNameString);
+                       .Cast<Enum>()
+                       .FirstOrDefault(value => GetEnumDisplayName(value) == displayNameString);
         }
     }
 }

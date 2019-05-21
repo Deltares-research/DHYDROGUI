@@ -7,14 +7,13 @@ using SharpMap.Api.Editors;
 using SharpMap.Api.Layers;
 using SharpMap.Editors.Interactors;
 using SharpMap.Layers;
+using SharpMap.Styles;
 
 namespace DeltaShell.Plugins.FMSuite.Common.Layers
 {
-    public class Boundary2DEditor: Feature2DEditor
+    public class Boundary2DEditor : Feature2DEditor
     {
-        public Boundary2DEditor(IEditableObject editableObject) : base(editableObject)
-        {
-        }
+        public Boundary2DEditor(IEditableObject editableObject) : base(editableObject) {}
 
         public Func<Feature2D, int, bool> AllowRemovePoint { private get; set; }
 
@@ -23,12 +22,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
             if (feature.Geometry is ILineString)
             {
                 var vectorLayer = layer as VectorLayer;
-                var vectorStyle = (vectorLayer != null ? vectorLayer.Style : null);
+                VectorStyle vectorStyle = vectorLayer != null ? vectorLayer.Style : null;
                 return new Boundary2DInteractor(layer, feature, vectorStyle, EditableObject)
                 {
                     AllowRemovePoint = AllowRemovePoint
                 };
             }
+
             return base.CreateInteractor(layer, feature);
         }
     }
