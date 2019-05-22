@@ -1,9 +1,14 @@
+using System;
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro.Structures.WeirFormula;
+using DelftTools.Shell.Core.Workflow.DataItems;
+using DelftTools.Utils;
 using DelftTools.Utils.Editing;
 using DeltaShell.NGHS.IO.Grid;
+using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.FunctionStores;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using GeoAPI.Extensions.CoordinateSystems;
 
@@ -163,5 +168,41 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         }
 
         #endregion
+
+        private void ReadDiaFile(string outputDirectory)
+        {
+            ReportProgressText("Reading dia file");
+            string diaFileName = string.Format("{0}.dia", Name);
+
+            string diaFilePath = Path.Combine(outputDirectory, diaFileName);
+            if (File.Exists(diaFilePath))
+            {
+                try
+                {
+                    IDataItem logDataItem = DataItems.FirstOrDefault(di => di.Tag == DiaFileDataItemTag);
+                    if (logDataItem == null)
+                    {
+                        // add logfile dataitem if not exists
+                        var textDocument = new TextDocument(true) {Name = diaFileName};
+                        logDataItem = new DataItem(textDocument, DataItemRole.Output, DiaFileDataItemTag);
+                        DataItems.Add(logDataItem);
+                    }
+
+                    string log = DiaFileReader.Read(diaFilePath);
+                    ((TextDocument) logDataItem.Value).Content = log;
+                }
+                catch (Exception ex)
+                {
+                    Log.ErrorFormat(Resources.WaterFlowFMModel_ReadDiaFile_Error_reading_log_file___0____1_,
+                                    diaFileName, ex.Message);
+                }
+            }
+            else
+            {
+                Log.WarnFormat(
+                    Resources.WaterFlowFMModel_ReadDiaFile_Could_not_find_log_file___0__at_expected_path___1_,
+                    diaFileName, diaFilePath);
+            }
+        }
     }
 }
