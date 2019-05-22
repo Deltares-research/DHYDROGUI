@@ -332,13 +332,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             var weir = new Weir2D(true);
             weir.WeirFormula = CreateGeneralStructureWeirFormula(structure2D, path, refDate);
 
-            var crestWidthProperty = structure2D.GetProperty(KnownGeneralStructureProperties.WidthCenter.GetDescription());
+            var crestWidthProperty = structure2D.GetProperty(KnownGeneralStructureProperties.CrestWidth.GetDescription());
             var crestWidthString = crestWidthProperty?.GetValueAsString();
             weir.CrestWidth = string.IsNullOrEmpty(crestWidthString)
                 ? double.NaN
                 : FMParser.FromString<double>(crestWidthString);
 
-            SetTimeSeriesProperty(structure2D, KnownGeneralStructureProperties.LevelCenter.GetDescription(), path, refDate, weir,
+            SetTimeSeriesProperty(structure2D, KnownGeneralStructureProperties.CrestLevel.GetDescription(), path, refDate, weir,
                 TypeUtils.GetMemberName(() => weir.UseCrestLevelTimeSeries),
                 TypeUtils.GetMemberName(() => weir.CrestLevel), weir.CrestLevelTimeSeries);
             
@@ -359,11 +359,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             foreach (var property in Enum.GetValues(typeof(KnownGeneralStructureProperties)).Cast<KnownGeneralStructureProperties>())
             {
                 //Ignored, because they are already set in the general weir or they could be timeseries or the variable is not a double, but an enum.
-                if (property == KnownGeneralStructureProperties.GateHeight || 
-                    property==KnownGeneralStructureProperties.HorizontalDoorOpeningWidth || 
-                    property == KnownGeneralStructureProperties.HorizontalDoorOpeningDirection || 
-                    property == KnownGeneralStructureProperties.LevelCenter|| 
-                    property ==KnownGeneralStructureProperties.WidthCenter) continue;
+                if (property == KnownGeneralStructureProperties.GateLowerEdgeLevel || 
+                    property==KnownGeneralStructureProperties.GateOpeningWidth || 
+                    property == KnownGeneralStructureProperties.GateOpeningHorizontalDirection || 
+                    property == KnownGeneralStructureProperties.CrestLevel|| 
+                    property ==KnownGeneralStructureProperties.CrestWidth) continue;
 
                 var structureproperty = structure2D.GetProperty(property);
                 if (structureproperty == null)
@@ -375,9 +375,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             }
 
             var horizontalDoorOpeningDirectionProperty =
-                structure2D.GetProperty(KnownGeneralStructureProperties.HorizontalDoorOpeningDirection);
+                structure2D.GetProperty(KnownGeneralStructureProperties.GateOpeningHorizontalDirection);
             if (horizontalDoorOpeningDirectionProperty == null)
-                Log.WarnFormat("Property [{0}] is not supported and is skipped.", KnownGeneralStructureProperties.HorizontalDoorOpeningDirection);
+                Log.WarnFormat("Property [{0}] is not supported and is skipped.", KnownGeneralStructureProperties.GateOpeningHorizontalDirection);
             else
             {
                 gsWeirFormula.HorizontalDoorOpeningDirection =
@@ -385,12 +385,12 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             }
 
 
-            SetTimeSeriesPropertyInsideWeirFormula(structure2D, KnownGeneralStructureProperties.HorizontalDoorOpeningWidth.GetDescription(), path, refDate, gsWeirFormula,
+            SetTimeSeriesPropertyInsideWeirFormula(structure2D, KnownGeneralStructureProperties.GateOpeningWidth.GetDescription(), path, refDate, gsWeirFormula,
                 TypeUtils.GetMemberName(() => gsWeirFormula.UseHorizontalDoorOpeningWidthTimeSeries),
                 TypeUtils.GetMemberName(() => gsWeirFormula.HorizontalDoorOpeningWidth),
                 TypeUtils.GetMemberName(() => gsWeirFormula.HorizontalDoorOpeningWidthTimeSeries));
 
-            SetTimeSeriesPropertyInsideWeirFormula(structure2D, KnownGeneralStructureProperties.GateHeight.GetDescription(), path, refDate, gsWeirFormula,
+            SetTimeSeriesPropertyInsideWeirFormula(structure2D, KnownGeneralStructureProperties.GateLowerEdgeLevel.GetDescription(), path, refDate, gsWeirFormula,
                 TypeUtils.GetMemberName(() => gsWeirFormula.UseLowerEdgeLevelTimeSeries),
                 TypeUtils.GetMemberName(() => gsWeirFormula.LowerEdgeLevel), 
                 TypeUtils.GetMemberName(() => gsWeirFormula.LowerEdgeLevelTimeSeries));
@@ -443,13 +443,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             var weir = new Weir2D(true);
             weir.WeirFormula = CreateGateWeirFormula(structure2D, path, refDate);
 
-            var crestWidthProperty = structure2D.GetProperty(KnownStructureProperties.GateSillWidth);
+            var crestWidthProperty = structure2D.GetProperty(KnownStructureProperties.CrestWidth);
             var crestWidthString = crestWidthProperty?.GetValueAsString();
             weir.CrestWidth = string.IsNullOrEmpty(crestWidthString)
                 ? double.NaN
                 : FMParser.FromString<double>(crestWidthString);
 
-            SetTimeSeriesProperty(structure2D, KnownStructureProperties.GateSillLevel, path, refDate, weir,
+            SetTimeSeriesProperty(structure2D, KnownStructureProperties.CrestLevel, path, refDate, weir,
                 TypeUtils.GetMemberName(() => weir.UseCrestLevelTimeSeries),
                 TypeUtils.GetMemberName(() => weir.CrestLevel), weir.CrestLevelTimeSeries);
 
@@ -462,10 +462,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             
             gateWeirFormula.DoorHeight =
                 FMParser.FromString<double>(
-                    structure2D.GetProperty(KnownStructureProperties.GateDoorHeight).GetValueAsString());
+                    structure2D.GetProperty(KnownStructureProperties.GateHeight).GetValueAsString());
 
             var openingDirectionProperty =
-                structure2D.GetProperty(KnownStructureProperties.GateHorizontalOpeningDirection);
+                structure2D.GetProperty(KnownStructureProperties.GateOpeningHorizontalDirection);
             var openingDirectionValue =
                 (Enum)
                     FMParser.FromString(openingDirectionProperty.GetValueAsString(),

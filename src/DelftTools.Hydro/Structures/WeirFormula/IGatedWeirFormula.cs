@@ -19,12 +19,13 @@ namespace DelftTools.Hydro.Structures.WeirFormula
         /// indicated in the gui by a small arrow.
         /// </summary>
         GateOpeningDirection HorizontalDoorOpeningDirection { get; set; }
+
         double HorizontalDoorOpeningWidth { get; set; }
         bool UseHorizontalDoorOpeningWidthTimeSeries { get; set; }
         TimeSeries HorizontalDoorOpeningWidthTimeSeries { get; set; }
 
         // Gate.Lower Edge Level(T)
-        double LowerEdgeLevel { get; set; } 
+        double LowerEdgeLevel { get; set; }
         bool UseLowerEdgeLevelTimeSeries { get; set; }
         TimeSeries LowerEdgeLevelTimeSeries { get; set; }
     }

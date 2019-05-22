@@ -64,48 +64,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public const string InitialTracerPrefix = "initialtracer";
         public const string InitialSpatialVaryingSedimentPrefix = "initialsedfrac";
 
-        public static IEnumerable<string> KnownQuantities = new List<string>
-        {
-            WaterLevelAtBound,
-            DischargeAtBound,
-            QhAtBound,
-            VelocityAtBound,
-            NormalVelocityAtBound,
-            TangentialVelocityAtBound,
-            NeumannConditionAtBound,
-            RiemannConditionAtBound,
-            RiemannVelocityAtBound,
-            OpenFlowConditionAtBound,
-            SalinityAtBound,
-            TemperatureAtBound,
-            TracerAtBound,
-            ConcentrationAtBound,
-            LowerGateLevel,
-            DamLevel,
-            SourceAndSink,
-            FrictCoef,
-            HorEddyViscCoef,
-            HorEddyDiffCoef,
-            AdvectionType,
-            InitialWaterLevel,
-            InitialSalinity,
-            InitialSalinityTop,
-            InitialTemperature,
-            WindX,
-            WindY,
-            WindXY,
-            Rain,
-            AtmosphericPressure,
-            PressureWindXWindY,
-            SpiderWeb,
-            MeteoData,
-            MeteoDataWithRadiation,
-            EmbankmentBnd,
-            EmbankmentForcingFile,
-            InitialTracerPrefix,
-            InitialSpatialVaryingSedimentPrefix
-        };
-
         public static readonly IDictionary<BoundaryConditionDataType, string> ForcingToFileExtensionMapping =
             new Dictionary<BoundaryConditionDataType, string>
             {

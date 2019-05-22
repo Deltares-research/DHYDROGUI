@@ -1,5 +1,0 @@
-DLF1.0
-[User Defined Output]
-FILE "@calcpnt.his" LAYER "" TYPE node HISLOC 2 VAR 5 DLFACTION 'stat_maximum' = Freeboard, maximum
-FILE "@calcpnt.his" LAYER "" TYPE node HISLOC 2 VAR 4 DLFACTION 'stat_maximum' = Time water-on-street, maximum
-FILE "@calcpnt.his" LAYER "" TYPE node HISLOC 2 VAR 1 DLFACTION 'stat_maximum' = water level, maximum

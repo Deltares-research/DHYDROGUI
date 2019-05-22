@@ -36,9 +36,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         {
             var def = new WaterFlowFMModelDefinition();
             var extPath = TestHelper.GetTestFilePath(@"harlingen\001.ext");
+            var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
 
             var extForceFile = new ExtForceFile();
-            extForceFile.Read(extPath, def);
+            extForceFile.Read(extPath, def, mduPath);
 
             //extForceFile.ImportSpatialOperations(extPath, def);
 
@@ -67,9 +68,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         {
             var def = new WaterFlowFMModelDefinition();
             var extPath = TestHelper.GetTestFilePath(@"chezy_samples\chezy.ext");
+            var mduPath = TestHelper.GetTestFilePath(@"chezy_samples\chezy.mdu");
 
             var extForceFile = new ExtForceFile();
-            extForceFile.Read(extPath, def);
+            extForceFile.Read(extPath, def, mduPath);
 
             Assert.IsNull(def.GetSpatialOperations(WaterFlowFMModelDefinition.ViscosityDataItemName));
             Assert.IsNull(def.GetSpatialOperations(WaterFlowFMModelDefinition.DiffusivityDataItemName));
@@ -85,44 +87,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
-        public void ReadXyzFile_WithUnknownSpatiallyVaryingProperties_ShouldGiveAWarningMessage()
+        public void GivenAnExtForceFileWithUnknownSpatiallyVaryingProperties_WhenRead_ThenCorrectWarningMessageIsGiven()
         {
-            var def = new WaterFlowFMModelDefinition();
+            // Given
             var extPath = TestHelper.GetTestFilePath(@"SpatialVaryingPrefix\incorrect_prefix.ext");
             extPath = TestHelper.CreateLocalCopy(extPath);
+            var mduPath = Path.Combine(Path.GetDirectoryName(extPath), "incorrect_prefix.mdu");
             Assert.IsTrue(File.Exists(extPath));
 
-            var extForceFile = new ExtForceFile();
-
+            // When, Then
             TestHelper.AssertAtLeastOneLogMessagesContains(
-                () => extForceFile.Read(extPath, def),
-                String.Format(
-                    Resources
-                        .ExtForceFile_ReadSpatialData_The_model_may_not_run__Spatial_varying_quantity__0__could_not_be_imported_because_the_prefix_does_not_match__1__for_Tracers_or__2__for_Spatial_Varying_Sediments_,
-                    "initialspatialvaryingsedimentSediment_sand_SedConc",
-                    ExtForceQuantNames.InitialTracerPrefix, ExtForceQuantNames.InitialSpatialVaryingSedimentPrefix));
-
-            FileUtils.DeleteIfExists(extPath);
-        }
-
-        [Test]
-        public void ReadXyzFile_WithKnownSpatiallyVaryingProperties_ShouldNotGiveAWarningMessage()
-        {
-            var def = new WaterFlowFMModelDefinition();
-            var extPath = TestHelper.GetTestFilePath(@"SpatialVaryingPrefix\correctKnownQuantity.ext");
-            extPath = TestHelper.CreateLocalCopy(extPath);
-            Assert.IsTrue(File.Exists(extPath));
-
-            var extForceFile = new ExtForceFile();
-            Assert.Throws<AssertionException>(
-                () => TestHelper.AssertAtLeastOneLogMessagesContains(
-                    () => extForceFile.Read(extPath, def),
-                    String.Format(
-                        Resources
-                            .ExtForceFile_ReadSpatialData_The_model_may_not_run__Spatial_varying_quantity__0__could_not_be_imported_because_the_prefix_does_not_match__1__for_Tracers_or__2__for_Spatial_Varying_Sediments_,
-                        ExtForceQuantNames.InitialWaterLevel,
-                        ExtForceQuantNames.InitialTracerPrefix, ExtForceQuantNames.InitialSpatialVaryingSedimentPrefix)),
-                "The warn message was logged, but we were not expecting it to appear");
+                () => new ExtForceFile().Read(extPath, new WaterFlowFMModelDefinition(), mduPath),
+                string.Format(Resources.ExtForceFile_StoreUnknownQuantities_Quantity___0___detected_in_the_external_force_file_and_will_be_passed_to_the_computational_core__This_may_affect_your_simulation_,
+                              "initialspatialvaryingsedimentSediment_sand_SedConc"));
 
             FileUtils.DeleteIfExists(extPath);
         }
@@ -132,6 +109,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         {
             var def = new WaterFlowFMModelDefinition();
             var extPath = TestHelper.GetTestFilePath(@"ExtFileTest\withOnlyUnknownQuantity.ext");
+            var mduPath = Path.Combine(Path.GetDirectoryName(extPath), "withOnlyUnknownQuantity.mdu");
             Assert.IsTrue(File.Exists(extPath));
 
             extPath = TestHelper.CreateLocalCopy(extPath);
@@ -139,7 +117,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             var expectedMessage = string.Format(Resources.ExtForceFile_StoreUnknownQuantities_Quantity___0___detected_in_the_external_force_file_and_will_be_passed_to_the_computational_core__This_may_affect_your_simulation_, "generalstructure");
             var extForceFile = new ExtForceFile();
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => extForceFile.Read(extPath, def), expectedMessage);
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => extForceFile.Read(extPath, def, mduPath), expectedMessage);
         }
 
         [Test]
@@ -147,6 +125,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         {
             var def = new WaterFlowFMModelDefinition();
             var extPath = TestHelper.GetTestFilePath(@"ExtFileTest\withUnknownAndKnownQuantities.ext");
+            var mduPath = Path.Combine(Path.GetDirectoryName(extPath), "withUnknownAndKnownQuantities.mdu");
             Assert.IsTrue(File.Exists(extPath));
 
             extPath = TestHelper.CreateLocalCopy(extPath);
@@ -156,7 +135,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var extForceFile = new ExtForceFile();
 
             Assert.IsFalse(def.BoundaryConditions.Any());
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => extForceFile.Read(extPath, def), expectedMessage);
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => extForceFile.Read(extPath, def, mduPath), expectedMessage);
             Assert.IsTrue(def.BoundaryConditions.Any());
 
             /* Just check the boundary has been imported. */
@@ -169,7 +148,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         public void GivenAnExtFileWithAnUnknownQuantity_WhenImportingItAndExportingIt_ThenThisQuantityShouldBeReadAndWritten()
         {
             var def = new WaterFlowFMModelDefinition();
-            var extPath = TestHelper.GetTestFilePath(@"ExtFileTest\withInternalTidesFrictionCoefficientAndKnownQuantities.ext");
+            var extPath = TestHelper.GetTestFilePath(@"ExtFileTest\withKnownAndUnknownQuantities.ext");
+            var mduPath = Path.Combine(Path.GetDirectoryName(extPath), "withKnownAndUnknownQuantities.mdu");
             Assert.IsTrue(File.Exists(extPath));
 
             extPath = TestHelper.CreateLocalCopy(extPath);
@@ -180,7 +160,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 string.Format(Resources.ExtForceFile_StoreUnknownQuantities_Quantity___0___detected_in_the_external_force_file_and_will_be_passed_to_the_computational_core__This_may_affect_your_simulation_, "internaltidesfrictioncoefficient");
 
             Assert.IsFalse(def.BoundaryConditions.Any());
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => extForceFile.Read(extPath, def), expectedMessage);
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => extForceFile.Read(extPath, def, mduPath), expectedMessage);
             Assert.IsTrue(def.BoundaryConditions.Any());
 
             /* Just check the boundary has been imported. */
@@ -188,12 +168,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.AreEqual("WaterLevel", boundaryCondition.VariableName);
             Assert.AreEqual("OB_001_orgsize-Water level", boundaryCondition.Name);
 
-            // Check if the internaltidesfrictioncoefficient is in memory
-            ValidateUnknownQuantity(def);
+            ValidateUnknownQuantities(def);
 
             Assert.That(File.Exists(Path.Combine(Path.GetDirectoryName(extPath), def.UnsupportedFileBasedExtForceFileItems[0].UnsupportedExtForceFileItem.FileName)));
 
             string newPath = Path.Combine(Path.GetDirectoryName(extPath), "NewExtFileDirectory", "NewExtFile");
+            var newMduPath = Path.Combine(Path.GetDirectoryName(extPath), "NewExtFileDirectory", "NewMduFile");
+
             extForceFile.Write(newPath, def); // write loaded definition to new location
 
             //Check
@@ -202,9 +183,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var newExtFile = new ExtForceFile();
             var newDef = new WaterFlowFMModelDefinition();
 
-            newExtFile.Read(newPath, newDef); // load written definition back
-            // Check if the internaltidesfrictioncoefficient is in memory again, so that the write method is correct.
-            ValidateUnknownQuantity(newDef);
+            newExtFile.Read(newPath, newDef, newMduPath); // load written definition back
+            ValidateUnknownQuantities(newDef);
         }
 
         [Test]
@@ -213,7 +193,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             // Given
             var modelDefinition = new WaterFlowFMModelDefinition();
             var extPath =
-                TestHelper.GetTestFilePath(@"ExtFileTest\ExtFileWithInternalTidesFrictionCoefficientAndMissingFile\withInternalTidesFrictionCoefficientAndKnownQuantities.ext");
+                TestHelper.GetTestFilePath(@"ExtFileTest\ExtFileWithInternalTidesFrictionCoefficientAndMissingFile\withKnownAndUnknownQuantities.ext");
+            var mduPath = Path.Combine(Path.GetDirectoryName(extPath), "withKnownAndUnknownQuantities.mdu");
             Assert.IsTrue(File.Exists(extPath));
 
             extPath = TestHelper.CreateLocalCopy(extPath);
@@ -225,10 +206,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.IsFalse(modelDefinition.BoundaryConditions.Any());
 
             // When
-            TestHelper.AssertLogMessageIsGenerated(() => extForceFile.Read(extPath, modelDefinition), expectedMessage);
+            TestHelper.AssertLogMessageIsGenerated(() => extForceFile.Read(extPath, modelDefinition, mduPath), expectedMessage);
 
             // Then
-            ValidateUnknownQuantity(modelDefinition);
+            ValidateUnknownQuantities(modelDefinition);
             Assert.IsTrue(modelDefinition.BoundaryConditions.Any());
             var boundaryCondition = modelDefinition.BoundaryConditions.First();
             Assert.AreEqual("WaterLevel", boundaryCondition.VariableName);
@@ -241,8 +222,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             //LogHelper.ConfigureLogging(|Level);
             var def = new WaterFlowFMModelDefinition();
             var extPath = TestHelper.GetTestFilePath(@"SpatialVaryingPrefix\correct_prefix.ext");
+            var mduPath = Path.Combine(Path.GetDirectoryName(extPath), "correct_prefix.mdu");
             var extForceFile = new ExtForceFile();
-            TestHelper.AssertLogMessagesCount(() => extForceFile.Read(extPath, def), 0);
+            TestHelper.AssertLogMessagesCount(() => extForceFile.Read(extPath, def, mduPath), 0);
         }
 
         [Test]
@@ -517,9 +499,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         {
             var def = new WaterFlowFMModelDefinition();
             var extPath = TestHelper.GetTestFilePath(@"chezy_samples\chezy_A.ext");
+            var mduPath = Path.Combine(Path.GetDirectoryName(extPath), "chezy_A.mdu");
 
             var extForceFile = new ExtForceFile();
-            extForceFile.Read(extPath, def);
+            extForceFile.Read(extPath, def, mduPath);
 
             Assert.IsNull(def.GetSpatialOperations(WaterFlowFMModelDefinition.ViscosityDataItemName));
             Assert.IsNull(def.GetSpatialOperations(WaterFlowFMModelDefinition.DiffusivityDataItemName));
@@ -534,12 +517,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.AreEqual(4, samplesOperation.GetPoints().Count());
 
             const string newPath = "local.ext";
+            var newMduPath = Path.Combine(Path.GetDirectoryName(newPath), "chezy_A.mdu");
             extForceFile.Write(newPath, def); // write loaded definition to new location
 
             var newExtFile = new ExtForceFile();
             var newDef = new WaterFlowFMModelDefinition();
 
-            newExtFile.Read(newPath, newDef); // load written definition back
+            newExtFile.Read(newPath, newDef, newMduPath); // load written definition back
             var newRoughnessOperations = newDef.GetSpatialOperations(WaterFlowFMModelDefinition.RoughnessDataItemName);
             Assert.AreEqual(4, ((ImportSamplesOperation) newRoughnessOperations[1]).GetPoints().Count());
         }
@@ -549,9 +533,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         {
             var def = new WaterFlowFMModelDefinition();
             var extPath = TestHelper.GetTestFilePath(@"chezy_samples\waterlevel.ext");
+            var mduPath = Path.Combine(Path.GetDirectoryName(extPath), "waterlevel.mdu");
 
             var extForceFile = new ExtForceFile();
-            extForceFile.Read(extPath, def);
+            extForceFile.Read(extPath, def,mduPath);
 
             Assert.AreEqual(1, def.GetSpatialOperations(WaterFlowFMModelDefinition.InitialWaterLevelDataItemName).Count);
 
@@ -606,11 +591,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             def.GetSpatialOperations(WaterFlowFMModelDefinition.InitialWaterLevelDataItemName).Add(samples);
 
             const string newExtPath = "test.ext";
+            var newMduPath = Path.Combine(Path.GetDirectoryName(newExtPath), "test.mdu");
+
             extForceFile.Write(newExtPath, def);
 
             var newDef = new WaterFlowFMModelDefinition();
             var newExtFile = new ExtForceFile();
-            newExtFile.Read(newExtPath, newDef);
+            newExtFile.Read(newExtPath, newDef,newMduPath);
 
             Assert.AreEqual(3, newDef.GetSpatialOperations(WaterFlowFMModelDefinition.InitialWaterLevelDataItemName).Count);
             Assert.AreEqual(3,
@@ -909,9 +896,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var def = new WaterFlowFMModelDefinition();
 
             var extPath = TestHelper.GetTestFilePath(@"c070_sourcesink_2D\sourcesink_2D.ext");
+            var mduPath = Path.Combine(Path.GetDirectoryName(extPath), "sourcesink_2D.mdu");
 
             var extForceFile = new ExtForceFile();
-            extForceFile.Read(extPath, def);
+            extForceFile.Read(extPath, def, mduPath);
 
             Assert.AreEqual(6, def.Pipes.Count);
             Assert.AreEqual(6, def.SourcesAndSinks.Count);
@@ -926,23 +914,38 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.IsTrue(File.Exists("chan2_east_outflow.tim"));
         }
 
-        private static void ValidateUnknownQuantity(WaterFlowFMModelDefinition def)
+        private static void ValidateUnknownQuantities(WaterFlowFMModelDefinition def)
         {
-            Assert.AreEqual(1, def.UnsupportedFileBasedExtForceFileItems.Count,
-                            "One unknown quantity was expected to be stored on the model definition.");
+            Assert.AreEqual(2, def.UnsupportedFileBasedExtForceFileItems.Count,
+                            "Two unknown quantities were expected to be stored on the model definition.");
 
-            ExtForceFileItem unsupportedQuantity = def.UnsupportedFileBasedExtForceFileItems.First().UnsupportedExtForceFileItem;
+            ExtForceFileItem unsupportedQuantity1 = def.UnsupportedFileBasedExtForceFileItems.First().UnsupportedExtForceFileItem;
 
-            Assert.AreEqual("surroundingDomain.pol", unsupportedQuantity.FileName,
+            Assert.AreEqual("internaltidesfrictioncoefficient", unsupportedQuantity1.Quantity,
+                            "Quantity name was not as expected.");
+            Assert.AreEqual("surroundingDomain.pol", unsupportedQuantity1.FileName,
                             "File name of quantity was not as expected.");
-            Assert.AreEqual(10, unsupportedQuantity.FileType,
+            Assert.AreEqual(10, unsupportedQuantity1.FileType,
                             "File type of quantity was not as expected.");
-            Assert.AreEqual(4, unsupportedQuantity.Method,
+            Assert.AreEqual(4, unsupportedQuantity1.Method,
                             "Method type of quantity was not as expected.");
-            Assert.AreEqual("*", unsupportedQuantity.Operand,
+            Assert.AreEqual("*", unsupportedQuantity1.Operand,
                             "Operand of quantity was not as expected.");
-            Assert.AreEqual(0.0125, unsupportedQuantity.Value,
+            Assert.AreEqual(0.0125, unsupportedQuantity1.Value,
                             "Value of quantity was not as expected.");
+
+            ExtForceFileItem unsupportedQuantity2 = def.UnsupportedFileBasedExtForceFileItems.Last().UnsupportedExtForceFileItem;
+
+            Assert.AreEqual("rainfall_rate", unsupportedQuantity2.Quantity,
+                            "Quantity name was not as expected.");
+            Assert.AreEqual("RAD_NL25_RAC_MFBS_5min.nc", unsupportedQuantity2.FileName,
+                            "File name of quantity was not as expected.");
+            Assert.AreEqual(11, unsupportedQuantity2.FileType,
+                            "File type of quantity was not as expected.");
+            Assert.AreEqual(3, unsupportedQuantity2.Method,
+                            "Method type of quantity was not as expected.");
+            Assert.AreEqual("O", unsupportedQuantity2.Operand,
+                            "Operand of quantity was not as expected.");
         }
 
         private static void AddBoundaryCondition(WaterFlowFMModel model, FlowBoundaryCondition bc)

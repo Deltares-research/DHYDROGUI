@@ -1,7 +1,0 @@
-STRU id 'GeneralStructure' nm '' dd '##2' ca 0 0 0 0 cj '-1' '-1' '-1' '-1' cm 0 stru
-STRU id 'Weir' nm '' dd '28' stru
-STRU id 'Orifice' nm '' dd '29' stru
-STRU id 'Culvert' nm '' dd '30' stru
-STRU id 'RiverWeir' nm '' dd '##3' ca 0 0 0 0 cj '-1' '-1' '-1' '-1' cm 0 stru
-STRU id 'Siphon' nm '' dd '31' stru
-STRU id 'InvertedSiphon' nm '' dd '32' stru

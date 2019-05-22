@@ -148,33 +148,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unsupported quantity type: {0}, in the .ext file {1} detected. It will not be imported..
-        /// </summary>
-        public static string ExtForceFile_ReadPolyLineData_Unsupported_quantity_type___0___in_the__ext_file__1__detected__It_will_not_be_imported_ {
-            get {
-                return ResourceManager.GetString("ExtForceFile_ReadPolyLineData_Unsupported_quantity_type___0___in_the__ext_file__1" +
-                        "__detected__It_will_not_be_imported_", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Unexpected line &quot;{0}&quot; on line {1} in file {2} and will be ignored..
         /// </summary>
         public static string ExtForceFile_ReadQuantityProperty_Unexpected_line___0___on_line__1__in_file__2__and_will_be_ignored_ {
             get {
                 return ResourceManager.GetString("ExtForceFile_ReadQuantityProperty_Unexpected_line___0___on_line__1__in_file__2__a" +
                         "nd_will_be_ignored_", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The model may not run. Spatial varying quantity {0} could not be imported because the prefix does not match {1} for Tracers or {2} for Spatial Varying Sediments..
-        /// </summary>
-        public static string ExtForceFile_ReadSpatialData_The_model_may_not_run__Spatial_varying_quantity__0__could_not_be_imported_because_the_prefix_does_not_match__1__for_Tracers_or__2__for_Spatial_Varying_Sediments_ {
-            get {
-                return ResourceManager.GetString("ExtForceFile_ReadSpatialData_The_model_may_not_run__Spatial_varying_quantity__0__" +
-                        "could_not_be_imported_because_the_prefix_does_not_match__1__for_Tracers_or__2__f" +
-                        "or_Spatial_Varying_Sediments_", resourceCulture);
             }
         }
         

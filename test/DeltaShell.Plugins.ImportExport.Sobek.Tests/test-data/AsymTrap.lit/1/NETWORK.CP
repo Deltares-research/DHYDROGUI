@@ -1,6 +1,0 @@
-CP_1.0
-BRCH id '1' cp 1 ct bc 
-TBLE
-8551.9679886984 124.275837401088 <
-tble brch
-

@@ -1,4 +1,0 @@
-TRGR id '5424' nm 'Samb_PID' ty 1 tp 0 ml '013_15518' tt tr PDIN 1 0 '' pdin CLTT 'Time' 'On/Off' 'And/Or' 'Operation' 'Water Level [m]' cltt CLID '(null)' '(null)' '(null)' '(null)' '(null)' clid
-TBLE
-'1990/01/01;00:00:00' -1 -1 0 10.1 <
-tble trgr

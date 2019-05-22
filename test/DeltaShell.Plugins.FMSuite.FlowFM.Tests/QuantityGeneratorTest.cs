@@ -57,9 +57,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             // Then
             Assert.That(quantities.Length, Is.EqualTo(3));
-            Assert.That(quantities.Contains(KnownGeneralStructureProperties.LevelCenter.GetDescription()));
-            Assert.That(quantities.Contains(KnownGeneralStructureProperties.GateHeight.GetDescription()));
-            Assert.That(quantities.Contains(KnownGeneralStructureProperties.HorizontalDoorOpeningWidth.GetDescription()));
+            Assert.That(quantities.Contains(KnownGeneralStructureProperties.CrestLevel.GetDescription()));
+            Assert.That(quantities.Contains(KnownGeneralStructureProperties.GateLowerEdgeLevel.GetDescription()));
+            Assert.That(quantities.Contains(KnownGeneralStructureProperties.GateOpeningWidth.GetDescription()));
         }
 
         [TestCase(true)]
@@ -74,7 +74,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             // Then
             Assert.That(quantities.Length, Is.EqualTo(3));
-            Assert.That(quantities.Contains(KnownStructureProperties.GateSillLevel));
+            Assert.That(quantities.Contains(KnownStructureProperties.CrestLevel));
             Assert.That(quantities.Contains(KnownStructureProperties.GateLowerEdgeLevel));
             Assert.That(quantities.Contains(KnownStructureProperties.GateOpeningWidth));
         }

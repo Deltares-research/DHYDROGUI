@@ -274,8 +274,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             @"Water_Quality\output\deltashell.map",
             @"Water_Quality\output\deltashell.mon",
             @"Water_Quality\output\deltashell_res.map",
-            @"Water_Quality_output\bloominp.d09",
-            @"Water_Quality_output\bloominp.frm",
             @"Water_Quality_output\deltashell-timers.out",
             @"Water_Quality_output\deltashell.inp",
             @"Water_Quality_output\includes_deltashell",

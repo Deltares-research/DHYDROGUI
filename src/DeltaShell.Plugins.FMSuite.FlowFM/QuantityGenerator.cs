@@ -64,13 +64,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
             if (weirFormula is GeneralStructureWeirFormula)
             {
-                yield return KnownGeneralStructureProperties.LevelCenter.GetDescription();
-                yield return KnownGeneralStructureProperties.GateHeight.GetDescription();
-                yield return KnownGeneralStructureProperties.HorizontalDoorOpeningWidth.GetDescription();
+                yield return KnownGeneralStructureProperties.CrestLevel.GetDescription();
+                yield return KnownGeneralStructureProperties.GateLowerEdgeLevel.GetDescription();
+                yield return KnownGeneralStructureProperties.GateOpeningWidth.GetDescription();
             }
             if (weirFormula is GatedWeirFormula)
             {
-                yield return KnownStructureProperties.GateSillLevel;
+                yield return KnownStructureProperties.CrestLevel;
                 yield return KnownStructureProperties.GateLowerEdgeLevel;
                 yield return KnownStructureProperties.GateOpeningWidth;
             }

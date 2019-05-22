@@ -1,9 +1,0 @@
-STRU id 'Weir1_IntervalCntrl' nm '' dd '##1' ca 1 1 1 0 cj '##1' '##2' '##3' '-1' cm 0 stru
-STRU id 'Weir2_TimeCntrl' nm '' dd '##2' ca 1 1 1 0 cj '##4' '##5' '##6' '-1' cm 0 stru
-STRU id 'Weir3_HydraulicCntrl' nm '' dd '##3' ca 1 1 1 0 cj '##7' '##8' '##9' '-1' cm 0 stru
-STRU id 'Weir4_PIDCntr' nm '' dd '##4' ca 1 1 1 0 cj '##10' '##11' '##12' '-1' cm 0 stru
-STRU id 'Weir5_RelTimeCntrl' nm '' dd '##5' ca 1 1 1 0 cj '##13' '##14' '##15' '-1' cm 0 stru
-STRU id 'Weir6_RelValueCntrl' nm '' dd '##6' ca 1 1 1 0 cj '##16' '##17' '##18' '-1' cm 0 stru
-STRU id 'Weir7_Time_IntV_PID' nm '' dd '##7' ca 1 1 1 0 cj '##34' '##33' '##27' '-1' cm 0 stru
-STRU id 'Weir8_RelTime_Hydr_PID' nm '' dd '##8' ca 1 1 1 0 cj '##30' '##32' '##31' '-1' cm 0 stru
-STRU id 'Weir9_RelValue_IntV_Hydr' nm '' dd '##9' ca 1 1 1 0 cj '##38' '##39' '##40' '-1' cm 0 stru
