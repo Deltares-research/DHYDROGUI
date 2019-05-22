@@ -338,6 +338,11 @@ parameter 'VWind'
    unit          '(m/s)'
    value          0.3000E+01
 end-parameter
+parameter 'Tau'
+   description   'critical shear stress near the bottom'
+   unit          '(N/m2)'
+   value          0.0
+end-parameter
 output 'AlgN'
    description   'total nitrogen in algae'
 end-output
@@ -380,7 +385,7 @@ active-processes
    name  'SedDetC' 'Sedimentation detritus carbon'
    name  'Secchi' 'Extinction of visible-light (370-680nm)'
    name  'WM_DetN' 'Mineralisation detritus nitrogen'
-   name  'SedN_Det' 'Sedim. nutrients in detritus'
+   name  'SedNPOC1' 'Sedim. nutrients in detritus'
    name  'WM_DetP' 'Mineralisation detritus phosphorus'
    name  'GroMrt_Gre' 'Nett primary production and mortality green algae'
    name  'PPrLim' 'Limitation (numerical) on primary production'
@@ -398,7 +403,6 @@ active-processes
    name  'DynDepth' 'dynamic calculation of the depth'
    name  'Phy_dyn' 'Computation of phytoplankton - Dynamo'
    name  'POC_Dyn' 'Composition of POC (Dynamo & Bloom)'
-   name  'CalTau' 'Calculation of bottom friction'
    name  'Extinc_VL' 'Extinction of visible-light (370-680nm)'
    name  'DL_Green' 'Daylength function for green algae'
    name  'NLGreen' 'Nutrient limiation function for green algae'

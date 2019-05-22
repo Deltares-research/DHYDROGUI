@@ -6,11 +6,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
     {
         public static IFlexibleMeshModelApi CreateNew(bool runRemote = true)
         {
-            if (!Environment.Is64BitOperatingSystem || (!runRemote && !Environment.Is64BitProcess)) return null;
+            if (!Environment.Is64BitOperatingSystem || !runRemote && !Environment.Is64BitProcess)
+            {
+                return null;
+            }
 
             return runRemote
-                ? (IFlexibleMeshModelApi)new RemoteFlexibleMeshModelApi()
-                : new FlexibleMeshModelApi();
+                       ? (IFlexibleMeshModelApi) new RemoteFlexibleMeshModelApi()
+                       : new FlexibleMeshModelApi();
         }
     }
 }

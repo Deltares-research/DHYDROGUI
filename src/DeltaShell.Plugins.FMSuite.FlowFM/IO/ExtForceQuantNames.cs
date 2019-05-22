@@ -5,6 +5,7 @@ using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using GeoAPI.Extensions.Feature;
 using SharpMap.SpatialOperations;
+
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
     public static class ExtForceQuantNames
@@ -116,23 +117,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 throw new ArgumentException("Cannot parse " + operationString + " into valid pointwise operator");
             }
-            var spatialOperator = OperatorToStringMapping.First(kvp => kvp.Value == operationString).Key;
+
+            Operator spatialOperator = OperatorToStringMapping.First(kvp => kvp.Value == operationString).Key;
             if (!OperatorMapping.Values.Contains(spatialOperator))
             {
                 throw new ArgumentException("Cannot parse " + operationString + " into valid pointwise operator");
             }
+
             return OperatorMapping.First(kvp => kvp.Value == spatialOperator).Key;
         }
 
         // wind quantities
-        public static readonly IDictionary<WindQuantity, string> WindQuantityNames = new Dictionary<WindQuantity, string>
-        {
-            {WindQuantity.VelocityX, WindX},
-            {WindQuantity.VelocityY, WindY},
-            {WindQuantity.VelocityVector, WindXY},
-            {WindQuantity.AirPressure, AtmosphericPressure},
-            {WindQuantity.VelocityVectorAirPressure, PressureWindXWindY},
-        };
+        public static readonly IDictionary<WindQuantity, string> WindQuantityNames =
+            new Dictionary<WindQuantity, string>
+            {
+                {WindQuantity.VelocityX, WindX},
+                {WindQuantity.VelocityY, WindY},
+                {WindQuantity.VelocityVector, WindXY},
+                {WindQuantity.AirPressure, AtmosphericPressure},
+                {WindQuantity.VelocityVectorAirPressure, PressureWindXWindY},
+            };
 
         // Boundary condition quantities
         private static readonly IDictionary<string, FlowBoundaryQuantityType> BoundaryToQuantityMapping =
@@ -151,12 +155,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 {TemperatureAtBound, FlowBoundaryQuantityType.Temperature},
                 {ConcentrationAtBound, FlowBoundaryQuantityType.SedimentConcentration},
                 {BcmFileFlowBoundaryDataBuilder.BedLevelAtBound, FlowBoundaryQuantityType.MorphologyBedLevelPrescribed},
-                {BcmFileFlowBoundaryDataBuilder.BedLevelChangeAtBound, FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed},
+                {
+                    BcmFileFlowBoundaryDataBuilder.BedLevelChangeAtBound,
+                    FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed
+                },
                 {BcmFileFlowBoundaryDataBuilder.BedLoadAtBound, FlowBoundaryQuantityType.MorphologyBedLoadTransport},
                 {QhAtBound, FlowBoundaryQuantityType.WaterLevel}
             };
-
-
 
         /// <summary>
         /// Try to parse the quantity name and see if it is a boundary.
@@ -169,10 +174,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 return true;
             }
 
-            var mapping = BoundaryToQuantityMapping.FirstOrDefault(m => standardName.StartsWith(m.Key));
+            KeyValuePair<string, FlowBoundaryQuantityType> mapping =
+                BoundaryToQuantityMapping.FirstOrDefault(m => standardName.StartsWith(m.Key));
             quantityType = mapping.Value;
 
-            return (mapping.Key != null);
+            return mapping.Key != null;
         }
 
         /// <summary>
@@ -180,24 +186,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         /// </summary>
         public static string GetQuantityString(FlowBoundaryCondition boundaryCondition)
         {
-            var quantity = boundaryCondition.FlowQuantity;
+            FlowBoundaryQuantityType quantity = boundaryCondition.FlowQuantity;
             if (quantity == FlowBoundaryQuantityType.Tracer)
             {
                 return TracerAtBound + boundaryCondition.TracerName;
             }
+
             if (boundaryCondition.DataType == BoundaryConditionDataType.Qh)
             {
                 return QhAtBound;
             }
+
             if (quantity == FlowBoundaryQuantityType.SedimentConcentration)
             {
                 return ConcentrationAtBound + boundaryCondition.SedimentFractionName;
             }
+
             if (BoundaryToQuantityMapping.Values.Contains(quantity))
             {
                 return BoundaryToQuantityMapping.First(kvp => kvp.Value.Equals(quantity)).Key;
             }
-            throw new ArgumentException(String.Format("Quantity {0} cannot be mapped to standard name.", quantity));
+
+            throw new ArgumentException(string.Format("Quantity {0} cannot be mapped to standard name.", quantity));
         }
 
         /// <summary>
@@ -208,71 +218,87 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             var boundaryCondition = featureData as IBoundaryCondition;
             if (boundaryCondition != null)
             {
-                var quantity = boundaryCondition.VariableName;
+                string quantity = boundaryCondition.VariableName;
 
                 if (quantity.Equals(FlowBoundaryQuantityType.WaterLevel.ToString()))
                 {
                     return "_h";
                 }
+
                 if (quantity.Equals(FlowBoundaryQuantityType.Velocity.ToString()))
                 {
                     return "_v";
                 }
+
                 if (quantity.Equals(FlowBoundaryQuantityType.Discharge.ToString()))
                 {
                     return "_q";
                 }
+
                 if (quantity.Equals(FlowBoundaryQuantityType.NormalVelocity.ToString()))
                 {
                     return "_un";
                 }
+
                 if (quantity.Equals(FlowBoundaryQuantityType.TangentVelocity.ToString()))
                 {
                     return "_ut";
                 }
+
                 if (quantity.Equals(FlowBoundaryQuantityType.Neumann.ToString()))
                 {
                     return "_nm";
                 }
+
                 if (quantity.Equals(FlowBoundaryQuantityType.Riemann.ToString()))
                 {
                     return "_rm";
                 }
+
                 if (quantity.Equals(FlowBoundaryQuantityType.RiemannVelocity.ToString()))
                 {
                     return "_rv";
                 }
+
                 if (quantity.Equals(FlowBoundaryQuantityType.Outflow.ToString()))
                 {
                     return "_op";
                 }
+
                 if (quantity.Equals(FlowBoundaryQuantityType.Salinity.ToString()))
                 {
                     return "_sal";
                 }
+
                 if (quantity.Equals(FlowBoundaryQuantityType.Temperature.ToString()))
                 {
                     return "_tmp";
                 }
+
                 if (quantity.Equals(FlowBoundaryQuantityType.SedimentConcentration.ToString()))
                 {
                     return "_con";
                 }
+
                 if (quantity.Equals(FlowBoundaryQuantityType.MorphologyBedLevelPrescribed.ToString()))
                 {
                     return "_blp";
                 }
+
                 if (quantity.Equals(FlowBoundaryQuantityType.MorphologyBedLevelPrescribed.ToString()))
                 {
                     return "_blcp";
                 }
+
                 if (quantity.Equals(FlowBoundaryQuantityType.MorphologyBedLoadTransport.ToString()))
                 {
                     return "_blt";
                 }
+
                 return "_" + boundaryCondition.VariableName.ToLower().Substring(0, 3);
             }
-            return String.Empty;
+
+            return string.Empty;
         }
     }
 }

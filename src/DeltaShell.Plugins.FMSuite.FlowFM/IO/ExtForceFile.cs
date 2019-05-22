@@ -14,7 +14,6 @@ using GeoAPI.Extensions.Feature;
 using log4net;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
-using SharpMap;
 using SharpMap.Api.SpatialOperations;
 using SharpMap.Data.Providers;
 using SharpMap.SpatialOperations;
@@ -71,40 +70,43 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         }
 
         public bool WriteToDisk { get; set; }
-        
-        public IEnumerable<IBoundaryCondition> ExistingBoundaryConditions => polylineForceFileItems.Keys.OfType<IBoundaryCondition>();
+
+        public IEnumerable<IBoundaryCondition> ExistingBoundaryConditions =>
+            polylineForceFileItems.Keys.OfType<IBoundaryCondition>();
 
         /// <summary>
         /// Get the data files that are references in the extForceFile.
         /// </summary>
-        /// <param name="modelDefinition"></param>
-        /// <returns>A list of tuples of name and file path.</returns>
+        /// <param name="modelDefinition"> </param>
+        /// <returns> A list of tuples of name and file path. </returns>
         public IEnumerable<string[]> GetFeatureDataFiles(WaterFlowFMModelDefinition modelDefinition)
         {
             ExtForceFileHelper.StartWritingSubFiles();
 
-            foreach (var boundaryConditionSet in modelDefinition.BoundaryConditionSets.Where(bc => bc.Feature.Name != null))
+            foreach (BoundaryConditionSet boundaryConditionSet in
+                modelDefinition.BoundaryConditionSets.Where(bc => bc.Feature.Name != null))
             {
-                foreach (var bc in boundaryConditionSet.BoundaryConditions.OfType<FlowBoundaryCondition>())
+                foreach (FlowBoundaryCondition bc in boundaryConditionSet
+                                                     .BoundaryConditions.OfType<FlowBoundaryCondition>())
                 {
                     polylineForceFileItems.TryGetValue(bc, out ExtForceFileItem matchingItem);
-                    var dataFiles =
+                    List<string[]> dataFiles =
                         ExtForceFileHelper.GetBoundaryDataFiles(bc, boundaryConditionSet, matchingItem).ToList();
 
-                    foreach (var dataFile in dataFiles)
+                    foreach (string[] dataFile in dataFiles)
                     {
                         yield return dataFile;
                     }
                 }
             }
 
-            foreach (var sourceAndSink in modelDefinition.SourcesAndSinks)
+            foreach (SourceAndSink sourceAndSink in modelDefinition.SourcesAndSinks)
             {
                 polylineForceFileItems.TryGetValue(sourceAndSink, out ExtForceFileItem matchingItem);
-                var dataFiles =
+                List<string[]> dataFiles =
                     ExtForceFileHelper.GetSourceAndSinkDataFiles(sourceAndSink, matchingItem).ToList();
 
-                foreach (var dataFile in dataFiles)
+                foreach (string[] dataFile in dataFiles)
                 {
                     yield return dataFile;
                 }
@@ -113,14 +115,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private string ExtFilePath { get; set; }
 
-        private bool PathsRelativeToExtDuringReading { get; set; }
-
-        private string MduFilePath { get; set; }
+        private string ExtSubFilesReferenceFilePath { get; set; }
 
         private static bool IsNewEntry(string line)
         {
-            var lineToLower = line.ToLower();
-            var keysToCheck = new[]
+            string lineToLower = line.ToLower();
+            IEnumerable<string> keysToCheck = new[]
             {
                 QuantityKey,
                 DisabledQuantityKey
@@ -132,22 +132,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private void ReadPolyLineData(IEnumerable<ExtForceFileItem> extForceFileItems,
                                       WaterFlowFMModelDefinition modelDefinition)
         {
-            var boundaryConditionSets = modelDefinition.BoundaryConditionSets;
+            IEventedList<BoundaryConditionSet> boundaryConditionSets = modelDefinition.BoundaryConditionSets;
             var boundaryConditions = new List<IBoundaryCondition>();
             var sourcesAndSinks = new List<SourceAndSink>();
 
             var modelReferenceDate = (DateTime) modelDefinition.GetModelProperty(KnownProperties.RefDate).Value;
 
-            foreach (var extForceFileItem in extForceFileItems.Where(e => e.FileName.ToLower().EndsWith(".pli")))
+            foreach (ExtForceFileItem extForceFileItem in extForceFileItems.Where(
+                e => e.FileName.ToLower().EndsWith(".pli")))
             {
                 if (extForceFileItem.FileType != ExtForceQuantNames.FileTypes.PolyTim)
+                {
                     throw new NotSupportedException("The provided pli file is not a PolyTim file. " +
                                                     extForceFileItem.FileName);
+                }
 
                 // check what type of polyline to read
                 bool isSourceAndSink = Equals(extForceFileItem.Quantity, ExtForceQuantNames.SourceAndSink);
 
-                if (!ExtForceQuantNames.TryParseBoundaryQuantityType(extForceFileItem.Quantity, out var quantityType) &&
+                if (!ExtForceQuantNames.TryParseBoundaryQuantityType(extForceFileItem.Quantity,
+                                                                     out FlowBoundaryQuantityType quantityType) &&
                     !isSourceAndSink)
                 {
                     continue;
@@ -156,7 +160,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 supportedExtForceFileItems.Add(extForceFileItem);
 
                 // read the pli file
-                string pliFilePath = RetrieveAbsoluteFilePath(extForceFileItem.FileName);
+                string pliFilePath =
+                    GetOtherFilePathInSameDirectory(ExtSubFilesReferenceFilePath, extForceFileItem.FileName);
 
                 var reader = new PliFile<Feature2D>();
                 if (isSourceAndSink)
@@ -166,26 +171,30 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                             points.Count == 1
                                 ? new Feature2DPoint
                                 {
-                                    Name = name, Geometry = new Point(points[0])
+                                    Name = name,
+                                    Geometry = new Point(points[0])
                                 }
                                 : new Feature2D
                                 {
-                                    Name = name, Geometry = PliFile<Feature2D>.CreatePolyLineGeometry(points)
+                                    Name = name,
+                                    Geometry = PliFile<Feature2D>.CreatePolyLineGeometry(points)
                                 };
                 }
 
-                var features2D = reader.Read(pliFilePath);
+                IList<Feature2D> features2D = reader.Read(pliFilePath);
                 existingForceFileItems[extForceFileItem] = features2D;
 
                 // go through all feature2Ds
-                foreach (var feature2D in features2D)
+                foreach (Feature2D feature2D in features2D)
                 {
                     if (isSourceAndSink)
                     {
                         SourceAndSink sourceAndSink;
                         try
                         {
-                            sourceAndSink = ExtForceFileHelper.ReadSourceAndSinkData(pliFilePath, feature2D, extForceFileItem, modelReferenceDate);
+                            sourceAndSink =
+                                ExtForceFileHelper.ReadSourceAndSinkData(
+                                    pliFilePath, feature2D, extForceFileItem, modelReferenceDate);
                         }
                         catch (Exception e)
                         {
@@ -193,29 +202,31 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                                 e is FileNotFoundException || e is IOException || e is OutOfMemoryException)
                             {
                                 throw new InvalidOperationException(
-                                    $"An error (Message: {e.Message}) occured while source/sink data for feature {feature2D.Name} in file {ExtFilePath}", e);
+                                    $"An error (Message: {e.Message}) occured while source/sink data for feature {feature2D.Name} in file {ExtFilePath}",
+                                    e);
                             }
 
                             throw;
                         }
 
-                        if (sourceAndSink == null) continue;
+                        if (sourceAndSink == null)
+                        {
+                            continue;
+                        }
 
                         polylineForceFileItems[sourceAndSink] = extForceFileItem;
                         sourcesAndSinks.Add(sourceAndSink);
                     }
                     else // boundary condition
                     {
-                        var uniqueFeature =
+                        Feature2D uniqueFeature =
                             boundaryConditionSets.Select(bcs => bcs.Feature)
-                                                 .FirstOrDefault(f => f.Geometry.Equals(feature2D.Geometry)) ?? feature2D;
+                                                 .FirstOrDefault(f => f.Geometry.Equals(feature2D.Geometry)) ??
+                            feature2D;
 
                         if (uniqueFeature == feature2D)
                         {
-                            boundaryConditionSets.Add(new BoundaryConditionSet
-                            {
-                                Feature = feature2D
-                            });
+                            boundaryConditionSets.Add(new BoundaryConditionSet {Feature = feature2D});
                         }
 
                         BoundaryCondition boundaryCondition;
@@ -223,7 +234,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         try
                         {
                             boundaryCondition = ExtForceFileHelper.ReadBoundaryConditionData(pliFilePath,
-                                                                                             uniqueFeature, extForceFileItem, modelReferenceDate);
+                                                                                             uniqueFeature,
+                                                                                             extForceFileItem,
+                                                                                             modelReferenceDate);
                         }
                         catch (Exception e)
                         {
@@ -238,7 +251,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                             throw;
                         }
 
-                        if (boundaryCondition == null) continue;
+                        if (boundaryCondition == null)
+                        {
+                            continue;
+                        }
 
                         polylineForceFileItems[boundaryCondition] = extForceFileItem;
                         boundaryConditions.Add(boundaryCondition);
@@ -246,7 +262,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 }
             }
 
-            foreach (var boundaryConditionSet in boundaryConditionSets)
+            foreach (BoundaryConditionSet boundaryConditionSet in boundaryConditionSets)
             {
                 var feature = boundaryConditionSet.Feature as IFeature;
                 boundaryConditionSet.BoundaryConditions = new EventedList<IBoundaryCondition>();
@@ -262,22 +278,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             modelDefinition.Pipes.AddRange(sourcesAndSinks.Select(ss => ss.Feature).Distinct());
         }
 
-        private string RetrieveAbsoluteFilePath(string fileName)
-        {
-            string filePath;
-            if (PathsRelativeToExtDuringReading)
-            {
-                filePath = GetOtherFilePathInSameDirectory(ExtFilePath, fileName);
-            }
-            else
-            {
-                filePath = GetOtherFilePathInSameDirectory(MduFilePath, fileName);
-            }
-
-            return filePath;
-        }
-
-        private void ReadHeatFluxModelData(IEnumerable<ExtForceFileItem> extForceFileItems, WaterFlowFMModelDefinition modelDefinition)
+        private void ReadHeatFluxModelData(IEnumerable<ExtForceFileItem> extForceFileItems,
+                                           WaterFlowFMModelDefinition modelDefinition)
         {
             var modelReferenceDate = (DateTime) modelDefinition.GetModelProperty(KnownProperties.RefDate).Value;
             switch (modelDefinition.HeatFluxModel.Type)
@@ -294,17 +296,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private void ReadCompositeTemperatureData(IEnumerable<ExtForceFileItem> extForceFileItems,
                                                   HeatFluxModel heatFluxModel, DateTime modelReferenceDate)
         {
-            var forceFileItem =
+            ExtForceFileItem forceFileItem =
                 extForceFileItems.LastOrDefault(e => e.Quantity == ExtForceQuantNames.MeteoData ||
                                                      e.Quantity == ExtForceQuantNames.MeteoDataWithRadiation);
 
-            if (forceFileItem == null) return;
+            if (forceFileItem == null)
+            {
+                return;
+            }
 
             supportedExtForceFileItems.Add(forceFileItem);
 
             heatFluxModel.ContainsSolarRadiation = forceFileItem.Quantity == ExtForceQuantNames.MeteoDataWithRadiation;
 
-            string filePath = RetrieveAbsoluteFilePath(forceFileItem.FileName);
+            string filePath = GetOtherFilePathInSameDirectory(ExtSubFilesReferenceFilePath, forceFileItem.FileName);
 
             new TimFile().Read(filePath, heatFluxModel.MeteoData, modelReferenceDate);
             existingForceFileItems[forceFileItem] = heatFluxModel.MeteoData;
@@ -312,20 +317,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private IEnumerable<ExtForceFileItem> WriteHeatFluxModelData(WaterFlowFMModelDefinition modelDefinition)
         {
-            if (modelDefinition.HeatFluxModel.MeteoData == null) yield break;
+            if (modelDefinition.HeatFluxModel.MeteoData == null)
+            {
+                yield break;
+            }
 
-            var extForceFileItem = GetExistingForceFileItemOrNull(modelDefinition.HeatFluxModel)
-                                   ??
-                                   new ExtForceFileItem(modelDefinition.HeatFluxModel.ContainsSolarRadiation
-                                                            ? ExtForceQuantNames.MeteoDataWithRadiation
-                                                            : ExtForceQuantNames.MeteoData)
-                                   {
-                                       FileName = modelDefinition.ModelName + "_meteo.tim", FileType = ExtForceQuantNames.FileTypes.Uniform, Method = 1, Operand = ExtForceQuantNames.OperatorToStringMapping[Operator.Overwrite]
-                                   };
+            ExtForceFileItem extForceFileItem = GetExistingForceFileItemOrNull(modelDefinition.HeatFluxModel)
+                                                ??
+                                                new ExtForceFileItem(
+                                                    modelDefinition.HeatFluxModel.ContainsSolarRadiation
+                                                        ? ExtForceQuantNames.MeteoDataWithRadiation
+                                                        : ExtForceQuantNames.MeteoData)
+                                                {
+                                                    FileName = modelDefinition.ModelName + "_meteo.tim",
+                                                    FileType = ExtForceQuantNames.FileTypes.Uniform,
+                                                    Method = 1,
+                                                    Operand = ExtForceQuantNames.OperatorToStringMapping[
+                                                        Operator.Overwrite]
+                                                };
 
             if (WriteToDisk)
             {
-                var path = GetOtherFilePathInSameDirectory(ExtFilePath, extForceFileItem.FileName);
+                string path = GetOtherFilePathInSameDirectory(ExtFilePath, extForceFileItem.FileName);
                 new TimFile().Write(path, modelDefinition.HeatFluxModel.MeteoData,
                                     (DateTime) modelDefinition.GetModelProperty(KnownProperties.RefDate).Value);
             }
@@ -333,88 +346,97 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             yield return extForceFileItem;
         }
 
-        private void ReadSpatialData(IList<ExtForceFileItem> extForceFileItems, WaterFlowFMModelDefinition modelDefinition)
+        private void ReadSpatialData(IList<ExtForceFileItem> extForceFileItems,
+                                     WaterFlowFMModelDefinition modelDefinition)
         {
-            var unreadExtForceFileItems = extForceFileItems;
+            IList<ExtForceFileItem> unreadExtForceFileItems = extForceFileItems;
 
             var knownQuantities = new Dictionary<string, string>
             {
-                {
-                    ExtForceQuantNames.InitialWaterLevel, WaterFlowFMModelDefinition.InitialWaterLevelDataItemName
-                },
-                {
-                    ExtForceQuantNames.InitialSalinity, WaterFlowFMModelDefinition.InitialSalinityDataItemName
-                },
-                {
-                    ExtForceQuantNames.InitialSalinityTop, WaterFlowFMModelDefinition.InitialSalinityDataItemName
-                },
-                {
-                    ExtForceQuantNames.InitialTemperature, WaterFlowFMModelDefinition.InitialTemperatureDataItemName
-                },
-                {
-                    ExtForceQuantNames.FrictCoef, WaterFlowFMModelDefinition.RoughnessDataItemName
-                },
-                {
-                    ExtForceQuantNames.HorEddyViscCoef, WaterFlowFMModelDefinition.ViscosityDataItemName
-                },
-                {
-                    ExtForceQuantNames.HorEddyDiffCoef, WaterFlowFMModelDefinition.DiffusivityDataItemName
-                }
+                {ExtForceQuantNames.InitialWaterLevel, WaterFlowFMModelDefinition.InitialWaterLevelDataItemName},
+                {ExtForceQuantNames.InitialSalinity, WaterFlowFMModelDefinition.InitialSalinityDataItemName},
+                {ExtForceQuantNames.InitialSalinityTop, WaterFlowFMModelDefinition.InitialSalinityDataItemName},
+                {ExtForceQuantNames.InitialTemperature, WaterFlowFMModelDefinition.InitialTemperatureDataItemName},
+                {ExtForceQuantNames.FrictCoef, WaterFlowFMModelDefinition.RoughnessDataItemName},
+                {ExtForceQuantNames.HorEddyViscCoef, WaterFlowFMModelDefinition.ViscosityDataItemName},
+                {ExtForceQuantNames.HorEddyDiffCoef, WaterFlowFMModelDefinition.DiffusivityDataItemName}
             };
 
-            foreach (var quantityPair in knownQuantities)
+            foreach (KeyValuePair<string, string> quantityPair in knownQuantities)
             {
-                var readItems = unreadExtForceFileItems.Where(i => i.Quantity == quantityPair.Key).ToList();
+                List<ExtForceFileItem> readItems =
+                    unreadExtForceFileItems.Where(i => i.Quantity == quantityPair.Key).ToList();
                 if (quantityPair.Key.Equals(ExtForceQuantNames.FrictCoef))
+                {
                     readItems = FilterByFrictionType(unreadExtForceFileItems, modelDefinition).ToList();
+                }
 
                 ReadSpatialOperationData(readItems, modelDefinition, quantityPair.Key, quantityPair.Value);
 
                 //Remove read items.
                 unreadExtForceFileItems = unreadExtForceFileItems.Except(readItems).ToList();
-                if (!unreadExtForceFileItems.Any()) return;
+                if (!unreadExtForceFileItems.Any())
+                {
+                    return;
+                }
             }
 
             //Read tracer items.
-            var initialTracerItems = unreadExtForceFileItems.Where(fi => fi.Quantity.StartsWith(ExtForceQuantNames.InitialTracerPrefix)).ToList();
-            foreach (var tracerItem in initialTracerItems)
+            List<ExtForceFileItem> initialTracerItems = unreadExtForceFileItems
+                                                        .Where(fi => fi.Quantity.StartsWith(
+                                                                   ExtForceQuantNames.InitialTracerPrefix))
+                                                        .ToList();
+            foreach (ExtForceFileItem tracerItem in initialTracerItems)
             {
                 string tracerName = tracerItem.Quantity.Substring(ExtForceQuantNames.InitialTracerPrefix.Length);
                 ReadSpatialOperationData(initialTracerItems, modelDefinition, tracerItem.Quantity, tracerName);
             }
 
             unreadExtForceFileItems = unreadExtForceFileItems.Except(initialTracerItems).ToList();
-            if (!unreadExtForceFileItems.Any()) return;
+            if (!unreadExtForceFileItems.Any())
+            {
+                return;
+            }
 
             //Read sediment items.
-            var initialSedimentItems = unreadExtForceFileItems.Where(fi => fi.Quantity.StartsWith(ExtForceQuantNames.InitialSpatialVaryingSedimentPrefix)).ToList();
-            foreach (var sedimentItem in initialSedimentItems)
+            List<ExtForceFileItem> initialSedimentItems = unreadExtForceFileItems
+                                                          .Where(fi => fi.Quantity.StartsWith(
+                                                                     ExtForceQuantNames
+                                                                         .InitialSpatialVaryingSedimentPrefix))
+                                                          .ToList();
+            foreach (ExtForceFileItem sedimentItem in initialSedimentItems)
             {
                 /* DELFT3DFM-1112
                  * The only Spatially Varying Sediment that gets read from the ExtForces file is
                  * SedimentConcentration. We could simply remove its prefix, however, due to the 
                  * way it's meant to be written in said file, we need to add the postfix */
-                string spatialvaryingSedConc = sedimentItem.Quantity.Substring(ExtForceQuantNames.InitialSpatialVaryingSedimentPrefix.Length) + SedConcPostfix;
-                ReadSpatialOperationData(initialSedimentItems, modelDefinition, sedimentItem.Quantity, spatialvaryingSedConc);
+                string spatialvaryingSedConc =
+                    sedimentItem.Quantity.Substring(ExtForceQuantNames.InitialSpatialVaryingSedimentPrefix.Length) +
+                    SedConcPostfix;
+                ReadSpatialOperationData(initialSedimentItems, modelDefinition, sedimentItem.Quantity,
+                                         spatialvaryingSedConc);
             }
         }
 
         private IEnumerable<ExtForceFileItem> FilterByFrictionType(IEnumerable<ExtForceFileItem> extForceFileItems,
                                                                    WaterFlowFMModelDefinition modelDefinition)
         {
-            var frictionTypeProperty =
+            WaterFlowFMProperty frictionTypeProperty =
                 modelDefinition.Properties.FirstOrDefault(
                     p => p.PropertyDefinition.MduPropertyName == KnownProperties.FrictionType);
 
-            var modelFrictionType = frictionTypeProperty != null
+            int modelFrictionType = frictionTypeProperty != null
                                         ? GetIntegerPropertyValue(frictionTypeProperty.GetValueAsString())
                                         : 1;
 
-            foreach (var extForceFileItem in extForceFileItems)
+            foreach (ExtForceFileItem extForceFileItem in extForceFileItems)
             {
-                if (extForceFileItem.Quantity != ExtForceQuantNames.FrictCoef) continue;
+                if (extForceFileItem.Quantity != ExtForceQuantNames.FrictCoef)
+                {
+                    continue;
+                }
 
-                var frictionType = modelFrictionType;
+                int frictionType = modelFrictionType;
 
                 if (extForceFileItem.ModelData.ContainsKey(FricTypeKey))
                 {
@@ -434,13 +456,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
         }
 
-        private void ReadSpatialOperationData(IEnumerable<ExtForceFileItem> spatialForcingsItems, WaterFlowFMModelDefinition waterFlowFMModelDefinition, string quantity, string dataItemName)
+        private void ReadSpatialOperationData(IEnumerable<ExtForceFileItem> spatialForcingsItems,
+                                              WaterFlowFMModelDefinition waterFlowFMModelDefinition, string quantity,
+                                              string dataItemName)
         {
-            var forcingsItems = spatialForcingsItems.Where(i => i.Quantity == quantity).ToList();
+            List<ExtForceFileItem> forcingsItems = spatialForcingsItems.Where(i => i.Quantity == quantity).ToList();
 
-            if (!forcingsItems.Any()) return;
+            if (!forcingsItems.Any())
+            {
+                return;
+            }
 
-            var spatialOperations = waterFlowFMModelDefinition.GetSpatialOperations(dataItemName);
+            IList<ISpatialOperation> spatialOperations = waterFlowFMModelDefinition.GetSpatialOperations(dataItemName);
 
             bool createOperationSet = spatialOperations == null;
 
@@ -451,10 +478,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
 
             spatialOperations.Clear();
-            foreach (var extForceFileItem in forcingsItems)
+            foreach (ExtForceFileItem extForceFileItem in forcingsItems)
             {
                 supportedExtForceFileItems.Add(extForceFileItem);
-                var spatialOperation = CreateSpatialOperation(extForceFileItem);
+                ISpatialOperation spatialOperation = CreateSpatialOperation(extForceFileItem);
                 if (spatialOperation != null)
                 {
                     spatialOperations.Add(spatialOperation);
@@ -479,18 +506,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private ISpatialOperation CreatePolygonOperation(ExtForceFileItem extForceFileItem)
         {
-            string path = RetrieveAbsoluteFilePath(extForceFileItem.FileName);
+            string path = GetOtherFilePathInSameDirectory(ExtSubFilesReferenceFilePath, extForceFileItem.FileName);
 
-            var features = new PolFile<Feature2DPolygon>().Read(path).Select(f => new Feature
-            {
-                Geometry = f.Geometry, Attributes = f.Attributes
-            });
+            IEnumerable<Feature> features = new PolFile<Feature2DPolygon>()
+                                            .Read(path).Select(f => new Feature
+                                            {
+                                                Geometry = f.Geometry,
+                                                Attributes = f.Attributes
+                                            });
 
-            var operationName = Path.GetFileNameWithoutExtension(extForceFileItem.FileName);
+            string operationName = Path.GetFileNameWithoutExtension(extForceFileItem.FileName);
 
             var operation = new SetValueOperation
             {
-                Value = extForceFileItem.Value, OperationType = ExtForceQuantNames.ParseOperationType(extForceFileItem.Operand), Name = operationName
+                Value = extForceFileItem.Value,
+                OperationType = ExtForceQuantNames.ParseOperationType(extForceFileItem.Operand),
+                Name = operationName
             };
             operation.Mask.Provider = new FeatureCollection(features.ToList(), typeof(Feature));
 
@@ -501,11 +532,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private ISpatialOperation CreateSamplesOperation(ExtForceFileItem extForceFileItem)
         {
-            var operationName = Path.GetFileNameWithoutExtension(extForceFileItem.FileName);
+            string operationName = Path.GetFileNameWithoutExtension(extForceFileItem.FileName);
 
             var operation = new ImportSamplesSpatialOperationExtension
             {
-                Name = operationName, FilePath = RetrieveAbsoluteFilePath(extForceFileItem.FileName)
+                Name = operationName,
+                FilePath = GetOtherFilePathInSameDirectory(ExtSubFilesReferenceFilePath, extForceFileItem.FileName)
             };
 
             if (extForceFileItem.ModelData.TryGetValue(AveragingTypeKey, out object value))
@@ -527,7 +559,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     operation.InterpolationMethod = SpatialInterpolationMethod.Averaging;
                     break;
                 default:
-                    throw new Exception($"Invalid interpolation method {extForceFileItem.Method} for file {extForceFileItem.FileName}");
+                    throw new Exception(
+                        $"Invalid interpolation method {extForceFileItem.Method} for file {extForceFileItem.FileName}");
             }
 
             existingForceFileItems[extForceFileItem] = operation;
@@ -540,15 +573,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             var refDate = (DateTime) modelDefinition.GetModelProperty(KnownProperties.RefDate).Value;
             foreach (
-                var extForceFileItem in
+                ExtForceFileItem extForceFileItem in
                 extForceFileItems.Where(i => ExtForceQuantNames.WindQuantityNames.Values.Contains(i.Quantity)))
             {
                 supportedExtForceFileItems.Add(extForceFileItem);
                 try
                 {
-                    var windField = ExtForceFileHelper.CreateWindField(extForceFileItem, ExtFilePath);
+                    IWindField windField = ExtForceFileHelper.CreateWindField(extForceFileItem, ExtFilePath);
 
-                    string windFile = RetrieveAbsoluteFilePath(extForceFileItem.FileName);
+                    string windFile =
+                        GetOtherFilePathInSameDirectory(ExtSubFilesReferenceFilePath, extForceFileItem.FileName);
 
                     if (!File.Exists(windFile))
                     {
@@ -581,13 +615,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
             catch (ArgumentOutOfRangeException)
             {
-                throw new FormatException($"Expected '<key>=<value>(!/#)<comment>' formatted line on line {LineNumber} of file {OutputFilePath}");
+                throw new FormatException(
+                    $"Expected '<key>=<value>(!/#)<comment>' formatted line on line {LineNumber} of file {OutputFilePath}");
             }
 
             // Determine comment starting index:
-            var commentIndex1 = valuePart.IndexOf('!');
-            var commentIndex2 = valuePart.IndexOf('#');
-            var commentIndex = Math.Min(commentIndex1, commentIndex2);
+            int commentIndex1 = valuePart.IndexOf('!');
+            int commentIndex2 = valuePart.IndexOf('#');
+            int commentIndex = Math.Min(commentIndex1, commentIndex2);
             if (commentIndex < 0)
             {
                 // not both characters present, may one of them
@@ -620,7 +655,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private ExtForceFileItem GetExistingForceFileItemOrNull(object value)
         {
-            return existingForceFileItems.Where(kvp => Equals(kvp.Value, value)).Select(kvp => kvp.Key).FirstOrDefault();
+            return existingForceFileItems.Where(kvp => Equals(kvp.Value, value)).Select(kvp => kvp.Key)
+                                         .FirstOrDefault();
         }
 
         #region write logic
@@ -628,10 +664,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         /// <summary>
         /// Writes the model definition external forcings to file.
         /// </summary>
-        /// <param name="extForceFilePath">File path</param>
-        /// <param name="modelDefinition">External forcings data</param>
-        /// <param name="writeBoundaryConditions">Whether we are writing boundary conditions.</param> 
-        public void Write(string extForceFilePath, WaterFlowFMModelDefinition modelDefinition, bool writeBoundaryConditions = true)
+        /// <param name="extForceFilePath"> File path </param>
+        /// <param name="modelDefinition"> External forcings data </param>
+        /// <param name="writeBoundaryConditions"> Whether we are writing boundary conditions. </param>
+        public void Write(string extForceFilePath, WaterFlowFMModelDefinition modelDefinition,
+                          bool writeBoundaryConditions = true)
         {
             ExtFilePath = extForceFilePath;
             Write(modelDefinition, writeBoundaryConditions);
@@ -639,12 +676,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private void Write(WaterFlowFMModelDefinition modelDefinition, bool writeBoundaryConditions = true)
         {
-            var extForceFileItems = WriteExtForceFileSubFiles(modelDefinition, writeBoundaryConditions);
+            IList<ExtForceFileItem> extForceFileItems =
+                WriteExtForceFileSubFiles(modelDefinition, writeBoundaryConditions);
 
             if (extForceFileItems.Any())
             {
                 WriteExtForceFile(extForceFileItems);
-                modelDefinition.GetModelProperty(KnownProperties.ExtForceFile).SetValueAsString(Path.GetFileName(ExtFilePath));
+                modelDefinition.GetModelProperty(KnownProperties.ExtForceFile)
+                               .SetValueAsString(Path.GetFileName(ExtFilePath));
             }
             else
             {
@@ -658,7 +697,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             OpenOutputFile(ExtFilePath);
             try
             {
-                foreach (var extForceFileItem in extForceFileItems)
+                foreach (ExtForceFileItem extForceFileItem in extForceFileItems)
                 {
                     WriteLine("");
                     WriteLine((extForceFileItem.Enabled ? QuantityKey : DisabledQuantityKey) +
@@ -667,24 +706,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     WriteLine(FileTypeKey + "=" + extForceFileItem.FileType);
                     WriteLine(MethodKey + "=" + extForceFileItem.Method);
                     WriteLine(OperandKey + "=" + extForceFileItem.Operand);
-                    if (!Double.IsNaN(extForceFileItem.Value))
+                    if (!double.IsNaN(extForceFileItem.Value))
                     {
                         WriteLine(ValueKey + "=" + extForceFileItem.Value);
                     }
 
-                    if (!Double.IsNaN(extForceFileItem.Factor))
+                    if (!double.IsNaN(extForceFileItem.Factor))
                     {
                         WriteLine(FactorKey + "=" + extForceFileItem.Factor);
                     }
 
-                    if (!Double.IsNaN(extForceFileItem.Offset))
+                    if (!double.IsNaN(extForceFileItem.Offset))
                     {
                         WriteLine(OffsetKey + "=" + extForceFileItem.Offset);
                     }
 
                     if (extForceFileItem.ModelData != null)
                     {
-                        foreach (var modelData in extForceFileItem.ModelData)
+                        foreach (KeyValuePair<string, object> modelData in extForceFileItem.ModelData)
                         {
                             WriteLine(modelData.Key + "=" + modelData.Value);
                         }
@@ -700,19 +739,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         /// <summary>
         /// Writes data files references by the external forcings file.
         /// </summary>
-        /// <param name="path">File path.</param>
-        /// <param name="modelDefinition">Contains data to be written.</param>
-        /// <param name="switchTo">Flag denoting whether to switch to the file path directory (save)</param>
-        /// <param name="writeBoundaryConditions">Flag denoting whether to write boundary conditions</param>
-        /// <returns>Resulting force file items</returns>
+        /// <param name="path"> File path. </param>
+        /// <param name="modelDefinition"> Contains data to be written. </param>
+        /// <param name="switchTo"> Flag denoting whether to switch to the file path directory (save) </param>
+        /// <param name="writeBoundaryConditions"> Flag denoting whether to write boundary conditions </param>
+        /// <returns> Resulting force file items </returns>
         public IEnumerable<ExtForceFileItem> WriteExtForceFileSubFiles(string path,
-                                                                       WaterFlowFMModelDefinition modelDefinition, bool switchTo, bool writeBoundaryConditions)
+                                                                       WaterFlowFMModelDefinition modelDefinition,
+                                                                       bool switchTo, bool writeBoundaryConditions)
         {
             ExtFilePath = path;
             return WriteExtForceFileSubFiles(modelDefinition, writeBoundaryConditions);
         }
 
-        private IList<ExtForceFileItem> WriteExtForceFileSubFiles(WaterFlowFMModelDefinition modelDefinition, bool writeBoundaryConditions)
+        private IList<ExtForceFileItem> WriteExtForceFileSubFiles(WaterFlowFMModelDefinition modelDefinition,
+                                                                  bool writeBoundaryConditions)
         {
             var extForceFileItems = new List<ExtForceFileItem>();
 
@@ -728,39 +769,50 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             extForceFileItems.AddRange(
                 WriteSpatialData(ExtForceQuantNames.InitialWaterLevel,
-                                 modelDefinition.GetSpatialOperations(WaterFlowFMModelDefinition.InitialWaterLevelDataItemName))
+                                 modelDefinition.GetSpatialOperations(
+                                     WaterFlowFMModelDefinition.InitialWaterLevelDataItemName))
                     .Distinct());
 
             extForceFileItems.AddRange(
                 WriteSpatialData(ExtForceQuantNames.InitialSalinity,
-                                 modelDefinition.GetSpatialOperations(WaterFlowFMModelDefinition.InitialSalinityDataItemName))
+                                 modelDefinition.GetSpatialOperations(
+                                     WaterFlowFMModelDefinition.InitialSalinityDataItemName))
                     .Distinct());
 
             extForceFileItems.AddRange(
                 WriteSpatialData(ExtForceQuantNames.InitialSalinity,
-                                 modelDefinition.GetSpatialOperations(WaterFlowFMModelDefinition.InitialSalinityDataItemName +
-                                                                      " (layer 1)"))
+                                 modelDefinition.GetSpatialOperations(
+                                     WaterFlowFMModelDefinition.InitialSalinityDataItemName +
+                                     " (layer 1)"))
                     .Distinct());
 
             extForceFileItems.AddRange(
                 WriteSpatialData(ExtForceQuantNames.InitialSalinityTop,
-                                 modelDefinition.GetSpatialOperations(WaterFlowFMModelDefinition.InitialSalinityDataItemName +
-                                                                      " (layer 2)"))
+                                 modelDefinition.GetSpatialOperations(
+                                     WaterFlowFMModelDefinition.InitialSalinityDataItemName +
+                                     " (layer 2)"))
                     .Distinct());
 
             extForceFileItems.AddRange(
                 WriteSpatialData(ExtForceQuantNames.InitialTemperature,
-                                 modelDefinition.GetSpatialOperations(WaterFlowFMModelDefinition.InitialTemperatureDataItemName))
+                                 modelDefinition.GetSpatialOperations(
+                                     WaterFlowFMModelDefinition.InitialTemperatureDataItemName))
                     .Distinct());
 
             extForceFileItems.AddRange(WriteSpatialData(ExtForceQuantNames.FrictCoef,
-                                                        modelDefinition.GetSpatialOperations(WaterFlowFMModelDefinition.RoughnessDataItemName)).Distinct());
+                                                        modelDefinition.GetSpatialOperations(
+                                                            WaterFlowFMModelDefinition.RoughnessDataItemName))
+                                           .Distinct());
 
             extForceFileItems.AddRange(WriteSpatialData(ExtForceQuantNames.HorEddyViscCoef,
-                                                        modelDefinition.GetSpatialOperations(WaterFlowFMModelDefinition.ViscosityDataItemName)).Distinct());
+                                                        modelDefinition.GetSpatialOperations(
+                                                            WaterFlowFMModelDefinition.ViscosityDataItemName))
+                                           .Distinct());
 
             extForceFileItems.AddRange(WriteSpatialData(ExtForceQuantNames.HorEddyDiffCoef,
-                                                        modelDefinition.GetSpatialOperations(WaterFlowFMModelDefinition.DiffusivityDataItemName)).Distinct());
+                                                        modelDefinition.GetSpatialOperations(
+                                                            WaterFlowFMModelDefinition.DiffusivityDataItemName))
+                                           .Distinct());
 
             extForceFileItems.AddRange(WriteWindItems(modelDefinition).Distinct());
 
@@ -768,7 +820,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             extForceFileItems.AddRange(WriteUnknownQuantities(modelDefinition));
 
-            foreach (var tracerName in modelDefinition.InitialTracerNames)
+            foreach (string tracerName in modelDefinition.InitialTracerNames)
             {
                 extForceFileItems.AddRange(
                     WriteSpatialData(ExtForceQuantNames.InitialTracerPrefix + tracerName,
@@ -778,20 +830,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             /* DELFT3DFM-1112
              * This is only meant for SedimentConcentration */
-            var sedConcSpatiallyVarying =
+            IEnumerable<string> sedConcSpatiallyVarying =
                 modelDefinition.InitialSpatiallyVaryingSedimentPropertyNames.Where(sp => sp.EndsWith(SedConcPostfix));
-            foreach (var spatiallyVaryingSedimentPropertyName in sedConcSpatiallyVarying)
+            foreach (string spatiallyVaryingSedimentPropertyName in sedConcSpatiallyVarying)
             {
-                var spatialOperations = modelDefinition.GetSpatialOperations(spatiallyVaryingSedimentPropertyName);
+                IList<ISpatialOperation> spatialOperations =
+                    modelDefinition.GetSpatialOperations(spatiallyVaryingSedimentPropertyName);
                 if (spatialOperations?.All(s => s is ImportSamplesSpatialOperationExtension ||
                                                 s is AddSamplesOperation) != true)
                 {
-                    var warnMsg = String.Format(
-                        Resources.SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_No_spatial_operations_of_type_Import__Add_or_Value_found_for_spatially_varying_property__0___Remember_to_interpolate_them_to_generate_the_xyz_file__Otherwise_the_model_might_not_run_as_expected_,
+                    string warnMsg = string.Format(
+                        Resources
+                            .SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_No_spatial_operations_of_type_Import__Add_or_Value_found_for_spatially_varying_property__0___Remember_to_interpolate_them_to_generate_the_xyz_file__Otherwise_the_model_might_not_run_as_expected_,
                         spatiallyVaryingSedimentPropertyName);
                     if (spatialOperations != null)
                     {
-                        warnMsg = String.Format(
+                        warnMsg = string.Format(
                             Resources
                                 .SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_Cannot_create_xyz_file_for_spatial_varying_initial_condition__0__because_it_is_a_value_spatial_operation__please_interpolate_the_operation_to_the_grid_or,
                             spatiallyVaryingSedimentPropertyName);
@@ -801,13 +855,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     continue;
                 }
 
-                var forceFileItems = WriteSpatialData(spatiallyVaryingSedimentPropertyName,
-                                                      spatialOperations, ExtForceQuantNames.InitialSpatialVaryingSedimentPrefix)
-                                     .Distinct().ToList();
+                List<ExtForceFileItem> forceFileItems = WriteSpatialData(spatiallyVaryingSedimentPropertyName,
+                                                                         spatialOperations,
+                                                                         ExtForceQuantNames
+                                                                             .InitialSpatialVaryingSedimentPrefix)
+                                                        .Distinct().ToList();
 
                 //Remove the postfix from the quantity (it is not accepted by the kernel)
                 if (spatiallyVaryingSedimentPropertyName.EndsWith(SedConcPostfix))
-                    forceFileItems.ForEach(ffi => ffi.Quantity = ffi.Quantity.Substring(0, ffi.Quantity.Length - SedConcPostfix.Length));
+                {
+                    forceFileItems.ForEach(ffi => ffi.Quantity =
+                                                      ffi.Quantity.Substring(
+                                                          0, ffi.Quantity.Length - SedConcPostfix.Length));
+                }
+
                 extForceFileItems.AddRange(forceFileItems);
             }
 
@@ -816,7 +877,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private IEnumerable<ExtForceFileItem> WriteUnknownQuantities(WaterFlowFMModelDefinition modelDefinition)
         {
-            foreach (var unsupportedExtForceFileItem in modelDefinition.UnsupportedFileBasedExtForceFileItems)
+            foreach (IUnsupportedFileBasedExtForceFileItem unsupportedExtForceFileItem in modelDefinition
+                .UnsupportedFileBasedExtForceFileItems)
             {
                 string relativeFilePath = unsupportedExtForceFileItem.UnsupportedExtForceFileItem.FileName;
                 string targetPath = Path.Combine(Path.GetDirectoryName(ExtFilePath), relativeFilePath);
@@ -830,11 +892,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             var referenceTime = (DateTime) modelDefinition.GetModelProperty(KnownProperties.RefDate).Value;
 
-            foreach (var sourceAndSink in modelDefinition.SourcesAndSinks.Where(ss => ss.Feature.Name != null))
+            foreach (SourceAndSink sourceAndSink in modelDefinition.SourcesAndSinks.Where(ss => ss.Feature.Name != null)
+            )
             {
                 polylineForceFileItems.TryGetValue(sourceAndSink, out ExtForceFileItem matchingItem);
 
-                yield return ExtForceFileHelper.WriteSourceAndSinkData(ExtFilePath, sourceAndSink, referenceTime, matchingItem, WriteToDisk, modelDefinition);
+                yield return ExtForceFileHelper.WriteSourceAndSinkData(ExtFilePath, sourceAndSink, referenceTime,
+                                                                       matchingItem, WriteToDisk, modelDefinition);
             }
         }
 
@@ -842,9 +906,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             var referenceTime = (DateTime) modelDefinition.GetModelProperty(KnownProperties.RefDate).Value;
 
-            foreach (var boundaryConditionSet in modelDefinition.BoundaryConditionSets.Where(bcs => bcs.Feature.Name != null))
+            foreach (BoundaryConditionSet boundaryConditionSet in
+                modelDefinition.BoundaryConditionSets.Where(bcs => bcs.Feature.Name != null))
             {
-                var flowBoundaryConditions =
+                List<FlowBoundaryCondition> flowBoundaryConditions =
                     boundaryConditionSet.BoundaryConditions.OfType<FlowBoundaryCondition>().ToList();
 
                 if (WriteToDisk && !flowBoundaryConditions.Any())
@@ -854,15 +919,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         boundaryConditionSet.Name);
                 }
 
-                foreach (var flowBoundaryCondition in flowBoundaryConditions)
+                foreach (FlowBoundaryCondition flowBoundaryCondition in flowBoundaryConditions)
                 {
                     if (!polylineForceFileItems.TryGetValue(flowBoundaryCondition, out ExtForceFileItem matchingItem))
                     {
                         continue; //new boundary conditions shall be written by BndExtForceFile.
                     }
 
-                    var index =
-                        boundaryConditionSet.BoundaryConditions.Where(b => b.VariableName == flowBoundaryCondition.VariableName)
+                    int index =
+                        boundaryConditionSet.BoundaryConditions
+                                            .Where(b => b.VariableName == flowBoundaryCondition.VariableName)
                                             .ToList()
                                             .IndexOf(flowBoundaryCondition);
 
@@ -873,7 +939,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
         }
 
-        private IEnumerable<ExtForceFileItem> WriteSpatialData(string quantity, IEnumerable<ISpatialOperation> spatialOperations, string prefix = null)
+        private IEnumerable<ExtForceFileItem> WriteSpatialData(string quantity,
+                                                               IEnumerable<ISpatialOperation> spatialOperations,
+                                                               string prefix = null)
         {
             if (spatialOperations == null)
             {
@@ -881,12 +949,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
 
             // if all ops are interpolations/set value within polygons, write them to the file
-            foreach (var spatialOperation in spatialOperations)
+            foreach (ISpatialOperation spatialOperation in spatialOperations)
             {
                 var importSamplesOperation = spatialOperation as ImportSamplesSpatialOperationExtension;
                 if (importSamplesOperation != null)
                 {
-                    var existingItem = GetExistingForceFileItemOrNull(importSamplesOperation);
+                    ExtForceFileItem existingItem = GetExistingForceFileItemOrNull(importSamplesOperation);
                     yield return
                         ExtForceFileHelper.WriteInitialConditionsSamples(ExtFilePath, quantity, importSamplesOperation,
                                                                          existingItem, WriteToDisk, prefix);
@@ -896,7 +964,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 var polygonOperation = spatialOperation as SetValueOperation;
                 if (polygonOperation != null)
                 {
-                    var existingItem = GetExistingForceFileItemOrNull(spatialOperation);
+                    ExtForceFileItem existingItem = GetExistingForceFileItemOrNull(spatialOperation);
                     yield return
                         ExtForceFileHelper.WriteInitialConditionsPolygon(ExtFilePath, quantity, polygonOperation,
                                                                          existingItem, WriteToDisk, prefix);
@@ -926,30 +994,34 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private IEnumerable<ExtForceFileItem> WriteWindItems(WaterFlowFMModelDefinition modelDefinition)
         {
             var referenceTime = (DateTime) modelDefinition.GetModelProperty(KnownProperties.RefDate).Value;
-            var directory = Path.GetDirectoryName(ExtFilePath);
+            string directory = Path.GetDirectoryName(ExtFilePath);
             ExtForceFileHelper.StartWritingSubFiles();
 
-            foreach (var windField in modelDefinition.WindFields)
+            foreach (IWindField windField in modelDefinition.WindFields)
             {
                 if (windField is IFileBased fileBasedWindField)
                 {
-                    var extForceFileItem = GetExistingForceFileItemOrNull(windField) ??
-                                           ExtForceFileHelper.CreateWindFieldExtForceFileItem(windField,
-                                                                                              Path.GetFileName(fileBasedWindField.Path));
-                    var newPath = Path.Combine(Path.GetDirectoryName(ExtFilePath), extForceFileItem.FileName);
+                    ExtForceFileItem extForceFileItem = GetExistingForceFileItemOrNull(windField) ??
+                                                        ExtForceFileHelper.CreateWindFieldExtForceFileItem(windField,
+                                                                                                           Path
+                                                                                                               .GetFileName(
+                                                                                                                   fileBasedWindField
+                                                                                                                       .Path));
+                    string newPath = Path.Combine(Path.GetDirectoryName(ExtFilePath), extForceFileItem.FileName);
                     fileBasedWindField.CopyTo(newPath);
                     yield return extForceFileItem;
                 }
 
                 if (windField is UniformWindField)
                 {
-                    var fileName = string.Join(".", ExtForceQuantNames.WindQuantityNames[windField.Quantity],
-                                               ExtForceQuantNames.TimFileExtension);
-                    var extForceFileItem = GetExistingForceFileItemOrNull(windField) ??
-                                           ExtForceFileHelper.CreateWindFieldExtForceFileItem(windField, fileName);
+                    string fileName = string.Join(".", ExtForceQuantNames.WindQuantityNames[windField.Quantity],
+                                                  ExtForceQuantNames.TimFileExtension);
+                    ExtForceFileItem extForceFileItem = GetExistingForceFileItemOrNull(windField) ??
+                                                        ExtForceFileHelper.CreateWindFieldExtForceFileItem(
+                                                            windField, fileName);
                     ExtForceFileHelper.AddSuffixInCaseOfDuplicateFile(extForceFileItem);
                     var timFile = new TimFile();
-                    var timFilePath = Path.Combine(directory, extForceFileItem.FileName);
+                    string timFilePath = Path.Combine(directory, extForceFileItem.FileName);
                     timFile.Write(timFilePath, windField.Data, referenceTime);
                     yield return extForceFileItem;
                 }
@@ -960,19 +1032,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         #region Read logic
 
-        public void Read(string extForceFilePath, WaterFlowFMModelDefinition modelDefinition, string mduFilePath)
+        public void Read(string extForceFilePath, WaterFlowFMModelDefinition modelDefinition,
+                         string extSubFilesReferenceFilePath)
         {
-            MduFilePath = mduFilePath;
-
-            PathsRelativeToExtDuringReading = (bool) modelDefinition.GetModelProperty(KnownProperties.PathsRelativeToParent).Value;
+            ExtSubFilesReferenceFilePath = extSubFilesReferenceFilePath;
             ExtFilePath = extForceFilePath;
+
             Read(modelDefinition);
         }
-        
+
         private void Read(WaterFlowFMModelDefinition modelDefinition)
         {
-            var extForceFileItems = ParseExtForceFile();
-            var forceFileItems = extForceFileItems as IList<ExtForceFileItem> ?? extForceFileItems.ToList();
+            IEnumerable<ExtForceFileItem> extForceFileItems = ParseExtForceFile();
+            IList<ExtForceFileItem> forceFileItems =
+                extForceFileItems as IList<ExtForceFileItem> ?? extForceFileItems.ToList();
 
             ReadPolyLineData(forceFileItems, modelDefinition);
             ReadWindItems(forceFileItems, modelDefinition);
@@ -981,24 +1054,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             StoreUnknownQuantities(forceFileItems, modelDefinition);
         }
 
-        private IEnumerable<ExtForceFileItem> GetUnknownExtForceFileItems(IEnumerable<ExtForceFileItem> allExtForceFileItems)
+        private IEnumerable<ExtForceFileItem> GetUnknownExtForceFileItems(
+            IEnumerable<ExtForceFileItem> allExtForceFileItems)
         {
             return allExtForceFileItems.Except(supportedExtForceFileItems);
         }
 
-        private void StoreUnknownQuantities(IEnumerable<ExtForceFileItem> allExtForceFileItems, WaterFlowFMModelDefinition modelDefinition)
+        private void StoreUnknownQuantities(IEnumerable<ExtForceFileItem> allExtForceFileItems,
+                                            WaterFlowFMModelDefinition modelDefinition)
         {
-            var unknownForceFileItems = GetUnknownExtForceFileItems(allExtForceFileItems).ToList();
-            foreach (var unknownForceFileItem in unknownForceFileItems)
+            List<ExtForceFileItem> unknownForceFileItems = GetUnknownExtForceFileItems(allExtForceFileItems).ToList();
+            foreach (ExtForceFileItem unknownForceFileItem in unknownForceFileItems)
             {
                 log.WarnFormat(
                     Resources
                         .ExtForceFile_StoreUnknownQuantities_Quantity___0___detected_in_the_external_force_file_and_will_be_passed_to_the_computational_core__This_may_affect_your_simulation_,
                     unknownForceFileItem.Quantity);
 
-                string referencedFilePath = RetrieveAbsoluteFilePath(unknownForceFileItem.FileName);
+                string referencedFilePath =
+                    GetOtherFilePathInSameDirectory(ExtSubFilesReferenceFilePath, unknownForceFileItem.FileName);
 
-                var unsupportedFileBasedExtForceFileItem = new UnsupportedFileBasedExtForceFileItem(referencedFilePath, unknownForceFileItem);
+                var unsupportedFileBasedExtForceFileItem =
+                    new UnsupportedFileBasedExtForceFileItem(referencedFilePath, unknownForceFileItem);
 
                 modelDefinition.UnsupportedFileBasedExtForceFileItems.Add(unsupportedFileBasedExtForceFileItem);
             }
@@ -1014,9 +1091,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
                 while (currentLine != null && IsNewEntry(currentLine))
                 {
-                    var startLineNumber = LineNumber;
+                    int startLineNumber = LineNumber;
 
-                    var extForceFileItem = ReadQuantityBlock(startLineNumber);
+                    ExtForceFileItem extForceFileItem = ReadQuantityBlock(startLineNumber);
 
                     if (IsValidQuantity(extForceFileItem))
                     {
@@ -1024,7 +1101,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     }
                     else
                     {
-                        log.WarnFormat($"Invalid Quantity item '{extForceFileItem.Quantity}' starting on line {startLineNumber} in file {ExtFilePath}; Item is skipped.");
+                        log.WarnFormat(
+                            $"Invalid Quantity item '{extForceFileItem.Quantity}' starting on line {startLineNumber} in file {ExtFilePath}; Item is skipped.");
                     }
                 }
             }
@@ -1036,7 +1114,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private ExtForceFileItem ReadQuantityBlock(int startLineNumber)
         {
-            var propertyName = GetKeyPart(currentLine);
+            string propertyName = GetKeyPart(currentLine);
             var extForceFileItem = new ExtForceFileItem(GetValuePart(currentLine));
 
             if (propertyName != QuantityKey)
@@ -1057,7 +1135,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
             catch (FormatException e)
             {
-                log.ErrorFormat("An error occured while reading Quantity item starting at line {0}: {1}.", startLineNumber, e.Message);
+                log.ErrorFormat("An error occured while reading Quantity item starting at line {0}: {1}.",
+                                startLineNumber, e.Message);
             }
 
             return extForceFileItem;
@@ -1065,7 +1144,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private void ReadQuantityProperty(ExtForceFileItem extForceFileItem)
         {
-            var propertyName = GetKeyPart(currentLine);
+            string propertyName = GetKeyPart(currentLine);
 
             switch (propertyName)
             {
@@ -1103,7 +1182,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     SetFrictionType(extForceFileItem);
                     break;
                 default:
-                    log.WarnFormat(Resources.ExtForceFile_ReadQuantityProperty_Unexpected_line___0___on_line__1__in_file__2__and_will_be_ignored_, currentLine, LineNumber, ExtFilePath);
+                    log.WarnFormat(
+                        Resources
+                            .ExtForceFile_ReadQuantityProperty_Unexpected_line___0___on_line__1__in_file__2__and_will_be_ignored_,
+                        currentLine, LineNumber, ExtFilePath);
                     break;
             }
         }
@@ -1149,7 +1231,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 extForceFileItem.Method = GetIntegerPropertyValue(currentLine);
 
                 // backward compatibility: samples triangulation changed from 4 to 5 in #30984
-                if (extForceFileItem.FileType == ExtForceQuantNames.FileTypes.Triangulation && extForceFileItem.Method == 4)
+                if (extForceFileItem.FileType == ExtForceQuantNames.FileTypes.Triangulation &&
+                    extForceFileItem.Method == 4)
                 {
                     extForceFileItem.Method = 5;
                 }
@@ -1235,7 +1318,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private void SetAveragingType(ExtForceFileItem extForceFileItem)
         {
-            if (extForceFileItem.FileType != ExtForceQuantNames.FileTypes.Triangulation && extForceFileItem.Operand == null)
+            if (extForceFileItem.FileType != ExtForceQuantNames.FileTypes.Triangulation &&
+                extForceFileItem.Operand == null)
             {
                 throw new FormatException(GetMessageUnexpectedKeyword(AveragingTypeKey));
             }
@@ -1250,7 +1334,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private void SetRelativeSearchCellSize(ExtForceFileItem extForceFileItem)
         {
-            if (extForceFileItem.FileType != ExtForceQuantNames.FileTypes.Triangulation && extForceFileItem.Operand == null)
+            if (extForceFileItem.FileType != ExtForceQuantNames.FileTypes.Triangulation &&
+                extForceFileItem.Operand == null)
             {
                 throw new FormatException(GetMessageUnexpectedKeyword(RelSearchCellSizeKey));
             }
@@ -1275,12 +1360,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private void LogWarningQuantityPropertyAlreadySet(string quantityName)
         {
-            log.WarnFormat(Resources.ExtForceFile_LogWarningQuantityPropertyAlreadySet__0__is_already_set__Line__1__of_file__2__will_be_ignored_, quantityName, LineNumber, ExtFilePath);
+            log.WarnFormat(
+                Resources
+                    .ExtForceFile_LogWarningQuantityPropertyAlreadySet__0__is_already_set__Line__1__of_file__2__will_be_ignored_,
+                quantityName, LineNumber, ExtFilePath);
         }
 
         private string GetMessageUnexpectedKeyword(string quantityName)
         {
-            return string.Format(Resources.ExtForceFile_GetMessageUnexpectedKeyword_Unexpected_keyword__0__on_line__1__of_file__2_, quantityName, LineNumber, ExtFilePath);
+            return string.Format(
+                Resources.ExtForceFile_GetMessageUnexpectedKeyword_Unexpected_keyword__0__on_line__1__of_file__2_,
+                quantityName, LineNumber, ExtFilePath);
         }
 
         private static bool IsValidQuantity(ExtForceFileItem extForceFileItem)

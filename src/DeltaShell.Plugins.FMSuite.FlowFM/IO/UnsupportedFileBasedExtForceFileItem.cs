@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DelftTools.Utils.IO;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
     public class UnsupportedFileBasedExtForceFileItem : IUnsupportedFileBasedExtForceFileItem
     {
-        public UnsupportedFileBasedExtForceFileItem(string path, ExtForceFileItem parent) 
+        public UnsupportedFileBasedExtForceFileItem(string path, ExtForceFileItem parent)
         {
             Path = path;
             UnsupportedExtForceFileItem = parent;
@@ -24,6 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 File.Create(path);
             }
+
             Path = path;
         }
 
@@ -38,6 +34,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 throw new FileNotFoundException(string.Format("File {0} could not be found", path));
             }
+
             Path = path;
         }
 
@@ -47,11 +44,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 return;
             }
+
             if (System.IO.Path.GetFullPath(Path) != System.IO.Path.GetFullPath(destinationPath))
             {
                 File.Copy(Path, destinationPath, true);
             }
-
         }
 
         public void SwitchTo(string newPath)
@@ -65,17 +62,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 File.Delete(Path);
             }
+
             Path = null;
         }
 
         public string Path { get; set; }
         public IEnumerable<string> Paths { get; }
-        public bool IsFileCritical { get { return true; } }
-        public bool IsOpen
-        {
-            get { return Path != null; }
-        }
-    }
+        public bool IsFileCritical => true;
 
-    
+        public bool IsOpen => Path != null;
+    }
 }

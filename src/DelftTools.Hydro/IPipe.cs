@@ -12,7 +12,7 @@ namespace DelftTools.Hydro
         IEnumerable<IStructure1D> Structures { get; set; }
 
         IEnumerable<IPump> Pumps { get; }
-        
+
         IEnumerable<IGully> Gullies { get; }
 
         double StartZ { get; set; }

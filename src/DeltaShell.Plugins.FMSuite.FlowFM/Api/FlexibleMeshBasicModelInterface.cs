@@ -14,7 +14,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
     public class FlexibleMeshBasicModelInterface : IBasicModelInterface
     {
         private string originalCurrentDirectory;
-        
+
         public int Initialize(string path)
         {
             originalCurrentDirectory = Environment.CurrentDirectory;
@@ -24,7 +24,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
 
         public int Update(double dt = -1)
         {
-            var totalSeconds = TimeStep.TotalSeconds;
+            double totalSeconds = TimeStep.TotalSeconds;
             return FlexibleMeshModelDll.update(totalSeconds);
         }
 
@@ -48,7 +48,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
 
         public Array GetValues(string variable)
         {
-            var ptr = IntPtr.Zero;
+            IntPtr ptr = IntPtr.Zero;
             FlexibleMeshModelDll.get_var(variable, ref ptr);
 
             if (ptr == IntPtr.Zero)
@@ -68,12 +68,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             // get value type
             var typeNameBuilder = new StringBuilder(FlexibleMeshModelDll.MAXSTRLEN);
             FlexibleMeshModelDll.get_var_type(variable, typeNameBuilder);
-            var typeName = typeNameBuilder.ToString();
+            string typeName = typeNameBuilder.ToString();
 
             // copy to 1D array
-            var totalLength = GetTotalLength(shape);
+            int totalLength = GetTotalLength(shape);
 
-            var values1D = ToArray1D(ptr, typeName, totalLength);
+            Array values1D = ToArray1D(ptr, typeName, totalLength);
 
             if (rank == 1)
             {
@@ -81,8 +81,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             }
 
             // convert to nD array
-            var valueType = ToType(typeName);
-            var values = Array.CreateInstance(valueType, shape);
+            Type valueType = ToType(typeName);
+            Array values = Array.CreateInstance(valueType, shape);
             Buffer.BlockCopy(values1D, 0, values, 0, values1D.Length * Marshal.SizeOf(valueType));
 
             return values;
@@ -162,7 +162,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
         {
             var sb = new StringBuilder(FlexibleMeshModelDll.MAXSTRLEN);
             FlexibleMeshModelDll.get_string_attribute("refdat", sb);
-            var refDate = DateTime.ParseExact(sb.ToString(), "yyyyMMdd", CultureInfo.InvariantCulture);
+            DateTime refDate = DateTime.ParseExact(sb.ToString(), "yyyyMMdd", CultureInfo.InvariantCulture);
             return refDate;
         }
 
@@ -172,7 +172,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             {
                 double dt;
                 FlexibleMeshModelDll.get_time_step(out dt);
-                return new TimeSpan((long) (TimeSpan.TicksPerSecond*dt));
+                return new TimeSpan((long) (TimeSpan.TicksPerSecond * dt));
             }
         }
 
@@ -187,8 +187,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
         {
             get
             {
-                var count = GetVariableCount();
-                if (count == 0) return new string[0];
+                int count = GetVariableCount();
+                if (count == 0)
+                {
+                    return new string[0];
+                }
 
                 var names = new string[count];
                 for (var i = 0; i < count; i++)
@@ -202,7 +205,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
 
         private int GetVariableCount()
         {
-            int count = 0;
+            var count = 0;
             FlexibleMeshModelDll.get_var_count(ref count);
             return count;
         }
@@ -213,7 +216,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             FlexibleMeshModelDll.get_var_name(index, variableNameBuilder);
             return variableNameBuilder.ToString();
         }
- 
+
         public Logger Logger { get; set; }
 
         private static Type ToType(string typeName)
@@ -227,7 +230,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
                     return typeof(int);
 
                 case "float":
-                    return typeof (float);
+                    return typeof(float);
             }
 
             throw new NotSupportedException("Unsupported type: " + typeName);

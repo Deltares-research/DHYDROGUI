@@ -14,7 +14,10 @@ namespace DelftTools.Hydro
         public override void OnAfterInitialize(object entity, IDbConnection dbConnection)
         {
             var hydroNetwork = entity as IHydroNetwork;
-            if (hydroNetwork == null) return;
+            if (hydroNetwork == null)
+            {
+                return;
+            }
 
             hydroNetworks.Add(hydroNetwork);
         }

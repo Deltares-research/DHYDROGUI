@@ -3,6 +3,7 @@ using System.Drawing;
 using DelftTools.Hydro;
 using DelftTools.Utils.Collections;
 using DeltaShell.Plugins.FMSuite.Common.IO;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 {
@@ -11,7 +12,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         protected override IEnumerable<LandBoundary2D> Import(string path)
         {
             var reader = new LdbFile();
-            var landBoundaries = reader.Read(path);
+            IList<LandBoundary2D> landBoundaries = reader.Read(path);
             landBoundaries.ForEach(lb => lb.TrySetGroupName(path));
             return landBoundaries;
         }
@@ -22,34 +23,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             writer.Write(path, features);
         }
 
-        public override string Category
-        {
-            get { return "Feature geometries"; }
-        }
+        public override string Category => "Feature geometries";
 
-        public override string Description
-        {
-            get { return string.Empty; }
-        }
+        public override string Description => string.Empty;
 
-        public override Bitmap Image
-        {
-            get { return Properties.Resources.TextDocument; }
-        }
+        public override Bitmap Image => Resources.TextDocument;
 
-        public override string FileFilter
-        {
-            get { return "Land boundary files|*.ldb"; }
-        }
+        public override string FileFilter => "Land boundary files|*.ldb";
 
-        protected override string ImporterName
-        {
-            get { return "Land boundaries from .ldb file"; }
-        }
+        protected override string ImporterName => "Land boundaries from .ldb file";
 
-        protected override string ExporterName
-        {
-            get { return "Land boundaries to .ldb file"; }
-        }
+        protected override string ExporterName => "Land boundaries to .ldb file";
     }
 }

@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using DelftTools.Hydro.Structures;
 using DelftTools.Utils;
-using DelftTools.Utils.Collections;
 using DeltaShell.Plugins.FMSuite.Common.IO;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 
@@ -15,8 +14,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
     /// <summary>
     /// Allows to do an import / export of a PLIZ file, which extends the PliImporterExporter.
     /// </summary>
-    /// <typeparam name="TParent">The type of the parent.</typeparam>
-    /// <typeparam name="TFeat">The type of the feat.</typeparam>
+    /// <typeparam name="TParent"> The type of the parent. </typeparam>
+    /// <typeparam name="TFeat"> The type of the feat. </typeparam>
     /// <seealso cref="DeltaShell.Plugins.FMSuite.Common.IO.Feature2DImportExportBase{TFeat}" />
     public class PlizFileImporterExporter<TParent, TFeat> : Feature2DImportExportBase<TFeat>
         where TFeat : class, IFeature, INameable, new() where TParent : INameable
@@ -27,10 +26,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         /// <value>
         /// The name of the importer.
         /// </value>
-        protected override string ImporterName
-        {
-            get { return "Features from .pliz file"; }
-        }
+        protected override string ImporterName => "Features from .pliz file";
 
         /// <summary>
         /// Gets the name of the exporter.
@@ -38,10 +34,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         /// <value>
         /// The name of the exporter.
         /// </value>
-        protected override string ExporterName
-        {
-            get { return "Features to .pliz file"; }
-        }
+        protected override string ExporterName => "Features to .pliz file";
 
         /// <summary>
         /// Gets the category.
@@ -49,15 +42,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         /// <value>
         /// The category.
         /// </value>
-        public override string Category
-        {
-            get { return "Feature geometries"; }
-        }
+        public override string Category => "Feature geometries";
 
-        public override string Description
-        {
-            get { return string.Empty; }
-        }
+        public override string Description => string.Empty;
 
         /// <summary>
         /// Gets the file filter.
@@ -65,10 +52,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         /// <value>
         /// The file filter.
         /// </value>
-        public override string FileFilter
-        {
-            get { return "Feature polyline-z files (*.pliz)|*.pliz"; }
-        }
+        public override string FileFilter => "Feature polyline-z files (*.pliz)|*.pliz";
 
         /// <summary>
         /// Gets the image.
@@ -76,15 +60,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         /// <value>
         /// The image.
         /// </value>
-        public override Bitmap Image
-        {
-            get { return Properties.Resources.TextDocument; }
-        }
+        public override Bitmap Image => Resources.TextDocument;
 
         /// <summary>
         /// Sources the types.
         /// </summary>
-        /// <returns></returns>
+        /// <returns> </returns>
         public override IEnumerable<Type> SourceTypes()
         {
             yield return typeof(TParent);
@@ -99,7 +80,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         /// </value>
         public override IEnumerable<Type> SupportedItemTypes
         {
-            get { yield return typeof(IList<TParent>); }
+            get
+            {
+                yield return typeof(IList<TParent>);
+            }
         }
 
         protected override IEnumerable<TFeat> Import(string path)
@@ -112,6 +96,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                 };
                 return reader.Read(path, (s, c, t) => ProgressChanged?.Invoke(s, c, t));
             }
+
             return Enumerable.Empty<TFeat>();
         }
 
@@ -124,7 +109,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                 var writer = new PlizFile<TFeat>
                 {
                     CreateDelegate = CreateDelegate,
-
                 };
                 writer.Write(path, features);
             }
@@ -147,7 +131,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         /// The get feature.
         /// </value>
         public Func<TParent, TFeat> GetFeature { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the create delegate.
         /// </summary>
@@ -162,15 +146,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             {
                 return CreateFromFeature(feature);
             }
+
             if (feature is TParent)
             {
                 //prevent compiler from whining
                 object o = feature;
                 return (TParent) o;
             }
+
             throw new InvalidCastException(
                 string.Format("Cannot create object of type {0} from feature of type {1}",
-                    typeof(TParent), typeof(TFeat)));
+                              typeof(TParent), typeof(TFeat)));
         }
 
         private TFeat GetFeatureFromParent(TParent parent)
@@ -179,12 +165,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             {
                 return GetFeature(parent);
             }
+
             if (typeof(TFeat).IsAssignableFrom(typeof(TParent)))
             {
                 return parent as TFeat;
             }
+
             throw new InvalidCastException(string.Format("Cannot get feature of type {0} from object of type {1}",
-                typeof(TFeat), typeof(TParent)));
+                                                         typeof(TFeat), typeof(TParent)));
         }
 
         protected override object OnImportItem(string path, object target = null)
@@ -193,34 +181,39 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             {
                 return base.OnImportItem(path, target);
             }
+
             if (target is IList<TParent>)
             {
                 var featureList = new List<TFeat>();
                 base.OnImportItem(path, featureList);
                 AddOrReplace((IList<TParent>) target, featureList.Select(CreateParentFromFeature),
-                    EqualityComparer);
+                             EqualityComparer);
             }
+
             return target;
         }
 
         /// <summary>
         /// Exports the specified item.
         /// </summary>
-        /// <param name="item">The item.</param>
-        /// <param name="path">The path.</param>
-        /// <returns></returns>
+        /// <param name="item"> The item. </param>
+        /// <param name="path"> The path. </param>
+        /// <returns> </returns>
         public override bool Export(object item, string path)
         {
-            var file = path;
+            string file = path;
 
             if (file == null && Files != null && Files.Any())
             {
                 file = Files[0];
             }
 
-            if (file == null) return false;
+            if (file == null)
+            {
+                return false;
+            }
 
-            var itemsToExport = Enumerable.Empty<TFeat>();
+            IEnumerable<TFeat> itemsToExport = Enumerable.Empty<TFeat>();
 
             if (typeof(TFeat).IsAssignableFrom(typeof(TParent)))
             {
@@ -230,7 +223,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                 }
                 else if (item is TParent)
                 {
-                    itemsToExport = new List<TFeat>(new[] {(TFeat) item});
+                    itemsToExport = new List<TFeat>(new[]
+                    {
+                        (TFeat) item
+                    });
                 }
             }
             else
@@ -241,9 +237,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                 }
                 else if (item is TParent)
                 {
-                    itemsToExport = new List<TFeat>(new[] {GetFeatureFromParent((TParent) item)});
+                    itemsToExport = new List<TFeat>(new[]
+                    {
+                        GetFeatureFromParent((TParent) item)
+                    });
                 }
             }
+
             Export(itemsToExport, file);
             return true;
         }

@@ -7,12 +7,12 @@ using GeoAPI.Extensions.Feature;
 
 namespace DelftTools.Hydro.Structures
 {
-    ///<summary>
+    /// <summary>
     /// Implements a 1d pump.
     /// Both the Sobek Pump (type 9) and River Pump (type 3) are implemented by this class.
     /// todo: add support for reduction table = combine with implementation triggers
-    ///</summary>
-    [Entity(FireOnCollectionChange=false)]
+    /// </summary>
+    [Entity(FireOnCollectionChange = false)]
     [TypeConverter(typeof(ExpandableObjectConverter))]
     public class Pump : BranchStructure, IPump
     {
@@ -21,7 +21,7 @@ namespace DelftTools.Hydro.Structures
 
         public Pump() : this("Pump") {}
 
-        public Pump(bool canBeTimeDependent) :this("Pump", canBeTimeDependent) {}
+        public Pump(bool canBeTimeDependent) : this("Pump", canBeTimeDependent) {}
 
         public Pump(string name, bool canBeTimeDependent = false)
         {
@@ -40,7 +40,7 @@ namespace DelftTools.Hydro.Structures
 
         public virtual bool CanBeTimedependent
         {
-            get { return canBeTimedependent; }
+            get => canBeTimedependent;
             set
             {
                 canBeTimedependent = value;
@@ -54,7 +54,9 @@ namespace DelftTools.Hydro.Structures
             if (canBeTimedependent)
             {
                 if (CapacityTimeSeries == null)
+                {
                     CapacityTimeSeries = HydroTimeSeriesFactory.CreateTimeSeries("Capacity", "Capacity", "TODO");
+                }
             }
             else
             {
@@ -64,7 +66,7 @@ namespace DelftTools.Hydro.Structures
         }
 
         [DisplayName("Positive direction")]
-        [FeatureAttribute(Order = 5,ExportName = "PosDir")]
+        [FeatureAttribute(Order = 5, ExportName = "PosDir")]
         public virtual bool DirectionIsPositive { get; set; }
 
         [FeatureAttribute(Order = 6)]
@@ -72,11 +74,15 @@ namespace DelftTools.Hydro.Structures
 
         public virtual bool UseCapacityTimeSeries
         {
-            get { return useCapacityTimeSeries; }
+            get => useCapacityTimeSeries;
             set
             {
-                if(!canBeTimedependent && value)
-                    throw new InvalidOperationException("Cannot use time series for capacity when time varying data is not allowed.");
+                if (!canBeTimedependent && value)
+                {
+                    throw new InvalidOperationException(
+                        "Cannot use time series for capacity when time varying data is not allowed.");
+                }
+
                 useCapacityTimeSeries = value;
             }
         }
@@ -92,11 +98,11 @@ namespace DelftTools.Hydro.Structures
         public virtual double StopDelivery { get; set; }
 
         [DisplayName("Switch-on suction")]
-        [FeatureAttribute(Order = 9,ExportName = "OnSuction")]
+        [FeatureAttribute(Order = 9, ExportName = "OnSuction")]
         public virtual double StartSuction { get; set; }
 
         [DisplayName("Switch-off suction")]
-        [FeatureAttribute(Order = 10,ExportName = "OffSuction")]
+        [FeatureAttribute(Order = 10, ExportName = "OffSuction")]
         public virtual double StopSuction { get; set; }
 
         [DisplayName("Control on")]
@@ -111,17 +117,32 @@ namespace DelftTools.Hydro.Structures
                 switch (ControlDirection)
                 {
                     case PumpControlDirection.DeliverySideControl:
-                        relevantZValues = new[] { StopDelivery, StartDelivery };
+                        relevantZValues = new[]
+                        {
+                            StopDelivery,
+                            StartDelivery
+                        };
                         break;
                     case PumpControlDirection.SuctionSideControl:
-                        relevantZValues = new[] { StartSuction, StopSuction };
+                        relevantZValues = new[]
+                        {
+                            StartSuction,
+                            StopSuction
+                        };
                         break;
                     default:
-                        relevantZValues = new[] { StartSuction, StopSuction, StartDelivery, StopDelivery };
+                        relevantZValues = new[]
+                        {
+                            StartSuction,
+                            StopSuction,
+                            StartDelivery,
+                            StopDelivery
+                        };
                         break;
                 }
+
                 //return the middle between min and max
-                return (relevantZValues.Min() + relevantZValues.Max()) / 2;    
+                return (relevantZValues.Min() + relevantZValues.Max()) / 2;
             }
         }
 
@@ -129,11 +150,11 @@ namespace DelftTools.Hydro.Structures
         /// reduction table
         /// </summary>
         public virtual IFunction ReductionTable { get; set; }
-        
+
         public override void CopyFrom(object source)
         {
             base.CopyFrom(source);
-            var pump = ((Pump) source);
+            var pump = (Pump) source;
 
             Attributes = (IFeatureAttributeCollection) pump.Attributes.Clone();
             Capacity = pump.Capacity;
@@ -146,10 +167,13 @@ namespace DelftTools.Hydro.Structures
             DirectionIsPositive = pump.DirectionIsPositive;
 
             CanBeTimedependent = pump.CanBeTimedependent;
-            if (!pump.CanBeTimedependent) return;
+            if (!pump.CanBeTimedependent)
+            {
+                return;
+            }
 
             UseCapacityTimeSeries = pump.UseCapacityTimeSeries;
-            CapacityTimeSeries = (TimeSeries)pump.CapacityTimeSeries.Clone(true);
+            CapacityTimeSeries = (TimeSeries) pump.CapacityTimeSeries.Clone(true);
         }
 
         public override StructureType GetStructureType()

@@ -204,6 +204,7 @@
     <Compile Include="IGroupableFeature.cs" />
     <Compile Include="IStructure.cs" />
     <Compile Include="NameableFeatureComparer.cs" />
+    <Compile Include="HydroNetwork.Eventing.cs" />
     <Compile Include="Structures\BridgePillar.cs" />
     <Compile Include="Structures\FixedWeir.cs" />
     <Compile Include="Friction.cs" />
@@ -512,6 +513,7 @@
   <ItemGroup>
     <EmbeddedResource Include="HydroNetwork.3.5.1.hbm.xml" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

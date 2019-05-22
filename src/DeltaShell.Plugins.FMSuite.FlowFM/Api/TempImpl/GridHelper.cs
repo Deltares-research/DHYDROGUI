@@ -45,23 +45,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api.TempImpl
     public static class GridHelper
     {
         /// <summary>
-        /// Given a net-file, create an UnstructuredGrid object. It achieves this by creating a temporary model, initialise it, and 
-        /// read the grid from the resulting map file. This is done because the initialise step can do a 'renumbering' of the grid 
-        /// cells. Now, the user sees the grid cell indices that are actually used by the computational core. 
-        /// If the initialise fails (throws an exception), the exception will be caught at a higher level. This can be the case when 
-        /// the grid is non-orthogonal, for instance. In that case, the non-renumbered grid will be used. 
+        /// Given a net-file, create an UnstructuredGrid object. It achieves this by creating a temporary model, initialise it, and
+        /// read the grid from the resulting map file. This is done because the initialise step can do a 'renumbering' of the grid
+        /// cells. Now, the user sees the grid cell indices that are actually used by the computational core.
+        /// If the initialise fails (throws an exception), the exception will be caught at a higher level. This can be the case
+        /// when
+        /// the grid is non-orthogonal, for instance. In that case, the non-renumbered grid will be used.
         /// </summary>
-        /// <param name="netFilePath"></param>
-        /// <returns></returns>
+        /// <param name="netFilePath"> </param>
+        /// <returns> </returns>
         public static UnstructuredGrid CreateUnstructuredGridFromNetCdfFor1D2DLinks(string netFilePath)
         {
-            if (!File.Exists(netFilePath) || Path.GetFileName(netFilePath) == null) return null;
+            if (!File.Exists(netFilePath) || Path.GetFileName(netFilePath) == null)
+            {
+                return null;
+            }
 
-            var tempPath = FileUtils.CreateTempDirectory();
-            var tempModel = new WaterFlowFMModel { Name = "flowinit" };
+            string tempPath = FileUtils.CreateTempDirectory();
+            var tempModel = new WaterFlowFMModel {Name = "flowinit"};
 
             tempModel.ModelDefinition.GetModelProperty(KnownProperties.NetFile)
-                .SetValueAsString(Path.GetFileName(netFilePath));
+                     .SetValueAsString(Path.GetFileName(netFilePath));
 
             tempModel.ModelDefinition.GetModelProperty(GuiProperties.MapOutputDeltaT).Value = new TimeSpan(1, 0, 0);
             tempModel.ModelDefinition.GetModelProperty(GuiProperties.WriteMapFile).Value = true;
@@ -72,21 +76,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api.TempImpl
 
             File.Copy(netFilePath, Path.Combine(tempPath, Path.GetFileName(netFilePath)));
 
-            var mduName = tempModel.Name + MduFile.MduExtension;
-            var mduFilePath = Path.Combine(tempPath, mduName);
+            string mduName = tempModel.Name + MduFile.MduExtension;
+            string mduFilePath = Path.Combine(tempPath, mduName);
 
             tempModel.ExportTo(mduFilePath, false, false, false); //TODO: add features
-            var flowFmOutputPath = Path.Combine(tempPath, "DFM_OUTPUT_" + tempModel.Name);
-            
+            string flowFmOutputPath = Path.Combine(tempPath, "DFM_OUTPUT_" + tempModel.Name);
+
             if (!Directory.Exists(flowFmOutputPath))
             {
                 Directory.CreateDirectory(flowFmOutputPath);
             }
-            var mapFilePath = Path.Combine(flowFmOutputPath, tempModel.MapSavePath);
+
+            string mapFilePath = Path.Combine(flowFmOutputPath, tempModel.MapSavePath);
 
             // call model initialize
-            var logFilePath = Path.Combine(tempPath, "flowinit.dia");
-            var api = FlexibleMeshModelApiFactory.CreateNew();
+            string logFilePath = Path.Combine(tempPath, "flowinit.dia");
+            IFlexibleMeshModelApi api = FlexibleMeshModelApiFactory.CreateNew();
 
             if (api == null)
             {
@@ -123,7 +128,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api.TempImpl
             }
             catch (Exception e)
             {
-                throw new InvalidOperationException(String.Format(Resources.GridHelper_CreateUnstructuredGridFromNetCdfFor1D2DLinks_It_was_not_possible_to_load_from_file___0___LogFilePath___1_, e.Message, logFilePath));
+                throw new InvalidOperationException(string.Format(
+                                                        Resources
+                                                            .GridHelper_CreateUnstructuredGridFromNetCdfFor1D2DLinks_It_was_not_possible_to_load_from_file___0___LogFilePath___1_,
+                                                        e.Message, logFilePath));
             }
 
             return unstructuredGrid;

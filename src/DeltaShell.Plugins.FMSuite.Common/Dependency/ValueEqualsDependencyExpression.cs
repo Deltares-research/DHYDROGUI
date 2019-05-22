@@ -8,8 +8,12 @@ using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 namespace DeltaShell.Plugins.FMSuite.Common.Dependency
 {
     /// <summary>
-    /// Represents a dependency expression in the form of "<c>propertyA is enabled if propertyB exists and
-    /// equals to any of the following values</c>".
+    /// Represents a dependency expression in the form of "
+    /// <c>
+    /// propertyA is enabled if propertyB exists and
+    /// equals to any of the following values
+    /// </c>
+    /// ".
     /// </summary>
     public class ValueEqualsDependencyExpression : DependencyExpressionBase
     {
@@ -23,57 +27,59 @@ namespace DeltaShell.Plugins.FMSuite.Common.Dependency
         /// </summary>
         private const string ValueArrayPart = @"\s*-?\d+(\|-?\d+)*$";
 
-        protected override string Regex
-        {
-            get { return KeywordPart + "=" + ValueArrayPart; }
-        }
+        protected override string Regex => KeywordPart + "=" + ValueArrayPart;
 
-        protected internal override string OnValidate(ModelProperty evaluatedProperty, IEnumerable<ModelProperty> allProperties, string dependencyExpression)
+        protected internal override string OnValidate(ModelProperty evaluatedProperty,
+                                                      IEnumerable<ModelProperty> allProperties,
+                                                      string dependencyExpression)
         {
-            var dependencyPropertyName = GetDependencyPropertyName(dependencyExpression);
-            var dependencyProperty =
+            string dependencyPropertyName = GetDependencyPropertyName(dependencyExpression);
+            ModelProperty dependencyProperty =
                 allProperties?.FirstOrDefault(
                     p =>
-                    p.PropertyDefinition.FilePropertyName.Equals(dependencyPropertyName,
-                                                                 StringComparison.InvariantCultureIgnoreCase));
+                        p.PropertyDefinition.FilePropertyName.Equals(dependencyPropertyName,
+                                                                     StringComparison.InvariantCultureIgnoreCase));
             if (dependencyProperty != null)
             {
                 if (dependencyProperty.PropertyDefinition.DataType != typeof(bool) &&
                     dependencyProperty.PropertyDefinition.DataType != typeof(int) &&
                     !dependencyProperty.PropertyDefinition.DataType.IsEnum)
                 {
-                    return String.Format("Model property '{0}' should be have 'bool', 'int' or 'enum' data type.", dependencyPropertyName);
+                    return string.Format("Model property '{0}' should be have 'bool', 'int' or 'enum' data type.",
+                                         dependencyPropertyName);
                 }
             }
 
             return null;
         }
 
-        protected internal override Func<IEnumerable<ModelProperty>, bool> OnCompile(ModelProperty evaluatedProperty, IEnumerable<ModelProperty> allProperties, string dependencyExpression)
+        protected internal override Func<IEnumerable<ModelProperty>, bool> OnCompile(
+            ModelProperty evaluatedProperty, IEnumerable<ModelProperty> allProperties, string dependencyExpression)
         {
             return properties =>
-                {
-                    var dependencyPropertyName = GetDependencyPropertyName(dependencyExpression);
-                    var dependencyProperty =
-                        properties?.FirstOrDefault(
-                            p =>
+            {
+                string dependencyPropertyName = GetDependencyPropertyName(dependencyExpression);
+                ModelProperty dependencyProperty =
+                    properties?.FirstOrDefault(
+                        p =>
                             p.PropertyDefinition.FilePropertyName.Equals(dependencyPropertyName,
                                                                          StringComparison.InvariantCultureIgnoreCase));
 
-                    if (dependencyProperty != null)
-                    {
-                        var comparisonValues = GetComparisonValues(dependencyExpression);
+                if (dependencyProperty != null)
+                {
+                    IEnumerable<int> comparisonValues = GetComparisonValues(dependencyExpression);
 
-                        return comparisonValues.Contains(Convert.ToInt32(dependencyProperty.Value));
-                    }
-                    // Property does not exist -> Is not true -> Do not enable!
-                    return false;
-                };
+                    return comparisonValues.Contains(Convert.ToInt32(dependencyProperty.Value));
+                }
+
+                // Property does not exist -> Is not true -> Do not enable!
+                return false;
+            };
         }
 
         private static IEnumerable<int> GetComparisonValues(string dependencyExpression)
         {
-            var numberValue = RegularExpression.GetFirstMatch(ValueArrayPart, dependencyExpression).Value.Trim();
+            string numberValue = RegularExpression.GetFirstMatch(ValueArrayPart, dependencyExpression).Value.Trim();
 
             // Do not catch exceptions, as value should be kept valid by application
             return numberValue.Split('|').Select(FMParser.FromString<int>);

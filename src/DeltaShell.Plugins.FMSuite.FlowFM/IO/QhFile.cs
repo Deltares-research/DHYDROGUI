@@ -8,7 +8,7 @@ using DeltaShell.Plugins.FMSuite.Common.IO;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
-    class QhFile : FMSuiteFileBase
+    internal class QhFile : FMSuiteFileBase
     {
         public void Write(string filePath, IFunction data)
         {
@@ -17,10 +17,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 try
                 {
                     OpenOutputFile(filePath);
-                    foreach (var argumentValue in data.Arguments[0].Values)
+                    foreach (object argumentValue in data.Arguments[0].Values)
                     {
                         var value = (double) data[argumentValue];
-                        WriteLine(String.Format("{0:0.0000000e+00}  {1:0.0000000e+00}", argumentValue, value));
+                        WriteLine(string.Format("{0:0.0000000e+00}  {1:0.0000000e+00}", argumentValue, value));
                     }
                 }
                 finally
@@ -31,30 +31,35 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         }
 
         /// <summary>
-        /// 
         /// </summary>
-        /// <param name="filePath"></param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentException"><paramref name="filePath"/> is an empty string ("").</exception>
-        /// <exception cref="ArgumentNullException"><paramref name="filePath"/> is null.</exception>
-        /// <exception cref="System.IO.FileNotFoundException">The file cannot be found.</exception>
-        /// <exception cref="System.IO.DirectoryNotFoundException">The specified path is invalid, such as being on an unmapped drive.</exception>
-        /// <exception cref="System.IO.IOException"><paramref name="filePath"/> includes an incorrect or invalid syntax for file name, directory name, or volume label.</exception>
-        /// <exception cref="OutOfMemoryException">There is insufficient memory to allocate a buffer for the returned string.</exception>
-        /// <exception cref="System.IO.IOException">An I/O error occured.</exception>
-        /// <exception cref="FormatException">When a line with invalid format was encountered.</exception>
+        /// <param name="filePath"> </param>
+        /// <returns> </returns>
+        /// <exception cref="ArgumentException"> <paramref name="filePath" /> is an empty string (""). </exception>
+        /// <exception cref="ArgumentNullException"> <paramref name="filePath" /> is null. </exception>
+        /// <exception cref="System.IO.FileNotFoundException"> The file cannot be found. </exception>
+        /// <exception cref="System.IO.DirectoryNotFoundException">
+        /// The specified path is invalid, such as being on an unmapped
+        /// drive.
+        /// </exception>
+        /// <exception cref="System.IO.IOException">
+        /// <paramref name="filePath" /> includes an incorrect or invalid syntax for file
+        /// name, directory name, or volume label.
+        /// </exception>
+        /// <exception cref="OutOfMemoryException"> There is insufficient memory to allocate a buffer for the returned string. </exception>
+        /// <exception cref="System.IO.IOException"> An I/O error occured. </exception>
+        /// <exception cref="FormatException"> When a line with invalid format was encountered. </exception>
         public IFunction Read(string filePath)
         {
             OpenInputFile(filePath);
             var qvalues = new List<double>();
             var hvalues = new List<double>();
-            var line = GetNextLine();
+            string line = GetNextLine();
             while (line != null)
             {
-                var lineFields = SplitLine(line).ToList();
+                List<string> lineFields = SplitLine(line).ToList();
                 if (lineFields.Count < 2)
                 {
-                    throw new FormatException(String.Format("Invalid q-value/h-value row on line {0} in file {1}",
+                    throw new FormatException(string.Format("Invalid q-value/h-value row on line {0} in file {1}",
                                                             LineNumber, filePath));
                 }
 

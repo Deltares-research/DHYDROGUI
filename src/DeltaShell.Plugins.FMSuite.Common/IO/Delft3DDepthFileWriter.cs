@@ -11,8 +11,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 
         public static void Write(double[] depthValues, int sizeN, int sizeM, string targetFile)
         {
-            if (depthValues.Length != sizeN*sizeM)
+            if (depthValues.Length != sizeN * sizeM)
+            {
                 throw new NotSupportedException("nr. of depth values should match grid size");
+            }
 
             using (var writer = new StreamWriter(targetFile))
             {
@@ -20,23 +22,30 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                 {
                     var index = 0;
                     const string spacing = "  ";
-                    for (int n = 0; n < sizeN; ++n)
+                    for (var n = 0; n < sizeN; ++n)
                     {
-                        for (int m = 0; m < sizeM; ++m)
+                        for (var m = 0; m < sizeM; ++m)
                         {
                             if (m > 0)
-                                writer.Write(m%MaxNrOfEntriesInRow == 0 ? Environment.NewLine : spacing);
+                            {
+                                writer.Write(m % MaxNrOfEntriesInRow == 0 ? Environment.NewLine : spacing);
+                            }
+
                             writer.Write(string.Format("{0,15:F8}", depthValues[index++]));
                         }
+
                         // write -999 column:
                         writer.Write(string.Format(spacing + "{0,15:F8}", MissingValue) + Environment.NewLine);
                     }
 
                     // write -999 row:
-                    for (int m = 0; m < sizeM + 1; ++m)
+                    for (var m = 0; m < sizeM + 1; ++m)
                     {
                         if (m > 0)
+                        {
                             writer.Write(m % MaxNrOfEntriesInRow == 0 ? Environment.NewLine : spacing);
+                        }
+
                         writer.Write(string.Format("{0,15:F8}", MissingValue));
                     }
                 }

@@ -10,20 +10,23 @@ namespace DelftTools.Hydro.Structures
             var culvert = entity as Culvert;
             if (culvert != null)
             {
-                var command = dbConnection.CreateCommand();
+                IDbCommand command = dbConnection.CreateCommand();
                 command.CommandText = string.Format(
                     "SELECT IsSiphon FROM features WHERE type = 'branch_structure_culvert' AND Name = '{0}' AND branch_id = '{1}'",
                     culvert.Name, culvert.Branch.Id);
 
-                var isSiphon = command.ExecuteScalar();
+                object isSiphon = command.ExecuteScalar();
                 if (isSiphon != null) // shouldn't happen, suggests corrupt database
                 {
-                    if ((bool) isSiphon) culvert.CulvertType = CulvertType.Siphon;
+                    if ((bool) isSiphon)
+                    {
+                        culvert.CulvertType = CulvertType.Siphon;
+                    }
                     else
                     {
                         culvert.CulvertType = culvert.BendLossCoefficient > 0
-                            ? CulvertType.InvertedSiphon
-                            : CulvertType.Culvert;
+                                                  ? CulvertType.InvertedSiphon
+                                                  : CulvertType.Culvert;
                     }
                 }
             }

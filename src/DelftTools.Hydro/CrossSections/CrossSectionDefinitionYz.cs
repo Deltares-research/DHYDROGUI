@@ -14,19 +14,15 @@ using NetTopologySuite.LinearReferencing;
 
 namespace DelftTools.Hydro.CrossSections
 {
-    [Entity(FireOnCollectionChange=false)]
+    [Entity(FireOnCollectionChange = false)]
     public class CrossSectionDefinitionYZ : CrossSectionDefinition
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(CrossSectionDefinitionYZ));
 
         public CrossSectionDefinitionYZ()
-            : this("")
-        {
-        }
+            : this("") {}
 
-        public CrossSectionDefinitionYZ(string name) : base(name)
-        {
-        }
+        public CrossSectionDefinitionYZ(string name) : base(name) {}
 
         private void RowChanging(object sender, LightDataRowChangeEventArgs e)
         {
@@ -35,22 +31,26 @@ namespace DelftTools.Hydro.CrossSections
             EndEdit();
 
             if (e.Action == DataRowAction.Add || e.Action == DataRowAction.Change)
+            {
                 ValidateRow(e.Row as CrossSectionDataSet.CrossSectionYZRow);
+            }
         }
 
         private void ValidateRow(CrossSectionDataSet.CrossSectionYZRow row)
         {
-            var rowIndex = yzDataTable.Rows.IndexOf(row);
-            var validationResult = ValidateCellValue(rowIndex, 0, row.Yq);
+            int rowIndex = yzDataTable.Rows.IndexOf(row);
+            Utils.Tuple<string, bool> validationResult = ValidateCellValue(rowIndex, 0, row.Yq);
             if (!validationResult.Second)
             {
                 throw new ArgumentException(validationResult.First);
             }
+
             validationResult = ValidateCellValue(rowIndex, 1, row.Z);
             if (!validationResult.Second)
             {
                 throw new ArgumentException(validationResult.First);
             }
+
             validationResult = ValidateCellValue(rowIndex, 2, row.DeltaZStorage);
             if (!validationResult.Second)
             {
@@ -59,19 +59,15 @@ namespace DelftTools.Hydro.CrossSections
         }
 
         private FastYZDataTable yzDataTable;
-        
-        public override bool GeometryBased
-        {
-            get { return false; }
-        }
+
+        public override bool GeometryBased => false;
 
         public override IEnumerable<Coordinate> Profile
         {
             get
             {
                 return
-                    YZDataTable.Rows.Select(row => new Coordinate(row.Yq, row.Z)).OrderBy(c => c.X).
-                        ToList();
+                    YZDataTable.Rows.Select(row => new Coordinate(row.Yq, row.Z)).OrderBy(c => c.X).ToList();
             }
         }
 
@@ -79,32 +75,30 @@ namespace DelftTools.Hydro.CrossSections
         {
             get
             {
-                return YZDataTable.Rows.Select(row => new Coordinate(row.Yq, row.Z + row.DeltaZStorage)).OrderBy(c => c.X);
+                return YZDataTable.Rows.Select(row => new Coordinate(row.Yq, row.Z + row.DeltaZStorage))
+                                  .OrderBy(c => c.X);
             }
         }
 
         public virtual CrossSectionDataSet.CrossSectionYZRow GetRow(int profileIndex)
         {
-            var unsortedRows = YZDataTable.Rows;
-            var sortedRows = YZDataTable.Rows.OrderBy(row => row.Yq).ToList();
+            LightBindingList<CrossSectionDataSet.CrossSectionYZRow> unsortedRows = YZDataTable.Rows;
+            List<CrossSectionDataSet.CrossSectionYZRow> sortedRows = YZDataTable.Rows.OrderBy(row => row.Yq).ToList();
             int realIndex = unsortedRows.IndexOf(sortedRows[profileIndex]);
             return YZDataTable.Rows.ElementAt(realIndex);
         }
 
-        public override CrossSectionType CrossSectionType
-        {
-            get { return CrossSectionType.YZ; }
-        }
+        public override CrossSectionType CrossSectionType => CrossSectionType.YZ;
 
         public override void ShiftLevel(double delta)
         {
             BeginEdit(new DefaultEditAction("Shift level"));
 
-            foreach (var yz in YZDataTable.ToList())
+            foreach (CrossSectionDataSet.CrossSectionYZRow yz in YZDataTable.ToList())
             {
                 yz.Z += delta;
             }
-            
+
             EndEdit();
         }
 
@@ -114,12 +108,12 @@ namespace DelftTools.Hydro.CrossSections
 
             if (cellValue is double)
             {
-                value = (double)cellValue;
+                value = (double) cellValue;
             }
             else
             {
-                var cellString = cellValue as String;
-                if (cellString != null && !Double.TryParse(cellString, out value))
+                var cellString = cellValue as string;
+                if (cellString != null && !double.TryParse(cellString, out value))
                 {
                     return new Utils.Tuple<string, bool>("Value must be a number.", false);
                 }
@@ -134,7 +128,7 @@ namespace DelftTools.Hydro.CrossSections
             if (columnIndex == 0 &&
                 rowIndex >= 0 &&
                 yzDataTable.Where((t, i) => rowIndex != i && // Skip the validated row
-                                          value == yzDataTable.Rows[i].Yq).Any())
+                                            value == yzDataTable.Rows[i].Yq).Any())
                 // Any duplicates?
             {
                 return new Utils.Tuple<string, bool>("Y' must be unique.", false);
@@ -146,7 +140,7 @@ namespace DelftTools.Hydro.CrossSections
                 return new Utils.Tuple<string, bool>("DeltaZ Storage cannot be negative.", false);
             }
 
-            return new Utils.Tuple<string, bool>("",true);
+            return new Utils.Tuple<string, bool>("", true);
         }
 
         public override IGeometry CalculateGeometry(IGeometry branchGeometry, double mapChainage)
@@ -158,8 +152,9 @@ namespace DelftTools.Hydro.CrossSections
                 // always clone: ExtractPoint will give either a new coordinate or a reference to an existing object
                 return new Point((Coordinate) lengthIndexedLine.ExtractPoint(mapChainage).Clone());
             }
-            var minY = Left;
-            var maxY = Left + Width;
+
+            double minY = Left;
+            double maxY = Left + Width;
 
             return CrossSectionHelper.CreatePerpendicularGeometry(branchGeometry, mapChainage, minY, maxY, Thalweg);
         }
@@ -173,11 +168,12 @@ namespace DelftTools.Hydro.CrossSections
         {
             get
             {
-                if(yzDataTable == null)
+                if (yzDataTable == null)
                 {
                     yzDataTable = new FastYZDataTable();
                     SubscribeToDataTable();
                 }
+
                 return yzDataTable;
             }
             set
@@ -190,27 +186,29 @@ namespace DelftTools.Hydro.CrossSections
 
         private void UnsubscribeFromDataTable()
         {
-            if (yzDataTable == null) 
+            if (yzDataTable == null)
+            {
                 return;
+            }
 
             yzDataTable.RowChanging -= RowChanging;
         }
 
         private void SubscribeToDataTable()
         {
-            if (yzDataTable == null) 
+            if (yzDataTable == null)
+            {
                 return;
+            }
 
             yzDataTable.RowChanging += RowChanging;
         }
 
-        public override LightDataTable RawData
-        {
-            get { return YZDataTable; }
-        }
+        public override LightDataTable RawData => YZDataTable;
 
         /// <summary>
-        /// This method will check if the roughness sections needs shifting and if they do, shift the roughness positions of the Sections.
+        /// This method will check if the roughness sections needs shifting and if they do, shift the roughness positions of
+        /// the Sections.
         /// <remarks>
         /// Returning when Sections.Count == 0 is a a fix for models that do not have roughness positions defined.
         /// The tolerance is set to 0.0001 to match the tolerance of the kernel.
@@ -218,18 +216,25 @@ namespace DelftTools.Hydro.CrossSections
         /// </summary>
         public override void RefreshSectionsWidths()
         {
-            if (Sections.Count == 0) return;
+            if (Sections.Count == 0)
+            {
+                return;
+            }
 
-            var sectionWidthsMatch = CompareTotalSectionWidths();
+            bool sectionWidthsMatch = CompareTotalSectionWidths();
             if (!sectionWidthsMatch)
             {
                 base.RefreshSectionsWidths();
             }
-            
-            var necessaryShift = CalculateNecessaryShift();
-            
-            if (!(Math.Abs(necessaryShift) > 0.0001)) return;
-            foreach (var section in Sections)
+
+            double necessaryShift = CalculateNecessaryShift();
+
+            if (!(Math.Abs(necessaryShift) > 0.0001))
+            {
+                return;
+            }
+
+            foreach (CrossSectionSection section in Sections)
             {
                 ShiftRoughnessPosition(section, necessaryShift);
             }
@@ -240,23 +245,26 @@ namespace DelftTools.Hydro.CrossSections
             var clone = (CrossSectionDefinitionYZ) base.Clone();
 
             var table = new FastYZDataTable();
-            
+
             table.BeginLoadData();
-            foreach (var row in YZDataTable)
+            foreach (CrossSectionDataSet.CrossSectionYZRow row in YZDataTable)
+            {
                 table.AddCrossSectionYZRow(row.Yq, row.Z, row.DeltaZStorage);
+            }
+
             table.EndLoadData();
-            
+
             clone.YZDataTable = table;
 
             clone.Thalweg = Thalweg;
-            
+
             return clone;
         }
 
         private bool CompareTotalSectionWidths()
         {
-            var deltaWidthRoughnessPositions = (Sections.Last().MaxY) - (Sections.First().MinY);
-            var deltaWidthProfile = (Profile.Last().X) - (Profile.First().X);
+            double deltaWidthRoughnessPositions = Sections.Last().MaxY - Sections.First().MinY;
+            double deltaWidthProfile = Profile.Last().X - Profile.First().X;
 
             return Math.Abs(deltaWidthProfile - deltaWidthRoughnessPositions) < 0.0001;
         }
@@ -269,12 +277,12 @@ namespace DelftTools.Hydro.CrossSections
         /// Positive means Profile starts before first Roughness section.
         /// Negative means Profile starts after first Roughness section.
         /// </remarks>
-        /// <returns>necessaryShift in [m]</returns>
+        /// <returns> necessaryShift in [m] </returns>
         private double CalculateNecessaryShift()
         {
-            var firstRoughnessPosition = Sections.First().MinY;
-            var firstProfilePosition = Profile.First().X;
-            var necessaryShift = firstProfilePosition - firstRoughnessPosition;
+            double firstRoughnessPosition = Sections.First().MinY;
+            double firstProfilePosition = Profile.First().X;
+            double necessaryShift = firstProfilePosition - firstRoughnessPosition;
 
             return necessaryShift;
         }
@@ -286,9 +294,11 @@ namespace DelftTools.Hydro.CrossSections
                 section.MinY += necessaryShift;
                 section.MaxY += necessaryShift;
 
-                Log.Info(string.Format(Resources.CrossSectionDefinitionYZ_ShiftRoughnessPosition_The_roughness_positions_of_cross_section___0___have_been_shifted_by__1___m__to_match_the_flow_profile,
-                        Name,
-                        necessaryShift));
+                Log.Info(string.Format(
+                             Resources
+                                 .CrossSectionDefinitionYZ_ShiftRoughnessPosition_The_roughness_positions_of_cross_section___0___have_been_shifted_by__1___m__to_match_the_flow_profile,
+                             Name,
+                             necessaryShift));
             }
             else
             {
@@ -296,7 +306,7 @@ namespace DelftTools.Hydro.CrossSections
             }
         }
 
-        public static CrossSectionDefinitionYZ CreateDefault(string name="")
+        public static CrossSectionDefinitionYZ CreateDefault(string name = "")
         {
             var crossSectionYZ = new CrossSectionDefinitionYZ();
             crossSectionYZ.SetDefaultYZTableAndUpdateThalWeg();

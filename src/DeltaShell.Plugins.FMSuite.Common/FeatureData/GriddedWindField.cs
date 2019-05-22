@@ -8,9 +8,9 @@ using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
 {
-    public class GriddedWindField: IWindField, IFileBased
+    public class GriddedWindField : IWindField, IFileBased
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof (GriddedWindField));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(GriddedWindField));
         private WindQuantity quantity;
 
         public static GriddedWindField CreateXField(string filePath)
@@ -20,12 +20,12 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
 
         public static GriddedWindField CreateYField(string filePath)
         {
-            return new GriddedWindField(filePath) { Quantity = WindQuantity.VelocityY };
+            return new GriddedWindField(filePath) {Quantity = WindQuantity.VelocityY};
         }
 
         public static GriddedWindField CreatePressureField(string filePath)
         {
-            return new GriddedWindField(filePath) { Quantity = WindQuantity.AirPressure };
+            return new GriddedWindField(filePath) {Quantity = WindQuantity.AirPressure};
         }
 
         public static GriddedWindField CreateCurviField(string filePath, string gridFilePath)
@@ -70,7 +70,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
 
         public WindQuantity Quantity
         {
-            get { return quantity; }
+            get => quantity;
             private set
             {
                 quantity = value;
@@ -83,10 +83,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
             Name = CreateName(Quantity);
         }
 
-        public IFunction Data
-        {
-            get { return null; }
-        }
+        public IFunction Data => null;
 
         public string Name { get; private set; }
 
@@ -98,8 +95,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
 
         public string Path
         {
-            get { return WindFilePath; }
-            set { WindFilePath = value; }
+            get => WindFilePath;
+            set => WindFilePath = value;
         }
 
         public IEnumerable<string> Paths
@@ -114,12 +111,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
             }
         }
 
-        public bool IsFileCritical { get { return true; } }
+        public bool IsFileCritical => true;
 
-        public bool IsOpen
-        {
-            get { return Path != null; }
-        }
+        public bool IsOpen => Path != null;
 
         public void CreateNew(string path)
         {
@@ -127,6 +121,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
             {
                 File.Create(path);
             }
+
             Path = path;
         }
 
@@ -142,15 +137,19 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
             {
                 throw new FileNotFoundException(string.Format("Wind file {0} could not be found", path));
             }
+
             if (SeparateGridFile)
             {
-                var gridFilePath = GetCorrespondingGridFilePath(path);
+                string gridFilePath = GetCorrespondingGridFilePath(path);
                 if (gridFilePath == null || !File.Exists(gridFilePath))
                 {
-                    throw new FileNotFoundException(string.Format("Corresponding grid file {0} could not be found", gridFilePath));
+                    throw new FileNotFoundException(
+                        string.Format("Corresponding grid file {0} could not be found", gridFilePath));
                 }
+
                 GridFilePath = gridFilePath;
             }
+
             Path = path;
         }
 
@@ -161,19 +160,23 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
                 Log.ErrorFormat("Could not find wind data file {0}", Path);
                 return;
             }
+
             if (System.IO.Path.GetFullPath(Path) != System.IO.Path.GetFullPath(destinationPath))
             {
                 File.Copy(Path, destinationPath, true);
             }
+
             if (SeparateGridFile)
             {
                 if (!File.Exists(GridFilePath))
                 {
                     Log.ErrorFormat("Could not find wind grid file {0}", Path);
-                    return;                    
+                    return;
                 }
-                var destGridFilePath = GetCorrespondingGridFilePath(destinationPath);
-                if (destGridFilePath != null && System.IO.Path.GetFullPath(GridFilePath) != System.IO.Path.GetFullPath(destGridFilePath))
+
+                string destGridFilePath = GetCorrespondingGridFilePath(destinationPath);
+                if (destGridFilePath != null && System.IO.Path.GetFullPath(GridFilePath) !=
+                    System.IO.Path.GetFullPath(destGridFilePath))
                 {
                     File.Copy(GridFilePath, destGridFilePath, true);
                 }
@@ -192,10 +195,12 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
             {
                 File.Delete(Path);
             }
+
             if (SeparateGridFile && File.Exists(GridFilePath))
             {
                 File.Delete(GridFilePath);
             }
+
             Path = null;
             GridFilePath = null;
         }

@@ -22,39 +22,32 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
 
         public string FilePath { get; private set; }
 
-        public string FileName
-        {
-            get { return Path.GetFileName(FilePath); }
-        }
+        public string FileName => Path.GetFileName(FilePath);
 
-        public string Directory
-        {
-            get { return Path.GetDirectoryName(FilePath); }
-        }
+        public string Directory => Path.GetDirectoryName(FilePath);
 
-        public bool FileExists
-        {
-            get { return File.Exists(FilePath); }
-        }
+        public bool FileExists => File.Exists(FilePath);
 
         public FileBasedModelItem AddChildItem(string property, string relativePath)
         {
-            if (property == null || relativePath == null) return null;
-            var absolutePath = Path.Combine(Directory, relativePath);
-            var fileBasedModelItem = new FileBasedModelItem(property, absolutePath)
-                {
-                    Parent = this
-                };
+            if (property == null || relativePath == null)
+            {
+                return null;
+            }
+
+            string absolutePath = Path.Combine(Directory, relativePath);
+            var fileBasedModelItem = new FileBasedModelItem(property, absolutePath) {Parent = this};
             DirectChildren.Add(fileBasedModelItem);
             return fileBasedModelItem;
         }
 
         public void Clear()
         {
-            foreach (var child in DirectChildren)
+            foreach (FileBasedModelItem child in DirectChildren)
             {
                 child.Clear();
             }
+
             DirectChildren.Clear();
         }
     }

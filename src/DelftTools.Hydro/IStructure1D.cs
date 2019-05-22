@@ -9,7 +9,7 @@ namespace DelftTools.Hydro
     public interface IStructure1D : IStructure, IHydroNetworkFeature, IBranchFeature //TODO : get this inheritance out
     {
         ICompositeBranchStructure ParentStructure { get; set; }
-        
+
         // TODO: why?
         IChannel Channel { get; set; }
 

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 
 namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
@@ -6,7 +5,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
     public class HarmonicComponent
     {
         // frequency in rad/h
-        public static readonly IDictionary<string, double> DefaultAstroComponentsRadPerHour = new Dictionary<string, double>
+        public static readonly IDictionary<string, double> DefaultAstroComponentsRadPerHour =
+            new Dictionary<string, double>
             {
                 {"A0", 0},
                 {"Q1", 0.233850747771757},
@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
                 {"K2", 0.525032341572931},
                 {"M4", 1.01173609876037},
                 {"MS4", 1.02946682497848},
-                {"MF", 0.01916429219274845},               
+                {"MF", 0.01916429219274845},
                 {"MM", 0.009501130821960508},
                 {"SSA", 0.001433565974632488},
                 {"SA", 0.0007167829873162440},
@@ -267,28 +267,16 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
 
         public bool IsAstro()
         {
-            return !String.IsNullOrEmpty(name);
+            return !string.IsNullOrEmpty(name);
         }
 
-        public string Name
-        {
-            get { return name; }
-        }
+        public string Name => name;
 
         // Tide frequency, in deg/h
-        public double Frequency
-        {
-            get { return frequency; }
-        }
+        public double Frequency => frequency;
 
-        public double Amplitude
-        {
-            get { return amplitude; }
-        }
+        public double Amplitude => amplitude;
 
-        public double Phase
-        {
-            get { return phase; }
-        }
+        public double Phase => phase;
     }
 }

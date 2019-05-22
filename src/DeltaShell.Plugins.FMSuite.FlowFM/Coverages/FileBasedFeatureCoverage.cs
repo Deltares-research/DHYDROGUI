@@ -4,12 +4,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
 {
     public class FileBasedFeatureCoverage : FeatureCoverage
     {
-        public FileBasedFeatureCoverage()
-        {
-        }
+        public FileBasedFeatureCoverage() {}
 
-        public FileBasedFeatureCoverage(string name) : base(name)
-        {
-        }
+        public FileBasedFeatureCoverage(string name) : base(name) {}
     }
 }

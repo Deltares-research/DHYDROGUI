@@ -2,7 +2,7 @@
 
 namespace DelftTools.Hydro.CrossSections
 {
-    [Entity(FireOnCollectionChange=false)]
+    [Entity(FireOnCollectionChange = false)]
     public class SummerDike //persisted as compound object (therefor not IUnique)
     {
         /// <summary>
@@ -33,13 +33,13 @@ namespace DelftTools.Hydro.CrossSections
         public virtual SummerDike Clone()
         {
             return new SummerDike()
-                       {
-                           Active = this.Active,
-                           CrestLevel = this.CrestLevel,
-                           FloodPlainLevel = this.FloodPlainLevel,
-                           FloodSurface = this.FloodSurface,
-                           TotalSurface = this.TotalSurface
-                       };
+            {
+                Active = Active,
+                CrestLevel = CrestLevel,
+                FloodPlainLevel = FloodPlainLevel,
+                FloodSurface = FloodSurface,
+                TotalSurface = TotalSurface
+            };
         }
 
         public bool Equals(SummerDike other)
@@ -48,15 +48,17 @@ namespace DelftTools.Hydro.CrossSections
             {
                 return false;
             }
+
             if (ReferenceEquals(this, other))
             {
                 return true;
             }
-            return other.Active.Equals(this.Active) 
-                && other.CrestLevel.Equals(this.CrestLevel) 
-                && other.FloodSurface.Equals(this.FloodSurface) 
-                && other.TotalSurface.Equals(this.TotalSurface) 
-                && other.FloodPlainLevel.Equals(this.FloodPlainLevel);
+
+            return other.Active.Equals(Active)
+                   && other.CrestLevel.Equals(CrestLevel)
+                   && other.FloodSurface.Equals(FloodSurface)
+                   && other.TotalSurface.Equals(TotalSurface)
+                   && other.FloodPlainLevel.Equals(FloodPlainLevel);
         }
 
         public override bool Equals(object obj)
@@ -65,10 +67,12 @@ namespace DelftTools.Hydro.CrossSections
             {
                 return false;
             }
+
             if (ReferenceEquals(this, obj))
             {
                 return true;
             }
+
             return Equals(obj as SummerDike);
         }
 
@@ -76,11 +80,11 @@ namespace DelftTools.Hydro.CrossSections
         {
             unchecked
             {
-                int result = this.Active.GetHashCode();
-                result = (result * 397) ^ this.CrestLevel.GetHashCode();
-                result = (result * 397) ^ this.FloodSurface.GetHashCode();
-                result = (result * 397) ^ this.TotalSurface.GetHashCode();
-                result = (result * 397) ^ this.FloodPlainLevel.GetHashCode();
+                int result = Active.GetHashCode();
+                result = (result * 397) ^ CrestLevel.GetHashCode();
+                result = (result * 397) ^ FloodSurface.GetHashCode();
+                result = (result * 397) ^ TotalSurface.GetHashCode();
+                result = (result * 397) ^ FloodPlainLevel.GetHashCode();
                 return result;
             }
         }

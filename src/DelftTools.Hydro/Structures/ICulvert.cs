@@ -16,20 +16,20 @@ namespace DelftTools.Hydro.Structures
         CrossSectionDefinitionZW TabulatedCrossSectionDefinition { get; }
 
         /// <summary>
-        /// Function Losscoefficient of gateopening 
+        /// Function Losscoefficient of gateopening
         /// </summary>
         IFunction GateOpeningLossCoefficientFunction { get; set; }
 
         /// <summary>
         /// Crosssection of the culvert. The inlet level is added to the cross-section
         /// </summary>
-        /// <returns>Crosssection as in StructureView</returns>
+        /// <returns> Crosssection as in StructureView </returns>
         CrossSectionDefinitionZW CrossSectionDefinitionAtInletAbsolute { get; }
-        
+
         /// <summary>
         /// Crosssection of the culvert. The outlet level is added to the cross-section
         /// </summary>
-        /// <returns>Crosssection as in StructureView</returns>
+        /// <returns> Crosssection as in StructureView </returns>
         CrossSectionDefinitionZW CrossSectionDefinitionAtOutletAbsolute { get; }
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace DelftTools.Hydro.Structures
         /// Radius of the culvert (if shape steel cunette)
         /// </summary>
         double Radius { get; set; }
-    
+
         /// <summary>
         /// Radius1 of the culvert (if shape steel cunette)
         /// </summary>
@@ -87,9 +87,10 @@ namespace DelftTools.Hydro.Structures
         double SiphonOnLevel { get; set; }
 
         double SiphonOffLevel { get; set; }
-        
+
         bool IsGated { get; set; }
         double GateInitialOpening { get; set; }
+
         /// <summary>
         /// Bedlevel + GateOpening
         /// </summary>
@@ -106,7 +107,7 @@ namespace DelftTools.Hydro.Structures
         /// <summary>
         /// Average bedlevel of the culvert. Used for crossectional view.
         /// </summary>
-        double BottomLevel { get;}
+        double BottomLevel { get; }
 
         double BendLossCoefficient { get; set; }
 
@@ -134,16 +135,15 @@ namespace DelftTools.Hydro.Structures
 
         /// <summary>
         /// Crosssection as used for model api. It does not include any level since these are passed separately
-        /// If rectangle a single section tabulated is returned. 
+        /// If rectangle a single section tabulated is returned.
         /// </summary>
         CrossSectionDefinitionZW CrossSectionDefinitionForCalculation { get; }
-        
+
         /// <summary>
         /// Cross Section Definition as used for ini (filewriter).
         /// </summary>
         ICrossSectionDefinition CrossSectionDefinition { get; }
 
         CulvertType CulvertType { get; set; }
-
     }
 }

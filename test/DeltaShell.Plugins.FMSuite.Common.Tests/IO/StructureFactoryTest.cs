@@ -415,11 +415,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             structure.AddProperty(KnownStructureProperties.Name, typeof(string), "Gate02");
             structure.AddProperty(KnownStructureProperties.PolylineFile, typeof(string), "pump05.pli");
             structure.AddProperty(KnownStructureProperties.CrestLevel, typeof(Steerable),
-                                  "Gate02_GateLowerEdgeLevel.tim");
+                                  $"Gate02_{KnownStructureProperties.GateLowerEdgeLevel}.tim");
             structure.AddProperty(KnownStructureProperties.GateLowerEdgeLevel, typeof(Steerable),
-                                  "Gate02_GateLowerEdgeLevel.tim");
+                                  $"Gate02_{KnownStructureProperties.GateLowerEdgeLevel}.tim");
             structure.AddProperty(KnownStructureProperties.GateOpeningWidth, typeof(Steerable),
-                                  "Gate02_GateOpeningWidth.tim");
+                                  $"Gate02_{KnownStructureProperties.GateOpeningWidth}.tim");
             structure.AddProperty(KnownStructureProperties.GateHeight, typeof(double), "10");
             structure.AddProperty(KnownStructureProperties.GateOpeningHorizontalDirection,
                                   openingDirectionDefinition.DataType, "from_right");

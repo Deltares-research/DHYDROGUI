@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using DelftTools.Shell.Core;
 using DeltaShell.Plugins.FMSuite.FlowFM.Api;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
 {
@@ -35,32 +36,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
 
         #region IFileExporter
 
-        public string Name
-        {
-            get { return "Partition exporter"; }
-        }
+        public string Name => "Partition exporter";
 
         public abstract bool Export(object item, string path);
 
-        public string Category
-        {
-            get { return "General"; }
-        }
+        public string Category => "General";
 
-        public string Description
-        {
-            get { return string.Empty; }
-        }
+        public string Description => string.Empty;
 
         public abstract IEnumerable<Type> SourceTypes();
 
         public abstract string FileFilter { get; }
 
         [ExcludeFromCodeCoverage]
-        public Bitmap Icon
-        {
-            get { return Properties.Resources.unstruc; }
-        }
+        public Bitmap Icon => Resources.unstruc;
 
         public bool CanExportFor(object item)
         {

@@ -10,6 +10,8 @@ using DelftTools.Utils.Editing;
 using DelftTools.Utils.Web;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
+using GeoAPI.CoordinateSystems.Transformations;
 using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Geometries;
 using NetTopologySuite.IO;
@@ -19,7 +21,7 @@ using Point = NetTopologySuite.Geometries.Point;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
-    public class BoundaryConditionWpsImporter: IFileImporter
+    public class BoundaryConditionWpsImporter : IFileImporter
     {
         public enum SupportPointImportMode
         {
@@ -33,22 +35,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         #region IFileImporter
 
-        public string Name { get { return "Boundary data from WPS"; } }
+        public string Name => "Boundary data from WPS";
 
-        public string Category { get { return "Boundary data"; } }
-        public string Description
-        {
-            get { return string.Empty; }
-        }
+        public string Category => "Boundary data";
 
-        public Bitmap Image { get { return Properties.Resources.down; } }
+        public string Description => string.Empty;
+
+        public Bitmap Image => Resources.down;
 
         public IEnumerable<Type> SupportedItemTypes
         {
             get
             {
-                yield return typeof (IList<BoundaryConditionSet>);
-                yield return typeof (BoundaryConditionSet);
+                yield return typeof(IList<BoundaryConditionSet>);
+                yield return typeof(BoundaryConditionSet);
             }
         }
 
@@ -57,9 +57,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             return true;
         }
 
-        public bool CanImportOnRootLevel { get { return false; } }
+        public bool CanImportOnRootLevel => false;
 
-        public string FileFilter { get { return null; } }
+        public string FileFilter => null;
 
         public string TargetDataDirectory { get; set; }
 
@@ -95,7 +95,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public DateTime StartDate { private get; set; }
 
         public DateTime EndDate { private get; set; }
-        
+
         public ICoordinateSystem InputCoordinateSystem { private get; set; }
 
         public bool CreateNewBoundaryConditions { private get; set; }
@@ -106,7 +106,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         public TimeSpan TimeStep
         {
-            get { return timeStep; }
+            get => timeStep;
             set
             {
                 timeStep = value;
@@ -121,16 +121,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 Frequency = "SECONDLY";
                 return;
             }
+
             if (TimeStep.TotalHours < 1)
             {
                 Frequency = "MINUTELY";
                 return;
             }
+
             if (TimeStep.TotalDays < 1)
             {
                 Frequency = "HOURLY";
                 return;
             }
+
             Frequency = "DAILY";
         }
 
@@ -160,10 +163,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             if (InputCoordinateSystem != null)
             {
                 var coordinateSystemFactory = new OgrCoordinateSystemFactory();
-                var targetCoordinateSystem = coordinateSystemFactory.CreateFromEPSG(4326);
-                var transformation = coordinateSystemFactory.CreateTransformation(InputCoordinateSystem,
-                                                                                  targetCoordinateSystem);
-                var newPoint = GeometryTransform.TransformGeometry(new Point(coordinate), transformation.MathTransform);
+                ICoordinateSystem targetCoordinateSystem = coordinateSystemFactory.CreateFromEPSG(4326);
+                ICoordinateTransformation transformation = coordinateSystemFactory.CreateTransformation(
+                    InputCoordinateSystem,
+                    targetCoordinateSystem);
+                IGeometry newPoint =
+                    GeometryTransform.TransformGeometry(new Point(coordinate), transformation.MathTransform);
                 newCoordinate = newPoint.Coordinate;
                 newCoordinate.Z = double.NaN;
             }
@@ -171,18 +176,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 throw new ArgumentException("No input coordinate system defined.");
             }
+
             return WKTWriter.ToPoint(newCoordinate);
         }
 
         private int CountDataSetsToImport(BoundaryConditionSet boundaryConditionSet, int pointIndex)
         {
-            var boundaryCondition =
+            FlowBoundaryCondition boundaryCondition =
                 boundaryConditionSet.BoundaryConditions.OfType<FlowBoundaryCondition>()
                                     .FirstOrDefault(
                                         bc =>
-                                        bc.DataType == BoundaryConditionDataType.TimeSeries &&
-                                        bc.FlowQuantity == FlowBoundaryQuantityType.WaterLevel);
-            var pointCount = boundaryConditionSet.Feature.Geometry.Coordinates.Count();
+                                            bc.DataType == BoundaryConditionDataType.TimeSeries &&
+                                            bc.FlowQuantity == FlowBoundaryQuantityType.WaterLevel);
+            int pointCount = boundaryConditionSet.Feature.Geometry.Coordinates.Count();
 
             switch (ImportMode)
             {
@@ -193,19 +199,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     {
                         return 0;
                     }
+
                     return boundaryCondition == null ? 0 : boundaryCondition.DataPointIndices.Count;
-                 case SupportPointImportMode.Inactive:
-                     if (CreateNewBoundaryConditions)
-                     {
-                         return pointCount;
-                     }
+                case SupportPointImportMode.Inactive:
+                    if (CreateNewBoundaryConditions)
+                    {
+                        return pointCount;
+                    }
+
                     return boundaryCondition == null
                                ? 0
                                : Enumerable.Range(0, pointCount).Except(boundaryCondition.DataPointIndices).Count();
                 case SupportPointImportMode.All:
                     return pointCount;
                 default:
-                    throw new NotImplementedException(string.Format("Boundary import mode {0} not supported", ImportMode));
+                    throw new NotImplementedException(
+                        string.Format("Boundary import mode {0} not supported", ImportMode));
             }
         }
 
@@ -215,11 +224,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 throw new ArgumentException("No input coordinate system defined.");
             }
-            var count = boundaryConditionSets.Select(bcs => CountDataSetsToImport(bcs, -1)).Sum();
+
+            int count = boundaryConditionSets.Select(bcs => CountDataSetsToImport(bcs, -1)).Sum();
             var index = 0;
-            foreach (var boundaryConditionSet in boundaryConditionSets)
+            foreach (BoundaryConditionSet boundaryConditionSet in boundaryConditionSets)
             {
-                if (ShouldCancel) return;
+                if (ShouldCancel)
+                {
+                    return;
+                }
+
                 Import(boundaryConditionSet, ref index, count);
             }
         }
@@ -233,7 +247,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private void Import(BoundaryConditionSet boundaryConditionSet, ref int fullIndex,
                             int totalSteps)
         {
-            if (ImportMode == SupportPointImportMode.Selected && SupportPointIndex == -1) return;
+            if (ImportMode == SupportPointImportMode.Selected && SupportPointIndex == -1)
+            {
+                return;
+            }
 
             FlowBoundaryCondition boundaryCondition;
             var indices = new List<int>();
@@ -242,14 +259,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 boundaryCondition = new FlowBoundaryCondition(FlowBoundaryQuantityType.WaterLevel,
                                                               BoundaryConditionDataType.TimeSeries)
-                    {
-                        Feature = boundaryConditionSet.Feature
-                    };
+                {
+                    Feature = boundaryConditionSet.Feature
+                };
                 boundaryConditionSet.BoundaryConditions.Add(boundaryCondition);
 
                 if (ImportMode == SupportPointImportMode.Selected)
                 {
-                    indices = new List<int>(new[] {SupportPointIndex});
+                    indices = new List<int>(new[]
+                    {
+                        SupportPointIndex
+                    });
                 }
                 else if (ImportMode == SupportPointImportMode.Inactive || ImportMode == SupportPointImportMode.All)
                 {
@@ -262,8 +282,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     boundaryConditionSet.BoundaryConditions.OfType<FlowBoundaryCondition>()
                                         .FirstOrDefault(
                                             bc =>
-                                            bc.DataType == BoundaryConditionDataType.TimeSeries &&
-                                            bc.FlowQuantity == FlowBoundaryQuantityType.WaterLevel);
+                                                bc.DataType == BoundaryConditionDataType.TimeSeries &&
+                                                bc.FlowQuantity == FlowBoundaryQuantityType.WaterLevel);
                 indices = new List<int>();
 
                 if (boundaryCondition == null)
@@ -274,7 +294,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 switch (ImportMode)
                 {
                     case SupportPointImportMode.Selected:
-                        indices = new List<int>(new[] {SupportPointIndex});
+                        indices = new List<int>(new[]
+                        {
+                            SupportPointIndex
+                        });
                         break;
                     case SupportPointImportMode.Active:
                         indices = boundaryCondition.DataPointIndices.ToList();
@@ -290,14 +313,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 }
             }
 
-            var n = (totalSteps == 0 ? indices.Count : totalSteps);
-            foreach (var index in indices)
+            int n = totalSteps == 0 ? indices.Count : totalSteps;
+            foreach (int index in indices)
             {
-                if (ShouldCancel) return;
+                if (ShouldCancel)
+                {
+                    return;
+                }
+
                 if (ProgressChanged != null)
                 {
                     ProgressChanged(string.Format("Importing time series at point {0}", index), fullIndex++, n);
                 }
+
                 boundaryCondition.BeginEdit(new DefaultEditAction("Importing data from WPS"));
                 try
                 {
@@ -305,12 +333,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     {
                         boundaryCondition.AddPoint(index);
                     }
+
                     Import(boundaryCondition.GetDataAtPoint(index),
                            boundaryCondition.Feature.Geometry.Coordinates[index]);
                 }
                 finally
                 {
-                    boundaryCondition.EndEdit();                    
+                    boundaryCondition.EndEdit();
                 }
             }
         }
@@ -321,18 +350,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 return;
             }
+
             InitializeClient();
-            if (boundaryData.Arguments[0].ValueType == typeof (DateTime))
+            if (boundaryData.Arguments[0].ValueType == typeof(DateTime))
             {
                 using (CultureUtils.SwitchToInvariantCulture())
                 {
-                    var locationInput = Client.CreateInputForProcess("tidal_predict", "location",
-                                                                     GetLocation(coordinate));
-                    var startDateInput = Client.CreateInputForProcess("tidal_predict", "startdate", StartDate);
-                    var endDateInput = Client.CreateInputForProcess("tidal_predict", "enddate", EndDate);
-                    var frequencyInput = Client.CreateInputForProcess("tidal_predict", "frequency", Frequency);
+                    WpsProcessData locationInput = Client.CreateInputForProcess("tidal_predict", "location",
+                                                                                GetLocation(coordinate));
+                    WpsProcessData startDateInput =
+                        Client.CreateInputForProcess("tidal_predict", "startdate", StartDate);
+                    WpsProcessData endDateInput = Client.CreateInputForProcess("tidal_predict", "enddate", EndDate);
+                    WpsProcessData frequencyInput =
+                        Client.CreateInputForProcess("tidal_predict", "frequency", Frequency);
 
-                    var output =
+                    string output =
                         Client.Execute("tidal_predict", locationInput, startDateInput, endDateInput, frequencyInput)
                               .FirstOrDefault();
 
@@ -359,9 +391,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             times = new List<DateTime>();
             levels = new List<double>();
-            foreach (var line in Regex.Split(output, "\n").ToList())
+            foreach (string line in Regex.Split(output, "\n").ToList())
             {
-                var values = Regex.Split(line, ",");
+                string[] values = Regex.Split(line, ",");
                 DateTime dateTime;
                 double waterLevel;
                 if (DateTime.TryParse(values[0].Trim('\"'), out dateTime) &&

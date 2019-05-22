@@ -22,7 +22,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             // so we need to start the 64bit worker. This works as long as the data send over the IFlexibleMeshModelApi border 
             // is not bit dependent, eg IntPtr and the like.
             RemotingTypeConverters.RegisterTypeConverter(new LoggerToProtoConverter());
-            remoteInstanceApi = RemoteInstanceContainer.CreateInstance<IFlexibleMeshModelApi, FlexibleMeshModelApi>(true, showConsole: showDebugConsole);
+            remoteInstanceApi =
+                RemoteInstanceContainer.CreateInstance<IFlexibleMeshModelApi, FlexibleMeshModelApi>(
+                    true, showConsole: showDebugConsole);
             // for non-remote use:
             //remoteInstanceApi = new FlexibleMeshModelApi();
         }
@@ -97,12 +99,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
                 remoteInstanceApi.SetValuesDouble(variable, doubles);
                 return;
             }
+
             var ints = values as int[];
             if (ints != null)
             {
                 remoteInstanceApi.SetValuesInt(variable, ints);
                 return;
             }
+
             remoteInstanceApi.SetValues(variable, values);
         }
 
@@ -114,12 +118,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
                 remoteInstanceApi.SetValuesDouble(variable, start, count, doubles);
                 return;
             }
+
             var ints = values as int[];
             if (ints != null)
             {
                 remoteInstanceApi.SetValuesInt(variable, start, count, ints);
                 return;
             }
+
             remoteInstanceApi.SetValues(variable, start, count, values);
         }
 
@@ -131,18 +137,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
                 remoteInstanceApi.SetValuesDouble(variable, index, doubles);
                 return;
             }
+
             var ints = values as int[];
             if (ints != null)
             {
                 remoteInstanceApi.SetValuesInt(variable, index, ints);
                 return;
             }
+
             remoteInstanceApi.SetValues(variable, index, values);
         }
 
         private static void TryThrowWithKernelLoggedErrors(Exception innerException, string runDirectory)
         {
-            var diaFiles = Directory.GetFiles(runDirectory, "*.dia");
+            string[] diaFiles = Directory.GetFiles(runDirectory, "*.dia");
 
             if (diaFiles.Length <= 0)
             {
@@ -150,29 +158,32 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             }
 
             List<string> errorMessages;
-            var diaFile = diaFiles[0];
+            string diaFile = diaFiles[0];
 
             try
             {
                 errorMessages = DiaFileReader.CollectAllErrorMessages(diaFile);
 
-                errorMessages.AddRange(File.ReadAllLines(diaFile).Where( line => line.Contains("FATAL")));
+                errorMessages.AddRange(File.ReadAllLines(diaFile).Where(line => line.Contains("FATAL")));
             }
             catch (Exception e)
             {
                 throw new FileFormatException(string.Format("Unable to read diagnostics file {0}: {1}", diaFile,
-                    e.Message));
+                                                            e.Message));
             }
 
             if (!errorMessages.Any())
             {
                 throw new InvalidOperationException(string.Format(
-                    "No errors were reported in the diagnostics file {0}", diaFile));
+                                                        "No errors were reported in the diagnostics file {0}",
+                                                        diaFile));
             }
 
             throw new InvalidOperationException(string.Format(
-                "The kernel reported the following error(s):{0}{1}{0}(Errors extracted from diagnostics file {2})",
-                Environment.NewLine, string.Join(Environment.NewLine, errorMessages), diaFile), innerException);
+                                                    "The kernel reported the following error(s):{0}{1}{0}(Errors extracted from diagnostics file {2})",
+                                                    Environment.NewLine,
+                                                    string.Join(Environment.NewLine, errorMessages), diaFile),
+                                                innerException);
         }
 
         public string GetVersionString()
@@ -268,39 +279,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             return remoteInstanceApi.GetVariableLocation(variable);
         }
 
-        public DateTime StartTime
-        {
-            get { return remoteInstanceApi.StartTime; }
-        }
+        public DateTime StartTime => remoteInstanceApi.StartTime;
 
-        public DateTime StopTime
-        {
-            get { return remoteInstanceApi.StopTime; }
-        }
+        public DateTime StopTime => remoteInstanceApi.StopTime;
 
-        public DateTime CurrentTime
-        {
-            get { return remoteInstanceApi.CurrentTime; }
-        }
+        public DateTime CurrentTime => remoteInstanceApi.CurrentTime;
 
-        public TimeSpan TimeStep
-        {
-            get { return remoteInstanceApi.TimeStep; }
-        }
+        public TimeSpan TimeStep => remoteInstanceApi.TimeStep;
 
-        public string[] VariableNames
-        {
-            get { return remoteInstanceApi.VariableNames; }
-        }
+        public string[] VariableNames => remoteInstanceApi.VariableNames;
 
         public Logger Logger
         {
-            get { return remoteInstanceApi.Logger; }
-            set { remoteInstanceApi.Logger = value; }
+            get => remoteInstanceApi.Logger;
+            set => remoteInstanceApi.Logger = value;
         }
 
-        public bool GetSnappedFeature(string featureType, double[] xin, double[] yin, ref double[] xout, ref double[] yout,
-            ref int[] featureIds)
+        public bool GetSnappedFeature(string featureType, double[] xin, double[] yin, ref double[] xout,
+                                      ref double[] yout,
+                                      ref int[] featureIds)
         {
             return remoteInstanceApi.GetSnappedFeature(featureType, xin, yin, ref xout, ref yout, ref featureIds);
         }
@@ -371,13 +368,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             Dispose(true);
             // Must always ensure this happens to prevent GC deadlock on project close!
             GC.SuppressFinalize(this);
-            
         }
 
         private void DisposeInternal()
         {
             if (remoteInstanceApi != null)
+            {
                 RemoteInstanceContainer.RemoveInstance(remoteInstanceApi);
+            }
+
             remoteInstanceApi = null;
             disposed = true;
             Thread.Sleep(100); // wait for process to truly exit
@@ -399,6 +398,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
                         throw;
                     }
                 }
+
                 disposed = true;
             }
         }

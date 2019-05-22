@@ -10,9 +10,9 @@ using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
-    public class BcFile: FMSuiteFileBase
+    public class BcFile : FMSuiteFileBase
     {
-        protected readonly ILog log = LogManager.GetLogger(typeof (BcFile));
+        protected readonly ILog log = LogManager.GetLogger(typeof(BcFile));
 
         public const string Extension = ".bc";
 
@@ -44,8 +44,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             FlowBoundaryQuantityType.VelocityVector,
             FlowBoundaryQuantityType.Salinity,
             FlowBoundaryQuantityType.Temperature,
-            FlowBoundaryQuantityType.Tracer,     
-            FlowBoundaryQuantityType.SedimentConcentration   
+            FlowBoundaryQuantityType.Tracer,
+            FlowBoundaryQuantityType.SedimentConcentration
         };
 
         private readonly int columnWidth = VerticalPositionSpecKey.Length;
@@ -54,10 +54,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             [Description("Single file")]
             SingleFile,
+
             [Description("File per boundary")]
             FilePerFeature,
+
             [Description("File per process")]
             FilePerProcess,
+
             [Description("File per quantity")]
             FilePerQuantity
         }
@@ -90,8 +93,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private static string AppendToFile(string filePath, string tag)
         {
-            var extension = Path.GetExtension(filePath);
-            if (extension == null) return filePath + tag;
+            string extension = Path.GetExtension(filePath);
+            if (extension == null)
+            {
+                return filePath + tag;
+            }
+
             return filePath.Substring(0, filePath.Length - extension.Length) + tag + extension;
         }
 
@@ -99,28 +106,32 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             get
             {
-                return supportedProcesses.Select(sp => FlowBoundaryCondition.GetProcessNameForQuantity(sp)).Distinct().ToList();
+                return supportedProcesses.Select(sp => FlowBoundaryCondition.GetProcessNameForQuantity(sp)).Distinct()
+                                         .ToList();
             }
         }
 
         public IEnumerable<IGrouping<string, Tuple<IBoundaryCondition, BoundaryConditionSet>>> GroupBoundaryConditions(
             IEnumerable<BoundaryConditionSet> boundaryConditionSets)
         {
-            var discriminator = BcDiscriminator(MultiFileMode);
-            return boundaryConditionSets.SelectMany(bcs =>
-                bcs.BoundaryConditions.Where(bc => SupportedProcesses.Contains(bc.ProcessName) && bc.DataType != BoundaryConditionDataType.Empty) // don't write empty bc!
-                .Select(bc => new Tuple<IBoundaryCondition, BoundaryConditionSet>(bc, bcs)))
-                .GroupBy(t => discriminator(t.Item1));
+            Func<IBoundaryCondition, string> discriminator = BcDiscriminator(MultiFileMode);
+            return boundaryConditionSets
+                   .SelectMany(bcs => bcs.BoundaryConditions
+                                         .Where(bc => SupportedProcesses.Contains(bc.ProcessName) &&
+                                                      bc.DataType != BoundaryConditionDataType.Empty) // don't write empty bc!
+                                         .Select(bc => new Tuple<IBoundaryCondition, BoundaryConditionSet>(bc, bcs)))
+                   .GroupBy(t => discriminator(t.Item1));
         }
 
         public void Write(IEnumerable<BoundaryConditionSet> boundaryConditionSets, string filePath,
-            BcFileFlowBoundaryDataBuilder boundaryDataBuilder, DateTime? refDate = null)
+                          BcFileFlowBoundaryDataBuilder boundaryDataBuilder, DateTime? refDate = null)
         {
-            var grouping = GroupBoundaryConditions(boundaryConditionSets.ToList());
+            IEnumerable<IGrouping<string, Tuple<IBoundaryCondition, BoundaryConditionSet>>> grouping =
+                GroupBoundaryConditions(boundaryConditionSets.ToList());
 
-            foreach (var group in grouping)
+            foreach (IGrouping<string, Tuple<IBoundaryCondition, BoundaryConditionSet>> group in grouping)
             {
-                var subFile = string.IsNullOrEmpty(group.Key) ? filePath : AppendToFile(filePath, "_" + group.Key);
+                string subFile = string.IsNullOrEmpty(group.Key) ? filePath : AppendToFile(filePath, "_" + group.Key);
                 Write(group.ToDictionary(t => t.Item1, t => t.Item2), subFile, boundaryDataBuilder, refDate);
             }
         }
@@ -134,48 +145,63 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private static bool SimilarDataType(BoundaryConditionDataType dt1, BoundaryConditionDataType dt2)
         {
             if (dt1 == BoundaryConditionDataType.AstroCorrection && dt2 == BoundaryConditionDataType.AstroComponents)
+            {
                 return true;
+            }
+
             if (dt1 == BoundaryConditionDataType.AstroComponents && dt2 == BoundaryConditionDataType.AstroCorrection)
+            {
                 return true;
+            }
+
             if (dt1 == BoundaryConditionDataType.HarmonicCorrection && dt2 == BoundaryConditionDataType.Harmonics)
+            {
                 return true;
+            }
+
             if (dt1 == BoundaryConditionDataType.Harmonics && dt2 == BoundaryConditionDataType.HarmonicCorrection)
+            {
                 return true;
+            }
+
             return dt1 == dt2;
         }
 
-        public virtual void Write(IEnumerable<KeyValuePair<IBoundaryCondition, BoundaryConditionSet>> boundaryConditions,
+        public virtual void Write(
+            IEnumerable<KeyValuePair<IBoundaryCondition, BoundaryConditionSet>> boundaryConditions,
             string filePath, BcFileFlowBoundaryDataBuilder boundaryDataBuilder, DateTime? refDate = null)
         {
             OpenOutputFile(filePath);
             try
             {
-                foreach (var boundaryConditionKeyValuePair in boundaryConditions)
+                foreach (KeyValuePair<IBoundaryCondition, BoundaryConditionSet> boundaryConditionKeyValuePair in
+                    boundaryConditions)
                 {
                     if (CorrectionFile && !IsCorrectionType(boundaryConditionKeyValuePair.Key.DataType))
                     {
                         continue;
                     }
 
-                    var boundaryCondition = boundaryConditionKeyValuePair.Key;
-                    var supportPointNames = boundaryConditionKeyValuePair.Value.SupportPointNames;
+                    IBoundaryCondition boundaryCondition = boundaryConditionKeyValuePair.Key;
+                    IList<string> supportPointNames = boundaryConditionKeyValuePair.Value.SupportPointNames;
 
-                    var seriesIndex =
+                    int seriesIndex =
                         boundaryConditionKeyValuePair.Value.BoundaryConditions.Where(
-                            bc => bc.VariableName == boundaryCondition.VariableName &&
-                                  SimilarDataType(bc.DataType, boundaryCondition.DataType))
-                            .ToList()
-                            .IndexOf(boundaryCondition);
+                                                         bc => bc.VariableName == boundaryCondition.VariableName &&
+                                                               SimilarDataType(
+                                                                   bc.DataType, boundaryCondition.DataType))
+                                                     .ToList()
+                                                     .IndexOf(boundaryCondition);
 
-                    var blockData = boundaryDataBuilder.CreateBlockData(boundaryCondition as FlowBoundaryCondition,
-                            supportPointNames, refDate, seriesIndex, CorrectionFile);
+                    IEnumerable<BcBlockData> blockData = boundaryDataBuilder.CreateBlockData(
+                        boundaryCondition as FlowBoundaryCondition,
+                        supportPointNames, refDate, seriesIndex, CorrectionFile);
 
-                    foreach (var block in blockData)
+                    foreach (BcBlockData block in blockData)
                     {
                         WriteBlock(block);
                         WriteLine("");
                     }
-
                 }
             }
             finally
@@ -192,71 +218,76 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         protected virtual void WriteBlock(BcBlockData block)
         {
             WriteLine(BlockKey);
-            
+
             WriteKeyValuePairLine(SupportPointKey, block.SupportPoint);
-            
+
             WriteKeyValuePairLine(ForcingTypeKey, block.FunctionType);
-            
+
             if (block.SeriesIndex != null)
             {
                 WriteKeyValuePairLine(SeriesIndexKey, block.SeriesIndex);
             }
-            
+
             if (block.TimeInterpolationType != null)
             {
                 WriteKeyValuePairLine(TimeInterpolationKey, block.TimeInterpolationType);
             }
-            
+
             if (block.VerticalPositionType != null)
             {
                 WriteKeyValuePairLine(VerticalPositionTypeKey, block.VerticalPositionType);
             }
-            
+
             if (block.VerticalPositionDefinition != null)
             {
                 WriteKeyValuePairLine(VerticalPositionSpecKey, block.VerticalPositionDefinition);
             }
-            
+
             if (block.VerticalInterpolationType != null)
             {
                 WriteKeyValuePairLine(VerticalIntepolationKey, block.VerticalInterpolationType);
             }
-            
+
             if (block.Offset != null)
             {
                 WriteKeyValuePairLine(OffsetKey, block.Offset);
             }
-            
+
             if (block.Factor != null)
             {
                 WriteKeyValuePairLine(FactorKey, block.Factor);
             }
-            
-            foreach (var quantity in block.Quantities)
+
+            foreach (BcQuantityData quantity in block.Quantities)
             {
                 WriteKeyValuePairLine(QuantityKey, quantity.Quantity);
                 if (quantity.Unit != null)
                 {
                     WriteKeyValuePairLine(UnitKey, quantity.Unit);
                 }
+
                 if (quantity.VerticalPosition != null)
                 {
                     WriteKeyValuePairLine(VerticalPositionKey, quantity.VerticalPosition);
                 }
             }
 
-            var rowCount = block.Quantities.Select(q => q.Values.Count).Min();
-            
-            if (rowCount == 0) return;
-            
-            var columnWidths =
+            int rowCount = block.Quantities.Select(q => q.Values.Count).Min();
+
+            if (rowCount == 0)
+            {
+                return;
+            }
+
+            List<int> columnWidths =
                 block.Quantities.Select(q => q.Values.Take(rowCount).Select(s => s.Length).Max() + 1).ToList();
-            
+
             for (var i = 0; i < rowCount; ++i)
             {
                 var j = 0;
                 // TODO: Agree on formatting conventions: for times, use min. since reftime
-                WriteLine(string.Join(" ", block.Quantities.Select(q => q.Values[i].PadRight(columnWidths[j++]))).TrimEnd());
+                WriteLine(string.Join(" ", block.Quantities.Select(q => q.Values[i].PadRight(columnWidths[j++])))
+                                .TrimEnd());
             }
         }
 
@@ -265,12 +296,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             OpenInputFile(inputFile);
             try
             {
-                var line = GetNextLine();
+                string line = GetNextLine();
                 while (line != null)
                 {
                     if (line.StartsWith(BlockKey))
                     {
-                        var block = ReadDataBlock(out line);
+                        BcBlockData block = ReadDataBlock(out line);
                         if (block != null)
                         {
                             yield return block;
@@ -289,9 +320,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
         }
 
-        static string[] SplitString(string str)
+        private static string[] SplitString(string str)
         {
-            return str.Split(new[] {'='}, StringSplitOptions.RemoveEmptyEntries).Select(s => s.Trim()).ToArray();
+            return str.Split(new[]
+            {
+                '='
+            }, StringSplitOptions.RemoveEmptyEntries).Select(s => s.Trim()).ToArray();
         }
 
         private BcBlockData ReadDataBlock(out string line)
@@ -306,117 +340,153 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             string offset = null;
             string factor = null;
             var quantityDataList = new List<BcQuantityData>();
-            
+
             BcQuantityData quantityData = null;
 
-            var lineNumber = LineNumber;
+            int lineNumber = LineNumber;
 
             line = GetNextLine();
 
             while (line != null)
             {
-                var split = SplitString(line);
+                string[] split = SplitString(line);
                 if (split.Length < 2)
                 {
                     break;
                 }
+
                 if (split[0] == SupportPointKey)
                 {
                     supportPointName = split[1];
                 }
+
                 if (split[0] == ForcingTypeKey)
                 {
                     forcingType = split[1];
                 }
+
                 if (split[0] == TimeInterpolationKey)
                 {
                     timeInterpolationType = split[1];
                 }
+
                 if (split[0] == VerticalPositionTypeKey)
                 {
                     verticalPositionType = split[1];
                 }
+
                 if (split[0] == VerticalPositionSpecKey)
                 {
                     verticalPositionSpecification = split[1];
                 }
+
                 if (split[0] == VerticalIntepolationKey)
                 {
                     verticalInterpolationType = split[1];
                 }
+
                 if (split[0] == SeriesIndexKey)
                 {
                     seriesIndex = split[1];
                 }
+
                 if (split[0] == OffsetKey)
                 {
                     offset = split[1];
                 }
+
                 if (split[0] == FactorKey)
                 {
                     factor = split[1];
                 }
+
                 if (split[0] == QuantityKey)
                 {
                     if (quantityData != null)
                     {
                         quantityDataList.Add(quantityData);
                     }
+
                     if (split.Length == 2)
                     {
                         quantityData = new BcQuantityData {Quantity = split[1]};
                     }
                 }
+
                 if (split[0] == UnitKey)
                 {
-                    if (quantityData == null) continue;
+                    if (quantityData == null)
+                    {
+                        continue;
+                    }
+
                     quantityData.Unit = split[1];
                 }
+
                 if (split[0] == VerticalPositionKey)
                 {
-                    if (quantityData == null) continue;
+                    if (quantityData == null)
+                    {
+                        continue;
+                    }
+
                     quantityData.VerticalPosition = split[1];
                 }
+
                 line = GetNextLine();
             }
+
             if (quantityData != null)
             {
                 quantityDataList.Add(quantityData);
             }
+
             while (line != null)
             {
-                if (line.StartsWith(BlockKey)) break;
-                var columns = line.Split(new[] {' ', '\t'}, StringSplitOptions.RemoveEmptyEntries);
-                if(columns.Length<quantityDataList.Count)
+                if (line.StartsWith(BlockKey))
+                {
+                    break;
+                }
+
+                string[] columns = line.Split(new[]
+                {
+                    ' ',
+                    '\t'
+                }, StringSplitOptions.RemoveEmptyEntries);
+                if (columns.Length < quantityDataList.Count)
                 {
                     log.WarnFormat("Omitting line {0} with less than {1} columns", LineNumber, quantityDataList.Count);
                 }
+
                 for (var i = 0; i < quantityDataList.Count; ++i)
                 {
                     quantityDataList[i].Values.Add(columns[i]);
                 }
+
                 line = GetNextLine();
             }
+
             if (supportPointName == null || forcingType == null || !quantityDataList.Any())
             {
                 return null;
             }
+
             return
                 new BcBlockData
-                    {
-                        FilePath = InputFilePath,
-                        LineNumber = lineNumber,
-                        SupportPoint = supportPointName,
-                        FunctionType = forcingType,
-                        SeriesIndex = seriesIndex,
-                        TimeInterpolationType = timeInterpolationType,
-                        VerticalPositionDefinition = verticalPositionSpecification,
-                        VerticalPositionType = verticalPositionType,
-                        VerticalInterpolationType = verticalInterpolationType,
-                        Offset = offset,
-                        Factor = factor,
-                        Quantities = quantityDataList
-                    };
+                {
+                    FilePath = InputFilePath,
+                    LineNumber = lineNumber,
+                    SupportPoint = supportPointName,
+                    FunctionType = forcingType,
+                    SeriesIndex = seriesIndex,
+                    TimeInterpolationType = timeInterpolationType,
+                    VerticalPositionDefinition = verticalPositionSpecification,
+                    VerticalPositionType = verticalPositionType,
+                    VerticalInterpolationType = verticalInterpolationType,
+                    Offset = offset,
+                    Factor = factor,
+                    Quantities = quantityDataList
+                };
         }
     }
 }

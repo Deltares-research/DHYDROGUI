@@ -1,4 +1,7 @@
-﻿using DelftTools.Functions;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using DelftTools.Functions;
 using DelftTools.Functions.Filters;
 using DelftTools.Functions.Generic;
 using DelftTools.Units;
@@ -9,13 +12,9 @@ using DeltaShell.Plugins.FMSuite.Common.IO;
 using log4net;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
-
     /// <summary>
     /// Function store for Class Map Files.
     /// </summary>
@@ -32,12 +31,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private UnstructuredGrid grid;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FMClassMapFileFunctionStore"/> class.
+        /// Initializes a new instance of the <see cref="FMClassMapFileFunctionStore" /> class.
         /// </summary>
-        /// <param name="classMapFilePath">The class map file path.</param>
-        public FMClassMapFileFunctionStore(string classMapFilePath) : base (classMapFilePath)
-        {
-        }
+        /// <param name="classMapFilePath"> The class map file path. </param>
+        public FMClassMapFileFunctionStore(string classMapFilePath) : base(classMapFilePath) {}
 
         /// <summary>
         /// Gets the grid.
@@ -50,42 +47,47 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         /// <summary>
         /// Constructs the functions for netCdf variables that are time dependent.
         /// </summary>
-        /// <param name="dataVariables">The data variables.</param>
-        /// <returns></returns>
+        /// <param name="dataVariables"> The data variables. </param>
+        /// <returns> </returns>
         protected override IEnumerable<IFunction> ConstructFunctions(IEnumerable<NetCdfVariableInfo> dataVariables)
         {
             grid = UnstructuredGridFileHelper.LoadFromFile(netCdfFile.Path, true);
-            var timeDepVariables = dataVariables.Where(v => v.IsTimeDependent && v.NumDimensions > 1);
-            var functions = timeDepVariables.Select(CreateCoverageForTimeDependentVariable).Where(c => c != null);
+            IEnumerable<NetCdfVariableInfo> timeDepVariables =
+                dataVariables.Where(v => v.IsTimeDependent && v.NumDimensions > 1);
+            IEnumerable<UnstructuredGridCoverage> functions =
+                timeDepVariables.Select(CreateCoverageForTimeDependentVariable).Where(c => c != null);
 
             return functions;
         }
 
-        private UnstructuredGridCoverage CreateCoverageForTimeDependentVariable(NetCdfVariableInfo timeDependentVariable)
+        private UnstructuredGridCoverage CreateCoverageForTimeDependentVariable(
+            NetCdfVariableInfo timeDependentVariable)
         {
-            var netCdfVariable = timeDependentVariable.NetCdfDataVariable;
-            var netCdfVariableName = netCdfFile.GetVariableName(netCdfVariable);
-            var netCdfVariableType = netCdfFile.GetVariableDataType(netCdfVariable);
+            NetCdfVariable netCdfVariable = timeDependentVariable.NetCdfDataVariable;
+            string netCdfVariableName = netCdfFile.GetVariableName(netCdfVariable);
+            NetCdfDataType netCdfVariableType = netCdfFile.GetVariableDataType(netCdfVariable);
 
             if (netCdfVariableType != NetCdfDataType.NcByte)
             {
-                Log.Warn($"Time dependent functions in the class map file are expected to be of type Byte. Please check the value type for variable '{netCdfVariableName}'.");
+                Log.Warn(
+                    $"Time dependent functions in the class map file are expected to be of type Byte. Please check the value type for variable '{netCdfVariableName}'.");
                 return null;
             }
 
-            var secondDimension = netCdfFile.GetDimensions(netCdfVariable).ElementAt(1);
-            var secondDimensionName = netCdfFile.GetDimensionName(secondDimension);
-            var location = netCdfFile.GetAttributeValue(netCdfVariable, LocationAttributeName);
-            var longName = netCdfFile.GetAttributeValue(netCdfVariable, LongNameAttributeName) ??
-                           netCdfFile.GetAttributeValue(netCdfVariable, StandardNameAttributeName);
-            var unit = netCdfFile.GetAttributeValue(netCdfVariable, UnitsAttributeName);
-            var coverageLongName = longName != null? $"{longName} ({netCdfVariableName})" : netCdfVariableName;
+            NetCdfDimension secondDimension = netCdfFile.GetDimensions(netCdfVariable).ElementAt(1);
+            string secondDimensionName = netCdfFile.GetDimensionName(secondDimension);
+            string location = netCdfFile.GetAttributeValue(netCdfVariable, LocationAttributeName);
+            string longName = netCdfFile.GetAttributeValue(netCdfVariable, LongNameAttributeName) ??
+                              netCdfFile.GetAttributeValue(netCdfVariable, StandardNameAttributeName);
+            string unit = netCdfFile.GetAttributeValue(netCdfVariable, UnitsAttributeName);
+            string coverageLongName = longName != null ? $"{longName} ({netCdfVariableName})" : netCdfVariableName;
 
-            var dotNetType = NetCdfConstants.GetClrDataType(netCdfVariableType);
-            var coverage = CreateCoverage(location, coverageLongName, dotNetType);
+            Type dotNetType = NetCdfConstants.GetClrDataType(netCdfVariableType);
+            UnstructuredGridCoverage coverage = CreateCoverage(location, coverageLongName, dotNetType);
             if (coverage != null)
             {
-                InitializeCoverage(coverage, secondDimensionName, netCdfVariableName, unit, timeDependentVariable.ReferenceDate);
+                InitializeCoverage(coverage, secondDimensionName, netCdfVariableName, unit,
+                                   timeDependentVariable.ReferenceDate);
             }
 
             return coverage;
@@ -94,11 +96,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         /// <summary>
         /// Gets the variable values.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="function">The function.</param>
-        /// <param name="filters">The variable filters.</param>
-        /// <returns></returns>
-        protected override IMultiDimensionalArray<T> GetVariableValuesCore<T>(IVariable function, IVariableFilter[] filters)
+        /// <typeparam name="T"> </typeparam>
+        /// <param name="function"> The function. </param>
+        /// <param name="filters"> The variable filters. </param>
+        /// <returns> </returns>
+        protected override IMultiDimensionalArray<T> GetVariableValuesCore<T>(
+            IVariable function, IVariableFilter[] filters)
         {
             if (function.Attributes[NcUseVariableSizeAttribute] == "false") // has no explicit variable
             {
@@ -113,12 +116,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             if (location != GridApiDataSet.UGridAttributeConstants.LocationValues.Face)
             {
-                Log.WarnFormat($"Cannot create coverage: can only create coverages for cell faces. See '{coverageLongName}' in the class map file: {Path}.");
+                Log.WarnFormat(
+                    $"Cannot create coverage: can only create coverages for cell faces. See '{coverageLongName}' in the class map file: {Path}.");
                 return null;
             }
 
-            var coverage = new UnstructuredGridCellCoverage(grid, true) { Name = coverageLongName };  
-            
+            var coverage = new UnstructuredGridCellCoverage(grid, true) {Name = coverageLongName};
+
             coverage.Components.RemoveAt(0);
             coverage.Components.Add((IVariable) TypeUtils.CreateGeneric(typeof(Variable<>), outputType));
             coverage.Components[0].Name = "value";
@@ -126,29 +130,34 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             return coverage;
         }
 
-        private void InitializeCoverage(IFunction coverage, string secondDimensionName, string variableName, string unitSymbol, string refDate)
+        private void InitializeCoverage(IFunction coverage, string secondDimensionName, string variableName,
+                                        string unitSymbol, string refDate)
         {
             coverage.Store = this;
 
-            var timeDimension = coverage.Arguments[0];
+            IVariable timeDimension = coverage.Arguments[0];
             timeDimension.Name = "Time";
             timeDimension.Attributes[NcNameAttribute] = TimeVariableNames[0];
             timeDimension.Attributes[NcUseVariableSizeAttribute] = "true";
             timeDimension.Attributes[NcRefDateAttribute] = refDate;
             timeDimension.IsEditable = false;
 
-            var secondDimension = coverage.Arguments[1];
+            IVariable secondDimension = coverage.Arguments[1];
             secondDimension.Name = secondDimensionName;
             secondDimension.Attributes[NcNameAttribute] = secondDimensionName;
             secondDimension.Attributes[NcUseVariableSizeAttribute] = "false";
             secondDimension.IsEditable = false;
 
-            var coverageComponent = coverage.Components[0];
+            IVariable coverageComponent = coverage.Components[0];
             coverageComponent.Name = variableName;
             coverageComponent.Attributes[NcNameAttribute] = variableName;
             coverageComponent.Attributes[NcUseVariableSizeAttribute] = "true";
 
-            if (coverageComponent.ValueType == typeof(Double)) coverageComponent.NoDataValue = MissingValue;
+            if (coverageComponent.ValueType == typeof(double))
+            {
+                coverageComponent.NoDataValue = MissingValue;
+            }
+
             coverageComponent.IsEditable = false;
             coverageComponent.Unit = new Unit(unitSymbol, unitSymbol);
             coverage.IsEditable = false;

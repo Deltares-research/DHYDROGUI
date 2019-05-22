@@ -13,7 +13,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         {
             try
             {
-                var api = FlexibleMeshModelApiFactory.CreateNew();
+                IFlexibleMeshModelApi api = FlexibleMeshModelApiFactory.CreateNew();
                 if (api == null)
                 {
                     return null;

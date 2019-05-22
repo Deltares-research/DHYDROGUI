@@ -3,7 +3,7 @@ using DelftTools.Utils.Aop;
 
 namespace DelftTools.Hydro.CrossSections.StandardShapes
 {
-    [Entity(FireOnCollectionChange=false)]
+    [Entity(FireOnCollectionChange = false)]
     public class CrossSectionStandardShapeElliptical : CrossSectionStandardShapeWidthHeightBase
     {
         public static CrossSectionStandardShapeElliptical CreateDefault()
@@ -15,15 +15,11 @@ namespace DelftTools.Hydro.CrossSections.StandardShapes
             };
         }
 
-        public override CrossSectionStandardShapeType Type
-        {
-            get { return CrossSectionStandardShapeType.Elliptical; }
-        }
+        public override CrossSectionStandardShapeType Type => CrossSectionStandardShapeType.Elliptical;
 
-        
         public override CrossSectionDefinitionZW GetTabulatedDefinition()
         {
-            return StandardCrossSectionsFactory.GetTabulatedCrossSectionFromEllipse(Width,Height);
+            return StandardCrossSectionsFactory.GetTabulatedCrossSectionFromEllipse(Width, Height);
         }
     }
 }

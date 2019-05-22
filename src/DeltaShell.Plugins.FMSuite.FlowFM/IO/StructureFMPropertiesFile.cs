@@ -1,4 +1,5 @@
-﻿using DeltaShell.Plugins.FMSuite.Common.IO;
+﻿using System.Collections.Generic;
+using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
@@ -7,10 +8,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
     {
         public StructureSchema<ModelPropertyDefinition> ReadProperties(string propertiesDefinitionFile)
         {
-            var schema = ReadStructureSchema(propertiesDefinitionFile);
+            StructureSchema<ModelPropertyDefinition> schema = ReadStructureSchema(propertiesDefinitionFile);
 
             StructurePropertyDefinition.StructurePropertyGroups.Clear();
-            foreach (var group in schema.StructurePropertyGroups)
+            foreach (KeyValuePair<string, ModelPropertyGroup> group in schema.StructurePropertyGroups)
             {
                 StructurePropertyDefinition.StructurePropertyGroups.Add(group.Key, group.Value);
             }

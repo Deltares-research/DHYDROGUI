@@ -11,7 +11,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         [Aggregation]
         public WaterFlowFMModel Model { get; set; }
 
-        public WaterFlowFMFeatureValueConverter(WaterFlowFMModel model, IFeature feature, string parameterName, string unit)
+        public WaterFlowFMFeatureValueConverter(WaterFlowFMModel model, IFeature feature, string parameterName,
+                                                string unit)
         {
             Location = feature;
             Model = model;
@@ -21,7 +22,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         public override object DeepClone()
         {
-            var clone = (WaterFlowFMFeatureValueConverter)base.DeepClone();
+            var clone = (WaterFlowFMFeatureValueConverter) base.DeepClone();
 
             clone.Model = Model;
 
@@ -31,10 +32,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         [NoNotifyPropertyChange]
         public override double ConvertedValue
         {
-            get
-            {
-                return Model.GetValueFromModelApi(Location, ParameterName);
-            }
+            get => Model.GetValueFromModelApi(Location, ParameterName);
             set
             {
                 if (Model == null)
@@ -48,7 +46,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 }
 
                 if (double.IsNaN(value))
+                {
                     return;
+                }
 
                 Model.SetToModelApi(Location, ParameterName, value);
             }

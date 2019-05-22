@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 using DelftTools.Utils.RegularExpressions;
 using DeltaShell.NGHS.IO;
 
@@ -7,7 +8,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
     public class SedMorDelftIniReader : DelftIniReader
     {
         /// <summary>
-        /// Regular expression for a key/value/comment line, where key & value are a string without 
+        /// Regular expression for a key/value/comment line, where key & value are a string without
         /// whitespace
         /// </summary>
         private const string KeyValueCommentPattern =
@@ -24,10 +25,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         /// and value can contain whitespace. There can be no comments.
         /// </summary>
         private const string KeyValuePattern =
-            @"\s*" +            // pre-whitespace
-            @"(?<key>[\w]+)" +  // key
-            @"\s*=\s*" +        // =
-            @"(?<value>.*)";    // value
+            @"\s*" +           // pre-whitespace
+            @"(?<key>[\w]+)" + // key
+            @"\s*=\s*" +       // =
+            @"(?<value>.*)";   // value
 
         protected override string[] GetKeyValueComment(string line)
         {
@@ -36,9 +37,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 // it's a bit crude, but the first few lines (eg, the header) in the .sed & .mor file have a 
                 // different parse format
-                var matches = RegularExpression.GetMatches(KeyValuePattern, line);
+                MatchCollection matches = RegularExpression.GetMatches(KeyValuePattern, line);
                 if (matches.Count == 0)
-                    throw new FormatException(String.Format("Invalid key-value line on line {0} in file {1}", LineNumber, InputFilePath));
+                {
+                    throw new FormatException(string.Format("Invalid key-value line on line {0} in file {1}",
+                                                            LineNumber, InputFilePath));
+                }
 
                 result[0] = matches[0].Groups["key"].Value.Trim();
                 result[1] = matches[0].Groups["value"].Value.Trim();
@@ -46,9 +50,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
             else
             {
-                var matches = RegularExpression.GetMatches(KeyValueCommentPattern, line);
+                MatchCollection matches = RegularExpression.GetMatches(KeyValueCommentPattern, line);
                 if (matches.Count == 0)
-                    throw new FormatException(String.Format("Invalid key-value-comment line on line {0} in file {1}", LineNumber, InputFilePath));
+                {
+                    throw new FormatException(string.Format("Invalid key-value-comment line on line {0} in file {1}",
+                                                            LineNumber, InputFilePath));
+                }
 
                 result[0] = matches[0].Groups["key"].Value.Trim();
                 result[1] = matches[0].Groups["value"].Value.Trim();

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using DelftTools.Utils.RegularExpressions;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 
@@ -15,65 +16,92 @@ namespace DeltaShell.Plugins.FMSuite.Common.Dependency
             this.dependencies = dependencies;
         }
 
-        protected override string Regex
-        {
-            get { return @"(?<left>^.*)&&(?<right>.*$)"; } // Note: When also implementing ||, we require precedency rules as well!
-        }
+        protected override string Regex => @"(?<left>^.*)&&(?<right>.*$)";
 
         public override bool CanHandleExpression(string expression)
         {
-            if (string.IsNullOrEmpty(expression)) return false;
+            if (string.IsNullOrEmpty(expression))
+            {
+                return false;
+            }
 
-            var canHandleExpression = RegularExpression.GetMatches(Regex, expression);
-            if (canHandleExpression.Count == 0) return false;
+            MatchCollection canHandleExpression = RegularExpression.GetMatches(Regex, expression);
+            if (canHandleExpression.Count == 0)
+            {
+                return false;
+            }
 
-            var leftPart = canHandleExpression[0].Groups["left"].Value.Trim();
-            var rightPart = canHandleExpression[0].Groups["right"].Value.Trim();
+            string leftPart = canHandleExpression[0].Groups["left"].Value.Trim();
+            string rightPart = canHandleExpression[0].Groups["right"].Value.Trim();
 
-            var leftMatches = dependencies.Where(d => d.CanHandleExpression(leftPart));
-            var count = leftMatches.Count();
-            if (count == 0) return false;
-            if (count > 1) throw new NotImplementedException("This should not happen.");
+            IEnumerable<DependencyExpressionBase>
+                leftMatches = dependencies.Where(d => d.CanHandleExpression(leftPart));
+            int count = leftMatches.Count();
+            if (count == 0)
+            {
+                return false;
+            }
 
-            var rightMatches = dependencies.Where(d => d.CanHandleExpression(rightPart));
+            if (count > 1)
+            {
+                throw new NotImplementedException("This should not happen.");
+            }
+
+            IEnumerable<DependencyExpressionBase> rightMatches =
+                dependencies.Where(d => d.CanHandleExpression(rightPart));
             count = rightMatches.Count();
-            if (count == 0) return false;
-            if (count > 1) throw new NotImplementedException("This should not happen.");
+            if (count == 0)
+            {
+                return false;
+            }
+
+            if (count > 1)
+            {
+                throw new NotImplementedException("This should not happen.");
+            }
 
             return true; // Both subexpressions are valid
         }
 
-        protected internal override string OnValidate(ModelProperty evaluatedProperty, IEnumerable<ModelProperty> allProperties, string dependencyExpression)
+        protected internal override string OnValidate(ModelProperty evaluatedProperty,
+                                                      IEnumerable<ModelProperty> allProperties,
+                                                      string dependencyExpression)
         {
-            var canHandleExpression = RegularExpression.GetMatches(Regex, dependencyExpression);
+            MatchCollection canHandleExpression = RegularExpression.GetMatches(Regex, dependencyExpression);
 
-            var leftPart = canHandleExpression[0].Groups["left"].Value.Trim();
-            var leftMatch = dependencies.First(d => d.CanHandleExpression(leftPart));
+            string leftPart = canHandleExpression[0].Groups["left"].Value.Trim();
+            DependencyExpressionBase leftMatch = dependencies.First(d => d.CanHandleExpression(leftPart));
 
-            var error = leftMatch.OnValidate(evaluatedProperty, allProperties, leftPart);
-            if (!string.IsNullOrEmpty(error)) return error;
+            string error = leftMatch.OnValidate(evaluatedProperty, allProperties, leftPart);
+            if (!string.IsNullOrEmpty(error))
+            {
+                return error;
+            }
 
-            var rightPart = canHandleExpression[0].Groups["right"].Value.Trim();
-            var rightMatch = dependencies.First(d => d.CanHandleExpression(rightPart));
+            string rightPart = canHandleExpression[0].Groups["right"].Value.Trim();
+            DependencyExpressionBase rightMatch = dependencies.First(d => d.CanHandleExpression(rightPart));
             return rightMatch.OnValidate(evaluatedProperty, allProperties, rightPart);
         }
 
-        protected internal override Func<IEnumerable<ModelProperty>, bool> OnCompile(ModelProperty evaluatedProperty, IEnumerable<ModelProperty> allProperties, string dependencyExpression)
+        protected internal override Func<IEnumerable<ModelProperty>, bool> OnCompile(
+            ModelProperty evaluatedProperty, IEnumerable<ModelProperty> allProperties, string dependencyExpression)
         {
             return properties =>
-                {
-                    var canHandleExpression = RegularExpression.GetMatches(Regex, dependencyExpression);
+            {
+                MatchCollection canHandleExpression = RegularExpression.GetMatches(Regex, dependencyExpression);
 
-                    var leftPart = canHandleExpression[0].Groups["left"].Value.Trim();
-                    var leftMatch = dependencies.First(d => d.CanHandleExpression(leftPart));
-                    var leftIsEnabled = leftMatch.OnCompile(evaluatedProperty, properties, leftPart);
+                string leftPart = canHandleExpression[0].Groups["left"].Value.Trim();
+                DependencyExpressionBase leftMatch = dependencies.First(d => d.CanHandleExpression(leftPart));
+                Func<IEnumerable<ModelProperty>, bool> leftIsEnabled =
+                    leftMatch.OnCompile(evaluatedProperty, properties, leftPart);
 
-                    var rightPart = canHandleExpression[0].Groups["right"].Value.Trim();
-                    var rightMatch = dependencies.First(d => d.CanHandleExpression(rightPart));
-                    var rightIsEnabled = rightMatch.OnCompile(evaluatedProperty, properties, rightPart);
+                string rightPart = canHandleExpression[0].Groups["right"].Value.Trim();
+                DependencyExpressionBase rightMatch = dependencies.First(d => d.CanHandleExpression(rightPart));
+                Func<IEnumerable<ModelProperty>, bool> rightIsEnabled =
+                    rightMatch.OnCompile(evaluatedProperty, properties, rightPart);
 
-                    return leftIsEnabled(properties) && rightIsEnabled(properties);
-                };
+                return leftIsEnabled(properties) && rightIsEnabled(properties);
+            };
         }
     }
 }

@@ -6,7 +6,6 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Hydro.Structures.WeirFormula;
-using DelftTools.Utils;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
@@ -20,23 +19,25 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(StructureFactory));
 
-        private static readonly Dictionary<StructureType, Func<Structure2D, string, DateTime, IStructure1D>> CreateStructureType = new Dictionary<StructureType, Func<Structure2D, string, DateTime, IStructure1D>>
-        {
-            { StructureType.Pump, CreatePumpCore },
-            { StructureType.Gate, CreateGateCore },
-            { StructureType.Weir, CreateSimpleWeirCore },
-            { StructureType.GeneralStructure, CreateGeneralStructureCore }
-        };
+        private static readonly Dictionary<StructureType, Func<Structure2D, string, DateTime, IStructure1D>>
+            CreateStructureType = new Dictionary<StructureType, Func<Structure2D, string, DateTime, IStructure1D>>
+            {
+                {StructureType.Pump, CreatePumpCore},
+                {StructureType.Gate, CreateGateCore},
+                {StructureType.Weir, CreateSimpleWeirCore},
+                {StructureType.GeneralStructure, CreateGeneralStructureCore}
+            };
 
         /// <summary>
-        /// Constructs a <see cref="IStructure1D"/> for the following supported types:
+        /// Constructs a <see cref="IStructure1D" /> for the following supported types:
         /// Pump, Weir, Gate
         /// </summary>
-        /// <param name="structure2D">The description of the structure.</param>
-        /// <param name="path">Filepath of the <see cref="StructuresFile"/>.</param>
-        /// <param name="refDate">Reference date for the model, required for time dependent data.</param>
-        /// <returns>Returns the constructed structure.</returns>
-        public static IStructure1D CreateStructure(Structure2D structure2D, string path, DateTime refDate, string oldPath = null)
+        /// <param name="structure2D"> The description of the structure. </param>
+        /// <param name="path"> Filepath of the <see cref="StructuresFile" />. </param>
+        /// <param name="refDate"> Reference date for the model, required for time dependent data. </param>
+        /// <returns> Returns the constructed structure. </returns>
+        public static IStructure1D CreateStructure(Structure2D structure2D, string path, DateTime refDate,
+                                                   string oldPath = null)
         {
             StructureFactoryValidator.ThrowIfInvalidType(structure2D, StructureFactoryValidator.SupportedTypes);
 
@@ -50,12 +51,12 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         /// <summary>
         /// Update general structure properties.
         /// </summary>
-        /// <param name="structure">Structure to be updated.</param>
-        /// <param name="structure2D">Source of data to update <paramref name="structure"/>.</param>
-        /// <param name="path">Filepath of the <see cref="StructuresFile"/>.</param>
+        /// <param name="structure"> Structure to be updated. </param>
+        /// <param name="structure2D"> Source of data to update <paramref name="structure" />. </param>
+        /// <param name="path"> Filepath of the <see cref="StructuresFile" />. </param>
         private static void SetCommonStructureData(IStructure1D structure, Structure2D structure2D, string path)
         {
-            var property = structure2D.GetProperty(KnownStructureProperties.Name);
+            ModelProperty property = structure2D.GetProperty(KnownStructureProperties.Name);
             if (property != null)
             {
                 structure.Name = property.GetValueAsString();
@@ -65,15 +66,16 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             if (property != null)
             {
                 var xCoordinate = FMParser.FromString<double>(property.GetValueAsString());
-                var yCoordinate = FMParser.FromString<double>(structure2D.GetProperty(KnownStructureProperties.Y).GetValueAsString());
+                var yCoordinate =
+                    FMParser.FromString<double>(structure2D.GetProperty(KnownStructureProperties.Y).GetValueAsString());
                 structure.Geometry = new Point(xCoordinate, yCoordinate);
             }
 
             property = structure2D.GetProperty(KnownStructureProperties.PolylineFile);
             if (property != null)
             {
-                var polylineFileName = property.GetValueAsString();
-                var filePath = FMSuiteFileBase.GetOtherFilePathInSameDirectory(path, polylineFileName);
+                string polylineFileName = property.GetValueAsString();
+                string filePath = NGHSFileBase.GetOtherFilePathInSameDirectory(path, polylineFileName);
                 var pliFile = new PliFile<Feature2D>();
                 structure.Geometry = pliFile.Read(filePath).First().Geometry;
             }
@@ -81,12 +83,18 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             structure.Chainage = double.NaN;
         }
 
-        private static void SetTimeSeriesProperty(Structure2D structure2D, string propertyName, string path, DateTime refDate, IStructure1D structure, string useTimeSeriesProperty, string constantValueProperty, TimeSeries timeSeries)
+        private static void SetTimeSeriesProperty(Structure2D structure2D, string propertyName, string path,
+                                                  DateTime refDate, IStructure1D structure,
+                                                  string useTimeSeriesProperty, string constantValueProperty,
+                                                  TimeSeries timeSeries)
         {
-            var property = structure2D.GetProperty(propertyName);
-            if (property == null) return;
+            ModelProperty property = structure2D.GetProperty(propertyName);
+            if (property == null)
+            {
+                return;
+            }
 
-            var steerable = (Steerable)property.Value;
+            var steerable = (Steerable) property.Value;
             switch (steerable.Mode)
             {
                 case SteerableMode.ConstantValue:
@@ -95,7 +103,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                     break;
                 case SteerableMode.TimeSeries:
                     TypeUtils.SetPropertyValue(structure, useTimeSeriesProperty, true);
-                    var filePath = FMSuiteFileBase.GetOtherFilePathInSameDirectory(path, steerable.TimeSeriesFilename);
+                    string filePath = NGHSFileBase.GetOtherFilePathInSameDirectory(path, steerable.TimeSeriesFilename);
                     var reader = new TimFile();
                     reader.Read(filePath, timeSeries, refDate);
                     break;
@@ -104,12 +112,16 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             }
         }
 
-        private static void SetTimeSeriesPropertyInsideWeirFormula(Structure2D structure2D, string propertyName, string path, DateTime refDate, IWeirFormula structure, string useTimeSeriesProperty, string constantValueProperty, string timeSeriesProperties)
+        private static void SetTimeSeriesPropertyInsideWeirFormula(Structure2D structure2D, string propertyName,
+                                                                   string path, DateTime refDate,
+                                                                   IWeirFormula structure, string useTimeSeriesProperty,
+                                                                   string constantValueProperty,
+                                                                   string timeSeriesProperties)
         {
             ModelProperty property = structure2D.GetProperty(propertyName);
             if (property != null)
             {
-                var steerable = (Steerable)property.Value;
+                var steerable = (Steerable) property.Value;
                 switch (steerable.Mode)
                 {
                     case SteerableMode.ConstantValue:
@@ -118,9 +130,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                         break;
                     case SteerableMode.TimeSeries:
                         TypeUtils.SetPropertyValue(structure, useTimeSeriesProperty, true);
-                        var timeSeries = (TimeSeries) TypeUtils.GetPropertyValue(structure, timeSeriesProperties, false);
+                        var timeSeries =
+                            (TimeSeries) TypeUtils.GetPropertyValue(structure, timeSeriesProperties, false);
 
-                        var filePath = FMSuiteFileBase.GetOtherFilePathInSameDirectory(path, steerable.TimeSeriesFilename);
+                        string filePath =
+                            NGHSFileBase.GetOtherFilePathInSameDirectory(path, steerable.TimeSeriesFilename);
                         var reader = new TimFile();
                         reader.Read(filePath, timeSeries, refDate);
                         break;
@@ -135,15 +149,18 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         /// <summary>
         /// Create a pump.
         /// </summary>
-        /// <param name="structure">Source of data to create structure with.</param>
-        /// <param name="path">Filepath of the <see cref="StructuresFile"/>.</param>
-        /// <param name="refDate">Reference data used for <see cref="TimFile"/>s.</param>
-        /// <returns>The created pump.</returns>
+        /// <param name="structure"> Source of data to create structure with. </param>
+        /// <param name="path"> Filepath of the <see cref="StructuresFile" />. </param>
+        /// <param name="refDate"> Reference data used for <see cref="TimFile" />s. </param>
+        /// <returns> The created pump. </returns>
         public static IPump CreatePump(Structure2D structure, string path, DateTime refDate)
         {
-            StructureFactoryValidator.ThrowIfInvalidType(structure, new[] { StructureType.Pump });
+            StructureFactoryValidator.ThrowIfInvalidType(structure, new[]
+            {
+                StructureType.Pump
+            });
 
-            var pump = CreatePumpCore(structure, path, refDate);
+            Pump2D pump = CreatePumpCore(structure, path, refDate);
             SetCommonStructureData(pump, structure, path);
 
             return pump;
@@ -152,15 +169,15 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         /// <summary>
         /// Create and set pump related data.
         /// </summary>
-        /// <param name="structure">Source of data to create structure with.</param>
-        /// <param name="path">Filepath of the <see cref="StructuresFile"/>.</param>
-        /// <param name="refDate">Reference data used for <see cref="TimFile"/>s.</param>
-        /// <returns>The created pump.</returns>
+        /// <param name="structure"> Source of data to create structure with. </param>
+        /// <param name="path"> Filepath of the <see cref="StructuresFile" />. </param>
+        /// <param name="refDate"> Reference data used for <see cref="TimFile" />s. </param>
+        /// <returns> The created pump. </returns>
         private static Pump2D CreatePumpCore(Structure2D structure, string path, DateTime refDate)
         {
             var pump = new Pump2D(true);
-            
-            var property = structure.GetProperty(KnownStructureProperties.Capacity);
+
+            ModelProperty property = structure.GetProperty(KnownStructureProperties.Capacity);
             if (property != null)
             {
                 var steerable = (Steerable) property.Value;
@@ -172,7 +189,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                         break;
                     case SteerableMode.TimeSeries:
                         pump.UseCapacityTimeSeries = true;
-                        var filePath = NGHSFileBase.GetOtherFilePathInSameDirectory(path, steerable.TimeSeriesFilename);
+                        string filePath =
+                            NGHSFileBase.GetOtherFilePathInSameDirectory(path, steerable.TimeSeriesFilename);
                         var timFile = new TimFile();
                         timFile.Read(filePath, pump.CapacityTimeSeries, refDate);
                         break;
@@ -192,12 +210,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         private static void AddPumpSobekProperties(Structure2D structure, Pump2D pump)
         {
             var hasSuctionSideLevels = false;
-            var property = structure.GetProperty(KnownStructureProperties.StartSuctionSide);
+            ModelProperty property = structure.GetProperty(KnownStructureProperties.StartSuctionSide);
             if (property != null)
             {
                 pump.StartSuction = FMParser.FromString<double>(property.GetValueAsString());
                 hasSuctionSideLevels = true;
             }
+
             property = structure.GetProperty(KnownStructureProperties.StopSuctionSide);
             if (property != null)
             {
@@ -212,6 +231,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                 pump.StartDelivery = FMParser.FromString<double>(property.GetValueAsString());
                 hasDeliverySideLevels = true;
             }
+
             property = structure.GetProperty(KnownStructureProperties.StopDeliverySide);
             if (property != null)
             {
@@ -242,17 +262,20 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                 }
                 else if (reductionLevels == 1)
                 {
-                    var reductionFactorProperty = structure.GetProperty(KnownStructureProperties.ReductionFactor);
+                    ModelProperty reductionFactorProperty =
+                        structure.GetProperty(KnownStructureProperties.ReductionFactor);
                     pump.ReductionTable[0.0] = FMParser.FromString<double>(reductionFactorProperty.GetValueAsString());
                 }
                 else
                 {
-                    var headProperty = structure.GetProperty(KnownStructureProperties.Head);
-                    var reductionFactorProperty = structure.GetProperty(KnownStructureProperties.ReductionFactor);
+                    ModelProperty headProperty = structure.GetProperty(KnownStructureProperties.Head);
+                    ModelProperty reductionFactorProperty =
+                        structure.GetProperty(KnownStructureProperties.ReductionFactor);
 
                     // Assumes the strings have already been validated:
                     var headValues = FMParser.FromString<IList<double>>(headProperty.GetValueAsString());
-                    var reductionValues = FMParser.FromString<IList<double>>(reductionFactorProperty.GetValueAsString());
+                    var reductionValues =
+                        FMParser.FromString<IList<double>>(reductionFactorProperty.GetValueAsString());
 
                     for (var i = 0; i < headValues.Count; i++)
                     {
@@ -269,35 +292,38 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         /// <summary>
         /// Create a weir.
         /// </summary>
-        /// <param name="structure2D">Source of data to create structure with.</param>
-        /// <param name="path">Filepath of the <see cref="StructuresFile"/>.</param>
-        /// <param name="refDate">Reference data used for <see cref="TimFile"/>s.</param>
-        /// <returns>The created weir.</returns>
+        /// <param name="structure2D"> Source of data to create structure with. </param>
+        /// <param name="path"> Filepath of the <see cref="StructuresFile" />. </param>
+        /// <param name="refDate"> Reference data used for <see cref="TimFile" />s. </param>
+        /// <returns> The created weir. </returns>
         public static IWeir CreateWeir(Structure2D structure2D, string path, DateTime refDate)
         {
-            StructureFactoryValidator.ThrowIfInvalidType(structure2D, new[] { StructureType.Weir });
+            StructureFactoryValidator.ThrowIfInvalidType(structure2D, new[]
+            {
+                StructureType.Weir
+            });
 
             IWeir structure = null;
             if (structure2D.StructureType == StructureType.Weir)
             {
                 structure = CreateSimpleWeirCore(structure2D, path, refDate);
             }
+
             SetCommonStructureData(structure, structure2D, path);
 
             return structure;
         }
 
-        
         /// <summary>
         /// Create a simple weir.
         /// </summary>
-        /// <param name="structure2D">Source of data to create structure with.</param>
-        /// <param name="path">Filepath of the <see cref="StructuresFile"/>.</param>
-        /// <param name="refDate">Reference data used for <see cref="TimFile"/>s.</param>
-        /// <returns>The created simple weir.</returns>
+        /// <param name="structure2D"> Source of data to create structure with. </param>
+        /// <param name="path"> Filepath of the <see cref="StructuresFile" />. </param>
+        /// <param name="refDate"> Reference data used for <see cref="TimFile" />s. </param>
+        /// <returns> The created simple weir. </returns>
         private static IWeir CreateSimpleWeirCore(Structure2D structure2D, string path, DateTime refDate)
         {
-            var weir = CreateWeirCore(structure2D, path, refDate);
+            Weir2D weir = CreateWeirCore(structure2D, path, refDate);
             weir.WeirFormula = CreateSimpleWeirFormula(structure2D);
 
             return weir;
@@ -306,94 +332,117 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         /// <summary>
         /// Create a simple weir formula
         /// </summary>
-        /// <param name="structure2D">Source of data to create the formula with.</param>
-        /// <returns>The created formula</returns>
+        /// <param name="structure2D"> Source of data to create the formula with. </param>
+        /// <returns> The created formula </returns>
         private static IWeirFormula CreateSimpleWeirFormula(Structure2D structure2D)
         {
             var simpleWeirFormula = new SimpleWeirFormula();
 
-            var property = structure2D.GetProperty(KnownStructureProperties.LateralContractionCoefficient);
+            ModelProperty property = structure2D.GetProperty(KnownStructureProperties.LateralContractionCoefficient);
             if (property != null)
             {
                 simpleWeirFormula.LateralContraction = FMParser.FromString<double>(property.GetValueAsString());
             }
+
             return simpleWeirFormula;
         }
 
         /// <summary>
         /// Create a weir that has a General Structure formula.
         /// </summary>
-        /// <param name="structure2D">Source of data to create structure with.</param>
-        /// <param name="path">Filepath of the <see cref="StructuresFile"/>.</param>
-        /// <param name="refDate">Reference data used for <see cref="TimFile"/>s.</param>
-        /// <returns>The created simple weir.</returns>
+        /// <param name="structure2D"> Source of data to create structure with. </param>
+        /// <param name="path"> Filepath of the <see cref="StructuresFile" />. </param>
+        /// <param name="refDate"> Reference data used for <see cref="TimFile" />s. </param>
+        /// <returns> The created simple weir. </returns>
         private static IWeir CreateGeneralStructureCore(Structure2D structure2D, string path, DateTime refDate)
         {
             var weir = new Weir2D(true);
             weir.WeirFormula = CreateGeneralStructureWeirFormula(structure2D, path, refDate);
 
-            var crestWidthProperty = structure2D.GetProperty(KnownGeneralStructureProperties.CrestWidth.GetDescription());
-            var crestWidthString = crestWidthProperty?.GetValueAsString();
+            ModelProperty crestWidthProperty =
+                structure2D.GetProperty(KnownGeneralStructureProperties.CrestWidth.GetDescription());
+            string crestWidthString = crestWidthProperty?.GetValueAsString();
             weir.CrestWidth = string.IsNullOrEmpty(crestWidthString)
-                ? double.NaN
-                : FMParser.FromString<double>(crestWidthString);
+                                  ? double.NaN
+                                  : FMParser.FromString<double>(crestWidthString);
 
-            SetTimeSeriesProperty(structure2D, KnownGeneralStructureProperties.CrestLevel.GetDescription(), path, refDate, weir,
-                TypeUtils.GetMemberName(() => weir.UseCrestLevelTimeSeries),
-                TypeUtils.GetMemberName(() => weir.CrestLevel), weir.CrestLevelTimeSeries);
-            
+            SetTimeSeriesProperty(structure2D, KnownGeneralStructureProperties.CrestLevel.GetDescription(), path,
+                                  refDate, weir,
+                                  TypeUtils.GetMemberName(() => weir.UseCrestLevelTimeSeries),
+                                  TypeUtils.GetMemberName(() => weir.CrestLevel), weir.CrestLevelTimeSeries);
+
             return weir;
         }
 
-        private static IWeirFormula CreateGeneralStructureWeirFormula(Structure2D structure2D,string path, DateTime refDate)
+        private static IWeirFormula CreateGeneralStructureWeirFormula(Structure2D structure2D, string path,
+                                                                      DateTime refDate)
         {
             var gsWeirFormula = new GeneralStructureWeirFormula()
             {
                 // Set default values for Structure2D general structures.
-                WidthStructureLeftSide    = double.NaN,
-                WidthStructureRightSide   = double.NaN,
-                WidthLeftSideOfStructure  = double.NaN,
+                WidthStructureLeftSide = double.NaN,
+                WidthStructureRightSide = double.NaN,
+                WidthLeftSideOfStructure = double.NaN,
                 WidthRightSideOfStructure = double.NaN
             };
 
-            foreach (var property in Enum.GetValues(typeof(KnownGeneralStructureProperties)).Cast<KnownGeneralStructureProperties>())
+            foreach (KnownGeneralStructureProperties property in Enum
+                                                                 .GetValues(typeof(KnownGeneralStructureProperties))
+                                                                 .Cast<KnownGeneralStructureProperties>())
             {
                 //Ignored, because they are already set in the general weir or they could be timeseries or the variable is not a double, but an enum.
-                if (property == KnownGeneralStructureProperties.GateLowerEdgeLevel || 
-                    property==KnownGeneralStructureProperties.GateOpeningWidth || 
-                    property == KnownGeneralStructureProperties.GateOpeningHorizontalDirection || 
-                    property == KnownGeneralStructureProperties.CrestLevel|| 
-                    property ==KnownGeneralStructureProperties.CrestWidth) continue;
+                if (property == KnownGeneralStructureProperties.GateLowerEdgeLevel ||
+                    property == KnownGeneralStructureProperties.GateOpeningWidth ||
+                    property == KnownGeneralStructureProperties.GateOpeningHorizontalDirection ||
+                    property == KnownGeneralStructureProperties.CrestLevel ||
+                    property == KnownGeneralStructureProperties.CrestWidth)
+                {
+                    continue;
+                }
 
-                var structureproperty = structure2D.GetProperty(property);
+                ModelProperty structureproperty = structure2D.GetProperty(property);
                 if (structureproperty == null)
+                {
                     Log.WarnFormat("Property [{0}] is not supported and is skipped.", property);
+                }
                 else
                 {
-                    gsWeirFormula.SetPropertyValue(property, FMParser.FromString<double>(structureproperty.GetValueAsString()));
+                    gsWeirFormula.SetPropertyValue(
+                        property, FMParser.FromString<double>(structureproperty.GetValueAsString()));
                 }
             }
 
-            var horizontalDoorOpeningDirectionProperty =
+            ModelProperty horizontalDoorOpeningDirectionProperty =
                 structure2D.GetProperty(KnownGeneralStructureProperties.GateOpeningHorizontalDirection);
             if (horizontalDoorOpeningDirectionProperty == null)
-                Log.WarnFormat("Property [{0}] is not supported and is skipped.", KnownGeneralStructureProperties.GateOpeningHorizontalDirection);
+            {
+                Log.WarnFormat("Property [{0}] is not supported and is skipped.",
+                               KnownGeneralStructureProperties.GateOpeningHorizontalDirection);
+            }
             else
             {
                 gsWeirFormula.HorizontalDoorOpeningDirection =
-                    (GateOpeningDirection)horizontalDoorOpeningDirectionProperty.Value;
+                    (GateOpeningDirection) horizontalDoorOpeningDirectionProperty.Value;
             }
 
+            SetTimeSeriesPropertyInsideWeirFormula(structure2D,
+                                                   KnownGeneralStructureProperties.GateOpeningWidth.GetDescription(),
+                                                   path, refDate, gsWeirFormula,
+                                                   TypeUtils.GetMemberName(
+                                                       () => gsWeirFormula.UseHorizontalDoorOpeningWidthTimeSeries),
+                                                   TypeUtils.GetMemberName(
+                                                       () => gsWeirFormula.HorizontalDoorOpeningWidth),
+                                                   TypeUtils.GetMemberName(
+                                                       () => gsWeirFormula.HorizontalDoorOpeningWidthTimeSeries));
 
-            SetTimeSeriesPropertyInsideWeirFormula(structure2D, KnownGeneralStructureProperties.GateOpeningWidth.GetDescription(), path, refDate, gsWeirFormula,
-                TypeUtils.GetMemberName(() => gsWeirFormula.UseHorizontalDoorOpeningWidthTimeSeries),
-                TypeUtils.GetMemberName(() => gsWeirFormula.HorizontalDoorOpeningWidth),
-                TypeUtils.GetMemberName(() => gsWeirFormula.HorizontalDoorOpeningWidthTimeSeries));
-
-            SetTimeSeriesPropertyInsideWeirFormula(structure2D, KnownGeneralStructureProperties.GateLowerEdgeLevel.GetDescription(), path, refDate, gsWeirFormula,
-                TypeUtils.GetMemberName(() => gsWeirFormula.UseLowerEdgeLevelTimeSeries),
-                TypeUtils.GetMemberName(() => gsWeirFormula.LowerEdgeLevel), 
-                TypeUtils.GetMemberName(() => gsWeirFormula.LowerEdgeLevelTimeSeries));
+            SetTimeSeriesPropertyInsideWeirFormula(structure2D,
+                                                   KnownGeneralStructureProperties.GateLowerEdgeLevel.GetDescription(),
+                                                   path, refDate, gsWeirFormula,
+                                                   TypeUtils.GetMemberName(
+                                                       () => gsWeirFormula.UseLowerEdgeLevelTimeSeries),
+                                                   TypeUtils.GetMemberName(() => gsWeirFormula.LowerEdgeLevel),
+                                                   TypeUtils.GetMemberName(
+                                                       () => gsWeirFormula.LowerEdgeLevelTimeSeries));
 
             return gsWeirFormula;
         }
@@ -401,18 +450,18 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         /// <summary>
         /// Create a weir.
         /// </summary>
-        /// <param name="structure2D">Source of data to create structure with.</param>
-        /// <param name="path">Filepath of the <see cref="StructuresFile"/>.</param>
-        /// <param name="refDate">Reference data used for <see cref="TimFile"/>s.</param>
-        /// <returns>The created weir.</returns>
+        /// <param name="structure2D"> Source of data to create structure with. </param>
+        /// <param name="path"> Filepath of the <see cref="StructuresFile" />. </param>
+        /// <param name="refDate"> Reference data used for <see cref="TimFile" />s. </param>
+        /// <returns> The created weir. </returns>
         private static Weir2D CreateWeirCore(Structure2D structure2D, string path, DateTime refDate)
         {
             var weir = new Weir2D(true);
-            var crestWidthProperty = structure2D.GetProperty(KnownStructureProperties.CrestWidth);
-            var crestWidthString = crestWidthProperty?.GetValueAsString();
+            ModelProperty crestWidthProperty = structure2D.GetProperty(KnownStructureProperties.CrestWidth);
+            string crestWidthString = crestWidthProperty?.GetValueAsString();
             weir.CrestWidth = string.IsNullOrEmpty(crestWidthString)
-                ? double.NaN
-                : FMParser.FromString<double>(crestWidthString);
+                                  ? double.NaN
+                                  : FMParser.FromString<double>(crestWidthString);
             SetTimeSeriesProperty(structure2D, KnownStructureProperties.CrestLevel, path, refDate, weir,
                                   TypeUtils.GetMemberName(() => weir.UseCrestLevelTimeSeries),
                                   TypeUtils.GetMemberName(() => weir.CrestLevel), weir.CrestLevelTimeSeries);
@@ -426,13 +475,17 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 
         public static IWeir CreateGate(Structure2D structure2D, string path, DateTime refDate)
         {
-            StructureFactoryValidator.ThrowIfInvalidType(structure2D, new[] { StructureType.Gate });
+            StructureFactoryValidator.ThrowIfInvalidType(structure2D, new[]
+            {
+                StructureType.Gate
+            });
 
             IWeir structure = null;
             if (structure2D.StructureType == StructureType.Gate)
             {
                 structure = CreateGateCore(structure2D, path, refDate);
             }
+
             SetCommonStructureData(structure, structure2D, path);
 
             return structure;
@@ -443,15 +496,15 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             var weir = new Weir2D(true);
             weir.WeirFormula = CreateGateWeirFormula(structure2D, path, refDate);
 
-            var crestWidthProperty = structure2D.GetProperty(KnownStructureProperties.CrestWidth);
-            var crestWidthString = crestWidthProperty?.GetValueAsString();
+            ModelProperty crestWidthProperty = structure2D.GetProperty(KnownStructureProperties.CrestWidth);
+            string crestWidthString = crestWidthProperty?.GetValueAsString();
             weir.CrestWidth = string.IsNullOrEmpty(crestWidthString)
-                ? double.NaN
-                : FMParser.FromString<double>(crestWidthString);
+                                  ? double.NaN
+                                  : FMParser.FromString<double>(crestWidthString);
 
             SetTimeSeriesProperty(structure2D, KnownStructureProperties.CrestLevel, path, refDate, weir,
-                TypeUtils.GetMemberName(() => weir.UseCrestLevelTimeSeries),
-                TypeUtils.GetMemberName(() => weir.CrestLevel), weir.CrestLevelTimeSeries);
+                                  TypeUtils.GetMemberName(() => weir.UseCrestLevelTimeSeries),
+                                  TypeUtils.GetMemberName(() => weir.CrestLevel), weir.CrestLevelTimeSeries);
 
             return weir;
         }
@@ -459,18 +512,18 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         private static IWeirFormula CreateGateWeirFormula(Structure2D structure2D, string path, DateTime refDate)
         {
             var gateWeirFormula = new GatedWeirFormula(true);
-            
+
             gateWeirFormula.DoorHeight =
                 FMParser.FromString<double>(
                     structure2D.GetProperty(KnownStructureProperties.GateHeight).GetValueAsString());
 
-            var openingDirectionProperty =
+            ModelProperty openingDirectionProperty =
                 structure2D.GetProperty(KnownStructureProperties.GateOpeningHorizontalDirection);
             var openingDirectionValue =
                 (Enum)
-                    FMParser.FromString(openingDirectionProperty.GetValueAsString(),
-                        openingDirectionProperty.PropertyDefinition.DataType);
-            var displayName = openingDirectionValue.GetDisplayName();
+                FMParser.FromString(openingDirectionProperty.GetValueAsString(),
+                                    openingDirectionProperty.PropertyDefinition.DataType);
+            string displayName = openingDirectionValue.GetDisplayName();
             switch (displayName)
             {
                 case "symmetric":
@@ -485,23 +538,28 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                 default:
                     throw new ArgumentException("Could not parse horizontal_opening_direction of type: " + displayName);
             }
-            
-            SetTimeSeriesPropertyInsideWeirFormula(structure2D,
-                KnownStructureProperties.GateLowerEdgeLevel,
-                path, refDate,
-                gateWeirFormula,
-                TypeUtils.GetMemberName(() => gateWeirFormula.UseLowerEdgeLevelTimeSeries),
-                TypeUtils.GetMemberName(() => gateWeirFormula.LowerEdgeLevel),
-                TypeUtils.GetMemberName(() => gateWeirFormula.LowerEdgeLevelTimeSeries));
 
             SetTimeSeriesPropertyInsideWeirFormula(structure2D,
-                KnownStructureProperties.GateOpeningWidth,
-                path, refDate,
-                gateWeirFormula,
-                TypeUtils.GetMemberName(() => gateWeirFormula.UseHorizontalDoorOpeningWidthTimeSeries),
-                TypeUtils.GetMemberName(() => gateWeirFormula.HorizontalDoorOpeningWidth),
-                TypeUtils.GetMemberName(() => gateWeirFormula.HorizontalDoorOpeningWidthTimeSeries));
-            
+                                                   KnownStructureProperties.GateLowerEdgeLevel,
+                                                   path, refDate,
+                                                   gateWeirFormula,
+                                                   TypeUtils.GetMemberName(
+                                                       () => gateWeirFormula.UseLowerEdgeLevelTimeSeries),
+                                                   TypeUtils.GetMemberName(() => gateWeirFormula.LowerEdgeLevel),
+                                                   TypeUtils.GetMemberName(
+                                                       () => gateWeirFormula.LowerEdgeLevelTimeSeries));
+
+            SetTimeSeriesPropertyInsideWeirFormula(structure2D,
+                                                   KnownStructureProperties.GateOpeningWidth,
+                                                   path, refDate,
+                                                   gateWeirFormula,
+                                                   TypeUtils.GetMemberName(
+                                                       () => gateWeirFormula.UseHorizontalDoorOpeningWidthTimeSeries),
+                                                   TypeUtils.GetMemberName(
+                                                       () => gateWeirFormula.HorizontalDoorOpeningWidth),
+                                                   TypeUtils.GetMemberName(
+                                                       () => gateWeirFormula.HorizontalDoorOpeningWidthTimeSeries));
+
             return gateWeirFormula;
         }
 
