@@ -2,6 +2,7 @@ using System;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Core.Workflow.DataItems.ValueConverters;
 using DelftTools.Utils.Aop;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using GeoAPI.Extensions.Feature;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData

@@ -4,7 +4,6 @@ using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.TestUtils.TestReferenceHelper;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.FunctionStores;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
@@ -14,6 +13,8 @@ using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using System;
 using System.Linq;
+using DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 {

@@ -9,6 +9,7 @@ using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Views;
 using DeltaShell.Plugins.DelftModels.HydroModel.Properties;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.FMSuite.FlowFM;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.Wave;
 using NUnit.Framework;
 using Rhino.Mocks;

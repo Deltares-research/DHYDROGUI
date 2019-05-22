@@ -2,6 +2,7 @@
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Utils.Validation;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation

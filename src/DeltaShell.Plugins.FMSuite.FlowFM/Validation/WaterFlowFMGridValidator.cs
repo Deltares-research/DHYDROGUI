@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using DelftTools.Utils.Validation;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 {

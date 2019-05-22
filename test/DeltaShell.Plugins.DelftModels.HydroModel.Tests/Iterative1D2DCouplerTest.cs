@@ -15,6 +15,7 @@ using DeltaShell.Plugins.DelftModels.WaterFlowModel;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation;
 using DeltaShell.Plugins.DeveloperTools.Builders;
 using DeltaShell.Plugins.FMSuite.FlowFM;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using GeoAPI.Extensions.CoordinateSystems;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.Extensions.Coverages;

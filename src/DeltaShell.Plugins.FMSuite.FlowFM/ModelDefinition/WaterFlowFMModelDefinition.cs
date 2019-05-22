@@ -33,11 +33,13 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 {
     // TODO: Make this an [Entity]. Needs refactoring.
-    public class WaterFlowFMModelDefinition
+    public partial class WaterFlowFMModelDefinition
     {
         public const string BathymetryDataItemName = "Bed Level";
         public const string InitialWaterLevelDataItemName = "Initial Water Level";
@@ -260,71 +262,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             }
         }
 
-        private void OnWaterFlowFMCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            if (e.Action == NotifyCollectionChangedAction.Add)
-            {
-                object removedOrAddedItem = e.GetRemovedOrAddedItem();
-                if (removedOrAddedItem == GetModelProperty(KnownProperties.Temperature))
-                {
-                    var prop = (WaterFlowFMProperty) removedOrAddedItem;
-                    HeatFluxModel.Type = (HeatFluxModelType) (int) prop.Value;
-                }
-            }
-        }
-
-        private bool handlingPropertyChanged;
-        private readonly Dictionary<string, Action<WaterFlowFMProperty>> waterFlowFmPropertyChangedHandler;
-
-        [EditAction]
-        private void OnWaterFlowFMPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (handlingPropertyChanged)
-            {
-                return; //prevent recursion in syncing useTemperature with heat flux model type
-            }
-
-            handlingPropertyChanged = true;
-
-            try
-            {
-                var prop = (WaterFlowFMProperty) sender;
-                string propName = prop.PropertyDefinition.MduPropertyName.ToLower();
-                if (waterFlowFmPropertyChangedHandler.ContainsKey(propName))
-                {
-                    waterFlowFmPropertyChangedHandler[propName](prop);
-                }
-            }
-            finally
-            {
-                handlingPropertyChanged = false;
-            }
-        }
-
-        private void OnIcdTypePropertyChanged(WaterFlowFMProperty icdtypProp)
-        {
-            var icdtyp = (int) icdtypProp.Value;
-            if (icdtyp == 2 || icdtyp == 3)
-            {
-                WaterFlowFMProperty cdbreakpointsProperty = GetModelProperty(KnownProperties.Cdbreakpoints);
-                CorrectWindDragCoefficientBreakpointsCollection(cdbreakpointsProperty, icdtyp);
-
-                WaterFlowFMProperty windspeedbreakpointsProperty =
-                    GetModelProperty(KnownProperties.Windspeedbreakpoints);
-                CorrectWindDragCoefficientBreakpointsCollection(windspeedbreakpointsProperty, icdtyp);
-            }
-        }
-
-        private void OnTimePropertyChanged(WaterFlowFMProperty prop)
-        {
-            UpdateOutputTimes();
-        }
-
-        private void OnTemperaturePropertyChanged(WaterFlowFMProperty temperatureProp)
-        {
-            HeatFluxModel.Type = (HeatFluxModelType) (int) temperatureProp.Value;
-        }
-
         public readonly List<string> KnownWriteOutputSnappedFeatures = new List<string>()
         {
             KnownProperties.Wrishp_crs,
@@ -339,24 +276,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             KnownProperties.Wrishp_src,
             KnownProperties.Wrishp_pump
         };
-
-        private void OnWriteSnappedFeaturesPropertyChanged(WaterFlowFMProperty prop)
-        {
-            foreach (string writeProp in KnownWriteOutputSnappedFeatures)
-            {
-                GetModelProperty(writeProp).Value = WriteSnappedFeatures;
-            }
-        }
-
-        private void OnMorphologySedimentPropertyChanged(WaterFlowFMProperty prop)
-        {
-            if (prop.PropertyDefinition.MduPropertyName != GuiProperties.UseMorSed)
-            {
-                return;
-            }
-
-            SetMapFormatPropertyValue();
-        }
 
         private void SetModelProperty(string mduPropertyName, WaterFlowFMProperty property)
         {
@@ -778,34 +697,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             return ticks / TimeSpan.TicksPerSecond / numSecondsInTimeStep;
         }
 
-        private void UpdateOutputTimes()
-        {
-            UpdateOutputTimesFromSimulationPeriod(GuiProperties.SpecifyHisStart, GuiProperties.HisOutputStartTime,
-                                                  GuiProperties.SpecifyHisStop, GuiProperties.HisOutputStopTime);
-            UpdateOutputTimesFromSimulationPeriod(GuiProperties.SpecifyMapStart, GuiProperties.MapOutputStartTime,
-                                                  GuiProperties.SpecifyMapStop, GuiProperties.MapOutputStopTime);
-            UpdateOutputTimesFromSimulationPeriod(GuiProperties.SpecifyRstStart, GuiProperties.RstOutputStartTime,
-                                                  GuiProperties.SpecifyRstStop, GuiProperties.RstOutputStopTime);
-            UpdateOutputTimesFromSimulationPeriod(GuiProperties.SpecifyWaqOutputStartTime,
-                                                  GuiProperties.WaqOutputStartTime,
-                                                  GuiProperties.SpecifyWaqOutputStopTime,
-                                                  GuiProperties.WaqOutputStopTime); /*rstoutput needs to be replaced */
-        }
-
-        private void UpdateOutputTimesFromSimulationPeriod(string specifyStartPropName, string startTimePropName,
-                                                           string specifyStopPropName, string stopTimePropName)
-        {
-            if (!(bool) GetModelProperty(specifyStartPropName).Value)
-            {
-                GetModelProperty(startTimePropName).Value = GetModelProperty(GuiProperties.StartTime).Value;
-            }
-
-            if (!(bool) GetModelProperty(specifyStopPropName).Value)
-            {
-                GetModelProperty(stopTimePropName).Value = GetModelProperty(GuiProperties.StopTime).Value;
-            }
-        }
-
         public bool ContainsProperty(string propertyKey)
         {
             return GetModelProperty(propertyKey) != null;
@@ -814,24 +705,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         public void AddProperty(WaterFlowFMProperty waterFlowFmProperty)
         {
             Properties.Add(waterFlowFmProperty);
-        }
-
-        private void CorrectWindDragCoefficientBreakpointsCollection(WaterFlowFMProperty breakPointsProperty,
-                                                                     int icdtyp)
-        {
-            var cdbreakpoints = (IList<double>) breakPointsProperty.Value;
-            // Append new values:
-            if (cdbreakpoints.Count < icdtyp)
-            {
-                breakPointsProperty.Value =
-                    new List<double>(cdbreakpoints.Concat(Enumerable.Repeat(0.0, icdtyp - cdbreakpoints.Count)));
-            }
-
-            // Remove obsolete values:
-            if (cdbreakpoints.Count > icdtyp)
-            {
-                breakPointsProperty.Value = new List<double>(cdbreakpoints.Take(icdtyp));
-            }
         }
 
         /// <summary>

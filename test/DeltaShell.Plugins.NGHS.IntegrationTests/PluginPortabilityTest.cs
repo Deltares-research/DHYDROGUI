@@ -40,6 +40,7 @@ using SharpMapTestUtils;
 using System;
 using System.IO;
 using System.Linq;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using Point = NetTopologySuite.Geometries.Point;
 using PointwiseOperationType = SharpMap.SpatialOperations.PointwiseOperationType;
 

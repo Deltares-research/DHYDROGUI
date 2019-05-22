@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters;
 using NUnit.Framework;
 using Rhino.Mocks;
 

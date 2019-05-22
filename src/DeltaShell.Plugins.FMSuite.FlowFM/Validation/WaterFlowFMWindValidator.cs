@@ -5,6 +5,7 @@ using System.Linq;
 using DelftTools.Functions.Generic;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 {

@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Windows.Forms;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using NetTopologySuite.Extensions.Features;
 using MessageBox = DelftTools.Controls.Swf.MessageBox;
 

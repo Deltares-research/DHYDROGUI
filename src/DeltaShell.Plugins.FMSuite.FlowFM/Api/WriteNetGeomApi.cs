@@ -5,6 +5,7 @@ using log4net;
 using NetTopologySuite.Extensions.Grids;
 using System;
 using System.IO;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
 {

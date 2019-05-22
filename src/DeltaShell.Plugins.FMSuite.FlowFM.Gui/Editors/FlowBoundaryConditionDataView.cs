@@ -31,6 +31,7 @@ using System.Linq;
 using System.Net;
 using System.Runtime.Remoting;
 using System.Windows.Forms;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 {

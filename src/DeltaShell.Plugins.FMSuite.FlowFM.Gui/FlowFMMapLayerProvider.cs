@@ -35,8 +35,9 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
+using DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.FunctionStores;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 {
