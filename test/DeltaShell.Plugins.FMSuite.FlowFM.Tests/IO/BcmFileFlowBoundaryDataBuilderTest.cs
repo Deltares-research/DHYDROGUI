@@ -9,6 +9,7 @@ using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using System.Linq;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccess;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
 
 [TestFixture]
 public class BcmFileFlowBoundaryDataBuilderTest

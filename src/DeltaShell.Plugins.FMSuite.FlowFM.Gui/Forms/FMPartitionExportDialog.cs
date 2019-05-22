@@ -5,7 +5,7 @@ using System.Linq;
 using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Shell.Gui;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
 {

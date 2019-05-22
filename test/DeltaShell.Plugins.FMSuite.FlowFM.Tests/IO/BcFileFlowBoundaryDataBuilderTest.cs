@@ -12,6 +12,7 @@ using NUnit.Framework;
 using System;
 using System.Linq;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccess;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 {

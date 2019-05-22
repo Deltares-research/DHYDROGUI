@@ -3,7 +3,7 @@ using System.Linq;
 using System.Windows.Forms;
 using DelftTools.TestUtils;
 using DeltaShell.NGHS.IO.Adaptors;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;

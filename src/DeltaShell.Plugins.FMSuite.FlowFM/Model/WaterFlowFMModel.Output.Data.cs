@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 using DelftTools.Functions;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.FunctionStores;
+using DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using NetTopologySuite.Extensions.Coverages;
 
