@@ -1,0 +1,9 @@
+<BranchVCSpec>
+	<PkgGUID>{3FA65F21-0CA5-4754-9477-AE69032F6B84}</PkgGUID>
+	<XMLPath>eaA\AE69032F6B84.xml</XMLPath>
+	<Config>
+		<GUID>NGHS</GUID>
+		<LocalPath>%NGHS%</LocalPath>
+		<Type>2</Type>
+	</Config>
+</BranchVCSpec>
