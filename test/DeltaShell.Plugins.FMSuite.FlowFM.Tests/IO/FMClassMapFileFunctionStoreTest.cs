@@ -1,6 +1,6 @@
 ﻿using DelftTools.Functions;
 using DelftTools.TestUtils;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.FunctionStores;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
 using NUnit.Framework;

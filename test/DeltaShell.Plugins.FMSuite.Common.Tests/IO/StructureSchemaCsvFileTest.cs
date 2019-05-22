@@ -1,4 +1,5 @@
-﻿using DelftTools.TestUtils;
+﻿using System.IO;
+using DelftTools.TestUtils;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using NUnit.Framework;
@@ -8,7 +9,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
     [TestFixture]
     public class StructureSchemaCsvFileTest
     {
-        public static readonly string ApplicationStructuresSchemaCsvFilePath = @"plugins\DeltaShell.Plugins.FMSuite.FlowFM\structure-properties.csv";
+        public static readonly string ApplicationStructuresSchemaCsvFilePath = Path.Combine("plugins",
+                                                                                            "DeltaShell.Plugins.FMSuite.FlowFM",
+                                                                                            "CsvFiles",
+                                                                                            "structure-properties.csv");
 
         [Test]
         [Category(TestCategory.DataAccess)]

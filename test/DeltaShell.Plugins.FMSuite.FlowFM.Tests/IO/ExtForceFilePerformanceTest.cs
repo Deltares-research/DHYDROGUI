@@ -1,9 +1,9 @@
-﻿using System.IO;
-using DelftTools.TestUtils;
+﻿using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using NUnit.Framework;
+using System.IO;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 {

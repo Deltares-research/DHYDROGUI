@@ -5,6 +5,7 @@ using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils;
 using DelftTools.Utils.Reflection;
+using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using NUnit.Framework;
 using Rhino.Mocks;
 

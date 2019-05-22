@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.ComponentModel;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using DelftTools.Functions.Generic;
+﻿using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils;
@@ -20,6 +13,9 @@ using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccess;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using GeoAPI.Extensions.CoordinateSystems;
@@ -30,6 +26,13 @@ using NetTopologySuite.Extensions.Features;
 using SharpMap.Api.SpatialOperations;
 using SharpMap.Data.Providers;
 using SharpMap.SpatialOperations;
+using System;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.ComponentModel;
+using System.IO;
+using System.Linq;
+using System.Reflection;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 {
@@ -135,15 +138,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 
         static WaterFlowFMModelDefinition()
         {
+            const string dflowfmCsvFileDirectoryName = "CsvFiles";
             const string dflowfmPropertiesCsvFileName = "dflowfm-properties.csv";
             const string dflowfmStructurePropertiesCsvFileName = "structure-properties.csv";
             const string dflowfmMorPropertiesCsvFileName = "dflowfm-mor-properties.csv";
+
             Assembly assembly = typeof(WaterFlowFMModelDefinition).Assembly;
             string assemblyLocation = assembly.Location;
             DirectoryInfo directoryInfo = new FileInfo(assemblyLocation).Directory;
             if (directoryInfo != null)
             {
-                string path = directoryInfo.FullName;
+                string path = Path.Combine(directoryInfo.FullName, dflowfmCsvFileDirectoryName);
                 string propertiesDefinitionFile = Path.Combine(path, dflowfmPropertiesCsvFileName);
                 ModelPropertySchema =
                     new ModelSchemaCsvFile().ReadModelSchema<WaterFlowFMPropertyDefinition>(propertiesDefinitionFile,

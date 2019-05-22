@@ -5,6 +5,7 @@ using System.Linq;
 using DelftTools.Utils.Aop;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
+using DeltaShell.Plugins.FMSuite.FlowFM.Sediment;
 using SharpMap;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
