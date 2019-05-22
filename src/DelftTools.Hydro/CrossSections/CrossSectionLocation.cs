@@ -18,5 +18,6 @@
         public string Definition { get; set; }
 
         public string LongName { get; set; }
+
     }
 }

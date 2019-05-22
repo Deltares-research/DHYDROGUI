@@ -36,8 +36,6 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using DeltaShell.Plugins.FMSuite.FlowFM.Model;
-using DeltaShell.Plugins.FMSuite.FlowFM.Sediment;
 using GeoAPI.Extensions.Feature;
 using ObservationCrossSection2D = DelftTools.Hydro.ObservationCrossSection2D;
 
@@ -322,9 +320,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             var generalStructureDataItems = new List<string>
             {
-                KnownGeneralStructureProperties.CrestLevel.GetDescription(),
-                KnownGeneralStructureProperties.GateLowerEdgeLevel.GetDescription(),
-                KnownGeneralStructureProperties.GateOpeningWidth.GetDescription()
+                KnownGeneralStructureProperties.LevelCenter.GetDescription(),
+                KnownGeneralStructureProperties.GateHeight.GetDescription(),
+                KnownGeneralStructureProperties.HorizontalDoorOpeningWidth.GetDescription()
             };
 
             for (var i = 0; i < dataItems.Count; ++i)
@@ -2051,33 +2049,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             dataItemWaterFlowFmModel = model.AllDataItems.FirstOrDefault(di => di.ComposedValue is Weir2D);
             Assert.IsNull(dataItemWaterFlowFmModel, "The DataItem for the weir is not removed after removing the weir");
             Assert.AreEqual(0, rtcDataItem.LinkedBy.Count, "The DataItem of the RTC component is still linked after removing the weir");
-        }
-
-        [Test]
-        public void GivenAnMduWithoutOrZeroValueForPropertyPathsRelativeToParent_WhenImportAndExportThisModel_ThenThisPropertyShouldChangedToOneDuringAnExport()
-        {
-            // Given
-            string mduFilePath = TestHelper.GetTestFilePath(@"small\small.mdu");
-            mduFilePath = TestHelper.CreateLocalCopy(mduFilePath);
-
-            var model = new WaterFlowFMModel(mduFilePath);
-
-            string pathsRelativeToParent = model.ModelDefinition.GetModelProperty(KnownProperties.PathsRelativeToParent).GetValueAsString();
-            Assert.AreEqual("0", pathsRelativeToParent, "The property for PathsRelativeToParent is {0} instead of 0. This is incorrect, because it was not written in the Mdu file", pathsRelativeToParent);
-
-            string saveDirectory = Path.Combine(Path.GetDirectoryName(mduFilePath), "..", "small_saved");
-
-            FileUtils.DeleteIfExists(saveDirectory);
-            Directory.CreateDirectory(saveDirectory);
-
-            string targetMduFilePath = Path.Combine(saveDirectory, "small.mdu");
-
-            // When
-            model.ExportTo(targetMduFilePath);
-
-            pathsRelativeToParent = model.ModelDefinition.GetModelProperty(KnownProperties.PathsRelativeToParent).GetValueAsString();
-            // Then
-            Assert.AreEqual("1", pathsRelativeToParent, "The property for PathsRelativeToParent is {0} instead of 1. This is incorrect, because it should change to 1 during an export", pathsRelativeToParent);
         }
 
         private static WaterFlowFMModel CreateFMModelWithStructureLinkedToRTC(out DataItem rtcDataItem, out IDataItem dataItemWaterFlowFmModel)

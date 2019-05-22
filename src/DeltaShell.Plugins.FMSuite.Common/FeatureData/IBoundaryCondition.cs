@@ -9,8 +9,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
     public interface IBoundaryCondition : IEditableObject, IFeatureData, ICloneable
     {
         /// <summary>
-        /// Physical process, like water flow, sediments transport, ..., see <see cref="FunctionAttributes.StandardProcessNames" />
-        /// for a list of possible values.
+        /// Physical process, like water flow, sediments transport, ..., see <see cref="FunctionAttributes.StandardProcessNames"/> for a list of possible values.
         /// </summary>
         string ProcessName { get; }
 
@@ -30,7 +29,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
         string VariableDescription { get; }
 
         /// <summary>
-        /// Defines structure of the data in <see cref="PointData" /> functions (e.g. const, time series, harmonic, etc.).
+        /// Defines structure of the data in <see cref="PointData"/> functions (e.g. const, time series, harmonic, etc.).
         /// </summary>
         BoundaryConditionDataType DataType { get; set; }
 
@@ -60,34 +59,34 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
         bool IsHorizontallyUniform { get; }
 
         /// <summary>
-        /// When true - only <see cref="DepthLayerType.Single" /> can be used to define Z layers.
+        /// When true - only <see cref="DepthLayerType.Single"/> can be used to define Z layers.
         /// </summary>
         bool IsVerticallyUniform { get; }
 
         /// <summary>
         /// Adds a new point and data, depth layers. Returns the created function.
         /// </summary>
-        /// <param name="i"> </param>
+        /// <param name="i"></param>
         void AddPoint(int i);
 
         /// <summary>
         /// Removes point, data and depth layer for point.
         /// </summary>
-        /// <param name="i"> </param>
+        /// <param name="i"></param>
         void RemovePoint(int i);
 
         /// <summary>
-        /// Gets point data for point <paramref name="i" />.
+        /// Gets point data for point <paramref name="i"/>.
         /// </summary>
-        /// <param name="i"> </param>
-        /// <returns> </returns>
+        /// <param name="i"></param>
+        /// <returns></returns>
         IFunction GetDataAtPoint(int i);
 
         /// <summary>
-        /// Gets Z layer for point <paramref name="i" />.
+        /// Gets Z layer for point <paramref name="i"/>.
         /// </summary>
-        /// <param name="i"> </param>
-        /// <returns> </returns>
+        /// <param name="i"></param>
+        /// <returns></returns>
         VerticalProfileDefinition GetDepthLayerDefinitionAtPoint(int i);
     }
 }

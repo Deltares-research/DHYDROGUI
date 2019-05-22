@@ -2,7 +2,7 @@
 
 namespace DelftTools.Hydro.CrossSections
 {
-    public interface ICrossSection : IBranchFeature, IHydroNetworkFeature
+    public interface ICrossSection: IBranchFeature, IHydroNetworkFeature
     {
         ICrossSectionDefinition Definition { get; }
 

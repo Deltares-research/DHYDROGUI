@@ -16,31 +16,33 @@ namespace DelftTools.Hydro.CrossSections.DataSets
 {
     public abstract class LightDataTable<T> : LightDataTable, IEnumerable<T> where T : LightDataRow, new()
     {
-        protected LightDataTable() {}
+        protected LightDataTable()
+        {
+        }
 
         protected LightDataTable(SerializationInfo info, StreamingContext context)
-            : base(info, context) {}
+            : base(info, context)
+        {
+        }
 
         protected override void Initialize()
         {
-            Rows = new LightBindingList<T>
-            {
-                AllowEdit = true,
-                AllowNew = true,
-                AllowRemove = true
-            };
+            Rows = new LightBindingList<T> {AllowEdit = true, AllowNew = true, AllowRemove = true};
             Rows.ListChanged += RowsChanged;
             Rows.AddingNew += RowsAddingNew;
         }
 
-        private void RowsAddingNew(object sender, AddingNewEventArgs e)
+        void RowsAddingNew(object sender, AddingNewEventArgs e)
         {
             var defaultRow = new T();
             EnsureUniqueAndAtEndOfTable(defaultRow);
             e.NewObject = defaultRow;
         }
 
-        public new T this[int index] => Rows[index];
+        public new T this[int index]
+        {
+            get { return Rows[index]; }
+        }
 
         public new LightBindingList<T> Rows { get; private set; }
 
@@ -48,19 +50,19 @@ namespace DelftTools.Hydro.CrossSections.DataSets
         {
             return Rows.GetEnumerator();
         }
-
+        
         private void RowsChanged(object sender, ListChangedEventArgs e)
         {
             switch (e.ListChangedType)
             {
                 case ListChangedType.ItemAdded:
-                {
-                    T row = Rows[e.NewIndex];
-                    row.Table = this;
-                    ApplySorting(row);
-                    HandleRowAdded(row, Rows.IndexOf(row));
-                    break;
-                }
+                    {
+                        var row = Rows[e.NewIndex];
+                        row.Table = this;
+                        ApplySorting(row);
+                        HandleRowAdded(row, Rows.IndexOf(row));
+                        break;
+                    }
                 case ListChangedType.ItemDeleted:
                     HandleRowRemoved(Rows.RemovedItem, e.NewIndex);
                     break;
@@ -70,10 +72,7 @@ namespace DelftTools.Hydro.CrossSections.DataSets
                     break;
                 case ListChangedType.Reset:
                     if (Rows.ItemsBeforeClear != null && Rows.ItemsBeforeClear.Count > 0)
-                    {
                         HandleListCleared(Rows.ItemsBeforeClear.Cast<LightDataRow>().ToList());
-                    }
-
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -83,18 +82,15 @@ namespace DelftTools.Hydro.CrossSections.DataSets
         private void EnsureUniqueAndAtEndOfTable(T row)
         {
             // so we aren't bothered with jumping rows
-            double proposedValue = row[0];
-            double[] existingValues = Rows.Where(r => r != row).Select(r => r[0]).ToArray();
+            var proposedValue = row[0];
+            var existingValues = Rows.Where(r => r != row).Select(r => r[0]).ToArray();
             if (!existingValues.Contains(proposedValue))
-            {
                 return;
-            }
-
-            double value = existingValues.Any()
-                               ? GetSortOrder() == SortOrder.Ascending
-                                     ? existingValues.Max() + 1
-                                     : existingValues.Min() - 1
-                               : 0.0;
+            var value = existingValues.Any()
+                            ? GetSortOrder() == SortOrder.Ascending
+                                  ? existingValues.Max() + 1
+                                  : existingValues.Min() - 1
+                            : 0.0;
             row[0] = value;
         }
 
@@ -108,11 +104,9 @@ namespace DelftTools.Hydro.CrossSections.DataSets
         private void ApplySorting(LightDataRow row)
         {
             var typedRow = (T) row;
-            int sortedIndex = GetSortedIndex(typedRow);
+            var sortedIndex = GetSortedIndex(typedRow);
             if (sortedIndex != Rows.IndexOf(typedRow))
-            {
                 Rows.Move(typedRow, sortedIndex);
-            }
         }
 
         protected abstract SortOrder GetSortOrder();
@@ -121,30 +115,20 @@ namespace DelftTools.Hydro.CrossSections.DataSets
         {
             // get sorted index while ignoring self
             const int columnIndex = 0;
-            double value = row[columnIndex];
+            var value = row[columnIndex];
             var index = 0;
-            SortOrder direction = GetSortOrder();
+            var direction = GetSortOrder();
             for (var i = 0; i < Rows.Count; i++)
             {
-                T r = Rows[i];
+                var r = Rows[i];
                 if (r == row)
-                {
                     continue; // ignore self
-                }
-
                 if (direction == SortOrder.Descending && value >= r[columnIndex])
-                {
                     return index;
-                }
-
                 if (direction == SortOrder.Ascending && value <= r[columnIndex])
-                {
                     return index;
-                }
-
                 index++;
             }
-
             return index;
         }
 
@@ -180,23 +164,19 @@ namespace DelftTools.Hydro.CrossSections.DataSets
             EnforceConstraints = true;
         }
 
-        protected LightDataTable(SerializationInfo info, StreamingContext context) : this()
+        protected LightDataTable(SerializationInfo info, StreamingContext context):this()
         {
-            var reader = new SerializationReader((byte[]) info.GetValue("data", typeof(byte[])));
+            var reader = new SerializationReader((byte[]) info.GetValue("data", typeof (byte[])));
             int count = reader.ReadInt32();
 
             EnforceConstraints = false;
-            for (var i = 0; i < count; i++)
+            for (int i = 0; i < count; i++)
             {
                 var values = new double[NumColumns];
-                for (var j = 0; j < NumColumns; j++)
-                {
+                for (int j = 0; j < NumColumns; j++)
                     values[j] = reader.ReadDouble();
-                }
-
                 AddByValues(values);
             }
-
             EnforceConstraints = true;
         }
 
@@ -204,33 +184,41 @@ namespace DelftTools.Hydro.CrossSections.DataSets
 
         public bool HasErrors { get; private set; }
 
-        public LightDataRow this[int index] => GetRow(index);
+        public LightDataRow this[int index]
+        {
+            get { return GetRow(index); }
+        }
 
-        public int Count => GetRows().Count;
+        public int Count
+        {
+            get { return GetRows().Count; }
+        }
 
-        public IList<LightDataRow> Rows => GetRows().Cast<LightDataRow>().ToList().AsReadOnly();
+        public IList<LightDataRow> Rows
+        {
+            get { return GetRows().Cast<LightDataRow>().ToList().AsReadOnly(); }
+        }
 
-        private IList MutableRows => GetRows();
+        private IList MutableRows
+        {
+            get { return GetRows(); }
+        }
 
         public bool EnforceConstraints
         {
-            get => enforceConstraints;
+            get { return enforceConstraints; }
             set
             {
                 enforceConstraints = value;
-                if (!enforceConstraints)
-                {
+                if (!enforceConstraints) 
                     return;
-                }
 
                 if (GetRows() != null)
-                {
                     DoEnforceConstraints();
-                }
             }
         }
 
-        protected virtual void DoEnforceConstraints() {}
+        protected virtual void DoEnforceConstraints() { }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
@@ -242,18 +230,18 @@ namespace DelftTools.Hydro.CrossSections.DataSets
             return GetRows();
         }
 
-        public bool ContainsListCollection => true;
+        public bool ContainsListCollection
+        {
+            get { return true; }
+        }
 
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             var writer = new SerializationWriter();
             writer.Write(Count); // not really needed but very handy in deserialization.
-            foreach (LightDataRow row in Rows)
-            foreach (double item in row.ItemArray)
-            {
-                writer.Write(item);
-            }
-
+            foreach (var row in Rows)
+                foreach (var item in row.ItemArray)
+                    writer.Write(item);
             info.AddValue("data", writer.ToArray());
         }
 
@@ -261,36 +249,33 @@ namespace DelftTools.Hydro.CrossSections.DataSets
         protected abstract LightDataRow GetRow(int index);
         protected abstract IEnumerator GetEnumeratorCore();
 
-        public void BeginLoadData() {}
+        public void BeginLoadData()
+        {
+        }
 
-        public void EndLoadData() {}
+        public void EndLoadData()
+        {
+        }
 
         public bool ContentEquals(LightDataTable table)
         {
-            LightDataTable table1 = this;
-            LightDataTable table2 = table;
+            var table1 = this;
+            var table2 = table;
 
             if (!(table1.GetType() == table2.GetType()))
-            {
                 return false;
-            }
 
             if (table1.Rows.Count != table2.Rows.Count)
-            {
                 return false;
-            }
 
-            for (var i = 0; i < table1.Rows.Count; i++)
+            for (int i = 0; i < table1.Rows.Count; i++)
             {
-                for (var j = 0; j < table1.NumColumns; j++)
+                for (int j = 0; j < table1.NumColumns; j++)
                 {
                     if (!table1.Rows[i][j].Equals(table2.Rows[i][j]))
-                    {
                         return false;
-                    }
                 }
             }
-
             return true;
         }
 
@@ -308,18 +293,10 @@ namespace DelftTools.Hydro.CrossSections.DataSets
         private void OnRowChanging(LightDataRow row, DataRowAction action)
         {
             if (EnforceConstraints && (action == DataRowAction.Add || action == DataRowAction.Change))
-            {
                 DoEnforceConstraints();
-            }
 
             if (RowChanging != null)
-            {
-                RowChanging(this, new LightDataRowChangeEventArgs
-                {
-                    Action = action,
-                    Row = row
-                });
-            }
+                RowChanging(this, new LightDataRowChangeEventArgs { Action = action, Row = row });
         }
 
         protected abstract void AddByValues(double[] itemArray);
@@ -327,21 +304,23 @@ namespace DelftTools.Hydro.CrossSections.DataSets
         #region Undo/Redo
 
         [EditAction(typeof(ListClearedAction))]
-        internal virtual void HandleListCleared(IList<LightDataRow> rows) {}
+        internal virtual void HandleListCleared(IList<LightDataRow> rows)
+        {
+        }
 
-        [EditAction(typeof(RowChangeAction))]
+        [EditAction(typeof (RowChangeAction))]
         internal virtual void HandleRowChanged(LightDataRow row, double[] oldState, double[] newState)
         {
             OnRowChanging(row, DataRowAction.Change);
         }
 
-        [EditAction(typeof(RowAddAction))]
+        [EditAction(typeof (RowAddAction))]
         protected virtual void HandleRowAdded(LightDataRow row, int index)
         {
             OnRowChanging(row, DataRowAction.Add);
         }
 
-        [EditAction(typeof(RowRemoveAction))]
+        [EditAction(typeof (RowRemoveAction))]
         protected virtual void HandleRowRemoved(LightDataRow row, int index)
         {
             OnRowChanging(row, DataRowAction.Delete);
@@ -350,29 +329,36 @@ namespace DelftTools.Hydro.CrossSections.DataSets
         private class ListClearedAction : EditActionBase
         {
             public ListClearedAction()
-                : base("List cleared") {}
+                : base("List cleared")
+            {
+            }
 
-            public override bool HandlesRestore => true;
+            public override bool HandlesRestore
+            {
+                get { return true; }
+            }
 
             public override void Restore()
             {
-                var table = (LightDataTable) Instance;
+                var table = (LightDataTable)Instance;
                 var rows = (IList<LightDataRow>) Arguments[0];
                 table.BeginEdit("Fill list"); // restore in multiple events :-(
-                foreach (LightDataRow row in rows)
-                {
+                foreach (var row in rows) 
                     table.MutableRows.Add(row);
-                }
-
                 table.EndEdit();
             }
         }
 
         private class RowAddAction : EditActionBase
         {
-            public RowAddAction() : base("Add row") {}
+            public RowAddAction() : base("Add row")
+            {
+            }
 
-            public override bool HandlesRestore => true;
+            public override bool HandlesRestore
+            {
+                get { return true; }
+            }
 
             public override void Restore()
             {
@@ -384,29 +370,36 @@ namespace DelftTools.Hydro.CrossSections.DataSets
 
         private class RowChangeAction : EditActionBase
         {
-            public RowChangeAction() : base("Change row") {}
+            public RowChangeAction() : base("Change row")
+            {
+            }
 
-            public override bool HandlesRestore => true;
+            public override bool HandlesRestore
+            {
+                get { return true; }
+            }
 
             public override void Restore()
             {
-                var row = (LightDataRow) Arguments[0];
+                var row = ((LightDataRow) Arguments[0]);
                 var itemArray = (double[]) Arguments[1];
                 row.BeginEdit();
-                for (var i = 0; i < itemArray.Length; i++)
-                {
+                for (int i = 0; i < itemArray.Length; i++)
                     row[i] = itemArray[i];
-                }
-
                 row.EndEdit();
             }
         }
 
         private class RowRemoveAction : EditActionBase
         {
-            public RowRemoveAction() : base("Remove row") {}
+            public RowRemoveAction() : base("Remove row")
+            {
+            }
 
-            public override bool HandlesRestore => true;
+            public override bool HandlesRestore
+            {
+                get { return true; }
+            }
 
             public override void Restore()
             {
@@ -433,8 +426,8 @@ namespace DelftTools.Hydro.CrossSections.DataSets
         }
 
         protected override void RemoveItem(int index)
-        {
-            bool wasAllowingRemove = AllowRemove;
+        {            
+            var wasAllowingRemove = AllowRemove;
             try
             {
                 AllowRemove = true;
@@ -445,6 +438,7 @@ namespace DelftTools.Hydro.CrossSections.DataSets
             }
             finally
             {
+
                 AllowRemove = wasAllowingRemove;
             }
         }
@@ -453,14 +447,14 @@ namespace DelftTools.Hydro.CrossSections.DataSets
         {
             // index = index while ignoring self
 
-            bool wasRaising = RaiseListChangedEvents;
-            bool wasAllowingRemove = AllowRemove;
+            var wasRaising = RaiseListChangedEvents;
+            var wasAllowingRemove = AllowRemove;
             try
             {
                 RaiseListChangedEvents = false;
                 AllowRemove = true;
 
-                int oldIndex = IndexOf(item);
+                var oldIndex = IndexOf(item);
                 Remove(item);
                 InsertItem(index, item);
                 OnListChanged(new ListChangedEventArgs(ListChangedType.ItemMoved, index, oldIndex));
@@ -480,10 +474,9 @@ namespace DelftTools.Hydro.CrossSections.DataSets
 
         [Browsable(false)]
         public double[] ItemArray { get; private set; }
-
         [Browsable(false)]
         public LightDataTable Table { get; internal set; }
-
+        
         protected LightDataRow(int size)
         {
             ItemArray = new double[size];
@@ -491,8 +484,8 @@ namespace DelftTools.Hydro.CrossSections.DataSets
 
         public double this[int index]
         {
-            get => ItemArray[index];
-            set => Set(index, value);
+            get { return ItemArray[index]; }
+            set { Set(index, value); }
         }
 
         protected void Set(int index, double value)
@@ -515,18 +508,13 @@ namespace DelftTools.Hydro.CrossSections.DataSets
         private void BeginEditManually()
         {
             if (oldState == null)
-            {
-                oldState = (double[]) ItemArray.Clone();
-            }
+                oldState = (double[])ItemArray.Clone();
         }
 
         public void CancelEdit()
         {
-            if (oldState != null)
-            {
+            if (oldState != null) 
                 ItemArray = oldState;
-            }
-
             oldState = null;
         }
 
@@ -535,16 +523,11 @@ namespace DelftTools.Hydro.CrossSections.DataSets
             inTransaction = false;
 
             if (oldState == null)
-            {
                 return; // nothing was changed
-            }
 
-            if (!oldState.SequenceEqual(ItemArray))
-            {
+            if (!oldState.SequenceEqual(ItemArray)) 
                 OnRowChanged();
-            }
-
-            oldState = null;
+            oldState = null; 
         }
 
         private void OnRowChanged()
@@ -552,9 +535,7 @@ namespace DelftTools.Hydro.CrossSections.DataSets
             try
             {
                 if (Table != null) // can be null if not yet added to table
-                {
                     Table.HandleRowChanged(this, oldState, ItemArray);
-                }
             }
             catch (Exception)
             {

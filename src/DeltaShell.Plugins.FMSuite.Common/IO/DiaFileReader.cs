@@ -1,5 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using DelftTools.Shell.Core.Workflow.DataItems;
+using DelftTools.Utils;
+using DelftTools.Utils.Reflection;
 using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.Common.IO
@@ -10,14 +17,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 
         public static string Read(string diaFilePath)
         {
-            string diaFileContent = File.ReadAllText(diaFilePath);
+            var diaFileContent = File.ReadAllText(diaFilePath);
 
             return diaFileContent;
         }
-
         public static List<string> CollectAllErrorMessages(string diaFile)
         {
-            string errorLine = string.Empty;
+            var errorLine = string.Empty;
             var lineCount = 0;
             var errorMessages = new List<string>();
 
@@ -25,9 +31,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             {
                 while (!reader.EndOfStream)
                 {
-                    string line = reader.ReadLine();
+                    var line = reader.ReadLine();
 
-                    if (!string.IsNullOrEmpty(line) && (line.Contains("ERROR") || !string.IsNullOrEmpty(errorLine)))
+                    if (!string.IsNullOrEmpty(line) && ((line.Contains("ERROR")) || !string.IsNullOrEmpty(errorLine)))
                     {
                         if (!line.Contains("FATAL"))
                         {
@@ -35,7 +41,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                             {
                                 line = line.Substring(1);
                             }
-
                             errorLine += line;
                         }
                         else
@@ -44,7 +49,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                         }
                     }
                 }
-
                 reader.Close();
             }
 

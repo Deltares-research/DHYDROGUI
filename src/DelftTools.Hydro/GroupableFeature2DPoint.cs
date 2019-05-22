@@ -16,10 +16,12 @@ namespace DelftTools.Hydro
         /// </summary>
         [FeatureAttribute]
         [DisplayName("Group name")]
-        public string GroupName
-        {
-            get => groupName;
-            set => groupName = GroupableFeatureHelper.SetGroupableFeatureGroupName(value);
+        public string GroupName {
+            get
+            {
+                return groupName;
+            }
+            set { groupName = GroupableFeatureHelper.SetGroupableFeatureGroupName(value); }
         }
 
         public bool IsDefaultGroup { get; set; }

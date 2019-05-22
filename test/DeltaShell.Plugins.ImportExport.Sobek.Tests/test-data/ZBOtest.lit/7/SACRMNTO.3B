@@ -1,0 +1,16 @@
+SACR id 'S1' ar 14750000 op '1' uh '1' ca '1' ms 'S1' aaf 1 sacr
+SACR id 'S2' nm 'S2 ' ar 2.29E+07 ca '2' uh '2' op '2' ms 'S2' aaf 1 sacr
+SACR id 'S3' nm 'S3 ' ar 1E+07 ca '3' uh '3' op '3' ms 'S3' aaf 1 sacr
+SACR id 'S4' nm 'S4 ' ar 2.54E+07 ca '4' uh '4' op '4' ms 'S4' aaf 1 sacr
+OPAR id '1'  nm 'S1' zperc 80 rexp 1.2 pfree .4 rserv .02 pctim .07 adimp 0 sarva .01 side 0 ssout 0 pm 0 pt1 0 pt2 0 opar
+OPAR id '2'  nm 'S2' zperc 80 rexp 1.2 pfree .4 rserv .02 pctim .07 adimp 0 sarva .01 side 0 ssout 0 pm 0 pt1 0 pt2 0 opar
+OPAR id '3'  nm 'S3' zperc 80 rexp 1.2 pfree .4 rserv .02 pctim .01 adimp 0 sarva .01 side 0 ssout 0 pm 0 pt1 0 pt2 0 opar
+OPAR id '4'  nm 'S4' zperc 80 rexp 1.2 pfree .4 rserv .02 pctim .03 adimp 0 sarva .01 side 0 ssout 0 pm 0 pt1 0 pt2 0 opar
+UNIH id '1'  nm 'UH1' dt 27 uh 4 8 12 11 10 9 8 7 6 5 4 3 2 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 unih
+UNIH id '2'  nm 'UH2' dt 33 uh 4 8 12 11 10 9 8 7 6 5 4 3 2 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 unih
+UNIH id '3'  nm 'UH3' dt 18 uh 4 8 12 11 10 9 8 7 6 5 4 3 2 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 unih
+UNIH id '4'  nm 'UH4' dt 33 uh 4 8 12 11 10 9 8 7 6 5 4 3 2 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 unih
+CAPS id '1'  nm 'S1' uztwm 175 uztwc 40 uzfwm 100 uzfwc 10 lztwm 166 lztwc 166 lzfsm 200 lzfsc 13 lzfpm 400 lzfpc 263 uzk .2 lzsk .05 lzpk .001 caps
+CAPS id '2'  nm 'S2' uztwm 175 uztwc 40 uzfwm 100 uzfwc 10 lztwm 166 lztwc 166 lzfsm 200 lzfsc 13 lzfpm 400 lzfpc 263 uzk .2 lzsk .05 lzpk .001 caps
+CAPS id '3'  nm 'S3' uztwm 175 uztwc 40 uzfwm 100 uzfwc 10 lztwm 166 lztwc 166 lzfsm 200 lzfsc 13 lzfpm 400 lzfpc 263 uzk .2 lzsk .05 lzpk .001 caps
+CAPS id '4'  nm 'S4' uztwm 175 uztwc 40 uzfwm 100 uzfwc 10 lztwm 166 lztwc 166 lzfsm 200 lzfsc 13 lzfpm 400 lzfpc 263 uzk .2 lzsk .05 lzpk .001 caps

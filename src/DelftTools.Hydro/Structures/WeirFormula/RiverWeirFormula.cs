@@ -7,7 +7,7 @@ namespace DelftTools.Hydro.Structures.WeirFormula
     /// <summary>
     /// Weir with detailed description of crest (River weir)
     /// </summary>
-    [Entity(FireOnCollectionChange = false)]
+    [Entity(FireOnCollectionChange=false)]
     public class RiverWeirFormula : Unique<long>, IWeirFormula
     {
         public RiverWeirFormula()
@@ -22,28 +22,32 @@ namespace DelftTools.Hydro.Structures.WeirFormula
 
         /// <summary>
         /// Creates a RiverWeirFormula with default values as found in Sobek.
-        /// <returns> </returns>
+        /// <returns></returns>
         public static RiverWeirFormula CreateDefault()
         {
             var riverWeirFormula = new RiverWeirFormula
-            {
-                CorrectionCoefficientNeg = 1,
-                CorrectionCoefficientPos = 1,
-                SubmergeLimitNeg = 0.82,
-                SubmergeLimitPos = 0.82
-            };
+                       {
+                           CorrectionCoefficientNeg = 1,
+                           CorrectionCoefficientPos = 1,
+                           SubmergeLimitNeg = 0.82,
+                           SubmergeLimitPos = 0.82
+                       };
             riverWeirFormula.SubmergeReductionPos = CrestBroadSubmergeReduction;
             riverWeirFormula.SubmergeReductionNeg = CrestBroadSubmergeReduction;
             return riverWeirFormula;
         }
 
-        public virtual string Name => "Weir with detailed description of crest (River weir)";
+
+        public virtual string Name
+        {
+            get { return "Weir with detailed description of crest (River weir)"; }
+        }
 
         /// <summary>
         /// Correction coefficient flow direction(pos_cwcoef)
         /// </summary>
         public virtual double CorrectionCoefficientPos { get; set; }
-
+        
         /// <summary>
         /// Correction coefficient reverse direction(neg_cwcoef)
         /// </summary>
@@ -70,19 +74,27 @@ namespace DelftTools.Hydro.Structures.WeirFormula
         /// Submerge coefficient reverse direction(neg_slimlimit)
         /// </summary>
         public virtual double SubmergeLimitNeg { get; set; }
+        
+        public virtual bool IsRectangle
+        {
+            get { return true; }
+        }
 
-        public virtual bool IsRectangle => true;
+        public virtual bool IsGated
+        {
+            get { return false; }
+        }
 
-        public virtual bool IsGated => false;
-
-        public virtual bool HasFlowDirection => false;
+        public virtual bool HasFlowDirection
+        {
+            get { return false; }
+        }
 
         public static IFunction CrestBroadSubmergeReduction
         {
             get
             {
-                IFunction submergeReduction =
-                    FunctionHelper.Get1DFunction<double, double>("submergereduction", "S", "R");
+                var submergeReduction = FunctionHelper.Get1DFunction<double, double>("submergereduction", "S", "R");
                 submergeReduction[0.82] = 1.0;
                 submergeReduction[0.86] = 0.95;
                 submergeReduction[0.9] = 0.9;
@@ -98,8 +110,7 @@ namespace DelftTools.Hydro.Structures.WeirFormula
         {
             get
             {
-                IFunction submergeReduction =
-                    FunctionHelper.Get1DFunction<double, double>("submergereduction", "S", "R");
+                var submergeReduction = FunctionHelper.Get1DFunction<double, double>("submergereduction", "S", "R");
                 submergeReduction[0.3] = 1.0;
                 submergeReduction[0.61] = 0.95;
                 submergeReduction[0.77] = 0.9;
@@ -116,8 +127,7 @@ namespace DelftTools.Hydro.Structures.WeirFormula
         {
             get
             {
-                IFunction submergeReduction =
-                    FunctionHelper.Get1DFunction<double, double>("submergereduction", "S", "R");
+                var submergeReduction = FunctionHelper.Get1DFunction<double, double>("submergereduction", "S", "R");
                 submergeReduction[0.01] = 1.0;
                 submergeReduction[0.27] = 0.9;
                 submergeReduction[0.48] = 0.8;
@@ -134,8 +144,7 @@ namespace DelftTools.Hydro.Structures.WeirFormula
         {
             get
             {
-                IFunction submergeReduction =
-                    FunctionHelper.Get1DFunction<double, double>("submergereduction", "S", "R");
+                var submergeReduction = FunctionHelper.Get1DFunction<double, double>("submergereduction", "S", "R");
                 submergeReduction[0.67] = 1.0;
                 submergeReduction[0.80] = 0.95;
                 submergeReduction[0.85] = 0.9;
@@ -155,8 +164,8 @@ namespace DelftTools.Hydro.Structures.WeirFormula
             clone.CorrectionCoefficientPos = CorrectionCoefficientPos;
             clone.SubmergeLimitNeg = SubmergeLimitNeg;
             clone.SubmergeLimitPos = SubmergeLimitPos;
-            clone.SubmergeReductionNeg = (IFunction) SubmergeReductionNeg.Clone(true);
-            clone.SubmergeReductionPos = (IFunction) SubmergeReductionPos.Clone(true);
+            clone.SubmergeReductionNeg = (IFunction)SubmergeReductionNeg.Clone(true);
+            clone.SubmergeReductionPos = (IFunction)SubmergeReductionPos.Clone(true);
             return clone;
         }
     }

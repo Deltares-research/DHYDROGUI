@@ -1,0 +1,18 @@
+TP_1.0
+NODE id 'NOD00000' nm '' px 0 py 0 node
+NODE id 'NOD00001' nm '' px 250 py 0 node
+NODE id 'NOD00002' nm '' px 500 py 0 node
+NODE id 'NOD00003' nm '' px 750 py 0 node
+NODE id 'NOD00004' nm '' px 1000 py 0 node
+NODE id 'NOD00005' nm '' px 1250 py 0 node
+NODE id 'NOD00006' nm '' px 1500 py 0 node
+NODE id 'NOD00007' nm '' px 1750 py 0 node
+NODE id 'NOD00008' nm '' px 2000 py 0 node
+BRCH id 'R_1' nm '' bn 'NOD00000' en 'NOD00001' al 250 vc_opt 1 vc_equi -1 vc_len 1000 brch
+BRCH id 'R_2' nm '' bn 'NOD00001' en 'NOD00002' al 250 vc_opt 1 vc_equi -1 vc_len 1000 brch
+BRCH id 'R_3' nm '' bn 'NOD00002' en 'NOD00003' al 250 vc_opt 1 vc_equi -1 vc_len 1000 brch
+BRCH id 'R_4' nm '' bn 'NOD00003' en 'NOD00004' al 250 vc_opt 1 vc_equi -1 vc_len 1000 brch
+BRCH id 'R_5' nm '' bn 'NOD00004' en 'NOD00005' al 250 vc_opt 1 vc_equi -1 vc_len 1000 brch
+BRCH id 'R_6' nm '' bn 'NOD00005' en 'NOD00006' al 250 vc_opt 1 vc_equi -1 vc_len 1000 brch
+BRCH id 'R_7' nm '' bn 'NOD00006' en 'NOD00007' al 250 vc_opt 1 vc_equi -1 vc_len 1000 brch
+BRCH id 'R_8' nm '' bn 'NOD00007' en 'NOD00008' al 250 vc_opt 1 vc_equi -1 vc_len 1000 brch

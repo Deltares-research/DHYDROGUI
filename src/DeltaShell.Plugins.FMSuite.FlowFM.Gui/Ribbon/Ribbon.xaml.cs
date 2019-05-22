@@ -5,7 +5,6 @@ using System.Windows.Controls.Primitives;
 using DelftTools.Controls;
 using DelftTools.Shell.Gui.Forms;
 using DeltaShell.Plugins.FMSuite.Common.Layers;
-using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.NetworkEditor.MapLayers;
 using DeltaShell.Plugins.SharpMapGis.Gui.Commands;
 using Fluent;

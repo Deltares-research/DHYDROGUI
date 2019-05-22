@@ -1,4 +1,7 @@
 namespace DelftTools.Hydro
 {
-    public interface IStructure : IHydroObject {}
+    public interface IStructure : IHydroObject
+    {
+        
+    }
 }

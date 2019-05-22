@@ -6,8 +6,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
     {
         public string MduPropertyName
         {
-            get => FilePropertyName;
-            set => FilePropertyName = value;
+            get { return base.FilePropertyName; }
+            set { base.FilePropertyName = value; }
         }
 
         public PropertySource UnknownPropertySource { get; set; }
@@ -15,7 +15,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 
     public static class KnownProperties
     {
-        public const string PathsRelativeToParent = "pathsrelativetoparent";
         public const string BathymetryFile = "bathymetryfile";
         public const string ObsCrsFile = "crsfile";
         public const string ExtForceFile = "extforcefile";
@@ -103,6 +102,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         public const string WaqOutputDir = "WAQOutputDir";
     }
 
+
     public static class GuiProperties
     {
         public const string GUIonly = "GUIOnly"; // recognize GUI group name when writing writing MDU
@@ -143,6 +143,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         public const string PartOf1D2DModel = "PartOf1D2DModel";
         public const string WriteSnappedFeatures = "WriteSnappedFeatures";
     }
+
 
     public enum MapFormatType
     {

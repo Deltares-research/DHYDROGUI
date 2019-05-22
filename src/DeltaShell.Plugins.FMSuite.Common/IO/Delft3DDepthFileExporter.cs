@@ -12,19 +12,21 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(Delft3DDepthFileExporter));
 
-        public string Name => "Delft3D Depth File";
+        public string Name
+        {
+            get { return "Delft3D Depth File"; }
+        }
 
-        public string Category => "General";
-
-        public string Description => string.Empty;
+        public string Category { get { return "General"; } }
+        public string Description
+        {
+            get { return string.Empty; }
+        }
 
         public bool Export(object item, string path)
         {
             var bathy = item as CurvilinearCoverage;
-            if (bathy == null)
-            {
-                return false;
-            }
+            if (bathy == null) return false;
 
             try
             {
@@ -41,13 +43,15 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 
         public IEnumerable<Type> SourceTypes()
         {
-            yield return typeof(CurvilinearCoverage);
+            yield return typeof (CurvilinearCoverage);
         }
 
-        public string FileFilter => "Delft3D Depth File (*.dep)|*.dep";
+        public string FileFilter
+        {
+            get { return "Delft3D Depth File (*.dep)|*.dep"; }
+        }
 
         public Bitmap Icon { get; private set; }
-
         public bool CanExportFor(object item)
         {
             return true;

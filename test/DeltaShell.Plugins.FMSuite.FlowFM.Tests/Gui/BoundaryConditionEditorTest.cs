@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Windows.Controls;
-using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Gui;
@@ -10,7 +9,6 @@ using DeltaShell.Plugins.FMSuite.Common.Gui.Editors;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors;
-using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.NetworkEditor.Gui;
@@ -90,6 +88,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             WindowsFormsTestHelper.ShowModal(view);
         }
 
+
         [Test]
         [Category(TestCategory.WindowsForms)]
         public void ShowWithSalinityTimeSeriesDataAndSigmaLayers()
@@ -157,6 +156,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
             WindowsFormsTestHelper.ShowModal(view);
         }
+
 
         [Test]
         [Category(TestCategory.WindowsForms)]
@@ -437,15 +437,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Test]
         [Category(TestCategory.WindowsForms)]
         [Category(TestCategory.Slow)]
-        public void ShowBoundaryConditionsFromGuiForBoundaryCondition()
+        public void ShowBoundaryConditionsFromGui()
         {
-            string mduPath = TestHelper.GetTestFilePath(@"roughness\bendprof.mdu");
+            var mduPath = TestHelper.GetTestFilePath(@"roughness\bendprof.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
             var model = new WaterFlowFMModel(mduPath);
 
             using (var gui = new DeltaShellGui())
             {
-                IApplication app = gui.Application;
+                var app = gui.Application;
                 app.Plugins.Add(new SharpMapGisApplicationPlugin());
                 app.Plugins.Add(new NetworkEditorApplicationPlugin());
                 gui.Plugins.Add(new ProjectExplorerGuiPlugin());
@@ -456,53 +456,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 gui.Run();
 
                 Action mainWindowShown = delegate
-                {
-                    Project project = app.Project;
-                    project.RootFolder.Add(model);
+                    {
+                        var project = app.Project;
+                        project.RootFolder.Add(model);
 
-                    // open view for boundary condition
-                    gui.CommandHandler.OpenView(model.BoundaryConditions.First());
+                        // open view for boundary condition
+                        gui.CommandHandler.OpenView(model.BoundaryConditions.First());
 
-                    Assert.IsInstanceOf<BoundaryConditionEditor>(gui.DocumentViews.ActiveView);
-                };
+                        Assert.IsInstanceOf<BoundaryConditionEditor>(gui.DocumentViews.ActiveView);
+
+                        gui.DocumentViews.Remove(gui.DocumentViews.ActiveView);
+
+                        Assert.IsNull(gui.DocumentViews.ActiveView);
+
+                        // open view for boundary (note: not the condition!)
+                        gui.CommandHandler.OpenView(model.Boundaries.First());
+
+                        Assert.IsInstanceOf<BoundaryConditionEditor>(gui.DocumentViews.ActiveView);
+                    };
 
                 WpfTestHelper.ShowModal((Control) gui.MainWindow, mainWindowShown);
-            }
-        }
-
-        [Test]
-        [Category(TestCategory.WindowsForms)]
-        [Category(TestCategory.Slow)]
-        public void ShowBoundaryConditionsFromGuiForBoundary()
-        {
-            string mduPath = TestHelper.GetTestFilePath(@"roughness\bendprof.mdu");
-            mduPath = TestHelper.CreateLocalCopy(mduPath);
-            var model = new WaterFlowFMModel(mduPath);
-
-            using (var gui = new DeltaShellGui())
-            {
-                IApplication app = gui.Application;
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                gui.Plugins.Add(new ProjectExplorerGuiPlugin());
-                gui.Plugins.Add(new NetworkEditorGuiPlugin());
-                gui.Plugins.Add(new SharpMapGisGuiPlugin());
-                gui.Plugins.Add(new FlowFMGuiPlugin());
-
-                gui.Run();
-
-                Action mainWindowShown = delegate
-                {
-                    Project project = app.Project;
-                    project.RootFolder.Add(model);
-
-                    // open view for boundary (note: not the condition!)
-                    gui.CommandHandler.OpenView(model.Boundaries.First());
-
-                    Assert.IsInstanceOf<BoundaryConditionEditor>(gui.DocumentViews.ActiveView);
-                };
-
-                WpfTestHelper.ShowModal((Control)gui.MainWindow, mainWindowShown);
             }
         }
     }

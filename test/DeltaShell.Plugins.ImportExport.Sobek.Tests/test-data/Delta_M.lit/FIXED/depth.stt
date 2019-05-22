@@ -1,0 +1,18 @@
+version 3 minor 29
+
+period 'sim'
+   suffix     'Total'
+   start-time '2000/01/01-00:00:00'
+   stop-time  'STOP'
+end-period
+
+output-operation 'STADSC'
+   substance 'Volume'
+   suffix    ''
+end-output-operation
+
+output-operation 'STADSC'
+   substance 'Surf'
+   suffix    ''
+end-output-operation
+

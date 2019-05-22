@@ -1,7 +1,6 @@
 ﻿using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Aop;
 using GeoAPI.Extensions.CoordinateSystems;
-using SharpMap.Api.Layers;
 using SharpMap.Layers;
 
 namespace DeltaShell.Plugins.FMSuite.Common.Layers
@@ -13,13 +12,12 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
 
         public void UpdateCoordinateSystem(ICoordinateSystem currentCS, ICoordinateSystem targetCS)
         {
-            foreach (ILayer layer in GetAllLayers(false))
+            foreach (var layer in GetAllLayers(false))
             {
                 if (layer.DataSource == null || layer.DataSource.CoordinateSystem != currentCS)
                 {
                     continue;
                 }
-
                 layer.DataSource.CoordinateSystem = targetCS;
             }
         }

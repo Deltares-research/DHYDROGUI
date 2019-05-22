@@ -91,7 +91,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 SetSimpleGateRequiredProperties(structureCategory);
 
                 if (hasExplicitField)
-                    structureCategory.AddProperty(KnownStructureProperties.CrestWidth, " ", "#");
+                    structureCategory.AddProperty(KnownStructureProperties.GateSillWidth, " ", "#");
 
                 WriteStructuresIniFile(structureCategory, tempDir);
 
@@ -137,11 +137,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 if (hasExplicitFields)
                 {
-                    structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.Upstream2Width),    " ", "#");
-                    structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.Upstream1Width),  " ", "#");
-                    structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.CrestWidth),    " ", "#");
-                    structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.Downstream1Width), " ", "#");
-                    structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.Downstream2Width),   " ", "#");
+                    structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.WidthLeftW1),    " ", "#");
+                    structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.WidthLeftWsdl),  " ", "#");
+                    structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.WidthCenter),    " ", "#");
+                    structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.WidthRightWsdr), " ", "#");
+                    structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.WidthRightW2),   " ", "#");
                 }
 
                 WriteStructuresIniFile(structureCategory, tempDir);
@@ -243,22 +243,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
         private static void SetSimpleGateRequiredProperties(IDelftIniCategory structureCategory)
         {
-            structureCategory.AddProperty(KnownStructureProperties.CrestLevel,      "0.0", "#");
+            structureCategory.AddProperty(KnownStructureProperties.GateSillLevel,      "0.0", "#");
             structureCategory.AddProperty(KnownStructureProperties.GateLowerEdgeLevel, "0.0", "#");
             structureCategory.AddProperty(KnownStructureProperties.GateOpeningWidth,   "0.0", "#");
-            structureCategory.AddProperty(KnownStructureProperties.GateHeight,     "0.0", "#");
-            structureCategory.AddProperty(KnownStructureProperties.GateOpeningHorizontalDirection, "symmetric", "#");
+            structureCategory.AddProperty(KnownStructureProperties.GateDoorHeight,     "0.0", "#");
+            structureCategory.AddProperty(KnownStructureProperties.GateHorizontalOpeningDirection, "symmetric", "#");
         }
 
         private static void SetGeneralStructureRequiredProperties(IDelftIniCategory structureCategory)
         {
-            structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.Upstream2Level),   "0.0", "#");
-            structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.Upstream1Level),  "0.0", "#");
-            structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.CrestLevel),    "0.0", "#");
-            structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.Downstream1Level), "0.0", "#");
-            structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.Downstream2Level),  "0.0", "#");
+            structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.LevelLeftZb1),   "0.0", "#");
+            structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.LevelLeftZbsl),  "0.0", "#");
+            structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.LevelCenter),    "0.0", "#");
+            structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.LevelRightZbsr), "0.0", "#");
+            structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.LevelRightZb2),  "0.0", "#");
 
-            structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.GateLowerEdgeLevel),     "0.0", "#");
+            structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.GateHeight),     "0.0", "#");
 
             structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.PositiveContractionCoefficientFreeGate), "1.0", "#");
             structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.PositiveDrownGateFlowCoefficient),       "1.0", "#");
@@ -272,10 +272,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.NegativeFreeWeirFlowCoefficient),        "1.0", "#");
 
             structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.ExtraResistance), "0.0", "#");
-            structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.GateHeight), "0.0", "#");
-            structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.GateOpeningWidth), "0.0", "#");
+            structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.GateDoorHeightGeneralStructure), "0.0", "#");
+            structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.HorizontalDoorOpeningWidth), "0.0", "#");
 
-            structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.GateOpeningHorizontalDirection), "symmetric", "#");
+            structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.HorizontalDoorOpeningDirection), "symmetric", "#");
         }
 
         private static void AssertThatStructureIsCorrect(IStructure structure, Type expectedWeirFormulaType)

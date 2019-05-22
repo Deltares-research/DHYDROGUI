@@ -16,22 +16,16 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
     {
         [Description("vertically uniform")]
         Uniform,
-
         [Description("at bed/surface")]
         TopBottom,
-
         [Description("z from bed")]
         ZFromBed,
-
         [Description("z from surface")]
         ZFromSurface,
-
         [Description("z from datum")]
         ZFromDatum,
-
         [Description("percentage from bed")]
         PercentageFromBed,
-
         [Description("percentage from surface")]
         PercentageFromSurface
     }
@@ -48,10 +42,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
         public VerticalProfileDefinition()
         {
             Type = VerticalProfileType.Uniform;
-            PointDepths = new EventedList<double>(new[]
-            {
-                1.0
-            });
+            PointDepths = new EventedList<double>(new[] { 1.0 });
             PointDepths.CollectionChanging += PointDepthsCollectionChanging;
         }
 
@@ -61,17 +52,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
             switch (Type)
             {
                 case VerticalProfileType.Uniform:
-                    PointDepths = new EventedList<double>(new[]
-                    {
-                        1.0
-                    });
+                    PointDepths = new EventedList<double>(new[] {1.0});
                     break;
                 case VerticalProfileType.TopBottom:
-                    PointDepths = new EventedList<double>(new[]
-                    {
-                        0.0,
-                        1.0
-                    });
+                    PointDepths = new EventedList<double>(new[] {0.0, 1.0});
                     break;
                 case VerticalProfileType.ZFromBed:
                 case VerticalProfileType.ZFromSurface:
@@ -85,12 +69,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
                 default:
                     throw new NotImplementedException(string.Format("Vertical profile type {0} unknown", type));
             }
-
             PointDepths.CollectionChanging += PointDepthsCollectionChanging;
         }
 
         public VerticalProfileDefinition(VerticalProfileType type, params double[] values)
-            : this(type, values.AsEnumerable()) {}
+            : this(type, values.AsEnumerable())
+        {
+        }
 
         public static VerticalProfileDefinition Create(VerticalProfileType type, IEnumerable<double> values)
         {
@@ -101,44 +86,46 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
                     {
                         log.WarnFormat("Ignoring vertical profile depths for uniform vertical profile definition...");
                     }
-
                     return new VerticalProfileDefinition(type, values);
                 case VerticalProfileType.TopBottom:
                     if (values.Any())
                     {
                         log.WarnFormat("Ignoring vertical profile depths for surface-bedlevel vertical definition...");
                     }
-
                     return new VerticalProfileDefinition(type, values);
                 case VerticalProfileType.ZFromBed:
                 case VerticalProfileType.ZFromSurface:
                 case VerticalProfileType.ZFromDatum:
                 case VerticalProfileType.PercentageFromBed:
-                    List<double> ascendingDepths = SortDepths(values, type).ToList();
+                    var ascendingDepths = SortDepths(values, type).ToList();
                     if (ascendingDepths.Count != ascendingDepths.Distinct().Count())
                     {
                         log.ErrorFormat("Duplicate profile depths enountered...");
                         return null;
                     }
-
                     return new VerticalProfileDefinition(type, ascendingDepths);
                 case VerticalProfileType.PercentageFromSurface:
-                    List<double> descendingDepths = SortDepths(values, type).ToList();
+                    var descendingDepths = SortDepths(values, type).ToList();
                     if (descendingDepths.Count != descendingDepths.Distinct().Count())
                     {
                         log.ErrorFormat("Duplicate profile depths enountered...");
                         return null;
                     }
-
                     return new VerticalProfileDefinition(type, descendingDepths);
                 default:
                     throw new NotImplementedException(string.Format("Vertical profile type {0} unknown", type));
             }
         }
+        
+        public int ProfilePoints
+        {
+            get { return PointDepths.Count; }
+        }
 
-        public int ProfilePoints => PointDepths.Count;
-
-        public IEnumerable<double> SortedPointDepths => SortDepths(PointDepths);
+        public IEnumerable<double> SortedPointDepths
+        {
+            get { return SortDepths(PointDepths); }
+        }
 
         public IEnumerable<double> SortDepths(IEnumerable<double> depths)
         {
@@ -152,16 +139,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
                 switch (Type)
                 {
                     case VerticalProfileType.Uniform:
-                        return new[]
-                        {
-                            "single"
-                        };
+                        return new[] {"single"};
                     case VerticalProfileType.TopBottom:
-                        return new[]
-                        {
-                            "bed",
-                            "surface"
-                        };
+                        return new[] {"bed", "surface"};
                     case VerticalProfileType.PercentageFromBed:
                         return SortedPointDepths.Select(d => d.ToString() + "% above bed");
                     case VerticalProfileType.PercentageFromSurface:
@@ -183,16 +163,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
             switch (type)
             {
                 case VerticalProfileType.Uniform:
-                    return new[]
-                    {
-                        1.0
-                    };
+                    return new[] {1.0};
                 case VerticalProfileType.TopBottom:
-                    return new[]
-                    {
-                        0.0,
-                        1.0
-                    };
+                    return new[] {0.0, 1.0};
                 case VerticalProfileType.PercentageFromSurface:
                 case VerticalProfileType.ZFromSurface:
                     return depths.OrderByDescending(d => d);
@@ -207,12 +180,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
             {
                 e.Cancel = true;
             }
-
             if (e.Action == NotifyCollectionChangeAction.Reset)
             {
                 e.Cancel = true;
             }
-
             if (e.Action == NotifyCollectionChangeAction.Remove && PointDepths.Count == 1)
             {
                 e.Cancel = true;

@@ -22,18 +22,27 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
 
         public string WindFilePath { get; set; }
 
-        public WindQuantity Quantity => WindQuantity.VelocityVectorAirPressure;
+        public WindQuantity Quantity
+        {
+            get { return WindQuantity.VelocityVectorAirPressure; }
+        }
 
-        public IFunction Data => null;
+        public IFunction Data
+        {
+            get { return null; }
+        }
 
-        public string Name => "Spider web";
+        public string Name
+        {
+            get { return "Spider web"; }
+        }
 
         #region IFileBased
 
         public string Path
         {
-            get => WindFilePath;
-            set => WindFilePath = value;
+            get { return WindFilePath; }
+            set { WindFilePath = value; }
         }
 
         public IEnumerable<string> Paths
@@ -44,9 +53,12 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
             }
         }
 
-        public bool IsFileCritical => true;
+        public bool IsFileCritical { get { return true; } }
 
-        public bool IsOpen => Path != null;
+        public bool IsOpen
+        {
+            get { return Path != null; }
+        }
 
         public void CreateNew(string path)
         {
@@ -54,7 +66,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
             {
                 File.Create(path);
             }
-
             Path = path;
         }
 
@@ -69,7 +80,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
             {
                 throw new FileNotFoundException(string.Format("Wind file {0} could not be found", path));
             }
-
             Path = path;
         }
 
@@ -80,7 +90,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
                 Log.ErrorFormat("Could not find wind data file {0}", Path);
                 return;
             }
-
             if (System.IO.Path.GetFullPath(Path) != System.IO.Path.GetFullPath(destinationPath))
             {
                 File.Copy(Path, destinationPath, true);

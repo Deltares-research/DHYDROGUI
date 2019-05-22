@@ -1,0 +1,100 @@
+FLM2.1
+FLCM id 'KST74' nm '' na 0 iv -1.7
+  SBMS nm 'KST74 Naar HW benedenstrooms' pr 1 ty 6 nv 1 bp 'KST74_Hben' cv -2.38 ch '>' psp 'KST74_Klepstand_omhoog' sbms
+  SBMS nm 'KST74 Naar LW benedenstrooms' pr 1 ty 6 nv 2 bp 'KST74_Hben' 'KST74_Hoogwater' cv -2.45 1 ch '<' '=' psp 'KST74_Klepstand_omlaag' sbms
+  SBMS nm 'KST74 Operationeel peil te hoog' pr 1 ty 6 nv 3 bp 'KST74_Hben' 'KST74_Hoogwater' 'KST74_Hbov' cv -2.38 0 -1.69 ch '<' '=' '>' psp 'KST74_Klepstand_omlaag' sbms
+  SBMS nm 'KST74 Operationeel peil te laag' pr 1 ty 6 nv 2 bp 'KST74_Hben' 'KST74_Hbov' cv -2.38 -1.71 ch '<' '<' psp 'KST74_Klepstand_omhoog' sbms flcm
+FLCM id 'KST74_dummy' nm '' na 0 iv 0
+SBMS nm 'KST74 Dummy naar HW' pr 1 ty 5 nv 1 bp 'KST74_Hben'                   cv -2.38   ch '>'     sp 1 sbms
+SBMS nm 'KST74 Dummy naar LW' pr 1 ty 5 nv 2 bp 'KST74_Hben' 'KST74_Hoogwater' cv -2.45 1 ch '<' '=' sp 0 sbms
+flcm
+FLM2.1
+FLCM id 'KST67' nm '' na 0 iv -2.3
+SBMS nm 'KST67 Naar HW benedenstrooms' pr 1 ty 6 nv 1 bp 'KST67_Hben' cv -2.1 ch '>' psp 'KST67_Klepstand_omhoog' sbms
+SBMS nm 'KST67 Naar LW benedenstrooms' pr 1 ty 6 nv 2 bp 'KST67_Hben' 'KST67_Hoogwater' cv -2.25 1 ch '<' '=' psp 'KST67_Klepstand_omlaag' sbms
+SBMS nm 'KST67 Operationeel peil te hoog' pr 1 ty 6 nv 3 bp 'KST67_Hben' 'KST67_Hoogwater' 'KST67_Hbov' cv -2.1 0 -2.3 ch '<' '=' '>' psp 'KST67_Klepstand_omlaag' sbms
+SBMS nm 'KST67 Operationeel peil te laag' pr 1 ty 6 nv 3 bp 'KST67_Hben' 'KST67_Hoogwater' 'KST67_Hbov' cv -2.1 0 -2.3 ch '<' '=' '<' psp 'KST67_Klepstand_omhoog' sbms flcm
+FLCM id 'KST67_dummy' nm '' na 0 iv 0
+SBMS nm 'KST67 Dummy naar HW' pr 1 ty 5 nv 1 bp 'KST67_Hben'                   cv -2.1   ch '>'     sp 1 sbms
+SBMS nm 'KST67 Dummy naar LW' pr 1 ty 5 nv 2 bp 'KST67_Hben' 'KST67_Hoogwater' cv -2.25 1 ch '<' '=' sp 0 sbms
+flcm
+FLM2.1
+FLCM id 'KST606' nm '' na 0 iv -1
+SBMS nm 'KST606 Naar HW benedenstrooms' pr 1 ty 6 nv 1 bp 'KST606_Hben' cv -1.1 ch '>' psp 'KST606_Klepstand_omhoog' sbms
+SBMS nm 'KST606 Naar LW benedenstrooms' pr 1 ty 6 nv 2 bp 'KST606_Hben' 'KST606_Hoogwater' cv -1.25 1 ch '<' '=' psp 'KST606_Klepstand_omlaag' sbms
+SBMS nm 'KST606 Operationeel peil te hoog' pr 1 ty 6 nv 3 bp 'KST606_Hben' 'KST606_Hoogwater' 'KST606_Hbov' cv -1.1 0 -0.99 ch '<' '=' '>' psp 'KST606_Klepstand_omlaag' sbms
+SBMS nm 'KST606 Operationeel peil te laag' pr 1 ty 6 nv 3 bp 'KST606_Hben' 'KST606_Hoogwater' 'KST606_Hbov' cv -1.1 0 -1.01 ch '<' '=' '<' psp 'KST606_Klepstand_omhoog' sbms flcm
+FLCM id 'KST606_dummy' nm '' na 0 iv 0
+SBMS nm 'KST606 Dummy naar HW' pr 1 ty 5 nv 1 bp 'KST606_Hben'                   cv -1.1   ch '>'     sp 1 sbms
+SBMS nm 'KST606 Dummy naar LW' pr 1 ty 5 nv 2 bp 'KST606_Hben' 'KST606_Hoogwater' cv -1.25 1 ch '<' '=' sp 0 sbms
+flcm
+FLM2.1
+FLCM id 'KST70' nm '' na 0 iv -1.5
+SBMS nm 'KST70 Naar HW benedenstrooms' pr 1 ty 6 nv 1 bp 'KST70_Hben' cv -1.87 ch '>' psp 'KST70_Klepstand_omhoog' sbms
+SBMS nm 'KST70 Naar LW benedenstrooms' pr 1 ty 6 nv 2 bp 'KST70_Hben' 'KST70_Hoogwater' cv -1.9 1 ch '<' '=' psp 'KST70_Klepstand_omlaag' sbms
+SBMS nm 'KST70 Operationeel peil te hoog' pr 1 ty 6 nv 3 bp 'KST70_Hben' 'KST70_Hoogwater' 'KST70_Hbov' cv -1.87 0 -1.49 ch '<' '=' '>' psp 'KST70_Klepstand_omlaag' sbms
+SBMS nm 'KST70 Operationeel peil te laag' pr 1 ty 6 nv 3 bp 'KST70_Hben' 'KST70_Hoogwater' 'KST70_Hbov' cv -1.87 0 -1.51 ch '<' '=' '<' psp 'KST70_Klepstand_omhoog' sbms flcm
+FLCM id 'KST70_dummy' nm '' na 0 iv 0
+SBMS nm 'KST70 Dummy naar HW' pr 1 ty 5 nv 1 bp 'KST70_Hben'                   cv -1.87   ch '>'     sp 1 sbms
+SBMS nm 'KST70 Dummy naar LW' pr 1 ty 5 nv 2 bp 'KST70_Hben' 'KST70_Hoogwater' cv -1.9 1 ch '<' '=' sp 0 sbms
+flcm
+FLM2.1
+FLCM id 'KST68' nm '' na 0 iv -0.7
+SBMS nm 'KST68 Naar HW benedenstrooms' pr 1 ty 6 nv 1 bp 'KST68_Hben' cv -1.85 ch '>' psp 'KST68_Klepstand_omhoog' sbms
+SBMS nm 'KST68 Naar LW benedenstrooms' pr 1 ty 6 nv 2 bp 'KST68_Hben' 'KST68_Hoogwater' cv -1.9 1 ch '<' '=' psp 'KST68_Klepstand_omlaag' sbms
+SBMS nm 'KST68 Operationeel peil te hoog' pr 1 ty 6 nv 3 bp 'KST68_Hben' 'KST68_Hoogwater' 'KST68_Hbov' cv -1.85 0 -0.69 ch '<' '=' '>' psp 'KST68_Klepstand_omlaag' sbms
+SBMS nm 'KST68 Operationeel peil te laag' pr 1 ty 6 nv 3 bp 'KST68_Hben' 'KST68_Hoogwater' 'KST68_Hbov' cv -1.85 0 -0.71 ch '<' '=' '<' psp 'KST68_Klepstand_omhoog' sbms flcm
+FLCM id 'KST68_dummy' nm '' na 0 iv 0
+SBMS nm 'KST68 Dummy naar HW' pr 1 ty 5 nv 1 bp 'KST68_Hben'                   cv -1.85   ch '>'     sp 1 sbms
+SBMS nm 'KST68 Dummy naar LW' pr 1 ty 5 nv 2 bp 'KST68_Hben' 'KST68_Hoogwater' cv -1.9 1 ch '<' '=' sp 0 sbms
+flcm
+FLM2.1
+FLCM id 'KST69' nm '' na 0 iv -1.8
+SBMS nm 'KST69 Naar HW benedenstrooms' pr 1 ty 6 nv 1 bp 'KST69_Hben' cv -1.65 ch '>' psp 'KST69_Klepstand_omhoog' sbms
+SBMS nm 'KST69 Naar LW benedenstrooms' pr 1 ty 6 nv 2 bp 'KST69_Hben' 'KST69_Hoogwater' cv -1.72 1 ch '<' '=' psp 'KST69_Klepstand_omlaag' sbms
+SBMS nm 'KST69 Operationeel peil te hoog' pr 1 ty 6 nv 3 bp 'KST69_Hben' 'KST69_Hoogwater' 'KST69_Hbov' cv -1.65 0 -1.79 ch '<' '=' '>' psp 'KST69_Klepstand_omlaag' sbms
+SBMS nm 'KST69 Operationeel peil te laag' pr 1 ty 6 nv 3 bp 'KST69_Hben' 'KST69_Hoogwater' 'KST69_Hbov' cv -1.65 0 -1.81 ch '<' '=' '<' psp 'KST69_Klepstand_omhoog' sbms flcm
+FLCM id 'KST69_dummy' nm '' na 0 iv 0
+SBMS nm 'KST69 Dummy naar HW' pr 1 ty 5 nv 1 bp 'KST69_Hben'                   cv -1.65   ch '>'     sp 1 sbms
+SBMS nm 'KST69 Dummy naar LW' pr 1 ty 5 nv 2 bp 'KST69_Hben' 'KST69_Hoogwater' cv -1.72 1 ch '<' '=' sp 0 sbms
+flcm
+FLM2.1
+FLCM id 'KST441' nm '' na 0 iv -2.05
+SBMS nm 'KST441 Naar HW benedenstrooms' pr 1 ty 6 nv 1 bp 'KST441_Hben' cv -1.5 ch '>' psp 'KST441_Klepstand_omhoog' sbms
+SBMS nm 'KST441 Naar LW benedenstrooms' pr 1 ty 6 nv 2 bp 'KST441_Hben' 'KST441_Hoogwater' cv -2.5 1 ch '<' '=' psp 'KST441_Klepstand_omlaag' sbms
+SBMS nm 'KST441 Operationeel peil te hoog' pr 1 ty 6 nv 3 bp 'KST441_Hben' 'KST441_Hoogwater' 'KST441_Hbov' cv -1.5 0 -2.04 ch '<' '=' '>' psp 'KST441_Klepstand_omlaag' sbms
+SBMS nm 'KST441 Operationeel peil te laag' pr 1 ty 6 nv 3 bp 'KST441_Hben' 'KST441_Hoogwater' 'KST441_Hbov' cv -1.5 0 -2.06 ch '<' '=' '<' psp 'KST441_Klepstand_omhoog' sbms flcm
+FLCM id 'KST441_dummy' nm '' na 0 iv 0
+SBMS nm 'KST441 Dummy naar HW' pr 1 ty 5 nv 1 bp 'KST441_Hben'                   cv -1.5   ch '>'     sp 1 sbms
+SBMS nm 'KST441 Dummy naar LW' pr 1 ty 5 nv 2 bp 'KST441_Hben' 'KST441_Hoogwater' cv -2.5 1 ch '<' '=' sp 0 sbms
+flcm
+FLM2.1
+FLCM id 'KST442' nm '' na 0 iv -1
+SBMS nm 'KST442 Naar HW benedenstrooms' pr 1 ty 6 nv 1 bp 'KST442_Hben' cv -1.7 ch '>' psp 'KST442_Klepstand_omhoog' sbms
+SBMS nm 'KST442 Naar LW benedenstrooms' pr 1 ty 6 nv 2 bp 'KST442_Hben' 'KST442_Hoogwater' cv -1.8 1 ch '<' '=' psp 'KST442_Klepstand_omlaag' sbms
+SBMS nm 'KST442 Operationeel peil te hoog' pr 1 ty 6 nv 3 bp 'KST442_Hben' 'KST442_Hoogwater' 'KST442_Hbov' cv -1.7 0 -0.99 ch '<' '=' '>' psp 'KST442_Klepstand_omlaag' sbms
+SBMS nm 'KST442 Operationeel peil te laag' pr 1 ty 6 nv 3 bp 'KST442_Hben' 'KST442_Hoogwater' 'KST442_Hbov' cv -1.7 0 -1.01 ch '<' '=' '<' psp 'KST442_Klepstand_omhoog' sbms flcm
+FLCM id 'KST442_dummy' nm '' na 0 iv 0
+SBMS nm 'KST442 Dummy naar HW' pr 1 ty 5 nv 1 bp 'KST442_Hben'                   cv -1.7   ch '>'     sp 1 sbms
+SBMS nm 'KST442 Dummy naar LW' pr 1 ty 5 nv 2 bp 'KST442_Hben' 'KST442_Hoogwater' cv -1.8 1 ch '<' '=' sp 0 sbms
+flcm
+FLCM id 'KSL1_1' nm '' na 0 iv 0
+SBMS nm 'Waterhoogte Bath te laag' pr 1 ty 5 nv 1 bp 'Bath_H' cv -2.00 ch '<' sp 0 sbms
+SBMS nm 'Debiet Brugweg te laag' pr 1 ty 5 nv 1 bp 'Brugweg_Q' cv 0.01 ch '<' sp 0 sbms
+SBMS nm 'open' pr 1 ty 5 nv 2 bp 'Bath_H' 'Brugweg_Q' cv -1.95 0.01 ch '>' '>' sp 3.60 sbms flcm
+FLCM id 'KSL1_2' nm '' na 0 iv 0
+SBMS nm 'Waterhoogte Bath te laag' pr 1 ty 5 nv 1 bp 'Bath_H' cv -2.00 ch '<' sp 0 sbms
+SBMS nm 'Debiet Brugweg te laag' pr 1 ty 5 nv 1 bp 'Brugweg_Q' cv 0.01 ch '<' sp 0 sbms
+SBMS nm 'open' pr 1 ty 5 nv 2 bp 'Bath_H' 'Brugweg_Q' cv -1.95 0.01 ch '>' '>' sp 3.60 sbms flcm
+FLCM id 'KSL1_3' nm '' na 0 iv 0
+SBMS nm 'Waterhoogte Bath te laag' pr 1 ty 5 nv 1 bp 'Bath_H' cv -2.00 ch '<' sp 0 sbms
+SBMS nm 'Debiet Brugweg te laag' pr 1 ty 5 nv 1 bp 'Brugweg_Q' cv 0.01 ch '<' sp 0 sbms
+SBMS nm 'open' pr 1 ty 5 nv 2 bp 'Bath_H' 'Brugweg_Q' cv -1.95 0.01 ch '>' '>' sp 3.60 sbms flcm
+FLCM id 'KSL1_4' nm '' na 0 iv 0
+SBMS nm 'Waterhoogte Bath te laag' pr 1 ty 5 nv 1 bp 'Bath_H' cv -2.00 ch '<' sp 0 sbms
+SBMS nm 'Debiet Brugweg te laag' pr 1 ty 5 nv 1 bp 'Brugweg_Q' cv 0.01 ch '<' sp 0 sbms
+SBMS nm 'open' pr 1 ty 5 nv 2 bp 'Bath_H' 'Brugweg_Q' cv -1.95 0.01 ch '>' '>' sp 3.60 sbms flcm
+FLCM id 'regel bath' nm '' na 0 iv 0
+SBMS nm 'Waterhoogte Bath te laag' pr 1 ty 5 nv 1 bp 'Bath_H' cv -2.00 ch '<' sp 1 sbms
+SBMS nm 'Debiet Brugweg te laag' pr 1 ty 5 nv 1 bp 'Brugweg_Q' cv 0.01 ch '<' sp 2 sbms
+SBMS nm 'open' pr 1 ty 5 nv 2 bp 'Bath_H' 'Brugweg_Q' cv -1.95 0.01 ch '>' '>' sp 3 sbms flcm

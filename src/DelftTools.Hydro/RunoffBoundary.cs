@@ -24,14 +24,20 @@ namespace DelftTools.Hydro
         [Aggregation]
         public virtual DrainageBasin Basin { get; set; }
 
-        public virtual IHydroRegion Region => Basin;
-
+        public virtual IHydroRegion Region { get { return Basin; } }
+        
         [Aggregation]
         public virtual IEventedList<HydroLink> Links { get; set; }
 
-        public virtual bool CanBeLinkSource => false;
+        public virtual bool CanBeLinkSource
+        {
+            get { return false; }
+        }
 
-        public virtual bool CanBeLinkTarget => true;
+        public virtual bool CanBeLinkTarget
+        {
+            get { return true; }
+        }
 
         public virtual HydroLink LinkTo(IHydroObject target)
         {
@@ -54,17 +60,14 @@ namespace DelftTools.Hydro
             if (other != null)
             {
                 if (Equals(this, other))
-                {
                     return 0;
-                }
 
-                foreach (RunoffBoundary c in Basin.Boundaries)
+                foreach (var c in Basin.Boundaries)
                 {
                     if (Equals(c, this))
                     {
                         return -1;
                     }
-
                     if (Equals(c, other))
                     {
                         return 1;
@@ -79,10 +82,9 @@ namespace DelftTools.Hydro
             {
                 return 1;
             }
-
             throw new InvalidOperationException();
         }
-
+        
         [DisplayName("Long name")]
         [FeatureAttribute]
         public virtual string LongName { get; set; }
@@ -103,7 +105,7 @@ namespace DelftTools.Hydro
             boundary.Description = Description;
             boundary.LongName = LongName;
             boundary.Basin = Basin;
-            boundary.Attributes = (IFeatureAttributeCollection) Attributes.Clone();
+            boundary.Attributes = (IFeatureAttributeCollection)Attributes.Clone();
             boundary.Links = new EventedList<HydroLink>(Links);
             return boundary;
         }

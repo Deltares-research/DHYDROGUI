@@ -6,12 +6,11 @@ using System.IO;
 using DelftTools.Shell.Core;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
-using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
 {
-    internal class WindItemExporter : IFileExporter
+    class WindItemExporter: IFileExporter
     {
         public static IEnumerable<WindItemExporter> CreateExporters()
         {
@@ -19,107 +18,89 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
                 new WindItemExporter
                 {
                     Category = "Wind time series",
-                    SupportedTypes = new[]
-                    {
-                        typeof(UniformWindField)
-                    },
+                    SupportedTypes = new[] {typeof (UniformWindField)},
                     SupportedQuantities =
                         new[]
                         {
-                            WindQuantity.VelocityX,
-                            WindQuantity.VelocityY,
-                            WindQuantity.AirPressure,
-                            WindQuantity.VelocityVector,
-                            WindQuantity.VelocityVectorAirPressure
+                            WindQuantity.VelocityX, WindQuantity.VelocityY, WindQuantity.AirPressure,
+                            WindQuantity.VelocityVector, WindQuantity.VelocityVectorAirPressure
                         },
                     FileFilter = "time series file|*.tim",
-                    Icon = Resources.TimeSeries
+                    Icon = Properties.Resources.TimeSeries
                 };
             yield return
                 new WindItemExporter
                 {
                     Category = "Wind gridded data",
-                    SupportedTypes = new[]
-                    {
-                        typeof(GriddedWindField)
-                    },
+                    SupportedTypes = new[] { typeof(GriddedWindField) },
                     SupportedQuantities =
                         new[]
                         {
                             WindQuantity.VelocityX
                         },
                     FileFilter = "regular grid file|*.amu",
-                    Icon = Resources.FunctionGrid2D
+                    Icon = Properties.Resources.FunctionGrid2D
                 };
             yield return
                 new WindItemExporter
                 {
                     Category = "Wind gridded data",
-                    SupportedTypes = new[]
-                    {
-                        typeof(GriddedWindField)
-                    },
+                    SupportedTypes = new[] { typeof(GriddedWindField) },
                     SupportedQuantities =
                         new[]
                         {
                             WindQuantity.VelocityY
                         },
                     FileFilter = "regular grid file|*.amv",
-                    Icon = Resources.FunctionGrid2D
+                    Icon = Properties.Resources.FunctionGrid2D
                 };
             yield return
                 new WindItemExporter
                 {
                     Category = "Wind gridded data",
-                    SupportedTypes = new[]
-                    {
-                        typeof(GriddedWindField)
-                    },
+                    SupportedTypes = new[] {typeof (GriddedWindField)},
                     SupportedQuantities =
                         new[]
                         {
                             WindQuantity.AirPressure
                         },
                     FileFilter = "regular grid file|*.amp",
-                    Icon = Resources.FunctionGrid2D
+                    Icon = Properties.Resources.FunctionGrid2D
                 };
             yield return
                 new WindItemExporter
                 {
                     Category = "Wind gridded data",
-                    SupportedTypes = new[]
-                    {
-                        typeof(GriddedWindField)
-                    },
+                    SupportedTypes = new[] {typeof (GriddedWindField)},
                     SupportedQuantities =
                         new[]
                         {
                             WindQuantity.VelocityVectorAirPressure
                         },
                     FileFilter = "curvi-grid file|*.apwxwy",
-                    Icon = Resources.FunctionGrid2D
+                    Icon = Properties.Resources.FunctionGrid2D
                 };
             yield return
                 new WindItemExporter
                 {
                     Category = "Wind gridded data",
-                    SupportedTypes = new[]
-                    {
-                        typeof(SpiderWebWindField)
-                    },
+                    SupportedTypes = new[] { typeof(SpiderWebWindField) },
                     SupportedQuantities =
                         new[]
                         {
                             WindQuantity.VelocityVectorAirPressure
                         },
                     FileFilter = "spider web file|*.spw",
-                    Icon = Resources.hurricane2
+                    Icon = Properties.Resources.hurricane2
                 };
         }
 
-        private static readonly ILog Log = LogManager.GetLogger(typeof(WindItemExporter));
+        private static readonly ILog Log = LogManager.GetLogger(typeof (WindItemExporter));
 
-        public string Name => "wind data exporter";
+        public string Name
+        {
+            get { return "wind data exporter"; }
+        }
 
         private IList<Type> SupportedTypes { get; set; }
 
@@ -138,19 +119,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
                 {
                     referenceDate = ReferenceDateGetter(uniformWindField);
                 }
-
                 fileWriter.Write(path, ((IWindField) item).Data, referenceDate);
             }
-
             var griddedWindField = item as GriddedWindField;
             if (griddedWindField != null)
             {
                 if (griddedWindField.SeparateGridFile)
                 {
-                    string gridFilePath = Path.GetFullPath(griddedWindField.GridFilePath);
+                    var gridFilePath = Path.GetFullPath(griddedWindField.GridFilePath);
                     if (File.Exists(gridFilePath))
                     {
-                        string newGridFilePath = GriddedWindField.GetCorrespondingGridFilePath(path);
+                        var newGridFilePath = GriddedWindField.GetCorrespondingGridFilePath(path);
                         if (newGridFilePath != gridFilePath)
                         {
                             File.Copy(gridFilePath, newGridFilePath, true);
@@ -162,7 +141,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
                         return false;
                     }
                 }
-
                 if (File.Exists(griddedWindField.WindFilePath))
                 {
                     if (Path.GetFullPath(path) != Path.GetFullPath(griddedWindField.WindFilePath))
@@ -176,7 +154,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
                     return false;
                 }
             }
-
             var spiderWebItem = item as SpiderWebWindField;
             if (spiderWebItem != null)
             {
@@ -193,12 +170,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
                     return false;
                 }
             }
-
             return true;
         }
 
         public string Category { get; private set; }
-        public string Description => string.Empty;
+        public string Description
+        {
+            get { return string.Empty; }
+        }
 
         public IEnumerable<Type> SourceTypes()
         {
@@ -212,8 +191,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
 
         public bool CanExportFor(object item)
         {
-            return SupportedTypes.Contains(item.GetType()) &&
-                   SupportedQuantities.Contains(((IWindField) item).Quantity);
+            return SupportedTypes.Contains(item.GetType()) && SupportedQuantities.Contains(((IWindField) item).Quantity);
         }
     }
 }

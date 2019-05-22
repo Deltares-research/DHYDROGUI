@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using DeltaShell.Plugins.FMSuite.Common.Gui.Editors.Buttons;
-using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 {

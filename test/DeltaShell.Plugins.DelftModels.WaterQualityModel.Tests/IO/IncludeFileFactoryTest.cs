@@ -28,10 +28,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         [Test]
         public void TestCreateT0Include()
         {
-            const string ExpectedString = "'T0: 2010.01.01 13:12:11  (scu=       1s)'";
+            const string expectedString = "'T0: 2010.01.01 13:12:11  (scu=       1s)'";
 
             var dispersionInclude = IncludeFileFactory.CreateT0Include(new DateTime(2010, 1, 1, 13, 12, 11));
-            Assert.AreEqual(ExpectedString, dispersionInclude);
+            Assert.AreEqual(expectedString, dispersionInclude);
         }
 
         [Test]
@@ -169,11 +169,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             var text = IncludeFileFactory.CreateOutputLocationsInclude(obsPoints);
 
             string expectedString = "2 ; nr of monitor locations" + Environment.NewLine +
-                                    "'obs1' 3" + Environment.NewLine +
+                                    "'obs1' 3" + Environment.NewLine + 
                                     "1" + Environment.NewLine +
-                                    "2" + Environment.NewLine +
+                                    "2" + Environment.NewLine + 
                                     "3" + Environment.NewLine +
-                                    "'obs2' 3" + Environment.NewLine +
+                                    "'obs2' 3" + Environment.NewLine + 
                                     "4" + Environment.NewLine +
                                     "5" + Environment.NewLine +
                                     "6" + Environment.NewLine;
@@ -200,9 +200,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         [Test]
         public void TestCreateNumberOfSegmentsInclude()
         {
-            const string ExpectedString = "446698 ; number of segments";
+            const string expectedString = "446698 ; number of segments";
 
-            Assert.AreEqual(ExpectedString, IncludeFileFactory.CreateNumberOfSegmentsInclude(63814, 7));
+            Assert.AreEqual(expectedString, IncludeFileFactory.CreateNumberOfSegmentsInclude(63814, 7));
         }
 
         [Test]
@@ -215,15 +215,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         }
 
         #endregion Block 3
-
+       
         #region Block 4
 
         [Test]
         public void TestCreateNumberOfExchangesInclude()
         {
-            const string ExpectedString = "788900 0 382884 ; number of exchanges in three directions";
+            const string expectedString = "788900 0 382884 ; number of exchanges in three directions";
 
-            Assert.AreEqual(ExpectedString, IncludeFileFactory.CreateNumberOfExchangesInclude(788900, 382884));
+            Assert.AreEqual(expectedString, IncludeFileFactory.CreateNumberOfExchangesInclude(788900, 382884));
         }
 
         [Test]
@@ -247,9 +247,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         [Test]
         public void TestCreateAttributesFileInclude()
         {
-            const string ExpectedString = "INCLUDE 'uni3d.atr' ; attributes file";
+            const string expectedString = "INCLUDE 'uni3d.atr' ; attributes file";
 
-            Assert.AreEqual(ExpectedString, IncludeFileFactory.CreateAttributesFileInclude("uni3d.atr"));
+            Assert.AreEqual(expectedString, IncludeFileFactory.CreateAttributesFileInclude("uni3d.atr"));
         }
 
         [Test]
@@ -273,21 +273,21 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         [Test]
         public void TestCreateConstantDispersionInclude()
         {
-            const string ExpectedString = "0.2 0.0 0.3 ; constant dispersion";
+            const string expectedString = "0.2 0.0 0.3 ; constant dispersion";
 
             var dispersion = WaterQualityFunctionFactory.CreateConst("Dispersion", 0.2d, "Dispersion", "m2/s", null);
 
-            Assert.AreEqual(ExpectedString, IncludeFileFactory.CreateConstantDispersionInclude(0.3d, dispersion));
+            Assert.AreEqual(expectedString, IncludeFileFactory.CreateConstantDispersionInclude(0.3d, dispersion));
         }
 
         [Test]
         public void TestCreateConstantDispersionInclude_HasSpatialData()
         {
-            const string ExpectedString = "0.0 0.0 0.3 ; constant dispersion";
+            const string expectedString = "0.0 0.0 0.3 ; constant dispersion";
 
             var dispersion = WaterQualityFunctionFactory.CreateUnstructuredGridCellCoverage("Dispersion", 0.2d, "Dispersion", "m2/s", null);
 
-            Assert.AreEqual(ExpectedString, IncludeFileFactory.CreateConstantDispersionInclude(0.3d, dispersion));
+            Assert.AreEqual(expectedString, IncludeFileFactory.CreateConstantDispersionInclude(0.3d, dispersion));
         }
 
         #endregion Block 4
@@ -323,18 +323,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         [Test]
         public void TestCreateBoundaryListInclude()
         {
-            const string BoundaryNameOne = "one";
-            const string BoundaryNameTwo = "two";
+            const string boundaryNameOne = "one";
+            const string boundaryNameTwo = "two";
 
             Dictionary<WaterQualityBoundary, int[]> boundaryNodes = new Dictionary<WaterQualityBoundary, int[]>(2)
             {
-                {new WaterQualityBoundary() {Name = BoundaryNameTwo}, new[] {6, 2}}, // added in the wrong order, but the result should still start with 1
-                {new WaterQualityBoundary() {Name = BoundaryNameOne}, new[] {1, 5, 3, 4}},
+                {new WaterQualityBoundary() {Name = boundaryNameTwo}, new[] {6, 2}}, // added in the wrong order, but the result should still start with 1
+                {new WaterQualityBoundary() {Name = boundaryNameOne}, new[] {1, 5, 3, 4}},
             };
 
             string result = IncludeFileFactory.CreateBoundaryListInclude(boundaryNodes, 3);
 
-            string[] lines = result.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+            string[] lines = result.Split(new []{ Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
 
             Assert.AreEqual(22, lines.Length);
 
@@ -467,7 +467,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
 
             Assert.AreEqual(expectedContents, boundaryAliasesIncludeFileContents);
         }
-
+        
         #endregion Block 5
 
         #region Block 6
@@ -492,12 +492,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                 LoadType = "haha"
             };
 
-            var loadsAndIds = new Dictionary<WaterQualityLoad, int>(3)
-            {
-                [load1] = 948,
-                [load2] = 67,
-                [load3] = 0
-            };
+            var loadsAndIds = new Dictionary<WaterQualityLoad, int>(3);
+            loadsAndIds[load1] = 948;
+            loadsAndIds[load2] = 67;
+            loadsAndIds[load3] = 0;
 
             string expectedString =
                 "; Number of loads" + Environment.NewLine +
@@ -660,12 +658,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         {
             var staggeredGrid = CreateTwoCellStaggeredGrid();
 
-            var coverageA = (UnstructuredGridCellCoverage)WaterQualityFunctionFactory.CreateUnstructuredGridCellCoverage("A", 2.0, "A", "mg", "A");
+            var coverageA = (UnstructuredGridCellCoverage) WaterQualityFunctionFactory.CreateUnstructuredGridCellCoverage("A", 2.0, "A", "mg", "A");
             coverageA.Grid = staggeredGrid;
             coverageA[0] = 2.0;
             coverageA[1] = 4.0;
 
-            var coverageB = (UnstructuredGridCellCoverage)WaterQualityFunctionFactory.CreateUnstructuredGridCellCoverage("D", 3.0, "D", "mg", "D");
+            var coverageB = (UnstructuredGridCellCoverage) WaterQualityFunctionFactory.CreateUnstructuredGridCellCoverage("D", 3.0, "D", "mg", "D");
             coverageB.Grid = staggeredGrid;
             coverageB[0] = 2.0;
             coverageB[1] = 5.5;
@@ -706,14 +704,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         [Test]
         public void TestSurfParametersWritten()
         {
-            const string SurfacesFile = "uni3d.srf";
+            const string surfacesFile = "uni3d.srf";
             var waqInitializationSettings = new WaqInitializationSettings
             {
-                SurfacesFile = SurfacesFile,
+                SurfacesFile = surfacesFile,
             };
 
-            string expectedString = "PARAMETERS" + Environment.NewLine +
-                                    "'Surf'" + Environment.NewLine +
+            string expectedString = "PARAMETERS" + Environment.NewLine + 
+                                    "'Surf'" + Environment.NewLine + 
                                     "ALL" + Environment.NewLine +
                                     "BINARY_FILE 'uni3d.srf' ; from horizontal-surfaces-file key in hyd file" + Environment.NewLine;
 
@@ -733,9 +731,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             bFunc.FilePath = "<another filepath set by model>";
 
             var initSettings = new WaqInitializationSettings
-            {
-                ProcessCoefficients = new[] { aFunc, bFunc },
-            };
+                {
+                    ProcessCoefficients = new[] { aFunc, bFunc },
+                };
 
             // call
             var segfunctionInclude = IncludeFileFactory.CreateSegfunctionsInclude(initSettings);
@@ -784,9 +782,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                 "SEG_FUNCTIONS" + Environment.NewLine +
                 "'B'" + Environment.NewLine +
                 "ALL" + Environment.NewLine +
-                "BINARY_FILE '" + pathB + "'" + Environment.NewLine +
+                "BINARY_FILE '"+ pathB + "'" + Environment.NewLine +
                 Environment.NewLine;
-            var expectedText = FileUtils.ReplaceDirectorySeparator(expectedTextUnformatted);
+            var expectedText= FileUtils.ReplaceDirectorySeparator(expectedTextUnformatted);
             Assert.AreEqual(expectedText, segfunctionInclude);
         }
 
@@ -820,20 +818,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                 "CONSTANTS 'tolerance' DATA 1E-06 ; Convergence tolerance" + Environment.NewLine +
                 "CONSTANTS 'iteration report' DATA 0 ; Write iteration report (when 1) or not (when 0)" + Environment.NewLine;
             Assert.AreEqual(expectedText, numericalOptionsInclude);
-        }
-
-        [Test]
-        public void CreateNumericalOptionsIncludeTestDefaultNumberOfCoresIs2()
-        {
-            // setup
-            var initSettings = new WaqInitializationSettings();
-
-            // call
-            var numericalOptionsInclude = IncludeFileFactory.CreateNumericalOptionsInclude(initSettings);
-
-            // assert
-            var expectedText = "CONSTANTS 'NOTHREADS' DATA 2 ; Number of threads used by delwaq";
-            Assert.IsTrue(numericalOptionsInclude.Contains(expectedText));
         }
 
         [Test]
@@ -882,7 +866,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                     DryCellThreshold = 1.23
                 }
             };
-
+            
             // call
             var numericalOptionsInclude = IncludeFileFactory.CreateNumericalOptionsInclude(initSettings);
 
@@ -896,30 +880,30 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             Assert.AreEqual(expectedText, numericalOptionsInclude);
         }
 
-        [Test]
-        public void CreateSpatialDispersionTest()
-        {
-            var staggeredGrid = CreateTwoCellStaggeredGrid();
-            var coverageA = (UnstructuredGridCellCoverage)WaterQualityFunctionFactory.CreateUnstructuredGridCellCoverage("A", 2.0, "A", "mg", "A");
-            coverageA.Grid = staggeredGrid;
-            coverageA[0] = 2.0;
-            coverageA[1] = 4.0;
+         [Test]
+         public void CreateSpatialDispersionTest()
+         {
+             var staggeredGrid = CreateTwoCellStaggeredGrid();
+             var coverageA = (UnstructuredGridCellCoverage) WaterQualityFunctionFactory.CreateUnstructuredGridCellCoverage("A", 2.0, "A", "mg", "A");
+             coverageA.Grid = staggeredGrid;
+             coverageA[0] = 2.0;
+             coverageA[1] = 4.0;
+ 
+             var result = IncludeFileFactory.CreateSpatialDispersionInclude(coverageA, 2);
 
-            var result = IncludeFileFactory.CreateSpatialDispersionInclude(coverageA, 2);
-
-            var expectedString = "CONSTANTS 'ACTIVE_HDisperAdd' DATA 1.0" + Environment.NewLine +
-                                 "PARAMETERS" + Environment.NewLine +
-                                 "'AddDispH'" + Environment.NewLine +
-                                 "ALL" + Environment.NewLine +
-                                 "DATA" + Environment.NewLine +
-                                 "2" + Environment.NewLine +
-                                 "4" + Environment.NewLine +
-                                 "2" + Environment.NewLine +
-                                 "4" + Environment.NewLine +
-                                 Environment.NewLine;
-
-            Assert.AreEqual(expectedString, result);
-        }
+             var expectedString = "CONSTANTS 'ACTIVE_HDisperAdd' DATA 1.0" + Environment.NewLine +
+                                  "PARAMETERS" + Environment.NewLine +
+                                  "'AddDispH'" + Environment.NewLine + 
+                                  "ALL" + Environment.NewLine + 
+                                  "DATA" + Environment.NewLine + 
+                                  "2" + Environment.NewLine + 
+                                  "4" + Environment.NewLine + 
+                                  "2" + Environment.NewLine + 
+                                  "4" + Environment.NewLine + 
+                                  Environment.NewLine;
+ 
+             Assert.AreEqual(expectedString, result);
+         }
 
         [Test]
         public void CreateVerticalDiffusionTest()

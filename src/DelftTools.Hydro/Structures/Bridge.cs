@@ -1,6 +1,6 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using DelftTools.Hydro.CrossSections;
-using DelftTools.Hydro.CrossSections.DataSets;
 using DelftTools.Hydro.CrossSections.StandardShapes;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Utils.Aop;
@@ -12,11 +12,13 @@ namespace DelftTools.Hydro.Structures
 {
     ///<summary>
     ///</summary>
-    [Entity(FireOnCollectionChange = false)]
+    [Entity(FireOnCollectionChange=false)]
     public class Bridge : BranchStructure, IBridge
     {
         public Bridge()
-            : this("Bridge") {}
+            : this("Bridge")
+        {
+        }
 
         public Bridge(string name)
         {
@@ -27,7 +29,7 @@ namespace DelftTools.Hydro.Structures
             BottomLevel = 0;
             PillarWidth = 3;
             ShapeFactor = 1.5;
-
+            
             TabulatedCrossSectionDefinition = new CrossSectionDefinitionZW();
             BridgeType = BridgeType.Tabulated;
         }
@@ -43,10 +45,9 @@ namespace DelftTools.Hydro.Structures
         /// </summary>
         public virtual CrossSectionDefinitionZW TabulatedCrossSectionDefinition
         {
-            get => tabulatedCrossSectionDefinition;
-            set => tabulatedCrossSectionDefinition = value;
+            get { return tabulatedCrossSectionDefinition; }
+            set { tabulatedCrossSectionDefinition = value; }
         }
-
         /// <summary>
         /// Crosssection as used for model api. It does not include any level since these are passed separately
         /// </summary>
@@ -65,7 +66,7 @@ namespace DelftTools.Hydro.Structures
         [NoNotifyPropertyChange]
         public virtual bool IsTabulated
         {
-            get => BridgeType == BridgeType.Tabulated;
+            get { return BridgeType == BridgeType.Tabulated; }
             set
             {
                 if (value)
@@ -81,10 +82,10 @@ namespace DelftTools.Hydro.Structures
         [NoNotifyPropertyChange]
         public virtual bool IsRectangle
         {
-            get => BridgeType == BridgeType.Rectangle;
+            get { return BridgeType == BridgeType.Rectangle; }
             set
             {
-                if (value)
+                if(value)
                 {
                     BridgeType = BridgeType.Rectangle;
                 }
@@ -97,7 +98,7 @@ namespace DelftTools.Hydro.Structures
         [NoNotifyPropertyChange]
         public virtual bool IsPillar
         {
-            get => BridgeType == BridgeType.Pillar;
+            get { return BridgeType == BridgeType.Pillar; }
             set
             {
                 if (value)
@@ -110,18 +111,14 @@ namespace DelftTools.Hydro.Structures
         /// <summary>
         /// Effective crosssection of the bridge. If rectangle a single section tabulated is returned.
         /// </summary>
-        /// <returns> Crosssection as used for ModelAPI and in views </returns>
+        /// <returns>Crosssection as used for ModelAPI and in views</returns>
         public virtual CrossSectionDefinitionZW EffectiveCrossSectionDefinition
         {
             get
             {
                 if (BridgeType == BridgeType.Tabulated)
-                {
                     return TabulatedCrossSectionDefinition;
-                }
-
-                return StandardCrossSectionsFactory
-                       .GetTabulatedCrossSectionFromRectangle(Width, Height).AddLevel(BottomLevel);
+                return StandardCrossSectionsFactory.GetTabulatedCrossSectionFromRectangle(Width, Height).AddLevel(BottomLevel);
             }
         }
 
@@ -138,19 +135,19 @@ namespace DelftTools.Hydro.Structures
         [DisplayName("Flow direction")]
         [FeatureAttribute(Order = 12, ExportName = "FlowDir")]
         public virtual FlowDirection FlowDirection { get; set; }
-
+        
         [DynamicReadOnly]
         [DisplayName("Roughness type")]
         [FeatureAttribute(Order = 7, ExportName = "RoughType")]
         public virtual BridgeFrictionType FrictionType
         {
-            get => FrictionTypeConverter.ConvertToBridgeFrictionType(FrictionDataType);
-            set => FrictionDataType = FrictionTypeConverter.ConvertFrictionType(value);
+            get { return FrictionTypeConverter.ConvertToBridgeFrictionType(FrictionDataType); }
+            set { FrictionDataType = FrictionTypeConverter.ConvertFrictionType(value); }
         }
 
         [Browsable(false)]
         public virtual Friction FrictionDataType { get; set; }
-
+        
         [DynamicReadOnly]
         [DisplayName("Roughness")]
         [FeatureAttribute(Order = 8, ExportName = "Roughness")]
@@ -185,10 +182,10 @@ namespace DelftTools.Hydro.Structures
         [FeatureAttribute(Order = 5, ExportName = "Shape")]
         public virtual BridgeType BridgeType
         {
-            get => bridgeType;
+            get { return bridgeType; }
             set
             {
-                bridgeType = value;
+                bridgeType = value; 
                 UpdateCrossSectionDefinition(bridgeType);
             }
         }
@@ -198,8 +195,8 @@ namespace DelftTools.Hydro.Structures
         [FeatureAttribute(Order = 6, ExportName = "Length")]
         public virtual double BridgeLength
         {
-            get => Length;
-            set => Length = value;
+            get { return Length; }
+            set { Length = value; }
         }
 
         [DynamicReadOnly]
@@ -219,9 +216,11 @@ namespace DelftTools.Hydro.Structures
 
         public virtual bool AllowNegativeFlow
         {
-            get =>
-                FlowDirection == FlowDirection.Both ||
-                FlowDirection == FlowDirection.Negative;
+            get
+            {
+                return FlowDirection == FlowDirection.Both ||
+                       FlowDirection == FlowDirection.Negative;
+            }
             set
             {
                 if (value != AllowNegativeFlow)
@@ -239,9 +238,13 @@ namespace DelftTools.Hydro.Structures
 
         public virtual bool AllowPositiveFlow
         {
-            get =>
-                FlowDirection == FlowDirection.Both ||
-                FlowDirection == FlowDirection.Positive;
+            get
+            {
+                {
+                    return FlowDirection == FlowDirection.Both ||
+                           FlowDirection == FlowDirection.Positive;
+                }
+            }
             set
             {
                 if (value != AllowPositiveFlow)
@@ -250,12 +253,11 @@ namespace DelftTools.Hydro.Structures
                 }
             }
         }
-
+        
         #endregion
-
         public override void CopyFrom(object source)
         {
-            var copyFrom = (Bridge) source;
+            Bridge copyFrom = (Bridge) source;
             base.CopyFrom(source);
             InletLossCoefficient = copyFrom.InletLossCoefficient;
             OutletLossCoefficient = copyFrom.OutletLossCoefficient;
@@ -270,14 +272,11 @@ namespace DelftTools.Hydro.Structures
             if (copyFrom.BridgeType == BridgeType.Tabulated)
             {
                 TabulatedCrossSectionDefinition.ZWDataTable.Clear();
-                foreach (CrossSectionDataSet.CrossSectionZWRow zwwRow in copyFrom
-                                                                         .TabulatedCrossSectionDefinition.ZWDataTable)
+                foreach (var zwwRow in copyFrom.TabulatedCrossSectionDefinition.ZWDataTable)
                 {
-                    TabulatedCrossSectionDefinition.ZWDataTable.AddCrossSectionZWRow(
-                        zwwRow.Z, zwwRow.Width, zwwRow.StorageWidth);
+                    TabulatedCrossSectionDefinition.ZWDataTable.AddCrossSectionZWRow(zwwRow.Z, zwwRow.Width, zwwRow.StorageWidth);
                 }
             }
-
             BottomLevel = copyFrom.BottomLevel;
             Width = copyFrom.Width;
             Height = copyFrom.Height;
@@ -289,18 +288,16 @@ namespace DelftTools.Hydro.Structures
         protected static FlowDirection GetPossibleFlowDirection(bool allowPositiveFlow, bool allowNegativeFlow)
         {
             return allowPositiveFlow
-                       ? allowNegativeFlow ? FlowDirection.Both : FlowDirection.Positive
-                       : allowNegativeFlow
-                           ? FlowDirection.Negative
-                           : FlowDirection.None;
+                       ? (allowNegativeFlow ? FlowDirection.Both : FlowDirection.Positive)
+                       : (allowNegativeFlow ? FlowDirection.Negative : FlowDirection.None);
         }
 
         /// <summary>
         /// Set the bridge geometry to a tabulated profile with one single rectangular segment.
         /// </summary>
-        /// <param name="bedLevel"> </param>
-        /// <param name="width"> </param>
-        /// <param name="height"> </param>
+        /// <param name="bedLevel"></param>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
         public virtual void SetRectangleCrossSection(double bedLevel, double width, double height)
         {
             BottomLevel = bedLevel;
@@ -311,22 +308,23 @@ namespace DelftTools.Hydro.Structures
             TabulatedCrossSectionDefinition.SetAsRectangle(bedLevel, width, height);
         }
 
+
         public static Bridge CreateDefault()
         {
             var bridge = new Bridge();
             bridge.TabulatedCrossSectionDefinition.SetWithHfswData(new[]
-            {
-                new HeightFlowStorageWidth(-10, 50, 50),
-                new HeightFlowStorageWidth(0, 100, 100)
-            });
+                                                             {
+                                                                 new HeightFlowStorageWidth(-10, 50, 50),
+                                                                 new HeightFlowStorageWidth(0, 100, 100)
+                                                             });
             bridge.FrictionType = BridgeFrictionType.Chezy;
-            bridge.Friction = 45.0;
+            bridge.Friction = 45.0; 
             return bridge;
         }
 
         public static Bridge CreateDefault(IBranch branch)
         {
-            Bridge bridge = CreateDefault();
+            var bridge = CreateDefault();
             AddStructureToNetwork(bridge, branch);
             return bridge;
         }
@@ -335,8 +333,7 @@ namespace DelftTools.Hydro.Structures
         public virtual bool DynamicReadOnlyValidationMethod(string propertyName)
         {
             if (propertyName == "BridgeLength" || propertyName == "FrictionType" || propertyName == "Friction" ||
-                propertyName == "GroundLayerEnabled" || propertyName == "InletLossCoefficient" ||
-                propertyName == "OutletLossCoefficient")
+                propertyName == "GroundLayerEnabled" || propertyName == "InletLossCoefficient" || propertyName == "OutletLossCoefficient")
             {
                 return IsPillar;
             }
@@ -361,9 +358,9 @@ namespace DelftTools.Hydro.Structures
 
         public override StructureType GetStructureType()
         {
-            return IsPillar
-                       ? StructureType.BridgePillar
-                       : StructureType.Bridge;
+            return IsPillar 
+                ? StructureType.BridgePillar 
+                : StructureType.Bridge;
         }
 
         private void UpdateCrossSectionDefinition(BridgeType type)
@@ -376,15 +373,12 @@ namespace DelftTools.Hydro.Structures
                         {
                             Width = Width,
                             Height = Height
-                        }) {Name = Name};
+                        }) { Name = Name };
                     break;
                 case BridgeType.Tabulated:
                     crossSectionDefinition = tabulatedCrossSectionDefinition;
                     if (crossSectionDefinition.Name != Name)
-                    {
                         crossSectionDefinition.Name = Name;
-                    }
-
                     break;
                 default:
                     crossSectionDefinition = null;

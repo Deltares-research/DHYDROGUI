@@ -8,13 +8,12 @@ using DelftTools.Utils.Collections.Generic;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;
-using NetTopologySuite.Extensions.Features.Generic;
 using NetTopologySuite.Extensions.Geometries;
 
 namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
 {
     [Entity]
-    public class BoundaryConditionSet : FeatureData<IEventedList<IBoundaryCondition>, Feature2D>, IFeature
+    public class BoundaryConditionSet : NetTopologySuite.Extensions.Features.Generic.FeatureData<IEventedList<IBoundaryCondition>, Feature2D>, IFeature
     {
         private IEventedList<IBoundaryCondition> boundaryConditions;
 
@@ -27,18 +26,14 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
         {
             get
             {
-                if (Feature == null)
-                {
-                    return null;
-                }
-
+                if (Feature == null) return null;
                 return Feature.Attributes[Feature2D.LocationKey] as IList<string>;
             }
         }
 
         public IEventedList<IBoundaryCondition> BoundaryConditions
         {
-            get => boundaryConditions;
+            get { return boundaryConditions; }
             set
             {
                 boundaryConditions = value;
@@ -53,7 +48,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
 
         public override Feature2D Feature
         {
-            get => base.Feature;
+            get { return base.Feature; }
             set
             {
                 if (base.Feature != null)
@@ -61,7 +56,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
                     ((INotifyPropertyChange) base.Feature).PropertyChanging -= OnPropertyChanging;
                     ((INotifyPropertyChange) base.Feature).PropertyChanged -= OnPropertyChanged;
                 }
-
                 base.Feature = value;
                 if (base.Feature != null)
                 {
@@ -103,14 +97,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
             {
                 Feature.Attributes = new DictionaryFeatureAttributeCollection();
             }
-
             if (!Feature.Attributes.ContainsKey(Feature2D.LocationKey))
             {
                 Feature.Attributes.Add(Feature2D.LocationKey, CreateGeometryPointsSyncedList());
             }
             else if (!(Feature.Attributes[Feature2D.LocationKey] is GeometryPointsSyncedList<string>))
             {
-                GeometryPointsSyncedList<string> geometryPointsSyncedList = CreateGeometryPointsSyncedList();
+                var geometryPointsSyncedList = CreateGeometryPointsSyncedList();
 
                 var locations = Feature.Attributes[Feature2D.LocationKey] as IList<string>;
 
@@ -118,11 +111,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
                 {
                     for (var i = 0; i < geometryPointsSyncedList.Count; ++i)
                     {
-                        if (i == locations.Count)
-                        {
-                            break;
-                        }
-
+                        if (i == locations.Count) break;
                         geometryPointsSyncedList[i] = locations[i];
                     }
                 }
@@ -132,12 +121,12 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
         private GeometryPointsSyncedList<string> CreateGeometryPointsSyncedList()
         {
             return new GeometryPointsSyncedList<string>
-            {
-                CreationMethod = DefaultLocationName,
-                RecreateAllItems = false,
-                SyncWithGeometryMove = false,
-                Feature = Feature
-            };
+                {
+                    CreationMethod = DefaultLocationName,
+                    RecreateAllItems = false,
+                    SyncWithGeometryMove = false,
+                    Feature = Feature
+                };
         }
 
         public static string DefaultLocationName(IFeature feature, int i)
@@ -147,7 +136,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
             {
                 return CreateNameByIndex(feature2D.Name, i);
             }
-
             return (i + 1).ToString("D4");
         }
 
@@ -160,15 +148,17 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
         {
             if (locationName.StartsWith(featureName + "_"))
             {
-                string numString = locationName.Substring(featureName.Length + 1);
+                var numString = locationName.Substring(featureName.Length + 1);
                 int number;
                 return numString.Length == 4 && int.TryParse(numString, out number);
             }
-
             return false;
         }
 
-        public string VariableDescription => BoundaryConditions.Any() ? BoundaryConditions.First().Description : "";
+        public string VariableDescription
+        {
+            get { return BoundaryConditions.Any() ? BoundaryConditions.First().Description : ""; }
+        }
 
         public bool ContainsData()
         {
@@ -181,15 +171,14 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
             {
                 Feature = Feature,
                 BoundaryConditions =
-                    new EventedList<IBoundaryCondition>(
-                        BoundaryConditions.Select(bc => (IBoundaryCondition) bc.Clone()))
+                    new EventedList<IBoundaryCondition>(BoundaryConditions.Select(bc => (IBoundaryCondition) bc.Clone()))
             };
         }
 
         public IGeometry Geometry
         {
-            get => Feature.Geometry.Centroid;
-            set => throw new Exception("Boundary condition sets cannot be moved");
+            get { return Feature.Geometry.Centroid; }
+            set { throw new Exception("Boundary condition sets cannot be moved"); }
         }
 
         public IFeatureAttributeCollection Attributes { get; set; }

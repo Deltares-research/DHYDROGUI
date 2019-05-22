@@ -10,10 +10,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
     {
         public static IEnumerable<double> Read(string path, int sizeN, int sizeM)
         {
-            var lineCount = 0;
+            int lineCount = 0;
 
-            var columnCount = 0;
-            var lastRowCounter = 0;
+            int columnCount = 0;
+            int lastRowCounter = 0;
 
             var values = new List<double>();
 
@@ -23,17 +23,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                 while ((line = reader.ReadLine()) != null)
                 {
                     lineCount++;
-                    if (line == string.Empty || line.StartsWith("*"))
-                    {
-                        continue;
-                    }
+                    if (line == string.Empty|| line.StartsWith("*")) continue;
 
-                    List<string> doubleValues = line.Split(new[]
-                    {
-                        ' '
-                    }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                    var doubleValues = line.Split(new[]{' '}, StringSplitOptions.RemoveEmptyEntries).ToList();
 
-                    for (var i = 0; i < doubleValues.Count; i++)
+                    for (int i = 0; i < doubleValues.Count; i++)
                     {
                         double val;
                         if (!double.TryParse(doubleValues[i], NumberStyles.Any, CultureInfo.InvariantCulture, out val))
@@ -51,7 +45,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                             continue;
                         }
 
-                        if (values.Count < sizeN * sizeM)
+                        if (values.Count < sizeN*sizeM)
                         {
                             values.Add(val);
                         }
@@ -66,8 +60,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             if (lastRowCounter != sizeM)
             {
                 throw new Exception(string.Format(
-                                        "Unexpected format of depth file {0}, expecting a total of {1}x{2} values (including end-of-row/column symbols)",
-                                        path, sizeM + 1, sizeN + 1));
+                    "Unexpected format of depth file {0}, expecting a total of {1}x{2} values (including end-of-row/column symbols)",
+                    path, sizeM + 1, sizeN + 1));
             }
 
             return values;

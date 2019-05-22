@@ -17,6 +17,7 @@ namespace DelftTools.Hydro
                 {RoughnessType.DeBosAndBijkerk, 33.8}
             };
 
+
         public static RoughnessType ConvertRougnessType(CulvertFrictionType frictionType)
         {
             switch (frictionType)
@@ -61,10 +62,9 @@ namespace DelftTools.Hydro
             {
                 return DefaultRoughnessValueMapping[type];
             }
-
             throw new NotSupportedException("Unexpected roughness type! Cannot retrieve default value.");
         }
-
+        
         public static double GetDefault(CulvertFrictionType type)
         {
             return GetDefault(ConvertRougnessType(type));

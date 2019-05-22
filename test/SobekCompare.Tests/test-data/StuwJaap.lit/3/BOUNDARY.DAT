@@ -1,0 +1,6 @@
+FLBO id '1' st 0 ty 0 h_ wd 0  8 0 flbo
+FLBO id '2' st 0 ty 0 h_ wt 1 0 0 PDIN 0 0 '' pdin
+TBLE
+'1996/01/01;00:00:00' 8 < 
+'1996/01/02;00:00:00' 1 < 
+tble flbo

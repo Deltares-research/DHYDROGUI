@@ -1,0 +1,26 @@
+[General]
+
+NetworkNew=0
+QualityResultsPresent=0
+ImportFrom=SOBEK_river
+ImportDate=11-11-2010 14:00:11
+Case Name=030_NoLaterals
+SuftableHasRun=-1
+QuantityResultsPresent=0
+UserId=Bernhard Becker
+UserName=becker
+ComputerName=D00518
+[Previous OutputFiles]
+..\work\calcpnt.his=-1
+..\work\reachseg.his=-1
+..\work\struc.his=-1
+..\work\flowanal.his=-1
+..\work\calcdim.his=-1
+..\work\reachdim.his=-1
+..\work\strucdim.his=-1
+..\work\controll.his=0
+..\work\triggers.his=0
+..\work\qwb.his=-1
+..\work\simulate.rep=-1
+..\work\sobek.log=-1
+..\work\indicat.flw=-1

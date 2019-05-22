@@ -23,7 +23,6 @@ using NUnit.Framework;
 using SharpMap.Extensions.CoordinateSystems;
 using SharpMap.Layers;
 using DeltaShell.NGHS.TestUtils;
-using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 {

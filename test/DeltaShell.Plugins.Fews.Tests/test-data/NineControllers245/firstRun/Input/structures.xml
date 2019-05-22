@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TimeSeries xmlns="http://www.wldelft.nl/fews/PI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.wldelft.nl/fews/PI http://fews.wldelft.nl/schemas/version1.0/pi-schemas/pi_timeseries.xsd" version="1.2">
+    <timeZone>0.0</timeZone>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>Control group of Weir1_IntervalCntrl_##3</locationId>
+            <parameterId>rtc_timecondition</parameterId>
+            <timeStep unit="hour" multiplier="6"/>
+            <startDate date="2012-03-01" time="12:00:00"/>
+            <endDate date="2012-03-03" time="12:00:00"/>
+            <missVal>-999.0</missVal>
+            <stationName>Weir1_IntervalCntrl_##1</stationName>
+            <units>true/false</units>
+        </header>
+        <event date="2012-03-01" time="12:00:00" value="1" flag="2"/>
+        <event date="2012-03-03" time="12:00:00" value="1" flag="2"/>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>Control group of Weir2_TimeCntrl_##3</locationId>
+            <parameterId>rtc_timecondition</parameterId>
+            <timeStep unit="hour" multiplier="6"/>
+            <startDate date="2012-03-01" time="12:00:00"/>
+            <endDate date="2012-03-03" time="12:00:00"/>
+            <missVal>-999.0</missVal>
+            <stationName>Weir2_TimeCntrl_##3</stationName>
+            <units>true/false</units>
+        </header>
+        <event date="2012-03-01" time="12:00:00" value="1" flag="2"/>
+        <event date="2012-03-03" time="12:00:00" value="1" flag="2"/>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>Control group of Weir3_HydraulicCntrl_##3</locationId>
+            <parameterId>rtc_timecondition</parameterId>
+            <timeStep unit="hour" multiplier="6"/>
+            <startDate date="2012-03-01" time="12:00:00"/>
+            <endDate date="2012-03-03" time="12:00:00"/>
+            <missVal>-999.0</missVal>
+            <stationName>Weir3_HydraulicCntrl_##3</stationName>
+            <units>true/false</units>
+        </header>
+        <event date="2012-03-01" time="12:00:00" value="1" flag="2"/>
+        <event date="2012-03-03" time="12:00:00" value="1" flag="2"/>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>Control group of Weir4_PIDCntr_##3</locationId>
+            <parameterId>rtc_timecondition</parameterId>
+            <timeStep unit="hour" multiplier="6"/>
+            <startDate date="2012-03-01" time="12:00:00"/>
+            <endDate date="2012-03-03" time="12:00:00"/>
+            <missVal>-999.0</missVal>
+            <stationName>Weir4_PIDCntr_##3</stationName>
+            <units>true/false</units>
+        </header>
+        <event date="2012-03-01" time="12:00:00" value="1" flag="2"/>
+        <event date="2012-03-03" time="12:00:00" value="1" flag="2"/>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>Control group of Weir5_RelTimeCntrl_##3</locationId>
+            <parameterId>rtc_timecondition</parameterId>
+            <timeStep unit="hour" multiplier="6"/>
+            <startDate date="2012-03-01" time="12:00:00"/>
+            <endDate date="2012-03-03" time="12:00:00"/>
+            <missVal>-999.0</missVal>
+            <stationName>Weir5_RelTimeCntrl_##3</stationName>
+            <units>true/false</units>
+        </header>
+        <event date="2012-03-01" time="12:00:00" value="1" flag="2"/>
+        <event date="2012-03-03" time="12:00:00" value="1" flag="2"/>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>Control group of Weir6_RelValueCntrl_##3</locationId>
+            <parameterId>rtc_timecondition</parameterId>
+            <timeStep unit="hour" multiplier="6"/>
+            <startDate date="2012-03-01" time="12:00:00"/>
+            <endDate date="2012-03-03" time="12:00:00"/>
+            <missVal>-999.0</missVal>
+            <stationName>Weir6_RelValueCntrl_##3</stationName>
+            <units>true/false</units>
+        </header>
+        <event date="2012-03-01" time="12:00:00" value="1" flag="2"/>
+        <event date="2012-03-03" time="12:00:00" value="1" flag="2"/>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>Control group of Weir7_Time_IntV_PID_##3</locationId>
+            <parameterId>rtc_timecondition</parameterId>
+            <timeStep unit="hour" multiplier="6"/>
+            <startDate date="2012-03-01" time="12:00:00"/>
+            <endDate date="2012-03-03" time="12:00:00"/>
+            <missVal>-999.0</missVal>
+            <stationName>Weir7_Time_IntV_PID_##3</stationName>
+            <units>true/false</units>
+        </header>
+        <event date="2012-03-01" time="12:00:00" value="1" flag="2"/>
+        <event date="2012-03-03" time="12:00:00" value="1" flag="2"/>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>Control group of Weir1_IntervalCntrl_##1</locationId>
+            <parameterId>rtc_intervalrule</parameterId>
+            <timeStep unit="hour" multiplier="6"/>
+            <startDate date="2012-03-01" time="12:00:00"/>
+            <endDate date="2012-03-03" time="12:00:00"/>
+            <missVal>-999.0</missVal>
+            <stationName>Weir1_IntervalCntrl_##1</stationName>
+            <units>m AD</units>
+        </header>
+        <event date="2012-03-01" time="12:00:00" value="4.8" flag="2"/>
+        <event date="2012-03-01" time="18:00:00" value="4.5" flag="2"/>
+        <event date="2012-03-02" time="00:00:00" value="4.3" flag="2"/>
+        <event date="2012-03-02" time="06:00:00" value="4.2" flag="2"/>
+        <event date="2012-03-02" time="12:00:00" value="4.1" flag="2"/>
+        <event date="2012-03-02" time="18:00:00" value="4.4" flag="2"/>
+        <event date="2012-03-03" time="00:00:00" value="4.9" flag="2"/>
+        <event date="2012-03-03" time="06:00:00" value="4.7" flag="2"/>
+        <event date="2012-03-03" time="12:00:00" value="4.6" flag="2"/>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>Control group of Weir2_TimeCntrl_##4</locationId>
+            <parameterId>rtc_timerule</parameterId>
+            <timeStep unit="hour" multiplier="6"/>
+            <startDate date="2012-03-01" time="12:00:00"/>
+            <endDate date="2012-03-03" time="12:00:00"/>
+            <missVal>-999.0</missVal>
+            <stationName>Weir2_TimeCntrl##4</stationName>
+            <units>m AD</units>
+        </header>
+        <event date="2012-03-01" time="12:00:00" value="3.1" flag="2"/>
+        <event date="2012-03-01" time="18:00:00" value="2.9" flag="2"/>
+        <event date="2012-03-02" time="00:00:00" value="2.7" flag="2"/>
+        <event date="2012-03-02" time="06:00:00" value="3.1" flag="2"/>
+        <event date="2012-03-02" time="12:00:00" value="3.3" flag="2"/>
+        <event date="2012-03-02" time="18:00:00" value="3.0" flag="2"/>
+        <event date="2012-03-03" time="00:00:00" value="3.2" flag="2"/>
+        <event date="2012-03-03" time="06:00:00" value="2.8" flag="2"/>
+        <event date="2012-03-03" time="12:00:00" value="3.4" flag="2"/>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>Control group of Weir4_PIDCntr_##10</locationId>
+            <parameterId>rtc_pidrule</parameterId>
+            <timeStep unit="hour" multiplier="6"/>
+            <startDate date="2012-03-01" time="12:00:00"/>
+            <endDate date="2012-03-03" time="12:00:00"/>
+            <missVal>-999.0</missVal>
+            <stationName>Weir4_PIDCntr_##10</stationName>
+            <units>m AD</units>
+        </header>
+        <event date="2012-03-01" time="12:00:00" value="4.85" flag="2"/>
+        <event date="2012-03-01" time="18:00:00" value="4.55" flag="2"/>
+        <event date="2012-03-02" time="00:00:00" value="4.35" flag="2"/>
+        <event date="2012-03-02" time="06:00:00" value="4.25" flag="2"/>
+        <event date="2012-03-02" time="12:00:00" value="4.15" flag="2"/>
+        <event date="2012-03-02" time="18:00:00" value="4.45" flag="2"/>
+        <event date="2012-03-03" time="00:00:00" value="4.95" flag="2"/>
+        <event date="2012-03-03" time="06:00:00" value="4.75" flag="2"/>
+        <event date="2012-03-03" time="12:00:00" value="4.65" flag="2"/>
+    </series>
+</TimeSeries>

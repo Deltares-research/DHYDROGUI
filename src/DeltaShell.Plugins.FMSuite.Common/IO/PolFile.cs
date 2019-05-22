@@ -31,7 +31,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                 try
                 {
                     var i = 1;
-                    foreach (IFeature feature in features)
+                    foreach (var feature in features)
                     {
                         var lineString = new LineString(feature.Geometry.Coordinates);
                         const int numColumns = 2; // X, Y
@@ -40,7 +40,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                         {
                             throw new Exception("Invalid geometry " + feature.GetType());
                         }
-
+                        
                         var nameable = feature as INameable;
                         if (nameable != null)
                         {
@@ -48,18 +48,17 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                         }
                         else
                         {
-                            WriteLine("poly_" + i++);
+                            WriteLine("poly_" + (i++));
                         }
 
-                        List<Coordinate> coordinates = lineString.Coordinates.Take(lineString.Coordinates.Length -
-                                                                                   (IncludeClosingCoordinate ? 0 : 1))
-                                                                 .ToList();
+                        var coordinates = lineString.Coordinates.Take(lineString.Coordinates.Length -
+                                                                        (IncludeClosingCoordinate ? 0 : 1)).ToList();
 
-                        WriteLine(string.Format("    {0}    {1}", coordinates.Count(), numColumns));
+                        WriteLine(String.Format("    {0}    {1}", coordinates.Count(), numColumns));
 
-                        foreach (Coordinate coordinate in coordinates)
+                        foreach (var coordinate in coordinates)
                         {
-                            WriteLine(string.Format("{0, 24}{1, 24}", coordinate.X, coordinate.Y));
+                            WriteLine(String.Format("{0, 24}{1, 24}", coordinate.X, coordinate.Y));
                         }
                     }
                 }
@@ -82,18 +81,18 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             OpenInputFile(polFilePath);
             try
             {
-                string line = GetNextLine();
+                var line = GetNextLine();
                 while (line != null)
                 {
                     //  start of polyLine
                     var feature = new T {Name = line};
                     feature.TrySetGroupName(polFilePath);
-
+                    
                     line = GetNextLine();
                     if (line == null)
                     {
                         throw new FormatException(
-                            string.Format(
+                            String.Format(
                                 "Unexpected end of file; Expected line stating number of points and columns on line {0} of file {1}",
                                 LineNumber, polFilePath));
                     }
@@ -101,27 +100,26 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                     var lineFields = (IList<string>) SplitLine(line).Take(2).ToList();
                     if (lineFields.Count != 2)
                     {
-                        throw new FormatException(string.Format("Invalid numpoints/numcolums {0} in file {1}",
+                        throw new FormatException(String.Format("Invalid numpoints/numcolums {0} in file {1}",
                                                                 lineFields, polFilePath));
                     }
 
-                    int numPoints = GetInt(lineFields[0], "value for nr of points");
-                    int numColumns = GetInt(lineFields[1], "value for nr of columns");
+                    var numPoints = GetInt(lineFields[0], "value for nr of points");
+                    var numColumns = GetInt(lineFields[1], "value for nr of columns");
                     if (numColumns < 2)
                     {
-                        throw new FormatException(string.Format(
-                                                      "Invalid number of colums ({0}, must be 2) in file {1}",
-                                                      numColumns, polFilePath));
+                        throw new FormatException(String.Format(
+                            "Invalid number of colums ({0}, must be 2) in file {1}", numColumns, polFilePath));
                     }
 
                     var points = new List<Coordinate>();
-                    for (var i = 0; i < numPoints; i++)
+                    for (int i = 0; i < numPoints; i++)
                     {
                         line = GetNextLine();
                         if (line == null)
                         {
                             throw new FormatException(
-                                string.Format(
+                                String.Format(
                                     "Unexpected end of file; Expected point row ({0} out of {1}) on line {2} in file {3}",
                                     i + 1, numPoints, LineNumber, polFilePath));
                         }
@@ -129,20 +127,18 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                         lineFields = SplitLine(line).Take(2).ToList();
                         if (lineFields.Count != 2)
                         {
-                            throw new FormatException(string.Format("Invalid point row on line {0} in file {1}",
+                            throw new FormatException(String.Format("Invalid point row on line {0} in file {1}",
                                                                     LineNumber, polFilePath));
                         }
 
-                        double x = GetDouble(lineFields[0]);
-                        double y = GetDouble(lineFields[1]);
+                        var x = GetDouble(lineFields[0]);
+                        var y = GetDouble(lineFields[1]);
                         points.Add(new Coordinate(x, y));
                     }
-
-                    if (points.First().X != points.Last().X || points.First().Y != points.Last().Y)
+                    if ((points.First().X != points.Last().X) || (points.First().Y != points.Last().Y))
                     {
                         points.Add(points[0]); // close polygon
                     }
-
                     ILinearRing linearRing;
                     try
                     {
@@ -165,7 +161,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             {
                 CloseInputFile();
             }
-
             return features;
         }
     }

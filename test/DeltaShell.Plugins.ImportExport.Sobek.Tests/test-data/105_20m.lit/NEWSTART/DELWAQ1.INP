@@ -1,0 +1,6 @@
+  86400 'DDHHMMSS' 'DDHHMMSS'  ; system clock in seconds, auxiliary in days
+                         10.60 ; integration option
+           1996/01/01-00:00:00 ; simulation starting time, set by simulate
+           1996/01/01-02:00:00 ; simulation ending time, set by simulate
+                             0 ; timestep constant
+                     000000500 ; simulation timestep

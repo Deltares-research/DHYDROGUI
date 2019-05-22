@@ -11,17 +11,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 {
     public enum StructureType
     {
-        [Description(StructureRegion.StructureTypeName.Pump)]
-        Pump,
-
-        [Description(StructureRegion.StructureTypeName.Gate)]
-        Gate,
-
-        [Description(StructureRegion.StructureTypeName.Weir)]
-        Weir,
-
-        [Description(StructureRegion.StructureTypeName.GeneralStructure)]
-        GeneralStructure,
+        [Description(StructureRegion.StructureTypeName.Pump)] Pump,
+        [Description(StructureRegion.StructureTypeName.Gate)] Gate,
+        [Description(StructureRegion.StructureTypeName.Weir)] Weir,
+        [Description(StructureRegion.StructureTypeName.GeneralStructure)] GeneralStructure,
         InvalidType
     }
 
@@ -37,9 +30,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         {
             try
             {
-                StructureType =
-                    (StructureType) Enum.Parse(typeof(StructureType), type,
-                                               true); // TODO: This is also a ModelProperty! Should this refer to the ModelProperty of should we remove that one from Properties?
+                StructureType = (StructureType) Enum.Parse(typeof(StructureType), type, true); // TODO: This is also a ModelProperty! Should this refer to the ModelProperty of should we remove that one from Properties?
             }
             catch (ArgumentException)
             {
@@ -49,11 +40,17 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         }
 
         // Might be risky: assumes that KnownStructureProperties.Name is always available.
-        public string Name => GetProperty(KnownStructureProperties.Name).GetValueAsString();
+        public string Name
+        {
+            get
+            {
+                return GetProperty(KnownStructureProperties.Name).GetValueAsString();
+            }
+        }
 
         public StructureType StructureType { get; private set; }
         public string InvalidStructureType { get; private set; }
-
+        
         public IList<ModelProperty> Properties { get; private set; }
 
         public ModelProperty GetProperty(string name)
@@ -63,8 +60,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 
         public ModelProperty GetProperty(KnownGeneralStructureProperties property)
         {
-            return Properties.FirstOrDefault(p => p.PropertyDefinition.FilePropertyName.ToLower() ==
-                                                  property.GetDescription().ToLower());
+            return Properties.FirstOrDefault(p => p.PropertyDefinition.FilePropertyName.ToLower() == property.GetDescription().ToLower());
         }
     }
 }

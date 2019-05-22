@@ -10,14 +10,14 @@ namespace DelftTools.Hydro.Structures
         /// <summary>
         /// Crosssection of the bridge. If rectangle a single section tabulated is returned.
         /// </summary>
-        /// <returns> Crosssection as used for ModelAPI </returns>
+        /// <returns>Crosssection as used for ModelAPI</returns>
         CrossSectionDefinitionZW EffectiveCrossSectionDefinition { get; }
 
         /// <summary>
         /// Inlet loss
         /// </summary>
         double InletLossCoefficient { get; set; }
-
+        
         /// <summary>
         /// Outlet loss
         /// </summary>
@@ -32,7 +32,7 @@ namespace DelftTools.Hydro.Structures
         /// Frictiontype of the bridge bed
         /// </summary>
         BridgeFrictionType FrictionType { get; set; }
-
+        
         /// <summary>
         /// Rectangle or tabulated geometry
         /// </summary>
@@ -41,7 +41,7 @@ namespace DelftTools.Hydro.Structures
         /// <summary>
         /// Bed level for rectangle geometry
         /// </summary>
-        double BottomLevel { get; set; }
+        double BottomLevel { get; set;}
 
         /// <summary>
         /// Width of rectangle geometry
@@ -87,7 +87,7 @@ namespace DelftTools.Hydro.Structures
         /// Shapefactor of the pillars
         /// </summary>
         double ShapeFactor { get; set; }
-
+        
         /// <summary>
         /// ZW (used for databinding). Use bridgegeometrytype to find out about geometry etc
         /// </summary>
@@ -102,7 +102,7 @@ namespace DelftTools.Hydro.Structures
         /// Pillar (used for databinding). Use bridgegeometrytype to find out about geometry etc
         /// </summary>
         bool IsPillar { get; set; }
-
+        
         /// <summary>
         /// Cross Section Definition as used for ini (filewriter).
         /// </summary>
@@ -111,8 +111,6 @@ namespace DelftTools.Hydro.Structures
 
     public enum BridgeType
     {
-        Rectangle,
-        Tabulated,
-        Pillar
+        Rectangle,Tabulated, Pillar
     }
 }

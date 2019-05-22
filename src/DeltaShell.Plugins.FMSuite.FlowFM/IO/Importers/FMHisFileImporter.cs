@@ -2,39 +2,52 @@
 using System.Collections.Generic;
 using System.Drawing;
 using DelftTools.Shell.Core;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.FunctionStores;
-using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 {
     public class FMHisFileImporter : IFileImporter
     {
-        public string Name => "Flexible Mesh His File";
+        public string Name
+        {
+            get { return "Flexible Mesh His File"; }
+        }
 
-        public string Category => "D-Flow FM 2D/3D";
+        public string Category
+        {
+            get { return "D-Flow FM 2D/3D"; }
+        }
 
-        public string Description => string.Empty;
+        public string Description
+        {
+            get { return string.Empty; }
+        }
 
-        public Bitmap Image => Resources.unstrucWater;
+        public Bitmap Image
+        {
+            get { return Properties.Resources.unstrucWater; }
+        }
 
         public IEnumerable<Type> SupportedItemTypes
         {
-            get
-            {
-                yield return typeof(FMHisFileFunctionStore);
-            }
+            get { yield return typeof(FMHisFileFunctionStore); }
         }
 
-        public bool OpenViewAfterImport => false;
+        public bool OpenViewAfterImport { get { return false; } }
 
         public bool CanImportOn(object targetObject)
         {
             return true;
         }
 
-        public bool CanImportOnRootLevel => true;
+        public bool CanImportOnRootLevel
+        {
+            get { return true; }
+        }
 
-        public string FileFilter => "FM His File|*_his.nc";
+        public string FileFilter
+        {
+            get { return "FM His File|*_his.nc"; }
+        }
 
         public string TargetDataDirectory { get; set; }
 
@@ -44,7 +57,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 
         public object ImportItem(string path, object target = null)
         {
-            return new FMHisFileFunctionStore(path, new WaterFlowFMModelDTO());
+            return new FMHisFileFunctionStore(path);
         }
     }
 }

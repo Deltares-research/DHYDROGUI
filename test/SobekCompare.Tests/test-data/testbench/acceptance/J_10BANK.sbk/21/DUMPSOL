@@ -1,0 +1,15 @@
+ Solution of last steps before crash
+ or continuation without convergence.
+ Each record contains:
+  - Time step number
+  - Iteration step number
+  - Per gridpoint:
+  - Location
+  - Waterlevel
+  - Discharge
+  - Waterlevel referred to the top of the Preismann slot
+    (negative value means waterlevel inside of slot or waterlevel below bottom)
+  - Flow width
+  - Total width
+  - 1/C/C/R
+  

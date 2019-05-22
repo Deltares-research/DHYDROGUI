@@ -1,29 +1,29 @@
 ﻿using DelftTools.Hydro.CrossSections;
-using DelftTools.Hydro.CrossSections.DataSets;
 
 namespace DelftTools.Hydro.Helpers
 {
     /// <summary>
-    /// Returns new crossection based on exising crossection.
+    /// Returns new crossection based on exising crossection. 
     /// Provides conversion between some types
-    /// XYZ -> YZ
+    /// XYZ -> YZ 
     /// </summary>
     public static class CrossSectionConverter
     {
         /// <summary>
         /// Returns a new crossection based on the given crossection
         /// </summary>
-        /// <param name="source"> </param>
-        /// <returns> </returns>
+        /// <param name="source"></param>
+        /// <returns></returns>
         public static CrossSectionDefinitionYZ ConvertToYz(CrossSectionDefinitionXYZ source)
         {
             //var csWidth = source.Width;
             var result = new CrossSectionDefinitionYZ();
-            foreach (CrossSectionDataSet.CrossSectionXYZRow row in source.XYZDataTable)
+            foreach (var row in source.XYZDataTable)
             {
                 result.YZDataTable.AddCrossSectionYZRow(row.Yq, row.Z, row.DeltaZStorage);
             }
 
+                          
             return result;
         }
     }

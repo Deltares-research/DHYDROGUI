@@ -1,18 +1,17 @@
-﻿using DelftTools.Utils.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
-using DeltaShell.Plugins.FMSuite.FlowFM.Sediment;
 using DeltaShell.Plugins.FMSuite.FlowFM.Validation;
 using GeoAPI.Geometries;
-using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
+using NetTopologySuite.Extensions.Features;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 {

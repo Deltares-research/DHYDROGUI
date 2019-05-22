@@ -142,8 +142,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
 
             var editFunctionDialog = new EditFunctionDialog
             {
-                Text = $"{GuiParameterNames.CrestLevel} time series for " + data.Name,
-                ColumnNames = new[] {"Date time", String.Format($"{GuiParameterNames.CrestLevel} [m]")},
+                Text = "Crest level time series for " + data.Name,
+                ColumnNames = new[] {"Date time", String.Format("Crest level [m]")},
                 ChartViewOption = ChartViewOptions.AllSeries,
                 Data = dialogData
             };

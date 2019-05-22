@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -128,53 +128,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unexpected keyword {0} on line {1} of file {2}.
+        ///   Looks up a localized string similar to Unsupported quantity type: {0}, in the .ext file {1} detected. It will not be imported..
         /// </summary>
-        public static string ExtForceFile_GetMessageUnexpectedKeyword_Unexpected_keyword__0__on_line__1__of_file__2_ {
+        public static string ExtForceFile_ReadPolyLineData_Unsupported_quantity_type___0___in_the__ext_file__1__detected__It_will_not_be_imported_ {
             get {
-                return ResourceManager.GetString("ExtForceFile_GetMessageUnexpectedKeyword_Unexpected_keyword__0__on_line__1__of_fi" +
-                        "le__2_", resourceCulture);
+                return ResourceManager.GetString("ExtForceFile_ReadPolyLineData_Unsupported_quantity_type___0___in_the__ext_file__1" +
+                        "__detected__It_will_not_be_imported_", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} is already set; Line {1} of file {2} will be ignored..
+        ///   Looks up a localized string similar to The model may not run. Spatial varying quantity {0} could not be imported because the prefix does not match {1} for Tracers or {2} for Spatial Varying Sediments..
         /// </summary>
-        public static string ExtForceFile_LogWarningQuantityPropertyAlreadySet__0__is_already_set__Line__1__of_file__2__will_be_ignored_ {
+        public static string ExtForceFile_ReadSpatialData_The_model_may_not_run__Spatial_varying_quantity__0__could_not_be_imported_because_the_prefix_does_not_match__1__for_Tracers_or__2__for_Spatial_Varying_Sediments_ {
             get {
-                return ResourceManager.GetString("ExtForceFile_LogWarningQuantityPropertyAlreadySet__0__is_already_set__Line__1__of" +
-                        "_file__2__will_be_ignored_", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Unexpected line &quot;{0}&quot; on line {1} in file {2} and will be ignored..
-        /// </summary>
-        public static string ExtForceFile_ReadQuantityProperty_Unexpected_line___0___on_line__1__in_file__2__and_will_be_ignored_ {
-            get {
-                return ResourceManager.GetString("ExtForceFile_ReadQuantityProperty_Unexpected_line___0___on_line__1__in_file__2__a" +
-                        "nd_will_be_ignored_", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to File {0} could not be found for quantity &apos;{1}&apos; in the external force file {2}..
-        /// </summary>
-        public static string ExtForceFile_StoreUnknownQuantities_File__0__could_not_be_found_for_quantity___1___in_the_external_force_file__2__ {
-            get {
-                return ResourceManager.GetString("ExtForceFile_StoreUnknownQuantities_File__0__could_not_be_found_for_quantity___1_" +
-                        "__in_the_external_force_file__2__", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Quantity &apos;{0}&apos; detected in the external force file and will be passed to the computational core. This may affect your simulation..
-        /// </summary>
-        public static string ExtForceFile_StoreUnknownQuantities_Quantity___0___detected_in_the_external_force_file_and_will_be_passed_to_the_computational_core__This_may_affect_your_simulation_ {
-            get {
-                return ResourceManager.GetString("ExtForceFile_StoreUnknownQuantities_Quantity___0___detected_in_the_external_force" +
-                        "_file_and_will_be_passed_to_the_computational_core__This_may_affect_your_simulat" +
-                        "ion_", resourceCulture);
+                return ResourceManager.GetString("ExtForceFile_ReadSpatialData_The_model_may_not_run__Spatial_varying_quantity__0__" +
+                        "could_not_be_imported_because_the_prefix_does_not_match__1__for_Tracers_or__2__f" +
+                        "or_Spatial_Varying_Sediments_", resourceCulture);
             }
         }
         
@@ -188,18 +158,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &apos;{0}&apos;: Fixed weir with type &apos;TabellenBoek&apos; have a ground heights smaller than 0.10 m. A minimum of 0.10 m will be applied by the computational core..
-        /// </summary>
-        public static string FixedWeirValidator_ValidateSillDepths__0___Fixed_weir_with_type_1_have_a_ground_heights_smaller_than_0_10_m__A_minimum_of_0_10_m_will_be_applied_by_the_computational_core_ {
-            get {
-                return ResourceManager.GetString("FixedWeirValidator_ValidateSillDepths__0___Fixed_weir_with_type_1_have_a_ground_h" +
-                        "eights_smaller_than_0_10_m__A_minimum_of_0_10_m_will_be_applied_by_the_computati" +
-                        "onal_core_", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to &apos;{0}&apos;: Fixed weir has ground heights smaller than 0.00 m. A minimum of 0.00 m will be applied by the computational core..
+        ///   Looks up a localized string similar to fixed weir &apos;{0}&apos; has unphysical sill depths, parts will be ignored by dflow-fm..
         /// </summary>
         public static string FixedWeirValidator_ValidateSillDepths_fixed_weir___0___has_unphysical_sill_depths__parts_will_be_ignored_by_dflow_fm_ {
             get {

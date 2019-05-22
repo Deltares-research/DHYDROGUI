@@ -28,7 +28,6 @@ namespace DelftTools.Hydro
                     throw new InvalidOperationException();
             }
         }
-
         public static RoughnessType ConvertToRoughnessFrictionType(Friction type)
         {
             switch (type)
@@ -46,7 +45,7 @@ namespace DelftTools.Hydro
                 case Friction.BosBijkerk:
                     return RoughnessType.DeBosAndBijkerk;
                 default:
-                    return RoughnessType.Chezy; //throw new InvalidOperationException();
+                    return RoughnessType.Chezy;//throw new InvalidOperationException();
             }
         }
 
@@ -84,7 +83,7 @@ namespace DelftTools.Hydro
                 case Friction.WhiteColebrook:
                     return BridgeFrictionType.WhiteColebrook;
                 default:
-                    return BridgeFrictionType.Chezy; //throw new InvalidOperationException();
+                    return BridgeFrictionType.Chezy;//throw new InvalidOperationException();
             }
         }
 
@@ -106,7 +105,6 @@ namespace DelftTools.Hydro
                     throw new InvalidOperationException();
             }
         }
-
         public static CulvertFrictionType ConvertToCulvertFrictionType(Friction type)
         {
             switch (type)
@@ -122,7 +120,7 @@ namespace DelftTools.Hydro
                 case Friction.WhiteColebrook:
                     return CulvertFrictionType.WhiteColebrook;
                 default:
-                    return CulvertFrictionType.Chezy; //throw new InvalidOperationException();
+                    return CulvertFrictionType.Chezy;//throw new InvalidOperationException();
             }
         }
     }

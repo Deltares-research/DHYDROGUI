@@ -1,0 +1,14 @@
+ Residues in case of continuing with no convergence
+ Each record contains:
+  - Time step number
+  - Maximum waterlevel residue with corresponding position
+  - Maximum discharge residue with corresponding position
+  - Waterlevel convergence error
+    (if waterlevel criterion specified)
+  - Waterlevel convergence error factor
+    (if waterlevel criterion specified)
+  - Discharge convergence error
+    (if any discharge criterion specified)
+  - Discharge convergence error factor
+    (if any discharge criterion specified)
+  

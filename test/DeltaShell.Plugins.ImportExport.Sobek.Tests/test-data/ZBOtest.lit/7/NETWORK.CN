@@ -1,0 +1,240 @@
+CN_1.1
+FLBO id '1492' ci '1492' flbo
+FLBO id '1232' ci '1232' flbo
+FLBO id '1927' ci '1927' flbo
+FLBO id '1384' ci '1384' flbo
+FLBO id '1872' ci '1872' flbo
+FLBO id '1825' ci '1825' flbo
+FLBX id 'ltrZRO420' nm '' ci '5' lc .192186753708481 flbx 
+FLBX id 'ltrZRO527' nm '' ci '5' lc 3774.80099558568 flbx 
+FLBX id 'ltrZRO278' nm '' ci '8' lc 509.993969797352 flbx 
+FLBX id 'ltrZRO526' nm '' ci '9' lc 784.39955430382 flbx 
+FLBX id 'ltrZRO419' nm '' ci '10' lc 3530.13597212029 flbx 
+FLBX id 'ltrZRO288' nm '' ci '18' lc 101.761240356958 flbx 
+FLBX id 'ltrZRO461' nm '' ci '29' lc .163397738266512 flbx 
+FLBX id 'ltrZRO562' nm '' ci '40' lc 3531.29121628734 flbx 
+FLBX id 'ltrStationsweg 1' nm '' ci '44' lc 416.607811837778 flbx 
+FLBX id 'ltrStationsweg 2' nm '' ci '44' lc 1524.42491953111 flbx 
+FLBX id 'ltrZRO290' nm '' ci '44' lc 2835.8035931403 flbx 
+FLBX id 'ltrZRO279' nm '' ci '47' lc .168179367865222 flbx 
+FLBX id 'ltrZRO528' nm '' ci '51' lc 2220.30651867045 flbx 
+FLBX id 'ltrZRO567' nm '' ci '62' lc 201.166766527503 flbx 
+FLBX id 'ltrZRO561' nm '' ci '63' lc 968.282402336895 flbx 
+FLBX id 'ltrZRO559' nm '' ci '70' lc .242905211044114 flbx 
+FLBX id 'ltrZRO563' nm '' ci '71' lc .15926097445675 flbx 
+FLNX id '778' nm '' ci '778' flnx
+FLNX id 'cGH5_GFE1224' nm '' ci 'cGH5_GFE1224' flnx
+FLBX id 'ltrGH1_GFE1224' nm '' ci '96' lc 3295.939546231 flbx 
+FLBX id 'ltrZRO282' nm '' ci '97' lc 59.1985215029476 flbx 
+FLBX id 'ltrZRO281' nm '' ci '97' lc 461.105747590333 flbx 
+FLBX id 'ltrZRO458' nm '' ci '111' lc .147637978578071 flbx 
+FLNX id '1223' nm '' ci '1223' flnx
+FLBR id 'BFC_Driepolders' nm 'BaseFlowCorrectie_Driepolders' ci '125' lc 7.84469445647384 flbr 
+FLBX id 'ltrZRO457' nm '' ci '234' lc 41.1425458096402 flbx 
+FLBX id 'ltrZRO459' nm '' ci '234' lc 2401.34887714357 flbx 
+FLBX id 'ltrZRO47' nm '' ci '258' lc 6.92100208180329 flbx 
+FLNX id '2134' nm '' ci '2134' flnx
+FLNX id 'cGFE1094' nm '' ci 'cGFE1094' flnx
+FLNX id 'cGFE1095' nm '' ci 'cGFE1095' flnx
+FLNX id 'cGFE1096' nm '' ci 'cGFE1096' flnx
+FLNX id 'cGFE1097' nm '' ci 'cGFE1097' flnx
+FLBX id 'ltrZRO280' nm '' ci '358' lc .307007774477969 flbx 
+FLNX id 'cGFE1099' nm '' ci 'cGFE1099' flnx
+FLNX id 'cGFE1100' nm '' ci 'cGFE1100' flnx
+FLNX id 'cGFE1101' nm '' ci 'cGFE1101' flnx
+FLNX id 'cGFE1102' nm '' ci 'cGFE1102' flnx
+FLNX id 'cGFE1105' nm '' ci 'cGFE1105' flnx
+FLNX id 'cGFE1106' nm '' ci 'cGFE1106' flnx
+FLNX id 'cGFE1109' nm '' ci 'cGFE1109' flnx
+FLNX id 'cGFE1110' nm '' ci 'cGFE1110' flnx
+FLNX id 'cGFE1111' nm '' ci 'cGFE1111' flnx
+FLNX id 'cGFE1112' nm '' ci 'cGFE1112' flnx
+FLNX id 'cGFE1113' nm '' ci 'cGFE1113' flnx
+FLNX id 'cGFE1114' nm '' ci 'cGFE1114' flnx
+FLNX id 'cGFE1116' nm '' ci 'cGFE1116' flnx
+FLNX id 'cGFE1117' nm '' ci 'cGFE1117' flnx
+FLNX id 'cGFE1119' nm '' ci 'cGFE1119' flnx
+FLNX id 'cGFE1120' nm '' ci 'cGFE1120' flnx
+FLNX id 'cGFE1121' nm '' ci 'cGFE1121' flnx
+FLNX id 'cGFE1122' nm '' ci 'cGFE1122' flnx
+FLNX id 'cGFE1123' nm '' ci 'cGFE1123' flnx
+FLNX id 'cGFE1124' nm '' ci 'cGFE1124' flnx
+FLNX id 'cGFE1127' nm '' ci 'cGFE1127' flnx
+FLNX id 'cGFE1128' nm '' ci 'cGFE1128' flnx
+FLNX id 'cGFE1129' nm '' ci 'cGFE1129' flnx
+FLNX id 'cGFE1130' nm '' ci 'cGFE1130' flnx
+FLNX id 'cGFE1133' nm '' ci 'cGFE1133' flnx
+FLNX id 'cGFE1134' nm '' ci 'cGFE1134' flnx
+FLNX id 'cGFE1135' nm '' ci 'cGFE1135' flnx
+FLNX id 'cGFE1136' nm '' ci 'cGFE1136' flnx
+FLNX id 'cGFE1138' nm '' ci 'cGFE1138' flnx
+FLNX id 'cGFE1140' nm '' ci 'cGFE1140' flnx
+FLNX id 'cGFE1141' nm '' ci 'cGFE1141' flnx
+FLNX id 'cGFE1143' nm '' ci 'cGFE1143' flnx
+FLNX id 'cGFE1144' nm '' ci 'cGFE1144' flnx
+FLNX id 'cGFE1145' nm '' ci 'cGFE1145' flnx
+FLNX id 'cGFE1146' nm '' ci 'cGFE1146' flnx
+FLNX id 'cGFE1147' nm '' ci 'cGFE1147' flnx
+FLNX id 'cGFE1148' nm '' ci 'cGFE1148' flnx
+FLNX id 'cGFE1149' nm '' ci 'cGFE1149' flnx
+FLNX id 'cGFE1150' nm '' ci 'cGFE1150' flnx
+FLNX id 'cGFE1151' nm '' ci 'cGFE1151' flnx
+FLNX id 'cGFE1152' nm '' ci 'cGFE1152' flnx
+FLNX id 'cGFE1153' nm '' ci 'cGFE1153' flnx
+FLNX id 'cGFE1154' nm '' ci 'cGFE1154' flnx
+FLNX id 'cGFE1155' nm '' ci 'cGFE1155' flnx
+FLNX id 'cGFE1156' nm '' ci 'cGFE1156' flnx
+FLNX id 'cGFE1157' nm '' ci 'cGFE1157' flnx
+FLNX id 'cGFE1160' nm '' ci 'cGFE1160' flnx
+FLNX id 'cGFE1161' nm '' ci 'cGFE1161' flnx
+FLNX id 'cGFE1162' nm '' ci 'cGFE1162' flnx
+FLNX id 'cGFE1164' nm '' ci 'cGFE1164' flnx
+FLNX id 'cGFE1165' nm '' ci 'cGFE1165' flnx
+FLNX id 'cGFE1166' nm '' ci 'cGFE1166' flnx
+FLNX id 'cGFE1167' nm '' ci 'cGFE1167' flnx
+FLNX id 'cGFE1168' nm '' ci 'cGFE1168' flnx
+FLNX id 'cGFE1169' nm '' ci 'cGFE1169' flnx
+FLNX id 'cGFE1170' nm '' ci 'cGFE1170' flnx
+FLNX id 'cGFE1171' nm '' ci 'cGFE1171' flnx
+FLNX id 'cGFE1172' nm '' ci 'cGFE1172' flnx
+FLNX id 'cGFE1173' nm '' ci 'cGFE1173' flnx
+FLNX id 'cGFE1174' nm '' ci 'cGFE1174' flnx
+FLNX id 'cGFE1175' nm '' ci 'cGFE1175' flnx
+FLNX id 'cGFE1176' nm '' ci 'cGFE1176' flnx
+FLNX id 'cGFE1177' nm '' ci 'cGFE1177' flnx
+FLNX id 'cGFE1178' nm '' ci 'cGFE1178' flnx
+FLNX id 'cGFE1179' nm '' ci 'cGFE1179' flnx
+FLNX id 'cGFE1180' nm '' ci 'cGFE1180' flnx
+FLNX id 'cGFE1181' nm '' ci 'cGFE1181' flnx
+FLNX id 'cGFE1182' nm '' ci 'cGFE1182' flnx
+FLNX id 'cGFE1183' nm '' ci 'cGFE1183' flnx
+FLNX id 'cGFE1184' nm '' ci 'cGFE1184' flnx
+FLNX id 'cGFE1185' nm '' ci 'cGFE1185' flnx
+FLNX id 'cGFE1186' nm '' ci 'cGFE1186' flnx
+FLNX id 'cGFE1187' nm '' ci 'cGFE1187' flnx
+FLNX id 'cGFE1188' nm '' ci 'cGFE1188' flnx
+FLNX id 'cGFE1189' nm '' ci 'cGFE1189' flnx
+FLNX id 'cGFE1190' nm '' ci 'cGFE1190' flnx
+FLNX id 'cGFE1191' nm '' ci 'cGFE1191' flnx
+FLNX id 'cGFE1192' nm '' ci 'cGFE1192' flnx
+FLNX id 'cGFE1193' nm '' ci 'cGFE1193' flnx
+FLNX id 'cGFE1194' nm '' ci 'cGFE1194' flnx
+FLNX id 'cGFE1195' nm '' ci 'cGFE1195' flnx
+FLNX id 'cGFE1196' nm '' ci 'cGFE1196' flnx
+FLNX id 'cGFE1197' nm '' ci 'cGFE1197' flnx
+FLNX id 'cGFE1198' nm '' ci 'cGFE1198' flnx
+FLNX id 'cGFE1199' nm '' ci 'cGFE1199' flnx
+FLNX id 'cGFE1200' nm '' ci 'cGFE1200' flnx
+FLNX id 'cGFE1201' nm '' ci 'cGFE1201' flnx
+FLNX id 'cGFE1202' nm '' ci 'cGFE1202' flnx
+FLNX id 'cGFE1203' nm '' ci 'cGFE1203' flnx
+FLNX id 'cGFE1204' nm '' ci 'cGFE1204' flnx
+FLNX id 'cGFE1205' nm '' ci 'cGFE1205' flnx
+FLNX id 'cGFE1206' nm '' ci 'cGFE1206' flnx
+FLNX id 'cGFE1207' nm '' ci 'cGFE1207' flnx
+FLNX id 'cGFE1208' nm '' ci 'cGFE1208' flnx
+FLNX id 'cGFE1209' nm '' ci 'cGFE1209' flnx
+FLNX id 'cGFE1210' nm '' ci 'cGFE1210' flnx
+FLNX id 'cGFE1211' nm '' ci 'cGFE1211' flnx
+FLNX id 'cGFE1212' nm '' ci 'cGFE1212' flnx
+FLNX id 'cGFE1213' nm '' ci 'cGFE1213' flnx
+FLNX id 'cGFE1214' nm '' ci 'cGFE1214' flnx
+FLNX id 'cGFE1215' nm '' ci 'cGFE1215' flnx
+FLNX id 'cGFE1216' nm '' ci 'cGFE1216' flnx
+FLNX id 'cGFE1217' nm '' ci 'cGFE1217' flnx
+FLNX id 'cGFE1218' nm '' ci 'cGFE1218' flnx
+FLNX id 'cGFE1219' nm '' ci 'cGFE1219' flnx
+FLNX id 'cGFE1220' nm '' ci 'cGFE1220' flnx
+FLNX id 'cGFE1221' nm '' ci 'cGFE1221' flnx
+FLNX id 'cGFE1222' nm '' ci 'cGFE1222' flnx
+FLNX id 'cGFE1223' nm '' ci 'cGFE1223' flnx
+FLNX id 'cGFE1224' nm '' ci 'cGFE1224' flnx
+FLNX id 'cGFE1225' nm '' ci 'cGFE1225' flnx
+FLNX id 'cGFE1226' nm '' ci 'cGFE1226' flnx
+FLNX id 'cGFE1227' nm '' ci 'cGFE1227' flnx
+FLNX id 'cGFE1228' nm '' ci 'cGFE1228' flnx
+FLNX id 'cGFE1229' nm '' ci 'cGFE1229' flnx
+FLNX id 'cGFE1230' nm '' ci 'cGFE1230' flnx
+FLNX id 'cGFE1231' nm '' ci 'cGFE1231' flnx
+FLNX id 'cGFE1232' nm '' ci 'cGFE1232' flnx
+FLNX id 'cGFE1233' nm '' ci 'cGFE1233' flnx
+FLNX id 'cGFE1234' nm '' ci 'cGFE1234' flnx
+FLNX id 'cGFE1235' nm '' ci 'cGFE1235' flnx
+FLNX id 'cGFE1236' nm '' ci 'cGFE1236' flnx
+FLNX id 'cGFE1237' nm '' ci 'cGFE1237' flnx
+FLNX id 'cGFE1238' nm '' ci 'cGFE1238' flnx
+FLNX id 'cGFE1239' nm '' ci 'cGFE1239' flnx
+FLNX id 'cGFE1240' nm '' ci 'cGFE1240' flnx
+FLNX id 'cGFE1241' nm '' ci 'cGFE1241' flnx
+FLNX id 'cGFE1242' nm '' ci 'cGFE1242' flnx
+FLNX id 'cGFE1243' nm '' ci 'cGFE1243' flnx
+FLNX id 'cGFE1244' nm '' ci 'cGFE1244' flnx
+FLNX id 'cGFE1245' nm '' ci 'cGFE1245' flnx
+FLNX id 'cGFE1246' nm '' ci 'cGFE1246' flnx
+FLNX id 'cGFE1247' nm '' ci 'cGFE1247' flnx
+FLNX id 'cGFE1248' nm '' ci 'cGFE1248' flnx
+FLNX id 'cGFE1249' nm '' ci 'cGFE1249' flnx
+FLNX id 'cGFE1250' nm '' ci 'cGFE1250' flnx
+FLNX id 'cGFE1251' nm '' ci 'cGFE1251' flnx
+FLNX id 'cGFE1252' nm '' ci 'cGFE1252' flnx
+FLNX id 'cGFE1253' nm '' ci 'cGFE1253' flnx
+FLNX id 'cGFE1254' nm '' ci 'cGFE1254' flnx
+FLNX id 'cGFE1255' nm '' ci 'cGFE1255' flnx
+FLNX id 'cGFE1256' nm '' ci 'cGFE1256' flnx
+FLNX id 'cGFE1257' nm '' ci 'cGFE1257' flnx
+FLNX id 'cGFE1258' nm '' ci 'cGFE1258' flnx
+FLNX id 'cGFE1259' nm '' ci 'cGFE1259' flnx
+FLNX id 'cGFE1260' nm '' ci 'cGFE1260' flnx
+FLNX id 'cGFE1261' nm '' ci 'cGFE1261' flnx
+FLNX id 'cGFE1262' nm '' ci 'cGFE1262' flnx
+FLNX id 'cGFE1263' nm '' ci 'cGFE1263' flnx
+FLNX id 'cGFE1264' nm '' ci 'cGFE1264' flnx
+FLNX id 'cGFE1265' nm '' ci 'cGFE1265' flnx
+FLNX id 'cGFE1266' nm '' ci 'cGFE1266' flnx
+FLNX id 'cGFE1267' nm '' ci 'cGFE1267' flnx
+FLNX id 'cGFE1268' nm '' ci 'cGFE1268' flnx
+FLNX id 'cGFE1269' nm '' ci 'cGFE1269' flnx
+FLNX id 'cGFE1270' nm '' ci 'cGFE1270' flnx
+FLNX id 'cGFE1271' nm '' ci 'cGFE1271' flnx
+FLNX id 'cGFE1272' nm '' ci 'cGFE1272' flnx
+FLNX id 'cGFE1274' nm '' ci 'cGFE1274' flnx
+FLNX id 'cGFE1275' nm '' ci 'cGFE1275' flnx
+FLNX id 'cGFE1276' nm '' ci 'cGFE1276' flnx
+FLNX id 'cGFE1277' nm '' ci 'cGFE1277' flnx
+FLNX id 'cGFE1278' nm '' ci 'cGFE1278' flnx
+FLNX id 'cGFE1279' nm '' ci 'cGFE1279' flnx
+FLNX id 'cGFE1280' nm '' ci 'cGFE1280' flnx
+FLNX id 'cGFE1281' nm '' ci 'cGFE1281' flnx
+FLNX id 'cGFE1282' nm '' ci 'cGFE1282' flnx
+FLNX id 'cGFE1283' nm '' ci 'cGFE1283' flnx
+FLNX id 'cGFE1284' nm '' ci 'cGFE1284' flnx
+FLNX id 'cGFE1286' nm '' ci 'cGFE1286' flnx
+FLNX id 'cGFE1287' nm '' ci 'cGFE1287' flnx
+FLNX id 'cGFE1288' nm '' ci 'cGFE1288' flnx
+FLNX id 'cGFE1289' nm '' ci 'cGFE1289' flnx
+FLNX id 'cGFE1290' nm '' ci 'cGFE1290' flnx
+FLNX id 'cGFE1291' nm '' ci 'cGFE1291' flnx
+FLNX id 'cGFE1292' nm '' ci 'cGFE1292' flnx
+FLNX id 'cGFE1293' nm '' ci 'cGFE1293' flnx
+FLNX id 'cGFE1294' nm '' ci 'cGFE1294' flnx
+FLNX id 'cGFE1295' nm '' ci 'cGFE1295' flnx
+FLNX id 'cGFE1296' nm '' ci 'cGFE1296' flnx
+FLNX id 'cGFE1297' nm '' ci 'cGFE1297' flnx
+FLNX id 'cGFE1298' nm '' ci 'cGFE1298' flnx
+FLNX id 'cGFE1299' nm '' ci 'cGFE1299' flnx
+FLNX id 'cGFE1300' nm '' ci 'cGFE1300' flnx
+FLNX id 'cGFE1301' nm '' ci 'cGFE1301' flnx
+FLNX id 'cGFE1302' nm '' ci 'cGFE1302' flnx
+FLNX id 'cGFE1303' nm '' ci 'cGFE1303' flnx
+FLNX id 'cGFE1304' nm '' ci 'cGFE1304' flnx
+FLNX id 'cGFE1305' nm '' ci 'cGFE1305' flnx
+FLNX id 'cGFE1306' nm '' ci 'cGFE1306' flnx
+FLNX id 'cGFE1307' nm '' ci 'cGFE1307' flnx
+FLNX id 'cGFE1308' nm '' ci 'cGFE1308' flnx
+FLNX id 'cGFE1309' nm '' ci 'cGFE1309' flnx
+FLNX id 'cGFE1103' nm '' ci 'cGFE1103' flnx
+FLNX id 'cGH4_GFE1224' nm '' ci 'cGH4_GFE1224' flnx
+FLBX id 'ltrGH2_GFE1224' nm '' ci 'GH2' lc 308.900076625972 flbx 
+FLBX id 'ltrZRO289' nm '' ci '558' lc 956.02766056349 flbx 
+FLBX id 'ltrZRO286' nm '' ci '559' lc 345.160126794629 flbx 
+FLBX id 'ltrZRO292' nm '' ci '559' lc 3744.27313077685 flbx 

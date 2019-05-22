@@ -12,6 +12,7 @@ using DelftTools.Utils.Editing;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using GeoAPI.Extensions.Feature;
+using log4net;
 using NetTopologySuite.Extensions.Features;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
@@ -22,75 +23,57 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
         [Category("Flow")]
         [Description("Water level")]
         WaterLevel,
-
         [Category("Flow")]
         [Description("Velocity")]
         Velocity,
-
         [Category("Flow")]
         [Description("Discharge")]
         Discharge,
-
         [Category("Flow")]
         [Description("Riemann invariant")]
         Riemann,
-
         [Category("Flow")]
         [Description("Riemann velocity")]
         RiemannVelocity,
-
         [Category("Flow")]
         [Description("Neumann gradient")]
         Neumann,
-
         [Category("Flow")]
         [Description("Outflow")]
         Outflow,
-
         [Category("Flow")]
         [Description("Normal velocity")]
         NormalVelocity,
-
         [Category("Flow")]
         [Description("Tangential velocity")]
         TangentVelocity,
-
         [Category("Flow")]
         [Description("Velocity vector")]
         VelocityVector,
-
         [Category("Salinity")]
         [Description("Salinity")]
         Salinity,
-
         [Category("Temperature")]
         [Description("Temperature")]
         Temperature,
-
         [Category("Sediment concentration")]
         [Description("Sediment concentration")]
         SedimentConcentration,
-
         [Category("Morphology")]
         [Description("Bed level prescribed")]
         MorphologyBedLevelPrescribed,
-
         [Category("Morphology")]
         [Description("Bed level change prescribed")]
         MorphologyBedLevelChangePrescribed,
-
         [Category("Morphology")]
         [Description("Bed load transport")]
         MorphologyBedLoadTransport,
-
         [Category("Morphology")]
         [Description("Bed level unconstrained")]
         MorphologyNoBedLevelConstraint,
-
         [Category("Morphology")]
         [Description("Bed level fixed")]
         MorphologyBedLevelFixed,
-
         [Category("Tracer")]
         [Description("Tracer")]
         Tracer,
@@ -100,466 +83,138 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
     public class FlowBoundaryCondition : BoundaryCondition
     {
         /// <summary>
-        /// Constrained BC combinations within a set. Quantities not appearing anywhere in these lists are considered to be
-        /// unconstrained,
+        /// Constrained BC combinations within a set. Quantities not appearing anywhere in these lists are considered to be unconstrained, 
         /// i.e. the user can combine these with any quantity. (e.g. SedimentConcentration)
         /// </summary>
         public static readonly IList<IList<FlowBoundaryQuantityType>> ValidBoundaryConditionCombinations = new[]
         {
-            /*
-                Note: When adding combinations here, also check the Morphology related combinations (below)
-            */
+        /*
+            Note: When adding combinations here, also check the Morphology related combinations (below)
+        */
 
             // WaterLevel & Combinations
-            new[]
-            {
-                FlowBoundaryQuantityType.WaterLevel
-            },
-            new[]
-            {
-                FlowBoundaryQuantityType.WaterLevel,
-                FlowBoundaryQuantityType.NormalVelocity
-            },
-            new[]
-            {
-                FlowBoundaryQuantityType.WaterLevel,
-                FlowBoundaryQuantityType.TangentVelocity
-            },
-            new[]
-            {
-                FlowBoundaryQuantityType.WaterLevel,
-                FlowBoundaryQuantityType.NormalVelocity,
-                FlowBoundaryQuantityType.TangentVelocity
-            },
-            new[]
-            {
-                FlowBoundaryQuantityType.WaterLevel,
-                FlowBoundaryQuantityType.VelocityVector
-            },
-
+            new[] {FlowBoundaryQuantityType.WaterLevel},
+            new[] {FlowBoundaryQuantityType.WaterLevel, FlowBoundaryQuantityType.NormalVelocity},
+            new[] {FlowBoundaryQuantityType.WaterLevel, FlowBoundaryQuantityType.TangentVelocity},
+            new[] {FlowBoundaryQuantityType.WaterLevel, FlowBoundaryQuantityType.NormalVelocity, FlowBoundaryQuantityType.TangentVelocity},
+            new[] {FlowBoundaryQuantityType.WaterLevel, FlowBoundaryQuantityType.VelocityVector},
+            
             // Velocity & combinations
-            new[]
-            {
-                FlowBoundaryQuantityType.Velocity
-            },
+            new[] {FlowBoundaryQuantityType.Velocity},
 
             // Riemann & Combinations
-            new[]
-            {
-                FlowBoundaryQuantityType.Riemann
-            },
-            new[]
-            {
-                FlowBoundaryQuantityType.Riemann,
-                FlowBoundaryQuantityType.TangentVelocity
-            },
+            new[] {FlowBoundaryQuantityType.Riemann},
+            new[] {FlowBoundaryQuantityType.Riemann, FlowBoundaryQuantityType.TangentVelocity},
 
             // RiemannVelocity & Combinations
-            new[]
-            {
-                FlowBoundaryQuantityType.RiemannVelocity
-            },
+            new[] {FlowBoundaryQuantityType.RiemannVelocity},
 
             // Neumann & Combinations
-            new[]
-            {
-                FlowBoundaryQuantityType.Neumann
-            },
+            new[] {FlowBoundaryQuantityType.Neumann},
 
             // Discharge & Combinations
-            new[]
-            {
-                FlowBoundaryQuantityType.Discharge
-            },
+            new[] {FlowBoundaryQuantityType.Discharge},
 
             // Outflow & Combinations
-            new[]
-            {
-                FlowBoundaryQuantityType.Outflow
-            },
+            new[] {FlowBoundaryQuantityType.Outflow},
 
             #region Morphology related combinations
 
-            /*
-                Note: Morphology related quantities are mutually exclusive (i.e. cannot be combined with each other)
-                        The exception being SedimentConcentration which can be combined with Everything (hense it does not appear in these lists)
-            */
+        /*
+            Note: Morphology related quantities are mutually exclusive (i.e. cannot be combined with each other)
+                    The exception being SedimentConcentration which can be combined with Everything (hense it does not appear in these lists)
+        */
 
-            new[]
-            {
-                FlowBoundaryQuantityType.MorphologyBedLevelFixed
-            },
-            new[]
-            {
-                FlowBoundaryQuantityType.MorphologyNoBedLevelConstraint
-            },
-            new[]
-            {
-                FlowBoundaryQuantityType.MorphologyBedLevelPrescribed
-            },
-            new[]
-            {
-                FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed
-            },
-            new[]
-            {
-                FlowBoundaryQuantityType.MorphologyBedLoadTransport
-            },
-
+            new[] {FlowBoundaryQuantityType.MorphologyBedLevelFixed},
+            new[] {FlowBoundaryQuantityType.MorphologyNoBedLevelConstraint},
+            new[] {FlowBoundaryQuantityType.MorphologyBedLevelPrescribed},
+            new[] {FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed},
+            new[] {FlowBoundaryQuantityType.MorphologyBedLoadTransport},
+            
             // WaterLevel & Combinations          
-            new[]
-            {
-                FlowBoundaryQuantityType.WaterLevel,
-                FlowBoundaryQuantityType.MorphologyBedLevelFixed
-            },
-            new[]
-            {
-                FlowBoundaryQuantityType.WaterLevel,
-                FlowBoundaryQuantityType.NormalVelocity,
-                FlowBoundaryQuantityType.MorphologyBedLevelFixed
-            },
-            new[]
-            {
-                FlowBoundaryQuantityType.WaterLevel,
-                FlowBoundaryQuantityType.TangentVelocity,
-                FlowBoundaryQuantityType.MorphologyBedLevelFixed
-            },
-            new[]
-            {
-                FlowBoundaryQuantityType.WaterLevel,
-                FlowBoundaryQuantityType.NormalVelocity,
-                FlowBoundaryQuantityType.TangentVelocity,
-                FlowBoundaryQuantityType.MorphologyBedLevelFixed
-            },
-            new[]
-            {
-                FlowBoundaryQuantityType.WaterLevel,
-                FlowBoundaryQuantityType.VelocityVector,
-                FlowBoundaryQuantityType.MorphologyBedLevelFixed
-            },
+            new[] {FlowBoundaryQuantityType.WaterLevel, FlowBoundaryQuantityType.MorphologyBedLevelFixed},
+            new[] {FlowBoundaryQuantityType.WaterLevel, FlowBoundaryQuantityType.NormalVelocity, FlowBoundaryQuantityType.MorphologyBedLevelFixed},
+            new[] {FlowBoundaryQuantityType.WaterLevel, FlowBoundaryQuantityType.TangentVelocity, FlowBoundaryQuantityType.MorphologyBedLevelFixed},
+            new[] {FlowBoundaryQuantityType.WaterLevel, FlowBoundaryQuantityType.NormalVelocity, FlowBoundaryQuantityType.TangentVelocity, FlowBoundaryQuantityType.MorphologyBedLevelFixed},
+            new[] {FlowBoundaryQuantityType.WaterLevel, FlowBoundaryQuantityType.VelocityVector, FlowBoundaryQuantityType.MorphologyBedLevelFixed},
 
-            new[]
-            {
-                FlowBoundaryQuantityType.WaterLevel,
-                FlowBoundaryQuantityType.MorphologyNoBedLevelConstraint
-            },
-            new[]
-            {
-                FlowBoundaryQuantityType.WaterLevel,
-                FlowBoundaryQuantityType.NormalVelocity,
-                FlowBoundaryQuantityType.MorphologyNoBedLevelConstraint
-            },
-            new[]
-            {
-                FlowBoundaryQuantityType.WaterLevel,
-                FlowBoundaryQuantityType.TangentVelocity,
-                FlowBoundaryQuantityType.MorphologyNoBedLevelConstraint
-            },
-            new[]
-            {
-                FlowBoundaryQuantityType.WaterLevel,
-                FlowBoundaryQuantityType.NormalVelocity,
-                FlowBoundaryQuantityType.TangentVelocity,
-                FlowBoundaryQuantityType.MorphologyNoBedLevelConstraint
-            },
-            new[]
-            {
-                FlowBoundaryQuantityType.WaterLevel,
-                FlowBoundaryQuantityType.VelocityVector,
-                FlowBoundaryQuantityType.MorphologyNoBedLevelConstraint
-            },
+            new[] {FlowBoundaryQuantityType.WaterLevel, FlowBoundaryQuantityType.MorphologyNoBedLevelConstraint},
+            new[] {FlowBoundaryQuantityType.WaterLevel, FlowBoundaryQuantityType.NormalVelocity, FlowBoundaryQuantityType.MorphologyNoBedLevelConstraint},
+            new[] {FlowBoundaryQuantityType.WaterLevel, FlowBoundaryQuantityType.TangentVelocity, FlowBoundaryQuantityType.MorphologyNoBedLevelConstraint},
+            new[] {FlowBoundaryQuantityType.WaterLevel, FlowBoundaryQuantityType.NormalVelocity, FlowBoundaryQuantityType.TangentVelocity, FlowBoundaryQuantityType.MorphologyNoBedLevelConstraint},
+            new[] {FlowBoundaryQuantityType.WaterLevel, FlowBoundaryQuantityType.VelocityVector, FlowBoundaryQuantityType.MorphologyNoBedLevelConstraint},
 
-            new[]
-            {
-                FlowBoundaryQuantityType.WaterLevel,
-                FlowBoundaryQuantityType.MorphologyBedLevelPrescribed
-            },
-            new[]
-            {
-                FlowBoundaryQuantityType.WaterLevel,
-                FlowBoundaryQuantityType.NormalVelocity,
-                FlowBoundaryQuantityType.MorphologyBedLevelPrescribed
-            },
-            new[]
-            {
-                FlowBoundaryQuantityType.WaterLevel,
-                FlowBoundaryQuantityType.TangentVelocity,
-                FlowBoundaryQuantityType.MorphologyBedLevelPrescribed
-            },
-            new[]
-            {
-                FlowBoundaryQuantityType.WaterLevel,
-                FlowBoundaryQuantityType.NormalVelocity,
-                FlowBoundaryQuantityType.TangentVelocity,
-                FlowBoundaryQuantityType.MorphologyBedLevelPrescribed
-            },
-            new[]
-            {
-                FlowBoundaryQuantityType.WaterLevel,
-                FlowBoundaryQuantityType.VelocityVector,
-                FlowBoundaryQuantityType.MorphologyBedLevelPrescribed
-            },
+            new[] {FlowBoundaryQuantityType.WaterLevel, FlowBoundaryQuantityType.MorphologyBedLevelPrescribed},
+            new[] {FlowBoundaryQuantityType.WaterLevel, FlowBoundaryQuantityType.NormalVelocity, FlowBoundaryQuantityType.MorphologyBedLevelPrescribed},
+            new[] {FlowBoundaryQuantityType.WaterLevel, FlowBoundaryQuantityType.TangentVelocity, FlowBoundaryQuantityType.MorphologyBedLevelPrescribed},
+            new[] {FlowBoundaryQuantityType.WaterLevel, FlowBoundaryQuantityType.NormalVelocity, FlowBoundaryQuantityType.TangentVelocity, FlowBoundaryQuantityType.MorphologyBedLevelPrescribed},
+            new[] {FlowBoundaryQuantityType.WaterLevel, FlowBoundaryQuantityType.VelocityVector, FlowBoundaryQuantityType.MorphologyBedLevelPrescribed},
 
-            new[]
-            {
-                FlowBoundaryQuantityType.WaterLevel,
-                FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed
-            },
-            new[]
-            {
-                FlowBoundaryQuantityType.WaterLevel,
-                FlowBoundaryQuantityType.NormalVelocity,
-                FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed
-            },
-            new[]
-            {
-                FlowBoundaryQuantityType.WaterLevel,
-                FlowBoundaryQuantityType.TangentVelocity,
-                FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed
-            },
-            new[]
-            {
-                FlowBoundaryQuantityType.WaterLevel,
-                FlowBoundaryQuantityType.NormalVelocity,
-                FlowBoundaryQuantityType.TangentVelocity,
-                FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed
-            },
-            new[]
-            {
-                FlowBoundaryQuantityType.WaterLevel,
-                FlowBoundaryQuantityType.VelocityVector,
-                FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed
-            },
+            new[] {FlowBoundaryQuantityType.WaterLevel, FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed},
+            new[] {FlowBoundaryQuantityType.WaterLevel, FlowBoundaryQuantityType.NormalVelocity, FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed},
+            new[] {FlowBoundaryQuantityType.WaterLevel, FlowBoundaryQuantityType.TangentVelocity, FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed},
+            new[] {FlowBoundaryQuantityType.WaterLevel, FlowBoundaryQuantityType.NormalVelocity, FlowBoundaryQuantityType.TangentVelocity, FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed},
+            new[] {FlowBoundaryQuantityType.WaterLevel, FlowBoundaryQuantityType.VelocityVector, FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed},
 
-            new[]
-            {
-                FlowBoundaryQuantityType.WaterLevel,
-                FlowBoundaryQuantityType.MorphologyBedLoadTransport
-            },
-            new[]
-            {
-                FlowBoundaryQuantityType.WaterLevel,
-                FlowBoundaryQuantityType.NormalVelocity,
-                FlowBoundaryQuantityType.MorphologyBedLoadTransport
-            },
-            new[]
-            {
-                FlowBoundaryQuantityType.WaterLevel,
-                FlowBoundaryQuantityType.TangentVelocity,
-                FlowBoundaryQuantityType.MorphologyBedLoadTransport
-            },
-            new[]
-            {
-                FlowBoundaryQuantityType.WaterLevel,
-                FlowBoundaryQuantityType.NormalVelocity,
-                FlowBoundaryQuantityType.TangentVelocity,
-                FlowBoundaryQuantityType.MorphologyBedLoadTransport
-            },
-            new[]
-            {
-                FlowBoundaryQuantityType.WaterLevel,
-                FlowBoundaryQuantityType.VelocityVector,
-                FlowBoundaryQuantityType.MorphologyBedLoadTransport
-            },
+            new[] {FlowBoundaryQuantityType.WaterLevel, FlowBoundaryQuantityType.MorphologyBedLoadTransport},
+            new[] {FlowBoundaryQuantityType.WaterLevel, FlowBoundaryQuantityType.NormalVelocity, FlowBoundaryQuantityType.MorphologyBedLoadTransport},
+            new[] {FlowBoundaryQuantityType.WaterLevel, FlowBoundaryQuantityType.TangentVelocity, FlowBoundaryQuantityType.MorphologyBedLoadTransport},
+            new[] {FlowBoundaryQuantityType.WaterLevel, FlowBoundaryQuantityType.NormalVelocity, FlowBoundaryQuantityType.TangentVelocity, FlowBoundaryQuantityType.MorphologyBedLoadTransport},
+            new[] {FlowBoundaryQuantityType.WaterLevel, FlowBoundaryQuantityType.VelocityVector, FlowBoundaryQuantityType.MorphologyBedLoadTransport},
 
             // Velocity & combinations
-            new[]
-            {
-                FlowBoundaryQuantityType.Velocity,
-                FlowBoundaryQuantityType.MorphologyBedLevelFixed
-            },
-            new[]
-            {
-                FlowBoundaryQuantityType.Velocity,
-                FlowBoundaryQuantityType.MorphologyNoBedLevelConstraint
-            },
-            new[]
-            {
-                FlowBoundaryQuantityType.Velocity,
-                FlowBoundaryQuantityType.MorphologyBedLevelPrescribed
-            },
-            new[]
-            {
-                FlowBoundaryQuantityType.Velocity,
-                FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed
-            },
-            new[]
-            {
-                FlowBoundaryQuantityType.Velocity,
-                FlowBoundaryQuantityType.MorphologyBedLoadTransport
-            },
+            new[] {FlowBoundaryQuantityType.Velocity, FlowBoundaryQuantityType.MorphologyBedLevelFixed},
+            new[] {FlowBoundaryQuantityType.Velocity, FlowBoundaryQuantityType.MorphologyNoBedLevelConstraint},
+            new[] {FlowBoundaryQuantityType.Velocity, FlowBoundaryQuantityType.MorphologyBedLevelPrescribed},
+            new[] {FlowBoundaryQuantityType.Velocity, FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed},
+            new[] {FlowBoundaryQuantityType.Velocity, FlowBoundaryQuantityType.MorphologyBedLoadTransport},
 
             // Riemann & Combinations
-            new[]
-            {
-                FlowBoundaryQuantityType.Riemann,
-                FlowBoundaryQuantityType.MorphologyBedLevelFixed
-            },
-            new[]
-            {
-                FlowBoundaryQuantityType.Riemann,
-                FlowBoundaryQuantityType.MorphologyNoBedLevelConstraint
-            },
-            new[]
-            {
-                FlowBoundaryQuantityType.Riemann,
-                FlowBoundaryQuantityType.MorphologyBedLevelPrescribed
-            },
-            new[]
-            {
-                FlowBoundaryQuantityType.Riemann,
-                FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed
-            },
-            new[]
-            {
-                FlowBoundaryQuantityType.Riemann,
-                FlowBoundaryQuantityType.MorphologyBedLoadTransport
-            },
+            new[] {FlowBoundaryQuantityType.Riemann, FlowBoundaryQuantityType.MorphologyBedLevelFixed},
+            new[] {FlowBoundaryQuantityType.Riemann, FlowBoundaryQuantityType.MorphologyNoBedLevelConstraint},
+            new[] {FlowBoundaryQuantityType.Riemann, FlowBoundaryQuantityType.MorphologyBedLevelPrescribed},
+            new[] {FlowBoundaryQuantityType.Riemann, FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed},
+            new[] {FlowBoundaryQuantityType.Riemann, FlowBoundaryQuantityType.MorphologyBedLoadTransport},
 
-            new[]
-            {
-                FlowBoundaryQuantityType.Riemann,
-                FlowBoundaryQuantityType.TangentVelocity,
-                FlowBoundaryQuantityType.MorphologyBedLevelFixed
-            },
-            new[]
-            {
-                FlowBoundaryQuantityType.Riemann,
-                FlowBoundaryQuantityType.TangentVelocity,
-                FlowBoundaryQuantityType.MorphologyNoBedLevelConstraint
-            },
-            new[]
-            {
-                FlowBoundaryQuantityType.Riemann,
-                FlowBoundaryQuantityType.TangentVelocity,
-                FlowBoundaryQuantityType.MorphologyBedLevelPrescribed
-            },
-            new[]
-            {
-                FlowBoundaryQuantityType.Riemann,
-                FlowBoundaryQuantityType.TangentVelocity,
-                FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed
-            },
-            new[]
-            {
-                FlowBoundaryQuantityType.Riemann,
-                FlowBoundaryQuantityType.TangentVelocity,
-                FlowBoundaryQuantityType.MorphologyBedLoadTransport
-            },
-
+            new[] {FlowBoundaryQuantityType.Riemann, FlowBoundaryQuantityType.TangentVelocity, FlowBoundaryQuantityType.MorphologyBedLevelFixed},
+            new[] {FlowBoundaryQuantityType.Riemann, FlowBoundaryQuantityType.TangentVelocity, FlowBoundaryQuantityType.MorphologyNoBedLevelConstraint},
+            new[] {FlowBoundaryQuantityType.Riemann, FlowBoundaryQuantityType.TangentVelocity, FlowBoundaryQuantityType.MorphologyBedLevelPrescribed},
+            new[] {FlowBoundaryQuantityType.Riemann, FlowBoundaryQuantityType.TangentVelocity, FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed},
+            new[] {FlowBoundaryQuantityType.Riemann, FlowBoundaryQuantityType.TangentVelocity, FlowBoundaryQuantityType.MorphologyBedLoadTransport},
+            
             // RiemannVelocity & Combinations
-            new[]
-            {
-                FlowBoundaryQuantityType.RiemannVelocity,
-                FlowBoundaryQuantityType.MorphologyBedLevelFixed
-            },
-            new[]
-            {
-                FlowBoundaryQuantityType.RiemannVelocity,
-                FlowBoundaryQuantityType.MorphologyNoBedLevelConstraint
-            },
-            new[]
-            {
-                FlowBoundaryQuantityType.RiemannVelocity,
-                FlowBoundaryQuantityType.MorphologyBedLevelPrescribed
-            },
-            new[]
-            {
-                FlowBoundaryQuantityType.RiemannVelocity,
-                FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed
-            },
-            new[]
-            {
-                FlowBoundaryQuantityType.RiemannVelocity,
-                FlowBoundaryQuantityType.MorphologyBedLoadTransport
-            },
-
+            new[] {FlowBoundaryQuantityType.RiemannVelocity, FlowBoundaryQuantityType.MorphologyBedLevelFixed},
+            new[] {FlowBoundaryQuantityType.RiemannVelocity, FlowBoundaryQuantityType.MorphologyNoBedLevelConstraint},
+            new[] {FlowBoundaryQuantityType.RiemannVelocity, FlowBoundaryQuantityType.MorphologyBedLevelPrescribed},
+            new[] {FlowBoundaryQuantityType.RiemannVelocity, FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed},
+            new[] {FlowBoundaryQuantityType.RiemannVelocity, FlowBoundaryQuantityType.MorphologyBedLoadTransport},
+            
             // Neumann & Combinations
-            new[]
-            {
-                FlowBoundaryQuantityType.Neumann,
-                FlowBoundaryQuantityType.MorphologyBedLevelFixed
-            },
-            new[]
-            {
-                FlowBoundaryQuantityType.Neumann,
-                FlowBoundaryQuantityType.MorphologyNoBedLevelConstraint
-            },
-            new[]
-            {
-                FlowBoundaryQuantityType.Neumann,
-                FlowBoundaryQuantityType.MorphologyBedLevelPrescribed
-            },
-            new[]
-            {
-                FlowBoundaryQuantityType.Neumann,
-                FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed
-            },
-            new[]
-            {
-                FlowBoundaryQuantityType.Neumann,
-                FlowBoundaryQuantityType.MorphologyBedLoadTransport
-            },
-
+            new[] {FlowBoundaryQuantityType.Neumann, FlowBoundaryQuantityType.MorphologyBedLevelFixed},
+            new[] {FlowBoundaryQuantityType.Neumann, FlowBoundaryQuantityType.MorphologyNoBedLevelConstraint},
+            new[] {FlowBoundaryQuantityType.Neumann, FlowBoundaryQuantityType.MorphologyBedLevelPrescribed},
+            new[] {FlowBoundaryQuantityType.Neumann, FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed},
+            new[] {FlowBoundaryQuantityType.Neumann, FlowBoundaryQuantityType.MorphologyBedLoadTransport},
+            
             // Discharge & Combinations
-            new[]
-            {
-                FlowBoundaryQuantityType.Discharge,
-                FlowBoundaryQuantityType.MorphologyBedLevelFixed
-            },
-            new[]
-            {
-                FlowBoundaryQuantityType.Discharge,
-                FlowBoundaryQuantityType.MorphologyNoBedLevelConstraint
-            },
-            new[]
-            {
-                FlowBoundaryQuantityType.Discharge,
-                FlowBoundaryQuantityType.MorphologyBedLevelPrescribed
-            },
-            new[]
-            {
-                FlowBoundaryQuantityType.Discharge,
-                FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed
-            },
-            new[]
-            {
-                FlowBoundaryQuantityType.Discharge,
-                FlowBoundaryQuantityType.MorphologyBedLoadTransport
-            },
-
+            new[] {FlowBoundaryQuantityType.Discharge, FlowBoundaryQuantityType.MorphologyBedLevelFixed},
+            new[] {FlowBoundaryQuantityType.Discharge, FlowBoundaryQuantityType.MorphologyNoBedLevelConstraint},
+            new[] {FlowBoundaryQuantityType.Discharge, FlowBoundaryQuantityType.MorphologyBedLevelPrescribed},
+            new[] {FlowBoundaryQuantityType.Discharge, FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed},
+            new[] {FlowBoundaryQuantityType.Discharge, FlowBoundaryQuantityType.MorphologyBedLoadTransport},
+            
             // Outflow & Combinations
-            new[]
-            {
-                FlowBoundaryQuantityType.Outflow,
-                FlowBoundaryQuantityType.MorphologyBedLevelFixed
-            },
-            new[]
-            {
-                FlowBoundaryQuantityType.Outflow,
-                FlowBoundaryQuantityType.MorphologyNoBedLevelConstraint
-            },
-            new[]
-            {
-                FlowBoundaryQuantityType.Outflow,
-                FlowBoundaryQuantityType.MorphologyBedLevelPrescribed
-            },
-            new[]
-            {
-                FlowBoundaryQuantityType.Outflow,
-                FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed
-            },
-            new[]
-            {
-                FlowBoundaryQuantityType.Outflow,
-                FlowBoundaryQuantityType.MorphologyBedLoadTransport
-            },
-
+            new[] {FlowBoundaryQuantityType.Outflow, FlowBoundaryQuantityType.MorphologyBedLevelFixed},
+            new[] {FlowBoundaryQuantityType.Outflow, FlowBoundaryQuantityType.MorphologyNoBedLevelConstraint},
+            new[] {FlowBoundaryQuantityType.Outflow, FlowBoundaryQuantityType.MorphologyBedLevelPrescribed},
+            new[] {FlowBoundaryQuantityType.Outflow, FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed},
+            new[] {FlowBoundaryQuantityType.Outflow, FlowBoundaryQuantityType.MorphologyBedLoadTransport},
+            
             #endregion
         };
 
         public static readonly IList<FlowBoundaryQuantityType> AlwaysAllowedQuantities =
-            Enum.GetValues(typeof(FlowBoundaryQuantityType))
+            Enum.GetValues(typeof (FlowBoundaryQuantityType))
                 .Cast<FlowBoundaryQuantityType>()
                 .Except(ValidBoundaryConditionCombinations.SelectMany(l => l).Distinct())
                 .ToList();
@@ -580,7 +235,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
         }
 
         public static string GetDescription(FlowBoundaryQuantityType flowBoundaryQuantityType,
-                                            BoundaryConditionDataType boundaryConditionDataType)
+            BoundaryConditionDataType boundaryConditionDataType)
         {
             return GetDescription(flowBoundaryQuantityType) + " (" +
                    GetDescription(boundaryConditionDataType) + ")";
@@ -588,30 +243,29 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
 
         public static string GetProcessNameForQuantity(FlowBoundaryQuantityType flowQuantity)
         {
-            List<CategoryAttribute> attributes =
-                typeof(FlowBoundaryQuantityType).GetField(flowQuantity.ToString())
-                                                .GetCustomAttributes(typeof(CategoryAttribute), false)
-                                                .OfType<CategoryAttribute>()
-                                                .ToList();
+            var attributes =
+                typeof (FlowBoundaryQuantityType).GetField(flowQuantity.ToString())
+                                                 .GetCustomAttributes(typeof (CategoryAttribute), false)
+                                                 .OfType<CategoryAttribute>()
+                                                 .ToList();
 
             return attributes.Any() ? attributes.First().Category : "<none>";
         }
 
         public static double GetPeriodInMinutes(double frequencyInDegPerHour)
         {
-            return frequencyInDegPerHour == 0 ? 0 : (60 * 360) / frequencyInDegPerHour;
+            return frequencyInDegPerHour == 0 ? 0 : 60*360/frequencyInDegPerHour;
         }
 
         public static double GetFrequencyInDegPerHour(double periodInMinutes)
         {
-            return periodInMinutes == 0 ? 0 : (60 * 360) / periodInMinutes;
+            return periodInMinutes == 0 ? 0 : 60*360/periodInMinutes;
         }
 
         private VerticalInterpolationType verticalInterpolationType;
         private string tracerName;
 
-        public FlowBoundaryCondition(FlowBoundaryQuantityType flowQuantity, BoundaryConditionDataType dataType) :
-            base(dataType)
+        public FlowBoundaryCondition(FlowBoundaryQuantityType flowQuantity, BoundaryConditionDataType dataType) : base(dataType)
         {
             FlowQuantity = flowQuantity;
             Offset = 0;
@@ -628,7 +282,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
 
         public TimeSpan ThatcherHarlemanTimeLag { get; set; }
 
-        public bool SupportsReflection => false;
+        public bool SupportsReflection
+        {
+            get
+            {
+                return false;
+            }
+        }
 
         public IEnumerable<VerticalInterpolationType> SupportedVerticalInterpolationTypes
         {
@@ -665,7 +325,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
                     case FlowBoundaryQuantityType.Discharge:
                         return new Unit("time", "s");
                     default:
-                        throw new ArgumentOutOfRangeException(string.Format("VariableName type {0} not supported",
+                        throw new ArgumentOutOfRangeException(String.Format("VariableName type {0} not supported",
                                                                             FlowQuantity));
                 }
             }
@@ -674,7 +334,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
         //TODO: move the vertical profile, depends upon support point.
         public VerticalInterpolationType VerticalInterpolationType
         {
-            get => verticalInterpolationType;
+            get { return verticalInterpolationType; }
             set
             {
                 if (SupportedVerticalInterpolationTypes.Contains(value))
@@ -686,43 +346,41 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
 
         public void KeepBottomLayer()
         {
-            for (var i = 0; i < PointDepthLayerDefinitions.Count; ++i)
+            for (int i = 0; i < PointDepthLayerDefinitions.Count; ++i)
             {
-                int numLayers = PointDepthLayerDefinitions[i].ProfilePoints;
-                IFunction data = PointData[i];
-                int componentsToRemove = (numLayers - 1) * (data.Components.Count / numLayers);
-                for (var j = 0; j < componentsToRemove; ++j)
+                var numLayers = PointDepthLayerDefinitions[i].ProfilePoints;
+                var data = PointData[i];
+                var componentsToRemove = (numLayers - 1)*(data.Components.Count/numLayers);
+                for (int j = 0; j < componentsToRemove; ++j)
                 {
                     data.Components.RemoveAt(j);
                 }
-
                 PointDepthLayerDefinitions[i] = new VerticalProfileDefinition();
             }
         }
 
         public void KeepTopLayer()
         {
-            for (var i = 0; i < PointDepthLayerDefinitions.Count; ++i)
+            for (int i = 0; i < PointDepthLayerDefinitions.Count; ++i)
             {
                 PointDepthLayerDefinitions[i] = new VerticalProfileDefinition();
             }
         }
 
         /// <summary>
-        /// The tracer name is only set when the <see cref="FlowQuantity" /> is set to
-        /// <see cref="FlowBoundaryQuantityType.Tracer" />.
+        /// The tracer name is only set when the <see cref="FlowQuantity"/> is set to <see cref="FlowBoundaryQuantityType.Tracer"/>.
         /// It is the postfix of tracer_{TracerName}.
         /// </summary>
         public string TracerName
         {
-            get => tracerName;
-            set
+            get { return tracerName; }
+            set 
             {
                 tracerName = value;
 
-                if (FlowQuantity == FlowBoundaryQuantityType.Tracer)
+                if(FlowQuantity == FlowBoundaryQuantityType.Tracer)
                 {
-                    foreach (IFunction function in PointData)
+                    foreach (var function in PointData)
                     {
                         function.BeginEdit(new DefaultEditAction("Tracer name"));
 
@@ -739,13 +397,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
 
         public string SedimentFractionName
         {
-            get => sedimentFractionName;
+            get { return sedimentFractionName; }
             set
             {
                 sedimentFractionName = value;
                 if (FlowQuantity == FlowBoundaryQuantityType.SedimentConcentration)
                 {
-                    foreach (IFunction function in PointData)
+                    foreach (var function in PointData)
                     {
                         function.BeginEdit(new DefaultEditAction("Sediment concentration name"));
 
@@ -757,6 +415,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
                 }
 
                 UpdateName();
+
             }
         }
 
@@ -764,10 +423,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
 
         public List<string> SedimentFractionNames { get; set; } /* Sediment fraction names are unique */
 
+
         /// <summary>
         /// Gets the name of the flow boundary quantity type.
-        /// If the Quantity type is Tracer or Sediment Concentration it will return the tracer name or sediment fraction name,
-        /// respectively.
+        /// If the Quantity type is Tracer or Sediment Concentration it will return the tracer name or sediment fraction name, respectively.
         /// </summary>
         /// <value>
         /// The name of the variable.
@@ -788,13 +447,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
             }
         }
 
-        [FeatureAttribute(Order = 3)]
+        [FeatureAttribute(Order=3)]
         [ReadOnly(true)]
         [DisplayName("Quantity")]
-        public override string VariableDescription =>
-            FlowQuantity == FlowBoundaryQuantityType.Tracer ? VariableName : GetDescription(FlowQuantity);
+        public override string VariableDescription
+        {
+            get
+            {
+                return FlowQuantity == FlowBoundaryQuantityType.Tracer ? VariableName : GetDescription(FlowQuantity);
+            }
+        }
 
-        public override string Description => GetDescription(FlowQuantity, DataType);
+        public override string Description
+        {
+            get { return GetDescription(FlowQuantity, DataType); }
+        }
 
         public override IUnit VariableUnit
         {
@@ -830,22 +497,36 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
                     case FlowBoundaryQuantityType.MorphologyBedLoadTransport:
                         return new Unit("cubic meters per second per meter", "m³/s/m");
                     default:
-                        throw new ArgumentOutOfRangeException(string.Format("VariableName type {0} not supported",
+                        throw new ArgumentOutOfRangeException(String.Format("VariableName type {0} not supported",
                                                                             FlowQuantity));
                 }
             }
         }
 
-        public override int VariableDimension => FlowQuantity == FlowBoundaryQuantityType.VelocityVector ? 2 : 1;
+        public override int VariableDimension
+        {
+            get
+            {
+                return FlowQuantity == FlowBoundaryQuantityType.VelocityVector? 2: 1;
+            }
+        }
 
-        [FeatureAttribute(Order = 2)]
+        [FeatureAttribute(Order=2)]
         [ReadOnly(true)]
         [DisplayName("Process")]
-        public override string ProcessName => GetProcessNameForQuantity(FlowQuantity);
+        public override string ProcessName
+        {
+            get { return GetProcessNameForQuantity(FlowQuantity); }
+        }
 
-        public override bool IsHorizontallyUniform =>
-            FlowQuantity == FlowBoundaryQuantityType.Discharge ||
-            DataType == BoundaryConditionDataType.Qh || IsMorphologyFlowQuantityType(FlowQuantity);
+        public override bool IsHorizontallyUniform
+        {
+            get
+            {
+                return FlowQuantity == FlowBoundaryQuantityType.Discharge ||
+                       DataType == BoundaryConditionDataType.Qh || IsMorphologyFlowQuantityType(FlowQuantity);
+            }
+        }
 
         public override bool IsVerticallyUniform
         {
@@ -855,40 +536,32 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
                      FlowQuantity == FlowBoundaryQuantityType.Temperature ||
                      FlowQuantity == FlowBoundaryQuantityType.SedimentConcentration ||
                      FlowQuantity == FlowBoundaryQuantityType.VelocityVector) &&
-                    DataType == BoundaryConditionDataType.TimeSeries)
-                {
-                    return false;
-                }
-
+                    DataType == BoundaryConditionDataType.TimeSeries) return false;
                 return true;
             }
         }
 
         public static bool MorphologyBoundaryConditionHasGeneratedData(IBoundaryCondition boundaryCondition)
         {
-            bool generatedData = boundaryCondition.DataType != BoundaryConditionDataType.Empty &&
-                                 boundaryCondition.PointData.Count(pd => pd.GetValues().Count > 0) > 0;
+            var generatedData = boundaryCondition.DataType != BoundaryConditionDataType.Empty  && boundaryCondition.PointData.Count(pd => pd.GetValues().Count > 0) > 0;
             return generatedData && IsMorphologyBoundary(boundaryCondition);
         }
 
         public static bool IsMorphologyBoundary(IBoundaryCondition boundaryCondition)
         {
             var flowBC = boundaryCondition as FlowBoundaryCondition;
-            if (flowBC == null)
-            {
-                return false;
-            }
+            if (flowBC == null) return false;
 
             return IsMorphologyFlowQuantityType(flowBC.FlowQuantity);
         }
 
         public static bool IsMorphologyFlowQuantityType(FlowBoundaryQuantityType flowQuantity)
         {
-            return flowQuantity == FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed ||
-                   flowQuantity == FlowBoundaryQuantityType.MorphologyBedLevelPrescribed ||
-                   flowQuantity == FlowBoundaryQuantityType.MorphologyBedLoadTransport ||
-                   flowQuantity == FlowBoundaryQuantityType.MorphologyNoBedLevelConstraint ||
-                   flowQuantity == FlowBoundaryQuantityType.MorphologyBedLevelFixed;
+            return (flowQuantity == FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed ||
+                    flowQuantity == FlowBoundaryQuantityType.MorphologyBedLevelPrescribed ||
+                    flowQuantity == FlowBoundaryQuantityType.MorphologyBedLoadTransport||
+                    flowQuantity == FlowBoundaryQuantityType.MorphologyNoBedLevelConstraint||
+                    flowQuantity == FlowBoundaryQuantityType.MorphologyBedLevelFixed);
         }
 
         protected override IFunction CreateFunction()
@@ -897,7 +570,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
             {
                 var function = new Function(VariableName);
                 function.Arguments.Add(new Variable<double>("Q", new Unit("cubic meters", "m³/s")));
-                function.Components.Add(new Variable<double>("h", new Unit("meters", "m")) {NoDataValue = double.NaN});
+                function.Components.Add(new Variable<double>("h", new Unit("meters", "m"))
+                {
+                    NoDataValue = Double.NaN
+                });
 
                 return function;
             }
@@ -905,20 +581,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
             if (FlowQuantity == FlowBoundaryQuantityType.MorphologyBedLoadTransport &&
                 DataType == BoundaryConditionDataType.TimeSeries)
             {
-                if (SedimentFractionNames == null || SedimentFractionNames.Count == 0)
-                {
+                if ( SedimentFractionNames == null || SedimentFractionNames.Count == 0)
                     return null;
-                }
-
                 IFunction loadTransport = new Function(VariableName);
 
                 loadTransport.Arguments.Add(new Variable<DateTime>("Time"));
-                foreach (string fraction in SedimentFractionNames)
+                foreach (var fraction in SedimentFractionNames)
                 {
                     AddSedimentFractionToFunction(loadTransport, fraction);
                 }
-
                 return loadTransport;
+
             }
 
             return base.CreateFunction();
@@ -926,12 +599,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
 
         public void AddSedimentFractionToFunction(IFunction loadTransport, string fraction)
         {
-            if (!SedimentFractionNames.Contains(fraction))
-            {
+            if( ! SedimentFractionNames.Contains(fraction) )
                 SedimentFractionNames.Add(fraction);
-            }
-
-            loadTransport.Components.Add(new Variable<double>(fraction, VariableUnit) {NoDataValue = double.NaN});
+            loadTransport.Components.Add(new Variable<double>(fraction, VariableUnit)
+            {
+                NoDataValue = double.NaN
+            });
         }
 
         public void RemoveSedimentFractionFromFunction(IFunction loadTransport, string fraction)
@@ -940,7 +613,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
             {
                 SedimentFractionNames.Remove(fraction);
             }
-
             if (loadTransport != null)
             {
                 loadTransport.Components.RemoveAllWhere(fc => fc.Name.Equals(fraction));
@@ -955,7 +627,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
             }
             else
             {
-                base.FeaturePropertyChanged(sender, e);
+                base.FeaturePropertyChanged(sender, e);                
             }
         }
 
@@ -973,26 +645,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
                 yield return BoundaryConditionDataType.Empty;
                 yield break;
             }
-
             yield return BoundaryConditionDataType.TimeSeries;
-            if (flowBoundaryQuantityType == FlowBoundaryQuantityType.Tracer)
-            {
-                yield break;
-            }
-
-            if (flowBoundaryQuantityType == FlowBoundaryQuantityType.SedimentConcentration)
-            {
-                yield break;
-            }
-
+            if (flowBoundaryQuantityType == FlowBoundaryQuantityType.Tracer) yield break;
+            if (flowBoundaryQuantityType == FlowBoundaryQuantityType.SedimentConcentration) yield break;
             if (flowBoundaryQuantityType == FlowBoundaryQuantityType.MorphologyBedLoadTransport
                 || flowBoundaryQuantityType == FlowBoundaryQuantityType.MorphologyBedLevelPrescribed
                 || flowBoundaryQuantityType == FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed
-            )
-            {
-                yield break;
-            }
-
+            ) yield break;
             yield return BoundaryConditionDataType.AstroComponents;
             yield return BoundaryConditionDataType.AstroCorrection;
             yield return BoundaryConditionDataType.Harmonics;
@@ -1004,16 +663,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
             }
         }
 
-        public bool StrictlyPositive =>
-            FlowQuantity == FlowBoundaryQuantityType.Salinity ||
-            FlowQuantity == FlowBoundaryQuantityType.Temperature ||
-            FlowQuantity == FlowBoundaryQuantityType.SedimentConcentration ||
-            FlowQuantity == FlowBoundaryQuantityType.Tracer;
+        public bool StrictlyPositive
+        {
+            get
+            {
+                return FlowQuantity == FlowBoundaryQuantityType.Salinity ||
+                       FlowQuantity == FlowBoundaryQuantityType.Temperature ||
+                       FlowQuantity == FlowBoundaryQuantityType.SedimentConcentration ||
+                       FlowQuantity == FlowBoundaryQuantityType.Tracer;
+            }
+        }
 
-        public bool SupportsThatcherHarleman =>
-            FlowQuantity == FlowBoundaryQuantityType.Salinity ||
-            FlowQuantity == FlowBoundaryQuantityType.Temperature ||
-            FlowQuantity == FlowBoundaryQuantityType.SedimentConcentration ||
-            FlowQuantity == FlowBoundaryQuantityType.Tracer;
+        public bool SupportsThatcherHarleman
+        {
+            get
+            {
+                return FlowQuantity == FlowBoundaryQuantityType.Salinity ||
+                       FlowQuantity == FlowBoundaryQuantityType.Temperature ||
+                       FlowQuantity == FlowBoundaryQuantityType.SedimentConcentration ||
+                       FlowQuantity == FlowBoundaryQuantityType.Tracer;
+            }
+        }
     }
 }

@@ -1,13 +1,12 @@
 ﻿using DelftTools.Controls;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui.Swf;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.FunctionStores;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using NetTopologySuite.Extensions.Coverages;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
 {

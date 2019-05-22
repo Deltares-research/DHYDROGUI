@@ -1,0 +1,39 @@
+[General]
+    majorVersion          = 1                   
+    minorVersion          = 0                   
+    fileType              = crossDef            
+
+[Definition]
+    id                    = CrossSection1       
+    type                  = yz                  
+    thalweg               = 0.000               
+    yzCount               = 2                   
+    yValues               = 0.000 1.000         
+    zValues               = 0.000 0.110         
+    deltaZStorage         = 0.000 0.000         
+    sectionCount          = 1                   
+    roughnessNames        = Main                
+    roughnessPositions    = 0.000 1.000         
+    roughnessTypesPos     = 1                   
+    roughnessValuesPos    = 45.000              
+    roughnessTypesNeg     = 1                   
+    roughnessValuesNeg    = 45.000              
+
+[Definition]
+    id                    = CrossSection2       
+    type                  = tabulated           
+    thalweg               = 0.000               
+    numLevels             = 2                   
+    levels                = 0.00000 10.00000    
+    flowWidths            = 51.56854 56.56854   
+    totalWidths           = 51.56854 56.56854   
+    sd_crest              = 0.000               
+    sd_flowArea           = 0.000               
+    sd_totalArea          = 0.000               
+    sd_baseLevel          = 0.000               
+    main                  = 0.000               
+    floodPlain1           = 0.000               
+    floodPlain2           = 0.000               
+    groundlayerUsed       = 0                   
+    groundlayer           = 0.000               
+

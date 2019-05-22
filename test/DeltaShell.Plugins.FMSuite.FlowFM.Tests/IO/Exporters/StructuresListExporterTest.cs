@@ -8,7 +8,6 @@ using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters;
-using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using NUnit.Framework;
 using Rhino.Mocks;
 using Is = NUnit.Framework.Is;

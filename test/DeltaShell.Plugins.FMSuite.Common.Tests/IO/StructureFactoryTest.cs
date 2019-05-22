@@ -1,9 +1,12 @@
+using System;
+using System.Collections.Generic;
 using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.TestUtils;
+using DelftTools.Utils;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.Plugins.FMSuite.Common.IO;
@@ -12,8 +15,6 @@ using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using Rhino.Mocks;
-using System;
-using System.Collections.Generic;
 using Point = NetTopologySuite.Geometries.Point;
 
 
@@ -39,17 +40,17 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 [KnownStructureProperties.LateralContractionCoefficient] = 4.0,
                 [KnownStructureProperties.GateOpeningWidth] = 8.0,
                 [KnownStructureProperties.GateLowerEdgeLevel] = 16.0,
-                [KnownStructureProperties.GateHeight] = 32.0,
+                [KnownStructureProperties.GateDoorHeight] = 32.0,
 
-                [KnownGeneralStructureProperties.Upstream2Width.GetDescription()]    = 64.0,
-                [KnownGeneralStructureProperties.Upstream1Width.GetDescription()]  = 128.0,
-                [KnownGeneralStructureProperties.Downstream1Width.GetDescription()] = 256.0,
-                [KnownGeneralStructureProperties.Downstream2Width.GetDescription()]   = 512.0,
+                [KnownGeneralStructureProperties.WidthLeftW1.GetDescription()]    = 64.0,
+                [KnownGeneralStructureProperties.WidthLeftWsdl.GetDescription()]  = 128.0,
+                [KnownGeneralStructureProperties.WidthRightWsdr.GetDescription()] = 256.0,
+                [KnownGeneralStructureProperties.WidthRightW2.GetDescription()]   = 512.0,
 
-                [KnownGeneralStructureProperties.Upstream2Level.GetDescription()]   = 1024.0,
-                [KnownGeneralStructureProperties.Upstream1Level.GetDescription()]  = 2048.0,
-                [KnownGeneralStructureProperties.Downstream1Level.GetDescription()] = 4096.0,
-                [KnownGeneralStructureProperties.Downstream2Level.GetDescription()]  = 8192.0,
+                [KnownGeneralStructureProperties.LevelLeftZb1.GetDescription()]   = 1024.0,
+                [KnownGeneralStructureProperties.LevelLeftZbsl.GetDescription()]  = 2048.0,
+                [KnownGeneralStructureProperties.LevelRightZbsr.GetDescription()] = 4096.0,
+                [KnownGeneralStructureProperties.LevelRightZb2.GetDescription()]  = 8192.0,
 
                 [KnownGeneralStructureProperties.PositiveFreeGateFlowCoefficient.GetDescription()]  = 16384.0,
                 [KnownGeneralStructureProperties.PositiveDrownGateFlowCoefficient.GetDescription()] = 32768.0,
@@ -66,9 +67,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
             timeSeriesLookUpTable = new Dictionary<string, string>()
             {
-                [KnownStructureProperties.CrestLevel] = $"weir_{KnownStructureProperties.CrestLevel}.tim",
-                [KnownStructureProperties.GateLowerEdgeLevel] = $"Gate02_{KnownStructureProperties.GateLowerEdgeLevel}.tim",
-                [KnownStructureProperties.GateOpeningWidth] = $"Gate02_{KnownStructureProperties.GateOpeningWidth}.tim",
+                [KnownStructureProperties.CrestLevel] = "weir_crest_level.tim",
+                [KnownStructureProperties.GateLowerEdgeLevel] = "Gate02_lower_edge_level.tim",
+                [KnownStructureProperties.GateOpeningWidth] = "Gate02_opening_width.tim",
             };
 
             propertyNameMap = new Dictionary<string, Dictionary<string, string>>()
@@ -80,23 +81,23 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 },
                 [StructureRegion.StructureTypeName.Gate] = new Dictionary<string, string>()
                 {
-                    [KnownStructureProperties.CrestLevel]         = KnownStructureProperties.CrestLevel,
-                    [KnownStructureProperties.CrestWidth]         = KnownStructureProperties.CrestWidth,
+                    [KnownStructureProperties.CrestLevel]         = KnownStructureProperties.GateSillLevel,
+                    [KnownStructureProperties.CrestWidth]         = KnownStructureProperties.GateSillWidth,
                     [KnownStructureProperties.GateOpeningWidth]   = KnownStructureProperties.GateOpeningWidth,
                     [KnownStructureProperties.GateLowerEdgeLevel] = KnownStructureProperties.GateLowerEdgeLevel,
-                    [KnownStructureProperties.GateHeight]     = KnownStructureProperties.GateHeight,
-                    [KnownStructureProperties.GateOpeningHorizontalDirection] = 
-                        KnownStructureProperties.GateOpeningHorizontalDirection,
+                    [KnownStructureProperties.GateDoorHeight]     = KnownStructureProperties.GateDoorHeight,
+                    [KnownStructureProperties.GateHorizontalOpeningDirection] = 
+                        KnownStructureProperties.GateHorizontalOpeningDirection,
                 },
                 [StructureRegion.StructureTypeName.GeneralStructure] = new Dictionary<string, string>()
                 {
 
-                    [KnownStructureProperties.CrestLevel]         = KnownGeneralStructureProperties.CrestLevel.GetDescription(),
-                    [KnownStructureProperties.CrestWidth]         = KnownGeneralStructureProperties.CrestWidth.GetDescription(),
-                    [KnownStructureProperties.GateOpeningWidth]   = KnownGeneralStructureProperties.GateOpeningWidth.GetDescription(),
-                    [KnownStructureProperties.GateLowerEdgeLevel] = KnownGeneralStructureProperties.GateLowerEdgeLevel.GetDescription(),
-                    [KnownStructureProperties.GateHeight]     = KnownGeneralStructureProperties.GateHeight.GetDescription(),
-                    [KnownStructureProperties.GateOpeningHorizontalDirection] = KnownGeneralStructureProperties.GateOpeningHorizontalDirection.GetDescription(),
+                    [KnownStructureProperties.CrestLevel]         = KnownGeneralStructureProperties.LevelCenter.GetDescription(),
+                    [KnownStructureProperties.CrestWidth]         = KnownGeneralStructureProperties.WidthCenter.GetDescription(),
+                    [KnownStructureProperties.GateOpeningWidth]   = KnownGeneralStructureProperties.HorizontalDoorOpeningWidth.GetDescription(),
+                    [KnownStructureProperties.GateLowerEdgeLevel] = KnownGeneralStructureProperties.GateHeight.GetDescription(),
+                    [KnownStructureProperties.GateDoorHeight]     = KnownGeneralStructureProperties.GateDoorHeightGeneralStructure.GetDescription(),
+                    [KnownStructureProperties.GateHorizontalOpeningDirection] = KnownGeneralStructureProperties.HorizontalDoorOpeningDirection.GetDescription(),
                 }
             };
 
@@ -209,13 +210,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
                 var generalStructure = new Structure2D(StructureRegion.StructureTypeName.GeneralStructure);
 
-                if (property == KnownGeneralStructureProperties.GateOpeningWidth ||
-                    property == KnownGeneralStructureProperties.GateLowerEdgeLevel ||
-                    property == KnownGeneralStructureProperties.CrestLevel)
+                if (property == KnownGeneralStructureProperties.HorizontalDoorOpeningWidth ||
+                    property == KnownGeneralStructureProperties.GateHeight ||
+                    property == KnownGeneralStructureProperties.LevelCenter)
                 {
                     generalStructure.AddProperty(property.GetDescription(), typeof(Steerable), "12.34");
                 }
-                else if (property == KnownGeneralStructureProperties.GateOpeningHorizontalDirection)
+                else if (property == KnownGeneralStructureProperties.HorizontalDoorOpeningDirection)
                 {
                     continue;
                 }
@@ -255,17 +256,17 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
             var dictionary = new Dictionary<KnownGeneralStructureProperties, object>
             {
-                {KnownGeneralStructureProperties.Upstream2Width, weirFormula.WidthLeftSideOfStructure},
-                {KnownGeneralStructureProperties.Upstream1Width, weirFormula.WidthStructureLeftSide},
-                {KnownGeneralStructureProperties.CrestWidth, weirFormula.WidthStructureCentre },
-                {KnownGeneralStructureProperties.Downstream1Width, weirFormula.WidthStructureRightSide},
-                {KnownGeneralStructureProperties.Downstream2Width, weirFormula.WidthRightSideOfStructure},
-                {KnownGeneralStructureProperties.Upstream2Level, weirFormula.BedLevelLeftSideOfStructure},
-                {KnownGeneralStructureProperties.Upstream1Level, weirFormula.BedLevelLeftSideStructure },
-                {KnownGeneralStructureProperties.CrestLevel, weirFormula.BedLevelStructureCentre },
-                {KnownGeneralStructureProperties.Downstream1Level, weirFormula.BedLevelRightSideStructure },
-                {KnownGeneralStructureProperties.Downstream2Level, weirFormula.BedLevelRightSideOfStructure },
-                {KnownGeneralStructureProperties.GateHeight, weirFormula.DoorHeight},
+                {KnownGeneralStructureProperties.WidthLeftW1, weirFormula.WidthLeftSideOfStructure},
+                {KnownGeneralStructureProperties.WidthLeftWsdl, weirFormula.WidthStructureLeftSide},
+                {KnownGeneralStructureProperties.WidthCenter, weirFormula.WidthStructureCentre },
+                {KnownGeneralStructureProperties.WidthRightWsdr, weirFormula.WidthStructureRightSide},
+                {KnownGeneralStructureProperties.WidthRightW2, weirFormula.WidthRightSideOfStructure},
+                {KnownGeneralStructureProperties.LevelLeftZb1, weirFormula.BedLevelLeftSideOfStructure},
+                {KnownGeneralStructureProperties.LevelLeftZbsl, weirFormula.BedLevelLeftSideStructure },
+                {KnownGeneralStructureProperties.LevelCenter, weirFormula.BedLevelStructureCentre },
+                {KnownGeneralStructureProperties.LevelRightZbsr, weirFormula.BedLevelRightSideStructure },
+                {KnownGeneralStructureProperties.LevelRightZb2, weirFormula.BedLevelRightSideOfStructure },
+                {KnownGeneralStructureProperties.GateDoorHeightGeneralStructure, weirFormula.DoorHeight},
                 {KnownGeneralStructureProperties.PositiveFreeGateFlowCoefficient, weirFormula.PositiveFreeGateFlow},
                 {KnownGeneralStructureProperties.PositiveDrownGateFlowCoefficient, weirFormula.PositiveDrownedGateFlow},
                 {KnownGeneralStructureProperties.PositiveFreeWeirFlowCoefficient, weirFormula.PositiveFreeWeirFlow},
@@ -277,8 +278,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 {KnownGeneralStructureProperties.NegativeDrownWeirFlowCoefficient, weirFormula.NegativeDrownedWeirFlow},
                 {KnownGeneralStructureProperties.NegativeContractionCoefficientFreeGate, weirFormula.NegativeContractionCoefficient},
                 {KnownGeneralStructureProperties.ExtraResistance, weirFormula.ExtraResistance},
-                {KnownGeneralStructureProperties.GateOpeningWidth, weirFormula.HorizontalDoorOpeningWidth},
-                {KnownGeneralStructureProperties.GateLowerEdgeLevel, weirFormula.LowerEdgeLevel}
+                {KnownGeneralStructureProperties.HorizontalDoorOpeningWidth, weirFormula.HorizontalDoorOpeningWidth},
+                {KnownGeneralStructureProperties.GateHeight, weirFormula.LowerEdgeLevel}
             };
             return dictionary;
         }
@@ -332,7 +333,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             structure.AddProperty(KnownStructureProperties.Name, typeof(string), "Weir_moving");
             structure.AddProperty(KnownStructureProperties.X, typeof(double), "680");
             structure.AddProperty(KnownStructureProperties.Y, typeof(double), "360");
-            structure.AddProperty(KnownStructureProperties.CrestLevel, typeof(Steerable), "weir_CrestLevel.tim");
+            structure.AddProperty(KnownStructureProperties.CrestLevel, typeof(Steerable), "weir_crest_level.tim");
             structure.AddProperty(KnownStructureProperties.CrestWidth, typeof (double), "23.5");
             structure.AddProperty(KnownStructureProperties.LateralContractionCoefficient, typeof(double), "0.7");
 
@@ -362,19 +363,19 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         public void CreateGateWithConstantPropertiesTest()
         {
             var schema = new StructureSchemaCsvFile().ReadStructureSchema(StructureSchemaCsvFileTest.ApplicationStructuresSchemaCsvFilePath);
-            var openingDirectionDefinition = schema.GetDefinition("gate", KnownGeneralStructureProperties.GateOpeningHorizontalDirection.GetDescription());
+            var openingDirectionDefinition = schema.GetDefinition("gate", "horizontal_opening_direction");
             
             var structure = new Structure2D("gate");
             structure.AddProperty(KnownStructureProperties.Type, typeof(string), "gate");
             structure.AddProperty(KnownStructureProperties.Name, typeof(string), "Gate01");
             structure.AddProperty(KnownStructureProperties.X, typeof(double), "500");
             structure.AddProperty(KnownStructureProperties.Y, typeof(double), "360");
-            structure.AddProperty(KnownStructureProperties.CrestLevel, typeof(Steerable), "2");
-            structure.AddProperty(KnownStructureProperties.CrestWidth,typeof(double),"55.7");
+            structure.AddProperty(KnownStructureProperties.GateSillLevel, typeof(Steerable), "2");
+            structure.AddProperty(KnownStructureProperties.GateSillWidth,typeof(double),"55.7");
             structure.AddProperty(KnownStructureProperties.GateOpeningWidth, typeof(Steerable), "1");
             structure.AddProperty(KnownStructureProperties.GateLowerEdgeLevel, typeof(Steerable), "2.8");
-            structure.AddProperty(KnownStructureProperties.GateHeight, typeof(double), "10");
-            structure.AddProperty(KnownStructureProperties.GateOpeningHorizontalDirection, openingDirectionDefinition.DataType, "from_right");
+            structure.AddProperty(KnownStructureProperties.GateDoorHeight, typeof(double), "10");
+            structure.AddProperty(KnownStructureProperties.GateHorizontalOpeningDirection, openingDirectionDefinition.DataType, "from_right");
 
             var dummyPath = TestHelper.GetTestFilePath(@"structures/nonExistentFile_structures.ini");
 
@@ -407,20 +408,20 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             var schema =
                 new StructureSchemaCsvFile().ReadStructureSchema(
                     StructureSchemaCsvFileTest.ApplicationStructuresSchemaCsvFilePath);
-            var openingDirectionDefinition = schema.GetDefinition("gate", KnownGeneralStructureProperties.GateOpeningHorizontalDirection.GetDescription());
+            var openingDirectionDefinition = schema.GetDefinition("gate", "horizontal_opening_direction");
 
             var structure = new Structure2D("gate");
             structure.AddProperty(KnownStructureProperties.Type, typeof(string), "gate");
             structure.AddProperty(KnownStructureProperties.Name, typeof(string), "Gate02");
             structure.AddProperty(KnownStructureProperties.PolylineFile, typeof(string), "pump05.pli");
-            structure.AddProperty(KnownStructureProperties.CrestLevel, typeof(Steerable),
-                                  $"Gate02_{KnownStructureProperties.GateLowerEdgeLevel}.tim");
+            structure.AddProperty(KnownStructureProperties.GateSillLevel, typeof(Steerable),
+                                  "Gate02_lower_edge_level.tim");
             structure.AddProperty(KnownStructureProperties.GateLowerEdgeLevel, typeof(Steerable),
-                                  $"Gate02_{KnownStructureProperties.GateLowerEdgeLevel}.tim");
+                                  "Gate02_lower_edge_level.tim");
             structure.AddProperty(KnownStructureProperties.GateOpeningWidth, typeof(Steerable),
-                                  $"Gate02_{KnownStructureProperties.GateOpeningWidth}.tim");
-            structure.AddProperty(KnownStructureProperties.GateHeight, typeof(double), "10");
-            structure.AddProperty(KnownStructureProperties.GateOpeningHorizontalDirection,
+                                  "Gate02_opening_width.tim");
+            structure.AddProperty(KnownStructureProperties.GateDoorHeight, typeof(double), "10");
+            structure.AddProperty(KnownStructureProperties.GateHorizontalOpeningDirection,
                                   openingDirectionDefinition.DataType, "from_right");
 
             var dummyPath = TestHelper.GetTestFilePath(@"structures/nonExistentFile_structures.ini");
@@ -578,15 +579,15 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             // GeneralStructure specific
             var generalStructureProperties = new List<string>()
             {
-                KnownGeneralStructureProperties.Upstream2Width.GetDescription(),
-                KnownGeneralStructureProperties.Upstream1Width.GetDescription(),
-                KnownGeneralStructureProperties.Downstream1Width.GetDescription(),
-                KnownGeneralStructureProperties.Downstream2Width.GetDescription(),
+                KnownGeneralStructureProperties.WidthLeftW1.GetDescription(),
+                KnownGeneralStructureProperties.WidthLeftWsdl.GetDescription(),
+                KnownGeneralStructureProperties.WidthRightWsdr.GetDescription(),
+                KnownGeneralStructureProperties.WidthRightW2.GetDescription(),
 
-                KnownGeneralStructureProperties.Upstream2Level.GetDescription(),
-                KnownGeneralStructureProperties.Upstream1Level.GetDescription(),
-                KnownGeneralStructureProperties.Downstream1Level.GetDescription(),
-                KnownGeneralStructureProperties.Downstream2Level.GetDescription(),
+                KnownGeneralStructureProperties.LevelLeftZb1.GetDescription(),
+                KnownGeneralStructureProperties.LevelLeftZbsl.GetDescription(),
+                KnownGeneralStructureProperties.LevelRightZbsr.GetDescription(),
+                KnownGeneralStructureProperties.LevelRightZb2.GetDescription(),
 
                 KnownGeneralStructureProperties.PositiveFreeGateFlowCoefficient.GetDescription(),
                 KnownGeneralStructureProperties.PositiveDrownGateFlowCoefficient.GetDescription(),
@@ -668,14 +669,14 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
             // Opening direction
             var schema = new StructureSchemaCsvFile().ReadStructureSchema(StructureSchemaCsvFileTest.ApplicationStructuresSchemaCsvFilePath);
-            var openingDirectionDefinition = schema.GetDefinition(structureType, KnownGeneralStructureProperties.GateOpeningHorizontalDirection.GetDescription());
-            result.AddProperty(KnownStructureProperties.GateOpeningHorizontalDirection, openingDirectionDefinition.DataType, "symmetric");
+            var openingDirectionDefinition = schema.GetDefinition(structureType, "horizontal_opening_direction");
+            result.AddProperty(KnownStructureProperties.GateHorizontalOpeningDirection, openingDirectionDefinition.DataType, "symmetric");
 
             // door height
             var gateDoorHeightProperty =
-                propertyNameMap[structureType][KnownStructureProperties.GateHeight];
+                propertyNameMap[structureType][KnownStructureProperties.GateDoorHeight];
             var gateDoorHeightValue =
-                constValLookUpTable[KnownStructureProperties.GateHeight].ToString();
+                constValLookUpTable[KnownStructureProperties.GateDoorHeight].ToString();
             result.AddProperty(gateDoorHeightProperty, typeof(double), gateDoorHeightValue);
         }
         #endregion
@@ -721,15 +722,15 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             var generalStructureFormula = weir.WeirFormula as GeneralStructureWeirFormula;
             Assert.That(generalStructureFormula, Is.Not.Null, "Expected the weir formula to be a general structure:");
 
-            Assert.That(generalStructureFormula.WidthLeftSideOfStructure,  Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.Upstream2Width.GetDescription()]    ));
-            Assert.That(generalStructureFormula.WidthStructureLeftSide,    Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.Upstream1Width.GetDescription()]  ));
-            Assert.That(generalStructureFormula.WidthStructureRightSide,   Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.Downstream1Width.GetDescription()] ));
-            Assert.That(generalStructureFormula.WidthRightSideOfStructure, Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.Downstream2Width.GetDescription()]   ));
+            Assert.That(generalStructureFormula.WidthLeftSideOfStructure,  Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.WidthLeftW1.GetDescription()]    ));
+            Assert.That(generalStructureFormula.WidthStructureLeftSide,    Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.WidthLeftWsdl.GetDescription()]  ));
+            Assert.That(generalStructureFormula.WidthStructureRightSide,   Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.WidthRightWsdr.GetDescription()] ));
+            Assert.That(generalStructureFormula.WidthRightSideOfStructure, Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.WidthRightW2.GetDescription()]   ));
 
-            Assert.That(generalStructureFormula.BedLevelLeftSideOfStructure,  Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.Upstream2Level.GetDescription()]   ));
-            Assert.That(generalStructureFormula.BedLevelLeftSideStructure,    Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.Upstream1Level.GetDescription()]  ));
-            Assert.That(generalStructureFormula.BedLevelRightSideStructure,   Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.Downstream1Level.GetDescription()] ));
-            Assert.That(generalStructureFormula.BedLevelRightSideOfStructure, Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.Downstream2Level.GetDescription()]  ));
+            Assert.That(generalStructureFormula.BedLevelLeftSideOfStructure,  Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.LevelLeftZb1.GetDescription()]   ));
+            Assert.That(generalStructureFormula.BedLevelLeftSideStructure,    Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.LevelLeftZbsl.GetDescription()]  ));
+            Assert.That(generalStructureFormula.BedLevelRightSideStructure,   Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.LevelRightZbsr.GetDescription()] ));
+            Assert.That(generalStructureFormula.BedLevelRightSideOfStructure, Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.LevelRightZb2.GetDescription()]  ));
 
             Assert.That(generalStructureFormula.PositiveFreeGateFlow,    Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.PositiveFreeGateFlowCoefficient.GetDescription()]   ));
             Assert.That(generalStructureFormula.PositiveDrownedGateFlow, Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.PositiveDrownGateFlowCoefficient.GetDescription()]  ));
@@ -797,7 +798,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                                  weirFormula.HorizontalDoorOpeningWidthTimeSeries);
             }
 
-            Assert.That(weirFormula.DoorHeight, Is.EqualTo(constValLookUpTable[KnownStructureProperties.GateHeight]), "Expected door height to be a different value:");
+            Assert.That(weirFormula.DoorHeight, Is.EqualTo(constValLookUpTable[KnownStructureProperties.GateDoorHeight]), "Expected door height to be a different value:");
             Assert.That(weirFormula.HorizontalDoorOpeningDirection, Is.EqualTo(GateOpeningDirection.Symmetric));
         }
 

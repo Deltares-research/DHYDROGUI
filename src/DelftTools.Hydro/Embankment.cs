@@ -12,10 +12,14 @@ namespace DelftTools.Hydro
 
         #region IHydroObject
 
-        public virtual IHydroRegion Region { get; set; }
-
+        public virtual IHydroRegion Region
+        {
+            get;
+            set;
+        }
+        
         public virtual IEventedList<HydroLink> Links { get; set; }
-
+        
         public virtual bool CanBeLinkSource => true;
 
         public virtual bool CanBeLinkTarget => false;

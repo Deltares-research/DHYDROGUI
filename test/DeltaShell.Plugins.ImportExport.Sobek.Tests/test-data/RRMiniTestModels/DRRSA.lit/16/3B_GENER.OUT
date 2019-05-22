@@ -1,0 +1,43 @@
+ Run datum (DD-MM-YY) and time: 22- 3-2012  15:22
+
+ Summary of common data    
+ ===============================
+
+ Case name                                     
+ Number of nodes                4      2.91 ha
+ Number of links                2
+ Number of paved areas          0      0.00 ha
+ Number of unpaved areas        0      0.00 ha
+ Number of greenhouse-areas     2      2.91 ha
+           with basins                 0.15 ha
+ Number of open water nodes     0      0.00 ha
+ Number of structures           0
+ Number of boundaries           2
+ Number of NWRW nodes           0      0.00 ha
+ Number of Sacramento nodes     0      0.00 ha
+ Number of RR Runoff nodes      0      0.00 ha
+ Number of Cells                0      0.00 ha
+
+ Number of events               1
+ Timestepsize    (s)          900
+
+
+
+
+ Summary inputdata greenhouse-areas  
+
+ Node identification   Node      Max.storage   surface    Surfaces per greenhouse class
+                                      on roofs                 
+                       name       (mm)            (m)         (in hectare)
+============================================================================================================================================================
+GRH02                                 0.671     0.500     0.816     0.000     0.000     0.000     0.000     0.000     0.000     0.000     0.000     0.000
+GRH01                                 1.183    -0.300     0.250     0.375     0.225     0.115     0.105     0.100     0.100     0.125     0.135     0.161
+
+
+ Summary input data boundaries      
+
+ Node identification   Node    Init.level variable  serie
+                       name      (m NAP)   (1=yes)   number
+================================================================
+11                                  -2.850        0        0
+10                                  -2.850        0        0

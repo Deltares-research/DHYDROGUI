@@ -1,28 +1,24 @@
-﻿using DelftTools.TestUtils;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using DelftTools.TestUtils;
+using DelftTools.Utils;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 {
     [TestFixture]
     public class FMModelSchemaCsvFileTest
     {
-        private string dflowfmPropertiesCsvFilePath = Path.Combine("plugins",
-                                                                   "DeltaShell.Plugins.FMSuite.FlowFM",
-                                                                   "CsvFiles",
-                                                                   "dflowfm-properties.csv");
-
         [Test]
         public void LoadCharEnums()
         {
-            var modelPropertySchema = new ModelSchemaCsvFile().ReadModelSchema<WaterFlowFMPropertyDefinition>(dflowfmPropertiesCsvFilePath, "MduGroup");
+            var modelPropertySchema = new ModelSchemaCsvFile().ReadModelSchema<WaterFlowFMPropertyDefinition>("plugins\\DeltaShell.Plugins.FMSuite.FlowFM\\dflowfm-properties.csv", "MduGroup");
             Assert.Greater(modelPropertySchema.PropertyDefinitions.Count, 50);
 
             var tunitProperty = modelPropertySchema.PropertyDefinitions[KnownProperties.Tunit];
@@ -90,7 +86,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Test]
         public void LoadCharEnumsTestParser()
         {
-            var modelPropertySchema = new ModelSchemaCsvFile().ReadModelSchema<WaterFlowFMPropertyDefinition>(dflowfmPropertiesCsvFilePath, "MduGroup");
+            var modelPropertySchema = new ModelSchemaCsvFile().ReadModelSchema<WaterFlowFMPropertyDefinition>("plugins\\DeltaShell.Plugins.FMSuite.FlowFM\\dflowfm-properties.csv", "MduGroup");
             Assert.Greater(modelPropertySchema.PropertyDefinitions.Count, 50);
 
             Assert.Greater(modelPropertySchema.PropertyDefinitions.Count, 50);
@@ -109,7 +105,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Test]
         public void LoadIntEnums()
         {
-            var modelPropertySchema = new ModelSchemaCsvFile().ReadModelSchema<WaterFlowFMPropertyDefinition>(dflowfmPropertiesCsvFilePath, "MduGroup");
+            var modelPropertySchema = new ModelSchemaCsvFile().ReadModelSchema<WaterFlowFMPropertyDefinition>("plugins\\DeltaShell.Plugins.FMSuite.FlowFM\\dflowfm-properties.csv", "MduGroup");
             Assert.Greater(modelPropertySchema.PropertyDefinitions.Count, 50);
 
             var convProperty = modelPropertySchema.PropertyDefinitions[KnownProperties.Conveyance2d];
@@ -125,7 +121,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         public void LoadConveyance2dEnumAndVerifyThatItHasNotChanged()
         {
             //if changed check fm validationrule 'WaterFlowFMModelDefinitionValidator'
-            var modelPropertySchema = new ModelSchemaCsvFile().ReadModelSchema<WaterFlowFMPropertyDefinition>(dflowfmPropertiesCsvFilePath, "MduGroup");
+            var modelPropertySchema = new ModelSchemaCsvFile().ReadModelSchema<WaterFlowFMPropertyDefinition>("plugins\\DeltaShell.Plugins.FMSuite.FlowFM\\dflowfm-properties.csv", "MduGroup");
             
             var convProperty = modelPropertySchema.PropertyDefinitions[KnownProperties.Conveyance2d];
             var convEnum = convProperty.DataType;
@@ -146,7 +142,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Test]
         public void LoadIntEnumsNotStartingAtZero()
         {
-            var modelPropertySchema = new ModelSchemaCsvFile().ReadModelSchema<WaterFlowFMPropertyDefinition>(dflowfmPropertiesCsvFilePath, "MduGroup");
+            var modelPropertySchema = new ModelSchemaCsvFile().ReadModelSchema<WaterFlowFMPropertyDefinition>("plugins\\DeltaShell.Plugins.FMSuite.FlowFM\\dflowfm-properties.csv", "MduGroup");
             Assert.Greater(modelPropertySchema.PropertyDefinitions.Count, 50);
 
             var convProperty = modelPropertySchema.PropertyDefinitions["icgsolver"];
@@ -161,7 +157,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Test]
         public void FixedWeirScheme()
         {
-            var modelPropertySchema = new ModelSchemaCsvFile().ReadModelSchema<WaterFlowFMPropertyDefinition>(dflowfmPropertiesCsvFilePath, "MduGroup");
+            var modelPropertySchema = new ModelSchemaCsvFile().ReadModelSchema<WaterFlowFMPropertyDefinition>("plugins\\DeltaShell.Plugins.FMSuite.FlowFM\\dflowfm-properties.csv", "MduGroup");
             Assert.Greater(modelPropertySchema.PropertyDefinitions.Count, 50);
 
             var convProperty = modelPropertySchema.PropertyDefinitions["fixedweirscheme"];

@@ -9,7 +9,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
     [Entity]
     public class DataColumn<T> : IDataColumn
     {
-        public DataColumn() : this("") {}
+        public DataColumn() : this("")
+        {
+        }
 
         public DataColumn(string name)
         {
@@ -23,14 +25,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
 
         public bool IsActive { get; set; }
 
-        public Type DataType => typeof(T);
+        public Type DataType
+        {
+            get { return typeof(T); }
+        }
 
         public T DefaultValue { get; set; }
 
         object IDataColumn.DefaultValue
         {
-            get => DefaultValue;
-            set => DefaultValue = (T) value;
+            get { return DefaultValue; }
+            set { DefaultValue = (T) value; }
         }
 
         public List<T> ValueList { get; private set; }
@@ -42,8 +47,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
 
         IList IDataColumn.ValueList
         {
-            get => ValueList;
-            set => ValueList = (List<T>) value;
+            get { return ValueList; }
+            set { ValueList = (List<T>) value; }
         }
     }
 }

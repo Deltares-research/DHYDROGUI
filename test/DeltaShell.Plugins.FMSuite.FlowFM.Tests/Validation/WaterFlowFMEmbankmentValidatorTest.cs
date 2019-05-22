@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using DeltaShell.Plugins.FMSuite.FlowFM.Validation;
 using DelftTools.Hydro;
-using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;

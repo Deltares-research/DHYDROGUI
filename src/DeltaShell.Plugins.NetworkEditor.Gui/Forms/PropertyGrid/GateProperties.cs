@@ -66,7 +66,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
 
         [Category("General")]
         [PropertyOrder(4)]
-        [DisplayName(GuiParameterNames.HorizontalOpeningDirection)]
+        [DisplayName("Horizontal opening direction")]
         [Description("Horizontal opening direction of gate doors")]
         public GateOpeningDirection HorizontalOpeningDirection
         {

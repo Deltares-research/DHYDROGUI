@@ -1,0 +1,386 @@
+STDS id 'P_Anza_30425' nm '' ty 11 cl 1 si 'P_Anza_30425' ce 1 sv 0.667 rt 0                      stds
+STDS id 'P_Belbo_cassa_55540' nm '' ty 11 cl 1 si 'P_Belbo_cassa_55540' ce 1 sv 0.667 rt 0                      stds
+STDS id 'S_belbo_restituzione1_84' nm '' ty 10 tc 1 ll 154 rl 152.66 dl 5 si 'strS_belbo_restituzione1_84' li 0.1 lo 1 lb 0 ov 0 tv 0 rt 0 hs 0 he 0                      stds
+STDS id 'S_belbo_restituzione2_85' nm '' ty 10 tc 1 ll 153 rl 148.42 dl 5 si 'strS_belbo_restituzione2_85' li 0.1 lo 1 lb 0 ov 0 tv 0 rt 0 hs 0 he 0                      stds
+STDS id '99' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+0.2 0.8 0.6 0 0 <
+tble                      stds
+STDS id '111' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+100 0.8 0.6 0 0 <
+tble                      stds
+STDS id '112' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+70 0.8 0.6 0 0 <
+tble                      stds
+STDS id '107' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+1 0.8 0.6 0 0 <
+tble                      stds
+STDS id '113' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+120 0.8 0.6 0 0 <
+tble                      stds
+STDS id 'S_Cervo_15' nm 'CE_MAN65 weir' ty 11 cl 0 si 'strS_Cervo_15' ce 1 sv 0.667 rt 0                      stds
+STDS id '116' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+200.5 0.8 0.6 0 0 <
+tble                      stds
+STDS id '115' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+200.5 0.8 0.6 0 0 <
+tble                      stds
+STDS id '93' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+0 0.8 0.6 0 0 <
+tble                      stds
+STDS id '101' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+0 0.8 0.6 0 0 <
+tble                      stds
+STDS id '##2' nm 'lsx196101' ty 0 cl 101.08 cw 2000 cs 0 po 1 ps 0.82 pt pr
+TBLE
+0.82 1.00 <
+0.86 0.95 <
+0.90 0.90 <
+0.94 0.80 <
+0.96 0.70 <
+0.97 0.60 <
+1.00 0.00 <
+tble no 1 ns 0.82 nt nr PDIN 0 0 pdin
+TBLE
+0.82 1.00 <
+0.86 0.95 <
+0.90 0.90 <
+0.94 0.80 <
+0.96 0.70 <
+0.97 0.60 <
+1.00 0.00 <
+tble                      stds
+STDS id '##3' nm 'LSX198351_weir' ty 0 cl 98.15 cw 1250 cs 0 po 1 ps 0.82 pt pr
+TBLE
+0.82 1.00 <
+0.86 0.95 <
+0.90 0.90 <
+0.94 0.80 <
+0.96 0.70 <
+0.97 0.60 <
+1.00 0.00 <
+tble no 1 ns 0.82 nt nr PDIN 0 0 pdin
+TBLE
+0.82 1.00 <
+0.86 0.95 <
+0.90 0.90 <
+0.94 0.80 <
+0.96 0.70 <
+0.97 0.60 <
+1.00 0.00 <
+tble                      stds
+STDS id '##4' nm 'LSX200193' ty 0 cl 99.22 cw 1800 cs 0 po 1 ps 0.82 pt pr
+TBLE
+0.82 1.00 <
+0.86 0.95 <
+0.90 0.90 <
+0.94 0.80 <
+0.96 0.70 <
+0.97 0.60 <
+1.00 0.00 <
+tble no 1 ns 0.82 nt nr PDIN 0 0 pdin
+TBLE
+0.82 1.00 <
+0.86 0.95 <
+0.90 0.90 <
+0.94 0.80 <
+0.96 0.70 <
+0.97 0.60 <
+1.00 0.00 <
+tble                      stds
+STDS id '##5' nm 'LSX201153_weir' ty 0 cl 94.87 cw 1000 cs 0 po 1 ps 0.82 pt pr
+TBLE
+0.82 1.00 <
+0.86 0.95 <
+0.90 0.90 <
+0.94 0.80 <
+0.96 0.70 <
+0.97 0.60 <
+1.00 0.00 <
+tble no 1 ns 0.82 nt nr PDIN 0 0 pdin
+TBLE
+0.82 1.00 <
+0.86 0.95 <
+0.90 0.90 <
+0.94 0.80 <
+0.96 0.70 <
+0.97 0.60 <
+1.00 0.00 <
+tble                      stds
+STDS id '##6' nm 'LSX202807_weir' ty 0 cl 91.98 cw 700 cs 0 po 1 ps 0.82 pt pr
+TBLE
+0.82 1.00 <
+0.86 0.95 <
+0.90 0.90 <
+0.94 0.80 <
+0.96 0.70 <
+0.97 0.60 <
+1.00 0.00 <
+tble no 1 ns 0.82 nt nr PDIN 0 0 pdin
+TBLE
+0.82 1.00 <
+0.86 0.95 <
+0.90 0.90 <
+0.94 0.80 <
+0.96 0.70 <
+0.97 0.60 <
+1.00 0.00 <
+tble                      stds
+STDS id '##7' nm 'LSX203626_weir' ty 0 cl 91.24 cw 850 cs 0 po 1 ps 0.82 pt pr
+TBLE
+0.82 1.00 <
+0.86 0.95 <
+0.90 0.90 <
+0.94 0.80 <
+0.96 0.70 <
+0.97 0.60 <
+1.00 0.00 <
+tble no 1 ns 0.82 nt nr PDIN 0 0 pdin
+TBLE
+0.82 1.00 <
+0.86 0.95 <
+0.90 0.90 <
+0.94 0.80 <
+0.96 0.70 <
+0.97 0.60 <
+1.00 0.00 <
+tble                      stds
+STDS id '##8' nm 'LSX204999_weir' ty 0 cl 90.91 cw 500 cs 0 po 1 ps 0.82 pt pr
+TBLE
+0.82 1.00 <
+0.86 0.95 <
+0.90 0.90 <
+0.94 0.80 <
+0.96 0.70 <
+0.97 0.60 <
+1.00 0.00 <
+tble no 1 ns 0.82 nt nr PDIN 0 0 pdin
+TBLE
+0.82 1.00 <
+0.86 0.95 <
+0.90 0.90 <
+0.94 0.80 <
+0.96 0.70 <
+0.97 0.60 <
+1.00 0.00 <
+tble                      stds
+STDS id '##9' nm 'LSX207253_weir' ty 0 cl 90.75 cw 100 cs 0 po 1 ps 0.82 pt pr
+TBLE
+0.82 1.00 <
+0.86 0.95 <
+0.90 0.90 <
+0.94 0.80 <
+0.96 0.70 <
+0.97 0.60 <
+1.00 0.00 <
+tble no 1 ns 0.82 nt nr PDIN 0 0 pdin
+TBLE
+0.82 1.00 <
+0.86 0.95 <
+0.90 0.90 <
+0.94 0.80 <
+0.96 0.70 <
+0.97 0.60 <
+1.00 0.00 <
+tble                      stds
+STDS id 'S_Ovesca_72' nm '' ty 10 tc 1 ll 256.38 rl 256.2 dl 11 si 'strS_Ovesca_72' li 0.1 lo 1 lb 0 ov 0 tv 0 rt 0 hs 0 he 0                      stds
+STDS id 'P_Ovesca_2370' nm '' ty 11 cl 1 si 'P_Ovesca_2370' ce 1 sv 0.667 rt 0                      stds
+STDS id 'S_Po_34' nm 'pza. vittorio' ty 11 cl 0 si 'strS_Po_34' ce 1 sv 0.667 rt 0                      stds
+STDS id '97' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+20 0.8 0.6 0 0 <
+tble                      stds
+STDS id '117' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+16 0.8 0.6 0 0 <
+tble                      stds
+STDS id '88' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+3 0.8 0.6 0 0 <
+tble                      stds
+STDS id '96' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+40 0.8 0.6 0 0 <
+tble                      stds
+STDS id '94' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+5 0.8 0.6 0 0 <
+tble                      stds
+STDS id '102' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+2.6 0.8 0.6 0 0 <
+tble                      stds
+STDS id '103' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+7 0.8 0.6 0 0 <
+tble                      stds
+STDS id '83' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+13.7 0.8 0.6 0 0 <
+tble                      stds
+STDS id '85' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+20 0.8 0.6 0 0 <
+tble                      stds
+STDS id '104' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+10.5 0.8 0.6 0 0 <
+tble                      stds
+STDS id '86' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+12 0.8 0.6 0 0 <
+tble                      stds
+STDS id '105' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+110 0.8 0.6 0 0 <
+tble                      stds
+STDS id '98' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+16 0.8 0.6 0 0 <
+tble                      stds
+STDS id '90' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+4 0.8 0.6 0 0 <
+tble                      stds
+STDS id '91' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+3 0.8 0.6 0 0 <
+tble                      stds
+STDS id '100' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+55 0.8 0.6 0 0 <
+tble                      stds
+STDS id '89' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+3 0.8 0.6 0 0 <
+tble                      stds
+STDS id '118' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+1 0.8 0.6 0 0 <
+tble                    stds
+STDS id '106' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+55.5 0.8 0.6 0 0 <
+tble                      stds
+STDS id 'P_sessera_158' nm '' ty 11 cl 1 si 'P_sessera_158' ce 1 sv 0.667 rt 0                      stds
+STDS id 'P_Strona di Mosso_72' nm '' ty 11 cl 1 si 'P_Strona di Mosso_72' ce 1 sv 0.667 rt 0      stds
+STDS id 'P_Strona di Mosso_76' nm '' ty 11 cl 1 si 'P_Strona di Mosso_76' ce 1 sv 0.667 rt 0                      stds
+STDS id 'S_Terdoppio_0' nm 'partitore lat' ty 11 cl 0 si 'strS_Terdoppio_0' ce 1 sv 0.667 rt 0                      stds
+STDS id '109' nm '' ty 11 cl 1 si '39' ce 1 sv 0.667 rt 0                      stds
+STDS id '119' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+3400 0.8 0.6 0 0 <
+tble                   stds
+STDS id 'S_Varaita_38' nm 'varto_weir' ty 11 cl 0 si 'strS_Varaita_38' ce 1 sv 0.667 rt 0                      stds
+STDS id 'S_Vermenagna_86' nm 'Robilante' ty 10 tc 1 ll 733.32 rl 733.22 dl 10 si 'strS_Vermenagna_86' li 0.2 lo 1 lb 0 ov 0 tv 0 rt 0 hs 0 he 0                      stds
+STDS id 'S_Vobbia_41' nm '' ty 11 cl 0 si 'strS_Vobbia_41' ce 1 sv 0.667 rt 0                      stds
+STDS id '4' nm '' ty 10 tc 1 ll 402.45 rl 402.4 dl 2 si '2' li 0.7 lo 1 ov 0 tv 0 rt 0                      stds
+STDS id '53' nm '' ty 10 tc 1 ll 481.511 rl 481.011 dl 10 si '20' li 0.7 lo 1 ov 0 tv 0 rt 0                      stds
+STDS id '58' nm '' ty 10 tc 1 ll 162.89 rl 162.89 dl 23.5 si '22' li 0.7 lo 1 ov 0 tv 0 rt 0                      stds
+STDS id '62' nm '' ty 10 tc 1 ll 332.25 rl 332.2 dl 6.69 si '24' li 0.7 lo 1 ov 0 tv 0 rt 0                      stds
+STDS id '66' nm '' ty 10 tc 1 ll 243.75 rl 243.75 dl 8 si '29' li 0.7 lo 1 ov 0 tv 0 rt 0                      stds
+STDS id '70' nm '' ty 10 tc 1 ll 218.99 rl 218.99 dl 8 si '31' li 0.7 lo 1 ov 0 tv 0 rt 0                      stds
+STDS id '74' nm '' ty 10 tc 1 ll 184.47 rl 184.37 dl 18 si '32' li 0.7 lo 1 ov 0 tv 0 rt 0                      stds
+STDS id '78' nm '' ty 10 tc 1 ll 1144.47 rl 1144.42 dl 10 si '34' li 0.7 lo 1 ov 0 tv 0 rt 0                      stds
+STDS id '82' nm '' ty 10 tc 1 ll 307.1 rl 307.1 dl 3 si '35' li 0.7 lo 1 ov 0 tv 0 rt 0                      stds
+STDS id 'P_Agogna_48474' nm '' ty 11 cl 1 si 'P_Agogna_48474' ce 1 sv 0.667 rt 0                      stds
+STDS id 'S_STAFFORA_1' nm '103' ty 11 cl 0 si 'strS_STAFFORA_1' ce 1 sv 0.667 rt 0                      stds
+STDS id 'S_STAFFORA_73' nm '123' ty 10 tc 1 ll 93.88 rl 93.4 dl 20 si 'strS_STAFFORA_73' li 0.3 lo 1 lb 0 ov 0 tv 0 rt 0 hs 0 he 0                      stds
+STDS id 'S_STAFFORA_74' nm '128' ty 10 tc 1 ll 88.52 rl 88.35 dl 10 si 'strS_STAFFORA_74' li 0.1 lo 1 lb 0 ov 0 tv 0 rt 0 hs 0 he 0                      stds
+STDS id 'S_Scrivia_40' nm 'weir 11' ty 11 cl 0 si 'strS_Scrivia_40' ce 1 sv 0.667 rt 0                      stds
+STDS id 'S_malone_2' nm 'WeirA11' ty 11 cl 0 si 'strS_malone_2' ce 1 sv 0.667 rt 0                      stds
+STDS id 'S_malone_3' nm 'WeirA09' ty 11 cl 0 si 'strS_malone_3' ce 1 sv 0.667 rt 0                      stds
+STDS id 'S_malone_4' nm 'WeirA04' ty 11 cl 0 si 'strS_malone_4' ce 1 sv 0.667 rt 0                      stds
+STDS id 'S_malone_5' nm 'WeirD6' ty 11 cl 0 si 'strS_malone_5' ce 1 sv 0.667 rt 0                      stds
+STDS id 'S_sesia_16' nm 'SS_MAN106' ty 11 cl 0 si 'strS_sesia_16' ce 1 sv 0.667 rt 0                      stds
+STDS id 'S_sesia_17' nm 'SS_MAN38.1' ty 11 cl 0 si 'strS_sesia_17' ce 1 sv 0.667 rt 0                      stds
+STDS id 'S_Cervo_81' nm 'CE_MAN2' ty 10 tc 1 ll 131 rl 130.5 dl 8.8 si 'strS_Cervo_81' li 0.3 lo 1 lb 0 ov 0 tv 0 rt 0 hs 0 he 0                      stds
+STDS id 'S_Cervo_80' nm 'CE_MAN16.1' ty 10 tc 1 ll 152.5 rl 152.46 dl 23.3 si 'strS_Cervo_80' li 0.1 lo 1 lb 0 ov 0 tv 0 rt 0 hs 0 he 0                      stds
+STDS id 'S_Cervo_25' nm 'CE_MAN33.1' ty 11 cl 0 si 'strS_Cervo_25' ce 1 sv 0.667 rt 0                      stds
+STDS id 'S_Cervo_21' nm 'CE_MAN59.1' ty 11 cl 0 si 'strS_Cervo_21' ce 1 sv 0.667 rt 0                      stds
+STDS id 'S_Cervo_22' nm 'CEBR0047' ty 11 cl 0 si 'strS_Cervo_22' ce 1 sv 0.667 rt 0                      stds
+STDS id 'S_Cervo_23' nm 'CE_MAN54.1' ty 11 cl 0 si 'strS_Cervo_23' ce 1 sv 0.667 rt 0                      stds
+STDS id 'S_Cervo_24' nm 'CE_MAN52' ty 11 cl 0 si 'strS_Cervo_24' ce 1 sv 0.667 rt 0                      stds
+STDS id 'S_Cervo_18' nm 'CEBR0060' ty 11 cl 0 si 'strS_Cervo_18' ce 1 sv 0.667 rt 0                      stds
+STDS id 'S_Cervo_26' nm 'CE_MAN43.1' ty 11 cl 0 si 'strS_Cervo_26' ce 1 sv 0.667 rt 0                      stds
+STDS id 'S_Cervo_79' nm 'CE_MAN40' ty 10 tc 1 ll 208.1 rl 204.09 dl 10 si 'strS_Cervo_79' li 0.1 lo 1 lb 0 ov 0 tv 0 rt 0 hs 0 he 0                      stds
+STDS id 'S_Elvo_19' nm 'TR45' ty 11 cl 0 si 'strS_Elvo_19' ce 1 sv 0.667 rt 0                      stds
+STDS id 'S_Elvo_20' nm 'BR60' ty 11 cl 0 si 'strS_Elvo_20' ce 1 sv 0.667 rt 0                      stds
+STDS id 'S_Elvo_82' nm 'ELCA' ty 10 tc 1 ll 175.88 rl 175.83 dl 32 si 'strS_Elvo_82' li 0.1 lo 1 lb 0 ov 0 tv 0 rt 0 hs 0 he 0                      stds
+STDS id 'S_Elvo_83' nm 'EL_MAN12' ty 10 tc 1 ll 163.87 rl 163.85 dl 18 si 'strS_Elvo_83' li 0.3 lo 1 lb 0 ov 0 tv 0 rt 0 hs 0 he 0                      stds
+STDS id 'P_sesia_122060' nm '' ty 11 cl 1 si 'P_sesia_122060' ce 1 sv 0.667 rt 0                      stds
+STDS id 'P_PELLICE_50340.2' nm '' ty 11 cl 1 si 'P_PELLICE_50340.2' ce 1 sv 0.667 rt 0                      stds
+STDS id 'S_Varaita_88' nm '' ty 10 tc 1 ll 492.22 rl 492.22 dl 10 si 'strS_Varaita_88' li 0 lo 1 lb 0 ov 0 tv 0 rt 0 hs 0 he 0                      stds
+STDS id 'S_Maira_87' nm '' ty 10 tc 1 ll 472.45 rl 472.35 dl 8 si 'strS_Maira_87' li 0 lo 1 lb 0 ov 0 tv 0 rt 0 hs 0 he 0                      stds
+STDS id 'P_Maira_95563' nm '' ty 11 cl 1 si 'P_Maira_95563' ce 1 sv 0.667 rt 0                      stds
+STDS id 'P_Stura di Lanzo_33112' nm '' ty 11 cl 1 si 'P_Stura di Lanzo_33117' ce 1 sv 0.667 rt 0                      stds
+STDS id 'P_Stura di Lanzo_60570' nm '' ty 11 cl 1 si 'P_Stura di Lanzo_60570' ce 1 sv 0.667 rt 0                      stds
+STDS id 'S_D_RIPARIA_39' nm 'w_susa' ty 11 cl 0 si 'strS_D_RIPARIA_39' ce 1 sv 0.667 rt 0                      stds
+STDS id 'S_Sangone_37' nm 'soglia27-28' ty 11 cl 0 si 'strS_Sangone_37' ce 1 sv 0.667 rt 0                      stds
+STDS id 'P_Tanaro_131736.1' nm '' ty 11 cl 1 si 'P_Tanaro_131736.1' ce 1 sv 0.667 rt 0                      stds
+STDS id 'P_Tanaro_134161.2' nm '' ty 11 cl 1 si 'P_Tanaro_134161.2' ce 1 sv 0.667 rt 0                      stds
+STDS id 'S_Tanaro_33' nm '26_n' ty 11 cl 0 si 'strS_Tanaro_33' ce 1 sv 0.667 rt 0                      stds
+STDS id 'P_Pesio_43276' nm '' ty 11 cl 1 si 'P_Pesio_43276' ce 1 sv 0.667 rt 0                      stds
+STDS id 'S_Tanaro_31' nm '27_n Traversa di Clavesana' ty 11 cl 0 si 'strS_Tanaro_31' ce 1 sv 0.667 rt 0                      stds
+STDS id 'P_Tanaro_71007.91' nm '' ty 11 cl 1 si 'P_Tanaro_71007.91' ce 1 sv 0.667 rt 0                      stds
+STDS id 'P_Tanaro_76060.72' nm '' ty 11 cl 1 si 'P_Tanaro_76060.72' ce 1 sv 0.667 rt 0                      stds
+STDS id 'P_Tanaro_77036.17' nm '' ty 11 cl 1 si 'P_Tanaro_77036.17' ce 1 sv 0.667 rt 0                      stds
+STDS id 'S_Tanaro_32' nm '28_n Briglia Bastià Mondovì' ty 11 cl 0 si 'strS_Tanaro_32' ce 1 sv 0.667 rt 0                      stds
+STDS id 'P_Tanaro_152108.1' nm '' ty 11 cl 1 si 'P_Tanaro_152108.1' ce 1 sv 0.667 rt 0                      stds
+STDS id 'S_ORBA_29' nm 'left' ty 11 cl 0 si 'strS_ORBA_29' ce 1 sv 0.667 rt 0                      stds
+STDS id 'S_ORBA_28' nm 'basaluzzo' ty 11 cl 0 si 'strS_ORBA_28' ce 1 sv 0.667 rt 0                      stds
+STDS id 'P_Bormida_131993' nm '' ty 11 cl 1 si 'P_Bormida_131993' ce 1 sv 0.667 rt 0                      stds
+STDS id 'P_Bormida_136458' nm '' ty 11 cl 1 si 'P_Bormida_136458' ce 1 sv 0.667 rt 0                      stds
+STDS id 'S_Tanaro_30' nm '21_n' ty 11 cl 0 si 'strS_Tanaro_30' ce 1 sv 0.667 rt 0                      stds
+STDS id 'P_Tanaro_205242' nm '' ty 11 cl 1 si 'P_Tanaro_205242' ce 1 sv 0.667 rt 0                      stds
+STDS id 'P_Bormida_180061.1' nm '' ty 11 cl 1 si 'P_Bormida_180061.1' ce 1 sv 0.667 rt 0                      stds
+STDS id 'S_ORBA_27' nm 'weir' ty 11 cl 0 si 'strS_ORBA_27' ce 1 sv 0.667 rt 0                      stds
+STDS id 'P_Bormida_148570' nm '' ty 11 cl 1 si 'P_Bormida_148570' ce 1 sv 0.667 rt 0                      stds
+STDS id 'S_DoraBaltea_13' nm 'jump103-2' ty 11 cl 0 si 'strS_DoraBaltea_13' ce 1 sv 0.667 rt 0                      stds
+STDS id 'S_DoraBaltea_14' nm 'Montjovet' ty 11 cl 0 si 'strS_DoraBaltea_14' ce 1 sv 0.667 rt 0                      stds
+STDS id 'S_DoraBaltea_76' nm '59-2A' ty 10 tc 1 ll 342.27 rl 342.24 dl 8 si 'strS_DoraBaltea_76' li 0.1 lo 1 lb 0 ov 0 tv 0 rt 0 hs 0 he 0                      stds
+STDS id 'S_DoraBaltea_12' nm '55-1A_WEIR' ty 11 cl 0 si 'strS_DoraBaltea_12' ce 1 sv 0.667 rt 0                      stds
+STDS id 'S_DoraBaltea_11' nm 'UEI' ty 11 cl 0 si 'strS_DoraBaltea_11' ce 1 sv 0.667 rt 0                      stds
+STDS id 'S_DoraBaltea_78' nm 'Dbata' ty 10 tc 1 ll 259.77 rl 259.77 dl 10 si 'strS_DoraBaltea_78' li 0.1 lo 1 lb 0 ov 0 tv 0 rt 0 hs 0 he 0                      stds
+STDS id 'S_DoraBaltea_8' nm 'Mazzè' ty 11 cl 0 si 'strS_DoraBaltea_8' ce 1 sv 0.667 rt 0                      stds
+STDS id 'S_DoraBaltea_9' nm 'DePretis' ty 11 cl 0 si 'strS_DoraBaltea_9' ce 1 sv 0.667 rt 0                      stds
+STDS id 'S_DoraBaltea_6' nm 'Traversa Farini' ty 11 cl 0 si 'strS_DoraBaltea_6' ce 1 sv 0.667 rt 0                      stds
+STDS id 'S_DoraBaltea_7' nm 'c.Cavour' ty 11 cl 0 si 'strS_DoraBaltea_7' ce 1 sv 0.667 rt 0                      stds
+STDS id 'S_DoraBaltea_77' nm 'Dbave' ty 10 tc 1 ll 157.74 rl 156.305 dl 11.3 si 'strS_DoraBaltea_77' li 0.1 lo 1 lb 0 ov 0 tv 0 rt 0 hs 0 he 0                      stds
+STDS id 'P_DoraBaltea_111461' nm '' ty 11 cl 1 si 'P_DoraBaltea_111461' ce 1 sv 0.667 rt 0      stds
+STDS id 'S_DoraBaltea_75' nm '37.3A(Ponte Vecchio Ivrea)' ty 10 tc 1 ll 225.25 rl 225.25 dl 13 si 'strS_DoraBaltea_75' li 0.2 lo 1 lb 0 ov 0 tv 0 rt 0 hs 0 he 0                      stds
+STDS id 'S_DoraBaltea_10' nm 'Naviglio Ivrea' ty 11 cl 0 si 'strS_DoraBaltea_10' ce 1 sv 0.667 rt 0                      stds
+STDS id 'S_Po_35' nm '' ty 11 cl 0 si 'strS_Po_35' ce 1 sv 0.667 rt 0                      stds
+STDS id 'S_Po_36' nm 'ferrovie' ty 11 cl 0 si 'strS_Po_36' ce 1 sv 0.667 rt 0                      stds
+STDS id 'P_Ticino_66249.1' nm '' ty 11 cl 1 si 'P_Ticino_66249.1' ce 1 sv 0.667 rt 0                      stds
+STDS id '##11' nm 'LDX203625' ty 0 cl 92.26 cw 1000 cs 0 po 1 ps 0.82 pt pr
+TBLE
+0.82 1.00 <
+0.86 0.95 <
+0.90 0.90 <
+0.94 0.80 <
+0.96 0.70 <
+0.97 0.60 <
+1.00 0.00 <
+tble no 1 ns 0.82 nt nr PDIN 0 0 pdin
+TBLE
+0.82 1.00 <
+0.86 0.95 <
+0.90 0.90 <
+0.94 0.80 <
+0.96 0.70 <
+0.97 0.60 <
+1.00 0.00 <
+tble                      stds
+STDS id '92' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+16 0.8 0.6 0 0 <
+tble                      stds

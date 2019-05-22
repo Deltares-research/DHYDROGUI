@@ -9,11 +9,17 @@ namespace DelftTools.Hydro.Structures
     {
         private string groupName;
 
-        public Pump2D() {}
+        public Pump2D()
+        {
+        }
 
-        public Pump2D(bool canBeTimeDependent) : base(canBeTimeDependent) {}
+        public Pump2D(bool canBeTimeDependent) : base(canBeTimeDependent)
+        {
+        }
 
-        public Pump2D(string name, bool canBeTimeDependent = false) : base(name, canBeTimeDependent) {}
+        public Pump2D(string name, bool canBeTimeDependent = false) : base(name, canBeTimeDependent)
+        {
+        }
 
         /// <summary>
         /// Name used to group features with the same group name together
@@ -22,8 +28,11 @@ namespace DelftTools.Hydro.Structures
         [DisplayName("Group name")]
         public string GroupName
         {
-            get => groupName;
-            set => groupName = GroupableFeatureHelper.SetGroupableFeatureGroupName(value);
+            get
+            {
+                return groupName;
+            }
+            set { groupName = GroupableFeatureHelper.SetGroupableFeatureGroupName(value); }
         }
 
         public bool IsDefaultGroup { get; set; }

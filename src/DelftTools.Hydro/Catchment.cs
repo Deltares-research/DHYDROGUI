@@ -9,6 +9,7 @@ using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.Utilities;
+using Point = NetTopologySuite.Geometries.Point;
 
 namespace DelftTools.Hydro
 {
@@ -16,8 +17,8 @@ namespace DelftTools.Hydro
     public class Catchment : Feature, ICopyFrom, IHydroObject, IComparable, INameable
     {
         private IPoint interiorPointCache;
-        private string longName = string.Empty;
-        private string description = string.Empty;
+        private string longName = String.Empty;
+        private string description = String.Empty;
 
         public Catchment()
         {
@@ -38,8 +39,8 @@ namespace DelftTools.Hydro
         [FeatureAttribute(Order = 3)]
         public virtual string LongName
         {
-            get => longName;
-            set => longName = value;
+            get { return longName; }
+            set { longName = value; }
         }
 
         [Aggregation]
@@ -51,15 +52,18 @@ namespace DelftTools.Hydro
         [FeatureAttribute(Order = 2)]
         public virtual string Description
         {
-            get => description;
-            set => description = value;
+            get { return description; }
+            set { description = value; }
         }
 
         public virtual bool IsGeometryDerivedFromAreaSize { get; set; }
 
         public override IGeometry Geometry
         {
-            get => base.Geometry;
+            get
+            {
+                return base.Geometry;
+            }
             set
             {
                 if (value is ILineString && value.Coordinates.Length >= 3)
@@ -75,7 +79,10 @@ namespace DelftTools.Hydro
             }
         }
 
-        public virtual IPoint InteriorPoint => interiorPointCache ?? (interiorPointCache = CalculateInteriorPoint());
+        public virtual IPoint InteriorPoint
+        {
+            get { return interiorPointCache ?? (interiorPointCache = CalculateInteriorPoint()); }
+        }
 
         public virtual void SetAreaSize(double area)
         {
@@ -89,24 +96,26 @@ namespace DelftTools.Hydro
             }
         }
 
-        public virtual double AreaSize => Geometry != null ? Geometry.Area : 0.0;
+        public virtual double AreaSize
+        {
+            get { return Geometry != null ? Geometry.Area : 0.0; }
+        }
 
         public override object Clone()
         {
             var clone = new Catchment
-            {
-                Geometry = Geometry != null ? (IGeometry) Geometry.Clone() : null,
-                IsGeometryDerivedFromAreaSize = IsGeometryDerivedFromAreaSize,
-                Name = Name,
-                Attributes = (IFeatureAttributeCollection) Attributes.Clone(),
-                Basin = Basin,
-                Description = Description,
-                Links = new EventedList<HydroLink>(Links),
-                SubCatchments = new EventedList<Catchment>(SubCatchments.Select(sc => (Catchment) sc.Clone())),
-                CatchmentType =
-                    CatchmentType // hopefully it is static for now, TODO: extend when dynamic catchment types are added
-            };
-
+                {
+                    Geometry = Geometry != null ? (IGeometry) Geometry.Clone() : null,
+                    IsGeometryDerivedFromAreaSize = IsGeometryDerivedFromAreaSize,
+                    Name = Name,
+                    Attributes = (IFeatureAttributeCollection) Attributes.Clone(),
+                    Basin = Basin,
+                    Description = Description,
+                    Links = new EventedList<HydroLink>(Links),
+                    SubCatchments = new EventedList<Catchment>(SubCatchments.Select(sc => (Catchment) sc.Clone())),
+                    CatchmentType = CatchmentType // hopefully it is static for now, TODO: extend when dynamic catchment types are added
+                };
+            
             return clone;
         }
 
@@ -127,14 +136,14 @@ namespace DelftTools.Hydro
         public virtual IDrainageBasin Basin { get; set; }
 
         [Aggregation]
-        public virtual IHydroRegion Region => Basin;
+        public virtual IHydroRegion Region { get { return Basin; } }
 
         [Aggregation]
         public virtual IEventedList<HydroLink> Links { get; set; }
 
-        public virtual bool CanBeLinkSource => !CatchmentType.SubCatchmentTypes.Any();
+        public virtual bool CanBeLinkSource { get { return !CatchmentType.SubCatchmentTypes.Any(); } }
 
-        public virtual bool CanBeLinkTarget => false;
+        public virtual bool CanBeLinkTarget { get { return false; } }
 
         public virtual HydroLink LinkTo(IHydroObject target)
         {
@@ -155,11 +164,7 @@ namespace DelftTools.Hydro
         {
             var catchment = new Catchment();
 
-            var factory = new GeometricShapeFactory
-            {
-                Centre = new Coordinate(20, 20),
-                Size = 30
-            };
+            var factory = new GeometricShapeFactory {Centre = new Coordinate(20, 20), Size = 30};
             catchment.Geometry = factory.CreateCircle();
             catchment.IsGeometryDerivedFromAreaSize = true;
 
@@ -168,7 +173,7 @@ namespace DelftTools.Hydro
 
         private IPoint CalculateInteriorPoint()
         {
-            IPoint interiorPoint = CalculateInteriorPointCore();
+            var interiorPoint = CalculateInteriorPointCore();
             return new Point(interiorPoint.X, interiorPoint.Y, 0); //if Z is NaN we get in trouble later
         }
 
@@ -179,12 +184,11 @@ namespace DelftTools.Hydro
             {
                 return Geometry.Centroid;
             }
-
             return Geometry.IsValid
                        ? Geometry.InteriorPoint
-                       : double.IsNaN(Geometry.Centroid.X)
-                           ? new Point(Geometry.Coordinate)
-                           : Geometry.Centroid;
+                       : (double.IsNaN(Geometry.Centroid.X)
+                              ? new Point(Geometry.Coordinate)
+                              : Geometry.Centroid);
         }
 
         private void UpdateDerivedGeometry(double newAreaSize)
@@ -193,21 +197,17 @@ namespace DelftTools.Hydro
             newAreaSize *= factorToAdjustForCircleApproximation;
 
             IPoint center = GetCenter();
-            double diameter = Math.Sqrt((4.0 * newAreaSize) / Math.PI);
-            var factory = new GeometricShapeFactory
-            {
-                Centre = center.Coordinate,
-                Size = diameter
-            };
+            double diameter = Math.Sqrt(4.0*newAreaSize/Math.PI);
+            var factory = new GeometricShapeFactory {Centre = center.Coordinate, Size = diameter};
             Geometry = factory.CreateCircle();
         }
 
         private IPoint GetCenter()
         {
             return Geometry != null
-                       ? !double.IsNaN(Geometry.Envelope.Centroid.X)
-                             ? Geometry.Envelope.Centroid
-                             : new Point(Geometry.Coordinate)
+                       ? (!double.IsNaN(Geometry.Envelope.Centroid.X)
+                              ? Geometry.Envelope.Centroid
+                              : new Point(Geometry.Coordinate))
                        : new Point(0, 0);
         }
 
@@ -221,17 +221,14 @@ namespace DelftTools.Hydro
             if (other is Catchment)
             {
                 if (Equals(this, other))
-                {
                     return 0;
-                }
 
-                foreach (Catchment c in Basin.AllCatchments)
+                foreach(var c in Basin.AllCatchments)
                 {
                     if (Equals(c, this))
                     {
                         return -1;
                     }
-
                     if (Equals(c, other))
                     {
                         return 1;
@@ -242,24 +239,21 @@ namespace DelftTools.Hydro
             {
                 return -1;
             }
-
             throw new InvalidOperationException();
         }
-
+        
         //nhib ;-) \-)
         [NoNotifyPropertyChange]
         protected virtual string CatchmentTypeString
         {
-            get => CatchmentType != null ? CatchmentType.Name : CatchmentType.PavedTypeName;
-            set => CatchmentType = CatchmentType.LoadFromString(value);
+            get { return CatchmentType != null ? CatchmentType.Name : CatchmentType.PavedTypeName; }
+            set { CatchmentType = CatchmentType.LoadFromString(value); }
         }
-
+        
         public virtual Catchment AddSubCatchment(CatchmentType catchmentType)
         {
             if (!CatchmentType.SubCatchmentTypes.Contains(catchmentType))
-            {
                 throw new InvalidOperationException("This catchment cannot have sub catchments of given type");
-            }
 
             var delta = new Coordinate(0, 0);
             var offset = 100;
@@ -278,19 +272,19 @@ namespace DelftTools.Hydro
                     delta = new Coordinate(0, -offset);
                     break;
                 default:
-                    throw new NotSupportedException("Unknown type to render as part of polder concept");
+                    throw new NotSupportedException("Unknow type to render as part of polder concept");
             }
 
             var geometry = new Point(InteriorPoint.X + delta.X, InteriorPoint.Y + delta.Y);
 
             var subCatchment = new Catchment
-            {
-                Name = Name + "_" + catchmentType,
-                LongName = LongName + "_" + catchmentType,
-                CatchmentType = catchmentType,
-                Geometry = geometry,
-                Basin = Basin
-            };
+                {
+                    Name = Name + "_" + catchmentType,
+                    LongName = LongName + "_" + catchmentType, 
+                    CatchmentType = catchmentType, 
+                    Geometry = geometry, 
+                    Basin = Basin
+                };
             SubCatchments.Add(subCatchment);
             return subCatchment;
         }

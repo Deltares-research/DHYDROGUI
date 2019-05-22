@@ -1,9 +1,8 @@
 ﻿using DelftTools.Functions.Filters;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
-using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.FunctionStores;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
 using NUnit.Framework;
@@ -11,6 +10,7 @@ using SharpMap.Extensions.CoordinateSystems;
 using System;
 using System.IO;
 using System.Linq;
+using DelftTools.Utils.IO;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 {

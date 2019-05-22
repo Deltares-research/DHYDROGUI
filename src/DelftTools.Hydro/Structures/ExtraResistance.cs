@@ -8,10 +8,12 @@ namespace DelftTools.Hydro.Structures
 {
     ///<summary>
     ///</summary>
-    [Entity(FireOnCollectionChange = false)]
+    [Entity(FireOnCollectionChange=false)]
     public class ExtraResistance : BranchStructure, IExtraResistance
     {
-        public ExtraResistance() : this("ER") {}
+        public ExtraResistance() : this("ER")
+        {
+        }
 
         public ExtraResistance(string name)
         {
@@ -32,7 +34,7 @@ namespace DelftTools.Hydro.Structures
 
         public static ExtraResistance CreateDefault(IBranch branch)
         {
-            ExtraResistance extraResistance = CreateDefault();
+            var extraResistance = CreateDefault();
             AddStructureToNetwork(extraResistance, branch);
             return extraResistance;
         }
@@ -42,8 +44,9 @@ namespace DelftTools.Hydro.Structures
             base.CopyFrom(source);
             var sourceExtraResistance = (ExtraResistance) source;
             ExtraResistanceType = 0;
-            FrictionTable =
+            FrictionTable = 
                 (IFunction) sourceExtraResistance.FrictionTable.Clone();
+
         }
 
         public override StructureType GetStructureType()

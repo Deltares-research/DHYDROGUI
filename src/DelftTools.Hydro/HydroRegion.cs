@@ -33,39 +33,32 @@ namespace DelftTools.Hydro
 
         public override IEventedList<IRegion> SubRegions
         {
-            get => base.SubRegions;
+            get { return base.SubRegions; } 
             set
             {
                 if (base.SubRegions != null)
                 {
                     base.SubRegions.CollectionChanging -= OnSubRegionsCollectionChanging;
                 }
-
+                
                 base.SubRegions = value;
 
                 if (base.SubRegions != null)
                 {
-                    foreach (IRegion subregion in base.SubRegions)
+                    foreach (var subregion in base.SubRegions)
                     {
                         subregion.Parent = this;
                     }
-
                     base.SubRegions.CollectionChanging += OnSubRegionsCollectionChanging;
                 }
             }
         }
 
-        public virtual IEnumerable<IHydroObject> AllHydroObjects
-        {
-            get
-            {
-                return SubRegions.OfType<IHydroRegion>().SelectMany(r => r.AllHydroObjects);
-            }
-        }
+        public virtual IEnumerable<IHydroObject> AllHydroObjects { get { return SubRegions.OfType<IHydroRegion>().SelectMany(r => r.AllHydroObjects); } }
 
         public virtual IEventedList<HydroLink> Links
         {
-            get => links;
+            get { return links; }
             set
             {
                 if (links != null)
@@ -89,7 +82,7 @@ namespace DelftTools.Hydro
             clone.Name = Name;
             clone.Geometry = (IGeometry) (Geometry != null ? Geometry.Clone() : null);
             clone.Attributes = (IFeatureAttributeCollection) (Attributes != null ? Attributes.Clone() : null);
-
+            
             clone.isCloning = true;
             CloneAndAddLinks(this, clone);
             clone.isCloning = false;
@@ -104,8 +97,8 @@ namespace DelftTools.Hydro
         public static HydroLink AddNewLink(IHydroObject source, IHydroObject target)
         {
             var link = new HydroLink(source, target);
-
-            IHydroRegion commonRegion = GetCommonRegion(source, target);
+            
+            var commonRegion = GetCommonRegion(source, target);
             commonRegion.Links.Add(link);
 
             return link;
@@ -113,10 +106,10 @@ namespace DelftTools.Hydro
 
         public static void RemoveLink(IHydroObject source, IHydroObject target)
         {
-            HydroLink link = source.Links.First(l => Equals(l.Source, source) && Equals(l.Target, target));
+            var link = source.Links.First(l => Equals(l.Source, source) && Equals(l.Target, target));
 
-            IHydroRegion commonRegion = GetCommonRegion(source, target);
-
+            var commonRegion = GetCommonRegion(source, target);
+            
             commonRegion.Links.Remove(link);
         }
 
@@ -138,22 +131,20 @@ namespace DelftTools.Hydro
             }
 
             // source and target have common parent region
-            if (GetCommonRegion(source, target) == null)
+            if(GetCommonRegion(source, target) == null)
             {
                 return false;
             }
 
             // allowed links
             if ((source is Catchment || source is WasteWaterTreatmentPlant)
-                && (target is Catchment || target is WasteWaterTreatmentPlant || target is RunoffBoundary ||
-                    target is LateralSource || target is HydroNode))
+                && (target is Catchment || target is WasteWaterTreatmentPlant || target is RunoffBoundary || target is LateralSource || target is HydroNode))
             {
                 var catchmentSource = source as Catchment;
                 if (catchmentSource != null)
-                {
+                { 
                     //for now: if you can have subcatchments, you cannot be linked directly yourself (will probably change in the future)
-                    return catchmentSource.CatchmentType != null &&
-                           !catchmentSource.CatchmentType.SubCatchmentTypes.Any();
+                    return catchmentSource.CatchmentType != null && !catchmentSource.CatchmentType.SubCatchmentTypes.Any();
                 }
 
                 return true;
@@ -181,14 +172,15 @@ namespace DelftTools.Hydro
         }
 
         /// <summary>
-        /// Adds links to the <paramref name="clone" /> region based on the links of <paramref name="original" /> region.
+        /// Adds links to the <paramref name="clone"/> region based on the links of <paramref name="original"/> region.
         /// </summary>
         public static void CloneAndAddLinks(IHydroRegion original, IHydroRegion clone)
         {
-            List<IHydroObject> originalObjects = original.AllHydroObjects.ToList();
-            List<IHydroObject> clonedObjects = clone.AllHydroObjects.ToList();
+            
+            var originalObjects = original.AllHydroObjects.ToList();
+            var clonedObjects = clone.AllHydroObjects.ToList();
 
-            foreach (HydroLink link in original.Links)
+            foreach (var link in original.Links)
             {
                 var linkClone = (HydroLink) link.Clone();
 
@@ -197,10 +189,10 @@ namespace DelftTools.Hydro
                 linkClone.Target = clonedObjects[originalObjects.IndexOf(link.Target)];
 
                 // replace link in source and target objects
-                int linkInSourceIndex = linkClone.Source.Links.IndexOf(link);
+                var linkInSourceIndex = linkClone.Source.Links.IndexOf(link);
                 linkClone.Source.Links[linkInSourceIndex] = linkClone;
 
-                int linkInTargetIndex = linkClone.Target.Links.IndexOf(link);
+                var linkInTargetIndex = linkClone.Target.Links.IndexOf(link);
                 linkClone.Target.Links[linkInTargetIndex] = linkClone;
 
                 clone.Links.Add(linkClone);
@@ -210,7 +202,7 @@ namespace DelftTools.Hydro
         public static IEnumerable<IHydroRegion> GetAllRegions(IHydroRegion parentRegion)
         {
             yield return parentRegion;
-            foreach (IHydroRegion subRegion in parentRegion.SubRegions.OfType<IHydroRegion>().SelectMany(GetAllRegions))
+            foreach (var subRegion in parentRegion.SubRegions.OfType<IHydroRegion>().SelectMany(GetAllRegions))
             {
                 yield return subRegion;
             }
@@ -238,14 +230,12 @@ namespace DelftTools.Hydro
                     break;
 
                 case NotifyCollectionChangeAction.Remove:
-                    HydroLink[] links = subRegion.GetAllItemsRecursive().OfType<IHydroObject>()
-                                                 .Where(o => o.Links != null)
-                                                 .SelectMany(o => o.Links).Where(l => Links.Contains(l)).ToArray();
-                    foreach (HydroLink link in links)
+                    var links = subRegion.GetAllItemsRecursive().OfType<IHydroObject>().Where(o => o.Links != null)
+                        .SelectMany(o => o.Links).Where(l => Links.Contains(l)).ToArray();
+                    foreach (var link in links)
                     {
                         RemoveLink(link);
                     }
-
                     break;
             }
         }
@@ -257,7 +247,6 @@ namespace DelftTools.Hydro
             {
                 return;
             }
-
             var link = e.GetRemovedOrAddedItem() as HydroLink;
 
             if (e.Action == NotifyCollectionChangedAction.Remove)

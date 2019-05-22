@@ -18,13 +18,11 @@
         /// <summary>
         /// The value is used as a time-constant value.
         /// </summary>
-        ConstantValue,
-
+        ConstantValue, 
         /// <summary>
         /// The value is used as a time-varying value.
         /// </summary>
-        TimeSeries,
-
+        TimeSeries, 
         /// <summary>
         /// The value is driven by some external force.
         /// </summary>

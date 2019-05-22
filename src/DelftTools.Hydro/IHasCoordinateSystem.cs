@@ -11,12 +11,13 @@ namespace DelftTools.Hydro
 
         /// <summary>
         /// True if the potential coordinate system seems to match the expected scale/range of the object's coordinates.
-        /// Eg an X coordinate of 34534534.0 is not likely to be defined in a degree lat/lon system.
-        /// The 'not likely' is very vague, so the basic premises is that the visualization shouldn't crash on this new
-        /// combination being transformed to, arbitrarily, wgs84.
+        ///             Eg an X coordinate of 34534534.0 is not likely to be defined in a degree lat/lon system.
+        ///             The 'not likely' is very vague, so the basic premises is that the visualization shouldn't crash on this new
+        ///             combination being transformed to, arbitrarily, wgs84.
+        /// 
         /// </summary>
-        /// <param name="potentialCoordinateSystem" />
-        /// <returns />
+        /// <param name="potentialCoordinateSystem"/>
+        /// <returns/>
         bool CanSetCoordinateSystem(ICoordinateSystem potentialCoordinateSystem);
     }
 }

@@ -1,6 +1,5 @@
 ﻿using DelftTools.Functions;
 using DelftTools.Hydro;
-using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
@@ -11,8 +10,6 @@ using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
@@ -31,7 +28,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using DeltaShell.Plugins.FMSuite.FlowFM.Model;
+using DelftTools.Hydro.Structures;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 {
@@ -243,8 +240,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var extForceFileContent = File.ReadAllText("readWriteMdu/fm_files.ext");
             Assert.IsTrue(extForceFileContent.Contains(
                 "* FACTOR  =   : Conversion factor for this provider"));
-            Assert.IsTrue(extForceFileContent.Contains(
-                "* This comment line will not be removed, eventhough shiptxy is not yet supported."));
+            Assert.IsFalse(extForceFileContent.Contains(
+                "* This comment line will be removed (shiptxy not yet supported and thus not read)"));
             Assert.IsTrue(mduContent.Contains(
                 "! comment line on initial water level"));
             Assert.IsTrue(mduContent.Contains(

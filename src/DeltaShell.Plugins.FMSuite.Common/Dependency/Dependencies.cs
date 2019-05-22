@@ -7,29 +7,29 @@ using log4net;
 namespace DeltaShell.Plugins.FMSuite.Common.Dependency
 {
     /// <summary>
-    /// This class compiles <see cref="ModelPropertyDefinition.EnabledDependencies" /> and is
+    /// This class compiles <see cref="ModelPropertyDefinition.EnabledDependencies"/> and is
     /// responsible for updating all dependency related methods.
     /// </summary>
     public static class Dependencies
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(Dependencies));
+        private static readonly ILog Log = LogManager.GetLogger(typeof (Dependencies));
 
         private static readonly ICollection<DependencyExpressionBase> SupportedDependencyExpressions;
 
         static Dependencies()
         {
             SupportedDependencyExpressions = new List<DependencyExpressionBase>
-            {
-                new BooleanIsTrueDependencyExpression(),
-                new ValueGreaterOrLesserThanDependencyExpression(),
-                new ValueEqualsDependencyExpression()
-            };
+                {
+                    new BooleanIsTrueDependencyExpression(),
+                    new ValueGreaterOrLesserThanDependencyExpression(),
+                    new ValueEqualsDependencyExpression()
+                };
             SupportedDependencyExpressions.Add(new AndOperatorExpression(SupportedDependencyExpressions));
         }
 
         public static void CompileEnabledDependencies(IEnumerable<ModelProperty> allProperties)
         {
-            foreach (ModelProperty modelProperty in allProperties)
+            foreach (var modelProperty in allProperties)
             {
                 // Nothing specified, use default:
                 if (string.IsNullOrEmpty(modelProperty.PropertyDefinition.EnabledDependencies))
@@ -38,22 +38,19 @@ namespace DeltaShell.Plugins.FMSuite.Common.Dependency
                     continue;
                 }
 
-                ModelProperty property = modelProperty; // Deal with 'foreach variable in closure'
-                DependencyExpressionBase[] matchingDependencies =
+                var property = modelProperty; // Deal with 'foreach variable in closure'
+                var matchingDependencies =
                     SupportedDependencyExpressions.Where(
-                        sde => sde.CanHandleExpression(
-                            property.PropertyDefinition.EnabledDependencies)).ToArray();
+                        sde => sde.CanHandleExpression(property.PropertyDefinition.EnabledDependencies)).ToArray();
                 if (matchingDependencies.Length > 0)
                 {
                     // Get all compiled expressions:
                     var compiledExpressions = new List<Func<IEnumerable<ModelProperty>, bool>>();
-                    foreach (DependencyExpressionBase dependencyExpression in matchingDependencies)
+                    foreach (var dependencyExpression in matchingDependencies)
                     {
                         try
                         {
-                            compiledExpressions.Add(dependencyExpression.CompileExpression(
-                                                        property, allProperties,
-                                                        property.PropertyDefinition.EnabledDependencies));
+                            compiledExpressions.Add(dependencyExpression.CompileExpression(property, allProperties, property.PropertyDefinition.EnabledDependencies));
                         }
                         catch (ArgumentException e)
                         {
@@ -62,7 +59,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.Dependency
                                             modelProperty.PropertyDefinition.FilePropertyName, e.Message);
                         }
                     }
-
                     // AND composition of all compiled expressions:
                     modelProperty.PropertyDefinition.IsEnabled =
                         properties => compiledExpressions.All(isEnabled => isEnabled(properties));
@@ -76,7 +72,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Dependency
 
         public static void CompileVisibleDependencies(IEnumerable<ModelProperty> allProperties)
         {
-            foreach (ModelProperty modelProperty in allProperties)
+            foreach (var modelProperty in allProperties)
             {
                 // Nothing specified, use default:
                 if (string.IsNullOrEmpty(modelProperty.PropertyDefinition.VisibleDependencies))
@@ -85,22 +81,19 @@ namespace DeltaShell.Plugins.FMSuite.Common.Dependency
                     continue;
                 }
 
-                ModelProperty property = modelProperty; // Deal with 'foreach variable in closure'
-                DependencyExpressionBase[] matchingDependencies =
+                var property = modelProperty; // Deal with 'foreach variable in closure'
+                var matchingDependencies =
                     SupportedDependencyExpressions.Where(
-                        sde => sde.CanHandleExpression(
-                            property.PropertyDefinition.VisibleDependencies)).ToArray();
+                        sde => sde.CanHandleExpression(property.PropertyDefinition.VisibleDependencies)).ToArray();
                 if (matchingDependencies.Length > 0)
                 {
                     // Get all compiled expressions:
                     var compiledExpressions = new List<Func<IEnumerable<ModelProperty>, bool>>();
-                    foreach (DependencyExpressionBase dependencyExpression in matchingDependencies)
+                    foreach (var dependencyExpression in matchingDependencies)
                     {
                         try
                         {
-                            compiledExpressions.Add(dependencyExpression.CompileExpression(
-                                                        property, allProperties,
-                                                        property.PropertyDefinition.VisibleDependencies));
+                            compiledExpressions.Add(dependencyExpression.CompileExpression(property, allProperties, property.PropertyDefinition.VisibleDependencies));
                         }
                         catch (ArgumentException e)
                         {
@@ -109,7 +102,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.Dependency
                                             modelProperty.PropertyDefinition.FilePropertyName, e.Message);
                         }
                     }
-
                     // AND composition of all compiled expressions:
                     modelProperty.PropertyDefinition.IsVisible =
                         properties => compiledExpressions.All(isVisible => isVisible(properties));

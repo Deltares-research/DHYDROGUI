@@ -1,0 +1,59 @@
+[General]
+    majorVersion          = 1                   
+    minorVersion          = 0                   
+    fileType              = roughness           
+
+[Content]
+    sectionId             = Main                
+    flowDirection         = False               
+    interpolate           = 1                   
+    globalType            = 1                   
+    globalValue           = 45.000              
+
+[BranchProperties]
+    branchId              = Channel1            
+    roughnessType         = 5                   
+    functionType          = 0                   
+
+[BranchProperties]
+    branchId              = Channel2            
+    roughnessType         = 1                   
+    functionType          = 0                   
+
+[BranchProperties]
+    branchId              = Channel3            
+    roughnessType         = 7                   
+    functionType          = 0                   
+
+[BranchProperties]
+    branchId              = Channel6            
+    roughnessType         = 1                   
+    functionType          = 1                   
+    numLevels             = 2                   
+    levels                = 11.000 13.000       
+
+[Definition]
+    branchId              = Channel1            
+    chainage              = 0.000               
+    value                 = 0.23000             
+
+[Definition]
+    branchId              = Channel2            
+    chainage              = 0.000               
+    value                 = 47.00000            
+
+[Definition]
+    branchId              = Channel2            
+    chainage              = 200.000             
+    value                 = 51.00000            
+
+[Definition]
+    branchId              = Channel3            
+    chainage              = 15.000              
+    value                 = 0.20000             
+
+[Definition]
+    branchId              = Channel6            
+    chainage              = 30.000              
+    values                = 29.00000 47.00000   
+

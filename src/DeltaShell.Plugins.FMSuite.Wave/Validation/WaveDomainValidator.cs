@@ -14,7 +14,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
 
         private static IEnumerable<ValidationReport> ValidateAllDomains(WaveModel model)
         {
-            var reportList = new List<ValidationReport> {ValidateAllDomainsShareCoordinateSystem(model)};
+            var reportList = new List<ValidationReport>();
+            reportList.Add(ValidateAllDomainsShareCoordinateSystem(model));
             reportList.AddRange(WaveDomainHelper.GetAllDomains(model.OuterDomain)
                 .Select(ValidateDomain)
                 .ToList());
@@ -24,10 +25,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
         private static ValidationReport ValidateAllDomainsShareCoordinateSystem(WaveModel model)
         {
             var issues = new List<ValidationIssue>();
+
             var domain = model.OuterDomain;
             var domains = WaveDomainHelper.GetAllDomains(domain);
             var sphericalDomains = domains.Where(d => CheckDomainGrid( d, WaveModel.CoordinateSystemType.Spherical)).ToList();
-
             if (sphericalDomains.Any() && domains.Any(d => CheckDomainGrid(d, WaveModel.CoordinateSystemType.Cartesian)))
             {
                 issues.Add(new ValidationIssue(domain, ValidationSeverity.Error, Resources.WaveDomainValidator_ValidateAllDomainsShareCoordinateSystem_All_the_grids_Coordinate_System_should_be_the_same__either_Spherical_or_Cardesian));
@@ -36,12 +37,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
             {
                 if (model.ModelDefinition.WaveSetup)
                 {
-                    var waveValidationShortcut = new WaveValidationShortcut
-                    {
-                        WaveModel = model,
-                        TabName = "Physical Processes"
-                    };
-                    issues.Add(new ValidationIssue(domain, ValidationSeverity.Error, Resources.WaveDomainValidator_ValidateAllDomainsShareCoordinateSystem_WaveSetup_should_be_false_when_using_Spherical_Coordinate_Systems_, waveValidationShortcut));
+                    issues.Add(new ValidationIssue(domain, ValidationSeverity.Error, Resources.WaveDomainValidator_ValidateAllDomainsShareCoordinateSystem_WaveSetup_should_be_false_when_using_Spherical_Coordinate_Systems_, model));
                 }
             }
             return new ValidationReport("Model domains", issues);

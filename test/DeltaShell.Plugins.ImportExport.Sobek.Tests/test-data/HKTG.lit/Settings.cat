@@ -1,0 +1,24 @@
+[General]
+Title=257_000
+AppType=1
+Version=1.0.0
+CATTemplateFile=Fixed\Cat.tpl
+ThematicMapOption=2
+CATIniFile=D:\Sb213_14\Programs\Cat\cat.ini
+WQStandardsOption=0
+SaveTemplateonExit=True
+UserName=SOBEK
+
+[Functions]
+defaultini=D:\Sb213_14\Programs\Cat\functions.ini
+
+[Netter]
+NtpFile=D:\Sb213_14\Programs\Cat\netter.ntp
+
+
+[StandAloneApps]
+NumberApps=0
+
+[CMTApps]
+NumberApps=1
+App1=\SB213_14\HKTG.lit, HKTG

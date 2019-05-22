@@ -1,0 +1,16 @@
+CRDS id 'P01_1' nm 'P01_start' ty 10 st 0 lt sw 0 0 gl 0 gu 0 lt yz
+TBLE
+-15 25 <
+-2 9 <
+2 9 <
+15 25 <
+tble
+crds
+CRDS id 'P01_2' nm 'P01_end' ty 10 st 0 lt sw 0 0 gl 0 gu 0 lt yz
+TBLE
+-25 10 <
+-5 0 <
+5 0 <
+25 10 <
+tble
+crds

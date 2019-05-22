@@ -1,0 +1,6 @@
+TP_1.0
+NODE id '1' nm '' px 0 py 0 node
+NODE id '3' nm '' px 969.381417340458 py 0 node
+NODE id '21' nm '' px 2000 py 0 node
+BRCH id '1' nm '' bn '1' en '3' al 969.381417340458 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '2' nm '' bn '3' en '21' al 1030.61858265954 vc_opt 1 vc_equi -1 vc_len 100 brch

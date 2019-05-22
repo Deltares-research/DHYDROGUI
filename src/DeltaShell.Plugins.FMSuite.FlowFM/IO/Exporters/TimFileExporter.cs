@@ -8,16 +8,15 @@ using DelftTools.Utils.Collections;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
-using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
 {
-    public class TimFileExporter : BoundaryDataExporterBase, IFileExporter
+    public class TimFileExporter: BoundaryDataExporterBase, IFileExporter
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(TimFileExporter));
+        private static readonly ILog Log = LogManager.GetLogger(typeof (TimFileExporter));
 
         public Func<SourceAndSink, WaterFlowFMModel> GetModelForSourceAndSink { private get; set; }
 
@@ -25,11 +24,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
 
         #region IFileExporter
 
-        public string Name => "Time series to .tim file";
+        public string Name { get { return "Time series to .tim file"; } }
 
-        public string Category => "General";
-
-        public string Description => string.Empty;
+        public string Category { get { return "General"; } }
+        public string Description
+        {
+            get { return string.Empty; }
+        }
 
         public bool Export(object item, string path)
         {
@@ -46,46 +47,30 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
             var sourceAndSink = item as SourceAndSink;
             if (sourceAndSink != null)
             {
-                IFunction function = sourceAndSink.Function;
+                var function = sourceAndSink.Function;
                 if (function == null)
                 {
-                    Log.ErrorFormat(Resources.Could_not_export_data_for_SourceAndSink___0___no_Function_was_found,
-                                    sourceAndSink.Name);
+                    Log.ErrorFormat(Resources.Could_not_export_data_for_SourceAndSink___0___no_Function_was_found, sourceAndSink.Name);
                     return false;
                 }
 
-                data = (IFunction) function.Clone(true);
+                data = (IFunction)function.Clone(true);
 
-                WaterFlowFMModel model = GetModelForSourceAndSink(sourceAndSink);
+                var model = GetModelForSourceAndSink(sourceAndSink);
                 if (model != null)
                 {
                     refDate = model.ReferenceTime;
-
-                    if (!model.UseSalinity)
-                    {
-                        data.RemoveComponentByName(SourceAndSink.SalinityVariableName);
-                    }
-
-                    if (!model.UseTemperature)
-                    {
-                        data.RemoveComponentByName(SourceAndSink.TemperatureVariableName);
-                    }
-
-                    if (!model.UseMorSed)
-                    {
-                        sourceAndSink.SedimentFractionNames.ForEach(sfn => data.RemoveComponentByName(sfn));
-                    }
-
-                    if (!model.UseSecondaryFlow)
-                    {
-                        data.RemoveComponentByName(SourceAndSink.SecondaryFlowVariableName);
-                    }
+                    
+                    if (!model.UseSalinity) data.RemoveComponentByName(SourceAndSink.SalinityVariableName);
+                    if (!model.UseTemperature) data.RemoveComponentByName(SourceAndSink.TemperatureVariableName);
+                    if (!model.UseMorSed) sourceAndSink.SedimentFractionNames.ForEach(sfn => data.RemoveComponentByName(sfn));
+                    if (!model.UseSecondaryFlow) data.RemoveComponentByName(SourceAndSink.SecondaryFlowVariableName);
                 }
             }
 
             var heatFluxModel = item as HeatFluxModel;
             if (heatFluxModel != null)
-            {
+            {                
                 data = heatFluxModel.MeteoData;
                 if (GetModelForHeatFluxModel != null)
                 {
@@ -93,11 +78,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
                 }
             }
 
-            if (data == null)
-            {
-                return false;
-            }
-
+            if (data == null) return false;
+            
             try
             {
                 var writer = new TimFile();
@@ -113,14 +95,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
 
         public IEnumerable<Type> SourceTypes()
         {
-            yield return typeof(SourceAndSink);
-            yield return typeof(HeatFluxModel);
+            yield return typeof (SourceAndSink);
+            yield return typeof (HeatFluxModel);
         }
 
-        public string FileFilter => "Time series file|*.tim";
+        public string FileFilter
+        {
+            get { return "Time series file|*.tim"; }
+        }
 
         [ExcludeFromCodeCoverage]
-        public Bitmap Icon => Resources.TextDocument;
+        public Bitmap Icon { get { return Properties.Resources.TextDocument; } }
 
         public bool CanExportFor(object item)
         {
@@ -131,10 +116,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
 
         public override IEnumerable<BoundaryConditionDataType> ForcingTypes
         {
-            get
-            {
-                yield return BoundaryConditionDataType.TimeSeries;
-            }
+            get { yield return BoundaryConditionDataType.TimeSeries; }
         }
     }
 }

@@ -12,8 +12,8 @@ namespace DelftTools.Hydro.Helpers
     {
         public override IFunction GetConveyance(ICrossSection crossSection)
         {
-            ICrossSectionDefinition crossSectionDefinition = crossSection.Definition;
-            IEnumerable<Coordinate> yzValues = crossSectionDefinition.Profile;
+            var crossSectionDefinition = crossSection.Definition;
+            var yzValues = crossSectionDefinition.Profile;
             double[] y = yzValues.Select(yz => yz.X).ToArray();
             double[] z = yzValues.Select(yz => yz.Y).ToArray();
             //var zValuesVariable = crossSectionDefinition.VariableZ;
@@ -22,7 +22,7 @@ namespace DelftTools.Hydro.Helpers
             double[] zValuesOrdered = z.OrderBy(v => v).ToArray();
             double maxZ = zValuesOrdered.Max();
 
-            var vertices = new List<Coordinate> {new Coordinate(y[0] - 1, maxZ + 1)};
+            var vertices = new List<Coordinate> { new Coordinate(y[0] - 1, maxZ + 1) };
 
             // In order to avoid NTS throw exceptions (polygon with internal maximum)
             // set an extra 'top' on the polygon
@@ -33,7 +33,6 @@ namespace DelftTools.Hydro.Helpers
             {
                 vertices.Add(new Coordinate(y[i], zValuesOrdered[i]));
             }
-
             // extra value at end.
             vertices.Add(new Coordinate(vertices[vertices.Count - 1].X + 1, maxZ + 1));
             vertices.Add(new Coordinate(vertices[0].X, vertices[0].Y));
@@ -41,15 +40,15 @@ namespace DelftTools.Hydro.Helpers
             IGeometry crossSectionPolygon = new Polygon(new LinearRing(vertices.ToArray()));
 
             var verticesRectangle = new List<Coordinate>
-            {
-                new Coordinate(y[0], zValuesOrdered[0]),
-                new Coordinate(y[0], zValuesOrdered[zValuesOrdered.Length - 1]),
-                new Coordinate(y[y.Length - 1], zValuesOrdered[zValuesOrdered.Length - 1]),
-                new Coordinate(y[y.Length - 1], zValuesOrdered[0]),
-                new Coordinate(y[0], zValuesOrdered[0])
-            };
-            IFunction result = GetEmptyConveyanceFunction();
-            for (var i = 0; i < zValuesOrdered.Length; i++)
+                                        {
+                                            new Coordinate(y[0], zValuesOrdered[0]),
+                                            new Coordinate(y[0],zValuesOrdered[zValuesOrdered.Length - 1]),
+                                            new Coordinate(y[y.Length - 1],zValuesOrdered[zValuesOrdered.Length - 1]),
+                                            new Coordinate(y[y.Length - 1],zValuesOrdered[0]),
+                                            new Coordinate(y[0], zValuesOrdered[0])
+                                        };
+            var result = GetEmptyConveyanceFunction();
+            for (int i = 0; i < zValuesOrdered.Length; i++)
             {
                 verticesRectangle[1].Y = zValuesOrdered[i];
                 verticesRectangle[2].Y = zValuesOrdered[i];
@@ -65,9 +64,9 @@ namespace DelftTools.Hydro.Helpers
                 double conveyance;
                 if (intersection is IGeometryCollection)
                 {
-                    for (var j = 0; j < intersection.NumGeometries; j++)
+                    for (int j = 0; j < intersection.NumGeometries; j++)
                     {
-                        IGeometry smallPolygon = ((IGeometryCollection) intersection).Geometries[j];
+                        IGeometry smallPolygon = ((IGeometryCollection)intersection).Geometries[j];
                         width += smallPolygon.EnvelopeInternal.Width;
                         area += smallPolygon.Area;
                         wettedPerimeter += smallPolygon.Boundary.Length;
@@ -91,109 +90,98 @@ namespace DelftTools.Hydro.Helpers
                     // use Manning's equation to compute conveyance
                     conveyance = area * chezy * Math.Sqrt(hydraulicRadius);
                 }
-
                 storageWidth = width; // TODO: migrate to storage area
 
                 // flowArea, flowWidth, perimeter, hydraulicRadius, totalWidth, conveyancePos, conveyanceNeg
-                result[zValuesOrdered[i]] = new[]
-                {
-                    conveyance,
-                    area,
-                    width - storageWidth,
-                    wettedPerimeter,
-                    hydraulicRadius,
-                    width,
-                    conveyance
-                };
+                result[zValuesOrdered[i]] = new[] { conveyance, area,  (width-storageWidth), wettedPerimeter, hydraulicRadius, width, conveyance };
             }
-
             return result;
         }
 
-        //    /// <summary>
-        //    /// Updates the processed data (depth: width) based on the available y-z values;
-        //    /// </summary>
-        //    /// <param name="crossSection"></param>
-        //    public void UpdateConveyance(ICrossSectionDefinition crossSectionDefinition)
-        //    {
-        //        var zValuesVariable = crossSectionDefinition.VariableZ;
-        //        var yValuesVariable = crossSectionDefinition.VariableY;
+    //    /// <summary>
+    //    /// Updates the processed data (depth: width) based on the available y-z values;
+    //    /// </summary>
+    //    /// <param name="crossSection"></param>
+    //    public void UpdateConveyance(ICrossSectionDefinition crossSectionDefinition)
+    //    {
+    //        var zValuesVariable = crossSectionDefinition.VariableZ;
+    //        var yValuesVariable = crossSectionDefinition.VariableY;
 
-        //        double[] zValuesOrdered = zValuesVariable.Values.OrderBy(v => v).ToArray();
-        //        double maxZ = zValuesOrdered.Max();
+    //        double[] zValuesOrdered = zValuesVariable.Values.OrderBy(v => v).ToArray();
+    //        double maxZ = zValuesOrdered.Max();
 
-        //        var vertices = new List<ICoordinate> { new Coordinate(yValuesVariable.Values[0] - 1, maxZ + 1) };
+    //        var vertices = new List<ICoordinate> { new Coordinate(yValuesVariable.Values[0] - 1, maxZ + 1) };
 
-        //        // In order to avoid NTS throw exceptions (polygon with internal maximum)
-        //        // set an extra 'top' on the polygon
-        //        // Since we will only use intersections at valid z values these will be filtered out.
-        //        // extra value at start
-        //        // TODO: isn't it just a requirement from NTS that polygons must be closed?
-        //        for (var i = 0; i < zValuesOrdered.Length; i++)
-        //        {
-        //            vertices.Add(new Coordinate(yValuesVariable.Values[i], zValuesOrdered[i]));
-        //        }
-        //        // extra value at end.
-        //        vertices.Add(new Coordinate(vertices[vertices.Count - 1].X + 1, maxZ + 1));
-        //        vertices.Add(new Coordinate(vertices[0].X, vertices[0].Y));
+    //        // In order to avoid NTS throw exceptions (polygon with internal maximum)
+    //        // set an extra 'top' on the polygon
+    //        // Since we will only use intersections at valid z values these will be filtered out.
+    //        // extra value at start
+    //        // TODO: isn't it just a requirement from NTS that polygons must be closed?
+    //        for (var i = 0; i < zValuesOrdered.Length; i++)
+    //        {
+    //            vertices.Add(new Coordinate(yValuesVariable.Values[i], zValuesOrdered[i]));
+    //        }
+    //        // extra value at end.
+    //        vertices.Add(new Coordinate(vertices[vertices.Count - 1].X + 1, maxZ + 1));
+    //        vertices.Add(new Coordinate(vertices[0].X, vertices[0].Y));
 
-        //        IGeometry crossSectionPolygon = new Polygon(new LinearRing(vertices.ToArray()));
+    //        IGeometry crossSectionPolygon = new Polygon(new LinearRing(vertices.ToArray()));
 
-        //        var verticesRectangle = new List<ICoordinate>
-        //                                    {
-        //                                        new Coordinate(yValuesVariable.Values[0], zValuesOrdered[0]),
-        //                                        new Coordinate(yValuesVariable.Values[0],zValuesOrdered[zValuesOrdered.Length - 1]),
-        //                                        new Coordinate(yValuesVariable.Values[yValuesVariable.Values.Count - 1],zValuesOrdered[zValuesOrdered.Length - 1]),
-        //                                        new Coordinate(yValuesVariable.Values[yValuesVariable.Values.Count - 1],zValuesOrdered[0]),
-        //                                        new Coordinate(yValuesVariable.Values[0], zValuesOrdered[0])
-        //                                    };
+    //        var verticesRectangle = new List<ICoordinate>
+    //                                    {
+    //                                        new Coordinate(yValuesVariable.Values[0], zValuesOrdered[0]),
+    //                                        new Coordinate(yValuesVariable.Values[0],zValuesOrdered[zValuesOrdered.Length - 1]),
+    //                                        new Coordinate(yValuesVariable.Values[yValuesVariable.Values.Count - 1],zValuesOrdered[zValuesOrdered.Length - 1]),
+    //                                        new Coordinate(yValuesVariable.Values[yValuesVariable.Values.Count - 1],zValuesOrdered[0]),
+    //                                        new Coordinate(yValuesVariable.Values[0], zValuesOrdered[0])
+    //                                    };
 
-        //        for (int i = 0; i < zValuesOrdered.Length; i++)
-        //        {
-        //            verticesRectangle[1].Y = zValuesOrdered[i];
-        //            verticesRectangle[2].Y = zValuesOrdered[i];
-        //            IGeometry rectangle = new Polygon(new LinearRing(verticesRectangle.ToArray()));
+    //        for (int i = 0; i < zValuesOrdered.Length; i++)
+    //        {
+    //            verticesRectangle[1].Y = zValuesOrdered[i];
+    //            verticesRectangle[2].Y = zValuesOrdered[i];
+    //            IGeometry rectangle = new Polygon(new LinearRing(verticesRectangle.ToArray()));
 
-        //            IGeometry intersection = crossSectionPolygon.Intersection(rectangle);
-        //            const double chezy = 45.0;
-        //            double width = 0;
-        //            double storageWidth;
-        //            double area = 0;
-        //            double wettedPerimeter = 0;
-        //            double hydraulicRadius;
-        //            double conveyance;
-        //            if (intersection is IGeometryCollection)
-        //            {
-        //                for (int j = 0; j < intersection.NumGeometries; j++)
-        //                {
-        //                    IGeometry smallPolygon = ((IGeometryCollection)intersection).Geometries[j];
-        //                    width += smallPolygon.EnvelopeInternal.Width;
-        //                    area += smallPolygon.Area;
-        //                    wettedPerimeter += smallPolygon.Boundary.Length;
-        //                }
-        //            }
-        //            else
-        //            {
-        //                width = intersection.EnvelopeInternal.Width;
-        //                area = intersection.EnvelopeInternal.Area;
-        //                wettedPerimeter = intersection.Boundary.Length;
-        //            }
+    //            IGeometry intersection = crossSectionPolygon.Intersection(rectangle);
+    //            const double chezy = 45.0;
+    //            double width = 0;
+    //            double storageWidth;
+    //            double area = 0;
+    //            double wettedPerimeter = 0;
+    //            double hydraulicRadius;
+    //            double conveyance;
+    //            if (intersection is IGeometryCollection)
+    //            {
+    //                for (int j = 0; j < intersection.NumGeometries; j++)
+    //                {
+    //                    IGeometry smallPolygon = ((IGeometryCollection)intersection).Geometries[j];
+    //                    width += smallPolygon.EnvelopeInternal.Width;
+    //                    area += smallPolygon.Area;
+    //                    wettedPerimeter += smallPolygon.Boundary.Length;
+    //                }
+    //            }
+    //            else
+    //            {
+    //                width = intersection.EnvelopeInternal.Width;
+    //                area = intersection.EnvelopeInternal.Area;
+    //                wettedPerimeter = intersection.Boundary.Length;
+    //            }
 
-        //            hydraulicRadius = area / wettedPerimeter;
-        //            if (hydraulicRadius == 0 || wettedPerimeter == 0)
-        //            {
-        //                conveyance = 0;
-        //                hydraulicRadius = 0;
-        //            }
-        //            else
-        //            {
-        //                // use Manning's equation to compute conveyance
-        //                conveyance = area * chezy * Math.Sqrt(hydraulicRadius);
-        //            }
-        //            storageWidth = width; // TODO: migrate to storage area
+    //            hydraulicRadius = area / wettedPerimeter;
+    //            if (hydraulicRadius == 0 || wettedPerimeter == 0)
+    //            {
+    //                conveyance = 0;
+    //                hydraulicRadius = 0;
+    //            }
+    //            else
+    //            {
+    //                // use Manning's equation to compute conveyance
+    //                conveyance = area * chezy * Math.Sqrt(hydraulicRadius);
+    //            }
+    //            storageWidth = width; // TODO: migrate to storage area
 
-        //            crossSectionDefinition.ConveyanceData[zValuesOrdered[i]] = new[] { width, storageWidth, conveyance, conveyance, wettedPerimeter, hydraulicRadius, area };
-        //        }
-        //    }
+    //            crossSectionDefinition.ConveyanceData[zValuesOrdered[i]] = new[] { width, storageWidth, conveyance, conveyance, wettedPerimeter, hydraulicRadius, area };
+    //        }
+    //    }
     }
 }

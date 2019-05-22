@@ -1,0 +1,39 @@
+[General]
+
+NetworkNew=0
+QualityResultsPresent=0
+ImportFrom=FromScratch
+ImportDate=21/01/2013 08:44:36
+SuftableHasRun=-1
+Case Name=REF 400 RR Unpaved Node, Ernst-001: Basic functionality
+QuantityResultsPresent=0
+UserId=Toine Vergroesen
+UserName=vergroe
+ComputerName=L00373
+[Previous OutputFiles]
+..\work\3bareas.his=-1
+..\work\calcpnt.his=0
+..\work\reachseg.his=0
+..\work\qlat.his=0
+..\work\flowanal.his=0
+..\work\calcdim.his=0
+..\work\reachdim.his=0
+..\work\rrbalans.his=-1
+..\work\qwb.his=0
+..\work\simulate.rep=-1
+..\work\sobek_3b.log=-1
+..\work\sobek.log=0
+..\work\3B_GENER.OUT=-1
+..\work\indicat.flw=0
+..\work\balansdt.his=-1
+..\work\3blinks.his=-1
+..\work\pvstordt.his=0
+..\work\upflowdt.his=-1
+..\work\grnstrdt.his=0
+..\work\bndflodt.his=-1
+..\work\bndfltot.his=-1
+..\work\wwtpdt.his=0
+..\work\PAVED.OUT=0
+..\work\UNPAVED.OUT=-1
+..\work\GRNHOUS.OUT=0
+..\work\BOUND3B.OUT=-1

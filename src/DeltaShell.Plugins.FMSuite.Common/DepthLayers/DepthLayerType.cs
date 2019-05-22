@@ -6,10 +6,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.DepthLayers
     {
         [Description("Single")]
         Single,
-
         [Description("Z")]
         Z,
-
         [Description("Sigma")]
         Sigma
     }

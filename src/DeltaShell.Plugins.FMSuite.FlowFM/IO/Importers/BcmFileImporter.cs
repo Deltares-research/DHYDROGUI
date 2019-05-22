@@ -1,15 +1,15 @@
-using DelftTools.Shell.Core;
-using DelftTools.Utils.Editing;
-using DeltaShell.Plugins.FMSuite.Common.FeatureData;
-using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
-using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Linq;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccess;
+using DelftTools.Shell.Core;
+using DelftTools.Utils.Collections;
+using DelftTools.Utils.Editing;
+using DeltaShell.NGHS.IO;
+using DeltaShell.Plugins.FMSuite.Common.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 {
@@ -23,17 +23,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         }
 
         #region IFileImporter
+        [ExcludeFromCodeCoverage]
+        public string Name
+        {
+            get { return "Morphology boundary data from .bcm file"; }
+        }
 
         [ExcludeFromCodeCoverage]
-        public string Name => "Morphology boundary data from .bcm file";
+        public string Category
+        {
+            get { return "Morpology boundary data"; }
+        }
+
+        public string Description
+        {
+            get { return string.Empty; }
+        }
 
         [ExcludeFromCodeCoverage]
-        public string Category => "Morpology boundary data";
-
-        public string Description => string.Empty;
-
-        [ExcludeFromCodeCoverage]
-        public Bitmap Image => Resources.TextDocument;
+        public Bitmap Image
+        {
+            get { return Properties.Resources.TextDocument; }
+        }
 
         public IEnumerable<Type> SupportedItemTypes
         {
@@ -50,10 +61,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             return true;
         }
 
-        public bool CanImportOnRootLevel => false;
+        public bool CanImportOnRootLevel
+        {
+            get { return false; }
+        }
 
         [ExcludeFromCodeCoverage]
-        public override string FileFilter => "Morphology boundary conditions file|*.bcm";
+        public override string FileFilter
+        {
+            get { return "Morphology boundary conditions file|*.bcm"; }
+        }
 
         public string TargetDataDirectory { get; set; }
 
@@ -67,12 +84,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 
         public object ImportItem(string filePath, object target = null)
         {
-            string[] filePaths = filePath == null
-                                     ? FilePaths
-                                     : new[]
-                                     {
-                                         filePath
-                                     };
+            var filePaths = filePath == null ? FilePaths : new[] { filePath };
 
             if (filePaths == null)
             {
@@ -82,26 +94,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             var bcSetList = target as IList<BoundaryConditionSet>;
             if (bcSetList != null)
             {
-                foreach (string path in filePaths)
+                foreach (var path in filePaths)
                 {
-                    if (ShouldCancel)
-                    {
-                        return bcSetList;
-                    }
-
+                    if (ShouldCancel) return bcSetList;
                     if (DeleteDataBeforeImport)
                     {
                         foreach (
-                            FlowBoundaryCondition boundaryCondition in
+                            var boundaryCondition in
                             bcSetList.SelectMany(bc => bc.BoundaryConditions).OfType<FlowBoundaryCondition>())
                         {
                             boundaryCondition.ClearData();
                         }
                     }
-
                     ImportTo(path, bcSetList, true);
                 }
-
                 OpenViewAfterImport = false;
                 return bcSetList;
             }
@@ -109,29 +115,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             var bcSet = target as BoundaryConditionSet;
             if (bcSet != null)
             {
-                foreach (string path in filePaths)
+                foreach (var path in filePaths)
                 {
-                    if (ShouldCancel)
-                    {
-                        return bcSet;
-                    }
-
+                    if (ShouldCancel) return bcSet;
                     if (DeleteDataBeforeImport)
                     {
-                        foreach (FlowBoundaryCondition boundaryCondition in bcSet
-                                                                            .BoundaryConditions
-                                                                            .OfType<FlowBoundaryCondition>())
+                        foreach (var boundaryCondition in bcSet.BoundaryConditions.OfType<FlowBoundaryCondition>())
                         {
                             boundaryCondition.ClearData();
                         }
                     }
-
-                    ImportTo(path, new[]
-                    {
-                        bcSet
-                    }, true);
+                    ImportTo(path, new[] { bcSet }, true);
                 }
-
                 OpenViewAfterImport = true;
                 return bcSet;
             }
@@ -139,33 +134,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             var condition = target as FlowBoundaryCondition;
             if (condition != null)
             {
-                var tempSet = new BoundaryConditionSet {Feature = condition.Feature};
-                tempSet.BoundaryConditions.Add(condition);
-                foreach (string path in filePaths)
+                var tempSet = new BoundaryConditionSet
                 {
-                    if (ShouldCancel)
-                    {
-                        return condition;
-                    }
-
+                    Feature = condition.Feature
+                };
+                tempSet.BoundaryConditions.Add(condition);
+                foreach (var path in filePaths)
+                {
+                    if (ShouldCancel) return condition;
                     if (DeleteDataBeforeImport)
                     {
                         condition.ClearData();
                     }
-
-                    ImportTo(path, new[]
-                    {
-                        tempSet
-                    }, false);
+                    ImportTo(path, new[] { tempSet }, false);
                 }
-
                 OpenViewAfterImport = true;
                 return condition;
             }
 
-            throw new ArgumentException(
-                Resources
-                    .BcmFileImporter_ImportItem_Morphology_boundary_condition_bcm_file_importer_could_not_import_data_onto_given_target);
+            throw new ArgumentException(Resources.BcmFileImporter_ImportItem_Morphology_boundary_condition_bcm_file_importer_could_not_import_data_onto_given_target);
         }
 
         #endregion
@@ -176,9 +163,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             {
                 ProgressChanged("parsing file...", 0, 2);
             }
-
             var fileReader = new BcmFile();
-            List<BcBlockData> dataBlocks = fileReader.Read(filePath).ToList();
+            var dataBlocks = fileReader.Read(filePath).ToList();
             var builder = new BcmFileFlowBoundaryDataBuilder
             {
                 ExcludedDataTypes = ExcludedDataTypes,
@@ -186,31 +172,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                 OverwriteExistingData = OverwriteExistingData,
                 CanCreateNewBoundaryCondition = createNew
             };
-            int blockCount = dataBlocks.Count;
-            var i = 0;
-            foreach (IBoundaryCondition boundaryCondition in boundaryConditionSets.SelectMany(
-                bcs => bcs.BoundaryConditions))
+            var blockCount = dataBlocks.Count;
+            int i = 0;
+            foreach (var boundaryCondition in boundaryConditionSets.SelectMany(bcs => bcs.BoundaryConditions))
             {
                 boundaryCondition.BeginEdit(new DefaultEditAction("Begin import bcm data..."));
             }
-
-            foreach (BcBlockData bcBlockData in dataBlocks)
+            foreach (var bcBlockData in dataBlocks)
             {
-                if (ShouldCancel)
-                {
-                    return;
-                }
-
+                if (ShouldCancel) return;
                 if (ProgressChanged != null)
                 {
                     ProgressChanged("importing data block...", i++, blockCount);
                 }
-
                 builder.InsertBoundaryData(boundaryConditionSets, bcBlockData);
             }
-
-            foreach (IBoundaryCondition boundaryCondition in boundaryConditionSets.SelectMany(
-                bcs => bcs.BoundaryConditions))
+            foreach (var boundaryCondition in boundaryConditionSets.SelectMany(bcs => bcs.BoundaryConditions))
             {
                 if (boundaryCondition.IsEditing)
                 {
@@ -226,13 +203,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         public bool DeleteDataBeforeImport { private get; set; }
 
         public bool OverwriteExistingData { private get; set; }
-
         public override IEnumerable<BoundaryConditionDataType> ForcingTypes
         {
-            get
-            {
-                yield return BoundaryConditionDataType.TimeSeries;
-            }
+            get { yield return BoundaryConditionDataType.TimeSeries; }
         }
 
         public override void Import(string fileName, FlowBoundaryCondition boundaryCondition)
@@ -242,8 +215,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 
         public override bool CanImportOnBoundaryCondition(FlowBoundaryCondition boundaryCondition)
         {
-            return FlowBoundaryCondition.IsMorphologyBoundary(boundaryCondition) &&
-                   ForcingTypes.Contains(boundaryCondition.DataType);
+            return FlowBoundaryCondition.IsMorphologyBoundary(boundaryCondition) && ForcingTypes.Contains(boundaryCondition.DataType);
         }
     }
 }

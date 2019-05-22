@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text.RegularExpressions;
 using DelftTools.Utils.RegularExpressions;
 using DeltaShell.NGHS.IO;
 using log4net;
@@ -27,21 +26,19 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 
                 while ((line = GetNextLine()) != null)
                 {
-                    string[] fields = GetKeyValueComment(line);
+                    var fields = GetKeyValueComment(line);
                     if (fields[0].Trim() == GridFileIdentifier)
                     {
                         CloseInputFile();
                         return fields[1].Trim();
                     }
                 }
-
                 CloseInputFile();
             }
             catch (Exception)
             {
                 Log.ErrorFormat("File at '{0}' was not found.", filePath);
             }
-
             return null;
         }
 
@@ -51,12 +48,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             {
                 var result = new string[3];
 
-                MatchCollection matches = RegularExpression.GetMatches(KeyValueCommentPattern, line);
-                if (matches.Count == 0)
-                {
-                    throw new FormatException(string.Format("Invalid key-value-comment line on line {0} in file {1}",
-                                                            LineNumber, InputFilePath));
-                }
+                var matches = RegularExpression.GetMatches(KeyValueCommentPattern, line);
+                if (matches.Count == 0) throw new FormatException(String.Format("Invalid key-value-comment line on line {0} in file {1}",
+                    LineNumber, InputFilePath));
 
                 result[0] = matches[0].Groups["key"].Value.Trim();
                 result[1] = matches[0].Groups["value"].Value.Trim();
@@ -67,12 +61,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             catch (Exception ex)
             {
                 Log.WarnFormat("During reading apwxwy file: {0}", ex.Message);
-                return new string[3]
-                {
-                    "a",
-                    "b",
-                    "c"
-                };
+                return new string[3] {"a","b","c"};
             }
         }
     }

@@ -1,0 +1,25 @@
+ST_1.0
+STRU id 'ER_5580754' nm 'vak3_4' ci 'R_001' lc 1324.99999999971 stru
+STRU id 'ER_5580913' nm 'servaasbrug1' ci 'R_002' lc 2018.99999999989 stru
+STCM id 'C_01' nm 'stuw_Borg_comp' ci 'R_003' lc 567.602015996071 stcm
+STRU id 'ER_5580594' nm 'Berg' ci 'R_004' lc 19520.9999999994 stru
+STRU id 'ER_5580432' nm 'vak103_104' ci 'R_052' lc 3634.99999999968 stru
+STRU id 'S_04' nm 'sluis___Limmel' ci 'R_006' lc 587.017196422513 stru
+STRU id 'S_05' nm 'sluis_____Born' ci 'R_006' lc 24081.9070822567 stru
+STRU id 'S_06' nm 'sluis_Maasbrac' ci 'R_006' lc 39377.4922567748 stru
+STCM id 'C_02' nm 'stuw_Linn_comp' ci 'R_008' lc 943.999999999688 stcm
+STCM id 'C_4477' nm 'stuw_Roer_comp' ci 'R_008' lc 13059.9999999995 stcm
+STRU id 'S_12' nm 'sluis_____Heel' ci 'R_009' lc 668.004561519769 stru
+STCM id 'C_04' nm 'stuw_Belf_comp' ci 'R_010' lc 15038.9999999996 stcm
+STCM id 'C_05' nm 'stuw_Samb_comp' ci 'R_013' lc 14413.0000000002 stcm
+STRU id 'S_17' nm 'sluis___Heumen' ci 'R_014' lc 10511.9373284685 stru
+STRU id 'S_18' nm 'sluis_Kraaijpl' ci 'R_015' lc 5067.81865397138 stru
+STCM id 'C_06' nm 'stuw_Grav_comp' ci 'R_016' lc 9819.00000000035 stcm
+STCM id 'C_07' nm 'stuw_Lith__comp' ci 'R_016' lc 34804.0000000005 stcm
+STRU id 'ER_6034645' nm 'Verkeersbrug_Empel' ci 'R_017' lc 15115.9999999998 stru
+STRU id 'S_5172' nm 'Kering_afgedamde_Maas' ci 'R_021' lc 1902.17486765553 stru
+STRU id 'S_5577336' nm 'oudems_in' ci 'R_024' lc 929.823097106032 stru
+STRU id 'S_5577337' nm 'oudems_brug' ci 'R_024' lc 3868.38644949704 stru
+STRU id 'S_286' nm 'Crevecoeur' ci 'R_029' lc 6010.99999999988 stru
+STCM id 'C_5576954' nm 'bosschebroek' ci 'R_032' lc 3000.0000000001 stcm
+STRU id 'S_285' nm 'Bovenl_Sls' ci 'R_035' lc 13541 stru

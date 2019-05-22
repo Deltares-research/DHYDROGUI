@@ -16,16 +16,12 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
     {
         [Description("X-component")]
         VelocityX,
-
         [Description("Y-component")]
         VelocityY,
-
         [Description("Velocity vector")]
         VelocityVector,
-
         [Description("Air pressure")]
         AirPressure,
-
         [Description("Wind vector and air pressure")]
         VelocityVectorAirPressure,
     }

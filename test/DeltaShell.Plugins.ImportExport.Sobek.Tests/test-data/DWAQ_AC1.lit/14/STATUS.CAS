@@ -1,0 +1,42 @@
+[General]
+
+NetworkNew=0
+QualityResultsPresent=-1
+ImportFrom=FromScratch
+ImportDate=12-9-2011 11:57:34
+SuftableHasRun=-1
+Case Name=DWAQ AC2a: RR-FLOW-WQ - substances calcultation
+QuantityResultsPresent=-1
+UserId=ir. Erwin Meijers
+UserName=meijers
+ComputerName=L00271
+[Previous OutputFiles]
+..\work\calcpnt.his=-1
+..\work\reachseg.his=-1
+..\work\reachvol.his=-1
+..\work\reachflw.his=-1
+..\work\qlat.his=-1
+..\work\flowanal.his=-1
+..\work\calcdim.his=-1
+..\work\reachdim.his=-1
+..\work\delwaq.map=-1
+..\work\delwaq.his=-1
+..\work\qwb.his=-1
+..\work\wqbou20.his=-1
+..\work\wqbal.his=0
+..\work\simulate.rep=-1
+..\work\sobek.log=-1
+..\work\wqint.lst=-1
+..\work\delwaq.lst=-1
+..\work\delwaq.lsp=-1
+..\work\delwaq.mon=-1
+..\work\indicat.flw=-1
+..\work\wqbal.prn=-1
+..\work\waterbal.prn=-1
+..\work\3bareas.his=-1
+..\work\rrbalans.his=-1
+..\work\sobek_3b.log=-1
+..\work\3B_GENER.OUT=-1
+..\work\struc.his=-1
+..\work\strucdim.his=-1
+..\work\controll.his=-1

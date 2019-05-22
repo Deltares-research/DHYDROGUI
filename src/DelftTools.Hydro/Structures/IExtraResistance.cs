@@ -7,7 +7,6 @@ namespace DelftTools.Hydro.Structures
     {
         [Description("Ksi in delta")]
         KsiInDelta,
-
         [Description("Eta in delta")]
         EtaInDelta
     }
@@ -16,9 +15,9 @@ namespace DelftTools.Hydro.Structures
     ///</summary>
     public interface IExtraResistance : IStructure1D
     {
-        /// <summary>
+        ///<summary>
         /// Used formulate to calculate the extra friction
-        /// </summary>
+        ///</summary>
         ExtraResistanceType ExtraResistanceType { get; set; }
 
         /// <summary>

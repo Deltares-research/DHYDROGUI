@@ -9,19 +9,16 @@ namespace DelftTools.Hydro.Structures
     {
         [FeatureAttribute]
         public virtual double SillLevel { get; set; }
-
         public virtual bool UseSillLevelTimeSeries { get; set; }
         public virtual TimeSeries SillLevelTimeSeries { get; set; }
 
         [FeatureAttribute]
         public virtual double LowerEdgeLevel { get; set; }
-
         public virtual bool UseLowerEdgeLevelTimeSeries { get; set; }
         public virtual TimeSeries LowerEdgeLevelTimeSeries { get; set; }
 
         [FeatureAttribute]
         public virtual double OpeningWidth { get; set; }
-
         public virtual bool UseOpeningWidthTimeSeries { get; set; }
         public virtual TimeSeries OpeningWidthTimeSeries { get; set; }
 
@@ -34,7 +31,9 @@ namespace DelftTools.Hydro.Structures
         [FeatureAttribute]
         public virtual double SillWidth { get; set; }
 
-        public Gate() : this("Gate") {}
+        public Gate() : this("Gate")
+        {
+        }
 
         public Gate(string name)
         {
@@ -43,15 +42,14 @@ namespace DelftTools.Hydro.Structures
             OffsetY = 0;
 
             SillLevelTimeSeries = HydroTimeSeriesFactory.CreateTimeSeries("Sill level", "Sill level", "m");
-            LowerEdgeLevelTimeSeries =
-                HydroTimeSeriesFactory.CreateTimeSeries("Lower edge level", "Lower edge level", "m");
+            LowerEdgeLevelTimeSeries = HydroTimeSeriesFactory.CreateTimeSeries("Lower edge level", "Lower edge level", "m");
             OpeningWidthTimeSeries = HydroTimeSeriesFactory.CreateTimeSeries("Opening width", "Opening width", "m");
         }
 
         public override void CopyFrom(object source)
         {
             base.CopyFrom(source);
-            var copyFrom = (Gate) source;
+            var copyFrom = (Gate)source;
 
             SillLevel = copyFrom.SillLevel;
             LowerEdgeLevel = copyFrom.LowerEdgeLevel;
@@ -66,7 +64,7 @@ namespace DelftTools.Hydro.Structures
             {
                 SillLevelTimeSeries = (TimeSeries) copyFrom.SillLevelTimeSeries.Clone(true);
             }
-
+            
             UseLowerEdgeLevelTimeSeries = copyFrom.UseLowerEdgeLevelTimeSeries;
             if (copyFrom.LowerEdgeLevelTimeSeries != null)
             {
@@ -74,9 +72,9 @@ namespace DelftTools.Hydro.Structures
             }
 
             UseOpeningWidthTimeSeries = copyFrom.UseOpeningWidthTimeSeries;
-            if (copyFrom.OpeningWidthTimeSeries != null)
+            if(copyFrom.OpeningWidthTimeSeries != null)
             {
-                OpeningWidthTimeSeries = (TimeSeries) copyFrom.OpeningWidthTimeSeries.Clone(true);
+                OpeningWidthTimeSeries = (TimeSeries)copyFrom.OpeningWidthTimeSeries.Clone(true);
             }
         }
 

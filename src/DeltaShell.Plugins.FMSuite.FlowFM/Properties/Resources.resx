@@ -202,6 +202,9 @@
   <data name="SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_Cannot_create_xyz_file_for_spatial_varying_initial_condition__0__because_it_is_a_value_spatial_operation__please_interpolate_the_operation_to_the_grid_or" xml:space="preserve">
     <value>Cannot create xyz file for spatial varying initial condition {0} because it is a value spatial operation. Please interpolate the operation to the grid or click the "Copy to spatial data"-button to generate the xyz file.</value>
   </data>
+  <data name="ExtForceFile_ReadSpatialData_The_model_may_not_run__Spatial_varying_quantity__0__could_not_be_imported_because_the_prefix_does_not_match__1__for_Tracers_or__2__for_Spatial_Varying_Sediments_" xml:space="preserve">
+    <value>The model may not run. Spatial varying quantity {0} could not be imported because the prefix does not match {1} for Tracers or {2} for Spatial Varying Sediments.</value>
+  </data>
   <data name="SedimentFile_WriteXYZIfDirectoryExists_Could_not_get_directory_name_from_file_path__0_" xml:space="preserve">
     <value>Could not get directory name from file path {0}</value>
   </data>
@@ -461,6 +464,9 @@ Manhole with unique id '{4}' is not imported.</value>
   <data name="WaterFlowFMModel_ReadDiaFile_Could_not_find_log_file___0__at_expected_path___1_" xml:space="preserve">
     <value>Could not find log file: {0} at expected path: {1}</value>
   </data>
+  <data name="ExtForceFile_ReadPolyLineData_Unsupported_quantity_type___0___in_the__ext_file__1__detected__It_will_not_be_imported_" xml:space="preserve">
+    <value>Unsupported quantity type: {0}, in the .ext file {1} detected. It will not be imported.</value>
+  </data>
   <data name="UnstrucGridOperationApi_DisposeApiIfNotReachable_API_failed_to_generate_snapped_feature__0___Try_reopening_the_project_if_the_problem_persists_" xml:space="preserve">
     <value>API failed to generate snapped feature {0}. Try reopening the project if the problem persists.</value>
   </data>
@@ -552,27 +558,9 @@ Manhole with unique id '{4}' is not imported.</value>
     <value>fixed weir '{0}' not within grid extent.</value>
   </data>
   <data name="FixedWeirValidator_ValidateSillDepths_fixed_weir___0___has_unphysical_sill_depths__parts_will_be_ignored_by_dflow_fm_" xml:space="preserve">
-    <value>'{0}': Fixed weir has ground heights smaller than 0.00 m. A minimum of 0.00 m will be applied by the computational core.</value>
+    <value>fixed weir '{0}' has unphysical sill depths, parts will be ignored by dflow-fm.</value>
   </data>
   <data name="WaterFlowFMModel_ChangingWeirFormulaWhenAlsoUsedInRTC_Structure_component__0__has_been_removed_from_RTC_Control_Group__1__due_to_type_change" xml:space="preserve">
     <value> Structure component'{0}' has been removed from Control Group '{1}' due to type change.</value>
-  </data>
-  <data name="FixedWeirValidator_ValidateSillDepths__0___Fixed_weir_with_type_1_have_a_ground_heights_smaller_than_0_10_m__A_minimum_of_0_10_m_will_be_applied_by_the_computational_core_" xml:space="preserve">
-    <value>'{0}': Fixed weir with type 'TabellenBoek' have a ground heights smaller than 0.10 m. A minimum of 0.10 m will be applied by the computational core.</value>
-  </data>
-  <data name="ExtForceFile_StoreUnknownQuantities_File__0__could_not_be_found_for_quantity___1___in_the_external_force_file__2__" xml:space="preserve">
-    <value>File {0} could not be found for quantity '{1}' in the external force file {2}.</value>
-  </data>
-  <data name="ExtForceFile_StoreUnknownQuantities_Quantity___0___detected_in_the_external_force_file_and_will_be_passed_to_the_computational_core__This_may_affect_your_simulation_" xml:space="preserve">
-    <value>Quantity '{0}' detected in the external force file and will be passed to the computational core. This may affect your simulation.</value>
-  </data>
-  <data name="ExtForceFile_ReadQuantityProperty_Unexpected_line___0___on_line__1__in_file__2__and_will_be_ignored_" xml:space="preserve">
-    <value>Unexpected line "{0}" on line {1} in file {2} and will be ignored.</value>
-  </data>
-  <data name="ExtForceFile_LogWarningQuantityPropertyAlreadySet__0__is_already_set__Line__1__of_file__2__will_be_ignored_" xml:space="preserve">
-    <value>{0} is already set; Line {1} of file {2} will be ignored.</value>
-  </data>
-  <data name="ExtForceFile_GetMessageUnexpectedKeyword_Unexpected_keyword__0__on_line__1__of_file__2_" xml:space="preserve">
-    <value>Unexpected keyword {0} on line {1} of file {2}</value>
   </data>
 </root>

@@ -68,81 +68,72 @@ namespace DelftTools.Hydro
 
         #region IHydroRegion
 
-        public virtual IEnumerable<IHydroObject> AllHydroObjects => Enumerable.Empty<IHydroObject>();
+        public virtual IEnumerable<IHydroObject> AllHydroObjects
+        {
+            get { return Enumerable.Empty<IHydroObject>(); }
+        }
 
         public virtual IEventedList<HydroLink> Links { get; set; }
 
         public override IEnumerable<object> GetDirectChildren()
         {
             yield return Pumps; // Required to open view for the collection of pumps
-            foreach (Pump2D pump in Pumps)
+            foreach (var pump in Pumps)
             {
                 yield return pump;
             }
-
             yield return Weirs; // Required to open view for the collection of weirs
-            foreach (Weir2D weir in Weirs)
+            foreach (var weir in Weirs)
             {
                 yield return weir;
             }
 
-            foreach (ThinDam2D thinDam in ThinDams)
+            foreach (var thinDam in ThinDams)
             {
                 yield return thinDam;
             }
-
-            foreach (FixedWeir fixedWeir in FixedWeirs)
+            foreach (var fixedWeir in FixedWeirs)
             {
                 yield return fixedWeir;
             }
-
-            foreach (LandBoundary2D landBoundary in LandBoundaries)
+            foreach (var landBoundary in LandBoundaries)
             {
                 yield return landBoundary;
             }
-
             yield return DryPoints;
-            foreach (GroupablePointFeature dryPoint in DryPoints)
+            foreach (var dryPoint in DryPoints)
             {
                 yield return dryPoint;
             }
-
-            foreach (GroupableFeature2DPolygon dryArea in DryAreas)
+            foreach (var dryArea in DryAreas)
             {
                 yield return dryArea;
             }
-
-            foreach (GroupableFeature2DPoint observationPoint in ObservationPoints)
+            foreach (var observationPoint in ObservationPoints)
             {
                 yield return observationPoint;
             }
-
-            foreach (ObservationCrossSection2D observationCrossSection in ObservationCrossSections)
+            foreach (var observationCrossSection in ObservationCrossSections)
             {
                 yield return observationCrossSection;
             }
-
-            foreach (GroupableFeature2D dumpingLocation in DumpingLocations)
+            foreach (var dumpingLocation in DumpingLocations)
             {
                 yield return dumpingLocation;
             }
-
-            foreach (GroupableFeature2D dredgingLocation in DredgingLocations)
+            foreach (var dredgingLocation in DredgingLocations)
             {
                 yield return dredgingLocation;
             }
-
-            foreach (Embankment embankment in Embankments)
+            foreach (var embankment in Embankments)
             {
                 yield return embankment;
             }
-
-            foreach (GroupableFeature2DPolygon enclosure in Enclosures)
+            foreach (var enclosure in Enclosures)
             {
                 yield return enclosure;
             }
-
-            foreach (BridgePillar bridgePillar in BridgePillars)
+            foreach (var bridgePillar in BridgePillars)
             {
                 yield return bridgePillar;
             }
@@ -165,13 +156,12 @@ namespace DelftTools.Hydro
 
         public override object Clone()
         {
-            var clone = (HydroArea) base.Clone();
+            var clone = (HydroArea)base.Clone();
             clone.Initialize();
             clone.Links = new EventedList<HydroLink>(Links);
 
             return clone;
         }
-
         #endregion
     }
 }

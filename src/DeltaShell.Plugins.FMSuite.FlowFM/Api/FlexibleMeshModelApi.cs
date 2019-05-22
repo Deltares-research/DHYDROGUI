@@ -80,61 +80,46 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
 
         public bool InitializeUserTimeStep(double targetTimeRel)
         {
-            int result = FlexibleMeshModelDll.dfm_init_user_timestep(ref targetTimeRel);
+            var result = FlexibleMeshModelDll.dfm_init_user_timestep(ref targetTimeRel);
             if (result != 0 && result != 88)
-            {
                 throw new Exception("Flow FM initialize user time step failed with error code " + result);
-            }
-
             return true;
         }
 
         public bool FinalizeUserTimeStep()
         {
-            int result = FlexibleMeshModelDll.dfm_finalize_user_timestep();
-            if (result == 0)
-            {
-                return true;
-            }
-
+            var result = FlexibleMeshModelDll.dfm_finalize_user_timestep();
+            if (result == 0) return true;
             throw new Exception("Flow FM finalize user time step failed with error code " + result);
         }
 
         public double InitializeComputationalTimeStep(double targetTimeRel, double timeStep)
         {
-            double dt = timeStep;
-            int result = FlexibleMeshModelDll.dfm_init_computational_timestep(ref targetTimeRel, ref dt);
+            var dt = timeStep;
+            var result = FlexibleMeshModelDll.dfm_init_computational_timestep(ref targetTimeRel, ref dt);
 
             if (result != 0 && result != 88)
-            {
                 throw new Exception("Flow FM initialize computational time step failed with error code " + result);
-            }
 
             return dt;
         }
 
         public double RunComputationalTimeStep(double timeStep)
         {
-            double newTimeStep = timeStep;
-            int result = FlexibleMeshModelDll.dfm_run_computational_timestep(ref newTimeStep);
+            var newTimeStep = timeStep;
+            var result = FlexibleMeshModelDll.dfm_run_computational_timestep(ref newTimeStep);
 
             // Keep dflowfm (1d2d) computation going, when dflofm core returns warning code 31 (time setback) 
-            if (result != 0 && result != 31)
-            {
+            if (result != 0 && result != 31) 
                 throw new Exception("Flow FM perform computational time step failed with error code " + result);
-            }
 
             return newTimeStep;
         }
 
         public bool FinalizeComputationalTimeStep()
         {
-            int result = FlexibleMeshModelDll.dfm_finalize_computational_timestep();
-            if (result == 0)
-            {
-                return true;
-            }
-
+            var result = FlexibleMeshModelDll.dfm_finalize_computational_timestep();
+            if (result == 0) return true;
             throw new Exception("Flow FM finalize computational time step failed with error " + result);
         }
 
@@ -151,11 +136,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             switch (sb.ToString())
             {
                 case "double":
-                    return typeof(double);
+                    return typeof (double);
                 case "int":
-                    return typeof(int);
+                    return typeof (int);
                 default:
-                    throw new NotSupportedException(string.Format("Unsupported type from bmi api: {0}", sb));
+                    throw new NotSupportedException(String.Format("Unsupported type from bmi api: {0}", sb));
             }
         }
 
@@ -164,42 +149,53 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             return flexibleMeshBasicModelInterface.GetVariableLocation(variable);
         }
 
-        public DateTime StartTime => flexibleMeshBasicModelInterface.StartTime;
+        public DateTime StartTime
+        {
+            get { return flexibleMeshBasicModelInterface.StartTime; }
+        }
+        
+        public DateTime StopTime { get { return flexibleMeshBasicModelInterface.StopTime; } }
 
-        public DateTime StopTime => flexibleMeshBasicModelInterface.StopTime;
+        public DateTime CurrentTime
+        {
+            get { return flexibleMeshBasicModelInterface.CurrentTime; }
+        }
 
-        public DateTime CurrentTime => flexibleMeshBasicModelInterface.CurrentTime;
+        public TimeSpan TimeStep
+        {
+            get { return flexibleMeshBasicModelInterface.TimeStep; }
+        }
 
-        public TimeSpan TimeStep => flexibleMeshBasicModelInterface.TimeStep;
-
-        public string[] VariableNames => flexibleMeshBasicModelInterface.VariableNames;
+        public string[] VariableNames
+        {
+            get { return flexibleMeshBasicModelInterface.VariableNames; }
+        }
 
         public Logger Logger { get; set; }
 
         public void Dispose()
         {
+            
             // nothing to do here
         }
 
-        public virtual bool GetSnappedFeature(string featureType, double[] xin, double[] yin, ref double[] xout,
-                                              ref double[] yout, ref int[] featureIds)
+        public virtual bool GetSnappedFeature(string featureType, double[] xin, double[] yin, ref double[] xout, ref double[] yout, ref int[] featureIds)
         {
-            int numInputs = xin.Length;
+            var numInputs = xin.Length;
 
             using (var pinnedXin = new Pinned(xin))
             using (var pinnedYin = new Pinned(yin))
             {
-                IntPtr ptrXin = pinnedXin.IntPtr;
-                IntPtr ptrYin = pinnedYin.IntPtr;
+                var ptrXin = pinnedXin.IntPtr;
+                var ptrYin = pinnedYin.IntPtr;
                 var numOutputs = 0;
                 var ptrXout = new IntPtr();
                 var ptrYout = new IntPtr();
                 var ptrFeatureIds = new IntPtr();
-                int errorCode = -1;
+                var errorCode = -1;
 
                 FlexibleMeshModelDll.get_snapped_feature(featureType, ref numInputs, ref ptrXin, ref ptrYin,
-                                                         ref numOutputs, ref ptrXout, ref ptrYout, ref ptrFeatureIds,
-                                                         ref errorCode);
+                    ref numOutputs, ref ptrXout, ref ptrYout, ref ptrFeatureIds, ref errorCode);
 
                 xout = new double[numOutputs];
                 yout = new double[numOutputs];
@@ -242,7 +238,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
         {
             using (var p = new Pinned(value))
             {
-                IntPtr pointer = p.IntPtr;
+                var pointer = p.IntPtr;
                 FlexibleMeshModelDll.set_compound_field(featureCategory, featureName, parameterName, pointer);
             }
         }
@@ -268,7 +264,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
         {
             if (numDomains > 1)
             {
-                int contInt = contiguous ? 1 : 0;
+                var contInt = contiguous ? 1 : 0;
                 FlexibleMeshModelDll.write_partition_metis(inputFileName, outputFileName, ref numDomains, ref contInt);
             }
             else

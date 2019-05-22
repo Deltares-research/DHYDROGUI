@@ -11,29 +11,26 @@ namespace DelftTools.Hydro
     {
         Tabulated,
         Round, // not yet in modelapi
-        Egg,   // not yet in model api
+        Egg, // not yet in model api
         Rectangle,
-        Ellipse,
+        Ellipse, 
         Arch,
         Cunette,
         SteelCunette
     }
 
-    /// <summary>
+    ///<summary>
     /// Friction types to be used in culvert
-    /// </summary>
+    ///</summary>
     [TypeConverter(typeof(EnumDescriptionAttributeTypeConverter))]
     public enum CulvertFrictionType
     {
         Chezy = 0,
         Manning = 1,
-
         [Description("Strickler Kn")]
         StricklerKn = 2,
-
         [Description("Strickler Ks")]
         StricklerKs = 3,
-
         [Description("White colebrook")]
         WhiteColebrook = 4,
     }

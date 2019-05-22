@@ -66,16 +66,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
                 foreach (var exchange in exchangeInfo.Exchanges)
                 {
-                    IDataItem sourceItem = sourceItems.FirstOrDefault(di => Equals(ModelExchange.GetExchangeIdentifier(di), exchange.SourceName));
-
-                    string targetName = exchange.TargetName.Trim();
-
-                    if (exchangeInfo.TargetModelName == "FlowFM")
-                    {
-                        targetName = HydroModelHelper.UpdateOldNamesOfStructuresComponentsToNewNamesIfNeeded(targetName);
-                    }
-
-                    IDataItem targetItem = targetItems.FirstOrDefault(di => Equals(ModelExchange.GetExchangeIdentifier(di), targetName));
+                    var sourceItem = sourceItems.FirstOrDefault(di => Equals(ModelExchange.GetExchangeIdentifier(di), exchange.SourceName));
+                    var targetItem = targetItems.FirstOrDefault(di => Equals(ModelExchange.GetExchangeIdentifier(di), exchange.TargetName));
 
                     if (sourceItem == null || targetItem == null)
                     {

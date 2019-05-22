@@ -1,0 +1,173 @@
+CNTL id '##1' nm 'Weir1_Cntrl1' ct 2 ca 0 ac 1 cf 1 ta 1 0 0 0 gi '##3' '-1' '-1' '-1' ao 1 1 1 1 cp 0 ml 'Weir1_MS' ui 6 ua 0.2 cn 1 cv 0.0003 dt 0 d_ 0.05 sp tc  0 4.6 0 cntl
+CNTL id '##2' nm 'Weir1_Cntrl2' ct 2 ca 0 ac 1 cf 1 ta 1 0 0 0 gi '##2' '-1' '-1' '-1' ao 1 1 1 1 cp 0 ml 'Weir1_MS' ui 6 ua 0.2 cn 1 cv 0.0003 dt 0 d_ 0.05 sp tc  0 4.8 0 cntl
+CNTL id '##3' nm 'Weir1_Cntrl3' ct 2 ca 0 ac 1 cf 1 ta 1 0 0 0 gi '##4' '-1' '-1' '-1' ao 1 1 1 1 cp 0 ml 'Weir1_MS' ui 6 ua 0.2 cn 1 cv 0.0003 dt 0 d_ 0.05 sp tc  0 5 0 cntl
+CNTL id '##4' nm 'Weir2_Cntrl1' ct 0 ca 0 ac 1 cf 1 ta 1 0 0 0 gi '##3' '-1' '-1' '-1' ao 1 1 1 1 mc 0 ti tv PDIN 1 0  pdin
+TBLE
+'2000/01/01;00:00:00' 3.2 <
+'2000/01/02;18:00:00' 3.2 <
+'2000/01/02;19:00:00' 3.2 <
+'2000/01/03;00:00:00' 3.2 <
+'2000/01/04;18:00:00' 3.2 <
+'2000/01/04;19:00:00' 3.2 <
+'2000/01/05;00:00:00' 3.2 <
+'2000/01/06;18:00:00' 3.2 <
+'2000/01/06;19:00:00' 3.2 <
+'2000/01/07;00:00:00' 3.2 <
+tble cntl
+CNTL id '##5' nm 'Weir2_Cntrl2' ct 0 ca 0 ac 1 cf 1 ta 1 0 0 0 gi '##2' '-1' '-1' '-1' ao 1 1 1 1 mc 0 ti tv PDIN 1 0 pdin
+TBLE
+'2000/01/01;00:00:00' 2.8 <
+'2000/01/02;18:00:00' 2.8 <
+'2000/01/02;19:00:00' 2.8 <
+'2000/01/03;00:00:00' 2.8 <
+'2000/01/04;18:00:00' 2.8 <
+'2000/01/04;19:00:00' 2.8 <
+'2000/01/05;00:00:00' 2.8 <
+'2000/01/06;18:00:00' 2.8 <
+'2000/01/06;19:00:00' 2.8 <
+'2000/01/07;00:00:00' 2.8 <
+tble cntl
+CNTL id '##6' nm 'Weir2_Cntrl3' ct 0 ca 0 ac 1 cf 1 ta 1 0 0 0 gi '##4' '-1' '-1' '-1' ao 1 1 1 1 mc 0 ti tv PDIN 1 0 pdin
+TBLE
+'2000/01/01;00:00:00' 2.6 <
+'2000/01/02;18:00:00' 2.6 <
+'2000/01/02;19:00:00' 2.6 <
+'2000/01/03;00:00:00' 2.6 <
+'2000/01/04;18:00:00' 2.6 <
+'2000/01/04;19:00:00' 2.6 <
+'2000/01/05;00:00:00' 2.6 <
+'2000/01/06;18:00:00' 2.6 <
+'2000/01/06;19:00:00' 2.6 <
+'2000/01/07;00:00:00' 2.6 <
+tble cntl
+CNTL id '##7' nm 'Weir3_Cntrl1' ct 1 ca 0 ac 1 cf 1 ta 1 0 0 0 gi '##3' '-1' '-1' '-1' ao 1 1 1 1 cp 0 ml 'HydrMeaStation' '-1' '-1' '-1' '-1' hc ht PDIN 0 0  pdin
+TBLE
+0 2 <
+1.3 3 <
+1.5 3 <
+1.6 3.2 <
+1.65 3.2 <
+1.7 3.3 <
+1.8 3.3 <
+1.9 3.4 <
+2 3.4 <
+4 4 <
+tble cntl
+CNTL id '##8' nm 'Weir3_Cntrl2' ct 1 ca 0 ac 1 cf 1 ta 1 0 0 0 gi '##2' '-1' '-1' '-1' ao 1 1 1 1 cp 0 ml 'HydrMeaStation' '-1' '-1' '-1' '-1' hc ht PDIN 0 0  pdin
+TBLE
+0 2 <
+1.3 3 <
+1.5 3 <
+1.6 3.2 <
+1.65 3.2 <
+1.7 3.3 <
+1.8 3.3 <
+1.9 3.4 <
+2 3.4 <
+4 4 <
+tble cntl
+CNTL id '##9' nm 'Weir3_Cntrl3' ct 1 ca 0 ac 1 cf 1 ta 1 0 0 0 gi '##4' '-1' '-1' '-1' ao 1 1 1 1 cp 0 ml 'HydrMeaStation' '-1' '-1' '-1' '-1' hc ht PDIN 0 0  pdin
+TBLE
+0 2 <
+1.3 3 <
+1.4 3 <
+1.5 3.1 <
+1.6 3.2 <
+1.7 3.3 <
+1.8 3.3 <
+1.9 3.4 <
+2 3.4 <
+4 4 <
+tble cntl
+CNTL id '##10' nm 'Weir4_Cntrl1' ct 3 ca 0 ac 1 cf 1 ta 1 0 0 0 gi '##3' '-1' '-1' '-1' ao 1 1 1 1 cp 0 ml 'Weir4_MS' u0 5.5 ui 2 ua 6 va 0.0002 pf 5 if 0 df 0 sp tc  0 4.6 0 cntl
+CNTL id '##11' nm 'Weir4_Cntrl2' ct 3 ca 0 ac 1 cf 1 ta 1 0 0 0 gi '##2' '-1' '-1' '-1' ao 1 1 1 1 cp 0 ml 'Weir4_MS' u0 5.5 ui 2 ua 6 va 0.0002 pf 5 if 0 df 0 sp tc  0 4.8 0 cntl
+CNTL id '##12' nm 'Weir4_Cntrl3' ct 3 ca 0 ac 1 cf 1 ta 1 0 0 0 gi '##4' '-1' '-1' '-1' ao 1 1 1 1 cp 0 ml 'Weir4_MS' u0 5.5 ui 2 ua 6 va 0.0002 pf 5 if 0 df 0 sp tc  0 5 0 cntl
+CNTL id '##13' nm 'Weir5_Cntrl1' ct 4 ca 0 ac 1 cf 1 ta 1 0 0 0 gi '##3' '-1' '-1' '-1' ao 1 1 1 1 mc 0 mp 172800 ti vv PDIN 0 0  pdin
+TBLE
+0 3.3 <
+518400 3.3 <
+tble cntl
+CNTL id '##14' nm 'Weir5_Cntrl2' ct 4 ca 0 ac 1 cf 1 ta 1 0 0 0 gi '##2' '-1' '-1' '-1' ao 1 1 1 1 mc 0 mp 172800 ti vv PDIN 0 0  pdin
+TBLE
+0 3 <
+518400 3 <
+tble cntl
+CNTL id '##15' nm 'Weir5_Cntrl3' ct 4 ca 0 ac 1 cf 1 ta 1 0 0 0 gi '##4' '-1' '-1' '-1' ao 1 1 1 1 mc 0 mp 172800 ti vv PDIN 0 0  pdin
+TBLE
+0 2.8 <
+518400 2.8 <
+tble cntl
+CNTL id '##16' nm 'Weir6_Cntrl1' ct 5 ca 0 ac 1 cf 1 ta 1 0 0 0 gi '##3' '-1' '-1' '-1' ao 1 1 1 1 mc 0 mp 172800 ti vv PDIN 0 0 '' pdin
+TBLE
+0 3.5 <
+32400 3.4 <
+64800 3.1 <
+tble cntl
+CNTL id '##17' nm 'Weir6_Cntrl2' ct 5 ca 0 ac 1 cf 1 ta 1 0 0 0 gi '##2' '-1' '-1' '-1' ao 1 1 1 1 mc 0 mp 172800 ti vv PDIN 0 0 '' pdin
+TBLE
+0 3.4 <
+32400 3.8 <
+64800 3.9 <
+tble cntl
+CNTL id '##18' nm 'Weir6_Cntrl3' ct 5 ca 0 ac 1 cf 1 ta 1 0 0 0 gi '##4' '-1' '-1' '-1' ao 1 1 1 1 mc 0 mp 172800 ti vv PDIN 0 0 '' pdin
+TBLE
+0 3.6 <
+32400 3.2 <
+64800 3.1 <
+tble cntl
+CNTL id '##27' nm 'Weir7_Cntrl3PID' ct 3 ca 0 ac 1 cf 1 ta 1 0 0 0 gi '##4' '-1' '-1' '-1' ao 1 1 1 1 cp 0 ml 'Weir7_MS' u0 5.5 ui 2 ua 6 va 0.0002 pf 5 if 0 df 0 sp tc  0 5 0 cntl
+CNTL id '##30' nm 'Weir8_Cntrl1RelTime' ct 4 ca 0 ac 1 cf 1 ta 1 0 0 0 gi '##3' '-1' '-1' '-1' ao 1 1 1 1 mc 0 mp 172800 ti vv PDIN 0 0  pdin
+TBLE
+0 3.5 <
+108000 4 <
+129600 3.5 <
+518400 3.5 <
+tble cntl
+CNTL id '##31' nm 'Weir8_Cntrl3PID' ct 3 ca 0 ac 1 cf 1 ta 1 0 0 0 gi '##4' '-1' '-1' '-1' ao 1 1 1 1 cp 0 ml 'Weir8_MS' u0 5.5 ui 2 ua 6 va 0.0002 pf 5 if 0 df 0 sp tc  0 5 0 cntl
+CNTL id '##32' nm 'Weir8_Cntrl2Hydr' ct 1 ca 0 ac 1 cf 1 ta 1 0 0 0 gi '##2' '-1' '-1' '-1' ao 1 1 1 1 cp 0 ml 'HydrMeaStation' '-1' '-1' '-1' '-1' hc ht PDIN 0 0 pdin
+TBLE
+0 2 <
+1.3 3 <
+1.5 3 <
+1.6 3.2 <
+1.65 3.2 <
+1.7 3.3 <
+1.8 3.3 <
+1.9 3.4 <
+2 3.4 <
+4 4 <
+tble cntl
+CNTL id '##33' nm 'Weir7_Cntrl2InterV' ct 2 ca 0 ac 1 cf 1 ta 1 0 0 0 gi '##2' '-1' '-1' '-1' ao 1 1 1 1 cp 0 ml 'Weir7_MS' ui 6 ua 0.2 cn 1 cv 0.0003 dt 0 d_ 0.05 sp tc  0 4.8 0 cntl
+CNTL id '##34' nm 'Weir7_Cntrl1Time' ct 0 ca 0 ac 1 cf 1 ta 1 0 0 0 gi '##3' '-1' '-1' '-1' ao 1 1 1 1 mc 0 ti tv PDIN 1 0 pdin
+TBLE
+'2000/01/01;00:00:00' 3.2 <
+'2000/01/02;18:00:00' 3.2 <
+'2000/01/02;19:00:00' 3.2 <
+'2000/01/03;00:00:00' 3.2 <
+'2000/01/04;18:00:00' 3.2 <
+'2000/01/04;19:00:00' 3.2 <
+'2000/01/05;00:00:00' 3.2 <
+'2000/01/06;18:00:00' 3.2 <
+'2000/01/06;19:00:00' 3.2 <
+'2000/01/07;00:00:00' 3.2 <
+tble cntl
+CNTL id '##38' nm 'Weir9_Cntrl1RelValue' ct 5 ca 0 ac 1 cf 1 ta 1 0 0 0 gi '##3' '-1' '-1' '-1' ao 1 1 1 1 mc 0 mp 172800 ti vv PDIN 0 0 '' pdin
+TBLE
+0 3.5 <
+32400 3.4 <
+64800 3.1 <
+tble cntl
+CNTL id '##39' nm 'Weir9_Cntrl2IntVal' ct 2 ca 0 ac 1 cf 1 ta 1 0 0 0 gi '##2' '-1' '-1' '-1' ao 1 1 1 1 cp 0 ml 'Weir9_MS' ui 6 ua 0.2 cn 1 cv 0.0003 dt 0 d_ 0.05 sp tc  0 4.8 0 cntl
+CNTL id '##40' nm 'Weir9_Cntrl3Hydr' ct 1 ca 0 ac 1 cf 1 ta 1 0 0 0 gi '##4' '-1' '-1' '-1' ao 1 1 1 1 cp 0 ml 'HydrMeaStation' '-1' '-1' '-1' '-1' hc ht PDIN 0 0 pdin
+TBLE
+0 2 <
+1.3 3 <
+1.4 3 <
+1.5 3.1 <
+1.6 3.2 <
+1.7 3.3 <
+1.8 3.3 <
+1.9 3.4 <
+2 3.4 <
+4 4 <
+tble cntl

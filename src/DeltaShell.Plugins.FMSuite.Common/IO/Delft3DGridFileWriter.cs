@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using DelftTools.Functions.Generic;
 using DelftTools.Utils;
 using NetTopologySuite.Extensions.Grids;
@@ -17,11 +18,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             {
                 using (CultureUtils.SwitchToInvariantCulture())
                 {
-                    int mSize = grid.Size2;
-                    int nSize = grid.Size1;
-                    IMultiDimensionalArray<double> xCoordinates = grid.X.Values;
-                    IMultiDimensionalArray<double> yCoordinates = grid.Y.Values;
-
+                    var mSize = grid.Size2;
+                    var nSize = grid.Size1;
+                    var xCoordinates = grid.X.Values;
+                    var yCoordinates = grid.Y.Values;
+                    
                     writer.WriteLine("Coordinate System = " + grid.Attributes[CurvilinearGrid.CoordinateSystemKey]);
                     writer.WriteLine("{0,8} {1,7}", mSize, nSize);
                     writer.WriteLine(" 0 0 0");
@@ -32,20 +33,19 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             }
         }
 
-        private static void WriteCoordinates(StreamWriter writer, int nSize, int mSize,
-                                             IMultiDimensionalArray<double> xCoordinates)
+        private static void WriteCoordinates(StreamWriter writer, int nSize, int mSize, IMultiDimensionalArray<double> xCoordinates)
         {
-            var index = 0;
+            int index = 0;
             var offset = new string(' ', 3);
             var leftIndent = new string(' ', 9);
-            for (var n = 0; n < nSize; ++n)
+            for (int n = 0; n < nSize; ++n)
             {
-                var columnCount = 0;
+                int columnCount = 0;
 
                 writer.Write("ETA={0,5}", n + 1);
-                for (var m = 0; m < mSize; ++m)
+                for (int m = 0; m < mSize; ++m)
                 {
-                    double x = xCoordinates[index++];
+                    var x = xCoordinates[index++];
                     writer.Write(offset + "{0,23:E20}", double.IsNaN(x) ? dryCellValue : x);
                     if (++columnCount == maxNrColumnsPerLine)
                     {
@@ -57,7 +57,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                         }
                     }
                 }
-
                 writer.Write(Environment.NewLine);
             }
         }

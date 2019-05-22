@@ -9,17 +9,15 @@ namespace DelftTools.Hydro.Structures
         double Chainage { get; set; }
 
         /// <summary>
-        /// Indicates if <see cref="CapacityTimeSeries" /> can be used.
+        /// Indicates if <see cref="CapacityTimeSeries"/> can be used.
         /// </summary>
         bool CanBeTimedependent { get; set; }
 
         bool DirectionIsPositive { get; set; }
-
         /// <summary>
-        /// If true, <see cref="CapacityTimeSeries" /> is used. Otherwise use <see cref="Capacity" />.
+        /// If true, <see cref="CapacityTimeSeries"/> is used. Otherwise use <see cref="Capacity"/>.
         /// </summary>
         bool UseCapacityTimeSeries { get; set; }
-
         double Capacity { get; set; }
         TimeSeries CapacityTimeSeries { get; }
         double StartDelivery { get; set; }
@@ -34,7 +32,6 @@ namespace DelftTools.Hydro.Structures
         /// the pump in the structure designer. It is not used by the 1d model engine.
         /// </summary>
         double OffsetY { get; set; }
-
         /// <summary>
         /// Y offset relative in the profile. Calculated based on levels. For visualization only
         /// </summary>

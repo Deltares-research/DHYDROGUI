@@ -18,8 +18,11 @@ namespace DelftTools.Hydro
         [DisplayName("Group name")]
         public string GroupName
         {
-            get => groupName;
-            set => groupName = GroupableFeatureHelper.SetGroupableFeatureGroupName(value);
+            get
+            {
+                return groupName;
+            }
+            set { groupName = GroupableFeatureHelper.SetGroupableFeatureGroupName(value); }
         }
 
         public bool IsDefaultGroup { get; set; }

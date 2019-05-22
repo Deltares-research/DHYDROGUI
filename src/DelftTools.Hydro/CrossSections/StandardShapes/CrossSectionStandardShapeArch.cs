@@ -3,33 +3,32 @@ using DelftTools.Utils.Aop;
 
 namespace DelftTools.Hydro.CrossSections.StandardShapes
 {
-    [Entity(FireOnCollectionChange = false)]
+    [Entity(FireOnCollectionChange=false)]
     public class CrossSectionStandardShapeArch : CrossSectionStandardShapeBase
     {
-        public override CrossSectionStandardShapeType Type => CrossSectionStandardShapeType.Arch;
+        public override CrossSectionStandardShapeType Type
+        {
+            get { return CrossSectionStandardShapeType.Arch; }
+        }
+
 
         public override CrossSectionDefinitionZW GetTabulatedDefinition()
         {
             return StandardCrossSectionsFactory.GetTabulatedCrossSectionFromArch(Width, Height, ArcHeight);
         }
 
+        
         public static CrossSectionStandardShapeArch CreateDefault()
         {
-            return new CrossSectionStandardShapeArch
-            {
-                ArcHeight = 1,
-                Height = 2,
-                Width = 1
-            };
+            return new CrossSectionStandardShapeArch {ArcHeight = 1, Height = 2, Width = 1};
         }
 
         public virtual double Width { get; set; }
         public virtual double Height { get; set; }
         private double arcHeight;
-
         public virtual double ArcHeight
         {
-            get => arcHeight;
+            get { return arcHeight; }
             set
             {
                 arcHeight = value;

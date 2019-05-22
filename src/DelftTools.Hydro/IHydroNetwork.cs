@@ -11,7 +11,7 @@ namespace DelftTools.Hydro
     {
         IEventedList<Route> Routes { get; }
 
-        IEnumerable<IHydroNode> HydroNodes { get; }
+        IEnumerable<IHydroNode> HydroNodes{ get; }
         IEnumerable<IPipe> Pipes { get; }
         IEnumerable<IChannel> Channels { get; }
 
@@ -30,7 +30,7 @@ namespace DelftTools.Hydro
         IEnumerable<IRetention> Retentions { get; }
         IEnumerable<IObservationPoint> ObservationPoints { get; }
         IEnumerable<IExtraResistance> ExtraResistances { get; }
-
+        
         IEnumerable<IManhole> Manholes { get; }
         IEnumerable<IGully> Gullies { get; }
 

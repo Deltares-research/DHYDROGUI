@@ -5,11 +5,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
     public static class BoundaryConditionQuantityTypeConverter
     {
         public static MorphologyBoundaryConditionQuantityType
-            ConvertFlowBoundaryConditionQuantityTypeToMorphologyBoundaryConditionQuantityType(
-                FlowBoundaryQuantityType type)
+            ConvertFlowBoundaryConditionQuantityTypeToMorphologyBoundaryConditionQuantityType(FlowBoundaryQuantityType type)
         {
             switch (type)
             {
+
                 case FlowBoundaryQuantityType.MorphologyBedLevelPrescribed:
                     return MorphologyBoundaryConditionQuantityType.BedLevelSpecifiedAsFunctionOfTime;
                 case FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed:
@@ -23,9 +23,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
             }
         }
 
-        public static FlowBoundaryQuantityType
-            ConvertMorphologyBoundaryConditionQuantityTypeToFlowBoundaryConditionQuantityType(
-                MorphologyBoundaryConditionQuantityType type)
+        public static FlowBoundaryQuantityType ConvertMorphologyBoundaryConditionQuantityTypeToFlowBoundaryConditionQuantityType(MorphologyBoundaryConditionQuantityType type)
         {
             switch (type)
             {

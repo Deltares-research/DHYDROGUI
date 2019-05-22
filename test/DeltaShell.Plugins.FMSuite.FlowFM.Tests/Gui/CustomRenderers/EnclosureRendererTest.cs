@@ -5,7 +5,6 @@ using SharpMap.Layers;
 using System.Drawing;
 using SharpMap;
 using System;
-using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.CustomRenderers
 {

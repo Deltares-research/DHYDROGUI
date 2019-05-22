@@ -8,9 +8,7 @@ using System.Security;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DeltaShell.Plugins.FMSuite.Common.IO;
-using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
-using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
@@ -23,24 +21,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
 
         #region IFileExporter
 
-        public string Name => "2D structures";
+        public string Name { get { return "2D structures"; } }
 
-        public string Category => "General";
-
-        public string Description => string.Empty;
+        public string Category { get { return "General"; } }
+        public string Description
+        {
+            get { return string.Empty; }
+        }
 
         public bool Export(object item, string path)
         {
-            if (string.IsNullOrEmpty(path))
+            if (String.IsNullOrEmpty(path))
             {
                 Log.ErrorFormat("No file destination given.");
                 return false;
             }
-
             if (item == null)
             {
-                Log.ErrorFormat(
-                    "No target was presented to export from (requires a Flexible Mesh Water Flow model or Area.");
+                Log.ErrorFormat("No target was presented to export from (requires a Flexible Mesh Water Flow model or Area.");
                 return false;
             }
 
@@ -53,7 +51,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
             else
             {
                 // is Area
-                targetHydroArea = (HydroArea) item;
+                targetHydroArea = (HydroArea)item;
                 model = GetModelForArea(targetHydroArea);
                 if (model == null && targetHydroArea.Parent != null)
                 {
@@ -63,14 +61,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
             }
 
             var structuresFile = new StructuresFile
-            {
-                StructureSchema = model.ModelDefinition.StructureSchema,
-                ReferenceDate = (DateTime) model.ModelDefinition.GetModelProperty(KnownProperties.RefDate).Value
-            };
+                {
+                    StructureSchema = model.ModelDefinition.StructureSchema,
+                    ReferenceDate = (DateTime) model.ModelDefinition.GetModelProperty(KnownProperties.RefDate).Value
+                };
             try
             {
-                IEnumerable<IStructure1D> structures =
-                    targetHydroArea.Weirs.Cast<IStructure1D>().Concat(targetHydroArea.Pumps);
+                var structures = targetHydroArea.Weirs.Cast<IStructure1D>().Concat(targetHydroArea.Pumps);
                 structuresFile.Write(path, structures);
                 //TODO
                 Log.InfoFormat("Written {0} structures (Pumps: {1}; Weir structures: {2};).",
@@ -84,11 +81,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
                 if (e is ArgumentException || e is UnauthorizedAccessException || e is DirectoryNotFoundException ||
                     e is PathTooLongException || e is IOException || e is SecurityException)
                 {
-                    Log.Error(string.Format("An error occurred while exporting structures, export stopped; Cause: "),
-                              e);
+                    Log.Error(String.Format("An error occurred while exporting structures, export stopped; Cause: "), e);
                     return false;
                 }
-
                 // Unexpected exception, let it bubble:
                 throw;
             }
@@ -96,14 +91,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
 
         public IEnumerable<Type> SourceTypes()
         {
-            yield return typeof(HydroArea);
+            yield return typeof (HydroArea);
         }
 
-        public string FileFilter => "Structures file|*.ini";
+        public string FileFilter { get { return "Structures file|*.ini"; } }
 
         [ExcludeFromCodeCoverage]
-        public Bitmap Icon => Resources.StructureFeatureSmall;
-
+        public Bitmap Icon { get { return Properties.Resources.StructureFeatureSmall; } }
         public bool CanExportFor(object item)
         {
             return true;

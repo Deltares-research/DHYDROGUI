@@ -7,19 +7,15 @@ namespace DelftTools.Hydro.Structures
     {
         public static string SetGroupableFeatureGroupName(string value)
         {
-            if (value == null)
-            {
-                return null;
-            }
+            if (value == null) return null;
 
-            string groupName = value.Replace(@"\", "/").TrimStart('/');
-            Match match = Regex.Match(groupName, @"/{2,}");
+            var groupName = value.Replace(@"\", "/").TrimStart('/');
+            var match = Regex.Match(groupName, @"/{2,}");
             while (match.Success)
             {
                 groupName = groupName.ReplaceFirst(match.Value, "/");
                 match = Regex.Match(groupName, @"/{2,}");
             }
-
             return groupName;
         }
 

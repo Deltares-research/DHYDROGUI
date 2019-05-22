@@ -7,6 +7,7 @@ using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.Common.Layers;
+using DeltaShell.Plugins.FMSuite.FlowFM.CoverageDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms;
@@ -34,11 +35,6 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using SharpMap.Api;
-using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.FunctionStores;
-using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 {
@@ -51,9 +47,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             new ConditionalWeakTable<WaterFlowFMModel, FMOutputSnappedFeaturesGroupLayerData>();
 
 
-        private static readonly ILog log = LogManager.GetLogger(typeof(FlowFMMapLayerProvider));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(FlowFMMapLayerProvider));
 
-        private static readonly string modelName = typeof (WaterFlowFMModel).Name;
+        private static readonly string ModelName = typeof (WaterFlowFMModel).Name;
 
         public const string BoundariesLayerName = "Boundaries";
         public const string BoundaryConditionsLayerName = "Boundary Conditions";
@@ -95,15 +91,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     return new VectorLayer(BoundariesLayerName)
                         {
                             DataSource =
-                                new Feature2DCollection().Init(feature2Ds, "Boundary", modelName, fmModel.CoordinateSystem),
+                                new Feature2DCollection().Init(feature2Ds, "Boundary", ModelName, fmModel.CoordinateSystem),
                             FeatureEditor =
                                 new Boundary2DEditor(fmModel)
                                     {
                                         AllowRemovePoint = new RemoveBoundaryPointDialog(fmModel).ShowDialogForFeature
                                     },
                             Style = AreaLayerStyles.BoundariesStyle,
-                            NameIsReadOnly = true,
-                            ShowInLegend = false 
+                            NameIsReadOnly = true
                         };
                 }
                 if (Equals(feature2Ds, fmModel.Pipes))
@@ -111,14 +106,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     return new VectorLayer(SourcesAndSinksLayerName)
                         {
                             DataSource =
-                                new Feature2DCollection().Init(feature2Ds, "SourceSink", modelName, fmModel.CoordinateSystem),
+                                new Feature2DCollection().Init(feature2Ds, "SourceSink", ModelName, fmModel.CoordinateSystem),
                             FeatureEditor =
                                 new Feature2DEditor(fmModel),
                             Style = AreaLayerStyles.SourcesAndSinksStyle,
                             NameIsReadOnly = true,
                             CustomRenderers =
-                                new IFeatureRenderer[] {new ArrowLineStringAdornerRenderer {Orientation = Orientation.Forward, Opacity = 1}},
-                            ShowInLegend = false
+                                new[] {new ArrowLineStringAdornerRenderer {Orientation = Orientation.Forward, Opacity = 1}}
                         };
                 }
             }
@@ -130,7 +124,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 var theme = CreateBoundaryConditionsTheme();
                 return new VectorLayer(BoundaryConditionsLayerName)
                     {
-                        DataSource = new Feature2DCollection().Init(allBoundaryConditionSets, "BoundaryCondition", modelName, fmModel.CoordinateSystem),
+                        DataSource = new Feature2DCollection().Init(allBoundaryConditionSets, "BoundaryCondition", ModelName, fmModel.CoordinateSystem),
                         Theme = theme,
                         Style = (VectorStyle) theme.DefaultStyle,
                         NameIsReadOnly = true,
@@ -287,7 +281,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                             var geoAsPol = enclosure.Geometry as Polygon;
                             if( geoAsPol == null || !geoAsPol.IsValid)
                             {
-                                log.WarnFormat(Resources.WaterFlowFMEnclosureValidator_Validate_Drawn_polygon_not__0__not_valid, enclosure.Name);
+                                Log.WarnFormat(Resources.WaterFlowFMEnclosureValidator_Validate_Drawn_polygon_not__0__not_valid, enclosure.Name);
                             }
                         }
                     }

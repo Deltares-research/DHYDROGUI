@@ -1,0 +1,110 @@
+<model name="1d water flow model">
+  <input-parameters>
+    <StartTime>9/4/2009 12:00:00 AM</StartTime>
+      <StopTime>9/5/2009 12:00:00 AM</StopTime>
+      <TimeStep>01:00:00</TimeStep>
+  </input-parameters>
+  <input>
+    <function name="initial water flow">
+      <arguments>
+        <variable name="network_location">
+          <values>{}</values>
+        </variable>
+      </arguments>
+      <components>
+        <variable name="water flow">
+          <values>{}</values>
+        </variable>
+      </components>
+    </function>
+    <function name="initial water depth">
+      <arguments>
+        <variable name="network_location">
+          <values>{}</values>
+        </variable>
+      </arguments>
+      <components>
+        <variable name="water depth">
+          <values>{}</values>
+        </variable>
+      </components>
+    </function>
+    <boundary-conditions />
+  </input>
+  <output>
+    <function name="Water level (Current value)">
+      <arguments>
+        <variable name="time">
+          <values>{}</values>
+        </variable>
+        <variable name="network_location">
+          <values>{}</values>
+        </variable>
+      </arguments>
+      <components>
+        <variable name="Water level (Current value)">
+          <values>{}</values>
+        </variable>
+      </components>
+    </function>
+    <function name="Water depth (Current value)">
+      <arguments>
+        <variable name="time">
+          <values>{}</values>
+        </variable>
+        <variable name="network_location">
+          <values>{}</values>
+        </variable>
+      </arguments>
+      <components>
+        <variable name="Water depth (Current value)">
+          <values>{}</values>
+        </variable>
+      </components>
+    </function>
+    <function name="Discharge (Current value)">
+      <arguments>
+        <variable name="time">
+          <values>{}</values>
+        </variable>
+        <variable name="network_location">
+          <values>{}</values>
+        </variable></arguments>
+      <components>
+        <variable name="Discharge (Current value)">
+          <values>{}</values>
+        </variable>
+      </components>
+    </function>
+    <function name="Velocity (Current value)">
+        <arguments>
+          <variable name="time">
+            <values>{}</values>
+          </variable>
+          <variable name="network_location">
+            <values>{}</values>
+          </variable>
+        </arguments>
+        <components>
+          <variable name="Velocity (Current value)">
+            <values>{}</values>
+          </variable>
+      </components>
+    </function>
+    <function name="Flow area (Current value)">
+      <arguments>
+        <variable name="time">
+          <values>{}</values>
+        </variable>
+        <variable name="network_location">
+          <values>{}</values>
+        </variable>
+      </arguments>
+      <components>
+        <variable name="Flow area (Current value)">
+          <values>{}</values>
+        </variable>
+      </components>
+    </function>
+  </output>
+</model>

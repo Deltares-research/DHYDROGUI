@@ -56,7 +56,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
 
             Data = new TimeSeries {Name = "wind velocity"};
 
-            foreach (WindComponent windComponent in components)
+            foreach (var windComponent in components)
             {
                 Data.Components.Add(new Variable<double>(windComponent.ToString())
                 {
@@ -68,7 +68,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
             }
         }
 
-        public IEnumerable<WindComponent> Components => components;
+        public IEnumerable<WindComponent> Components
+        {
+            get { return components; }
+        }
 
         private static string CreateName(WindQuantity windQuantity, IList<WindComponent> components)
         {
@@ -83,7 +86,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
                     {
                         return "Uniform mag/dir";
                     }
-
                     return "Uniform xy-field";
                 case WindQuantity.AirPressure:
                     return "Uniform pressure";
@@ -94,7 +96,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
 
         public WindQuantity Quantity
         {
-            get => quantity;
+            get { return quantity; }
             private set
             {
                 quantity = value;

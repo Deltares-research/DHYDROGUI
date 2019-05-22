@@ -7,7 +7,6 @@ using DelftTools.Hydro;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using DelftTools.Hydro.Helpers;
-using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using Point = NetTopologySuite.Geometries.Point;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests

@@ -1,0 +1,509 @@
+ Froude numbers higher than 0.8. Each record contains:
+  - Time step number
+  - Iteration step number
+  - Branch name
+  - Coordinate
+  - Froude number gridpoint ( *** = supercritical flow )
+  - Froude number next cel ( *** = supercritical flow )
+  
+ Time step =   850 Iter. step =   7
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79544    Froude next cel=   0.80003
+ Time step =   850 Iter. step =   8
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79547    Froude next cel=   0.80015
+ Time step =   850 Iter. step =   9
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79549    Froude next cel=   0.80023
+ Time step =   850 Iter. step =  10
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79551    Froude next cel=   0.80028
+ Time step =   850 Iter. step =  11
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79552    Froude next cel=   0.80031
+ Time step =   850 Iter. step =  12
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79552    Froude next cel=   0.80033
+ Time step =   850 Iter. step =  13
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79553    Froude next cel=   0.80034
+ Time step =   850 Iter. step =  14
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79553    Froude next cel=   0.80035
+ Time step =   850 Iter. step =  15
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79553    Froude next cel=   0.80035
+ Time step =   850 Iter. step =  16
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79554    Froude next cel=   0.80035
+ Time step =   850 Iter. step =  17
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79554    Froude next cel=   0.80036
+ Time step =   850 Iter. step =  18
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79554    Froude next cel=   0.80036
+ Time step =   850 Iter. step =  19
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79554    Froude next cel=   0.80036
+ Time step =   850 Iter. step =  20
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79554    Froude next cel=   0.80036
+ Time step =   850 Iter. step =  21
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79554    Froude next cel=   0.80036
+ Time step =   850 Iter. step =  22
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79554    Froude next cel=   0.80036
+ Time step =   850 Iter. step =  23
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79554    Froude next cel=   0.80036
+ Time step =   850 Iter. step =  24
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79554    Froude next cel=   0.80036
+  
+ Time step =   851 Iter. step =   1
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79595    Froude next cel=   0.80086
+ Time step =   851 Iter. step =   2
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79577    Froude next cel=   0.80299
+ Time step =   851 Iter. step =   3
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79598    Froude next cel=   0.80432
+ Time step =   851 Iter. step =   4
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79614    Froude next cel=   0.80508
+ Time step =   851 Iter. step =   5
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79625    Froude next cel=   0.80552
+ Time step =   851 Iter. step =   6
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79631    Froude next cel=   0.80578
+ Time step =   851 Iter. step =   7
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79636    Froude next cel=   0.80593
+ Time step =   851 Iter. step =   8
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79639    Froude next cel=   0.80603
+ Time step =   851 Iter. step =   9
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79641    Froude next cel=   0.80609
+ Time step =   851 Iter. step =  10
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79643    Froude next cel=   0.80613
+ Time step =   851 Iter. step =  11
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79644    Froude next cel=   0.80615
+ Time step =   851 Iter. step =  12
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79644    Froude next cel=   0.80617
+ Time step =   851 Iter. step =  13
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79645    Froude next cel=   0.80618
+ Time step =   851 Iter. step =  14
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79645    Froude next cel=   0.80618
+ Time step =   851 Iter. step =  15
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79646    Froude next cel=   0.80619
+ Time step =   851 Iter. step =  16
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79646    Froude next cel=   0.80619
+ Time step =   851 Iter. step =  17
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79646    Froude next cel=   0.80619
+ Time step =   851 Iter. step =  18
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79646    Froude next cel=   0.80620
+ Time step =   851 Iter. step =  19
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79646    Froude next cel=   0.80620
+ Time step =   851 Iter. step =  20
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79646    Froude next cel=   0.80620
+ Time step =   851 Iter. step =  21
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79646    Froude next cel=   0.80620
+ Time step =   851 Iter. step =  22
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79646    Froude next cel=   0.80620
+  
+ Time step =   852 Iter. step =   1
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79681    Froude next cel=   0.80648
+ Time step =   852 Iter. step =   2
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79645    Froude next cel=   0.80808
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.82164    Froude next cel=   0.80149
+ Time step =   852 Iter. step =   3
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79660    Froude next cel=   0.80912
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.82377    Froude next cel=   0.80354
+ Time step =   852 Iter. step =   4
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79675    Froude next cel=   0.80973
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.82495    Froude next cel=   0.80468
+ Time step =   852 Iter. step =   5
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79685    Froude next cel=   0.81009
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.82562    Froude next cel=   0.80533
+ Time step =   852 Iter. step =   6
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79692    Froude next cel=   0.81030
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.82601    Froude next cel=   0.80571
+ Time step =   852 Iter. step =   7
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79697    Froude next cel=   0.81042
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.82624    Froude next cel=   0.80594
+ Time step =   852 Iter. step =   8
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79700    Froude next cel=   0.81050
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.82638    Froude next cel=   0.80607
+ Time step =   852 Iter. step =   9
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79702    Froude next cel=   0.81055
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.82647    Froude next cel=   0.80616
+ Time step =   852 Iter. step =  10
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79703    Froude next cel=   0.81058
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.82652    Froude next cel=   0.80621
+ Time step =   852 Iter. step =  11
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79704    Froude next cel=   0.81060
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.82655    Froude next cel=   0.80624
+ Time step =   852 Iter. step =  12
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79705    Froude next cel=   0.81062
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.82657    Froude next cel=   0.80626
+ Time step =   852 Iter. step =  13
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79706    Froude next cel=   0.81062
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.82659    Froude next cel=   0.80628
+ Time step =   852 Iter. step =  14
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79706    Froude next cel=   0.81063
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.82659    Froude next cel=   0.80628
+ Time step =   852 Iter. step =  15
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79706    Froude next cel=   0.81063
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.82660    Froude next cel=   0.80629
+ Time step =   852 Iter. step =  16
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79706    Froude next cel=   0.81064
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.82660    Froude next cel=   0.80629
+ Time step =   852 Iter. step =  17
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79707    Froude next cel=   0.81064
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.82661    Froude next cel=   0.80629
+ Time step =   852 Iter. step =  18
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79707    Froude next cel=   0.81064
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.82661    Froude next cel=   0.80630
+ Time step =   852 Iter. step =  19
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79707    Froude next cel=   0.81064
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.82661    Froude next cel=   0.80630
+ Time step =   852 Iter. step =  20
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79707    Froude next cel=   0.81064
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.82661    Froude next cel=   0.80630
+  
+ Time step =   853 Iter. step =   1
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79722    Froude next cel=   0.81075
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.82666    Froude next cel=   0.80657
+ Time step =   853 Iter. step =   2
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79704    Froude next cel=   0.81216
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.82998    Froude next cel=   0.80995
+ Time step =   853 Iter. step =   3
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79725    Froude next cel=   0.81307
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.83178    Froude next cel=   0.81169
+ Time step =   853 Iter. step =   4
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79749    Froude next cel=   0.81367
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.83283    Froude next cel=   0.81270
+ Time step =   853 Iter. step =   5
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79763    Froude next cel=   0.81400
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.83341    Froude next cel=   0.81327
+ Time step =   853 Iter. step =   6
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79776    Froude next cel=   0.81423
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.83378    Froude next cel=   0.81362
+ Time step =   853 Iter. step =   7
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79784    Froude next cel=   0.81436
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.83399    Froude next cel=   0.81379
+ Time step =   853 Iter. step =   8
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79791    Froude next cel=   0.81447
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.83414    Froude next cel=   0.81381
+ Time step =   853 Iter. step =   9
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79795    Froude next cel=   0.81453
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.83423    Froude next cel=   0.81381
+ Time step =   853 Iter. step =  10
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79799    Froude next cel=   0.81458
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.83429    Froude next cel=   0.81382
+ Time step =   853 Iter. step =  11
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79801    Froude next cel=   0.81461
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.83433    Froude next cel=   0.81383
+ Time step =   853 Iter. step =  12
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79803    Froude next cel=   0.81464
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.83437    Froude next cel=   0.81384
+ Time step =   853 Iter. step =  13
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79805    Froude next cel=   0.81465
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.83439    Froude next cel=   0.81384
+ Time step =   853 Iter. step =  14
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79806    Froude next cel=   0.81467
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.83441    Froude next cel=   0.81385
+ Time step =   853 Iter. step =  15
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79807    Froude next cel=   0.81467
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.83442    Froude next cel=   0.81385
+ Time step =   853 Iter. step =  16
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79808    Froude next cel=   0.81468
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.83443    Froude next cel=   0.81385
+ Time step =   853 Iter. step =  17
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79808    Froude next cel=   0.81469
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.83443    Froude next cel=   0.81386
+ Time step =   853 Iter. step =  18
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79809    Froude next cel=   0.81469
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.83444    Froude next cel=   0.81386
+ Time step =   853 Iter. step =  19
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79809    Froude next cel=   0.81470
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.83444    Froude next cel=   0.81386
+ Time step =   853 Iter. step =  20
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79809    Froude next cel=   0.81470
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.83444    Froude next cel=   0.81386
+ Time step =   853 Iter. step =  21
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79809    Froude next cel=   0.81470
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.83445    Froude next cel=   0.81386
+ Time step =   853 Iter. step =  22
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79809    Froude next cel=   0.81471
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.83445    Froude next cel=   0.81386
+  
+ Time step =   854 Iter. step =   1
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79875    Froude next cel=   0.81512
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.83460    Froude next cel=   0.81411
+ Time step =   854 Iter. step =   2
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79828    Froude next cel=   0.81576
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.83657    Froude next cel=   0.81447
+ Time step =   854 Iter. step =   3
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79833    Froude next cel=   0.81505
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.83491    Froude next cel=   0.81310
+ Time step =   854 Iter. step =   4
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79843    Froude next cel=   0.81456
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.83370    Froude next cel=   0.81211
+ Time step =   854 Iter. step =   5
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79851    Froude next cel=   0.81424
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.83291    Froude next cel=   0.81146
+ Time step =   854 Iter. step =   6
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79857    Froude next cel=   0.81405
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.83242    Froude next cel=   0.81105
+ Time step =   854 Iter. step =   7
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79860    Froude next cel=   0.81393
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.83211    Froude next cel=   0.81080
+ Time step =   854 Iter. step =   8
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79863    Froude next cel=   0.81386
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.83193    Froude next cel=   0.81065
+ Time step =   854 Iter. step =   9
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79865    Froude next cel=   0.81382
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.83182    Froude next cel=   0.81056
+ Time step =   854 Iter. step =  10
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79866    Froude next cel=   0.81379
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.83175    Froude next cel=   0.81050
+ Time step =   854 Iter. step =  11
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79867    Froude next cel=   0.81378
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.83171    Froude next cel=   0.81047
+ Time step =   854 Iter. step =  12
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79868    Froude next cel=   0.81377
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.83169    Froude next cel=   0.81045
+ Time step =   854 Iter. step =  13
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79868    Froude next cel=   0.81377
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.83167    Froude next cel=   0.81044
+ Time step =   854 Iter. step =  14
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79869    Froude next cel=   0.81377
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.83166    Froude next cel=   0.81043
+ Time step =   854 Iter. step =  15
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79869    Froude next cel=   0.81377
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.83166    Froude next cel=   0.81043
+ Time step =   854 Iter. step =  16
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79869    Froude next cel=   0.81376
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.83165    Froude next cel=   0.81042
+ Time step =   854 Iter. step =  17
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79869    Froude next cel=   0.81376
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.83165    Froude next cel=   0.81042
+ Time step =   854 Iter. step =  18
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79869    Froude next cel=   0.81376
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.83165    Froude next cel=   0.81042
+ Time step =   854 Iter. step =  19
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79869    Froude next cel=   0.81376
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.83165    Froude next cel=   0.81042
+  
+ Time step =   855 Iter. step =   1
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79860    Froude next cel=   0.81341
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.83098    Froude next cel=   0.81001
+ Time step =   855 Iter. step =   2
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79814    Froude next cel=   0.81201
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.82839    Froude next cel=   0.80822
+ Time step =   855 Iter. step =   3
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79820    Froude next cel=   0.81120
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.82654    Froude next cel=   0.80679
+ Time step =   855 Iter. step =   4
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79827    Froude next cel=   0.81067
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.82527    Froude next cel=   0.80580
+ Time step =   855 Iter. step =   5
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79832    Froude next cel=   0.81039
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.82459    Froude next cel=   0.80522
+ Time step =   855 Iter. step =   6
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79834    Froude next cel=   0.81023
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.82423    Froude next cel=   0.80488
+ Time step =   855 Iter. step =   7
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79833    Froude next cel=   0.81013
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.82401    Froude next cel=   0.80467
+ Time step =   855 Iter. step =   8
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79833    Froude next cel=   0.81007
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.82388    Froude next cel=   0.80455
+ Time step =   855 Iter. step =   9
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79833    Froude next cel=   0.81004
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.82381    Froude next cel=   0.80448
+ Time step =   855 Iter. step =  10
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79833    Froude next cel=   0.81002
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.82377    Froude next cel=   0.80444
+ Time step =   855 Iter. step =  11
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79834    Froude next cel=   0.81001
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.82375    Froude next cel=   0.80441
+ Time step =   855 Iter. step =  12
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79834    Froude next cel=   0.81001
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.82373    Froude next cel=   0.80440
+ Time step =   855 Iter. step =  13
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79834    Froude next cel=   0.81001
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.82373    Froude next cel=   0.80439
+ Time step =   855 Iter. step =  14
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79834    Froude next cel=   0.81001
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.82372    Froude next cel=   0.80438
+ Time step =   855 Iter. step =  15
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79834    Froude next cel=   0.81000
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.82372    Froude next cel=   0.80438
+ Time step =   855 Iter. step =  16
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79834    Froude next cel=   0.81000
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.82372    Froude next cel=   0.80438
+ Time step =   855 Iter. step =  17
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79834    Froude next cel=   0.81000
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.82371    Froude next cel=   0.80438
+ Time step =   855 Iter. step =  18
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79834    Froude next cel=   0.81000
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.82371    Froude next cel=   0.80438
+ Time step =   855 Iter. step =  19
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79834    Froude next cel=   0.81000
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.82371    Froude next cel=   0.80438
+  
+ Time step =   856 Iter. step =   1
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79809    Froude next cel=   0.81047
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.82498    Froude next cel=   0.80490
+ Time step =   856 Iter. step =   2
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79760    Froude next cel=   0.80940
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.82317    Froude next cel=   0.80348
+ Time step =   856 Iter. step =   3
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79747    Froude next cel=   0.80873
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.82183    Froude next cel=   0.80225
+ Time step =   856 Iter. step =   4
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79742    Froude next cel=   0.80829
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.82091    Froude next cel=   0.80133
+ Time step =   856 Iter. step =   5
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79741    Froude next cel=   0.80801
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.82032    Froude next cel=   0.80073
+ Time step =   856 Iter. step =   6
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79740    Froude next cel=   0.80783
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.81995    Froude next cel=   0.80034
+ Time step =   856 Iter. step =   7
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79741    Froude next cel=   0.80773
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.81971    Froude next cel=   0.80010
+ Time step =   856 Iter. step =   8
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79741    Froude next cel=   0.80766
+ Time step =   856 Iter. step =   9
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79741    Froude next cel=   0.80763
+ Time step =   856 Iter. step =  10
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79742    Froude next cel=   0.80760
+ Time step =   856 Iter. step =  11
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79742    Froude next cel=   0.80759
+ Time step =   856 Iter. step =  12
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79742    Froude next cel=   0.80758
+ Time step =   856 Iter. step =  13
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79743    Froude next cel=   0.80758
+ Time step =   856 Iter. step =  14
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79743    Froude next cel=   0.80758
+ Time step =   856 Iter. step =  15
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79743    Froude next cel=   0.80757
+ Time step =   856 Iter. step =  16
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79743    Froude next cel=   0.80757
+ Time step =   856 Iter. step =  17
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79743    Froude next cel=   0.80757
+ Time step =   856 Iter. step =  18
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79743    Froude next cel=   0.80757
+ Time step =   856 Iter. step =  19
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79743    Froude next cel=   0.80757
+  
+ Time step =   857 Iter. step =   1
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79909    Froude next cel=   0.80872
+    Grenms3b             X=   8949.00 Froude grdpnt=   0.81991    Froude next cel=   0.80022
+ Time step =   857 Iter. step =   2
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.79963    Froude next cel=   0.80814
+ Time step =   857 Iter. step =   3
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.80015    Froude next cel=   0.80763
+ Time step =   857 Iter. step =   4
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.80044    Froude next cel=   0.80727
+ Time step =   857 Iter. step =   5
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.80061    Froude next cel=   0.80703
+ Time step =   857 Iter. step =   6
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.80071    Froude next cel=   0.80688
+ Time step =   857 Iter. step =   7
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.80077    Froude next cel=   0.80679
+ Time step =   857 Iter. step =   8
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.80081    Froude next cel=   0.80674
+ Time step =   857 Iter. step =   9
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.80084    Froude next cel=   0.80670
+ Time step =   857 Iter. step =  10
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.80086    Froude next cel=   0.80669
+ Time step =   857 Iter. step =  11
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.80087    Froude next cel=   0.80668
+ Time step =   857 Iter. step =  12
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.80088    Froude next cel=   0.80667
+ Time step =   857 Iter. step =  13
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.80089    Froude next cel=   0.80667
+ Time step =   857 Iter. step =  14
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.80089    Froude next cel=   0.80666
+ Time step =   857 Iter. step =  15
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.80089    Froude next cel=   0.80666
+ Time step =   857 Iter. step =  16
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.80089    Froude next cel=   0.80666
+ Time step =   857 Iter. step =  17
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.80089    Froude next cel=   0.80666
+ Time step =   857 Iter. step =  18
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.80090    Froude next cel=   0.80666
+ Time step =   857 Iter. step =  19
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.80090    Froude next cel=   0.80666
+ Time step =   857 Iter. step =  20
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.80090    Froude next cel=   0.80666
+  
+ Time step =   858 Iter. step =   1
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.80215    Froude next cel=   0.80751
+ Time step =   858 Iter. step =   2
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.80310    Froude next cel=   0.80700
+ Time step =   858 Iter. step =   3
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.80324    Froude next cel=   0.80627
+ Time step =   858 Iter. step =   4
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.80335    Froude next cel=   0.80579
+ Time step =   858 Iter. step =   5
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.80344    Froude next cel=   0.80549
+ Time step =   858 Iter. step =   6
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.80350    Froude next cel=   0.80531
+ Time step =   858 Iter. step =   7
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.80354    Froude next cel=   0.80520
+ Time step =   858 Iter. step =   8
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.80357    Froude next cel=   0.80513
+ Time step =   858 Iter. step =   9
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.80359    Froude next cel=   0.80510
+ Time step =   858 Iter. step =  10
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.80360    Froude next cel=   0.80507
+ Time step =   858 Iter. step =  11
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.80361    Froude next cel=   0.80506
+ Time step =   858 Iter. step =  12
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.80362    Froude next cel=   0.80505
+ Time step =   858 Iter. step =  13
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.80362    Froude next cel=   0.80505
+ Time step =   858 Iter. step =  14
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.80363    Froude next cel=   0.80504
+ Time step =   858 Iter. step =  15
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.80363    Froude next cel=   0.80504
+ Time step =   858 Iter. step =  16
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.80363    Froude next cel=   0.80504
+ Time step =   858 Iter. step =  17
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.80363    Froude next cel=   0.80504
+ Time step =   858 Iter. step =  18
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.80363    Froude next cel=   0.80504
+ Time step =   858 Iter. step =  19
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.80363    Froude next cel=   0.80504
+ Time step =   858 Iter. step =  20
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.80363    Froude next cel=   0.80504
+ Time step =   858 Iter. step =  21
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.80363    Froude next cel=   0.80504
+ Time step =   858 Iter. step =  22
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.80363    Froude next cel=   0.80504
+ Time step =   858 Iter. step =  23
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.80363    Froude next cel=   0.80504
+  
+ Time step =   859 Iter. step =   1
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.80465    Froude next cel=   0.80562
+ Time step =   859 Iter. step =   2
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.80477    Froude next cel=   0.80464
+ Time step =   859 Iter. step =   3
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.80499    Froude next cel=   0.80386
+ Time step =   859 Iter. step =   4
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.80511    Froude next cel=   0.80334
+ Time step =   859 Iter. step =   5
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.80518    Froude next cel=   0.80300
+ Time step =   859 Iter. step =   6
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.80522    Froude next cel=   0.80279
+ Time step =   859 Iter. step =   7
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.80525    Froude next cel=   0.80266
+ Time step =   859 Iter. step =   8
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.80527    Froude next cel=   0.80258
+ Time step =   859 Iter. step =   9
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.80528    Froude next cel=   0.80253
+ Time step =   859 Iter. step =  10
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.80529    Froude next cel=   0.80250
+ Time step =   859 Iter. step =  11
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.80530    Froude next cel=   0.80249
+ Time step =   859 Iter. step =  12
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.80530    Froude next cel=   0.80248
+ Time step =   859 Iter. step =  13
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.80531    Froude next cel=   0.80247
+ Time step =   859 Iter. step =  14
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.80531    Froude next cel=   0.80247
+ Time step =   859 Iter. step =  15
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.80531    Froude next cel=   0.80246
+ Time step =   859 Iter. step =  16
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.80531    Froude next cel=   0.80246
+ Time step =   859 Iter. step =  17
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.80531    Froude next cel=   0.80246
+ Time step =   859 Iter. step =  18
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.80531    Froude next cel=   0.80246
+ Time step =   859 Iter. step =  19
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.80531    Froude next cel=   0.80246
+ Time step =   859 Iter. step =  20
+    Grenms3b             X=   8389.00 Froude grdpnt=   0.80531    Froude next cel=   0.80246
+  

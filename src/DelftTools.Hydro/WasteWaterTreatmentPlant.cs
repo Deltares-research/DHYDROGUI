@@ -35,7 +35,7 @@ namespace DelftTools.Hydro
             wwtp.LongName = LongName;
             wwtp.Name = Name;
             wwtp.Basin = Basin;
-            wwtp.Attributes = (IFeatureAttributeCollection) Attributes.Clone();
+            wwtp.Attributes = (IFeatureAttributeCollection)Attributes.Clone();
             wwtp.Links = new EventedList<HydroLink>(Links);
 
             return wwtp;
@@ -44,7 +44,7 @@ namespace DelftTools.Hydro
         [DisplayName("Name")]
         [FeatureAttribute]
         public virtual string Name { get; set; }
-
+        
         [DisplayName("LongName")]
         [FeatureAttribute]
         public virtual string LongName { get; set; }
@@ -55,14 +55,14 @@ namespace DelftTools.Hydro
         [Aggregation]
         public virtual DrainageBasin Basin { get; set; }
 
-        public virtual IHydroRegion Region => Basin;
+        public virtual IHydroRegion Region { get { return Basin; } }
 
         [Aggregation]
         public virtual IEventedList<HydroLink> Links { get; set; }
 
-        public virtual bool CanBeLinkSource => true;
+        public virtual bool CanBeLinkSource { get { return true; } }
 
-        public virtual bool CanBeLinkTarget => true;
+        public virtual bool CanBeLinkTarget { get { return true; } }
 
         public virtual HydroLink LinkTo(IHydroObject target)
         {
@@ -90,17 +90,14 @@ namespace DelftTools.Hydro
             if (other != null)
             {
                 if (Equals(this, other))
-                {
                     return 0;
-                }
 
-                foreach (WasteWaterTreatmentPlant c in Basin.WasteWaterTreatmentPlants)
+                foreach (var c in Basin.WasteWaterTreatmentPlants)
                 {
                     if (Equals(c, this))
                     {
                         return -1;
                     }
-
                     if (Equals(c, other))
                     {
                         return 1;
@@ -115,7 +112,6 @@ namespace DelftTools.Hydro
             {
                 return -1;
             }
-
             throw new InvalidOperationException();
         }
     }

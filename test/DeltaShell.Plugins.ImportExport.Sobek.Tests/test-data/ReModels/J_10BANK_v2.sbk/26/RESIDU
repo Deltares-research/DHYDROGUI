@@ -1,0 +1,31 @@
+ Residues in case of continuing with no convergence
+ Each record contains:
+  - Time step number
+  - Maximum waterlevel residue with corresponding position
+  - Maximum discharge residue with corresponding position
+  - Waterlevel convergence error
+    (if waterlevel criterion specified)
+  - Waterlevel convergence error factor
+    (if waterlevel criterion specified)
+  - Discharge convergence error
+    (if any discharge criterion specified)
+  - Discharge convergence error factor
+    (if any discharge criterion specified)
+  
+ Time step =     1
+    Getijms1                       X=   9894.00 DH=  -0.00320
+    Getijms4                       X=  12564.00 DQ=    -3.414
+    Waterlevel convergence error=   0.00319
+    Waterlevel convergence error factor=   319.529
+    Discharge convergence error=   3.36226
+    Discharge convergence error factor=    65.597
+ Time step =     2
+    Getijms2                       X=   9455.00 DH=  -0.00002
+    Getijms4                       X=  12017.00 DQ=    -0.026
+    Waterlevel convergence error=   0.00001
+    Waterlevel convergence error factor=     2.337
+ Time step =     3
+    Getijms2                       X=   9455.00 DH=  -0.00002
+    Getijms4                       X=  12017.00 DQ=    -0.019
+    Waterlevel convergence error=   0.00001
+    Waterlevel convergence error factor=     1.717

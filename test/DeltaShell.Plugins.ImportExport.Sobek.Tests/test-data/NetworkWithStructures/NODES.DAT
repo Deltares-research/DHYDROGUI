@@ -1,0 +1,122 @@
+NODE id '0-2063' ty 1 ws 1.5625 ss 100 wl 0.04 ml 2 node
+NODE id '0-2064' ty 1 ws 1.5625 ss 100 wl 0.01 ml 2 node
+NODE id '0-2070' ty 1 ws 1 ss 100 wl 0 ml 2 node
+NODE id '0-2111' ty  1 ws  .5 ss  100 wl  0 ml  2 node
+NODE id '0-2065' ty 1 ws 1.5625 ss 100 wl -0.06 ml 2 node
+NODE id '0-2066' ty 1 ws 1.5625 ss 100 wl -0.72 ml 2 node
+NODE id '0-2067' ty 1 ws 1.5625 ss 100 wl -0.8 ml 2 node
+NODE id '0-12066' ty 1 ws 1.5625 ss 100 wl -0.72 ml 2 node
+NODE id '0-12067' ty 1 ws 1.5625 ss 100 wl -0.8 ml 2 node
+NODE id '0-2068' ty 1 ws 1.5625 ss 100 wl -0.8 ml 2 node
+NODE id '0-12068' ty 1 ws 1.5625 ss 100 wl -0.8 ml 2 node
+NODE id '0-2069' ty 1 ct sw
+TBLE
+-.8 8 <
+.95 8 <
+1 4 <
+2 4 <
+tble ss 100 ml 2 node
+NODE id '0-12069' ty 1 ct sw
+TBLE
+-.8 8 <
+.95 8 <
+1 4 <
+2 4 <
+tble ss 100 ml 2 node
+NODE id '0-1402' ty 1 ws 1 ss 100 wl 0.1 ml 2 node
+NODE id '0-2252' ty 1 ws 1 ss 100 wl 0.1 ml 2 node
+NODE id '0-2249' ty 1 ws 1 ss 100 wl 0.1 ml 2 node
+NODE id '0-2253' ty 1 ws 1 ss 100 wl 0.1 ml 2 node
+NODE id '0-1401' ty 1 ws 1 ss 100 wl 0.1 ml 2 node
+NODE id '0-2108' ty  1 ws  .5 ss  100 wl  2.25 ml  3.1 node
+NODE id '6' ty 1 ws 10 ss 100 wl -10 ml 2 node
+NODE id '0-1403' ty 1 ws 1.96 ss 100 wl -2.7 ml 2 node
+NODE id '0-2263' ty 1 ws 1.96 ss 100 wl -2.69 ml 2 node
+NODE id '0-2545' ty 1 ws 1.96 ss 100 wl -2.71 ml 2 node
+NODE id '0-2524' ty 1 ws 1.96 ss 100 wl -2.72 ml 2 node
+NODE id '0-2544' ty 1 ws 1.96 ss 100 wl -2.73 ml 2 node
+NODE id '0-2508' ty 1 ws 1.96 ss 100 wl -2.74 ml 2 node
+NODE id '0-2509' ty 1 ws 1.96 ss 100 wl -2.75 ml 2 node
+NODE id '0-2501' ty 1 ws 1.96 ss 100 wl -2.8 ml 2 node
+NODE id '0-2513' ty 1 ws 1.96 ss 100 wl -2.79 ml 2 node
+NODE id '0-2503' ty 1 ws 1.96 ss 100 wl -2.82 ml 2 node
+NODE id '0-2504' ty 1 ws 1.96 ss 100 wl -2.83 ml 2 node
+NODE id '0-2505' ty 1 ws 1.96 ss 100 wl -2.84 ml 2 node
+NODE id '0-2506' ty 1 ws 1.96 ss 100 wl -2.85 ml 2 node
+NODE id '0-2507' ty 1 ct sw
+TBLE
+-2.86 10 <
+-.1 10 <
+0 4 <
+2 4 <
+tble ss 100 ml 2 node
+NODE id '0-4676' ty 1 ws 1.96 ss 100 wl -2.7 ml 2 node
+NODE id '0-1404' ty 1 ws 1 ss 100 wl -1 ml 2 node
+NODE id '0-2514' ty 1 ws 0.5 ss 100 wl 0.7 ml 2 node
+NODE id '0-2515' ty 1 ws 0.5 ss 100 wl 0.55 ml 2 node
+NODE id '0-2516' ty 1 ws 0.5 ss 100 wl 0.34 ml 2 node
+NODE id '0-2517' ty 1 ws 1 ss 100 wl 0.1 ml 2 node
+NODE id '0-2518' ty 1 ws 1 ss 100 wl 0.12 ml 2 node
+NODE id '0-2519' ty 1 ws 1 ss 100 wl 0.08 ml 2 node
+NODE id '0-2520' ty 1 ws 1 ss 100 wl 0.09 ml 2 node
+NODE id '0-2521' ty 1 ws 1 ss 100 wl 0.06 ml 2 node
+NODE id '0-2548' ty 1 ws 1 ss 100 wl 0 ml 2 node
+NODE id '0-2523' ty 1 ws 0.5 ss 100 wl 0.55 ml 2 node
+NODE id '0-2525' ty 1 ws 0.5 ss 100 wl 0.82 ml 2 node
+NODE id '0-2526' ty  1 ws  .5 ss  100 wl  1.11 ml  2 node
+NODE id '0-2546' ty 1 ws 1 ss 100 wl 0.23 ml 2 node
+NODE id '0-2547' ty 1 ws 1 ss 100 wl 0.06 ml 2 node
+NODE id '28' ty 1 ws 10 ss 100 wl -10 ml 2 node
+NODE id '40' ty 1 ws 0 ss 0 wl 0 ml 1 node
+NODE id '41' ty 1 ws 5 ss 100 wl -10 ml 2 node
+NODE id '42' ty 1 ws 5 ss 100 wl -10 ml 2 node
+NODE id '43' ty 1 ws 5 ss 100 wl -10 ml 2 node
+NODE id '44' ty 1 ws 10 ss 100 wl -10 ml 2 node
+NODE id '45' ty 1 ws 10 ss 100 wl -10 ml 2 node
+NODE id '47' ty 1 ws 0 ss 0 wl 0 ml 1 node
+NODE id '23' ty 1 ws 5 ss 100 wl 1.5 ml 3 node
+NODE id '17' ty 1 ws 5 ss 100 wl 1.2 ml 3 node
+NODE id '16' ty 1 ws 5 ss 10 wl 1 ml 2.5 node
+NODE id '21' ty 1 ws 5 ss 100 wl 1.2 ml 2.4 node
+NODE id '20' ty 1 ws 1 ss 10 wl 0.5 ml 2 node
+NODE id '19' ty 1 ws 1 ss 10 wl 0.3 ml 2 node
+NODE id '18' ty 1 ws 5 ss 100 wl 0.1 ml 2 node
+NODE id '0-2266' ty 1 ws 1.96 ss 100 wl -2.67 ml 2 node
+NODE id '15' ty 1 ws 5 ss 5 wl 0 ml 2.5 node
+NODE id '24' ty 1 ws 10 ss 100 wl 1.4 ml 2.5 node
+NODE id '14' ty 1 ws 0 ss 0 wl 0 ml 1 node
+NODE id '0-2511' ty 1 ws 1.96 ss 100 wl -2.77 ml 2 node
+NODE id '95' ty 1 ws 0 ss 0 wl 0 ml 1 node
+NODE id '177' ty 1 ws 0 ct ss
+TBLE
+333.33 20 <
+444.44 50 <
+tble  wl 0 node
+NODE id '188' ty 3 ws 20 ss 100 wl -5 ml 5.22 node
+NODE id '187' ty 1 ws 0 ss 100 wl -3.5 ml 2.4 node
+NODE id '199' ty 1 ws 0 ss 0 wl 0 ml 1 node
+NODE id '200' ty 1 ws 0 ss 0 wl 0 ml 1 node
+NODE id '202' ty 1 ws 0 ss 0 wl 0 ml 1 node
+NODE id '201' ty 1 ws 0 ss 0 wl 0 ml 1 node
+NODE id '223' ty 1 ws 10 ss 10 wl -2 ml 1 node
+NODE id '225' ty 1 ws 10 ss 10 wl -2.5 ml 1 node
+NODE id '226' ty 1 ws 10 ss 10 wl -2 ml 1 node
+NODE id '224' ty 1 ws 10 ss 10 wl -2.5 ml 1 node
+NODE id '228' ty 1 ws 10 ss 10 wl -2.5 ml 1 node
+NODE id '227' ty 1 ws 10 ss 10 wl -2 ml 1 node
+NODE id '229' ty 1 ws 10 ss 10 wl -3 ml 1 node
+NODE id '49' ty 2 ws  ss  wl  ml  node
+NODE id '73' ty 2 ws  ss  wl  ml  node
+NODE id '74' ty 2 ws  ss  wl  ml  node
+NODE id '81' ty 2 ws  ss  wl  ml  node
+NODE id '78' ty 2 ws  ss  wl  ml  node
+NODE id '101' ty 2 ws  ss  wl  ml  node
+NODE id '102' ty 2 ws  ss  wl  ml  node
+NODE id '110' ty 2 ws  ss  wl  ml  node
+NODE id '111' ty 2 ws  ss  wl  ml  node
+NODE id '109' ty 2 ws  ss  wl  ml  node
+NODE id '107' ty 2 ws  ss  wl  ml  node
+NODE id '108' ty 2 ws  ss  wl  ml  node
+NODE id '192' ty 2 ws  ss  wl  ml  node
+NODE id '193' ty 2 ws  ss  wl  ml  node
+NODE id '194' ty 2 ws  ss  wl  ml  node

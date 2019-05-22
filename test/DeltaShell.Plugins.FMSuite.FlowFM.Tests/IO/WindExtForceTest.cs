@@ -1,11 +1,11 @@
-﻿using DelftTools.Functions;
+﻿using System;
+using System.IO;
+using DelftTools.Functions;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using NUnit.Framework;
-using System;
-using System.IO;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 {
@@ -139,7 +139,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             var loadedModelDefinition = new WaterFlowFMModelDefinition();
             loadedModelDefinition.GetModelProperty(KnownProperties.RefDate).Value = refDate;
-            writer.Read("testmodel", loadedModelDefinition, "testmodel");
+            writer.Read("testmodel", loadedModelDefinition);
 
             Assert.AreEqual(modelDefinition.WindFields.Count, loadedModelDefinition.WindFields.Count);
             for (var i = 0; i < loadedModelDefinition.WindFields.Count; ++i)
@@ -166,7 +166,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             var loadedModelDefinition = new WaterFlowFMModelDefinition();
             loadedModelDefinition.GetModelProperty(KnownProperties.RefDate).Value = refDate;
-            writer.Read("testmodel", loadedModelDefinition, "testmodel");
+            writer.Read("testmodel", loadedModelDefinition);
 
             Assert.AreEqual(modelDefinition.WindFields.Count, loadedModelDefinition.WindFields.Count);
             for (var i = 0; i < loadedModelDefinition.WindFields.Count; ++i)
@@ -197,7 +197,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             var loadedModelDefinition = new WaterFlowFMModelDefinition();
             loadedModelDefinition.GetModelProperty(KnownProperties.RefDate).Value = refDate;
-            writer.Read("testmodel", loadedModelDefinition, "testmodel");
+            writer.Read("testmodel", loadedModelDefinition);
 
             Assert.AreEqual(modelDefinition.WindFields.Count, loadedModelDefinition.WindFields.Count);
             for (var i = 0; i < loadedModelDefinition.WindFields.Count; ++i)

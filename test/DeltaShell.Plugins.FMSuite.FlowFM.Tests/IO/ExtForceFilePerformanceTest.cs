@@ -1,9 +1,9 @@
-﻿using DelftTools.TestUtils;
+﻿using System.IO;
+using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using NUnit.Framework;
-using System.IO;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 {
@@ -25,13 +25,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 ZipFileUtils.Extract(externalForcingZipFilePath, tempDir);
 
                 var externalForcingFileName = "dcsmv6.ext";
-                var mduFileName = "dcsmv6.mdu";
-
                 var externalForcingFile = Path.Combine(tempDir, externalForcingFileName);
-                var extSubFilesReferenceFilePath = Path.Combine(tempDir, mduFileName);
 
                 var extForceFile = new ExtForceFile();
-                TestHelper.AssertIsFasterThan(30000, () => extForceFile.Read(externalForcingFile, def, extSubFilesReferenceFilePath));
+                TestHelper.AssertIsFasterThan(30000, () => extForceFile.Read(externalForcingFile, def));
             });
         }
     }

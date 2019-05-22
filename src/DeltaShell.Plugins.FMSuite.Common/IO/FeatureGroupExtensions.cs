@@ -8,20 +8,15 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         public static void TrySetGroupName(this IFeature feature, string filePath)
         {
             var groupableFeature = feature as IGroupableFeature;
-            if (groupableFeature == null)
-            {
-                return;
-            }
+            if (groupableFeature == null) return;
 
             groupableFeature.GroupName = filePath;
         }
 
-        public static bool HasDefaultGroupName(this IGroupableFeature feature, string featureExtension,
-                                               string defaultGroupName)
+        public static bool HasDefaultGroupName(this IGroupableFeature feature, string featureExtension, string defaultGroupName)
         {
-            string featureGroupName = feature.GroupName;
-            return string.IsNullOrEmpty(featureGroupName) ||
-                   featureGroupName.Replace(featureExtension, string.Empty).Equals(defaultGroupName);
+            var featureGroupName = feature.GroupName;
+            return string.IsNullOrEmpty(featureGroupName) || featureGroupName.Replace(featureExtension, string.Empty).Equals(defaultGroupName);
         }
     }
 }

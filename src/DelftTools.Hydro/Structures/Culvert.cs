@@ -13,7 +13,7 @@ namespace DelftTools.Hydro.Structures
 {
     ///<summary>
     ///</summary>
-    [Entity(FireOnCollectionChange = false)]
+    [Entity(FireOnCollectionChange=false)]
     public class Culvert : BranchStructure, ICulvert
     {
         private double width;
@@ -23,30 +23,32 @@ namespace DelftTools.Hydro.Structures
         private CulvertGeometryType geometryType;
         private CulvertType culvertType;
 
+
         public Culvert()
-            : this("Culvert") {}
+            : this("Culvert")
+        {
+        }
 
         public Culvert(string name)
         {
             base.Name = name;
-
-            GateOpeningLossCoefficientFunction =
-                FunctionHelper.Get1DFunction<double, double>("gatereduction", "gate height opening factor",
-                                                             "loss efficient");
-
+            
+            GateOpeningLossCoefficientFunction = FunctionHelper.Get1DFunction<double, double>("gatereduction", "gate height opening factor", "loss efficient");
+            
             Width = 1.0;
             Height = 1.0;
-
+            
             TabulatedCrossSectionDefinition = new CrossSectionDefinitionZW {IsClosed = true};
             GeometryType = CulvertGeometryType.Round;
             CulvertType = CulvertType.Culvert;
+
         }
 
         [DisplayName("Flow direction")]
-        [FeatureAttribute(Order = 16, ExportName = "FlowDir")]
+        [FeatureAttribute(Order = 16,ExportName = "FlowDir")]
         public virtual FlowDirection FlowDirection
         {
-            get => flowDirection;
+            get { return flowDirection; }
             set
             {
                 BeforeFlowDirectionSet(value);
@@ -57,8 +59,7 @@ namespace DelftTools.Hydro.Structures
         [EditAction]
         private void BeforeFlowDirectionSet(FlowDirection value)
         {
-            if (CulvertType.Equals(CulvertType.Siphon) &&
-                !(value == FlowDirection.Positive || value == FlowDirection.None))
+            if ((CulvertType.Equals(CulvertType.Siphon)) && !(value == FlowDirection.Positive || value == FlowDirection.None))
             {
                 throw new ArgumentException("Negative flow is not allowed for siphons");
             }
@@ -67,11 +68,18 @@ namespace DelftTools.Hydro.Structures
         /// <summary>
         /// Calculates the cross-section as defined at the inlet
         /// </summary>
-        public virtual CrossSectionDefinitionZW CrossSectionDefinitionAtInletAbsolute =>
-            CrossSectionDefinitionForCalculation.AddLevel(InletLevel);
+        public virtual CrossSectionDefinitionZW CrossSectionDefinitionAtInletAbsolute
+        {
+            get
+            {
+                return CrossSectionDefinitionForCalculation.AddLevel(InletLevel);
+            }
+        }
 
-        public virtual CrossSectionDefinitionZW CrossSectionDefinitionAtOutletAbsolute =>
-            CrossSectionDefinitionForCalculation.AddLevel(OutletLevel);
+        public virtual CrossSectionDefinitionZW CrossSectionDefinitionAtOutletAbsolute
+        {
+            get { return CrossSectionDefinitionForCalculation.AddLevel(OutletLevel); }
+        }
 
         /// <summary>
         /// Crosssection as used for model api. It does not include any level since these are passed separately
@@ -97,9 +105,8 @@ namespace DelftTools.Hydro.Structures
                     case CulvertGeometryType.Cunette:
                         return StandardCrossSectionsFactory.GetTabulatedCrossSectionFromCunette(Width, Height);
                     case CulvertGeometryType.SteelCunette:
-                        return StandardCrossSectionsFactory.GetTabulatedCrossSectionFromSteelCunette(
-                            Height, Radius, Radius1,
-                            Radius2, Radius3, Angle, Angle1);
+                        return StandardCrossSectionsFactory.GetTabulatedCrossSectionFromSteelCunette(Height, Radius, Radius1,
+                                            Radius2, Radius3, Angle, Angle1);
                     default:
                         throw new InvalidOperationException(
                             "A crossection is only defined if geometry type is tabulated or rectangle");
@@ -141,8 +148,8 @@ namespace DelftTools.Hydro.Structures
         [FeatureAttribute(Order = 6, ExportName = "RoughType")]
         public virtual CulvertFrictionType FrictionType
         {
-            get => FrictionTypeConverter.ConvertToCulvertFrictionType(FrictionDataType);
-            set => FrictionDataType = FrictionTypeConverter.ConvertFrictionType(value);
+            get { return FrictionTypeConverter.ConvertToCulvertFrictionType(FrictionDataType); }
+            set { FrictionDataType = FrictionTypeConverter.ConvertFrictionType(value); }
         }
 
         [Browsable(false)]
@@ -152,15 +159,15 @@ namespace DelftTools.Hydro.Structures
         [FeatureAttribute(Order = 5, ExportName = "Length")]
         public virtual double CulvertLength
         {
-            get => Length;
-            set => Length = value;
+            get { return Length; }
+            set { Length = value; }
         }
 
         [DynamicReadOnly]
         [FeatureAttribute(Order = 24)]
         public virtual double Width
         {
-            get => width;
+            get { return width; }
             set
             {
                 width = value;
@@ -214,20 +221,16 @@ namespace DelftTools.Hydro.Structures
         [DisplayName("Angle 1")]
         [FeatureAttribute(Order = 33)]
         public virtual double Angle1 { get; set; }
-
+        
         [DisplayName("Culvert type")]
         [EditAction]
         [FeatureAttribute(Order = 20)]
-        public virtual CulvertType CulvertType
-        {
-            get => culvertType;
+        public virtual CulvertType CulvertType {
+            get { return culvertType; }
             set
             {
                 culvertType = value;
-                if (value == CulvertType.Siphon)
-                {
-                    AllowNegativeFlow = false;
-                }
+                if (value == CulvertType.Siphon) AllowNegativeFlow = false;
             }
         }
 
@@ -253,7 +256,10 @@ namespace DelftTools.Hydro.Structures
         [DynamicReadOnly]
         [DisplayName("Gate lower edge")]
         [FeatureAttribute(Order = 19, ExportName = "GateLowEdge")]
-        public virtual double GateLowerEdgeLevel => BottomLevel + GateInitialOpening;
+        public virtual double GateLowerEdgeLevel
+        {
+            get { return BottomLevel + GateInitialOpening; }
+        }
 
         [DisplayName("Inlet loss coefficient")]
         [FeatureAttribute(Order = 13, ExportName = "InLossCoef")]
@@ -271,7 +277,10 @@ namespace DelftTools.Hydro.Structures
         [FeatureAttribute(Order = 12, ExportName = "OutletLvl")]
         public virtual double OutletLevel { get; set; }
 
-        public virtual double BottomLevel => (InletLevel + OutletLevel) / 2;
+        public virtual double BottomLevel
+        {
+            get { return (InletLevel + OutletLevel)/2; }
+        }
 
         [DisplayName("Bend loss coefficient")]
         [FeatureAttribute(Order = 15, ExportName = "BendLosCoef")]
@@ -282,7 +291,7 @@ namespace DelftTools.Hydro.Structures
         [FeatureAttribute(Order = 23, ExportName = "GeomType")]
         public virtual CulvertGeometryType GeometryType
         {
-            get => geometryType;
+            get { return geometryType; }
             set
             {
                 geometryType = value;
@@ -300,14 +309,14 @@ namespace DelftTools.Hydro.Structures
                         {
                             Width = Width,
                             Height = Height
-                        }) {Name = Name};
+                        }) { Name = Name };
                     break;
                 case CulvertGeometryType.Round:
                     crossSectionDefinition =
                         new CrossSectionDefinitionStandard(new CrossSectionStandardShapeRound
                         {
                             Diameter = Diameter,
-                        }) {Name = Name};
+                        }) { Name = Name };
                     break;
                 case CulvertGeometryType.Ellipse:
                     crossSectionDefinition =
@@ -315,11 +324,14 @@ namespace DelftTools.Hydro.Structures
                         {
                             Width = Width,
                             Height = Height
-                        }) {Name = Name};
+                        }) { Name = Name };
                     break;
                 case CulvertGeometryType.Egg:
-                    var eggShape = new CrossSectionStandardShapeEgg {Width = Width};
-                    crossSectionDefinition = new CrossSectionDefinitionStandard(eggShape) {Name = Name};
+                    var eggShape = new CrossSectionStandardShapeEgg
+                    {
+                        Width = Width
+                    };
+                    crossSectionDefinition = new CrossSectionDefinitionStandard(eggShape) { Name = Name };
                     Height = eggShape.Height;
                     break;
                 case CulvertGeometryType.Arch:
@@ -329,11 +341,14 @@ namespace DelftTools.Hydro.Structures
                             Width = Width,
                             Height = Height,
                             ArcHeight = ArcHeight
-                        }) {Name = Name};
+                        }) { Name = Name };
                     break;
                 case CulvertGeometryType.Cunette:
-                    var cunetteShape = new CrossSectionStandardShapeCunette {Width = Width};
-                    crossSectionDefinition = new CrossSectionDefinitionStandard(cunetteShape) {Name = Name};
+                    var cunetteShape = new CrossSectionStandardShapeCunette
+                    {
+                        Width = Width
+                    };
+                    crossSectionDefinition = new CrossSectionDefinitionStandard(cunetteShape) { Name = Name };
                     Height = cunetteShape.Height;
                     break;
                 case CulvertGeometryType.SteelCunette:
@@ -347,24 +362,23 @@ namespace DelftTools.Hydro.Structures
                             RadiusR3 = Radius3,
                             AngleA = Angle,
                             AngleA1 = Angle1
-                        }) {Name = Name};
+                        }) { Name = Name };
                     break;
                 default:
                     crossSectionDefinition = tabulatedCrossSectionDefinition;
-                    if (crossSectionDefinition.Name != Name)
-                    {
+                    if(crossSectionDefinition.Name != Name)
                         crossSectionDefinition.Name = Name;
-                    }
-
                     break;
             }
         }
 
         public virtual bool AllowNegativeFlow
         {
-            get =>
-                FlowDirection == FlowDirection.Both ||
-                FlowDirection == FlowDirection.Negative;
+            get
+            {
+                return FlowDirection == FlowDirection.Both ||
+                       FlowDirection == FlowDirection.Negative;
+            }
             set
             {
                 if (value != AllowNegativeFlow)
@@ -376,9 +390,13 @@ namespace DelftTools.Hydro.Structures
 
         public virtual bool AllowPositiveFlow
         {
-            get =>
-                FlowDirection == FlowDirection.Both ||
-                FlowDirection == FlowDirection.Positive;
+            get
+            {
+                {
+                    return FlowDirection == FlowDirection.Both ||
+                           FlowDirection == FlowDirection.Positive;
+                }
+            }
             set
             {
                 if (value != AllowPositiveFlow)
@@ -390,8 +408,8 @@ namespace DelftTools.Hydro.Structures
 
         public virtual CrossSectionDefinitionZW TabulatedCrossSectionDefinition
         {
-            get => tabulatedCrossSectionDefinition;
-            set => tabulatedCrossSectionDefinition = value;
+            get { return tabulatedCrossSectionDefinition; }
+            set { tabulatedCrossSectionDefinition = value; }
         }
 
         public virtual IFunction GateOpeningLossCoefficientFunction { get; set; }
@@ -399,7 +417,7 @@ namespace DelftTools.Hydro.Structures
         public override void CopyFrom(object source)
         {
             base.CopyFrom(source);
-            var sourceCulvert = (Culvert) source;
+            Culvert sourceCulvert = (Culvert) source;
             CulvertType = sourceCulvert.CulvertType;
             BendLossCoefficient = sourceCulvert.BendLossCoefficient;
             Diameter = sourceCulvert.Diameter;
@@ -407,7 +425,7 @@ namespace DelftTools.Hydro.Structures
             Friction = sourceCulvert.Friction;
             FrictionType = sourceCulvert.FrictionType;
             GateInitialOpening = sourceCulvert.GateInitialOpening;
-            GateOpeningLossCoefficientFunction = (IFunction) sourceCulvert.GateOpeningLossCoefficientFunction.Clone();
+            GateOpeningLossCoefficientFunction = (IFunction)sourceCulvert.GateOpeningLossCoefficientFunction.Clone();
             GeometryType = sourceCulvert.GeometryType;
             Height = sourceCulvert.Height;
             InletLevel = sourceCulvert.InletLevel;
@@ -425,8 +443,7 @@ namespace DelftTools.Hydro.Structures
             Radius3 = sourceCulvert.Radius3;
             SiphonOffLevel = sourceCulvert.SiphonOffLevel;
             SiphonOnLevel = sourceCulvert.SiphonOnLevel;
-            TabulatedCrossSectionDefinition =
-                (CrossSectionDefinitionZW) sourceCulvert.TabulatedCrossSectionDefinition.Clone();
+            TabulatedCrossSectionDefinition = (CrossSectionDefinitionZW)sourceCulvert.TabulatedCrossSectionDefinition.Clone();
             Width = sourceCulvert.Width;
         }
 
@@ -439,16 +456,14 @@ namespace DelftTools.Hydro.Structures
         private static FlowDirection GetPossibleFlowDirection(bool allowPositiveFlow, bool allowNegativeFlow)
         {
             return allowPositiveFlow
-                       ? allowNegativeFlow ? FlowDirection.Both : FlowDirection.Positive
-                       : allowNegativeFlow
-                           ? FlowDirection.Negative
-                           : FlowDirection.None;
+                       ? (allowNegativeFlow ? FlowDirection.Both : FlowDirection.Positive)
+                       : (allowNegativeFlow ? FlowDirection.Negative : FlowDirection.None);
         }
-
+        
         /// <summary>
         /// Sets defaults as seen in Sobek 2.12
         /// </summary>
-        /// <param name="gateFunction"> </param>
+        /// <param name="gateFunction"></param>
         private static void SetDefaultGateOpeningFunction(IFunction gateFunction)
         {
             gateFunction.Clear();
@@ -461,35 +476,35 @@ namespace DelftTools.Hydro.Structures
             gateFunction[0.6] = 1.71;
             gateFunction[0.7] = 1.64;
             gateFunction[0.8] = 1.51;
-            gateFunction[0.9] = 1.36;
+            gateFunction[0.9] = 1.36; 
             gateFunction[1.0] = 1.19;
         }
 
         public static Culvert CreateDefault()
         {
             var culvert = new Culvert
-            {
-                InletLevel = -5.0,
-                OutletLevel = -5.0,
-                SiphonOnLevel = 2,
-                SiphonOffLevel = 3,
-                Width = 1.0,
-                Height = 1.0,
-                Length = 10.0,
-                InletLossCoefficient = 0.1,
-                OutletLossCoefficient = 0.1,
-                BendLossCoefficient = 0.0,
-                ArcHeight = 0.25,
-                Diameter = 4.0,
-                Radius = 0.5,
-                Radius1 = 0.8,
-                Radius2 = 0.2,
-                Radius3 = 0,
-                Angle = 28,
-                Angle1 = 0,
-                Friction = 45.0,
-                FrictionDataType = Hydro.Friction.Chezy
-            };
+                              {
+                                  InletLevel = -5.0,
+                                  OutletLevel = -5.0,
+                                  SiphonOnLevel = 2,
+                                  SiphonOffLevel = 3,
+                                  Width = 1.0,
+                                  Height = 1.0,
+                                  Length = 10.0,
+                                  InletLossCoefficient = 0.1,
+                                  OutletLossCoefficient = 0.1,
+                                  BendLossCoefficient = 0.0,
+                                  ArcHeight = 0.25,
+                                  Diameter = 4.0, 
+                                  Radius = 0.5,
+                                  Radius1 = 0.8,
+                                  Radius2 = 0.2,
+                                  Radius3 = 0,
+                                  Angle = 28,
+                                  Angle1 = 0,
+                                  Friction = 45.0,
+                                  FrictionDataType = Hydro.Friction.Chezy
+                              };
 
             culvert.TabulatedCrossSectionDefinition.SetAsRectangle(0, 2, 2);
             SetDefaultGateOpeningFunction(culvert.GateOpeningLossCoefficientFunction);
@@ -498,8 +513,8 @@ namespace DelftTools.Hydro.Structures
 
         public static Culvert CreateDefault(IBranch branch)
         {
-            Culvert culvert = CreateDefault();
-            AddStructureToNetwork(culvert, branch);
+            var culvert = CreateDefault();
+            AddStructureToNetwork(culvert,branch);
             return culvert;
         }
 
@@ -529,8 +544,8 @@ namespace DelftTools.Hydro.Structures
             if (propertyName == "Width")
             {
                 return GeometryType == CulvertGeometryType.SteelCunette ||
-                       GeometryType == CulvertGeometryType.Tabulated ||
-                       GeometryType == CulvertGeometryType.Round;
+                         GeometryType == CulvertGeometryType.Tabulated ||
+                         GeometryType == CulvertGeometryType.Round;
             }
 
             if (propertyName == "Height")
@@ -547,9 +562,8 @@ namespace DelftTools.Hydro.Structures
             {
                 return GeometryType != CulvertGeometryType.Round;
             }
-
-            if (propertyName == "Radius" || propertyName == "Radius1" || propertyName == "Radius2" ||
-                propertyName == "Radius3" ||
+            
+            if (propertyName == "Radius" || propertyName == "Radius1" || propertyName == "Radius2" || propertyName == "Radius3" ||
                 propertyName == "Angle" || propertyName == "Angle1")
             {
                 return GeometryType != CulvertGeometryType.SteelCunette;

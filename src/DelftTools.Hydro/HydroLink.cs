@@ -6,10 +6,12 @@ using GeoAPI.Geometries;
 
 namespace DelftTools.Hydro
 {
-    [Entity(FireOnCollectionChange = false)]
+    [Entity(FireOnCollectionChange=false)]
     public class HydroLink : Unique<long>, IFeature, INameable
     {
-        public HydroLink() {}
+        public HydroLink()
+        {
+        }
 
         public HydroLink(IHydroObject source, IHydroObject target)
         {
@@ -17,7 +19,6 @@ namespace DelftTools.Hydro
             {
                 Name = "HL_" + source.Name + "_" + target.Name;
             }
-
             Source = source;
             Target = target;
         }
@@ -34,28 +35,20 @@ namespace DelftTools.Hydro
         public virtual IHydroObject Target { get; set; }
 
         // TODO: remove and use <any> in mapping
-        protected virtual IFeature SourceFeature
-        {
-            get => Source;
-            set => Source = (IHydroObject) value;
-        }
+        protected virtual IFeature SourceFeature { get { return Source; } set { Source = (IHydroObject)value; } }
 
         // TODO: remove and use <any> in mapping
-        protected virtual IFeature TargetFeature
-        {
-            get => Target;
-            set => Target = (IHydroObject) value;
-        }
+        protected virtual IFeature TargetFeature { get { return Target; } set { Target = (IHydroObject)value; } }
 
         public virtual object Clone()
         {
             return new HydroLink
-            {
-                Source = Source,
-                Target = Target,
-                Attributes = Attributes != null ? (IFeatureAttributeCollection) Attributes.Clone() : null,
-                Geometry = Geometry != null ? (IGeometry) Geometry.Clone() : null
-            };
+                       {
+                           Source = Source, 
+                           Target = Target,
+                           Attributes = Attributes != null ? (IFeatureAttributeCollection) Attributes.Clone() : null,
+                           Geometry = Geometry != null ? (IGeometry) Geometry.Clone() : null
+                       };
         }
 
         public virtual IGeometry Geometry { get; set; }

@@ -1,23 +1,17 @@
 using System.Collections.Generic;
+using DelftTools.Hydro.Structures;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
 {
     /// <summary>
-    /// Compares <see cref="IDataColumn" /> by name
+    /// Compares <see cref="IDataColumn"/> by name
     /// </summary>
     public class DataColumnsNameComparer : IEqualityComparer<IDataColumn>
     {
         public bool Equals(IDataColumn x, IDataColumn y)
         {
-            if (x == null)
-            {
-                return false;
-            }
-
-            if (y == null)
-            {
-                return false;
-            }
+            if (x == null) return false;
+            if (y == null) return false;
 
             return Equals(x.Name, y.Name);
         }

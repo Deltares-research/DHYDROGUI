@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
+using DelftTools.Utils.IO;
 using DeltaShell.Plugins.FMSuite.Common.IO;
-using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using log4net;
 
@@ -21,10 +20,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         public static void RemoveDuplicateFeatures(object features, IGroupableFeature addedFeature, string modelName)
         {
-            if (addedFeature == null)
-            {
-                return;
-            }
+            if (addedFeature == null) return;
 
             var landBoundary = addedFeature as LandBoundary2D;
             if (landBoundary != null)
@@ -83,14 +79,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
 
             var bridgePillar = addedFeature as BridgePillar;
-            if (bridgePillar != null)
-            {
-                RemoveAddedFeatureIfDuplicate(features, bridgePillar, modelName);
-            }
+            if (bridgePillar != null) RemoveAddedFeatureIfDuplicate(features, bridgePillar, modelName);
+
         }
 
-        private static void RemoveAddedFeatureIfDuplicate<T>(object features, T addedFeature, string modelName)
-            where T : IGroupableFeature, INameable
+        private static void RemoveAddedFeatureIfDuplicate<T>(object features, T addedFeature, string modelName) where T : IGroupableFeature, INameable
         {
             var featureList = features as EventedList<T>;
             if (featureList != null)
@@ -99,15 +92,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
         }
 
-        private static void RemoveNewObjectFromListIfDuplicate<T>(EventedList<T> features, T addedFeature,
-                                                                  string modelName)
-            where T : IGroupableFeature, INameable
+        private static void RemoveNewObjectFromListIfDuplicate<T>(EventedList<T> features, T addedFeature, string modelName) where T : IGroupableFeature, INameable
         {
             if (features.Count(f => f.Name == addedFeature.Name && f.GroupName == addedFeature.GroupName) > 1)
             {
                 features.RemoveAt(features.Count - 1);
-                Log.WarnFormat(
-                    "Feature with group name '{0}'and name '{1}' has not been added to model '{2}', because a feature with the same properties already exists."
+                Log.WarnFormat("Feature with group name '{0}'and name '{1}' has not been added to model '{2}', because a feature with the same properties already exists."
                     , addedFeature.GroupName, addedFeature.Name, modelName);
             }
         }
@@ -120,55 +110,39 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             groupableFeature.MakeGroupNameRelative(model.MduFilePath);
         }
 
-        private static void RenameStructureGroupNameToStructureFilePath(this IGroupableFeature hydroAreaFeature,
-                                                                        WaterFlowFMModel model)
+        private static void RenameStructureGroupNameToStructureFilePath(this IGroupableFeature hydroAreaFeature, WaterFlowFMModel model)
         {
-            if (!(hydroAreaFeature is Weir2D) && !(hydroAreaFeature is Pump2D))
-            {
-                return;
-            }
-
+            if (!(hydroAreaFeature is Weir2D) && !(hydroAreaFeature is Pump2D)) return;
             ChangeStructureGroupName<Weir2D>(hydroAreaFeature, model);
             ChangeStructureGroupName<Pump2D>(hydroAreaFeature, model);
         }
 
-        private static void ChangeStructureGroupName<TFeat>(IGroupableFeature hydroAreaFeature, WaterFlowFMModel model)
-            where TFeat : class, IGroupableFeature
+        private static void ChangeStructureGroupName<TFeat>(IGroupableFeature hydroAreaFeature, WaterFlowFMModel model) where TFeat : class, IGroupableFeature
         {
             var structure = hydroAreaFeature as TFeat;
-            if (structure == null)
-            {
-                return;
-            }
+            if(structure == null) return;
 
-            string strucGroupName = structure.GroupName;
-            if (string.IsNullOrEmpty(strucGroupName) || !Path.IsPathRooted(strucGroupName) ||
-                strucGroupName.EndsWith(".ini"))
-            {
-                return;
-            }
+            var strucGroupName = structure.GroupName;
+            if (string.IsNullOrEmpty(strucGroupName) || !Path.IsPathRooted(strucGroupName) || strucGroupName.EndsWith(".ini")) return;
 
-            string[] iniFiles = Directory.GetFiles(Path.GetDirectoryName(strucGroupName), "*.ini");
+            var iniFiles = Directory.GetFiles(Path.GetDirectoryName(strucGroupName), "*.ini");
             var strucFile = new StructuresFile
             {
                 StructureSchema = model.ModelDefinition.StructureSchema,
                 ReferenceDate = (DateTime) model.ModelDefinition.GetModelProperty(KnownProperties.RefDate).Value
             };
 
-            foreach (string file in iniFiles)
+            foreach (var file in iniFiles)
             {
-                IList<IStructure> structures = strucFile.Read(file);
-                int numberOfMatchingStructureNames =
-                    structures.Count(s => s.Name == Path.GetFileNameWithoutExtension(strucGroupName));
+                var structures = strucFile.Read(file);
+                var numberOfMatchingStructureNames = structures.Count(s => s.Name == Path.GetFileNameWithoutExtension(strucGroupName));
                 if (numberOfMatchingStructureNames > 0)
                 {
                     structure.GroupName = file;
                     return;
                 }
             }
-
-            structure.GroupName =
-                Path.Combine(Path.GetDirectoryName(structure.GroupName), model.Name + "_structures.ini");
+            structure.GroupName = Path.Combine(Path.GetDirectoryName(structure.GroupName), model.Name + "_structures.ini");
         }
     }
 }

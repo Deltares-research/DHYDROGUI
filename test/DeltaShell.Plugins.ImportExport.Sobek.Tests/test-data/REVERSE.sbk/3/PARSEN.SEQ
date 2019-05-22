@@ -1,0 +1,34 @@
+$node
+1 A_L_start
+2 A_R_end
+3 B_L_end
+4 B_R_start
+5 C_L_end
+6 C_R_start
+7 D_L_end
+8 D_R_start
+9 E_L_end
+10 E_R_start
+$branch
+1 A
+2 B
+3 C
+4 D
+5 E
+$structure
+$lat_discharge
+$segment
+$controller
+$trigger
+$h_bound
+1 A_R_end
+2 B_R_start
+3 C_R_start
+4 D_R_start
+5 E_R_start
+$Q_bound
+1 A_L_start
+2 B_L_end
+3 C_L_end
+4 D_L_end
+5 E_L_end

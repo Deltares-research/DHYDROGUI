@@ -22,12 +22,11 @@ namespace DelftTools.Hydro.CrossSections
         [NoNotifyPropertyChange]
         public override string Name
         {
-            get => base.Name;
+            get { return base.Name; }
             set
             {
-                BeginEdit(new DefaultEditAction(
-                              string.Format("Change CrossSection Name from \"{0}\" to \"{1}\"", base.Name, value)));
-
+                BeginEdit(new DefaultEditAction(string.Format("Change CrossSection Name from \"{0}\" to \"{1}\"", base.Name, value)));
+                
                 base.Name = value;
                 AfterNameSet();
 
@@ -54,7 +53,10 @@ namespace DelftTools.Hydro.CrossSections
         [NoNotifyPropertyChange] // already handled in base class
         public override double Chainage
         {
-            get => base.Chainage;
+            get
+            {
+                return base.Chainage;
+            }
             set
             {
                 base.Chainage = value;
@@ -75,24 +77,24 @@ namespace DelftTools.Hydro.CrossSections
              * however, is being copied aswell and this should not happen.
              * After some discussion with Hidde we found out that the fastest and 'safest'
              * way is to store the name before the template and set it again after the cloning.*/
-            string name = Definition != null ? Definition.Name : null;
+            var name = Definition != null ? Definition.Name : null;
             Definition = (ICrossSectionDefinition) ((ICrossSection) source).Definition.Clone();
             if (name != null)
             {
                 Definition.Name = name;
             }
-
             //Definition.CopyFrom(((ICrossSection) source).Definition);
         }
 
         [Obsolete("Should only be used by NHibernate")]
         public CrossSection() //NHibernate and local Activator
-        {}
+        {
+        }
 
         public override object Clone()
         {
             var clone = (CrossSection) base.Clone();
-            clone.Definition = (ICrossSectionDefinition) Definition.Clone();
+            clone.Definition = (ICrossSectionDefinition)Definition.Clone();
             return clone;
         }
 
@@ -104,7 +106,10 @@ namespace DelftTools.Hydro.CrossSections
 
         public virtual ICrossSectionDefinition Definition { get; protected set; }
 
-        public virtual bool GeometryBased => Definition.GeometryBased;
+        public virtual bool GeometryBased
+        {
+            get { return Definition.GeometryBased; }
+        }
 
         public virtual void MakeDefinitionLocal()
         {
@@ -112,9 +117,7 @@ namespace DelftTools.Hydro.CrossSections
             {
                 throw new InvalidOperationException("Definition is already local");
             }
-
-            ICrossSectionDefinition crossSectionDefinition =
-                ((CrossSectionDefinitionProxy) Definition).GetUnProxiedDefinition();
+            var crossSectionDefinition = ((CrossSectionDefinitionProxy) Definition).GetUnProxiedDefinition();
             crossSectionDefinition.Name = Name;
             Definition = crossSectionDefinition;
         }
@@ -144,22 +147,23 @@ namespace DelftTools.Hydro.CrossSections
             HydroNetwork.SharedCrossSectionDefinitions.CollectionChanging -= LocalDefinitionAddingToSharedDefinitions;
         }
 
-        private void LocalDefinitionAddingToSharedDefinitions(object sender, NotifyCollectionChangingEventArgs e)
+        void LocalDefinitionAddingToSharedDefinitions(object sender, NotifyCollectionChangingEventArgs e)
         {
             if (e.Action != NotifyCollectionChangeAction.Add)
             {
                 throw new InvalidOperationException("Not expected");
             }
-
             Definition = new CrossSectionDefinitionProxy(e.Item as CrossSectionDefinition);
         }
 
         public override IGeometry Geometry
         {
-            get =>
-                branch != null && Definition != null
-                    ? Definition.GetGeometry(this)
-                    : tmpGeometry;
+            get 
+            {
+                return branch != null && Definition != null
+                           ? Definition.GetGeometry(this)
+                           : tmpGeometry;
+            }
             set
             {
                 BeforeGeometrySet(value);
@@ -180,28 +184,22 @@ namespace DelftTools.Hydro.CrossSections
             return CreateDefault(CrossSectionType.YZ, null, 0);
         }
 
-        public static ICrossSection CreateDefault(CrossSectionType definitionType, IBranch branch,
-                                                  double chainage = 0.0)
+        public static ICrossSection CreateDefault(CrossSectionType definitionType, IBranch branch, double chainage=0.0)
         {
-            ICrossSectionDefinition definition = GetDefaultDefinition(definitionType);
-            var crossSection = new CrossSection(definition)
-            {
-                Branch = branch,
-                Chainage = chainage
-            };
-
+            var definition = GetDefaultDefinition(definitionType);
+            var crossSection = new CrossSection(definition) {Branch = branch, Chainage = chainage};
+            
             if (crossSection.Network != null)
             {
-                crossSection.Name =
-                    HydroNetworkHelper.GetUniqueFeatureName(crossSection.Network as HydroNetwork, crossSection);
+                crossSection.Name = HydroNetworkHelper.GetUniqueFeatureName(crossSection.Network as HydroNetwork, crossSection);    
             }
-
+            
             return crossSection;
         }
 
         private static ICrossSectionDefinition GetDefaultDefinition(CrossSectionType definitionType)
         {
-            switch (definitionType)
+            switch(definitionType)
             {
                 case CrossSectionType.YZ:
                     return CrossSectionDefinitionYZ.CreateDefault();
@@ -212,38 +210,58 @@ namespace DelftTools.Hydro.CrossSections
                 case CrossSectionType.Standard:
                     return CrossSectionDefinitionStandard.CreateDefault();
             }
-
             throw new NotImplementedException();
         }
 
-        public virtual IHydroNetwork HydroNetwork => (IHydroNetwork) Network;
+        public virtual IHydroNetwork HydroNetwork
+        {
+            get { return (IHydroNetwork) Network; }
+        }
 
         [DisplayName("Lowest point")]
         [FeatureAttribute(Order = 5, ExportName = "LowestPt")]
-        public virtual double LowestPoint => Definition.LowestPoint;
+        public virtual double LowestPoint
+        {
+            get { return Definition.LowestPoint; }
+        }
 
         [DisplayName("Highest point")]
         [FeatureAttribute(Order = 6, ExportName = "HighestPt")]
-        public virtual double HighestPoint => Definition.HighestPoint;
+        public virtual double HighestPoint
+        {
+            get { return Definition.HighestPoint; }
+        }
 
         [DisplayName("Type")]
         [FeatureAttribute(Order = 7)]
-        public virtual CrossSectionType CrossSectionType => Definition.CrossSectionType;
+        public virtual CrossSectionType CrossSectionType
+        {
+            get { return Definition.CrossSectionType; }
+        }
 
         [FeatureAttribute(Order = 8)]
-        public virtual double Width => Definition.Width;
+        public virtual double Width
+        {
+            get { return Definition.Width; }
+        }
 
         [FeatureAttribute(Order = 9)]
-        public virtual double Thalweg => Math.Round(Definition.Thalweg, 2);
+        public virtual double Thalweg
+        {
+            get { return Math.Round(Definition.Thalweg, 2); }
+        }
 
         [DisplayName("Definition")]
         [FeatureAttribute(Order = 10, ExportName = "DefName")]
-        public virtual string DefinitionName => Definition.Name;
+        public virtual string DefinitionName
+        {
+            get { return Definition.Name; }
+        }
 
         private readonly Stack<IEditAction> editActions = new Stack<IEditAction>();
 
         [NoNotifyPropertyChange]
-        public virtual IEditAction CurrentEditAction => editActions.Count > 0 ? editActions.Peek() : null;
+        public virtual IEditAction CurrentEditAction { get { return (editActions.Count > 0) ? editActions.Peek() : null; } }
 
         [NoNotifyPropertyChange]
         public virtual bool EditWasCancelled { get; protected set; }

@@ -10,10 +10,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.Toolboxes
         {
             var commands = new List<ScriptCommand>();
 
-            foreach (string scriptPath in Directory.GetFiles(toolboxPath, "*.py"))
+            foreach (var scriptPath in Directory.GetFiles(toolboxPath, "*.py"))
             {
-                string title = Path.GetFileNameWithoutExtension(scriptPath);
-                Bitmap image = LoadImageWithSameName(scriptPath, title);
+                var title = Path.GetFileNameWithoutExtension(scriptPath);
+                var image = LoadImageWithSameName(scriptPath, title);
 
                 commands.Add(new ScriptCommand(title, image, scriptPath));
             }
@@ -23,13 +23,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.Toolboxes
 
         private static Bitmap LoadImageWithSameName(string scriptPath, string title)
         {
-            string directory = Path.GetDirectoryName(scriptPath) ?? "";
-            string imagePath = Path.Combine(directory, title + ".png");
+            var directory = Path.GetDirectoryName(scriptPath) ?? "";
+            var imagePath = Path.Combine(directory, title + ".png");
             if (File.Exists(imagePath))
-            {
                 return (Bitmap) Image.FromFile(imagePath);
-            }
-
             return null;
         }
     }

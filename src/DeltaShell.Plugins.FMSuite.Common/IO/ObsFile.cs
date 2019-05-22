@@ -17,7 +17,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                 OpenOutputFile(obsFilePath);
                 try
                 {
-                    foreach (T observationPoint in observationPoints)
+                    foreach (var observationPoint in observationPoints)
                     {
                         if (includeName)
                         {
@@ -27,8 +27,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                         }
                         else
                         {
-                            WriteLine(string.Format("{0,24} {1,24}",
-                                                    observationPoint.X, observationPoint.Y));
+                            WriteLine(string.Format("{0,24} {1,24}", 
+                                observationPoint.X, observationPoint.Y));
                         }
                     }
                 }
@@ -48,24 +48,23 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             {
                 string line = GetNextLine();
 
-                var nameSuffix = 0;
+                int nameSuffix = 0;
                 int expectedLineCount = includeName ? 3 : 2;
-
+                
                 while (line != null)
                 {
-                    List<string> lineFields = SplitLine(line).Take(3).ToList();
+                    var lineFields = SplitLine(line).Take(3).ToList();
                     if (lineFields.Count != expectedLineCount)
                     {
-                        throw new Exception(string.Format("Invalid point row on line {0} in file {1}", LineNumber,
-                                                          obsFilePath));
+                        throw new Exception(string.Format("Invalid point row on line {0} in file {1}", LineNumber, obsFilePath));
                     }
 
                     var observationPoint = new T
                     {
                         Geometry = new Point(GetDouble(lineFields[0], "x-coord"), GetDouble(lineFields[1], "y-coord")),
                         Name = includeName
-                                   ? lineFields[2]
-                                   : string.Format("point{0}", nameSuffix++)
+                            ? lineFields[2]
+                            : string.Format("point{0}", nameSuffix++)
                     };
 
                     observationPoint.TrySetGroupName(obsFilePath);
@@ -78,7 +77,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             {
                 CloseInputFile();
             }
-
             return observationPoints;
         }
 

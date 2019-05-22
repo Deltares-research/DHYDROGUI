@@ -12,54 +12,81 @@ using NetTopologySuite.Extensions.Networks;
 
 namespace DelftTools.Hydro.CrossSections
 {
-    [Entity(FireOnCollectionChange = false)]
+    [Entity(FireOnCollectionChange=false)]
     public class CrossSectionDefinitionProxy : Unique<long>, ICrossSectionDefinition, ISummerDikeEnabledDefinition
     {
         private IGeometry geometry;
-        protected CrossSectionDefinitionProxy() {} //nhibernate
+        protected CrossSectionDefinitionProxy() { } //nhibernate
 
         public CrossSectionDefinitionProxy(ICrossSectionDefinition innerDefinition)
         {
             InnerDefinition = innerDefinition;
         }
 
-        public virtual bool GeometryBased => InnerDefinition.GeometryBased;
+        public virtual bool GeometryBased
+        {
+            get { return InnerDefinition.GeometryBased; }
+        }
 
         public virtual IEnumerable<Coordinate> Profile
         {
-            get
-            {
-                return InnerDefinition.Profile.Select(c => new Coordinate(c.X, c.Y + LevelShift));
-            }
+            get { return InnerDefinition.Profile.Select(c => new Coordinate(c.X, c.Y + LevelShift)); }
         }
 
         public virtual IEnumerable<Coordinate> FlowProfile
         {
-            get
-            {
-                return InnerDefinition.FlowProfile.Select(c => new Coordinate(c.X, c.Y + LevelShift));
-            }
+            get { return InnerDefinition.FlowProfile.Select(c => new Coordinate(c.X, c.Y + LevelShift)); }
         }
 
-        public virtual LightDataTable RawData => InnerDefinition.RawData;
+        public virtual LightDataTable RawData
+        {
+            get { return InnerDefinition.RawData; }
+        }
 
-        public virtual double LowestPoint => InnerDefinition.LowestPoint + LevelShift;
+        public virtual double LowestPoint
+        {
+            get { return InnerDefinition.LowestPoint + LevelShift; }
+        }
 
-        public virtual double HighestPoint => InnerDefinition.HighestPoint + LevelShift;
+        public virtual double HighestPoint
+        {
+            get { return InnerDefinition.HighestPoint + LevelShift; }
+        }
 
-        public virtual double LeftEmbankment => InnerDefinition.LeftEmbankment + LevelShift;
+        public virtual double LeftEmbankment
+        {
+            get { return InnerDefinition.LeftEmbankment + LevelShift; }
+        }
 
-        public virtual double RightEmbankment => InnerDefinition.RightEmbankment + LevelShift;
+        public virtual double RightEmbankment
+        {
+            get { return InnerDefinition.RightEmbankment + LevelShift; }
+        }
 
-        public virtual IEventedList<CrossSectionSection> Sections => InnerDefinition.Sections;
+        public virtual IEventedList<CrossSectionSection> Sections
+        {
+            get { return InnerDefinition.Sections; }
+        }
 
-        public virtual CrossSectionType CrossSectionType => InnerDefinition.CrossSectionType;
+        public virtual CrossSectionType CrossSectionType
+        {
+            get { return InnerDefinition.CrossSectionType; }
+        }
 
-        public virtual double Width => InnerDefinition.Width;
+        public virtual double Width
+        {
+            get { return InnerDefinition.Width; }
+        }
 
-        public virtual double Left => InnerDefinition.Left;
+        public virtual double Left
+        {
+            get { return InnerDefinition.Left; }
+        }
 
-        public virtual bool IsProxy => true;
+        public virtual bool IsProxy
+        {
+            get { return true; }
+        }
 
         public void RefreshGeometry()
         {
@@ -68,11 +95,14 @@ namespace DelftTools.Hydro.CrossSections
 
         public Utils.Tuple<string, bool> ValidateCellValue(int rowIndex, int columnIndex, object cellValue)
         {
-            return new Utils.Tuple<string, bool>("", true);
+            return new Utils.Tuple<string, bool>("",true);
         }
 
         /// this might be reason to have CanHaveSummerDike on ICrossSectionDefinition
-        public virtual bool CanHaveSummerDike => InnerDefinition is ISummerDikeEnabledDefinition;
+        public virtual bool CanHaveSummerDike
+        {
+            get { return InnerDefinition is ISummerDikeEnabledDefinition; }
+        }
 
         public virtual SummerDike SummerDike
         {
@@ -80,10 +110,8 @@ namespace DelftTools.Hydro.CrossSections
             {
                 if (!(InnerDefinition is ISummerDikeEnabledDefinition))
                 {
-                    throw new InvalidOperationException(
-                        $"Inner definition {InnerDefinition.Name} does not support summerdike. Check CanHaveSummerdike property to see if this definition can have a summer dike");
+                    throw new InvalidOperationException($"Inner definition {InnerDefinition.Name} does not support summerdike. Check CanHaveSummerdike property to see if this definition can have a summer dike");    
                 }
-
                 return (InnerDefinition as ISummerDikeEnabledDefinition).SummerDike;
             }
         }
@@ -92,16 +120,16 @@ namespace DelftTools.Hydro.CrossSections
 
         public virtual double Thalweg
         {
-            get => InnerDefinition.Thalweg;
+            get { return InnerDefinition.Thalweg; }
             [EditAction]
-            set => throw new InvalidOperationException("Unable to set properties on proxy");
+            set { throw new InvalidOperationException("Unable to set properties on proxy"); }
         }
 
         public virtual string Description
         {
-            get => InnerDefinition.Description;
+            get { return InnerDefinition.Description; }
             [EditAction]
-            set => throw new InvalidOperationException("Unable to set properties on proxy");
+            set { throw new InvalidOperationException("Unable to set properties on proxy"); }
         }
 
         private ICrossSectionDefinition innerDefinition;
@@ -109,19 +137,19 @@ namespace DelftTools.Hydro.CrossSections
         [Aggregation]
         public virtual ICrossSectionDefinition InnerDefinition
         {
-            get => innerDefinition;
+            get { return innerDefinition; }
             set
             {
                 if (innerDefinition != null)
                 {
-                    ((INotifyPropertyChanged) innerDefinition).PropertyChanged -= InnerDefinitionProfileChanged;
+                    ((INotifyPropertyChanged)innerDefinition).PropertyChanged -= InnerDefinitionProfileChanged; 
                 }
 
                 innerDefinition = value;
 
                 if (innerDefinition != null)
                 {
-                    ((INotifyPropertyChanged) innerDefinition).PropertyChanged += InnerDefinitionProfileChanged;
+                    ((INotifyPropertyChanged)innerDefinition).PropertyChanged += InnerDefinitionProfileChanged;
                 }
             }
         }
@@ -136,7 +164,7 @@ namespace DelftTools.Hydro.CrossSections
 
         public virtual string Name
         {
-            get => InnerDefinition.Name;
+            get { return InnerDefinition.Name; }
             set
             {
                 //throw new InvalidOperationException("Unable to set properties on proxy");
@@ -167,7 +195,7 @@ namespace DelftTools.Hydro.CrossSections
 
             if (definition != null)
             {
-                double mapChainage = NetworkHelper.MapChainage(crossSection.Branch, crossSection.Chainage);
+                var mapChainage = NetworkHelper.MapChainage(crossSection.Branch, crossSection.Chainage);
                 geometry = definition.CalculateGeometry(crossSection.Branch.Geometry, mapChainage);
             }
 
@@ -175,37 +203,42 @@ namespace DelftTools.Hydro.CrossSections
             {
                 geometry = InnerDefinition.GetGeometry(crossSection);
             }
-
             return geometry;
         }
 
         public virtual void SetGeometry(IGeometry value)
         {
             if (value == null)
-            {
                 geometry = null;
-            }
-
             //do nothing
         }
 
         /// <summary>
         /// Returns a shifted copy of the inner definition. As sent to modelApi etc
         /// </summary>
-        /// <returns> </returns>
+        /// <returns></returns>
         public virtual ICrossSectionDefinition GetUnProxiedDefinition()
         {
             //create a shifted copy
-            var localDefinition = (ICrossSectionDefinition) InnerDefinition.Clone();
+            var localDefinition = (ICrossSectionDefinition)InnerDefinition.Clone();
             localDefinition.ShiftLevel(LevelShift);
             return localDefinition;
         }
 
-        public bool IsEditing => InnerDefinition.IsEditing;
+        public bool IsEditing
+        {
+            get { return InnerDefinition.IsEditing; }
+        }
 
-        public bool EditWasCancelled => InnerDefinition.EditWasCancelled;
+        public bool EditWasCancelled
+        {
+            get { return InnerDefinition.EditWasCancelled; }
+        }
 
-        public IEditAction CurrentEditAction => InnerDefinition.CurrentEditAction;
+        public IEditAction CurrentEditAction
+        {
+            get { return InnerDefinition.CurrentEditAction; }
+        }
 
         public void BeginEdit(IEditAction action)
         {

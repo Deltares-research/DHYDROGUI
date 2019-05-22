@@ -1,0 +1,1627 @@
+# short description
+# long  description
+SUFHYD 0
+IO  ..\BASECASE\STATUS.CAS "" "" N
+I   ..\BASECASE\DELFT_3B.INI "" "" N
+OO  ..\BASECASE\SUFHYD.LOG "" "" N
+OO  ..\BASECASE\SOBEK_3B.LOG "" "" N
+OO  ..\BASECASE\SOBEK.LOG "" "" N
+OO  ..\BASECASE\INDICAT.FLW "" "" N
+OO  ..\BASECASE\FLOWS.TXT "" "" N
+OO  ..\BASECASE\NODES.TXT "" "" N
+OO  ..\BASECASE\NWRWSYS.TXT "" "" N
+OO  ..\BASECASE\FREEBOAR.TXT "" "" N
+OO  ..\BASECASE\WATONSTR.TXT "" "" N
+OO  ..\BASECASE\STRLIST.TXT "" "" N
+OO  ..\BASECASE\FLW_CONV.TBL "" "" N
+OO  ..\BASECASE\RTC.LOG "" "" N
+O   ..\BASECASE\NETWORK.NTW "" "" N
+O   ..\BASECASE\NETWORK.NVL "" "" N
+OO  ..\BASECASE\NETWORKL.DBF "" "" N
+OO  ..\BASECASE\NETWORKN.DBF "" "" N
+O   ..\BASECASE\NETWORK.BBB "" "" N
+O   ..\BASECASE\NETWORK.SOB "" "" N
+O   ..\BASECASE\3B_LINK.TP "" "" N
+O   ..\BASECASE\3B_NOD.TP "" "" N
+O   ..\BASECASE\3B_ROUT.3B "" "" N
+O   ..\BASECASE\3BRUNOFF.TP "" "" N
+O   ..\BASECASE\BOUND3B.3B "" "" N
+O   ..\BASECASE\BOUND3B.TBL "" "" N
+O   ..\BASECASE\CONTR3B.DEF "" "" N
+O   ..\BASECASE\GREENHSE.3B "" "" N
+O   ..\BASECASE\GREENHSE.RF "" "" N
+O   ..\BASECASE\GREENHSE.SIL "" "" N
+O   ..\BASECASE\GREENHSE.TBL "" "" N
+O   ..\BASECASE\INDUSTRY.3B "" "" N
+O   ..\BASECASE\INDUSTRY.TBL "" "" N
+O   ..\BASECASE\OPENWATE.3B "" "" N
+O   ..\BASECASE\OPENWATE.SEP "" "" N
+O   ..\BASECASE\OPENWATE.TBL "" "" N
+O   ..\BASECASE\PAVED.3B "" "" N
+O   ..\BASECASE\PAVED.DWA "" "" N
+O   ..\BASECASE\PAVED.STO "" "" N
+O   ..\BASECASE\PAVED.TBL "" "" N
+O   ..\BASECASE\PLUVIUS.3B "" "" N
+O   ..\BASECASE\PLUVIUS.ALG "" "" N
+O   ..\BASECASE\PLUVIUS.DWA "" "" N
+O   ..\BASECASE\PLUVIUS.TBL "" "" N
+O   ..\BASECASE\SALT.3B "" "" N
+O   ..\BASECASE\SACRMNTO.3B "" "" N
+O   ..\BASECASE\SACRMNTO.CAP "" "" N
+O   ..\BASECASE\SACRMNTO.OTH "" "" N
+O   ..\BASECASE\SACRMNTO.UH "" "" N
+O   ..\BASECASE\STRUCT3B.DAT "" "" N
+O   ..\BASECASE\STRUCT3B.DEF "" "" N
+O   ..\BASECASE\STRUCT3B.TBL "" "" N
+O   ..\BASECASE\UNPAVED.3B "" "" N
+O   ..\BASECASE\UNPAVED.ALF "" "" N
+O   ..\BASECASE\UNPAVED.INF "" "" N
+O   ..\BASECASE\UNPAVED.SEP "" "" N
+O   ..\BASECASE\UNPAVED.STO "" "" N
+O   ..\BASECASE\UNPAVED.TBL "" "" N
+O   ..\BASECASE\WWTP.3B "" "" N
+O   ..\BASECASE\WWTP.TBL "" "" N
+O   ..\BASECASE\BOUNDARY.DAT "" "" N
+O   ..\BASECASE\BOUNDLAT.DAT "" "" N
+O   ..\BASECASE\CONCSALT.DAT "" "" N
+O   ..\BASECASE\CONTROL.DEF "" "" N
+O   ..\BASECASE\TRIGGER.DEF "" "" N
+O   ..\BASECASE\STRUCT.CMP "" "" N
+O   ..\BASECASE\VALVE.TAB "" "" N
+O   ..\BASECASE\FRICTION.DAT "" "" N
+O   ..\BASECASE\INITIAL.DAT "" "" N
+O   ..\BASECASE\INITSALT.DAT "" "" N
+O   ..\BASECASE\LATERAL.DAT "" "" N
+O   ..\BASECASE\NETWORK.CN "" "" N
+O   ..\BASECASE\NETWORK.CP "" "" N
+O   ..\BASECASE\NETWORK.CR "" "" N
+O   ..\BASECASE\NETWORK.GR "" "" N
+O   ..\BASECASE\NETWORK.ME "" "" N
+O   ..\BASECASE\NETWORK.OBI "" "" N
+O   ..\BASECASE\NETWORK.ST "" "" N
+O   ..\BASECASE\NETWORK.TP "" "" N
+O   ..\BASECASE\NETWORK.D12 "" "" N
+O   ..\BASECASE\NODES.DAT "" "" N
+O   ..\BASECASE\2DGRID.DAT "" "" N
+O   ..\BASECASE\PROFILE.DAT "" "" N
+O   ..\BASECASE\PROFILE.DEF "" "" N
+O   ..\BASECASE\STRUCT.DAT "" "" N
+O   ..\BASECASE\STRUCT.DEF "" "" N
+O   ..\BASECASE\WND_LOC.DAT "" "" N
+O   ..\BASECASE\3B_LOC.RTC "" "" N
+O   ..\BASECASE\3B_MEAS.RTC "" "" N
+O   ..\BASECASE\DECISPAR.RTC "" "" N
+O   ..\BASECASE\EXT_LOC.RTC "" "" N
+O   ..\BASECASE\PREC_LOC.RTC "" "" N
+O   ..\BASECASE\SBK_LOC.RTC "" "" N
+O   ..\BASECASE\SBK_MEAS.RTC "" "" N
+O   ..\BASECASE\RESERVOI.RTC "" "" N
+O   ..\BASECASE\BOUNDEST.DAT "" "" N
+O   ..\BASECASE\WASTLOAD.POS "" "" N
+O   ..\BASECASE\WLMATMO.CFT "" "" N
+O   ..\BASECASE\WLMBANK.CFT "" "" N
+O   ..\BASECASE\WLMBOUND.CFT "" "" N
+O   ..\BASECASE\WLMBOUND.DAT "" "" N
+O   ..\BASECASE\WLMBRNCH.DAT "" "" N
+O   ..\BASECASE\WLMDISTR.DAT "" "" N
+O   ..\BASECASE\WLMDWA.CFT "" "" N
+O   ..\BASECASE\WLMGRHSE.CFT "" "" N
+O   ..\BASECASE\WLMINDUS.CFT "" "" N
+O   ..\BASECASE\WLMINDUS.DAT "" "" N
+O   ..\BASECASE\WLMINFO.DAT "" "" N
+O   ..\BASECASE\WLMNODE.DAT "" "" N
+O   ..\BASECASE\WLMPAVED.CFT "" "" N
+O   ..\BASECASE\WLMRWZI.CFT "" "" N
+O   ..\BASECASE\WLMRWZI.DAT "" "" N
+O   ..\BASECASE\WLMSEPT.CFT "" "" N
+O   ..\BASECASE\WLMSEPT.DAT "" "" N
+O   ..\BASECASE\WLMSEWER.CFT "" "" N
+O   ..\BASECASE\WLMSTRU.CFT "" "" N
+O   ..\BASECASE\WLMWABOT.CFT "" "" N
+O   ..\BASECASE\WLMWATER.CFT "" "" N
+O   ..\BASECASE\BOUNDWQ.DAT "" "" N
+O   ..\BASECASE\BOUNDWQ.TYP "" "" N
+O   ..\BASECASE\LOADSWQ.DAT "" "" N
+O   ..\BASECASE\LOADSWQ.TYP "" "" N
+O   ..\BASECASE\MONSTAT.WQ "" "" N
+O   ..\BASECASE\NTRDLWQ.POI "" "" N
+O   ..\BASECASE\NTRPLUV.OBJ "" "" N
+O   ..\BASECASE\2DBNDWQ.DAT "" "" N
+O   ..\BASECASE\2DBNDWQ.TYP "" "" N
+O   ..\BASECASE\2DDISPX.DAT "" "" N
+O   ..\BASECASE\2DMONST.WQ "" "" N
+O   ..\BASECASE\2DINIT.DAT "" "" N
+O   ..\BASECASE\2DPARAM.DAT "" "" N
+O   ..\BASECASE\FLAWININ.ZIP "" "" N
+O   ..\BASECASE\SUBSTANC.DEF "" "" N
+O   ..\BASECASE\GRID.TEO "" "" N
+O   ..\BASECASE\TRIWACO.ZIP "" "" N
+O   ..\BASECASE\SIMULATE.REP "" "" N
+OO  ..\BASECASE\NETWORK.REP "" "" N
+OO  ..\BASECASE\3B_GENER.OUT "" "" N
+OO  ..\BASECASE\3BAREAS.HIS                         "RR: areas of nodes"                         "RR: areas of nodes"                        Y
+OO  ..\BASECASE\3BAREAS.HIA "" "" N
+OO  ..\BASECASE\3BLINKS.HIS                         "RR: flows"                                  "RR: flows"                                 Y
+OO  ..\BASECASE\3BLINKS.HIA "" "" N
+OO  ..\BASECASE\3BSTRDIM.HIS                        "RR: dimensions of structures"               "RR: dimensions of structures"              Y
+OO  ..\BASECASE\3BSTRDIM.HIA "" "" N
+OO  ..\BASECASE\NWRWAREA.HIS                        "RR: dimensions of sewerage areas"           "RR: dimensions of sewerage areas"          Y
+OO  ..\BASECASE\NWRWAREA.HIA "" "" N
+OO  ..\BASECASE\BALANSDT.HIS                        "RR: balances"                               "RR: balances"                              Y
+OO  ..\BASECASE\BALANSDT.HIA "" "" N
+OO  ..\BASECASE\BALANSEV.HIS                        "RR: balances"                               "RR: balances"                              Y
+OO  ..\BASECASE\BALANSEV.HIA "" "" N
+OO  ..\BASECASE\BNDFLODT.HIS                        "RR: boundary flows"                         "RR: boundary flows"                        Y
+OO  ..\BASECASE\BNDFLODT.HIA "" "" N
+OO  ..\BASECASE\BNDFLOMX.HIS                        "RR: max. boundary flows"                    "RR: max. boundary flows"                   Y
+OO  ..\BASECASE\BNDFLOMX.HIA "" "" N
+OO  ..\BASECASE\BNDFLTOT.HIS                        "RR: daily boundary volumes"                 "RR: daily boundary volumes"                Y
+OO  ..\BASECASE\BNDFLTOT.HIA "" "" N
+OO  ..\BASECASE\BOUND3B.OUT "" "" N
+OO  ..\BASECASE\CUMBALDT.HIS                        "RR: cumulative balances"                    "RR: cumulative balances"                   Y
+OO  ..\BASECASE\CUMBALDT.HIA "" "" N
+OO  ..\BASECASE\GRNFLODT.HIS                        "RR: flows at greenhouse nodes"              "RR: flows at greenhouse nodes"             Y
+OO  ..\BASECASE\GRNFLODT.HIA "" "" N
+OO  ..\BASECASE\GRNFLOMX.HIS                        "RR: max. flows at greenhouse nodes"         "RR: max. flows at greenhouse nodes"        Y
+OO  ..\BASECASE\GRNFLOMX.HIA "" "" N
+OO  ..\BASECASE\GRNHOUS.OUT "" "" N
+OO  ..\BASECASE\GRNSTRDT.HIS                        "RR: storage at greenhouse nodes"            "RR: storage at greenhouse nodes"           Y
+OO  ..\BASECASE\GRNSTRDT.HIA "" "" N
+OO  ..\BASECASE\GRNSTRMX.HIS                        "RR: max. storage at greenhouse nodes"       "RR: max. storage at greenhouse nodes"      Y
+OO  ..\BASECASE\GRNSTRMX.HIA "" "" N
+OO  ..\BASECASE\INDUSTDT.HIS                        "RR: flow at industry nodes"                 "RR: flow at industry nodes"                Y
+OO  ..\BASECASE\INDUSTDT.HIA "" "" N
+OO  ..\BASECASE\INDUSTMX.HIS                        "RR: max. flow at industry nodes"            "RR: max. flow at industry nodes"           Y
+OO  ..\BASECASE\INDUSTMX.HIA "" "" N
+OO  ..\BASECASE\NWRWSYS.HIS                         "RR: yearly sewer runoff"                    "RR: yearley sewer runoff"                  Y
+OO  ..\BASECASE\NWRWSYS.HIA "" "" N
+OO  ..\BASECASE\OPENWATE.OUT "" "" N
+OO  ..\BASECASE\OW_EXCDT.HIS                        "RR: excedance of openwater levels"          "RR: excedance of openwater levels"         Y
+OO  ..\BASECASE\OW_EXCDT.HIA "" "" N
+OO  ..\BASECASE\OW_EXCED.HIS                        "RR: excedance of openwater levels"          "RR: excedance of openwater levels"         Y
+OO  ..\BASECASE\OW_EXCED.HIA "" "" N
+OO  ..\BASECASE\OW_LVLDT.HIS                        "RR: openwater levels"                       "RR: openwater levels"                      Y
+OO  ..\BASECASE\OW_LVLDT.HIA "" "" N
+OO  ..\BASECASE\OW_LVLMX.HIS                        "RR: max. openwater levels"                  "RR: max. openwater levels"                 Y
+OO  ..\BASECASE\OW_LVLMX.HIA "" "" N
+OO  ..\BASECASE\PAVED.OUT "" "" N
+OO  ..\BASECASE\PLUVIUS.OUT "" "" N
+OO  ..\BASECASE\PLVFLODT.HIS                        "RR: flows in sewer areas"                   "RR: flows in sewer areas"                  Y
+OO  ..\BASECASE\PLVFLODT.HIA "" "" N
+OO  ..\BASECASE\PLVFLOMX.HIS                        "RR: max. flows in sewer areas"              "RR: max. flows in sewer areas"             Y
+OO  ..\BASECASE\PLVFLOMX.HIA "" "" N
+OO  ..\BASECASE\PLVSTRDT.HIS                        "RR: storage in sewer areas"                 "RR: storage in sewer areas"                Y
+OO  ..\BASECASE\PLVSTRDT.HIA "" "" N
+OO  ..\BASECASE\PLVSTRMX.HIS                        "RR: max. storage in sewer areas"            "RR: max. storage in sewer areas"           Y
+OO  ..\BASECASE\PLVSTRMX.HIA "" "" N
+OO  ..\BASECASE\PVFLOWDT.HIS                        "RR: flows in paved areas"                   "RR: flows in paved areas"                  Y
+OO  ..\BASECASE\PVFLOWDT.HIA "" "" N
+OO  ..\BASECASE\PVFLOWMX.HIS                        "RR: max. flows in paved areas"              "RR: max. flows in paved areas"             Y
+OO  ..\BASECASE\PVFLOWMX.HIA "" "" N
+OO  ..\BASECASE\PVSTORDT.HIS                        "RR: storage in paved areas"                 "RR: storage in paved areas"                Y
+OO  ..\BASECASE\PVSTORDT.HIA "" "" N
+OO  ..\BASECASE\PVSTORMX.HIS                        "RR: max. storage in paved areas"            "RR: max. storage in paved areas"           Y
+OO  ..\BASECASE\PVSTORMX.HIA "" "" N
+OO  ..\BASECASE\RRBALANS.HIS                        "RR: system balance"                         "RR: system balance"                              Y
+OO  ..\BASECASE\RRBALANS.HIA "" "" N
+OO  ..\BASECASE\RRRUNOFF.HIS                        "RR: runoff results"                         "RR: runoff results"                   Y
+OO  ..\BASECASE\RRRUNOFF.HIA "" "" N
+OO  ..\BASECASE\RUNOFF.OUT "" "" N
+OO  ..\BASECASE\SACRMNTO.HIS                        "RR: sacramento results"                     "RR: sacramento results"                   Y
+OO  ..\BASECASE\SACRMNTO.HIA "" "" N
+OO  ..\BASECASE\SACRMNTO.OUT "" "" N
+OO  ..\BASECASE\SALTDT.HIS                          "RR: salt concentrations"                    "RR: salt concentrations"                   Y
+OO  ..\BASECASE\SALTDT.HIA "" "" N
+OO  ..\BASECASE\SALTMX.HIS                          "RR: max. salt concentrations"               "RR: max. salt concentrations"              Y
+OO  ..\BASECASE\SALTMX.HIA "" "" N
+OO  ..\BASECASE\STRFLODT.HIS                        "RR: flows at structures"                    "RR: flows at structures"                   Y
+OO  ..\BASECASE\STRFLODT.HIA "" "" N
+OO  ..\BASECASE\STRFLOMX.HIS                        "RR: max. flows at structures"               "RR: max. flows at structures"              Y
+OO  ..\BASECASE\STRFLOMX.HIA "" "" N
+OO  ..\BASECASE\STRUCT3B.OUT "" "" N
+OO  ..\BASECASE\UNPAVED.OUT "" "" N
+OO  ..\BASECASE\UPFLOWDT.HIS                        "RR: flows at unpaved areas"                 "RR: flows at unpaved areas"                Y
+OO  ..\BASECASE\UPFLOWDT.HIA "" "" N
+OO  ..\BASECASE\UPFLOWMX.HIS                        "RR: max. flows at unpaved areas"            "RR: max. flows at unpaved areas"           Y
+OO  ..\BASECASE\UPFLOWMX.HIA "" "" N
+OO  ..\BASECASE\UPGWLVDT.HIS                        "RR: groundwater levels"                     "RR: groundwater levels"                    Y
+OO  ..\BASECASE\UPGWLVDT.HIA "" "" N
+OO  ..\BASECASE\UPGWLVMX.HIS                        "RR: max. groundwater levels"                "RR: max. groundwater levels"               Y
+OO  ..\BASECASE\UPGWLVMX.HIA "" "" N
+OO  ..\BASECASE\WWTPDT.HIS                          "RR: waste water treatment plant"            "RR: waste water treatment plant"           Y
+OO  ..\BASECASE\WWTPDT.HIA "" "" N
+OO  ..\BASECASE\WWTPMX.HIS                          "RR: max. flow waste water treatmentplants"  "RR: max. waste water treatment plant"      Y
+OO  ..\BASECASE\WWTPMX.HIA "" "" N
+OO  ..\BASECASE\CALCPNT.HIS                         "FLOW: results of nodes"                     "FLOW: results of nodes"                    Y
+OO  ..\BASECASE\CALCPNT.HIA "" "" N
+OO  ..\BASECASE\CALCDIM.HIS                         "FLOW: dimensions of nodes"                  "FLOW: dimensions of nodes"                 Y
+OO  ..\BASECASE\CALCDIM.HIA "" "" N
+OO  ..\BASECASE\FLOWANAL.HIS                        "FLOW: simulation info"                      "FLOW: simulation info"                     Y
+OO  ..\BASECASE\FLOWANAL.HIA "" "" N
+OO  ..\BASECASE\NODES.HIS   "" "" N
+OO  ..\BASECASE\NODES.HIA "" "" N
+OO  ..\BASECASE\NODES_CR.HIS                        "FLOW: crash-status of nodes"                "FLOW: crash-status of nodes"               Y
+OO  ..\BASECASE\NODES_CR.HIA "" "" N
+OO  ..\BASECASE\NODESDIM.HIS                        "FLOW: dimensions of nodes"                  "FLOW: dimensions of nodes"                 Y
+OO  ..\BASECASE\NODESDIM.HIA "" "" N
+OO  ..\BASECASE\NODESVOL.HIS                        "FLOW: parameters of nodes"                  "FLOW: parameters of nodes"                 Y
+OO  ..\BASECASE\NODESVOL.HIA "" "" N
+OO  ..\BASECASE\QLAT.HIS                            "FLOW: laterals"                             "FLOW: laterals"                            Y
+OO  ..\BASECASE\QLAT.HIA "" "" N
+OO  ..\BASECASE\QWB.HIS                             "FLOW: total water balance"                  "FLOW: total water balance"                 Y
+OO  ..\BASECASE\QWB.HIA "" "" N
+OO  ..\BASECASE\REACH.HIS  "" "" N
+OO  ..\BASECASE\REACH.HIA "" "" N
+OO  ..\BASECASE\REACH_CR.HIS                        "FLOW: crash-status of reachsegments"        "FLOW: crash-status of reachsegments"       Y
+OO  ..\BASECASE\REACH_CR.HIA "" "" N
+OO  ..\BASECASE\REACHDIM.HIS                        "FLOW: dimensions of reachsegments"          "FLOW: dimensions of reachsegments"         Y
+OO  ..\BASECASE\REACHDIM.HIA "" "" N
+OO  ..\BASECASE\RSEGSUB.HIS                         "FLOW: results at sub sections"              "FLOW: results at sub sections"             Y
+OO  ..\BASECASE\RSEGSUB.HIA "" "" N
+OO  ..\BASECASE\REACHFLW.HIS  "" "" N
+OO  ..\BASECASE\REACHFLW.HIA "" "" N
+OO  ..\BASECASE\REACHSEG.HIS                        "FLOW: results at reachsegments"             "FLOW: results at reachsegments"            Y
+OO  ..\BASECASE\REACHSEG.HIA "" "" N
+OO  ..\BASECASE\REACHVOL.HIS                        "FLOW: parameters of reachsegments"          "FLOW: parameters of reachsegments"         Y
+OO  ..\BASECASE\REACHVOL.HIA "" "" N
+OO  ..\BASECASE\STRUC.HIS                           "FLOW: results at structures"                "FLOW: results at structures"               Y
+OO  ..\BASECASE\STRUC.HIA "" "" N
+OO  ..\BASECASE\CONTROLL.HIS                        "FLOW: results at controllers"               "FLOW: results at controllers"              Y
+OO  ..\BASECASE\CONTROLL.HIA "" "" N
+OO  ..\BASECASE\TRIGGERS.HIS                        "FLOW: results at triggers"                  "FLOW: results at triggers"                 Y
+OO  ..\BASECASE\TRIGGERS.HIA "" "" N
+OO  ..\BASECASE\STRUC_SF.HIS                        "FLOW: continuous results at structures"     "FLOW: continuous results at structures"    Y
+OO  ..\BASECASE\STRUC_SF.HIA "" "" N
+OO  ..\BASECASE\SFSPILLS.HIS                        "FLOW: spill information at structures"      "FLOW: spill information at structures"     Y
+OO  ..\BASECASE\SFSPILLS.HIA "" "" N
+OO  ..\BASECASE\FLS_H.INC " " " "  N
+OO  ..\BASECASE\FLS_C.INC " " " "  N
+OO  ..\BASECASE\FLS_Z.INC " " " "  N
+OO  ..\BASECASE\FLS_U.INC " " " "  N
+OO  ..\BASECASE\FLS_V.INC " " " "  N
+OO  ..\BASECASE\FLSHIS.HIS                          "2D: Results at history stations"            "2D: Results at history stations"           Y
+OO  ..\BASECASE\FLSHIS.HIA "" "" N
+OO  ..\BASECASE\STRUC_CR.HIS                        "FLOW: crash-status of structures"           "FLOW: crash-status of structures"          Y
+OO  ..\BASECASE\STRUC_CR.HIA "" "" N
+OO  ..\BASECASE\STRUCDIM.HIS                        "FLOW: dimensions of structures"             "FLOW: dimensions of structures"            Y
+OO  ..\BASECASE\STRUCDIM.HIA "" "" N
+OO  ..\BASECASE\RTC3BALL.HIS                        "RTC: actions to RR Module"                  "RTC: actions to RR Module"                 Y
+OO  ..\BASECASE\RTC3BALL.HIA "" "" N
+OO  ..\BASECASE\RTCPARAL.HIS                        "RTC: Decision parameters"                   "RTC: Decision parameters"                  Y
+OO  ..\BASECASE\RTCPARAL.HIA "" "" N
+OO  ..\BASECASE\RTCSBALL.HIS                        "RTC: actions to Flow Module"                "RTC: actions to Flow Module"               Y
+OO  ..\BASECASE\RTCSBALL.HIA "" "" N
+OO  ..\BASECASE\BOUNDWLM.DEF "" "" N
+OO  ..\BASECASE\BOUNDWLM.HIS                        "EM: Concentrations at boundaries"           "EM: Concentrations at boundaries"          Y
+OO  ..\BASECASE\BOUNDWLM.HIA "" "" N
+OO  ..\BASECASE\BAL_WLM.HIS                         "EM: Balance of wasteloads"                  "EM: Balance of wasteloads"                 Y
+OO  ..\BASECASE\BAL_WLM.HIA "" "" N
+OO  ..\BASECASE\NODELOAD.HIS                        "EM: Production at nodes"                    "EM: Production at nodes"                   Y
+OO  ..\BASECASE\NODELOAD.HIA "" "" N
+OO  ..\BASECASE\LINKLOAD.HIS                        "EM: Transport in links"                     "EM: Transport in links"                    Y
+OO  ..\BASECASE\LINKLOAD.HIA "" "" N
+OO  ..\BASECASE\WASTLOAD.DEF "" "" N
+OO  ..\BASECASE\WASTLOAD.HIS                        "EM: waste loads"                            "EM: waste loads"                           Y
+OO  ..\BASECASE\WASTLOAD.HIA "" "" N
+OO  ..\BASECASE\WQBOU20.HIS                         "WQ: balance of quantity input"              "WQ: balance of quantity input"             Y
+OO  ..\BASECASE\WQBOU20.HIA "" "" N
+OO  ..\BASECASE\DELWAQ.MAP                          "WQ: animation results"                      "WQ: animation results"                     Y
+OO  ..\BASECASE\DELWAQ.MAA "" "" N
+OO  ..\BASECASE\DELWAQ.HIS                          "WQ: history results"                        "WQ: history results"                       Y
+OO  ..\BASECASE\DELWAQ.HIA "" "" N
+OO  ..\BASECASE\DELWAQ.PST "" "" N
+OO  ..\BASECASE\DELWAQ.STU "" "" N
+OO  ..\BASECASE\LOZING.MAP                          "WQ: balance of loads"                       "WQ: balance of loads"                      Y
+OO  ..\BASECASE\LOZING.PST "" "" N
+OO  ..\BASECASE\LOZING.STU "" "" N
+OO  ..\BASECASE\WATERBAL.PRN "" "" N
+OO  ..\BASECASE\WQBAL.HIS                           "WQ: balance of substances"                  "WQ: balance of substances"                 Y
+OO  ..\BASECASE\WQBAL.HIA "" "" N
+OO  ..\BASECASE\WQBAL.PRN "" "" N
+OO  ..\BASECASE\2DWQBO20.HIS                        "2D WQ: balance of quantity input"              "2D WQ: balance of quantity input"       Y
+OO  ..\BASECASE\2DWQBO20.HIA "" "" N
+OO  ..\BASECASE\2DDELWAQ.MAP                        "2D WQ: animation results"                      "2D WQ: animation results"               Y
+OO  ..\BASECASE\2DDELWAQ.MAA "" "" N
+OO  ..\BASECASE\2DDELWAQ.M2B "" "" N
+OO  ..\BASECASE\2DDELWAQ.HIS                        "2D WQ: history results"                        "2D WQ: history results"                 Y
+OO  ..\BASECASE\2DDELWAQ.HIA "" "" N
+OO  ..\BASECASE\2DLOZING.MAP                        "2D WQ: balance of loads"                       "2D WQ: balance of loads"                Y
+OO  ..\BASECASE\2DWATBAL.PRN "" "" N
+OO  ..\BASECASE\2DWQBAL.HIS                         "2D WQ: balance of substances"                  "2D WQ: balance of substances"           Y
+OO  ..\BASECASE\2DWQBAL.HIA "" "" N
+OO  ..\BASECASE\2DWQBAL.PRN "" "" N
+OO  ..\BASECASE\2DNROFSG.DAT "" "" N
+OO  ..\BASECASE\2DVOLUME.DAT "" "" N
+OO  ..\BASECASE\2DNROFEX.DAT "" "" N
+OO  ..\BASECASE\2DPOINT.DAT "" "" N
+OO  ..\BASECASE\2DAREA.DAT "" "" N
+OO  ..\BASECASE\2DBDNWQ.ID "" "" N
+OO  ..\BASECASE\2DFLOW.DAT "" "" N
+OO  ..\BASECASE\2DLENGTH.DAT "" "" N
+OO  ..\BASECASE\2DSEGFUN.DAT "" "" N
+OO  ..\BASECASE\2DMONIT.DAT "" "" N
+OO  ..\BASECASE\FLAIRS.CHO "" "" N
+OO  ..\BASECASE\FLAIRS.CHP "" "" N
+OO  ..\BASECASE\FLAIRS.FLO "" "" N
+OO  ..\BASECASE\FLAIRS.FLP "" "" N
+OO  ..\BASECASE\FLAIRS.MAP "" "" N
+OO  ..\BASECASE\FLAIRS.PNT "" "" N
+CASEDEF1 0
+IO  ..\BASECASE\STATUS.CAS "" "" N
+IO  ..\BASECASE\SETTINGS.DAT "" "" N
+I   DELWAQ.# "" "" N
+I   EVAPOR.# "" "" N
+I   EVENT.# "" "" N
+I   WIND.# "" "" N
+I   WQ_WIND.# "" "" N
+OI  TEMP.# "" "" N
+OI  RNFF.# "" "" N
+IO  ..\BASECASE\INCCLASS.DAT "" "" N
+IO  ..\BASECASE\DELFT_3B.INI "" "" N
+IO  ..\BASECASE\RTC.DAT "" "" N
+IO  ..\BASECASE\SUBLIST.WLM "" "" N
+IO  ..\BASECASE\EM2WQ.SUB "" "" N
+IO  ..\BASECASE\NETWORK.NTW "" "" N
+IO  ..\BASECASE\NETWORK.NVL "" "" N
+OIO ..\BASECASE\NETWORKL.DBF "" "" N
+OIO ..\BASECASE\NETWORKN.DBF "" "" N
+IO  ..\BASECASE\NETWORK.SOB "" "" N
+IO  ..\BASECASE\NETWORK.BBB "" "" N
+IO  ..\BASECASE\3B_LINK.TP "" "" N
+IO  ..\BASECASE\3B_NOD.TP "" "" N
+IO  ..\BASECASE\3B_ROUT.3B "" "" N
+IO  ..\BASECASE\3BRUNOFF.TP "" "" N
+IO  ..\BASECASE\BOUND3B.3B "" "" N
+IO  ..\BASECASE\BOUND3B.TBL "" "" N
+IO  ..\BASECASE\CONTR3B.DEF "" "" N
+IO  ..\BASECASE\GREENHSE.3B "" "" N
+IO  ..\BASECASE\GREENHSE.RF "" "" N
+IO  ..\BASECASE\GREENHSE.SIL "" "" N
+IO  ..\BASECASE\GREENHSE.TBL "" "" N
+IO  ..\BASECASE\INDUSTRY.3B "" "" N
+IO  ..\BASECASE\INDUSTRY.TBL "" "" N
+IO  ..\BASECASE\OPENWATE.3B "" "" N
+IO  ..\BASECASE\OPENWATE.SEP "" "" N
+IO  ..\BASECASE\OPENWATE.TBL "" "" N
+IO  ..\BASECASE\PAVED.3B "" "" N
+IO  ..\BASECASE\PAVED.DWA "" "" N
+IO  ..\BASECASE\PAVED.STO "" "" N
+IO  ..\BASECASE\PAVED.TBL "" "" N
+IO  ..\BASECASE\PLUVIUS.3B "" "" N
+IO  ..\BASECASE\PLUVIUS.ALG "" "" N
+IO  ..\BASECASE\PLUVIUS.DWA "" "" N
+IO  ..\BASECASE\PLUVIUS.TBL "" "" N
+IO  ..\BASECASE\SACRMNTO.3B "" "" N
+IO  ..\BASECASE\SACRMNTO.CAP "" "" N
+IO  ..\BASECASE\SACRMNTO.OTH "" "" N
+IO  ..\BASECASE\SACRMNTO.UH "" "" N
+IO  ..\BASECASE\SALT.3B "" "" N
+IO  ..\BASECASE\STRUCT3B.DAT "" "" N
+IO  ..\BASECASE\STRUCT3B.DEF "" "" N
+IO  ..\BASECASE\STRUCT3B.TBL "" "" N
+IO  ..\BASECASE\UNPAVED.3B "" "" N
+IO  ..\BASECASE\UNPAVED.ALF "" "" N
+IO  ..\BASECASE\UNPAVED.INF "" "" N
+IO  ..\BASECASE\UNPAVED.SEP "" "" N
+IO  ..\BASECASE\UNPAVED.STO "" "" N
+IO  ..\BASECASE\UNPAVED.TBL "" "" N
+IO  ..\BASECASE\WWTP.3B "" "" N
+IO  ..\BASECASE\WWTP.TBL "" "" N
+IO  ..\BASECASE\BOUNDARY.DAT "" "" N
+IO  ..\BASECASE\BOUNDLAT.DAT "" "" N
+IO  ..\BASECASE\CONCSALT.DAT "" "" N
+IO  ..\BASECASE\CONTROL.DEF "" "" N
+IO  ..\BASECASE\TRIGGER.DEF "" "" N
+IO  ..\BASECASE\STRUCT.CMP "" "" N
+IO  ..\BASECASE\VALVE.TAB "" "" N
+IO  ..\BASECASE\FRICTION.DAT "" "" N
+IO  ..\BASECASE\INITIAL.DAT "" "" N
+IO  ..\BASECASE\INITSALT.DAT "" "" N
+IO  ..\BASECASE\LATERAL.DAT "" "" N
+IO  ..\BASECASE\NETWORK.CN "" "" N
+IO  ..\BASECASE\NETWORK.CP "" "" N
+IO  ..\BASECASE\NETWORK.CR "" "" N
+IO  ..\BASECASE\NETWORK.GR "" "" N
+IO  ..\BASECASE\NETWORK.ME "" "" N
+OIO ..\BASECASE\NETWORK.REP "" "" N
+IO  ..\BASECASE\NETWORK.OBI "" "" N
+IO  ..\BASECASE\NETWORK.ST "" "" N
+IO  ..\BASECASE\NETWORK.TP "" "" N
+IO  ..\BASECASE\NETWORK.D12 "" "" N
+IO  ..\BASECASE\NODES.DAT "" "" N
+IO  ..\BASECASE\2DGRID.DAT "" "" N
+IO  ..\BASECASE\PROFILE.DAT "" "" N
+IO  ..\BASECASE\PROFILE.DEF "" "" N
+IO  ..\BASECASE\STRUCT.DAT "" "" N
+IO  ..\BASECASE\STRUCT.DEF "" "" N
+IO  ..\BASECASE\WND_LOC.DAT "" "" N
+IO  ..\BASECASE\3B_LOC.RTC "" "" N
+IO  ..\BASECASE\3B_MEAS.RTC "" "" N
+IO  ..\BASECASE\DECISPAR.RTC "" "" N
+IO  ..\BASECASE\EXT_LOC.RTC "" "" N
+IO  ..\BASECASE\PREC_LOC.RTC "" "" N
+IO  ..\BASECASE\SBK_LOC.RTC "" "" N
+IO  ..\BASECASE\SBK_MEAS.RTC "" "" N
+IO  ..\BASECASE\RESERVOI.RTC "" "" N
+IO  ..\BASECASE\BOUNDEST.DAT "" "" N
+IO   ..\BASECASE\WASTLOAD.POS "" "" N
+IO  ..\BASECASE\WLMATMO.CFT "" "" N
+IO  ..\BASECASE\WLMBANK.CFT "" "" N
+IO  ..\BASECASE\WLMBOUND.CFT "" "" N
+IO  ..\BASECASE\WLMBOUND.DAT "" "" N
+IO  ..\BASECASE\WLMBRNCH.DAT "" "" N
+IO  ..\BASECASE\WLMDISTR.DAT "" "" N
+IO  ..\BASECASE\WLMDWA.CFT "" "" N
+IO  ..\BASECASE\WLMGRHSE.CFT "" "" N
+IO  ..\BASECASE\WLMINDUS.CFT "" "" N
+IO  ..\BASECASE\WLMINDUS.DAT "" "" N
+IO  ..\BASECASE\WLMINFO.DAT "" "" N
+IO  ..\BASECASE\WLMNODE.DAT "" "" N
+IO  ..\BASECASE\WLMPAVED.CFT "" "" N
+IO  ..\BASECASE\WLMRWZI.CFT "" "" N
+IO  ..\BASECASE\WLMRWZI.DAT "" "" N
+IO  ..\BASECASE\WLMSEPT.CFT "" "" N
+IO  ..\BASECASE\WLMSEPT.DAT "" "" N
+IO  ..\BASECASE\WLMSEWER.CFT "" "" N
+IO  ..\BASECASE\WLMSTRU.CFT "" "" N
+IO  ..\BASECASE\WLMWABOT.CFT "" "" N
+IO  ..\BASECASE\WLMWATER.CFT "" "" N
+IO  ..\BASECASE\BOUNDWQ.GLB "" "" N
+IO  ..\BASECASE\2DBNDWQ.GLB "" "" N
+IO  ..\BASECASE\BOUNDWQ.TYP "" "" N
+IO  ..\BASECASE\2DBNDWQ.TYP "" "" N
+IO  ..\BASECASE\BOUNDWQ.DAT "" "" N
+IO  ..\BASECASE\2DBNDWQ.DAT "" "" N
+IO  ..\BASECASE\LOADSWQ.DAT "" "" N
+IO  ..\BASECASE\LOADSWQ.TYP "" "" N
+IO  ..\BASECASE\COEFX.DAT "" "" N
+IO  ..\BASECASE\2DCOEFX.DAT "" "" N
+IO  ..\BASECASE\2DINIT.DAT "" "" N
+IO  ..\BASECASE\2DPARAM.DAT "" "" N
+IO  ..\BASECASE\2DDISPX.DAT "" "" N
+IO  ..\BASECASE\MONSTAT.WQ "" "" N
+IO  ..\BASECASE\2DMONST.WQ "" "" N
+IO  ..\BASECASE\NTRDLWQ.POI "" "" N
+IO  ..\BASECASE\NTRPLUV.OBJ "" "" N
+IO  ..\BASECASE\SUBSTANC.DWQ "" "" N
+IO  ..\BASECASE\SUBSTANC.DEF "" "" N
+I   ..\BASECASE\SUBSTATE.SUB "" "" N
+IO  ..\BASECASE\WQ.DAT "" "" N
+IO  ..\BASECASE\2DWQ.DAT "" "" N
+IO  ..\BASECASE\DELWAQ1.INP "" "" N
+IO  ..\BASECASE\2DDLWQ1.INP "" "" N
+IO  ..\BASECASE\DELWAQ3.INP "" "" N
+IO  ..\BASECASE\2DDLWQ3.INP "" "" N
+I   ..\BASECASE\CONSTANT.DWQ "" "" N
+I   ..\BASECASE\2DCONST.DWQ "" "" N
+IO  ..\BASECASE\FLAWININ.ZIP "" "" N
+IO  ..\BASECASE\GRID.TEO "" "" N
+IO  ..\BASECASE\TRIWACO.DAT "" "" N
+IO  ..\BASECASE\TRIWACO.ZIP "" "" N
+CONFIG1 0
+IO  ..\BASECASE\SETTINGS.DAT "" "" N
+I   RSRR_IN.# "" "" N
+I   RDSRR_IN.# "" "" N
+I   RDSRROUT.# "" "" N
+IO  RESDES1.# "" "" N
+IO  RESDES2.# "" "" N
+IO  RESDES3.# "" "" N
+IO  RESDES4.# "" "" N
+IO  RESDES5.# "" "" N
+IO  RESA_11.# "" "" N
+IO  RESA_12.# "" "" N
+IO  RESA_13.# "" "" N
+IO  RESA_14.# "" "" N
+IO  RESA_15.# "" "" N
+IO  RESB_11.# "" "" N
+IO  RESB_12.# "" "" N
+IO  RESB_13.# "" "" N
+IO  RESB_14.# "" "" N
+IO  RESB_15.# "" "" N
+I   RSFLSIN.# "" "" N
+I   RDFLSIN.# "" "" N
+I   RDFLSOUT.# "" "" N
+IO  ..\BASECASE\INCCLASS.DAT "" "" N
+IO  ..\BASECASE\DELFT_3B.INI "" "" N
+IO  ..\BASECASE\RTC.DAT "" "" N
+IO  ..\BASECASE\WLMTIMES.DAT "" "" N
+IO  ..\BASECASE\SUBLIST.WLM "" "" N
+IO  ..\BASECASE\EM2WQ.SUB "" "" N
+IO  ..\BASECASE\CONSTANT.DWQ "" "" N
+IO  ..\BASECASE\2DCONST.DWQ "" "" N
+IO  ..\BASECASE\DELWAQ1.INP "" "" N
+IO  ..\BASECASE\2DDLWQ1.INP "" "" N
+IO  ..\BASECASE\DELWAQ2.INP "" "" N
+IO  ..\BASECASE\2DDLWQ2.INP "" "" N
+IO  ..\BASECASE\DELWAQ3.INP "" "" N
+IO  ..\BASECASE\2DDLWQ3.INP "" "" N
+IO  ..\BASECASE\DELWAQ4.INP "" "" N
+IO  ..\BASECASE\2DDLWQ4.INP "" "" N
+IO  ..\BASECASE\DISPERSW.DAT "" "" N
+IO  ..\BASECASE\HISVAR.DAT "" "" N
+IO  ..\BASECASE\2DHISVAR.DAT "" "" N
+IO  ..\BASECASE\OUTLOCWQ.DAT "" "" N
+IO  ..\BASECASE\2DOUTLOC.DAT "" "" N
+IO  ..\BASECASE\OUTPUT.DWQ "" "" N
+IO  ..\BASECASE\2DOUTP.DWQ "" "" N
+IO  ..\BASECASE\OUTPUTM.DWQ "" "" N
+IO  ..\BASECASE\2DOUTPM.DWQ "" "" N
+IO  ..\BASECASE\MAPVAR.DAT "" "" N
+IO  ..\BASECASE\2DMAPVAR.DAT "" "" N
+IO  ..\BASECASE\PROCEDIT.DAT "" "" N
+IO  ..\BASECASE\PROCESS.DWQ "" "" N
+IO  ..\BASECASE\SUBSTANC.DWQ "" "" N
+IO  ..\BASECASE\SUBSTATE.0 "" "" N
+IO  ..\BASECASE\SUBSTATE.SUB "" "" N
+IO  ..\BASECASE\BOUNDWQ.GLB "" "" N
+IO  ..\BASECASE\2DBNDWQ.GLB "" "" N
+IO  ..\BASECASE\WLM&DWQ.DAT "" "" N
+IO  ..\BASECASE\WQ.DAT "" "" N
+IO  ..\BASECASE\2DWQ.DAT "" "" N
+IO  RSDWQ1.# "" "" N
+IO  RSDWQ2.# "" "" N
+IO  RSDWQ3.# "" "" N
+IO  RSDWQ4.# "" "" N
+IO  RSDWQ5.# "" "" N
+IO  RDSDWQ1.# "" "" N
+IO  RDSDWQ2.# "" "" N
+IO  RDSDWQ3.# "" "" N
+IO  RDSDWQ4.# "" "" N
+IO  RDSDWQ5.# "" "" N
+IO  2RSDWQ1.# "" "" N
+IO  2RSDWQ2.# "" "" N
+IO  2RSDWQ3.# "" "" N
+IO  2RSDWQ4.# "" "" N
+IO  2RSDWQ5.# "" "" N
+IO  2RDSDWQ1.# "" "" N
+IO  2RDSDWQ2.# "" "" N
+IO  2RDSDWQ3.# "" "" N
+IO  2RDSDWQ4.# "" "" N
+IO  2RDSDWQ5.# "" "" N
+I   MEASWQ.# "" "" N
+IO  ..\BASECASE\TRIWACO.DAT "" "" N
+IO  ..\BASECASE\GWINPAV.DAT "" "" N
+EVENTS 0
+I   ..\BASECASE\SETTINGS.DAT "" "" N
+PLUVIUS1 0
+IO  ..\BASECASE\SETTINGS.DAT "" "" N
+OIO ..\BASECASE\SUFHYD.LOG "" "" N
+OIO ..\BASECASE\SOBEK_3B.LOG "" "" N
+OIO ..\BASECASE\SOBEK.LOG "" "" N
+OIO ..\BASECASE\FLOWS.TXT "" "" N
+OIO ..\BASECASE\NODES.TXT "" "" N
+OIO ..\BASECASE\NWRWSYS.TXT "" "" N
+OIO ..\BASECASE\FREEBOAR.TXT "" "" N
+OIO ..\BASECASE\WATONSTR.TXT "" "" N
+OIO ..\BASECASE\STRLIST.TXT "" "" N
+OIO ..\BASECASE\INDICAT.FLW "" "" N
+OIO ..\BASECASE\FLW_CONV.TBL "" "" N
+OIO ..\BASECASE\RTC.LOG "" "" N
+OIO ..\BASECASE\WQINT.LST "" "" N
+OIO ..\BASECASE\DELWAQ.LST "" "" N
+OIO ..\BASECASE\DELWAQ.LSP "" "" N
+OIO ..\BASECASE\DELWAQ.MON "" "" N
+OIO ..\BASECASE\2DWQINT.LST "" "" N
+OIO ..\BASECASE\2DDELWAQ.LST "" "" N
+OIO ..\BASECASE\2DDELWAQ.LSP "" "" N
+OIO ..\BASECASE\2DDELWAQ.MON "" "" N
+I   MEASWQ.# "" "" N
+I   DELWAQ.# "" "" N
+I   EVAPOR.# "" "" N
+I   EVENT.# "" "" N
+I   NWRWCONT.# "" "" N
+I   WIND.# "" "" N
+I   WQ_WIND.# "" "" N
+OI  TEMP.# "" "" N
+OI  RNFF.# "" "" N
+I   RSRR_IN.# "" "" N
+I   RSRR_OUT.# "" "" N
+IO  RESA_IN.# "" "" N
+IO  RESB_IN.# "" "" N
+IO  RESA_OUT.# "" "" N
+IO  RESB_OUT.# "" "" N
+IO  RSDWQIN.# "" "" N
+IO  RSDWQOUT.# "" "" N
+IO  2RSDWQI.# "" "" N
+IO  2RSDWQO.# "" "" N
+I   RSFLSIN.# "" "" N
+I   RSFLSOUT.# "" "" N
+I   ..\BASECASE\INCCLASS.DAT "" "" N
+IO  ..\BASECASE\DELFT_3B.INI "" "" N
+IO  ..\BASECASE\RTC.DAT "" "" N
+IO  ..\BASECASE\WLMTIMES.DAT "" "" N
+IO  ..\BASECASE\SUBLIST.WLM "" "" N
+IO  ..\BASECASE\EM2WQ.SUB "" "" N
+IO  ..\BASECASE\STATUS.CAS "" "" N
+I   ..\BASECASE\NETWORK.NTW "" "" N
+I   ..\BASECASE\3B_LINK.TP "" "" N
+I   ..\BASECASE\3B_NOD.TP "" "" N
+I   ..\BASECASE\3B_ROUT.3B "" "" N
+I   ..\BASECASE\3BRUNOFF.TP "" "" N
+IO  ..\BASECASE\BOUND3B.3B "" "" N
+I   ..\BASECASE\BOUND3B.TBL "" "" N
+I   ..\BASECASE\CONTR3B.DEF "" "" N
+I   ..\BASECASE\GREENHSE.3B "" "" N
+I   ..\BASECASE\GREENHSE.RF "" "" N
+I   ..\BASECASE\GREENHSE.SIL "" "" N
+I   ..\BASECASE\GREENHSE.TBL "" "" N
+I   ..\BASECASE\INDUSTRY.3B "" "" N
+I   ..\BASECASE\INDUSTRY.TBL "" "" N
+I   ..\BASECASE\OPENWATE.3B "" "" N
+I   ..\BASECASE\OPENWATE.SEP "" "" N
+I   ..\BASECASE\OPENWATE.TBL "" "" N
+I   ..\BASECASE\PAVED.3B "" "" N
+I   ..\BASECASE\PAVED.DWA "" "" N
+I   ..\BASECASE\PAVED.STO "" "" N
+I   ..\BASECASE\PAVED.TBL "" "" N
+I   ..\BASECASE\PLUVIUS.3B "" "" N
+I   ..\BASECASE\PLUVIUS.ALG "" "" N
+I   ..\BASECASE\PLUVIUS.DWA "" "" N
+I   ..\BASECASE\PLUVIUS.TBL "" "" N
+I   ..\BASECASE\SACRMNTO.3B "" "" N
+I   ..\BASECASE\SACRMNTO.CAP "" "" N
+I   ..\BASECASE\SACRMNTO.OTH "" "" N
+I   ..\BASECASE\SACRMNTO.UH "" "" N
+I   ..\BASECASE\SALT.3B "" "" N
+I   ..\BASECASE\STRUCT3B.DAT "" "" N
+I   ..\BASECASE\STRUCT3B.DEF "" "" N
+I   ..\BASECASE\STRUCT3B.TBL "" "" N
+I   ..\BASECASE\UNPAVED.3B "" "" N
+I   ..\BASECASE\UNPAVED.ALF "" "" N
+I   ..\BASECASE\UNPAVED.INF "" "" N
+I   ..\BASECASE\UNPAVED.SEP "" "" N
+I   ..\BASECASE\UNPAVED.STO "" "" N
+I   ..\BASECASE\UNPAVED.TBL "" "" N
+I   ..\BASECASE\WWTP.3B "" "" N
+I   ..\BASECASE\WWTP.TBL "" "" N
+I   ..\BASECASE\BOUNDARY.DAT "" "" N
+I   ..\BASECASE\BOUNDLAT.DAT "" "" N
+I   ..\BASECASE\CONCSALT.DAT "" "" N
+I   ..\BASECASE\CONTROL.DEF "" "" N
+I   ..\BASECASE\TRIGGER.DEF "" "" N
+I   ..\BASECASE\STRUCT.CMP "" "" N
+I   ..\BASECASE\VALVE.TAB "" "" N
+I   ..\BASECASE\FRICTION.DAT "" "" N
+IO  ..\BASECASE\INITIAL.DAT "" "" N
+I   ..\BASECASE\INITSALT.DAT "" "" N
+I   ..\BASECASE\LATERAL.DAT "" "" N
+I   ..\BASECASE\NETWORK.CN "" "" N
+I   ..\BASECASE\NETWORK.CP "" "" N
+I   ..\BASECASE\NETWORK.CR "" "" N
+I   ..\BASECASE\NETWORK.GR "" "" N
+I   ..\BASECASE\NETWORK.ME "" "" N
+I   ..\BASECASE\NETWORK.OBI "" "" N
+I   ..\BASECASE\NETWORK.ST "" "" N
+I   ..\BASECASE\NETWORK.TP "" "" N
+I   ..\BASECASE\NETWORK.D12 "" "" N
+I   ..\BASECASE\NODES.DAT "" "" N
+I   ..\BASECASE\2DGRID.DAT "" "" N
+I   ..\BASECASE\PROFILE.DAT "" "" N
+I   ..\BASECASE\PROFILE.DEF "" "" N
+I   ..\BASECASE\STRUCT.DAT "" "" N
+I   ..\BASECASE\STRUCT.DEF "" "" N
+I   ..\BASECASE\WND_LOC.DAT "" "" N
+IO  ..\BASECASE\3B_LOC.RTC "" "" N
+IO  ..\BASECASE\3B_MEAS.RTC "" "" N
+IO  ..\BASECASE\DECISPAR.RTC "" "" N
+IO  ..\BASECASE\EXT_LOC.RTC "" "" N
+IO  ..\BASECASE\PREC_LOC.RTC "" "" N
+IO  ..\BASECASE\SBK_LOC.RTC "" "" N
+IO  ..\BASECASE\SBK_MEAS.RTC "" "" N
+IO  ..\BASECASE\RESERVOI.RTC "" "" N
+I   ..\BASECASE\BOUNDEST.DAT "" "" N
+I   ..\BASECASE\WASTLOAD.POS "" "" N
+I   ..\BASECASE\WLMATMO.CFT "" "" N
+I   ..\BASECASE\WLMBANK.CFT "" "" N
+I   ..\BASECASE\WLMBOUND.CFT "" "" N
+I   ..\BASECASE\WLMBOUND.DAT "" "" N
+I   ..\BASECASE\WLMBRNCH.DAT "" "" N
+I   ..\BASECASE\WLMDISTR.DAT "" "" N
+I   ..\BASECASE\WLMDWA.CFT "" "" N
+I   ..\BASECASE\WLMGRHSE.CFT "" "" N
+I   ..\BASECASE\WLMINDUS.CFT "" "" N
+I   ..\BASECASE\WLMINDUS.DAT "" "" N
+I   ..\BASECASE\WLMINFO.DAT "" "" N
+I   ..\BASECASE\WLMNODE.DAT "" "" N
+I   ..\BASECASE\WLMPAVED.CFT "" "" N
+I   ..\BASECASE\WLMRWZI.CFT "" "" N
+I   ..\BASECASE\WLMRWZI.DAT "" "" N
+I   ..\BASECASE\WLMSEPT.CFT "" "" N
+I   ..\BASECASE\WLMSEPT.DAT "" "" N
+I   ..\BASECASE\WLMSEWER.CFT "" "" N
+I   ..\BASECASE\WLMSTRU.CFT "" "" N
+I   ..\BASECASE\WLMWABOT.CFT "" "" N
+I   ..\BASECASE\WLMWATER.CFT "" "" N
+I   ..\BASECASE\BOUNDWQ.DAT "" "" N
+I   ..\BASECASE\2DBNDWQ.DAT "" "" N
+I   ..\BASECASE\BOUNDWQ.TYP "" "" N
+I   ..\BASECASE\2DBNDWQ.TYP "" "" N
+I   ..\BASECASE\LOADSWQ.DAT "" "" N
+I   ..\BASECASE\LOADSWQ.TYP "" "" N
+I   ..\BASECASE\CONSTANT.DWQ "" "" N
+I   ..\BASECASE\2DCONST.DWQ "" "" N
+I   ..\BASECASE\COEFX.DAT "" "" N
+I   ..\BASECASE\2DCOEFX.DAT "" "" N
+I   ..\BASECASE\2DINIT.DAT "" "" N
+I   ..\BASECASE\2DPARAM.DAT "" "" N
+I   ..\BASECASE\2DDISPX.DAT "" "" N
+I   ..\BASECASE\MONSTAT.WQ "" "" N
+I   ..\BASECASE\2DMONST.WQ "" "" N
+IO  ..\BASECASE\DELWAQ1.INP "" "" N
+IO  ..\BASECASE\2DDLWQ1.INP "" "" N
+IO  ..\BASECASE\DELWAQ2.INP "" "" N
+IO  ..\BASECASE\2DDLWQ2.INP "" "" N
+I   ..\BASECASE\DELWAQ3.INP "" "" N
+I   ..\BASECASE\2DDLWQ3.INP "" "" N
+IO  ..\BASECASE\DELWAQ4.INP "" "" N
+IO  ..\BASECASE\2DDLWQ4.INP "" "" N
+I   ..\BASECASE\NTRDLWQ.POI "" "" N
+I   ..\BASECASE\PROCESS.DWQ "" "" N
+I   ..\BASECASE\SUBSTANC.DWQ "" "" N
+I   ..\BASECASE\WLM&DWQ.DAT "" "" N
+I   ..\BASECASE\WQ.DAT "" "" N
+I   ..\BASECASE\2DWQ.DAT "" "" N
+I   ..\BASECASE\DISPERSW.DAT "" "" N
+I   ..\BASECASE\HISVAR.DAT "" "" N
+I   ..\BASECASE\2DHISVAR.DAT "" "" N
+I   ..\BASECASE\OUTLOCWQ.DAT "" "" N
+I   ..\BASECASE\2DOUTLOC.DAT "" "" N
+I   ..\BASECASE\OUTPUT.DWQ "" "" N
+I   ..\BASECASE\2DOUTP.DWQ "" "" N
+I   ..\BASECASE\OUTPUTM.DWQ "" "" N
+I   ..\BASECASE\2DOUTPM.DWQ "" "" N
+I   ..\BASECASE\MAPVAR.DAT "" "" N
+I   ..\BASECASE\2DMAPVAR.DAT "" "" N
+IO  ..\BASECASE\GRID.TEO "" "" N
+IO  ..\BASECASE\GWINPAV.DAT "" "" N
+IO  ..\BASECASE\FLAWININ.ZIP "" "" N
+O   ..\BASECASE\NETTER.DLF "" "" N
+O   ..\BASECASE\ODS2XLS.DLF "" "" N
+O   ..\BASECASE\TABLES.LST "" "" N
+IO  ..\BASECASE\SIMULATE.REP "" "" N
+OIO ..\BASECASE\3B_GENER.OUT "" "" N
+OIO ..\BASECASE\BOUND3B.OUT "" "" N
+OIO ..\BASECASE\GRNHOUS.OUT "" "" N
+OIO ..\BASECASE\OPENWATE.OUT "" "" N
+OIO ..\BASECASE\PAVED.OUT "" "" N
+OIO ..\BASECASE\PLUVIUS.OUT "" "" N
+OIO ..\BASECASE\RUNOFF.OUT "" "" N
+OIO ..\BASECASE\SACRMNTO.OUT "" "" N
+OIO ..\BASECASE\STRUCT3B.OUT "" "" N
+OIO ..\BASECASE\UNPAVED.OUT "" "" N
+OIO ..\BASECASE\3BAREAS.HIS   "" "" N
+OIO ..\BASECASE\3BAREAS.HIA "" "" N
+OIO ..\BASECASE\3BLINKS.HIS   "" "" N
+OIO ..\BASECASE\3BLINKS.HIA "" "" N
+OIO ..\BASECASE\3BSTRDIM.HIS   "" "" N
+OIO ..\BASECASE\3BSTRDIM.HIA "" "" N
+OIO ..\BASECASE\NWRWAREA.HIS   "" "" N
+OIO ..\BASECASE\NWRWAREA.HIA "" "" N
+OIO ..\BASECASE\BALANSDT.HIS   "" "" N
+OIO ..\BASECASE\BALANSDT.HIA "" "" N
+OIO ..\BASECASE\BALANSEV.HIS  "" "" N
+OIO ..\BASECASE\BALANSEV.HIA "" "" N
+OIO ..\BASECASE\BNDFLODT.HIS   "" "" N
+OIO ..\BASECASE\BNDFLODT.HIA "" "" N
+OIO ..\BASECASE\BNDFLOMX.HIS  "" "" N
+OIO ..\BASECASE\BNDFLOMX.HIA "" "" N
+OIO ..\BASECASE\BNDFLTOT.HIS   "" "" N
+OIO ..\BASECASE\BNDFLTOT.HIA "" "" N
+OIO ..\BASECASE\CUMBALDT.HIS   "" "" N
+OIO ..\BASECASE\CUMBALDT.HIA "" "" N
+OIO ..\BASECASE\GRNFLODT.HIS   "" "" N
+OIO ..\BASECASE\GRNFLODT.HIA "" "" N
+OIO ..\BASECASE\GRNFLOMX.HIS  "" "" N
+OIO ..\BASECASE\GRNFLOMX.HIA "" "" N
+OIO ..\BASECASE\GRNSTRDT.HIS   "" "" N
+OIO ..\BASECASE\GRNSTRDT.HIA "" "" N
+OIO ..\BASECASE\GRNSTRMX.HIS  "" "" N
+OIO ..\BASECASE\GRNSTRMX.HIA "" "" N
+OIO ..\BASECASE\INDUSTDT.HIS  "" "" N
+OIO ..\BASECASE\INDUSTDT.HIA "" "" N
+OIO ..\BASECASE\INDUSTMX.HIS  "" "" N
+OIO ..\BASECASE\INDUSTMX.HIA "" "" N
+OIO ..\BASECASE\NWRWSYS.HIS "" "" N
+OIO ..\BASECASE\NWRWSYS.HIA "" "" N
+OIO ..\BASECASE\OW_EXCDT.HIS   "" "" N
+OIO ..\BASECASE\OW_EXCDT.HIA "" "" N
+OIO ..\BASECASE\OW_EXCED.HIS  "" "" N
+OIO ..\BASECASE\OW_EXCED.HIA "" "" N
+OIO ..\BASECASE\OW_LVLDT.HIS   "" "" N
+OIO ..\BASECASE\OW_LVLDT.HIA "" "" N
+OIO ..\BASECASE\OW_LVLMX.HIS  "" "" N
+OIO ..\BASECASE\OW_LVLMX.HIA "" "" N
+OIO ..\BASECASE\PLVFLODT.HIS   "" "" N
+OIO ..\BASECASE\PLVFLODT.HIA "" "" N
+OIO ..\BASECASE\PLVFLOMX.HIS   "" "" N
+OIO ..\BASECASE\PLVFLOMX.HIA "" "" N
+OIO ..\BASECASE\PLVSTRDT.HIS   "" "" N
+OIO ..\BASECASE\PLVSTRDT.HIA "" "" N
+OIO ..\BASECASE\PLVSTRMX.HIS   "" "" N
+OIO ..\BASECASE\PLVSTRMX.HIA "" "" N
+OIO ..\BASECASE\PVFLOWDT.HIS   "" "" N
+OIO ..\BASECASE\PVFLOWDT.HIA "" "" N
+OIO ..\BASECASE\PVFLOWMX.HIS  "" "" N
+OIO ..\BASECASE\PVFLOWMX.HIA "" "" N
+OIO ..\BASECASE\PVSTORDT.HIS   "" "" N
+OIO ..\BASECASE\PVSTORDT.HIA "" "" N
+OIO ..\BASECASE\PVSTORMX.HIS  "" "" N
+OIO ..\BASECASE\PVSTORMX.HIA "" "" N
+OIO ..\BASECASE\RRBALANS.HIS    "" "" N
+OIO ..\BASECASE\RRBALANS.HIA "" "" N
+OIO ..\BASECASE\RRRUNOFF.HIS "" "" N
+OIO ..\BASECASE\RRRUNOFF.HIA "" "" N
+OIO ..\BASECASE\SACRMNTO.HIS    "" "" N
+OIO ..\BASECASE\SACRMNTO.HIA "" "" N
+OIO ..\BASECASE\SALTDT.HIS    "" "" N
+OIO ..\BASECASE\SALTDT.HIA "" "" N
+OIO ..\BASECASE\SALTMX.HIS    "" "" N
+OIO ..\BASECASE\SALTMX.HIA "" "" N
+OIO ..\BASECASE\STRFLODT.HIS   "" "" N
+OIO ..\BASECASE\STRFLODT.HIA "" "" N
+OIO ..\BASECASE\STRFLOMX.HIS  "" "" N
+OIO ..\BASECASE\STRFLOMX.HIA "" "" N
+OIO ..\BASECASE\UPFLOWDT.HIS   "" "" N
+OIO ..\BASECASE\UPFLOWDT.HIA "" "" N
+OIO ..\BASECASE\UPFLOWMX.HIS  "" "" N
+OIO ..\BASECASE\UPFLOWMX.HIA "" "" N
+OIO ..\BASECASE\UPGWLVDT.HIS   "" "" N
+OIO ..\BASECASE\UPGWLVDT.HIA "" "" N
+OIO ..\BASECASE\UPGWLVMX.HIS  "" "" N
+OIO ..\BASECASE\UPGWLVMX.HIA "" "" N
+OIO ..\BASECASE\WWTPDT.HIS  "" "" N
+OIO ..\BASECASE\WWTPDT.HIA "" "" N
+OIO ..\BASECASE\WWTPMX.HIS  "" "" N
+OIO ..\BASECASE\WWTPMX.HIA "" "" N
+OIO ..\BASECASE\CALCPNT.HIS "" "" N
+OIO ..\BASECASE\CALCPNT.HIA "" "" N
+OIO ..\BASECASE\REDUCED.NTW "" "" N
+OIO ..\BASECASE\CALCDIM.HIS "" "" N
+OIO ..\BASECASE\CALCDIM.HIA "" "" N
+OIO ..\BASECASE\FLOWANAL.HIS   "" "" N
+OIO ..\BASECASE\FLOWANAL.HIA "" "" N
+OIO ..\BASECASE\NETWORK.REP "" "" N
+OIO ..\BASECASE\NODES.HIS  "" "" N
+OIO ..\BASECASE\NODES.HIA "" "" N
+OIO ..\BASECASE\NODES_CR.HIS   "" "" N
+OIO ..\BASECASE\NODES_CR.HIA "" "" N
+OIO ..\BASECASE\NODESDIM.HIS  "" "" N
+OIO ..\BASECASE\NODESDIM.HIA "" "" N
+OIO ..\BASECASE\NODESVOL.HIS  "" "" N
+OIO ..\BASECASE\NODESVOL.HIA "" "" N
+OIO ..\BASECASE\QLAT.HIS  "" "" N
+OIO ..\BASECASE\QLAT.HIA "" "" N
+OIO ..\BASECASE\QWB.HIS  "" "" N
+OIO ..\BASECASE\QWB.HIA "" "" N
+OIO ..\BASECASE\REACH.HIS  "" "" N
+OIO ..\BASECASE\REACH.HIA "" "" N
+OIO ..\BASECASE\REACH_CR.HIS   "" "" N
+OIO ..\BASECASE\REACH_CR.HIA "" "" N
+OIO ..\BASECASE\REACHDIM.HIS  "" "" N
+OIO ..\BASECASE\REACHDIM.HIA "" "" N
+OIO ..\BASECASE\RSEGSUB.HIS  "" "" N
+OIO ..\BASECASE\RSEGSUB.HIA "" "" N
+OIO ..\BASECASE\REACHFLW.HIS  "" "" N
+OIO ..\BASECASE\REACHFLW.HIA "" "" N
+OIO ..\BASECASE\REACHSEG.HIS "" "" N
+OIO ..\BASECASE\REACHSEG.HIA "" "" N
+OIO ..\BASECASE\REACHVOL.HIS  "" "" N
+OIO ..\BASECASE\REACHVOL.HIA "" "" N
+OIO ..\BASECASE\STRUC.HIS "" "" N
+OIO ..\BASECASE\STRUC.HIA "" "" N
+OIO ..\BASECASE\CONTROLL.HIS "" "" N
+OIO ..\BASECASE\CONTROLL.HIA "" "" N
+OIO ..\BASECASE\TRIGGERS.HIS "" "" N
+OIO ..\BASECASE\TRIGGERS.HIA "" "" N
+OIO ..\BASECASE\STRUC_SF.HIS "" "" N
+OIO ..\BASECASE\STRUC_SF.HIA "" "" N
+OIO ..\BASECASE\SFSPILLS.HIS "" "" N
+OIO ..\BASECASE\SFSPILLS.HIA "" "" N
+OIO ..\BASECASE\FLS_H.INC " " " "  N
+OIO ..\BASECASE\FLS_C.INC " " " "  N
+OIO ..\BASECASE\FLS_Z.INC " " " "  N
+OIO ..\BASECASE\FLS_U.INC " " " "  N
+OIO ..\BASECASE\FLS_V.INC " " " "  N
+OIO ..\BASECASE\FLSHIS.HIS " " " "  N
+OIO ..\BASECASE\FLSHIS.HIA "" "" N
+OO  ..\BASECASE\FLS_GIS.HLF " " " "  N
+OO  ..\BASECASE\???D????.ASC " " " "  N
+OO  ..\BASECASE\???R????.ASC " " " "  N
+OO  ..\BASECASE\???C????.ASC " " " "  N
+OO  ..\BASECASE\???V????.ASC " " " "  N
+OO  ..\BASECASE\???U????.ASC " " " "  N
+OO  ..\BASECASE\???H????.ASC " " " "  N
+OO  ..\BASECASE\???MAXD?.ASC " " " "  N
+OO  ..\BASECASE\???MAXC?.ASC " " " "  N
+OO  ..\BASECASE\???MAXH?.ASC " " " "  N
+OO  ..\BASECASE\???TMAXD.ASC " " " "  N
+OO  ..\BASECASE\???TMAXC.ASC " " " "  N
+OO  ..\BASECASE\???TMAXH.ASC " " " "  N
+OO  ..\BASECASE\???TWT??.ASC " " " "  N
+OO  ..\BASECASE\???TEM??.ASC " " " "  N
+OO  ..\BASECASE\???WTC??.ASC " " " "  N
+OO  ..\BASECASE\???EMC??.ASC " " " "  N
+OO  ..\BASECASE\DM?.M2B " " " "  N
+OO  ..\BASECASE\???D????.MAP " " " "  N
+OO  ..\BASECASE\???R????.MAP " " " "  N
+OO  ..\BASECASE\???C????.MAP " " " "  N
+OO  ..\BASECASE\???V????.MAP " " " "  N
+OO  ..\BASECASE\???U????.MAP " " " "  N
+OO  ..\BASECASE\???H????.MAP " " " "  N
+OO  ..\BASECASE\???MAXD?.MAP " " " "  N
+OO  ..\BASECASE\???MAXC?.MAP " " " "  N
+OO  ..\BASECASE\???MAXH?.MAP " " " "  N
+OO  ..\BASECASE\???TWTEM.MAP " " " "  N
+OO  ..\BASECASE\???WEC??.MAP " " " "  N
+OO  ..\BASECASE\???NEGDP.ASC " " " "  N
+OO  ..\BASECASE\???TSU.ASC " " " "  N
+OO  ..\BASECASE\???TSV.ASC " " " "  N
+OIO ..\BASECASE\STRUC_CR.HIS   "" "" N
+OIO ..\BASECASE\STRUC_CR.HIA "" "" N
+OIO ..\BASECASE\STRUCDIM.HIS  "" "" N
+OIO ..\BASECASE\STRUCDIM.HIA "" "" N
+OIO ..\BASECASE\RTC3BALL.HIS "" "" N
+OIO ..\BASECASE\RTC3BALL.HIA "" "" N
+OIO ..\BASECASE\RTCPARAL.HIS "" "" N
+OIO ..\BASECASE\RTCPARAL.HIA "" "" N
+OIO ..\BASECASE\RTCSBALL.HIS "" "" N
+OIO ..\BASECASE\RTCSBALL.HIA "" "" N
+OIO ..\BASECASE\BOUNDWLM.DEF "" "" N
+OIO ..\BASECASE\BOUNDWLM.HIS   "" "" N
+OIO ..\BASECASE\BOUNDWLM.HIA "" "" N
+OIO ..\BASECASE\BAL_WLM.HIS   "" "" N
+OIO ..\BASECASE\BAL_WLM.HIA "" "" N
+OIO ..\BASECASE\NODELOAD.HIS   "" "" N
+OIO ..\BASECASE\NODELOAD.HIA "" "" N
+OIO ..\BASECASE\LINKLOAD.HIS   "" "" N
+OIO ..\BASECASE\LINKLOAD.HIA "" "" N
+OIO ..\BASECASE\WASTLOAD.DEF "" "" N
+OIO ..\BASECASE\WASTLOAD.HIS   "" "" N
+OIO ..\BASECASE\WASTLOAD.HIA "" "" N
+OIO ..\BASECASE\WQBOU20.HIS   "" "" N
+OIO ..\BASECASE\2DWQBO20.HIS   "" "" N
+OIO ..\BASECASE\WQBOU20.HIA "" "" N
+OIO ..\BASECASE\2DWQBO20.HIA "" "" N
+OIO ..\BASECASE\DELWAQ.MAP "" "" N
+OIO ..\BASECASE\2DDELWAQ.MAP "" "" N
+OIO ..\BASECASE\DELWAQ.MAA "" "" N
+OIO ..\BASECASE\2DDELWAQ.MAA "" "" N
+OIO ..\BASECASE\DELWAQ.HIS   "" "" N
+OIO ..\BASECASE\2DDELWAQ.HIS   "" "" N
+OIO ..\BASECASE\DELWAQ.HIA "" "" N
+OIO ..\BASECASE\2DDELWAQ.HIA "" "" N
+OIO ..\BASECASE\DELWAQ.PST "" "" N
+OIO ..\BASECASE\DELWAQ.STU "" "" N
+OIO ..\BASECASE\LOZING.MAP "" "" N
+OIO ..\BASECASE\2DLOZING.MAP "" "" N
+OIO ..\BASECASE\LOZING.PST "" "" N
+OIO ..\BASECASE\LOZING.STU "" "" N
+OIO ..\BASECASE\WATERBAL.PRN "" "" N
+OIO ..\BASECASE\2DWATBAL.PRN "" "" N
+OIO ..\BASECASE\WQBAL.HIS    "" "" N
+OIO ..\BASECASE\2DWQBAL.HIS    "" "" N
+OIO ..\BASECASE\WQBAL.HIA "" "" N
+OIO ..\BASECASE\2DWQBAL.HIA "" "" N
+OIO ..\BASECASE\WQBAL.PRN "" "" N
+OIO ..\BASECASE\2DWQBAL.PRN "" "" N
+OIO ..\BASECASE\FLAIRS.CHO "" "" N
+OIO ..\BASECASE\FLAIRS.CHP "" "" N
+OIO ..\BASECASE\FLAIRS.FLO "" "" N
+OIO ..\BASECASE\FLAIRS.FLP "" "" N
+OIO ..\BASECASE\FLAIRS.MAP "" "" N
+OIO ..\BASECASE\FLAIRS.PNT "" "" N
+OIO ..\BASECASE\2DNROFSG.DAT "" "" N
+OIO ..\BASECASE\2DVOLUME.DAT "" "" N
+OIO ..\BASECASE\2DNROFEX.DAT "" "" N
+OIO ..\BASECASE\2DPOINT.DAT "" "" N
+OIO ..\BASECASE\2DAREA.DAT "" "" N
+OIO ..\BASECASE\2DFLOW.DAT "" "" N
+OIO ..\BASECASE\2DLENGTH.DAT "" "" N
+OIO ..\BASECASE\2DBNDFRA.ID "" "" N
+OIO ..\BASECASE\2DSEGFUN.DAT "" "" N
+OIO ..\BASECASE\2DMONIT.DAT "" "" N
+OIO ..\BASECASE\2DSOBEK.SRF "" "" N
+OIO ..\BASECASE\2DSOBEK.CHZ "" "" N
+OIO ..\BASECASE\2DVELOC.DAT "" "" N
+OIO ..\BASECASE\2DDELWAQ.M2B "" "" N
+OI ..\BASECASE\2DBNDWQ.GLB "" "" N
+MAPPER1 0
+IO  ..\BASECASE\SETTINGS.DAT "" "" N
+IO  ..\BASECASE\FUNC.DLF "" "" N
+I   DELWAQ.# "" "" N
+I   EVAPOR.# "" "" N
+I   EVENT.# "" "" N
+I   WIND.# "" "" N
+I   WQ_WIND.# "" "" N
+OI  TEMP.# "" "" N
+OI  RNFF.# "" "" N
+I   ..\BASECASE\NETWORK.CN "" "" N
+I   ..\BASECASE\NETWORK.CP "" "" N
+I   ..\BASECASE\NETWORK.CR "" "" N
+I   ..\BASECASE\NETWORK.D12 "" "" N
+I   ..\BASECASE\NETWORK.GR "" "" N
+I   ..\BASECASE\NETWORK.ME "" "" N
+I   ..\BASECASE\NETWORK.NTW "" "" N
+I   ..\BASECASE\NETWORK.OBI "" "" N
+I   ..\BASECASE\NETWORK.ST "" "" N
+I   ..\BASECASE\NETWORK.TP "" "" N
+I   ..\BASECASE\NTRDLWQ.POI "" "" N
+IO  ..\BASECASE\NTRPLUV.OBJ "" "" N
+I   ..\BASECASE\INCCLASS.DAT "" "" N
+IO  ..\BASECASE\DELFT_3B.INI "" "" N
+I   ..\BASECASE\RTC.DAT "" "" N
+I   ..\BASECASE\WLMTIMES.DAT "" "" N
+I   ..\BASECASE\SUBLIST.WLM "" "" N
+I   ..\BASECASE\EM2WQ.SUB "" "" N
+I   ..\BASECASE\STATUS.CAS "" "" N
+I   ..\BASECASE\3B_LINK.TP "" "" N
+I   ..\BASECASE\3B_NOD.TP "" "" N
+I   ..\BASECASE\3B_ROUT.3B "" "" N
+I   ..\BASECASE\3BRUNOFF.TP "" "" N
+I   ..\BASECASE\BOUND3B.3B "" "" N
+I   ..\BASECASE\BOUND3B.TBL "" "" N
+I   ..\BASECASE\CONTR3B.DEF "" "" N
+I   ..\BASECASE\GREENHSE.3B "" "" N
+I   ..\BASECASE\GREENHSE.RF "" "" N
+I   ..\BASECASE\GREENHSE.SIL "" "" N
+I   ..\BASECASE\GREENHSE.TBL "" "" N
+I   ..\BASECASE\INDUSTRY.3B "" "" N
+I   ..\BASECASE\INDUSTRY.TBL "" "" N
+I   ..\BASECASE\OPENWATE.3B "" "" N
+I   ..\BASECASE\OPENWATE.SEP "" "" N
+I   ..\BASECASE\OPENWATE.TBL "" "" N
+I   ..\BASECASE\PAVED.3B "" "" N
+I   ..\BASECASE\PAVED.DWA "" "" N
+I   ..\BASECASE\PAVED.STO "" "" N
+I   ..\BASECASE\PAVED.TBL "" "" N
+I   ..\BASECASE\PLUVIUS.3B "" "" N
+I   ..\BASECASE\PLUVIUS.ALG "" "" N
+I   ..\BASECASE\PLUVIUS.DWA "" "" N
+I   ..\BASECASE\PLUVIUS.TBL "" "" N
+I   ..\BASECASE\SACRMNTO.3B "" "" N
+I   ..\BASECASE\SACRMNTO.CAP "" "" N
+I   ..\BASECASE\SACRMNTO.OTH "" "" N
+I   ..\BASECASE\SACRMNTO.UH "" "" N
+I   ..\BASECASE\SALT.3B "" "" N
+I   ..\BASECASE\STRUCT3B.DAT "" "" N
+I   ..\BASECASE\STRUCT3B.DEF "" "" N
+I   ..\BASECASE\STRUCT3B.TBL "" "" N
+I   ..\BASECASE\UNPAVED.3B "" "" N
+I   ..\BASECASE\UNPAVED.ALF "" "" N
+I   ..\BASECASE\UNPAVED.INF "" "" N
+I   ..\BASECASE\UNPAVED.SEP "" "" N
+I   ..\BASECASE\UNPAVED.STO "" "" N
+I   ..\BASECASE\UNPAVED.TBL "" "" N
+I   ..\BASECASE\WWTP.3B "" "" N
+I   ..\BASECASE\WWTP.TBL "" "" N
+I   ..\BASECASE\BOUNDARY.DAT "" "" N
+I   ..\BASECASE\BOUNDLAT.DAT "" "" N
+I   ..\BASECASE\CONCSALT.DAT "" "" N
+I   ..\BASECASE\CONTROL.DEF "" "" N
+I   ..\BASECASE\TRIGGER.DEF "" "" N
+I   ..\BASECASE\STRUCT.CMP "" "" N
+I   ..\BASECASE\VALVE.TAB "" "" N
+I   ..\BASECASE\FRICTION.DAT "" "" N
+I   ..\BASECASE\INITIAL.DAT "" "" N
+I   ..\BASECASE\INITSALT.DAT "" "" N
+I   ..\BASECASE\LATERAL.DAT "" "" N
+I   ..\BASECASE\NODES.DAT "" "" N
+I   ..\BASECASE\2DGRID.DAT "" "" N
+I   ..\BASECASE\PROFILE.DAT "" "" N
+I   ..\BASECASE\PROFILE.DEF "" "" N
+I   ..\BASECASE\STRUCT.DAT "" "" N
+I   ..\BASECASE\STRUCT.DEF "" "" N
+I   ..\BASECASE\WND_LOC.DAT "" "" N
+I   ..\BASECASE\3B_LOC.RTC "" "" N
+I   ..\BASECASE\3B_MEAS.RTC "" "" N
+I   ..\BASECASE\DECISPAR.RTC "" "" N
+I   ..\BASECASE\EXT_LOC.RTC "" "" N
+I   ..\BASECASE\PREC_LOC.RTC "" "" N
+I   ..\BASECASE\SBK_LOC.RTC "" "" N
+I   ..\BASECASE\SBK_MEAS.RTC "" "" N
+I   ..\BASECASE\RESERVOI.RTC "" "" N
+I   ..\BASECASE\BOUNDEST.DAT "" "" N
+I   ..\BASECASE\WASTLOAD.POS "" "" N
+I   ..\BASECASE\WLMATMO.CFT "" "" N
+I   ..\BASECASE\WLMBANK.CFT "" "" N
+I   ..\BASECASE\WLMBOUND.CFT "" "" N
+I   ..\BASECASE\WLMBOUND.DAT "" "" N
+I   ..\BASECASE\WLMBRNCH.DAT "" "" N
+I   ..\BASECASE\WLMDISTR.DAT "" "" N
+I   ..\BASECASE\WLMDWA.CFT "" "" N
+I   ..\BASECASE\WLMGRHSE.CFT "" "" N
+I   ..\BASECASE\WLMINDUS.CFT "" "" N
+I   ..\BASECASE\WLMINDUS.DAT "" "" N
+I   ..\BASECASE\WLMINFO.DAT "" "" N
+I   ..\BASECASE\WLMNODE.DAT "" "" N
+I   ..\BASECASE\WLMPAVED.CFT "" "" N
+I   ..\BASECASE\WLMRWZI.CFT "" "" N
+I   ..\BASECASE\WLMRWZI.DAT "" "" N
+I   ..\BASECASE\WLMSEPT.CFT "" "" N
+I   ..\BASECASE\WLMSEPT.DAT "" "" N
+I   ..\BASECASE\WLMSEWER.CFT "" "" N
+I   ..\BASECASE\WLMSTRU.CFT "" "" N
+I   ..\BASECASE\WLMWABOT.CFT "" "" N
+I   ..\BASECASE\WLMWATER.CFT "" "" N
+I   ..\BASECASE\BOUNDWQ.DAT "" "" N
+I   ..\BASECASE\2DBNDWQ.DAT "" "" N
+I   ..\BASECASE\BOUNDWQ.TYP "" "" N
+I   ..\BASECASE\2DBNDWQ.TYP "" "" N
+I   ..\BASECASE\LOADSWQ.DAT "" "" N
+I   ..\BASECASE\LOADSWQ.TYP "" "" N
+I   ..\BASECASE\BOUNDWQ.GLB "" "" N
+I   ..\BASECASE\2DBNDWQ.GLB "" "" N
+I   ..\BASECASE\CONSTANT.DWQ "" "" N
+I   ..\BASECASE\2DCONST.DWQ "" "" N
+I   ..\BASECASE\COEFX.DAT "" "" N
+I   ..\BASECASE\2DCOEFX.DAT "" "" N
+I   ..\BASECASE\2DINIT.DAT "" "" N
+I   ..\BASECASE\2DPARAM.DAT "" "" N
+I   ..\BASECASE\2DDISPX.DAT "" "" N
+I   ..\BASECASE\MONSTAT.WQ "" "" N
+I   ..\BASECASE\2DMONST.WQ "" "" N
+I   ..\BASECASE\DELWAQ1.INP "" "" N
+I   ..\BASECASE\2DDLWQ1.INP "" "" N
+I   ..\BASECASE\DELWAQ2.INP "" "" N
+I   ..\BASECASE\2DDLWQ2.INP "" "" N
+I   ..\BASECASE\DELWAQ3.INP "" "" N
+I   ..\BASECASE\2DDLWQ3.INP "" "" N
+I   ..\BASECASE\DELWAQ4.INP "" "" N
+I   ..\BASECASE\2DDLWQ4.INP "" "" N
+I   ..\BASECASE\PROCESS.DWQ "" "" N
+I   ..\BASECASE\SUBSTANC.DWQ "" "" N
+I   ..\BASECASE\SUBSTATE.SUB "" "" N
+I   ..\BASECASE\SUBSTANC.DEF "" "" N
+I   ..\BASECASE\WLM&DWQ.DAT "" "" N
+I   ..\BASECASE\WQ.DAT "" "" N
+I   ..\BASECASE\2DWQ.DAT "" "" N
+I   ..\BASECASE\DISPERSW.DAT "" "" N
+I   ..\BASECASE\HISVAR.DAT "" "" N
+I   ..\BASECASE\2DHISVAR.DAT "" "" N
+I   ..\BASECASE\OUTLOCWQ.DAT "" "" N
+I   ..\BASECASE\2DOUTLOC.DAT "" "" N
+I   ..\BASECASE\OUTPUT.DWQ "" "" N
+I   ..\BASECASE\2DOUTP.DWQ "" "" N
+I   ..\BASECASE\OUTPUTM.DWQ "" "" N
+I   ..\BASECASE\2DOUTPM.DWQ "" "" N
+I   ..\BASECASE\MAPVAR.DAT "" "" N
+I   ..\BASECASE\2DMAPVAR.DAT "" "" N
+I   ..\BASECASE\GRID.TEO "" "" N
+I   ..\BASECASE\GWINPAV.DAT "" "" N
+I   ..\BASECASE\FLAWININ.ZIP "" "" N
+IO  ..\BASECASE\NETTER.DLF "" "" N
+OI  ..\BASECASE\3BAREAS.HIS   "" "" N
+OI  ..\BASECASE\3BAREAS.HIA "" "" N
+OI  ..\BASECASE\3BLINKS.HIS   "" "" N
+OI  ..\BASECASE\3BLINKS.HIA "" "" N
+OI  ..\BASECASE\3BSTRDIM.HIS   "" "" N
+OI  ..\BASECASE\3BSTRDIM.HIA "" "" N
+OI  ..\BASECASE\NWRWAREA.HIS   "" "" N
+OI  ..\BASECASE\NWRWAREA.HIA "" "" N
+OI  ..\BASECASE\BALANSDT.HIS   "" "" N
+OI  ..\BASECASE\BALANSDT.HIA "" "" N
+OI  ..\BASECASE\BALANSEV.HIS  "" "" N
+OI  ..\BASECASE\BALANSEV.HIA "" "" N
+OI  ..\BASECASE\BNDFLODT.HIS   "" "" N
+OI  ..\BASECASE\BNDFLODT.HIA "" "" N
+OI  ..\BASECASE\BNDFLOMX.HIS  "" "" N
+OI  ..\BASECASE\BNDFLOMX.HIA "" "" N
+OI  ..\BASECASE\BNDFLTOT.HIS   "" "" N
+OI  ..\BASECASE\BNDFLTOT.HIA "" "" N
+OI  ..\BASECASE\CUMBALDT.HIS   "" "" N
+OI  ..\BASECASE\CUMBALDT.HIA "" "" N
+OI  ..\BASECASE\GRNFLODT.HIS   "" "" N
+OI  ..\BASECASE\GRNFLODT.HIA "" "" N
+OI  ..\BASECASE\GRNFLOMX.HIS  "" "" N
+OI  ..\BASECASE\GRNFLOMX.HIA "" "" N
+OI  ..\BASECASE\GRNSTRDT.HIS   "" "" N
+OI  ..\BASECASE\GRNSTRDT.HIA "" "" N
+OI  ..\BASECASE\GRNSTRMX.HIS  "" "" N
+OI  ..\BASECASE\GRNSTRMX.HIA "" "" N
+OI  ..\BASECASE\INDUSTDT.HIS  "" "" N
+OI  ..\BASECASE\INDUSTDT.HIA "" "" N
+OI  ..\BASECASE\INDUSTMX.HIS  "" "" N
+OI  ..\BASECASE\INDUSTMX.HIA "" "" N
+OI  ..\BASECASE\NWRWSYS.HIS "" "" N
+OI  ..\BASECASE\NWRWSYS.HIA "" "" N
+OI  ..\BASECASE\OW_EXCDT.HIS   "" "" N
+OI  ..\BASECASE\OW_EXCDT.HIA "" "" N
+OI  ..\BASECASE\OW_EXCED.HIS  "" "" N
+OI  ..\BASECASE\OW_EXCED.HIA "" "" N
+OI  ..\BASECASE\OW_LVLDT.HIS   "" "" N
+OI  ..\BASECASE\OW_LVLDT.HIA "" "" N
+OI  ..\BASECASE\OW_LVLMX.HIS  "" "" N
+OI  ..\BASECASE\OW_LVLMX.HIA "" "" N
+OI  ..\BASECASE\PLVFLODT.HIS   "" "" N
+OI  ..\BASECASE\PLVFLODT.HIA "" "" N
+OI  ..\BASECASE\PLVFLOMX.HIS   "" "" N
+OI  ..\BASECASE\PLVFLOMX.HIA "" "" N
+OI  ..\BASECASE\PLVSTRDT.HIS   "" "" N
+OI  ..\BASECASE\PLVSTRDT.HIA "" "" N
+OI  ..\BASECASE\PLVSTRMX.HIS   "" "" N
+OI  ..\BASECASE\PLVSTRMX.HIA "" "" N
+OI  ..\BASECASE\PVFLOWDT.HIS  "" "" N
+OI  ..\BASECASE\PVFLOWDT.HIA "" "" N
+OI  ..\BASECASE\PVFLOWMX.HIS  "" "" N
+OI  ..\BASECASE\PVFLOWMX.HIA "" "" N
+OI  ..\BASECASE\PVSTORDT.HIS  "" "" N
+OI  ..\BASECASE\PVSTORDT.HIA "" "" N
+OI  ..\BASECASE\PVSTORMX.HIS  "" "" N
+OI  ..\BASECASE\PVSTORMX.HIA "" "" N
+OI  ..\BASECASE\RRBALANS.HIS   "" "" N
+OI  ..\BASECASE\RRBALANS.HIA "" "" N
+OI  ..\BASECASE\RRRUNOFF.HIS "" "" N
+OI  ..\BASECASE\RRRUNOFF.HIA "" "" N
+OI  ..\BASECASE\SACRMNTO.HIS "" "" N
+OI  ..\BASECASE\SACRMNTO.HIA "" "" N
+OI  ..\BASECASE\SALTDT.HIS   "" "" N
+OI  ..\BASECASE\SALTDT.HIA "" "" N
+OI  ..\BASECASE\SALTMX.HIS    "" "" N
+OI  ..\BASECASE\SALTMX.HIA "" "" N
+OI  ..\BASECASE\STRFLODT.HIS   "" "" N
+OI  ..\BASECASE\STRFLODT.HIA "" "" N
+OI  ..\BASECASE\STRFLOMX.HIS  "" "" N
+OI  ..\BASECASE\STRFLOMX.HIA "" "" N
+OI  ..\BASECASE\UPFLOWDT.HIS   "" "" N
+OI  ..\BASECASE\UPFLOWDT.HIA "" "" N
+OI  ..\BASECASE\UPFLOWMX.HIS  "" "" N
+OI  ..\BASECASE\UPFLOWMX.HIA "" "" N
+OI  ..\BASECASE\UPGWLVDT.HIS   "" "" N
+OI  ..\BASECASE\UPGWLVDT.HIA "" "" N
+OI  ..\BASECASE\UPGWLVMX.HIS  "" "" N
+OI  ..\BASECASE\UPGWLVMX.HIA "" "" N
+OI  ..\BASECASE\WWTPDT.HIS  "" "" N
+OI  ..\BASECASE\WWTPDT.HIA "" "" N
+OI  ..\BASECASE\WWTPMX.HIS  "" "" N
+OI  ..\BASECASE\WWTPMX.HIA "" "" N
+OI  ..\BASECASE\CALCPNT.HIS "" "" N
+OI  ..\BASECASE\CALCPNT.HIA "" "" N
+OI  ..\BASECASE\CALCDIM.HIS "" "" N
+OI  ..\BASECASE\CALCDIM.HIA "" "" N
+OI  ..\BASECASE\FLOWANAL.HIS   "" "" N
+OI  ..\BASECASE\FLOWANAL.HIA "" "" N
+OI  ..\BASECASE\NODES.HIS  "" "" N
+OI  ..\BASECASE\NODES.HIA "" "" N
+OI  ..\BASECASE\NODES_CR.HIS   "" "" N
+OI  ..\BASECASE\NODES_CR.HIA "" "" N
+OI  ..\BASECASE\NODESDIM.HIS  "" "" N
+OI  ..\BASECASE\NODESDIM.HIA "" "" N
+OI  ..\BASECASE\QLAT.HIS   "" "" N
+OI  ..\BASECASE\QLAT.HIA "" "" N
+OI  ..\BASECASE\QWB.HIS "" "" N
+OI  ..\BASECASE\QWB.HIA "" "" N
+OI  ..\BASECASE\REACH.HIS  "" "" N
+OI  ..\BASECASE\REACH.HIA "" "" N
+OI  ..\BASECASE\REACH_CR.HIS   "" "" N
+OI  ..\BASECASE\REACH_CR.HIA "" "" N
+OI  ..\BASECASE\REACHDIM.HIS  "" "" N
+OI  ..\BASECASE\REACHDIM.HIA "" "" N
+OI  ..\BASECASE\RSEGSUB.HIS  "" "" N
+OI  ..\BASECASE\RSEGSUB.HIA "" "" N
+OI  ..\BASECASE\REACHFLW.HIS  "" "" N
+OI  ..\BASECASE\REACHFLW.HIA "" "" N
+OI  ..\BASECASE\REACHSEG.HIS "" "" N
+OI  ..\BASECASE\REACHSEG.HIA "" "" N
+OI  ..\BASECASE\REACHVOL.HIS "" "" N
+OI  ..\BASECASE\REACHVOL.HIA "" "" N
+OI  ..\BASECASE\STRUC.HIS "" "" N
+OI  ..\BASECASE\STRUC.HIA "" "" N
+OI  ..\BASECASE\CONTROLL.HIS "" "" N
+OI  ..\BASECASE\CONTROLL.HIA "" "" N
+OI  ..\BASECASE\TRIGGERS.HIS "" "" N
+OI  ..\BASECASE\TRIGGERS.HIA "" "" N
+OI  ..\BASECASE\STRUC_SF.HIS "" "" N
+OI  ..\BASECASE\STRUC_SF.HIA "" "" N
+OI  ..\BASECASE\SFSPILLS.HIS "" "" N
+OI  ..\BASECASE\SFSPILLS.HIA "" "" N
+OI  ..\BASECASE\FLS_H.INC " " " "  N
+OI  ..\BASECASE\FLS_C.INC " " " "  N
+OI  ..\BASECASE\FLS_Z.INC " " " "  N
+OI  ..\BASECASE\FLS_U.INC " " " "  N
+OI  ..\BASECASE\FLS_V.INC " " " "  N
+OI  ..\BASECASE\FLSHIS.HIS " " " "  N
+OI  ..\BASECASE\FLSHIS.HIA "" "" N
+OI  ..\BASECASE\FLS_GIS.HLF " " " "  N
+OI  ..\BASECASE\???D????.ASC " " " "  N
+OI  ..\BASECASE\???R????.ASC " " " "  N
+OI  ..\BASECASE\???C????.ASC " " " "  N
+OI  ..\BASECASE\???V????.ASC " " " "  N
+OI  ..\BASECASE\???U????.ASC " " " "  N
+OI  ..\BASECASE\???H????.ASC " " " "  N
+OI  ..\BASECASE\???MAXD?.ASC " " " "  N
+OI  ..\BASECASE\???MAXC?.ASC " " " "  N
+OI  ..\BASECASE\???MAXH?.ASC " " " "  N
+OI  ..\BASECASE\???TMAXD.ASC " " " "  N
+OI  ..\BASECASE\???TMAXC.ASC " " " "  N
+OI  ..\BASECASE\???TMAXH.ASC " " " "  N
+OI  ..\BASECASE\???TWT??.ASC " " " "  N
+OI  ..\BASECASE\???TEM??.ASC " " " "  N
+OI  ..\BASECASE\???WTC??.ASC " " " "  N
+OI  ..\BASECASE\???EMC??.ASC " " " "  N
+OI  ..\BASECASE\DM?.M2B " " " "  N
+OI  ..\BASECASE\???D????.MAP " " " "  N
+OI  ..\BASECASE\???R????.MAP " " " "  N
+OI  ..\BASECASE\???C????.MAP " " " "  N
+OI  ..\BASECASE\???V????.MAP " " " "  N
+OI  ..\BASECASE\???U????.MAP " " " "  N
+OI  ..\BASECASE\???H????.MAP " " " "  N
+OI  ..\BASECASE\???MAXD?.MAP " " " "  N
+OI  ..\BASECASE\???MAXC?.MAP " " " "  N
+OI  ..\BASECASE\???MAXH?.MAP " " " "  N
+OI  ..\BASECASE\???TWTEM.MAP " " " "  N
+OI  ..\BASECASE\???WEC??.MAP " " " "  N
+OI  ..\BASECASE\???NEGDP.ASC " " " "  N
+OI  ..\BASECASE\???TSU.ASC " " " "  N
+OI  ..\BASECASE\???TSV.ASC " " " "  N
+OIO ..\BASECASE\NETTER2D.LEG " " " "  N
+OI  ..\BASECASE\STRUC_CR.HIS   "" "" N
+OI  ..\BASECASE\STRUC_CR.HIA "" "" N
+OI  ..\BASECASE\STRUCDIM.HIS "" "" N
+OI  ..\BASECASE\STRUCDIM.HIA "" "" N
+OI  ..\BASECASE\RTC3BALL.HIS "" "" N
+OI  ..\BASECASE\RTC3BALL.HIA "" "" N
+OI  ..\BASECASE\RTCPARAL.HIS "" "" N
+OI  ..\BASECASE\RTCPARAL.HIA "" "" N
+OI  ..\BASECASE\RTCSBALL.HIS "" "" N
+OI  ..\BASECASE\RTCSBALL.HIA "" "" N
+OI  ..\BASECASE\BOUNDWLM.HIS   "" "" N
+OI  ..\BASECASE\BOUNDWLM.HIA "" "" N
+OI  ..\BASECASE\BAL_WLM.HIS   "" "" N
+OI  ..\BASECASE\BAL_WLM.HIA "" "" N
+OI  ..\BASECASE\NODELOAD.HIS   "" "" N
+OI  ..\BASECASE\NODELOAD.HIA "" "" N
+OI  ..\BASECASE\LINKLOAD.HIS   "" "" N
+OI  ..\BASECASE\LINKLOAD.HIA "" "" N
+OI  ..\BASECASE\WASTLOAD.HIS   "" "" N
+OI  ..\BASECASE\WASTLOAD.HIA "" "" N
+OI  ..\BASECASE\DELWAQ.MAP "" "" N
+OI  ..\BASECASE\2DDELWAQ.MAP "" "" N
+OI  ..\BASECASE\DELWAQ.MAA "" "" N
+OI  ..\BASECASE\2DDELWAQ.MAA "" "" N
+OI  ..\BASECASE\2DDELWAQ.M2B "" "" N
+OI  ..\BASECASE\DELWAQ.HIS "" "" N
+OI  ..\BASECASE\2DDELWAQ.HIS "" "" N
+OI  ..\BASECASE\DELWAQ.HIA "" "" N
+OI  ..\BASECASE\2DDELWAQ.HIA "" "" N
+OI  ..\BASECASE\LOZING.MAP "" "" N
+OI  ..\BASECASE\2DLOZING.MAP "" "" N
+OI  ..\BASECASE\FLAIRS.FLO "" "" N
+OI  ..\BASECASE\FLAIRS.MAP "" "" N
+OI  ..\BASECASE\FLAIRS.PNT "" "" N
+VIEW1 0
+IO  ..\BASECASE\STATUS.CAS "" "" N
+I   ..\BASECASE\SETTINGS.DAT "" "" N
+I   ..\BASECASE\TABLES.LST "" "" N
+I   ..\BASECASE\SIMULATE.REP "" "" N
+I   ..\BASECASE\NETWORK.OBI "" "" N
+I   ..\BASECASE\NETWORK.ST "" "" N
+I   ..\BASECASE\STRUCT.DAT "" "" N
+I   ..\BASECASE\STRUCT.DEF "" "" N
+OI  ..\BASECASE\SUFHYD.LOG "" "" N
+OI  ..\BASECASE\SOBEK_3B.LOG "" "" N
+OI  ..\BASECASE\SOBEK.LOG "" "" N
+OIO ..\BASECASE\FLOWS.TXT "" "" N
+OIO ..\BASECASE\NODES.TXT "" "" N
+OIO ..\BASECASE\NWRWSYS.TXT "" "" N
+OIO ..\BASECASE\FREEBOAR.TXT "" "" N
+OIO ..\BASECASE\WATONSTR.TXT "" "" N
+OIO ..\BASECASE\STRLIST.TXT "" "" N
+OI  ..\BASECASE\INDICAT.FLW "" "" N
+OI  ..\BASECASE\FLW_CONV.TBL "" "" N
+OI  ..\BASECASE\RTC.LOG "" "" N
+OI  ..\BASECASE\WQINT.LST "" "" N
+OI  ..\BASECASE\DELWAQ.LST "" "" N
+OI  ..\BASECASE\DELWAQ.LSP "" "" N
+OI  ..\BASECASE\DELWAQ.MON "" "" N
+OI  ..\BASECASE\2DWQINT.LST "" "" N
+OI  ..\BASECASE\2DDELWAQ.LST "" "" N
+OI  ..\BASECASE\2DDELWAQ.LSP "" "" N
+OI  ..\BASECASE\2DDELWAQ.MON "" "" N
+OI  ..\BASECASE\3B_GENER.OUT "" "" N
+OI  ..\BASECASE\BOUND3B.OUT "" "" N
+OI  ..\BASECASE\GRNHOUS.OUT "" "" N
+OI  ..\BASECASE\OPENWATE.OUT "" "" N
+OI  ..\BASECASE\PAVED.OUT "" "" N
+OI  ..\BASECASE\PLUVIUS.OUT "" "" N
+OI  ..\BASECASE\STRUCT3B.OUT "" "" N
+OI  ..\BASECASE\SACRMNTO.OUT "" "" N
+OI  ..\BASECASE\UNPAVED.OUT "" "" N
+OI  ..\BASECASE\NETWORK.REP "" "" N
+OI  ..\BASECASE\3BAREAS.HIS  "" "" N
+OI  ..\BASECASE\3BAREAS.HIA "" "" N
+OI  ..\BASECASE\CALCPNT.HIS  "" "" N
+OI  ..\BASECASE\CALCPNT.HIA "" "" N
+OI  ..\BASECASE\CALCDIM.HIS  "" "" N
+OI  ..\BASECASE\CALCDIM.HIA "" "" N
+OI  ..\BASECASE\QWB.HIS "" "" N
+OI  ..\BASECASE\QWB.HIA "" "" N
+OI  ..\BASECASE\STRUC.HIS "" "" N
+OI  ..\BASECASE\STRUC.HIA "" "" N
+OI  ..\BASECASE\CONTROLL.HIS "" "" N
+OI  ..\BASECASE\CONTROLL.HIA "" "" N
+OI  ..\BASECASE\TRIGGERS.HIS "" "" N
+OI  ..\BASECASE\TRIGGERS.HIA "" "" N
+OI  ..\BASECASE\STRUC_SF.HIS "" "" N
+OI  ..\BASECASE\STRUC_SF.HIA "" "" N
+OI  ..\BASECASE\SFSPILLS.HIS "" "" N
+OI  ..\BASECASE\SFSPILLS.HIA "" "" N
+OI  ..\BASECASE\BOUNDWLM.DEF "" "" N
+OI  ..\BASECASE\DUMPWLM.ASC "" "" N
+OI  ..\BASECASE\WASTLOAD.DEF "" "" N
+OI  ..\BASECASE\WATERBAL.PRN "" "" N
+OI  ..\BASECASE\2DWATBAL.PRN "" "" N
+OI  ..\BASECASE\WQBAL.PRN "" "" N
+OI  ..\BASECASE\2DWQBAL.PRN "" "" N
+OI  ..\BASECASE\FLAIRS.CHO "" "" N
+OI  ..\BASECASE\FLAIRS.CHP "" "" N
+OI  ..\BASECASE\FLAIRS.FLP "" "" N
+VIEW2 0
+I   ..\BASECASE\ODS2XLS.DLF "" "" N
+OI  ..\BASECASE\3BAREAS.HIS   "" "" N
+OI  ..\BASECASE\3BAREAS.HIA "" "" N
+OI  ..\BASECASE\3BLINKS.HIS   "" "" N
+OI  ..\BASECASE\3BLINKS.HIA "" "" N
+OI  ..\BASECASE\3BSTRDIM.HIS   "" "" N
+OI  ..\BASECASE\3BSTRDIM.HIA "" "" N
+OI  ..\BASECASE\NWRWAREA.HIS   "" "" N
+OI  ..\BASECASE\NWRWAREA.HIA "" "" N
+OI  ..\BASECASE\BALANSDT.HIS   "" "" N
+OI  ..\BASECASE\BALANSDT.HIA "" "" N
+OI  ..\BASECASE\BALANSEV.HIS  "" "" N
+OI  ..\BASECASE\BALANSEV.HIA "" "" N
+OI  ..\BASECASE\BNDFLODT.HIS   "" "" N
+OI  ..\BASECASE\BNDFLODT.HIA "" "" N
+OI  ..\BASECASE\BNDFLOMX.HIS  "" "" N
+OI  ..\BASECASE\BNDFLOMX.HIA "" "" N
+OI  ..\BASECASE\BNDFLTOT.HIS   "" "" N
+OI  ..\BASECASE\BNDFLTOT.HIA "" "" N
+OI  ..\BASECASE\CUMBALDT.HIS   "" "" N
+OI  ..\BASECASE\CUMBALDT.HIA "" "" N
+OI  ..\BASECASE\GRNFLODT.HIS   "" "" N
+OI  ..\BASECASE\GRNFLODT.HIA "" "" N
+OI  ..\BASECASE\GRNFLOMX.HIS  "" "" N
+OI  ..\BASECASE\GRNFLOMX.HIA "" "" N
+OI  ..\BASECASE\GRNSTRDT.HIS   "" "" N
+OI  ..\BASECASE\GRNSTRDT.HIA "" "" N
+OI  ..\BASECASE\GRNSTRMX.HIS  "" "" N
+OI  ..\BASECASE\GRNSTRMX.HIA "" "" N
+OI  ..\BASECASE\INDUSTDT.HIS  "" "" N
+OI  ..\BASECASE\INDUSTDT.HIA "" "" N
+OI  ..\BASECASE\INDUSTMX.HIS  "" "" N
+OI  ..\BASECASE\INDUSTMX.HIA "" "" N
+OI  ..\BASECASE\NWRWSYS.HIS "" "" N
+OI  ..\BASECASE\NWRWSYS.HIA "" "" N
+OI  ..\BASECASE\OW_EXCDT.HIS   "" "" N
+OI  ..\BASECASE\OW_EXCDT.HIA "" "" N
+OI  ..\BASECASE\OW_EXCED.HIS  "" "" N
+OI  ..\BASECASE\OW_EXCED.HIA "" "" N
+OI  ..\BASECASE\OW_LVLDT.HIS   "" "" N
+OI  ..\BASECASE\OW_LVLDT.HIA "" "" N
+OI  ..\BASECASE\OW_LVLMX.HIS  "" "" N
+OI  ..\BASECASE\OW_LVLMX.HIA "" "" N
+OI  ..\BASECASE\PLVFLODT.HIS   "" "" N
+OI  ..\BASECASE\PLVFLODT.HIA "" "" N
+OI  ..\BASECASE\PLVFLOMX.HIS   "" "" N
+OI  ..\BASECASE\PLVFLOMX.HIA "" "" N
+OI  ..\BASECASE\PLVSTRDT.HIS   "" "" N
+OI  ..\BASECASE\PLVSTRDT.HIA "" "" N
+OI  ..\BASECASE\PLVSTRMX.HIS   "" "" N
+OI  ..\BASECASE\PLVSTRMX.HIA "" "" N
+OI  ..\BASECASE\PVFLOWDT.HIS  "" "" N
+OI  ..\BASECASE\PVFLOWDT.HIA "" "" N
+OI  ..\BASECASE\PVFLOWMX.HIS  "" "" N
+OI  ..\BASECASE\PVFLOWMX.HIA "" "" N
+OI  ..\BASECASE\PVSTORDT.HIS  "" "" N
+OI  ..\BASECASE\PVSTORDT.HIA "" "" N
+OI  ..\BASECASE\PVSTORMX.HIS  "" "" N
+OI  ..\BASECASE\PVSTORMX.HIA "" "" N
+OI  ..\BASECASE\RRBALANS.HIS   "" "" N
+OI  ..\BASECASE\RRBALANS.HIA "" "" N
+OI  ..\BASECASE\RRRUNOFF.HIS "" "" N
+OI  ..\BASECASE\RRRUNOFF.HIA "" "" N
+OI  ..\BASECASE\SACRMNTO.HIS   "" "" N
+OI  ..\BASECASE\SACRMNTO.HIA "" "" N
+OI  ..\BASECASE\SALTDT.HIS   "" "" N
+OI  ..\BASECASE\SALTDT.HIA "" "" N
+OI  ..\BASECASE\SALTMX.HIS    "" "" N
+OI  ..\BASECASE\SALTMX.HIA "" "" N
+OI  ..\BASECASE\STRFLODT.HIS   "" "" N
+OI  ..\BASECASE\STRFLODT.HIA "" "" N
+OI  ..\BASECASE\STRFLOMX.HIS  "" "" N
+OI  ..\BASECASE\STRFLOMX.HIA "" "" N
+OI  ..\BASECASE\UPFLOWDT.HIS   "" "" N
+OI  ..\BASECASE\UPFLOWDT.HIA "" "" N
+OI  ..\BASECASE\UPFLOWMX.HIS  "" "" N
+OI  ..\BASECASE\UPFLOWMX.HIA "" "" N
+OI  ..\BASECASE\UPGWLVDT.HIS   "" "" N
+OI  ..\BASECASE\UPGWLVDT.HIA "" "" N
+OI  ..\BASECASE\UPGWLVMX.HIS  "" "" N
+OI  ..\BASECASE\UPGWLVMX.HIA "" "" N
+OI  ..\BASECASE\WWTPDT.HIS  "" "" N
+OI  ..\BASECASE\WWTPDT.HIA "" "" N
+OI  ..\BASECASE\WWTPMX.HIS  "" "" N
+OI  ..\BASECASE\WWTPMX.HIA "" "" N
+OI  ..\BASECASE\CALCPNT.HIS "" "" N
+OI  ..\BASECASE\CALCPNT.HIA "" "" N
+OI  ..\BASECASE\CALCDIM.HIS "" "" N
+OI  ..\BASECASE\CALCDIM.HIA "" "" N
+OI  ..\BASECASE\FLOWANAL.HIS   "" "" N
+OI  ..\BASECASE\FLOWANAL.HIA "" "" N
+OI  ..\BASECASE\NODES.HIS  "" "" N
+OI  ..\BASECASE\NODES.HIA "" "" N
+OI  ..\BASECASE\NODES_CR.HIS   "" "" N
+OI  ..\BASECASE\NODES_CR.HIA "" "" N
+OI  ..\BASECASE\NODESDIM.HIS  "" "" N
+OI  ..\BASECASE\NODESDIM.HIA "" "" N
+OI  ..\BASECASE\QLAT.HIS "" "" N
+OI  ..\BASECASE\QLAT.HIA "" "" N
+OI  ..\BASECASE\QWB.HIS "" "" N
+OI  ..\BASECASE\QWB.HIA "" "" N
+OI  ..\BASECASE\REACH.HIS  "" "" N
+OI  ..\BASECASE\REACH.HIA "" "" N
+OI  ..\BASECASE\REACH_CR.HIS   "" "" N
+OI  ..\BASECASE\REACH_CR.HIA "" "" N
+OI  ..\BASECASE\REACHDIM.HIS  "" "" N
+OI  ..\BASECASE\REACHDIM.HIA "" "" N
+OI  ..\BASECASE\RSEGSUB.HIS  "" "" N
+OI  ..\BASECASE\RSEGSUB.HIA "" "" N
+OI  ..\BASECASE\REACHFLW.HIS  "" "" N
+OI  ..\BASECASE\REACHFLW.HIA "" "" N
+OI  ..\BASECASE\REACHSEG.HIS "" "" N
+OI  ..\BASECASE\REACHSEG.HIA "" "" N
+OI  ..\BASECASE\REACHVOL.HIS "" "" N
+OI  ..\BASECASE\REACHVOL.HIA "" "" N
+OI  ..\BASECASE\STRUC.HIS "" "" N
+OI  ..\BASECASE\STRUC.HIA "" "" N
+OI  ..\BASECASE\CONTROLL.HIS "" "" N
+OI  ..\BASECASE\CONTROLL.HIA "" "" N
+OI  ..\BASECASE\TRIGGERS.HIS "" "" N
+OI  ..\BASECASE\TRIGGERS.HIA "" "" N
+OI  ..\BASECASE\STRUC_SF.HIS "" "" N
+OI  ..\BASECASE\STRUC_SF.HIA "" "" N
+OI  ..\BASECASE\SFSPILLS.HIS "" "" N
+OI  ..\BASECASE\SFSPILLS.HIA "" "" N
+OI  ..\BASECASE\FLSHIS.HIS " " " "  N
+OI  ..\BASECASE\FLSHIS.HIA "" "" N
+OI  ..\BASECASE\STRUC_CR.HIS   "" "" N
+OI  ..\BASECASE\STRUC_CR.HIA "" "" N
+OI  ..\BASECASE\STRUCDIM.HIS  "" "" N
+OI  ..\BASECASE\STRUCDIM.HIA "" "" N
+OI  ..\BASECASE\RTC3BALL.HIS "" "" N
+OI  ..\BASECASE\RTC3BALL.HIA "" "" N
+OI  ..\BASECASE\RTCPARAL.HIS "" "" N
+OI  ..\BASECASE\RTCPARAL.HIA "" "" N
+OI  ..\BASECASE\RTCSBALL.HIS "" "" N
+OI  ..\BASECASE\RTCSBALL.HIA "" "" N
+OI  ..\BASECASE\BOUNDWLM.HIS   "" "" N
+OI  ..\BASECASE\BOUNDWLM.HIA "" "" N
+OI  ..\BASECASE\BAL_WLM.HIS   "" "" N
+OI  ..\BASECASE\BAL_WLM.HIA "" "" N
+OI  ..\BASECASE\NODELOAD.HIS   "" "" N
+OI  ..\BASECASE\NODELOAD.HIA "" "" N
+OI  ..\BASECASE\LINKLOAD.HIS   "" "" N
+OI  ..\BASECASE\LINKLOAD.HIA "" "" N
+OI  ..\BASECASE\WASTLOAD.HIS   "" "" N
+OI  ..\BASECASE\WASTLOAD.HIA "" "" N
+OI  ..\BASECASE\WQBOU20.HIS   "" "" N
+OI  ..\BASECASE\2DWQBO20.HIS   "" "" N
+OI  ..\BASECASE\WQBOU20.HIA "" "" N
+OI  ..\BASECASE\2DWQBO20.HIA "" "" N
+OI  ..\BASECASE\DELWAQ.HIS   "" "" N
+OI  ..\BASECASE\2DDELWAQ.HIS   "" "" N
+OI  ..\BASECASE\DELWAQ.HIA "" "" N
+OI  ..\BASECASE\DELWAQ.PST "" "" N
+OI  ..\BASECASE\DELWAQ.STU "" "" N
+OI  ..\BASECASE\DELWAQ.MAP "" "" N
+OI  ..\BASECASE\2DDELWAQ.MAP "" "" N
+OI  ..\BASECASE\DELWAQ.MAA "" "" N
+OI  ..\BASECASE\2DDELWAQ.MAA "" "" N
+OI  ..\BASECASE\2DDELWAQ.M2B "" "" N
+OI  ..\BASECASE\LOZING.MAP "" "" N
+OI  ..\BASECASE\2DLOZING.MAP "" "" N
+OI  ..\BASECASE\LOZING.PST "" "" N
+OI  ..\BASECASE\LOZING.STU "" "" N
+OI  ..\BASECASE\WQBAL.HIS    "" "" N
+OI  ..\BASECASE\2DWQBAL.HIS    "" "" N
+OI  ..\BASECASE\WQBAL.HIA "" "" N
+OI  ..\BASECASE\2DWQBAL.HIA "" "" N

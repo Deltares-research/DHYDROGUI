@@ -1,6 +1,4 @@
-﻿using DelftTools.Hydro.Structures;
-
-namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
+﻿namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
 {
     partial class WeirView
     {
@@ -407,7 +405,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             this.labelCrestLevel.Name = "labelCrestLevel";
             this.labelCrestLevel.Size = new System.Drawing.Size(156, 13);
             this.labelCrestLevel.TabIndex = 0;
-            this.labelCrestLevel.Text = GuiParameterNames.CrestLevel;
+            this.labelCrestLevel.Text = "Crest level";
             // 
             // textBoxCrestLevel
             // 
@@ -441,7 +439,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             this.labelCrestWidth.Name = "labelCrestWidth";
             this.labelCrestWidth.Size = new System.Drawing.Size(156, 13);
             this.labelCrestWidth.TabIndex = 0;
-            this.labelCrestWidth.Text = GuiParameterNames.CrestWidth;
+            this.labelCrestWidth.Text = "Crest width";
             // 
             // textBoxOffsetY
             // 

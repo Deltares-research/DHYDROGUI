@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using DelftTools.Hydro.CrossSections.DataSets;
 using DelftTools.Utils.Aop;
+using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Data;
 using DelftTools.Utils.Editing;
@@ -24,32 +25,35 @@ namespace DelftTools.Hydro.CrossSections
         private bool inSectionsPropertyChanged;
         private IGeometry cachedGeometry;
 
-        protected CrossSectionDefinition() : this("") {}
+        protected CrossSectionDefinition():this("")
+        {
+            
+        }
 
         protected CrossSectionDefinition(string name)
         {
             Name = name;
             Sections = new EventedList<CrossSectionSection>();
         }
-
+       
         /// <summary>
         /// The crossSection is based on a linestring geometry.
         /// Default is true, otherwise cs is a point but will be shown
         /// as a linestring in the network/map.
         /// </summary>
         public abstract bool GeometryBased { get; }
-
-        /// <summary>
+        
+        ///<summary>
         /// For cross sections of GeometryBased this is exactly the position where cross section intersect channel.
         /// For YZ and ZW this is user defined value.
         /// The ThalWeg currently has no meaning for the calculation. It is used for drawing the cross section on the map.
-        /// The ThalWeg is the fastest flowing point at the bottom of the cross-section.
+        /// The ThalWeg is the fastest flowing point at the bottom of the cross-section. 
         /// It is also a point where cross section intersects with the channel.
-        /// </summary>
+        ///</summary>
         [FeatureAttribute]
         public virtual double Thalweg
         {
-            get => thalweg;
+            get { return thalweg; }
             set
             {
                 if (thalweg == value)
@@ -61,7 +65,7 @@ namespace DelftTools.Hydro.CrossSections
                 HandleCrossSectionChanged();
             }
         }
-
+        
         [NoNotifyPropertyChange]
         public virtual bool ForceSectionsSpanFullWidth { get; set; }
 
@@ -79,7 +83,7 @@ namespace DelftTools.Hydro.CrossSections
         /// Y`Z, along the cross-section
         /// </summary>
         public abstract IEnumerable<Coordinate> FlowProfile { get; }
-
+        
         [FeatureAttribute]
         public abstract CrossSectionType CrossSectionType { get; }
 
@@ -98,44 +102,32 @@ namespace DelftTools.Hydro.CrossSections
 
         public virtual double Left
         {
-            get
-            {
-                return Profile.Select(c => c.X).DefaultIfEmpty().Min();
-            }
+            get { return Profile.Select(c => c.X).DefaultIfEmpty().Min(); }
         }
 
         public virtual double Right
         {
-            get
-            {
-                return Profile.Select(c => c.X).DefaultIfEmpty().Max();
-            }
+            get { return Profile.Select(c => c.X).DefaultIfEmpty().Max(); }
         }
 
         [FeatureAttribute]
         public virtual double LowestPoint
         {
-            get
-            {
-                return Profile.Select(c => c.Y).DefaultIfEmpty().Min();
-            }
+            get { return Profile.Select(c => c.Y).DefaultIfEmpty().Min(); }
         }
 
         [FeatureAttribute]
         public virtual double HighestPoint
         {
-            get
-            {
-                return Profile.Select(c => c.Y).DefaultIfEmpty().Max();
-            }
+            get { return Profile.Select(c => c.Y).DefaultIfEmpty().Max(); }
         }
 
         [FeatureAttribute]
         public virtual double LeftEmbankment
         {
-            get
-            {
-                IOrderedEnumerable<Coordinate> sortedProfile = Profile.OrderBy(c => c.X);
+            get 
+            { 
+                var sortedProfile = Profile.OrderBy(c => c.X);
                 return sortedProfile.Any() ? sortedProfile.First().Y : double.NaN;
             }
         }
@@ -145,39 +137,41 @@ namespace DelftTools.Hydro.CrossSections
         {
             get
             {
-                IOrderedEnumerable<Coordinate> sortedProfile = Profile.OrderBy(c => c.X);
+                var sortedProfile = Profile.OrderBy(c => c.X);
                 return sortedProfile.Any() ? sortedProfile.Last().Y : double.NaN;
             }
         }
 
         [FeatureAttribute]
         public virtual string Description { get; set; }
-
+        
         [DisplayName("Name")]
         [FeatureAttribute]
         public virtual string Name { get; set; }
 
         public virtual IEventedList<CrossSectionSection> Sections
         {
-            get => sections;
+            get { return sections; }
             protected set
             {
                 if (sections != null)
                 {
-                    ((INotifyPropertyChanged) sections).PropertyChanged -= SectionsPropertyChanged;
+                    ((INotifyPropertyChanged)sections).PropertyChanged -= SectionsPropertyChanged;
                     sections.CollectionChanged -= SectionsCollectionChanged;
                 }
-
                 sections = value;
                 if (sections != null)
                 {
-                    ((INotifyPropertyChanged) sections).PropertyChanged += SectionsPropertyChanged;
+                    ((INotifyPropertyChanged)sections).PropertyChanged += SectionsPropertyChanged;
                     sections.CollectionChanged += SectionsCollectionChanged;
                 }
             }
         }
 
-        public virtual bool IsProxy => false;
+        public virtual bool IsProxy
+        {
+            get { return false; }
+        }
 
         public virtual void RefreshGeometry()
         {
@@ -186,22 +180,31 @@ namespace DelftTools.Hydro.CrossSections
 
         public abstract Utils.Tuple<string, bool> ValidateCellValue(int rowIndex, int columnIndex, object cellValue);
 
-        protected virtual double SectionsMaxY => Right;
+        protected virtual double SectionsMaxY
+        {
+            get { return Right; }
+        }
 
-        protected virtual double SectionsMinY => Left;
+        protected virtual double SectionsMinY
+        {
+            get { return Left; }
+        }
 
-        public static IEditAction DefaultEditAction => new DefaultEditAction("Cross section profile changed");
+        public static IEditAction DefaultEditAction
+        {
+            get { return new DefaultEditAction("Cross section profile changed"); }
+        }
 
         public virtual object Clone()
         {
             var clone = (CrossSectionDefinition) Activator.CreateInstance(GetType());
-
+            
             clone.Name = Name;
 
             clone.Thalweg = Thalweg;
 
             clone.CopySectionsFrom(this);
-
+            
             return clone;
         }
 
@@ -210,18 +213,18 @@ namespace DelftTools.Hydro.CrossSections
             return Name;
         }
 
-        /// <summary>
+        ///<summary>
         /// Adds delta to all z-levels of the cross-section
-        /// </summary>
-        /// <param name="delta"> </param>
-        /// <exception cref="System.ArgumentException"> </exception>
+        ///</summary>
+        ///<param name="delta"></param>
+        ///<exception cref="System.ArgumentException"></exception>
         public abstract void ShiftLevel(double delta);
 
         public virtual IGeometry GetGeometry(ICrossSection cs)
         {
             return cachedGeometry ??
                    (cachedGeometry =
-                        CalculateGeometry(cs.Branch.Geometry, NetworkHelper.MapChainage(cs.Branch, cs.Chainage)));
+                    CalculateGeometry(cs.Branch.Geometry, NetworkHelper.MapChainage(cs.Branch, cs.Chainage)));
         }
 
         public abstract IGeometry CalculateGeometry(IGeometry branchGeometry, double mapChainage);
@@ -229,9 +232,7 @@ namespace DelftTools.Hydro.CrossSections
         public virtual void SetGeometry(IGeometry value)
         {
             if (value == null)
-            {
                 cachedGeometry = null;
-            }
         }
 
         public virtual void CopyFrom(object source)
@@ -241,7 +242,6 @@ namespace DelftTools.Hydro.CrossSections
 
         private int editingCount = 0;
         private bool enforceConstraintsSkipped;
-
         public override void BeginEdit(IEditAction action)
         {
             if (editingCount == 0 && RawData != null)
@@ -252,7 +252,6 @@ namespace DelftTools.Hydro.CrossSections
                     RawData.EnforceConstraints = false;
                 }
             }
-
             editingCount++;
 
             base.BeginEdit(action);
@@ -268,7 +267,6 @@ namespace DelftTools.Hydro.CrossSections
                 {
                     RawData.EnforceConstraints = true;
                 }
-
                 HandleCrossSectionChanged(); //must be done before IsEditing=false
             }
 
@@ -280,16 +278,15 @@ namespace DelftTools.Hydro.CrossSections
         /// <summary>
         /// Returns width of section with given type name.
         /// </summary>
-        /// <param name="name"> </param>
-        /// <returns> </returns>
+        /// <param name="name"></param>
+        /// <returns></returns>
         public virtual double GetSectionWidth(string name)
         {
-            CrossSectionSection section = Sections.FirstOrDefault(s => s.SectionType.Name == name);
+            var section = Sections.FirstOrDefault(s => s.SectionType.Name == name);
             if (section != null)
             {
                 return (section.MaxY - section.MinY) * this.GetWidthFactor();
             }
-
             return 0;
         }
 
@@ -317,7 +314,7 @@ namespace DelftTools.Hydro.CrossSections
             if (copyTable)
             {
                 RawData.Clear(); //keep the instance!
-                foreach (LightDataRow row in definitionSource.RawData.Rows)
+                foreach (var row in definitionSource.RawData.Rows)
                 {
                     RawData.Add(row.ItemArray);
                 }
@@ -330,21 +327,17 @@ namespace DelftTools.Hydro.CrossSections
         protected void SectionsPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (inSectionsPropertyChanged)
-            {
                 return;
-            }
 
             //min or max of section changed
             var crossSectionSection = sender as CrossSectionSection;
 
             if (crossSectionSection == null)
-            {
                 return;
-            }
-
+            
             inSectionsPropertyChanged = true;
 
-            int index = sections.IndexOf(crossSectionSection);
+            var index = sections.IndexOf(crossSectionSection);
 
             if (e.PropertyName == "MinY")
             {
@@ -352,7 +345,7 @@ namespace DelftTools.Hydro.CrossSections
                 {
                     double oldValue = sections[index - 1].MaxY;
                     sections[index - 1].MaxY = crossSectionSection.MinY;
-                    while (index > 1 && oldValue == sections[index - 2].MaxY)
+                    while ((index > 1) && (oldValue == sections[index - 2].MaxY))
                     {
                         sections[index - 1].MinY = crossSectionSection.MinY;
                         sections[index - 2].MaxY = crossSectionSection.MinY;
@@ -364,7 +357,7 @@ namespace DelftTools.Hydro.CrossSections
             {
                 if (index < sections.Count - 1)
                 {
-                    double oldValue = sections[index + 1].MinY;
+                    var oldValue = sections[index + 1].MinY;
                     sections[index + 1].MinY = crossSectionSection.MaxY;
                     while (index < sections.Count - 2 && Math.Abs(oldValue - sections[index + 2].MinY) < double.Epsilon)
                     {
@@ -383,7 +376,7 @@ namespace DelftTools.Hydro.CrossSections
         [EditAction]
         private void SectionsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            switch (e.Action)
+            switch(e.Action)
             {
                 case NotifyCollectionChangedAction.Add:
                     //set defaults?
@@ -395,32 +388,29 @@ namespace DelftTools.Hydro.CrossSections
                     throw new ArgumentOutOfRangeException();
             }
         }
-
+        
         [EditAction]
         private void FixMinMaxOfSections()
         {
             if (!ForceSectionsSpanFullWidth)
-            {
                 return;
-            }
 
             //retrieve once
-            double sectionsMinY = SectionsMinY;
-            double sectionsMaxY = SectionsMaxY;
+            var sectionsMinY = SectionsMinY;
+            var sectionsMaxY = SectionsMaxY;
 
             if (sectionsMinY >= sectionsMaxY)
             {
                 return;
             }
-
-            for (var i = 0; i < sections.Count; i++)
+            
+            for (int i = 0; i < sections.Count; i++)
             {
-                CrossSectionSection crossSectionSection = sections[i];
+                var crossSectionSection = sections[i];
                 if (crossSectionSection.MinY < sectionsMinY)
                 {
                     crossSectionSection.MinY = sectionsMinY;
                 }
-
                 if (crossSectionSection.MaxY > sectionsMaxY)
                 {
                     crossSectionSection.MaxY = sectionsMaxY;
@@ -455,11 +445,11 @@ namespace DelftTools.Hydro.CrossSections
             foreach (CrossSectionSection crossSectionSection in source.Sections)
             {
                 Sections.Add(new CrossSectionSection
-                {
-                    MinY = crossSectionSection.MinY,
-                    MaxY = crossSectionSection.MaxY,
-                    SectionType = crossSectionSection.SectionType,
-                });
+                    {
+                        MinY = crossSectionSection.MinY,
+                        MaxY = crossSectionSection.MaxY,
+                        SectionType = crossSectionSection.SectionType,
+                    });
             }
         }
 
@@ -470,15 +460,13 @@ namespace DelftTools.Hydro.CrossSections
             {
                 return;
             }
-
-            double max = Profile.Max(c => c.X);
+            var max = Profile.Max(c => c.X);
             if (thalweg > max)
             {
                 thalweg = max;
                 return;
             }
-
-            double min = Profile.Min(c => c.X);
+            var min = Profile.Min(c => c.X);
             if (thalweg < min)
             {
                 thalweg = min;

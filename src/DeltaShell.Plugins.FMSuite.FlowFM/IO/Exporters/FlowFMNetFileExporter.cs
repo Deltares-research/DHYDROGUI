@@ -4,31 +4,32 @@ using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.IO;
 using DelftTools.Shell.Core;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
-using DeltaShell.Plugins.FMSuite.FlowFM.Model;
-using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using log4net;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
+using Resources = DeltaShell.Plugins.FMSuite.FlowFM.Properties.Resources;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
 {
-    public class FlowFMNetFileExporter : IFileExporter
+    public class FlowFMNetFileExporter: IFileExporter
     {
-        private ILog Log = LogManager.GetLogger(typeof(FlowFMNetFileExporter));
+        private ILog Log = LogManager.GetLogger(typeof (FlowFMNetFileExporter));
 
         public Func<UnstructuredGrid, WaterFlowFMModel> GetModelForGrid { private get; set; }
 
         #region IFileExporter
 
         [ExcludeFromCodeCoverage]
-        public string Name => "Grid exporter";
+        public string Name { get { return "Grid exporter"; } }
 
         [ExcludeFromCodeCoverage]
-        public string Category => "General";
+        public string Category { get { return "General"; } }
 
-        public string Description => string.Empty;
+        public string Description
+        {
+            get { return string.Empty; }
+        }
 
         public bool Export(object item, string path)
         {
@@ -39,7 +40,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
                 {
                     File.Copy(importedGrid.Path, path, true);
                 }
-
                 return true;
             }
 
@@ -70,18 +70,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
             {
                 try
                 {
-                    NetFile.Write(path, grid);
+                    NetFile.Write(path,grid);
                 }
                 catch (Exception e)
                 {
                     Log.ErrorFormat("Failed to export unstructured grid: {0}", e.Message);
                     return false;
                 }
-
                 return true;
             }
 
-            WaterFlowFMModel model = GetModelForGrid(grid);
+            var model = GetModelForGrid(grid);
 
             if (path != model.NetFilePath)
             {
@@ -93,7 +92,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
                 {
                     try
                     {
-                        NetFile.Write(path, grid);
+                        NetFile.Write(path,grid);
                     }
                     catch (Exception e)
                     {
@@ -113,16 +112,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
 
         public IEnumerable<Type> SourceTypes()
         {
-            yield return typeof(UnstructuredGrid);
-            yield return typeof(ImportedFMNetFile);
-            yield return typeof(UnstructuredGridCoverage);
+            yield return typeof (UnstructuredGrid);
+            yield return typeof (ImportedFMNetFile);
+            yield return typeof (UnstructuredGridCoverage);
         }
 
         [ExcludeFromCodeCoverage]
-        public string FileFilter => "Net file|*.nc";
+        public string FileFilter { get { return "Net file|*.nc"; } }
 
         [ExcludeFromCodeCoverage]
-        public Bitmap Icon => Resources.unstruc;
+        public Bitmap Icon { get { return Properties.Resources.unstruc; } }
 
         public bool CanExportFor(object item)
         {
@@ -130,9 +129,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
             var unstructuredGridCoverage = item as UnstructuredGridCoverage;
 
             return unstructuredGridCoverage == null ||
-                   GetModelForGrid != null && (GetModelForGrid(unstructuredGridCoverage.Grid) == null
-                                               || GetModelForGrid(unstructuredGridCoverage.Grid).Bathymetry ==
-                                               unstructuredGridCoverage);
+                  (GetModelForGrid != null && (GetModelForGrid(unstructuredGridCoverage.Grid) == null
+                  || GetModelForGrid(unstructuredGridCoverage.Grid).Bathymetry == unstructuredGridCoverage));
         }
 
         #endregion

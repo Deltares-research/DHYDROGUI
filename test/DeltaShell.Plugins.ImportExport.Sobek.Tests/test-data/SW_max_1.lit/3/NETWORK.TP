@@ -1,0 +1,36 @@
+TP_1.0
+NODE id '1' nm '' px 202638.640625 py 503224 node
+NODE id '3' nm '' px 203433.921875 py 503089.625 node
+NODE id 'rand_Koelwaterkanaal' nm '' px 204403.90625 py 502335.3125 node
+NODE id '6' nm '' px 205424.78125 py 501079.28125 node
+NODE id '7' nm '' px 208204.046875 py 498177.5 node
+NODE id 'Langeslag' nm 'Langeslag' px 208209.09375 py 498137.8125 node
+NODE id 'rand_OverijsselschKanaal' nm '' px 208286.40625 py 498172.8125 node
+NODE id 'rand_Wijhe' nm '' px 207545.096679384 py 490138.016835287 node
+NODE id 'benedenrand_ZwarteWater' nm '' px 202257.828125 py 503503.78125 node
+NODE id '4' nm '' px 203668.171197275 py 502935.777293959 node
+NODE id 'Bo_1' nm '' px 219478.546875 py 495899.46875 node
+NODE id 'OK22_OK20' nm 'OK22_OK20' px 219148.171875 py 494683 node
+NODE id 'Bo_4' nm '' px 224646.46875 py 494534.4375 node
+NODE id 'Hancate' nm 'Hancate' px 226577.546875 py 494542.59375 node
+NODE id 'Boxbergen' nm 'Boxbergen' px 207979.75 py 482335.53125 node
+NODE id '20' nm '' px 220005.582700422 py 495772.42877194 node
+NODE id '19' nm '' px 219869.376914315 py 495802.499916805 node
+BRCH id 'Almelose kanaal ben' nm 'Almelose kanaal ben' bn '1' en 'benedenrand_ZwarteWater' al 480.028746506354 vc_opt 0 vc_equi -1 vc_len 1000 brch
+BRCH id 'stadsgrachten Zwolle Noord' nm 'stadsgrachten Zwolle Noord' bn '3' en '1' al 1311.19162635997 vc_opt 0 vc_equi -1 vc_len 1000 brch
+BRCH id 'stadsgrachten Zwolle Midden' nm 'stadsgrachten Zwolle Midden' bn '3' en '1' al 830.782911752175 vc_opt 0 vc_equi -1 vc_len 1000 brch
+BRCH id 'stadsgrachten Zwolle Zuid' nm 'stadsgrachten Zwolle Zuid' bn '3' en '1' al 2029.28061161119 vc_opt 0 vc_equi -1 vc_len 1000 brch
+BRCH id 'Koelwaterkanaal' nm 'Koelwaterkanaal' bn 'rand_Koelwaterkanaal' en '4' al 993.883579678374 vc_opt 0 vc_equi -1 vc_len 1000 brch
+BRCH id 'Almelose kanaal' nm 'Almelose kanaal' bn '6' en '4' al 2752.80130984064 vc_opt 0 vc_equi -1 vc_len 1000 brch
+BRCH id 'Nieuwe Wetering' nm 'Nieuwe Wetering' bn '7' en '6' al 4163.16369326908 vc_opt 0 vc_equi -1 vc_len 1000 brch
+BRCH id '1' nm 'Nieuwe Wetering' bn 'Langeslag' en '7' al 40.099290361156 vc_opt 0 vc_equi -1 vc_len 1000 brch
+BRCH id 'Overijsselsch Kanaal' nm 'Overijsselsch Kanaal' bn 'rand_OverijsselschKanaal' en '7' al 82.7475869971498 vc_opt 0 vc_equi -1 vc_len 1000 brch
+BRCH id 'Soestwetering' nm 'Soestwetering' bn 'rand_Wijhe' en '6' al 11660.0873099204 vc_opt 0 vc_equi -1 vc_len 1000 brch
+BRCH id '2' nm '' bn '4' en '3' al 280.381601092599 vc_opt 0 vc_equi -1 vc_len 1000 brch
+BRCH id 'Bo_Overijsselsch Kanaal' nm 'Overijsselsch Kanaal' bn 'Bo_1' en 'rand_OverijsselschKanaal' al 11597.6724261341 vc_opt 0 vc_equi -1 vc_len 1000 brch
+BRCH id 'Bo_Overijsselsch Kanaal zuid' nm 'Overijsselsch Kanaal zuid' bn 'OK22_OK20' en 'Bo_1' al 1260.54573722908 vc_opt 0 vc_equi -1 vc_len 1000 brch
+BRCH id 'Bo_1' nm 'Overijsselsch Kanaal' bn 'Bo_4' en '20' al 4806.22920422392 vc_opt 0 vc_equi -1 vc_len 1000 brch
+BRCH id 'Bo_2' nm 'Overijsselsch Kanaal' bn 'Hancate' en 'Bo_4' al 1941.68914057357 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id 'Bo_Soestwetering' nm 'Soestwetering' bn 'Boxbergen' en 'rand_Wijhe' al 8900.37117519103 vc_opt 1 vc_equi -1 vc_len 100 brch
+BRCH id '3' nm '' bn '19' en 'Bo_1' al 402.964398152269 vc_opt 0 vc_equi -1 vc_len 1000 brch
+BRCH id '4' nm '' bn '20' en '19' al 139.51783275919 vc_opt 0 vc_equi -1 vc_len 1000 brch

@@ -7,7 +7,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
     public enum Operator
     {
         Overwrite,
-
         [Description("Overwr. missing")]
         ApplyOnly,
         Add,

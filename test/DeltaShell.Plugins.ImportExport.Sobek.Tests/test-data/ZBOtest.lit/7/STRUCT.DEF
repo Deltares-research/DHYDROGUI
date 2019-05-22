@@ -1,0 +1,849 @@
+STDS id 'KDU36320' nm 'Duikerdef_KDU36320' ty 10 tc 1 dl 14.62 ll -1.57 rl -1.63 si 'KDU36320' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KST435' nm 'Stuwdef_KST435' ty 6 cl -0.89 cw 0.8 ce 1 sc 1 rt 0      stds
+STDS id 'KDU1239' nm 'Duikerdef_KDU1239' ty 10 tc 1 dl 9.22 ll -1.55 rl -1.55 si 'KDU1239' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU5209' nm 'Duikerdef_KDU5209' ty 10 tc 1 dl 12.08 ll -1.56 rl -1.56 si 'KDU5209' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1030' nm 'Duikerdef_KDU1030' ty 10 tc 1 dl 12.26 ll -1.54 rl -1.55 si 'KDU1030' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1306' nm 'Duikerdef_KDU1306' ty 10 tc 1 dl 14 ll -3.33 rl -3.33 si 'KDU1306' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KST75' nm 'Stuwdef_KST75' ty 6 cl -2.09 cw 1 ce 1 sc 1 rt 0      stds
+STDS id 'KDU5261' nm 'Duikerdef_KDU5261' ty 10 tc 1 dl 12.47 ll -2.88 rl -2.92 si 'KDU5261' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1199' nm 'Duikerdef_KDU1199' ty 10 tc 1 dl 15.66 ll -2.64 rl -2.77 si 'KDU1199' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1172' nm 'Duikerdef_KDU1172' ty 10 tc 1 dl 18.5 ll -2.26 rl -2.21 si 'KDU1172' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1173' nm 'Duikerdef_KDU1173' ty 10 tc 1 dl 17.47 ll -2.18 rl -2.17 si 'KDU1173' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1174' nm 'Duikerdef_KDU1174' ty 10 tc 1 dl 50.75 ll -2.21 rl -2.37 si 'KDU1174' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1102' nm 'Duikerdef_KDU1102' ty 10 tc 1 dl 78.01 ll -2.67 rl -2.74 si 'KDU1102' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1100' nm 'Duikerdef_KDU1100' ty 10 tc 1 dl 13.62 ll -2.73 rl -2.72 si 'KDU1100' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1098' nm 'Duikerdef_KDU1098' ty 10 tc 1 dl 22.15 ll -3.13 rl -3.13 si 'KDU1098' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KGM67' nm '' ty 9 dn 1 rt cr 2
+TBLE
+-6 0.341 <
+-3.075 0.671 <
+-0.15 1 <
+tble ct lt 1
+TBLE
+1.53 -1.84 -1.85 0 0 <
+3.27 -1.83 -1.84 0 0 <
+tble stds
+STDS id 'KDU1101' nm 'Duikerdef_KDU1101' ty 10 tc 1 dl 9.01 ll -2.83 rl -2.74 si 'KDU1101' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1068' nm 'Duikerdef_KDU1068' ty 10 tc 1 dl 14.87 ll -1.3 rl -1.15 si 'KDU1068' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1067' nm 'Duikerdef_KDU1067' ty 10 tc 1 dl 13.15 ll -1.2 rl -1.28 si 'KDU1067' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1069' nm 'Duikerdef_KDU1069' ty 10 tc 1 dl 27.49 ll -1.29 rl -1.31 si 'KDU1069' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU3144' nm 'Duikerdef_KDU3144' ty 10 tc 1 dl 36.41 ll -1.38 rl -1.38 si 'KDU3144' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1063' nm 'Duikerdef_KDU1063' ty 10 tc 1 dl 22.68 ll -1.47 rl -1.48 si 'KDU1063' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1048' nm 'Duikerdef_KDU1048' ty 10 tc 1 dl 9.23 ll -1.48 rl -1.47 si 'KDU1048' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1047' nm 'Duikerdef_KDU1047' ty 10 tc 1 dl 9.06 ll -1.58 rl -1.58 si 'KDU1047' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1046' nm 'Duikerdef_KDU1046' ty 10 tc 1 dl 9.16 ll -1.58 rl -1.64 si 'KDU1046' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1094' nm 'Duikerdef_KDU1094' ty 10 tc 1 dl 40.13 ll -2.46 rl -2.62 si 'KDU1094' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1095' nm 'Duikerdef_KDU1095' ty 10 tc 1 dl 9 ll -2.41 rl -2.42 si 'KDU1095' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1076' nm 'Duikerdef_KDU1076' ty 10 tc 1 dl 11.78 ll -1.04 rl -1.03 si 'KDU1076' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU4602' nm 'Duikerdef_KDU4602' ty 10 tc 1 dl 12.23 ll -1.07 rl -1.13 si 'KDU4602' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KST443' nm 'Stuwdef_KST443' ty 6 cl -0.1 cw 0.65 ce 1 sc 1 rt 0      stds
+STDS id 'KDU1077' nm 'Duikerdef_KDU1077' ty 10 tc 1 dl 34.71 ll -1.01 rl -1.01 si 'KDU1077' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1078' nm 'Duikerdef_KDU1078' ty 10 tc 1 dl 12.57 ll -1.46 rl -1.45 si 'KDU1078' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1079' nm 'Duikerdef_KDU1079' ty 10 tc 1 dl 12.46 ll -1.43 rl -1.42 si 'KDU1079' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1080' nm 'Duikerdef_KDU1080' ty 10 tc 1 dl 18.43 ll -1.43 rl -1.38 si 'KDU1080' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1081' nm 'Duikerdef_KDU1081' ty 10 tc 1 dl 16.51 ll -1.45 rl -1.43 si 'KDU1081' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1083' nm 'Duikerdef_KDU1083' ty 10 tc 1 dl 12.47 ll -1.48 rl -1.48 si 'KDU1083' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU5395' nm 'Duikerdef_KDU5395' ty 10 tc 1 dl 12.46 ll -1.47 rl -1.54 si 'KDU5395' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1084' nm 'Duikerdef_KDU1084' ty 10 tc 1 dl 14.63 ll -1.48 rl -1.44 si 'KDU1084' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1086' nm 'Duikerdef_KDU1086' ty 10 tc 1 dl 31.19 ll -1.69 rl -1.68 si 'KDU1086' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1188' nm 'Duikerdef_KDU1188' ty 10 tc 1 dl 12.96 ll -1.69 rl -1.72 si 'KDU1188' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU19863' nm 'Duikerdef_KDU19863' ty 10 tc 1 dl 15 ll -1.69 rl -1.69 si 'KDU19863' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU3113' nm 'Duikerdef_KDU3113' ty 10 tc 1 dl 37 ll -2.06 rl -2.06 si 'KDU3113' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1186' nm 'Duikerdef_KDU1186' ty 10 tc 1 dl 22.76 ll -1.75 rl -1.8 si 'KDU1186' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1185' nm 'Duikerdef_KDU1185' ty 10 tc 1 dl 9.01 ll -1.82 rl -1.83 si 'KDU1185' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KST442' nm '' ty 6 cl -1 cw 1.5 ce 1 sc 1 rt 0   stds
+STDS id 'KDU1184' nm 'Duikerdef_KDU1184' ty 10 tc 1 dl 30.52 ll -1.58 rl -1.69 si 'KDU1184' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1183' nm 'Duikerdef_KDU1183' ty 10 tc 1 dl 10.02 ll -2.95 rl -2.94 si 'KDU1183' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KST391' nm 'Stuwdef_KST391' ty 6 cl -1.62 cw 0.63 ce 1 sc 1 rt 0      stds
+STDS id 'KDU7479' nm 'Duikerdef_KDU7479' ty 10 tc 1 dl 7.31 ll -2.52 rl -2.44 si 'KDU7479' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1296' nm 'Duikerdef_KDU1296' ty 10 tc 1 dl 26.9 ll -2.94 rl -2.93 si 'KDU1296' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KST635' nm 'Stuwdef_KST635' ty 6 cl 1 cw 1 ce 1 sc 1 rt 0      stds
+STDS id 'KDU1052' nm 'Duikerdef_KDU1052' ty 10 tc 1 dl 68.6 ll -2.54 rl -2.49 si 'KDU1052' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1182' nm 'Duikerdef_KDU1182' ty 10 tc 1 dl 9.14 ll -2.61 rl -2.64 si 'KDU1182' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU3112' nm 'Duikerdef_KDU3112' ty 10 tc 1 dl 14.63 ll -2.51 rl -2.54 si 'KDU3112' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1170' nm 'Duikerdef_KDU1170' ty 10 tc 1 dl 15.54 ll -2.51 rl -2.58 si 'KDU1170' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1169' nm 'Duikerdef_KDU1169' ty 10 tc 1 dl 12.7 ll -2.66 rl -2.57 si 'KDU1169' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1049' nm 'Duikerdef_KDU1049' ty 10 tc 1 dl 9.12 ll -1.44 rl -1.47 si 'KDU1049' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1050' nm 'Duikerdef_KDU1050' ty 10 tc 1 dl 9.93 ll -1.35 rl -1.34 si 'KDU1050' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KST65' nm 'Stuwdef_KST65' ty 6 cl -0.36 cw 1 ce 1 sc 1 rt 0      stds
+STDS id 'KDU1040' nm 'Duikerdef_KDU1040' ty 10 tc 1 dl 21.73 ll -1.52 rl -1.56 si 'KDU1040' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1014' nm 'Duikerdef_KDU1014' ty 10 tc 1 dl 10.27 ll -1.52 rl -1.5 si 'KDU1014' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1012' nm 'Duikerdef_KDU1012' ty 10 tc 1 dl 18.44 ll -1.64 rl -1.64 si 'KDU1012' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1011' nm 'Duikerdef_KDU1011' ty 10 tc 1 dl 10.11 ll -1.09 rl -1.1 si 'KDU1011' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1010' nm 'Duikerdef_KDU1010' ty 10 tc 1 dl 17.24 ll -1.28 rl -1.37 si 'KDU1010' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1009' nm 'Duikerdef_KDU1009' ty 10 tc 1 dl 10.06 ll -1.77 rl -1.81 si 'KDU1009' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1006' nm 'Duikerdef_KDU1006' ty 10 tc 1 dl 10.13 ll -1.85 rl -1.85 si 'KDU1006' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU4943' nm 'Duikerdef_KDU4943' ty 10 tc 1 dl 7.28 ll -2.07 rl -2.14 si 'KDU4943' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1057' nm 'Duikerdef_KDU1057' ty 10 tc 1 dl 20.65 ll -1.4 rl -1.39 si 'KDU1057' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KST621' nm 'Stuwdef_KST621' ty 6 cl 1.1 cw 1 ce 1 sc 1 rt 0      stds
+STDS id 'KDU6278' nm 'Duikerdef_KDU6278' ty 10 tc 1 dl 12 ll -0.2 rl -0.2 si 'KDU6278' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU31548' nm 'Duikerdef_KDU31548' ty 10 tc 1 dl 12.26 ll -0.27 rl -0.23 si 'KDU31548' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1007' nm 'Duikerdef_KDU1007' ty 10 tc 1 dl 6.02 ll -0.29 rl -0.21 si 'KDU1007' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1005' nm 'Duikerdef_KDU1005' ty 10 tc 1 dl 10.08 ll -0.12 rl -0.06 si 'KDU1005' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1004' nm 'Duikerdef_KDU1004' ty 10 tc 1 dl 9.93 ll -0.27 rl -0.37 si 'KDU1004' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1001' nm 'Duikerdef_KDU1001' ty 10 tc 1 dl 8.04 ll -0.46 rl -0.5 si 'KDU1001' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1002' nm 'Duikerdef_KDU1002' ty 10 tc 1 dl 9.87 ll -0.49 rl -0.49 si 'KDU1002' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KST534' nm 'Stuwdef_KST534' ty 6 cl -1.48 cw 1 ce 1 sc 1 rt 0      stds
+STDS id 'KDU38136' nm 'Duikerdef_KDU38136' ty 10 tc 1 dl 16.46 ll -2.34 rl -2.29 si 'KDU38136' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU38134' nm 'Duikerdef_KDU38134' ty 10 tc 1 dl 16.52 ll -2.35 rl -2.32 si 'KDU38134' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU38133' nm 'Duikerdef_KDU38133' ty 10 tc 1 dl 16.48 ll -2.3 rl -2.28 si 'KDU38133' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU38132' nm 'Duikerdef_KDU38132' ty 10 tc 1 dl 12.29 ll -2.32 rl -2.36 si 'KDU38132' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU38129' nm 'Duikerdef_KDU38129' ty 10 tc 1 dl 36.11 ll -2.22 rl -2.2 si 'KDU38129' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU38130' nm 'Duikerdef_KDU38130' ty 10 tc 1 dl 12.43 ll -2.32 rl -2.27 si 'KDU38130' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KGM65' nm '' ty 9 dn 1 rt cr 2
+TBLE
+-4.3 0.6928531 <
+-2.8 0.8464265 <
+-1.3 1 <
+tble ct lt 1
+TBLE
+1.17 -2.49 -2.5 0 0 <
+2.47 -2.48 -2.49 0 0 <
+tble stds
+STDS id 'KST66' nm 'Stuwdef_KST66' ty 6 cl -0.01 cw 1 ce 1 sc 1 rt 0      stds
+STDS id 'KDU1060' nm 'Duikerdef_KDU1060' ty 10 tc 1 dl 23.24 ll -0.89 rl -0.89 si 'KDU1060' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1059' nm 'Duikerdef_KDU1059' ty 10 tc 1 dl 40.45 ll -1.05 rl -1.01 si 'KDU1059' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1058' nm 'Duikerdef_KDU1058' ty 10 tc 1 dl 36.54 ll -1.64 rl -1.73 si 'KDU1058' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1263' nm 'Duikerdef_KDU1263' ty 10 tc 1 dl 9.18 ll -1.82 rl -1.89 si 'KDU1263' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1056' nm 'Duikerdef_KDU1056' ty 10 tc 1 dl 30.19 ll -1.98 rl -1.99 si 'KDU1056' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1055' nm 'Duikerdef_KDU1055' ty 10 tc 1 dl 14.99 ll -2.07 rl -2.1 si 'KDU1055' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1024' nm 'Duikerdef_KDU1024' ty 10 tc 1 dl 56.78 ll -2.15 rl -2.09 si 'KDU1024' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1023' nm 'Duikerdef_KDU1023' ty 10 tc 1 dl 15.35 ll -2.25 rl -2.25 si 'KDU1023' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1022' nm 'Duikerdef_KDU1022' ty 10 tc 1 dl 12.56 ll -2.24 rl -2.25 si 'KDU1022' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU794' nm '' ty 10 tc 1 dl 14.54 ll -0.07 rl -0.3 si 'KDU794' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KST531' nm 'Stuwdef_KST531' ty 6 cl 0.14 cw 1 ce 1 sc 1 rt 0      stds
+STDS id 'KDU989' nm 'Duikerdef_KDU989' ty 10 tc 1 dl 10.34 ll -0.89 rl -0.97 si 'KDU989' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU938' nm 'Duikerdef_KDU938' ty 10 tc 1 dl 8.93 ll -0.33 rl -0.48 si 'KDU938' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1090' nm 'Duikerdef_KDU1090' ty 10 tc 1 dl 16.33 ll -0.63 rl -1.08 si 'KDU1090' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1326' nm 'Duikerdef_KDU1326' ty 10 tc 1 dl 14.3 ll -2.38 rl -2.31 si 'KDU1326' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KGM95' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+0.0444 -0.39 -0.4 0 0 <
+tble stds
+STDS id 'KDU37443' nm 'Duikerdef_KDU37443' ty 10 tc 1 dl 6.3 ll -0.27 rl -0.38 si 'KDU37443' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KGM84' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+0.14 -0.39 -0.4 0 0 <
+tble stds
+STDS id 'KDU3559' nm 'Duikerdef_KDU3559' ty 10 tc 1 dl 12 ll -0.03 rl -0.03 si 'KDU3559' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU925' nm 'Duikerdef_KDU925' ty 10 tc 1 dl 80 ll -0.76 rl -0.76 si 'KDU925' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU926' nm 'Duikerdef_KDU926' ty 10 tc 1 dl 77.36 ll -0.85 rl -0.92 si 'KDU926' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KST60' nm 'Stuwdef_KST60' ty 6 cl 0.16 cw 1 ce 1 sc 1 rt 0      stds
+STDS id 'KDU19141' nm 'Duikerdef_KDU19141' ty 10 tc 1 dl 9 ll -0.7 rl -0.7 si 'KDU19141' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU928' nm 'Duikerdef_KDU928' ty 10 tc 1 dl 12 ll -0.72 rl -0.72 si 'KDU928' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU929' nm 'Duikerdef_KDU929' ty 10 tc 1 dl 12.43 ll -0.81 rl -0.77 si 'KDU929' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU930' nm 'Duikerdef_KDU930' ty 10 tc 1 dl 94.25 ll -0.66 rl -0.7 si 'KDU930' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU931' nm 'Duikerdef_KDU931' ty 10 tc 1 dl 12.29 ll -0.65 rl -0.65 si 'KDU931' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU932' nm 'Duikerdef_KDU932' ty 10 tc 1 dl 17.06 ll -0.69 rl -0.67 si 'KDU932' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU934' nm 'Duikerdef_KDU934' ty 10 tc 1 dl 16.96 ll -0.69 rl -0.72 si 'KDU934' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU890' nm 'Duikerdef_KDU890' ty 10 tc 1 dl 31.99 ll -0.65 rl -0.56 si 'KDU890' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU891' nm 'Duikerdef_KDU891' ty 10 tc 1 dl 24.8 ll -0.67 rl -0.56 si 'KDU891' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU18215' nm 'Duikerdef_KDU18215' ty 10 tc 1 dl 25.7 ll -0.46 rl -0.46 si 'KDU18215' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU892' nm 'Duikerdef_KDU892' ty 10 tc 1 dl 11.52 ll -0.76 rl -0.68 si 'KDU892' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU893' nm 'Duikerdef_KDU893' ty 10 tc 1 dl 100.04 ll -0.7 rl -0.74 si 'KDU893' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU995' nm 'Duikerdef_KDU995' ty 10 tc 1 dl 12.08 ll -0.56 rl -0.61 si 'KDU995' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU996' nm 'Duikerdef_KDU996' ty 10 tc 1 dl 16.13 ll -0.53 rl -0.48 si 'KDU996' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU997' nm 'Duikerdef_KDU997' ty 10 tc 1 dl 12.27 ll -0.44 rl -0.4 si 'KDU997' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU998' nm 'Duikerdef_KDU998' ty 10 tc 1 dl 12.09 ll -0.64 rl -0.62 si 'KDU998' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU19832' nm 'Duikerdef_KDU19832' ty 10 tc 1 dl 19.28 ll -0.68 rl -0.72 si 'KDU19832' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU31186' nm 'Duikerdef_KDU31186' ty 10 tc 1 dl 44.13 ll -0.62 rl -0.6 si 'KDU31186' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU31188' nm 'Duikerdef_KDU31188' ty 10 tc 1 dl 10.57 ll -0.16 rl -0.11 si 'KDU31188' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU31192' nm 'Duikerdef_KDU31192' ty 10 tc 1 dl 9.34 ll -0.37 rl -0.42 si 'KDU31192' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU31194' nm 'Duikerdef_KDU31194' ty 10 tc 1 dl 10.41 ll -0.25 rl -0.27 si 'KDU31194' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU31197' nm 'Duikerdef_KDU31197' ty 10 tc 1 dl 6.16 ll -0.48 rl -0.33 si 'KDU31197' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU31200' nm 'Duikerdef_KDU31200' ty 10 tc 1 dl 29.04 ll -0.52 rl -0.63 si 'KDU31200' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU31265' nm '' ty 10 tc 1 dl 18.06 ll -0.19 rl -0.17 si 'KDU31265' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU3286' nm 'Duikerdef_KDU3286' ty 10 tc 1 dl 31.85 ll -1.89 rl -1.89 si 'KDU3286' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1285' nm 'Duikerdef_KDU1285' ty 10 tc 1 dl 14.36 ll -1.91 rl -1.78 si 'KDU1285' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1286' nm 'Duikerdef_KDU1286' ty 10 tc 1 dl 8.99 ll -1.68 rl -1.71 si 'KDU1286' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KST72' nm 'Stuwdef_KST72' ty 6 cl -0.69 cw 1 ce 1 sc 1 rt 0      stds
+STDS id 'KDU1287' nm 'Duikerdef_KDU1287' ty 10 tc 1 dl 12.44 ll -2.29 rl -2.33 si 'KDU1287' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1288' nm 'Duikerdef_KDU1288' ty 10 tc 1 dl 12.63 ll -2.34 rl -2.31 si 'KDU1288' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1289' nm 'Duikerdef_KDU1289' ty 10 tc 1 dl 13.34 ll -2.5 rl -2.46 si 'KDU1289' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1290' nm 'Duikerdef_KDU1290' ty 10 tc 1 dl 12.85 ll -2.56 rl -2.58 si 'KDU1290' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1291' nm 'Duikerdef_KDU1291' ty 10 tc 1 dl 12.78 ll -2.64 rl -2.67 si 'KDU1291' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1292' nm 'Duikerdef_KDU1292' ty 10 tc 1 dl 40.22 ll -2.6 rl -2.54 si 'KDU1292' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1295' nm 'Duikerdef_KDU1295' ty 10 tc 1 dl 28.14 ll -2.97 rl -2.96 si 'KDU1295' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU3589' nm 'Duikerdef_KDU3589' ty 10 tc 1 dl 26.5 ll -3.12 rl -3.16 si 'KDU3589' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1139' nm 'Duikerdef_KDU1139' ty 10 tc 1 dl 14.6 ll -3.31 rl -3.29 si 'KDU1139' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KST67' nm '' ty 6 cl -2.3 cw 2 ce 1 sc 1 rt 0   stds
+STDS id 'KDU1147' nm 'Duikerdef_KDU1147' ty 10 tc 1 dl 13.45 ll -3.29 rl -3.35 si 'KDU1147' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU3853' nm 'Duikerdef_KDU3853' ty 10 tc 1 dl 10.5 ll -3.52 rl -3.52 si 'KDU3853' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1153' nm 'Duikerdef_KDU1153' ty 10 tc 1 dl 12 ll -3.43 rl -3.41 si 'KDU1153' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1154' nm 'Duikerdef_KDU1154' ty 10 tc 1 dl 15.04 ll -3.57 rl -3.59 si 'KDU1154' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1155' nm 'Duikerdef_KDU1155' ty 10 tc 1 dl 10.52 ll -3.58 rl -3.56 si 'KDU1155' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU7509' nm 'Duikerdef_KDU7509' ty 10 tc 1 dl 10.62 ll -3.57 rl -3.6 si 'KDU7509' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU7513' nm 'Duikerdef_KDU7513' ty 10 tc 1 dl 10.52 ll -3.56 rl -3.58 si 'KDU7513' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1308' nm 'Duikerdef_KDU1308' ty 10 tc 1 dl 10.56 ll -3.71 rl -3.72 si 'KDU1308' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1303' nm 'Duikerdef_KDU1303' ty 10 tc 1 dl 13.56 ll -3.83 rl -3.82 si 'KDU1303' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1305' nm 'Duikerdef_KDU1305' ty 10 tc 1 dl 13.48 ll -4.06 rl -4.02 si 'KDU1305' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KST63' nm 'Stuwdef_KST63' ty 6 cl -0.19 cw 1 ce 1 sc 1 rt 0      stds
+STDS id 'KDU1003' nm 'Duikerdef_KDU1003' ty 10 tc 1 dl 26.75 ll -1.42 rl -1.39 si 'KDU1003' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KST64' nm 'Stuwdef_KST64' ty 6 cl 0.16 cw 1 ce 1 sc 1 rt 0      stds
+STDS id 'KDU1013' nm 'Duikerdef_KDU1013' ty 10 tc 1 dl 31.68 ll -0.79 rl -1.46 si 'KDU1013' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU7290' nm 'Duikerdef_KDU7290' ty 10 tc 1 dl 91.12 ll -1.59 rl -1.46 si 'KDU7290' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU7237' nm 'Duikerdef_KDU7237' ty 10 tc 1 dl 28.73 ll -2.03 rl -2.04 si 'KDU7237' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU5969' nm 'Duikerdef_KDU5969' ty 10 tc 1 dl 40 ll -2.02 rl -2.02 si 'KDU5969' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU5976' nm 'Duikerdef_KDU5976' ty 10 tc 1 dl 14.4 ll -2.14 rl -2.14 si 'KDU5976' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1217' nm 'Duikerdef_KDU1217' ty 10 tc 1 dl 55.78 ll -2.69 rl -2.63 si 'KDU1217' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1213' nm 'Duikerdef_KDU1213' ty 10 tc 1 dl 29.43 ll -2.66 rl -2.61 si 'KDU1213' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1212' nm 'Duikerdef_KDU1212' ty 10 tc 1 dl 16.09 ll -2.57 rl -2.45 si 'KDU1212' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1211' nm 'Duikerdef_KDU1211' ty 10 tc 1 dl 8.14 ll -2.54 rl -2.52 si 'KDU1211' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1210' nm 'Duikerdef_KDU1210' ty 10 tc 1 dl 8.16 ll -2.68 rl -2.68 si 'KDU1210' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1209' nm 'Duikerdef_KDU1209' ty 10 tc 1 dl 8.16 ll -2.63 rl -2.64 si 'KDU1209' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KST69' nm '' ty 6 cl -2.1 cw 1.5 ce 1 sc 1 rt 0 stds
+STDS id 'KDU1206' nm 'Duikerdef_KDU1206' ty 10 tc 1 dl 9.15 ll -2.96 rl -2.97 si 'KDU1206' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1207' nm 'Duikerdef_KDU1207' ty 10 tc 1 dl 19.16 ll -2.97 rl -2.97 si 'KDU1207' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1208' nm 'Duikerdef_KDU1208' ty 10 tc 1 dl 45.47 ll -2.96 rl -2.89 si 'KDU1208' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU840' nm 'Duikerdef_KDU840' ty 10 tc 1 dl 60.13 ll 1.15 rl 0.62 si 'KDU840' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU841' nm 'Duikerdef_KDU841' ty 10 tc 1 dl 16.23 ll 0.27 rl 0.28 si 'KDU841' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU41126' nm 'Duikerdef_KDU41126' ty 10 tc 1 dl 10.16 ll 0.05 rl 0.09 si 'KDU41126' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU842' nm 'Duikerdef_KDU842' ty 10 tc 1 dl 13.4 ll 0.08 rl 0.08 si 'KDU842' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU843' nm 'Duikerdef_KDU843' ty 10 tc 1 dl 10.23 ll 0.09 rl 0.08 si 'KDU843' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU844' nm 'Duikerdef_KDU844' ty 10 tc 1 dl 10.32 ll 0.09 rl -0.23 si 'KDU844' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1294' nm 'Duikerdef_KDU1294' ty 10 tc 1 dl 4.95 ll -2.56 rl -2.51 si 'KDU1294' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KST73' nm 'Stuwdef_KST73' ty 6 cl -1.9 cw 0.3 ce 1 sc 1 rt 0      stds
+STDS id 'KDU1293' nm 'Duikerdef_KDU1293' ty 10 tc 1 dl 12.95 ll -2.42 rl -2.32 si 'KDU1293' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1031' nm 'Duikerdef_KDU1031' ty 10 tc 1 dl 24.93 ll -1.45 rl -1.62 si 'KDU1031' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU4845' nm 'Duikerdef_KDU4845' ty 10 tc 1 dl 10.35 ll -1.52 rl -1.6 si 'KDU4845' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1037' nm 'Duikerdef_KDU1037' ty 10 tc 1 dl 6.53 ll -1.19 rl -1.19 si 'KDU1037' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1038' nm 'Duikerdef_KDU1038' ty 10 tc 1 dl 10.14 ll -1.31 rl -1.3 si 'KDU1038' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1039' nm 'Duikerdef_KDU1039' ty 10 tc 1 dl 20.32 ll -1.33 rl -1.38 si 'KDU1039' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1017' nm 'Duikerdef_KDU1017' ty 10 tc 1 dl 12.21 ll -0.28 rl -0.31 si 'KDU1017' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU17954' nm 'Duikerdef_KDU17954' ty 10 tc 1 dl 12.2 ll -0.42 rl -0.41 si 'KDU17954' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU41170' nm 'Duikerdef_KDU41170' ty 10 tc 1 dl 19.63 ll -0.79 rl -0.65 si 'KDU41170' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU41171' nm 'Duikerdef_KDU41171' ty 10 tc 1 dl 17.12 ll -0.77 rl -0.73 si 'KDU41171' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU977' nm 'Duikerdef_KDU977' ty 10 tc 1 dl 14.83 ll -0.88 rl -0.87 si 'KDU977' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU974' nm 'Duikerdef_KDU974' ty 10 tc 1 dl 14.83 ll -0.89 rl -0.88 si 'KDU974' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU976' nm 'Duikerdef_KDU976' ty 10 tc 1 dl 35.22 ll -1.18 rl -1.12 si 'KDU976' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KST61' nm 'Stuwdef_KST61' ty 6 cl 0.34 cw 1.8 ce 1 sc 1 rt 0      stds
+STDS id 'KDU1020' nm 'Duikerdef_KDU1020' ty 10 tc 1 dl 167.27 ll -0.05 rl -0.19 si 'KDU1020' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU942' nm 'Duikerdef_KDU942' ty 10 tc 1 dl 12.14 ll -0.3 rl -0.23 si 'KDU942' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU943' nm 'Duikerdef_KDU943' ty 10 tc 1 dl 12.16 ll -0.27 rl -0.33 si 'KDU943' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU944' nm 'Duikerdef_KDU944' ty 10 tc 1 dl 12.17 ll -0.39 rl -0.36 si 'KDU944' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU945' nm 'Duikerdef_KDU945' ty 10 tc 1 dl 13.95 ll -0.2 rl -0.25 si 'KDU945' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU947' nm 'Duikerdef_KDU947' ty 10 tc 1 dl 12.08 ll -0.77 rl -0.77 si 'KDU947' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU948' nm 'Duikerdef_KDU948' ty 10 tc 1 dl 13.11 ll -0.95 rl -0.91 si 'KDU948' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU971' nm 'Duikerdef_KDU971' ty 10 tc 1 dl 13.06 ll -0.85 rl -0.86 si 'KDU971' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU961' nm 'Duikerdef_KDU961' ty 10 tc 1 dl 34.66 ll -0.85 rl -0.88 si 'KDU961' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU973' nm 'Duikerdef_KDU973' ty 10 tc 1 dl 11.46 ll -0.9 rl -0.91 si 'KDU973' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1106' nm 'Duikerdef_KDU1106' ty 10 tc 1 dl 12.17 ll -2.11 rl -2.16 si 'KDU1106' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1107' nm 'Duikerdef_KDU1107' ty 10 tc 1 dl 7 ll -2.24 rl -2.19 si 'KDU1107' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1108' nm 'Duikerdef_KDU1108' ty 10 tc 1 dl 13.54 ll -2.25 rl -2.21 si 'KDU1108' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU41182' nm 'Duikerdef_KDU41182' ty 10 tc 1 dl 12.65 ll -2.23 rl -2.23 si 'KDU41182' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1109' nm 'Duikerdef_KDU1109' ty 10 tc 1 dl 14.23 ll -2.26 rl -2.2 si 'KDU1109' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1110' nm 'Duikerdef_KDU1110' ty 10 tc 1 dl 8.13 ll -2.3 rl -2.35 si 'KDU1110' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1111' nm 'Duikerdef_KDU1111' ty 10 tc 1 dl 8.12 ll -2.2 rl -2.19 si 'KDU1111' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1112' nm 'Duikerdef_KDU1112' ty 10 tc 1 dl 8.06 ll -2.24 rl -2.26 si 'KDU1112' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1113' nm 'Duikerdef_KDU1113' ty 10 tc 1 dl 8.14 ll -2.27 rl -2.36 si 'KDU1113' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1114' nm 'Duikerdef_KDU1114' ty 10 tc 1 dl 9.19 ll -2.3 rl -2.28 si 'KDU1114' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1105' nm 'Duikerdef_KDU1105' ty 10 tc 1 dl 15.31 ll -2.61 rl -2.58 si 'KDU1105' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1104' nm 'Duikerdef_KDU1104' ty 10 tc 1 dl 16.25 ll -2.78 rl -2.74 si 'KDU1104' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU852' nm 'Duikerdef_KDU852' ty 10 tc 1 dl 10.97 ll 0 rl -0.07 si 'KDU852' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU5080' nm 'Duikerdef_KDU5080' ty 10 tc 1 dl 8.89 ll -0.29 rl -0.32 si 'KDU5080' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU873' nm 'Duikerdef_KDU873' ty 10 tc 1 dl 9.85 ll -0.32 rl -0.33 si 'KDU873' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU874' nm 'Duikerdef_KDU874' ty 10 tc 1 dl 10.47 ll -0.39 rl -0.37 si 'KDU874' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU18217' nm 'Duikerdef_KDU18217' ty 10 tc 1 dl 10.56 ll -0.43 rl -0.37 si 'KDU18217' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU875' nm 'Duikerdef_KDU875' ty 10 tc 1 dl 9.79 ll -0.31 rl -0.32 si 'KDU875' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KST530' nm 'Stuwdef_KST530' ty 6 cl 0.36 cw 1 ce 1 sc 1 rt 0      stds
+STDS id 'KDU834' nm 'Duikerdef_KDU834' ty 10 tc 1 dl 9.52 ll -1.24 rl -0.72 si 'KDU834' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU833' nm 'Duikerdef_KDU833' ty 10 tc 1 dl 12.68 ll -1.28 rl -1.28 si 'KDU833' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU832' nm 'Duikerdef_KDU832' ty 10 tc 1 dl 12.76 ll -1.3 rl -1.25 si 'KDU832' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU831' nm 'Duikerdef_KDU831' ty 10 tc 1 dl 12.69 ll -1.36 rl -1.25 si 'KDU831' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KGM70' nm '' ty 9 dn 1 rt cr 2
+TBLE
+-3.3 0.808 <
+-3.15 0.904 <
+-3 1 <
+tble ct lt 1
+TBLE
+0.45 -0.85 -0.9 0 0 <
+tble stds
+STDS id 'KDU812' nm 'Duikerdef_KDU812' ty 10 tc 1 dl 31.87 ll 0.74 rl 0.57 si 'KDU812' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KST413' nm '' ty 6 cl -1.05 cw 0.5 ce 1 sc 1 rt 0  stds
+STDS id 'KST47' nm 'Stuwdef_KST47' ty 6 cl 1.01 cw 1 ce 1 sc 1 rt 0      stds
+STDS id 'KDU1181' nm 'Duikerdef_KDU1181' ty 10 tc 1 dl 9.25 ll -2.56 rl -2.54 si 'KDU1181' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1179' nm 'Duikerdef_KDU1179' ty 10 tc 1 dl 8.15 ll -2.61 rl -2.64 si 'KDU1179' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU3116' nm 'Duikerdef_KDU3116' ty 10 tc 1 dl 12.12 ll -2.68 rl -2.62 si 'KDU3116' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1178' nm 'Duikerdef_KDU1178' ty 10 tc 1 dl 8.26 ll -2.53 rl -2.51 si 'KDU1178' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1177' nm 'Duikerdef_KDU1177' ty 10 tc 1 dl 7.22 ll -2.5 rl -2.47 si 'KDU1177' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1200' nm 'Duikerdef_KDU1200' ty 10 tc 1 dl 9.12 ll -2.65 rl -2.8 si 'KDU1200' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1203' nm 'Duikerdef_KDU1203' ty 10 tc 1 dl 10.2 ll -2.91 rl -2.81 si 'KDU1203' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1204' nm 'Duikerdef_KDU1204' ty 10 tc 1 dl 9.18 ll -2.81 rl -2.76 si 'KDU1204' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1205' nm 'Duikerdef_KDU1205' ty 10 tc 1 dl 56.86 ll -2.98 rl -2.98 si 'KDU1205' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1165' nm 'Duikerdef_KDU1165' ty 10 tc 1 dl 17.11 ll -1.19 rl -1.32 si 'KDU1165' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU41186' nm 'Duikerdef_KDU41186' ty 10 tc 1 dl 10.19 ll -1.43 rl -1.46 si 'KDU41186' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1164' nm 'Duikerdef_KDU1164' ty 10 tc 1 dl 14.72 ll -1.97 rl -2.04 si 'KDU1164' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU30638' nm 'Duikerdef_KDU30638' ty 10 tc 1 dl 10.18 ll -2.04 rl -2.07 si 'KDU30638' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1281' nm 'Duikerdef_KDU1281' ty 10 tc 1 dl 12 ll -1.98 rl -1.96 si 'KDU1281' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1280' nm 'Duikerdef_KDU1280' ty 10 tc 1 dl 16 ll -2.08 rl -1.99 si 'KDU1280' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1279' nm 'Duikerdef_KDU1279' ty 10 tc 1 dl 17.49 ll -2.28 rl -2.3 si 'KDU1279' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1278' nm 'Duikerdef_KDU1278' ty 10 tc 1 dl 10.13 ll -2.86 rl -2.88 si 'KDU1278' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1277' nm 'Duikerdef_KDU1277' ty 10 tc 1 dl 9.24 ll -3.13 rl -3.06 si 'KDU1277' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1276' nm 'Duikerdef_KDU1276' ty 10 tc 1 dl 11.38 ll -2.93 rl -2.99 si 'KDU1276' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1275' nm 'Duikerdef_KDU1275' ty 10 tc 1 dl 11.25 ll -3.01 rl -3.01 si 'KDU1275' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1274' nm 'Duikerdef_KDU1274' ty 10 tc 1 dl 8.3 ll -2.96 rl -2.95 si 'KDU1274' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1273' nm 'Duikerdef_KDU1273' ty 10 tc 1 dl 28.25 ll -3.24 rl -3.29 si 'KDU1273' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KST441' nm '' ty 6 cl -2.1 cw 2 ce 1 sc 1 rt 0   stds
+STDS id 'KDU1272' nm 'Duikerdef_KDU1272' ty 10 tc 1 dl 10.4 ll -3.5 rl -3.48 si 'KDU1272' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1271' nm 'Duikerdef_KDU1271' ty 10 tc 1 dl 14.38 ll -3.78 rl -3.65 si 'KDU1271' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1162' nm 'Duikerdef_KDU1162' ty 10 tc 1 dl 181.13 ll -3.51 rl -3.5 si 'KDU1162' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1161' nm 'Duikerdef_KDU1161' ty 10 tc 1 dl 10.22 ll -3.53 rl -3.52 si 'KDU1161' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU3565' nm 'Duikerdef_KDU3565' ty 10 tc 1 dl 9.89 ll -1.28 rl -1.27 si 'KDU3565' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU3732' nm 'Duikerdef_KDU3732' ty 10 tc 1 dl 8 ll -1.5 rl -1.5 si 'KDU3732' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KST312' nm '' ty 6 cl -0.65 cw 1 ce 1 sc 1 rt 0 stds
+STDS id 'KDU1261' nm 'Duikerdef_KDU1261' ty 10 tc 1 dl 10.77 ll -1.25 rl -1.32 si 'KDU1261' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU3556' nm 'Duikerdef_KDU3556' ty 10 tc 1 dl 5 ll -1.37 rl -1.37 si 'KDU3556' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1143' nm 'Duikerdef_KDU1143' ty 10 tc 1 dl 35 ll -2.38 rl -2.38 si 'KDU1143' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1144' nm 'Duikerdef_KDU1144' ty 10 tc 1 dl 14.57 ll -1.76 rl -1.77 si 'KDU1144' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1145' nm 'Duikerdef_KDU1145' ty 10 tc 1 dl 12.2 ll -1.8 rl -1.8 si 'KDU1145' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1146' nm 'Duikerdef_KDU1146' ty 10 tc 1 dl 14.72 ll -1.81 rl -1.81 si 'KDU1146' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1260' nm 'Duikerdef_KDU1260' ty 10 tc 1 dl 12.22 ll -1.86 rl -1.9 si 'KDU1260' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KST71' nm 'Stuwdef_KST71' ty 6 cl -0.65 cw 1 ce 1 sc 1 rt 0      stds
+STDS id 'KDU1259' nm 'Duikerdef_KDU1259' ty 10 tc 1 dl 41.69 ll -1.89 rl -1.9 si 'KDU1259' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1258' nm 'Duikerdef_KDU1258' ty 10 tc 1 dl 9.85 ll -2.09 rl -2.12 si 'KDU1258' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1257' nm 'Duikerdef_KDU1257' ty 10 tc 1 dl 12.66 ll -2.06 rl -2.13 si 'KDU1257' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KST537' nm 'Stuwdef_KST537' ty 6 cl -2.15 cw 1 ce 1 sc 1 rt 0      stds
+STDS id 'KDU1256' nm 'Duikerdef_KDU1256' ty 10 tc 1 dl 15.11 ll -2.83 rl -2.79 si 'KDU1256' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1314' nm 'Duikerdef_KDU1314' ty 10 tc 1 dl 15.13 ll -2.95 rl -2.92 si 'KDU1314' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1313' nm 'Duikerdef_KDU1313' ty 10 tc 1 dl 15.16 ll -2.94 rl -2.95 si 'KDU1313' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1311' nm 'Duikerdef_KDU1311' ty 10 tc 1 dl 12.33 ll -3.03 rl -3.04 si 'KDU1311' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1310' nm 'Duikerdef_KDU1310' ty 10 tc 1 dl 15.3 ll -2.93 rl -3 si 'KDU1310' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KST535' nm 'Stuwdef_KST535' ty 6 cl -1.24 cw 1.77 ce 1 sc 1 rt 0      stds
+STDS id 'KST74' nm '' ty 6 cl -1.7 cw 2.5 ce 1 sc 1 rt 0   stds
+STDS id 'KDU1334' nm 'Duikerdef_KDU1334' ty 10 tc 1 dl 11.81 ll -2.71 rl -2.75 si 'KDU1334' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1333' nm 'Duikerdef_KDU1333' ty 10 tc 1 dl 11 ll -3.03 rl -3.06 si 'KDU1333' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1332' nm 'Duikerdef_KDU1332' ty 10 tc 1 dl 12.34 ll -3.25 rl -3.22 si 'KDU1332' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1331' nm 'Duikerdef_KDU1331' ty 10 tc 1 dl 20.71 ll -2.81 rl -2.85 si 'KDU1331' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1330' nm 'Duikerdef_KDU1330' ty 10 tc 1 dl 95.62 ll -2.83 rl -2.8 si 'KDU1330' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1329' nm 'Duikerdef_KDU1329' ty 10 tc 1 dl 33.6 ll -3.04 rl -3.07 si 'KDU1329' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU7560' nm 'Duikerdef_KDU7560' ty 10 tc 1 dl 10 ll -3.12 rl -3.18 si 'KDU7560' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1328' nm 'Duikerdef_KDU1328' ty 10 tc 1 dl 52.76 ll -3.27 rl -3.28 si 'KDU1328' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1327' nm 'Duikerdef_KDU1327' ty 10 tc 1 dl 19.62 ll -3.69 rl -3.54 si 'KDU1327' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1325' nm 'Duikerdef_KDU1325' ty 10 tc 1 dl 12.47 ll -3.35 rl -3.28 si 'KDU1325' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1324' nm 'Duikerdef_KDU1324' ty 10 tc 1 dl 12.31 ll -3.39 rl -3.39 si 'KDU1324' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1320' nm 'Duikerdef_KDU1320' ty 10 tc 1 dl 12.43 ll -3.32 rl -3.16 si 'KDU1320' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1319' nm 'Duikerdef_KDU1319' ty 10 tc 1 dl 12.34 ll -3.37 rl -3.23 si 'KDU1319' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1318' nm 'Duikerdef_KDU1318' ty 10 tc 1 dl 12.4 ll -3.13 rl -3.18 si 'KDU1318' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1309' nm 'Duikerdef_KDU1309' ty 10 tc 1 dl 12.55 ll -3.58 rl -3.74 si 'KDU1309' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1126' nm 'Duikerdef_KDU1126' ty 10 tc 1 dl 7.51 ll -2.31 rl -2.37 si 'KDU1126' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1125' nm 'Duikerdef_KDU1125' ty 10 tc 1 dl 7.14 ll -2.37 rl -2.29 si 'KDU1125' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1124' nm 'Duikerdef_KDU1124' ty 10 tc 1 dl 7.96 ll -2.31 rl -2.41 si 'KDU1124' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1123' nm 'Duikerdef_KDU1123' ty 10 tc 1 dl 6.71 ll -2.24 rl -2.3 si 'KDU1123' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1122' nm 'Duikerdef_KDU1122' ty 10 tc 1 dl 13.16 ll -2.4 rl -2.44 si 'KDU1122' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1121' nm 'Duikerdef_KDU1121' ty 10 tc 1 dl 15.28 ll -2.66 rl -2.66 si 'KDU1121' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1120' nm 'Duikerdef_KDU1120' ty 10 tc 1 dl 8.09 ll -2.32 rl -2.38 si 'KDU1120' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1119' nm 'Duikerdef_KDU1119' ty 10 tc 1 dl 8.25 ll -2.53 rl -2.51 si 'KDU1119' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1118' nm 'Duikerdef_KDU1118' ty 10 tc 1 dl 15.06 ll -2.51 rl -2.47 si 'KDU1118' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1117' nm 'Duikerdef_KDU1117' ty 10 tc 1 dl 5.28 ll -2.34 rl -2.32 si 'KDU1117' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1115' nm 'Duikerdef_KDU1115' ty 10 tc 1 dl 12.29 ll -2.45 rl -2.53 si 'KDU1115' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1127' nm 'Duikerdef_KDU1127' ty 10 tc 1 dl 7.76 ll -0.98 rl -0.92 si 'KDU1127' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1128' nm 'Duikerdef_KDU1128' ty 10 tc 1 dl 16.12 ll -0.73 rl -0.88 si 'KDU1128' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1129' nm 'Duikerdef_KDU1129' ty 10 tc 1 dl 4.97 ll -0.89 rl -0.95 si 'KDU1129' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1130' nm 'Duikerdef_KDU1130' ty 10 tc 1 dl 6.06 ll -1.22 rl -1.25 si 'KDU1130' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1131' nm 'Duikerdef_KDU1131' ty 10 tc 1 dl 8.44 ll -1.01 rl -1.04 si 'KDU1131' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1132' nm 'Duikerdef_KDU1132' ty 10 tc 1 dl 10.08 ll -1.18 rl -1.21 si 'KDU1132' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1133' nm 'Duikerdef_KDU1133' ty 10 tc 1 dl 8.14 ll -1.41 rl -1.45 si 'KDU1133' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1134' nm 'Duikerdef_KDU1134' ty 10 tc 1 dl 10.04 ll -1.84 rl -1.89 si 'KDU1134' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1135' nm 'Duikerdef_KDU1135' ty 10 tc 1 dl 11.07 ll -1.9 rl -1.95 si 'KDU1135' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KST440' nm 'Stuwdef_KST440' ty 6 cl -1.01 cw 0.8 ce 1 sc 1 rt 0      stds
+STDS id 'KDU1136' nm 'Duikerdef_KDU1136' ty 10 tc 1 dl 15.55 ll -2.06 rl -2.04 si 'KDU1136' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1140' nm 'Duikerdef_KDU1140' ty 10 tc 1 dl 22.04 ll -1.21 rl -1.24 si 'KDU1140' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1141' nm 'Duikerdef_KDU1141' ty 10 tc 1 dl 36.38 ll -1.16 rl -1.15 si 'KDU1141' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KST606' nm '' ty 6 cl -1 cw 1.4 ce 1 sc 1 rt 0 stds
+STDS id 'KDU3119' nm 'Duikerdef_KDU3119' ty 10 tc 1 dl 12.21 ll -1.57 rl -1.6 si 'KDU3119' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KST70' nm '' ty 6 cl -1.5 cw 2.5 ce 1 sc 1 rt 0   stds
+STDS id 'KDU1237' nm 'Duikerdef_KDU1237' ty 10 tc 1 dl 39.12 ll -1.88 rl -1.99 si 'KDU1237' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1236' nm 'Duikerdef_KDU1236' ty 10 tc 1 dl 9.84 ll -2.9 rl -2.93 si 'KDU1236' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1235' nm 'Duikerdef_KDU1235' ty 10 tc 1 dl 17.09 ll -2.95 rl -2.9 si 'KDU1235' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1197' nm 'Duikerdef_KDU1197' ty 10 tc 1 dl 28.32 ll -3.14 rl -3.11 si 'KDU1197' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1198' nm 'Duikerdef_KDU1198' ty 10 tc 1 dl 7.95 ll -3.18 rl -3.16 si 'KDU1198' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1176' nm 'Duikerdef_KDU1176' ty 10 tc 1 dl 7.25 ll -3.91 rl -3.84 si 'KDU1176' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1175' nm 'Duikerdef_KDU1175' ty 10 tc 1 dl 8.33 ll -3.85 rl -3.83 si 'KDU1175' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1168' nm 'Duikerdef_KDU1168' ty 10 tc 1 dl 79.54 ll -3.39 rl -3.34 si 'KDU1168' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1167' nm 'Duikerdef_KDU1167' ty 10 tc 1 dl 46.49 ll -3.21 rl -3.24 si 'KDU1167' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU7021' nm 'Duikerdef_KDU7021' ty 10 tc 1 dl 20.82 ll -3.5 rl -3.5 si 'KDU7021' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KGM66' nm '' ty 9 dn 1 rt cr 2
+TBLE
+-5.2 0.691 <
+-3.4 0.846 <
+-1.6 1 <
+tble ct lt 1
+TBLE
+1.83 -2.29 -2.3 0 0 <
+3.75 -2.28 -2.29 0 0 <
+tble stds
+STDS id 'KDU1149' nm 'Duikerdef_KDU1149' ty 10 tc 1 dl 12.19 ll -2.64 rl -2.67 si 'KDU1149' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1150' nm 'Duikerdef_KDU1150' ty 10 tc 1 dl 31.98 ll -2.58 rl -2.55 si 'KDU1150' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1151' nm 'Duikerdef_KDU1151' ty 10 tc 1 dl 12.22 ll -2.68 rl -2.69 si 'KDU1151' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1158' nm 'Duikerdef_KDU1158' ty 10 tc 1 dl 12.54 ll -2.94 rl -2.89 si 'KDU1158' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1157' nm 'Duikerdef_KDU1157' ty 10 tc 1 dl 12.51 ll -2.94 rl -2.94 si 'KDU1157' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1156' nm 'Duikerdef_KDU1156' ty 10 tc 1 dl 15.03 ll -3.01 rl -2.97 si 'KDU1156' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1163' nm 'Duikerdef_KDU1163' ty 10 tc 1 dl 9.21 ll -2.66 rl -2.65 si 'KDU1163' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1194' nm 'Duikerdef_KDU1194' ty 10 tc 1 dl 19.56 ll -0.87 rl -0.91 si 'KDU1194' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1195' nm 'Duikerdef_KDU1195' ty 10 tc 1 dl 6.3 ll -0.94 rl -0.91 si 'KDU1195' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1089' nm 'Duikerdef_KDU1089' ty 10 tc 1 dl 7.19 ll -1.09 rl -1.12 si 'KDU1089' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1088' nm 'Duikerdef_KDU1088' ty 10 tc 1 dl 8.07 ll -1.11 rl -1.13 si 'KDU1088' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1087' nm 'Duikerdef_KDU1087' ty 10 tc 1 dl 10.04 ll -1.16 rl -1.17 si 'KDU1087' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1085' nm 'Duikerdef_KDU1085' ty 10 tc 1 dl 14.13 ll -1.11 rl -1.2 si 'KDU1085' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1193' nm 'Duikerdef_KDU1193' ty 10 tc 1 dl 8.1 ll -1.02 rl -1.06 si 'KDU1193' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1192' nm 'Duikerdef_KDU1192' ty 10 tc 1 dl 8.12 ll -1.03 rl -1.03 si 'KDU1192' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU5452' nm 'Duikerdef_KDU5452' ty 10 tc 1 dl 9.41 ll -1.05 rl -1.11 si 'KDU5452' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1191' nm 'Duikerdef_KDU1191' ty 10 tc 1 dl 8.27 ll -0.99 rl -1.12 si 'KDU1191' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1190' nm 'Duikerdef_KDU1190' ty 10 tc 1 dl 8.07 ll -1.01 rl -1.03 si 'KDU1190' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU3115' nm 'Duikerdef_KDU3115' ty 10 tc 1 dl 86.51 ll -1.29 rl -1.23 si 'KDU3115' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1201' nm 'Duikerdef_KDU1201' ty 10 tc 1 dl 11.22 ll -2.68 rl -2.67 si 'KDU1201' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1202' nm 'Duikerdef_KDU1202' ty 10 tc 1 dl 11.15 ll -2.69 rl -2.73 si 'KDU1202' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU999' nm 'Duikerdef_KDU999' ty 10 tc 1 dl 11.88 ll -1.83 rl -1.79 si 'KDU999' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1223' nm 'Duikerdef_KDU1223' ty 10 tc 1 dl 13.24 ll -1.27 rl -1.28 si 'KDU1223' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1224' nm 'Duikerdef_KDU1224' ty 10 tc 1 dl 13.17 ll -1.31 rl -1.31 si 'KDU1224' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1218' nm 'Duikerdef_KDU1218' ty 10 tc 1 dl 9.07 ll -1.46 rl -1.48 si 'KDU1218' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1219' nm 'Duikerdef_KDU1219' ty 10 tc 1 dl 24.09 ll -1.45 rl -1.48 si 'KDU1219' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1220' nm 'Duikerdef_KDU1220' ty 10 tc 1 dl 16.06 ll -1.54 rl -1.52 si 'KDU1220' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1221' nm 'Duikerdef_KDU1221' ty 10 tc 1 dl 9.08 ll -1.49 rl -1.48 si 'KDU1221' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1222' nm 'Duikerdef_KDU1222' ty 10 tc 1 dl 10.1 ll -1.54 rl -1.53 si 'KDU1222' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1075' nm 'Duikerdef_KDU1075' ty 10 tc 1 dl 9.14 ll -1.51 rl -1.57 si 'KDU1075' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1074' nm 'Duikerdef_KDU1074' ty 10 tc 1 dl 24.23 ll -1.4 rl -1.41 si 'KDU1074' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1073' nm 'Duikerdef_KDU1073' ty 10 tc 1 dl 9.15 ll -1.39 rl -1.43 si 'KDU1073' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1072' nm 'Duikerdef_KDU1072' ty 10 tc 1 dl 24.15 ll -1.43 rl -1.42 si 'KDU1072' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1071' nm 'Duikerdef_KDU1071' ty 10 tc 1 dl 11.14 ll -1.52 rl -1.5 si 'KDU1071' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1070' nm 'Duikerdef_KDU1070' ty 10 tc 1 dl 26.24 ll -1.63 rl -1.61 si 'KDU1070' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1045' nm 'Duikerdef_KDU1045' ty 10 tc 1 dl 19.27 ll -1.68 rl -1.67 si 'KDU1045' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1044' nm 'Duikerdef_KDU1044' ty 10 tc 1 dl 41.92 ll -1.38 rl -1.72 si 'KDU1044' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1043' nm 'Duikerdef_KDU1043' ty 10 tc 1 dl 7.86 ll -1.95 rl -1.94 si 'KDU1043' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1042' nm 'Duikerdef_KDU1042' ty 10 tc 1 dl 7.64 ll -1.96 rl -1.97 si 'KDU1042' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1041' nm 'Duikerdef_KDU1041' ty 10 tc 1 dl 10.28 ll -1.96 rl -1.97 si 'KDU1041' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1036' nm 'Duikerdef_KDU1036' ty 10 tc 1 dl 7.6 ll -2.02 rl -2 si 'KDU1036' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1035' nm 'Duikerdef_KDU1035' ty 10 tc 1 dl 7.62 ll -2.01 rl -2.04 si 'KDU1035' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1034' nm 'Duikerdef_KDU1034' ty 10 tc 1 dl 7.72 ll -2.02 rl -2.02 si 'KDU1034' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1032' nm 'Duikerdef_KDU1032' ty 10 tc 1 dl 9.13 ll -2.01 rl -2.02 si 'KDU1032' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1028' nm 'Duikerdef_KDU1028' ty 10 tc 1 dl 7.24 ll -2.18 rl -2.16 si 'KDU1028' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1027' nm 'Duikerdef_KDU1027' ty 10 tc 1 dl 54.02 ll -2.1 rl -2.08 si 'KDU1027' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1026' nm 'Duikerdef_KDU1026' ty 10 tc 1 dl 63.37 ll -2.27 rl -2.26 si 'KDU1026' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1051' nm 'Duikerdef_KDU1051' ty 10 tc 1 dl 8.72 ll -2.63 rl -2.61 si 'KDU1051' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1021' nm 'Duikerdef_KDU1021' ty 10 tc 1 dl 6.59 ll -2.28 rl -2.29 si 'KDU1021' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KST62' nm '' ty 6 cl -1.25 cw 6 ce 1 sc 1 rt 0   stds
+STDS id 'KDU1008' nm 'Duikerdef_KDU1008' ty 10 tc 1 dl 33.03 ll -2.77 rl -2.53 si 'KDU1008' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1097' nm 'Duikerdef_KDU1097' ty 10 tc 1 dl 11.81 ll -3.25 rl -3.29 si 'KDU1097' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1096' nm 'Duikerdef_KDU1096' ty 10 tc 1 dl 10.28 ll -3.41 rl -3.42 si 'KDU1096' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU985' nm 'Duikerdef_KDU985' ty 10 tc 1 dl 14.62 ll -0.23 rl -0.3 si 'KDU985' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU983' nm 'Duikerdef_KDU983' ty 10 tc 1 dl 14.55 ll -0.33 rl -0.36 si 'KDU983' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU982' nm 'Duikerdef_KDU982' ty 10 tc 1 dl 21.9 ll -0.41 rl -0.48 si 'KDU982' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU981' nm 'Duikerdef_KDU981' ty 10 tc 1 dl 17 ll -0.4 rl -0.34 si 'KDU981' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU975' nm 'Duikerdef_KDU975' ty 10 tc 1 dl 12.32 ll -0.36 rl -0.43 si 'KDU975' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1240' nm 'Duikerdef_KDU1240' ty 10 tc 1 dl 9.62 ll -0.99 rl -0.97 si 'KDU1240' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KST436' nm 'Stuwdef_KST436' ty 6 cl -0.56 cw 0.8 ce 1 sc 1 rt 0      stds
+STDS id 'KDU1241' nm 'Duikerdef_KDU1241' ty 10 tc 1 dl 9.15 ll -1.34 rl -1.38 si 'KDU1241' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1238' nm 'Duikerdef_KDU1238' ty 10 tc 1 dl 6.12 ll -1.51 rl -1.51 si 'KDU1238' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1266' nm 'Duikerdef_KDU1266' ty 10 tc 1 dl 11.73 ll -1.6 rl -1.56 si 'KDU1266' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1248' nm 'Duikerdef_KDU1248' ty 10 tc 1 dl 14.19 ll -0.99 rl -1.11 si 'KDU1248' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1247' nm 'Duikerdef_KDU1247' ty 10 tc 1 dl 6.23 ll -1.7 rl -1.78 si 'KDU1247' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1246' nm 'Duikerdef_KDU1246' ty 10 tc 1 dl 6.37 ll -2.24 rl -2.33 si 'KDU1246' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1245' nm 'Duikerdef_KDU1245' ty 10 tc 1 dl 17.32 ll -3.46 rl -3.49 si 'KDU1245' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1242' nm 'Duikerdef_KDU1242' ty 10 tc 1 dl 14.79 ll -2.59 rl -2.61 si 'KDU1242' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1300' nm 'Duikerdef_KDU1300' ty 10 tc 1 dl 9.88 ll -1.97 rl -2.02 si 'KDU1300' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1299' nm 'Duikerdef_KDU1299' ty 10 tc 1 dl 9.86 ll -2.1 rl -2.11 si 'KDU1299' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1298' nm 'Duikerdef_KDU1298' ty 10 tc 1 dl 9.96 ll -2.2 rl -2.13 si 'KDU1298' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1297' nm 'Duikerdef_KDU1297' ty 10 tc 1 dl 9.9 ll -2.16 rl -2.16 si 'KDU1297' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1304' nm 'Duikerdef_KDU1304' ty 10 tc 1 dl 12.36 ll -2.96 rl -3 si 'KDU1304' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1312' nm 'Duikerdef_KDU1312' ty 10 tc 1 dl 10.89 ll -2.95 rl -2.94 si 'KDU1312' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1337' nm 'Duikerdef_KDU1337' ty 10 tc 1 dl 8.21 ll -2.4 rl -2.38 si 'KDU1337' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1282' nm 'Duikerdef_KDU1282' ty 10 tc 1 dl 8.19 ll -2.33 rl -2.34 si 'KDU1282' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1283' nm 'Duikerdef_KDU1283' ty 10 tc 1 dl 56.49 ll -2.69 rl -2.67 si 'KDU1283' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1284' nm 'Duikerdef_KDU1284' ty 10 tc 1 dl 8.14 ll -2.64 rl -2.67 si 'KDU1284' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1216' nm 'Duikerdef_KDU1216' ty 10 tc 1 dl 12.36 ll -2.5 rl -2.56 si 'KDU1216' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1215' nm 'Duikerdef_KDU1215' ty 10 tc 1 dl 9.17 ll -2.63 rl -2.64 si 'KDU1215' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1214' nm 'Duikerdef_KDU1214' ty 10 tc 1 dl 17.76 ll -2.76 rl -2.67 si 'KDU1214' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU845' nm 'Duikerdef_KDU845' ty 10 tc 1 dl 81.07 ll -1.41 rl -1.57 si 'KDU845' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU18229' nm 'Duikerdef_KDU18229' ty 10 tc 1 dl 7.29 ll -1.62 rl -1.62 si 'KDU18229' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDUBD4049' nm 'Duikerdef_KDUBD4049' ty 10 tc 1 dl 7.28 ll -1.3 rl -1.27 si 'KDUBD4049' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU849' nm 'Duikerdef_KDU849' ty 10 tc 1 dl 25 ll -2.4 rl -3 si 'KDU849' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU851' nm 'Duikerdef_KDU851' ty 10 tc 1 dl 11.43 ll -1.43 rl -1.41 si 'KDU851' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU18233' nm 'Duikerdef_KDU18233' ty 10 tc 1 dl 24.38 ll -2.25 rl -2.29 si 'KDU18233' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU18235' nm '' ty 10 tc 1 dl 1.72 ll -2.84 rl -2.82 si 'KDU18235' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU18637' nm 'Duikerdef_KDU18637' ty 10 tc 1 dl 25.59 ll -2.19 rl -2.3 si 'KDU18637' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1019' nm 'Duikerdef_KDU1019' ty 10 tc 1 dl 8.15 ll 0.04 rl 0.05 si 'KDU1019' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1018' nm 'Duikerdef_KDU1018' ty 10 tc 1 dl 10.08 ll -0.16 rl -0.19 si 'KDU1018' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1054' nm 'Duikerdef_KDU1054' ty 10 tc 1 dl 10.12 ll -2.43 rl -2.45 si 'KDU1054' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1099' nm 'Duikerdef_KDU1099' ty 10 tc 1 dl 16.15 ll -2.73 rl -2.78 si 'KDU1099' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU31105' nm 'Duikerdef_KDU31105' ty 10 tc 1 dl 7.61 ll 0.37 rl 0.33 si 'KDU31105' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KGM96' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+0.0444 -0.49 -0.5 0 0 <
+tble stds
+STDS id 'KDU3117' nm 'Duikerdef_KDU3117' ty 10 tc 1 dl 12.69 ll -1.37 rl -1.37 si 'KDU3117' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU31569' nm 'Duikerdef_KDU31569' ty 10 tc 1 dl 11.79 ll 0.03 rl -0.14 si 'KDU31569' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU19142' nm 'Duikerdef_KDU19142' ty 10 tc 1 dl 16.22 ll 0.06 rl -0.17 si 'KDU19142' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU36231' nm 'Duikerdef_KDU36231' ty 10 tc 1 dl 11.58 ll -2.69 rl -2.75 si 'KDU36231' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1321' nm 'Duikerdef_KDU1321' ty 10 tc 1 dl 12.41 ll -2.93 rl -2.91 si 'KDU1321' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1322' nm 'Duikerdef_KDU1322' ty 10 tc 1 dl 12.28 ll -3.03 rl -3.04 si 'KDU1322' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1323' nm 'Duikerdef_KDU1323' ty 10 tc 1 dl 17.3 ll -3.02 rl -3.02 si 'KDU1323' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU36245' nm 'Duikerdef_KDU36245' ty 10 tc 1 dl 7.59 ll -1.53 rl -1.46 si 'KDU36245' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1252' nm 'Duikerdef_KDU1252' ty 10 tc 1 dl 15.19 ll -2.38 rl -2.41 si 'KDU1252' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1253' nm 'Duikerdef_KDU1253' ty 10 tc 1 dl 13.55 ll -2.7 rl -2.79 si 'KDU1253' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1254' nm 'Duikerdef_KDU1254' ty 10 tc 1 dl 12.42 ll -2.68 rl -2.68 si 'KDU1254' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1255' nm 'Duikerdef_KDU1255' ty 10 tc 1 dl 10.94 ll -2.66 rl -2.71 si 'KDU1255' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1315' nm 'Duikerdef_KDU1315' ty 10 tc 1 dl 12.53 ll -2.75 rl -2.77 si 'KDU1315' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1316' nm 'Duikerdef_KDU1316' ty 10 tc 1 dl 7.53 ll -2.86 rl -2.79 si 'KDU1316' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1317' nm 'Duikerdef_KDU1317' ty 10 tc 1 dl 12 ll -3.03 rl -3.03 si 'KDU1317' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU36605' nm 'Duikerdef_KDU36605' ty 10 tc 1 dl 11.52 ll -1.38 rl -1.43 si 'KDU36605' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU5095' nm 'Duikerdef_KDU5095' ty 10 tc 1 dl 28.32 ll -1.57 rl -1.56 si 'KDU5095' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU906' nm 'Duikerdef_KDU906' ty 10 tc 1 dl 6.14 ll -1.41 rl -1.45 si 'KDU906' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU907' nm 'Duikerdef_KDU907' ty 10 tc 1 dl 14.72 ll -1.43 rl -1.54 si 'KDU907' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU905' nm 'Duikerdef_KDU905' ty 10 tc 1 dl 6.24 ll -1.4 rl -1.47 si 'KDU905' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU904' nm 'Duikerdef_KDU904' ty 10 tc 1 dl 7.43 ll -1.11 rl -1.1 si 'KDU904' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU901' nm 'Duikerdef_KDU901' ty 10 tc 1 dl 36.7 ll -1.34 rl -1.36 si 'KDU901' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU3824' nm 'Duikerdef_KDU3824' ty 10 tc 1 dl 8.07 ll -1.02 rl -1 si 'KDU3824' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU3143' nm 'Duikerdef_KDU3143' ty 10 tc 1 dl 12 ll -1 rl -1 si 'KDU3143' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU3142' nm 'Duikerdef_KDU3142' ty 10 tc 1 dl 12.94 ll -0.93 rl -0.99 si 'KDU3142' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU3141' nm 'Duikerdef_KDU3141' ty 10 tc 1 dl 198.5 ll -0.85 rl -1.05 si 'KDU3141' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU3140' nm 'Duikerdef_KDU3140' ty 10 tc 1 dl 7 ll -0.82 rl -0.85 si 'KDU3140' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU3139' nm 'Duikerdef_KDU3139' ty 10 tc 1 dl 12 ll -0.9 rl -0.9 si 'KDU3139' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU3137' nm 'Duikerdef_KDU3137' ty 10 tc 1 dl 20.04 ll -1.08 rl -1.2 si 'KDU3137' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU41168' nm 'Duikerdef_KDU41168' ty 10 tc 1 dl 12.02 ll -1.72 rl -1.75 si 'KDU41168' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KST414' nm 'Stuwdef_KST414' ty 6 cl -0.99 cw 0.7 ce 1 sc 1 rt 0      stds
+STDS id 'KDU1029' nm 'Duikerdef_KDU1029' ty 10 tc 1 dl 29.64 ll -2.09 rl -2.07 si 'KDU1029' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU18241' nm 'Duikerdef_KDU18241' ty 10 tc 1 dl 19.58 ll -1.01 rl -1.01 si 'KDU18241' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU41130' nm 'Duikerdef_KDU41130' ty 10 tc 1 dl 6.83 ll -0.88 rl -0.86 si 'KDU41130' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU915' nm 'Duikerdef_KDU915' ty 10 tc 1 dl 12.65 ll -0.98 rl -0.98 si 'KDU915' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KST58' nm 'Stuwdef_KST58' ty 6 cl 1.6 cw 0.65 ce 1 sc 1 rt 0      stds
+STDS id 'KGM94' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+0.18 -0.64 -0.65 0 0 <
+tble stds
+STDS id 'KDU912' nm 'Duikerdef_KDU912' ty 10 tc 1 dl 6.38 ll -1.22 rl -1.12 si 'KDU912' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU914' nm 'Duikerdef_KDU914' ty 10 tc 1 dl 23.25 ll -1.06 rl -1.02 si 'KDU914' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KST52' nm 'Stuwdef_KST52' ty 6 cl -0.49 cw 1.5 ce 1 sc 1 rt 0      stds
+STDS id 'KDU883' nm 'Duikerdef_KDU883' ty 10 tc 1 dl 19.14 ll -1.12 rl -1.95 si 'KDU883' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU3339' nm 'Duikerdef_KDU3339' ty 10 tc 1 dl 19 ll -0.76 rl -0.96 si 'KDU3339' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU876' nm 'Duikerdef_KDU876' ty 10 tc 1 dl 49.84 ll -1.44 rl -1.32 si 'KDU876' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1016' nm 'Duikerdef_KDU1016' ty 10 tc 1 dl 16.91 ll -0.5 rl -0.48 si 'KDU1016' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU41169' nm 'Duikerdef_KDU41169' ty 10 tc 1 dl 10.05 ll -0.16 rl -0.24 si 'KDU41169' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU5096' nm '' ty 10 tc 1 dl 18.02 ll -0.9 rl -0.91 si 'KDU5096' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU5097' nm 'Duikerdef_KDU5097' ty 10 tc 1 dl 20.52 ll -0.88 rl -0.85 si 'KDU5097' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU5360' nm 'Duikerdef_KDU5360' ty 10 tc 1 dl 44.74 ll -0.86 rl -0.82 si 'KDU5360' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU5915' nm 'Duikerdef_KDU5915' ty 10 tc 1 dl 27.91 ll -0.92 rl -0.92 si 'KDU5915' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU5797' nm 'Duikerdef_KDU5797' ty 10 tc 1 dl 20.66 ll -0.87 rl -0.84 si 'KDU5797' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU5739' nm 'Duikerdef_KDU5739' ty 10 tc 1 dl 31.46 ll -0.82 rl -0.84 si 'KDU5739' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU903' nm 'Duikerdef_KDU903' ty 10 tc 1 dl 8.11 ll -0.91 rl -0.93 si 'KDU903' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU902' nm 'Duikerdef_KDU902' ty 10 tc 1 dl 10.21 ll -0.94 rl -0.88 si 'KDU902' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1225' nm 'Duikerdef_KDU1225' ty 10 tc 1 dl 11.8 ll -0.99 rl -0.96 si 'KDU1225' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1262' nm 'Duikerdef_KDU1262' ty 10 tc 1 dl 12.03 ll -0.96 rl -1.02 si 'KDU1262' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU18635' nm 'Duikerdef_KDU18635' ty 10 tc 1 dl 9.9 ll -1.07 rl -0.98 si 'KDU18635' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1227' nm 'Duikerdef_KDU1227' ty 10 tc 1 dl 11.56 ll -1.06 rl -1.02 si 'KDU1227' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1228' nm 'Duikerdef_KDU1228' ty 10 tc 1 dl 11.97 ll -1.08 rl -1 si 'KDU1228' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU5219' nm 'Duikerdef_KDU5219' ty 10 tc 1 dl 9.9 ll -1.02 rl -1.07 si 'KDU5219' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU5238' nm 'Duikerdef_KDU5238' ty 10 tc 1 dl 9.85 ll -1.22 rl -1.15 si 'KDU5238' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1229' nm 'Duikerdef_KDU1229' ty 10 tc 1 dl 12.26 ll -1.05 rl -1.01 si 'KDU1229' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1230' nm 'Duikerdef_KDU1230' ty 10 tc 1 dl 26.36 ll -1.13 rl -1.09 si 'KDU1230' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1231' nm 'Duikerdef_KDU1231' ty 10 tc 1 dl 12.25 ll -1.1 rl -1.15 si 'KDU1231' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1232' nm 'Duikerdef_KDU1232' ty 10 tc 1 dl 12.39 ll -1.12 rl -1.13 si 'KDU1232' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1233' nm 'Duikerdef_KDU1233' ty 10 tc 1 dl 12.39 ll -1.23 rl -1.24 si 'KDU1233' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1234' nm '' ty 10 tc 1 dl 12.39 ll -1.2 rl -1.2 si 'KDU1234' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KST68' nm '' ty 6 cl -0.7 cw 1.25 ce 1 sc 1 rt 0   stds
+STDS id 'KDU1196' nm 'Duikerdef_KDU1196' ty 10 tc 1 dl 37.61 ll -1.18 rl -1.39 si 'KDU1196' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU3557' nm 'Duikerdef_KDU3557' ty 10 tc 1 dl 12.26 ll 0.23 rl 0.19 si 'KDU3557' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU817' nm 'Duikerdef_KDU817' ty 10 tc 1 dl 9.33 ll 0.11 rl 0.11 si 'KDU817' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU816' nm 'Duikerdef_KDU816' ty 10 tc 1 dl 9.36 ll -0.09 rl -0.14 si 'KDU816' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU41127' nm 'Duikerdef_KDU41127' ty 10 tc 1 dl 10.29 ll -0.06 rl -0.12 si 'KDU41127' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU800' nm 'Duikerdef_KDU800' ty 10 tc 1 dl 7.47 ll 0.05 rl 0.08 si 'KDU800' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU801' nm 'Duikerdef_KDU801' ty 10 tc 1 dl 7.03 ll 0.09 rl 0.1 si 'KDU801' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU802' nm 'Duikerdef_KDU802' ty 10 tc 1 dl 21.68 ll 0.03 rl 0.06 si 'KDU802' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU803' nm 'Duikerdef_KDU803' ty 10 tc 1 dl 9.59 ll 0.05 rl 0.09 si 'KDU803' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU804' nm 'Duikerdef_KDU804' ty 10 tc 1 dl 7.43 ll 0.04 rl 0.01 si 'KDU804' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU805' nm 'Duikerdef_KDU805' ty 10 tc 1 dl 8.85 ll -0.05 rl 0.06 si 'KDU805' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU806' nm 'Duikerdef_KDU806' ty 10 tc 1 dl 9.18 ll -0.01 rl 0.02 si 'KDU806' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU866' nm 'Duikerdef_KDU866' ty 10 tc 1 dl 9.81 ll -0.02 rl -0.06 si 'KDU866' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU867' nm 'Duikerdef_KDU867' ty 10 tc 1 dl 10.04 ll -0.13 rl -0.09 si 'KDU867' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU868' nm 'Duikerdef_KDU868' ty 10 tc 1 dl 9.95 ll -0.21 rl -0.23 si 'KDU868' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU869' nm 'Duikerdef_KDU869' ty 10 tc 1 dl 9.93 ll -0.2 rl -0.17 si 'KDU869' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU870' nm 'Duikerdef_KDU870' ty 10 tc 1 dl 15.1 ll -0.39 rl -0.43 si 'KDU870' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU871' nm 'Duikerdef_KDU871' ty 10 tc 1 dl 10.13 ll -0.43 rl -0.48 si 'KDU871' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU872' nm 'Duikerdef_KDU872' ty 10 tc 1 dl 29.96 ll -0.89 rl -0.77 si 'KDU872' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU848' nm 'Duikerdef_KDU848' ty 10 tc 1 dl 24.63 ll -0.68 rl -0.65 si 'KDU848' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KST49' nm 'Stuwdef_KST49' ty 6 cl 0.41 cw 1 ce 1 sc 1 rt 0      stds
+STDS id 'KDU850' nm 'Duikerdef_KDU850' ty 10 tc 1 dl 7.08 ll -0.77 rl -0.84 si 'KDU850' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU839' nm 'Duikerdef_KDU839' ty 10 tc 1 dl 13.94 ll -0.58 rl -0.62 si 'KDU839' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU838' nm 'Duikerdef_KDU838' ty 10 tc 1 dl 16.2 ll -0.72 rl -0.68 si 'KDU838' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU12' nm 'Duikerdef_KDU12' ty 10 tc 1 dl 10.06 ll -0.81 rl -0.79 si 'KDU12' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KST315' nm 'Stuwdef_KST315' ty 6 cl 0.11 cw 0.8 ce 1 sc 1 rt 0      stds
+STDS id 'KDU837' nm 'Duikerdef_KDU837' ty 10 tc 1 dl 16.92 ll -0.96 rl -0.93 si 'KDU837' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU836' nm 'Duikerdef_KDU836' ty 10 tc 1 dl 10.23 ll -0.91 rl -0.86 si 'KDU836' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU835' nm 'Duikerdef_KDU835' ty 10 tc 1 dl 10.24 ll -0.97 rl -0.99 si 'KDU835' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU3558' nm 'Duikerdef_KDU3558' ty 10 tc 1 dl 14.76 ll -1.06 rl -1.06 si 'KDU3558' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU853' nm 'Duikerdef_KDU853' ty 10 tc 1 dl 11.21 ll 0.04 rl -0.05 si 'KDU853' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU854' nm 'Duikerdef_KDU854' ty 10 tc 1 dl 10.37 ll 0.17 rl 0.03 si 'KDU854' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU855' nm 'Duikerdef_KDU855' ty 10 tc 1 dl 7.94 ll -0.3 rl -0.24 si 'KDU855' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU856' nm 'Duikerdef_KDU856' ty 10 tc 1 dl 10.26 ll -0.29 rl -0.27 si 'KDU856' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU857' nm 'Duikerdef_KDU857' ty 10 tc 1 dl 8.97 ll -0.55 rl -0.48 si 'KDU857' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU858' nm 'Duikerdef_KDU858' ty 10 tc 1 dl 9.17 ll -0.53 rl -0.58 si 'KDU858' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU859' nm 'Duikerdef_KDU859' ty 10 tc 1 dl 12.23 ll -0.63 rl -0.62 si 'KDU859' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU860' nm 'Duikerdef_KDU860' ty 10 tc 1 dl 18.32 ll -0.51 rl -0.5 si 'KDU860' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU861' nm 'Duikerdef_KDU861' ty 10 tc 1 dl 10.26 ll -0.85 rl -0.84 si 'KDU861' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU862' nm 'Duikerdef_KDU862' ty 10 tc 1 dl 20.33 ll -0.86 rl -0.99 si 'KDU862' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU813' nm 'Duikerdef_KDU813' ty 10 tc 1 dl 9.25 ll -0.86 rl -0.83 si 'KDU813' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU799' nm 'Duikerdef_KDU799' ty 10 tc 1 dl 30.7 ll -0.86 rl -0.85 si 'KDU799' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU865' nm 'Duikerdef_KDU865' ty 10 tc 1 dl 9.11 ll -0.34 rl -0.29 si 'KDU865' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU864' nm 'Duikerdef_KDU864' ty 10 tc 1 dl 50.45 ll -0.65 rl -0.7 si 'KDU864' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU881' nm 'Duikerdef_KDU881' ty 10 tc 1 dl 14.43 ll -0.5 rl -0.49 si 'KDU881' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU880' nm 'Duikerdef_KDU880' ty 10 tc 1 dl 14.36 ll -0.51 rl -0.51 si 'KDU880' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU879' nm 'Duikerdef_KDU879' ty 10 tc 1 dl 14.23 ll -0.54 rl -0.51 si 'KDU879' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU878' nm 'Duikerdef_KDU878' ty 10 tc 1 dl 32.41 ll -1.15 rl -1.18 si 'KDU878' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KST50' nm 'Stuwdef_KST50' ty 6 cl 0.39 cw 0.99 ce 1 sc 1 rt 0      stds
+STDS id 'KDU882' nm 'Duikerdef_KDU882' ty 10 tc 1 dl 10 ll -0.55 rl -0.66 si 'KDU882' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KST51' nm 'Stuwdef_KST51' ty 6 cl 0.34 cw 1 ce 1 sc 1 rt 0      stds
+STDS id 'KDU888' nm 'Duikerdef_KDU888' ty 10 tc 1 dl 157.37 ll -1.1 rl -1.12 si 'KDU888' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1269' nm 'Duikerdef_KDU1269' ty 10 tc 1 dl 53.6 ll -0.81 rl -0.81 si 'KDU1269' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1268' nm 'Duikerdef_KDU1268' ty 10 tc 1 dl 9 ll -0.74 rl -0.74 si 'KDU1268' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1267' nm 'Duikerdef_KDU1267' ty 10 tc 1 dl 16.3 ll -0.77 rl -0.77 si 'KDU1267' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU887' nm 'Duikerdef_KDU887' ty 10 tc 1 dl 14.9 ll -0.68 rl -0.68 si 'KDU887' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KST187' nm 'Stuwdef_KST187' ty 6 cl 0.22 cw 1 ce 1 sc 1 rt 0      stds
+STDS id 'KDU886' nm 'Duikerdef_KDU886' ty 10 tc 1 dl 17.24 ll -0.67 rl -0.71 si 'KDU886' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU885' nm 'Duikerdef_KDU885' ty 10 tc 1 dl 17.27 ll -0.73 rl -0.73 si 'KDU885' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU913' nm 'Duikerdef_KDU913' ty 10 tc 1 dl 17.22 ll -1.03 rl -1.03 si 'KDU913' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU919' nm 'Duikerdef_KDU919' ty 10 tc 1 dl 12.25 ll -0.7 rl -0.67 si 'KDU919' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU918' nm 'Duikerdef_KDU918' ty 10 tc 1 dl 23.51 ll -0.62 rl -0.66 si 'KDU918' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU933' nm 'Duikerdef_KDU933' ty 10 tc 1 dl 9.8 ll -0.25 rl -0.39 si 'KDU933' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU935' nm 'Duikerdef_KDU935' ty 10 tc 1 dl 9.18 ll -0.32 rl -0.4 si 'KDU935' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU936' nm '' ty 10 tc 1 ll -0.6 rl -0.62 dl 13.48 si 'KDU936' li 0.7 lo 1 ov 0 tv 0 rt 0 stds
+STDS id 'KDU937' nm 'Duikerdef_KDU937' ty 10 tc 1 dl 10.56 ll -0.58 rl -0.58 si 'KDU937' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1092' nm 'Duikerdef_KDU1092' ty 10 tc 1 dl 13.6 ll -0.71 rl -0.59 si 'KDU1092' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1265' nm 'Duikerdef_KDU1265' ty 10 tc 1 dl 18.08 ll -1.06 rl -1.35 si 'KDU1265' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU899' nm 'Duikerdef_KDU899' ty 10 tc 1 dl 14.69 ll -1.26 rl -1.21 si 'KDU899' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KST55' nm 'Stuwdef_KST55' ty 6 cl -0.18 cw 1.16 ce 1 sc 1 rt 0      stds
+STDS id 'KDU900' nm 'Duikerdef_KDU900' ty 10 tc 1 dl 0.96 ll -0.68 rl -0.8 si 'KDU900' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU941' nm 'Duikerdef_KDU941' ty 10 tc 1 dl 28.41 ll -0.79 rl -0.53 si 'KDU941' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU940' nm 'Duikerdef_KDU940' ty 10 tc 1 dl 12.4 ll -0.59 rl -0.66 si 'KDU940' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU939' nm 'Duikerdef_KDU939' ty 10 tc 1 dl 14.69 ll -0.92 rl -0.9 si 'KDU939' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1093' nm 'Duikerdef_KDU1093' ty 10 tc 1 dl 18.36 ll -0.98 rl -0.85 si 'KDU1093' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU954' nm 'Duikerdef_KDU954' ty 10 tc 1 dl 12.25 ll -0.46 rl -0.44 si 'KDU954' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU955' nm 'Duikerdef_KDU955' ty 10 tc 1 dl 12.19 ll -0.4 rl -0.46 si 'KDU955' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU956' nm 'Duikerdef_KDU956' ty 10 tc 1 dl 12.24 ll -0.5 rl -0.51 si 'KDU956' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU957' nm 'Duikerdef_KDU957' ty 10 tc 1 dl 20.74 ll -0.57 rl -0.44 si 'KDU957' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU958' nm 'Duikerdef_KDU958' ty 10 tc 1 dl 12.53 ll -0.46 rl -0.47 si 'KDU958' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU959' nm 'Duikerdef_KDU959' ty 10 tc 1 dl 13 ll -0.6 rl -0.67 si 'KDU959' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU953' nm 'Duikerdef_KDU953' ty 10 tc 1 dl 17.15 ll -0.19 rl -0.16 si 'KDU953' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU952' nm 'Duikerdef_KDU952' ty 10 tc 1 dl 17.16 ll -0.21 rl -0.25 si 'KDU952' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU951' nm 'Duikerdef_KDU951' ty 10 tc 1 dl 17.06 ll -0.19 rl -0.28 si 'KDU951' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU950' nm 'Duikerdef_KDU950' ty 10 tc 1 dl 17.09 ll -0.26 rl -0.31 si 'KDU950' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU949' nm 'Duikerdef_KDU949' ty 10 tc 1 dl 18.24 ll -0.42 rl -0.36 si 'KDU949' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU966' nm 'Duikerdef_KDU966' ty 10 tc 1 dl 12.02 ll -0.21 rl -0.19 si 'KDU966' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU965' nm 'Duikerdef_KDU965' ty 10 tc 1 dl 14.65 ll -0.16 rl -0.15 si 'KDU965' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU964' nm 'Duikerdef_KDU964' ty 10 tc 1 dl 14.64 ll -0.18 rl -0.19 si 'KDU964' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU972' nm 'Duikerdef_KDU972' ty 10 tc 1 dl 14.52 ll -0.2 rl -0.22 si 'KDU972' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU963' nm 'Duikerdef_KDU963' ty 10 tc 1 dl 14.53 ll -0.27 rl -0.26 si 'KDU963' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU960' nm 'Duikerdef_KDU960' ty 10 tc 1 dl 11.03 ll -0.33 rl -0.43 si 'KDU960' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU967' nm 'Duikerdef_KDU967' ty 10 tc 1 dl 29.92 ll -0.09 rl -0.1 si 'KDU967' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU968' nm 'Duikerdef_KDU968' ty 10 tc 1 dl 11.9 ll -0.18 rl -0.21 si 'KDU968' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU969' nm 'Duikerdef_KDU969' ty 10 tc 1 dl 11.89 ll -0.2 rl -0.2 si 'KDU969' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU970' nm 'Duikerdef_KDU970' ty 10 tc 1 dl 11.96 ll -0.13 rl -0.15 si 'KDU970' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU962' nm 'Duikerdef_KDU962' ty 10 tc 1 dl 11.34 ll -0.18 rl -0.21 si 'KDU962' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU979' nm 'Duikerdef_KDU979' ty 10 tc 1 dl 9.7 ll -0.48 rl -0.47 si 'KDU979' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDUBD1714' nm 'Duikerdef_KDUBD1714' ty 10 tc 1 dl 14.47 ll -0.63 rl -0.35 si 'KDUBD1714' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDUBD1715' nm 'Duikerdef_KDUBD1715' ty 10 tc 1 dl 14.47 ll -0.81 rl -0.73 si 'KDUBD1715' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDUBD1716' nm 'Duikerdef_KDUBD1716' ty 10 tc 1 dl 8.34 ll -0.76 rl -0.77 si 'KDUBD1716' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDUBD1717' nm 'Duikerdef_KDUBD1717' ty 10 tc 1 dl 8.33 ll -0.76 rl -0.79 si 'KDUBD1717' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDUBD1718' nm 'Duikerdef_KDUBD1718' ty 10 tc 1 dl 6.3 ll -0.67 rl -0.63 si 'KDUBD1718' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDUBD1719' nm 'Duikerdef_KDUBD1719' ty 10 tc 1 dl 6.26 ll -0.89 rl -0.85 si 'KDUBD1719' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDUBD1704' nm 'Duikerdef_KDUBD1704' ty 10 tc 1 dl 10.32 ll -0.96 rl -0.99 si 'KDUBD1704' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDUBD7846' nm 'Duikerdef_KDUBD7846' ty 10 tc 1 dl 6.24 ll -0.9 rl -0.89 si 'KDUBD7846' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDUBD1705' nm 'Duikerdef_KDUBD1705' ty 10 tc 1 dl 6.27 ll -1.03 rl -1.03 si 'KDUBD1705' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDUBD1706' nm 'Duikerdef_KDUBD1706' ty 10 tc 1 dl 6.39 ll -0.97 rl -0.92 si 'KDUBD1706' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDUBD2928' nm 'Duikerdef_KDUBD2928' ty 10 tc 1 dl 45.33 ll -1 rl -1.02 si 'KDUBD2928' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDUBD2929' nm 'Duikerdef_KDUBD2929' ty 10 tc 1 dl 17.2 ll -1.04 rl -0.97 si 'KDUBD2929' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDUBD1703' nm 'Duikerdef_KDUBD1703' ty 10 tc 1 dl 7.66 ll -0.84 rl -0.77 si 'KDUBD1703' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDUBD1707' nm 'Duikerdef_KDUBD1707' ty 10 tc 1 dl 6.47 ll -0.9 rl -0.97 si 'KDUBD1707' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDUBD1708' nm 'Duikerdef_KDUBD1708' ty 10 tc 1 dl 9.24 ll -0.65 rl -0.61 si 'KDUBD1708' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDUBD1693' nm 'Duikerdef_KDUBD1693' ty 10 tc 1 dl 22.16 ll -0.34 rl -0.31 si 'KDUBD1693' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDUBD1694' nm 'Duikerdef_KDUBD1694' ty 10 tc 1 dl 6.46 ll -0.2 rl -0.18 si 'KDUBD1694' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDUBD1695' nm 'Duikerdef_KDUBD1695' ty 10 tc 1 dl 6.38 ll -0.17 rl -0.21 si 'KDUBD1695' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDUBD994' nm 'Duikerdef_KDUBD994' ty 10 tc 1 dl 33.1 ll -0.22 rl -0.16 si 'KDUBD994' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDUBD7879' nm 'Duikerdef_KDUBD7879' ty 10 tc 1 dl 10.41 ll -0.26 rl -0.23 si 'KDUBD7879' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDUBD1709' nm 'Duikerdef_KDUBD1709' ty 10 tc 1 dl 9.19 ll -0.52 rl -0.51 si 'KDUBD1709' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU41128' nm 'Duikerdef_KDU41128' ty 10 tc 1 dl 24.74 ll -0.25 rl -0.3 si 'KDU41128' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KST438' nm 'Stuwdef_KST438' ty 6 cl 0.48 cw 0.75 ce 1 sc 1 rt 0      stds
+STDS id 'KDU808' nm 'Duikerdef_KDU808' ty 10 tc 1 dl 6.18 ll -0.17 rl -0.22 si 'KDU808' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU809' nm 'Duikerdef_KDU809' ty 10 tc 1 dl 12.37 ll -0.63 rl -0.63 si 'KDU809' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU810' nm 'Duikerdef_KDU810' ty 10 tc 1 dl 12.29 ll -0.63 rl -0.68 si 'KDU810' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU811' nm 'Duikerdef_KDU811' ty 10 tc 1 dl 12.42 ll -0.6 rl -0.62 si 'KDU811' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU830' nm 'Duikerdef_KDU830' ty 10 tc 1 dl 12.27 ll -0.6 rl -0.69 si 'KDU830' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU829' nm 'Duikerdef_KDU829' ty 10 tc 1 dl 14.81 ll -0.66 rl -0.64 si 'KDU829' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU828' nm 'Duikerdef_KDU828' ty 10 tc 1 dl 12.35 ll -0.6 rl -0.67 si 'KDU828' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU827' nm 'Duikerdef_KDU827' ty 10 tc 1 dl 12.06 ll -0.6 rl -0.59 si 'KDU827' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU826' nm 'Duikerdef_KDU826' ty 10 tc 1 dl 12.07 ll -0.57 rl -0.61 si 'KDU826' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU825' nm 'Duikerdef_KDU825' ty 10 tc 1 dl 16.47 ll -0.74 rl -0.77 si 'KDU825' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU824' nm 'Duikerdef_KDU824' ty 10 tc 1 dl 12.16 ll -0.7 rl -0.8 si 'KDU824' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU823' nm 'Duikerdef_KDU823' ty 10 tc 1 dl 12.25 ll -0.83 rl -0.84 si 'KDU823' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU821' nm 'Duikerdef_KDU821' ty 10 tc 1 dl 12.28 ll -0.74 rl -0.81 si 'KDU821' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU822' nm 'Duikerdef_KDU822' ty 10 tc 1 dl 19.54 ll -0.64 rl -0.66 si 'KDU822' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU820' nm 'Duikerdef_KDU820' ty 10 tc 1 dl 12.44 ll -0.87 rl -0.73 si 'KDU820' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU819' nm 'Duikerdef_KDU819' ty 10 tc 1 dl 12.35 ll -0.84 rl -0.85 si 'KDU819' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KST45' nm '' ty 6 cl -0.25 cw 2.7 ce 1 sc 1 rt 0  stds
+STDS id 'KST46' nm 'Stuwdef_KST46' ty 6 cl 0.42 cw 1.5 ce 1 sc 1 rt 0      stds
+STDS id 'KDU815' nm 'Duikerdef_KDU815' ty 10 tc 1 dl 90.92 ll -0.68 rl -0.95 si 'KDU815' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU18236' nm 'Duikerdef_KDU18236' ty 10 tc 1 dl 1.66 ll -2.81 rl -2.83 si 'KDU18236' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU814' nm '' ty 10 tc 1 dl 235.8 ll -3.89 rl -3.89 si 'KDU814' li 1 lo 1 lb 0 tv 1 'KDU814' ov 3.5 rt 0 hs 0 he 0 stds
+STDS id 'KDU18239' nm '' ty 10 tc 1 dl 154.8 ll -3.9 rl -3.89 si 'KDU18239' li 1 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KST560' nm '' ty 6 cl -0.8 cw 2.86 ce 1 sc 1 rt 0   stds
+STDS id 'KDU3337' nm '' ty 10 tc 1 dl 27.73 ll -2.84 rl -2.69 si 'KDU3337' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'stuw Bath' nm '' ty 6 cl -3.5 cw 100 ce 1 sc 1 rt 0 stds
+STDS id 'KSL1_1' nm '' ty 10 tc 1 ll -3.6 rl -3.6 dl 80 si '10' li 0.55 lo 0.55 ov 0.1 tv 1 'KSL1_1' rt 1 stds
+STDS id 'KSL1_2' nm '' ty 10 tc 1 ll -3.6 rl -3.6 dl 80 si '10' li 0.55 lo 0.55 ov 0.1 tv 1 'KSL1_2' rt 1 stds
+STDS id 'KSL1_3' nm '' ty 10 tc 1 ll -3.6 rl -3.6 dl 80 si '10' li 0.55 lo 0.55 ov 0.1 tv 1 'KSL1_3' rt 1 stds
+STDS id 'KSL1_4' nm '' ty 10 tc 1 ll -3.6 rl -3.6 dl 80 si '10' li 0.55 lo 0.55 ov 0.1 tv 1 'KSL1_4' rt 1 stds
+STDS id 'KDUBD424' nm 'Duikerdef_KDUBD424' ty 10 tc 1 dl 11.9 ll -0.84 rl -0.79 si 'KDUBD424' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDUBD2932' nm 'Duikerdef_KDUBD2932' ty 10 tc 1 dl 12.17 ll -1.47 rl -1.5 si 'KDUBD2932' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDUBD2933' nm 'Duikerdef_KDUBD2933' ty 10 tc 1 dl 22.15 ll -2.21 rl -2.09 si 'KDUBD2933' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDUBD2931' nm 'Duikerdef_KDUBD2931' ty 10 tc 1 dl 5.16 ll -0.52 rl -0.56 si 'KDUBD2931' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDUBD2930' nm 'Duikerdef_KDUBD2930' ty 10 tc 1 dl 10.7 ll -0.38 rl -0.54 si 'KDUBD2930' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDUBD1698' nm 'Duikerdef_KDUBD1698' ty 10 tc 1 dl 12.36 ll -0.26 rl -0.33 si 'KDUBD1698' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1160' nm 'Duikerdef_KDU1160' ty 10 tc 1 dl 20.8 ll -3.49 rl -3.49 si 'KDU1160' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU6981' nm 'Duikerdef_KDU6981' ty 10 tc 1 dl 45.51 ll -2.97 rl -2.88 si 'KDU6981' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU19166' nm 'Duikerdef_KDU19166' ty 10 tc 1 dl 35 ll -1.25 rl -1.25 si 'KDU19166' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU6937' nm 'Duikerdef_KDU6937' ty 10 tc 1 dl 46.52 ll -3.21 rl -3.24 si 'KDU6937' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU6978' nm 'Duikerdef_KDU6978' ty 10 tc 1 dl 46.48 ll -3.23 rl -3.24 si 'KDU6978' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU3114' nm 'Duikerdef_KDU3114' ty 10 tc 1 dl 79.58 ll -3.4 rl -3.33 si 'KDU3114' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU19136' nm 'Duikerdef_KDU19136' ty 10 tc 1 dl 12 ll -2.45 rl -2.45 si 'KDU19136' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU36176' nm 'Duikerdef_KDU36176' ty 10 tc 1 dl 12 ll -2.46 rl -2.46 si 'KDU36176' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU5387' nm '' ty 10 tc 1 dl 30 ll -2.98 rl -2.96 si 'KDU5387' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU4662' nm 'Duikerdef_KDU4662' ty 10 tc 1 dl 9.01 ll -2.82 rl -2.78 si 'KDU4662' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1000' nm 'Duikerdef_KDU1000' ty 10 tc 1 dl 7.19 ll -2.05 rl -2.17 si 'KDU1000' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1015' nm '' ty 10 tc 1 dl 31.49 ll -1.43 rl -1.43 si 'KDU1015' li 0.7 lo 1 lb 0 tv 1 'KDU1015' ov 0.4 rt 0 hs 0 he 0 stds
+STDS id 'KDU924' nm 'Duikerdef_KDU924' ty 10 tc 1 dl 10.8 ll -0.78 rl -0.78 si 'KDU924' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU923' nm 'Duikerdef_KDU923' ty 10 tc 1 dl 26.6 ll -0.97 rl -0.97 si 'KDU923' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU922' nm 'Duikerdef_KDU922' ty 10 tc 1 dl 40 ll -0.89 rl -0.89 si 'KDU922' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU921' nm 'Duikerdef_KDU921' ty 10 tc 1 dl 9.86 ll -1 rl -0.98 si 'KDU921' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU920' nm 'Duikerdef_KDU920' ty 10 tc 1 dl 13.66 ll -1.13 rl -1.15 si 'KDU920' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU917' nm 'Duikerdef_KDU917' ty 10 tc 1 dl 62.95 ll -1.07 rl -1 si 'KDU917' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KST308' nm '' ty 6 cl -0.5 cw 1 ce 1 sc 1 rt 0   stds
+STDS id 'KDU31136' nm 'Duikerdef_KDU31136' ty 10 tc 1 dl 25.38 ll -0.55 rl -0.58 si 'KDU31136' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1137' nm 'Duikerdef_KDU1137' ty 10 tc 1 dl 14.58 ll -0.54 rl -0.5 si 'KDU1137' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU1138' nm 'Duikerdef_KDU1138' ty 10 tc 1 dl 14.65 ll -0.51 rl -0.47 si 'KDU1138' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU916' nm 'Duikerdef_KDU916' ty 10 tc 1 dl 21.63 ll -0.2 rl -0.46 si 'KDU916' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU898' nm 'Duikerdef_KDU898' ty 10 tc 1 dl 55.02 ll -0.55 rl -0.55 si 'KDU898' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU897' nm 'Duikerdef_KDU897' ty 10 tc 1 dl 17.2 ll -0.89 rl -0.89 si 'KDU897' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU896' nm 'Duikerdef_KDU896' ty 10 tc 1 dl 31.9 ll -0.63 rl -0.68 si 'KDU896' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU895' nm 'Duikerdef_KDU895' ty 10 tc 1 dl 19.68 ll -0.71 rl -0.74 si 'KDU895' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU894' nm 'Duikerdef_KDU894' ty 10 tc 1 dl 33.2 ll -0.78 rl -0.84 si 'KDU894' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KST54' nm 'Stuwdef_KST54' ty 6 cl 0.26 cw 2 ce 1 sc 1 rt 0      stds
+STDS id 'KDU978' nm 'Duikerdef_KDU978' ty 10 tc 1 dl 7.43 ll -1 rl -0.97 si 'KDU978' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KST59' nm '' ty 6 cl -0.25 cw 2 ce 1 sc 1 rt 0   stds
+STDS id 'KDU986' nm 'Duikerdef_KDU986' ty 10 tc 1 dl 15.48 ll -0.95 rl -0.97 si 'KDU986' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU980' nm 'Duikerdef_KDU980' ty 10 tc 1 dl 8.49 ll -1.35 rl -1.35 si 'KDU980' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU984' nm 'Duikerdef_KDU984' ty 10 tc 1 dl 13.59 ll -1.33 rl -1.38 si 'KDU984' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU987' nm 'Duikerdef_KDU987' ty 10 tc 1 dl 32.86 ll -1.64 rl -1.61 si 'KDU987' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU988' nm 'Duikerdef_KDU988' ty 10 tc 1 dl 8.58 ll -1.5 rl -1.56 si 'KDU988' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU990' nm 'Duikerdef_KDU990' ty 10 tc 1 dl 9.67 ll -1.56 rl -1.54 si 'KDU990' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU991' nm 'Duikerdef_KDU991' ty 10 tc 1 dl 7.58 ll -1.56 rl -1.58 si 'KDU991' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU992' nm 'Duikerdef_KDU992' ty 10 tc 1 dl 8.6 ll -1.58 rl -1.56 si 'KDU992' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU993' nm 'Duikerdef_KDU993' ty 10 tc 1 dl 8.6 ll -1.59 rl -1.6 si 'KDU993' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KST53' nm '' ty 6 cl -0.5 cw 4 ce 1 sc 1 rt 0   stds
+STDS id 'KDU889' nm 'Duikerdef_KDU889' ty 10 tc 1 dl 17.68 ll -1.63 rl -1.63 si 'KDU889' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU9101' nm 'Duikerdef_KDU9101' ty 10 tc 1 dl 24.13 ll -0.43 rl -0.46 si 'KDU9101' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU41131' nm 'Duikerdef_KDU41131' ty 10 tc 1 dl 11.14 ll -0.8 rl -0.87 si 'KDU41131' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU3340' nm 'Duikerdef_KDU3340' ty 10 tc 1 dl 51.4 ll -0.73 rl -0.75 si 'KDU3340' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KST56' nm 'Stuwdef_KST56' ty 6 cl 0.27 cw 2 ce 1 sc 1 rt 0      stds
+STDS id 'KDU910' nm 'Duikerdef_KDU910' ty 10 tc 1 dl 17.32 ll -0.93 rl -0.95 si 'KDU910' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU911' nm 'Duikerdef_KDU911' ty 10 tc 1 dl 13.3 ll -0.94 rl -0.98 si 'KDU911' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KST57' nm 'Stuwdef_KST57' ty 6 cl 0.23 cw 1.5 ce 1 sc 1 rt 0      stds
+STDS id 'KDU884' nm 'Duikerdef_KDU884' ty 10 tc 1 dl 22.85 ll -1.59 rl -1.64 si 'KDU884' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU877' nm 'Duikerdef_KDU877' ty 10 tc 1 dl 21.62 ll -2.94 rl -2.93 si 'KDU877' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KST538' nm 'Stuwdef_KST538' ty 6 cl -0.8 cw 3.6 ce 1 sc 1 rt 0      stds
+STDS id 'KDU3336' nm 'Duikerdef_KDU3336' ty 10 tc 1 dl 25.83 ll -3.02 rl -3.06 si 'KDU3336' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU9083' nm 'Duikerdef_KDU9083' ty 10 tc 1 dl 21.68 ll -2.95 rl -2.92 si 'KDU9083' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KST559' nm '' ty 6 cl -0.8 cw 2.86 ce 1 sc 1 rt 0  stds
+STDS id 'KDU18245' nm '' ty 10 tc 1 dl 27.71 ll -2.82 rl -2.71 si 'KDU18245' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU18244' nm '' ty 10 tc 1 dl 27.71 ll -2.84 rl -2.69 si 'KDU18244' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 3 hs 0 he 0 stds
+STDS id 'KDU18243' nm '' ty 10 tc 1 dl 27.7 ll -2.86 rl -2.69 si 'KDU18243' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 3 hs 0 he 0 stds
+STDS id 'KST563' nm '' ty 6 cl -0.8 cw 2.86 ce 1 sc 1 rt 0  stds
+STDS id 'KDU18242' nm '' ty 10 tc 1 dl 27.72 ll -2.82 rl -2.69 si 'KDU18242' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU18240' nm '' ty 10 tc 1 dl 154.83 ll -3.9 rl -3.9 si 'KDU18240' li 1 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU18238' nm '' ty 10 tc 1 dl 235.8 ll -3.93 rl -3.93 si 'KDU18238' li 1 lo 1 lb 0 tv 1 'KDU18238' ov 3.5 rt 0 hs 0 he 0 stds
+STDS id 'KDU18636' nm 'Duikerdef_KDU18636' ty 10 tc 1 dl 1.69 ll -2.84 rl -2.83 si 'KDU18636' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU2078' nm 'Duikerdef_KDU2078' ty 10 tc 1 dl 25.53 ll -2.2 rl -2.29 si 'KDU2078' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDUBD4037' nm 'Duikerdef_KDUBD4037' ty 10 tc 1 dl 4.78 ll -1.97 rl -1.97 si 'KDUBD4037' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU807' nm 'Duikerdef_KDU807' ty 10 tc 1 dl 17.48 ll -0.54 rl -0.43 si 'KDU807' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDUBD1700' nm 'Duikerdef_KDUBD1700' ty 10 tc 1 dl 12.65 ll -0.65 rl -0.39 si 'KDUBD1700' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDUBD1699' nm 'Duikerdef_KDUBD1699' ty 10 tc 1 dl 11.75 ll -0.6 rl -0.57 si 'KDUBD1699' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDUBD1690' nm 'Duikerdef_KDUBD1690' ty 10 tc 1 dl 8.34 ll -0.48 rl -0.42 si 'KDUBD1690' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDUBD1691' nm 'Duikerdef_KDUBD1691' ty 10 tc 1 dl 9.96 ll -0.47 rl -0.3 si 'KDUBD1691' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDUBD1692' nm 'Duikerdef_KDUBD1692' ty 10 tc 1 dl 16.44 ll -0.28 rl -0.32 si 'KDUBD1692' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDUBD1686' nm 'Duikerdef_KDUBD1686' ty 10 tc 1 dl 10.38 ll -0.28 rl -0.33 si 'KDUBD1686' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDUBD1685' nm 'Duikerdef_KDUBD1685' ty 10 tc 1 dl 9.36 ll 0.17 rl 0.26 si 'KDUBD1685' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDUBD7878' nm 'Duikerdef_KDUBD7878' ty 10 tc 1 dl 7.6 ll 0.09 rl 0.48 si 'KDUBD7878' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDUBD1684' nm 'Duikerdef_KDUBD1684' ty 10 tc 1 dl 7.8 ll 0.24 rl 0.28 si 'KDUBD1684' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDUBD1687' nm 'Duikerdef_KDUBD1687' ty 10 tc 1 dl 7.07 ll -0.51 rl -0.36 si 'KDUBD1687' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDUBD354' nm 'Duikerdef_KDUBD354' ty 10 tc 1 dl 12.9 ll -0.86 rl -0.65 si 'KDUBD354' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDUBD4042' nm 'Duikerdef_KDUBD4042' ty 10 tc 1 dl 34.46 ll -0.91 rl -0.88 si 'KDUBD4042' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDUBD4043' nm 'Duikerdef_KDUBD4043' ty 10 tc 1 dl 71.08 ll -0.99 rl -1 si 'KDUBD4043' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDUBD1678' nm 'Duikerdef_KDUBD1678' ty 10 tc 1 dl 9.34 ll -1.17 rl -1.14 si 'KDUBD1678' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDUBD1679' nm 'Duikerdef_KDUBD1679' ty 10 tc 1 dl 7.42 ll -1.42 rl -1.48 si 'KDUBD1679' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDUBD1681' nm 'Duikerdef_KDUBD1681' ty 10 tc 1 dl 7.85 ll -1.14 rl -1.12 si 'KDUBD1681' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDUBD1682' nm 'Duikerdef_KDUBD1682' ty 10 tc 1 dl 8.31 ll -1.02 rl -1.21 si 'KDUBD1682' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDUBD1683' nm 'Duikerdef_KDUBD1683' ty 10 tc 1 dl 25.15 ll -1.79 rl -1.73 si 'KDUBD1683' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDUBD1702' nm 'Duikerdef_KDUBD1702' ty 10 tc 1 dl 8.24 ll -1.88 rl -1.91 si 'KDUBD1702' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDUBD1701' nm 'Duikerdef_KDUBD1701' ty 10 tc 1 dl 29.08 ll -1.38 rl -1.38 si 'KDUBD1701' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU798' nm 'Duikerdef_KDU798' ty 10 tc 1 dl 24.44 ll -2.26 rl -2.29 si 'KDU798' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU796' nm 'Duikerdef_KDU796' ty 10 tc 1 dl 7.26 ll -0.21 rl -0.28 si 'KDU796' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU797' nm 'Duikerdef_KDU797' ty 10 tc 1 dl 12.5 ll -0.36 rl -0.46 si 'KDU797' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KSTBD0066' nm '' ty 6 cl -0.2 cw 0.91 ce 1 sc 1 rt 0  stds
+STDS id 'KDU31405' nm 'Duikerdef_KDU31405' ty 10 tc 1 dl 7.43 ll 0.42 rl 0.42 si 'KDU31405' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDUBD3094' nm 'Duikerdef_KDUBD3094' ty 10 tc 1 dl 51.66 ll -0.91 rl -0.85 si 'KDUBD3094' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDUBD10485' nm '' ty 10 tc 1 ll -0.61 rl -0.61 dl 1 si 'KDUBD10485' li 0.7 lo 1 ov 0 tv 0 rt 0 stds
+STDS id 'KDUBD4045' nm 'Duikerdef_KDUBD4045' ty 10 tc 1 dl 14.53 ll -0.65 rl -0.61 si 'KDUBD4045' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDUBD4046' nm 'Duikerdef_KDUBD4046' ty 10 tc 1 dl 14.17 ll -0.68 rl -0.68 si 'KDUBD4046' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDUBD4047' nm 'Duikerdef_KDUBD4047' ty 10 tc 1 dl 14.5 ll -0.71 rl -0.71 si 'KDUBD4047' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDUBD4048' nm 'Duikerdef_KDUBD4048' ty 10 tc 1 dl 9.71 ll -0.39 rl -0.37 si 'KDUBD4048' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDUBD7865' nm 'Duikerdef_KDUBD7865' ty 10 tc 1 dl 9.77 ll -0.54 rl -0.41 si 'KDUBD7865' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDUBD4041' nm 'Duikerdef_KDUBD4041' ty 10 tc 1 dl 10.01 ll -0.4 rl -0.52 si 'KDUBD4041' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDUBD4040' nm '' ty 10 tc 1 dl 9.97 ll -0.34 rl -0.38 si 'KDUBD4040' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDUBD4039' nm 'Duikerdef_KDUBD4039' ty 10 tc 1 dl 10.06 ll -0.35 rl -0.36 si 'KDUBD4039' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDUBD1713' nm 'Duikerdef_KDUBD1713' ty 10 tc 1 dl 9.82 ll -0.74 rl -0.49 si 'KDUBD1713' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDUBD1712' nm 'Duikerdef_KDUBD1712' ty 10 tc 1 dl 6.91 ll -0.39 rl -0.34 si 'KDUBD1712' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDUBD1711' nm 'Duikerdef_KDUBD1711' ty 10 tc 1 dl 7.1 ll -0.31 rl -0.31 si 'KDUBD1711' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDUBD1710' nm 'Duikerdef_KDUBD1710' ty 10 tc 1 dl 7.71 ll -0.62 rl -0.58 si 'KDUBD1710' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDUBD1697' nm 'Duikerdef_KDUBD1697' ty 10 tc 1 dl 7.51 ll -0.13 rl -0.08 si 'KDUBD1697' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDUBD1696' nm 'Duikerdef_KDUBD1696' ty 10 tc 1 dl 16.06 ll -0.4 rl -0.35 si 'KDUBD1696' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KGMBD00114' nm '' ty 9 dn 1 pu 2 rt cr 2
+TBLE
+0 1 <
+1.5 0.89 <
+2.5 0.78 <
+3.5 0.65 <
+4.5 0.5 <
+5.5 0.33 <
+0 0 <
+tble ct lt 1
+TBLE
+0.6 -1.24 -1.25 0 0 <
+1.183333 -1.22 -1.23 0 0 <
+tble stds
+STDS id 'KDUBD1662' nm 'Duikerdef_KDUBD1662' ty 10 tc 1 dl 48.6 ll -2.36 rl -2.39 si 'KDUBD1662' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDUBD2935' nm 'Duikerdef_KDUBD2935' ty 10 tc 1 dl 53.68 ll -2.3 rl -2.17 si 'KDUBD2935' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDUBD2934' nm 'Duikerdef_KDUBD2934' ty 10 tc 1 dl 10.27 ll -2.38 rl -2.38 si 'KDUBD2934' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KGM68' nm '' ty 9 dn 1 rt cr 2
+TBLE
+-6.2 0.771 <
+-3.9 0.885 <
+-1.6 1 <
+tble ct lt 1
+TBLE
+0.4 -0.54 -0.55 0 0 <
+0.8 -0.53 -0.54 0 0 <
+tble stds
+STDS id 'KDU5507' nm '' ty 10 tc 1 dl 10.73 ll -0.97 rl -0.98 si '18' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU5441' nm '' ty 10 tc 1 dl 15.53 ll -0.97 rl -0.99 si '20' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU5439' nm '' ty 10 tc 1 dl 15.57 ll -0.88 rl -0.87 si '22' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU5366' nm '' ty 10 tc 1 dl 22.54 ll -0.86 rl -0.88 si '24' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU5365' nm '' ty 10 tc 1 dl 22.48 ll -0.85 rl -0.91 si '26' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU36609' nm '' ty 10 tc 1 dl 10.39 ll -0.75 rl -0.97 si '28' li 0.7 lo 1 lb 0 tv 0 '1586' ov 0 rt 0 hs 0 he 0 stds
+STDS id 'KDU41187' nm '' ty 10 tc 1 ll -1.92 rl -2.06 dl 20.64 si '31' li 0.7 lo 1 ov 0 tv 0 rt 0 stds
+STDS id 'KDU30636' nm '' ty 10 tc 1 ll -1.84 rl -1.84 dl 6.51 si '33' li 0.7 lo 1 ov 0 tv 0 rt 0 stds
+STDS id 'KST74_dummy' nm '' ty 6 cl 0.7 cw 2 ce 1 sc 1 rt 0  stds
+STDS id 'KST67_dummy' nm '' ty 6 cl 0.7 cw 2 ce 1 sc 1 rt 0  stds
+STDS id 'KST606_dummy' nm '' ty 6 cl 0.7 cw 2 ce 1 sc 1 rt 0  stds
+STDS id 'KST70_dummy' nm '' ty 6 cl 0.7 cw 2 ce 1 sc 1 rt 0  stds
+STDS id 'KST68_dummy' nm '' ty 6 cl 0.7 cw 2 ce 1 sc 1 rt 0  stds
+STDS id 'KST69_dummy' nm '' ty 6 cl 0.7 cw 2 ce 1 sc 1 rt 0  stds
+STDS id 'KST441_dummy' nm '' ty 6 cl 0.7 cw 2 ce 1 sc 1 rt 0  stds
+STDS id 'KST442_dummy' nm '' ty 6 cl 0.7 cw 2 ce 1 sc 1 rt 0  stds

@@ -1,0 +1,20 @@
+[General]
+FileType=DelftIO HIA file
+DioVersion=Deltares, DELFTIO Version 1.09.00.7650, Oct 30 2017, 16:11:22
+HiaVersion=1.00
+ 
+[DioCheck]
+NumberOfParameters=11
+NumberOfLocations=1
+T0=2011.01.01 00:00:00
+TimeStepUnit=Second
+TimeStepMultiplyer=60
+ 
+[Long Parameters]
+3=Waterlevel down (m AD)
+5=Gate lower edge level (m AD)
+7=Force difference per unit width (N/m)
+8=Water level on crest (m AD)
+ 
+[Long Locations]
+ 

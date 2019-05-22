@@ -34,7 +34,6 @@ using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 using DelftTools.Utils.IO;
-using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using Control = System.Windows.Controls.Control;
 using ObservationCrossSection2D = DelftTools.Hydro.ObservationCrossSection2D;
 

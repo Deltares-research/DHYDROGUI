@@ -1,0 +1,14 @@
+TP_1.0
+NODE id 'N1' nm 'Node1' px 254902.698666233 py 471482.595349359 node
+NODE id 'N3' nm 'Node3' px 255445.558183461 py 471859.446068411 node
+NODE id 'N2' nm 'Node2' px 256011.036847239 py 472221.222758701 node
+NODE id 'CNS1' nm 'ConNodeStorage1' px 255420.809362606 py 472293.882964757 node
+NODE id 'CNS2' nm 'ConNodeStorage2' px 255482.486238217 py 472866.357315497 node
+NODE id 'BN3' nm 'Node 3' px 255905.413385264 py 471377.924003573 node
+NODE id 'BN4' nm 'Node 4' px 256284.285621161 py 471633.33563698 node
+BRCH id '1' nm '' bn 'N1' en 'N3' al 660.84258329427 vc_opt 0 vc_equi -1 vc_len 100 brch
+BRCH id '2' nm '' bn 'N3' en 'N2' al 671.303577247563 vc_opt 0 vc_equi -1 vc_len 100 brch
+BRCH id '3' nm '' bn 'N3' en 'CNS1' al 435.141265614335 vc_opt 0 vc_equi -1 vc_len 100 brch
+BRCH id '4' nm '' bn 'CNS1' en 'CNS2' al 575.787216982412 vc_opt 0 vc_equi -1 vc_len 100 brch
+BRCH id '5' nm '' bn 'N3' en 'BN3' al 665.830538163509 vc_opt 0 vc_equi -1 vc_len 100 brch
+BRCH id '6' nm '' bn 'N3' en 'BN4' al 868.671193232922 vc_opt 0 vc_equi -1 vc_len 100 brch

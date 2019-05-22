@@ -1,0 +1,8 @@
+ 1   ; file option for initial values in this file
+ 2   ; default option
+12*1.0 ; scale factors for substances, fixed at 1.0
+;* active substances:  AAP DetC DetN DetP GREEN NH4 NO3 PO4 OXY Cl IM1
+ 11.2233 2 3 4 5 6 7 8 9 10 11 ; initial values of active substances
+;* passive substances:  SOD
+ 12 ; initial values of passive substances
+ 0 ; number of overrides

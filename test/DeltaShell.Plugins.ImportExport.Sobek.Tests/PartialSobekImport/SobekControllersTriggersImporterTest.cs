@@ -1,0 +1,36 @@
+﻿using System.Linq;
+using DelftTools.TestUtils;
+using DeltaShell.Plugins.DelftModels.HydroModel;
+using DeltaShell.Plugins.DelftModels.RealTimeControl;
+using DeltaShell.Plugins.DelftModels.WaterFlowModel;
+using DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter;
+using NUnit.Framework;
+
+namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
+{
+    [TestFixture]
+    public class SobekControllersTriggersImporterTest
+    {
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
+        public void ImportControllerAndTriggers()
+        {
+            var pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\ReModels\JAMM2010.sbk\40\DEFTOP.1";
+            var realTimeControlModel = new RealTimeControlModel();
+            realTimeControlModel.ControlGroups.Clear();
+
+            var waterFlowModel1DModel = new WaterFlowModel1D();
+
+            var hydroModel = new HydroModel();
+            hydroModel.Activities.Add(realTimeControlModel);
+            hydroModel.Activities.Add(waterFlowModel1DModel);
+
+            var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekNetwork, hydroModel, new IPartialSobekImporter[] { new SobekBranchesImporter(), new SobekStructuresImporter(), new SobekMeasurementStationsImporter(), new SobekControllersTriggersImporter() });
+
+            importer.Import();
+
+            Assert.AreEqual(14, realTimeControlModel.ControlGroups.Count());
+        }
+    }
+}

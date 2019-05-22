@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.SharpMapGis;
 using GeoAPI.Extensions.CoordinateSystems;
@@ -17,14 +17,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Layers
         public ICoordinateSystem coordinateSystem;
         private static readonly ILog Log = LogManager.GetLogger(typeof(FMOutputSnappedFeaturesGroupLayerData));
 
-        public static readonly string OutputSnappedFeaturePostfix = "_snapped";
+        public readonly static string OutputSnappedFeaturePostfix = "_snapped";
 
         private static readonly Dictionary<string, string> SnappedFeatureDict = new Dictionary<string, string>
         {
-            {"Cross Sections", "_crs"},
+            {"Cross Sections", "_crs" },
             {"Weirs", "_weir"},
             {"Gates", "_gate"},
-            {"Fixed weirs", "_fxw"},
+            {"Fixed weirs", "_fxw" },
             {"Thin dams", "_thd"},
             {"Observation stations", "_obs"},
             {"Embankments", "_emb"},
@@ -35,34 +35,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Layers
 
         public FMOutputSnappedFeaturesGroupLayerData(WaterFlowFMModel model)
         {
-            modelOutputSnappedFeaturesPath = model.OutputSnappedFeaturesPath;
-            modelMduFilePath = model.MduFilePath;
-            coordinateSystem = model.CoordinateSystem;
+            this.modelOutputSnappedFeaturesPath = model.OutputSnappedFeaturesPath;
+            this.modelMduFilePath = model.MduFilePath;
+            this.coordinateSystem = model.CoordinateSystem;
         }
 
         public IList<ILayer> CreateLayers()
         {
             if (!Directory.Exists(modelOutputSnappedFeaturesPath))
             {
-                Log.WarnFormat(
-                    Resources
-                        .FMOutputSnappedFeaturesGroupLayerData_GetValidLayersLocation_Output_snapped_feature_layers_location_not_found_at___0_,
-                    modelOutputSnappedFeaturesPath);
+                Log.WarnFormat(Resources.FMOutputSnappedFeaturesGroupLayerData_GetValidLayersLocation_Output_snapped_feature_layers_location_not_found_at___0_, modelOutputSnappedFeaturesPath);
                 return Enumerable.Empty<ILayer>().ToList();
             }
 
             string mduName = Path.GetFileNameWithoutExtension(modelMduFilePath);
 
-            return SnappedFeatureDict
-                   .SelectMany(
-                       kvp => CreateLayerForSnappedFeatureShape(kvp.Key, kvp.Value, mduName,
-                                                                modelOutputSnappedFeaturesPath)).ToList();
+            return SnappedFeatureDict.SelectMany(kvp => CreateLayerForSnappedFeatureShape(kvp.Key, kvp.Value, mduName, modelOutputSnappedFeaturesPath)).ToList();
         }
 
-        private IEnumerable<ILayer> CreateLayerForSnappedFeatureShape(string layerName, string featurePostfix,
-                                                                      string mduName, string layersLocation)
+        private IEnumerable<ILayer> CreateLayerForSnappedFeatureShape(string layerName, string featurePostfix, string mduName, string layersLocation)
         {
-            string layerFileName = string.Concat(mduName, OutputSnappedFeaturePostfix, featurePostfix, ".shp");
+            string layerFileName = String.Concat(mduName, OutputSnappedFeaturePostfix, featurePostfix, ".shp");
             string layerLocation = Path.Combine(layersLocation, layerFileName);
             if (!File.Exists(layerLocation))
             {
@@ -71,14 +64,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Layers
             }
 
             /* The file is meant to be one level below the mdu file, under the dflowfmoutput directory. */
-            List<ILayer> layers = FileBasedLayerFactory.CreateLayersFromFile(layerLocation).ToList();
+            var layers = FileBasedLayerFactory.CreateLayersFromFile(layerLocation).ToList();
             if (layers.Count == 0)
             {
                 Log.WarnFormat("Output snapped feature for {0} was not generated.", layerName);
             }
 
-            layers.ForEach(l => l.Name = layerName);
-            layers.ForEach(l => l.DataSource.CoordinateSystem = coordinateSystem);
+            layers.ForEach( l => l.Name = layerName);
+            layers.ForEach(l => l.DataSource.CoordinateSystem = this.coordinateSystem);
 
             return layers;
         }

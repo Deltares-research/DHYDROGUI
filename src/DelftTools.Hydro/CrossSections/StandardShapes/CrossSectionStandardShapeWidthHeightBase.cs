@@ -2,7 +2,7 @@
 
 namespace DelftTools.Hydro.CrossSections.StandardShapes
 {
-    [Entity(FireOnCollectionChange = false)]
+    [Entity(FireOnCollectionChange=false)]
     public abstract class CrossSectionStandardShapeWidthHeightBase : CrossSectionStandardShapeBase
     {
         public virtual double Width { get; set; }

@@ -1,0 +1,111 @@
+  WQ Interface Messages File
+ DIO Read ERROR:          203  :
+ Could not open \SBKRIVER\DEMO_02.LIT\WORK\QLAT.HIS  for reading                
+  
+ \SBKRIVER\DEMO_02.LIT\WORK\QLAT.HIS                                            
+                                                                                
+                                                                                
+                    
+ DIO Read ERROR:          203  :
+ Could not open   for reading                                                   
+  
+                                                                                
+                                                                                
+                                                                                
+                    
+ DIO Read ERROR:          203  :
+ Could not open   for reading                                                   
+  
+                                                                                
+                                                                                
+                                                                                
+                    
+segmnt(     1) =     1    3
+segmnt(     2) =     4    3
+segmnt(     3) =     7    3
+segmnt(     4) =    10    3
+segmnt(     5) =    13    3
+segmnt(     6) =    16    3
+segmnt(     7) =    19    3
+segmnt(     8) =    22    3
+strgar(     1) = [R_1_1                                   ]
+strgar(     2) = [R_1_2                                   ]
+strgar(     3) = [R_1_3                                   ]
+strgar(     4) = [R_2_1                                   ]
+strgar(     5) = [R_2_2                                   ]
+strgar(     6) = [R_2_3                                   ]
+strgar(     7) = [R_3_1                                   ]
+strgar(     8) = [R_3_2                                   ]
+strgar(     9) = [R_3_3                                   ]
+strgar(    10) = [R_4_1                                   ]
+strgar(    11) = [R_4_2                                   ]
+strgar(    12) = [R_4_3                                   ]
+strgar(    13) = [R_5_1                                   ]
+strgar(    14) = [R_5_2                                   ]
+strgar(    15) = [R_5_3                                   ]
+strgar(    16) = [R_6_1                                   ]
+strgar(    17) = [R_6_2                                   ]
+strgar(    18) = [R_6_3                                   ]
+strgar(    19) = [R_7_1                                   ]
+strgar(    20) = [R_7_2                                   ]
+strgar(    21) = [R_7_3                                   ]
+strgar(    22) = [R_8_1                                   ]
+strgar(    23) = [R_8_2                                   ]
+strgar(    24) = [R_8_3                                   ]
+NOBJM                      :    31
+NOBJ after reading segments:    24
+Junction(1) NOD00001             PlayTyp PlayObj FromSeg   ToSeg FroPlay  ToPlay
+                                       1      -4
+                                       1       3
+                                                       2       1       1       2
+Junction(1) NOD00002             PlayTyp PlayObj FromSeg   ToSeg FroPlay  ToPlay
+                                       1      -7
+                                       1       6
+                                                       3       2       1       2
+Junction(1) NOD00003             PlayTyp PlayObj FromSeg   ToSeg FroPlay  ToPlay
+                                       1     -10
+                                       1       9
+                                                       4       3       1       2
+Junction(1) NOD00004             PlayTyp PlayObj FromSeg   ToSeg FroPlay  ToPlay
+                                       1     -13
+                                       1      12
+                                                       5       4       1       2
+Junction(1) NOD00005             PlayTyp PlayObj FromSeg   ToSeg FroPlay  ToPlay
+                                       1     -16
+                                       1      15
+                                                       6       5       1       2
+Junction(1) NOD00006             PlayTyp PlayObj FromSeg   ToSeg FroPlay  ToPlay
+                                       1     -19
+                                       1      18
+                                                       7       6       1       2
+Junction(1) NOD00007             PlayTyp PlayObj FromSeg   ToSeg FroPlay  ToPlay
+                                       1     -22
+                                       1      21
+                                                       8       7       1       2
+Junction(3) NOD00000             PlayTyp PlayObj FromSeg   ToSeg FroPlay  ToPlay
+                                       1      -1
+                                       3      25
+                                                      -1       1       2       1
+Junction(3) NOD00008             PlayTyp PlayObj FromSeg   ToSeg FroPlay  ToPlay
+                                       1      24
+                                       3      26
+                                                      -2       8       2       1
+NOBJ after reading exchanges:    26
+strgar(    25) = [@NOD00000                               ]
+strgar(    26) = [@NOD00008                               ]
+NOBJ after reading structures:    26
+NOBJ after mapping locations:    26
+NOTS                        :   337
+ ChezyInStructureBranches=   50.00000    
+ ChezyInNodeObjects=   50.00000    
+Substance  1: C                   mg/l      
+Hor. Surfaces used to scale initial conditions:
+surfi(   1)=     875.0
+surfi(   2)=    1750.0
+surfi(   3)=    1750.0
+surfi(   4)=    1750.0
+surfi(   5)=    1750.0
+surfi(   6)=    1750.0
+surfi(   7)=    1750.0
+surfi(   8)=     875.0
+  Min Volume read:   1.0000000E-03

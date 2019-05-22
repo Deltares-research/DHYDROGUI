@@ -12,13 +12,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
 
         public static void UpdateDataColumns(this ModelFeatureCoordinateData<BridgePillar> data)
         {
-            List<IDataColumn> expectedColumns = DataColumns().ToList();
+            var expectedColumns = DataColumns().ToList();
 
-            IEnumerable<IDataColumn> missingDataColumns = expectedColumns.Except(data.DataColumns);
+            var missingDataColumns = expectedColumns.Except(data.DataColumns);
 
-            foreach (IDataColumn missingDataColumn in missingDataColumns)
+            foreach (var missingDataColumn in missingDataColumns)
             {
-                int index = expectedColumns.IndexOf(missingDataColumn);
+                var index = expectedColumns.IndexOf(missingDataColumn);
                 data.DataColumns.Insert(index, missingDataColumn);
             }
 
@@ -29,8 +29,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
 
         private static IEnumerable<IDataColumn> DataColumns()
         {
-            yield return new DataColumn<double>(DiameterColumnName) {DefaultValue = -999};
-            yield return new DataColumn<double>(DragcoefficientColumnName) {DefaultValue = 1};
+            yield return new DataColumn<double>(DiameterColumnName){DefaultValue = -999};
+            yield return new DataColumn<double>(DragcoefficientColumnName){DefaultValue = 1};
         }
     }
 }
+
+

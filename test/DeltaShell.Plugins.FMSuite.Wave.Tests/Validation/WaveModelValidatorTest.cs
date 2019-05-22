@@ -6,7 +6,6 @@ using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.Wave.Properties;
 using DeltaShell.Plugins.FMSuite.Wave.Validation;
 using NUnit.Framework;
-using SharpMap.Extensions.CoordinateSystems;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
 {
@@ -137,26 +136,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                 var validationReport = WaveDomainValidator.Validate(model);
                 Assert.IsFalse(validationReport.AllErrors.Any());
             }
-        }
-
-        [Test]
-        public void GivenWaveModelWithSphericalCoordinateSystemAndWaveSetupIsTrue_WhenWaveDomainIsValidated_ThenCorrectViewDataIsThePhysicalProcessesTab()
-        {
-            //Given
-            var sphericalCoordinateSystemCode = 4326;
-            var waveModel = new WaveModel()
-            {
-                ModelDefinition = { WaveSetup = true},
-                OuterDomain = new WaveDomainData("wavedomaindata"),
-                CoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(sphericalCoordinateSystemCode)
-            };
-
-            //When
-            var result = WaveDomainValidator.Validate(waveModel);
-
-            //Then
-            var viewData = (WaveValidationShortcut) result.SubReports.ElementAt(0).Issues.ElementAt(0).ViewData;
-            Assert.That(viewData.TabName, Is.EqualTo("Physical Processes"));
         }
 
         private bool CheckDomainGrid(WaveDomainData domain, string coordinateSystemName)

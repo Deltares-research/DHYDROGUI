@@ -1,35 +1,32 @@
-﻿using DelftTools.Utils.IO;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
+﻿using System;
+using System.IO;
+using DelftTools.Utils.IO;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using log4net;
-using NetTopologySuite.Extensions.Grids;
-using System;
-using System.IO;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO;
-using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
 {
     public static class WriteNetGeomApi
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(WriteNetGeomApi));
+        private static readonly ILog Log = LogManager.GetLogger(typeof (WriteNetGeomApi));
 
         public static void WriteNetGeometryFile(WaterFlowFMModel model, string geomFile)
         {
-            UnstructuredGrid grid = model.Grid;
+            var grid = model.Grid;
             if (grid.IsEmpty || grid.Cells.Count == 1)
             {
                 return;
             }
 
             var skipDelete = false;
-            string tempPath = FileUtils.CreateTempDirectory();
+            var tempPath = FileUtils.CreateTempDirectory();
             try
             {
                 var tempModel = new WaterFlowFMModel {Name = "temp"};
 
                 tempModel.ModelDefinition.GetModelProperty(KnownProperties.NetFile)
-                         .SetValueAsString(Path.GetFileName(model.NetFilePath));
+                    .SetValueAsString(Path.GetFileName(model.NetFilePath));
 
                 tempModel.ModelDefinition.GetModelProperty(KnownProperties.ExtForceFile).SetValueAsString("");
                 tempModel.ModelDefinition.GetModelProperty(KnownProperties.BndExtForceFile).SetValueAsString("");
@@ -43,12 +40,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
 
                 File.Copy(model.NetFilePath, Path.Combine(tempPath, Path.GetFileName(model.NetFilePath)));
 
-                string mduName = tempModel.Name + MduFile.MduExtension;
-                string mduFilePath = Path.Combine(tempPath, mduName);
+                var mduName = tempModel.Name + MduFile.MduExtension;
+                var mduFilePath = Path.Combine(tempPath, mduName);
 
                 tempModel.ExportTo(mduFilePath, false, false, false);
 
-                IFlexibleMeshModelApi api = FlexibleMeshModelApiFactory.CreateNew();
+                var api = FlexibleMeshModelApiFactory.CreateNew();
                 if (api == null)
                 {
                     throw new InvalidOperationException("No FlexibleMesh api could be constructed.");
@@ -72,9 +69,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
                 try
                 {
                     if (!skipDelete)
-                    {
                         FileUtils.DeleteIfExists(tempPath);
-                    }
                 }
                 catch (Exception e)
                 {

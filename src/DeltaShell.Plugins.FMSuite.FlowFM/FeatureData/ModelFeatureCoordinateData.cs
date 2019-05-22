@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -10,6 +9,7 @@ using DelftTools.Utils.Collections.Generic;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Geometries;
+
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
 {
@@ -27,12 +27,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
 
         public TFeature Feature
         {
-            get => feature;
+            get { return feature; }
             set
             {
                 if (feature != null)
                 {
-                    ((INotifyPropertyChanged) feature).PropertyChanged -= GeometryChanged;
+                    ((INotifyPropertyChanged)feature).PropertyChanged -= GeometryChanged;
                 }
 
                 feature = value;
@@ -41,7 +41,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
                 {
                     previousGeometry = feature.Geometry;
                     DataColumns.ForEach(SyncDataColumnValueList);
-                    ((INotifyPropertyChanged) feature).PropertyChanged += GeometryChanged;
+                    ((INotifyPropertyChanged)feature).PropertyChanged += GeometryChanged;
                 }
                 else
                 {
@@ -54,8 +54,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
 
         IFeature IModelFeatureCoordinateData.Feature
         {
-            get => Feature;
-            set => Feature = (TFeature) value;
+            get { return Feature;}
+            set { Feature = (TFeature) value; }
         }
 
         public void Dispose()
@@ -68,7 +68,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
             switch (e.Action)
             {
                 case NotifyCollectionChangedAction.Add:
-                    SyncDataColumnValueList((IDataColumn) e.GetRemovedOrAddedItem());
+                    SyncDataColumnValueList((IDataColumn)e.GetRemovedOrAddedItem());
                     break;
                 case NotifyCollectionChangedAction.Remove:
                     break;
@@ -79,18 +79,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
 
         private void SyncDataColumnValueList(IDataColumn dataColumn)
         {
-            if (feature?.Geometry?.Coordinates == null)
-            {
-                return;
-            }
+            if (feature?.Geometry?.Coordinates == null) return;
 
-            int length = feature.Geometry.Coordinates.Length;
-            int valueListCount = dataColumn.ValueList.Count;
-            int delta = Math.Abs(length - valueListCount);
+            var length = feature.Geometry.Coordinates.Length;
+            var valueListCount = dataColumn.ValueList.Count;
+            var delta = Math.Abs(length - valueListCount);
 
             if (valueListCount < length)
             {
-                for (var i = 0; i < delta; i++)
+                for (int i = 0; i < delta; i++)
                 {
                     dataColumn.ValueList.Add(dataColumn.DefaultValue);
                 }
@@ -118,26 +115,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
         private void SynchronizeWithNewCoordinates()
         {
             if (feature.Geometry.Coordinates.Length == previousGeometry.Coordinates.Length)
-            {
-                previousGeometry = feature.Geometry;
+            { previousGeometry = feature.Geometry;
                 return;
             }
             else
             {
                 var coordinateComparison2D = new CoordinateComparison2D();
-                List<Coordinate> geometryCoordinates = feature.Geometry.Coordinates.ToList();
+                var geometryCoordinates = feature.Geometry.Coordinates.ToList();
+
 
                 // todo increase performance (Hashset ??)
                 var pointerList = new List<int>(previousGeometry.Coordinates.Length);
-                foreach (Coordinate previousGeometryCoordinate in previousGeometry.Coordinates)
+                foreach (var previousGeometryCoordinate in previousGeometry.Coordinates)
                 {
-                    int toIndex = -1;
-                    for (var i = 0; i < geometryCoordinates.Count; i++)
+                    var toIndex = -1;
+                    for (int i = 0; i < geometryCoordinates.Count; i++)
                     {
-                        if (!coordinateComparison2D.Equals(geometryCoordinates[i], previousGeometryCoordinate))
-                        {
-                            continue;
-                        }
+                        if (!coordinateComparison2D.Equals(geometryCoordinates[i], previousGeometryCoordinate)) continue;
 
                         toIndex = i;
                         break;
@@ -148,21 +142,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
 
                 DataColumns.ForEach(dc => UpdateColumnValuesWithPointerTable(dc, pointerList));
                 previousGeometry = feature.Geometry;
+
             }
         }
 
+
         private void UpdateColumnValuesWithPointerTable(IDataColumn dataColumn, List<int> pointerList)
         {
-            IList originalList = dataColumn.ValueList;
-            IList list = dataColumn.CreateDefaultValueList(feature.Geometry.Coordinates.Length);
+            var originalList = dataColumn.ValueList;
+            var list = dataColumn.CreateDefaultValueList(feature.Geometry.Coordinates.Length);
 
-            for (var i = 0; i < pointerList.Count; i++)
+            for (int i = 0; i < pointerList.Count; i++)
             {
-                int toIndex = pointerList[i];
-                if (toIndex == -1)
-                {
-                    continue;
-                }
+                var toIndex = pointerList[i];
+                if (toIndex == -1) continue;
 
                 list[toIndex] = originalList[i];
             }

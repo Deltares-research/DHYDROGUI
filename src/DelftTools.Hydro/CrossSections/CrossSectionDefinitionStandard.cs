@@ -10,19 +10,25 @@ using GeoAPI.Geometries;
 
 namespace DelftTools.Hydro.CrossSections
 {
-    [Entity(FireOnCollectionChange = false)]
+    [Entity(FireOnCollectionChange=false)]
     public class CrossSectionDefinitionStandard : CrossSectionDefinition
     {
         private ICrossSectionStandardShape shape;
 
-        public CrossSectionDefinitionStandard() : this(CrossSectionStandardShapeRectangle.CreateDefault()) {}
+        public CrossSectionDefinitionStandard():this(CrossSectionStandardShapeRectangle.CreateDefault())
+        {
+            
+        }
 
         public CrossSectionDefinitionStandard(ICrossSectionStandardShape shape)
         {
             Shape = shape;
         }
 
-        public override bool GeometryBased => false;
+        public override bool GeometryBased
+        {
+            get { return false; }
+        }
 
         public override IEnumerable<Coordinate> Profile
         {
@@ -32,43 +38,54 @@ namespace DelftTools.Hydro.CrossSections
             }
         }
 
-        public override IEnumerable<Coordinate> FlowProfile => Profile;
+        public override IEnumerable<Coordinate> FlowProfile
+        {
+            get { return Profile; }
+        }
 
-        public override CrossSectionType CrossSectionType => CrossSectionType.Standard;
+        public override CrossSectionType CrossSectionType
+        {
+            get { return CrossSectionType.Standard; }
+        }
 
-        public override LightDataTable RawData => null;
+        public override LightDataTable RawData
+        {
+            get { return null; }
+        }
 
         public virtual double LevelShift { get; set; }
 
         public virtual ICrossSectionStandardShape Shape
         {
-            get => shape;
-            protected set => shape = value;
+            get { return shape; }
+            protected set
+            {
+                shape = value;
+            }
         }
 
         public virtual CrossSectionStandardShapeType ShapeType
         {
-            get => shape.Type;
+            get { return shape.Type; }
             set
             {
                 if (shape.Type == value)
                 {
                     return;
                 }
-
                 SetShapeFromType(value);
             }
         }
 
         [EditAction]
-        private void SetShapeFromType(CrossSectionStandardShapeType shapeType)
+        void SetShapeFromType(CrossSectionStandardShapeType shapeType)
         {
             Shape = GetDefaultShape(shapeType);
         }
 
         public override object Clone()
         {
-            var clone = (CrossSectionDefinitionStandard) base.Clone();
+            var clone = (CrossSectionDefinitionStandard)base.Clone();
             clone.LevelShift = LevelShift;
             clone.Shape = (ICrossSectionStandardShape) Shape.Clone();
             return clone;
@@ -103,14 +120,14 @@ namespace DelftTools.Hydro.CrossSections
                 case CrossSectionStandardShapeType.Rectangle:
                     return CrossSectionStandardShapeRectangle.CreateDefault();
                 // TODO: Re-enable once Enclosed branches are supported
-                case CrossSectionStandardShapeType.Round:
+                case CrossSectionStandardShapeType.Round: 
                     return CrossSectionStandardShapeRound.CreateDefault();
                 case CrossSectionStandardShapeType.Arch:
                     return CrossSectionStandardShapeArch.CreateDefault();
                 case CrossSectionStandardShapeType.Cunette:
                     return CrossSectionStandardShapeCunette.CreateDefault();
                 // TODO: Re-enable once Enclosed branches are supported
-                case CrossSectionStandardShapeType.Egg:
+                case CrossSectionStandardShapeType.Egg: 
                     return CrossSectionStandardShapeEgg.CreateDefault();
                 case CrossSectionStandardShapeType.Elliptical:
                     return CrossSectionStandardShapeElliptical.CreateDefault();
