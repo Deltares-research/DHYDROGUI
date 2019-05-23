@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Utils.Validation;
-using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.Wave.Properties;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Validation
@@ -15,8 +14,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
 
         private static IEnumerable<ValidationReport> ValidateAllDomains(WaveModel model)
         {
-            var reportList = new List<ValidationReport>();
-            reportList.Add(ValidateAllDomainsShareCoordinateSystem(model));
+            var reportList = new List<ValidationReport> {ValidateAllDomainsShareCoordinateSystem(model)};
             reportList.AddRange(WaveDomainHelper.GetAllDomains(model.OuterDomain)
                 .Select(ValidateDomain)
                 .ToList());
