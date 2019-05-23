@@ -22,22 +22,27 @@ using SharpMap;
 using SharpMap.Api.Layers;
 using SharpMap.UI.Forms;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using DelftTools.Utils.Collections.Generic;
+using DelftTools.Utils.Reflection;
+using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
+using NetTopologySuite.Extensions.Features;
 using Control = System.Windows.Controls.Control;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 {
     [TestFixture]
     [Category(TestCategory.WindowsForms)]
-    public class FlowFMMapLayerProviderTest
+    public class FlowFmMapLayerProviderTest
     {
         [Test]
-        public void ShowLayersForFMModel()
+        public void ShowLayersForFmModel()
         {
             var mduPath =
                 TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
@@ -76,7 +81,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
 
         [Test]
-        public void CheckLayerIsSetCorrectlyWhenOpeningFMItems()
+        public void CheckLayerIsSetCorrectlyWhenOpeningFmItems()
         {
             var mduPath = TestHelper.GetTestFilePath(@"roughness\bendprof.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
@@ -122,7 +127,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
 
         [Test]
-        public void CheckFMEnclosureLayerIsCreated()
+        public void CheckFmEnclosureLayerIsCreated()
         {
             var model = new WaterFlowFMModel();
 
@@ -157,42 +162,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
 
         [Test]
-        public void CheckFMEnclosureLayerIsCreated2()
-        {
-            var model = new WaterFlowFMModel();
-
-            using (var gui = new DeltaShellGui())
-            {
-                var fmGuiPlugin = new FlowFMGuiPlugin();
-
-                var app = gui.Application;
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                gui.Plugins.Add(new ProjectExplorerGuiPlugin());
-                gui.Plugins.Add(new NetworkEditorGuiPlugin());
-                gui.Plugins.Add(new SharpMapGisGuiPlugin());
-                gui.Plugins.Add(fmGuiPlugin);
-
-                gui.Run();
-
-                var project = app.Project;
-                project.RootFolder.Add(model);
-
-                var enclosureFeature =
-                    FlowFMTestHelper.CreateFeature2DPolygonFromGeometry("Enclosure01",
-                                                                        FlowFMTestHelper.GetValidGeometryForEnclosureExample());
-
-                model.Area.Enclosures.Add(enclosureFeature);
-                var layer = new NetworkEditorMapLayerProvider().CreateLayer(model.Area.Enclosures, model.Area);
-
-                Assert.IsNotNull(layer); //asssert it got injected               
-                Assert.AreEqual(1, layer.CustomRenderers.Count);
-                Assert.AreEqual(typeof(EnclosureRenderer), layer.CustomRenderers[0].GetType());
-            }
-        }
-
-        [Test]
-        public void CheckFMBridgePillarLayerIsCreated()
+        public void CheckFmBridgePillarLayerIsCreated()
         {
             var model = new WaterFlowFMModel();
 
@@ -304,7 +274,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
 
         [Test]
-        public void CheckFMLayerProviderGivesAWarningWithInvalidGeometryForEnclosure()
+        public void CheckFmLayerProviderGivesAWarningWithInvalidGeometryForEnclosure()
         {
             var model = new WaterFlowFMModel();
 
@@ -335,7 +305,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 /* Make sure the method works first */
                 var layerProvider = fmGuiPlugin.MapLayerProvider;
                 var areaChildren = layerProvider.ChildLayerObjects(model).OfType<HydroArea>();
-                Assert.AreEqual(1, areaChildren.ToList().Count);
+                IEnumerable<HydroArea> hydroAreas = areaChildren as HydroArea[] ?? areaChildren.ToArray();
+                var listOfHydroAreas = hydroAreas.ToList();
+                Assert.AreEqual(1, listOfHydroAreas.Count);
                 
                 /* Now check there are log messages instantiating the enum to list. */
                 TestHelper.AssertAtLeastOneLogMessagesContains(
@@ -343,6 +315,43 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     String.Format(Resources.WaterFlowFMEnclosureValidator_Validate_Drawn_polygon_not__0__not_valid, featureName));
             }
         }
+
+        [Test]
+        public void GivenAFlowFmMapLayProvider_WhenCreatingAMapLayerBoundaryConditions_ThenBoundaryConditionLayerIsNotEnabledInLegend()
+        {
+            //Given
+            var mapLayerProvider = new FlowFMMapLayerProvider();
+            var boundaryConditionSets = new EventedList<BoundaryConditionSet>()
+            {
+                new BoundaryConditionSet()
+            };
+            var waterFlowFmModel = new WaterFlowFMModel();
+
+            //When
+            var layer = mapLayerProvider.CreateLayer(boundaryConditionSets, waterFlowFmModel);
+
+            //Then
+            Assert.That(layer.Name, Is.EqualTo("Boundary Conditions"));
+            Assert.That(layer.ShowInLegend, Is.EqualTo(false));
+        }
+
+        [Test]
+        public void GivenAFlowFmMapLayProvider_WhenCreatingAMapLayerSourceAndSinks_ThenSourceAndSinksLayerIsNotEnabledInLegend()
+        {
+            //Given
+            var mapLayerProvider = new FlowFMMapLayerProvider();
+            var sourceAndSinks = new EventedList<Feature2D>();
+            var waterFlowFmModel = new WaterFlowFMModel();
+            TypeUtils.SetPrivatePropertyValue(waterFlowFmModel, "Pipes", sourceAndSinks);
+
+           //When
+            var layer = mapLayerProvider.CreateLayer(sourceAndSinks, waterFlowFmModel);
+
+            //Then
+            Assert.That(layer.Name, Is.EqualTo("Sources and Sinks"));
+            Assert.That(layer.ShowInLegend, Is.EqualTo(false));
+        }
+
 
         private static void ShowModelLayers(WaterFlowFMModel model)
         {

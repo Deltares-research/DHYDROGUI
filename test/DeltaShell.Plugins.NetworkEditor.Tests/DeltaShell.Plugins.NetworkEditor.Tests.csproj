@@ -213,6 +213,7 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AreaLayerTest.cs" />
     <Compile Include="CulvertPropertiesTest.cs" />
     <Compile Include="Export\CrossSectionXYZToCsvFileExporterTest.cs" />
     <Compile Include="Export\CrossSectionYZToCsvFileExporterTest.cs" />
