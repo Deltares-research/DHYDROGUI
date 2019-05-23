@@ -28,10 +28,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         [Test]
         public void TestCreateT0Include()
         {
-            const string expectedString = "'T0: 2010.01.01 13:12:11  (scu=       1s)'";
+            const string ExpectedString = "'T0: 2010.01.01 13:12:11  (scu=       1s)'";
 
             var dispersionInclude = IncludeFileFactory.CreateT0Include(new DateTime(2010, 1, 1, 13, 12, 11));
-            Assert.AreEqual(expectedString, dispersionInclude);
+            Assert.AreEqual(ExpectedString, dispersionInclude);
         }
 
         [Test]
@@ -200,9 +200,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         [Test]
         public void TestCreateNumberOfSegmentsInclude()
         {
-            const string expectedString = "446698 ; number of segments";
+            const string ExpectedString = "446698 ; number of segments";
 
-            Assert.AreEqual(expectedString, IncludeFileFactory.CreateNumberOfSegmentsInclude(63814, 7));
+            Assert.AreEqual(ExpectedString, IncludeFileFactory.CreateNumberOfSegmentsInclude(63814, 7));
         }
 
         [Test]
@@ -221,9 +221,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         [Test]
         public void TestCreateNumberOfExchangesInclude()
         {
-            const string expectedString = "788900 0 382884 ; number of exchanges in three directions";
+            const string ExpectedString = "788900 0 382884 ; number of exchanges in three directions";
 
-            Assert.AreEqual(expectedString, IncludeFileFactory.CreateNumberOfExchangesInclude(788900, 382884));
+            Assert.AreEqual(ExpectedString, IncludeFileFactory.CreateNumberOfExchangesInclude(788900, 382884));
         }
 
         [Test]
@@ -247,9 +247,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         [Test]
         public void TestCreateAttributesFileInclude()
         {
-            const string expectedString = "INCLUDE 'uni3d.atr' ; attributes file";
+            const string ExpectedString = "INCLUDE 'uni3d.atr' ; attributes file";
 
-            Assert.AreEqual(expectedString, IncludeFileFactory.CreateAttributesFileInclude("uni3d.atr"));
+            Assert.AreEqual(ExpectedString, IncludeFileFactory.CreateAttributesFileInclude("uni3d.atr"));
         }
 
         [Test]
@@ -273,21 +273,21 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         [Test]
         public void TestCreateConstantDispersionInclude()
         {
-            const string expectedString = "0.2 0.0 0.3 ; constant dispersion";
+            const string ExpectedString = "0.2 0.0 0.3 ; constant dispersion";
 
             var dispersion = WaterQualityFunctionFactory.CreateConst("Dispersion", 0.2d, "Dispersion", "m2/s", null);
 
-            Assert.AreEqual(expectedString, IncludeFileFactory.CreateConstantDispersionInclude(0.3d, dispersion));
+            Assert.AreEqual(ExpectedString, IncludeFileFactory.CreateConstantDispersionInclude(0.3d, dispersion));
         }
 
         [Test]
         public void TestCreateConstantDispersionInclude_HasSpatialData()
         {
-            const string expectedString = "0.0 0.0 0.3 ; constant dispersion";
+            const string ExpectedString = "0.0 0.0 0.3 ; constant dispersion";
 
             var dispersion = WaterQualityFunctionFactory.CreateUnstructuredGridCellCoverage("Dispersion", 0.2d, "Dispersion", "m2/s", null);
 
-            Assert.AreEqual(expectedString, IncludeFileFactory.CreateConstantDispersionInclude(0.3d, dispersion));
+            Assert.AreEqual(ExpectedString, IncludeFileFactory.CreateConstantDispersionInclude(0.3d, dispersion));
         }
 
         #endregion Block 4
@@ -323,13 +323,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         [Test]
         public void TestCreateBoundaryListInclude()
         {
-            const string boundaryNameOne = "one";
-            const string boundaryNameTwo = "two";
+            const string BoundaryNameOne = "one";
+            const string BoundaryNameTwo = "two";
 
             Dictionary<WaterQualityBoundary, int[]> boundaryNodes = new Dictionary<WaterQualityBoundary, int[]>(2)
             {
-                {new WaterQualityBoundary() {Name = boundaryNameTwo}, new[] {6, 2}}, // added in the wrong order, but the result should still start with 1
-                {new WaterQualityBoundary() {Name = boundaryNameOne}, new[] {1, 5, 3, 4}},
+                {new WaterQualityBoundary() {Name = BoundaryNameTwo}, new[] {6, 2}}, // added in the wrong order, but the result should still start with 1
+                {new WaterQualityBoundary() {Name = BoundaryNameOne}, new[] {1, 5, 3, 4}},
             };
 
             string result = IncludeFileFactory.CreateBoundaryListInclude(boundaryNodes, 3);
@@ -492,10 +492,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                 LoadType = "haha"
             };
 
-            var loadsAndIds = new Dictionary<WaterQualityLoad, int>(3);
-            loadsAndIds[load1] = 948;
-            loadsAndIds[load2] = 67;
-            loadsAndIds[load3] = 0;
+            var loadsAndIds = new Dictionary<WaterQualityLoad, int>(3)
+            {
+                [load1] = 948,
+                [load2] = 67,
+                [load3] = 0
+            };
 
             string expectedString =
                 "; Number of loads" + Environment.NewLine +
@@ -704,10 +706,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         [Test]
         public void TestSurfParametersWritten()
         {
-            const string surfacesFile = "uni3d.srf";
+            const string SurfacesFile = "uni3d.srf";
             var waqInitializationSettings = new WaqInitializationSettings
             {
-                SurfacesFile = surfacesFile,
+                SurfacesFile = SurfacesFile,
             };
 
             string expectedString = "PARAMETERS" + Environment.NewLine + 
@@ -818,6 +820,20 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                 "CONSTANTS 'tolerance' DATA 1E-06 ; Convergence tolerance" + Environment.NewLine +
                 "CONSTANTS 'iteration report' DATA 0 ; Write iteration report (when 1) or not (when 0)" + Environment.NewLine;
             Assert.AreEqual(expectedText, numericalOptionsInclude);
+        }
+
+        [Test]
+        public void CreateNumericalOptionsIncludeTestDefaultNumberOfCoresIs2()
+        {
+            // setup
+            var initSettings = new WaqInitializationSettings();
+
+            // call
+            var numericalOptionsInclude = IncludeFileFactory.CreateNumericalOptionsInclude(initSettings);
+
+            // assert
+            var expectedText = "CONSTANTS 'NOTHREADS' DATA 2 ; Number of threads used by delwaq";
+            Assert.IsTrue(numericalOptionsInclude.Contains(expectedText));
         }
 
         [Test]

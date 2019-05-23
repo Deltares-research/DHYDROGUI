@@ -34,7 +34,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.DataObjects.Mod
             Assert.AreEqual(MonitoringOutputLevel.None, waterQualityModel1DSettings.MonitoringOutputLevel);
             Assert.IsTrue(waterQualityModel1DSettings.CorrectForEvaporation);
             Assert.IsTrue(waterQualityModel1DSettings.ClosureErrorCorrection);
-            Assert.AreEqual(0, waterQualityModel1DSettings.NrOfThreads);
+            Assert.AreEqual(2, waterQualityModel1DSettings.NrOfThreads);
             Assert.AreEqual(0.001, waterQualityModel1DSettings.DryCellThreshold);
             Assert.AreEqual(100, waterQualityModel1DSettings.IterationMaximum);
             Assert.AreEqual(1e-7, waterQualityModel1DSettings.Tolerance);
