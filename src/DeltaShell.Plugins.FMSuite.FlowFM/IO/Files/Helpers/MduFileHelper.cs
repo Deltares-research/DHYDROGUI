@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 using DelftTools.Hydro;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.IO;
-using DeltaShell.Plugins.FMSuite.Common.IO;
+using DeltaShell.Plugins.FMSuite.Common.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using log4net;

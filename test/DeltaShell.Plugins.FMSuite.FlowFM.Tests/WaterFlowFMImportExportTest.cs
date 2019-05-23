@@ -1,4 +1,8 @@
-﻿using DelftTools.Hydro.Structures;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
@@ -9,10 +13,12 @@ using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
-using DeltaShell.Plugins.FMSuite.Common.IO;
+using DeltaShell.Plugins.FMSuite.Common.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DeltaShell.Plugins.FMSuite.FlowFM.Sediment;
 using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.SharpMapGis;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
@@ -22,12 +28,6 @@ using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using SharpMapTestUtils;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using DeltaShell.Plugins.FMSuite.FlowFM.Model;
-using DeltaShell.Plugins.FMSuite.FlowFM.Sediment;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 {

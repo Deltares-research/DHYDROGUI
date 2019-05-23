@@ -4,7 +4,7 @@ using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Utils;
-using DeltaShell.Plugins.FMSuite.Common.IO;
+using DeltaShell.Plugins.FMSuite.Common.IO.Files;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 {

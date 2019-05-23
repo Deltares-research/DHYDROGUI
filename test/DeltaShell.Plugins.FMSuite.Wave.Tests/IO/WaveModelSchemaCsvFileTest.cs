@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
-using DeltaShell.Plugins.FMSuite.Common.IO;
+using DeltaShell.Plugins.FMSuite.Common.IO.Files;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 using NUnit.Framework;
 

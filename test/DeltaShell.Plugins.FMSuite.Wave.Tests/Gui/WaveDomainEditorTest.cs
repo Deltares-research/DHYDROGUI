@@ -1,5 +1,5 @@
 ﻿using DelftTools.TestUtils;
-using DeltaShell.Plugins.FMSuite.Common;
+using DeltaShell.Plugins.FMSuite.Common.Wind;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors;
 using NUnit.Framework;
 

@@ -1,5 +1,6 @@
 ﻿using DelftTools.TestUtils;
-using DeltaShell.Plugins.FMSuite.Common.IO;
+using DeltaShell.Plugins.FMSuite.Common.IO.ImportExport.Importers;
+using DeltaShell.Plugins.FMSuite.Common.IO.Readers;
 using NetTopologySuite.Extensions.Coverages;
 using NUnit.Framework;
 using SharpMap;

@@ -147,42 +147,42 @@
     <Compile Include="FeatureData\VerticalProfileDefinition.cs" />
     <Compile Include="FeatureData\IWindField.cs" />
     <Compile Include="FeatureData\UniformWindField.cs" />
-    <Compile Include="FileBasedWindDefinition.cs" />
-    <Compile Include="IO\ApwxwyFileReader.cs" />
-    <Compile Include="IO\Delft3DDepthFileExporter.cs" />
-    <Compile Include="IO\Delft3DDepthFileImporter.cs" />
-    <Compile Include="IO\Delft3DDepthFileReader.cs" />
-    <Compile Include="IO\Delft3DDepthFileWriter.cs" />
-    <Compile Include="IO\Delft3DGridFileExporter.cs" />
-    <Compile Include="IO\Delft3DGridFileImporter.cs" />
-    <Compile Include="IO\Delft3DGridFileReader.cs" />
-    <Compile Include="IO\Delft3DGridFileWriter.cs" />
-    <Compile Include="IO\DiaFileReader.cs" />
+    <Compile Include="Wind\FileBasedWindDefinition.cs" />
+    <Compile Include="IO\Readers\ApwxwyFileReader.cs" />
+    <Compile Include="IO\ImportExport\Exporters\Delft3DDepthFileExporter.cs" />
+    <Compile Include="IO\ImportExport\Importers\Delft3DDepthFileImporter.cs" />
+    <Compile Include="IO\Readers\Delft3DDepthFileReader.cs" />
+    <Compile Include="IO\Writers\Delft3DDepthFileWriter.cs" />
+    <Compile Include="IO\ImportExport\Exporters\Delft3DGridFileExporter.cs" />
+    <Compile Include="IO\ImportExport\Importers\Delft3DGridFileImporter.cs" />
+    <Compile Include="IO\Readers\Delft3DGridFileReader.cs" />
+    <Compile Include="IO\Writers\Delft3DGridFileWriter.cs" />
+    <Compile Include="IO\Readers\DiaFileReader.cs" />
     <Compile Include="IO\Feature2DImportExportBase.cs" />
-    <Compile Include="IO\FMNetCdfFileFunctionStore.cs" />
-    <Compile Include="IO\FeatureGroupExtensions.cs" />
-    <Compile Include="IO\FunctionExtensions.cs" />
-    <Compile Include="IO\IFeature2DFileBase.cs" />
-    <Compile Include="IO\ObsFile.cs" />
-    <Compile Include="IO\PliFile.cs" />
-    <Compile Include="IO\PlizFile.cs" />
-    <Compile Include="IO\PolFile.cs" />
-    <Compile Include="IO\Structure2D.cs" />
-    <Compile Include="IO\StructureFactory.cs" />
-    <Compile Include="IO\StructureFactoryValidator.cs" />
-    <Compile Include="IO\StructureProperty.cs" />
-    <Compile Include="IO\StructurePropertyDefinition.cs" />
-    <Compile Include="IO\StructureSchema.cs" />
-    <Compile Include="IO\StructureSchemaCsvFile.cs" />
-    <Compile Include="IO\StructuresFile.cs" />
-    <Compile Include="IO\T3DFile.cs" />
-    <Compile Include="IO\TimFile.cs" />
+    <Compile Include="FunctionStores\FMNetCdfFileFunctionStore.cs" />
+    <Compile Include="IO\Files\FeatureGroupExtensions.cs" />
+    <Compile Include="FunctionStores\FunctionExtensions.cs" />
+    <Compile Include="IO\Files\IFeature2DFileBase.cs" />
+    <Compile Include="IO\Files\ObsFile.cs" />
+    <Compile Include="IO\Files\PliFile.cs" />
+    <Compile Include="IO\Files\PlizFile.cs" />
+    <Compile Include="IO\Files\PolFile.cs" />
+    <Compile Include="IO\Files\Structures\Structure2D.cs" />
+    <Compile Include="IO\Files\Structures\StructureFactory.cs" />
+    <Compile Include="IO\Files\Structures\StructureFactoryValidator.cs" />
+    <Compile Include="IO\Files\Structures\StructureProperty.cs" />
+    <Compile Include="IO\Files\Structures\StructurePropertyDefinition.cs" />
+    <Compile Include="IO\Files\Structures\StructureSchema.cs" />
+    <Compile Include="IO\Files\Structures\StructureSchemaCsvFile.cs" />
+    <Compile Include="IO\Files\Structures\StructuresFile.cs" />
+    <Compile Include="IO\Files\T3DFile.cs" />
+    <Compile Include="IO\Files\TimFile.cs" />
     <Compile Include="IO\FMParser.cs" />
-    <Compile Include="IO\WindFile.cs" />
+    <Compile Include="IO\Files\WindFile.cs" />
     <Compile Include="Layers\Boundary2DEditor.cs" />
     <Compile Include="Layers\Boundary2DInteractor.cs" />
     <Compile Include="Layers\ModelGroupLayer.cs" />
-    <Compile Include="IO\FMSuiteFileBase.cs" />
+    <Compile Include="IO\Files\FMSuiteFileBase.cs" />
     <Compile Include="Layers\SnappedFeatureCollection.cs" />
     <Compile Include="ModelSchema\FileBasedModelItem.cs" />
     <Compile Include="ModelSchema\ModelProperty.cs" />
@@ -190,12 +190,12 @@
     <Compile Include="ModelSchema\ModelPropertyValueParsingExtensions.cs" />
     <Compile Include="ModelSchema\ModelPropertyGroup.cs" />
     <Compile Include="ModelSchema\ModelSchema.cs" />
-    <Compile Include="IO\ModelSchemaCsvFile.cs" />
+    <Compile Include="IO\Files\ModelSchemaCsvFile.cs" />
     <Compile Include="ModelSchema\Steerable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Toolboxes\ScriptCommand.cs" />
     <Compile Include="Toolboxes\ToolboxCommands.cs" />
-    <Compile Include="WindDefinitionType.cs" />
+    <Compile Include="Wind\WindDefinitionType.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -213,6 +213,7 @@
       <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>

@@ -1,4 +1,5 @@
 using System.Linq;
+using DeltaShell.Plugins.FMSuite.Common.Wind;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.Common.Tests

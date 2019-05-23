@@ -1,5 +1,6 @@
 ﻿using DelftTools.TestUtils;
-using DeltaShell.Plugins.FMSuite.Common.IO;
+using DeltaShell.Plugins.FMSuite.Common.IO.Readers;
+using DeltaShell.Plugins.FMSuite.Common.IO.Writers;
 using NetTopologySuite.Extensions.Grids;
 using NUnit.Framework;
 

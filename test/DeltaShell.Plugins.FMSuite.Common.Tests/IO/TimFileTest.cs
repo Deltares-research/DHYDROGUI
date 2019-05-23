@@ -5,7 +5,7 @@ using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.TestUtils;
-using DeltaShell.Plugins.FMSuite.Common.IO;
+using DeltaShell.Plugins.FMSuite.Common.IO.Files;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO

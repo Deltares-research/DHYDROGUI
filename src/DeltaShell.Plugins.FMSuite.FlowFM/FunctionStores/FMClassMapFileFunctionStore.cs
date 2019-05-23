@@ -8,7 +8,7 @@ using DelftTools.Units;
 using DelftTools.Utils.NetCdf;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO.Grid;
-using DeltaShell.Plugins.FMSuite.Common.IO;
+using DeltaShell.Plugins.FMSuite.Common.FunctionStores;
 using log4net;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
@@ -18,7 +18,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
     /// <summary>
     /// Function store for Class Map Files.
     /// </summary>
-    /// <seealso cref="DeltaShell.Plugins.FMSuite.Common.IO.FMNetCdfFileFunctionStore" />
+    /// <seealso cref="FMNetCdfFileFunctionStore" />
     public class FMClassMapFileFunctionStore : FMNetCdfFileFunctionStore
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(FMMapFileFunctionStore));

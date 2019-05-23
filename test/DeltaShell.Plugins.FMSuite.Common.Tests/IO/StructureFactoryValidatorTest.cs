@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using DelftTools.Utils.Collections;
-using DeltaShell.Plugins.FMSuite.Common.IO;
+using DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO

@@ -2,7 +2,7 @@
 using System.IO;
 using System.Windows.Forms;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
-using DeltaShell.Plugins.FMSuite.Common.IO;
+using DeltaShell.Plugins.FMSuite.Common.IO.Files;
 using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms

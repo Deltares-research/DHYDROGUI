@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
-using DeltaShell.Plugins.FMSuite.Common.IO;
+using DeltaShell.Plugins.FMSuite.Common.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccess;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;

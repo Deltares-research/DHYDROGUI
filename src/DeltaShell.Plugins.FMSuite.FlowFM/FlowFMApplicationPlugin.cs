@@ -1,3 +1,10 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Text;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
@@ -8,9 +15,14 @@ using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
+using DeltaShell.Plugins.FMSuite.Common.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.ImportersExporters;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.NetworkEditor.Import;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
@@ -22,17 +34,6 @@ using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Geometries;
 using NetTopologySuite.Extensions.Grids;
 using NetTopologySuite.Geometries;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.ImportersExporters;
-using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM
 {
