@@ -229,13 +229,11 @@
                 <TextBlock 
                     Text="{Binding Label}" 
                     Style="{StaticResource LabelTextBlockStyle}"/>
-                <xctk:TimeSpanUpDown
+                <settingsWpf:WpfCustomTimeSpan
                     Grid.Column="1"
                     FractionalSecondsDigitsCount="3" 
                     Style="{StaticResource ControlWithErrorStyle}"
                     Value="{Binding Value, Mode=TwoWay, ValidatesOnDataErrors=True}"
-                    Minimum="00:00:00.001"
-                    DefaultValue="{Binding Value}"
                     TextAlignment="Left"/>
             </Grid>
         </DataTemplate>
