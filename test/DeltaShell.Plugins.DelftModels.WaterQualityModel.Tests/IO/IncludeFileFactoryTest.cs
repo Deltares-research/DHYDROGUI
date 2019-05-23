@@ -821,6 +821,20 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         }
 
         [Test]
+        public void CreateNumericalOptionsIncludeTestDefaultNumberOfCoresIs2()
+        {
+            // setup
+            var initSettings = new WaqInitializationSettings();
+
+            // call
+            var numericalOptionsInclude = IncludeFileFactory.CreateNumericalOptionsInclude(initSettings);
+
+            // assert
+            var expectedText = "CONSTANTS 'NOTHREADS' DATA 2 ; Number of threads used by delwaq";
+            Assert.IsTrue(numericalOptionsInclude.Contains(expectedText));
+        }
+
+        [Test]
         public void CreateNumericalOptionsIncludeTestForNonIterativeScheme()
         {
             // setup

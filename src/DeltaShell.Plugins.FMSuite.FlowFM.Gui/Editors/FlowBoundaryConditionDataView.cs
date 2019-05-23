@@ -1,4 +1,14 @@
-﻿using DelftTools.Controls;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.ComponentModel;
+using System.Drawing;
+using System.Globalization;
+using System.Linq;
+using System.Net;
+using System.Runtime.Remoting;
+using System.Windows.Forms;
+using DelftTools.Controls;
 using DelftTools.Controls.Swf;
 using DelftTools.Controls.Swf.Charting;
 using DelftTools.Controls.Swf.Editors;
@@ -17,21 +27,11 @@ using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.Gui;
 using DeltaShell.Plugins.FMSuite.Common.Gui.Forms;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using GeoAPI.Extensions.CoordinateSystems;
 using log4net;
-using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.ComponentModel;
-using System.Drawing;
-using System.Globalization;
-using System.Linq;
-using System.Net;
-using System.Runtime.Remoting;
-using System.Windows.Forms;
-using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 {
@@ -767,10 +767,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
         private void TimeSeriesDialog()
         {
             var generateDialog = new TimeSeriesGeneratorDialog {ApplyOnAccept = false};
-
             var startTime = ModelStartTime;
             var stopTime = ModelStopTime;
-            var timeStep = ModelTimeStep;
+            var timeStep = new TimeSpan(0, 12, 0, 0);
+
             generateDialog.StartPosition = FormStartPosition.CenterScreen;
             generateDialog.SetData(null, startTime, stopTime, timeStep);
 

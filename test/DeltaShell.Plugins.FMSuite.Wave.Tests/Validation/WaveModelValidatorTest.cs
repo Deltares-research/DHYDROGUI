@@ -138,6 +138,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             }
         }
 
+        [Test]
+        public void WaveModel_With_OuterDomain_SphericalCoordinates_And_WaveSetupIsTrue_ValidationSucceeds()
+        {
+            var filePath = TestHelper.GetTestFilePath(@"WaveWithSphericalCoordinates\nonValidModel\d3dfm1125.mdw");
+            var waveModel = new WaveModel(filePath);
+
+            var result = WaveDomainValidator.Validate(waveModel);
+
+            Assert.That(result.SubReports.ElementAt(0).Issues.ElementAt(0).ViewData, Is.TypeOf<WaveValidationShortcut>());
+        }
+
         private bool CheckDomainGrid(WaveDomainData domain, string coordinateSystemName)
         {
             if (domain.Grid == null) return false;
