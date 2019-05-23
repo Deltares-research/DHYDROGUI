@@ -5,7 +5,7 @@ using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils;
-using DeltaShell.Plugins.FMSuite.Common.IO;
+using DeltaShell.Plugins.FMSuite.Common.IO.ImportExport.Exporters;
 using DeltaShell.Plugins.FMSuite.Wave.IO.Exporters;
 using DeltaShell.Plugins.FMSuite.Wave.IO.Importers;
 using Mono.Addins;

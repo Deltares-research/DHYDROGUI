@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core;
 using DelftTools.Utils.Editing;
-using DeltaShell.Plugins.FMSuite.Common.IO;
+using DeltaShell.Plugins.FMSuite.Common.IO.Readers;
 using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Extensions.Grids;

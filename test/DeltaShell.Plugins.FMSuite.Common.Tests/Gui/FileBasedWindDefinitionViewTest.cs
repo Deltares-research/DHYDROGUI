@@ -1,5 +1,6 @@
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.FMSuite.Common.Gui;
+using DeltaShell.Plugins.FMSuite.Common.Wind;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.Common.Tests.Gui

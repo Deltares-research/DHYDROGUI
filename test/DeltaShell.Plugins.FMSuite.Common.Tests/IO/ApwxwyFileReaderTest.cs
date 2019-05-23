@@ -1,8 +1,7 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
-using DeltaShell.Plugins.FMSuite.Common.IO;
+using DeltaShell.Plugins.FMSuite.Common.IO.Readers;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO

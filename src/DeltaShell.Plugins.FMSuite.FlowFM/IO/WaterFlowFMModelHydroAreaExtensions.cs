@@ -6,7 +6,7 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
-using DeltaShell.Plugins.FMSuite.Common.IO;
+using DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using log4net;

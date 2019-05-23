@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Utils.Collections;
-using DeltaShell.Plugins.FMSuite.Common.IO;
+using DeltaShell.Plugins.FMSuite.Common.IO.Files;
 using GeoAPI.Geometries;
 using log4net;
 

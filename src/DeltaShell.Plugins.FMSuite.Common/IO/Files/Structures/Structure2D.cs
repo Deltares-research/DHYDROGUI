@@ -1,0 +1,70 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using DelftTools.Hydro.Structures.KnownStructureProperties;
+using DelftTools.Utils.Reflection;
+using DeltaShell.NGHS.IO.FileWriters.Structure;
+using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
+
+namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
+{
+    public enum StructureType
+    {
+        [Description(StructureRegion.StructureTypeName.Pump)]
+        Pump,
+
+        [Description(StructureRegion.StructureTypeName.Gate)]
+        Gate,
+
+        [Description(StructureRegion.StructureTypeName.Weir)]
+        Weir,
+
+        [Description(StructureRegion.StructureTypeName.GeneralStructure)]
+        GeneralStructure,
+        InvalidType
+    }
+
+    public class Structure2D
+    {
+        public Structure2D(string type)
+        {
+            SetStructureType(type);
+            Properties = new List<ModelProperty>();
+        }
+
+        private void SetStructureType(string type)
+        {
+            try
+            {
+                StructureType =
+                    (StructureType) Enum.Parse(typeof(StructureType), type,
+                                               true); // TODO: This is also a ModelProperty! Should this refer to the ModelProperty of should we remove that one from Properties?
+            }
+            catch (ArgumentException)
+            {
+                StructureType = StructureType.InvalidType;
+                InvalidStructureType = type;
+            }
+        }
+
+        // Might be risky: assumes that KnownStructureProperties.Name is always available.
+        public string Name => GetProperty(KnownStructureProperties.Name).GetValueAsString();
+
+        public StructureType StructureType { get; private set; }
+        public string InvalidStructureType { get; private set; }
+
+        public IList<ModelProperty> Properties { get; private set; }
+
+        public ModelProperty GetProperty(string name)
+        {
+            return Properties.FirstOrDefault(p => p.PropertyDefinition.FilePropertyName.ToLower() == name.ToLower());
+        }
+
+        public ModelProperty GetProperty(KnownGeneralStructureProperties property)
+        {
+            return Properties.FirstOrDefault(p => p.PropertyDefinition.FilePropertyName.ToLower() ==
+                                                  property.GetDescription().ToLower());
+        }
+    }
+}

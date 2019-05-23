@@ -1,6 +1,5 @@
 ﻿using DelftTools.Hydro;
-using DeltaShell.Plugins.FMSuite.Common.IO;
-using GeoAPI.Extensions.Feature;
+using DeltaShell.Plugins.FMSuite.Common.IO.Files;
 using NUnit.Framework;
 using Rhino.Mocks;
 

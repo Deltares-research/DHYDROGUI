@@ -1,0 +1,54 @@
+﻿using System.Collections.Generic;
+using System.IO;
+using log4net;
+
+namespace DeltaShell.Plugins.FMSuite.Common.IO.Readers
+{
+    public static class DiaFileReader
+    {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(DiaFileReader));
+
+        public static string Read(string diaFilePath)
+        {
+            string diaFileContent = File.ReadAllText(diaFilePath);
+
+            return diaFileContent;
+        }
+
+        public static List<string> CollectAllErrorMessages(string diaFile)
+        {
+            string errorLine = string.Empty;
+            var lineCount = 0;
+            var errorMessages = new List<string>();
+
+            using (var reader = new StreamReader(diaFile))
+            {
+                while (!reader.EndOfStream)
+                {
+                    string line = reader.ReadLine();
+
+                    if (!string.IsNullOrEmpty(line) && (line.Contains("ERROR") || !string.IsNullOrEmpty(errorLine)))
+                    {
+                        if (!line.Contains("FATAL"))
+                        {
+                            if (line.StartsWith(""))
+                            {
+                                line = line.Substring(1);
+                            }
+
+                            errorLine += line;
+                        }
+                        else
+                        {
+                            errorMessages.Add(errorLine);
+                        }
+                    }
+                }
+
+                reader.Close();
+            }
+
+            return errorMessages;
+        }
+    }
+}

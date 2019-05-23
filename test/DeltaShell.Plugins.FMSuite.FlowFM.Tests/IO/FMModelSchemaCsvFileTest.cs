@@ -1,13 +1,14 @@
-﻿using DelftTools.TestUtils;
-using DelftTools.Utils.IO;
-using DelftTools.Utils.Reflection;
-using DeltaShell.Plugins.FMSuite.Common.IO;
-using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
-using NUnit.Framework;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DelftTools.TestUtils;
+using DelftTools.Utils.IO;
+using DelftTools.Utils.Reflection;
+using DeltaShell.Plugins.FMSuite.Common.IO;
+using DeltaShell.Plugins.FMSuite.Common.IO.Files;
+using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 {

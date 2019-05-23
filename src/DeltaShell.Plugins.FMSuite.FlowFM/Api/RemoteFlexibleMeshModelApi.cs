@@ -6,7 +6,7 @@ using System.Threading;
 using BasicModelInterface;
 using DelftTools.Utils.Remoting;
 using DeltaShell.Dimr;
-using DeltaShell.Plugins.FMSuite.Common.IO;
+using DeltaShell.Plugins.FMSuite.Common.IO.Readers;
 using ProtoBufRemote;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Api

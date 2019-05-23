@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
-using DeltaShell.Plugins.FMSuite.Common.IO;
+using DeltaShell.Plugins.FMSuite.Common.FunctionStores;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO

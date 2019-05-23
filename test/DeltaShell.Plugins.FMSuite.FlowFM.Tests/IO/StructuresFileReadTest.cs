@@ -6,11 +6,10 @@ using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.TestUtils;
-using DelftTools.Utils;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.Helpers;
-using DeltaShell.Plugins.FMSuite.Common.IO;
+using DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures;
 using DeltaShell.Plugins.FMSuite.Common.Tests.IO;
 using NUnit.Framework;
 

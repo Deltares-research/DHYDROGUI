@@ -3,11 +3,11 @@ using System.IO;
 using System.Linq;
 using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
-using DeltaShell.Plugins.FMSuite.Common.IO;
+using DeltaShell.Plugins.FMSuite.Common.IO.Files;
 using GeoAPI.Geometries;
-using NetTopologySuite.Geometries;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Geometries;
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using DelftTools.Functions;
 using DelftTools.Utils.IO;
-using DeltaShell.Plugins.FMSuite.Common.IO;
+using DeltaShell.Plugins.FMSuite.Common.IO.Files;
 using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.Common.FeatureData

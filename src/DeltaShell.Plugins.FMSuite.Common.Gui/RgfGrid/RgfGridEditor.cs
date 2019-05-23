@@ -7,7 +7,7 @@ using System.Threading;
 using System.Windows.Forms;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.Grid;
-using DeltaShell.Plugins.FMSuite.Common.IO;
+using DeltaShell.Plugins.FMSuite.Common.IO.Files;
 using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;

@@ -9,7 +9,7 @@ using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Units;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.NetCdf;
-using DeltaShell.Plugins.FMSuite.Common.IO;
+using DeltaShell.Plugins.FMSuite.Common.FunctionStores;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
 using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Coverages;

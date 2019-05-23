@@ -1,21 +1,27 @@
-﻿using DelftTools.Functions.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils;
-using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Common.Dependency;
 using DeltaShell.Plugins.FMSuite.Common.DepthLayers;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
-using DeltaShell.Plugins.FMSuite.Common.IO;
+using DeltaShell.Plugins.FMSuite.Common.IO.Files;
+using DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccess;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using GeoAPI.Extensions.CoordinateSystems;
@@ -26,15 +32,6 @@ using NetTopologySuite.Extensions.Features;
 using SharpMap.Api.SpatialOperations;
 using SharpMap.Data.Providers;
 using SharpMap.SpatialOperations;
-using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.ComponentModel;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
-using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 {

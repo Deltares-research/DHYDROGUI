@@ -1,5 +1,5 @@
 using System.Linq;
-using DeltaShell.Plugins.FMSuite.Common.IO;
+using DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using NUnit.Framework;
 

@@ -7,7 +7,7 @@ using DelftTools.Functions;
 using DelftTools.Units;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.RegularExpressions;
-using DeltaShell.Plugins.FMSuite.Common.IO;
+using DeltaShell.Plugins.FMSuite.Common.IO.Files;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 using log4net;
 

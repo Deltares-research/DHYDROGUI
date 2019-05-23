@@ -1,18 +1,18 @@
-﻿using DelftTools.TestUtils;
-using DelftTools.Utils.IO;
-using DeltaShell.Plugins.FMSuite.Common.IO;
-using GeoAPI.Geometries;
-using NetTopologySuite.Extensions.Features;
-using NetTopologySuite.Geometries;
-using NUnit.Framework;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.TestUtils;
+using DelftTools.Utils.IO;
+using DeltaShell.Plugins.FMSuite.Common.IO.Files;
+using GeoAPI.Geometries;
+using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Geometries;
 using NetTopologySuite.Extensions.Networks;
+using NetTopologySuite.Geometries;
+using NUnit.Framework;
 using ObservationCrossSection2D = DelftTools.Hydro.ObservationCrossSection2D;
 
 namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO

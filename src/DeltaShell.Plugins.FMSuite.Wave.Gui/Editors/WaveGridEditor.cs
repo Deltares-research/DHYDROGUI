@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using DeltaShell.Plugins.FMSuite.Common.Gui.RgfGrid;
-using DeltaShell.Plugins.FMSuite.Common.IO;
+using DeltaShell.Plugins.FMSuite.Common.IO.Readers;
 using GeoAPI.Geometries;
 using SharpMap.CoordinateSystems;
 

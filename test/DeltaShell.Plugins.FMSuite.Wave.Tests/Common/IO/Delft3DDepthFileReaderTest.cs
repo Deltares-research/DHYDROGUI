@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using DelftTools.TestUtils;
-using DeltaShell.Plugins.FMSuite.Common.IO;
+using DeltaShell.Plugins.FMSuite.Common.IO.Readers;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Common.IO

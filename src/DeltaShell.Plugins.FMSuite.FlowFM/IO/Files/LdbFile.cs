@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Utils.Collections.Generic;
-using DeltaShell.Plugins.FMSuite.Common.IO;
+using DeltaShell.Plugins.FMSuite.Common.IO.Files;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 

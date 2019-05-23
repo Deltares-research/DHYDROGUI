@@ -5,7 +5,7 @@ using System.Windows.Forms;
 using DelftTools.Utils;
 using DelftTools.Utils.Binding;
 using DelftTools.Utils.Reflection;
-using DeltaShell.Plugins.FMSuite.Common;
+using DeltaShell.Plugins.FMSuite.Common.Wind;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
 {

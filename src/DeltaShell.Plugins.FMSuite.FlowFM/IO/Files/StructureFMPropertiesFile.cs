@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using DeltaShell.Plugins.FMSuite.Common.IO;
+using DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files

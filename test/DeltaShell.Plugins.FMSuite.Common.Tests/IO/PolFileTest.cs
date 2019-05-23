@@ -5,7 +5,7 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
-using DeltaShell.Plugins.FMSuite.Common.IO;
+using DeltaShell.Plugins.FMSuite.Common.IO.Files;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;

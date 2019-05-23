@@ -1,4 +1,4 @@
-﻿using DeltaShell.Plugins.FMSuite.Common.IO;
+﻿using DeltaShell.Plugins.FMSuite.Common.IO.Files;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition

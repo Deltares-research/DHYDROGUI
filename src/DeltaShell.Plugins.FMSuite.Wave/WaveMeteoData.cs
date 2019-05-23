@@ -1,5 +1,5 @@
 ﻿using DelftTools.Utils.Aop;
-using DeltaShell.Plugins.FMSuite.Common;
+using DeltaShell.Plugins.FMSuite.Common.Wind;
 
 namespace DeltaShell.Plugins.FMSuite.Wave
 {

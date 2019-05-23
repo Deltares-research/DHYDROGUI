@@ -12,13 +12,13 @@ using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
-using DeltaShell.Plugins.FMSuite.Common.IO;
+using DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
-using StructureType = DeltaShell.Plugins.FMSuite.Common.IO.StructureType;
+using StructureType = DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures.StructureType;
 
 namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 {

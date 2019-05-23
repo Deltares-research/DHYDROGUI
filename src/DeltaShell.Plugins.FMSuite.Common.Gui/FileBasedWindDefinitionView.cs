@@ -4,8 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using DelftTools.Controls;
-using DelftTools.Utils;
 using DelftTools.Utils.Reflection;
+using DeltaShell.Plugins.FMSuite.Common.Wind;
 
 namespace DeltaShell.Plugins.FMSuite.Common.Gui
 {

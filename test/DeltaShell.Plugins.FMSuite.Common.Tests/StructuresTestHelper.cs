@@ -1,5 +1,5 @@
 ﻿using System;
-using DeltaShell.Plugins.FMSuite.Common.IO;
+using DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures;
 
 namespace DeltaShell.Plugins.FMSuite.Common.Tests
 {
