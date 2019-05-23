@@ -7,13 +7,16 @@ using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.Common.Layers;
+using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
+using DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
-using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors;
-using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Layers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
+using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors;
+using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms;
 using DeltaShell.Plugins.NetworkEditor.MapLayers;
 using GeoAPI.Geometries;
 using log4net;
@@ -34,10 +37,6 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
-using DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
-using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 {
@@ -101,7 +100,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                                         AllowRemovePoint = new RemoveBoundaryPointDialog(fmModel).ShowDialogForFeature
                                     },
                             Style = AreaLayerStyles.BoundariesStyle,
-                            NameIsReadOnly = true
+                            NameIsReadOnly = true,
+                            ShowInLegend = false 
                         };
                 }
                 if (Equals(feature2Ds, fmModel.Pipes))
@@ -115,7 +115,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                             Style = AreaLayerStyles.SourcesAndSinksStyle,
                             NameIsReadOnly = true,
                             CustomRenderers =
-                                new[] {new ArrowLineStringAdornerRenderer {Orientation = Orientation.Forward, Opacity = 1}}
+                                new[] {new ArrowLineStringAdornerRenderer {Orientation = Orientation.Forward, Opacity = 1}},
+                            ShowInLegend = false
                         };
                 }
             }
@@ -189,6 +190,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                             DataSource = snappedFeatures,
                             Selectable = false,
                             NameIsReadOnly = true,
+                            ShowInLegend = false
                         };
                     groupLayer.Layers.Add(layer);
                     snappedFeatures.Layer = layer;
