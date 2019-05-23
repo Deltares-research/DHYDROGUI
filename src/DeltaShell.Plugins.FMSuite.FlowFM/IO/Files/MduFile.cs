@@ -59,6 +59,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         public const string ObsCrossAlternativeExtension = "_crs.pliz";
         public const string DryAreaExtension = "_dry.pol";
         public const string DryPointExtension = "_dry.xyz";
+        public const string DryPointExtensionWithoutSuffix = ".xyz";
         public const string EnclosureExtension = "_enc.pol";
         public const string MorphologyExtension = ".mor";
         public const string SedimentExtension = ".sed";
@@ -1596,23 +1597,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
             foreach (string featureFilePath in featureFilePaths)
             {
+                var featureFilePathExtension = System.IO.Path.GetExtension(featureFilePath);
                 string groupName =
                     FileUtils.GetRelativePath(System.IO.Path.GetDirectoryName(mduFilePath), featureFilePath, true);
-                if (featureFilePath.EndsWith(DryPointExtension))
+                //By checking if the feature file path only ends with .xyz (without the _dry suffix),
+                //we can assure that backwards compatibility is ensure i.e. some old mdu files still refer to the dry point file without the _dry suffix.
+                if (featureFilePathExtension != null && featureFilePath.EndsWith(DryPointExtensionWithoutSuffix))
                 {
-                    IEnumerable<GroupablePointFeature> dryPointsToAdd = dryPointFile
-                                                                        .Read(featureFilePath).Select(
-                                                                            p => new GroupablePointFeature
-                                                                            {
-                                                                                Geometry = p.Geometry,
-                                                                                GroupName = groupName,
-                                                                                IsDefaultGroup =
-                                                                                    groupName != null &&
-                                                                                    groupName
-                                                                                        .Replace(DryPointExtension,
-                                                                                                 string.Empty)
-                                                                                        .Trim().Equals(mduPathName)
-                                                                            });
+                    var pointValues = dryPointFile.Read(featureFilePath);
+                    var isDefaultGroup = groupName.Replace(featureFilePathExtension, string.Empty).Trim()
+                                                  .Equals(mduPathName);
+                    var dryPointsToAdd = pointValues.Select(p => new GroupablePointFeature()
+                    {
+                        Geometry = p.Geometry,
+                        GroupName = groupName,
+                        IsDefaultGroup = isDefaultGroup
+                    });
                     hydroArea.DryPoints.AddRange(dryPointsToAdd);
                 }
                 else if (featureFilePath.EndsWith(DryAreaExtension))
