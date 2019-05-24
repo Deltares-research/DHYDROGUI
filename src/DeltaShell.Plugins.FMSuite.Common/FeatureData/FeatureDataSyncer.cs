@@ -5,7 +5,7 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using GeoAPI.Extensions.Feature;
 
-namespace DeltaShell.Plugins.FMSuite.Common
+namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
 {
     public class FeatureDataSyncer<TFeat, TData> : IDisposable where TFeat : IFeature
     {

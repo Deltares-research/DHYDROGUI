@@ -8,7 +8,7 @@ using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using log4net;
 
-namespace DeltaShell.Plugins.FMSuite.Common.IO
+namespace DeltaShell.Plugins.FMSuite.Common
 {
     public static class FMParser
     {

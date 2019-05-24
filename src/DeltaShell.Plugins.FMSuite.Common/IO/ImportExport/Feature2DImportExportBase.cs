@@ -16,7 +16,7 @@ using GeoAPI.CoordinateSystems.Transformations;
 using GeoAPI.Extensions.Feature;
 using SharpMap.CoordinateSystems.Transformations;
 
-namespace DeltaShell.Plugins.FMSuite.Common.IO
+namespace DeltaShell.Plugins.FMSuite.Common.IO.ImportExport
 {
     public enum Feature2DImportExportMode
     {

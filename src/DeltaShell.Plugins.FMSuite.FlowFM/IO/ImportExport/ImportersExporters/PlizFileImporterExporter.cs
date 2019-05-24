@@ -4,8 +4,8 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using DelftTools.Utils;
-using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files;
+using DeltaShell.Plugins.FMSuite.Common.IO.ImportExport;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
@@ -17,7 +17,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.ImportersExporters
     /// </summary>
     /// <typeparam name="TParent"> The type of the parent. </typeparam>
     /// <typeparam name="TFeat"> The type of the feat. </typeparam>
-    /// <seealso cref="DeltaShell.Plugins.FMSuite.Common.IO.Feature2DImportExportBase{TFeat}" />
+    /// <seealso cref="Feature2DImportExportBase{TFeat}" />
     public class PlizFileImporterExporter<TParent, TFeat> : Feature2DImportExportBase<TFeat>
         where TFeat : class, IFeature, INameable, new() where TParent : INameable
     {

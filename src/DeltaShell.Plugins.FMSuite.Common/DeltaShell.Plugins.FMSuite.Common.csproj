@@ -133,7 +133,7 @@
     <Compile Include="Dependency\ValueEqualsDependencyExpression.cs" />
     <Compile Include="Dependency\ValueGreaterOrLesserThanDependencyExpression.cs" />
     <Compile Include="DepthLayers\DepthLayerType.cs" />
-    <Compile Include="FeatureDataSyncer.cs" />
+    <Compile Include="FeatureData\FeatureDataSyncer.cs" />
     <Compile Include="FeatureData\BoundaryCondition.cs" />
     <Compile Include="FeatureData\BoundaryConditionFactory.cs" />
     <Compile Include="FeatureData\BoundaryConditionSet.cs" />
@@ -158,7 +158,7 @@
     <Compile Include="IO\Readers\Delft3DGridFileReader.cs" />
     <Compile Include="IO\Writers\Delft3DGridFileWriter.cs" />
     <Compile Include="IO\Readers\DiaFileReader.cs" />
-    <Compile Include="IO\Feature2DImportExportBase.cs" />
+    <Compile Include="IO\ImportExport\Feature2DImportExportBase.cs" />
     <Compile Include="FunctionStores\FMNetCdfFileFunctionStore.cs" />
     <Compile Include="IO\Files\FeatureGroupExtensions.cs" />
     <Compile Include="FunctionStores\FunctionExtensions.cs" />
@@ -177,7 +177,7 @@
     <Compile Include="IO\Files\Structures\StructuresFile.cs" />
     <Compile Include="IO\Files\T3DFile.cs" />
     <Compile Include="IO\Files\TimFile.cs" />
-    <Compile Include="IO\FMParser.cs" />
+    <Compile Include="FMParser.cs" />
     <Compile Include="IO\Files\WindFile.cs" />
     <Compile Include="Layers\Boundary2DEditor.cs" />
     <Compile Include="Layers\Boundary2DInteractor.cs" />
