@@ -6,7 +6,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
     /// <summary>
     /// Reader for attribute files.
     /// </summary>
-    /// <remarks>Only reads 'segment enabled' state data.</remarks>
+    /// <remarks> Only reads 'segment enabled' state data. </remarks>
     public static class AttributesFileReader
     {
         private const string CommentToken = ";";
@@ -14,24 +14,26 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         /// <summary>
         /// Reads all attribute data for a given size.
         /// </summary>
-        /// <param name="nrOfSegmentsPerLayer">The number of segments per layer.</param>
-        /// <param name="nrOfLayers">The number of layers.</param>
-        /// <param name="attributesFile">The attributes file (*.atr extension).</param>
-        /// <returns>All data read from the attributes file reader.</returns>
-        /// <exception cref="System.InvalidOperationException">When attributes file cannot be found.</exception>
-        /// <exception cref="System.FormatException">When the data is malformatted or missing enabled state data block.</exception>
+        /// <param name="nrOfSegmentsPerLayer"> The number of segments per layer. </param>
+        /// <param name="nrOfLayers"> The number of layers. </param>
+        /// <param name="attributesFile"> The attributes file (*.atr extension). </param>
+        /// <returns> All data read from the attributes file reader. </returns>
+        /// <exception cref="System.InvalidOperationException"> When attributes file cannot be found. </exception>
+        /// <exception cref="System.FormatException"> When the data is malformatted or missing enabled state data block. </exception>
         public static AttributesFileData ReadAll(int nrOfSegmentsPerLayer, int nrOfLayers, FileInfo attributesFile)
         {
-            var fullName = attributesFile == null ? "" : attributesFile.FullName;
+            string fullName = attributesFile == null ? "" : attributesFile.FullName;
             if (attributesFile == null || !attributesFile.Exists)
             {
-                throw new InvalidOperationException(String.Format("Cannot find attributes file ({0}).", fullName));
+                throw new InvalidOperationException(string.Format("Cannot find attributes file ({0}).", fullName));
             }
 
             var data = new AttributesFileData(nrOfSegmentsPerLayer, nrOfLayers);
             if (!ReadFileForSegmentEnabledState(data, attributesFile))
             {
-                var message = string.Format("Attributes file ({0}) does not contain data block for enabled state of segments.", fullName);
+                string message =
+                    string.Format("Attributes file ({0}) does not contain data block for enabled state of segments.",
+                                  fullName);
                 throw new FormatException(message);
             }
 
@@ -41,10 +43,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         private static bool ReadFileForSegmentEnabledState(AttributesFileData data, FileInfo attributesFile)
         {
             var segmentEnabledDataRead = false;
-            using (var streamReader = attributesFile.OpenText())
+            using (StreamReader streamReader = attributesFile.OpenText())
             {
-                var numberOfDataBlocks = int.Parse(GetNextDataLine(streamReader));
-                for (int i = 0; i < numberOfDataBlocks; i++)
+                int numberOfDataBlocks = int.Parse(GetNextDataLine(streamReader));
+                for (var i = 0; i < numberOfDataBlocks; i++)
                 {
                     if (FindSegmentEnablednessBock(streamReader))
                     {
@@ -52,10 +54,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                         segmentEnabledDataRead = true;
                         break;
                     }
-                    
+
                     SkipDataBlock(data.IndexCount, streamReader);
                 }
             }
+
             return segmentEnabledDataRead;
         }
 
@@ -63,7 +66,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         {
             if (GetNextDataLine(streamReader) != "1") // Number of attributes
             {
-                throw new NotSupportedException("Reader does not support attribute files with multiple attributes per block.");
+                throw new NotSupportedException(
+                    "Reader does not support attribute files with multiple attributes per block.");
             }
 
             if (GetNextDataLine(streamReader) != "1") // Attribute type indicator
@@ -73,10 +77,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                 GetNextDataLine(streamReader);
                 return false;
             }
-            
+
             if (GetNextDataLine(streamReader) != "1") // Data not in this file
             {
-                throw new NotSupportedException("Reader does not support attribute files with data outside the file itself.");
+                throw new NotSupportedException(
+                    "Reader does not support attribute files with data outside the file itself.");
             }
 
             if (GetNextDataLine(streamReader) != "1") // Data without defaults
@@ -89,7 +94,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 
         private static void SkipDataBlock(int indexCount, StreamReader streamReader)
         {
-            int index = 0;
+            var index = 0;
             while (index < indexCount)
             {
                 index += GetNextLineTextArray(streamReader).Length;
@@ -98,10 +103,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 
         private static void ParseSegmentEnablednessData(AttributesFileData data, StreamReader streamReader)
         {
-            int index = 1;
+            var index = 1;
             while (index <= data.IndexCount)
             {
-                foreach (var booleanStringValue in GetNextLineTextArray(streamReader))
+                foreach (string booleanStringValue in GetNextLineTextArray(streamReader))
                 {
                     data.SetSegmentActive(index++, GetBooleanValue(booleanStringValue));
                 }
@@ -110,7 +115,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 
         private static string[] GetNextLineTextArray(StreamReader streamReader)
         {
-            return GetNextDataLine(streamReader).Split(new[] { " ", "\t" }, StringSplitOptions.RemoveEmptyEntries);
+            return GetNextDataLine(streamReader).Split(new[]
+            {
+                " ",
+                "\t"
+            }, StringSplitOptions.RemoveEmptyEntries);
         }
 
         private static bool GetBooleanValue(string booleanStringValue)
@@ -119,10 +128,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             {
                 return true;
             }
+
             if (booleanStringValue == "0")
             {
                 return false;
             }
+
             throw new NotImplementedException();
         }
 
@@ -131,7 +142,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             string line;
             while ((line = streamReader.ReadLine()) != null)
             {
-                var lineParts = line.Split(new[] { CommentToken }, StringSplitOptions.None);
+                string[] lineParts = line.Split(new[]
+                {
+                    CommentToken
+                }, StringSplitOptions.None);
                 if (!string.IsNullOrWhiteSpace(lineParts[0]))
                 {
                     return lineParts[0].Trim();

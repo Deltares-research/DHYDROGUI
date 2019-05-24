@@ -11,33 +11,32 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Exporters
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(WaveModelFileExporter));
 
-        public string Name
-        {
-            get { return "Waves model"; }
-        }
+        public string Name => "Waves model";
 
-        public string Category { get { return "General"; } }
-        public string Description
-        {
-            get { return string.Empty; }
-        }
+        public string Category => "General";
+
+        public string Description => string.Empty;
 
         public bool Export(object item, string path)
         {
             var wm = item as WaveModel;
-            if (wm == null) return false;
+            if (wm == null)
+            {
+                return false;
+            }
 
             try
             {
                 if (Directory.Exists(path))
                 {
-                    var fullPath = Path.Combine(path, wm.Name + ".mdw");
+                    string fullPath = Path.Combine(path, wm.Name + ".mdw");
                     wm.ModelSaveTo(fullPath, false);
                 }
                 else
                 {
-                    wm.ModelSaveTo(path, false);                    
+                    wm.ModelSaveTo(path, false);
                 }
+
                 return true;
             }
             catch (Exception)
@@ -52,12 +51,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Exporters
             yield return typeof(WaveModel);
         }
 
-        public string FileFilter
-        {
-            get { return "Master Definition WAVE File|*.mdw"; }
-        }
+        public string FileFilter => "Master Definition WAVE File|*.mdw";
 
         public Bitmap Icon { get; private set; }
+
         public bool CanExportFor(object item)
         {
             return true;

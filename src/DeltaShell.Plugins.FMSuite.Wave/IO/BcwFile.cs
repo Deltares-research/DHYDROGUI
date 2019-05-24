@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using DelftTools.Functions;
 using DelftTools.Units;
 using DelftTools.Utils.Collections;
@@ -15,7 +16,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
 {
     public class BcwFile : FMSuiteFileBase
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof (BcwFile));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(BcwFile));
 
         private const string BoundaryNamePattern = @"(location\s+\'(?'value'.+)\')";
         private const string TimeFunctionPattern = @"(time-function\s+\'(?'value'.+)\')";
@@ -34,7 +35,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
         /// <summary>
         /// Reads the .bcw file.
         /// </summary>
-        /// <param name="bcwFilePath">Full file path</param>
+        /// <param name="bcwFilePath"> Full file path </param>
         /// <returns>
         /// Returns a dictionary with the boundary condition names, matching those in the mdw file,
         /// and their functions with components wave height, period, direction, spreading and argument time.
@@ -73,23 +74,27 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
 
         private void ReadBlock(IDictionary<string, List<IFunction>> bcwData)
         {
-            var boundaryName = ReadBoundaryName();
+            string boundaryName = ReadBoundaryName();
             bcwData.Add(boundaryName, new List<IFunction>());
 
             GetNextLine();
 
-            if (CurrentLine == null || IsNewBoundaryDataBlock(CurrentLine)) return;
+            if (CurrentLine == null || IsNewBoundaryDataBlock(CurrentLine))
+            {
+                return;
+            }
 
-            var header = ReadBcwHeaderData();
+            BcwHeaderData header = ReadBcwHeaderData();
 
-            var parameterData = ReadParameterMetaData();
+            IList<BcwParameter> parameterData = ReadParameterMetaData();
 
             while (CurrentLine != null && !IsNewBoundaryDataBlock(CurrentLine))
             {
-                var values = ReadParameterValues();
+                IList<double> values = ReadParameterValues();
                 if (values.Count != parameterData.Count)
                 {
-                    throw new FileFormatException($"Invalid parameter data: expecting {parameterData.Count} parameter values.");
+                    throw new FileFormatException(
+                        $"Invalid parameter data: expecting {parameterData.Count} parameter values.");
                 }
 
                 AddValuesToParameters(parameterData, values);
@@ -112,8 +117,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
 
         private IList<double> ReadParameterValues()
         {
-            var stringValues = CurrentLine.Trim().Split(new[] {' '}, StringSplitOptions.RemoveEmptyEntries);
-            var values = stringValues.Select(s => double.Parse(s, NumberStyles.Any, CultureInfo.InvariantCulture)).ToList();
+            string[] stringValues = CurrentLine.Trim().Split(new[]
+            {
+                ' '
+            }, StringSplitOptions.RemoveEmptyEntries);
+            List<double> values = stringValues
+                                  .Select(s => double.Parse(s, NumberStyles.Any, CultureInfo.InvariantCulture))
+                                  .ToList();
 
             return values;
         }
@@ -123,8 +133,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             return RegularExpression.GetFirstMatch(BoundaryNamePattern, CurrentLine).Groups["value"].Value;
         }
 
-        private void FillBoundaryData(IDictionary<string, List<IFunction>> bcwData, string boundaryName, BcwHeaderData header,
-            IList<BcwParameter> parameterData)
+        private void FillBoundaryData(IDictionary<string, List<IFunction>> bcwData, string boundaryName,
+                                      BcwHeaderData header,
+                                      IList<BcwParameter> parameterData)
         {
             bcwData[boundaryName] = new List<IFunction>();
             bcwData[boundaryName].AddRange(CreateFunctionsFromData(parameterData, header));
@@ -136,7 +147,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
 
             while (CurrentLine != null && IsNewParameter(CurrentLine))
             {
-                var matches = RegularExpression.GetFirstMatch(ParameterPattern, CurrentLine);
+                Match matches = RegularExpression.GetFirstMatch(ParameterPattern, CurrentLine);
                 var bcwParameter = new BcwParameter
                 {
                     Values = new List<double>(),
@@ -188,22 +199,25 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                     string.Format("Reference date \"from model\" in bcw file {0} not (yet) supported", InputFilePath));
             }
 
-            var timeParameter = parameterData.FirstOrDefault(pd => pd.Name == "time");
+            BcwParameter timeParameter = parameterData.FirstOrDefault(pd => pd.Name == "time");
             if (timeParameter == null)
             {
                 throw new FileFormatException($"Missing time parameter in timeseries file {InputFilePath}");
             }
 
-            var dateTimes =
+            List<DateTime> dateTimes =
                 timeParameter.Values.Select(v => ConvertToDateTime(v, header.TimeUnit, referenceDate)).ToList();
-            var waveHeights = parameterData.Where(pd => pd.Name == KnownWaveProperties.WaveHeight).ToList();
-            var periods = parameterData.Where(pd => pd.Name == KnownWaveProperties.Period).ToList();
-            var directions = parameterData.Where(pd => pd.Name == KnownWaveProperties.Direction).ToList();
-            var spreadings = parameterData.Where(pd => pd.Name == KnownWaveProperties.DirectionalSpreadingValue).ToList();
+            List<BcwParameter> waveHeights =
+                parameterData.Where(pd => pd.Name == KnownWaveProperties.WaveHeight).ToList();
+            List<BcwParameter> periods = parameterData.Where(pd => pd.Name == KnownWaveProperties.Period).ToList();
+            List<BcwParameter> directions =
+                parameterData.Where(pd => pd.Name == KnownWaveProperties.Direction).ToList();
+            List<BcwParameter> spreadings =
+                parameterData.Where(pd => pd.Name == KnownWaveProperties.DirectionalSpreadingValue).ToList();
 
             for (var i = 0; i < waveHeights.Count; ++i)
             {
-                var func = WaveBoundaryCondition.CreateEmptyWaveEnergyFunction();
+                IFunction func = WaveBoundaryCondition.CreateEmptyWaveEnergyFunction();
 
                 func.Arguments[0].SetValues(dateTimes);
                 func.Arguments[0].Unit = null;
@@ -239,23 +253,30 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
         /// <summary>
         /// Writes the specified boundary condition data.
         /// </summary>
-        /// <param name="boundaryConditionToFunctionsMappings">A dictionary with the boundary condition names with their functions.</param>
-        /// <param name="filePath">The file path.</param>
-        /// <remarks>If wave boundary condition does not have any functions, only the boundary condition name is written to the file.</remarks>
+        /// <param name="boundaryConditionToFunctionsMappings">
+        /// A dictionary with the boundary condition names with their
+        /// functions.
+        /// </param>
+        /// <param name="filePath"> The file path. </param>
+        /// <remarks>
+        /// If wave boundary condition does not have any functions, only the boundary condition name is written to the
+        /// file.
+        /// </remarks>
         public void Write(IDictionary<string, List<IFunction>> boundaryConditionToFunctionsMappings, string filePath)
         {
             OpenOutputFile(filePath);
             try
             {
-                foreach (var boundaryConditionToFunctionsMapping in boundaryConditionToFunctionsMappings)
+                foreach (KeyValuePair<string, List<IFunction>> boundaryConditionToFunctionsMapping in
+                    boundaryConditionToFunctionsMappings)
                 {
-                    var boundaryName = boundaryConditionToFunctionsMapping.Key;
-                    var functions = boundaryConditionToFunctionsMapping.Value;
+                    string boundaryName = boundaryConditionToFunctionsMapping.Key;
+                    List<IFunction> functions = boundaryConditionToFunctionsMapping.Value;
 
                     if (functions.Any())
                     {
-                        var header = CreateHeaderFromFunction(functions.First());
-                        var parameters = CreateParametersFromFunctions(functions);
+                        BcwHeaderData header = CreateHeaderFromFunction(functions.First());
+                        IList<BcwParameter> parameters = CreateParametersFromFunctions(functions);
 
                         WriteBoundaryData(boundaryName, header, parameters);
                     }
@@ -287,22 +308,23 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             WriteFormattedHeaderData("interpolation", header.InterpolationType);
 
             // parameters
-            foreach (var parameter in sortedParameters)
+            foreach (BcwParameter parameter in sortedParameters)
             {
                 WriteLine(
                     string.Format("{0,-21}{1,-21}{2,-21}", "parameter", "\'" + parameter.Name + "\'",
-                        "unit \'" + parameter.Unit + "\'").TrimEnd());
+                                  "unit \'" + parameter.Unit + "\'").TrimEnd());
             }
 
             // data
-            var timeParameter = sortedParameters.First(p => p.Name == "time");
+            BcwParameter timeParameter = sortedParameters.First(p => p.Name == "time");
             for (var i = 0; i < timeParameter.Values.Count; ++i)
             {
-                var time = timeParameter.Values[i].ToString("F2", CultureInfo.InvariantCulture);
-                var line = string.Format("{0,8}", time);
+                string time = timeParameter.Values[i].ToString("F2", CultureInfo.InvariantCulture);
+                string line = string.Format("{0,8}", time);
                 for (var j = 1; j < sortedParameters.Count; ++j)
                 {
-                    line += string.Format(" {0,8}", sortedParameters[j].Values[i].ToString("F4", CultureInfo.InvariantCulture));
+                    line += string.Format(
+                        " {0,8}", sortedParameters[j].Values[i].ToString("F4", CultureInfo.InvariantCulture));
                 }
 
                 WriteLine(line.TrimEnd());
@@ -311,7 +333,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
 
         private void WriteFormattedHeaderData(string parameterName, string parameterValue, bool withApostrophes = true)
         {
-            var apostrophe = withApostrophes ? "\'" : "";
+            string apostrophe = withApostrophes ? "\'" : "";
             WriteLine($"{parameterName,-21}{apostrophe + parameterValue + apostrophe,-21}".TrimEnd());
         }
 
@@ -329,12 +351,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
 
         private IList<BcwParameter> CreateParametersFromFunctions(IList<IFunction> functions)
         {
-            var func = functions.First();
+            IFunction func = functions.First();
 
             var parameters = new List<BcwParameter>();
 
-            var refDateString = func.Attributes[RefDateAttributeName];
-            var refDate = DateTime.ParseExact(refDateString, DateFormatString, CultureInfo.InvariantCulture);
+            string refDateString = func.Attributes[RefDateAttributeName];
+            DateTime refDate = DateTime.ParseExact(refDateString, DateFormatString, CultureInfo.InvariantCulture);
 
             // time
             var timeParameter = new BcwParameter
@@ -342,16 +364,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 Name = "time",
                 Unit = "[min]",
                 Values = func.Arguments[0].GetValues<DateTime>()
-                    .Select(d => ConvertToBcwTime(d, refDate, func.Attributes[TimeUnitAttributeName])).ToList()
+                             .Select(d => ConvertToBcwTime(d, refDate, func.Attributes[TimeUnitAttributeName]))
+                             .ToList()
             };
             parameters.Add(timeParameter);
 
-            foreach (var f in functions)
+            foreach (IFunction f in functions)
             {
-                var waveHeight = CreateBcwParameter(f.Components[0], KnownWaveProperties.WaveHeight);
-                var period = CreateBcwParameter(f.Components[1], KnownWaveProperties.Period);
-                var direction = CreateBcwParameter(f.Components[2], KnownWaveProperties.Direction);
-                var spreading = CreateBcwParameter(f.Components[3], KnownWaveProperties.DirectionalSpreadingValue);
+                BcwParameter waveHeight = CreateBcwParameter(f.Components[0], KnownWaveProperties.WaveHeight);
+                BcwParameter period = CreateBcwParameter(f.Components[1], KnownWaveProperties.Period);
+                BcwParameter direction = CreateBcwParameter(f.Components[2], KnownWaveProperties.Direction);
+                BcwParameter spreading =
+                    CreateBcwParameter(f.Components[3], KnownWaveProperties.DirectionalSpreadingValue);
 
                 parameters.Add(waveHeight);
                 parameters.Add(period);
@@ -412,7 +436,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 case "seconds":
                     return referenceDate.AddSeconds(value);
                 default:
-                    throw new NotImplementedException(string.Format("Unit {0} for bcw file is not (yet) implemented", unit));
+                    throw new NotImplementedException(
+                        string.Format("Unit {0} for bcw file is not (yet) implemented", unit));
             }
         }
 
@@ -429,7 +454,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 case "seconds":
                     return (dateTime - refDate).TotalSeconds;
                 default:
-                    throw new NotImplementedException(string.Format("Unit {0} for bcw file is not (yet) implemented", unit));
+                    throw new NotImplementedException(
+                        string.Format("Unit {0} for bcw file is not (yet) implemented", unit));
             }
         }
 

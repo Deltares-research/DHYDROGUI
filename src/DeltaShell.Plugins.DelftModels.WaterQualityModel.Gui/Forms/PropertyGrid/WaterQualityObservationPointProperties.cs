@@ -9,24 +9,21 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
     [DisplayName("Observation point")]
     public class WaterQualityObservationPointProperties : NameblePointFeatureProperties
     {
-        private WaterQualityObservationPoint ObservationPoint
-        {
-            get { return (WaterQualityObservationPoint) data; }
-        }
+        private WaterQualityObservationPoint ObservationPoint => (WaterQualityObservationPoint) data;
 
         [Category("General")]
         [DisplayName("Observation point type")]
         [PropertyOrder(2)]
         public ObservationPointType ObservationPointType
         {
-            get { return ObservationPoint.ObservationPointType ; }
-            set { ObservationPoint.ObservationPointType = value; }
+            get => ObservationPoint.ObservationPointType;
+            set => ObservationPoint.ObservationPointType = value;
         }
 
         [DynamicVisibleValidationMethod]
         public override bool IsPropertyVisible(string propertyName)
         {
-            if (propertyName == TypeUtils.GetMemberName(()=> Z))
+            if (propertyName == TypeUtils.GetMemberName(() => Z))
             {
                 return ObservationPointType == ObservationPointType.SinglePoint;
             }

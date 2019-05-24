@@ -4,8 +4,8 @@
     {
         protected string name;
         protected string tag;
-        
-        public string Name { get { return name; } }
-        public string Tag { get { return tag; } }
+
+        public string Name => name;
+        public string Tag => tag;
     }
 }

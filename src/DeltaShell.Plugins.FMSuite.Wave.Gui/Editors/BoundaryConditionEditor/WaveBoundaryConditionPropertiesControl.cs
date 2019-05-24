@@ -16,7 +16,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor
             uniformityBox.DataSource = EnumBindingHelper.ToList<WaveBoundaryConditionSpatialDefinitionType>();
             uniformityBox.DisplayMember = "Value";
             uniformityBox.ValueMember = "Key";
-            
         }
 
         protected override IEnumerable<BoundaryConditionDataType> GetSupportedDataTypes(string variable)
@@ -25,7 +24,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor
         }
 
         private WaveBoundaryCondition waveBoundaryCondition;
-        public override IBoundaryCondition BoundaryCondition 
+
+        public override IBoundaryCondition BoundaryCondition
         {
             protected get
             {
@@ -34,7 +34,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor
             set
             {
                 base.BoundaryCondition = value;
-                waveBoundaryCondition = (WaveBoundaryCondition)BoundaryCondition;
+                waveBoundaryCondition = (WaveBoundaryCondition) BoundaryCondition;
                 UpdateBinding();
             }
         }
@@ -46,7 +46,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor
             {
                 uniformityBox.DataBindings.Add(new Binding("SelectedValue", waveBoundaryCondition,
                                                            TypeUtils.GetMemberName(
-                                                               () => waveBoundaryCondition.SpatialDefinitionType), false,
+                                                               () => waveBoundaryCondition.SpatialDefinitionType),
+                                                           false,
                                                            DataSourceUpdateMode.OnPropertyChanged));
             }
         }

@@ -14,13 +14,14 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers
         [Aggregation]
         public virtual HydroArea HydroArea
         {
-            get { return hydroArea; }
+            get => hydroArea;
             set
             {
                 if (hydroArea != null && hydroArea.Equals(value))
                 {
                     return;
                 }
+
                 hydroArea = value;
                 Name = hydroArea.Name;
                 layersInitialized = false;
@@ -39,13 +40,15 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers
 
                 return base.Layers;
             }
-            set { base.Layers = value; }
+            set => base.Layers = value;
         }
-        
+
         private void InitializeLayers()
         {
             if (hydroArea == null)
+            {
                 return;
+            }
 
             layersInitialized = true; // set it here since it is accessed locally
 

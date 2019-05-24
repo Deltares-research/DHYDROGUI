@@ -24,24 +24,24 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms
 
             dataCollectionChangedDelayedEventHandler =
                 new DelayedEventHandler<NotifyCollectionChangedEventArgs>(delegate { UpdateDataGridViews(); })
-                    {
-                        SynchronizingObject = this
-                    };
+                {
+                    SynchronizingObject = this
+                };
 
             InitializeTableViews();
         }
 
         public Image Image { get; set; }
 
-        public void EnsureVisible(object item) { }
+        public void EnsureVisible(object item) {}
         public ViewInfo ViewInfo { get; set; }
 
         /// <summary>
-        /// The <see cref="SubstanceProcessLibrary"/> associated with this view.
+        /// The <see cref="SubstanceProcessLibrary" /> associated with this view.
         /// </summary>
         public object Data
         {
-            get { return library; }
+            get => library;
             set
             {
                 if (library != null)
@@ -53,7 +53,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms
 
                 if (library != null)
                 {
-                    ((INotifyCollectionChanged)library).CollectionChanged += dataCollectionChangedDelayedEventHandler;
+                    ((INotifyCollectionChanged) library).CollectionChanged += dataCollectionChangedDelayedEventHandler;
                 }
 
                 UpdateDataGridViews();
@@ -65,7 +65,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms
         /// </summary>
         public bool ShowNameAndDescriptionColumnsOnly
         {
-            get { return showNameAndDescriptionColumnsOnly; }
+            get => showNameAndDescriptionColumnsOnly;
             set
             {
                 showNameAndDescriptionColumnsOnly = value;
@@ -76,23 +76,29 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms
 
         private void UpdateDataGridViews()
         {
-            if (library == null) return;
+            if (library == null)
+            {
+                return;
+            }
 
             tableViewProcesses.Data = library.Processes != null
-                                              ? new BindingList<WaterQualityProcess>(library.Processes)
-                                              : null;
+                                          ? new BindingList<WaterQualityProcess>(library.Processes)
+                                          : null;
             tableViewParameters.Data = library.Parameters != null
                                            ? new BindingList<WaterQualityParameter>(library.Parameters)
                                            : null;
             tableViewActiveSubstances.Data = library.ActiveSubstances != null
-                                           ? new BindingList<WaterQualitySubstance>(library.ActiveSubstances.ToList())
-                                           : null;
+                                                 ? new BindingList<WaterQualitySubstance>(
+                                                     library.ActiveSubstances.ToList())
+                                                 : null;
             tableViewInactiveSubstances.Data = library.InActiveSubstances != null
-                                           ? new BindingList<WaterQualitySubstance>(library.InActiveSubstances.ToList())
-                                           : null;
+                                                   ? new BindingList<WaterQualitySubstance>(
+                                                       library.InActiveSubstances.ToList())
+                                                   : null;
             tableViewOutputParameters.Data = library.Parameters != null
-                                           ? new BindingList<WaterQualityOutputParameter>(library.OutputParameters)
-                                           : null;
+                                                 ? new BindingList<WaterQualityOutputParameter>(
+                                                     library.OutputParameters)
+                                                 : null;
 
             tableViewProcesses.BestFitColumns();
             tableViewParameters.BestFitColumns();
@@ -114,8 +120,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms
         {
             tableViewProcesses.Columns.Clear();
 
-            tableViewProcesses.AddColumn("Name", Resources.SubstanceProcessLibraryView_InitializeTableView_Name, true, 100);
-            tableViewProcesses.AddColumn("Description", Resources.SubstanceProcessLibraryView_InitializeTableView_Description, true, 100);
+            tableViewProcesses.AddColumn("Name", Resources.SubstanceProcessLibraryView_InitializeTableView_Name, true,
+                                         100);
+            tableViewProcesses.AddColumn("Description",
+                                         Resources.SubstanceProcessLibraryView_InitializeTableView_Description, true,
+                                         100);
 
             tableViewProcesses.BestFitColumns();
         }
@@ -124,13 +133,19 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms
         {
             tableViewParameters.Columns.Clear();
 
-            tableViewParameters.AddColumn("Name", Resources.SubstanceProcessLibraryView_InitializeTableView_Name, true, 100);
-            tableViewParameters.AddColumn("Description", Resources.SubstanceProcessLibraryView_InitializeTableView_Description, true, 100);
+            tableViewParameters.AddColumn("Name", Resources.SubstanceProcessLibraryView_InitializeTableView_Name, true,
+                                          100);
+            tableViewParameters.AddColumn("Description",
+                                          Resources.SubstanceProcessLibraryView_InitializeTableView_Description, true,
+                                          100);
 
             if (!ShowNameAndDescriptionColumnsOnly)
             {
-                tableViewParameters.AddColumn("Unit", Resources.SubstanceProcessLibraryView_InitializeTableView_Unit, true, 100);
-                tableViewParameters.AddColumn("DefaultValue", Resources.SubstanceProcessLibraryView_InitializeTableView_Default_value, true, 100);                
+                tableViewParameters.AddColumn("Unit", Resources.SubstanceProcessLibraryView_InitializeTableView_Unit,
+                                              true, 100);
+                tableViewParameters.AddColumn("DefaultValue",
+                                              Resources.SubstanceProcessLibraryView_InitializeTableView_Default_value,
+                                              true, 100);
             }
 
             tableViewParameters.BestFitColumns();
@@ -140,13 +155,22 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms
         {
             tableViewActiveSubstances.Columns.Clear();
 
-            tableViewActiveSubstances.AddColumn("Name", Resources.SubstanceProcessLibraryView_InitializeTableView_Name, true, 100);
-            tableViewActiveSubstances.AddColumn("Description", Resources.SubstanceProcessLibraryView_InitializeTableView_Description, true, 100);
+            tableViewActiveSubstances.AddColumn("Name", Resources.SubstanceProcessLibraryView_InitializeTableView_Name,
+                                                true, 100);
+            tableViewActiveSubstances.AddColumn("Description",
+                                                Resources.SubstanceProcessLibraryView_InitializeTableView_Description,
+                                                true, 100);
 
             if (!ShowNameAndDescriptionColumnsOnly)
             {
-                tableViewActiveSubstances.AddColumn("InitialValue", Resources.SubstanceProcessLibraryView_InitializeTableViewActiveSubstances_Default_value, true, 100);
-                tableViewActiveSubstances.AddColumn("ConcentrationUnit", Resources.SubstanceProcessLibraryView_InitializeTableView_Concentration_unit, true, 100);
+                tableViewActiveSubstances.AddColumn("InitialValue",
+                                                    Resources
+                                                        .SubstanceProcessLibraryView_InitializeTableViewActiveSubstances_Default_value,
+                                                    true, 100);
+                tableViewActiveSubstances.AddColumn("ConcentrationUnit",
+                                                    Resources
+                                                        .SubstanceProcessLibraryView_InitializeTableView_Concentration_unit,
+                                                    true, 100);
             }
 
             tableViewActiveSubstances.BestFitColumns();
@@ -156,13 +180,22 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms
         {
             tableViewInactiveSubstances.Columns.Clear();
 
-            tableViewInactiveSubstances.AddColumn("Name", Resources.SubstanceProcessLibraryView_InitializeTableView_Name, true, 100);
-            tableViewInactiveSubstances.AddColumn("Description", Resources.SubstanceProcessLibraryView_InitializeTableView_Description, true, 100);
+            tableViewInactiveSubstances.AddColumn(
+                "Name", Resources.SubstanceProcessLibraryView_InitializeTableView_Name, true, 100);
+            tableViewInactiveSubstances.AddColumn("Description",
+                                                  Resources.SubstanceProcessLibraryView_InitializeTableView_Description,
+                                                  true, 100);
 
             if (!ShowNameAndDescriptionColumnsOnly)
             {
-                tableViewInactiveSubstances.AddColumn("InitialValue", Resources.SubstanceProcessLibraryView_InitializeTableViewActiveSubstances_Default_value, true, 100);
-                tableViewInactiveSubstances.AddColumn("ConcentrationUnit", Resources.SubstanceProcessLibraryView_InitializeTableView_Concentration_unit, true, 100);
+                tableViewInactiveSubstances.AddColumn("InitialValue",
+                                                      Resources
+                                                          .SubstanceProcessLibraryView_InitializeTableViewActiveSubstances_Default_value,
+                                                      true, 100);
+                tableViewInactiveSubstances.AddColumn("ConcentrationUnit",
+                                                      Resources
+                                                          .SubstanceProcessLibraryView_InitializeTableView_Concentration_unit,
+                                                      true, 100);
             }
 
             tableViewInactiveSubstances.BestFitColumns();
@@ -172,13 +205,22 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms
         {
             tableViewOutputParameters.Columns.Clear();
 
-            tableViewOutputParameters.AddColumn("Name", Resources.SubstanceProcessLibraryView_InitializeTableView_Name, true, 100);
-            tableViewOutputParameters.AddColumn("Description", Resources.SubstanceProcessLibraryView_InitializeTableView_Description, true, 100);
+            tableViewOutputParameters.AddColumn("Name", Resources.SubstanceProcessLibraryView_InitializeTableView_Name,
+                                                true, 100);
+            tableViewOutputParameters.AddColumn("Description",
+                                                Resources.SubstanceProcessLibraryView_InitializeTableView_Description,
+                                                true, 100);
 
             if (!ShowNameAndDescriptionColumnsOnly)
             {
-                tableViewOutputParameters.AddColumn("ShowInMap", Resources.SubstanceProcessLibraryView_InitializeTableView_Show_in_Map, false, 100);
-                tableViewOutputParameters.AddColumn("ShowInHis", Resources.SubstanceProcessLibraryView_InitializeTableView_Show_in_His, false, 100);
+                tableViewOutputParameters.AddColumn("ShowInMap",
+                                                    Resources
+                                                        .SubstanceProcessLibraryView_InitializeTableView_Show_in_Map,
+                                                    false, 100);
+                tableViewOutputParameters.AddColumn("ShowInHis",
+                                                    Resources
+                                                        .SubstanceProcessLibraryView_InitializeTableView_Show_in_His,
+                                                    false, 100);
             }
 
             tableViewOutputParameters.BestFitColumns();
@@ -186,11 +228,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing && (components != null))
+            if (disposing && components != null)
             {
                 dataCollectionChangedDelayedEventHandler.Enabled = false;
                 dataCollectionChangedDelayedEventHandler.Dispose();
-                
+
                 components.Dispose();
             }
 

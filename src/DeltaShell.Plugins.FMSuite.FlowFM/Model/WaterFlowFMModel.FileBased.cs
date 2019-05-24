@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Utils.IO;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccess;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Model

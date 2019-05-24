@@ -11,15 +11,24 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
         {
             InitializeComponent();
         }
-        public Func<string, string> ImportIntoDirectory { private get; set; } 
 
-        public string LabelText { set {fileLabel.Text = value;}}
-        public string FileFilter { set { openFileDialog1.Filter = value; }}
+        public Func<string, string> ImportIntoDirectory { private get; set; }
+
+        public string LabelText
+        {
+            set => fileLabel.Text = value;
+        }
+
+        public string FileFilter
+        {
+            set => openFileDialog1.Filter = value;
+        }
 
         private string fileName;
+
         public string FileName
         {
-            get { return fileName; }
+            get => fileName;
             set
             {
                 fileName = value;
@@ -27,13 +36,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
             }
         }
 
-        private void selMeteoBtn_Click(object sender, System.EventArgs e)
+        private void selMeteoBtn_Click(object sender, EventArgs e)
         {
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 fileName = ImportIntoDirectory != null
-                    ? ImportIntoDirectory(openFileDialog1.FileName)
-                    : openFileDialog1.FileName;
+                               ? ImportIntoDirectory(openFileDialog1.FileName)
+                               : openFileDialog1.FileName;
                 meteoFileBox.Text = fileName;
             }
         }

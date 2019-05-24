@@ -13,67 +13,47 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
         [PropertyOrder(1)]
         public string Name
         {
-            get { return data.Name; }
-            set { data.Name = value; }
+            get => data.Name;
+            set => data.Name = value;
         }
 
         [Category("General")]
         [DisplayName("Process count")]
         [PropertyOrder(2)]
-        public int ProcessCount
-        {
-            get { return data.Processes.Count; }
-        }
+        public int ProcessCount => data.Processes.Count;
 
         [Category("General")]
         [DisplayName("Parameter count")]
         [PropertyOrder(3)]
-        public int ParameterCount
-        {
-            get { return data.Parameters.Count; }
-        }
+        public int ParameterCount => data.Parameters.Count;
 
         [Category("General")]
         [DisplayName("Substance count")]
         [PropertyOrder(4)]
-        public int SubstanceCount
-        {
-            get { return data.Substances.Count; }
-        }
+        public int SubstanceCount => data.Substances.Count;
 
         [Category("General")]
         [DisplayName("Output parameter count")]
         [PropertyOrder(5)]
-        public int OutputParameterCount
-        {
-            get { return data.OutputParameters.Count; }
-        }
+        public int OutputParameterCount => data.OutputParameters.Count;
 
         [PropertyOrder(1)]
         [Category("Process files")]
         [DisplayName("Process definition files")]
-        [Description("File path of the process definition files that are used (without extension: the corresponding [file path].def and [file path].dat files will be automatically retrieved during the calculation)")]
-        public string ProcessDefinitionFilesPath
-        {
-            get { return data.ProcessDefinitionFilesPath; }
-        }
+        [Description(
+            "File path of the process definition files that are used (without extension: the corresponding [file path].def and [file path].dat files will be automatically retrieved during the calculation)")]
+        public string ProcessDefinitionFilesPath => data.ProcessDefinitionFilesPath;
 
         [PropertyOrder(2)]
         [Category("Process files")]
         [DisplayName("Process dll")]
         [Description("File path of the process dll that is used (with extension)")]
-        public string ProcessDllFilePath
-        {
-            get { return data.ProcessDllFilePath; }
-        }
+        public string ProcessDllFilePath => data.ProcessDllFilePath;
 
         [PropertyOrder(3)]
         [Category("Process files")]
         [DisplayName("Imported substance file location")]
         [Description("The file location of the imported substance file")]
-        public string ImportedSubFilePath
-        {
-            get { return data.ImportedSubstanceFilePath; }
-        }
+        public string ImportedSubFilePath => data.ImportedSubstanceFilePath;
     }
 }

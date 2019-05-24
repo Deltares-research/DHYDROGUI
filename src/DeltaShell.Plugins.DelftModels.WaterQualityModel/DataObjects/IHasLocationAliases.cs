@@ -3,7 +3,7 @@
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects
 {
     /// <summary>
-    /// Implement this interface if you want <see cref="WaqInitializationSettingsBuilder"/>
+    /// Implement this interface if you want <see cref="WaqInitializationSettingsBuilder" />
     /// to be able to write the USEDATA_ITEM ... FORITEM ... block with this type of feature.
     /// </summary>
     public interface IHasLocationAliases

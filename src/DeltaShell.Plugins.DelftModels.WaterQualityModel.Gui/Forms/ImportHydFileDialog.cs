@@ -20,20 +20,21 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms
             this.path = path;
 
             InitializeComponent();
-            checkBoxTimers.Text = String.Format("Keep current timers for '{0}'", waterQualityModel.Name);
-            checkBoxCoordinateSystem.Text = String.Format("Keep current coordinate system for '{0}'", waterQualityModel.Name);
+            checkBoxTimers.Text = string.Format("Keep current timers for '{0}'", waterQualityModel.Name);
+            checkBoxCoordinateSystem.Text =
+                string.Format("Keep current coordinate system for '{0}'", waterQualityModel.Name);
             buttonOkOrgLocation = buttonOk.Location;
         }
 
         public string Message
         {
-            get { return labelMessage.Text; }
-            set { labelMessage.Text = value; }
+            get => labelMessage.Text;
+            set => labelMessage.Text = value;
         }
 
         public bool ShowCancelButton
         {
-            get { return showCancelButton; }
+            get => showCancelButton;
             set
             {
                 showCancelButton = value;
@@ -44,7 +45,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms
 
         private void buttonOk_Click(object sender, EventArgs e)
         {
-            var hydroData = HydFileReader.ReadAll(new FileInfo(path));
+            HydFileData hydroData = HydFileReader.ReadAll(new FileInfo(path));
             waterQualityModel.ImportHydroData(hydroData, !checkBoxTimers.Checked, !checkBoxCoordinateSystem.Checked);
         }
     }

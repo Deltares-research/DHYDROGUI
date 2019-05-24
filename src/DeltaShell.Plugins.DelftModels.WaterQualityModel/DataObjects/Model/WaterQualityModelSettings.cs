@@ -8,7 +8,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model
     /// <summary>
     /// Water quality model settings
     /// </summary>
-    [Entity(FireOnCollectionChange=false)]
+    [Entity(FireOnCollectionChange = false)]
     public class WaterQualityModelSettings : Unique<long>, ICloneable
     {
         /// <summary>
@@ -156,7 +156,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model
         public bool LumpLoads { get; set; }
 
         /// <summary>
-        /// Whether or not to suppress output for individual monitoring points (segments) and monitoring areas (leaving only the overall mass balance term)
+        /// Whether or not to suppress output for individual monitoring points (segments) and monitoring areas (leaving only the
+        /// overall mass balance term)
         /// </summary>
         public bool SuppressSpace { get; set; }
 
@@ -208,8 +209,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model
         /// doing a 'wrap around' on the hydro dynamic data.
         /// </summary>
         /// <value>
-        /// <c>true</c> if Delwaq should add/remove water volumes to keep concentrations continuous;
-        /// otherwise, <c>false</c> where the water volumes are used as is (causing concentration 
+        /// <c> true </c> if Delwaq should add/remove water volumes to keep concentrations continuous;
+        /// otherwise, <c> false </c> where the water volumes are used as is (causing concentration
         /// discontinuities when wrapping around).
         /// </value>
         public bool ClosureErrorCorrection { get; set; }
@@ -220,7 +221,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model
         public int NrOfThreads { get; set; }
 
         /// <summary>
-        /// Gets or sets the water level threshold (m) to determine if cells are empty/dry 
+        /// Gets or sets the water level threshold (m) to determine if cells are empty/dry
         /// (below this level) or containing water.
         /// </summary>
         public double DryCellThreshold { get; set; }
@@ -243,8 +244,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model
         /// <summary>
         /// The output directory is used in 2D/3D to explicitly set the folder to write the waq output files.
         /// Map, His, lst, lsp and mon file go here.
-        /// 
-        /// The output directory can be intentionally set to an empty string if the 
+        /// The output directory can be intentionally set to an empty string if the
         /// user wants the input and output in the same folder.
         /// </summary>
         public string OutputDirectory { get; set; }

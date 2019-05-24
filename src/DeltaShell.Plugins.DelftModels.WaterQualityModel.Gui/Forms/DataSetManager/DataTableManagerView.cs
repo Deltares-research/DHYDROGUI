@@ -31,13 +31,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.DataSetMana
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public DataTableManager DataTableManager
         {
-            get { return dataTableManager; }
+            get => dataTableManager;
             set
             {
                 tableView1.Data = null;
 
                 dataTableManager = value;
-                
+
                 if (dataTableManager != null)
                 {
                     tableView1.Data = dataTableManager.DataTables;
@@ -52,8 +52,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.DataSetMana
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public object Data
         {
-            get { return DataTableManager; }
-            set { DataTableManager = (DataTableManager) value; }
+            get => DataTableManager;
+            set => DataTableManager = (DataTableManager) value;
         }
 
         public Image Image { get; set; }
@@ -62,39 +62,35 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.DataSetMana
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public ViewInfo ViewInfo { get; set; }
 
-        public void EnsureVisible(object item)
-        {
-            
-        }
+        public void EnsureVisible(object item) {}
 
         private void InitTableView()
         {
             tableView1.AddColumn("Name", "Name", false, 100, typeof(string));
             tableView1.AddColumn("IsEnabled", "Enabled", false, 50, typeof(bool));
 
-            dataFileColumnIndex = tableView1.AddUnboundColumn("Data file", typeof(string)); 
+            dataFileColumnIndex = tableView1.AddUnboundColumn("Data file", typeof(string));
             substanceColumnIndex = tableView1.AddUnboundColumn("Substance use for file", typeof(string));
 
             var upButtonEditor = new ButtonTypeEditor
-                {
-                    Tooltip = "Move up",
-                    Image = Resources.arrow_090_medium,
-                    ButtonClickAction = () => MoveDataTable(true),
-                    HideOnReadOnly = true
-                };
+            {
+                Tooltip = "Move up",
+                Image = Resources.arrow_090_medium,
+                ButtonClickAction = () => MoveDataTable(true),
+                HideOnReadOnly = true
+            };
 
             var downButtonEditor = new ButtonTypeEditor
-                {
-                    Tooltip = "Move down",
-                    Image = Resources.arrow_270_medium,
-                    ButtonClickAction = () => MoveDataTable(false),
-                    HideOnReadOnly = true
-                };
-
+            {
+                Tooltip = "Move down",
+                Image = Resources.arrow_270_medium,
+                ButtonClickAction = () => MoveDataTable(false),
+                HideOnReadOnly = true
+            };
 
             upButtonColumnIndex = tableView1.AddUnboundColumn(" ", typeof(string), -1, upButtonEditor);
             downButtonColumnIndex = tableView1.AddUnboundColumn(" ", typeof(string), -1, downButtonEditor);
-            
+
             tableView1.UnboundColumnData += UnboundColumnData;
             tableView1.ReadOnlyCellFilter += ReadOnlyCellFilter;
             tableView1.DisplayCellFilter += DisplayCellFilter;
@@ -103,26 +99,32 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.DataSetMana
         private bool DisplayCellFilter(TableViewCellStyle tableViewCellStyle)
         {
             var dataTable = tableView1.GetRowObjectAt(tableViewCellStyle.RowIndex) as DataTable;
-            if (dataTable == null) return false;
+            if (dataTable == null)
+            {
+                return false;
+            }
 
-            if (dataTable.IsEnabled) return false;
+            if (dataTable.IsEnabled)
+            {
+                return false;
+            }
 
-            var disabledBackGroundColor = Color.Wheat;
-            
+            Color disabledBackGroundColor = Color.Wheat;
+
             tableViewCellStyle.BackColor = IsReadOnlyColumn(tableViewCellStyle.Column.AbsoluteIndex)
-                ? disabledBackGroundColor
-                : Color.FromArgb(125, disabledBackGroundColor);
+                                               ? disabledBackGroundColor
+                                               : Color.FromArgb(125, disabledBackGroundColor);
 
             return true;
         }
 
         private bool ReadOnlyCellFilter(TableViewCell tableViewCell)
         {
-            var rowIndex = tableViewCell.RowIndex;
-            var absoluteIndex = tableViewCell.Column.AbsoluteIndex;
+            int rowIndex = tableViewCell.RowIndex;
+            int absoluteIndex = tableViewCell.Column.AbsoluteIndex;
 
-            if ((absoluteIndex == upButtonColumnIndex && rowIndex == 0) || 
-                (absoluteIndex == downButtonColumnIndex && rowIndex == tableView1.RowCount -1))
+            if (absoluteIndex == upButtonColumnIndex && rowIndex == 0 ||
+                absoluteIndex == downButtonColumnIndex && rowIndex == tableView1.RowCount - 1)
             {
                 return true;
             }
@@ -132,23 +134,37 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.DataSetMana
 
         private bool IsReadOnlyColumn(int columnIndex)
         {
-            var readOnlyColumns = new[] { dataFileColumnIndex, substanceColumnIndex };
+            int[] readOnlyColumns = new[]
+            {
+                dataFileColumnIndex,
+                substanceColumnIndex
+            };
             return readOnlyColumns.Contains(columnIndex);
         }
 
         private object UnboundColumnData(int columnIndex, int rowIndex, bool isGet, bool isSet, object value)
         {
-            var unboundColumns = new[] { dataFileColumnIndex, substanceColumnIndex };
-            if (!unboundColumns.Contains(columnIndex) || isSet) return null;
+            int[] unboundColumns = new[]
+            {
+                dataFileColumnIndex,
+                substanceColumnIndex
+            };
+            if (!unboundColumns.Contains(columnIndex) || isSet)
+            {
+                return null;
+            }
 
             var dataTable = tableView1.GetRowObjectAt(rowIndex) as DataTable;
-            if (dataTable == null) return null;
+            if (dataTable == null)
+            {
+                return null;
+            }
 
             if (columnIndex == substanceColumnIndex)
             {
                 return GetPath(dataTable.SubstanceUseforFile);
             }
-            
+
             if (columnIndex == dataFileColumnIndex)
             {
                 return GetPath(dataTable.DataFile);
@@ -207,18 +223,24 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.DataSetMana
         private void MoveDataTable(bool up)
         {
             var dataTable = tableView1.CurrentFocusedRowObject as DataTable;
-            if (dataTable == null) return;
+            if (dataTable == null)
+            {
+                return;
+            }
 
-            var newIndex = tableView1.GetRowIndexByDataSourceIndex(dataTableManager.MoveDataTable(dataTable, up));
+            int newIndex = tableView1.GetRowIndexByDataSourceIndex(dataTableManager.MoveDataTable(dataTable, up));
 
             tableView1.SelectRow(newIndex);
             tableView1.FocusedRowIndex = newIndex;
         }
-        
+
         private void TextBoxSubstanceUseForValidating(object sender, CancelEventArgs e)
         {
             var dataTable = tableView1.CurrentFocusedRowObject as DataTable;
-            if (dataTable == null || dataTable.SubstanceUseforFile.Content == textBoxSubstanceUseFor.Text) return;
+            if (dataTable == null || dataTable.SubstanceUseforFile.Content == textBoxSubstanceUseFor.Text)
+            {
+                return;
+            }
 
             dataTable.SubstanceUseforFile.Content = textBoxSubstanceUseFor.Text;
         }
@@ -226,7 +248,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.DataSetMana
         private void TextBoxDataFileValidating(object sender, CancelEventArgs e)
         {
             var dataTable = tableView1.CurrentFocusedRowObject as DataTable;
-            if (dataTable == null || dataTable.DataFile.Content == textBoxDataFile.Text) return;
+            if (dataTable == null || dataTable.DataFile.Content == textBoxDataFile.Text)
+            {
+                return;
+            }
 
             dataTable.DataFile.Content = textBoxDataFile.Text;
         }

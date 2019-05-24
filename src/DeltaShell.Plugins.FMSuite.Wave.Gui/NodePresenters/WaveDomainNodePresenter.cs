@@ -23,6 +23,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
         private static readonly Bitmap BathymetryImage = Common.Gui.Properties.Resources.bathymetry;
 
         private readonly Func<WaveDomainData, WaveModel> getModelForDomain;
+
         public WaveDomainNodePresenter(Func<WaveDomainData, WaveModel> getModel)
         {
             getModelForDomain = getModel;
@@ -36,31 +37,39 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
 
         private readonly string gridMemberName = TypeUtils.GetMemberName<WaveDomainData>(d => d.Grid);
         private readonly string bathymetryMemberName = TypeUtils.GetMemberName<WaveDomainData>(d => d.Bathymetry);
+
         protected override void OnPropertyChanged(WaveDomainData item, ITreeNode node, PropertyChangedEventArgs e)
         {
-            if (node == null) return;
+            if (node == null)
+            {
+                return;
+            }
 
             if (e.PropertyName == gridMemberName ||
                 e.PropertyName == bathymetryMemberName)
             {
                 node.Update();
             }
+
             base.OnPropertyChanged(item, node, e);
         }
 
         public override IEnumerable GetChildNodeObjects(WaveDomainData parentNodeData, ITreeNode node)
         {
-            var model = getModelForDomain(parentNodeData);
-            yield return new WaveModelTreeShortcut(parentNodeData.Grid.Name, GridImage, model, parentNodeData.Grid, ShortCutType.Grid);
-            yield return new WaveModelTreeShortcut(parentNodeData.Bathymetry.Name, BathymetryImage, model, parentNodeData.Bathymetry, ShortCutType.SpatialCoverage);
+            WaveModel model = getModelForDomain(parentNodeData);
+            yield return new WaveModelTreeShortcut(parentNodeData.Grid.Name, GridImage, model, parentNodeData.Grid,
+                                                   ShortCutType.Grid);
+            yield return new WaveModelTreeShortcut(parentNodeData.Bathymetry.Name, BathymetryImage, model,
+                                                   parentNodeData.Bathymetry, ShortCutType.SpatialCoverage);
 
-            foreach (var domain in parentNodeData.SubDomains)
+            foreach (WaveDomainData domain in parentNodeData.SubDomains)
             {
                 yield return domain;
             }
         }
 
-        public override DragOperations CanDrop(object item, ITreeNode sourceNode, ITreeNode targetNode, DragOperations validOperations)
+        public override DragOperations CanDrop(object item, ITreeNode sourceNode, ITreeNode targetNode,
+                                               DragOperations validOperations)
         {
             return DragOperations.Move;
         }
@@ -79,21 +88,27 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
 
         protected override bool RemoveNodeData(object parentNodeData, WaveDomainData nodeData)
         {
-            var model = getModelForDomain(nodeData);
+            WaveModel model = getModelForDomain(nodeData);
             DeleteDomain(model, nodeData);
             return true;
         }
 
-        public override void OnDragDrop(object item, object sourceParentNodeData, WaveDomainData target, DragOperations operation, int position)
+        public override void OnDragDrop(object item, object sourceParentNodeData, WaveDomainData target,
+                                        DragOperations operation, int position)
         {
             if (operation != DragOperations.Move)
+            {
                 throw new NotImplementedException("No operations other than 'move' expected");
+            }
 
-            if (sourceParentNodeData.Equals(target)) return;
+            if (sourceParentNodeData.Equals(target))
+            {
+                return;
+            }
 
             var domain = item as WaveDomainData;
             var oldParent = sourceParentNodeData as WaveDomainData;
-            var model = getModelForDomain(domain);
+            WaveModel model = getModelForDomain(domain);
 
             model.BeginEdit(new DefaultEditAction("Move domain..."));
             model.DeleteSubDomain(oldParent, domain);
@@ -104,18 +119,22 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
         public override IMenuItem GetContextMenu(ITreeNode sender, object nodeData)
         {
             var waveDomain = nodeData as WaveDomainData;
-            var model = getModelForDomain(waveDomain);
+            WaveModel model = getModelForDomain(waveDomain);
             if (model != null && waveDomain != null)
             {
                 var contextMenu = new ContextMenuStrip();
                 if (waveDomain.SuperDomain == null)
+                {
                     contextMenu.Items.Add(CreateAddSuperDomainMenuItem(model, waveDomain));
+                }
+
                 contextMenu.Items.Add(CreateAddDomainMenuItem(model, waveDomain));
                 contextMenu.Items.Add(CreateDeleteDomainMenuItem(model, waveDomain));
 
                 var domainMenu = new MenuItemContextMenuStripAdapter(contextMenu);
                 return domainMenu;
             }
+
             return null;
         }
 
@@ -163,8 +182,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
             {
                 // here we know what to do
                 model.BeginEdit("Delete outer domain ...");
-                var newOuterDomain = model.OuterDomain.SubDomains[0];
-                model.OuterDomain.SubDomains.Clear();// disconnect
+                WaveDomainData newOuterDomain = model.OuterDomain.SubDomains[0];
+                model.OuterDomain.SubDomains.Clear(); // disconnect
                 newOuterDomain.SuperDomain = null;
                 model.OuterDomain = newOuterDomain;
                 model.EndEdit();
@@ -178,13 +197,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
 
         private void AddSuperDomainOnClick(WaveModel model, WaveDomainData waveDomain)
         {
-            var name = PromptForValidDomainName(model);
+            string name = PromptForValidDomainName(model);
 
             if (name != null)
             {
                 var newDomain = new WaveDomainData(name);
                 model.SyncWithModelDefaults(newDomain);
-                if (CancelOnExistingFile(model, newDomain)) return;
+                if (CancelOnExistingFile(model, newDomain))
+                {
+                    return;
+                }
 
                 model.BeginEdit("Add exterior domain ...");
                 model.OuterDomain = newDomain;
@@ -195,13 +217,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
 
         private void AddSubDomainOnClick(WaveModel model, WaveDomainData waveDomain)
         {
-            var name = PromptForValidDomainName(model);
+            string name = PromptForValidDomainName(model);
 
             if (name != null)
             {
                 var newDomain = new WaveDomainData(name);
                 model.SyncWithModelDefaults(newDomain);
-                if (CancelOnExistingFile(model, newDomain)) return;
+                if (CancelOnExistingFile(model, newDomain))
+                {
+                    return;
+                }
 
                 model.AddSubDomain(waveDomain, newDomain);
             }
@@ -222,22 +247,31 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
 
         private bool CancelOnExistingFile(WaveModel model, WaveDomainData domain)
         {
-            var gridFile = Path.Combine(Path.GetDirectoryName(model.MdwFilePath), domain.GridFileName);
-            var bedlevelFile = Path.Combine(Path.GetDirectoryName(model.MdwFilePath), domain.BedLevelFileName);
+            string gridFile = Path.Combine(Path.GetDirectoryName(model.MdwFilePath), domain.GridFileName);
+            string bedlevelFile = Path.Combine(Path.GetDirectoryName(model.MdwFilePath), domain.BedLevelFileName);
 
             if (File.Exists(gridFile))
             {
-                var result = PromptOnUsingExistingFile(gridFile);
-                if (result == DialogResult.Cancel) return true;
+                DialogResult result = PromptOnUsingExistingFile(gridFile);
+                if (result == DialogResult.Cancel)
+                {
+                    return true;
+                }
+
                 if (result == DialogResult.No)
                 {
                     FileUtils.DeleteIfExists(gridFile);
                 }
             }
+
             if (File.Exists(bedlevelFile))
             {
-                var result = PromptOnUsingExistingFile(bedlevelFile);
-                if (result == DialogResult.Cancel) return true;
+                DialogResult result = PromptOnUsingExistingFile(bedlevelFile);
+                if (result == DialogResult.Cancel)
+                {
+                    return true;
+                }
+
                 if (result == DialogResult.No)
                 {
                     FileUtils.DeleteIfExists(bedlevelFile);
@@ -250,9 +284,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
         private DialogResult PromptOnUsingExistingFile(string filePath)
         {
             var msg = "File {0} already exists in the model directory, do you want to use its content?";
-            var result = MessageBox.Show(string.Format(msg, filePath), "Use existing file?",
-                                         MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question,
-                                         MessageBoxDefaultButton.Button1);
+            DialogResult result = MessageBox.Show(string.Format(msg, filePath), "Use existing file?",
+                                                  MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question,
+                                                  MessageBoxDefaultButton.Button1);
 
             return result;
         }

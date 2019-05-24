@@ -25,24 +25,21 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         public WaveMeteoData MeteoData { get; set; }
         public bool UseGlobalMeteoData { get; set; }
         public bool Output { get; set; }
-        
+
         public int NestedInDomain { get; set; }
 
         [Aggregation]
         public WaveDomainData SuperDomain { get; set; }
 
-        public string Name
-        {
-            get { return Path.GetFileNameWithoutExtension(GridFileName); }
-        }
+        public string Name => Path.GetFileNameWithoutExtension(GridFileName);
 
         public WaveDomainData(string name)
         {
             SpectralDomainData = new SpectralDomainData
-                {
-                    UseDefaultDirectionalSpace = true,
-                    UseDefaultFrequencySpace = true
-                };
+            {
+                UseDefaultDirectionalSpace = true,
+                UseDefaultFrequencySpace = true
+            };
             HydroFromFlowData = new HydroFromFlowSettings {UseDefaultHydroFromFlowSettings = true};
             MeteoData = new WaveMeteoData();
             UseGlobalMeteoData = true;
@@ -52,10 +49,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             Grid = CurvilinearGrid.CreateDefault();
             Grid.Name = "Grid (" + name + ")";
 
-            Bathymetry = new CurvilinearCoverage()
-            {
-                Name = "Bed Level (" + name + ")"
-            };
+            Bathymetry = new CurvilinearCoverage() {Name = "Bed Level (" + name + ")"};
             Bathymetry.Components[0].NoDataValue = -999.0;
             Bathymetry.Components[0].DefaultValue = Bathymetry.Components[0].NoDataValue;
             Bathymetry.Resize(Grid.Size1, Grid.Size2, Grid.X.Values, Grid.Y.Values);
@@ -95,9 +89,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
     public enum WaveDirectionalSpaceType
     {
-        [Description("Circle")] 
+        [Description("Circle")]
         Circle,
-        [Description("Sector")] 
+
+        [Description("Sector")]
         Sector
     }
 
@@ -105,9 +100,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave
     {
         [Description("Do not use")]
         DoNotUse,
+
         [Description("Use, don't extend")]
         UseDoNotExtend,
-        [Description("Use and extend")] 
+
+        [Description("Use and extend")]
         UseAndExtend
     }
 
@@ -115,10 +112,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave
     {
         [Description("depth-averaged")]
         DepthAveraged,
+
         [Description("surface-layer")]
         SurfaceLayer,
+
         [Description("wave-dependent")]
         WaveDependent
     }
-
 }

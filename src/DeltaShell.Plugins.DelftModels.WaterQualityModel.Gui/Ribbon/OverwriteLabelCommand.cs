@@ -17,10 +17,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Ribbon
 {
     public class OverwriteLabelCommand : SpatialOperationCommandBase
     {
-        protected override IMapTool MapTool
-        {
-            get { return MapControl?.GetToolByType<QueryTool>(); }
-        }
+        protected override IMapTool MapTool => MapControl?.GetToolByType<QueryTool>();
 
         public override bool Enabled
         {
@@ -42,7 +39,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Ribbon
             if (MapTool != null)
             {
                 MapControl.ActivateTool(MapTool);
-                var queryTool = (QueryTool)MapTool;
+                var queryTool = (QueryTool) MapTool;
                 queryTool.OnMouseClick = OnMouseClick;
             }
         }
@@ -53,7 +50,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Ribbon
             {
                 clickedCoordinate = coordinate;
                 base.OnExecute();
-                var queryTool = (QueryTool)MapTool;
+                var queryTool = (QueryTool) MapTool;
                 queryTool.OnMouseClick = null;
             }
         }
@@ -68,9 +65,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Ribbon
         protected override ISpatialOperation CreateSpatialOperation(ILayer targetLayer)
         {
             // create a user input form
-            var form = new SpatialOperationInputForm { Text = Resources.OverwriteLabelOperationProperties_DisplayName };
+            var form = new SpatialOperationInputForm {Text = Resources.OverwriteLabelOperationProperties_DisplayName};
 
-            var labelControl = new SpatialOperationPropertyTextBox { LabelText = Resources.OverwriteLabelOperation_Label_DisplayName };
+            var labelControl =
+                new SpatialOperationPropertyTextBox {LabelText = Resources.OverwriteLabelOperation_Label_DisplayName};
             labelControl.Validating += LabelControlValidating;
             form.AddPropertyPanel(labelControl);
 
@@ -93,22 +91,24 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Ribbon
 
         protected override bool FeatureTypeIsSupported(Type type)
         {
-            return base.FeatureTypeIsSupported(type) && type == typeof (WaterQualityObservationAreaCoverage);
+            return base.FeatureTypeIsSupported(type) && type == typeof(WaterQualityObservationAreaCoverage);
         }
 
-        protected override bool EnabledSelectedFeatures(IEnumerable<IFeature> polygons, IEnumerable<IFeature> polyLines, IEnumerable<IFeature> points)
+        protected override bool EnabledSelectedFeatures(IEnumerable<IFeature> polygons, IEnumerable<IFeature> polyLines,
+                                                        IEnumerable<IFeature> points)
         {
-            return base.EnabledSelectedFeatures(polygons, polyLines, points) && !polygons.Any() && !polyLines.Any() && !points.Any();
+            return base.EnabledSelectedFeatures(polygons, polyLines, points) && !polygons.Any() && !polyLines.Any() &&
+                   !points.Any();
         }
 
         /// <summary>
         /// Validate the value control that sets the value on the points/coverage.
         /// </summary>
-        /// <param name="sender">The value control.</param>
-        /// <param name="cancelEventArgs">The event to cancel when validation fails.</param>
+        /// <param name="sender"> The value control. </param>
+        /// <param name="cancelEventArgs"> The event to cancel when validation fails. </param>
         private static void LabelControlValidating(object sender, CancelEventArgs cancelEventArgs)
         {
-            var control = (SpatialOperationPropertyTextBox)sender;
+            var control = (SpatialOperationPropertyTextBox) sender;
             string labelString = control.ValueString;
             if (string.IsNullOrWhiteSpace(labelString))
             {

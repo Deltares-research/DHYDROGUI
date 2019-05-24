@@ -3,9 +3,13 @@
     public enum HydroDynamicModelType
     {
         Undefined,
+
         /// <summary>
         /// Model based on unstructured sigma model.
         /// </summary>
-        Unstructured, Curvilinear, FiniteElements, HydroNetwork
+        Unstructured,
+        Curvilinear,
+        FiniteElements,
+        HydroNetwork
     }
 }

@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using DelftTools.Functions;
+using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils.Collections;
@@ -15,9 +16,6 @@ using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.FunctionStores;
 using DeltaShell.Plugins.FMSuite.Common.Layers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
-using DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
-using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors;
@@ -27,13 +25,14 @@ using DeltaShell.Plugins.FMSuite.FlowFM.Layers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
-using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors;
-using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms;
 using DeltaShell.Plugins.NetworkEditor.MapLayers;
+using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
 using log4net;
+using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
+using SharpMap.Api;
 using SharpMap.Api.Layers;
 using SharpMap.Data.Providers;
 using SharpMap.Editors;
@@ -42,29 +41,22 @@ using SharpMap.Layers;
 using SharpMap.Rendering;
 using SharpMap.Rendering.Thematics;
 using SharpMap.Styles;
-using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using SharpMap.Api;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 {
     public class FlowFMMapLayerProvider : IMapLayerProvider
     {
-        private static readonly ConditionalWeakTable<WaterFlowFMModel, FMSnappedFeaturesGroupLayerData> snappedGroupLayerDataMapping =
-            new ConditionalWeakTable<WaterFlowFMModel, FMSnappedFeaturesGroupLayerData>();
+        private static readonly ConditionalWeakTable<WaterFlowFMModel, FMSnappedFeaturesGroupLayerData>
+            snappedGroupLayerDataMapping =
+                new ConditionalWeakTable<WaterFlowFMModel, FMSnappedFeaturesGroupLayerData>();
 
-        private static readonly ConditionalWeakTable<WaterFlowFMModel, FMOutputSnappedFeaturesGroupLayerData> outputSnappedGroupLayerDataMapping =
-            new ConditionalWeakTable<WaterFlowFMModel, FMOutputSnappedFeaturesGroupLayerData>();
-
+        private static readonly ConditionalWeakTable<WaterFlowFMModel, FMOutputSnappedFeaturesGroupLayerData>
+            outputSnappedGroupLayerDataMapping =
+                new ConditionalWeakTable<WaterFlowFMModel, FMOutputSnappedFeaturesGroupLayerData>();
 
         private static readonly ILog log = LogManager.GetLogger(typeof(FlowFMMapLayerProvider));
 
-        private static readonly string modelName = typeof (WaterFlowFMModel).Name;
+        private static readonly string modelName = typeof(WaterFlowFMModel).Name;
 
         public const string BoundariesLayerName = "Boundaries";
         public const string BoundaryConditionsLayerName = "Boundary Conditions";
@@ -73,17 +65,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         public const string GridSnappedFeaturesLayerName = "Estimated Grid-snapped features";
 
         /// <summary>
-        /// Creates a maplayer. 
+        /// Creates a maplayer.
         /// </summary>
-        /// <param name="data">The data object for which the layer is created.</param>
-        /// <param name="parent">The parent object.</param>
-        /// <returns>The layer that is created for the data object.</returns>
+        /// <param name="data"> The data object for which the layer is created. </param>
+        /// <param name="parent"> The parent object. </param>
+        /// <returns> The layer that is created for the data object. </returns>
         public ILayer CreateLayer(object data, object parent)
         {
             var waterFlowFmModel = data as WaterFlowFMModel;
             if (waterFlowFmModel != null)
             {
-                return new ModelGroupLayer { Name = waterFlowFmModel.Name, Model = waterFlowFmModel, NameIsReadOnly = true};
+                return new ModelGroupLayer
+                {
+                    Name = waterFlowFmModel.Name,
+                    Model = waterFlowFmModel,
+                    NameIsReadOnly = true
+                };
             }
 
             var importedGridFile = data as ImportedFMNetFile;
@@ -104,33 +101,42 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 if (Equals(feature2Ds, fmModel.Boundaries))
                 {
                     return new VectorLayer(BoundariesLayerName)
-                        {
-                            DataSource =
-                                new Feature2DCollection().Init(feature2Ds, "Boundary", modelName, fmModel.CoordinateSystem),
-                            FeatureEditor =
-                                new Boundary2DEditor(fmModel)
-                                    {
-                                        AllowRemovePoint = new RemoveBoundaryPointDialog(fmModel).ShowDialogForFeature
-                                    },
-                            Style = AreaLayerStyles.BoundariesStyle,
-                            NameIsReadOnly = true,
-                            ShowInLegend = false 
-                        };
+                    {
+                        DataSource =
+                            new Feature2DCollection().Init(feature2Ds, "Boundary", modelName, fmModel.CoordinateSystem),
+                        FeatureEditor =
+                            new Boundary2DEditor(fmModel)
+                            {
+                                AllowRemovePoint = new RemoveBoundaryPointDialog(fmModel).ShowDialogForFeature
+                            },
+                        Style = AreaLayerStyles.BoundariesStyle,
+                        NameIsReadOnly = true,
+                        ShowInLegend = false
+                    };
                 }
+
                 if (Equals(feature2Ds, fmModel.Pipes))
                 {
                     return new VectorLayer(SourcesAndSinksLayerName)
-                        {
-                            DataSource =
-                                new Feature2DCollection().Init(feature2Ds, "SourceSink", modelName, fmModel.CoordinateSystem),
-                            FeatureEditor =
-                                new Feature2DEditor(fmModel),
-                            Style = AreaLayerStyles.SourcesAndSinksStyle,
-                            NameIsReadOnly = true,
-                            CustomRenderers =
-                                new IFeatureRenderer[] {new ArrowLineStringAdornerRenderer {Orientation = Orientation.Forward, Opacity = 1}},
-                            ShowInLegend = false
-                        };
+                    {
+                        DataSource =
+                            new Feature2DCollection().Init(feature2Ds, "SourceSink", modelName,
+                                                           fmModel.CoordinateSystem),
+                        FeatureEditor =
+                            new Feature2DEditor(fmModel),
+                        Style = AreaLayerStyles.SourcesAndSinksStyle,
+                        NameIsReadOnly = true,
+                        CustomRenderers =
+                            new IFeatureRenderer[]
+                            {
+                                new ArrowLineStringAdornerRenderer
+                                {
+                                    Orientation = Orientation.Forward,
+                                    Opacity = 1
+                                }
+                            },
+                        ShowInLegend = false
+                    };
                 }
             }
 
@@ -138,37 +144,39 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             if (allBoundaryConditionSets != null && parent is WaterFlowFMModel)
             {
                 var fmModel = (WaterFlowFMModel) parent;
-                var theme = CreateBoundaryConditionsTheme();
+                CategorialTheme theme = CreateBoundaryConditionsTheme();
                 return new VectorLayer(BoundaryConditionsLayerName)
-                    {
-                        DataSource = new Feature2DCollection().Init(allBoundaryConditionSets, "BoundaryCondition", modelName, fmModel.CoordinateSystem),
-                        Theme = theme,
-                        Style = (VectorStyle) theme.DefaultStyle,
-                        NameIsReadOnly = true,
-                        ShowInTreeView = true,
-                        ShowInLegend = false,
-                        Selectable = false
-                    };
+                {
+                    DataSource =
+                        new Feature2DCollection().Init(allBoundaryConditionSets, "BoundaryCondition", modelName,
+                                                       fmModel.CoordinateSystem),
+                    Theme = theme,
+                    Style = (VectorStyle) theme.DefaultStyle,
+                    NameIsReadOnly = true,
+                    ShowInTreeView = true,
+                    ShowInLegend = false,
+                    Selectable = false
+                };
             }
 
             if (data is FMMapFileFunctionStore)
             {
                 var groupLayer = new GroupLayer("Output (map)")
-                    {
-                        LayersReadOnly = true,
-                        NameIsReadOnly = true
-                    };
+                {
+                    LayersReadOnly = true,
+                    NameIsReadOnly = true
+                };
                 groupLayer.Layers.CollectionChanged += MapGroupLayerLayersCollectionChanged;
-                return groupLayer;  
+                return groupLayer;
             }
 
             if (data is FMHisFileFunctionStore)
             {
                 return new GroupLayer("Output (his)")
-                    {
-                        LayersReadOnly = true,
-                        NameIsReadOnly = true
-                    };
+                {
+                    LayersReadOnly = true,
+                    NameIsReadOnly = true
+                };
             }
 
             if (data is FMClassMapFileFunctionStore)
@@ -184,7 +192,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             var outputSnappedGroupLayerData = data as FMOutputSnappedFeaturesGroupLayerData;
             if (outputSnappedGroupLayerData != null)
             {
-                var groupLayer = new GroupLayer(OutputSnappedFeaturesLayerName) { Visible = false, NameIsReadOnly = true };
+                var groupLayer = new GroupLayer(OutputSnappedFeaturesLayerName)
+                {
+                    Visible = false,
+                    NameIsReadOnly = true
+                };
 
                 groupLayer.Layers.AddRange(outputSnappedGroupLayerData.CreateLayers());
                 groupLayer.LayersReadOnly = true;
@@ -194,19 +206,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             var snappedGroupLayerData = data as FMSnappedFeaturesGroupLayerData;
             if (snappedGroupLayerData != null)
             {
-                var groupLayer = new GroupLayer(GridSnappedFeaturesLayerName) {Visible = false, NameIsReadOnly = true};
-                foreach (var snappedFeatures in snappedGroupLayerData.ChildData)
+                var groupLayer = new GroupLayer(GridSnappedFeaturesLayerName)
+                {
+                    Visible = false,
+                    NameIsReadOnly = true
+                };
+                foreach (SnappedFeatureCollection snappedFeatures in snappedGroupLayerData.ChildData)
                 {
                     var layer = new VectorLayer(snappedFeatures.LayerName)
-                        {
-                            Style = snappedFeatures.SnappedLayerStyle,
-                            DataSource = snappedFeatures,
-                            Selectable = false,
-                            NameIsReadOnly = true,
-                        };
+                    {
+                        Style = snappedFeatures.SnappedLayerStyle,
+                        DataSource = snappedFeatures,
+                        Selectable = false,
+                        NameIsReadOnly = true,
+                    };
                     groupLayer.Layers.Add(layer);
                     snappedFeatures.Layer = layer;
                 }
+
                 groupLayer.LayersReadOnly = true;
                 return groupLayer;
             }
@@ -214,10 +231,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             var grouping = data as IGrouping<string, IFunction>;
             if (grouping != null)
             {
-                var functions = grouping.ToList();
+                List<IFunction> functions = grouping.ToList();
                 if (functions.Any())
                 {
-                    var groupLayerName = GetCommonFunctionName(functions);
+                    string groupLayerName = GetCommonFunctionName(functions);
                     return new GroupLayer(string.IsNullOrEmpty(groupLayerName) ? grouping.Key : groupLayerName);
                 }
             }
@@ -227,27 +244,38 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 
         private static string GetCommonFunctionName(IList<IFunction> functions)
         {
-            if (!functions.Any()) return string.Empty;
-            var commonFunctionName = functions[0].Name.ToCharArray();
+            if (!functions.Any())
+            {
+                return string.Empty;
+            }
+
+            char[] commonFunctionName = functions[0].Name.ToCharArray();
 
             for (var i = 1; i < functions.Count; i++)
             {
-                var functionName = functions[i].Name.ToCharArray();
+                char[] functionName = functions[i].Name.ToCharArray();
                 var commonCharacters = new List<char>();
-                for (int j = 0; j < Math.Min(commonFunctionName.Length, functionName.Length); j++)
+                for (var j = 0; j < Math.Min(commonFunctionName.Length, functionName.Length); j++)
                 {
-                    if (commonFunctionName[j] == functionName[j]) commonCharacters.Add(commonFunctionName[j]);
+                    if (commonFunctionName[j] == functionName[j])
+                    {
+                        commonCharacters.Add(commonFunctionName[j]);
+                    }
                 }
 
                 commonFunctionName = new string(commonCharacters.ToArray()).Replace("()", string.Empty).ToCharArray();
             }
+
             return new string(commonFunctionName).Trim();
         }
 
         private void MapGroupLayerLayersCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             var layer = e.GetRemovedOrAddedItem() as UnstructuredGridLayer;
-            if (layer == null || e.Action != NotifyCollectionChangedAction.Add) return;
+            if (layer == null || e.Action != NotifyCollectionChangedAction.Add)
+            {
+                return;
+            }
 
             layer.GridColor = Color.Gray;
         }
@@ -255,10 +283,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         /// <summary>
         /// Determines whether this instance can create a layer for the specified data object.
         /// </summary>
-        /// <param name="data">The data object for which will be determined whether a layer can be created.</param>
-        /// <param name="parentObject">The parent object.</param>
+        /// <param name="data"> The data object for which will be determined whether a layer can be created. </param>
+        /// <param name="parentObject"> The parent object. </param>
         /// <returns>
-        ///   <c>true</c> if this instance [can create layer for] the specified data; otherwise, <c>false</c>.
+        /// <c> true </c> if this instance [can create layer for] the specified data; otherwise, <c> false </c>.
         /// </returns>
         public bool CanCreateLayerFor(object data, object parentObject)
         {
@@ -268,18 +296,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                    || data is FMHisFileFunctionStore
                    || data is FMClassMapFileFunctionStore
                    || data is ImportedFMNetFile
-                   || (data is IEventedList<BoundaryConditionSet> && parentObject is WaterFlowFMModel)
+                   || data is IEventedList<BoundaryConditionSet> && parentObject is WaterFlowFMModel
                    || data is FMSnappedFeaturesGroupLayerData
                    || data is FMOutputSnappedFeaturesGroupLayerData
                    || data is CoverageDepthLayersList
-                   || data is IEventedList<Feature2D>;  // Boundaries and sources&sinks
+                   || data is IEventedList<Feature2D>; // Boundaries and sources&sinks
         }
 
         /// <summary>
         /// Child objects for <paramref name="data" />. Objects will be used to create child layers
         /// for the group layer (<paramref name="data" />)
         /// </summary>
-        /// <param name="data">Group layer data</param>
+        /// <param name="data"> Group layer data </param>
         /// <returns>
         /// Child objects for <paramref name="data" />
         /// </returns>
@@ -288,20 +316,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             var model = data as WaterFlowFMModel;
             if (model != null)
             {
-                var rootModel = GetRootModel(model);
-                if (rootModel == null || rootModel is WaterFlowFMModel || model.GetDataItemByValue(model.Area).LinkedTo == null)
+                IModel rootModel = GetRootModel(model);
+                if (rootModel == null || rootModel is WaterFlowFMModel ||
+                    model.GetDataItemByValue(model.Area).LinkedTo == null)
                 {
-                    if( model.Area.Enclosures.Count > 0 )
+                    if (model.Area.Enclosures.Count > 0)
                     {
-                        foreach( var enclosure in model.Area.Enclosures)
+                        foreach (GroupableFeature2DPolygon enclosure in model.Area.Enclosures)
                         {
                             var geoAsPol = enclosure.Geometry as Polygon;
-                            if( geoAsPol == null || !geoAsPol.IsValid)
+                            if (geoAsPol == null || !geoAsPol.IsValid)
                             {
-                                log.WarnFormat(Resources.WaterFlowFMEnclosureValidator_Validate_Drawn_polygon_not__0__not_valid, enclosure.Name);
+                                log.WarnFormat(
+                                    Resources.WaterFlowFMEnclosureValidator_Validate_Drawn_polygon_not__0__not_valid,
+                                    enclosure.Name);
                             }
                         }
                     }
+
                     yield return model.Area;
                 }
 
@@ -315,6 +347,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     layerData = new FMSnappedFeaturesGroupLayerData(model);
                     snappedGroupLayerDataMapping.Add(model, layerData);
                 }
+
                 yield return layerData;
 
                 if (model.WriteSnappedFeatures && Directory.Exists(model.OutputSnappedFeaturesPath))
@@ -333,6 +366,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 
                     yield return outputLayerData;
                 }
+
                 yield return model.Grid;
 
                 yield return model.InitialWaterLevel;
@@ -344,40 +378,50 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 {
                     yield return model.InitialTemperature;
                 }
+
                 if (model.UseSalinity)
                 {
-                    foreach (var coverage in model.InitialSalinity.Coverages)
+                    foreach (ICoverage coverage in model.InitialSalinity.Coverages)
                     {
                         yield return coverage;
                     }
                 }
-                foreach (var tracer in model.InitialTracers)
+
+                foreach (UnstructuredGridCellCoverage tracer in model.InitialTracers)
                 {
                     yield return tracer;
                 }
+
                 if (model.UseMorSed)
                 {
-                    foreach (var fraction in model.InitialFractions)
+                    foreach (UnstructuredGridCellCoverage fraction in model.InitialFractions)
                     {
                         yield return fraction;
                     }
                 }
+
                 yield return model.Bathymetry;
 
                 if (model.OutputMapFileStore != null)
+                {
                     yield return model.OutputMapFileStore;
-                
+                }
+
                 if (model.OutputHisFileStore != null)
+                {
                     yield return model.OutputHisFileStore;
+                }
 
                 if (model.OutputClassMapFileStore != null)
+                {
                     yield return model.OutputClassMapFileStore;
+                }
             }
 
             var coverageDepthLayersList = data as CoverageDepthLayersList;
             if (coverageDepthLayersList != null)
             {
-                foreach (var coverage in coverageDepthLayersList.Coverages)
+                foreach (ICoverage coverage in coverageDepthLayersList.Coverages)
                 {
                     yield return coverage;
                 }
@@ -388,20 +432,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             {
                 if (outputStore is FMMapFileFunctionStore fmMapFileFunctionStore)
                 {
-                    foreach (var output in GetMapOutputFunctions(fmMapFileFunctionStore))
+                    foreach (object output in GetMapOutputFunctions(fmMapFileFunctionStore))
+                    {
                         yield return output;
+                    }
                 }
                 else if (outputStore is FMClassMapFileFunctionStore fmClassMapFileFunctionStore)
                 {
                     yield return fmClassMapFileFunctionStore.Grid;
 
-                    foreach (var output in outputStore.Functions)
+                    foreach (IFunction output in outputStore.Functions)
+                    {
                         yield return output;
+                    }
                 }
                 else
                 {
-                    foreach (var output in outputStore.Functions)
+                    foreach (IFunction output in outputStore.Functions)
+                    {
                         yield return output;
+                    }
                 }
             }
 
@@ -409,7 +459,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             var grouping = data as IGrouping<string, IFunction>;
             if (grouping != null)
             {
-                foreach (var function in grouping)
+                foreach (IFunction function in grouping)
                 {
                     yield return function;
                 }
@@ -420,7 +470,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         {
             yield return mapStore.Grid;
 
-            var functionGrouping = mapStore.GetFunctionGrouping();
+            IEnumerable<IGrouping<string, IFunction>> functionGrouping = mapStore.GetFunctionGrouping();
             foreach (IGrouping<string, IFunction> group in functionGrouping)
             {
                 if (@group.Count() == 1)
@@ -434,7 +484,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 
             // Needs to be handled separately since it would be grouped with EastwardSeaWaterVelocityStandardName
             if (mapStore.CustomVelocityCoverage != null)
+            {
                 yield return mapStore.CustomVelocityCoverage;
+            }
         }
 
         private static CategorialTheme CreateBoundaryConditionsTheme()
@@ -448,23 +500,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 NoDataValues = new List<string> {""}
             };
 
-            foreach (var dataType in new FlowBoundaryConditionEditorController().AllSupportedDataTypes)
+            foreach (BoundaryConditionDataType dataType in new FlowBoundaryConditionEditorController()
+                .AllSupportedDataTypes)
             {
                 foreach (FlowBoundaryQuantityType qt in Enum.GetValues(typeof(FlowBoundaryQuantityType)))
                 {
                     var style = new VectorStyle
-                        {
-                            GeometryType = typeof (IPoint),
-                            Symbol = BoundaryDataMapSymbols.GetSymbol(qt, dataType)
-                        };
+                    {
+                        GeometryType = typeof(IPoint),
+                        Symbol = BoundaryDataMapSymbols.GetSymbol(qt, dataType)
+                    };
 
-                    var boundaryConditionName = FlowBoundaryCondition.GetDescription(qt, dataType);
+                    string boundaryConditionName = FlowBoundaryCondition.GetDescription(qt, dataType);
 
                     var themeItem = new CategorialThemeItem(boundaryConditionName, style, null,
                                                             boundaryConditionName);
                     theme.AddThemeItem(themeItem);
                 }
             }
+
             theme.DefaultStyle = new VectorStyle
             {
                 GeometryType = typeof(IPoint),
@@ -475,7 +529,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 
         private IModel GetRootModel(IModel model)
         {
-            var rootModelForModel = GetRootModelRecursive(model);
+            IModel rootModelForModel = GetRootModelRecursive(model);
             return rootModelForModel == model ? null : rootModelForModel;
         }
 
@@ -483,8 +537,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         {
             var ownerModel = model.Owner as IModel;
             return ownerModel != null
-                ? GetRootModelRecursive(ownerModel)
-                : model;
+                       ? GetRootModelRecursive(ownerModel)
+                       : model;
         }
     }
 }

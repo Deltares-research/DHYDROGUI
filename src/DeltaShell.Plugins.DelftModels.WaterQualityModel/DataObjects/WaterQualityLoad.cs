@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel;
-
 using GeoAPI.Extensions.Feature;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects

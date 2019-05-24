@@ -10,11 +10,10 @@ using DelftTools.Utils.Collections.Generic;
 
 namespace DeltaShell.Plugins.FMSuite.Wave
 {
-
     /// <summary>
     /// Syncing of first function argument on addition, removal, and replacement of values
     /// </summary>
-    /// <typeparam name="T">The type of the first argument</typeparam>
+    /// <typeparam name="T"> The type of the first argument </typeparam>
     public class FunctionArgumentSyncer<T> : IDisposable
     {
         public IEventedList<IFunction> Functions { get; private set; }
@@ -27,19 +26,26 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         private void FunctionsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs args)
         {
-            var removedOrAddedItem = args.GetRemovedOrAddedItem();
-            var arguments = ((IFunction) removedOrAddedItem).Arguments;
-            if (!arguments.Any()) return;
-            if (arguments[0].ValueType != typeof(T)) return;
+            object removedOrAddedItem = args.GetRemovedOrAddedItem();
+            IEventedList<IVariable> arguments = ((IFunction) removedOrAddedItem).Arguments;
+            if (!arguments.Any())
+            {
+                return;
+            }
+
+            if (arguments[0].ValueType != typeof(T))
+            {
+                return;
+            }
 
             switch (args.Action)
             {
-                case NotifyCollectionChangedAction.Add: 
-                    ((IFunction)removedOrAddedItem).Arguments[0].ValuesChanged += FunctionTimeValuesChanged;
-                    OnFunctionAdded(((IFunction)removedOrAddedItem));
+                case NotifyCollectionChangedAction.Add:
+                    ((IFunction) removedOrAddedItem).Arguments[0].ValuesChanged += FunctionTimeValuesChanged;
+                    OnFunctionAdded((IFunction) removedOrAddedItem);
                     break;
                 case NotifyCollectionChangedAction.Remove:
-                    ((IFunction)removedOrAddedItem).Arguments[0].ValuesChanged -= FunctionTimeValuesChanged;
+                    ((IFunction) removedOrAddedItem).Arguments[0].ValuesChanged -= FunctionTimeValuesChanged;
                     break;
                 default:
                     return;
@@ -50,7 +56,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         {
             var variable = sender as IVariable<T>;
             if (variable == null)
+            {
                 return;
+            }
 
             switch (args.Action)
             {
@@ -72,10 +80,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         private void OnFunctionAdded(IFunction addedFunction)
         {
-            if (Functions.Count == 1) return;
+            if (Functions.Count == 1)
+            {
+                return;
+            }
 
-            var newValues = addedFunction.Arguments[0].GetValues<T>().ToList();
-            var referenceValues = Functions.First().Arguments[0].GetValues<T>().ToList();
+            List<T> newValues = addedFunction.Arguments[0].GetValues<T>().ToList();
+            List<T> referenceValues = Functions.First().Arguments[0].GetValues<T>().ToList();
 
             // sync
             OnAddValues(newValues.Except(referenceValues).ToList(), addedFunction.Arguments[0]);
@@ -84,16 +95,28 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         }
 
         private bool isRemoving;
+
         private void OnRemoveValues(IList<T> values, IVariable fromVariable)
         {
-            if (!values.Any()) return;
-            if (isRemoving) return;
+            if (!values.Any())
+            {
+                return;
+            }
+
+            if (isRemoving)
+            {
+                return;
+            }
 
             isRemoving = true;
 
-            foreach (var function in Functions)
+            foreach (IFunction function in Functions)
             {
-                if (function.Arguments[0].Equals(fromVariable)) continue;
+                if (function.Arguments[0].Equals(fromVariable))
+                {
+                    continue;
+                }
+
                 function.RemoveValues(new VariableValueFilter<T>(function.Arguments[0], values));
             }
 
@@ -101,16 +124,28 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         }
 
         private bool isAdding;
+
         private void OnAddValues(IList<T> values, IVariable fromVariable)
         {
-            if (!values.Any()) return;
-            if (isAdding) return;
+            if (!values.Any())
+            {
+                return;
+            }
+
+            if (isAdding)
+            {
+                return;
+            }
 
             isAdding = true;
 
-            foreach (var function in Functions)
+            foreach (IFunction function in Functions)
             {
-                if (function.Arguments[0].Equals(fromVariable)) continue;
+                if (function.Arguments[0].Equals(fromVariable))
+                {
+                    continue;
+                }
+
                 function.Arguments[0].AddValues(values);
             }
 
@@ -118,18 +153,29 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         }
 
         private bool isReplacing;
+
         private void OnReplaceValues(IList<T> values, int startIndex, IVariable fromVariable)
         {
-            if (!values.Any()) return;
-            if (isReplacing) return;
+            if (!values.Any())
+            {
+                return;
+            }
+
+            if (isReplacing)
+            {
+                return;
+            }
 
             isReplacing = true;
 
-            foreach (var function in Functions)
+            foreach (IFunction function in Functions)
             {
-                if (function.Arguments[0].Equals(fromVariable)) continue;
+                if (function.Arguments[0].Equals(fromVariable))
+                {
+                    continue;
+                }
 
-                int index = 0;
+                var index = 0;
                 Enumerable.Range(startIndex, values.Count)
                           .ForEach(i => function.Arguments[0].Values[i] = values[index++]);
             }

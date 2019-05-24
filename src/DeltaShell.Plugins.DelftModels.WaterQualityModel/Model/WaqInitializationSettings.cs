@@ -71,13 +71,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
         public string AttributesFile { get; set; }
 
         public string VolumesFile { get; set; }
-                
+
         public int HorizontalExchanges { get; set; }
 
         public int VerticalExchanges { get; set; }
 
         public string PointersFile { get; set; }
-        
+
         public double HorizontalDispersion { get; set; }
 
         public double VerticalDispersion { get; set; }

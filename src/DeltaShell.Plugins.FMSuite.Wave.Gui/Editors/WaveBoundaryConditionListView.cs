@@ -14,11 +14,12 @@ using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using GeoAPI.Extensions.Feature;
+using NetTopologySuite.Extensions.Features;
 using SharpMap.Api.Layers;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
 {
-    public partial class WaveBoundaryConditionListView : UserControl , ILayerEditorView
+    public partial class WaveBoundaryConditionListView : UserControl, ILayerEditorView
     {
         private readonly WaveOverallSpectrumFileSelection specFileSelectionControl;
 
@@ -55,7 +56,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
             rbBoundarySegments.Checked = true;
             rbSp2File.Checked = false;
             rbSp2File.CheckedChanged += RbBoundarySegmentsOnCheckedChanged;
-            
+
             boundariesPanel.Controls.Add(tableView);
         }
 
@@ -71,22 +72,26 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
         {
             if (SelectedFeatures.Any())
             {
-                var selectedConditions =
+                List<Feature2D> selectedConditions =
                     SelectedFeatures.OfType<WaveBoundaryCondition>().Select(c => c.Feature).ToList();
                 model.Boundaries.RemoveAllWhere(selectedConditions.Contains);
                 return true;
             }
+
             return false;
         }
 
         private void RbBoundarySegmentsOnCheckedChanged(object sender, EventArgs eventArgs)
         {
-            if (model == null) return;
+            if (model == null)
+            {
+                return;
+            }
 
             if (rbSp2File.Checked && model.BoundaryConditions.Any())
             {
                 // to be replaced when we have undo/redo...
-                var dialogResult = MessageBox.Show(
+                DialogResult dialogResult = MessageBox.Show(
                     "This will delete all currently defined boundary conditions in this model. Continue?",
                     "Change Boundary Definition",
                     MessageBoxButtons.YesNo,
@@ -102,7 +107,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
 
             if (rbSp2File.Checked)
             {
-                var dialogResult = specFileSelectionControl.SelectSp2File();
+                DialogResult dialogResult = specFileSelectionControl.SelectSp2File();
                 if (dialogResult != DialogResult.OK)
                 {
                     // rewind
@@ -116,7 +121,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
             var modelGroupLayer = Layer as IGroupLayer;
             if (modelGroupLayer != null)
             {
-                var boundaryLayer =
+                ILayer boundaryLayer =
                     modelGroupLayer.Layers.FirstOrDefault(
                         l => l.Name == WaveModelMapLayerProvider.BoundaryLayerName);
                 if (boundaryLayer != null)
@@ -141,17 +146,22 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
             }
         }
 
-
         private void TableViewOnDoubleClick(object sender, EventArgs eventArgs)
         {
-            var indices = tableView.SelectedRowsIndices.ToList();
-            if (indices.Count != 1) return;
+            List<int> indices = tableView.SelectedRowsIndices.ToList();
+            if (indices.Count != 1)
+            {
+                return;
+            }
 
             var conditions = tableView.Data as IEventedList<WaveBoundaryCondition>;
-            if (conditions == null) return;
-            
-            var bc = conditions[tableView.GetDataSourceIndexByRowIndex(indices[0])];
-            
+            if (conditions == null)
+            {
+                return;
+            }
+
+            WaveBoundaryCondition bc = conditions[tableView.GetDataSourceIndexByRowIndex(indices[0])];
+
             if (OpenEditorView != null && bc != null)
             {
                 OpenEditorView(bc, null);
@@ -160,10 +170,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
 
         private bool ReadOnlyCellFilter(TableViewCell cell)
         {
-            if (!cell.Column.Equals(spectrumShapeColumn)) return false;
-            if (cell.RowIndex > tableView.RowCount - 1) return false;
+            if (!cell.Column.Equals(spectrumShapeColumn))
+            {
+                return false;
+            }
 
-            var definitionType = (BoundaryConditionDataType)tableView.GetCellValue(cell.RowIndex, spectralDefColumn.AbsoluteIndex);
+            if (cell.RowIndex > tableView.RowCount - 1)
+            {
+                return false;
+            }
+
+            var definitionType =
+                (BoundaryConditionDataType) tableView.GetCellValue(cell.RowIndex, spectralDefColumn.AbsoluteIndex);
             return definitionType == BoundaryConditionDataType.SpectrumFromFile;
         }
 
@@ -181,34 +199,34 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
                     return true;
                 }
             }
+
             return false;
         }
 
-        private void TableViewOnCellChanged(object sender, EventArgs<TableViewCell> e)
-        {
-        }
-        
+        private void TableViewOnCellChanged(object sender, EventArgs<TableViewCell> e) {}
+
         private DelftTools.Utils.Tuple<string, bool> ValidateInput(TableViewCell tableViewCell, object o)
         {
-            return new DelftTools.Utils.Tuple<string, bool>("",true);
+            return new DelftTools.Utils.Tuple<string, bool>("", true);
         }
 
         private WaveModel model;
-        public object Data 
+
+        public object Data
         {
-            get { return model; }
+            get => model;
             set
             {
                 if (model != null)
                 {
-                    ((INotifyPropertyChange)model).PropertyChanged -= OnModelPropertyChanged;    
+                    ((INotifyPropertyChange) model).PropertyChanged -= OnModelPropertyChanged;
                 }
 
                 model = value as WaveModel;
 
                 if (model != null)
                 {
-                    ((INotifyPropertyChange)model).PropertyChanged += OnModelPropertyChanged; 
+                    ((INotifyPropertyChange) model).PropertyChanged += OnModelPropertyChanged;
                 }
 
                 tableView.Data = model != null
@@ -217,7 +235,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
                 specFileSelectionControl.Data = model;
 
                 if (model != null)
+                {
                     UpdateView();
+                }
             }
         }
 
@@ -243,8 +263,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
             if (args.PropertyName == TypeUtils.GetMemberName<WaveModel>(m => m.IsEditing))
             {
                 // to prevent cross thread access..
-                if (model.IsEditing) BeforeModelEdit();
-                else AfterModelEdit();
+                if (model.IsEditing)
+                {
+                    BeforeModelEdit();
+                }
+                else
+                {
+                    AfterModelEdit();
+                }
             }
         }
 
@@ -264,10 +290,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
         }
 
         public Image Image { get; set; }
-        public void EnsureVisible(object item)
-        {
-            
-        }
+        public void EnsureVisible(object item) {}
 
         public ViewInfo ViewInfo { get; set; }
 
@@ -282,21 +305,29 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
                     {
                         return
                             tableView.SelectedRowsIndices.Select(
-                                i => conditions[tableView.GetDataSourceIndexByRowIndex(i)].Feature).Distinct();
+                                         i => conditions[tableView.GetDataSourceIndexByRowIndex(i)].Feature)
+                                     .Distinct();
                     }
                 }
+
                 return Enumerable.Empty<IFeature>();
             }
             set
             {
-                if (value == null) return;
-                
-                var selectedInMap = value.OfType<WaveBoundaryCondition>().ToList();
-                var allConditions = tableView.Data as IEventedList<WaveBoundaryCondition>;
-                if (allConditions == null) return;
+                if (value == null)
+                {
+                    return;
+                }
 
-                var selectedBoundaries = allConditions.Intersect(selectedInMap);
-                var selectedIndices = selectedBoundaries.Select(allConditions.IndexOf).ToArray();
+                List<WaveBoundaryCondition> selectedInMap = value.OfType<WaveBoundaryCondition>().ToList();
+                var allConditions = tableView.Data as IEventedList<WaveBoundaryCondition>;
+                if (allConditions == null)
+                {
+                    return;
+                }
+
+                IEnumerable<WaveBoundaryCondition> selectedBoundaries = allConditions.Intersect(selectedInMap);
+                int[] selectedIndices = selectedBoundaries.Select(allConditions.IndexOf).ToArray();
 
                 tableView.ClearSelection();
                 tableView.SelectRows(selectedIndices);
@@ -304,17 +335,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
             }
         }
 
-        public Action<WaveBoundaryCondition,Type> OpenEditorView { private get; set; }
+        public Action<WaveBoundaryCondition, Type> OpenEditorView { private get; set; }
 
         public event EventHandler SelectedFeaturesChanged;
         public ILayer Layer { get; set; }
-        
-        public void OnActivated()
-        {
-        }
 
-        public void OnDeactivated()
-        {
-        }
+        public void OnActivated() {}
+
+        public void OnDeactivated() {}
     }
 }

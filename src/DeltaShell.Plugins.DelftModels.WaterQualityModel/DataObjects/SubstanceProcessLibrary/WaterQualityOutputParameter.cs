@@ -9,7 +9,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Substance
     /// <summary>
     /// Output parameter
     /// </summary>
-    [Entity(FireOnCollectionChange=false)]
+    [Entity(FireOnCollectionChange = false)]
     public class WaterQualityOutputParameter : Unique<long>, INameable, ICloneable
     {
         /// <summary>

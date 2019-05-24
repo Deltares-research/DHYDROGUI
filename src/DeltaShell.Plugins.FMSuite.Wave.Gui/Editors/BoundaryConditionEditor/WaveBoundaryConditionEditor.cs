@@ -8,7 +8,7 @@ using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor
 {
     /// <summary>
-    /// WaveBoundaryConditionEditor wraps generic BoundaryConditionEditor because it has 
+    /// WaveBoundaryConditionEditor wraps generic BoundaryConditionEditor because it has
     /// different view Data: WaveBoundaryCondition and not BoundaryConditionSet
     /// </summary>
     public partial class WaveBoundaryConditionEditor : UserControl, ICompositeView, IReusableView
@@ -21,19 +21,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor
         public Common.Gui.Editors.BoundaryConditionEditor BoundaryConditionEditor { get; private set; }
 
         private WaveBoundaryCondition waveBoundaryCondition;
+
         public object Data
         {
-            get { return waveBoundaryCondition; }
+            get => waveBoundaryCondition;
             set
             {
                 waveBoundaryCondition = value as WaveBoundaryCondition;
                 if (waveBoundaryCondition != null)
                 {
                     BoundaryConditionEditor.Data = new BoundaryConditionSet
-                        {
-                            Feature = waveBoundaryCondition.Feature,
-                            BoundaryConditions = {waveBoundaryCondition}
-                        };
+                    {
+                        Feature = waveBoundaryCondition.Feature,
+                        BoundaryConditions = {waveBoundaryCondition}
+                    };
                 }
                 else
                 {
@@ -42,7 +43,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor
             }
         }
 
-        public Image Image { get { return BoundaryConditionEditor.Image; } set { BoundaryConditionEditor.Image = value; } }
+        public Image Image
+        {
+            get => BoundaryConditionEditor.Image;
+            set => BoundaryConditionEditor.Image = value;
+        }
+
         public void EnsureVisible(object item)
         {
             BoundaryConditionEditor.EnsureVisible(item);
@@ -50,31 +56,22 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor
 
         public ViewInfo ViewInfo { get; set; }
 
-
-        public bool Locked 
+        public bool Locked
         {
-            get { return BoundaryConditionEditor.Locked; }
-            set { BoundaryConditionEditor.Locked = value; }
+            get => BoundaryConditionEditor.Locked;
+            set => BoundaryConditionEditor.Locked = value;
         }
 
         public event EventHandler LockedChanged
         {
-            add { BoundaryConditionEditor.LockedChanged += value; }
-            remove { BoundaryConditionEditor.LockedChanged -= value; }
+            add => BoundaryConditionEditor.LockedChanged += value;
+            remove => BoundaryConditionEditor.LockedChanged -= value;
         }
 
-        public IEventedList<IView> ChildViews
-        {
-            get { return BoundaryConditionEditor.ChildViews; }
-        }
+        public IEventedList<IView> ChildViews => BoundaryConditionEditor.ChildViews;
 
-        public bool HandlesChildViews
-        {
-            get { return true; }
-        }
-        
-        public void ActivateChildView(IView childView)
-        {
-        }
+        public bool HandlesChildViews => true;
+
+        public void ActivateChildView(IView childView) {}
     }
 }

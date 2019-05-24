@@ -7,7 +7,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Api
     public static class WaveModelDll
     {
         private const string WAVE_DLL_NAME = "wave.dll";
-        
+
         static WaveModelDll()
         {
             using (new WaveModelApi.WaveDllHelper(string.Empty))
@@ -15,7 +15,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Api
                 DimrApiDataSet.SetSharedPath();
                 NativeLibrary.LoadNativeDll(WAVE_DLL_NAME, DimrApiDataSet.WaveDllPath);
             }
-            
         }
 
         [DllImport(WAVE_DLL_NAME, EntryPoint = "initialize", CallingConvention = CallingConvention.Cdecl)]
@@ -31,9 +30,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Api
         public static extern void set_var([In] string key, [In] string value);
 
         [DllImport(WAVE_DLL_NAME, EntryPoint = "get_current_time", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void get_current_time([In, Out] ref double t);
+        public static extern void get_current_time([In] [Out] ref double t);
 
         [DllImport(WAVE_DLL_NAME, EntryPoint = "get_start_time", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void get_start_time([In, Out] ref double t);
+        public static extern void get_start_time([In] [Out] ref double t);
     }
 }

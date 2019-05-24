@@ -9,10 +9,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model
     {
         [Description("None")]
         None,
+
         [Description("Points")]
         Points,
+
         [Description("Areas")]
         Areas,
+
         [Description("Points and areas")]
         PointsAndAreas
     }

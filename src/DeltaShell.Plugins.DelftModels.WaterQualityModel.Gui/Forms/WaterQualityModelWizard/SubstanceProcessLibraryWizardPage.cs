@@ -28,8 +28,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.WaterQualit
 
             InitializeControls(dataDirectory);
 
-            toolTipProcessFilePath.SetToolTip(pictureBoxProcessFilePath, Resources.SubstanceProcessLibraryWizardPage_Dll_file_path_tooltip);
-            toolTipProcessDefinitionsFilePath.SetToolTip(pictureBoxProcessDefinitionsFilePath, Resources.SubstanceProcessLibraryWizardPage_Process_definition_files_path_tooltip);
+            toolTipProcessFilePath.SetToolTip(pictureBoxProcessFilePath,
+                                              Resources.SubstanceProcessLibraryWizardPage_Dll_file_path_tooltip);
+            toolTipProcessDefinitionsFilePath.SetToolTip(pictureBoxProcessDefinitionsFilePath,
+                                                         Resources
+                                                             .SubstanceProcessLibraryWizardPage_Process_definition_files_path_tooltip);
         }
 
         # region IWizardPage
@@ -53,10 +56,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.WaterQualit
 
         # region Obtaining data
 
-        public string SubFilePath
-        {
-            get { return UsingStandardSubFile ? GetStandardSubFile() : GetCustomFile(); }
-        }
+        public string SubFilePath => UsingStandardSubFile ? GetStandardSubFile() : GetCustomFile();
 
         public WaterQualityProcessType SubFileProcessType
         {
@@ -67,9 +67,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.WaterQualit
                     return WaterQualityProcessType.Custom;
                 }
 
-                var selectedListViewItem = listView2.SelectedItems
-                    .OfType<ListViewItem>()
-                    .FirstOrDefault();
+                ListViewItem selectedListViewItem = listView2.SelectedItems
+                                                             .OfType<ListViewItem>()
+                                                             .FirstOrDefault();
 
                 return selectedListViewItem != null && selectedListViewItem.Group == listView2.Groups[1]
                            ? WaterQualityProcessType.Duflow
@@ -77,33 +77,21 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.WaterQualit
             }
         }
 
-        public bool UsingCustomProcessFiles
-        {
-            get { return !UsingStandardSubFile && radioButtonCustomProcesses.Checked; }
-        }
+        public bool UsingCustomProcessFiles => !UsingStandardSubFile && radioButtonCustomProcesses.Checked;
 
-        public string CustomProcessDllFilePath
-        {
-            get { return textBoxProcessFile.Text; }
-        }
+        public string CustomProcessDllFilePath => textBoxProcessFile.Text;
 
-        public string CustomProcessDefinitionFilesPath
-        {
-            get { return textBoxProcessDefinitionsFile.Text; }
-        }
+        public string CustomProcessDefinitionFilesPath => textBoxProcessDefinitionsFile.Text;
 
-        private bool UsingStandardSubFile
-        {
-            get { return tabControl1.SelectedTab == standardProcessTypeTab; }
-        }
+        private bool UsingStandardSubFile => tabControl1.SelectedTab == standardProcessTypeTab;
 
         private string GetStandardSubFile()
         {
-            var selectedItem = listView2.SelectedItems
-                .Cast<ListViewItem>()
-                .Select(lvi => lvi.Tag)
-                .OfType<FileInfo>()
-                .FirstOrDefault();
+            FileInfo selectedItem = listView2.SelectedItems
+                                             .Cast<ListViewItem>()
+                                             .Select(lvi => lvi.Tag)
+                                             .OfType<FileInfo>()
+                                             .FirstOrDefault();
 
             return selectedItem != null ? selectedItem.FullName : "";
         }
@@ -119,8 +107,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.WaterQualit
 
         private void InitializeControls(string dataDirectory)
         {
-            var sobekListItems = CreateListViewItems(dataDirectory + "\\Sobek", listView2.Groups[0]);
-            var duflowListItems = CreateListViewItems(dataDirectory + "\\Duflow", listView2.Groups[1]);
+            IEnumerable<ListViewItem> sobekListItems =
+                CreateListViewItems(dataDirectory + "\\Sobek", listView2.Groups[0]);
+            IEnumerable<ListViewItem> duflowListItems =
+                CreateListViewItems(dataDirectory + "\\Duflow", listView2.Groups[1]);
 
             listView2.Items.Clear();
             listView2.Items.AddRange(sobekListItems.Concat(duflowListItems).ToArray());
@@ -136,12 +126,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.WaterQualit
             if (Directory.Exists(subFilePath))
             {
                 subFileDictionary = new DirectoryInfo(subFilePath)
-                    .GetFiles("*.sub", SearchOption.AllDirectories)
-                    .ToDictionary(f => Path.GetFileNameWithoutExtension(f.FullName), f => f);
+                                    .GetFiles("*.sub", SearchOption.AllDirectories)
+                                    .ToDictionary(f => Path.GetFileNameWithoutExtension(f.FullName), f => f);
 
                 descriptionDictionary = new DirectoryInfo(subFilePath)
-                    .GetFiles("*.des", SearchOption.AllDirectories)
-                    .ToDictionary(f => Path.GetFileNameWithoutExtension(f.FullName), ReadDescriptionFileLine);
+                                        .GetFiles("*.des", SearchOption.AllDirectories)
+                                        .ToDictionary(f => Path.GetFileNameWithoutExtension(f.FullName),
+                                                      ReadDescriptionFileLine);
             }
             else
             {
@@ -150,13 +141,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.WaterQualit
             }
 
             return subFileDictionary.Select(kvp => new ListViewItem
-                                                       {
-                                                           ImageIndex = 0,
-                                                           Text = GetDescriptionText(descriptionDictionary, kvp.Key),
-                                                           Tag = kvp.Value,
-                                                           Group = @group,
-                                                           ToolTipText = GetDescriptionText(descriptionDictionary, kvp.Key)
-                                                       });
+            {
+                ImageIndex = 0,
+                Text = GetDescriptionText(descriptionDictionary, kvp.Key),
+                Tag = kvp.Value,
+                Group = @group,
+                ToolTipText = GetDescriptionText(descriptionDictionary, kvp.Key)
+            });
         }
 
         private static string ReadDescriptionFileLine(FileInfo f)
@@ -167,10 +158,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.WaterQualit
             {
                 line = f.OpenText().ReadLine();
             }
-            catch
-            {
-
-            }
+            catch {}
 
             return line;
         }
@@ -188,7 +176,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.WaterQualit
 
             try
             {
-                var subFilePath = SubFilePath;
+                string subFilePath = SubFilePath;
 
                 if (!string.IsNullOrEmpty(subFilePath))
                 {
@@ -203,9 +191,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.WaterQualit
 
         private void UpdateProcessTypeControls()
         {
-            var customProcessFilesTabSelected = tabControl1.SelectedTab == customProcessTypeTab;
+            bool customProcessFilesTabSelected = tabControl1.SelectedTab == customProcessTypeTab;
 
-            var usingCustomProcessFiles = customProcessFilesTabSelected && radioButtonCustomProcesses.Checked;
+            bool usingCustomProcessFiles = customProcessFilesTabSelected && radioButtonCustomProcesses.Checked;
 
             processFileLabel.Enabled = usingCustomProcessFiles;
             textBoxProcessFile.Enabled = usingCustomProcessFiles;
@@ -216,7 +204,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.WaterQualit
             processDefinitionFilesLabel.Enabled = usingCustomProcessFiles;
             textBoxProcessDefinitionsFile.Enabled = usingCustomProcessFiles;
             textBoxProcessDefinitionsFile.ReadOnly = !usingCustomProcessFiles;
-            textBoxProcessDefinitionsFile.BackColor = usingCustomProcessFiles ? SystemColors.Window : SystemColors.Control;
+            textBoxProcessDefinitionsFile.BackColor =
+                usingCustomProcessFiles ? SystemColors.Window : SystemColors.Control;
             buttonSelectProcessDefinitionsFilePath.Enabled = usingCustomProcessFiles;
         }
 
@@ -233,30 +222,45 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.WaterQualit
 
         private void RadioButtonStandardSobekProcessesCheckedChanged(object sender, EventArgs e)
         {
-            if (!radioButtonStandardSobekProcesses.Checked) return;
+            if (!radioButtonStandardSobekProcesses.Checked)
+            {
+                return;
+            }
 
             UpdateProcessTypeControls();
         }
 
         private void RadioButtonCustomProcessesCheckedChanged(object sender, EventArgs e)
         {
-            if (!radioButtonCustomProcesses.Checked) return;
+            if (!radioButtonCustomProcesses.Checked)
+            {
+                return;
+            }
 
             UpdateProcessTypeControls();
         }
 
         private void ButtonSelectProcessFilePathClick(object sender, EventArgs e)
         {
-            if (openFileDialogProcessFilePath.ShowDialog(this) != DialogResult.OK) return;
+            if (openFileDialogProcessFilePath.ShowDialog(this) != DialogResult.OK)
+            {
+                return;
+            }
 
             textBoxProcessFile.Text = openFileDialogProcessFilePath.FileName;
         }
 
         private void ButtonSelectProcessDefinitionsFilePathClick(object sender, EventArgs e)
         {
-            if (openFileDialogProcessDefinitionsFilePath.ShowDialog(this) != DialogResult.OK) return;
+            if (openFileDialogProcessDefinitionsFilePath.ShowDialog(this) != DialogResult.OK)
+            {
+                return;
+            }
 
-            textBoxProcessDefinitionsFile.Text = Path.GetDirectoryName(openFileDialogProcessDefinitionsFilePath.FileName) + Path.DirectorySeparatorChar + Path.GetFileNameWithoutExtension(openFileDialogProcessDefinitionsFilePath.FileName); // Note: strip off the extension
+            textBoxProcessDefinitionsFile.Text =
+                Path.GetDirectoryName(openFileDialogProcessDefinitionsFilePath.FileName) + Path.DirectorySeparatorChar +
+                Path.GetFileNameWithoutExtension(openFileDialogProcessDefinitionsFilePath
+                                                     .FileName); // Note: strip off the extension
         }
 
         private void StandardSubFileListViewResize(object sender, EventArgs e)

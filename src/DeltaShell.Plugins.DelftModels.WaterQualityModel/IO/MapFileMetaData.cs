@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 {
     /// <summary>
-    ///  Class for the meta data of a map file
+    /// Class for the meta data of a map file
     /// </summary>
     public class MapFileMetaData
     {

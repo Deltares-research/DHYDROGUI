@@ -15,15 +15,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Api
         /// <summary>
         /// Initializes the wave model, mdw file directory will be used to switch to
         /// </summary>
-        /// <param name="mdwFilePath">the full filepath of the mdw file</param>
+        /// <param name="mdwFilePath"> the full filepath of the mdw file </param>
         public int Initialize(string mdwFilePath)
         {
             workingDirectory = Path.GetDirectoryName(mdwFilePath);
-            var mdwFileName = Path.GetFileName(mdwFilePath);
+            string mdwFileName = Path.GetFileName(mdwFilePath);
             using (new WaveDllHelper(workingDirectory))
             {
                 WaveModelDll.initialize(mdwFileName);
             }
+
             return 0;
         }
 
@@ -33,6 +34,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Api
             {
                 WaveModelDll.update(timestep);
             }
+
             return 0;
         }
 
@@ -44,7 +46,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Api
 
         public int[] GetShape(string variable)
         {
-            return new int[] { };
+            return new int[]
+                {};
         }
 
         public Array GetValues(string variable)
@@ -64,21 +67,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Api
 
         public void SetValues(string variable, Array values)
         {
-            foreach (var value in values)
+            foreach (object value in values)
             {
                 WaveModelDll.set_var(variable, value.ToString());
             }
         }
 
-        public void SetValues(string variable, int[] start, int[] count, Array values)
-        {
-        }
+        public void SetValues(string variable, int[] start, int[] count, Array values) {}
 
-        public void SetValues(string variable, int[] index, Array values)
-        {
-        }
+        public void SetValues(string variable, int[] index, Array values) {}
 
-        
         public DateTime StartTime
         {
             get
@@ -107,9 +105,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Api
         public string[] VariableNames { get; set; }
         public Logger Logger { get; set; }
 
-        public void Dispose()
-        {
-        }
+        public void Dispose() {}
 
         public class WaveDllHelper : IDisposable
         {
@@ -125,8 +121,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Api
             private readonly string esmfScriptPath;
 
             public WaveDllHelper(string workDir)
-            {              
-                var d3DhomeDir = DimrApiDataSet.KernelsDirectory;
+            {
+                string d3DhomeDir = DimrApiDataSet.KernelsDirectory;
 
                 waveExeDir = DimrApiDataSet.WaveExePath;
                 swanExeDir = DimrApiDataSet.SwanExePath;
@@ -143,36 +139,26 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Api
                 DimrRun = DimrRun && DimrRun;
 
                 Environment.SetEnvironmentVariable("D3D_HOME", d3DhomeDir);
-                Environment.SetEnvironmentVariable("PATH", waveExeDir + ";" + swanExeDir + ";" + swanScriptDir + ";" + esmfPath + ";" + esmfScriptPath + ";" + oldPath);
+                Environment.SetEnvironmentVariable(
+                    "PATH",
+                    waveExeDir + ";" + swanExeDir + ";" + swanScriptDir + ";" + esmfPath + ";" + esmfScriptPath + ";" +
+                    oldPath);
                 Environment.SetEnvironmentVariable("ARCH", "x64", EnvironmentVariableTarget.Process);
                 if (workDir != string.Empty)
+                {
                     Directory.SetCurrentDirectory(workDir);
-            }
-            
-            public string WaveExeDir
-            {
-                get { return waveExeDir; }
+                }
             }
 
-            public string SwanExeDir
-            {
-                get { return swanExeDir; }
-            }
+            public string WaveExeDir => waveExeDir;
 
-            public string SwanScriptDir
-            {
-                get { return swanScriptDir; }
-            }
+            public string SwanExeDir => swanExeDir;
 
-            public string EsmfPath
-            {
-                get { return esmfPath; }
-            }
+            public string SwanScriptDir => swanScriptDir;
 
-            public string EsmfScriptPath
-            {
-                get { return esmfScriptPath; }
-            }
+            public string EsmfPath => esmfPath;
+
+            public string EsmfScriptPath => esmfScriptPath;
             public static bool DimrRun { get; set; }
 
             public void Dispose()
@@ -187,9 +173,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Api
                     Environment.SetEnvironmentVariable("D3D_HOME", oldDelft3DDirectory);
                     Environment.SetEnvironmentVariable("ARCH", oldArch, EnvironmentVariableTarget.Process);
                 }
+
                 Environment.SetEnvironmentVariable("PATH", oldPath);
                 if (originalWorkingDirectory != string.Empty)
+                {
                     Directory.SetCurrentDirectory(originalWorkingDirectory);
+                }
             }
         }
     }

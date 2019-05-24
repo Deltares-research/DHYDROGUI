@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using DelftTools.Utils;
 using DelftTools.Utils.Binding;
 using DelftTools.Utils.Reflection;
+using DeltaShell.Plugins.FMSuite.Common.Gui.Properties;
 using DeltaShell.Plugins.FMSuite.Common.Wind;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
@@ -18,19 +19,21 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
             InitializeComponent();
 
             // without pressure
-            inputTypeCBox.DataSource = EnumBindingHelper.ToList<WindDefinitionType>().Where(k => k.Key != WindDefinitionType.WindXYP).ToList();
+            inputTypeCBox.DataSource = EnumBindingHelper
+                                       .ToList<WindDefinitionType>().Where(k => k.Key != WindDefinitionType.WindXYP)
+                                       .ToList();
             inputTypeCBox.DisplayMember = "Value";
             inputTypeCBox.ValueMember = "Key";
         }
 
         public WaveMeteoData Data
         {
-            get { return meteoData; }
+            get => meteoData;
             set
             {
                 if (meteoData != null)
                 {
-                    ((INotifyPropertyChange)meteoData).PropertyChanged -= OnMeteoDataPropertyChanged;
+                    ((INotifyPropertyChange) meteoData).PropertyChanged -= OnMeteoDataPropertyChanged;
                     Unbind();
                 }
 
@@ -38,7 +41,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
 
                 if (meteoData != null)
                 {
-                    ((INotifyPropertyChange)meteoData).PropertyChanged += OnMeteoDataPropertyChanged;
+                    ((INotifyPropertyChange) meteoData).PropertyChanged += OnMeteoDataPropertyChanged;
                     Bind();
                 }
 
@@ -66,19 +69,24 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
         private void Bind()
         {
             inputTypeCBox.DataBindings.Add(new Binding("SelectedValue", meteoData,
-                TypeUtils.GetMemberName<WaveMeteoData>(m => m.FileType), false, DataSourceUpdateMode.OnPropertyChanged));
+                                                       TypeUtils.GetMemberName<WaveMeteoData>(m => m.FileType), false,
+                                                       DataSourceUpdateMode.OnPropertyChanged));
             xyVectorFileControl.DataBindings.Add(new Binding("FileName", meteoData,
-                TypeUtils.GetMemberName<WaveMeteoData>(m => m.XYVectorFileName), false,
-                DataSourceUpdateMode.OnPropertyChanged));
+                                                             TypeUtils.GetMemberName<WaveMeteoData>(
+                                                                 m => m.XYVectorFileName), false,
+                                                             DataSourceUpdateMode.OnPropertyChanged));
             xComponentFileControl.DataBindings.Add(new Binding("FileName", meteoData,
-                TypeUtils.GetMemberName<WaveMeteoData>(m => m.XComponentFileName), false,
-                DataSourceUpdateMode.OnPropertyChanged));
+                                                               TypeUtils.GetMemberName<WaveMeteoData>(
+                                                                   m => m.XComponentFileName), false,
+                                                               DataSourceUpdateMode.OnPropertyChanged));
             yComponentFileControl.DataBindings.Add(new Binding("FileName", meteoData,
-                TypeUtils.GetMemberName<WaveMeteoData>(m => m.YComponentFileName), false,
-                DataSourceUpdateMode.OnPropertyChanged));
+                                                               TypeUtils.GetMemberName<WaveMeteoData>(
+                                                                   m => m.YComponentFileName), false,
+                                                               DataSourceUpdateMode.OnPropertyChanged));
             spiderWebFileControl.DataBindings.Add(new Binding("FileName", meteoData,
-                TypeUtils.GetMemberName<WaveMeteoData>(m => m.SpiderWebFileName), false,
-                DataSourceUpdateMode.OnPropertyChanged));
+                                                              TypeUtils.GetMemberName<WaveMeteoData>(
+                                                                  m => m.SpiderWebFileName), false,
+                                                              DataSourceUpdateMode.OnPropertyChanged));
         }
 
         private void Unbind()
@@ -93,9 +101,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
         private void UpdatePanel()
         {
             flowLayoutPanel2.Controls.Clear();
-            if (meteoData == null) return;
+            if (meteoData == null)
+            {
+                return;
+            }
 
-            spwButton.Image = Common.Gui.Properties.Resources.hurricane2;
+            spwButton.Image = Resources.hurricane2;
             spwButton.Enabled = true;
 
             switch (meteoData.FileType)
@@ -117,7 +128,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
 
             if (meteoData.HasSpiderWeb && meteoData.FileType != WindDefinitionType.SpiderWebGrid)
             {
-                spwButton.Image = Common.Gui.Properties.Resources.hurricane_del;
+                spwButton.Image = Resources.hurricane_del;
                 flowLayoutPanel2.Controls.Add(spiderWebFileControl);
             }
         }
@@ -127,16 +138,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
             LabelText = "Spider web:",
             FileFilter = "spider web (*.spw)|*.spw"
         };
+
         private readonly MeteoFileSelectionControl xComponentFileControl = new MeteoFileSelectionControl
         {
             LabelText = "X component:",
             FileFilter = "uniform x series (*.wnd)|*.wnd"
         };
+
         private readonly MeteoFileSelectionControl yComponentFileControl = new MeteoFileSelectionControl
         {
             LabelText = "Y component:",
             FileFilter = "uniform y series (*.wnd)|*.wnd"
         };
+
         private readonly MeteoFileSelectionControl xyVectorFileControl = new MeteoFileSelectionControl
         {
             LabelText = "Wind velocity:",

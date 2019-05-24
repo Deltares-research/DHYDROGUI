@@ -6,8 +6,8 @@ using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
+using DeltaShell.Plugins.FMSuite.Wave.Properties;
 using log4net;
-
 
 namespace DeltaShell.Plugins.FMSuite.Wave.IO.Importers
 {
@@ -15,55 +15,37 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Importers
     {
         private readonly ILog log = LogManager.GetLogger(typeof(WaveModelFileImporter));
 
-        public string Name
-        {
-            get { return "Waves Model"; }
-        }
+        public string Name => "Waves Model";
 
-        public string Category
-        {
-            get { return "D-Flow FM 2D/3D"; }
-        }
+        public string Category => "D-Flow FM 2D/3D";
 
-        public string Description
-        {
-            get { return string.Empty; }
-        }
+        public string Description => string.Empty;
 
-        public Bitmap Image
-        {
-            get { return Properties.Resources.wave; }
-        }
+        public Bitmap Image => Resources.wave;
 
         public IEnumerable<Type> SupportedItemTypes
         {
-            get { yield return typeof(IHydroModel); }
+            get
+            {
+                yield return typeof(IHydroModel);
+            }
         }
-        
-        public bool OpenViewAfterImport
-        {
-            get { return true; }
-        }
+
+        public bool OpenViewAfterImport => true;
 
         public bool CanImportOn(object targetObject)
         {
             return targetObject is ICompositeActivity || targetObject is WaveModel;
         }
 
-        public bool CanImportOnRootLevel
-        {
-            get { return true; }
-        }
+        public bool CanImportOnRootLevel => true;
 
-        public string FileFilter
-        {
-            get { return "Master Definition WAVE File|*.mdw"; }
-        }
+        public string FileFilter => "Master Definition WAVE File|*.mdw";
 
         public string TargetDataDirectory { get; set; }
 
         public bool ShouldCancel { get; set; }
-        
+
         public ImportProgressChangedDelegate ProgressChanged { get; set; }
 
         public object ImportItem(string path, object target = null)
@@ -71,13 +53,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Importers
             try
             {
                 var importedWaveModel = new WaveModel(path);
-                
+
                 //replace the Wave Model
                 var targetWaveModel = target as WaveModel;
                 if (targetWaveModel != null)
                 {
                     importedWaveModel.IsCoupledToFlow = targetWaveModel.IsCoupledToFlow;
-                    var parent = targetWaveModel.Owner();
+                    IProjectItem parent = targetWaveModel.Owner();
 
                     //add / replace the Wave Model in the project
                     var folder = parent as Folder;
@@ -95,6 +77,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Importers
                         importedWaveModel.MoveModelIntoIntegratedModel(null, compositeActivity);
                         return compositeActivity;
                     }
+
                     return ShouldCancel ? null : importedWaveModel;
                 }
 
@@ -106,6 +89,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Importers
                     importedWaveModel.MoveModelIntoIntegratedModel(null, hydroModel);
                     return hydroModel;
                 }
+
                 importedWaveModel.IsCoupledToFlow = false;
                 return ShouldCancel ? null : importedWaveModel;
             }
@@ -114,8 +98,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Importers
                 if (e is ArgumentException || e is PathTooLongException || e is FormatException ||
                     e is OutOfMemoryException || e is IOException || e is InvalidOperationException)
                 {
-                    log.Error(String.Format("An error occurred while trying to import a {0}; Cause: ",
-                        Name), e);
+                    log.Error(string.Format("An error occurred while trying to import a {0}; Cause: ",
+                                            Name), e);
                     return null;
                 }
 

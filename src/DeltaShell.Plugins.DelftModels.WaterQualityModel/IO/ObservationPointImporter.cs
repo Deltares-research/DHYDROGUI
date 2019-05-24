@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.ObservationAreas;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties;
-
 using GeoAPI.Extensions.Feature;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
@@ -11,20 +10,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
     public class ObservationPointImporter : NameablePointFeatureImporter<WaterQualityObservationPoint>
     {
         public const string NewNameFormat = "ObsPoint {0}";
-        public override string Name { get { return "Observation points from GIS importer"; } }
-        public override Bitmap Image { get { return Resources.Observation; } }
+        public override string Name => "Observation points from GIS importer";
+        public override Bitmap Image => Resources.Observation;
 
-        protected override string NewNameFormatString
-        {
-            get { return NewNameFormat; }
-        }
+        protected override string NewNameFormatString => NewNameFormat;
 
         protected override WaterQualityObservationPoint CreateFeature()
         {
             return new WaterQualityObservationPoint();
         }
 
-        protected override void ReadAttributes(WaterQualityObservationPoint newFeature, IFeature feature, IEnumerable<WaterQualityObservationPoint> list)
+        protected override void ReadAttributes(WaterQualityObservationPoint newFeature, IFeature feature,
+                                               IEnumerable<WaterQualityObservationPoint> list)
         {
             base.ReadAttributes(newFeature, feature, list);
 
@@ -34,7 +31,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                 var o = feature.Attributes[attributeName] as string;
                 if (o != null)
                 {
-                    newFeature.ObservationPointType = (ObservationPointType)Enum.Parse(typeof(ObservationPointType), o);
+                    newFeature.ObservationPointType =
+                        (ObservationPointType) Enum.Parse(typeof(ObservationPointType), o);
                 }
                 else
                 {

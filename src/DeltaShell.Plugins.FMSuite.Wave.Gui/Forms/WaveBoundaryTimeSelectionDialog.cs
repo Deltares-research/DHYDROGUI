@@ -6,6 +6,7 @@ using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
 using DelftTools.Controls;
+using DelftTools.Functions;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Forms
@@ -26,15 +27,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Forms
         {
             UpdateDateTimeBox();
         }
-        
+
         private IList<DateTime> GetSelectedDateTimes()
         {
             if (supportPointListbox.Items.Count == 0)
+            {
                 return new DateTime[0];
+            }
 
-            var selectedValue = (int)supportPointListbox.SelectedValue;
-            var function = boundaryConditions[boundaryListBox.SelectedIndex].GetDataAtPoint(selectedValue);
-            var times = function != null ? function.Arguments[0].GetValues<DateTime>() : Enumerable.Empty<DateTime>();
+            var selectedValue = (int) supportPointListbox.SelectedValue;
+            IFunction function = boundaryConditions[boundaryListBox.SelectedIndex].GetDataAtPoint(selectedValue);
+            IEnumerable<DateTime> times = function != null
+                                              ? function.Arguments[0].GetValues<DateTime>()
+                                              : Enumerable.Empty<DateTime>();
             return times.ToList();
         }
 
@@ -46,35 +51,35 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Forms
 
         private void UpdateSupportPointBox()
         {
-            var selectedCondition = boundaryConditions[boundaryListBox.SelectedIndex];
+            WaveBoundaryCondition selectedCondition = boundaryConditions[boundaryListBox.SelectedIndex];
             supportPointListbox.DataSource = new BindingList<int>(selectedCondition.DataPointIndices.ToList());
         }
 
         private void UpdateDateTimeBox()
         {
-            var times = GetSelectedDateTimes();
-            var timeStrings = times.Select(t => t.ToString(CultureInfo.InvariantCulture)).ToList();
+            IList<DateTime> times = GetSelectedDateTimes();
+            List<string> timeStrings = times.Select(t => t.ToString(CultureInfo.InvariantCulture)).ToList();
             timesListBox.DataSource = new BindingList<string>(timeStrings);
         }
 
-
         private IList<WaveBoundaryCondition> boundaryConditions;
+
         public object Data
         {
-            get { return boundaryConditions; }
+            get => boundaryConditions;
             set
             {
                 boundaryConditions =
                     ((IList<WaveBoundaryCondition>) value).Where(
-                        bc => bc.DataType == BoundaryConditionDataType.ParameterizedSpectrumTimeseries).ToList();
+                        bc => bc.DataType == BoundaryConditionDataType
+                                  .ParameterizedSpectrumTimeseries).ToList();
 
                 boundaryListBox.DataSource = new BindingList<WaveBoundaryCondition>(boundaryConditions);
             }
         }
 
         public Image Image { get; set; }
-        public void EnsureVisible(object item){
-        }
+        public void EnsureVisible(object item) {}
 
         public ViewInfo ViewInfo { get; set; }
 

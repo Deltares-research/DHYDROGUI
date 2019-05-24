@@ -16,27 +16,36 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Extensions
         private static readonly ILog Log = LogManager.GetLogger(typeof(WaterQualityModelExtensions));
 
         /// <summary>
-        /// Adds a text document to the <param name="model"/> output with the content of the file described by <param name="filePath"/>
+        /// Adds a text document to the
+        /// <param name="model" />
+        /// output with the content of the file described by
+        /// <param name="filePath" />
         /// </summary>
-        /// <param name="model">The water quality model to add the text document to</param>
-        /// <param name="dataItemMetaData">The metadata object that provides information about the data item to be created</param>
-        /// <param name="filePath">The path to the file to read</param>
-        /// <param name="insertIndex">The data item index at which the text document must be inserted</param>
-        /// <remarks>The <paramref name="insertIndex"/> is ignored when a text document with <paramref name="dataItemMetaData"/> already exists</remarks>
-        public static void AddTextDocument(this WaterQualityModel model, ADataItemMetaData dataItemMetaData, string filePath, int insertIndex = -1)
+        /// <param name="model"> The water quality model to add the text document to </param>
+        /// <param name="dataItemMetaData"> The metadata object that provides information about the data item to be created </param>
+        /// <param name="filePath"> The path to the file to read </param>
+        /// <param name="insertIndex"> The data item index at which the text document must be inserted </param>
+        /// <remarks>
+        /// The <paramref name="insertIndex" /> is ignored when a text document with <paramref name="dataItemMetaData" />
+        /// already exists
+        /// </remarks>
+        public static void AddTextDocument(this WaterQualityModel model, ADataItemMetaData dataItemMetaData,
+                                           string filePath, int insertIndex = -1)
         {
             if (!File.Exists(filePath))
             {
                 Log.WarnFormat("Could not add {0} ({1})", dataItemMetaData.Name, filePath);
                 return;
             }
-            
-            var dataItem = ((IModel) model).DataItems.FirstOrDefault(di => di.Tag == dataItemMetaData.Tag);
+
+            IDataItem dataItem = ((IModel) model).DataItems.FirstOrDefault(di => di.Tag == dataItemMetaData.Tag);
             if (dataItem == null)
             {
-                var textDocumentFromFile = ((Func<string, TextDocumentBase>) CreateTextDocumentFromFile)(filePath);
-                dataItem = new DataItem(textDocumentFromFile, dataItemMetaData.Name, textDocumentFromFile.GetType(), DataItemRole.Output,
-                    dataItemMetaData.Tag);
+                TextDocumentBase textDocumentFromFile =
+                    ((Func<string, TextDocumentBase>) CreateTextDocumentFromFile)(filePath);
+                dataItem = new DataItem(textDocumentFromFile, dataItemMetaData.Name, textDocumentFromFile.GetType(),
+                                        DataItemRole.Output,
+                                        dataItemMetaData.Tag);
 
                 if (insertIndex > ((IModel) model).DataItems.Count || insertIndex < 0)
                 {
@@ -46,7 +55,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Extensions
                 {
                     ((IModel) model).DataItems.Insert(insertIndex, dataItem);
                 }
-                
+
                 CleanupInvalidFiles(filePath, dataItem);
             }
             else
@@ -62,12 +71,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Extensions
              * it gets updated with a temporary file that should not be created.
              * To avoid this behaviour we do hereby a cleanup of such files.
              */
-            if (dataItem == null 
-                || (TextDocumentFromFile)dataItem.Value == null
+            if (dataItem == null
+                || (TextDocumentFromFile) dataItem.Value == null
                 || ((TextDocumentFromFile) dataItem.Value).Path == filePath)
+            {
                 return;
+            }
 
-            var fileToRemove = ((TextDocumentFromFile) dataItem.Value).Path;
+            string fileToRemove = ((TextDocumentFromFile) dataItem.Value).Path;
             ((TextDocumentFromFile) dataItem.Value).Path = filePath;
             File.Delete(fileToRemove);
         }
@@ -78,9 +89,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Extensions
             if (value != null)
             {
                 // Reopen the file but keep same name for DataItem:
-                var originalDataItemName = dataItem.Name;
+                string originalDataItemName = dataItem.Name;
 
-                var path = value.Path;
+                string path = value.Path;
                 value.Close();
                 value.Open(path);
 
@@ -100,15 +111,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Extensions
         /// </summary>
         public static IEnumerable<UnstructuredGridCellCoverage> GetOutputCoverages(this WaterQualityModel model)
         {
-            return model.AllDataItems.Where(di => di.Role.HasFlag(DataItemRole.Output) && di.Value is UnstructuredGridCellCoverage)
-                .Select(di => ((UnstructuredGridCellCoverage)di.Value));
+            return model.AllDataItems
+                        .Where(di => di.Role.HasFlag(DataItemRole.Output) && di.Value is UnstructuredGridCellCoverage)
+                        .Select(di => (UnstructuredGridCellCoverage) di.Value);
         }
-        
+
         /// <summary>
         /// Setups the model data folder structure.
         /// </summary>
-        /// <param name="model">The model to be configured.</param>
-        /// <param name="projectDataDir">The directory where the project data is stored (often *.dsproj_data).</param>
+        /// <param name="model"> The model to be configured. </param>
+        /// <param name="projectDataDir"> The directory where the project data is stored (often *.dsproj_data). </param>
         public static void SetupModelDataFolderStructure(this WaterQualityModel model, string projectDataDir)
         {
             // Folder layout will be as follows:
@@ -119,9 +131,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Extensions
             //         +--- boundary_data_tables         (Folder storing DataTables for boundaries)
             //         +--- load_data_tables             (Folder storing DataTables for loads)
 
-            var name = string.IsNullOrWhiteSpace(model.Name) ? Path.GetTempFileName() : model.Name;
+            string name = string.IsNullOrWhiteSpace(model.Name) ? Path.GetTempFileName() : model.Name;
             model.ModelDataDirectory = Path.Combine(projectDataDir, name.Replace(" ", "_"));
-            var modelWorkFolder = model.ModelDataDirectory + "_output";
+            string modelWorkFolder = model.ModelDataDirectory + "_output";
             if (model.ModelSettings != null)
             {
                 model.ModelSettings.WorkDirectory = modelWorkFolder;

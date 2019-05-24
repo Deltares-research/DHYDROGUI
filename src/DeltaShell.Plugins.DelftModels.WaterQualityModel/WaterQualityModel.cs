@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using DelftTools.Functions;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
@@ -17,6 +18,7 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Editing;
 using DelftTools.Utils.IO;
+using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataItemMetaData;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.BoundaryData;
@@ -33,11 +35,10 @@ using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
-
 using log4net;
-
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
+using SharpMap.Api.SpatialOperations;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
 {
@@ -45,6 +46,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
     public class WaterQualityModel : TimeDependentModelBase, IStateAwareModelEngine, IDisposable
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(WaterQualityModel));
+
         private readonly string[] filesToDeleteFromExplicitWorkingDirectoryAfterModelCleanup =
         {
             "bloominp.d09",
@@ -54,34 +56,71 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         };
 
         #region Tags
+
         public static readonly DispersionDataItemMetaData DispersionDataItemMetaData = new DispersionDataItemMetaData();
-        public static readonly ProcessCoefficientsDataItemMetaData ProcessCoefficientsDataItemMetaData = new ProcessCoefficientsDataItemMetaData();
+
+        public static readonly ProcessCoefficientsDataItemMetaData ProcessCoefficientsDataItemMetaData =
+            new ProcessCoefficientsDataItemMetaData();
+
         public static readonly BloomAlgaeDataItemMetaData BloomAlgaeDataItemMetaData = new BloomAlgaeDataItemMetaData();
-        public static readonly InputFileHybridDataItemMetaData InputFileHybridDataItemMetaData = new InputFileHybridDataItemMetaData();
+
+        public static readonly InputFileHybridDataItemMetaData InputFileHybridDataItemMetaData =
+            new InputFileHybridDataItemMetaData();
+
         public static readonly BathymetryDataItemMetaData BathymetryDataItemMetaData = new BathymetryDataItemMetaData();
-        public static readonly BoundaryDataDataItemMetaData BoundaryDataDataItemMetaData = new BoundaryDataDataItemMetaData();
+
+        public static readonly BoundaryDataDataItemMetaData BoundaryDataDataItemMetaData =
+            new BoundaryDataDataItemMetaData();
+
         public static readonly BoundariesDataItemMetaData BoundariesDataItemMetaData = new BoundariesDataItemMetaData();
         public static readonly LoadsDataDataItemMetaData LoadsDataDataItemMetaData = new LoadsDataDataItemMetaData();
         public static readonly GridDataItemMetaData GridDataItemMetaData = new GridDataItemMetaData();
-        public static readonly SubstanceProcessLibraryDataItemMetaData SubstanceProcessLibraryDataItemMetaData = new SubstanceProcessLibraryDataItemMetaData();
-        public static readonly InputFileCommandLineDataItemMetaData InputFileCommandLineDataItemMetaData = new InputFileCommandLineDataItemMetaData();
+
+        public static readonly SubstanceProcessLibraryDataItemMetaData SubstanceProcessLibraryDataItemMetaData =
+            new SubstanceProcessLibraryDataItemMetaData();
+
+        public static readonly InputFileCommandLineDataItemMetaData InputFileCommandLineDataItemMetaData =
+            new InputFileCommandLineDataItemMetaData();
+
         public static readonly LoadsDataItemMetaData LoadsDataItemMetaData = new LoadsDataItemMetaData();
-        public static readonly InitialConditionsDataItemMetaData InitialConditionsDataItemMetaData = new InitialConditionsDataItemMetaData();
-        public static readonly ObservationPointsDataItemMetaData ObservationPointsDataItemMetaData = new ObservationPointsDataItemMetaData();
-        public static readonly ObservationAreasDataItemMetaData ObservationAreasDataItemMetaData = new ObservationAreasDataItemMetaData();
-        public static readonly MonitoringOutputDataItemMetaData MonitoringOutputDataItemMetaData = new MonitoringOutputDataItemMetaData();
-        public static readonly OutputSubstancesDataItemMetaData OutputSubstancesDataItemMetaData = new OutputSubstancesDataItemMetaData();
-        public static readonly OutputParametersDataItemMetaData OutputParametersDataItemMetaData = new OutputParametersDataItemMetaData();
-        public static readonly BalanceOutputDataItemMetaData BalanceOutputDataItemMetaData = new BalanceOutputDataItemMetaData();
-        public static readonly MonitoringFileDataItemMetaData MonitoringFileDataItemMetaData = new MonitoringFileDataItemMetaData();
+
+        public static readonly InitialConditionsDataItemMetaData InitialConditionsDataItemMetaData =
+            new InitialConditionsDataItemMetaData();
+
+        public static readonly ObservationPointsDataItemMetaData ObservationPointsDataItemMetaData =
+            new ObservationPointsDataItemMetaData();
+
+        public static readonly ObservationAreasDataItemMetaData ObservationAreasDataItemMetaData =
+            new ObservationAreasDataItemMetaData();
+
+        public static readonly MonitoringOutputDataItemMetaData MonitoringOutputDataItemMetaData =
+            new MonitoringOutputDataItemMetaData();
+
+        public static readonly OutputSubstancesDataItemMetaData OutputSubstancesDataItemMetaData =
+            new OutputSubstancesDataItemMetaData();
+
+        public static readonly OutputParametersDataItemMetaData OutputParametersDataItemMetaData =
+            new OutputParametersDataItemMetaData();
+
+        public static readonly BalanceOutputDataItemMetaData BalanceOutputDataItemMetaData =
+            new BalanceOutputDataItemMetaData();
+
+        public static readonly MonitoringFileDataItemMetaData MonitoringFileDataItemMetaData =
+            new MonitoringFileDataItemMetaData();
+
         public static readonly ListFileDataItemMetaData ListFileDataItemMetaData = new ListFileDataItemMetaData();
-        public static readonly ProcessFileDataItemMetaData ProcessFileDataItemMetaData = new ProcessFileDataItemMetaData();
+
+        public static readonly ProcessFileDataItemMetaData ProcessFileDataItemMetaData =
+            new ProcessFileDataItemMetaData();
 
         #endregion
 
         #region Fields
 
-        private static readonly int[] SupportedMetaDataVersions = { 1 };
+        private static readonly int[] SupportedMetaDataVersions =
+        {
+            1
+        };
 
         private double progressPercentage;
         private bool enableMarkOutputOutOfSync;
@@ -125,10 +164,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             };
 
             modelStateHandler = new ModelFileBasedStateHandler(Name,
-                new List<DelftTools.Utils.Tuple<string, string>>
-                    {
-                        new DelftTools.Utils.Tuple<string, string>("deltashell_res.map", "deltashell_res_in.map")
-                    });
+                                                               new List<DelftTools.Utils.Tuple<string, string>>
+                                                               {
+                                                                   new DelftTools.Utils.Tuple<string, string>(
+                                                                       "deltashell_res.map",
+                                                                       "deltashell_res_in.map")
+                                                               });
 
             InitializeInputDataItems();
             InitializeWaqProcessesRules();
@@ -146,12 +187,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
 
             this.SetupModelDataFolderStructure(Path.Combine(Path.GetTempPath(), Path.GetRandomFileName()));
 
-            AddDataItemSet(new EventedList<UnstructuredGridCellCoverage>(), OutputSubstancesDataItemMetaData.Name, DataItemRole.Output, OutputSubstancesDataItemMetaData.Tag);
-            AddDataItemSet(new EventedList<UnstructuredGridCellCoverage>(), OutputParametersDataItemMetaData.Name, DataItemRole.Output, OutputParametersDataItemMetaData.Tag);
+            AddDataItemSet(new EventedList<UnstructuredGridCellCoverage>(), OutputSubstancesDataItemMetaData.Name,
+                           DataItemRole.Output, OutputSubstancesDataItemMetaData.Tag);
+            AddDataItemSet(new EventedList<UnstructuredGridCellCoverage>(), OutputParametersDataItemMetaData.Name,
+                           DataItemRole.Output, OutputParametersDataItemMetaData.Tag);
 
             if (modelSettings.MonitoringOutputLevel != MonitoringOutputLevel.None)
             {
-                AddDataItemSet(new EventedList<WaterQualityObservationVariableOutput>(), MonitoringOutputDataItemMetaData.Name, DataItemRole.Output, MonitoringOutputDataItemMetaData.Tag);
+                AddDataItemSet(new EventedList<WaterQualityObservationVariableOutput>(),
+                               MonitoringOutputDataItemMetaData.Name, DataItemRole.Output,
+                               MonitoringOutputDataItemMetaData.Tag);
             }
 
             SubscribeToInternalEvents();
@@ -162,22 +207,20 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
 
         private IList<WaqProcessValidationRule> _waqProcessesRules;
 
-        public virtual IList<WaqProcessValidationRule> WaqProcessesRules
-        {
-            get
-            {
-                return _waqProcessesRules;
-            }
-        }
+        public virtual IList<WaqProcessValidationRule> WaqProcessesRules => _waqProcessesRules;
 
         private void InitializeWaqProcessesRules()
         {
             //Get the file location
-            var assembly = typeof(WaterQualityModel).Assembly;
-            var assemblyLocation = assembly.Location;
-            var directoryInfo = new FileInfo(assemblyLocation).Directory;
+            Assembly assembly = typeof(WaterQualityModel).Assembly;
+            string assemblyLocation = assembly.Location;
+            DirectoryInfo directoryInfo = new FileInfo(assemblyLocation).Directory;
 
-            if (directoryInfo == null) return;
+            if (directoryInfo == null)
+            {
+                return;
+            }
+
             //Initialize it.
             _waqProcessesRules = new WaqProcessesRules().ReadValidationCsv(directoryInfo.FullName);
         }
@@ -186,22 +229,25 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         {
             get
             {
-                var asmPath1 = DelwaqFileStructureHelper.GetDelwaq1ExePath();
-                var asmPath2 = DelwaqFileStructureHelper.GetDelwaq2ExePath();
+                string asmPath1 = DelwaqFileStructureHelper.GetDelwaq1ExePath();
+                string asmPath2 = DelwaqFileStructureHelper.GetDelwaq2ExePath();
 
                 var kernelVersions = "";
 
                 if (File.Exists(asmPath1))
                 {
                     kernelVersions += string.Format("Kernel: {0}  {1}",
-                        DelwaqFileStructureHelper.DELWAQ1_EXE,
-                        FileVersionInfo.GetVersionInfo(asmPath1).FileVersion) + Environment.NewLine;
+                                                    DelwaqFileStructureHelper.DELWAQ1_EXE,
+                                                    FileVersionInfo.GetVersionInfo(asmPath1).FileVersion) +
+                                      Environment.NewLine;
                 }
+
                 if (File.Exists(asmPath2))
                 {
                     kernelVersions += string.Format("Kernel: {0}  {1}",
-                        DelwaqFileStructureHelper.DELWAQ2_EXE,
-                        FileVersionInfo.GetVersionInfo(asmPath2).FileVersion) + Environment.NewLine;
+                                                    DelwaqFileStructureHelper.DELWAQ2_EXE,
+                                                    FileVersionInfo.GetVersionInfo(asmPath2).FileVersion) +
+                                      Environment.NewLine;
                 }
 
                 return kernelVersions;
@@ -213,25 +259,19 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         /// </summary>
         public virtual WaterQualityModelSettings ModelSettings
         {
-            get { return modelSettings; }
-            protected set { modelSettings = value; }
+            get => modelSettings;
+            protected set => modelSettings = value;
         }
 
         /// <summary>
         /// The input file of the water quality model
         /// </summary>
-        public virtual TextDocument InputFile
-        {
-            get { return InputFileCommandLine; }
-        }
+        public virtual TextDocument InputFile => InputFileCommandLine;
 
         /// <summary>
         /// Mapper for resolving coordinates (x,y,(z)) to cell indices.
         /// </summary>
-        public virtual PointToGridCellMapper PointToGridCellMapper
-        {
-            get { return pointToGridCellMapper; }
-        }
+        public virtual PointToGridCellMapper PointToGridCellMapper => pointToGridCellMapper;
 
         /// <summary>
         /// The input file of the water quality model in case of command line calculations
@@ -240,7 +280,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         {
             get
             {
-                var inputFileDataItem = GetDataItemByTag(InputFileCommandLineDataItemMetaData.Tag);
+                IDataItem inputFileDataItem = GetDataItemByTag(InputFileCommandLineDataItemMetaData.Tag);
 
                 return inputFileDataItem != null
                            ? inputFileDataItem.Value as TextDocument
@@ -255,7 +295,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         {
             get
             {
-                var inputFileDataItem = GetDataItemByTag(InputFileHybridDataItemMetaData.Tag);
+                IDataItem inputFileDataItem = GetDataItemByTag(InputFileHybridDataItemMetaData.Tag);
 
                 return inputFileDataItem != null
                            ? inputFileDataItem.Value as TextDocument
@@ -264,32 +304,30 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         }
 
         /// <summary>
-        /// The substance process library of the water quality model 
+        /// The substance process library of the water quality model
         /// </summary>
-        public virtual SubstanceProcessLibrary SubstanceProcessLibrary
-        {
-            get { return (SubstanceProcessLibrary)GetDataItemByTag(SubstanceProcessLibraryDataItemMetaData.Tag).Value; }
-        }
+        public virtual SubstanceProcessLibrary SubstanceProcessLibrary =>
+            (SubstanceProcessLibrary) GetDataItemByTag(SubstanceProcessLibraryDataItemMetaData.Tag).Value;
 
         /// <summary>
         /// The (dry waste) loads of the water quality model.
         /// </summary>
         public virtual IEventedList<WaterQualityLoad> Loads
         {
-            get { return loads; }
+            get => loads;
             protected set
             {
                 if (loads != null)
                 {
                     loads.CollectionChanged -= OnInputCollectionChanged;
                 }
+
                 loads = value;
                 if (loads != null)
                 {
                     loads.CollectionChanged += OnInputCollectionChanged;
                 }
             }
-            
         }
 
         /// <summary>
@@ -297,13 +335,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         /// </summary>
         public virtual IEventedList<WaterQualityObservationPoint> ObservationPoints
         {
-            get { return observationPoints; }
+            get => observationPoints;
             protected set
             {
                 if (observationPoints != null)
                 {
                     observationPoints.CollectionChanged -= OnInputCollectionChanged;
                 }
+
                 observationPoints = value;
                 if (observationPoints != null)
                 {
@@ -315,42 +354,34 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         /// <summary>
         /// The observation areas of the water quality model.
         /// </summary>
-        public virtual WaterQualityObservationAreaCoverage ObservationAreas
-        {
-            get { return GetDataItemValueByTag<WaterQualityObservationAreaCoverage>(ObservationAreasDataItemMetaData.Tag); }
-        }
+        public virtual WaterQualityObservationAreaCoverage ObservationAreas =>
+            GetDataItemValueByTag<WaterQualityObservationAreaCoverage>(ObservationAreasDataItemMetaData.Tag);
 
         /// <summary>
         /// The initial conditions of the water quality model
         /// </summary>
-        public virtual IEventedList<IFunction> InitialConditions
-        {
-            get { return GetDataItemSetByTag(InitialConditionsDataItemMetaData.Tag).AsEventedList<IFunction>(); }
-        }
+        public virtual IEventedList<IFunction> InitialConditions =>
+            GetDataItemSetByTag(InitialConditionsDataItemMetaData.Tag).AsEventedList<IFunction>();
 
         /// <summary>
         /// The process coefficients of the water quality model
         /// </summary>
-        public virtual IEventedList<IFunction> ProcessCoefficients
-        {
-            get { return GetDataItemSetByTag(ProcessCoefficientsDataItemMetaData.Tag).AsEventedList<IFunction>(); }
-        }
+        public virtual IEventedList<IFunction> ProcessCoefficients =>
+            GetDataItemSetByTag(ProcessCoefficientsDataItemMetaData.Tag).AsEventedList<IFunction>();
 
         /// <summary>
         /// The dispersion definitions of the water quality model
         /// </summary>
-        public virtual IEventedList<IFunction> Dispersion
-        {
-            get { return GetDataItemSetByTag(DispersionDataItemMetaData.Tag).AsEventedList<IFunction>(); }
-        }
+        public virtual IEventedList<IFunction> Dispersion =>
+            GetDataItemSetByTag(DispersionDataItemMetaData.Tag).AsEventedList<IFunction>();
 
         /// <summary>
         /// Gets or sets dispersion in the horizontal axis in m^2/s.
         /// </summary>
         public virtual double HorizontalDispersion
         {
-            get { return (double)Dispersion[0].Components[0].DefaultValue; }
-            set { SetHorizontalDispersion(value); }
+            get => (double) Dispersion[0].Components[0].DefaultValue;
+            set => SetHorizontalDispersion(value);
         }
 
         /// <summary>
@@ -367,10 +398,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         /// <summary>
         /// The monitoring output data item set of the water quality model
         /// </summary>
-        public virtual IDataItemSet MonitoringOutputDataItemSet
-        {
-            get { return GetDataItemSetByTag(MonitoringOutputDataItemMetaData.Tag); }
-        }
+        public virtual IDataItemSet MonitoringOutputDataItemSet =>
+            GetDataItemSetByTag(MonitoringOutputDataItemMetaData.Tag);
 
         /// <summary>
         /// The monitoring output of the water quality model
@@ -379,45 +408,38 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         {
             get
             {
-                var monitoringOutputDataItemSet = MonitoringOutputDataItemSet;
+                IDataItemSet monitoringOutputDataItemSet = MonitoringOutputDataItemSet;
 
                 return monitoringOutputDataItemSet != null
                            ? monitoringOutputDataItemSet.AsEventedList<WaterQualityObservationVariableOutput>()
                            : new EventedList<WaterQualityObservationVariableOutput>();
             }
         }
-        
+
         /// <summary>
         /// The output substances data item set of the water quality model
         /// </summary>
-        public virtual IDataItemSet OutputSubstancesDataItemSet
-        {
-            get { return GetDataItemSetByTag(OutputSubstancesDataItemMetaData.Tag); }
-        }
-        
+        public virtual IDataItemSet OutputSubstancesDataItemSet =>
+            GetDataItemSetByTag(OutputSubstancesDataItemMetaData.Tag);
+
         /// <summary>
         /// The output parameters data item set of the water quality model
         /// </summary>
-        public virtual IDataItemSet OutputParametersDataItemSet
-        {
-            get { return GetDataItemSetByTag(OutputParametersDataItemMetaData.Tag); }
-        }
+        public virtual IDataItemSet OutputParametersDataItemSet =>
+            GetDataItemSetByTag(OutputParametersDataItemMetaData.Tag);
 
         /// <summary>
-        /// The calculation grid of the water quality model 
+        /// The calculation grid of the water quality model
         /// </summary>
-        public virtual UnstructuredGrid Grid
-        {
-            get { return (UnstructuredGrid)GetDataItemByTag(GridDataItemMetaData.Tag).Value; }
-        }
+        public virtual UnstructuredGrid Grid => (UnstructuredGrid) GetDataItemByTag(GridDataItemMetaData.Tag).Value;
 
         /// <summary>
         /// The bathymetry for the water quality model
         /// </summary>
         public virtual UnstructuredGridVertexCoverage Bathymetry
         {
-            get { return (UnstructuredGridVertexCoverage)GetDataItemByTag(BathymetryDataItemMetaData.Tag).Value; }
-            protected set { GetDataItemByTag(BathymetryDataItemMetaData.Tag).Value = value; }
+            get => (UnstructuredGridVertexCoverage) GetDataItemByTag(BathymetryDataItemMetaData.Tag).Value;
+            protected set => GetDataItemByTag(BathymetryDataItemMetaData.Tag).Value = value;
         }
 
         /// <summary>
@@ -433,7 +455,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         /// </summary>
         public virtual IHydroData HydroData
         {
-            get { return hydroData; }
+            get => hydroData;
             protected set
             {
                 if (hydroData != null)
@@ -452,12 +474,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         }
 
         /// <summary>
-        /// Indicates if hydro dynamic data from <see cref="HydroData"/> has been 
-        /// successfully imported or not. 
+        /// Indicates if hydro dynamic data from <see cref="HydroData" /> has been
+        /// successfully imported or not.
         /// </summary>
         public virtual bool HasHydroDataImported
         {
-            get { return hasHydroDataImported; }
+            get => hasHydroDataImported;
             protected set
             {
                 hasHydroDataImported = value;
@@ -485,7 +507,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         /// </summary>
         public virtual LayerType LayerType
         {
-            get { return layerType; }
+            get => layerType;
             protected set
             {
                 if (layerType != value)
@@ -510,7 +532,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         /// The areas file can be found in the *.hyd-file and
         /// is passed in the input file.
         /// *.are
-        /// <see cref="IHydroData.VolumesRelativePath"/>
+        /// <see cref="IHydroData.VolumesRelativePath" />
         /// </summary>
         public virtual string AreasRelativeFilePath { get; protected set; }
 
@@ -518,7 +540,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         /// The volumes file can be found in the *.hyd-file and
         /// is passed in the input file.
         /// *.vol
-        /// <see cref="IHydroData.VolumesRelativePath"/>
+        /// <see cref="IHydroData.VolumesRelativePath" />
         /// </summary>
         public virtual string VolumesRelativeFilePath { get; protected set; }
 
@@ -526,7 +548,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         /// The flows file can be found in the *.hyd-file and
         /// is passed in the input file.
         /// *.flo
-        /// <see cref="IHydroData.FlowsRelativePath"/>
+        /// <see cref="IHydroData.FlowsRelativePath" />
         /// </summary>
         public virtual string FlowsRelativeFilePath { get; protected set; }
 
@@ -534,7 +556,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         /// The pointers file can be found in the *.hyd-file and
         /// is passed in the input file.
         /// *.poi
-        /// <see cref="IHydroData.GetPointersRelativeFilePath"/>
+        /// <see cref="IHydroData.GetPointersRelativeFilePath" />
         /// </summary>
         public virtual string PointersRelativeFilePath { get; protected set; }
 
@@ -542,71 +564,73 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         /// The lenghts file can be found in the *.hyd-file and
         /// is passed in the input file.
         /// *.len
-        /// <see cref="IHydroData.GetLengthsRelativeFilePath"/>
+        /// <see cref="IHydroData.GetLengthsRelativeFilePath" />
         /// </summary>
         public virtual string LengthsRelativeFilePath { get; protected set; }
 
         /// <summary>
         /// Gets or sets the velocities file path.
-        /// <see cref="IHydroData.GetVelocitiesFilePath"/>
+        /// <see cref="IHydroData.GetVelocitiesFilePath" />
         /// </summary>
         /// <value>
         /// The velocities file path.
         /// </value>
         public virtual string VelocitiesFilePath
         {
-            get { return velocitiesFilePath; }
+            get => velocitiesFilePath;
             protected set
             {
                 velocitiesFilePath = value;
-                HandleNewHydroDynamicsFunctionDataSet(GetDataItemSetByTag(ProcessCoefficientsDataItemMetaData.Tag), "Velocity");
+                HandleNewHydroDynamicsFunctionDataSet(GetDataItemSetByTag(ProcessCoefficientsDataItemMetaData.Tag),
+                                                      "Velocity");
             }
         }
 
         /// <summary>
         /// Gets or sets the widths file path.
-        /// <see cref="IHydroData.GetWidthsFilePath"/>
+        /// <see cref="IHydroData.GetWidthsFilePath" />
         /// </summary>
         /// <value>
         /// The widths file path.
         /// </value>
         public virtual string WidthsFilePath
         {
-            get { return widthsFilePath; }
+            get => widthsFilePath;
             protected set
             {
                 widthsFilePath = value;
-                HandleNewHydroDynamicsFunctionDataSet(GetDataItemSetByTag(ProcessCoefficientsDataItemMetaData.Tag), "Width");
+                HandleNewHydroDynamicsFunctionDataSet(GetDataItemSetByTag(ProcessCoefficientsDataItemMetaData.Tag),
+                                                      "Width");
             }
         }
 
         /// <summary>
         /// Gets or sets the chezy coefficients file path.
-        /// <see cref="IHydroData.GetChezyCoefficientsFilePath"/>
+        /// <see cref="IHydroData.GetChezyCoefficientsFilePath" />
         /// </summary>
         /// <value>
         /// The chezy coefficients file path.
         /// </value>
         public virtual string ChezyCoefficientsFilePath
         {
-            get { return chezyCoefficientsFilePath; }
+            get => chezyCoefficientsFilePath;
             protected set
             {
                 chezyCoefficientsFilePath = value;
-                HandleNewHydroDynamicsFunctionDataSet(GetDataItemSetByTag(ProcessCoefficientsDataItemMetaData.Tag), "Chezy");
+                HandleNewHydroDynamicsFunctionDataSet(GetDataItemSetByTag(ProcessCoefficientsDataItemMetaData.Tag),
+                                                      "Chezy");
             }
         }
-
 
         /// <summary>
         /// The vertical diffusion file can be found in the *.hyd-file and
         /// is passed in the input file.
         /// *.vdf
-        /// <see cref="IHydroData.VerticalDiffusionRelativePath"/>
+        /// <see cref="IHydroData.VerticalDiffusionRelativePath" />
         /// </summary>
         public virtual string VerticalDiffusionRelativeFilePath
         {
-            get { return verticalDiffusionRelativeFilePath; }
+            get => verticalDiffusionRelativeFilePath;
             protected set
             {
                 verticalDiffusionRelativeFilePath = value;
@@ -622,15 +646,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         /// The surfaces file can be found in the *.hyd-file and
         /// is passed in the input file.
         /// *.srf
-        /// <see cref="IHydroData.GetSurfacesRelativeFilePath"/>
+        /// <see cref="IHydroData.GetSurfacesRelativeFilePath" />
         /// </summary>
         public virtual string SurfacesRelativeFilePath
         {
-            get { return surfacesRelativeFilePath; }
+            get => surfacesRelativeFilePath;
             protected set
             {
                 surfacesRelativeFilePath = value;
-                HandleNewHydroDynamicsFunctionDataSet(GetDataItemSetByTag(ProcessCoefficientsDataItemMetaData.Tag), "Surf");
+                HandleNewHydroDynamicsFunctionDataSet(GetDataItemSetByTag(ProcessCoefficientsDataItemMetaData.Tag),
+                                                      "Surf");
             }
         }
 
@@ -638,16 +663,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         /// The salinity file can be found in the *.hyd-file and
         /// is passed in the input file.
         /// *.sal
-        /// <see cref="IHydroData.GetSalinityRelativeFilePath"/>
+        /// <see cref="IHydroData.GetSalinityRelativeFilePath" />
         /// </summary>
         public virtual string SalinityRelativeFilePath
         {
-            get { return salinityRelativeFilePath; }
+            get => salinityRelativeFilePath;
             protected set
             {
                 salinityRelativeFilePath = value;
 
-                HandleNewHydroDynamicsFunctionDataSet(GetDataItemSetByTag(ProcessCoefficientsDataItemMetaData.Tag), "Salinity");
+                HandleNewHydroDynamicsFunctionDataSet(GetDataItemSetByTag(ProcessCoefficientsDataItemMetaData.Tag),
+                                                      "Salinity");
             }
         }
 
@@ -655,16 +681,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         /// The temperature file can be found in the *.hyd-file and
         /// is passed in the input file.
         /// *.tmp?
-        /// <see cref="IHydroData.GetTemperatureRelativeFilePath"/>
+        /// <see cref="IHydroData.GetTemperatureRelativeFilePath" />
         /// </summary>
         public virtual string TemperatureRelativeFilePath
         {
-            get { return temperatureRelativeFilePath; }
+            get => temperatureRelativeFilePath;
             protected set
             {
                 temperatureRelativeFilePath = value;
 
-                HandleNewHydroDynamicsFunctionDataSet(GetDataItemSetByTag(ProcessCoefficientsDataItemMetaData.Tag), "Temp");
+                HandleNewHydroDynamicsFunctionDataSet(GetDataItemSetByTag(ProcessCoefficientsDataItemMetaData.Tag),
+                                                      "Temp");
             }
         }
 
@@ -672,22 +699,23 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         /// The shear stress file can be found in the *.hyd-file and
         /// is passed in the input file.
         /// *.tau
-        /// <see cref="IHydroData.GetShearStressesRelativeFilePath"/>
+        /// <see cref="IHydroData.GetShearStressesRelativeFilePath" />
         /// </summary>
         public virtual string ShearStressesRelativeFilePath
         {
-            get { return shearStressesRelativeFilePath; }
+            get => shearStressesRelativeFilePath;
             protected set
             {
                 shearStressesRelativeFilePath = value;
 
-                HandleNewHydroDynamicsFunctionDataSet(GetDataItemSetByTag(ProcessCoefficientsDataItemMetaData.Tag), "Tau");
+                HandleNewHydroDynamicsFunctionDataSet(GetDataItemSetByTag(ProcessCoefficientsDataItemMetaData.Tag),
+                                                      "Tau");
             }
         }
 
         /// <summary>
         /// The attributes file that will be included as INCLUDE in the input file.
-        /// <see cref="IHydroData.GetAttributesRelativeFilePath"/>
+        /// <see cref="IHydroData.GetAttributesRelativeFilePath" />
         /// </summary>
         public virtual string AttributesRelativeFilePath { get; protected set; }
 
@@ -728,7 +756,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                     return "Parsing output";
                 }
 
-                return GetProgressTextCore(progressPercentage/100.0);
+                return GetProgressTextCore(progressPercentage / 100.0);
             }
         }
 
@@ -745,19 +773,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         /// delwaq1 a directory where it can directly put its output files.
         /// This property is set when saving the model or opening
         /// the model.
-        /// 
         /// There is no need to save this in NHibernate.
         /// It is set with ProjectSaved and ProjectOpened.
         /// </summary>
         public virtual string ExplicitOutputDirectory
         {
-            get { return ModelSettings.OutputDirectory; }
-            set { SetOutputDirectory(value); }
+            get => ModelSettings.OutputDirectory;
+            set => SetOutputDirectory(value);
         }
 
         public override string ExplicitWorkingDirectory
         {
-            get { return base.ExplicitWorkingDirectory; }
+            get => base.ExplicitWorkingDirectory;
             set
             {
                 base.ExplicitWorkingDirectory = value;
@@ -767,36 +794,44 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
 
         public virtual string ModelDataDirectory
         {
-            get { return modelDataDirectory; }
-            set { modelDataDirectory = value; }
+            get => modelDataDirectory;
+            set => modelDataDirectory = value;
         }
 
-        public virtual DataTableManager BoundaryDataManager { get { return (DataTableManager)GetDataItemByTag(BoundaryDataDataItemMetaData.Tag).Value; } }
+        public virtual DataTableManager BoundaryDataManager =>
+            (DataTableManager) GetDataItemByTag(BoundaryDataDataItemMetaData.Tag).Value;
 
-        public virtual DataTableManager LoadsDataManager { get { return (DataTableManager)GetDataItemByTag(LoadsDataDataItemMetaData.Tag).Value; } }
+        public virtual DataTableManager LoadsDataManager =>
+            (DataTableManager) GetDataItemByTag(LoadsDataDataItemMetaData.Tag).Value;
 
         /// <summary>
-        /// The coordinate system can be found in the grid, 
+        /// The coordinate system can be found in the grid,
         /// but may be overridden by the user.
         /// </summary>
         public virtual ICoordinateSystem CoordinateSystem
         {
-            get { return Grid != null ? Grid.CoordinateSystem : null; }
+            get => Grid != null ? Grid.CoordinateSystem : null;
             set
             {
                 overriddenCoordinateSystem = value;
 
-                if (Grid == null) return;
+                if (Grid == null)
+                {
+                    return;
+                }
 
-                var existingGridCoordinateSystemString = Grid.CoordinateSystem == null
-                    ? string.Empty
-                    : Grid.CoordinateSystem.PROJ4;
+                string existingGridCoordinateSystemString = Grid.CoordinateSystem == null
+                                                                ? string.Empty
+                                                                : Grid.CoordinateSystem.PROJ4;
 
-                var newCoordinateSystemString = value == null
-                    ? string.Empty
-                    : value.PROJ4;
+                string newCoordinateSystemString = value == null
+                                                       ? string.Empty
+                                                       : value.PROJ4;
 
-                if (existingGridCoordinateSystemString == newCoordinateSystemString) return;
+                if (existingGridCoordinateSystemString == newCoordinateSystemString)
+                {
+                    return;
+                }
 
                 Grid.CoordinateSystem = value;
 
@@ -813,7 +848,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                     return mapFileFunctionStore;
                 }
 
-                var storeFromCoverages = this.GetOutputCoverages().Select(c => c.Store).OfType<LazyMapFileFunctionStore>().FirstOrDefault();
+                LazyMapFileFunctionStore storeFromCoverages =
+                    this.GetOutputCoverages().Select(c => c.Store).OfType<LazyMapFileFunctionStore>().FirstOrDefault();
                 mapFileFunctionStore = storeFromCoverages ?? new LazyMapFileFunctionStore();
 
                 return mapFileFunctionStore;
@@ -826,47 +862,50 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         {
             throw new NotSupportedException("WaterQualityModel does not support cloning.");
         }
-       
+
         /// <summary>
         /// Imports the contents of a HydFile into the WAQ model.
         /// </summary>
-        /// <param name="data">Contents from a HydFile (or generated HydroData).</param>
-        /// <param name="importCoordinateSystem">Optional parameter (default False).</param>
-        /// <param name="skipImportTimers">Optional parameter (default False).</param>
-        /// <param name="markOutputOutOfSync">Optional parameter (default True).</param>
-        public virtual void ImportHydroData(IHydroData data,bool importCoordinateSystem = false, bool skipImportTimers = false, bool markOutputOutOfSync = true)
+        /// <param name="data"> Contents from a HydFile (or generated HydroData). </param>
+        /// <param name="importCoordinateSystem"> Optional parameter (default False). </param>
+        /// <param name="skipImportTimers"> Optional parameter (default False). </param>
+        /// <param name="markOutputOutOfSync"> Optional parameter (default True). </param>
+        public virtual void ImportHydroData(IHydroData data, bool importCoordinateSystem = false,
+                                            bool skipImportTimers = false, bool markOutputOutOfSync = true)
         {
             if (data == null)
-            {   
+            {
                 HasHydroDataImported = false;
                 throw new ArgumentNullException("data", "No hydrodynamics data was specified.");
             }
 
             //As per issue D3DFMIQ-318, we should override the coordinate system with the imported one. 
-            var coordinateSystemChanges = CoordinateSystem != data.Grid?.CoordinateSystem;
+            bool coordinateSystemChanges = CoordinateSystem != data.Grid?.CoordinateSystem;
             CoordinateSystem = data.Grid?.CoordinateSystem;
             if (coordinateSystemChanges)
             {
                 Log.Info(
-                    string.Format(Resources.WaterQualityModel_ImportHydroData_The_coordinate_system_of_the_model___0__has_been_set_to__1_, 
-                        Name, 
-                        data.Grid?.CoordinateSystem == null 
-                            ? "<empty>" 
+                    string.Format(
+                        Resources
+                            .WaterQualityModel_ImportHydroData_The_coordinate_system_of_the_model___0__has_been_set_to__1_,
+                        Name,
+                        data.Grid?.CoordinateSystem == null
+                            ? "<empty>"
                             : data.Grid.CoordinateSystem.ToString()));
             }
-            
+
             if (data.Equals(HydroData))
             {
                 OverWriteModelTimersWithImportTimers(skipImportTimers, data);
                 OverWriteSegmentFunctions(data);
                 return;
             }
-            
+
             HasHydroDataImported = false;
 
             enableMarkOutputOutOfSync = markOutputOutOfSync;
 
-            var schematizationRemainsUnchanged = data.HasSameSchematization(HydroData);
+            bool schematizationRemainsUnchanged = data.HasSameSchematization(HydroData);
 
             try
             {
@@ -889,7 +928,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
 
                 //As of issue D3DFMIQ-329, the timers should be overriden when importing the hyd file again.
                 OverWriteModelTimersWithImportTimers(skipImportTimers, HydroData);
-                
+
                 SetImportProgress("Importing file paths");
                 AreasRelativeFilePath = HydroData.AreasRelativePath;
                 VolumesRelativeFilePath = HydroData.VolumesRelativePath;
@@ -914,9 +953,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                 BoundaryNodeIds = HydroData.GetBoundaryNodeIds();
 
                 SetImportProgress("Importing attributes");
-                var fileInfo = new FileInfo(Path.Combine(Path.GetDirectoryName(HydroData.FilePath), AttributesRelativeFilePath));
+                var fileInfo =
+                    new FileInfo(Path.Combine(Path.GetDirectoryName(HydroData.FilePath), AttributesRelativeFilePath));
 
-                attributeData = AttributesFileReader.ReadAll(NumberOfDelwaqSegmentsPerHydrodynamicLayer, NumberOfWaqSegmentLayers, fileInfo);
+                attributeData =
+                    AttributesFileReader.ReadAll(NumberOfDelwaqSegmentsPerHydrodynamicLayer, NumberOfWaqSegmentLayers,
+                                                 fileInfo);
                 pointToGridCellMapper = SetUpPointToGridCellMapper();
 
                 HasHydroDataImported = true;
@@ -943,7 +985,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
 
         private void OverWriteModelTimersWithImportTimers(bool skipImportTimers, IHydroData dataToOverwrite)
         {
-            if (skipImportTimers) return;
+            if (skipImportTimers)
+            {
+                return;
+            }
 
             SetImportProgress("Importing timers");
             StartTime = dataToOverwrite.ConversionStartTime;
@@ -961,12 +1006,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         private void ResolveBoundaryImport(IEnumerable<WaterQualityBoundary> importedBoundaries)
         {
             var newBoundaries = new List<WaterQualityBoundary>();
-            if( importedBoundaries != null)
+            if (importedBoundaries != null)
             {
-                foreach (var waterQualityBoundary in importedBoundaries)
+                foreach (WaterQualityBoundary waterQualityBoundary in importedBoundaries)
                 {
                     // find an already loaded boundary
-                    var existingBoundary = Boundaries.FirstOrDefault(b => b.Name == waterQualityBoundary.Name);
+                    WaterQualityBoundary existingBoundary =
+                        Boundaries.FirstOrDefault(b => b.Name == waterQualityBoundary.Name);
 
                     if (existingBoundary != null)
                     {
@@ -985,13 +1031,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
 
         private PointToGridCellMapper SetUpPointToGridCellMapper()
         {
-            var mapper = new PointToGridCellMapper { Grid = Grid };
+            var mapper = new PointToGridCellMapper {Grid = Grid};
             var waqRelativeThicknesses = new double[NumberOfWaqSegmentLayers];
             var hydroIndex = 0;
-            for (int i = 0; i < NumberOfWaqSegmentLayers; i++)
+            for (var i = 0; i < NumberOfWaqSegmentLayers; i++)
             {
                 var waqRelativeThickness = 0.0;
-                var addUptoHydroLayer = hydroIndex + NumberOfHydrodynamicLayersPerWaqLayer[i];
+                int addUptoHydroLayer = hydroIndex + NumberOfHydrodynamicLayersPerWaqLayer[i];
                 while (hydroIndex < addUptoHydroLayer)
                 {
                     waqRelativeThickness += HydrodynamicLayerThicknesses[hydroIndex++];
@@ -999,6 +1045,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
 
                 waqRelativeThicknesses[i] = waqRelativeThickness;
             }
+
             if (LayerType == LayerType.Sigma)
             {
                 mapper.SetSigmaLayers(waqRelativeThicknesses);
@@ -1007,78 +1054,87 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             {
                 mapper.SetZLayers(waqRelativeThicknesses, ZTop, ZBot);
             }
+
             return mapper;
         }
 
         /// <summary>
-        /// Determines whether the model has data available in its hydro dynamics for a 
-        /// specific function, process or substance. 
+        /// Determines whether the model has data available in its hydro dynamics for a
+        /// specific function, process or substance.
         /// </summary>
-        /// <param name="function">The function.</param>
-        /// <returns>True if there is data defined in the hydro dynamics, false otherwise.</returns>
+        /// <param name="function"> The function. </param>
+        /// <returns> True if there is data defined in the hydro dynamics, false otherwise. </returns>
         public virtual bool HasDataInHydroDynamics(IFunction function)
         {
             return function != null && HasDataInHydroDynamics(function.Name);
         }
 
         /// <summary>
-        /// Determines whether the model has data available in its hydro dynamics for a 
-        /// specific function, process or substance. 
+        /// Determines whether the model has data available in its hydro dynamics for a
+        /// specific function, process or substance.
         /// </summary>
-        /// <param name="functionName">The name of the function.</param>
-        /// <returns>True if there is data defined in the hydro dynamics, false otherwise.</returns>
+        /// <param name="functionName"> The name of the function. </param>
+        /// <returns> True if there is data defined in the hydro dynamics, false otherwise. </returns>
         public virtual bool HasDataInHydroDynamics(string functionName)
         {
             return HydroData != null && HydroData.HasDataFor(functionName);
         }
 
         /// <summary>
-        /// Gets the file path for a given function, process or substance when available 
+        /// Gets the file path for a given function, process or substance when available
         /// in the hydro dynamics.
         /// </summary>
-        /// <param name="function">The funcion.</param>
-        /// <returns>The filepath for the given function if <see cref="HasDataInHydroDynamics(IFunction)"/> 
-        /// returns true for <paramref name="function"/>.</returns>
-        /// <exception cref="InvalidOperationException">When <see cref="HasDataInHydroDynamics(IFunction)"/> 
-        /// returns false for <paramref name="function"/>.</exception>
+        /// <param name="function"> The funcion. </param>
+        /// <returns>
+        /// The filepath for the given function if <see cref="HasDataInHydroDynamics(IFunction)" />
+        /// returns true for <paramref name="function" />.
+        /// </returns>
+        /// <exception cref="InvalidOperationException">
+        /// When <see cref="HasDataInHydroDynamics(IFunction)" />
+        /// returns false for <paramref name="function" />.
+        /// </exception>
         public virtual string GetFilePathFromHydroDynamics(IFunction function)
         {
             if (HydroData == null || !HydroData.HasDataFor(function.Name))
             {
-                throw new InvalidOperationException(string.Format("Function '{0}' is not available in the hydro data.", function.Name));
+                throw new InvalidOperationException(
+                    string.Format("Function '{0}' is not available in the hydro data.", function.Name));
             }
+
             return HydroData.GetFilePathFor(function.Name);
         }
 
         /// <summary>
         /// Determines whether the given coordinate falls within an active cell or not.
         /// </summary>
-        /// <returns>True if the cell is active; false when it's inactive.</returns>
-        /// <exception cref="System.InvalidOperationException">When no hydro data has been importer.</exception>
+        /// <returns> True if the cell is active; false when it's inactive. </returns>
+        /// <exception cref="System.InvalidOperationException"> When no hydro data has been importer. </exception>
         public virtual bool IsInsideActiveCell(Coordinate coordinate)
         {
             if (!HasHydroDataImported)
             {
-                throw new InvalidOperationException("Cannot determine if location is inside active cell as no hydro dynamic data was imported.");
+                throw new InvalidOperationException(
+                    "Cannot determine if location is inside active cell as no hydro dynamic data was imported.");
             }
 
-            var index = GetSegmentIndexForLocation(coordinate);
+            int index = GetSegmentIndexForLocation(coordinate);
             return attributeData.IsSegmentActive(index);
         }
 
         /// <summary>
         /// Determines whether the given coordinate falls within an active cell or not.
         /// </summary>
-        /// <returns>True if the cell is active; false when it's inactive.</returns>
-        /// <exception cref="System.InvalidOperationException">When no hydro data has been importer.</exception>
+        /// <returns> True if the cell is active; false when it's inactive. </returns>
+        /// <exception cref="System.InvalidOperationException"> When no hydro data has been importer. </exception>
         public virtual bool IsInsideActiveCell2D(Coordinate coordinate)
         {
             if (!HasHydroDataImported)
             {
-                throw new InvalidOperationException("Cannot determine if location is inside active cell as no hydro dynamic data was imported.");
+                throw new InvalidOperationException(
+                    "Cannot determine if location is inside active cell as no hydro dynamic data was imported.");
             }
 
-            var index = GetSegmentIndexForLocation2D(coordinate);
+            int index = GetSegmentIndexForLocation2D(coordinate);
             return attributeData.IsSegmentActive(index);
         }
 
@@ -1089,7 +1145,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         {
             if (!HasHydroDataImported)
             {
-                throw new InvalidOperationException("Cannot determine grid cell index for location as no hydro dynamic data was imported.");
+                throw new InvalidOperationException(
+                    "Cannot determine grid cell index for location as no hydro dynamic data was imported.");
             }
 
             return pointToGridCellMapper.GetWaqSegmentIndex(coordinate.X, coordinate.Y, coordinate.Z);
@@ -1103,7 +1160,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         {
             if (!HasHydroDataImported)
             {
-                throw new InvalidOperationException("Cannot determine grid cell index for location as no hydro dynamic data was imported.");
+                throw new InvalidOperationException(
+                    "Cannot determine grid cell index for location as no hydro dynamic data was imported.");
             }
 
             return pointToGridCellMapper.GetWaqSegmentIndex2D(coordinate.X, coordinate.Y);
@@ -1111,7 +1169,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
 
         public override IEnumerable<object> GetDirectChildren()
         {
-            foreach (var directChild in base.GetDirectChildren())
+            foreach (object directChild in base.GetDirectChildren())
             {
                 yield return directChild;
             }
@@ -1146,13 +1204,19 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         {
             try
             {
-                var modelState = (ModelStateFilesImpl)modelStateHandler.CreateStateFromFile("validate", RestartInput.Path);
+                var modelState =
+                    (ModelStateFilesImpl) modelStateHandler.CreateStateFromFile("validate", RestartInput.Path);
 
-                ModelStateValidator.ValidateInputState(modelState, SupportedMetaDataVersions, GetMetaDataRequirements, GetOptionalMetaDataRequirements, "WaterQualityModel", out errors, out warnings);
+                ModelStateValidator.ValidateInputState(modelState, SupportedMetaDataVersions, GetMetaDataRequirements,
+                                                       GetOptionalMetaDataRequirements, "WaterQualityModel", out errors,
+                                                       out warnings);
             }
             catch (ArgumentException e)
             {
-                errors = new[] { e.Message };
+                errors = new[]
+                {
+                    e.Message
+                };
                 warnings = Enumerable.Empty<string>();
             }
         }
@@ -1181,7 +1245,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         {
             if (UseSaveStateTimeRange)
             {
-                var time = SaveStateStartTime;
+                DateTime time = SaveStateStartTime;
                 while (time <= SaveStateStopTime)
                 {
                     yield return time;
@@ -1216,10 +1280,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         {
             ClearOutput();
 
-            var validationReport = new WaterQualityModelValidator().Validate(this);
+            ValidationReport validationReport = new WaterQualityModelValidator().Validate(this);
             if (validationReport.ErrorCount > 0)
             {
-                throw new FormatException("Water quality model could not initialize. Please check the validation report.");
+                throw new FormatException(
+                    "Water quality model could not initialize. Please check the validation report.");
             }
 
             // a workaround to set the work directory on the model settings first
@@ -1246,11 +1311,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             // use the output directory to find the files to zip if writerestart is true.
             modelStateHandler.ModelWorkingDirectory = ModelSettings.OutputDirectory;
             waqPreProcessor = new WaqFileBasedPreProcessor();
-            var success = waqPreProcessor.InitializeWaq(waqInitializationSettings, (displayName, filePath) => this.AddTextDocument(displayName, filePath));
-            
+            bool success = waqPreProcessor.InitializeWaq(waqInitializationSettings,
+                                                         (displayName, filePath) =>
+                                                             this.AddTextDocument(displayName, filePath));
+
             if (!success)
             {
-               throw new Exception(string.Format(Resources.WaterQualityModel_OnInitializeCore_Failed_to_initialize_pre_processor__0_Please_look_at_the_List_file_for_more_information__0_List_file_found_in__Project_view____Output____List_file__0___1_, Environment.NewLine,  Path.GetDirectoryName(Path.Combine(ExplicitOutputDirectory,"output"))));
+                throw new Exception(string.Format(
+                                        Resources
+                                            .WaterQualityModel_OnInitializeCore_Failed_to_initialize_pre_processor__0_Please_look_at_the_List_file_for_more_information__0_List_file_found_in__Project_view____Output____List_file__0___1_,
+                                        Environment.NewLine,
+                                        Path.GetDirectoryName(Path.Combine(ExplicitOutputDirectory, "output"))));
             }
 
             //initialize and fill initial values in output coverages (needs to be available after initialize for rtc to pick up, for example)
@@ -1266,10 +1337,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         protected override void OnCancel()
         {
             if (waqPreProcessor != null)
+            {
                 waqPreProcessor.TryToCancel = true;
+            }
 
             if (waqProcessor != null)
+            {
                 waqProcessor.TryToCancel = true;
+            }
         }
 
         private void OnExecuteCore()
@@ -1292,7 +1367,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
 
             MapFileFunctionStore.Path = Path.Combine(ModelSettings.OutputDirectory, "deltashell.map");
 
-            waqProcessor.AddOutput(ModelSettings.OutputDirectory, ObservationVariableOutputs, (displayName, filePath) => this.AddTextDocument(displayName, filePath), ModelSettings.MonitoringOutputLevel);
+            waqProcessor.AddOutput(ModelSettings.OutputDirectory, ObservationVariableOutputs,
+                                   (displayName, filePath) => this.AddTextDocument(displayName, filePath),
+                                   ModelSettings.MonitoringOutputLevel);
         }
 
         protected override void OnCleanup()
@@ -1306,37 +1383,42 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         {
             MapFileFunctionStore.Path = null;
 
-            var outputDataItemsValues = AllDataItems.Where(di => di.Role.HasFlag(DataItemRole.Output)).Select(di => di.Value).ToList();
-            var outputCoverages = outputDataItemsValues.OfType<UnstructuredGridCellCoverage>().ToList();
-            var outputFeatureCoverages = outputDataItemsValues.OfType<IFeatureCoverage>();
-            var outputTextDocumentsFromFile = outputDataItemsValues.OfType<TextDocumentFromFile>();
-            var waqObservationPointOutput = outputDataItemsValues.OfType<WaterQualityObservationVariableOutput>();
+            List<object> outputDataItemsValues = AllDataItems
+                                                 .Where(di => di.Role.HasFlag(DataItemRole.Output))
+                                                 .Select(di => di.Value).ToList();
+            List<UnstructuredGridCellCoverage> outputCoverages =
+                outputDataItemsValues.OfType<UnstructuredGridCellCoverage>().ToList();
+            IEnumerable<IFeatureCoverage> outputFeatureCoverages = outputDataItemsValues.OfType<IFeatureCoverage>();
+            IEnumerable<TextDocumentFromFile> outputTextDocumentsFromFile =
+                outputDataItemsValues.OfType<TextDocumentFromFile>();
+            IEnumerable<WaterQualityObservationVariableOutput> waqObservationPointOutput =
+                outputDataItemsValues.OfType<WaterQualityObservationVariableOutput>();
 
             // Clear all output coverages
-            foreach (var unstructuredGridCellCoverage in outputCoverages)
+            foreach (UnstructuredGridCellCoverage unstructuredGridCellCoverage in outputCoverages)
             {
                 unstructuredGridCellCoverage.ClearCoverage();
             }
 
             // Clear all dynamic feature coverages
-            foreach (var featureCoverage in outputFeatureCoverages)
+            foreach (IFeatureCoverage featureCoverage in outputFeatureCoverages)
             {
                 featureCoverage.Filters.Clear();
                 featureCoverage.Clear();
             }
 
             // Remove all text documents based on files
-            foreach (var textDocumentFromFile in outputTextDocumentsFromFile)
+            foreach (TextDocumentFromFile textDocumentFromFile in outputTextDocumentsFromFile)
             {
                 FileUtils.DeleteIfExists(textDocumentFromFile.Path);
             }
 
             // Clear all time series values for observation point output
-            foreach (var obsPointOutput in waqObservationPointOutput)
+            foreach (WaterQualityObservationVariableOutput obsPointOutput in waqObservationPointOutput)
             {
                 obsPointOutput.ClearAllTimeSeries();
             }
-            
+
             DeleteOutputFiles();
 
             // Todo : Enable when monitoring output is added
@@ -1349,18 +1431,25 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
 
         private void DeleteOutputFiles()
         {
-            var outputDirectory = ModelSettings.OutputDirectory;
+            string outputDirectory = ModelSettings.OutputDirectory;
             FileUtils.DeleteIfExists(outputDirectory);
             FileUtils.CreateDirectoryIfNotExists(outputDirectory);
-            if(ExplicitWorkingDirectory != null) filesToDeleteFromExplicitWorkingDirectoryAfterModelCleanup.ForEach(file => FileUtils.DeleteIfExists(Path.Combine(ExplicitWorkingDirectory, file)));
+            if (ExplicitWorkingDirectory != null)
+            {
+                filesToDeleteFromExplicitWorkingDirectoryAfterModelCleanup.ForEach(
+                    file => FileUtils.DeleteIfExists(Path.Combine(ExplicitWorkingDirectory, file)));
+            }
         }
 
         # endregion
-        
+
         [EditAction]
         protected override void OnInputCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            if (!enableMarkOutputOutOfSync) return;
+            if (!enableMarkOutputOutOfSync)
+            {
+                return;
+            }
 
             this.InputCollectionChanged(sender, e);
 
@@ -1370,7 +1459,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         [EditAction]
         protected override void OnInputPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (!enableMarkOutputOutOfSync) return;
+            if (!enableMarkOutputOutOfSync)
+            {
+                return;
+            }
 
             this.InputPropertyChanged(sender, e);
 
@@ -1382,10 +1474,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         /// </summary>
         public override DateTime StartTime
         {
-            get { return base.StartTime; }
+            get => base.StartTime;
             set
             {
-                if (StartTime == value) return;
+                if (StartTime == value)
+                {
+                    return;
+                }
+
                 base.StartTime = value;
 
                 ModelSettings.BalanceStartTime = StartTime;
@@ -1400,10 +1496,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         /// </summary>
         public override DateTime StopTime
         {
-            get { return base.StopTime; }
+            get => base.StopTime;
             set
             {
-                if (StopTime == value) return;
+                if (StopTime == value)
+                {
+                    return;
+                }
+
                 base.StopTime = value;
 
                 ModelSettings.BalanceStopTime = StopTime;
@@ -1416,7 +1516,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         private void LogSynchronizedTimer(string timer, object value)
         {
             //For some info the test will only pass if the message is contained in the string.Format, but not in the Log.InfoFormat.
-            var message = string.Format(Resources.WaterQualityModel_LogSynchronizedTimer_Output_timers___0___have_been_synchronized_to_match_the_Simulation__0____1___, timer,value);
+            string message =
+                string.Format(
+                    Resources
+                        .WaterQualityModel_LogSynchronizedTimer_Output_timers___0___have_been_synchronized_to_match_the_Simulation__0____1___,
+                    timer, value);
             Log.Info(message);
         }
 
@@ -1428,7 +1532,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         private void SetNewGrid(UnstructuredGrid value, bool schematizationRemainsUnchanged)
         {
             // never set grid to null (this creates invalid UnstructuredGridCellCoverages)
-            var gridToSet = value ?? new UnstructuredGrid();
+            UnstructuredGrid gridToSet = value ?? new UnstructuredGrid();
 
             if (overriddenCoordinateSystem != null)
             {
@@ -1438,10 +1542,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             GetDataItemByTag(GridDataItemMetaData.Tag).Value = gridToSet;
             Bathymetry = CreateAndFillBathymetryCoverage(gridToSet);
 
-            ReplaceGridOnUnstructuredGridCoveragesWithSpatialOperations(GetDataItemSetByTag(InitialConditionsDataItemMetaData.Tag), schematizationRemainsUnchanged);
-            ReplaceGridOnUnstructuredGridCoveragesWithSpatialOperations(GetDataItemSetByTag(ProcessCoefficientsDataItemMetaData.Tag), schematizationRemainsUnchanged);
-            ReplaceGridOnUnstructuredGridCoveragesWithSpatialOperations(GetDataItemSetByTag(DispersionDataItemMetaData.Tag), schematizationRemainsUnchanged);
-            ReplaceGridOnUnstructuredGridCoverageWithSpatialOperations(GetDataItemByTag(ObservationAreasDataItemMetaData.Tag), schematizationRemainsUnchanged);
+            ReplaceGridOnUnstructuredGridCoveragesWithSpatialOperations(
+                GetDataItemSetByTag(InitialConditionsDataItemMetaData.Tag), schematizationRemainsUnchanged);
+            ReplaceGridOnUnstructuredGridCoveragesWithSpatialOperations(
+                GetDataItemSetByTag(ProcessCoefficientsDataItemMetaData.Tag), schematizationRemainsUnchanged);
+            ReplaceGridOnUnstructuredGridCoveragesWithSpatialOperations(
+                GetDataItemSetByTag(DispersionDataItemMetaData.Tag), schematizationRemainsUnchanged);
+            ReplaceGridOnUnstructuredGridCoverageWithSpatialOperations(
+                GetDataItemByTag(ObservationAreasDataItemMetaData.Tag), schematizationRemainsUnchanged);
             ReplaceGridOnUnstructuredGridCoverages(this.GetOutputCoverages(), schematizationRemainsUnchanged);
         }
 
@@ -1464,6 +1572,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             {
                 Loads.CollectionChanged += OnInputCollectionChanged;
             }
+
             if (ObservationPoints != null)
             {
                 ObservationPoints.CollectionChanged += OnInputCollectionChanged;
@@ -1474,26 +1583,28 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                 ((INotifyPropertyChanged) ModelSettings).PropertyChanged += OnInputPropertyChanged;
             }
         }
-      
+
         private string GetWaqDataFolderName()
         {
             if (string.IsNullOrWhiteSpace(Name))
             {
                 return Path.GetFileName(tempWorkDirectory);
             }
+
             return Name.Replace(" ", "_");
         }
 
         [EditAction]
         private void SetWaqPointHeights()
         {
-            var defaultZ = GetDefaultZ();
+            double defaultZ = GetDefaultZ();
 
-            foreach (var load in Loads)
+            foreach (WaterQualityLoad load in Loads)
             {
                 load.Z = defaultZ;
             }
-            foreach (var observationPoint in ObservationPoints)
+
+            foreach (WaterQualityObservationPoint observationPoint in ObservationPoints)
             {
                 observationPoint.Z = defaultZ;
             }
@@ -1514,26 +1625,43 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             {
                 waqPreProcessor.Dispose();
             }
+
             waqPreProcessor = null;
         }
 
         private void InitializeInputDataItems()
         {
-            AddDataItem(new TextDocument { Name = InputFileCommandLineDataItemMetaData.Name, Content = Resources.TemplateInpFileNew }, DataItemRole.Input, InputFileCommandLineDataItemMetaData.Tag);
-            AddDataItem(new TextDocument { Name = InputFileHybridDataItemMetaData.Name, Content = Resources.TemplateInpFileHybrid }, DataItemRole.Input, InputFileHybridDataItemMetaData.Tag);
+            AddDataItem(new TextDocument
+            {
+                Name = InputFileCommandLineDataItemMetaData.Name,
+                Content = Resources.TemplateInpFileNew
+            }, DataItemRole.Input, InputFileCommandLineDataItemMetaData.Tag);
+            AddDataItem(new TextDocument
+            {
+                Name = InputFileHybridDataItemMetaData.Name,
+                Content = Resources.TemplateInpFileHybrid
+            }, DataItemRole.Input, InputFileHybridDataItemMetaData.Tag);
 
-            AddDataItem(CreateSubstanceProcessLibrary(), SubstanceProcessLibraryDataItemMetaData.Name, DataItemRole.Input, SubstanceProcessLibraryDataItemMetaData.Tag);
+            AddDataItem(CreateSubstanceProcessLibrary(), SubstanceProcessLibraryDataItemMetaData.Name,
+                        DataItemRole.Input, SubstanceProcessLibraryDataItemMetaData.Tag);
 
             var initialGrid = new UnstructuredGrid();
             AddDataItem(initialGrid, GridDataItemMetaData.Name, DataItemRole.Input, GridDataItemMetaData.Tag);
-            AddDataItem(CreateAndFillBathymetryCoverage(initialGrid), BathymetryDataItemMetaData.Name, DataItemRole.Input, BathymetryDataItemMetaData.Tag);
-            AddDataItem(CreateObservationAreasCoverage(initialGrid), ObservationAreasDataItemMetaData.Name, DataItemRole.Input, ObservationAreasDataItemMetaData.Tag);
-            AddDataItem(new DataTableManager(), BoundaryDataDataItemMetaData.Name, DataItemRole.Input, BoundaryDataDataItemMetaData.Tag);
-            AddDataItem(new DataTableManager(), LoadsDataDataItemMetaData.Name, DataItemRole.Input, LoadsDataDataItemMetaData.Tag);
+            AddDataItem(CreateAndFillBathymetryCoverage(initialGrid), BathymetryDataItemMetaData.Name,
+                        DataItemRole.Input, BathymetryDataItemMetaData.Tag);
+            AddDataItem(CreateObservationAreasCoverage(initialGrid), ObservationAreasDataItemMetaData.Name,
+                        DataItemRole.Input, ObservationAreasDataItemMetaData.Tag);
+            AddDataItem(new DataTableManager(), BoundaryDataDataItemMetaData.Name, DataItemRole.Input,
+                        BoundaryDataDataItemMetaData.Tag);
+            AddDataItem(new DataTableManager(), LoadsDataDataItemMetaData.Name, DataItemRole.Input,
+                        LoadsDataDataItemMetaData.Tag);
 
-            AddDataItemSet(new EventedList<IFunction>(), InitialConditionsDataItemMetaData.Name, DataItemRole.Input, InitialConditionsDataItemMetaData.Tag, true);
-            AddDataItemSet(new EventedList<IFunction>(), ProcessCoefficientsDataItemMetaData.Name, DataItemRole.Input, ProcessCoefficientsDataItemMetaData.Tag, true);
-            AddDataItemSet(new EventedList<IFunction>(CreateDispersionFunctions()), DispersionDataItemMetaData.Name, DataItemRole.Input, DispersionDataItemMetaData.Tag, true);
+            AddDataItemSet(new EventedList<IFunction>(), InitialConditionsDataItemMetaData.Name, DataItemRole.Input,
+                           InitialConditionsDataItemMetaData.Tag, true);
+            AddDataItemSet(new EventedList<IFunction>(), ProcessCoefficientsDataItemMetaData.Name, DataItemRole.Input,
+                           ProcessCoefficientsDataItemMetaData.Tag, true);
+            AddDataItemSet(new EventedList<IFunction>(CreateDispersionFunctions()), DispersionDataItemMetaData.Name,
+                           DataItemRole.Input, DispersionDataItemMetaData.Tag, true);
         }
 
         private void SetImportProgress(string progress)
@@ -1554,34 +1682,38 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             {
                 Name = "Process Library",
                 OutputParameters =
-                               {
-                                   new WaterQualityOutputParameter
-                                       {
-                                           Name = Resources.SubstanceProcessLibrary_OutputParameters_Volume,
-                                           Description = Resources.SubstanceProcessLibrary_OutputParameters_Volume_description
-                                       },
-                                   new WaterQualityOutputParameter
-                                       {
-                                           Name = Resources.SubstanceProcessLibrary_OutputParameters_Surf,
-                                           Description = Resources.SubstanceProcessLibrary_OutputParameters_Surf_description
-                                       },
-                                   new WaterQualityOutputParameter
-                                       {
-                                           Name = Resources.SubstanceProcessLibrary_OutputParameters_Temp,
-                                           Description = Resources.SubstanceProcessLibrary_OutputParameters_Temp_description
-                                       },
-                                   new WaterQualityOutputParameter
-                                       {
-                                           Name = Resources.SubstanceProcessLibrary_OutputParameters_Rad,
-                                           Description = Resources.SubstanceProcessLibrary_OutputParameters_Rad_description
-                                       }
-                               }
+                {
+                    new WaterQualityOutputParameter
+                    {
+                        Name = Resources.SubstanceProcessLibrary_OutputParameters_Volume,
+                        Description = Resources.SubstanceProcessLibrary_OutputParameters_Volume_description
+                    },
+                    new WaterQualityOutputParameter
+                    {
+                        Name = Resources.SubstanceProcessLibrary_OutputParameters_Surf,
+                        Description = Resources.SubstanceProcessLibrary_OutputParameters_Surf_description
+                    },
+                    new WaterQualityOutputParameter
+                    {
+                        Name = Resources.SubstanceProcessLibrary_OutputParameters_Temp,
+                        Description = Resources.SubstanceProcessLibrary_OutputParameters_Temp_description
+                    },
+                    new WaterQualityOutputParameter
+                    {
+                        Name = Resources.SubstanceProcessLibrary_OutputParameters_Rad,
+                        Description = Resources.SubstanceProcessLibrary_OutputParameters_Rad_description
+                    }
+                }
             };
         }
 
         private static IEnumerable<IFunction> CreateDispersionFunctions()
         {
-            return new EventedList<IFunction> { WaterQualityFunctionFactory.CreateConst("Dispersion", 0, "Dispersion", "m2/s", "Horizontal Dispersion") };
+            return new EventedList<IFunction>
+            {
+                WaterQualityFunctionFactory.CreateConst("Dispersion", 0, "Dispersion", "m2/s",
+                                                        "Horizontal Dispersion")
+            };
         }
 
         private static UnstructuredGridVertexCoverage CreateAndFillBathymetryCoverage(UnstructuredGrid grid)
@@ -1596,7 +1728,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             bathymetry.Components[0].DefaultValue = bathymetry.Components[0].NoDataValue;
 
             if (grid.Vertices.Count > 0)
+            {
                 bathymetry.SetValues(grid.Vertices.Select(v => v.Z));
+            }
 
             return bathymetry;
         }
@@ -1612,6 +1746,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             {
                 return;
             }
+
             // check if it is explicit, or if there is a project data directory
             if (ExplicitWorkingDirectory != null)
             {
@@ -1619,7 +1754,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             }
             else if (ModelDataDirectory != null)
             {
-                ModelSettings.WorkDirectory = Path.Combine(Path.GetDirectoryName(ModelDataDirectory), GetWaqDataFolderName() + "_output");
+                ModelSettings.WorkDirectory =
+                    Path.Combine(Path.GetDirectoryName(ModelDataDirectory), GetWaqDataFolderName() + "_output");
             }
             else
             {
@@ -1631,15 +1767,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         /// <summary>
         /// Replace the grid on a list of coverages.
         /// This method does not look at spatial operations.
-        /// 
         /// Use this method for output coverages for example.
         /// </summary>
-        /// <param name="functions"></param>
-        /// <param name="onlyUpdateGrid"></param>
-        /// <seealso cref="ReplaceGridOnUnstructuredGridCoveragesWithSpatialOperations"/>
+        /// <param name="functions"> </param>
+        /// <param name="onlyUpdateGrid"> </param>
+        /// <seealso cref="ReplaceGridOnUnstructuredGridCoveragesWithSpatialOperations" />
         private void ReplaceGridOnUnstructuredGridCoverages(IEnumerable<IFunction> functions, bool onlyUpdateGrid)
         {
-            foreach (var function in functions)
+            foreach (IFunction function in functions)
             {
                 var coverage = function as UnstructuredGridCellCoverage;
                 if (coverage != null)
@@ -1651,35 +1786,39 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
 
         private void ReplaceGridOnUnstructuredGridCoverageWithSpatialOperations(IDataItem dataItem, bool onlyUpdateGrid)
         {
-            ReplaceGridOnUnstructuredGridCoverages(new[] { (IFunction)dataItem.Value }, onlyUpdateGrid);
+            ReplaceGridOnUnstructuredGridCoverages(new[]
+            {
+                (IFunction) dataItem.Value
+            }, onlyUpdateGrid);
             SetGridAndExecuteSpatialOperation(dataItem);
         }
 
         /// <summary>
-        /// Replace grid on unstructured coverages, because the grid was replaced via the <see cref="Grid"/> property.
+        /// Replace grid on unstructured coverages, because the grid was replaced via the <see cref="Grid" /> property.
         /// This method checks spatial operations.
-        /// 
         /// Use this method for functions that require spatial operation input.
         /// </summary>
-        /// <seealso cref="ReplaceGridOnUnstructuredGridCoverages"/>.
-        private void ReplaceGridOnUnstructuredGridCoveragesWithSpatialOperations(IDataItemSet dataItemSet, bool onlyUpdateGrid)
+        /// <seealso cref="ReplaceGridOnUnstructuredGridCoverages" />
+        /// .
+        private void ReplaceGridOnUnstructuredGridCoveragesWithSpatialOperations(
+            IDataItemSet dataItemSet, bool onlyUpdateGrid)
         {
-            List<IFunction> functionListToReplace = new List<IFunction>();
-            foreach (var dataItem in dataItemSet.DataItems)
+            var functionListToReplace = new List<IFunction>();
+            foreach (IDataItem dataItem in dataItemSet.DataItems)
             {
                 if (dataItem.Value != null)
                 {
-                    functionListToReplace.Add((IFunction)dataItem.Value);
+                    functionListToReplace.Add((IFunction) dataItem.Value);
                 }
                 else if (dataItem.ComposedValue != null)
                 {
-                    functionListToReplace.Add((IFunction)dataItem.ComposedValue);
+                    functionListToReplace.Add((IFunction) dataItem.ComposedValue);
                 }
             }
 
             ReplaceGridOnUnstructuredGridCoverages(functionListToReplace, onlyUpdateGrid);
 
-            foreach (var dataItem in dataItemSet.DataItems)
+            foreach (IDataItem dataItem in dataItemSet.DataItems)
             {
                 SetGridAndExecuteSpatialOperation(dataItem);
             }
@@ -1695,12 +1834,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                 return;
             }
 
-            var original = (UnstructuredGridCellCoverage)valueConverter.OriginalValue;
+            var original = (UnstructuredGridCellCoverage) valueConverter.OriginalValue;
             original.AssignNewGridToCoverage(Grid);
 
             // set the grid extents as mask for the first operation, because it depends on the grid.
-            var operation = valueConverter.SpatialOperationSet.Operations.FirstOrDefault(
-                o => o.Name == WaterQualityModelSyncExtensions.InitialValueOperationName);
+            ISpatialOperation operation = valueConverter.SpatialOperationSet.Operations.FirstOrDefault(
+                o => o.Name == WaterQualityModelSyncExtensions
+                         .InitialValueOperationName);
 
             if (operation != null)
             {
@@ -1717,41 +1857,57 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         private Dictionary<string, string> GetMetaDataRequirements(int version)
         {
             if (version != 1)
-                throw new NotImplementedException(String.Format("Meta data version {0} for model type {1} is not supported", version, "WaterQualityModel"));
+            {
+                throw new NotImplementedException(string.Format(
+                                                      "Meta data version {0} for model type {1} is not supported",
+                                                      version, "WaterQualityModel"));
+            }
 
-            return new Dictionary<string, string>
-                {
-                    {"CorrectForEvap", ModelSettings.CorrectForEvaporation.ToString()}
-                };
+            return new Dictionary<string, string> {{"CorrectForEvap", ModelSettings.CorrectForEvaporation.ToString()}};
         }
 
         private Dictionary<string, string> GetOptionalMetaDataRequirements(int version)
         {
             if (version != 1)
-                throw new NotImplementedException(String.Format("Meta data version {0} for model type {1} is not supported", version, "WaterQualityModel"));
+            {
+                throw new NotImplementedException(string.Format(
+                                                      "Meta data version {0} for model type {1} is not supported",
+                                                      version, "WaterQualityModel"));
+            }
 
             return new Dictionary<string, string>
-                    {
-                        {"NrOfActiveSubstances", SubstanceProcessLibrary.ActiveSubstances.Count().ToString(CultureInfo.InvariantCulture)}
-                    };
+            {
+                {
+                    "NrOfActiveSubstances",
+                    SubstanceProcessLibrary.ActiveSubstances.Count().ToString(CultureInfo.InvariantCulture)
+                }
+            };
         }
 
         private void HandleNewHydroDynamicsFunctionDataSet(IDataItemSet functionCollection, string functionName)
         {
-            var dataItem = functionCollection.DataItems.FirstOrDefault(p => p.Name.ToLowerInvariant() == functionName.ToLowerInvariant());
-            if (dataItem == null || SubstanceProcessLibrary == null) return;
+            IDataItem dataItem =
+                functionCollection.DataItems.FirstOrDefault(
+                    p => p.Name.ToLowerInvariant() == functionName.ToLowerInvariant());
+            if (dataItem == null || SubstanceProcessLibrary == null)
+            {
+                return;
+            }
 
-            var function = GetFunctionForDataItem(dataItem);
+            IFunction function = GetFunctionForDataItem(dataItem);
 
-            var hasDataInHydroDynamics = HasDataInHydroDynamics(functionName);
-            var isFromHydroDynamics = function.IsFromHydroDynamics();
+            bool hasDataInHydroDynamics = HasDataInHydroDynamics(functionName);
+            bool isFromHydroDynamics = function.IsFromHydroDynamics();
 
             IFunctionTypeCreator creator;
-            if (hasDataInHydroDynamics ) // if there is data and it is the first time, automatically set it to from hydrodynamics. 
+            if (hasDataInHydroDynamics
+            ) // if there is data and it is the first time, automatically set it to from hydrodynamics. 
             {
-                creator = FunctionTypeCreatorFactory.CreateFunctionFromHydroDynamicsCreator(HasDataInHydroDynamics, GetFilePathFromHydroDynamics);
+                creator = FunctionTypeCreatorFactory.CreateFunctionFromHydroDynamicsCreator(
+                    HasDataInHydroDynamics, GetFilePathFromHydroDynamics);
             }
-            else if (isFromHydroDynamics) // if there is no data in the hydrodynamics, but it is set as such, set it back to constant
+            else if (isFromHydroDynamics
+            ) // if there is no data in the hydrodynamics, but it is set as such, set it back to constant
             {
                 creator = FunctionTypeCreatorFactory.CreateConstantCreator();
             }
@@ -1760,24 +1916,31 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                 return;
             }
 
-            FunctionTypeCreator.ReplaceFunctionUsingCreator(functionCollection.AsEventedList<IFunction>(), function, creator, this);
-            Log.InfoFormat(Resources.WaterQualityModel_HandleNewHydroDynamicsFunctionDataSet_The_process_coefficient__0__has_been_updated_with_the_latest_Hydrodynamic_data_file_,
-                    function.Name);
+            FunctionTypeCreator.ReplaceFunctionUsingCreator(functionCollection.AsEventedList<IFunction>(), function,
+                                                            creator, this);
+            Log.InfoFormat(
+                Resources
+                    .WaterQualityModel_HandleNewHydroDynamicsFunctionDataSet_The_process_coefficient__0__has_been_updated_with_the_latest_Hydrodynamic_data_file_,
+                function.Name);
         }
 
         private IFunction GetFunctionForDataItem(IDataItem dataItem)
         {
-            var function = dataItem.Value as IFunction ?? dataItem.ValueConverter.OriginalValue as IFunction;
+            IFunction function = dataItem.Value as IFunction ?? dataItem.ValueConverter.OriginalValue as IFunction;
             Debug.Assert(function != null,
-                "Assumption: If DataItem.Value should return null here, we are dealing with " +
-                "an UnstructuredGridCellCoverage which uses ValueConverters and hasn't executed " +
-                "yet such as during save/load cycle.");
+                         "Assumption: If DataItem.Value should return null here, we are dealing with " +
+                         "an UnstructuredGridCellCoverage which uses ValueConverters and hasn't executed " +
+                         "yet such as during save/load cycle.");
             return function;
         }
 
         private void HydroDataOnDataChanged(object sender, EventArgs<string> eventArgs)
         {
-            if (HydroDataChanged == null) return;
+            if (HydroDataChanged == null)
+            {
+                return;
+            }
+
             HydroDataChanged(this, eventArgs);
         }
 

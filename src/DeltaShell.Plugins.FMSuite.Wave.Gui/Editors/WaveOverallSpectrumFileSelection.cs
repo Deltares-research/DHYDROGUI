@@ -10,7 +10,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
         {
             InitializeComponent();
             selectFileBtn.Click += SelectFileBtnOnClick;
-            
+
             openFileDialog1.Filter = "Overall Spectrum File (*.sp2)|*.sp2";
             openFileDialog1.Title = "Select SWAN spectrum file ...";
         }
@@ -22,20 +22,22 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
 
         public DialogResult SelectSp2File()
         {
-            var dlgResult = openFileDialog1.ShowDialog();
+            DialogResult dlgResult = openFileDialog1.ShowDialog();
             if (dlgResult == DialogResult.OK)
             {
-                var filePath = Path.GetFullPath(openFileDialog1.FileName);
+                string filePath = Path.GetFullPath(openFileDialog1.FileName);
                 data.OverallSpecFile = data.ImportIntoModelDirectory(filePath);
                 UpdatePanel();
             }
+
             return dlgResult;
         }
 
         private WaveModel data;
+
         public WaveModel Data
         {
-            get { return data; }
+            get => data;
             set
             {
                 data = value;

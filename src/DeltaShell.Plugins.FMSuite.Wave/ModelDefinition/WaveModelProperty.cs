@@ -7,9 +7,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.ModelDefinition
     [Entity]
     public class WaveModelProperty : ModelProperty
     {
-        public WaveModelProperty(ModelPropertyDefinition propertyDefinition, string valueAsString) : base(propertyDefinition, valueAsString)
-        {
-        }
+        public WaveModelProperty(ModelPropertyDefinition propertyDefinition, string valueAsString) : base(
+            propertyDefinition, valueAsString) {}
 
         public override object Clone()
         {
@@ -18,13 +17,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.ModelDefinition
 
         public override string GetValueAsString()
         {
-            if (PropertyDefinition.DataType == typeof (bool))
+            if (PropertyDefinition.DataType == typeof(bool))
             {
                 return (bool) Value ? "true" : "false";
             }
-            if (PropertyDefinition.DataType == typeof (DateTime))
+
+            if (PropertyDefinition.DataType == typeof(DateTime))
             {
-                return ((DateTime)Value).ToString("yyyy-MM-dd");
+                return ((DateTime) Value).ToString("yyyy-MM-dd");
             }
 
             return base.GetValueAsString();

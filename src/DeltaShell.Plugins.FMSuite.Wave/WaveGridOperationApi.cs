@@ -4,8 +4,8 @@ using System.Linq;
 using DelftTools.Utils.Collections;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
-using NetTopologySuite.Geometries;
 using log4net;
+using NetTopologySuite.Geometries;
 using SharpMap.Api;
 
 namespace DeltaShell.Plugins.FMSuite.Wave
@@ -24,24 +24,32 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         // todo: this is snapping for boundaries only...
         private IGeometry GetGridSnappedGeometry(IGeometry geometry)
         {
-            if (geometry == null) return null;
+            if (geometry == null)
+            {
+                return null;
+            }
+
             if (!grid.X.Values.Any())
             {
                 // no snapping on empty grid..
                 return geometry;
             }
 
-            var gridEnvelope = CreateGridEnvelope();
-            var snappedCoords = geometry.Coordinates.Select(c => FindNearestCoordinate(c, gridEnvelope)).ToList();
+            IList<GridCoordinate> gridEnvelope = CreateGridEnvelope();
+            List<GridCoordinate> snappedCoords =
+                geometry.Coordinates.Select(c => FindNearestCoordinate(c, gridEnvelope)).ToList();
 
-            if (snappedCoords.Count < 2) return null;
+            if (snappedCoords.Count < 2)
+            {
+                return null;
+            }
 
-            var finalCoordinates = new List<GridCoordinate> { snappedCoords[0] };
-            for (int i = 1; i < snappedCoords.Count; ++i)
+            var finalCoordinates = new List<GridCoordinate> {snappedCoords[0]};
+            for (var i = 1; i < snappedCoords.Count; ++i)
             {
                 // check if same segment:
-                var next = snappedCoords[i];
-                var start = snappedCoords[0];
+                GridCoordinate next = snappedCoords[i];
+                GridCoordinate start = snappedCoords[0];
 
                 if (!OnSameSide(start, next))
                 {
@@ -53,13 +61,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                 if (finalCoordinates.Any(c => c.Equals(next)))
                 {
                     // no duplicates
-                    Log.ErrorFormat("It is not allowed to have multiple support points snapped to the same grid point.");
+                    Log.ErrorFormat(
+                        "It is not allowed to have multiple support points snapped to the same grid point.");
                     return null;
                 }
 
                 finalCoordinates.Add(snappedCoords[i]);
             }
-            
+
             finalCoordinates = finalCoordinates.Distinct().ToList();
 
             if (finalCoordinates.Count < 2)
@@ -68,20 +77,26 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             }
 
             // we know they're on the same side, now check for dry points
-            if (ContainsDryPoints(finalCoordinates)) return null;
+            if (ContainsDryPoints(finalCoordinates))
+            {
+                return null;
+            }
 
             // ordered?
-            var mProperlyOrdered = finalCoordinates.Select(c => c.M).IsMonotonousAscending() || finalCoordinates.Select(c => c.M).IsMonotonousDescending();
-            var nProperlyOrdered = finalCoordinates.Select(c => c.N).IsMonotonousAscending() || finalCoordinates.Select(c => c.N).IsMonotonousDescending();
+            bool mProperlyOrdered = finalCoordinates.Select(c => c.M).IsMonotonousAscending() ||
+                                    finalCoordinates.Select(c => c.M).IsMonotonousDescending();
+            bool nProperlyOrdered = finalCoordinates.Select(c => c.N).IsMonotonousAscending() ||
+                                    finalCoordinates.Select(c => c.N).IsMonotonousDescending();
             if (!(nProperlyOrdered && mProperlyOrdered))
             {
-                Log.ErrorFormat("Snapped boundary points should be properly ordered in terms of grid coordinates (i.e. not self-intersecting)");
+                Log.ErrorFormat(
+                    "Snapped boundary points should be properly ordered in terms of grid coordinates (i.e. not self-intersecting)");
                 return null;
             }
 
             return new LineString(finalCoordinates.Select(GetCoordinate).ToArray());
         }
-       
+
         private bool OnSameSide(GridCoordinate c1, GridCoordinate c2)
         {
             return c2.N == c1.N || c2.M == c1.M;
@@ -92,9 +107,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             GridCoordinate nearestCoordinate = null;
             double closestApproach = double.MaxValue;
 
-            foreach (var c in envelope)
+            foreach (GridCoordinate c in envelope)
             {
-                var d = GetCoordinate(c).Distance(coord);
+                double d = GetCoordinate(c).Distance(coord);
                 if (d < closestApproach)
                 {
                     closestApproach = d;
@@ -112,46 +127,48 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         private Coordinate GetCoordinate(GridCoordinate c)
         {
-            var x = grid.X.Values[c.N,c.M];
-            var y = grid.Y.Values[c.N,c.M];
-            return new Coordinate(x,y);
+            double x = grid.X.Values[c.N, c.M];
+            double y = grid.Y.Values[c.N, c.M];
+            return new Coordinate(x, y);
         }
 
         private IList<GridCoordinate> CreateGridEnvelope()
         {
-            var sizeN = grid.Size1;
-            var sizeM = grid.Size2;
+            int sizeN = grid.Size1;
+            int sizeM = grid.Size2;
             var coordinates = new List<GridCoordinate>();
-            
-            var nMax = sizeN - 1;
-            var mMax = sizeM - 1;
-            coordinates.AddRange(Enumerable.Range(0, sizeN).Select(n => new GridCoordinate(nMax-n, mMax))); // bottom right, ccw
-            coordinates.AddRange(Enumerable.Range(0, sizeM-1).Select(m => new GridCoordinate(0, mMax - m)));
-            coordinates.AddRange(Enumerable.Range(0, sizeN-1).Select(n => new GridCoordinate(n, 0)));
-            coordinates.AddRange(Enumerable.Range(0, sizeM-1).Select(m => new GridCoordinate(nMax, m)));
+
+            int nMax = sizeN - 1;
+            int mMax = sizeM - 1;
+            coordinates.AddRange(Enumerable.Range(0, sizeN)
+                                           .Select(n => new GridCoordinate(nMax - n, mMax))); // bottom right, ccw
+            coordinates.AddRange(Enumerable.Range(0, sizeM - 1).Select(m => new GridCoordinate(0, mMax - m)));
+            coordinates.AddRange(Enumerable.Range(0, sizeN - 1).Select(n => new GridCoordinate(n, 0)));
+            coordinates.AddRange(Enumerable.Range(0, sizeM - 1).Select(m => new GridCoordinate(nMax, m)));
 
             return RemoveDryPoints(coordinates);
         }
 
         private bool ContainsDryPoints(List<GridCoordinate> finalCoordinates)
         {
-            var firstCoord = finalCoordinates[0];
-            var lastCoord = finalCoordinates[finalCoordinates.Count - 1];
+            GridCoordinate firstCoord = finalCoordinates[0];
+            GridCoordinate lastCoord = finalCoordinates[finalCoordinates.Count - 1];
 
-            var deltaN = lastCoord.N - firstCoord.N;
-            var deltaM = lastCoord.M - firstCoord.M;
-            var count = Math.Max(Math.Abs(deltaN), Math.Abs(deltaM));
-            deltaN = deltaN > 0 ? 1 : (deltaN < 0 ? -1 : 0);
-            deltaM = deltaM > 0 ? 1 : (deltaM < 0 ? -1 : 0);
+            int deltaN = lastCoord.N - firstCoord.N;
+            int deltaM = lastCoord.M - firstCoord.M;
+            int count = Math.Max(Math.Abs(deltaN), Math.Abs(deltaM));
+            deltaN = deltaN > 0 ? 1 : deltaN < 0 ? -1 : 0;
+            deltaM = deltaM > 0 ? 1 : deltaM < 0 ? -1 : 0;
 
-            for (int i = 0; i < count; ++i)
+            for (var i = 0; i < count; ++i)
             {
-                var nextToCheck = new GridCoordinate(firstCoord.N + i * deltaN, firstCoord.M + i * deltaM);
+                var nextToCheck = new GridCoordinate(firstCoord.N + (i * deltaN), firstCoord.M + (i * deltaM));
                 if (IsDryPoint(nextToCheck))
                 {
                     return true;
                 }
             }
+
             return false;
         }
 
@@ -163,8 +180,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         private bool IsDryPoint(GridCoordinate gridCoordinate)
         {
-            var x = grid.X.Values[gridCoordinate.N, gridCoordinate.M];
-            var y = grid.Y.Values[gridCoordinate.N, gridCoordinate.M];
+            double x = grid.X.Values[gridCoordinate.N, gridCoordinate.M];
+            double y = grid.Y.Values[gridCoordinate.N, gridCoordinate.M];
 
             return WaveDomainHelper.IsDryPoint(x, y);
         }

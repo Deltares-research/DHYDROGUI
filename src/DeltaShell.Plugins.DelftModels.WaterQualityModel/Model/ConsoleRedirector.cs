@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Pipes;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
@@ -21,9 +22,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
         /// <summary>
         /// Start capturing console messages
         /// </summary>
-        /// <param name="handler">Handler for console messages (use UserState of ProgressChangedEventArgs)</param>
-        /// <param name="forceConsoleRedirection">Forces console redirection</param>
-        public static void Attach(ProgressChangedEventHandler handler, ProgressChangedEventHandler errHandler, bool forceConsoleRedirection)
+        /// <param name="handler"> Handler for console messages (use UserState of ProgressChangedEventArgs) </param>
+        /// <param name="forceConsoleRedirection"> Forces console redirection </param>
+        public static void Attach(ProgressChangedEventHandler handler, ProgressChangedEventHandler errHandler,
+                                  bool forceConsoleRedirection)
         {
             Debug.Assert(null == instance);
             instance = new ConsoleRedirector(handler, forceConsoleRedirection, STD_OUTPUT_HANDLE);
@@ -42,18 +44,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
             errInstance = null;
         }
 
-        public static bool IsAttached
-        {
-            get
-            {
-                return null != instance;
-            }
-        }
+        public static bool IsAttached => null != instance;
 
         private static void ResetConsoleOutStream()
         {
             //Force console to recreate its output stream the next time Write/WriteLine is called
-            typeof(Console).GetField("_out", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic).SetValue(null, null);
+            typeof(Console).GetField("_out", BindingFlags.Static | BindingFlags.NonPublic).SetValue(null, null);
         }
 
         private volatile bool isDisposed;
@@ -103,32 +99,29 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
             worker.RunWorkerAsync(outClient);
 
             timer = new Timer(Flush, null, 500, 500);
-
         }
 
         private void WorkerDoWork(object sender, DoWorkEventArgs e)
         {
-            var backgroundWorker = (BackgroundWorker)sender;
-            var client = (TextReader)e.Argument;
+            var backgroundWorker = (BackgroundWorker) sender;
+            var client = (TextReader) e.Argument;
             try
             {
                 while (true)
                 {
-                    var read = client.Read(buffer, 0, 4096);
+                    int read = client.Read(buffer, 0, 4096);
 
                     if (read > 0)
+                    {
                         backgroundWorker.ReportProgress(0, new string(buffer, 0, read));
+                    }
                 }
             }
             catch (ObjectDisposedException)
             {
                 // Pipe was closed... terminate
-
             }
-            catch (Exception ex)
-            {
-
-            }
+            catch (Exception ex) {}
         }
 
         private void Flush(object state)
@@ -159,8 +152,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
                         timer.Dispose();
                         Flush(null);
 
-                        try { SetStdHandle(outputHandle, stdout); }
-                        catch (Exception) { }
+                        try
+                        {
+                            SetStdHandle(outputHandle, stdout);
+                        }
+                        catch (Exception) {}
+
                         outClient.Dispose();
                         outServer.Dispose();
 
@@ -168,7 +165,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
                         {
                             ResetConsoleOutStream(); //Calls to Console.Write/WriteLine will now get redirected to the original stdout stream
                         }
-
                     }
                 }
             }

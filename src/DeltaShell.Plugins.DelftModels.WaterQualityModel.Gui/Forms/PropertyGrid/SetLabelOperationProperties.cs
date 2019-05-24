@@ -15,8 +15,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
         [ResourcesDescription(typeof(GisResources), "ValueOperation_Operation_DisplayName")]
         public PointwiseOperationType Operation
         {
-            get { return data.OperationType; }
-            set { data.OperationType = value; }
+            get => data.OperationType;
+            set => data.OperationType = value;
         }
 
         [PropertyOrder(4)]
@@ -25,10 +25,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
         [ResourcesDescription(typeof(Resources), "SetLabelOperation_Label_Description")]
         public string Label
         {
-            get { return data.Label; }
+            get => data.Label;
             set
             {
-                if (string.IsNullOrWhiteSpace(value)) return;
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    return;
+                }
 
                 data.Label = value;
             }

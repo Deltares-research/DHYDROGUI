@@ -27,15 +27,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 
         public IEventedList<IFunction> Functions
         {
-            get { return functions; }
-            set { functions = value; }
+            get => functions;
+            set => functions = value;
         }
 
         public bool FireEvents { get; set; }
 
         public string Path
         {
-            get { return path; }
+            get => path;
             set
             {
                 path = value;
@@ -45,29 +45,26 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             }
         }
 
-        public IEnumerable<string> Paths { get { return new[] {Path}; } }
+        public IEnumerable<string> Paths => new[]
+        {
+            Path
+        };
 
-        public bool IsFileCritical { get { return false; } }
+        public bool IsFileCritical => false;
 
-        public bool IsOpen { get { return false; }}
+        public bool IsOpen => false;
 
         #region Unsupported properties
 
         public bool SkipChildItemEventBubbling { get; set; }
 
-        public bool SupportsPartialRemove
-        {
-            get { return false; }
-        }
+        public bool SupportsPartialRemove => false;
 
-        public IList<ITypeConverter> TypeConverters
-        {
-            get { return null; }
-        }
+        public IList<ITypeConverter> TypeConverters => null;
 
         public bool DisableCaching { get; set; }
 
-        public bool IsMultiValueFilteringSupported { get { return true; } }
+        public bool IsMultiValueFilteringSupported => true;
 
         #endregion
 
@@ -113,8 +110,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         /// <summary>
         /// Get data from the DelwaqOutputFile by using the function store.
         /// </summary>
-        /// <param name="function">Determines which parameter is needed from the delwaq output file</param>
-        /// <param name="filters">Determines which data for the parameter is filtered out </param>
+        /// <param name="function"> Determines which parameter is needed from the delwaq output file </param>
+        /// <param name="filters"> Determines which data for the parameter is filtered out </param>
         /// <returns>
         /// An IMultiDimensionalArray of double values.
         /// Which is empty in case of:
@@ -131,7 +128,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         /// </exception>
         public IMultiDimensionalArray GetVariableValues(IVariable function, params IVariableFilter[] filters)
         {
-            var type = function.ValueType;
+            Type type = function.ValueType;
             if (!HasValidMapFile)
             {
                 return CreateEmptyArrayForType(type);
@@ -142,7 +139,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                 return GetArgumentValues(function, filters);
             }
 
-            var timeVariable = function.Arguments.FirstOrDefault(a => a.ValueType == typeof(DateTime));
+            IVariable timeVariable = function.Arguments.FirstOrDefault(a => a.ValueType == typeof(DateTime));
 
             if (type != typeof(double) || timeVariable == null ||
                 filters.OfType<IVariableValueFilter>().Any(f => f.Values.Count > 1))
@@ -154,11 +151,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             {
                 return CreateEmptyArrayForType(type);
             }
-            
-            var locationIndexVariable = function.Arguments.FirstOrDefault(a => a.ValueType == typeof(int));
+
+            IVariable locationIndexVariable = function.Arguments.FirstOrDefault(a => a.ValueType == typeof(int));
 
             List<double> data = null;
-            
+
             if (locationIndexVariable != null)
             {
                 data = GetTimeDataForSpecificLocation(function, filters);
@@ -169,60 +166,64 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                 return new MultiDimentionalArrayAdapter<double>(new List<double>());
             }
 
-            UpdateMinMax(data, function.Name, (double)(function.NoDataValue ?? 0.0));
+            UpdateMinMax(data, function.Name, (double) (function.NoDataValue ?? 0.0));
             return new MultiDimentionalArrayAdapter<double>(data);
         }
 
         public IMultiDimensionalArray<T> GetVariableValues<T>(IVariable function, params IVariableFilter[] filters)
         {
-            return (IMultiDimensionalArray<T>)GetVariableValues(function, filters);
+            return (IMultiDimensionalArray<T>) GetVariableValues(function, filters);
         }
 
         private MultiDimentionalArrayAdapter<DateTime> GetArgumentValues(IVariable function, IVariableFilter[] filters)
         {
-            var argumentTimeFilter = filters.OfType<VariableValueFilter<DateTime>>().FirstOrDefault();
+            VariableValueFilter<DateTime> argumentTimeFilter =
+                filters.OfType<VariableValueFilter<DateTime>>().FirstOrDefault();
             if (function.ValueType == typeof(DateTime))
             {
                 return new MultiDimentionalArrayAdapter<DateTime>(argumentTimeFilter == null
-                    ? MetaData.Times
-                    : argumentTimeFilter.Values);
+                                                                      ? MetaData.Times
+                                                                      : argumentTimeFilter.Values);
             }
+
             throw new NotImplementedException();
         }
 
         private List<double> GetTimeDataForSpecificLocation(IVariable function, IVariableFilter[] filters)
         {
-            var locationFilter = filters.OfType<VariableValueFilter<int>>().FirstOrDefault();
-            var timeFilter = filters.OfType<VariableValueFilter<DateTime>>()
-                .FirstOrDefault();
+            VariableValueFilter<int> locationFilter = filters.OfType<VariableValueFilter<int>>().FirstOrDefault();
+            VariableValueFilter<DateTime> timeFilter = filters.OfType<VariableValueFilter<DateTime>>()
+                                                              .FirstOrDefault();
 
             if (locationFilter == null && timeFilter == null)
             {
                 throw new NotImplementedException();
             }
-            
-            var locationIndex = locationFilter != null ? locationFilter.Values[0] : -1;
-            var timeIndex = timeFilter != null ? MetaData.Times.IndexOf(timeFilter.Values[0]) : -1;
 
-            var data = timeIndex != -1
-                ? DelwaqMapFileReader.GetTimeStepData(path, MetaData, timeIndex, function.Name, locationIndex)
-                : DelwaqMapFileReader.GetTimeSeriesData(path, MetaData, function.Name, locationIndex);
+            int locationIndex = locationFilter != null ? locationFilter.Values[0] : -1;
+            int timeIndex = timeFilter != null ? MetaData.Times.IndexOf(timeFilter.Values[0]) : -1;
+
+            List<double> data = timeIndex != -1
+                                    ? DelwaqMapFileReader.GetTimeStepData(
+                                        path, MetaData, timeIndex, function.Name, locationIndex)
+                                    : DelwaqMapFileReader.GetTimeSeriesData(
+                                        path, MetaData, function.Name, locationIndex);
 
             return data;
         }
 
         public T GetMaxValue<T>(IVariable variable)
         {
-            if (typeof (T) == typeof (double))
+            if (typeof(T) == typeof(double))
             {
-                var maxValue = maxValues.ContainsKey(variable.Name) ? maxValues[variable.Name] :double.MaxValue;
-                return (T)Convert.ChangeType(maxValue, typeof(T));
+                double maxValue = maxValues.ContainsKey(variable.Name) ? maxValues[variable.Name] : double.MaxValue;
+                return (T) Convert.ChangeType(maxValue, typeof(T));
             }
 
             if (typeof(T) == typeof(DateTime))
             {
-                var maxDateTime = MetaData.Times.Count == 0 ? MetaData.Times[0] : MetaData.Times.Last();
-                return (T)Convert.ChangeType(maxDateTime, typeof(T));
+                DateTime maxDateTime = MetaData.Times.Count == 0 ? MetaData.Times[0] : MetaData.Times.Last();
+                return (T) Convert.ChangeType(maxDateTime, typeof(T));
             }
 
             throw new NotSupportedException("Map file only contains doubles or datetime values");
@@ -232,13 +233,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         {
             if (typeof(T) == typeof(double))
             {
-                var minValue = minValues.ContainsKey(variable.Name) ? minValues[variable.Name] : double.MinValue;
-                return (T)Convert.ChangeType(minValue, typeof(T));
+                double minValue = minValues.ContainsKey(variable.Name) ? minValues[variable.Name] : double.MinValue;
+                return (T) Convert.ChangeType(minValue, typeof(T));
             }
 
             if (typeof(T) == typeof(DateTime))
             {
-                return (T)Convert.ChangeType(MetaData.Times[0], typeof(T));
+                return (T) Convert.ChangeType(MetaData.Times[0], typeof(T));
             }
 
             throw new NotSupportedException("Map file only contains doubles or datetime values");
@@ -250,15 +251,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             Path = path;
         }
 
-        public void Close()
-        {
+        public void Close() {}
 
-        }
-
-        public void Open(string path)
-        {
-
-        }
+        public void Open(string path) {}
 
         public void CopyTo(string destinationPath)
         {
@@ -292,20 +287,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 
         public event NotifyCollectionChangedEventHandler CollectionChanged;
 
-        private bool HasValidMapFile
-        {
-            get { return !string.IsNullOrEmpty(path) && MetaData != null; }
-        }
+        private bool HasValidMapFile => !string.IsNullOrEmpty(path) && MetaData != null;
 
-        private MapFileMetaData MetaData
-        {
-            get { return metaData ?? DelwaqMapFileReader.ReadMetaData(path); }
-        }
+        private MapFileMetaData MetaData => metaData ?? DelwaqMapFileReader.ReadMetaData(path);
 
         private static IMultiDimensionalArray CreateEmptyArrayForType(Type type)
         {
-            var listType = typeof(List<>).MakeGenericType(type);
-            var mda = typeof (MultiDimentionalArrayAdapter<>).MakeGenericType(type);
+            Type listType = typeof(List<>).MakeGenericType(type);
+            Type mda = typeof(MultiDimentionalArrayAdapter<>).MakeGenericType(type);
             return (IMultiDimensionalArray) Activator.CreateInstance(mda, Activator.CreateInstance(listType));
         }
 
@@ -314,9 +303,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             double? min = null;
             double? max = null;
 
-            foreach (var value in timeStepData)
+            foreach (double value in timeStepData)
             {
-                if (Equals(value, noDataValue)) continue;
+                if (Equals(value, noDataValue))
+                {
+                    continue;
+                }
 
                 if (min == null || min.Value > value)
                 {
@@ -332,7 +324,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             if (min != null && (!minValues.ContainsKey(name) || minValues[name] > min.Value))
             {
                 minValues[name] = min.Value;
-                FireFunctionValuesChanged(null,new FunctionValuesChangingEventArgs());
+                FireFunctionValuesChanged(null, new FunctionValuesChangingEventArgs());
             }
 
             if (max != null && (!maxValues.ContainsKey(name) || maxValues[name] < max.Value))
@@ -341,28 +333,44 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                 FireFunctionValuesChanged(null, new FunctionValuesChangingEventArgs());
             }
         }
-        
+
         private void FireCollectionChanging(object sender, NotifyCollectionChangingEventArgs e)
         {
-            if (CollectionChanging == null) return;
+            if (CollectionChanging == null)
+            {
+                return;
+            }
+
             CollectionChanging(sender, e);
         }
 
         private void FireCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            if (CollectionChanged == null) return;
+            if (CollectionChanged == null)
+            {
+                return;
+            }
+
             CollectionChanged(sender, e);
         }
 
         private void FireFunctionValuesChanged(object sender, FunctionValuesChangingEventArgs e)
         {
-            if (FunctionValuesChanged == null) return;
+            if (FunctionValuesChanged == null)
+            {
+                return;
+            }
+
             FunctionValuesChanged(sender, e);
         }
 
         private void FireFunctionValuesChanging(object sender, FunctionValuesChangingEventArgs e)
         {
-            if (FunctionValuesChanging == null) return;
+            if (FunctionValuesChanging == null)
+            {
+                return;
+            }
+
             FunctionValuesChanging(sender, e);
         }
     }

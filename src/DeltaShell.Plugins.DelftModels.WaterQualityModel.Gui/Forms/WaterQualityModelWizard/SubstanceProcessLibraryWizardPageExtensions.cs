@@ -8,43 +8,58 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.WaterQualit
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(SubstanceProcessLibraryWizardPageExtensions));
 
-        public static void SetProcessFilesToModel(this SubstanceProcessLibraryWizardPage substanceProcessLibraryWizardPage, SubstanceProcessLibrary substanceProcessLibrary)
+        public static void SetProcessFilesToModel(
+            this SubstanceProcessLibraryWizardPage substanceProcessLibraryWizardPage,
+            SubstanceProcessLibrary substanceProcessLibrary)
         {
             switch (substanceProcessLibraryWizardPage.SubFileProcessType)
             {
                 case WaterQualityProcessType.Sobek:
+                {
+                    substanceProcessLibrary.ProcessDllFilePath = "";
+                    substanceProcessLibrary.ProcessDefinitionFilesPath =
+                        SubstanceProcessLibrary.DefaultSobekProcessDefinitionFilesPath;
+
+                    break;
+                }
+                case WaterQualityProcessType.Duflow:
+                {
+                    substanceProcessLibrary.ProcessDllFilePath =
+                        SubstanceProcessLibrary.DefaultDuflowProcessDllFilePath;
+                    substanceProcessLibrary.ProcessDefinitionFilesPath =
+                        SubstanceProcessLibrary.DefaultDuflowProcessDefinitionFilesPath;
+
+                    break;
+                }
+                case WaterQualityProcessType.Custom:
+                {
+                    if (substanceProcessLibraryWizardPage.UsingCustomProcessFiles)
+                    {
+                        substanceProcessLibrary.ProcessDllFilePath =
+                            substanceProcessLibraryWizardPage.CustomProcessDllFilePath;
+                        substanceProcessLibrary.ProcessDefinitionFilesPath =
+                            substanceProcessLibraryWizardPage.CustomProcessDefinitionFilesPath;
+                    }
+                    else
                     {
                         substanceProcessLibrary.ProcessDllFilePath = "";
-                        substanceProcessLibrary.ProcessDefinitionFilesPath = SubstanceProcessLibrary.DefaultSobekProcessDefinitionFilesPath;
-
-                        break;
+                        substanceProcessLibrary.ProcessDefinitionFilesPath =
+                            SubstanceProcessLibrary.DefaultSobekProcessDefinitionFilesPath;
                     }
-                case WaterQualityProcessType.Duflow:
-                    {
-                        substanceProcessLibrary.ProcessDllFilePath = SubstanceProcessLibrary.DefaultDuflowProcessDllFilePath;
-                        substanceProcessLibrary.ProcessDefinitionFilesPath = SubstanceProcessLibrary.DefaultDuflowProcessDefinitionFilesPath;
 
-                        break;
-                    }
-                case WaterQualityProcessType.Custom:
-                    {
-                        if (substanceProcessLibraryWizardPage.UsingCustomProcessFiles)
-                        {
-                            substanceProcessLibrary.ProcessDllFilePath = substanceProcessLibraryWizardPage.CustomProcessDllFilePath;
-                            substanceProcessLibrary.ProcessDefinitionFilesPath = substanceProcessLibraryWizardPage.CustomProcessDefinitionFilesPath;
-                        }
-                        else
-                        {
-                            substanceProcessLibrary.ProcessDllFilePath = "";
-                            substanceProcessLibrary.ProcessDefinitionFilesPath = SubstanceProcessLibrary.DefaultSobekProcessDefinitionFilesPath;
-                        }
-
-                        break;
-                    }
+                    break;
+                }
             }
 
-            Log.InfoFormat(Resources.SubstanceProcessLibraryWizardPageExtensions_The_process_definition_files_path_is_set_to_0_, string.IsNullOrEmpty(substanceProcessLibrary.ProcessDefinitionFilesPath) ? Resources.SubstanceProcessLibraryWizardPageExtentsions_Empty_ : substanceProcessLibrary.ProcessDefinitionFilesPath);
-            Log.InfoFormat(Resources.SubstanceProcessLibraryWizardPageExtensions_The_process_dll_file_path_is_set_to_0_, string.IsNullOrEmpty(substanceProcessLibrary.ProcessDllFilePath) ? Resources.SubstanceProcessLibraryWizardPageExtentsions_Empty_ : substanceProcessLibrary.ProcessDllFilePath);
+            Log.InfoFormat(
+                Resources.SubstanceProcessLibraryWizardPageExtensions_The_process_definition_files_path_is_set_to_0_,
+                string.IsNullOrEmpty(substanceProcessLibrary.ProcessDefinitionFilesPath)
+                    ? Resources.SubstanceProcessLibraryWizardPageExtentsions_Empty_
+                    : substanceProcessLibrary.ProcessDefinitionFilesPath);
+            Log.InfoFormat(Resources.SubstanceProcessLibraryWizardPageExtensions_The_process_dll_file_path_is_set_to_0_,
+                           string.IsNullOrEmpty(substanceProcessLibrary.ProcessDllFilePath)
+                               ? Resources.SubstanceProcessLibraryWizardPageExtentsions_Empty_
+                               : substanceProcessLibrary.ProcessDllFilePath);
         }
     }
 }

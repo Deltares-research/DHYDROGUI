@@ -15,8 +15,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model
     {
         [Description("Gram")]
         Gram,
+
         [Description("Gram per square meter")]
         GramPerSquareMeter,
+
         [Description("Gram per cubic meter")]
         GramPerCubicMeter
     }

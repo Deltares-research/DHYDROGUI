@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using DelftTools.Functions;
+using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
+using DeltaShell.Plugins.FMSuite.Common.Gui.Properties;
 using DeltaShell.Plugins.FMSuite.Common.Layers;
 using DeltaShell.Plugins.FMSuite.Wave.IO;
 using DeltaShell.Plugins.FMSuite.Wave.Layers;
@@ -32,17 +35,21 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
         public const string ObservationCrossSectionLayerName = "Observation Cross-Sections";
         public const string GridSnappedFeaturesLayerName = "Estimated Grid-snapped features";
 
-        private static readonly string ModelName = typeof (WaveModel).Name;
+        private static readonly string ModelName = typeof(WaveModel).Name;
 
-        private static readonly Bitmap coordinateBasedBoundaryIcon = Common.Gui.Properties.Resources.boundary;
+        private static readonly Bitmap coordinateBasedBoundaryIcon = Resources.boundary;
         private static readonly Bitmap obstacleDataIcon = Properties.Resources.wall_brick;
-        
+
         public ILayer CreateLayer(object data, object parent)
         {
             var waveModel = data as WaveModel;
             if (waveModel != null)
             {
-                return new ModelGroupLayer { Name = waveModel.Name, Model = waveModel };
+                return new ModelGroupLayer
+                {
+                    Name = waveModel.Name,
+                    Model = waveModel
+                };
             }
 
             var domain = data as WaveDomainData;
@@ -68,7 +75,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                 }
                 else
                 {
-                    var ownerWaveModel = GetWaveModels?.Invoke().FirstOrDefault(w => w.GetAllItemsRecursive().Contains(discreteGrid));
+                    WaveModel ownerWaveModel = GetWaveModels
+                                               ?.Invoke().FirstOrDefault(
+                                                   w => w.GetAllItemsRecursive().Contains(discreteGrid));
                     coordinateSystem = ownerWaveModel == null ? null : ownerWaveModel.CoordinateSystem;
                 }
 
@@ -79,23 +88,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                         Name = discreteGrid.Name,
                         CurviLinearGrid = discreteGrid,
                         OptimizeRendering = discreteGrid.X.Values.Count > 50000,
-                        DataSource = new WaveGridBasedDataSource(discreteGrid)
-                        {
-                            CoordinateSystem = coordinateSystem
-                        },
+                        DataSource = new WaveGridBasedDataSource(discreteGrid) {CoordinateSystem = coordinateSystem},
                         ReadOnly = true // to exclude from spatial editor
                     };
                 }
+
                 return new CurvilinearVertexCoverageLayer
                 {
                     Name = discreteGrid.Name,
                     Coverage = discreteGrid,
                     Visible = false,
                     OptimizeRendering = discreteGrid.X.Values.Count > 30000,
-                    DataSource = new WaveGridBasedDataSource(discreteGrid)
-                    {
-                        CoordinateSystem = coordinateSystem
-                    }
+                    DataSource = new WaveGridBasedDataSource(discreteGrid) {CoordinateSystem = coordinateSystem}
                 };
             }
 
@@ -105,67 +109,84 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                 if (Equals(features, model.Boundaries))
                 {
                     return new VectorLayer(BoundaryLayerName)
-                        {
-                            DataSource =
-                                new Feature2DCollection().Init(model.Boundaries, "Boundary", ModelName, model.CoordinateSystem, model.GetGridSnappedBoundary),
-                            FeatureEditor = new Feature2DEditor(model),
-                            Style = WaveModelLayerStyles.BoundaryStyle,
-                            NameIsReadOnly = true,
-                            Selectable = !model.BoundaryIsDefinedBySpecFile
-                        };
+                    {
+                        DataSource =
+                            new Feature2DCollection().Init(model.Boundaries, "Boundary", ModelName,
+                                                           model.CoordinateSystem, model.GetGridSnappedBoundary),
+                        FeatureEditor = new Feature2DEditor(model),
+                        Style = WaveModelLayerStyles.BoundaryStyle,
+                        NameIsReadOnly = true,
+                        Selectable = !model.BoundaryIsDefinedBySpecFile
+                    };
                 }
+
                 if (Equals(features, model.Obstacles))
                 {
                     return new VectorLayer(ObstacleLayerName)
                     {
-                        DataSource = new Feature2DCollection().Init(model.Obstacles, "Obstacle", ModelName, model.CoordinateSystem),
+                        DataSource =
+                            new Feature2DCollection().Init(model.Obstacles, "Obstacle", ModelName,
+                                                           model.CoordinateSystem),
                         FeatureEditor = new Feature2DEditor(model),
-                        Style = new VectorStyle { Line = new Pen(Color.Red, 3f), GeometryType = typeof(ILineString) },
+                        Style = new VectorStyle
+                        {
+                            Line = new Pen(Color.Red, 3f),
+                            GeometryType = typeof(ILineString)
+                        },
                         NameIsReadOnly = true
                     };
                 }
+
                 if (Equals(features, model.Sp2Boundaries))
                 {
                     return new VectorLayer("Boundary from sp2")
                     {
-                        DataSource = new Feature2DCollection().Init(model.Sp2Boundaries, "Sp2Boundary", ModelName, model.CoordinateSystem),
-                        Style = new VectorStyle { Line = new Pen(Color.DarkOrange, 3f), GeometryType = typeof(ILineString) },
+                        DataSource =
+                            new Feature2DCollection().Init(model.Sp2Boundaries, "Sp2Boundary", ModelName,
+                                                           model.CoordinateSystem),
+                        Style = new VectorStyle
+                        {
+                            Line = new Pen(Color.DarkOrange, 3f),
+                            GeometryType = typeof(ILineString)
+                        },
                         NameIsReadOnly = true,
                         Selectable = false
                     };
                 }
+
                 if (Equals(features, model.ObservationCrossSections))
                 {
                     return new VectorLayer(ObservationCrossSectionLayerName)
-                        {
-                            DataSource =
-                                new Feature2DCollection().Init(model.ObservationCrossSections, "CrS",
-                                                               ModelName, model.CoordinateSystem),
-                            FeatureEditor = new Feature2DEditor(model),
-                            Style =
-                                new VectorStyle
-                                    {
-                                        Line = new Pen(Color.LightSteelBlue, 3f),
-                                        GeometryType = typeof (ILineString)
-                                    },
-                            NameIsReadOnly = true
-                        };
+                    {
+                        DataSource =
+                            new Feature2DCollection().Init(model.ObservationCrossSections, "CrS",
+                                                           ModelName, model.CoordinateSystem),
+                        FeatureEditor = new Feature2DEditor(model),
+                        Style =
+                            new VectorStyle
+                            {
+                                Line = new Pen(Color.LightSteelBlue, 3f),
+                                GeometryType = typeof(ILineString)
+                            },
+                        NameIsReadOnly = true
+                    };
                 }
+
                 if (Equals(features, model.ObservationPoints))
                 {
                     return new VectorLayer(ObservationPointLayerName)
+                    {
+                        NameIsReadOnly = true,
+                        FeatureEditor = new Feature2DEditor(model),
+                        Style = new VectorStyle
                         {
-                            NameIsReadOnly = true,
-                            FeatureEditor = new Feature2DEditor(model),
-                            Style = new VectorStyle
-                                {
-                                    GeometryType = typeof (IPoint),
-                                    Symbol = Common.Gui.Properties.Resources.Observation
-                                },
-                            DataSource =
-                                new Feature2DCollection().Init(model.ObservationPoints, "ObservationPoints", ModelName,
-                                                               model.CoordinateSystem)
-                        };
+                            GeometryType = typeof(IPoint),
+                            Symbol = Resources.Observation
+                        },
+                        DataSource =
+                            new Feature2DCollection().Init(model.ObservationPoints, "ObservationPoints", ModelName,
+                                                           model.CoordinateSystem)
+                    };
                 }
             }
 
@@ -173,11 +194,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             if (boundaryConditions != null && model != null)
             {
                 return new VectorLayer(BoundaryConditionLayerName)
+                {
+                    DataSource =
+                        new Feature2DCollection().Init(boundaryConditions, "BoundaryCondition", ModelName,
+                                                       model.CoordinateSystem),
+                    Style = new VectorStyle
                     {
-                        DataSource = new Feature2DCollection().Init(boundaryConditions, "BoundaryCondition", ModelName, model.CoordinateSystem),
-                        Style = new VectorStyle { Symbol = coordinateBasedBoundaryIcon, GeometryType = typeof(IPoint) },
-                        NameIsReadOnly = true
-                    };
+                        Symbol = coordinateBasedBoundaryIcon,
+                        GeometryType = typeof(IPoint)
+                    },
+                    NameIsReadOnly = true
+                };
             }
 
             var obstacleData = data as IEventedList<WaveObstacle>;
@@ -185,8 +212,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             {
                 return new VectorLayer(ObstacleDataLayerName)
                 {
-                    DataSource = new Feature2DCollection().Init(obstacleData, "WaveObstacleData", ModelName, model.CoordinateSystem),
-                    Style = new VectorStyle{Symbol = obstacleDataIcon, GeometryType = typeof(IPoint)},
+                    DataSource =
+                        new Feature2DCollection().Init(obstacleData, "WaveObstacleData", ModelName,
+                                                       model.CoordinateSystem),
+                    Style = new VectorStyle
+                    {
+                        Symbol = obstacleDataIcon,
+                        GeometryType = typeof(IPoint)
+                    },
                     NameIsReadOnly = true
                 };
             }
@@ -195,17 +228,22 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             if (snappedGroupLayerData != null)
             {
                 var groupLayer = new GroupLayer(GridSnappedFeaturesLayerName);
-                foreach (var snappedFeatures in snappedGroupLayerData.ChildData)
+                foreach (FeatureCollection snappedFeatures in snappedGroupLayerData.ChildData)
                 {
                     var vectorLayer = new VectorLayer("Boundaries")
+                    {
+                        DataSource = snappedFeatures,
+                        NameIsReadOnly = true,
+                        Selectable = false,
+                        Style = new VectorStyle
                         {
-                            DataSource = snappedFeatures,
-                            NameIsReadOnly = true,
-                            Selectable = false,
-                            Style = new VectorStyle { Fill = Brushes.Gray, GeometryType = typeof(IPoint) }
-                        };
+                            Fill = Brushes.Gray,
+                            GeometryType = typeof(IPoint)
+                        }
+                    };
                     groupLayer.Layers.Add(vectorLayer);
                 }
+
                 return groupLayer;
             }
 
@@ -214,21 +252,21 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             {
                 if (model != null)
                 {
-                    var dataItem = model.GetDataItemByValue(wavmFileFunctionStore);
+                    IDataItem dataItem = model.GetDataItemByValue(wavmFileFunctionStore);
                     if (dataItem.Tag.StartsWith(WaveModel.WavmStoreDataItemTag))
                     {
-                        var domainName = string.Join(" ",
-                            new string(dataItem.Tag.Skip(WaveModel.WavmStoreDataItemTag.Count()).ToArray()), "WAVM");
+                        string domainName = string.Join(" ",
+                                                        new string(
+                                                            dataItem.Tag.Skip(WaveModel.WavmStoreDataItemTag.Count())
+                                                                    .ToArray()), "WAVM");
                         return new GroupLayer("Output (" + domainName + ")")
                         {
                             LayersReadOnly = true,
                         };
                     }
                 }
-                return new GroupLayer(wavmFileFunctionStore.Path)
-                {
-                    LayersReadOnly = true
-                };
+
+                return new GroupLayer(wavmFileFunctionStore.Path) {LayersReadOnly = true};
             }
 
             return null;
@@ -236,16 +274,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
 
         public bool CanCreateLayerFor(object data, object parentData)
         {
-            return data is WaveModel 
-                || data is WaveDomainData
-                || data is IDiscreteGridPointCoverage
-                || data is IEventedList<WaveObstacle>
-                || data is IEventedList<Feature2D>
-                || data is IEventedList<Feature2DPoint>
-                || data is IEventedList<WaveBoundaryCondition>
-                || data is WaveSnappedFeaturesGroupLayerData
-                || data is WavmFileFunctionStore
-                || data is CurvilinearCoverage;
+            return data is WaveModel
+                   || data is WaveDomainData
+                   || data is IDiscreteGridPointCoverage
+                   || data is IEventedList<WaveObstacle>
+                   || data is IEventedList<Feature2D>
+                   || data is IEventedList<Feature2DPoint>
+                   || data is IEventedList<WaveBoundaryCondition>
+                   || data is WaveSnappedFeaturesGroupLayerData
+                   || data is WavmFileFunctionStore
+                   || data is CurvilinearCoverage;
         }
 
         public IEnumerable<object> ChildLayerObjects(object data)
@@ -260,13 +298,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                 yield return model.Obstacles;
                 yield return model.ObservationPoints;
                 yield return model.ObservationCrossSections;
-                foreach (var waveDomain in WaveDomainHelper.GetAllDomains(model.OuterDomain))
+                foreach (WaveDomainData waveDomain in WaveDomainHelper.GetAllDomains(model.OuterDomain))
                 {
                     yield return waveDomain;
                 }
+
                 foreach (
-                    var wavmFunctionStore in
-                        model.WavmFunctionStores.Where(fs => fs.Functions.Any() && !string.IsNullOrEmpty(fs.Path)))
+                    WavmFileFunctionStore wavmFunctionStore in
+                    model.WavmFunctionStores.Where(fs => fs.Functions.Any() && !string.IsNullOrEmpty(fs.Path)))
                 {
                     yield return wavmFunctionStore;
                 }
@@ -282,13 +321,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             var store = data as WavmFileFunctionStore;
             if (store != null)
             {
-                var waveModel = GetWaveModels?.Invoke().FirstOrDefault(m => m.WavmFunctionStores.Contains(store));
+                WaveModel waveModel = GetWaveModels?.Invoke().FirstOrDefault(m => m.WavmFunctionStores.Contains(store));
                 if (waveModel == null)
                 {
                     yield return store.Grid;
                 }
-                foreach (var coverage in store.Functions)
+
+                foreach (IFunction coverage in store.Functions)
+                {
                     yield return coverage;
+                }
             }
         }
 

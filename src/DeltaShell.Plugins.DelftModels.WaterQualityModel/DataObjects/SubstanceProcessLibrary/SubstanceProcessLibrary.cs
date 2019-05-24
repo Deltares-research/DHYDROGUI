@@ -16,22 +16,25 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Substance
     [Entity]
     public class SubstanceProcessLibrary : Unique<long>, INameable, ICloneable
     {
-        public static readonly string DefaultSobekProcessDefinitionFilesPath = Path.Combine(DelwaqFileStructureHelper.GetDelwaqKernelMainFolderPath(), "default", "proc_def");
-        public static readonly string DefaultDuflowProcessDefinitionFilesPath = Path.Combine(DelwaqFileStructureHelper.GetDelwaqDataFolderPath(), "default", "proc_def_duflow");
-        public static readonly string DefaultDuflowProcessDllFilePath = Path.Combine(DelwaqFileStructureHelper.GetDelwaqKernelPluginFolderPath(), "x64", "duflow.dll");
+        public static readonly string DefaultSobekProcessDefinitionFilesPath =
+            Path.Combine(DelwaqFileStructureHelper.GetDelwaqKernelMainFolderPath(), "default", "proc_def");
+
+        public static readonly string DefaultDuflowProcessDefinitionFilesPath =
+            Path.Combine(DelwaqFileStructureHelper.GetDelwaqDataFolderPath(), "default", "proc_def_duflow");
+
+        public static readonly string DefaultDuflowProcessDllFilePath =
+            Path.Combine(DelwaqFileStructureHelper.GetDelwaqKernelPluginFolderPath(), "x64", "duflow.dll");
 
         /// <summary>
         /// Creates a substance process library without substances
         /// </summary>
-        public SubstanceProcessLibrary() : this(null)
-        {
-
-        }
+        public SubstanceProcessLibrary() : this(null) {}
 
         /// <summary>
-        /// Creates a substance process library with <param name="substances"/>
+        /// Creates a substance process library with
+        /// <param name="substances" />
         /// </summary>
-        /// <param name="substances">The substances of the substance process library</param>
+        /// <param name="substances"> The substances of the substance process library </param>
         public SubstanceProcessLibrary(IEventedList<WaterQualitySubstance> substances)
         {
             Substances = substances ?? new EventedList<WaterQualitySubstance>();
@@ -57,7 +60,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Substance
         /// </summary>
         public IEnumerable<WaterQualitySubstance> ActiveSubstances
         {
-            get { return Substances.Where(s => s.Active); }
+            get
+            {
+                return Substances.Where(s => s.Active);
+            }
         }
 
         /// <summary>
@@ -65,7 +71,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Substance
         /// </summary>
         public IEnumerable<WaterQualitySubstance> InActiveSubstances
         {
-            get { return Substances.Where(s => !s.Active); }
+            get
+            {
+                return Substances.Where(s => !s.Active);
+            }
         }
 
         /// <summary>
@@ -89,7 +98,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Substance
         public string ProcessDllFilePath { get; set; }
 
         /// <summary>
-        /// The path to the process definition files that are used (according to the selected process type); without *.dat/*.def extension
+        /// The path to the process definition files that are used (according to the selected process type); without *.dat/*.def
+        /// extension
         /// </summary>
         public string ProcessDefinitionFilesPath { get; set; }
 
@@ -99,17 +109,21 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Substance
         {
             var libraryString = "";
 
-            libraryString += Substances.Aggregate("Substances\n", (current, substance) => current + substance.Name + "\n");
+            libraryString +=
+                Substances.Aggregate("Substances\n", (current, substance) => current + substance.Name + "\n");
             libraryString += Processes.Aggregate("\nProcesses\n", (current, process) => current + process.Name + "\n");
-            libraryString += Parameters.Aggregate("\nParameters\n", (current, process) => current + process.Name + "\n");
-            libraryString += OutputParameters.Aggregate("\nOutput parameters\n", (current, process) => current + process.Name + "\n");                
-            
+            libraryString +=
+                Parameters.Aggregate("\nParameters\n", (current, process) => current + process.Name + "\n");
+            libraryString +=
+                OutputParameters.Aggregate("\nOutput parameters\n",
+                                           (current, process) => current + process.Name + "\n");
+
             return libraryString;
         }
 
         public object Clone()
         {
-            var clone = new SubstanceProcessLibrary { Name = Name };
+            var clone = new SubstanceProcessLibrary {Name = Name};
 
             clone.Substances.AddRange(Substances.Select(s => (WaterQualitySubstance) s.Clone()));
             clone.Parameters.AddRange(Parameters.Select(p => (WaterQualityParameter) p.Clone()));

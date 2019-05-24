@@ -2,7 +2,6 @@
 using System.ComponentModel;
 using System.Windows.Forms;
 using DelftTools.Utils;
-using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor
@@ -21,28 +20,30 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor
             openFileDialog1.Title = "Select spectrum file ...";
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                var filePath = openFileDialog1.FileName;
+                string filePath = openFileDialog1.FileName;
                 data.SpectrumFiles[selectedPointIndex] = ImportIntoDirectory(filePath);
                 UpdatePanel();
             }
         }
 
-        public Func<string, string> ImportIntoDirectory { private get; set; } 
+        public Func<string, string> ImportIntoDirectory { private get; set; }
 
         private WaveBoundaryCondition data;
+
         public WaveBoundaryCondition Data
         {
-            get { return data; }
+            get => data;
             set
             {
                 if (data != null)
                 {
-                    ((INotifyPropertyChange)data).PropertyChanged -= OnBoundaryConditionPropertyChanged;
+                    ((INotifyPropertyChange) data).PropertyChanged -= OnBoundaryConditionPropertyChanged;
                 }
+
                 data = value;
                 if (data != null)
                 {
-                    ((INotifyPropertyChange)data).PropertyChanged += OnBoundaryConditionPropertyChanged;
+                    ((INotifyPropertyChange) data).PropertyChanged += OnBoundaryConditionPropertyChanged;
                 }
 
                 UpdatePanel();
@@ -54,18 +55,26 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor
         private void OnBoundaryConditionPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             var bc = sender as WaveBoundaryCondition;
-            if (bc == null) return;
-            if (bc.IsEditing) return;
+            if (bc == null)
+            {
+                return;
+            }
+
+            if (bc.IsEditing)
+            {
+                return;
+            }
 
             UpdatePanel();
         }
 
         private int selectedPointIndex;
+
         public int SelectedPointIndex
         {
-            get { return selectedPointIndex; }
-            set 
-            { 
+            get => selectedPointIndex;
+            set
+            {
                 selectedPointIndex = value;
                 UpdatePanel();
             }
@@ -73,8 +82,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor
 
         private void UpdatePanel()
         {
-            if (data == null) return;
-            if (data.DataType != BoundaryConditionDataType.SpectrumFromFile) return;
+            if (data == null)
+            {
+                return;
+            }
+
+            if (data.DataType != BoundaryConditionDataType.SpectrumFromFile)
+            {
+                return;
+            }
 
             if (data.DataPointIndices.Contains(selectedPointIndex))
             {

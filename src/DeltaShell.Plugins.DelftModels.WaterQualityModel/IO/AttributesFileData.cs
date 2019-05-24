@@ -14,11 +14,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         {
             if (nrOfSegmentsPerLayer <= 0)
             {
-                throw new ArgumentOutOfRangeException("nrOfSegmentsPerLayer", "Cannot create attribute file data without segments.");
+                throw new ArgumentOutOfRangeException("nrOfSegmentsPerLayer",
+                                                      "Cannot create attribute file data without segments.");
             }
+
             if (nrOfLayers <= 0)
             {
-                throw new ArgumentOutOfRangeException("nrOfLayers", "Cannot create attribute file data without layers.");
+                throw new ArgumentOutOfRangeException("nrOfLayers",
+                                                      "Cannot create attribute file data without layers.");
             }
 
             IndexCount = nrOfSegmentsPerLayer * nrOfLayers;
@@ -33,13 +36,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         /// <summary>
         /// Determines whether a segment of a specific index is active or not.
         /// </summary>
-        /// <param name="segmentIndex">Index of the segment.</param>
+        /// <param name="segmentIndex"> Index of the segment. </param>
         public bool IsSegmentActive(int segmentIndex)
         {
             int arrayIndex = segmentIndex - 1;
             if (arrayIndex >= segmentEnabledData.Count)
             {
-                var message = string.Format("Segment index is out of range (count = {0}).", segmentEnabledData.Count);
+                string message = string.Format("Segment index is out of range (count = {0}).",
+                                               segmentEnabledData.Count);
                 throw new ArgumentOutOfRangeException("segmentIndex", segmentIndex, message);
             }
 
@@ -49,14 +53,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         /// <summary>
         /// Sets the enabledness state for a particular segment with the given index.
         /// </summary>
-        /// <param name="segmentIndex">Index of the segment.</param>
-        /// <param name="boolean">True if the segment is enabled, false if not.</param>
+        /// <param name="segmentIndex"> Index of the segment. </param>
+        /// <param name="boolean"> True if the segment is enabled, false if not. </param>
         public void SetSegmentActive(int segmentIndex, bool boolean)
         {
             int arrayIndex = segmentIndex - 1;
             if (arrayIndex >= segmentEnabledData.Count)
             {
-                var message = string.Format("Segment index is out of range (count = {0}).", segmentEnabledData.Count);
+                string message = string.Format("Segment index is out of range (count = {0}).",
+                                               segmentEnabledData.Count);
                 throw new ArgumentOutOfRangeException("segmentIndex", segmentIndex, message);
             }
 

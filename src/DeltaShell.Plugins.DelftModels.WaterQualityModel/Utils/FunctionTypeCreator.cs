@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-
 using DelftTools.Functions;
 using DelftTools.Utils.Editing;
 
@@ -25,20 +24,24 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils
         /// <summary>
         /// Creates a function type creator
         /// </summary>
-        /// <param name="name">The name of the function type creator</param>
-        /// <param name="checkFunction">The function to check the type of function arguments</param>
-        /// <param name="transformFunction">The function to transform function arguments</param>
-        /// <param name="getDefaultValueFunction">The function to get the default value of function arguments</param>
-        /// <param name="setDefaultValueFunction">The function to set the default value of function arguments</param>
-        /// <param name="getUnitFunction">The function to get the unit of function arguments</param>
-        /// <param name="setUnitFunction">The function to set the unit of function arguments</param>
-        /// <param name="isAllowedFunction">The function to determine if the creator can be
-        /// used for a given function or not.</param>
-        public FunctionTypeCreator(string name, Func<IFunction, bool> checkFunction, Func<IFunction, IFunction> transformFunction, 
-            Func<IFunction, double> getDefaultValueFunction, Action<IFunction, double> setDefaultValueFunction,
-            Func<IFunction, string> getUnitFunction, Action<IFunction, string> setUnitFunction,
-            Func<IFunction, string> getUrlFunction, Action<IFunction, string> setUrlFunction,
-            Func<IFunction, bool> isAllowedFunction)
+        /// <param name="name"> The name of the function type creator </param>
+        /// <param name="checkFunction"> The function to check the type of function arguments </param>
+        /// <param name="transformFunction"> The function to transform function arguments </param>
+        /// <param name="getDefaultValueFunction"> The function to get the default value of function arguments </param>
+        /// <param name="setDefaultValueFunction"> The function to set the default value of function arguments </param>
+        /// <param name="getUnitFunction"> The function to get the unit of function arguments </param>
+        /// <param name="setUnitFunction"> The function to set the unit of function arguments </param>
+        /// <param name="isAllowedFunction">
+        /// The function to determine if the creator can be
+        /// used for a given function or not.
+        /// </param>
+        public FunctionTypeCreator(string name, Func<IFunction, bool> checkFunction,
+                                   Func<IFunction, IFunction> transformFunction,
+                                   Func<IFunction, double> getDefaultValueFunction,
+                                   Action<IFunction, double> setDefaultValueFunction,
+                                   Func<IFunction, string> getUnitFunction, Action<IFunction, string> setUnitFunction,
+                                   Func<IFunction, string> getUrlFunction, Action<IFunction, string> setUrlFunction,
+                                   Func<IFunction, bool> isAllowedFunction)
         {
             this.name = name;
             this.checkFunction = checkFunction;
@@ -52,10 +55,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils
             this.isAllowedFunction = isAllowedFunction;
         }
 
-        public string FunctionTypeName { get { return name; } }
+        public string FunctionTypeName => name;
 
         public bool IsThisFunctionType(IFunction function)
-        {            
+        {
             return checkFunction(function);
         }
 
@@ -66,7 +69,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils
 
         public double GetDefaultValueForFunction(IFunction function)
         {
-            return !checkFunction(function) ? Double.NaN : getDefaultValueFunction(function);
+            return !checkFunction(function) ? double.NaN : getDefaultValueFunction(function);
         }
 
         public void SetDefaultValueForFunction(IFunction function, double defaultValue)
@@ -79,7 +82,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils
 
         public string GetUnitForFunction(IFunction function)
         {
-            return !checkFunction(function) ? String.Empty : getUnitFunction(function);
+            return !checkFunction(function) ? string.Empty : getUnitFunction(function);
         }
 
         public void SetUnitForFunction(IFunction function, string unit)
@@ -92,7 +95,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils
 
         public string GetUrlForFunction(IFunction function)
         {
-            return !checkFunction(function) ? String.Empty : getUrlFunction(function);
+            return !checkFunction(function) ? string.Empty : getUrlFunction(function);
         }
 
         public void SetUrlForFunction(IFunction function, string url)
@@ -111,23 +114,29 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils
         /// <summary>
         /// Replaces the function in a collection for a new one created with a creator.
         /// </summary>
-        /// <param name="functionCollection">The function collection containing the function to be replaced.</param>
-        /// <param name="function">The function to be replaced.</param>
-        /// <param name="creator">The creator handling the creation of a new <see cref="IFunction"/>
-        /// based on <paramref name="function"/>.</param>
-        /// <param name="dataOwner">The data owner or <paramref name="function"/>.</param>
-        /// <param name="previousType">Optional textual description of the original function type.
-        /// this is only used for undo/redo messaging.</param>
-        /// <returns>The newly created function that has been inserted into <paramref name="functionCollection"/>.</returns>
-        public static IFunction ReplaceFunctionUsingCreator(IList<IFunction> functionCollection, 
-            IFunction function, IFunctionTypeCreator creator, IEditableObject dataOwner, string previousType = "")
+        /// <param name="functionCollection"> The function collection containing the function to be replaced. </param>
+        /// <param name="function"> The function to be replaced. </param>
+        /// <param name="creator">
+        /// The creator handling the creation of a new <see cref="IFunction" />
+        /// based on <paramref name="function" />.
+        /// </param>
+        /// <param name="dataOwner"> The data owner or <paramref name="function" />. </param>
+        /// <param name="previousType">
+        /// Optional textual description of the original function type.
+        /// this is only used for undo/redo messaging.
+        /// </param>
+        /// <returns> The newly created function that has been inserted into <paramref name="functionCollection" />. </returns>
+        public static IFunction ReplaceFunctionUsingCreator(IList<IFunction> functionCollection,
+                                                            IFunction function, IFunctionTypeCreator creator,
+                                                            IEditableObject dataOwner, string previousType = "")
         {
-            var oldFunctionIndex = functionCollection.IndexOf(function);
+            int oldFunctionIndex = functionCollection.IndexOf(function);
 
-            var newfunction = creator.TransformToFunctionType(function);
+            IFunction newfunction = creator.TransformToFunctionType(function);
 
             // TODO : replace with "functions[oldFunctionIndex] = Function;" and remove BeginEdit/EndEdit when treeview can handle replace
-            var editActionMessage = String.Format("Changing function type of {0} {1}to {2}", function, previousType, creator.FunctionTypeName);
+            string editActionMessage = string.Format("Changing function type of {0} {1}to {2}", function, previousType,
+                                                     creator.FunctionTypeName);
             dataOwner.BeginEdit(new DefaultEditAction(editActionMessage));
 
             functionCollection.RemoveAt(oldFunctionIndex);

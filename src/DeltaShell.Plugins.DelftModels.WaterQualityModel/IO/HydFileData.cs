@@ -35,13 +35,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             HydrodynamicLayerThicknesses = new double[0];
             NumberOfHydrodynamicLayersPerWaqSegmentLayer = new int[0];
 
-            
             delwaqDataToFilePathMapping = new Dictionary<string, Func<string>>
             {
-                {SalinityName, () => SalinityRelativePath },
-                {TemperatureName, () => TemperatureRelativePath },
-                {TauName, () => ShearStressesRelativePath },
-                {TauFlowName, () => ShearStressesRelativePath },
+                {SalinityName, () => SalinityRelativePath},
+                {TemperatureName, () => TemperatureRelativePath},
+                {TauName, () => ShearStressesRelativePath},
+                {TauFlowName, () => ShearStressesRelativePath},
                 {ChezyName, () => ChezyCoefficientsRelativePath},
                 {VelocityName, () => VelocitiesRelativePath},
                 {WidthName, () => WidthsRelativePath},
@@ -64,10 +63,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             ChezyCoefficientsRelativePath = string.Empty;
 
             fileWatcher = new FileSystemWatcher
-                {
-                    IncludeSubdirectories = false,
-                    NotifyFilter = NotifyFilters.LastWrite
-                };
+            {
+                IncludeSubdirectories = false,
+                NotifyFilter = NotifyFilters.LastWrite
+            };
 
             fileWatcher.Changed += (s, e) => FireDataChanged(e.FullPath);
         }
@@ -77,12 +76,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         /// </summary>
         public FileInfo Path
         {
-            get { return path; }
+            get => path;
             set
             {
                 path = value;
 
-                if (!Directory.Exists(path.DirectoryName)) return;
+                if (!Directory.Exists(path.DirectoryName))
+                {
+                    return;
+                }
 
                 fileWatcher.Path = path.DirectoryName;
                 fileWatcher.Filter = System.IO.Path.GetFileNameWithoutExtension(path.Name) + "*.*";
@@ -98,13 +100,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         /// <summary>
         /// The type of geometry used for the schematization.
         /// </summary>
-        /// <seealso cref="BoundariesRelativePath"/>
-        /// <seealso cref="SchematizationRelativePath"/>
+        /// <seealso cref="BoundariesRelativePath" />
+        /// <seealso cref="SchematizationRelativePath" />
         public HydroDynamicModelType HydroDynamicModelType { get; set; }
 
         public LayerType LayerType
         {
-            get { return layerType; }
+            get => layerType;
             set
             {
                 layerType = value;
@@ -121,11 +123,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         public double ZBot { get; set; }
 
         public DateTime ConversionReferenceTime { get; set; }
-        
+
         public DateTime ConversionStartTime { get; set; }
-        
+
         public DateTime ConversionStopTime { get; set; }
-        
+
         public TimeSpan ConversionTimeStep { get; set; }
 
         /// <summary>
@@ -161,76 +163,83 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         public int[] NumberOfHydrodynamicLayersPerWaqSegmentLayer { get; set; }
 
         /// <summary>
-        /// Relative filepath from <see cref="Path"/> to the boundary definitions.
+        /// Relative filepath from <see cref="Path" /> to the boundary definitions.
         /// </summary>
         public string BoundariesRelativePath { get; set; }
 
         /// <summary>
-        /// Relative filepath from <see cref="Path"/> to the schematization (grid).
+        /// Relative filepath from <see cref="Path" /> to the schematization (grid).
         /// </summary>
-        /// <example>*_flowgeom.nc</example>
+        /// <example> *_flowgeom.nc </example>
         public string SchematizationRelativePath { get; set; }
 
         public IDictionary<WaterQualityBoundary, int[]> BoundaryNodeIds { get; set; }
 
         public IEventedList<WaterQualityBoundary> Boundaries { get; set; }
 
-        public string FilePath
-        {
-            get { return Path.FullName; }
-        }
+        public string FilePath => Path.FullName;
 
         public UnstructuredGrid Grid { get; set; }
 
         #region Bulk data filepaths
 
         /// <summary>
-        /// Relative filepath from <see cref="Path"/> to the volumes raw data (binary file).
+        /// Relative filepath from <see cref="Path" /> to the volumes raw data (binary file).
         /// </summary>
         public string VolumesRelativePath { get; set; }
+
         /// <summary>
-        /// Relative filepath from <see cref="Path"/> to the area raw data (binary file).
+        /// Relative filepath from <see cref="Path" /> to the area raw data (binary file).
         /// </summary>
         public string AreasRelativePath { get; set; }
+
         /// <summary>
-        /// Relative filepath from <see cref="Path"/> to the flow raw data (binary file).
+        /// Relative filepath from <see cref="Path" /> to the flow raw data (binary file).
         /// </summary>
         public string FlowsRelativePath { get; set; }
+
         /// <summary>
-        /// Relative filepath from <see cref="Path"/> to the segment exchanges raw data (binary file).
+        /// Relative filepath from <see cref="Path" /> to the segment exchanges raw data (binary file).
         /// </summary>
         public string PointersRelativePath { get; set; }
+
         /// <summary>
-        /// Relative filepath from <see cref="Path"/> to the lengths raw data (binary file).
+        /// Relative filepath from <see cref="Path" /> to the lengths raw data (binary file).
         /// </summary>
         public string LengthsRelativePath { get; set; }
+
         /// <summary>
-        /// Relative filepath from <see cref="Path"/> to the salinity raw data (binary file).
+        /// Relative filepath from <see cref="Path" /> to the salinity raw data (binary file).
         /// </summary>
         public string SalinityRelativePath { get; set; }
+
         /// <summary>
-        /// Relative filepath from <see cref="Path"/> to the temperature raw data (binary file).
+        /// Relative filepath from <see cref="Path" /> to the temperature raw data (binary file).
         /// </summary>
         public string TemperatureRelativePath { get; set; }
+
         /// <summary>
-        /// Relative filepath from <see cref="Path"/> to the vertical diffusion raw data (binary file).
+        /// Relative filepath from <see cref="Path" /> to the vertical diffusion raw data (binary file).
         /// </summary>
         public string VerticalDiffusionRelativePath { get; set; }
+
         /// <summary>
-        /// Relative filepath from <see cref="Path"/> to the surfaces raw data (binary file).
+        /// Relative filepath from <see cref="Path" /> to the surfaces raw data (binary file).
         /// </summary>
         public string SurfacesRelativePath { get; set; }
+
         /// <summary>
-        /// Relative filepath from <see cref="Path"/> to the shear stress raw data (binary file).
+        /// Relative filepath from <see cref="Path" /> to the shear stress raw data (binary file).
         /// </summary>
         public string ShearStressesRelativePath { get; set; }
+
         /// <summary>
-        /// Relative filepath from <see cref="Path"/> to the attributes data that will be included in the input file.
+        /// Relative filepath from <see cref="Path" /> to the attributes data that will be included in the input file.
         /// </summary>
         public string AttributesRelativePath { get; set; }
 
         /// <summary>
-        /// Gets the velocities file path.Relative filepath from <see cref="Path"/>.
+        /// Gets the velocities file path.Relative filepath from <see cref="Path" />.
         /// </summary>
         /// <value>
         /// The velocities relative file path (with respect to hydraulic data location). Extension .dat.
@@ -238,7 +247,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         public string VelocitiesRelativePath { get; set; }
 
         /// <summary>
-        /// Gets the widths file path. Relative filepath from <see cref="Path"/>.
+        /// Gets the widths file path. Relative filepath from <see cref="Path" />.
         /// </summary>
         /// <value>
         /// The widths relative file path (with respect to hydraulic data location). Extension .dat.
@@ -246,7 +255,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         public string WidthsRelativePath { get; set; }
 
         /// <summary>
-        /// Gets the chezy coefficients file path. Relative filepath from <see cref="Path"/>.
+        /// Gets the chezy coefficients file path. Relative filepath from <see cref="Path" />.
         /// </summary>
         /// <value>
         /// The chezy coefficients relative file path (with respect to hydraulic data location). Extension .dat.
@@ -258,7 +267,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         /// <summary>
         /// Indicates whether the current object is equal to another object of the same type.
         /// </summary>
-        /// <param name="other">An object to compare with this object.</param>
+        /// <param name="other"> An object to compare with this object. </param>
         /// <returns>
         /// true if the current object is equal to the <paramref name="other" /> parameter; otherwise, false.
         /// </returns>
@@ -268,6 +277,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             {
                 return false;
             }
+
             if (ReferenceEquals(this, other))
             {
                 return true;
@@ -315,13 +325,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 
         public string GetFilePathFor(string functionName)
         {
-            var filePath = GetFilePathForFunctionName(functionName);
+            string filePath = GetFilePathForFunctionName(functionName);
             if (string.IsNullOrWhiteSpace(filePath))
             {
                 throw new InvalidOperationException(
-                    string.Format("Cannot give filepath for function '{0}' as it's not available in hydro dynamics file.",
+                    string.Format(
+                        "Cannot give filepath for function '{0}' as it's not available in hydro dynamics file.",
                         functionName));
             }
+
             return System.IO.Path.Combine(System.IO.Path.GetDirectoryName(FilePath), filePath);
         }
 
@@ -332,6 +344,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             {
                 return Equals(Checksum, hydFileData.Checksum);
             }
+
             return false;
         }
 
@@ -341,22 +354,25 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             {
                 return false;
             }
+
             if (ReferenceEquals(this, obj))
             {
                 return true;
             }
-            if (obj.GetType() != this.GetType())
+
+            if (obj.GetType() != GetType())
             {
                 return false;
             }
-            return Equals((HydFileData)obj);
+
+            return Equals((HydFileData) obj);
         }
 
         public override int GetHashCode()
         {
             unchecked
             {
-                var hashCode = Path != null ? Path.GetHashCode() : 0;
+                int hashCode = Path != null ? Path.GetHashCode() : 0;
                 hashCode = (hashCode * 397) ^ (Checksum != null ? Checksum.GetHashCode() : 0);
                 return hashCode;
             }
@@ -379,24 +395,32 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 
         private void FireDataChanged(string fullPath)
         {
-            if (DataChanged == null) return;
+            if (DataChanged == null)
+            {
+                return;
+            }
+
             DataChanged(this, new EventArgs<string>(fullPath));
         }
 
         private string GetFilePathForFunctionName(string functionName)
         {
-            if (string.IsNullOrEmpty(functionName)) return null;
+            if (string.IsNullOrEmpty(functionName))
+            {
+                return null;
+            }
 
-            var name = functionName.ToLower();
-            return delwaqDataToFilePathMapping.ContainsKey(name) 
-                ? delwaqDataToFilePathMapping[name]() 
-                : null;
+            string name = functionName.ToLower();
+            return delwaqDataToFilePathMapping.ContainsKey(name)
+                       ? delwaqDataToFilePathMapping[name]()
+                       : null;
         }
 
         private bool IsFileEqualWithOtherHydFile(HydFileData other, Func<HydFileData, string> getRelativePath)
         {
-            var filePath = System.IO.Path.Combine(Path?.DirectoryName ?? string.Empty, getRelativePath(this));
-            var otherFilePath = System.IO.Path.Combine(other.Path?.DirectoryName ?? string.Empty, getRelativePath(other));
+            string filePath = System.IO.Path.Combine(Path?.DirectoryName ?? string.Empty, getRelativePath(this));
+            string otherFilePath =
+                System.IO.Path.Combine(other.Path?.DirectoryName ?? string.Empty, getRelativePath(other));
             if (File.Exists(filePath) && File.Exists(otherFilePath))
             {
                 return FileUtils.PathsAreEqual(filePath, otherFilePath)

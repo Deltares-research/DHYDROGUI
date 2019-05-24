@@ -6,13 +6,14 @@ using System.Linq;
 using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Controls.Swf;
+using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf;
 using DelftTools.Shell.Gui.Swf.Validation;
 using DelftTools.Utils;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
 using DeltaShell.Plugins.FMSuite.Common.Gui;
-using DeltaShell.Plugins.FMSuite.Wave.Gui.Properties;
+using DeltaShell.Plugins.FMSuite.Common.Gui.Properties;
 using DeltaShell.Plugins.FMSuite.Wave.IO;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
@@ -31,17 +32,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
         private const string ObsCurveNodeName = "Observation Curves";
         private const string SpectralDomainName = "Spectral Domain";
 
-        private static readonly Bitmap AreaImage = Common.Gui.Properties.Resources.area2d;
-        private static readonly Bitmap TimePointImage = Common.Gui.Properties.Resources.timers;
-        private static readonly Bitmap BoundaryConditionsImage = Common.Gui.Properties.Resources.boundary_folder;
-        private static readonly Bitmap ObstacleImage = Resources.wall_brick;
-        private static readonly Bitmap ObsPointImage = Common.Gui.Properties.Resources.Observation;
-        private static readonly Bitmap ObsCurveImage = Common.Gui.Properties.Resources.ObservationCS;
-        private static readonly Bitmap ProcessesImage = Common.Gui.Properties.Resources.processes;
-        private static readonly Bitmap NumericsIcon = Common.Gui.Properties.Resources.folder_wrench;
-        private static readonly Bitmap OutputParametersIcon = Common.Gui.Properties.Resources.output_param;
-        private static readonly Bitmap GeneralIcon = Common.Gui.Properties.Resources.settings;
-        private static readonly Bitmap PhysicalParametersImage = Common.Gui.Properties.Resources.folder_wrench;
+        private static readonly Bitmap AreaImage = Resources.area2d;
+        private static readonly Bitmap TimePointImage = Resources.timers;
+        private static readonly Bitmap BoundaryConditionsImage = Resources.boundary_folder;
+        private static readonly Bitmap ObstacleImage = Properties.Resources.wall_brick;
+        private static readonly Bitmap ObsPointImage = Resources.Observation;
+        private static readonly Bitmap ObsCurveImage = Resources.ObservationCS;
+        private static readonly Bitmap ProcessesImage = Resources.processes;
+        private static readonly Bitmap NumericsIcon = Resources.folder_wrench;
+        private static readonly Bitmap OutputParametersIcon = Resources.output_param;
+        private static readonly Bitmap GeneralIcon = Resources.settings;
+        private static readonly Bitmap PhysicalParametersImage = Resources.folder_wrench;
 
         private static readonly Bitmap WaveImage = Wave.Properties.Resources.wave;
 
@@ -59,9 +60,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
             node.Image = WaveImage;
         }
 
-        public WaveModelNodePresenter(GuiPlugin guiPlugin) : base(guiPlugin)
-        {
-        }
+        public WaveModelNodePresenter(GuiPlugin guiPlugin) : base(guiPlugin) {}
 
         public override DragOperations CanDrag(WaveModel nodeData)
         {
@@ -71,48 +70,67 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
         public override IEnumerable GetChildNodeObjects(WaveModel model, ITreeNode node)
         {
             yield return new WaveModelTreeShortcut(GeneralFolderName, GeneralIcon, model, GeneralFolderName);
-            yield return new WaveModelTreeShortcut(AreaFolderName, AreaImage, model, null, ShortCutType.SettingsTab, GetArea2DItems(model));
-            yield return new WaveModelTreeShortcut(SpectralDomainName, PhysicalParametersImage, model, SpectralDomainName);
+            yield return new WaveModelTreeShortcut(AreaFolderName, AreaImage, model, null, ShortCutType.SettingsTab,
+                                                   GetArea2DItems(model));
+            yield return new WaveModelTreeShortcut(SpectralDomainName, PhysicalParametersImage, model,
+                                                   SpectralDomainName);
             yield return model.OuterDomain;
-            yield return new WaveModelTreeShortcut(TimePointFolderName, TimePointImage, model, model.TimePointData, ShortCutType.FeatureSet);
-            yield return new WaveModelTreeShortcut(BoundaryFolderName, BoundaryConditionsImage, model, model.BoundaryConditions, ShortCutType.FeatureSet, model.BoundaryConditions);
+            yield return new WaveModelTreeShortcut(TimePointFolderName, TimePointImage, model, model.TimePointData,
+                                                   ShortCutType.FeatureSet);
+            yield return new WaveModelTreeShortcut(BoundaryFolderName, BoundaryConditionsImage, model,
+                                                   model.BoundaryConditions, ShortCutType.FeatureSet,
+                                                   model.BoundaryConditions);
             yield return new WaveModelTreeShortcut(PhysicalProcessesName, ProcessesImage, model, PhysicalProcessesName);
-            yield return new WaveModelTreeShortcut(NumericalParametersName, NumericsIcon, model, NumericalParametersName);
+            yield return new WaveModelTreeShortcut(NumericalParametersName, NumericsIcon, model,
+                                                   NumericalParametersName);
             yield return new WaveModelTreeShortcut(OutputParametersName, OutputParametersIcon, model, "Output");
             yield return new TreeFolder(model, GetOutputItems(model), "Output", FolderImageType.Output);
         }
 
         private static IEnumerable<object> GetArea2DItems(WaveModel model)
         {
-            yield return new WaveModelTreeShortcut(ObstacleNodeName, ObstacleImage, model, model.Obstacles, ShortCutType.FeatureSet);
-            yield return new WaveModelTreeShortcut(ObsPointNodeName, ObsPointImage, model, model.ObservationPoints, ShortCutType.FeatureSet);
-            yield return new WaveModelTreeShortcut(ObsCurveNodeName, ObsCurveImage, model, model.ObservationCrossSections, ShortCutType.FeatureSet);
+            yield return new WaveModelTreeShortcut(ObstacleNodeName, ObstacleImage, model, model.Obstacles,
+                                                   ShortCutType.FeatureSet);
+            yield return new WaveModelTreeShortcut(ObsPointNodeName, ObsPointImage, model, model.ObservationPoints,
+                                                   ShortCutType.FeatureSet);
+            yield return new WaveModelTreeShortcut(ObsCurveNodeName, ObsCurveImage, model,
+                                                   model.ObservationCrossSections, ShortCutType.FeatureSet);
         }
 
         private static IEnumerable<object> GetOutputItems(WaveModel model)
         {
-            var dataItem = model.GetDataItemByTag(WaveModel.SwanLogDataItemTag);
+            IDataItem dataItem = model.GetDataItemByTag(WaveModel.SwanLogDataItemTag);
             var swanLog = dataItem.Value as TextDocument;
             if (swanLog != null && !string.IsNullOrEmpty(swanLog.Content))
             {
                 yield return dataItem;
             }
-            foreach (var domain in WaveDomainHelper.GetAllDomains(model.OuterDomain))
+
+            foreach (WaveDomainData domain in WaveDomainHelper.GetAllDomains(model.OuterDomain))
             {
-                var subDataItem = model.GetDataItemByTag(WaveModel.WavmStoreDataItemTag + domain.Name);
-                if (subDataItem == null) continue;
+                IDataItem subDataItem = model.GetDataItemByTag(WaveModel.WavmStoreDataItemTag + domain.Name);
+                if (subDataItem == null)
+                {
+                    continue;
+                }
+
                 var functionStore = subDataItem.Value as WavmFileFunctionStore;
                 if (functionStore != null && functionStore.Functions.Any() && !string.IsNullOrEmpty(functionStore.Path))
+                {
                     yield return subDataItem;
+                }
             }
         }
 
         public override IMenuItem GetContextMenu(ITreeNode sender, object nodeData)
         {
-            var menu = base.GetContextMenu(sender, nodeData);
+            IMenuItem menu = base.GetContextMenu(sender, nodeData);
 
             var model = nodeData as WaveModel;
-            if (model == null) return menu;
+            if (model == null)
+            {
+                return menu;
+            }
 
             var contextMenu = new ContextMenuStrip();
 
@@ -127,14 +145,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
             contextMenu.Items.Add(CreateValidationMenuItem(model));
 
             var waveMenu = new MenuItemContextMenuStripAdapter(contextMenu);
-            if (menu == null) return waveMenu;
+            if (menu == null)
+            {
+                return waveMenu;
+            }
 
             menu.Add(waveMenu);
 
             // remove properties because there is already a settings option
-            var propertiesItem = (menu as MenuItemContextMenuStripAdapter)?.ContextMenuStrip?.Items?
-                .OfType<ToolStripItem>()
-                .FirstOrDefault(i => i.Name == "buttonModelProperties");
+            ToolStripItem propertiesItem = (menu as MenuItemContextMenuStripAdapter)?.ContextMenuStrip?.Items?
+                                                                                    .OfType<ToolStripItem>()
+                                                                                    .FirstOrDefault(
+                                                                                        i =>
+                                                                                            i.Name ==
+                                                                                            "buttonModelProperties");
 
             if (propertiesItem != null)
             {
@@ -159,9 +183,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
         {
             var item = new ClonableToolStripMenuItem
             {
-                Text = Resources.WaveModelNodePresenter_CreateValidationMenuItem_Validate___,
+                Text = Properties.Resources.WaveModelNodePresenter_CreateValidationMenuItem_Validate___,
                 Tag = model,
-                Image = Common.Gui.Properties.Resources.validation
+                Image = Resources.validation
             };
             item.Click += OnValidateClicked;
             return item;
@@ -169,13 +193,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
 
         private void OnSettingsClicked(object sender, EventArgs args)
         {
-            var model = (WaveModel)((ToolStripItem)sender).Tag;
+            var model = (WaveModel) ((ToolStripItem) sender).Tag;
             Gui.DocumentViewsResolver.OpenViewForData(model, typeof(WpfSettingsView));
         }
 
         private void OnValidateClicked(object sender, EventArgs args)
         {
-            var model = (WaveModel)((ToolStripItem)sender).Tag;
+            var model = (WaveModel) ((ToolStripItem) sender).Tag;
             Gui.DocumentViewsResolver.OpenViewForData(model, typeof(ValidationView));
         }
     }

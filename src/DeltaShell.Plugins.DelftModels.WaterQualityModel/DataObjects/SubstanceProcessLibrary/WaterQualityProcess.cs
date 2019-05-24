@@ -9,12 +9,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Substance
     /// <summary>
     /// Process
     /// </summary>
-    [Entity(FireOnCollectionChange=false)]
+    [Entity(FireOnCollectionChange = false)]
     public class WaterQualityProcess : Unique<long>, INameable, ICloneable
     {
-        ///<summary>
+        /// <summary>
         /// The name of the process
-        ///</summary>
+        /// </summary>
         public string Name { get; set; }
 
         /// <summary>

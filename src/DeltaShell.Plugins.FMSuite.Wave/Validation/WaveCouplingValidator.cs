@@ -12,16 +12,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
         {
             var issues = new List<ValidationIssue>();
 
-            var comFilePath =
-                    model.ModelDefinition.GetModelProperty(KnownWaveCategories.OutputCategory,
-                        KnownWaveProperties.COMFile).GetValueAsString();
+            string comFilePath =
+                model.ModelDefinition.GetModelProperty(KnownWaveCategories.OutputCategory,
+                                                       KnownWaveProperties.COMFile).GetValueAsString();
 
             if (model.IsCoupledToFlow)
             {
                 if (!model.WriteCOM || string.IsNullOrEmpty(comFilePath) || model.GetFlowComFilePath == null)
                 {
                     issues.Add(new ValidationIssue("Coupling", ValidationSeverity.Error,
-                        Resources.WaveCouplingValidator_Validate_Coupled_wave_model_must_use_COM_file, model));
+                                                   Resources
+                                                       .WaveCouplingValidator_Validate_Coupled_wave_model_must_use_COM_file,
+                                                   model));
                 }
 
                 issues.AddRange(model.ValidateModelTimeSettings());
@@ -31,10 +33,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                 if (model.WriteCOM || !string.IsNullOrEmpty(comFilePath))
                 {
                     issues.Add(new ValidationIssue("Coupling", ValidationSeverity.Error,
-                        Resources.WaveCouplingValidator_Validate_Stand_alone_wave_model_cannot_use_COM_file, model));
+                                                   Resources
+                                                       .WaveCouplingValidator_Validate_Stand_alone_wave_model_cannot_use_COM_file,
+                                                   model));
                 }
 
-                var waveDomainDataObjects = WaveDomainHelper.GetAllDomains(model.OuterDomain);
+                IList<WaveDomainData> waveDomainDataObjects = WaveDomainHelper.GetAllDomains(model.OuterDomain);
                 waveDomainDataObjects.ForEach(domain => issues.AddRange(ValidateWaveDomainData(domain)));
             }
 
@@ -51,7 +55,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                     TabName = "General"
                 };
                 yield return new ValidationIssue("Coupling", ValidationSeverity.Error,
-                    Resources.WaveTimePointValidator_Validate_Model_start_time_precedes_reference_time, waveValidationShortcut);
+                                                 Resources
+                                                     .WaveTimePointValidator_Validate_Model_start_time_precedes_reference_time,
+                                                 waveValidationShortcut);
             }
         }
 
@@ -60,25 +66,37 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
             if (waveDomainData.HydroFromFlowData.BedLevelUsage != UsageFromFlowType.DoNotUse)
             {
                 yield return new ValidationIssue("Coupling", ValidationSeverity.Error,
-                    string.Format(Resources.WaveCouplingValidator_Validate_Stand_alone_wave_model_cannot_use__0_, "flow bed level"), waveDomainData);
+                                                 string.Format(
+                                                     Resources
+                                                         .WaveCouplingValidator_Validate_Stand_alone_wave_model_cannot_use__0_,
+                                                     "flow bed level"), waveDomainData);
             }
 
             if (waveDomainData.HydroFromFlowData.WaterLevelUsage != UsageFromFlowType.DoNotUse)
             {
                 yield return new ValidationIssue("Coupling", ValidationSeverity.Error,
-                    string.Format(Resources.WaveCouplingValidator_Validate_Stand_alone_wave_model_cannot_use__0_, "flow water level"), waveDomainData);
+                                                 string.Format(
+                                                     Resources
+                                                         .WaveCouplingValidator_Validate_Stand_alone_wave_model_cannot_use__0_,
+                                                     "flow water level"), waveDomainData);
             }
 
             if (waveDomainData.HydroFromFlowData.VelocityUsage != UsageFromFlowType.DoNotUse)
             {
                 yield return new ValidationIssue("Coupling", ValidationSeverity.Error,
-                    string.Format(Resources.WaveCouplingValidator_Validate_Stand_alone_wave_model_cannot_use__0_, "flow velocities"), waveDomainData);
+                                                 string.Format(
+                                                     Resources
+                                                         .WaveCouplingValidator_Validate_Stand_alone_wave_model_cannot_use__0_,
+                                                     "flow velocities"), waveDomainData);
             }
 
             if (waveDomainData.HydroFromFlowData.WindUsage != UsageFromFlowType.DoNotUse)
             {
                 yield return new ValidationIssue("Coupling", ValidationSeverity.Error,
-                    string.Format(Resources.WaveCouplingValidator_Validate_Stand_alone_wave_model_cannot_use__0_, "flow wind"), waveDomainData);
+                                                 string.Format(
+                                                     Resources
+                                                         .WaveCouplingValidator_Validate_Stand_alone_wave_model_cannot_use__0_,
+                                                     "flow wind"), waveDomainData);
             }
         }
     }

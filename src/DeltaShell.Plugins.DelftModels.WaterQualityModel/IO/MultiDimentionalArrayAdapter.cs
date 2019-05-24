@@ -29,7 +29,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 
                 throw new NotImplementedException();
             }
-            set { throw new NotImplementedException(); }
+            set => throw new NotImplementedException();
         }
 
         object IMultiDimensionalArray.this[params int[] index]
@@ -43,46 +43,44 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 
                 throw new NotImplementedException();
             }
-            set { throw new NotImplementedException(); }
+            set => throw new NotImplementedException();
         }
 
         T IList<T>.this[int index]
         {
-            get { return values[index]; }
-            set { throw new NotImplementedException(); }
+            get => values[index];
+            set => throw new NotImplementedException();
         }
 
         object IList.this[int index]
         {
-            get { return values[index]; }
-            set { throw new NotImplementedException(); }
+            get => values[index];
+            set => throw new NotImplementedException();
         }
 
         public long Id { get; set; }
 
-        public object MaxValue
+        public object MaxValue => maxValue ?? (maxValue = values.Max());
+
+        public object MinValue => minValue ?? (minValue = values.Min());
+
+        int IMultiDimensionalArray<T>.Count => values.Count;
+
+        int IMultiDimensionalArray.Count => values.Count;
+
+        int ICollection<T>.Count => values.Count;
+
+        int ICollection.Count => values.Count;
+
+        bool IMultiDimensionalArray.IsReadOnly
         {
-            get { return maxValue ?? (maxValue = values.Max()); }
+            get => true;
+            set {}
         }
 
-        public object MinValue
-        {
-            get { return minValue ?? (minValue = values.Min()); }
-        }
+        bool ICollection<T>.IsReadOnly => true;
 
-        int IMultiDimensionalArray<T>.Count { get { return values.Count; } }
-
-        int IMultiDimensionalArray.Count { get { return values.Count; } }
-
-        int ICollection<T>.Count { get { return values.Count; } }
-        
-        int ICollection.Count { get { return values.Count; } }
-
-        bool IMultiDimensionalArray.IsReadOnly { get { return true; } set { } }
-
-        bool ICollection<T>.IsReadOnly { get { return true; } }
-
-        bool IList.IsReadOnly { get { return true; } }
+        bool IList.IsReadOnly => true;
 
         #region Unused properties
 
@@ -102,7 +100,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 
         public bool IsAutoSorted { get; set; }
 
-        public bool IsFixedSize { get { return true; } }
+        public bool IsFixedSize => true;
 
         #endregion
 
@@ -128,7 +126,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 
         public bool Contains(object value)
         {
-            return values.Contains((T)value);
+            return values.Contains((T) value);
         }
 
         public bool Contains(T item)

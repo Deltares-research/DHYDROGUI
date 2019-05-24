@@ -8,6 +8,7 @@ using DelftTools.Units;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.SubstanceProcessLibrary;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Extentions;
@@ -31,25 +32,32 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         private static bool syncing;
 
         /// <summary>
-        /// Synchronizes <paramref name="waterQualityModel"/> after property changed
+        /// Synchronizes <paramref name="waterQualityModel" /> after property changed
         /// </summary>
-        /// <param name="waterQualityModel">The water quality model to sync</param>
-        /// <param name="sender">The item that has changed</param>
-        /// <param name="e">The related event arguments</param>
-        public static void InputPropertyChanged(this WaterQualityModel waterQualityModel, object sender, PropertyChangedEventArgs e)
+        /// <param name="waterQualityModel"> The water quality model to sync </param>
+        /// <param name="sender"> The item that has changed </param>
+        /// <param name="e"> The related event arguments </param>
+        public static void InputPropertyChanged(this WaterQualityModel waterQualityModel, object sender,
+                                                PropertyChangedEventArgs e)
         {
-            if (syncing) return;
+            if (syncing)
+            {
+                return;
+            }
 
             syncing = true;
 
             try
             {
-                sender = sender is IDataItem ? ((IDataItem)sender).Value : sender; // Set sender to its value if it is a data item
+                sender = sender is IDataItem
+                             ? ((IDataItem) sender).Value
+                             : sender; // Set sender to its value if it is a data item
 
                 var modelSettings = sender as WaterQualityModelSettings;
                 if (modelSettings != null && e.PropertyName == "MonitoringOutputLevel")
                 {
-                    MonitoringOutputLevelChanged(waterQualityModel, WaterQualityModel.MonitoringOutputDataItemMetaData.Tag);
+                    MonitoringOutputLevelChanged(waterQualityModel,
+                                                 WaterQualityModel.MonitoringOutputDataItemMetaData.Tag);
                 }
 
                 var coverage = sender as WaterQualityObservationAreaCoverage;
@@ -68,7 +76,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
 
                     if (e.PropertyName == "ShowInHis")
                     {
-                        UpdateMonitoringOutputDataItemOutputParameterTimeSeries(waterQualityModel, waterQualityOutputParameter);
+                        UpdateMonitoringOutputDataItemOutputParameterTimeSeries(
+                            waterQualityModel, waterQualityOutputParameter);
                     }
                 }
 
@@ -84,15 +93,19 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             }
         }
 
-        public static void InputCollectionChanged(this WaterQualityModel waterQualityModel, object sender, NotifyCollectionChangedEventArgs e)
+        public static void InputCollectionChanged(this WaterQualityModel waterQualityModel, object sender,
+                                                  NotifyCollectionChangedEventArgs e)
         {
-            if (syncing) return;
+            if (syncing)
+            {
+                return;
+            }
 
             syncing = true;
 
             try
             {
-                var removedOrAddedItem = e.GetRemovedOrAddedItem();
+                object removedOrAddedItem = e.GetRemovedOrAddedItem();
                 var dataItem = removedOrAddedItem as IDataItem;
                 if (dataItem != null)
                 {
@@ -144,87 +157,122 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
 
         private static IEnumerable<string> GetCurrentMonitoringAreas(WaterQualityModel waterQualityModel)
         {
-            return waterQualityModel.ObservationVariableOutputs.Where( o => !(o.ObservationVariable is WaterQualityObservationPoint)).Select(v => v.Name);
+            return waterQualityModel.ObservationVariableOutputs
+                                    .Where(o => !(o.ObservationVariable is WaterQualityObservationPoint))
+                                    .Select(v => v.Name);
         }
 
-        private static void UpdateMonitoringOutputDataItemName(WaterQualityModel waterQualityModel, WaterQualityObservationPoint observationPoint)
+        private static void UpdateMonitoringOutputDataItemName(WaterQualityModel waterQualityModel,
+                                                               WaterQualityObservationPoint observationPoint)
         {
-            if (waterQualityModel.ModelSettings.MonitoringOutputLevel == MonitoringOutputLevel.None || waterQualityModel.ModelSettings.MonitoringOutputLevel == MonitoringOutputLevel.Areas) return; // Only perform observation variable name updates in case of monitoring output level "Points" or "PointsAndAreas"
+            if (waterQualityModel.ModelSettings.MonitoringOutputLevel == MonitoringOutputLevel.None ||
+                waterQualityModel.ModelSettings.MonitoringOutputLevel == MonitoringOutputLevel.Areas)
+            {
+                return; // Only perform observation variable name updates in case of monitoring output level "Points" or "PointsAndAreas"
+            }
 
-            var observationVariableOutputIndex = waterQualityModel.ObservationPoints.ToList().IndexOf(observationPoint); // Note: ugly but effective
+            int observationVariableOutputIndex =
+                waterQualityModel.ObservationPoints.ToList().IndexOf(observationPoint); // Note: ugly but effective
 
-            waterQualityModel.MonitoringOutputDataItemSet.DataItems[observationVariableOutputIndex].Name = observationPoint.Name;
+            waterQualityModel.MonitoringOutputDataItemSet.DataItems[observationVariableOutputIndex].Name =
+                observationPoint.Name;
         }
 
-        private static void UpdateMonitoringOutputDataItemOutputParameterTimeSeries(WaterQualityModel waterQualityModel, WaterQualityOutputParameter outputParameter)
+        private static void UpdateMonitoringOutputDataItemOutputParameterTimeSeries(
+            WaterQualityModel waterQualityModel, WaterQualityOutputParameter outputParameter)
         {
-            if (outputParameter.ShowInHis && waterQualityModel.ObservationVariableOutputs.Any(ovo => ovo.TimeSeriesList.All(ts => ts.Name != outputParameter.Name)))
+            if (outputParameter.ShowInHis &&
+                waterQualityModel.ObservationVariableOutputs.Any(
+                    ovo => ovo.TimeSeriesList.All(ts => ts.Name != outputParameter.Name)))
             {
                 // Add a new output parameter time series to all monitoring output data items
                 AddMonitoringOutputDataItemTimeSeries(waterQualityModel, outputParameter, "");
             }
-            else if (!outputParameter.ShowInHis && waterQualityModel.ObservationVariableOutputs.Any(ovo => ovo.TimeSeriesList.Any(ts => ts.Name == outputParameter.Name)))
+            else if (!outputParameter.ShowInHis &&
+                     waterQualityModel.ObservationVariableOutputs.Any(
+                         ovo => ovo.TimeSeriesList.Any(ts => ts.Name == outputParameter.Name)))
             {
                 // Remove the existing output parameter time series from all monitoring output data items
                 RemoveMonitoringOutputDataItemTimeSeries(waterQualityModel, outputParameter.Name);
             }
         }
 
-        private static void UpdateOutputParameterOutputCoverageDataItems(WaterQualityModel waterQualityModel, NotifyCollectionChangedEventArgs e)
+        private static void UpdateOutputParameterOutputCoverageDataItems(
+            WaterQualityModel waterQualityModel, NotifyCollectionChangedEventArgs e)
         {
-            var outputParameter = (WaterQualityOutputParameter)e.GetRemovedOrAddedItem();
-            if (!outputParameter.ShowInMap) return; // Only perform output parameter output coverage updates for output parameters that should be shown in map
+            var outputParameter = (WaterQualityOutputParameter) e.GetRemovedOrAddedItem();
+            if (!outputParameter.ShowInMap)
+            {
+                return; // Only perform output parameter output coverage updates for output parameters that should be shown in map
+            }
 
             switch (e.Action)
             {
                 case NotifyCollectionChangedAction.Add:
-                    {
-                        // Add a new output parameter output coverage data item
-                        var insertPosition = waterQualityModel.SubstanceProcessLibrary.OutputParameters.Where(op => op.ShowInMap).ToList().IndexOf(outputParameter);
-                        AddOutputCoverageDataItem(waterQualityModel, waterQualityModel.OutputParametersDataItemSet, insertPosition, outputParameter.Name);
-                        break;
-                    }
+                {
+                    // Add a new output parameter output coverage data item
+                    int insertPosition = waterQualityModel
+                                         .SubstanceProcessLibrary.OutputParameters.Where(op => op.ShowInMap).ToList()
+                                         .IndexOf(outputParameter);
+                    AddOutputCoverageDataItem(waterQualityModel, waterQualityModel.OutputParametersDataItemSet,
+                                              insertPosition, outputParameter.Name);
+                    break;
+                }
                 case NotifyCollectionChangedAction.Remove:
-                    {
-                        // Remove the existing output parameter output coverage data item
-                        RemoveOutputCoverageDataItem(waterQualityModel, outputParameter.Name, waterQualityModel.OutputParametersDataItemSet.DataItems);
-                        break;
-                    }
+                {
+                    // Remove the existing output parameter output coverage data item
+                    RemoveOutputCoverageDataItem(waterQualityModel, outputParameter.Name,
+                                                 waterQualityModel.OutputParametersDataItemSet.DataItems);
+                    break;
+                }
             }
         }
 
-        private static void UpdateOutputParameterOutputCoverageDataItems(WaterQualityModel waterQualityModel, WaterQualityOutputParameter outputParameter)
+        private static void UpdateOutputParameterOutputCoverageDataItems(
+            WaterQualityModel waterQualityModel, WaterQualityOutputParameter outputParameter)
         {
-            var existingOutputCoverageDataItem = waterQualityModel.OutputParametersDataItemSet.DataItems
-                .Where(dataItem => dataItem.Role.HasFlag(DataItemRole.Output))
-                .FirstOrDefault(di => di.Name == outputParameter.Name);
+            IDataItem existingOutputCoverageDataItem = waterQualityModel.OutputParametersDataItemSet.DataItems
+                                                                        .Where(dataItem =>
+                                                                                   dataItem.Role.HasFlag(
+                                                                                       DataItemRole.Output))
+                                                                        .FirstOrDefault(
+                                                                            di => di.Name == outputParameter.Name);
 
             if (outputParameter.ShowInMap && existingOutputCoverageDataItem == null)
             {
                 // Add a new output parameter output coverage data item
-                var insertPosition = waterQualityModel.SubstanceProcessLibrary.OutputParameters.Where(op => op.ShowInMap).ToList().IndexOf(outputParameter);
-                AddOutputCoverageDataItem(waterQualityModel, waterQualityModel.OutputParametersDataItemSet, insertPosition, outputParameter.Name);
+                int insertPosition = waterQualityModel
+                                     .SubstanceProcessLibrary.OutputParameters.Where(op => op.ShowInMap).ToList()
+                                     .IndexOf(outputParameter);
+                AddOutputCoverageDataItem(waterQualityModel, waterQualityModel.OutputParametersDataItemSet,
+                                          insertPosition, outputParameter.Name);
             }
             else if (!outputParameter.ShowInMap && existingOutputCoverageDataItem != null)
             {
                 // Remove the existing output parameter output coverage data item
-                RemoveOutputCoverageDataItem(waterQualityModel, outputParameter.Name, waterQualityModel.OutputParametersDataItemSet.DataItems);
+                RemoveOutputCoverageDataItem(waterQualityModel, outputParameter.Name,
+                                             waterQualityModel.OutputParametersDataItemSet.DataItems);
             }
         }
 
         private static void UpdateMonitoringOutputDataItems(WaterQualityModel waterQualityModel)
         {
-            if (waterQualityModel.ModelSettings.MonitoringOutputLevel == MonitoringOutputLevel.None) return; // Don't perform monitoring output data item updates when the monitoring output is set to "None"
+            if (waterQualityModel.ModelSettings.MonitoringOutputLevel == MonitoringOutputLevel.None)
+            {
+                return; // Don't perform monitoring output data item updates when the monitoring output is set to "None"
+            }
 
-            var monitoringOutputVariables = GetMonitoringOutputVariables(waterQualityModel);
-            var monitoringOutputLevel = waterQualityModel.ModelSettings.MonitoringOutputLevel;
-            var observationPoints = waterQualityModel.ObservationPoints;
-            var monitoringAreaOutputDataItemNames = GetMonitoringAreaOutputDataItemNames(waterQualityModel).ToList();
+            IEnumerable<Tuple<string, string>> monitoringOutputVariables =
+                GetMonitoringOutputVariables(waterQualityModel);
+            MonitoringOutputLevel monitoringOutputLevel = waterQualityModel.ModelSettings.MonitoringOutputLevel;
+            IEventedList<WaterQualityObservationPoint> observationPoints = waterQualityModel.ObservationPoints;
+            List<string> monitoringAreaOutputDataItemNames =
+                GetMonitoringAreaOutputDataItemNames(waterQualityModel).ToList();
 
-            var showPoints = monitoringOutputLevel == MonitoringOutputLevel.Points ||
-                             monitoringOutputLevel == MonitoringOutputLevel.PointsAndAreas;
+            bool showPoints = monitoringOutputLevel == MonitoringOutputLevel.Points ||
+                              monitoringOutputLevel == MonitoringOutputLevel.PointsAndAreas;
 
-            var showAreas = monitoringOutputLevel == MonitoringOutputLevel.Areas ||
+            bool showAreas = monitoringOutputLevel == MonitoringOutputLevel.Areas ||
                              monitoringOutputLevel == MonitoringOutputLevel.PointsAndAreas;
 
             // If relevant, remove any existing monitoring point output data items
@@ -236,24 +284,28 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             // If relevant, remove any existing monitoring area output data items
             if (!showAreas)
             {
-                GetCurrentMonitoringAreas(waterQualityModel).ToList().ForEach(a => RemoveMonitoringOutputDataItem(waterQualityModel, a));
+                GetCurrentMonitoringAreas(waterQualityModel)
+                    .ToList().ForEach(a => RemoveMonitoringOutputDataItem(waterQualityModel, a));
             }
 
             // If relevant, add any missing monitoring point output data items
             if (showPoints)
             {
-                observationPoints.ForEach(p => AddMonitoringOutputDataItem(waterQualityModel, p, monitoringOutputVariables));
+                observationPoints.ForEach(
+                    p => AddMonitoringOutputDataItem(waterQualityModel, p, monitoringOutputVariables));
             }
 
             // If relevant, add any missing monitoring area output data items
             if (showAreas)
             {
                 // remove old areas 
-                var itemsToRemove = GetCurrentMonitoringAreas(waterQualityModel).Except(monitoringAreaOutputDataItemNames).ToList();
-                itemsToRemove.ForEach(i => RemoveMonitoringOutputDataItem(waterQualityModel,i));
+                List<string> itemsToRemove = GetCurrentMonitoringAreas(waterQualityModel)
+                                             .Except(monitoringAreaOutputDataItemNames).ToList();
+                itemsToRemove.ForEach(i => RemoveMonitoringOutputDataItem(waterQualityModel, i));
 
                 // add new items
-                var itemsToAdd = monitoringAreaOutputDataItemNames.Except(GetCurrentMonitoringAreas(waterQualityModel));
+                IEnumerable<string> itemsToAdd =
+                    monitoringAreaOutputDataItemNames.Except(GetCurrentMonitoringAreas(waterQualityModel));
                 itemsToAdd.ForEach(i => AddMonitoringOutputDataItem(waterQualityModel, i, monitoringOutputVariables));
             }
         }
@@ -262,18 +314,23 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         {
             return waterQualityModel.ObservationAreas.GetLabelList();
         }
-        
-        private static void UpdateMonitoringOutputDataItems(WaterQualityModel waterQualityModel, NotifyCollectionChangedEventArgs e)
+
+        private static void UpdateMonitoringOutputDataItems(WaterQualityModel waterQualityModel,
+                                                            NotifyCollectionChangedEventArgs e)
         {
             // Add/remove a monitoring output data item for added/removed observation points
-            var removedOrAddedItem = e.GetRemovedOrAddedItem();
+            object removedOrAddedItem = e.GetRemovedOrAddedItem();
             var observationPoint = removedOrAddedItem as WaterQualityObservationPoint;
-            if (observationPoint != null && (waterQualityModel.ModelSettings.MonitoringOutputLevel == MonitoringOutputLevel.Points || waterQualityModel.ModelSettings.MonitoringOutputLevel == MonitoringOutputLevel.PointsAndAreas)) // Only perform observation variable output item updates for monitoring output level "Points" or "PointsAndAreas"
+            if (observationPoint != null &&
+                (waterQualityModel.ModelSettings.MonitoringOutputLevel == MonitoringOutputLevel.Points ||
+                 waterQualityModel.ModelSettings.MonitoringOutputLevel == MonitoringOutputLevel.PointsAndAreas)
+            ) // Only perform observation variable output item updates for monitoring output level "Points" or "PointsAndAreas"
             {
                 switch (e.Action)
                 {
                     case NotifyCollectionChangedAction.Add:
-                        AddMonitoringOutputDataItem(waterQualityModel, observationPoint, GetMonitoringOutputVariables(waterQualityModel));
+                        AddMonitoringOutputDataItem(waterQualityModel, observationPoint,
+                                                    GetMonitoringOutputVariables(waterQualityModel));
                         break;
                     case NotifyCollectionChangedAction.Remove:
                         RemoveMonitoringOutputDataItem(waterQualityModel, observationPoint);
@@ -283,72 +340,82 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
 
             // Update all monitoring output data item time series for added/removed substances
             var substance = removedOrAddedItem as WaterQualitySubstance;
-            if (substance != null) // Only perform monitoring output data item substance time series updates for substance calculations
+            if (substance != null
+            ) // Only perform monitoring output data item substance time series updates for substance calculations
             {
                 switch (e.Action)
                 {
                     case NotifyCollectionChangedAction.Add:
-                        {
-                            // Add a new substance time series to all monitoring output data items
-                            AddMonitoringOutputDataItemTimeSeries(waterQualityModel, substance, "");
+                    {
+                        // Add a new substance time series to all monitoring output data items
+                        AddMonitoringOutputDataItemTimeSeries(waterQualityModel, substance, "");
 
-                            break;
-                        }
+                        break;
+                    }
                     case NotifyCollectionChangedAction.Remove:
-                        {
-                            // Remove the existing substance time series from all monitoring output data items
-                            RemoveMonitoringOutputDataItemTimeSeries(waterQualityModel, substance.Name);
+                    {
+                        // Remove the existing substance time series from all monitoring output data items
+                        RemoveMonitoringOutputDataItemTimeSeries(waterQualityModel, substance.Name);
 
-                            break;
-                        }
+                        break;
+                    }
                 }
             }
 
             // Update all monitoring output data item time series for added/removed output parameters that should be shown in his
             var outputParameter = removedOrAddedItem as WaterQualityOutputParameter;
-            if (outputParameter != null && outputParameter.ShowInHis) // Only perform monitoring output data item output parameter time series updates for substance calculations
+            if (outputParameter != null && outputParameter.ShowInHis
+            ) // Only perform monitoring output data item output parameter time series updates for substance calculations
             {
                 switch (e.Action)
                 {
                     case NotifyCollectionChangedAction.Add:
-                        {
-                            // Add a new output parameter time series to all monitoring output data items
-                            AddMonitoringOutputDataItemTimeSeries(waterQualityModel, outputParameter, "");
+                    {
+                        // Add a new output parameter time series to all monitoring output data items
+                        AddMonitoringOutputDataItemTimeSeries(waterQualityModel, outputParameter, "");
 
-                            break;
-                        }
+                        break;
+                    }
                     case NotifyCollectionChangedAction.Remove:
-                        {
-                            // Remove the existing output parameter time series from all monitoring output data items
-                            RemoveMonitoringOutputDataItemTimeSeries(waterQualityModel, outputParameter.Name);
-                            break;
-                        }
+                    {
+                        // Remove the existing output parameter time series from all monitoring output data items
+                        RemoveMonitoringOutputDataItemTimeSeries(waterQualityModel, outputParameter.Name);
+                        break;
+                    }
                 }
             }
         }
 
         private static void RemoveMonitoringOutputDataItemTimeSeries(WaterQualityModel waterQualityModel, string name)
         {
-            foreach (var observationVariableOutput in waterQualityModel.ObservationVariableOutputs)
+            foreach (WaterQualityObservationVariableOutput observationVariableOutput in waterQualityModel
+                .ObservationVariableOutputs)
             {
                 observationVariableOutput.RemoveTimeSeries(name);
             }
         }
 
-        private static void AddMonitoringOutputDataItemTimeSeries(WaterQualityModel waterQualityModel, object outputItem, string unit)
+        private static void AddMonitoringOutputDataItemTimeSeries(WaterQualityModel waterQualityModel,
+                                                                  object outputItem, string unit)
         {
             string monitoringOutputTimeSeriesName;
             int monitoringOutputtInsertPosition;
 
-            GetMonitoringOutputTimeSeriesPositionAndName(waterQualityModel, outputItem, out monitoringOutputTimeSeriesName, out monitoringOutputtInsertPosition);
+            GetMonitoringOutputTimeSeriesPositionAndName(waterQualityModel, outputItem,
+                                                         out monitoringOutputTimeSeriesName,
+                                                         out monitoringOutputtInsertPosition);
 
-            foreach (var observationVariableOutput in waterQualityModel.ObservationVariableOutputs)
+            foreach (WaterQualityObservationVariableOutput observationVariableOutput in waterQualityModel
+                .ObservationVariableOutputs)
             {
-                observationVariableOutput.AddTimeSeries(new Tuple<string, string>(monitoringOutputTimeSeriesName, unit), monitoringOutputtInsertPosition);
+                observationVariableOutput.AddTimeSeries(new Tuple<string, string>(monitoringOutputTimeSeriesName, unit),
+                                                        monitoringOutputtInsertPosition);
             }
         }
 
-        private static void GetMonitoringOutputTimeSeriesPositionAndName(WaterQualityModel waterQualityModel, object outputItem, out string monitoringOutputTimeSeriesName, out int monitoringOutputTimeSeriesPosition)
+        private static void GetMonitoringOutputTimeSeriesPositionAndName(
+            WaterQualityModel waterQualityModel, object outputItem, out string monitoringOutputTimeSeriesName,
+            out int monitoringOutputTimeSeriesPosition)
         {
             monitoringOutputTimeSeriesName = "monitoring time series";
             monitoringOutputTimeSeriesPosition = 0;
@@ -357,7 +424,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             if (substance != null)
             {
                 monitoringOutputTimeSeriesName = substance.Name;
-                monitoringOutputTimeSeriesPosition += waterQualityModel.SubstanceProcessLibrary.Substances.IndexOf(substance);
+                monitoringOutputTimeSeriesPosition +=
+                    waterQualityModel.SubstanceProcessLibrary.Substances.IndexOf(substance);
 
                 return;
             }
@@ -368,9 +436,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                 monitoringOutputTimeSeriesName = outputParameter.Name;
                 monitoringOutputTimeSeriesPosition += waterQualityModel.SubstanceProcessLibrary.Substances.Count +
                                                       waterQualityModel.SubstanceProcessLibrary.OutputParameters
-                                                          .Where(op => op.ShowInHis)
-                                                          .ToList()
-                                                          .IndexOf(outputParameter);
+                                                                       .Where(op => op.ShowInHis)
+                                                                       .ToList()
+                                                                       .IndexOf(outputParameter);
 
                 return;
             }
@@ -386,140 +454,201 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                         }*/
         }
 
-        private static void RemoveMonitoringOutputDataItem(WaterQualityModel waterQualityModel, object monitoringOutputDataItemObject)
+        private static void RemoveMonitoringOutputDataItem(WaterQualityModel waterQualityModel,
+                                                           object monitoringOutputDataItemObject)
         {
             var observationPoint = monitoringOutputDataItemObject as WaterQualityObservationPoint;
             if (observationPoint != null)
             {
-                var monitoringPointOutputDataItemToRemove = waterQualityModel.ObservationVariableOutputs.FirstOrDefault(ovo => observationPoint.Equals(ovo.ObservationVariable));
-                if (monitoringPointOutputDataItemToRemove == null) return;
+                WaterQualityObservationVariableOutput monitoringPointOutputDataItemToRemove =
+                    waterQualityModel.ObservationVariableOutputs.FirstOrDefault(
+                        ovo => observationPoint.Equals(ovo.ObservationVariable));
+                if (monitoringPointOutputDataItemToRemove == null)
+                {
+                    return;
+                }
 
                 // Remove the observation point related monitoring output data item
                 waterQualityModel.ObservationVariableOutputs.Remove(monitoringPointOutputDataItemToRemove);
             }
 
-            var monitoringAreaName = monitoringOutputDataItemObject.ToString();
+            string monitoringAreaName = monitoringOutputDataItemObject.ToString();
             if (!string.IsNullOrEmpty(monitoringAreaName))
             {
-                var monitoringPointOutputDataItemToRemove = waterQualityModel.ObservationVariableOutputs.Where(o => !(o.ObservationVariable is WaterQualityObservationPoint)).FirstOrDefault(ovo => monitoringAreaName.Equals(ovo.Name));
-                if (monitoringPointOutputDataItemToRemove == null) return;
+                WaterQualityObservationVariableOutput monitoringPointOutputDataItemToRemove = waterQualityModel
+                                                                                              .ObservationVariableOutputs
+                                                                                              .Where(
+                                                                                                  o =>
+                                                                                                      !(o.ObservationVariable
+                                                                                                            is
+                                                                                                            WaterQualityObservationPoint
+                                                                                                       ))
+                                                                                              .FirstOrDefault(
+                                                                                                  ovo =>
+                                                                                                      monitoringAreaName
+                                                                                                          .Equals(
+                                                                                                              ovo
+                                                                                                                  .Name));
+                if (monitoringPointOutputDataItemToRemove == null)
+                {
+                    return;
+                }
 
                 // Remove the surface water type related monitoring output data item
                 waterQualityModel.ObservationVariableOutputs.Remove(monitoringPointOutputDataItemToRemove);
             }
         }
-        
-        private static IEnumerable<Tuple<string, string>> GetMonitoringOutputVariables(WaterQualityModel waterQualityModel)
+
+        private static IEnumerable<Tuple<string, string>> GetMonitoringOutputVariables(
+            WaterQualityModel waterQualityModel)
         {
             var outputVariables = new List<Tuple<string, string>>();
 
             // Add a DelftTools.Utils.Tuple for all substances
             outputVariables.AddRange(waterQualityModel.SubstanceProcessLibrary.Substances
-                                            .Select(s => new Tuple<string, string>(s.Name, s.ConcentrationUnit)));
+                                                      .Select(s => new Tuple<string, string>(
+                                                                  s.Name, s.ConcentrationUnit)));
 
             // Add a DelftTools.Utils.Tuple for all output parameters that should be shown in his
             outputVariables.AddRange(waterQualityModel.SubstanceProcessLibrary.OutputParameters
-                                            .Where(op => op.ShowInHis)
-                                            .Select(op => new Tuple<string, string>(op.Name, "")));
+                                                      .Where(op => op.ShowInHis)
+                                                      .Select(op => new Tuple<string, string>(op.Name, "")));
 
             return outputVariables;
-
         }
-        
-        private static void AddMonitoringOutputDataItem(WaterQualityModel waterQualityModel, object monitoringOutputDataItemObject, IEnumerable<Tuple<string, string>> outputVariables)
+
+        private static void AddMonitoringOutputDataItem(WaterQualityModel waterQualityModel,
+                                                        object monitoringOutputDataItemObject,
+                                                        IEnumerable<Tuple<string, string>> outputVariables)
         {
             var observationPoint = monitoringOutputDataItemObject as WaterQualityObservationPoint;
             if (observationPoint != null)
             {
                 // Check if the observation point related monitoring output data item is already present
-                if (waterQualityModel.ObservationVariableOutputs.Any(ovo => observationPoint.Equals(ovo.ObservationVariable))) return;
+                if (waterQualityModel.ObservationVariableOutputs.Any(
+                    ovo => observationPoint.Equals(ovo.ObservationVariable)))
+                {
+                    return;
+                }
 
-                var insertIndex = waterQualityModel.ObservationPoints.ToList().IndexOf(observationPoint);
-                if (insertIndex == -1) return;
+                int insertIndex = waterQualityModel.ObservationPoints.ToList().IndexOf(observationPoint);
+                if (insertIndex == -1)
+                {
+                    return;
+                }
 
                 // Insert the new observation point related monitoring output data item
-                waterQualityModel.MonitoringOutputDataItemSet.DataItems.Insert(insertIndex, new DataItem(new WaterQualityObservationVariableOutput(outputVariables) { ObservationVariable = observationPoint })
-                {
-                    Owner = waterQualityModel,
-                    Role = DataItemRole.Output
-                });
+                waterQualityModel.MonitoringOutputDataItemSet.DataItems.Insert(
+                    insertIndex,
+                    new DataItem(
+                        new WaterQualityObservationVariableOutput(outputVariables)
+                        {
+                            ObservationVariable = observationPoint
+                        })
+                    {
+                        Owner = waterQualityModel,
+                        Role = DataItemRole.Output
+                    });
 
                 return;
             }
 
-            var surfaceWaterType = monitoringOutputDataItemObject.ToString();
+            string surfaceWaterType = monitoringOutputDataItemObject.ToString();
             if (!string.IsNullOrEmpty(surfaceWaterType))
             {
-                var observationPointMonitoringoutputDataItemCount = waterQualityModel.ModelSettings.MonitoringOutputLevel != MonitoringOutputLevel.Areas
-                    ? waterQualityModel.ObservationPoints.Count()
-                    : 0;
+                int observationPointMonitoringoutputDataItemCount =
+                    waterQualityModel.ModelSettings.MonitoringOutputLevel != MonitoringOutputLevel.Areas
+                        ? waterQualityModel.ObservationPoints.Count()
+                        : 0;
 
                 // Check if the surface water type related monitoring output data item is already present
-                if (waterQualityModel.ObservationVariableOutputs.Skip(observationPointMonitoringoutputDataItemCount).Any(ovo => surfaceWaterType.Equals(ovo.Name))) return;
+                if (waterQualityModel.ObservationVariableOutputs.Skip(observationPointMonitoringoutputDataItemCount)
+                                     .Any(ovo => surfaceWaterType.Equals(ovo.Name)))
+                {
+                    return;
+                }
 
-                var monitoringAreaOutputDataItemNames = GetMonitoringAreaOutputDataItemNames(waterQualityModel).ToList();
-                var insertIndex = monitoringAreaOutputDataItemNames.IndexOf(surfaceWaterType) + observationPointMonitoringoutputDataItemCount;
+                List<string> monitoringAreaOutputDataItemNames =
+                    GetMonitoringAreaOutputDataItemNames(waterQualityModel).ToList();
+                int insertIndex = monitoringAreaOutputDataItemNames.IndexOf(surfaceWaterType) +
+                                  observationPointMonitoringoutputDataItemCount;
 
                 // Insert the new surface water type related related monitoring output data item
-                waterQualityModel.MonitoringOutputDataItemSet.DataItems.Insert(insertIndex, new DataItem(new WaterQualityObservationVariableOutput(outputVariables) { Name = surfaceWaterType })
-                {
-                    Owner = waterQualityModel,
-                    Role = DataItemRole.Output
-                });
+                waterQualityModel.MonitoringOutputDataItemSet.DataItems.Insert(
+                    insertIndex,
+                    new DataItem(
+                        new WaterQualityObservationVariableOutput(outputVariables)
+                        {
+                            Name = surfaceWaterType
+                        })
+                    {
+                        Owner = waterQualityModel,
+                        Role = DataItemRole.Output
+                    });
             }
-
         }
 
-        private static bool IsChildOfWaterQualityModelDataItemSet(WaterQualityModel waterQualityModel, IDataItem dataItem)
+        private static bool IsChildOfWaterQualityModelDataItemSet(WaterQualityModel waterQualityModel,
+                                                                  IDataItem dataItem)
         {
             // All collections in a DataItemSet should be mentioned here:
-            return waterQualityModel.GetDataItemByTag(WaterQualityModel.InitialConditionsDataItemMetaData.Tag).Equals(dataItem.Owner) ||
-                   waterQualityModel.GetDataItemByTag(WaterQualityModel.DispersionDataItemMetaData.Tag).Equals(dataItem.Owner) ||
-                   waterQualityModel.GetDataItemByTag(WaterQualityModel.ProcessCoefficientsDataItemMetaData.Tag).Equals(dataItem.Owner);
+            return waterQualityModel.GetDataItemByTag(WaterQualityModel.InitialConditionsDataItemMetaData.Tag)
+                                    .Equals(dataItem.Owner) ||
+                   waterQualityModel.GetDataItemByTag(WaterQualityModel.DispersionDataItemMetaData.Tag)
+                                    .Equals(dataItem.Owner) ||
+                   waterQualityModel.GetDataItemByTag(WaterQualityModel.ProcessCoefficientsDataItemMetaData.Tag)
+                                    .Equals(dataItem.Owner);
         }
 
-        private static void HandleFunctionListCollectionChanged(UnstructuredGrid grid, NotifyCollectionChangedAction notifyCollectionChangeAction, IDataItem dataItem)
+        private static void HandleFunctionListCollectionChanged(UnstructuredGrid grid,
+                                                                NotifyCollectionChangedAction
+                                                                    notifyCollectionChangeAction, IDataItem dataItem)
         {
             switch (notifyCollectionChangeAction)
             {
                 case NotifyCollectionChangedAction.Add:
+                {
+                    var unstructuredGridCoverage = dataItem.Value as UnstructuredGridCellCoverage;
+                    // when an initial condition or other list of functions/coverages was altered (changed from constant to coverage in this case)
+                    // make sure that the coverage is cleared, because it was replaced and a new coverage is created.
+                    // It will receive a new grid with the right number of cells.
+                    if (unstructuredGridCoverage != null)
                     {
-                        var unstructuredGridCoverage = dataItem.Value as UnstructuredGridCellCoverage;
-                        // when an initial condition or other list of functions/coverages was altered (changed from constant to coverage in this case)
-                        // make sure that the coverage is cleared, because it was replaced and a new coverage is created.
-                        // It will receive a new grid with the right number of cells.
-                        if (unstructuredGridCoverage != null)
+                        unstructuredGridCoverage.AssignNewGridToCoverage(grid);
+
+                        // create a spatial operation value converter and add a set value operation
+                        SpatialOperationSetValueConverter valueConverter =
+                            SpatialOperationValueConverterFactory.GetOrCreateSpatialOperationValueConverter(
+                                dataItem, unstructuredGridCoverage.Name);
+                        var operation = new SetValueOperation
                         {
-                            unstructuredGridCoverage.AssignNewGridToCoverage(grid);
+                            Name = InitialValueOperationName,
+                            Value = WaterQualityFunctionFactory.GetDefaultValue(unstructuredGridCoverage),
+                            OperationType = PointwiseOperationType.OverwriteWhereMissing,
+                        };
 
-                            // create a spatial operation value converter and add a set value operation
-                            var valueConverter = SpatialOperationValueConverterFactory.GetOrCreateSpatialOperationValueConverter(dataItem, unstructuredGridCoverage.Name);
-                            var operation = new SetValueOperation
-                            {
-                                Name = InitialValueOperationName,
-                                Value = WaterQualityFunctionFactory.GetDefaultValue(unstructuredGridCoverage),
-                                OperationType = PointwiseOperationType.OverwriteWhereMissing,
-                            };
+                        // set the input mask of the set value operation
+                        SetGridExtentsAsInputMask(operation, unstructuredGridCoverage);
 
-                            // set the input mask of the set value operation
-                            SetGridExtentsAsInputMask(operation, unstructuredGridCoverage);
-
-                            // add the operation to the set
-                            valueConverter.SpatialOperationSet.AddOperation(operation);
-                        }
+                        // add the operation to the set
+                        valueConverter.SpatialOperationSet.AddOperation(operation);
                     }
+                }
                     break;
             }
         }
 
-        public static void SetGridExtentsAsInputMask(ISpatialOperation operation, UnstructuredGridCoverage unstructuredGridCoverage)
+        public static void SetGridExtentsAsInputMask(ISpatialOperation operation,
+                                                     UnstructuredGridCoverage unstructuredGridCoverage)
         {
             if (unstructuredGridCoverage.Grid.IsEmpty)
+            {
                 return;
+            }
 
             // calculate the extents of the grid
             Envelope extents = unstructuredGridCoverage.Grid.GetExtents();
-            FeatureCollection polygonCollection = new FeatureCollection(new[]
+            var polygonCollection = new FeatureCollection(new[]
             {
                 new Feature
                 {
@@ -538,101 +667,122 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             operation.SetInputData(SpatialOperation.MaskInputName, polygonCollection);
         }
 
-        private static void UpdateUnstructuredGridCoverage(WaterQualityModel waterQualityModel, UnstructuredGridCoverage coverage, NotifyCollectionChangedEventArgs e)
+        private static void UpdateUnstructuredGridCoverage(WaterQualityModel waterQualityModel,
+                                                           UnstructuredGridCoverage coverage,
+                                                           NotifyCollectionChangedEventArgs e)
         {
             switch (e.Action)
             {
                 case NotifyCollectionChangedAction.Add:
-                    {
-                        coverage.Grid = waterQualityModel.Grid;
-                        break;
-                    }
+                {
+                    coverage.Grid = waterQualityModel.Grid;
+                    break;
+                }
                 case NotifyCollectionChangedAction.Remove:
-                    {
-                        coverage.Grid = null;
-                        break;
-                    }
+                {
+                    coverage.Grid = null;
+                    break;
+                }
             }
         }
 
-        private static void UpdateProcessCoefficients(WaterQualityModel waterQualityModel, WaterQualityParameter parameter, NotifyCollectionChangedAction action)
+        private static void UpdateProcessCoefficients(WaterQualityModel waterQualityModel,
+                                                      WaterQualityParameter parameter,
+                                                      NotifyCollectionChangedAction action)
         {
-            var name = parameter.Name;
-            var defaultValue = parameter.DefaultValue;
-            var unit = parameter.Unit;
-            var description = parameter.Description;
+            string name = parameter.Name;
+            double defaultValue = parameter.DefaultValue;
+            string unit = parameter.Unit;
+            string description = parameter.Description;
 
             if (action == NotifyCollectionChangedAction.Add && waterQualityModel.HasDataInHydroDynamics(name))
             {
-                var functionFromHydroData = WaterQualityFunctionFactory.CreateFunctionFromHydroDynamics(name, defaultValue, unit, unit, description);
+                FunctionFromHydroDynamics functionFromHydroData =
+                    WaterQualityFunctionFactory.CreateFunctionFromHydroDynamics(
+                        name, defaultValue, unit, unit, description);
                 functionFromHydroData.FilePath = waterQualityModel.GetFilePathFromHydroDynamics(functionFromHydroData);
                 waterQualityModel.ProcessCoefficients.Add(functionFromHydroData);
             }
             else
             {
                 UpdateFunctionCollection(action, waterQualityModel.ProcessCoefficients, name,
-                defaultValue, unit, description);
+                                         defaultValue, unit, description);
             }
         }
 
-        private static void UpdateInitialConditions(WaterQualityModel waterQualityModel, WaterQualitySubstance substanceVariable, NotifyCollectionChangedAction action)
+        private static void UpdateInitialConditions(WaterQualityModel waterQualityModel,
+                                                    WaterQualitySubstance substanceVariable,
+                                                    NotifyCollectionChangedAction action)
         {
             UpdateFunctionCollection(action, waterQualityModel.InitialConditions, substanceVariable.Name,
-                substanceVariable.InitialValue, substanceVariable.ConcentrationUnit, substanceVariable.Description);
+                                     substanceVariable.InitialValue, substanceVariable.ConcentrationUnit,
+                                     substanceVariable.Description);
         }
 
-        private static void UpdateFunctionCollection(NotifyCollectionChangedAction action, ICollection<IFunction> functionCollection, string functionName, double defaultValue, string componentUnitName, string description)
+        private static void UpdateFunctionCollection(NotifyCollectionChangedAction action,
+                                                     ICollection<IFunction> functionCollection, string functionName,
+                                                     double defaultValue, string componentUnitName, string description)
         {
             switch (action)
             {
                 case NotifyCollectionChangedAction.Add:
-                    {
-                        AddNewConstantFunction(functionCollection, functionName, defaultValue, componentUnitName, description);
-                        break;
-                    }
+                {
+                    AddNewConstantFunction(functionCollection, functionName, defaultValue, componentUnitName,
+                                           description);
+                    break;
+                }
                 case NotifyCollectionChangedAction.Remove:
-                    {
-                        RemoveFunction(functionCollection, functionName);
-                        break;
-                    }
+                {
+                    RemoveFunction(functionCollection, functionName);
+                    break;
+                }
             }
         }
 
-        private static void AddNewConstantFunction(ICollection<IFunction> functionCollection, string functionName, double defaultValue, string componentUnitName, string description)
+        private static void AddNewConstantFunction(ICollection<IFunction> functionCollection, string functionName,
+                                                   double defaultValue, string componentUnitName, string description)
         {
-            var newConstantFunction = WaterQualityFunctionFactory.CreateConst(functionName, defaultValue, functionName, componentUnitName, description);
+            IFunction newConstantFunction =
+                WaterQualityFunctionFactory.CreateConst(functionName, defaultValue, functionName, componentUnitName,
+                                                        description);
             functionCollection.Add(newConstantFunction);
         }
 
         private static void RemoveFunction(ICollection<IFunction> functionCollection, string functionName)
         {
-            var processCoefficient = functionCollection.FirstOrDefault(icd => icd.Name == functionName);
+            IFunction processCoefficient = functionCollection.FirstOrDefault(icd => icd.Name == functionName);
             if (processCoefficient != null)
             {
                 functionCollection.Remove(processCoefficient);
             }
         }
 
-        private static void UpdateSubstanceOutputCoverageDataItems(WaterQualityModel waterQualityModel, WaterQualitySubstance substance, NotifyCollectionChangedAction action)
+        private static void UpdateSubstanceOutputCoverageDataItems(WaterQualityModel waterQualityModel,
+                                                                   WaterQualitySubstance substance,
+                                                                   NotifyCollectionChangedAction action)
         {
             switch (action)
             {
                 case NotifyCollectionChangedAction.Add:
-                    {
-                        // Add a new substance output coverage data item
-                        AddOutputCoverageDataItem(waterQualityModel, waterQualityModel.OutputSubstancesDataItemSet, waterQualityModel.SubstanceProcessLibrary.Substances.IndexOf(substance), substance.Name, substance.ConcentrationUnit);
-                        break;
-                    }
+                {
+                    // Add a new substance output coverage data item
+                    AddOutputCoverageDataItem(waterQualityModel, waterQualityModel.OutputSubstancesDataItemSet,
+                                              waterQualityModel.SubstanceProcessLibrary.Substances.IndexOf(substance),
+                                              substance.Name, substance.ConcentrationUnit);
+                    break;
+                }
                 case NotifyCollectionChangedAction.Remove:
-                    {
-                        // Remove the existing substance output coverage data item
-                        RemoveOutputCoverageDataItem(waterQualityModel, substance.Name, waterQualityModel.OutputSubstancesDataItemSet.DataItems);
-                        break;
-                    }
+                {
+                    // Remove the existing substance output coverage data item
+                    RemoveOutputCoverageDataItem(waterQualityModel, substance.Name,
+                                                 waterQualityModel.OutputSubstancesDataItemSet.DataItems);
+                    break;
+                }
             }
         }
 
-        private static void AddOutputCoverageDataItem(WaterQualityModel waterQualityModel, IDataItemSet dataItemSet, int insertPosition, string outputDataItemName, string unit = null)
+        private static void AddOutputCoverageDataItem(WaterQualityModel waterQualityModel, IDataItemSet dataItemSet,
+                                                      int insertPosition, string outputDataItemName, string unit = null)
         {
             var unstructuredGridCellCoverage = new UnstructuredGridCellCoverage(waterQualityModel.Grid, true)
             {
@@ -642,44 +792,56 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             };
 
             unstructuredGridCellCoverage.Components[0].Name = outputDataItemName;
-            unstructuredGridCellCoverage.Components[0].Unit = !string.IsNullOrEmpty(unit) ? new Unit(unit, unit) : new Unit("-", "-");
+            unstructuredGridCellCoverage.Components[0].Unit =
+                !string.IsNullOrEmpty(unit) ? new Unit(unit, unit) : new Unit("-", "-");
             unstructuredGridCellCoverage.Components[0].NoDataValue = -999;
 
             waterQualityModel.MapFileFunctionStore.Functions.AddRange(GetAllFunctions(unstructuredGridCellCoverage));
 
-            var dataItem = new DataItem(unstructuredGridCellCoverage, DataItemRole.Output, outputDataItemName) { Name = outputDataItemName };
+            var dataItem =
+                new DataItem(unstructuredGridCellCoverage, DataItemRole.Output, outputDataItemName)
+                {
+                    Name = outputDataItemName
+                };
             dataItemSet.DataItems.Insert(insertPosition, dataItem);
         }
 
         private static IEnumerable<IFunction> GetAllFunctions(IFunction function)
         {
-            return function.Arguments.Concat(function.Components).Concat(new[] { function });
+            return function.Arguments.Concat(function.Components).Concat(new[]
+            {
+                function
+            });
         }
-        
-        private static void RemoveOutputCoverageDataItem(WaterQualityModel waterQualityModel, string outputCoverageToRemoveName, IEventedList<IDataItem> dataItems)
+
+        private static void RemoveOutputCoverageDataItem(WaterQualityModel waterQualityModel,
+                                                         string outputCoverageToRemoveName,
+                                                         IEventedList<IDataItem> dataItems)
         {
-            var outputCoverageDataItem = dataItems.First(di => di.Role.HasFlag(DataItemRole.Output)
-                                                                                 && di.Name == outputCoverageToRemoveName
-                                                                                 && !(di.Value is FeatureCoverage));
+            IDataItem outputCoverageDataItem = dataItems.First(di => di.Role.HasFlag(DataItemRole.Output)
+                                                                     && di.Name == outputCoverageToRemoveName
+                                                                     && !(di.Value is FeatureCoverage));
 
             // Release the network from the output coverage
-            var coverage = ((UnstructuredGridCellCoverage)outputCoverageDataItem.Value);
+            var coverage = (UnstructuredGridCellCoverage) outputCoverageDataItem.Value;
             coverage.Grid = null;
 
-            foreach (var function in GetAllFunctions(coverage))
+            foreach (IFunction function in GetAllFunctions(coverage))
             {
                 waterQualityModel.MapFileFunctionStore.Functions.Remove(function);
             }
-            
+
             dataItems.Remove(outputCoverageDataItem);
         }
 
-        private static void MonitoringOutputLevelChanged(WaterQualityModel waterQualityModel, string monitoringOutputTag)
+        private static void MonitoringOutputLevelChanged(WaterQualityModel waterQualityModel,
+                                                         string monitoringOutputTag)
         {
-            var existingMonitoringOutputDataItemSet = waterQualityModel.MonitoringOutputDataItemSet;
+            IDataItemSet existingMonitoringOutputDataItemSet = waterQualityModel.MonitoringOutputDataItemSet;
 
             // If relevant, add a new monitoring output data item set and update the monitoring output data items
-            if (existingMonitoringOutputDataItemSet == null && waterQualityModel.ModelSettings.MonitoringOutputLevel != MonitoringOutputLevel.None)
+            if (existingMonitoringOutputDataItemSet == null &&
+                waterQualityModel.ModelSettings.MonitoringOutputLevel != MonitoringOutputLevel.None)
             {
                 InsertMonitoringLocationsDataItem(waterQualityModel, monitoringOutputTag);
 
@@ -687,9 +849,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             }
 
             // If relevant, update the monitoring output data items and remove the existing monitoring output data item set
-            if (existingMonitoringOutputDataItemSet != null && waterQualityModel.ModelSettings.MonitoringOutputLevel == MonitoringOutputLevel.None)
+            if (existingMonitoringOutputDataItemSet != null &&
+                waterQualityModel.ModelSettings.MonitoringOutputLevel == MonitoringOutputLevel.None)
             {
-                UpdateMonitoringOutputDataItems(waterQualityModel); // Update the monitoring output data items before removing the monitoring output data item set; all existing monitoring output data items will be correctly removed
+                UpdateMonitoringOutputDataItems(
+                    waterQualityModel); // Update the monitoring output data items before removing the monitoring output data item set; all existing monitoring output data items will be correctly removed
                 waterQualityModel.DataItems.Remove(existingMonitoringOutputDataItemSet);
 
                 return;
@@ -699,18 +863,21 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             UpdateMonitoringOutputDataItems(waterQualityModel);
         }
 
-        public static void InsertMonitoringLocationsDataItem(WaterQualityModel waterQualityModel, string monitoringOutputTag)
+        public static void InsertMonitoringLocationsDataItem(WaterQualityModel waterQualityModel,
+                                                             string monitoringOutputTag)
         {
-            var dataItemSet = new DataItemSet(new EventedList<WaterQualityObservationVariableOutput>(), "Monitoring locations",
-                DataItemRole.Output, true, monitoringOutputTag, typeof (WaterQualityObservationVariableOutput));
+            var dataItemSet = new DataItemSet(new EventedList<WaterQualityObservationVariableOutput>(),
+                                              "Monitoring locations",
+                                              DataItemRole.Output, true, monitoringOutputTag,
+                                              typeof(WaterQualityObservationVariableOutput));
             waterQualityModel.DataItems.Insert(GetMonitoringOutputDataItemSetPosition(waterQualityModel), dataItemSet);
             UpdateMonitoringOutputDataItems(waterQualityModel);
-                // Update the monitoring output data items after adding the new monitoring output data item set; all relevant monitoring output data items will be added
+            // Update the monitoring output data items after adding the new monitoring output data item set; all relevant monitoring output data items will be added
         }
 
         private static int GetMonitoringOutputDataItemSetPosition(WaterQualityModel waterQualityModel)
         {
-            var startingPosition = waterQualityModel.DataItems.Count(di => !di.Role.HasFlag(DataItemRole.Output));
+            int startingPosition = waterQualityModel.DataItems.Count(di => !di.Role.HasFlag(DataItemRole.Output));
 
             startingPosition += waterQualityModel.SubstanceProcessLibrary.Substances.Count();
             startingPosition += waterQualityModel.SubstanceProcessLibrary.OutputParameters.Count(op => op.ShowInMap);

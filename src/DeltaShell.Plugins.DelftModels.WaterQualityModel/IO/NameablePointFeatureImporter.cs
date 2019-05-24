@@ -1,13 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-
 using DelftTools.Shell.Core;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects;
-using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.CoordinateSystems.Transformations;
+using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 using SharpMap.CoordinateSystems.Transformations;
@@ -20,24 +19,30 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
     public abstract class NameablePointFeatureImporter<T> : IFileImporter where T : NameablePointFeature
     {
         public abstract string Name { get; }
-        public string Category { get { return "Hydro"; } }
-        public string Description
-        {
-            get { return string.Empty; }
-        }
+        public string Category => "Hydro";
+
+        public string Description => string.Empty;
         public abstract Bitmap Image { get; }
-        public IEnumerable<Type> SupportedItemTypes { get { yield return typeof (IEventedList<T>); } }
+
+        public IEnumerable<Type> SupportedItemTypes
+        {
+            get
+            {
+                yield return typeof(IEventedList<T>);
+            }
+        }
+
         public bool CanImportOn(object targetObject)
         {
             return true;
         }
 
-        public bool CanImportOnRootLevel { get { return false; } }
-        public string FileFilter { get { return "Shape file (*.shp)|*.shp"; } }
+        public bool CanImportOnRootLevel => false;
+        public string FileFilter => "Shape file (*.shp)|*.shp";
         public string TargetDataDirectory { get; set; }
         public bool ShouldCancel { get; set; }
         public ImportProgressChangedDelegate ProgressChanged { get; set; }
-        public bool OpenViewAfterImport { get { return true; } }
+        public bool OpenViewAfterImport => true;
 
         public Func<double> GetDefaultZValue { get; set; }
 
@@ -53,25 +58,27 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                 throw new NotSupportedException("Target type is not is supported.");
             }
 
-            ShapeFile file = new ShapeFile(path);
+            var file = new ShapeFile(path);
 
             if (file.GetFeatureCount() > 0)
             {
                 ICoordinateTransformation transformation = null;
                 if (ModelCoordinateSystem != null && file.CoordinateSystem != null)
                 {
-                    transformation = new OgrCoordinateSystemFactory().CreateTransformation(file.CoordinateSystem, ModelCoordinateSystem);
+                    transformation =
+                        new OgrCoordinateSystemFactory().CreateTransformation(
+                            file.CoordinateSystem, ModelCoordinateSystem);
                 }
 
                 foreach (IFeature feature in file.Features)
                 {
                     if (feature.Geometry is Point)
                     {
-                        IGeometry transformedGeometry = (IGeometry)feature.Geometry.Clone();
+                        var transformedGeometry = (IGeometry) feature.Geometry.Clone();
                         if (transformation != null)
                         {
                             transformedGeometry = GeometryTransform.TransformGeometry(feature.Geometry,
-                                transformation.MathTransform);
+                                                                                      transformation.MathTransform);
                         }
 
                         T newFeature = CreateFeature();
@@ -103,7 +110,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             const string zAttributeName = "Z";
             if (feature.Attributes.ContainsKey(zAttributeName))
             {
-                var retrievedValue = feature.Attributes[zAttributeName];
+                object retrievedValue = feature.Attributes[zAttributeName];
                 if (!(retrievedValue is DBNull))
                 {
                     newFeature.Z = Convert.ToDouble(retrievedValue);

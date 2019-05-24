@@ -16,21 +16,25 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
         {
             var reportList = new List<ValidationReport> {ValidateAllDomainsShareCoordinateSystem(model)};
             reportList.AddRange(WaveDomainHelper.GetAllDomains(model.OuterDomain)
-                .Select(ValidateDomain)
-                .ToList());
+                                                .Select(ValidateDomain)
+                                                .ToList());
             return reportList;
         }
 
         private static ValidationReport ValidateAllDomainsShareCoordinateSystem(WaveModel model)
         {
             var issues = new List<ValidationIssue>();
-            var domain = model.OuterDomain;
-            var domains = WaveDomainHelper.GetAllDomains(domain);
-            var sphericalDomains = domains.Where(d => CheckDomainGrid( d, WaveModel.CoordinateSystemType.Spherical)).ToList();
+            WaveDomainData domain = model.OuterDomain;
+            IList<WaveDomainData> domains = WaveDomainHelper.GetAllDomains(domain);
+            List<WaveDomainData> sphericalDomains =
+                domains.Where(d => CheckDomainGrid(d, WaveModel.CoordinateSystemType.Spherical)).ToList();
 
-            if (sphericalDomains.Any() && domains.Any(d => CheckDomainGrid(d, WaveModel.CoordinateSystemType.Cartesian)))
+            if (sphericalDomains.Any() &&
+                domains.Any(d => CheckDomainGrid(d, WaveModel.CoordinateSystemType.Cartesian)))
             {
-                issues.Add(new ValidationIssue(domain, ValidationSeverity.Error, Resources.WaveDomainValidator_ValidateAllDomainsShareCoordinateSystem_All_the_grids_Coordinate_System_should_be_the_same__either_Spherical_or_Cardesian));
+                issues.Add(new ValidationIssue(domain, ValidationSeverity.Error,
+                                               Resources
+                                                   .WaveDomainValidator_ValidateAllDomainsShareCoordinateSystem_All_the_grids_Coordinate_System_should_be_the_same__either_Spherical_or_Cardesian));
             }
             else if (sphericalDomains.Count == domains.Count)
             {
@@ -41,19 +45,29 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                         WaveModel = model,
                         TabName = "Physical Processes"
                     };
-                    issues.Add(new ValidationIssue(domain, ValidationSeverity.Error, Resources.WaveDomainValidator_ValidateAllDomainsShareCoordinateSystem_WaveSetup_should_be_false_when_using_Spherical_Coordinate_Systems_, waveValidationShortcut));
+                    issues.Add(new ValidationIssue(domain, ValidationSeverity.Error,
+                                                   Resources
+                                                       .WaveDomainValidator_ValidateAllDomainsShareCoordinateSystem_WaveSetup_should_be_false_when_using_Spherical_Coordinate_Systems_,
+                                                   waveValidationShortcut));
                 }
             }
+
             return new ValidationReport("Model domains", issues);
         }
 
         private static bool CheckDomainGrid(WaveDomainData domain, string coordinateSystemName)
         {
-            if (domain.Grid == null) return false;
+            if (domain.Grid == null)
+            {
+                return false;
+            }
 
             string coordinateSystem;
             if (domain.Grid.Attributes.TryGetValue("CoordinateSystem", out coordinateSystem))
+            {
                 return coordinateSystem == coordinateSystemName;
+            }
+
             return false;
         }
 
@@ -63,16 +77,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
 
             issues.AddRange(ValidateGrid(domain));
             issues.AddRange(ValidateBathymetry(domain));
-            
+
             if (domain.SpectralDomainData.NDir == 0 && !domain.SpectralDomainData.UseDefaultDirectionalSpace)
             {
-                issues.Add(new ValidationIssue(domain, ValidationSeverity.Error, "Number of directions cannot be zero", domain));
+                issues.Add(new ValidationIssue(domain, ValidationSeverity.Error, "Number of directions cannot be zero",
+                                               domain));
             }
+
             if (domain.SpectralDomainData.NFreq == 0 && !domain.SpectralDomainData.UseDefaultFrequencySpace)
             {
-                issues.Add(new ValidationIssue(domain, ValidationSeverity.Error, "Number of frequencies cannot be zero", domain));
+                issues.Add(new ValidationIssue(domain, ValidationSeverity.Error, "Number of frequencies cannot be zero",
+                                               domain));
             }
-            
+
             return new ValidationReport(string.Format("Domain: {0}", domain.Name), issues);
         }
 
@@ -83,7 +100,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
             {
                 yield return
                     new ValidationIssue(domain.Bathymetry, ValidationSeverity.Error, "Bathymetry does not match grid",
-                        domain.Bathymetry);
+                                        domain.Bathymetry);
             }
         }
 
@@ -91,7 +108,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
         {
             if (!domain.Grid.X.Values.Any() || !domain.Grid.Y.Values.Any())
             {
-                yield return new ValidationIssue(domain.Grid, ValidationSeverity.Error, "Grid (" + domain.Name+ ") is empty", domain.Grid);
+                yield return new ValidationIssue(domain.Grid, ValidationSeverity.Error,
+                                                 "Grid (" + domain.Name + ") is empty", domain.Grid);
             }
 
             int nrZeroXs = domain.Grid.X.Values.Count(v => v.Equals(0.0));
@@ -99,8 +117,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
             {
                 yield return
                     new ValidationIssue(domain.Grid, ValidationSeverity.Error,
-                        "Grid contains " + nrZeroXs + " invalid x-coordinate(s); coordinates are not allowed to be exactly equal to 0.0",
-                        domain.Grid);
+                                        "Grid contains " + nrZeroXs +
+                                        " invalid x-coordinate(s); coordinates are not allowed to be exactly equal to 0.0",
+                                        domain.Grid);
             }
 
             int nrZeroYs = domain.Grid.Y.Values.Count(v => v.Equals(0.0));
@@ -108,8 +127,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
             {
                 yield return
                     new ValidationIssue(domain.Grid, ValidationSeverity.Error,
-                        "Grid contains " + nrZeroYs + " invalid y-coordinate(s); coordinates are not allowed to be exactly equal to 0.0",
-                        domain.Grid);
+                                        "Grid contains " + nrZeroYs +
+                                        " invalid y-coordinate(s); coordinates are not allowed to be exactly equal to 0.0",
+                                        domain.Grid);
             }
         }
     }

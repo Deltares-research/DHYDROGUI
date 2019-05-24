@@ -63,17 +63,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
 
         public bool IsCoupledToFlow
         {
-            set { hydroGroupBox.Visible = value; }
+            set => hydroGroupBox.Visible = value;
         }
 
         private WaveDomainData data;
+
         public object Data
         {
-            get { return data; }
+            get => data;
             set
             {
                 if (data != null)
+                {
                     UnbindControls();
+                }
 
                 data = value as WaveDomainData;
                 waveMeteoPanel.Data = data != null ? data.MeteoData : null;
@@ -83,55 +86,70 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
                     BindControls();
 
                     circleRBtn.CheckedChanged -= CircleRBtnOnCheckedChanged;
-                    
-                    circleRBtn.Checked = (data.SpectralDomainData.DirectionalSpaceType == WaveDirectionalSpaceType.Circle);
-                    sectorRBtn.Checked = (data.SpectralDomainData.DirectionalSpaceType == WaveDirectionalSpaceType.Sector);
-                    EnableControlsForSpectralSpaceType(data.SpectralDomainData.DirectionalSpaceType == WaveDirectionalSpaceType.Circle);
-                    
+
+                    circleRBtn.Checked =
+                        data.SpectralDomainData.DirectionalSpaceType == WaveDirectionalSpaceType.Circle;
+                    sectorRBtn.Checked =
+                        data.SpectralDomainData.DirectionalSpaceType == WaveDirectionalSpaceType.Sector;
+                    EnableControlsForSpectralSpaceType(data.SpectralDomainData.DirectionalSpaceType ==
+                                                       WaveDirectionalSpaceType.Circle);
+
                     circleRBtn.CheckedChanged += CircleRBtnOnCheckedChanged;
                 }
             }
         }
 
-        public Func<string, string> ImportIntoModelDirectory { private get; set; } 
+        public Func<string, string> ImportIntoModelDirectory { private get; set; }
 
         private void BindControls()
         {
-            var spectralDomain = data.SpectralDomainData;
+            SpectralDomainData spectralDomain = data.SpectralDomainData;
 
             useDefaultDirSpaceCBox.DataBindings.Add(new Binding("Checked", spectralDomain,
                                                                 TypeUtils.GetMemberName(
                                                                     () => spectralDomain.UseDefaultDirectionalSpace)));
-            nDirBox.DataBindings.Add(new Binding("Text", spectralDomain, TypeUtils.GetMemberName(() => spectralDomain.NDir)));
-            startDirBox.DataBindings.Add(new Binding("Text", spectralDomain, TypeUtils.GetMemberName(() => spectralDomain.StartDir)));
-            endDirBox.DataBindings.Add(new Binding("Text", spectralDomain, TypeUtils.GetMemberName(() => spectralDomain.EndDir)));
+            nDirBox.DataBindings.Add(new Binding("Text", spectralDomain,
+                                                 TypeUtils.GetMemberName(() => spectralDomain.NDir)));
+            startDirBox.DataBindings.Add(new Binding("Text", spectralDomain,
+                                                     TypeUtils.GetMemberName(() => spectralDomain.StartDir)));
+            endDirBox.DataBindings.Add(new Binding("Text", spectralDomain,
+                                                   TypeUtils.GetMemberName(() => spectralDomain.EndDir)));
 
             useDefaultFreqSpaceCBox.DataBindings.Add(new Binding("Checked", spectralDomain,
-                                                    TypeUtils.GetMemberName(
-                                                        () => spectralDomain.UseDefaultFrequencySpace)));
-            nrOfFreqBox.DataBindings.Add(new Binding("Text", spectralDomain, TypeUtils.GetMemberName(() => spectralDomain.NFreq)));
-            lowFreqBox.DataBindings.Add(new Binding("Text", spectralDomain, TypeUtils.GetMemberName(() => spectralDomain.FreqMin)));
-            highFreqBox.DataBindings.Add(new Binding("Text", spectralDomain, TypeUtils.GetMemberName(() => spectralDomain.FreqMax)));
+                                                                 TypeUtils.GetMemberName(
+                                                                     () => spectralDomain.UseDefaultFrequencySpace)));
+            nrOfFreqBox.DataBindings.Add(new Binding("Text", spectralDomain,
+                                                     TypeUtils.GetMemberName(() => spectralDomain.NFreq)));
+            lowFreqBox.DataBindings.Add(new Binding("Text", spectralDomain,
+                                                    TypeUtils.GetMemberName(() => spectralDomain.FreqMin)));
+            highFreqBox.DataBindings.Add(new Binding("Text", spectralDomain,
+                                                     TypeUtils.GetMemberName(() => spectralDomain.FreqMax)));
 
             useDefaultMeteoCBox.DataBindings.Add(new Binding("Checked", data,
-                TypeUtils.GetMemberName<WaveDomainData>(d => d.UseGlobalMeteoData)));
+                                                             TypeUtils.GetMemberName<WaveDomainData>(
+                                                                 d => d.UseGlobalMeteoData)));
 
-            var hydroData = data.HydroFromFlowData;
+            HydroFromFlowSettings hydroData = data.HydroFromFlowData;
             useDefaultHydroCBox.DataBindings.Add(new Binding("Checked", hydroData,
                                                              TypeUtils.GetMemberName(
                                                                  () => hydroData.UseDefaultHydroFromFlowSettings)));
-            bedlevelBox.DataBindings.Add(new Binding("SelectedValue", hydroData, TypeUtils.GetMemberName(() => hydroData.BedLevelUsage)));
-            waterlevelBox.DataBindings.Add(new Binding("SelectedValue", hydroData, TypeUtils.GetMemberName(() => hydroData.WaterLevelUsage)));
-            velocityBox.DataBindings.Add(new Binding("SelectedValue", hydroData, TypeUtils.GetMemberName(() => hydroData.VelocityUsage)));
-            velocityTypeBox.DataBindings.Add(new Binding("SelectedValue", hydroData, TypeUtils.GetMemberName(() => hydroData.VelocityUsageType)));
-            windBox.DataBindings.Add(new Binding("SelectedValue", hydroData, TypeUtils.GetMemberName(() => hydroData.WindUsage)));
+            bedlevelBox.DataBindings.Add(new Binding("SelectedValue", hydroData,
+                                                     TypeUtils.GetMemberName(() => hydroData.BedLevelUsage)));
+            waterlevelBox.DataBindings.Add(new Binding("SelectedValue", hydroData,
+                                                       TypeUtils.GetMemberName(() => hydroData.WaterLevelUsage)));
+            velocityBox.DataBindings.Add(new Binding("SelectedValue", hydroData,
+                                                     TypeUtils.GetMemberName(() => hydroData.VelocityUsage)));
+            velocityTypeBox.DataBindings.Add(new Binding("SelectedValue", hydroData,
+                                                         TypeUtils.GetMemberName(() => hydroData.VelocityUsageType)));
+            windBox.DataBindings.Add(new Binding("SelectedValue", hydroData,
+                                                 TypeUtils.GetMemberName(() => hydroData.WindUsage)));
         }
 
         private void CircleRBtnOnCheckedChanged(object sender, EventArgs eventArgs)
         {
             data.SpectralDomainData.DirectionalSpaceType = circleRBtn.Checked
-                                                      ? WaveDirectionalSpaceType.Circle
-                                                      : WaveDirectionalSpaceType.Sector;
+                                                               ? WaveDirectionalSpaceType.Circle
+                                                               : WaveDirectionalSpaceType.Sector;
             EnableControlsForSpectralSpaceType(circleRBtn.Checked);
         }
 
@@ -160,14 +178,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
             windBox.DataBindings.Clear();
         }
 
-
         public Image Image { get; set; }
-        public void EnsureVisible(object item){}
+        public void EnsureVisible(object item) {}
         public ViewInfo ViewInfo { get; set; }
         public IEnumerable<IFeature> SelectedFeatures { get; set; }
         public event EventHandler SelectedFeaturesChanged;
         public ILayer Layer { get; set; }
-        public void OnActivated(){}
-        public void OnDeactivated(){}
+        public void OnActivated() {}
+        public void OnDeactivated() {}
     }
 }

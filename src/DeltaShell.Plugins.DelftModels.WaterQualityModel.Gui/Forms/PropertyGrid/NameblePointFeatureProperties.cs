@@ -13,8 +13,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
         [PropertyOrder(1)]
         public string Name
         {
-            get { return data.Name; }
-            set { data.Name = value; }
+            get => data.Name;
+            set => data.Name = value;
         }
 
         [Category("Location")]
@@ -22,8 +22,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
         [PropertyOrder(1)]
         public double X
         {
-            get { return data.X; }
-            set { data.X = value; }
+            get => data.X;
+            set => data.X = value;
         }
 
         [Category("Location")]
@@ -31,8 +31,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
         [PropertyOrder(2)]
         public double Y
         {
-            get { return data.Y; }
-            set { data.Y = value; }
+            get => data.Y;
+            set => data.Y = value;
         }
 
         [Category("Location")]
@@ -42,8 +42,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
         [DynamicVisible]
         public double Z
         {
-            get { return data.Z; }
-            set { data.Z = value; }
+            get => data.Z;
+            set => data.Z = value;
         }
 
         [DynamicVisibleValidationMethod]

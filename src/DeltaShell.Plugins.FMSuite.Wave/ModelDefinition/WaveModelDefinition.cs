@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Common.Dependency;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files;
@@ -15,17 +16,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.ModelDefinition
     public class WaveModelDefinition
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(WaveModelDefinition));
-        public IEventedList<WaveModelProperty>  Properties { get; set; }
+        public IEventedList<WaveModelProperty> Properties { get; set; }
         public ModelSchema<WaveModelPropertyDefinition> ModelSchema { get; private set; }
-        
+
         public bool BoundaryIsDefinedBySpecFile { get; set; }
         public string OverallSpecFile { get; set; }
-        
+
         public WaveDomainData OuterDomain { get; set; }
         public IEventedList<WaveBoundaryCondition> BoundaryConditions { get; set; }
         public IEventedList<WaveObstacle> Obstacles { get; set; }
-        public IEventedList<Feature2DPoint> ObservationPoints { get; set; } 
-        public IEventedList<Feature2D> ObservationCrossSections { get; set; } 
+        public IEventedList<Feature2DPoint> ObservationPoints { get; set; }
+        public IEventedList<Feature2D> ObservationCrossSections { get; set; }
 
         public string ObstaclePolylineFile { get; set; }
 
@@ -37,22 +38,26 @@ namespace DeltaShell.Plugins.FMSuite.Wave.ModelDefinition
         // 
 
         /// <summary>
-        /// Create default/empty model definition and set the correct default values depending on other properties. 
+        /// Create default/empty model definition and set the correct default values depending on other properties.
         /// </summary>
         public WaveModelDefinition()
         {
             LoadSchema();
 
             Properties = new EventedList<WaveModelProperty>();
-            foreach (var propertyDefinition in ModelSchema.PropertyDefinitions.Values)
+            foreach (WaveModelPropertyDefinition propertyDefinition in ModelSchema.PropertyDefinitions.Values)
             {
-                if (MdwFile.ExcludedCategories.Contains(propertyDefinition.Category)) continue;
-                
+                if (MdwFile.ExcludedCategories.Contains(propertyDefinition.Category))
+                {
+                    continue;
+                }
+
                 if (propertyDefinition.MultipleDefaultValuesAvailable)
                 {
-                    var defaultValueDependentOn = propertyDefinition.DefaultValueDependentOn;
-                    var prop = Properties.FirstOrDefault(p =>
-                        p.PropertyDefinition.FilePropertyName.Equals(defaultValueDependentOn));
+                    string defaultValueDependentOn = propertyDefinition.DefaultValueDependentOn;
+                    WaveModelProperty prop = Properties.FirstOrDefault(p =>
+                                                                           p.PropertyDefinition.FilePropertyName.Equals(
+                                                                               defaultValueDependentOn));
                     if (prop != null)
                     {
                         var propValue = (int) prop.Value;
@@ -61,14 +66,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.ModelDefinition
                     else
                     {
                         propertyDefinition.DefaultValueAsString = "0";
-                        Log.WarnFormat("In file dwave-properties.csv multiple default values are defined dependent on the non-existing property {0}", defaultValueDependentOn);
+                        Log.WarnFormat(
+                            "In file dwave-properties.csv multiple default values are defined dependent on the non-existing property {0}",
+                            defaultValueDependentOn);
                     }
                 }
 
                 var waveProp = new WaveModelProperty(propertyDefinition, propertyDefinition.DefaultValueAsString);
 
                 SetModelProperty(propertyDefinition.FileCategoryName, propertyDefinition.FilePropertyName,
-                    waveProp);
+                                 waveProp);
             }
 
             Dependencies.CompileEnabledDependencies(Properties);
@@ -86,8 +93,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.ModelDefinition
 
         public void SetModelProperty(string fileCategoryName, string filePropertyName, WaveModelProperty property)
         {
-            var prop = Properties.Where(p => p.PropertyDefinition.FileCategoryName.Equals(fileCategoryName))
-                                 .FirstOrDefault(p => p.PropertyDefinition.FilePropertyName.Equals(filePropertyName));
+            WaveModelProperty prop = Properties
+                                     .Where(p => p.PropertyDefinition.FileCategoryName.Equals(fileCategoryName))
+                                     .FirstOrDefault(
+                                         p => p.PropertyDefinition.FilePropertyName.Equals(filePropertyName));
             if (prop != null)
             {
                 Properties[Properties.IndexOf(prop)] = property;
@@ -107,18 +116,25 @@ namespace DeltaShell.Plugins.FMSuite.Wave.ModelDefinition
         private void LoadSchema()
         {
             const string dwavePropertiesCsvFileName = "dwave-properties.csv";
-            var assembly = typeof (WaveModelDefinition).Assembly;
-            var assemblyLocation = assembly.Location;
-            var directoryInfo = new FileInfo(assemblyLocation).Directory;
+            Assembly assembly = typeof(WaveModelDefinition).Assembly;
+            string assemblyLocation = assembly.Location;
+            DirectoryInfo directoryInfo = new FileInfo(assemblyLocation).Directory;
             if (directoryInfo != null)
             {
-                var path = directoryInfo.FullName;
-                var propertiesDefinitionFile = Path.Combine(path, dwavePropertiesCsvFileName);
-                ModelSchema = new ModelSchemaCsvFile().ReadModelSchema<WaveModelPropertyDefinition>(propertiesDefinitionFile, "MdwGroup");
+                string path = directoryInfo.FullName;
+                string propertiesDefinitionFile = Path.Combine(path, dwavePropertiesCsvFileName);
+                ModelSchema =
+                    new ModelSchemaCsvFile().ReadModelSchema<WaveModelPropertyDefinition>(
+                        propertiesDefinitionFile, "MdwGroup");
 
                 // override default reference date property value with current date
-                var referenceDatePropertyDefinition = ModelSchema.ModelDefinitionCategory[KnownWaveCategories.GeneralCategory]?.PropertyDefinitions
-                    .FirstOrDefault(p => p.FilePropertyName == KnownWaveProperties.ReferenceDate);
+                ModelPropertyDefinition referenceDatePropertyDefinition = ModelSchema
+                                                                          .ModelDefinitionCategory[
+                                                                              KnownWaveCategories.GeneralCategory]
+                                                                          ?.PropertyDefinitions
+                                                                          .FirstOrDefault(
+                                                                              p => p.FilePropertyName ==
+                                                                                   KnownWaveProperties.ReferenceDate);
                 if (referenceDatePropertyDefinition != null)
                 {
                     referenceDatePropertyDefinition.DefaultValueAsString = DateTime.Now.ToString("yyyy-MM-dd");
@@ -134,153 +150,95 @@ namespace DeltaShell.Plugins.FMSuite.Wave.ModelDefinition
 
         public DateTime ModelReferenceDateTime
         {
-            get
-            {
-                return (DateTime)GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.ReferenceDate).Value;
-            }
-            set
-            {
-                GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.ReferenceDate).Value = value;
-            }
+            get => (DateTime) GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.ReferenceDate)
+                .Value;
+            set => GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.ReferenceDate).Value =
+                       value;
         }
 
-        public WaveDirectionalSpaceType DefaultDirectionalSpaceType
-        {
-            get
-            {
-                return (WaveDirectionalSpaceType) GetModelProperty(KnownWaveCategories.GeneralCategory,
-                                                                   KnownWaveProperties.DirectionalSpaceType).Value;
-            }
-        }
+        public WaveDirectionalSpaceType DefaultDirectionalSpaceType =>
+            (WaveDirectionalSpaceType) GetModelProperty(KnownWaveCategories.GeneralCategory,
+                                                        KnownWaveProperties.DirectionalSpaceType).Value;
 
-        public int DefaultNumberOfDirections
-        {
-            get
-            {
-                return (int) GetModelProperty(KnownWaveCategories.GeneralCategory,
-                                              KnownWaveProperties.NumberOfDirections).Value;
-            }
-        }
+        public int DefaultNumberOfDirections =>
+            (int) GetModelProperty(KnownWaveCategories.GeneralCategory,
+                                   KnownWaveProperties.NumberOfDirections).Value;
 
-        public double DefaultStartDirection
-        {
-            get
-            {
-                return (double) GetModelProperty(KnownWaveCategories.GeneralCategory,
-                                              KnownWaveProperties.StartDirection).Value;
-            }
-        }
+        public double DefaultStartDirection =>
+            (double) GetModelProperty(KnownWaveCategories.GeneralCategory,
+                                      KnownWaveProperties.StartDirection).Value;
 
-        public double DefaultEndDirection
-        {
-            get
-            {
-                return (double) GetModelProperty(KnownWaveCategories.GeneralCategory,
-                                              KnownWaveProperties.EndDirection).Value;
-            }
-        }
+        public double DefaultEndDirection =>
+            (double) GetModelProperty(KnownWaveCategories.GeneralCategory,
+                                      KnownWaveProperties.EndDirection).Value;
 
-        public int DefaultNumberOfFrequencies
-        {
-            get
-            {
-                return (int)GetModelProperty(KnownWaveCategories.GeneralCategory,
-                                              KnownWaveProperties.NumberOfFrequencies).Value;
-            }
-        }
+        public int DefaultNumberOfFrequencies =>
+            (int) GetModelProperty(KnownWaveCategories.GeneralCategory,
+                                   KnownWaveProperties.NumberOfFrequencies).Value;
 
-        public double DefaultStartFrequency
-        {
-            get
-            {
-                return (double)GetModelProperty(KnownWaveCategories.GeneralCategory,
-                                              KnownWaveProperties.StartFrequency).Value;
-            }
-        }
+        public double DefaultStartFrequency =>
+            (double) GetModelProperty(KnownWaveCategories.GeneralCategory,
+                                      KnownWaveProperties.StartFrequency).Value;
 
-        public double DefaultEndFrequency
-        {
-            get
-            {
-                return (double)GetModelProperty(KnownWaveCategories.GeneralCategory,
-                                              KnownWaveProperties.EndFrequency).Value;
-            }
-        }
+        public double DefaultEndFrequency =>
+            (double) GetModelProperty(KnownWaveCategories.GeneralCategory,
+                                      KnownWaveProperties.EndFrequency).Value;
 
         public UsageFromFlowType DefaultBedLevelUsage
         {
-            get
-            {
-                return (UsageFromFlowType) GetModelProperty(KnownWaveCategories.GeneralCategory,
-                                                            KnownWaveProperties.FlowBedLevelUsage).Value;
-            }
-            set
-            {
+            get =>
+                (UsageFromFlowType) GetModelProperty(KnownWaveCategories.GeneralCategory,
+                                                     KnownWaveProperties.FlowBedLevelUsage).Value;
+            set =>
                 GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.FlowBedLevelUsage)
-                    .SetValueAsString(((int)value).ToString());
-            }
-
+                    .SetValueAsString(((int) value).ToString());
         }
 
         public UsageFromFlowType DefaultWaterLevelUsage
         {
-            get
-            {
-                return (UsageFromFlowType)GetModelProperty(KnownWaveCategories.GeneralCategory,
-                                                            KnownWaveProperties.FlowWaterLevelUsage).Value;
-            }
-            set
-            {
+            get =>
+                (UsageFromFlowType) GetModelProperty(KnownWaveCategories.GeneralCategory,
+                                                     KnownWaveProperties.FlowWaterLevelUsage).Value;
+            set =>
                 GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.FlowWaterLevelUsage)
-                    .SetValueAsString(((int)value).ToString());
-            }
+                    .SetValueAsString(((int) value).ToString());
         }
 
         public UsageFromFlowType DefaultVelocityUsage
         {
-            get
-            {
-                return (UsageFromFlowType)GetModelProperty(KnownWaveCategories.GeneralCategory,
-                                                            KnownWaveProperties.FlowVelocityUsage).Value;
-            }
-            set
-            {
+            get =>
+                (UsageFromFlowType) GetModelProperty(KnownWaveCategories.GeneralCategory,
+                                                     KnownWaveProperties.FlowVelocityUsage).Value;
+            set =>
                 GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.FlowVelocityUsage)
                     .SetValueAsString(((int) value).ToString());
-            }
         }
 
-        public VelocityComputationType DefaultVelocityUsageType
-        {
-            get
-            {
-                return (VelocityComputationType)GetModelProperty(KnownWaveCategories.GeneralCategory,
-                                                            KnownWaveProperties.FlowVelocityUsageType).Value;
-            }
-        }
+        public VelocityComputationType DefaultVelocityUsageType =>
+            (VelocityComputationType) GetModelProperty(KnownWaveCategories.GeneralCategory,
+                                                       KnownWaveProperties.FlowVelocityUsageType).Value;
 
         public UsageFromFlowType DefaultWindUsage
         {
-            get
-            {
-                return (UsageFromFlowType)GetModelProperty(KnownWaveCategories.GeneralCategory,
-                                                            KnownWaveProperties.FlowWindUsage).Value;
-            }
-            set
-            {
+            get =>
+                (UsageFromFlowType) GetModelProperty(KnownWaveCategories.GeneralCategory,
+                                                     KnownWaveProperties.FlowWindUsage).Value;
+            set =>
                 GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.FlowWindUsage)
-                    .SetValueAsString(((int)value).ToString());
-            }
-
+                    .SetValueAsString(((int) value).ToString());
         }
 
-        public double WaveTimeStep 
+        public double WaveTimeStep
         {
             get
             {
                 double dt = -1.0;
-                var prop = GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.TimeStep);
-                if (prop != null) dt = (double) prop.Value;
+                WaveModelProperty prop =
+                    GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.TimeStep);
+                if (prop != null)
+                {
+                    dt = (double) prop.Value;
+                }
 
                 return dt;
             }
@@ -288,18 +246,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.ModelDefinition
 
         public bool WaveSetup
         {
-            get
-            {
-                return (bool)GetModelProperty(KnownWaveCategories.ProcessesCategory, KnownWaveProperties.WaveSetup).Value;
-            }
-            set
-            {
-                GetModelProperty(KnownWaveCategories.ProcessesCategory, KnownWaveProperties.WaveSetup).Value = value;
-            }
+            get => (bool) GetModelProperty(KnownWaveCategories.ProcessesCategory, KnownWaveProperties.WaveSetup).Value;
+            set => GetModelProperty(KnownWaveCategories.ProcessesCategory, KnownWaveProperties.WaveSetup).Value = value;
         }
 
         #endregion
-
-
     }
 }

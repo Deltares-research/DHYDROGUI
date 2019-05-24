@@ -10,6 +10,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor
         }
 
         private WaveBoundaryParameters data;
+
         public WaveBoundaryParameters Data
         {
             get => data;
@@ -17,7 +18,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor
             {
                 data = value;
 
-                UpdateBindings(); 
+                UpdateBindings();
                 Visible = data != null;
             }
         }

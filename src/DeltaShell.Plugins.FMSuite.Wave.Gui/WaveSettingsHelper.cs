@@ -19,44 +19,46 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             if (data != null)
             {
                 wpfGuiCategories = GetWaveSettings(data)?.FieldDescriptions
-                    .GroupBy(fd => fd.Category)
-                    .Select(gp => new WpfGuiCategory(gp.Key, gp.ToList())).ToList();
+                                                        .GroupBy(fd => fd.Category)
+                                                        .Select(gp => new WpfGuiCategory(gp.Key, gp.ToList())).ToList();
                 wpfGuiCategories?.SelectMany(gp => gp.Properties).Distinct().ForEach(p => p.GetModel = () => data);
             }
+
             SetWaveExtraSettings(data, gui, wpfGuiCategories);
             return new ObservableCollection<WpfGuiCategory>(wpfGuiCategories);
         }
 
         private static void SetWaveExtraSettings(WaveModel model, IGui gui, IList<WpfGuiCategory> wpfCategories)
         {
-            var generalCategory = wpfCategories.FirstOrDefault(c => c.CategoryName.ToLower().Equals("general"));
+            WpfGuiCategory generalCategory =
+                wpfCategories.FirstOrDefault(c => c.CategoryName.ToLower().Equals("general"));
             if (generalCategory != null)
             {
                 //Gui Coordinate        
-                var coordSys = new WpfGuiProperty(new FieldUIDescription(d => SetCoordinateSystemButton.CoordinateSystemName(model), null)
-                {
-                    Category = "General",
-                    ToolTip = SetCoordinateSystemButton.ToolTip,
-                    Label = SetCoordinateSystemButton.Label,
-                    ValueType = typeof(string),
-                    HasMaxValue = false,
-                    HasMinValue = false,
-                });
+                var coordSys = new WpfGuiProperty(
+                    new FieldUIDescription(d => SetCoordinateSystemButton.CoordinateSystemName(model), null)
+                    {
+                        Category = "General",
+                        ToolTip = SetCoordinateSystemButton.ToolTip,
+                        Label = SetCoordinateSystemButton.Label,
+                        ValueType = typeof(string),
+                        HasMaxValue = false,
+                        HasMinValue = false,
+                    });
 
                 coordSys.CustomCommand.ButtonFunction =
                     (o) => SetCoordinateSystemButton.ButtonAction(o, gui, WaveModel.IsValidCoordinateSystem);
                 coordSys.CustomCommand.ButtonImage = SetCoordinateSystemButton.ButtonImage;
                 generalCategory.AddWpfGuiProperty(coordSys);
             }
-            
         }
 
         private static ObjectUIDescription GetWaveSettings(WaveModel data)
         {
-            var objectDescription = WaveModelUIDescription.Extract(data);
+            ObjectUIDescription objectDescription = WaveModelUIDescription.Extract(data);
 
             var flowCouplingCheckBox = new FieldUIDescription(o => data.IsCoupledToFlow,
-                (d, v) => data.IsCoupledToFlow = (bool) v)
+                                                              (d, v) => data.IsCoupledToFlow = (bool) v)
             {
                 Category = KnownWaveCategories.GeneralCategory,
                 SubCategory = "Data from D-Flow FM",
@@ -67,7 +69,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             };
 
             var startTime = new FieldUIDescription(o => data.StartTime, (d, v) => data.StartTime = (DateTime) v,
-                (d) => data.IsCoupledToFlow)
+                                                   (d) => data.IsCoupledToFlow)
             {
                 Category = KnownWaveCategories.GeneralCategory,
                 SubCategory = "Coupling time frame",
@@ -78,7 +80,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             };
 
             var stopTime = new FieldUIDescription(o => data.StopTime, (d, v) => data.StopTime = (DateTime) v,
-                (d) => data.IsCoupledToFlow)
+                                                  (d) => data.IsCoupledToFlow)
             {
                 Category = KnownWaveCategories.GeneralCategory,
                 SubCategory = "Coupling time frame",
@@ -89,7 +91,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             };
 
             var timeStep = new FieldUIDescription(o => data.TimeStep, (d, v) => data.TimeStep = (TimeSpan) v,
-                (d) => data.IsCoupledToFlow)
+                                                  (d) => data.IsCoupledToFlow)
             {
                 Category = KnownWaveCategories.GeneralCategory,
                 SubCategory = "Coupling time frame",
@@ -102,9 +104,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             objectDescription.FieldDescriptions =
                 new[]
                     {
-                        /*setCoordinateSystemBtn,*/ flowCouplingCheckBox, startTime, stopTime, timeStep
+                        /*setCoordinateSystemBtn,*/
+                        flowCouplingCheckBox,
+                        startTime,
+                        stopTime,
+                        timeStep
                     }.Concat(objectDescription.FieldDescriptions)
-                    .ToList();
+                     .ToList();
 
             return objectDescription;
         }

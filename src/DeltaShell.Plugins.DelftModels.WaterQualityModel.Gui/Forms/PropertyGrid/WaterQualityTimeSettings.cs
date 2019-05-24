@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model;
 
@@ -13,15 +12,19 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
         private Func<DateTime?, DateTime> startTimeFunc;
         private Func<DateTime?, DateTime> stopTimeFunc;
         private Func<TimeSpan?, TimeSpan> timeStepFunc;
-     
+
         private readonly WaterQualityModelSettings waterQualityModelSettings;
 
         /// <summary>
-        /// Creates water quality time settings with start time, stop time and time step according to <param name="waterQualityModelSettings"/> and <param name="waterQualityTimeSettingsType"/> 
+        /// Creates water quality time settings with start time, stop time and time step according to
+        /// <param name="waterQualityModelSettings" />
+        /// and
+        /// <param name="waterQualityTimeSettingsType" />
         /// </summary>
-        /// <param name="waterQualityModelSettings">The water quality model settings to create the time settings for</param>
-        /// <param name="waterQualityTimeSettingsType">The type of time settings that should be created</param>
-        public WaterQualityTimeSettings(WaterQualityModelSettings waterQualityModelSettings, WaterQualityTimeSettingsType waterQualityTimeSettingsType)
+        /// <param name="waterQualityModelSettings"> The water quality model settings to create the time settings for </param>
+        /// <param name="waterQualityTimeSettingsType"> The type of time settings that should be created </param>
+        public WaterQualityTimeSettings(WaterQualityModelSettings waterQualityModelSettings,
+                                        WaterQualityTimeSettingsType waterQualityTimeSettingsType)
         {
             this.waterQualityModelSettings = waterQualityModelSettings;
             Initialize(waterQualityTimeSettingsType);
@@ -45,7 +48,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
             }
         }
 
-        private void CreateFunctions (string startTime, string stopTime, string timeSpan)
+        private void CreateFunctions(string startTime, string stopTime, string timeSpan)
         {
             startTimeFunc = CreateFunction<DateTime>(startTime);
             stopTimeFunc = CreateFunction<DateTime>(stopTime);
@@ -58,19 +61,20 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
                                   t => TypeUtils.SetPropertyValue(waterQualityModelSettings, propertyName, t));
         }
 
-        private static Func<Nullable<T>, T> CreateFunction<T>(Func<T> getVariable, Action<T> setVariable) where T : struct
+        private static Func<Nullable<T>, T> CreateFunction<T>(Func<T> getVariable, Action<T> setVariable)
+            where T : struct
         {
             return t =>
+            {
+                if (t == null)
                 {
-                    if (t == null)
-                    {
-                        return getVariable();
-                    }
+                    return getVariable();
+                }
 
-                    setVariable((T) t);
+                setVariable((T) t);
 
-                    return Activator.CreateInstance<T>();
-                };
+                return Activator.CreateInstance<T>();
+            };
         }
 
         /// <summary>
@@ -78,8 +82,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
         /// </summary>
         public DateTime StartTime
         {
-            get { return startTimeFunc(null); }
-            set { startTimeFunc(value); }
+            get => startTimeFunc(null);
+            set => startTimeFunc(value);
         }
 
         /// <summary>
@@ -87,8 +91,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
         /// </summary>
         public DateTime StopTime
         {
-            get { return stopTimeFunc(null); ; }
-            set { stopTimeFunc(value); }
+            get => stopTimeFunc(null);
+            set => stopTimeFunc(value);
         }
 
         /// <summary>
@@ -96,8 +100,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
         /// </summary>
         public TimeSpan TimeStep
         {
-            get { return timeStepFunc(null); }
-            set { timeStepFunc(value); }
+            get => timeStepFunc(null);
+            set => timeStepFunc(value);
         }
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core;
 using DelftTools.Utils.Editing;
@@ -16,25 +17,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Importers
             getModels = getModelsFunc;
         }
 
-        public string Name
-        {
-            get { return "Swan Spectral File (*.sp2)"; }
-        }
+        public string Name => "Swan Spectral File (*.sp2)";
 
         public string Category { get; private set; }
-        public string Description
-        {
-            get { return string.Empty; }
-        }
+        public string Description => string.Empty;
 
-        public string FileFilter
-        {
-            get { return "Swan Spectral Files (*.sp2)|*.sp2"; }
-        }
+        public string FileFilter => "Swan Spectral Files (*.sp2)|*.sp2";
 
         public IEnumerable<Type> SupportedItemTypes
         {
-            get { yield return typeof (IList<WaveBoundaryCondition>); }
+            get
+            {
+                yield return typeof(IList<WaveBoundaryCondition>);
+            }
         }
 
         public bool CanImportOn(object targetObject)
@@ -42,11 +37,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Importers
             return true;
         }
 
-        public bool CanImportOnRootLevel
-        {
-            get { return false; }
-        }
-        
+        public bool CanImportOnRootLevel => false;
+
         public string SelectedFilePath { get; set; }
 
         public object ImportItem(string path, object target)
@@ -55,10 +47,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Importers
 
             var conditions = target as IList<WaveBoundaryCondition>;
             if (conditions == null)
+            {
                 return null;
+            }
 
-            var model = getModels().First(m => m.BoundaryConditions.Equals(conditions));
-            var filePath = System.IO.Path.GetFullPath(path);
+            WaveModel model = getModels().First(m => m.BoundaryConditions.Equals(conditions));
+            string filePath = Path.GetFullPath(path);
 
             model.BeginEdit(new DefaultEditAction("Import sp2 file"));
             model.BoundaryIsDefinedBySpecFile = true;

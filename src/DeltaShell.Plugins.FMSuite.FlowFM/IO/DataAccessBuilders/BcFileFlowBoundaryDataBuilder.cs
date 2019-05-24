@@ -708,10 +708,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccess
                                                                            Feature2D feature,
                                                                            TimeSpan timelag,
                                                                            IGrouping<FlowBoundaryQuantityType,
-                                                                                   KeyValuePair<
-                                                                                       System.Tuple<
-                                                                                           FlowBoundaryQuantityType
-                                                                                           , int>, BcQuantityData>>
+                                                                                   KeyValuePair<System.Tuple<
+                                                                                       FlowBoundaryQuantityType
+                                                                                       , int>, BcQuantityData>>
                                                                                grouping)
         {
             var boundaryCondition = new FlowBoundaryCondition(flowQuantityEnum, forcingType)

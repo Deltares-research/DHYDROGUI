@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
 using DelftTools.Shell.Core.Workflow;
+using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
@@ -27,40 +27,26 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
     {
         private IEnumerable<IFileImporter> _getFileImporters;
 
-        public override string Name
-        {
-            get { return "Water quality model"; }
-        }
+        public override string Name => "Water quality model";
 
-        public override string DisplayName
-        {
-            get { return "D-Water Quality Plugin"; }
-        }
+        public override string DisplayName => "D-Water Quality Plugin";
 
-        public override string Description
-        {
-            // TODO: And in FM, but I don't know if I can change this at all.
-            get { return "Allows to simulate water quality in rivers and channels."; }
-        }
+        public override string Description => "Allows to simulate water quality in rivers and channels.";
 
-        public override string Version
-        {
-            get { return GetType().Assembly.GetName().Version.ToString(); }
-        }
+        public override string Version => GetType().Assembly.GetName().Version.ToString();
 
-        public override string FileFormatVersion
-        {
-            get { return "3.5.2.0"; }
-        }
+        public override string FileFormatVersion => "3.5.2.0";
 
         public override IEnumerable<ModelInfo> GetModelInfos()
         {
             yield return new ModelInfo
-                {
-                    Name = "Water Quality Model",
-                    Category = "1D / 2D / 3D Standalone Models",
-                    AdditionalOwnerCheck = owner => !(owner is ICompositeActivity), // Don't allow water quality models to be added to composite activity
-                    CreateModel = owner => new WaterQualityModel()
+            {
+                Name = "Water Quality Model",
+                Category = "1D / 2D / 3D Standalone Models",
+                AdditionalOwnerCheck =
+                    owner =>
+                        !(owner is ICompositeActivity), // Don't allow water quality models to be added to composite activity
+                CreateModel = owner => new WaterQualityModel()
             };
         }
 
@@ -86,7 +72,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
 
         public override IApplication Application
         {
-            get { return base.Application; }
+            get => base.Application;
             set
             {
                 if (Application != null)
@@ -114,24 +100,34 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             }
         }
 
-        void Application_ProjectSaveFinished(Project obj)
+        private void Application_ProjectSaveFinished(Project obj)
         {
-            if (Application.Project == null) return; 
-            var allWaqModels = Application.GetAllModelsInProject().OfType<WaterQualityModel>();
+            if (Application.Project == null)
+            {
+                return;
+            }
+
+            IEnumerable<WaterQualityModel> allWaqModels =
+                Application.GetAllModelsInProject().OfType<WaterQualityModel>();
             allWaqModels.ForEach(m => m.SetEnableMarkOutputOutOfSync(true));
         }
 
         private void Application_ProjectSaving(Project obj)
         {
-            if (Application.Project == null) return;
-            var allWaqModels = Application.GetAllModelsInProject().OfType<WaterQualityModel>();
+            if (Application.Project == null)
+            {
+                return;
+            }
+
+            IEnumerable<WaterQualityModel> allWaqModels =
+                Application.GetAllModelsInProject().OfType<WaterQualityModel>();
             allWaqModels.ForEach(m => m.SetEnableMarkOutputOutOfSync(false));
         }
 
         private void Application_OnProjectClosing(Project obj)
         {
             ((INotifyCollectionChange) obj).CollectionChanged -= Project_OnCollectionChanged;
-            ((INotifyPropertyChanged)obj).PropertyChanged -= Project_OnPropertyChanged;
+            ((INotifyPropertyChanged) obj).PropertyChanged -= Project_OnPropertyChanged;
         }
 
         public IEnumerable<IDataAccessListener> CreateDataAccessListeners()
@@ -167,9 +163,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             }
         }
 
-        private void ActivityRunner_OnActivityStatusChanged(object sender, ActivityStatusChangedEventArgs activityStatusChangedEventArgs)
+        private void ActivityRunner_OnActivityStatusChanged(object sender,
+                                                            ActivityStatusChangedEventArgs
+                                                                activityStatusChangedEventArgs)
         {
-            if (activityStatusChangedEventArgs.NewStatus != ActivityStatus.Initializing) return;
+            if (activityStatusChangedEventArgs.NewStatus != ActivityStatus.Initializing)
+            {
+                return;
+            }
 
             var importActivity = sender as FileImportActivity;
             if (importActivity != null)
@@ -183,10 +184,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         private void SetupLoadsImporter(FileImportActivity importActivity)
         {
             var loadsImporter = importActivity.FileImporter as LoadsImporter;
-            if (loadsImporter == null) return;
+            if (loadsImporter == null)
+            {
+                return;
+            }
 
-            var loadList = (IEventedList<WaterQualityLoad>)importActivity.Target;
-            var model = Application.GetAllModelsInProject().OfType<WaterQualityModel>().First(m => Equals(m.Loads, loadList));
+            var loadList = (IEventedList<WaterQualityLoad>) importActivity.Target;
+            WaterQualityModel model = Application.GetAllModelsInProject().OfType<WaterQualityModel>()
+                                                 .First(m => Equals(m.Loads, loadList));
 
             loadsImporter.ModelCoordinateSystem = model.CoordinateSystem;
             loadsImporter.GetDefaultZValue = model.GetDefaultZ;
@@ -195,10 +200,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         private void SetupObservationPointImporter(FileImportActivity importActivity)
         {
             var observationPointsImporter = importActivity.FileImporter as ObservationPointImporter;
-            if (observationPointsImporter == null) return;
+            if (observationPointsImporter == null)
+            {
+                return;
+            }
 
-            var obsList = (IEventedList<WaterQualityObservationPoint>)importActivity.Target;
-            var model = Application.GetAllModelsInProject().OfType<WaterQualityModel>().First(m => Equals(m.ObservationPoints, obsList));
+            var obsList = (IEventedList<WaterQualityObservationPoint>) importActivity.Target;
+            WaterQualityModel model = Application.GetAllModelsInProject().OfType<WaterQualityModel>()
+                                                 .First(m => Equals(m.ObservationPoints, obsList));
 
             observationPointsImporter.ModelCoordinateSystem = model.CoordinateSystem;
             observationPointsImporter.GetDefaultZValue = model.GetDefaultZ;
@@ -209,11 +218,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             var observationAreaImporter = importActivity.FileImporter as WaterQualityObservationAreaImporter;
             if (observationAreaImporter != null)
             {
-                var oberservationAreas = (WaterQualityObservationAreaCoverage)importActivity.Target;
-                var model =
+                var oberservationAreas = (WaterQualityObservationAreaCoverage) importActivity.Target;
+                WaterQualityModel model =
                     Application.Project.RootFolder.Models.OfType<WaterQualityModel>()
-                        .First(m => Equals(m.ObservationAreas, oberservationAreas));
-                var observationAreasDataItem = model.GetDataItemByTag(WaterQualityModel.ObservationAreasDataItemMetaData.Tag);
+                               .First(m => Equals(m.ObservationAreas, oberservationAreas));
+                IDataItem observationAreasDataItem =
+                    model.GetDataItemByTag(WaterQualityModel.ObservationAreasDataItemMetaData.Tag);
 
                 observationAreaImporter.GetDataItemForTarget = coverage => observationAreasDataItem;
                 observationAreaImporter.ModelCoordinateSystem = model.CoordinateSystem;
@@ -224,10 +234,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         /// Project is not null anymore in the application.
         /// Subscribe to the event so we can check for new waq models.
         /// </summary>
-        /// <param name="project"></param>
+        /// <param name="project"> </param>
         private void Application_OnProjectOpened(Project project)
         {
-            var allWaqModels = Application.GetAllModelsInProject().OfType<WaterQualityModel>();
+            IEnumerable<WaterQualityModel> allWaqModels =
+                Application.GetAllModelsInProject().OfType<WaterQualityModel>();
             allWaqModels.ForEach(ReimportHydFileForWaterQualityModel);
             allWaqModels.ForEach(RelinkToProcessDefinitionFiles);
 
@@ -240,7 +251,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         private void ReimportHydFileForWaterQualityModel(WaterQualityModel waqModel)
         {
             var importedHydFile = waqModel.HydroData as HydFileData;
-            if (importedHydFile == null) return;
+            if (importedHydFile == null)
+            {
+                return;
+            }
 
             if (importedHydFile.Path.Exists)
             {
@@ -258,9 +272,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
 
         private void RelinkToProcessDefinitionFiles(WaterQualityModel waqModel)
         {
-            if (waqModel.SubstanceProcessLibrary == null) return;
+            if (waqModel.SubstanceProcessLibrary == null)
+            {
+                return;
+            }
 
-            var processDefinitionFileName = waqModel.SubstanceProcessLibrary.ProcessDefinitionFilesPath;
+            string processDefinitionFileName = waqModel.SubstanceProcessLibrary.ProcessDefinitionFilesPath;
             if (!File.Exists(processDefinitionFileName + ".def"))
             {
                 OnProcessDefinitionFilesNotFound(waqModel, processDefinitionFileName);
@@ -268,12 +285,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         }
 
         /// <summary>
-        /// Excecutes all spatial operations available in <see cref="WaterQualityModel"/>
-        /// instances available in the <see cref="Project"/>.
+        /// Excecutes all spatial operations available in <see cref="WaterQualityModel" />
+        /// instances available in the <see cref="Project" />.
         /// </summary>
         public static void ExecuteAllWaterQualitySpatialOperations(Project project)
         {
-            foreach (var dataItem in project.GetAllItemsRecursive().OfType<WaterQualityModel>().SelectMany(waq => waq.AllDataItems))
+            foreach (IDataItem dataItem in project.GetAllItemsRecursive().OfType<WaterQualityModel>()
+                                                  .SelectMany(waq => waq.AllDataItems))
             {
                 var spatialOperationSetValueConverter = dataItem.ValueConverter as SpatialOperationSetValueConverter;
 
@@ -284,7 +302,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                     // this execute is required to get the result of the spatial operation set in the value converter.
                     // The value converter listens to events, but no events are sent when the project is loading.
                     // See TOOLS-22124 for more info
-                    spatialOperationSetValueConverter.SpatialOperationSet.Execute();    
+                    spatialOperationSetValueConverter.SpatialOperationSet.Execute();
                 }
             }
         }
@@ -308,13 +326,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         /// <summary>
         /// Listens to a change of a waq model's name property.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender"> </param>
+        /// <param name="e"> </param>
         private void Project_OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (!(sender is WaterQualityModel) || e.PropertyName != "Name") return;
+            if (!(sender is WaterQualityModel) || e.PropertyName != "Name")
+            {
+                return;
+            }
 
-            ((WaterQualityModel) sender).SetupModelDataFolderStructure(Application.HybridProjectRepository.ProjectDataDirectory);
+            ((WaterQualityModel) sender).SetupModelDataFolderStructure(
+                Application.HybridProjectRepository.ProjectDataDirectory);
         }
     }
 }

@@ -1,5 +1,11 @@
-﻿using DelftTools.Controls;
+﻿using System;
+using System.ComponentModel;
+using System.Drawing;
+using System.Linq;
+using System.Windows.Forms;
+using DelftTools.Controls;
 using DelftTools.Controls.Swf.Table;
+using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
@@ -8,11 +14,6 @@ using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.Gui.Forms;
-using System;
-using System.ComponentModel;
-using System.Drawing;
-using System.Linq;
-using System.Windows.Forms;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor
 {
@@ -36,46 +37,42 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor
 
         public object Data
         {
-            get { return boundaryCondition; }
+            get => boundaryCondition;
             set
             {
                 if (boundaryCondition != null)
                 {
-                    ((INotifyPropertyChange)boundaryCondition).PropertyChanged -= OnBoundaryConditionPropertyChanged;
+                    ((INotifyPropertyChange) boundaryCondition).PropertyChanged -= OnBoundaryConditionPropertyChanged;
                 }
+
                 boundaryCondition = value as WaveBoundaryCondition;
                 if (boundaryCondition != null)
                 {
-                    ((INotifyPropertyChange)boundaryCondition).PropertyChanged += OnBoundaryConditionPropertyChanged;
+                    ((INotifyPropertyChange) boundaryCondition).PropertyChanged += OnBoundaryConditionPropertyChanged;
                 }
 
                 FullRefresh();
             }
         }
 
-        private DateTime StartTime
-        {
-            get { return Model != null ? Model.ModelDefinition.ModelReferenceDateTime : DateTime.Today; }
-        }
+        private DateTime StartTime => Model != null ? Model.ModelDefinition.ModelReferenceDateTime : DateTime.Today;
 
-        private DateTime StopTime
-        {
-            get { return StartTime.AddDays(1); }
-        }
+        private DateTime StopTime => StartTime.AddDays(1);
 
-        private TimeSpan Timestep
-        {
-            get { return new TimeSpan(1, 0, 0, 0); }
-        }
+        private TimeSpan Timestep => new TimeSpan(1, 0, 0, 0);
 
         public int SelectedPointIndex { get; set; }
 
         public WaveModel Model { get; set; }
 
         private Func<string, string> importIntoModelDirectory;
+
         public Func<string, string> ImportIntoModelDirectory
         {
-            private get { return importIntoModelDirectory; }
+            private get
+            {
+                return importIntoModelDirectory;
+            }
             set
             {
                 importIntoModelDirectory = value;
@@ -89,7 +86,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor
             functionViewPanel.Controls.Clear();
             buttonPanel.Visible = false;
 
-            if (boundaryCondition == null) return;
+            if (boundaryCondition == null)
+            {
+                return;
+            }
 
             if (boundaryCondition.DataType == BoundaryConditionDataType.SpectrumFromFile)
             {
@@ -113,23 +113,27 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor
                 functionView.Data = null;
                 functionView.Data = boundaryCondition.GetDataAtPoint(SelectedPointIndex);
                 functionView.ChartView.Chart.LeftAxis.Automatic = true;
-                functionView.TableView.PasteController = new TableViewArgumentBasedPasteController((TableView)functionView.TableView, new[] { 0 })
-                {
-                    SkipRowsWithMissingArgumentValues = true
-                };
+                functionView.TableView.PasteController = new TableViewArgumentBasedPasteController(
+                    (TableView) functionView.TableView, new[]
+                    {
+                        0
+                    }) {SkipRowsWithMissingArgumentValues = true};
                 functionViewPanel.Controls.Add(functionView);
                 buttonPanel.Visible = true;
             }
         }
 
-        private void OnBoundaryConditionPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
+        private void OnBoundaryConditionPropertyChanged(object sender,
+                                                        PropertyChangedEventArgs propertyChangedEventArgs)
         {
-            if (propertyChangedEventArgs.PropertyName == TypeUtils.GetMemberName(() => boundaryCondition.SpatialDefinitionType))
+            if (propertyChangedEventArgs.PropertyName ==
+                TypeUtils.GetMemberName(() => boundaryCondition.SpatialDefinitionType))
             {
                 if (boundaryCondition.IsHorizontallyUniform)
                 {
                     SelectedPointIndex = 0;
                 }
+
                 UpdateDataView();
             }
 
@@ -168,27 +172,24 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor
             {
                 functionView.Data = null;
                 functionView.Data = boundaryCondition.GetDataAtPoint(SelectedPointIndex);
-                functionView.TableView.PasteController = new TableViewArgumentBasedPasteController((TableView)functionView.TableView, new[] { 0 })
-                {
-                    SkipRowsWithMissingArgumentValues = true
-                };
+                functionView.TableView.PasteController = new TableViewArgumentBasedPasteController(
+                    (TableView) functionView.TableView, new[]
+                    {
+                        0
+                    }) {SkipRowsWithMissingArgumentValues = true};
                 functionView.ChartView.Chart.LeftAxis.Automatic = true;
             }
         }
 
         public Image Image { get; set; }
-        public void EnsureVisible(object item)
-        {
-        }
+        public void EnsureVisible(object item) {}
         public ViewInfo ViewInfo { get; set; }
 
         public IEventedList<IView> ChildViews => functionView.ChildViews;
 
         public bool HandlesChildViews => true;
 
-        public void ActivateChildView(IView childView)
-        {
-        }
+        public void ActivateChildView(IView childView) {}
 
         private void genDataButton_Click(object sender, EventArgs e)
         {
@@ -197,7 +198,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor
 
         private void TimeSeriesDialog()
         {
-            var generateDialog = new TimeSeriesGeneratorDialog { ApplyOnAccept = false };
+            var generateDialog = new TimeSeriesGeneratorDialog {ApplyOnAccept = false};
             generateDialog.SetData(null, StartTime, StopTime, Timestep);
             generateDialog.ShowDialog(this);
 
@@ -225,52 +226,64 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor
 
             boundaryCondition.BeginEdit(new DefaultEditAction("Generate/modify timeseries"));
 
-            var numberOfCoordinates = boundaryCondition.Feature.Geometry.NumPoints;
+            int numberOfCoordinates = boundaryCondition.Feature.Geometry.NumPoints;
             switch (supportPointOperationMode)
             {
                 case SupportPointMode.NoPoints:
                     return;
                 case SupportPointMode.SelectedPoint:
-                    var boundaryConditionData = boundaryCondition.GetDataAtPoint(SelectedPointIndex);
+                    IFunction boundaryConditionData = boundaryCondition.GetDataAtPoint(SelectedPointIndex);
                     if (boundaryConditionData == null)
                     {
                         boundaryCondition.AddPoint(SelectedPointIndex);
                         boundaryConditionData = boundaryCondition.GetDataAtPoint(SelectedPointIndex);
                     }
+
                     boundaryConditionData.BeginEdit(new DefaultEditAction("Generate/modify timeseries"));
-                    generateDialog.Apply(boundaryConditionData.Arguments.OfType<IVariable<DateTime>>().FirstOrDefault());
+                    generateDialog.Apply(boundaryConditionData
+                                         .Arguments.OfType<IVariable<DateTime>>().FirstOrDefault());
                     boundaryConditionData.EndEdit();
                     break;
                 case SupportPointMode.ActivePoints:
-                    foreach (var function in boundaryCondition.PointData)
+                    foreach (IFunction function in boundaryCondition.PointData)
                     {
                         function.BeginEdit(new DefaultEditAction("Generate/modify timeseries"));
-                        var argument = function.Arguments.OfType<IVariable<DateTime>>().FirstOrDefault();
+                        IVariable<DateTime> argument =
+                            function.Arguments.OfType<IVariable<DateTime>>().FirstOrDefault();
                         if (!generateDialog.Apply(argument))
                         {
                             function.EndEdit();
                             break;
                         }
+
                         function.EndEdit();
                     }
+
                     break;
                 case SupportPointMode.InactivePoints:
 
                     for (var i = 0; i < numberOfCoordinates; ++i)
                     {
-                        if (boundaryCondition.DataPointIndices.Contains(i)) continue;
+                        if (boundaryCondition.DataPointIndices.Contains(i))
+                        {
+                            continue;
+                        }
+
                         boundaryCondition.AddPoint(i);
-                        var function = boundaryCondition.GetDataAtPoint(i);
+                        IFunction function = boundaryCondition.GetDataAtPoint(i);
 
                         function.BeginEdit(new DefaultEditAction("Generate/modify timeseries"));
-                        var argument = function.Arguments.OfType<IVariable<DateTime>>().FirstOrDefault();
+                        IVariable<DateTime> argument =
+                            function.Arguments.OfType<IVariable<DateTime>>().FirstOrDefault();
                         if (!generateDialog.Apply(argument))
                         {
                             function.EndEdit();
                             break;
                         }
+
                         function.EndEdit();
                     }
+
                     break;
                 case SupportPointMode.AllPoints:
 
@@ -280,22 +293,26 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor
                         {
                             boundaryCondition.AddPoint(i);
                         }
-                        var function = boundaryCondition.GetDataAtPoint(i);
+
+                        IFunction function = boundaryCondition.GetDataAtPoint(i);
 
                         function.BeginEdit(new DefaultEditAction("Generate/modify timeseries"));
-                        var argument = function.Arguments.OfType<IVariable<DateTime>>().FirstOrDefault();
+                        IVariable<DateTime> argument =
+                            function.Arguments.OfType<IVariable<DateTime>>().FirstOrDefault();
                         if (!generateDialog.Apply(argument))
                         {
                             function.EndEdit();
                             break;
                         }
+
                         function.EndEdit();
                     }
+
                     break;
                 default:
                     throw new NotImplementedException("Support point selection method not recognized.");
-
             }
+
             boundaryCondition.EndEdit();
             FullRefresh();
         }

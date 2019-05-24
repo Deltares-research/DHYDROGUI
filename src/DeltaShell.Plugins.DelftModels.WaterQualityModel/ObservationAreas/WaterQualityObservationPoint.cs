@@ -16,18 +16,19 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.ObservationAreas
         [FeatureAttribute(Order = 3)]
         public override double Z
         {
-            get { return base.Z; }
-            set { base.Z = value; }
+            get => base.Z;
+            set => base.Z = value;
         }
 
-        [DisplayName("Observation point type")] // TODO: UI logic on Domain class; Extract view model wrapper when more data is added.
+        [DisplayName(
+            "Observation point type")] // TODO: UI logic on Domain class; Extract view model wrapper when more data is added.
         [FeatureAttribute(Order = 4, ExportName = ObservationPointTypeAttributeName)]
         public virtual ObservationPointType ObservationPointType { get; set; }
 
         [DynamicReadOnlyValidationMethod]
         public virtual bool CheckReadOnly(string propertyName)
         {
-            if (propertyName == TypeUtils.GetMemberDescription(()=> Z))
+            if (propertyName == TypeUtils.GetMemberDescription(() => Z))
             {
                 return ObservationPointType != ObservationPointType.SinglePoint;
             }

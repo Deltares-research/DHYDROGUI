@@ -6,15 +6,16 @@ using System.IO;
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 {
     // TODO: Move this class to another namespace so that it can be shared by WFDExplorer and WaterQualityModel1D
-    public static class DelwaqHisFileReader 
+    public static class DelwaqHisFileReader
     {
         /// <summary>
-        /// Reads from <paramref name="delwaqOutputFile"/> and returns a List of <see cref="DelwaqHisFileData"/>.
+        /// Reads from <paramref name="delwaqOutputFile" /> and returns a List of <see cref="DelwaqHisFileData" />.
         /// </summary>
-        /// <param name="delwaqOutputFile"></param>
+        /// <param name="delwaqOutputFile"> </param>
         /// <returns>
-        /// Returns an empty List if file does not exist or is emtpy. 
-        /// Otherwise returns a list of <see cref="DelwaqHisFileData"/>.</returns>
+        /// Returns an empty List if file does not exist or is emtpy.
+        /// Otherwise returns a list of <see cref="DelwaqHisFileData" />.
+        /// </returns>
         public static List<DelwaqHisFileData> Read(string delwaqOutputFile)
         {
             BinaryReader reader = null;
@@ -39,12 +40,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                 reader.ReadChars(40 * 3); // Skip the first 3 headers (these contain meta-data that we do not need)
 
                 // Read and parse the first time step string
-                var timeString = new string(reader.ReadChars(40)).Substring(4, 19);
-                var firstTimeStep = DateTime.Parse(timeString, CultureInfo.InvariantCulture);
-                
+                string timeString = new string(reader.ReadChars(40)).Substring(4, 19);
+                DateTime firstTimeStep = DateTime.Parse(timeString, CultureInfo.InvariantCulture);
+
                 // Read the number of output variables (substances and output parameters) and observation variables
-                var numberOfOutputVariables = reader.ReadInt32();
-                var numberOfObservationVariables = reader.ReadInt32();
+                int numberOfOutputVariables = reader.ReadInt32();
+                int numberOfObservationVariables = reader.ReadInt32();
 
                 // Read all output parameter names
                 var outputVariables = new string[numberOfOutputVariables];
@@ -59,15 +60,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                     for (var i = 0; i < numberOfObservationVariables; i++)
                     {
                         reader.ReadInt32(); // Skip the variable number
-                        var observationVariable = new string(reader.ReadChars(20)).Trim(' ');
-                        result.Add(new DelwaqHisFileData(observationVariable) { OutputVariables = outputVariables });
+                        string observationVariable = new string(reader.ReadChars(20)).Trim(' ');
+                        result.Add(new DelwaqHisFileData(observationVariable) {OutputVariables = outputVariables});
                     }
                 }
 
                 // Read the observation variable values for each output variable per time step
                 while (reader.BaseStream.Position != reader.BaseStream.Length)
                 {
-                    var currentTimeStep = firstTimeStep.AddSeconds(reader.ReadInt32());
+                    DateTime currentTimeStep = firstTimeStep.AddSeconds(reader.ReadInt32());
 
                     for (var i = 0; i < numberOfObservationVariables; i++)
                     {

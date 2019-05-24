@@ -22,22 +22,29 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
         private readonly ITableViewColumn betaColumn;
         private readonly ITableViewColumn reflTypeColumn;
         private readonly ITableViewColumn reflCoefColumn;
-        
+
         public WaveObstacleListView()
         {
             InitializeComponent();
 
-            tableView = new TableView {AutoGenerateColumns = false, AllowAddNewRow = false};
+            tableView = new TableView
+            {
+                AutoGenerateColumns = false,
+                AllowAddNewRow = false
+            };
             tableView.SelectionChanged += TableViewOnSelectionChanged;
 
             tableView.AddColumn(TypeUtils.GetMemberName<WaveObstacle>(w => w.Name), "Name");
             obsTypeColumn = tableView.AddColumn(TypeUtils.GetMemberName<WaveObstacle>(w => w.Type), "Type");
-            transCoefColumn = tableView.AddColumn(TypeUtils.GetMemberName<WaveObstacle>(w => w.TransmissionCoefficient), "Transmission Coefficient");
+            transCoefColumn = tableView.AddColumn(TypeUtils.GetMemberName<WaveObstacle>(w => w.TransmissionCoefficient),
+                                                  "Transmission Coefficient");
             heightColumn = tableView.AddColumn(TypeUtils.GetMemberName<WaveObstacle>(w => w.Height), "Height");
             alphaColumn = tableView.AddColumn(TypeUtils.GetMemberName<WaveObstacle>(w => w.Alpha), "Alpha");
             betaColumn = tableView.AddColumn(TypeUtils.GetMemberName<WaveObstacle>(w => w.Beta), "Beta");
-            reflTypeColumn = tableView.AddColumn(TypeUtils.GetMemberName<WaveObstacle>(w => w.ReflectionType), "Reflection Type");
-            reflCoefColumn = tableView.AddColumn(TypeUtils.GetMemberName<WaveObstacle>(w => w.ReflectionCoefficient), "Reflection Coefficient");
+            reflTypeColumn = tableView.AddColumn(TypeUtils.GetMemberName<WaveObstacle>(w => w.ReflectionType),
+                                                 "Reflection Type");
+            reflCoefColumn = tableView.AddColumn(TypeUtils.GetMemberName<WaveObstacle>(w => w.ReflectionCoefficient),
+                                                 "Reflection Coefficient");
 
             tableView.RowDeleteHandler += RowDeleteHandler;
             tableView.ReadOnlyCellFilter += ReadOnlyCellFilter;
@@ -59,10 +66,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
             if (SelectedFeatures.Any())
             {
                 if (RemoveObstacles != null)
+                {
                     RemoveObstacles(SelectedFeatures.OfType<WaveObstacle>().ToList());
+                }
 
                 return true;
             }
+
             return false;
         }
 
@@ -76,32 +86,58 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
                 cellStyle.ForeColor = tableView.ReadOnlyCellBackColor;
                 return true;
             }
+
             return false;
         }
 
         private bool ReadOnlyCellFilter(TableViewCell cell)
         {
-            if (data == null) return false;
-            if (cell.RowIndex > tableView.RowCount - 1) return false;
+            if (data == null)
+            {
+                return false;
+            }
 
-            var type = (ObstacleType)tableView.GetCellValue(cell.RowIndex, obsTypeColumn.AbsoluteIndex);
+            if (cell.RowIndex > tableView.RowCount - 1)
+            {
+                return false;
+            }
+
+            var type = (ObstacleType) tableView.GetCellValue(cell.RowIndex, obsTypeColumn.AbsoluteIndex);
             var reflType = (ReflectionType) tableView.GetCellValue(cell.RowIndex, reflTypeColumn.AbsoluteIndex);
 
-            if (type == ObstacleType.Dam && cell.Column.AbsoluteIndex == transCoefColumn.AbsoluteIndex) return true;
-            
-            if (type == ObstacleType.Sheet && cell.Column.AbsoluteIndex == heightColumn.AbsoluteIndex) return true;
-            if (type == ObstacleType.Sheet && cell.Column.AbsoluteIndex == alphaColumn.AbsoluteIndex) return true;
-            if (type == ObstacleType.Sheet && cell.Column.AbsoluteIndex == betaColumn.AbsoluteIndex) return true;
+            if (type == ObstacleType.Dam && cell.Column.AbsoluteIndex == transCoefColumn.AbsoluteIndex)
+            {
+                return true;
+            }
 
-            if (reflType == ReflectionType.No && cell.Column.AbsoluteIndex == reflCoefColumn.AbsoluteIndex) return true;
+            if (type == ObstacleType.Sheet && cell.Column.AbsoluteIndex == heightColumn.AbsoluteIndex)
+            {
+                return true;
+            }
+
+            if (type == ObstacleType.Sheet && cell.Column.AbsoluteIndex == alphaColumn.AbsoluteIndex)
+            {
+                return true;
+            }
+
+            if (type == ObstacleType.Sheet && cell.Column.AbsoluteIndex == betaColumn.AbsoluteIndex)
+            {
+                return true;
+            }
+
+            if (reflType == ReflectionType.No && cell.Column.AbsoluteIndex == reflCoefColumn.AbsoluteIndex)
+            {
+                return true;
+            }
 
             return false;
         }
 
         private IList<WaveObstacle> data;
+
         public object Data
         {
-            get { return data; }
+            get => data;
             set
             {
                 data = value as IList<WaveObstacle>;
@@ -110,11 +146,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
         }
 
         public Image Image { get; set; }
-        public void EnsureVisible(object item)
-        {
-        }
+        public void EnsureVisible(object item) {}
 
         public ViewInfo ViewInfo { get; set; }
+
         public IEnumerable<IFeature> SelectedFeatures
         {
             get
@@ -129,18 +164,25 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
                                 i => obstacles[tableView.GetDataSourceIndexByRowIndex(i)]);
                     }
                 }
+
                 return Enumerable.Empty<IFeature>();
             }
             set
             {
-                if (value == null) return;
+                if (value == null)
+                {
+                    return;
+                }
 
-                var selectedInMap = value.OfType<WaveObstacle>().ToList();
+                List<WaveObstacle> selectedInMap = value.OfType<WaveObstacle>().ToList();
                 var allConditions = tableView.Data as IList<WaveObstacle>;
-                if (allConditions == null) return;
+                if (allConditions == null)
+                {
+                    return;
+                }
 
-                var selectedBoundaries = allConditions.Intersect(selectedInMap);
-                var selectedIndices = selectedBoundaries.Select(allConditions.IndexOf).ToArray();
+                IEnumerable<WaveObstacle> selectedBoundaries = allConditions.Intersect(selectedInMap);
+                int[] selectedIndices = selectedBoundaries.Select(allConditions.IndexOf).ToArray();
 
                 tableView.ClearSelection();
                 tableView.SelectRows(selectedIndices);
@@ -151,11 +193,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
         public event EventHandler SelectedFeaturesChanged;
         public ILayer Layer { get; set; }
 
-        public void OnActivated()
-        {
-        }
-        public void OnDeactivated()
-        {
-        }
+        public void OnActivated() {}
+        public void OnDeactivated() {}
     }
 }

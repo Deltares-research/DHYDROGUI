@@ -1,4 +1,5 @@
 using System;
+using GeoAPI.CoordinateSystems.Transformations;
 using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
@@ -11,29 +12,33 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.ObservationAreas
 {
     public class OverwriteLabelOperation : SpatialOperation
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof (OverwriteValueOperation));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(OverwriteValueOperation));
         private string labelToSet;
         private double x;
         private double y;
 
         public OverwriteLabelOperation()
         {
-            Inputs.Add(new SpatialOperationData(this){Name = MainInputName, FeatureType = typeof(ICoverage)});
+            Inputs.Add(new SpatialOperationData(this)
+            {
+                Name = MainInputName,
+                FeatureType = typeof(ICoverage)
+            });
         }
 
         public virtual double X
         {
-            get { return x; }
+            get => x;
             set
             {
-                x = value; 
+                x = value;
                 SetDirty();
             }
         }
 
         public virtual double Y
         {
-            get { return y; }
+            get => y;
             set
             {
                 y = value;
@@ -43,7 +48,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.ObservationAreas
 
         public virtual string Label
         {
-            get { return labelToSet; }
+            get => labelToSet;
             set
             {
                 if (value != null)
@@ -63,21 +68,26 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.ObservationAreas
             var coverage = MainInput.Provider.GetFeature(0) as WaterQualityObservationAreaCoverage;
             if (coverage != null)
             {
-                var clone = (WaterQualityObservationAreaCoverage)coverage.Clone();
+                var clone = (WaterQualityObservationAreaCoverage) coverage.Clone();
                 int indexOfLabel = clone.AddLabel(Label);
 
-                var x = X;
-                var y = Y;
+                double x = X;
+                double y = Y;
                 if (InputCoordinateSystem != null && CoordinateSystem != null &&
                     InputCoordinateSystem != CoordinateSystem)
                 {
-                    var transform = Map.CoordinateSystemFactory.CreateTransformation(InputCoordinateSystem,
+                    ICoordinateTransformation transform = Map.CoordinateSystemFactory.CreateTransformation(
+                        InputCoordinateSystem,
                         CoordinateSystem);
                     if (transform != null)
                     {
                         try
                         {
-                            var tranformedComponents = transform.MathTransform.Transform(new[] {X, Y});
+                            double[] tranformedComponents = transform.MathTransform.Transform(new[]
+                            {
+                                X,
+                                Y
+                            });
                             x = tranformedComponents[0];
                             y = tranformedComponents[1];
                         }
@@ -95,8 +105,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.ObservationAreas
                         }
                     }
                 }
+
                 FeatureProviderMask.SetNearestPointValue(clone, new Coordinate(x, y), indexOfLabel, CoordinateSystem);
-                Output.Provider = new CoverageFeatureProvider {Coverage = clone, CoordinateSystem = CoordinateSystem};
+                Output.Provider = new CoverageFeatureProvider
+                {
+                    Coverage = clone,
+                    CoordinateSystem = CoordinateSystem
+                };
             }
         }
 

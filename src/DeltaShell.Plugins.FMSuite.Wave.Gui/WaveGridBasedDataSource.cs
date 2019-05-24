@@ -15,20 +15,26 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
         public WaveGridBasedDataSource(IDiscreteGridPointCoverage grid)
         {
             this.grid = grid;
-            this.FeatureType = grid.GetType();
+            FeatureType = grid.GetType();
             ((INotifyPropertyChange) grid).PropertyChanged += OnGridPropertyChanged;
         }
 
         public override void Dispose()
         {
             if (grid != null)
-                ((INotifyPropertyChange)grid).PropertyChanged -= OnGridPropertyChanged;
+            {
+                ((INotifyPropertyChange) grid).PropertyChanged -= OnGridPropertyChanged;
+            }
+
             base.Dispose();
         }
 
         private void OnGridPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (grid.IsEditing) return;
+            if (grid.IsEditing)
+            {
+                return;
+            }
 
             FireFeaturesChanged();
         }

@@ -11,7 +11,7 @@ using log4net;
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 {
     /// <summary>
-    /// Reads data from a csv file to create <see cref="DataTable"/> objects from.
+    /// Reads data from a csv file to create <see cref="DataTable" /> objects from.
     /// </summary>
     /// <example>
     /// Accepted fileformat, for linear- or constant interpolated respectively:
@@ -28,7 +28,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
     /// yyyy-MM-dd hh:mm:ss,Text,Text,Number with '.' as decimal separator
     /// </para>
     /// </para>
-    ///  </example>
+    /// </example>
     public static class DataTableCsvFileReader
     {
         private const string LocationHeaderName = "location";
@@ -36,26 +36,26 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         private const string TimeLinear = "timeLinear";
         private const string TimeBlock = "timeBlock";
 
-        private static ILog Log = LogManager.GetLogger(typeof (DataTableCsvFileReader));
+        private static ILog Log = LogManager.GetLogger(typeof(DataTableCsvFileReader));
 
         /// <summary>
         /// Reads a water quality DataTable form a csv file.
         /// </summary>
-        /// <param name="path">The file-path.</param>
-        /// <param name="useforsFolderPath">Folder path to where the usefors includes are written to.</param>
-        /// <returns>Data from the file.</returns>
-        /// <exception cref="FormatException">When the file is not in the expected format.</exception>
+        /// <param name="path"> The file-path. </param>
+        /// <param name="useforsFolderPath"> Folder path to where the usefors includes are written to. </param>
+        /// <returns> Data from the file. </returns>
+        /// <exception cref="FormatException"> When the file is not in the expected format. </exception>
         public static DataTableCsvContents Read(string path, string useforsFolderPath)
         {
             if (!File.Exists(path))
             {
-                var message = string.Format("Not a valid file-path ({0}) specified.", path);
+                string message = string.Format("Not a valid file-path ({0}) specified.", path);
                 throw new ArgumentException(message, "path");
             }
 
-            var type = GetInterpolationTypeFromHeader(path);
+            DataTableInterpolationType type = GetInterpolationTypeFromHeader(path);
 
-            var dataTable = ReadCsv(path);
+            DataTable dataTable = ReadCsv(path);
 
             return CreateDataTableCsvContents(path, type, dataTable, useforsFolderPath);
         }
@@ -64,12 +64,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         {
             using (var stream = new StreamReader(path))
             {
-                var header = stream.ReadLine();
+                string header = stream.ReadLine();
                 if (header != null)
                 {
-                    var headerElements = header.Split(CsvDelimiter);
+                    string[] headerElements = header.Split(CsvDelimiter);
                     if (headerElements.Length == 4 &&
-                        string.Equals(headerElements[1], LocationHeaderName, StringComparison.InvariantCultureIgnoreCase) &&
+                        string.Equals(headerElements[1], LocationHeaderName,
+                                      StringComparison.InvariantCultureIgnoreCase) &&
                         string.Equals(headerElements[2], "substance", StringComparison.InvariantCultureIgnoreCase) &&
                         string.Equals(headerElements[3], "value", StringComparison.InvariantCultureIgnoreCase))
                     {
@@ -77,6 +78,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                         {
                             return DataTableInterpolationType.Linear;
                         }
+
                         if (string.Equals(headerElements[0], TimeBlock, StringComparison.InvariantCultureIgnoreCase))
                         {
                             return DataTableInterpolationType.Block;
@@ -84,9 +86,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                     }
                 }
 
-                var message = String.Format("No valid header was found; First line: {0}" + Environment.NewLine +
-                                            "Expected: time[Block/Linear],location,substance,value", 
-                    header ?? "<missing>");
+                string message = string.Format("No valid header was found; First line: {0}" + Environment.NewLine +
+                                               "Expected: time[Block/Linear],location,substance,value",
+                                               header ?? "<missing>");
                 throw new FormatException(message);
             }
         }
@@ -105,29 +107,26 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                 FieldToColumnMapping = new Dictionary<CsvRequiredField, CsvColumnInfo>
                 {
                     {
-                        new CsvRequiredField("time", typeof (DateTime)),
+                        new CsvRequiredField("time", typeof(DateTime)),
                         new CsvColumnInfo(0, new DateTimeFormatInfo {FullDateTimePattern = "yyyy-MM-dd HH:mm:ss"})
                     },
                     {
-                        new CsvRequiredField(LocationHeaderName, typeof (string)),
+                        new CsvRequiredField(LocationHeaderName, typeof(string)),
                         new CsvColumnInfo(1, CultureInfo.InvariantCulture)
                     },
                     {
-                        new CsvRequiredField("substance", typeof (string)),
+                        new CsvRequiredField("substance", typeof(string)),
                         new CsvColumnInfo(2, CultureInfo.InvariantCulture)
                     },
-                    {
-                        new CsvRequiredField("value", typeof (string)),
-                        new CsvColumnInfo(3, CultureInfo.InvariantCulture)
-                    },
+                    {new CsvRequiredField("value", typeof(string)), new CsvColumnInfo(3, CultureInfo.InvariantCulture)},
                 }
             };
 
-            var dataTable = csvImporter.ImportCsv(path, csvMappingData);
-            if (dataTable.HasErrors && dataTable.Rows.Count>0)
+            DataTable dataTable = csvImporter.ImportCsv(path, csvMappingData);
+            if (dataTable.HasErrors && dataTable.Rows.Count > 0)
             {
                 var i = 0;
-                var row = dataTable.Rows[i];
+                DataRow row = dataTable.Rows[i];
                 while (!row.HasErrors)
                 {
                     i++;
@@ -135,23 +134,28 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                     {
                         return dataTable;
                     }
+
                     row = dataTable.Rows[i];
                 }
+
                 if (row.HasErrors && row.IsNull(0))
                 {
                     Log.ErrorFormat(
                         "Time column could not be parsed correctly, please ensure it is formatted as yyyy-MM-dd HH:mm:ss");
                 }
+
                 if (row.HasErrors && row.IsNull(3))
                 {
                     Log.ErrorFormat(
                         "Value column could not be parsed correctly, please ensure it is formatted correctly");
                 }
             }
+
             return dataTable;
         }
 
-        private static DataTableCsvContents CreateDataTableCsvContents(string path, DataTableInterpolationType type, DataTable dataTable, string useforsFolderPath)
+        private static DataTableCsvContents CreateDataTableCsvContents(string path, DataTableInterpolationType type,
+                                                                       DataTable dataTable, string useforsFolderPath)
         {
             var result = new DataTableCsvContents
             {
@@ -161,33 +165,36 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             };
 
             LocationData locationData = null;
-            var dataRows = dataTable.Select(null, string.Format("{0} ASC", LocationHeaderName)).ToList();
-            foreach (var row in dataRows) // Presort rows on location without filtering any entries
+            List<DataRow> dataRows = dataTable.Select(null, string.Format("{0} ASC", LocationHeaderName)).ToList();
+            foreach (DataRow row in dataRows) // Presort rows on location without filtering any entries
             {
-                var location = (string)row[1];
+                var location = (string) row[1];
                 if (locationData == null || locationData.Name != location)
                 {
-                    locationData = new LocationData
-                    {
-                        Name = location
-                    };
+                    locationData = new LocationData {Name = location};
                     result.DataRows.Add(locationData);
                 }
 
-                var time = (DateTime)row[0];
+                var time = (DateTime) row[0];
                 if (!locationData.TimeDependentSubstanceData.ContainsKey(time))
                 {
                     locationData.TimeDependentSubstanceData[time] = new Dictionary<string, string>();
                 }
 
-                var substance = (string)row[2];
-                var substanceValue = (string)row[3];
-                double buffer = 0.0;
+                var substance = (string) row[2];
+                var substanceValue = (string) row[3];
+                var buffer = 0.0;
                 if (!double.TryParse(substanceValue, NumberStyles.Any, CultureInfo.InvariantCulture, out buffer))
-                    Log.ErrorFormat( Resources.DataTableCsvFileReader_CreateDataTableCsvContents_Line__0__contains_wrong_substance_value___1_, dataRows.IndexOf(row)+1, substanceValue);
+                {
+                    Log.ErrorFormat(
+                        Resources
+                            .DataTableCsvFileReader_CreateDataTableCsvContents_Line__0__contains_wrong_substance_value___1_,
+                        dataRows.IndexOf(row) + 1, substanceValue);
+                }
 
                 locationData.TimeDependentSubstanceData[time][substance] = substanceValue;
             }
+
             return result;
         }
     }

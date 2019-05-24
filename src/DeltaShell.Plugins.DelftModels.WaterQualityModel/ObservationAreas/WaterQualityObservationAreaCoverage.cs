@@ -18,13 +18,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.ObservationAreas
     {
         public const string NoDataLabel = null;
 
-        protected WaterQualityObservationAreaCoverage(){} // NHibernate
+        protected WaterQualityObservationAreaCoverage() {} // NHibernate
 
         public WaterQualityObservationAreaCoverage(UnstructuredGrid grid) : base(grid, false)
         {
             // Data is stored as int as this makes visualization easier, while exposing this as a coverage of 'strings' in the UI.
             Components.Clear();
-            Components.Add(new Variable<int>("value"){DefaultValue = -999, NoDataValue = -999 });
+            Components.Add(new Variable<int>("value")
+            {
+                DefaultValue = -999,
+                NoDataValue = -999
+            });
         }
 
         /// <summary>
@@ -33,52 +37,60 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.ObservationAreas
         public virtual Dictionary<string, IList<int>> GetOutputLocations()
         {
             var obsInformation = new Dictionary<string, IList<int>>();
-            int cellIndex = 0;
-            foreach (var intValue in GetValues<int>()) // Not using ToArray and for loop to save RAM
+            var cellIndex = 0;
+            foreach (int intValue in GetValues<int>()) // Not using ToArray and for loop to save RAM
             {
                 if (!Equals(Components[0].NoDataValue, intValue))
                 {
-                    var observationAreaName = GetLabel(intValue);
+                    string observationAreaName = GetLabel(intValue);
                     if (!obsInformation.ContainsKey(observationAreaName))
                     {
                         obsInformation[observationAreaName] = new List<int>();
                     }
+
                     obsInformation[observationAreaName].Add(cellIndex + 1); // + 1 because waq is one based
                 }
+
                 cellIndex++;
             }
+
             return obsInformation;
         }
 
         /// <summary>
         /// Find the label corresponding to the integer value that is used in the coverage.
         /// </summary>
-        /// <returns>Null if the int was no data value</returns>
+        /// <returns> Null if the int was no data value </returns>
         private string GetLabel(int intValue)
         {
             if (intValue == (int) Components[0].NoDataValue)
+            {
                 return NoDataLabel;
+            }
 
             string intString = intValue.ToString();
-            KeyValuePair<string, string> result = Components[0].Attributes.FirstOrDefault(kvp => kvp.Value == intString);
+            KeyValuePair<string, string>
+                result = Components[0].Attributes.FirstOrDefault(kvp => kvp.Value == intString);
 
             if (!Equals(result, default(KeyValuePair<string, string>)))
             {
                 return result.Key;
             }
-            else return NoDataLabel;
+            else
+            {
+                return NoDataLabel;
+            }
         }
 
         /// <summary>
-        /// Calls <see cref="Function.SetValues{T}"/> with ints. The labels that were not yet present
+        /// Calls <see cref="Function.SetValues{T}" /> with ints. The labels that were not yet present
         /// are added to the list of labels. Then SetValues is called to actually
         /// set the ints on the coverage.
-        /// 
         /// Use null as NoDataValue.
         /// </summary>
         public virtual void SetValuesAsLabels(IEnumerable<string> labels)
         {
-            List<int> result = new List<int>();
+            var result = new List<int>();
 
             // generate a list of ints to set on the coverage
             foreach (string label in labels)
@@ -90,23 +102,23 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.ObservationAreas
         }
 
         /// <summary>
-        /// Calls <see cref="IFunction.GetValues{T}"/> and transforms all
+        /// Calls <see cref="IFunction.GetValues{T}" /> and transforms all
         /// ints into the corresponding labels.
         /// </summary>
         public virtual IList<string> GetValuesAsLabels()
         {
             IMultiDimensionalArray<int> values = GetValues<int>();
-            List<string> result = new List<string>(values.Count);
+            var result = new List<string>(values.Count);
 
             foreach (int value in values)
             {
-                if (value == (int)Components[0].NoDataValue)
+                if (value == (int) Components[0].NoDataValue)
                 {
                     result.Add(NoDataLabel);
                 }
                 else
                 {
-                    result.Add(GetLabel(value));                    
+                    result.Add(GetLabel(value));
                 }
             }
 
@@ -115,15 +127,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.ObservationAreas
 
         /// <summary>
         /// Add a label to the list of labels.
-        /// This can be used if a method calls <see cref="Function.SetValues{T}"/> instead of
-        /// <see cref="SetValuesAsLabels"/> afterwards.
+        /// This can be used if a method calls <see cref="Function.SetValues{T}" /> instead of
+        /// <see cref="SetValuesAsLabels" /> afterwards.
         /// </summary>
-        /// <returns>The index that can be used in SetValues{int}. Returns NoDataValue when label is null.</returns>
+        /// <returns> The index that can be used in SetValues{int}. Returns NoDataValue when label is null. </returns>
         public virtual int AddLabel(string label)
         {
             if (label == NoDataLabel)
             {
-                return (int)Components[0].NoDataValue;
+                return (int) Components[0].NoDataValue;
             }
 
             label = label.ToLowerInvariant();
@@ -144,7 +156,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.ObservationAreas
 
         public virtual IEnumerable<string> GetLabelList()
         {
-            return Components[0].Attributes != null ? Components[0].Attributes.Keys : Enumerable.Empty<string>().ToList();
+            return Components[0].Attributes != null
+                       ? Components[0].Attributes.Keys
+                       : Enumerable.Empty<string>().ToList();
         }
     }
 }

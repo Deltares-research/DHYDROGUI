@@ -18,7 +18,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.WaterQualit
             FinishedPageMessage = Resources.SubstanceProcessLibraryWizard_Finished_message;
 
             substanceProcessLibraryWizardPage = new SubstanceProcessLibraryWizardPage();
-            AddPage(substanceProcessLibraryWizardPage, Resources.SubstanceProcessLibraryWizard_Title, Resources.SubstanceProcessLibraryWizardPage_Description);
+            AddPage(substanceProcessLibraryWizardPage, Resources.SubstanceProcessLibraryWizard_Title,
+                    Resources.SubstanceProcessLibraryWizardPage_Description);
         }
 
         public WaterQualityModel WaterQualityModel { get; set; }

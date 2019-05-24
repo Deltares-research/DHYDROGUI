@@ -27,11 +27,13 @@ using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.Gui;
 using DeltaShell.Plugins.FMSuite.Common.Gui.Forms;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
-using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using GeoAPI.Extensions.CoordinateSystems;
 using log4net;
+using MessageBox = DelftTools.Controls.Swf.MessageBox;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 {
@@ -50,15 +52,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             DefaultExt = BcFile.Extension
         };
 
-        private class AddSeriesTool: IChartViewContextMenuTool
+        private class AddSeriesTool : IChartViewContextMenuTool
         {
             public readonly IList<IBoundaryCondition> AddedBoundaryConditions = new List<IBoundaryCondition>();
- 
+
             public IChartView ChartView { get; set; }
 
             public bool Active
             {
-                get { return active; }
+                get => active;
                 set
                 {
                     active = value;
@@ -74,9 +76,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
             public void OnBeforeContextMenu(ContextMenuStrip menu)
             {
-                var procsToAdd =
+                List<IGrouping<string, IBoundaryCondition>> procsToAdd =
                     BoundaryConditionSet.BoundaryConditions.Except(
-                        AddedBoundaryConditions.Concat(new[] {BoundaryCondition}))
+                                            AddedBoundaryConditions.Concat(new[]
+                                            {
+                                                BoundaryCondition
+                                            }))
                                         .Where(bc => bc.DataPointIndices.Contains(SelectedIndex))
                                         .GroupBy(bc => bc.ProcessName).ToList();
 
@@ -89,17 +94,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
                     menu.Items.Add(new ToolStripMenuItem("Add series", null,
                                                          procsToAdd.Select(
-                                                             g => CreateMenuItem(g, AddBoundaryConditionSeries))
+                                                                       g => CreateMenuItem(
+                                                                           g, AddBoundaryConditionSeries))
                                                                    .ToArray()));
                 }
 
-                var procsToRemove = AddedBoundaryConditions.GroupBy(bc => bc.ProcessName).ToList();
+                List<IGrouping<string, IBoundaryCondition>> procsToRemove =
+                    AddedBoundaryConditions.GroupBy(bc => bc.ProcessName).ToList();
 
                 if (procsToRemove.Any())
                 {
                     menu.Items.Add(new ToolStripMenuItem("Remove series", null,
                                                          procsToRemove.Select(
-                                                             g => CreateMenuItem(g, RemoveBoundaryConditionSeries))
+                                                                          g => CreateMenuItem(
+                                                                              g, RemoveBoundaryConditionSeries))
                                                                       .ToArray()));
                 }
             }
@@ -109,8 +117,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             {
                 return new ToolStripMenuItem(grouping.Key, null,
                                              grouping.Select(
-                                                 bc =>
-                                                 new ToolStripMenuItem(bc.Name, null, eventHandler))
+                                                         bc =>
+                                                             new ToolStripMenuItem(bc.Name, null, eventHandler))
                                                      .Cast<ToolStripItem>()
                                                      .ToArray());
             }
@@ -121,16 +129,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
             private void AddBoundaryConditionSeries(object sender, EventArgs e)
             {
-                var boundaryCondition = BoundaryConditionSet.BoundaryConditions.FirstOrDefault(bc => bc.Name == ((ToolStripMenuItem)sender).Text);
+                IBoundaryCondition boundaryCondition =
+                    BoundaryConditionSet.BoundaryConditions.FirstOrDefault(
+                        bc => bc.Name == ((ToolStripMenuItem) sender).Text);
                 AddedBoundaryConditions.Add(boundaryCondition);
                 if (AddSeriesToView != null)
                 {
                     AddSeriesToView(boundaryCondition);
                 }
             }
+
             private void RemoveBoundaryConditionSeries(object sender, EventArgs e)
             {
-                var boundaryCondition = BoundaryConditionSet.BoundaryConditions.FirstOrDefault(bc => bc.Name == ((ToolStripMenuItem)sender).Text);
+                IBoundaryCondition boundaryCondition =
+                    BoundaryConditionSet.BoundaryConditions.FirstOrDefault(
+                        bc => bc.Name == ((ToolStripMenuItem) sender).Text);
                 AddedBoundaryConditions.Remove(boundaryCondition);
                 if (RemoveSeriesFromView != null)
                 {
@@ -153,14 +166,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
         public FlowBoundaryConditionDataView()
         {
             InitializeComponent();
-            
+
             const double factor = 180 / Math.PI;
             AstroComponents = HarmonicComponent.DefaultAstroComponentsRadPerHour.Take(10).ToDictionary(kvp => kvp.Key,
                                                                                                        kvp =>
-                                                                                                       kvp.Value * factor);
-            foreach (var kvp in HarmonicComponent.DefaultAstroComponentsRadPerHour.Skip(10).ToDictionary(kvp => kvp.Key,
-                                                                                                       kvp =>
-                                                                                                       kvp.Value * factor).OrderBy(kvp => kvp.Key))
+                                                                                                           kvp.Value *
+                                                                                                           factor);
+            foreach (KeyValuePair<string, double> kvp in HarmonicComponent
+                                                         .DefaultAstroComponentsRadPerHour.Skip(10).ToDictionary(
+                                                             kvp => kvp.Key,
+                                                             kvp =>
+                                                                 kvp.Value * factor).OrderBy(kvp => kvp.Key))
             {
                 AstroComponents.Add(kvp);
             }
@@ -175,18 +191,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             var chartView = functionView.ChartView as ChartView;
             if (chartView != null)
             {
-                var customDateTimeFormatInfo = (DateTimeFormatInfo)CultureInfo.CurrentCulture.DateTimeFormat.Clone();
+                var customDateTimeFormatInfo = (DateTimeFormatInfo) CultureInfo.CurrentCulture.DateTimeFormat.Clone();
                 customDateTimeFormatInfo.LongTimePattern = "HH:mm:ss";
                 customDateTimeFormatInfo.ShortTimePattern = "HH:mm";
                 chartView.DateTimeLabelFormatProvider.CustomDateTimeFormatInfo = customDateTimeFormatInfo;
             }
+
             addSeriesTool = new AddSeriesTool
-                {
-                    ChartView = functionView.ChartView,
-                    Active = true,
-                    AddSeriesToView = AddSeriesToView,
-                    RemoveSeriesFromView = RemoveSeriesFromView
-                };
+            {
+                ChartView = functionView.ChartView,
+                Active = true,
+                AddSeriesToView = AddSeriesToView,
+                RemoveSeriesFromView = RemoveSeriesFromView
+            };
             functionView.ChartView.Tools.Add(addSeriesTool);
 
             UpdateControl();
@@ -201,11 +218,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             {
                 return;
             }
+
             if (bc == BoundaryCondition)
             {
-                itemCheckEventArgs.NewValue=CheckState.Indeterminate;
+                itemCheckEventArgs.NewValue = CheckState.Indeterminate;
                 return;
             }
+
             if (itemCheckEventArgs.NewValue == CheckState.Checked)
             {
                 AddSeriesToView(bc);
@@ -227,7 +246,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
         private void RemoveSeriesFromView(IBoundaryCondition flowBoundaryCondition)
         {
-            var function = flowBoundaryCondition.GetDataAtPoint(SupportPointIndex);
+            IFunction function = flowBoundaryCondition.GetDataAtPoint(SupportPointIndex);
             seriesFactory.BackgroundFunctions.RemoveAllWhere(fw => ReferenceEquals(fw.Function, function));
             functionView.RefreshChartView();
         }
@@ -236,11 +255,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
         {
             return condition == null || condition.DataType == BoundaryConditionDataType.Constant ||
                    condition.DataType == BoundaryConditionDataType.Empty
-                ? null
-                : new FlowBoundaryConditionPointData(condition, SupportPointIndex, model != null && model.UseDepthLayers || condition.FlowQuantity == FlowBoundaryQuantityType.MorphologyBedLoadTransport);
+                       ? null
+                       : new FlowBoundaryConditionPointData(condition, SupportPointIndex,
+                                                            model != null && model.UseDepthLayers ||
+                                                            condition.FlowQuantity == FlowBoundaryQuantityType
+                                                                .MorphologyBedLoadTransport);
         }
 
-        FlowBoundaryConditionPointData BoundaryConditionWrapper()
+        private FlowBoundaryConditionPointData BoundaryConditionWrapper()
         {
             return BoundaryConditionWrapper(BoundaryCondition as FlowBoundaryCondition);
         }
@@ -257,29 +279,37 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
         private IFunction BoundaryConditionData
         {
-            get { return boundaryConditionData; }
+            get => boundaryConditionData;
             set
             {
                 if (ReferenceEquals(boundaryConditionData, value))
                 {
                     return;
                 }
+
                 if (boundaryConditionData != null)
                 {
                     boundaryConditionData.Components.CollectionChanged -= ComponentsCollectionChanged;
-                    if( model != null )
+                    if (model != null)
+                    {
                         model.SedimentFractions.CollectionChanged -= SedimentsCollectionChanged;
-                    ((INotifyPropertyChange)boundaryConditionData).PropertyChanged -= OnPropertyChanged;
+                    }
+
+                    ((INotifyPropertyChange) boundaryConditionData).PropertyChanged -= OnPropertyChanged;
                 }
+
                 boundaryConditionData = value;
                 if (boundaryConditionData != null)
                 {
                     boundaryConditionData.Components.CollectionChanged += ComponentsCollectionChanged;
-                    if( model != null)
+                    if (model != null)
+                    {
                         model.SedimentFractions.CollectionChanged += SedimentsCollectionChanged;
-                    ((INotifyPropertyChange)boundaryConditionData).PropertyChanged += OnPropertyChanged;
+                    }
+
+                    ((INotifyPropertyChange) boundaryConditionData).PropertyChanged += OnPropertyChanged;
                 }
-                
+
                 UpdateControl();
 
                 if (boundaryConditionData != null && Model != null)
@@ -302,8 +332,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
         private void SedimentsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-                UpdateControl();
-                componentsChanged = false;
+            UpdateControl();
+            componentsChanged = false;
         }
 
         private void ComponentsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -314,8 +344,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
         public void RefreshBoundaryData()
         {
             BoundaryConditionData = BoundaryCondition != null && SupportPointIndex != -1
-                ? BoundaryCondition.GetDataAtPoint(SupportPointIndex)
-                : null;
+                                        ? BoundaryCondition.GetDataAtPoint(SupportPointIndex)
+                                        : null;
         }
 
         public void OnSupportPointChanged(object sender, EventArgs<int> e)
@@ -327,20 +357,29 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
         public IBoundaryCondition BoundaryCondition
         {
-            private get { return boundaryCondition; }
+            private get
+            {
+                return boundaryCondition;
+            }
             set
             {
-                if (Equals(value, boundaryCondition)) return;
+                if (Equals(value, boundaryCondition))
+                {
+                    return;
+                }
+
                 if (boundaryCondition != null)
                 {
                     ((INotifyPropertyChanged) boundaryCondition).PropertyChanged -= BoundaryConditionPropertyChanged;
                 }
+
                 boundaryCondition = value;
                 addSeriesTool.BoundaryCondition = value;
                 if (boundaryCondition != null)
                 {
-                    ((INotifyPropertyChanged)boundaryCondition).PropertyChanged += BoundaryConditionPropertyChanged;
+                    ((INotifyPropertyChanged) boundaryCondition).PropertyChanged += BoundaryConditionPropertyChanged;
                 }
+
                 SupportPointIndex = 0;
                 RefreshBoundaryData();
             }
@@ -348,17 +387,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
         public WaterFlowFMModel Model
         {
-            private get { return model; }
+            private get
+            {
+                return model;
+            }
             set
             {
                 if (model != null)
                 {
                     ((INotifyPropertyChanged) model).PropertyChanged -= ModelPropertyChanged;
                 }
+
                 model = value;
                 if (model != null)
                 {
-                    ((INotifyPropertyChanged)model).PropertyChanged += ModelPropertyChanged;
+                    ((INotifyPropertyChanged) model).PropertyChanged += ModelPropertyChanged;
                     seriesFactory.ModelStartTime = model.StartTime;
                     seriesFactory.ModelStopTime = model.StopTime;
                     seriesFactory.ModelReferenceTime = model.ReferenceTime;
@@ -369,7 +412,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
         private void ModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName.Equals(TypeUtils.GetMemberName(() => model.StartTime)) ||
-                e.PropertyName.Equals(TypeUtils.GetMemberName(() => model.StopTime)) || 
+                e.PropertyName.Equals(TypeUtils.GetMemberName(() => model.StopTime)) ||
                 e.PropertyName.Equals(TypeUtils.GetMemberName(() => model.ReferenceTime)))
             {
                 seriesFactory.ModelStartTime = model.StartTime;
@@ -386,7 +429,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
         private void BoundaryConditionPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (boundaryCondition.IsEditing) return;
+            if (boundaryCondition.IsEditing)
+            {
+                return;
+            }
 
             if (e.PropertyName == TypeUtils.GetMemberName(() => boundaryCondition.IsEditing) ||
                 e.PropertyName == TypeUtils.GetMemberName(() => boundaryCondition.DataType) ||
@@ -401,34 +447,29 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
         public BoundaryConditionSet BoundaryConditionSet
         {
-            private get { return boundaryConditionSet; }
+            private get
+            {
+                return boundaryConditionSet;
+            }
             set
             {
-                if (Equals(value, boundaryConditionSet)) return;
+                if (Equals(value, boundaryConditionSet))
+                {
+                    return;
+                }
+
                 boundaryConditionSet = value;
                 addSeriesTool.BoundaryConditionSet = boundaryConditionSet;
             }
         }
 
-        private DateTime ModelStartTime
-        {
-            get { return Model == null ? DateTime.MinValue : Model.StartTime; }
-        }
+        private DateTime ModelStartTime => Model == null ? DateTime.MinValue : Model.StartTime;
 
-        private DateTime ModelStopTime
-        {
-            get { return Model == null ? ModelStartTime.AddDays(1) : Model.StopTime; }
-        }
+        private DateTime ModelStopTime => Model == null ? ModelStartTime.AddDays(1) : Model.StopTime;
 
-        private TimeSpan ModelTimeStep
-        {
-            get { return Model == null ? new TimeSpan(0, 1, 0, 0) : Model.TimeStep; }
-        }
+        private TimeSpan ModelTimeStep => Model == null ? new TimeSpan(0, 1, 0, 0) : Model.TimeStep;
 
-        private ICoordinateSystem ModelCoordinateSystem
-        {
-            get { return Model == null ? null : Model.CoordinateSystem; }
-        }
+        private ICoordinateSystem ModelCoordinateSystem => Model == null ? null : Model.CoordinateSystem;
 
         [InvokeRequired]
         public void UpdateControl()
@@ -461,21 +502,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
             boundaryDataListBox.Items.AddRange(
                 BoundaryConditionSet.BoundaryConditions.Where(
-                    bc =>
-                    bc.DataPointIndices.Contains(SupportPointIndex) && bc.DataType != BoundaryConditionDataType.Qh &&
-                    bc.DataType != BoundaryConditionDataType.Constant && bc.DataType != BoundaryConditionDataType.Empty)
+                                        bc =>
+                                            bc.DataPointIndices.Contains(SupportPointIndex) &&
+                                            bc.DataType != BoundaryConditionDataType.Qh &&
+                                            bc.DataType != BoundaryConditionDataType.Constant &&
+                                            bc.DataType != BoundaryConditionDataType.Empty)
                                     .OfType<object>()
                                     .ToArray());
 
-            var boundaryConditionIndex = boundaryDataListBox.Items.IndexOf(BoundaryCondition);
+            int boundaryConditionIndex = boundaryDataListBox.Items.IndexOf(BoundaryCondition);
             if (boundaryConditionIndex != -1)
             {
                 boundaryDataListBox.SetItemCheckState(boundaryConditionIndex, CheckState.Indeterminate);
             }
 
-            foreach (var bc in seriesFactory.BackgroundFunctions.Select(bf => bf.BoundaryCondition))
+            foreach (FlowBoundaryCondition bc in seriesFactory.BackgroundFunctions.Select(bf => bf.BoundaryCondition))
             {
-                var index = boundaryDataListBox.Items.IndexOf(bc);
+                int index = boundaryDataListBox.Items.IndexOf(bc);
                 if (index != -1)
                 {
                     boundaryDataListBox.SetItemChecked(index, true);
@@ -490,6 +533,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             {
                 return;
             }
+
             e.Value = item.Name;
         }
 
@@ -504,11 +548,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             {
                 return;
             }
+
             if (BoundaryConditionData == null)
             {
                 functionView.Visible = false;
                 if (BoundaryCondition != null && (BoundaryCondition.DataType == BoundaryConditionDataType.Empty ||
-                    BoundaryCondition.DataType == BoundaryConditionDataType.Constant))
+                                                  BoundaryCondition.DataType == BoundaryConditionDataType.Constant))
                 {
                     noDataLabel.Text = "";
                 }
@@ -516,10 +561,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                 {
                     noDataLabel.Text = boundaryCondition == null ? NoBcText : NoDataText;
                 }
+
                 noDataLabel.Visible = true;
                 return;
             }
-            var boundaryConditionDataType = BoundaryCondition.DataType;
+
+            BoundaryConditionDataType boundaryConditionDataType = BoundaryCondition.DataType;
             if (boundaryConditionDataType == BoundaryConditionDataType.Empty)
             {
                 functionView.Visible = false;
@@ -541,26 +588,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             SubscribeFunctionViewData();
 
             functionView.TableView.PasteController =
-                new TableViewArgumentBasedPasteController((TableView)functionView.TableView, new[] { 0 })
+                new TableViewArgumentBasedPasteController((TableView) functionView.TableView, new[]
                 {
-                    SkipRowsWithMissingArgumentValues = true
-                };
+                    0
+                }) {SkipRowsWithMissingArgumentValues = true};
             ((TableView) functionView.TableView).ExceptionMode = TableView.ValidationExceptionMode.NoAction;
-            if (BoundaryConditionData.Arguments[0].ValueType == typeof(DateTime))//override time navigator selection
+            if (BoundaryConditionData.Arguments[0].ValueType == typeof(DateTime)) //override time navigator selection
             {
-                functionView.SetCurrentTimeSelection(BoundaryConditionData.Arguments[0].Values.Cast<DateTime>().FirstOrDefault(),
-                                                     BoundaryConditionData.Arguments[0].Values.Cast<DateTime>().LastOrDefault());
+                functionView.SetCurrentTimeSelection(
+                    BoundaryConditionData.Arguments[0].Values.Cast<DateTime>().FirstOrDefault(),
+                    BoundaryConditionData.Arguments[0].Values.Cast<DateTime>().LastOrDefault());
             }
 
             if (model == null || !model.UseDepthLayers)
             {
-                var boundaryConditionWrapper = BoundaryConditionWrapper();
+                FlowBoundaryConditionPointData boundaryConditionWrapper = BoundaryConditionWrapper();
                 if (boundaryConditionWrapper != null)
                 {
-                    var dimension = boundaryConditionWrapper.ForcingTypeDimension*
+                    int dimension = boundaryConditionWrapper.ForcingTypeDimension *
                                     boundaryConditionWrapper.VariableDimension;
 
-                    foreach (var column in functionView.TableView.Columns)
+                    foreach (ITableViewColumn column in functionView.TableView.Columns)
                     {
                         column.Visible = column.AbsoluteIndex - 1 < dimension;
                     }
@@ -568,16 +616,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             }
             else
             {
-                foreach (var column in functionView.TableView.Columns)
+                foreach (ITableViewColumn column in functionView.TableView.Columns)
                 {
                     column.Visible = true;
                 }
             }
 
             // Fix display order after setting visibility (someone please fix this...)
-            for (int i = 0; i < functionView.TableView.Columns.Count; ++i)
+            for (var i = 0; i < functionView.TableView.Columns.Count; ++i)
             {
-                if (!functionView.TableView.Columns[i].Visible) break;
+                if (!functionView.TableView.Columns[i].Visible)
+                {
+                    break;
+                }
+
                 functionView.TableView.Columns[i].DisplayIndex = i;
             }
 
@@ -590,10 +642,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                 if (boundaryConditionDataType == BoundaryConditionDataType.AstroComponents ||
                     boundaryConditionDataType == BoundaryConditionDataType.AstroCorrection)
                 {
-                    functionView.TableView.Columns[0].Editor = new ComboBoxTypeEditor {Items = AstroComponents.Keys, UseWaitCursor = true};
+                    functionView.TableView.Columns[0].Editor = new ComboBoxTypeEditor
+                    {
+                        Items = AstroComponents.Keys,
+                        UseWaitCursor = true
+                    };
                     functionView.TableView.PasteController.PasteBehaviour =
                         TableViewPasteBehaviourOptions.SkipRowWhenValueIsInvalid;
-                    var argument = BoundaryConditionData.Arguments.OfType<IVariable<string>>().First();
+                    IVariable<string> argument = BoundaryConditionData.Arguments.OfType<IVariable<string>>().First();
                     argument.NextValueGenerator = new FuncNextValueGenerator<string>(GenerateNextAstroComponent);
                 }
             }
@@ -620,6 +676,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                     return new RowValidationResult(0, "Astronomic component not recognized");
                 }
             }
+
             if (BoundaryCondition.DataType == BoundaryConditionDataType.Harmonics ||
                 BoundaryCondition.DataType == BoundaryConditionDataType.HarmonicCorrection)
             {
@@ -629,6 +686,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                     return new RowValidationResult(0, "Input frequency should be between 0 and 1e+06 deg/h");
                 }
             }
+
             return new RowValidationResult(0, "");
         }
 
@@ -638,7 +696,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             if (function != null)
             {
                 function.ValuesChanged -= FunctionValuesChanged;
-                ((INotifyPropertyChanged)function).PropertyChanged -= FunctionPropertyChanged;
+                ((INotifyPropertyChanged) function).PropertyChanged -= FunctionPropertyChanged;
             }
         }
 
@@ -648,19 +706,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             if (function != null)
             {
                 function.ValuesChanged += FunctionValuesChanged;
-                ((INotifyPropertyChanged)function).PropertyChanged += FunctionPropertyChanged;
+                ((INotifyPropertyChanged) function).PropertyChanged += FunctionPropertyChanged;
             }
         }
 
         [InvokeRequired]
         private void FunctionPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (BoundaryCondition == null || BoundaryCondition.IsEditing) return;
+            if (BoundaryCondition == null || BoundaryCondition.IsEditing)
+            {
+                return;
+            }
 
             var function = (IFunction) functionView.Data;
 
             if (!Equals(sender, function) || e.PropertyName == "Dummy")
+            {
                 return;
+            }
 
             if (function != null && function.IsNestedEditingDone())
             {
@@ -672,13 +735,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
         [InvokeRequired]
         private void FunctionValuesChanged(object sender, FunctionValuesChangingEventArgs e)
         {
-            if (BoundaryCondition == null || BoundaryCondition.IsEditing) return;
+            if (BoundaryCondition == null || BoundaryCondition.IsEditing)
+            {
+                return;
+            }
 
-            var function = (IFunction)functionView.Data;
+            var function = (IFunction) functionView.Data;
 
             if (!Equals(sender, function))
+            {
                 return;
-            
+            }
+
             if (function != null && !function.IsEditing)
             {
                 seriesFactory.EvaluateSignal();
@@ -722,12 +790,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             wpsImportButton.Enabled = BoundaryCondition != null &&
                                       BoundaryCondition.DataType == BoundaryConditionDataType.TimeSeries &&
                                       BoundaryCondition.VariableName == "WaterLevel";
-            
-            fileImportButton.Enabled = BoundaryCondition != null && BoundaryCondition.DataType != BoundaryConditionDataType.Empty;
-            fileExportButton.Enabled = BoundaryCondition != null && BoundaryCondition.DataType != BoundaryConditionDataType.Empty;
+
+            fileImportButton.Enabled = BoundaryCondition != null &&
+                                       BoundaryCondition.DataType != BoundaryConditionDataType.Empty;
+            fileExportButton.Enabled = BoundaryCondition != null &&
+                                       BoundaryCondition.DataType != BoundaryConditionDataType.Empty;
         }
 
-        void GenerateDataButtonClick(object sender, EventArgs e)
+        private void GenerateDataButtonClick(object sender, EventArgs e)
         {
             if (BoundaryCondition != null)
             {
@@ -753,22 +823,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             FillFunctionView();
         }
 
-        private bool FourierDataType
-        {
-            get
-            {
-                return BoundaryCondition.DataType == BoundaryConditionDataType.AstroComponents ||
-                       BoundaryCondition.DataType == BoundaryConditionDataType.AstroCorrection ||
-                       BoundaryCondition.DataType == BoundaryConditionDataType.Harmonics ||
-                       BoundaryCondition.DataType == BoundaryConditionDataType.HarmonicCorrection;
-            }
-        }
+        private bool FourierDataType =>
+            BoundaryCondition.DataType == BoundaryConditionDataType.AstroComponents ||
+            BoundaryCondition.DataType == BoundaryConditionDataType.AstroCorrection ||
+            BoundaryCondition.DataType == BoundaryConditionDataType.Harmonics ||
+            BoundaryCondition.DataType == BoundaryConditionDataType.HarmonicCorrection;
 
         private void TimeSeriesDialog()
         {
             var generateDialog = new TimeSeriesGeneratorDialog {ApplyOnAccept = false};
-            var startTime = ModelStartTime;
-            var stopTime = ModelStopTime;
+            DateTime startTime = ModelStartTime;
+            DateTime stopTime = ModelStopTime;
             var timeStep = new TimeSpan(0, 12, 0, 0);
 
             generateDialog.StartPosition = FormStartPosition.CenterScreen;
@@ -781,19 +846,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                 return;
             }
 
-            ApplyBoundaryConditionsForSupportPointMode(new DateTime[] { },
-                (values, function) => GenerateTimeSeries(function, generateDialog), "Generate/modify timeseries");
+            ApplyBoundaryConditionsForSupportPointMode(new DateTime[]
+                                                           {},
+                                                       (values, function) =>
+                                                           GenerateTimeSeries(function, generateDialog),
+                                                       "Generate/modify timeseries");
         }
 
         private static bool GenerateTimeSeries(IFunction function, TimeSeriesGeneratorDialog generateDialog)
         {
             function.BeginEdit(new DefaultEditAction("Generate/modify timeseries"));
-            var argument = function.Arguments.OfType<IVariable<DateTime>>().FirstOrDefault();
+            IVariable<DateTime> argument = function.Arguments.OfType<IVariable<DateTime>>().FirstOrDefault();
             if (!generateDialog.Apply(argument))
             {
                 function.EndEdit();
                 return true;
             }
+
             function.EndEdit();
 
             return false;
@@ -803,25 +872,35 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
         {
             var dialog = new HarmonicConditionsDialog(correctionsEnabled);
 
-            var dialogResult = dialog.ShowDialog();
+            bool? dialogResult = dialog.ShowDialog();
             if (!dialogResult.HasValue || !dialogResult.Value)
             {
                 return;
             }
 
-            var viewModel = (HarmonicConditionsDialogViewModel)dialog.DataContext;
-            var amplitude = viewModel.Amplitude;
-            var frequency = viewModel.Frequency;
-            var phase = viewModel.Phase;
-            var amplitudeCorrection = viewModel.AmplitudeCorrection;
-            var phaseCorrection = viewModel.PhaseCorrection;
+            var viewModel = (HarmonicConditionsDialogViewModel) dialog.DataContext;
+            double amplitude = viewModel.Amplitude;
+            double frequency = viewModel.Frequency;
+            double phase = viewModel.Phase;
+            double amplitudeCorrection = viewModel.AmplitudeCorrection;
+            double phaseCorrection = viewModel.PhaseCorrection;
 
-            double[] newComponentValues = { frequency, amplitude, phase, amplitudeCorrection, phaseCorrection };
+            double[] newComponentValues =
+            {
+                frequency,
+                amplitude,
+                phase,
+                amplitudeCorrection,
+                phaseCorrection
+            };
 
-            ApplyBoundaryConditionsForSupportPointMode(newComponentValues, ApplyHarmonicComponentValues, "Generate/modify harmonic component values");
+            ApplyBoundaryConditionsForSupportPointMode(newComponentValues, ApplyHarmonicComponentValues,
+                                                       "Generate/modify harmonic component values");
         }
 
-        private void ApplyBoundaryConditionsForSupportPointMode<T>(T[] newComponentValues, Func<T[] ,IFunction,bool> applyToFunction, string actionName)
+        private void ApplyBoundaryConditionsForSupportPointMode<T>(T[] newComponentValues,
+                                                                   Func<T[], IFunction, bool> applyToFunction,
+                                                                   string actionName)
         {
             var supportPointsDialog = new SupportPointSelectionForm();
             var defaultPointMode = SupportPointMode.SelectedPoint;
@@ -830,15 +909,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                 supportPointsDialog.ShowDialog(this);
                 defaultPointMode = supportPointsDialog.SupportPointOperationMode;
             }
-            BoundaryCondition.ApplyForSupportPointMode(defaultPointMode, newComponentValues, applyToFunction, actionName, SupportPointIndex);
+
+            BoundaryCondition.ApplyForSupportPointMode(defaultPointMode, newComponentValues, applyToFunction,
+                                                       actionName, SupportPointIndex);
 
             RefreshBoundaryData();
             FillFunctionView();
             functionView.RefreshChartView();
         }
+
         private static bool ApplyHarmonicComponentValues(double[] newValues, IFunction function)
         {
-            var variable = function.Arguments.FirstOrDefault();
+            IVariable variable = function.Arguments.FirstOrDefault();
             if (variable == null)
             {
                 throw new NotSupportedException("Function has no arguments");
@@ -849,7 +931,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                 throw new NotSupportedException("Incorrect number of components");
             }
 
-            var isCorrected = function.Components.Count == 4;
+            bool isCorrected = function.Components.Count == 4;
 
             function.BeginEdit(new DefaultEditAction("Generate/modify harmonic component values"));
 
@@ -858,24 +940,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             double phase = newValues[2];
 
             function.Clear();
-            function[frequency] = !isCorrected 
-                ? new[] { amplitude, phase} 
-                : new[]
-                {
-                    amplitude,
-                    phase,
-                    newValues[3],// Amplitude correction
-                    newValues[4] // Phase correction
-                };
+            function[frequency] = !isCorrected
+                                      ? new[]
+                                      {
+                                          amplitude,
+                                          phase
+                                      }
+                                      : new[]
+                                      {
+                                          amplitude,
+                                          phase,
+                                          newValues[3], // Amplitude correction
+                                          newValues[4]  // Phase correction
+                                      };
 
             function.EndEdit();
             return true;
-            
         }
 
         private static bool ApplyAstroComponentSelection(string[] components, IFunction function)
         {
-            var variable = function.Arguments.FirstOrDefault();
+            IVariable variable = function.Arguments.FirstOrDefault();
             if (!(variable is IVariable<string>))
             {
                 return false;
@@ -883,11 +968,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
             function.BeginEdit(new DefaultEditAction("Generate/modify astro component values"));
 
-            var previousValues = variable.Values.Cast<string>().ToList();
-            foreach (var value in previousValues.Except(components))
+            List<string> previousValues = variable.Values.Cast<string>().ToList();
+            foreach (string value in previousValues.Except(components))
             {
                 variable.Values.Remove(value);
             }
+
             variable.AddValues(components.Except(previousValues));
 
             function.EndEdit();
@@ -900,84 +986,93 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             var selectDialog = new AstroComponentSelection(AstroComponents);
             if (BoundaryConditionData != null)
             {
-                var argumentVariable = BoundaryConditionData.Arguments.FirstOrDefault();
+                IVariable argumentVariable = BoundaryConditionData.Arguments.FirstOrDefault();
                 if (argumentVariable is IVariable<string>)
                 {
                     selectDialog.SelectComponents(argumentVariable.Values.Cast<string>().ToList());
                 }
+
                 if (argumentVariable is IVariable<double>)
                 {
                     var componentsInVariable = new List<string>();
-                    foreach (var frequency in argumentVariable.GetValues<double>())
+                    foreach (double frequency in argumentVariable.GetValues<double>())
                     {
-                        var component = AstroComponents.FirstOrDefault(kvp => kvp.Value == frequency).Key;
+                        string component = AstroComponents.FirstOrDefault(kvp => kvp.Value == frequency).Key;
                         if (!string.IsNullOrEmpty(component))
                         {
                             componentsInVariable.Add(component);
                         }
                     }
+
                     selectDialog.SelectComponents(componentsInVariable);
                 }
             }
+
             selectDialog.ShowDialog();
             if (selectDialog.DialogResult != DialogResult.OK)
             {
                 return;
             }
 
-            var selectedComponents = selectDialog.SelectedComponents.Select(kvp => kvp.Key).ToArray();
+            string[] selectedComponents = selectDialog.SelectedComponents.Select(kvp => kvp.Key).ToArray();
 
-            ApplyBoundaryConditionsForSupportPointMode(selectedComponents, ApplyAstroComponentSelection, "Generate/modify astro component values");
+            ApplyBoundaryConditionsForSupportPointMode(selectedComponents, ApplyAstroComponentSelection,
+                                                       "Generate/modify astro component values");
         }
 
         private void WpsImportButtonClick(object sender, EventArgs e)
         {
             var importDialog = new BoundaryConditionWpsDialog
-                {
-                    AllowCreateNewBoundaryCondition = false,
-                    AllowSelectedSupportPointImport = true,
-                    StartTime = ModelStartTime,
-                    StopTime = ModelStopTime,
-                    TimeStep = ModelTimeStep,
-                    CoordinateSystem = ModelCoordinateSystem,
-                };
+            {
+                AllowCreateNewBoundaryCondition = false,
+                AllowSelectedSupportPointImport = true,
+                StartTime = ModelStartTime,
+                StopTime = ModelStopTime,
+                TimeStep = ModelTimeStep,
+                CoordinateSystem = ModelCoordinateSystem,
+            };
             if (importDialog.ShowModal() != DelftDialogResult.OK)
             {
                 return;
             }
-            var importer = importDialog.CreateImporter();
+
+            BoundaryConditionWpsImporter importer = importDialog.CreateImporter();
             importer.SupportPointIndex = SupportPointIndex;
             ClearFunctionView();
             BoundaryCondition.BeginEdit(new DefaultEditAction("Import data from WPS"));
             try
             {
-                ProgressBarDialog.PerformTask("Importing data from WPS...", () => importer.Import(BoundaryConditionSet));
+                ProgressBarDialog.PerformTask("Importing data from WPS...",
+                                              () => importer.Import(BoundaryConditionSet));
             }
             catch (Exception exception)
             {
                 if (exception is ServerException)
                 {
-                    DelftTools.Controls.Swf.MessageBox.Show(exception.Message.Replace("\\", ""), "Import failed",
-                                                            MessageBoxButtons.OK,
-                                                            MessageBoxIcon.Error);
+                    MessageBox.Show(exception.Message.Replace("\\", ""), "Import failed",
+                                    MessageBoxButtons.OK,
+                                    MessageBoxIcon.Error);
                 }
+
                 if (exception is WebException)
                 {
-                    DelftTools.Controls.Swf.MessageBox.Show("Server timeout encountered", "Import failed",
-                                                            MessageBoxButtons.OK,
-                                                            MessageBoxIcon.Error);
+                    MessageBox.Show("Server timeout encountered", "Import failed",
+                                    MessageBoxButtons.OK,
+                                    MessageBoxIcon.Error);
                 }
+
                 if (exception is ArgumentException)
                 {
-                    DelftTools.Controls.Swf.MessageBox.Show(exception.Message, "Import failed",
-                                                            MessageBoxButtons.OK,
-                                                            MessageBoxIcon.Error);
+                    MessageBox.Show(exception.Message, "Import failed",
+                                    MessageBoxButtons.OK,
+                                    MessageBoxIcon.Error);
                 }
             }
             finally
             {
-                BoundaryCondition.EndEdit();                
+                BoundaryCondition.EndEdit();
             }
+
             RefreshBoundaryData();
             ConfigureSeriesFactory();
             FillFunctionView();
@@ -985,26 +1080,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
         public object Data { get; set; }
         public Image Image { get; set; }
-        public void EnsureVisible(object item)
-        {
-        }
+        public void EnsureVisible(object item) {}
 
         public ViewInfo ViewInfo { get; set; }
 
-        public IEventedList<IView> ChildViews
-        {
-            get { return functionView.ChildViews; }
-        }
+        public IEventedList<IView> ChildViews => functionView.ChildViews;
 
-        public bool HandlesChildViews
-        {
-            get { return true; }
-        }
+        public bool HandlesChildViews => true;
 
-        public void ActivateChildView(IView childView)
-        {
-            
-        }
+        public void ActivateChildView(IView childView) {}
 
         private enum ViewMode
         {
@@ -1014,7 +1098,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
         private ViewMode Mode
         {
-            get { return mode; }
+            get => mode;
             set
             {
                 if (mode != value)
@@ -1046,6 +1130,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                 {
                     functionView.ChartView.Tools.Remove(addSeriesTool);
                 }
+
                 FillCheckedListBox();
             }
         }
@@ -1054,8 +1139,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
         {
             Mode = Mode == ViewMode.Single ? ViewMode.Combined : ViewMode.Single;
         }
-
-
 
         private void FileImportButtonClick(object sender, EventArgs e)
         {
@@ -1066,7 +1149,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
         private void FileExportButtonClick(object sender, EventArgs e)
         {
-            BoundaryConditionDialogLauncher.LaunchExporterDialog(SaveFileDialog, BoundaryCondition as FlowBoundaryCondition,
+            BoundaryConditionDialogLauncher.LaunchExporterDialog(SaveFileDialog,
+                                                                 BoundaryCondition as FlowBoundaryCondition,
                                                                  SupportPointIndex, Model.ReferenceTime);
         }
     }

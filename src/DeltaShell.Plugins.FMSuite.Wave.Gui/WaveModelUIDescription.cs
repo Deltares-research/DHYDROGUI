@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using DelftTools.Controls.Swf.DataEditorGenerator.Metadata;
+using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui
@@ -11,11 +11,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
     {
         public static ObjectUIDescription Extract(WaveModel data)
         {
-            var definition = data.ModelDefinition;
+            WaveModelDefinition definition = data.ModelDefinition;
             var descriptions = new List<FieldUIDescription>();
 
             // all properties from GUIGroups, defined in csv
-            foreach (var guiGroup in data.ModelDefinition.ModelSchema.GuiPropertyGroups.Values)
+            foreach (ModelPropertyGroup guiGroup in data.ModelDefinition.ModelSchema.GuiPropertyGroups.Values)
             {
                 descriptions.AddRange(definition.Properties
                                                 .Where(p => p.PropertyDefinition.Category == guiGroup.Name &&
@@ -39,20 +39,22 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                 isVisible = o => prop.IsVisible(model.ModelDefinition.Properties);
             }
 
-            var label = string.IsNullOrEmpty(prop.PropertyDefinition.Caption) ? prop.PropertyDefinition.FilePropertyName : prop.PropertyDefinition.Caption;
+            string label = string.IsNullOrEmpty(prop.PropertyDefinition.Caption)
+                               ? prop.PropertyDefinition.FilePropertyName
+                               : prop.PropertyDefinition.Caption;
 
             return new FieldUIDescription(getter, setter, isEnabled, isVisible)
-                {
-                    AlwaysRefresh = isEnabled != null,
-                    Category = prop.PropertyDefinition.Category,
-                    SubCategory = prop.PropertyDefinition.SubCategory,
-                    IsReadOnly = prop.PropertyDefinition.ModelFileOnly,
-                    Label = label,
-                    Name = prop.PropertyDefinition.FilePropertyName,
-                    ValueType = prop.PropertyDefinition.DataType,
-                    ToolTip = prop.PropertyDefinition.Description,
-                    UnitSymbol = prop.PropertyDefinition.Unit
-                };
+            {
+                AlwaysRefresh = isEnabled != null,
+                Category = prop.PropertyDefinition.Category,
+                SubCategory = prop.PropertyDefinition.SubCategory,
+                IsReadOnly = prop.PropertyDefinition.ModelFileOnly,
+                Label = label,
+                Name = prop.PropertyDefinition.FilePropertyName,
+                ValueType = prop.PropertyDefinition.DataType,
+                ToolTip = prop.PropertyDefinition.Description,
+                UnitSymbol = prop.PropertyDefinition.Unit
+            };
         }
     }
 }

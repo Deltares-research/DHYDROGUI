@@ -9,14 +9,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils
     public class WaterQualityFunctionDataWrapper
     {
         /// <summary>
-        /// Creates a water quality function data wrapper with <param name="functions"/>
+        /// Creates a water quality function data wrapper with
+        /// <param name="functions" />
         /// </summary>
-        /// <param name="functions">The functions that are wrapped by the water quality function data wrapper</param>
+        /// <param name="functions"> The functions that are wrapped by the water quality function data wrapper </param>
         public WaterQualityFunctionDataWrapper(IEventedList<IFunction> functions)
         {
             Functions = functions;
         }
-        
+
         /// <summary>
         /// The functions that are wrapped by the water quality function data wrapper
         /// </summary>

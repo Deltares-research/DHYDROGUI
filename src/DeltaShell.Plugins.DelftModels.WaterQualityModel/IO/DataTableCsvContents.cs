@@ -37,7 +37,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         public string UseforIncludeFolderPath { get; set; }
 
         /// <summary>
-        /// Gets the name of the substance usefor file used as include for <see cref="CreateDataTableDelwaqFormat"/>.
+        /// Gets the name of the substance usefor file used as include for <see cref="CreateDataTableDelwaqFormat" />.
         /// </summary>
         public string GetSubstanceUseforFileName()
         {
@@ -45,13 +45,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         }
 
         /// <summary>
-        /// Creates the default substance usefor file-contents used as include for <see cref="CreateDataTableDelwaqFormat"/>.
+        /// Creates the default substance usefor file-contents used as include for <see cref="CreateDataTableDelwaqFormat" />.
         /// </summary>
         public string CreateDefaultSubstanceUseforContents()
         {
             return string.Join(Environment.NewLine, DataRows.SelectMany(GetSubstancesForLocation)
-                .Distinct()
-                .Select(s => string.Format("USEFOR '{0}' '{0}'", s)));
+                                                            .Distinct()
+                                                            .Select(s => string.Format("USEFOR '{0}' '{0}'", s)));
         }
 
         /// <summary>
@@ -61,26 +61,38 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         {
             using (var writer = new StringWriter(new StringBuilder()))
             {
-                foreach (var locationData in DataRows)
+                foreach (LocationData locationData in DataRows)
                 {
                     writer.WriteLine("DATA_ITEM");
                     writer.WriteLine("'{0}'", locationData.Name);
                     writer.WriteLine("CONCENTRATIONS");
-                    writer.WriteLine("INCLUDE '{0}'", Path.Combine(UseforIncludeFolderPath, GetSubstanceUseforFileName()));
+                    writer.WriteLine("INCLUDE '{0}'",
+                                     Path.Combine(UseforIncludeFolderPath, GetSubstanceUseforFileName()));
                     writer.WriteLine("TIME {0} DATA", Interpolation.ToString().ToUpper());
-                    var substancesForLocation = GetSubstancesForLocation(locationData);
-                    writer.WriteLine(string.Join(" ", substancesForLocation.Select(s=>string.Format("'{0}'", s))));
-                    foreach (var substanceData in locationData.TimeDependentSubstanceData)
+                    string[] substancesForLocation = GetSubstancesForLocation(locationData);
+                    writer.WriteLine(string.Join(" ", substancesForLocation.Select(s => string.Format("'{0}'", s))));
+                    foreach (KeyValuePair<DateTime, IDictionary<string, string>> substanceData in locationData
+                        .TimeDependentSubstanceData)
                     {
-                        var data = substanceData;
-                        var substanceDataValues = substancesForLocation.Select(substance =>
-                            data.Value.ContainsKey(substance)
-                                ? data.Value[substance].ToString(CultureInfo.InvariantCulture)
-                                : "-999");
+                        KeyValuePair<DateTime, IDictionary<string, string>> data = substanceData;
+                        IEnumerable<string> substanceDataValues = substancesForLocation.Select(substance =>
+                                                                                                   data
+                                                                                                       .Value
+                                                                                                       .ContainsKey(
+                                                                                                           substance)
+                                                                                                       ? data
+                                                                                                         .Value[
+                                                                                                             substance]
+                                                                                                         .ToString(
+                                                                                                             CultureInfo
+                                                                                                                 .InvariantCulture)
+                                                                                                       : "-999");
                         writer.WriteLine("{0} {1}",
-                            substanceData.Key.ToString("yyyy/MM/dd-HH:mm:ss", CultureInfo.InvariantCulture),
-                            string.Join(" ", substanceDataValues));
+                                         substanceData.Key.ToString("yyyy/MM/dd-HH:mm:ss",
+                                                                    CultureInfo.InvariantCulture),
+                                         string.Join(" ", substanceDataValues));
                     }
+
                     writer.WriteLine();
                 }
 
@@ -91,27 +103,25 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         private string[] GetSubstancesForLocation(LocationData locationData)
         {
             return locationData.TimeDependentSubstanceData.SelectMany(kvp => kvp.Value)
-                .Select(substanceData => substanceData.Key)
-                .Distinct()
-                .ToArray();
+                               .Select(substanceData => substanceData.Key)
+                               .Distinct()
+                               .ToArray();
         }
     }
 
     /// <summary>
-    /// Represents data read 
+    /// Represents data read
     /// </summary>
     public class LocationData
     {
-        private readonly IDictionary<DateTime, IDictionary<string, string>> data = new SortedDictionary<DateTime, IDictionary<string, string>>();
+        private readonly IDictionary<DateTime, IDictionary<string, string>> data =
+            new SortedDictionary<DateTime, IDictionary<string, string>>();
 
         public string Name;
 
         /// <summary>
         /// Gets the sparse time dependent substance data.
         /// </summary>
-        public IDictionary<DateTime, IDictionary<string, string>> TimeDependentSubstanceData
-        {
-            get { return data; }
-        }
+        public IDictionary<DateTime, IDictionary<string, string>> TimeDependentSubstanceData => data;
     }
 }

@@ -1,11 +1,10 @@
 using System;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
-
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;
-using Point = NetTopologySuite.Geometries.Point;
+using NetTopologySuite.Geometries;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects
 {
@@ -23,16 +22,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects
 
         public override IGeometry Geometry
         {
-            get
-            {
-                return base.Geometry;
-            }
+            get => base.Geometry;
             set
             {
                 if (!(value is IPoint))
                 {
                     throw new NotSupportedException("Only point geometries are supported");
                 }
+
                 base.Geometry = value;
             }
         }
@@ -40,28 +37,25 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects
         [FeatureAttribute(Order = 1)]
         public virtual double X
         {
-            get { return PointGeometry.X; }
-            set { UpdatePointGeometry(value, PointGeometry.Y, PointGeometry.Z); }
+            get => PointGeometry.X;
+            set => UpdatePointGeometry(value, PointGeometry.Y, PointGeometry.Z);
         }
 
         [FeatureAttribute(Order = 2)]
         public virtual double Y
         {
-            get { return PointGeometry.Y; }
-            set { UpdatePointGeometry(PointGeometry.X, value, PointGeometry.Z); }
+            get => PointGeometry.Y;
+            set => UpdatePointGeometry(PointGeometry.X, value, PointGeometry.Z);
         }
 
         [FeatureAttribute(Order = 3)]
         public virtual double Z
         {
-            get { return PointGeometry.Z; }
-            set { UpdatePointGeometry(PointGeometry.X, PointGeometry.Y, value); }
+            get => PointGeometry.Z;
+            set => UpdatePointGeometry(PointGeometry.X, PointGeometry.Y, value);
         }
 
-        private IPoint PointGeometry
-        {
-            get { return Geometry as IPoint; }
-        }
+        private IPoint PointGeometry => Geometry as IPoint;
 
         [EditAction]
         private void UpdatePointGeometry(double newX, double newY, double newZ)

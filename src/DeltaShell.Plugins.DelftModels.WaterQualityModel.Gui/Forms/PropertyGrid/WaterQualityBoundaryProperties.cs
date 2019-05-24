@@ -12,8 +12,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
         [Description("Comma separated list of location aliases. Example: bouy 1, bouy 2, factory")]
         public string LocationAliases
         {
-            get { return data.LocationAliases; }
-            set { data.LocationAliases = value; }
+            get => data.LocationAliases;
+            set => data.LocationAliases = value;
         }
     }
 }

@@ -15,8 +15,8 @@ using SharpMap.Api.Layers;
 using SharpMap.Api.SpatialOperations;
 using SharpMap.Data.Providers;
 using SharpMap.SpatialOperations;
-using PointwiseOperationType = DeltaShell.Plugins.DelftModels.WaterQualityModel.ObservationAreas.PointwiseOperationType;
 using GisResources = DeltaShell.Plugins.SharpMapGis.Gui.Properties.Resources;
+using PointwiseOperationType = DeltaShell.Plugins.DelftModels.WaterQualityModel.ObservationAreas.PointwiseOperationType;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Ribbon
 {
@@ -29,7 +29,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Ribbon
 
         protected override bool FeatureTypeIsSupported(Type type)
         {
-            return base.FeatureTypeIsSupported(type) && typeof(WaterQualityObservationAreaCoverage).IsAssignableFrom(type);
+            return base.FeatureTypeIsSupported(type) &&
+                   typeof(WaterQualityObservationAreaCoverage).IsAssignableFrom(type);
         }
 
         protected override bool EnabledSelectedFeatures(
@@ -43,13 +44,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Ribbon
         protected override ISpatialOperation CreateSpatialOperation(ILayer targetLayer)
         {
             // create a user input form
-            var form = new SpatialOperationInputForm { Text = Resources.SetLabelOperationProperties_DisplayName };
+            var form = new SpatialOperationInputForm {Text = Resources.SetLabelOperationProperties_DisplayName};
 
-            var labelControl = new SpatialOperationPropertyTextBox { LabelText = Resources.SetLabelOperation_Label_DisplayName };
+            var labelControl =
+                new SpatialOperationPropertyTextBox {LabelText = Resources.SetLabelOperation_Label_DisplayName};
             labelControl.Validating += LabelControlValidating;
             form.AddPropertyPanel(labelControl);
 
-            var operationTypeControl = new SpatialOperationPropertyCombobox { LabelText = GisResources.ValueOperation_Operation_DisplayName };
+            var operationTypeControl =
+                new SpatialOperationPropertyCombobox {LabelText = GisResources.ValueOperation_Operation_DisplayName};
             operationTypeControl.SetDataSource(EnumBindingHelper.ToList<PointwiseOperationType>(), "Key", "Value");
             operationTypeControl.Validating += OperationTypeControlValidating;
             form.AddPropertyPanel(operationTypeControl);
@@ -62,7 +65,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Ribbon
             else
             {
                 // parse the values
-                var type = (PointwiseOperationType)operationTypeControl.SelectedItem;
+                var type = (PointwiseOperationType) operationTypeControl.SelectedItem;
 
                 // create set value operation
                 return CreateSetLabelOperation(labelControl.ValueString, type);
@@ -72,29 +75,34 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Ribbon
         /// <summary>
         /// Create the set value operation with the right parameters and inputs
         /// </summary>
-        /// <param name="label"></param>
-        /// <param name="type">The pointwise operation on the set value operation.</param>
-        /// <returns></returns>
+        /// <param name="label"> </param>
+        /// <param name="type"> The pointwise operation on the set value operation. </param>
+        /// <returns> </returns>
         private ISpatialOperation CreateSetLabelOperation(string label, PointwiseOperationType type)
         {
             // create a spatial operation
-            var setValueOperation = new SetLabelOperation { Label = label, OperationType = type };
+            var setValueOperation = new SetLabelOperation
+            {
+                Label = label,
+                OperationType = type
+            };
             setValueOperation.SetInputData(SpatialOperation.MaskInputName,
-                new FeatureCollection(new EventedList<IFeature>(Polygons.Concat(Points)), typeof(Feature2D))
-                {
-                    CoordinateSystem = SourceCoordinateSystem
-                });
+                                           new FeatureCollection(new EventedList<IFeature>(Polygons.Concat(Points)),
+                                                                 typeof(Feature2D))
+                                           {
+                                               CoordinateSystem = SourceCoordinateSystem
+                                           });
             return setValueOperation;
         }
 
         /// <summary>
         /// Validate the value control that sets the value on the points/coverage.
         /// </summary>
-        /// <param name="sender">The value control.</param>
-        /// <param name="cancelEventArgs">The event to cancel when validation fails.</param>
+        /// <param name="sender"> The value control. </param>
+        /// <param name="cancelEventArgs"> The event to cancel when validation fails. </param>
         private static void LabelControlValidating(object sender, CancelEventArgs cancelEventArgs)
         {
-            var control = (SpatialOperationPropertyTextBox)sender;
+            var control = (SpatialOperationPropertyTextBox) sender;
             string valueString = control.ValueString;
             if (string.IsNullOrWhiteSpace(valueString))
             {
@@ -109,7 +117,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Ribbon
 
         private static void OperationTypeControlValidating(object sender, CancelEventArgs e)
         {
-            var control = (SpatialOperationPropertyCombobox)sender;
+            var control = (SpatialOperationPropertyCombobox) sender;
             if (control.SelectedItem == null)
             {
                 e.Cancel = true;

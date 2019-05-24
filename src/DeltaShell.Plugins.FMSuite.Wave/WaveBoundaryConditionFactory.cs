@@ -5,12 +5,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 {
     public class WaveBoundaryConditionFactory : BoundaryConditionFactory
     {
-        public override bool SupportsMultipleConditionsPerSet
-        {
-            get { return false; }
-        }
+        public override bool SupportsMultipleConditionsPerSet => false;
 
-        public override IBoundaryCondition CreateBoundaryCondition(Feature2D feature2D, string quantity, BoundaryConditionDataType dataType, string quantityType = null)
+        public override IBoundaryCondition CreateBoundaryCondition(Feature2D feature2D, string quantity,
+                                                                   BoundaryConditionDataType dataType,
+                                                                   string quantityType = null)
         {
             var bc = new WaveBoundaryCondition(dataType)
             {

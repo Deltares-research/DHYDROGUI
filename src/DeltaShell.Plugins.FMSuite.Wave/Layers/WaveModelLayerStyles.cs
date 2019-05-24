@@ -7,9 +7,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Layers
     public static class WaveModelLayerStyles
     {
         public static readonly VectorStyle BoundaryStyle = new VectorStyle
-            {
-                Line = new Pen(Color.Blue, 3f),
-                GeometryType = typeof (ILineString)
-            };
+        {
+            Line = new Pen(Color.Blue, 3f),
+            GeometryType = typeof(ILineString)
+        };
     }
 }

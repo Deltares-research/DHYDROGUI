@@ -19,8 +19,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
         [DisplayName("Start time")]
         public DateTime OutputStartTime
         {
-            get { return waterQualityTimeSettings.StartTime; }
-            set { waterQualityTimeSettings.StartTime = value; }
+            get => waterQualityTimeSettings.StartTime;
+            set => waterQualityTimeSettings.StartTime = value;
         }
 
         [PropertyOrder(2)]
@@ -28,8 +28,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
         [DisplayName("Stop time")]
         public DateTime OutputStopTime
         {
-            get { return waterQualityTimeSettings.StopTime; }
-            set { waterQualityTimeSettings.StopTime = value; }
+            get => waterQualityTimeSettings.StopTime;
+            set => waterQualityTimeSettings.StopTime = value;
         }
 
         [PropertyOrder(3)]
@@ -37,8 +37,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
         [TypeConverter(typeof(DeltaShellTimeSpanConverter))]
         public TimeSpan OutputTimeStep
         {
-            get { return waterQualityTimeSettings.TimeStep; }
-            set { waterQualityTimeSettings.TimeStep = value; }
+            get => waterQualityTimeSettings.TimeStep;
+            set => waterQualityTimeSettings.TimeStep = value;
         }
 
         public override string ToString()

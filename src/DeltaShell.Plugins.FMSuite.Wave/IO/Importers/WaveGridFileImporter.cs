@@ -27,22 +27,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Importers
             getModels = getModelsFunc;
         }
 
-        public string Name
-        {
-            get { return "Delft3D Grid"; }
-        }
+        public string Name => "Delft3D Grid";
 
         public string Category { get; private set; }
-        public string Description
-        {
-            get { return string.Empty; }
-        }
+        public string Description => string.Empty;
 
         public Bitmap Image { get; private set; }
 
         public IEnumerable<Type> SupportedItemTypes
         {
-            get { yield return typeof(CurvilinearGrid); }
+            get
+            {
+                yield return typeof(CurvilinearGrid);
+            }
         }
 
         public bool CanImportOn(object targetObject)
@@ -50,36 +47,38 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Importers
             return true;
         }
 
-        public bool CanImportOnRootLevel
-        {
-            get { return false; }
-        }
+        public bool CanImportOnRootLevel => false;
 
-        public string FileFilter
-        {
-            get { return "Delft3D Grid (*.grd)|*.grd|All Files (*.*)|*.*"; }
-        }
+        public string FileFilter => "Delft3D Grid (*.grd)|*.grd|All Files (*.*)|*.*";
 
         public object ImportItem(string path, object target = null)
         {
             var targetGrid = target as CurvilinearGrid;
             if (targetGrid == null)
+            {
                 throw new NotSupportedException("Need a valid target to import the grid file into");
+            }
 
-            var model = getModels().First(m =>
-                WaveDomainHelper.GetAllDomains(m.OuterDomain).Any(d => Equals(d.Grid, targetGrid)));
-            var domain = WaveDomainHelper.GetAllDomains(model.OuterDomain).First(d => Equals(d.Grid, targetGrid));
+            WaveModel model = getModels().First(m =>
+                                                    WaveDomainHelper
+                                                        .GetAllDomains(m.OuterDomain)
+                                                        .Any(d => Equals(d.Grid, targetGrid)));
+            WaveDomainData domain =
+                WaveDomainHelper.GetAllDomains(model.OuterDomain).First(d => Equals(d.Grid, targetGrid));
 
             model.BeginEdit(new DefaultEditAction("Importing grid"));
             try
             {
-                var grid = Delft3DGridFileReader.Read(path);
+                CurvilinearGrid grid = Delft3DGridFileReader.Read(path);
                 grid.CoordinateSystem = grid.Attributes[CurvilinearGrid.CoordinateSystemKey] == "Spherical"
-                    ? new OgrCoordinateSystemFactory().CreateFromEPSG(4326): null;
+                                            ? new OgrCoordinateSystemFactory().CreateFromEPSG(4326)
+                                            : null;
 
-                var coordinates = grid.X.Values.Zip(grid.Y.Values, (x, y) => new Coordinate(x, y));
-                if(Map.CoordinateSystemFactory == null)
+                IEnumerable<Coordinate> coordinates = grid.X.Values.Zip(grid.Y.Values, (x, y) => new Coordinate(x, y));
+                if (Map.CoordinateSystemFactory == null)
+                {
                     Map.CoordinateSystemFactory = new OgrCoordinateSystemFactory();
+                }
 
                 if (model.CoordinateSystem != null &&
                     !CoordinateSystemValidator.CanAssignCoordinateSystem(coordinates, model.CoordinateSystem))
@@ -90,14 +89,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Importers
                     return null;
                 }
 
-                var uniqueFileName = model.ImportIntoModelDirectory(path);
+                string uniqueFileName = model.ImportIntoModelDirectory(path);
                 domain.GridFileName = uniqueFileName;
                 WaveModel.LoadGrid(Path.GetDirectoryName(model.MdwFilePath), domain);
             }
-             finally
-             {
+            finally
+            {
                 model.EndEdit();
-             }
+            }
 
             return target;
         }

@@ -5,7 +5,9 @@ using DelftTools.Controls;
 using DelftTools.Shell.Gui.Forms;
 using DeltaShell.Plugins.FMSuite.Common.Layers;
 using DeltaShell.Plugins.SharpMapGis.Gui.Commands;
+using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using Fluent;
+using NetTopologySuite.Extensions.Grids;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Ribbon
 {
@@ -25,17 +27,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Ribbon
             buttonCommands.Add(ButtonAddObstacle, new MapToolCommand(WaveMapViewDecorator.ObstacleToolName));
             buttonCommands.Add(ButtonAddBoundary, new MapToolCommand(WaveMapViewDecorator.BoundaryToolName));
             buttonCommands.Add(ButtonAddObsPoint, new MapToolCommand(WaveMapViewDecorator.ObservationPointToolName));
-            buttonCommands.Add(ButtonAddObsCrossSection, new MapToolCommand(WaveMapViewDecorator.ObservationCrossSectionToolName));
+            buttonCommands.Add(ButtonAddObsCrossSection,
+                               new MapToolCommand(WaveMapViewDecorator.ObservationCrossSectionToolName));
         }
 
-        public IEnumerable<ICommand> Commands
-        {
-            get { return buttonCommands.Values; }
-        }
+        public IEnumerable<ICommand> Commands => buttonCommands.Values;
 
         public void ValidateItems()
         {
-            var mapView = WaveGuiPlugin.ActiveMapView;
+            MapView mapView = WaveGuiPlugin.ActiveMapView;
 
             ModelGroupLayer modelGroupLayer = null;
             if (mapView != null && mapView.Map != null)
@@ -44,23 +44,24 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Ribbon
                     mapView.Map.GetAllLayers(true).OfType<ModelGroupLayer>().FirstOrDefault(l => l.Model is WaveModel);
             }
 
-            var visible = modelGroupLayer != null;
+            bool visible = modelGroupLayer != null;
 
-            foreach (var buttonCommandPair in buttonCommands)
+            foreach (KeyValuePair<ToggleButton, ICommand> buttonCommandPair in buttonCommands)
             {
-                var button = buttonCommandPair.Key;
-                var command = buttonCommandPair.Value;
+                ToggleButton button = buttonCommandPair.Key;
+                ICommand command = buttonCommandPair.Value;
 
                 if (Equals(button, ButtonAddBoundary) && modelGroupLayer != null)
                 {
-                    var curvilinearGrid = ((WaveModel) modelGroupLayer.Model).OuterDomain.Grid;
-                    var hasGrid = curvilinearGrid != null && !curvilinearGrid.IsEmpty;
+                    CurvilinearGrid curvilinearGrid = ((WaveModel) modelGroupLayer.Model).OuterDomain.Grid;
+                    bool hasGrid = curvilinearGrid != null && !curvilinearGrid.IsEmpty;
                     button.IsEnabled = hasGrid && command.Enabled;
                 }
                 else
                 {
-                    button.IsEnabled = command.Enabled;                    
+                    button.IsEnabled = command.Enabled;
                 }
+
                 button.IsChecked = command.Checked;
                 button.Visibility = visible ? Visibility.Visible : Visibility.Collapsed;
             }
@@ -69,17 +70,22 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Ribbon
         public bool IsContextualTabVisible(string tabGroupName, string tabName)
         {
             if (tabName != "tabRegion")
+            {
                 return false;
+            }
 
             // return true if any button is enabled on the tab
             return buttonCommands.Keys.Any(b => b.IsEnabled);
         }
 
-        public object GetRibbonControl() { return RibbonControl; }
+        public object GetRibbonControl()
+        {
+            return RibbonControl;
+        }
 
         private void OnClick(object sender, RoutedEventArgs e)
         {
-            buttonCommands[(ToggleButton)sender].Execute();
+            buttonCommands[(ToggleButton) sender].Execute();
             ValidateItems();
         }
     }

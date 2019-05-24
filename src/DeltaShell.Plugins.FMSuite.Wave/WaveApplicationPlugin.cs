@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
@@ -15,43 +16,29 @@ namespace DeltaShell.Plugins.FMSuite.Wave
     [Extension(typeof(IPlugin))]
     public class WaveApplicationPlugin : ApplicationPlugin, IDataAccessListenersProvider
     {
-        public override string Name
-        {
-            get { return "Delft3D Wave"; }
-        }
+        public override string Name => "Delft3D Wave";
 
-        public override string DisplayName
-        {
-            get { return "D-Waves Plugin"; }
-        }
+        public override string DisplayName => "D-Waves Plugin";
 
-        public override string Description
-        {
-            get { return "A 2D/3D Wave module"; }
-        }
+        public override string Description => "A 2D/3D Wave module";
 
-        public override string Version
-        {
-            get { return GetType().Assembly.GetName().Version.ToString(); }
-        }
+        public override string Version => GetType().Assembly.GetName().Version.ToString();
 
-        public override string FileFormatVersion
-        {
-            get { return "1.1.0.0"; }
-        }
+        public override string FileFormatVersion => "1.1.0.0";
 
         public override IEnumerable<ModelInfo> GetModelInfos()
         {
             yield return new ModelInfo
-                {
-                    Name = "Waves Model",
-                    Category = "1D / 2D / 3D Standalone Models",
-                    Image = Properties.Resources.wave,
-                    AdditionalOwnerCheck = owner => 
-                        !(owner is ICompositeActivity) // Allow "standalone" wave models
-                        || (!((ICompositeActivity)owner).Activities.OfType<WaveModel>().Any() && owner is IHydroModel), // Don't allow multiple wave models in one composite activity
-                    CreateModel = t => new WaveModel()
-                };
+            {
+                Name = "Waves Model",
+                Category = "1D / 2D / 3D Standalone Models",
+                Image = Properties.Resources.wave,
+                AdditionalOwnerCheck = owner =>
+                    !(owner is ICompositeActivity) // Allow "standalone" wave models
+                    || !((ICompositeActivity) owner).Activities.OfType<WaveModel>().Any() &&
+                    owner is IHydroModel, // Don't allow multiple wave models in one composite activity
+                CreateModel = t => new WaveModel()
+            };
         }
 
         public override IEnumerable<IFileImporter> GetFileImporters()
@@ -70,8 +57,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             yield return new Delft3DDepthFileExporter();
             yield return new Delft3DGridFileExporter();
         }
-        
-        public override IEnumerable<System.Reflection.Assembly> GetPersistentAssemblies()
+
+        public override IEnumerable<Assembly> GetPersistentAssemblies()
         {
             yield return typeof(WaveModel).Assembly;
         }

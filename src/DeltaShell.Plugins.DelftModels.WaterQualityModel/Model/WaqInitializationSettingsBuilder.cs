@@ -2,9 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-
 using DelftTools.Utils.Collections.Extensions;
-
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.BoundaryData;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model;
@@ -17,26 +15,28 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
     public static class WaqInitializationSettingsBuilder
     {
         /// <summary>
-        /// Builds <see cref="WaqInitializationSettings"/> for the provided <param name="waterQualityModel"/>
+        /// Builds <see cref="WaqInitializationSettings" /> for the provided
+        /// <param name="waterQualityModel" />
         /// </summary>
-        /// <param name="waterQualityModel">Model to create <see cref="WaqInitializationSettings"/> for</param>
+        /// <param name="waterQualityModel"> Model to create <see cref="WaqInitializationSettings" /> for </param>
         public static WaqInitializationSettings BuildWaqInitializationSettings(WaterQualityModel waterQualityModel)
         {
             if (waterQualityModel.HydroData == null)
             {
-                throw new NotSupportedException("Can not create initialization settings : no hydro dynamica specified.");
+                throw new NotSupportedException(
+                    "Can not create initialization settings : no hydro dynamica specified.");
             }
 
-            var hydFilePath = waterQualityModel.HydroData.FilePath;
+            string hydFilePath = waterQualityModel.HydroData.FilePath;
 
-            var hydFileRoot = Path.GetDirectoryName(hydFilePath);
+            string hydFileRoot = Path.GetDirectoryName(hydFilePath);
             if (hydFileRoot == null)
             {
                 throw new NotSupportedException("Could not find directory for relative paths");
             }
 
             string verticalDiffusionFile = null;
-            if(!string.IsNullOrEmpty(waterQualityModel.VerticalDiffusionRelativeFilePath))
+            if (!string.IsNullOrEmpty(waterQualityModel.VerticalDiffusionRelativeFilePath))
             {
                 verticalDiffusionFile = Path.Combine(hydFileRoot, waterQualityModel.VerticalDiffusionRelativeFilePath);
             }
@@ -53,9 +53,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
                 ProcessCoefficients = waterQualityModel.ProcessCoefficients,
                 Dispersion = waterQualityModel.Dispersion,
                 InitialConditions = waterQualityModel.InitialConditions,
-
                 UseRestart = waterQualityModel.UseRestart,
-
                 SegmentsPerLayer = waterQualityModel.NumberOfDelwaqSegmentsPerHydrodynamicLayer,
                 NumberOfLayers = waterQualityModel.NumberOfWaqSegmentLayers,
                 AttributesFile = Path.Combine(hydFileRoot, waterQualityModel.AttributesRelativeFilePath),
@@ -74,38 +72,35 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
                 VelocitiesFile = Path.Combine(hydFileRoot, waterQualityModel.VelocitiesFilePath),
                 WidthsFile = Path.Combine(hydFileRoot, waterQualityModel.WidthsFilePath),
                 ChezyCoefficientsFile = Path.Combine(hydFileRoot, waterQualityModel.ChezyCoefficientsFilePath),
-
                 ModelWorkDirectory = waterQualityModel.ModelSettings.WorkDirectory,
                 BoundaryDataManager = waterQualityModel.BoundaryDataManager,
                 LoadsDataManager = waterQualityModel.LoadsDataManager,
                 BoundaryNodeIds = waterQualityModel.BoundaryNodeIds,
                 LoadAndIds = CreateLoadLocationInformation(waterQualityModel),
                 OutputLocations = CreateOutputLocationInformation(waterQualityModel),
-
-                BoundaryAliases = CreateLocationAliases(waterQualityModel.Boundaries, waterQualityModel.BoundaryDataManager),
+                BoundaryAliases =
+                    CreateLocationAliases(waterQualityModel.Boundaries, waterQualityModel.BoundaryDataManager),
                 LoadsAliases = CreateLocationAliases(waterQualityModel.Loads, waterQualityModel.LoadsDataManager)
             };
         }
 
         /// <summary>
-        /// The boundary aliases are stored as 
-        /// 
+        /// The boundary aliases are stored as
         /// boundary 1: measurement 1, measurement 2
         /// boundary 2: measurement 2
-        /// 
         /// But should be written in the input file as
-        /// 
         /// measurement 1: boundary 1
         /// measurement 2: boundary 1, boundary 2
         /// </summary>
-        private static IDictionary<string, IList<string>> CreateLocationAliases(IEnumerable<IHasLocationAliases> locations, DataTableManager dataManager)
+        private static IDictionary<string, IList<string>> CreateLocationAliases(
+            IEnumerable<IHasLocationAliases> locations, DataTableManager dataManager)
         {
             var result = new Dictionary<string, IList<string>>();
 
             // only write data if there is any data to be found
             if (dataManager.DataTables.Any())
             {
-                foreach (var location in locations)
+                foreach (IHasLocationAliases location in locations)
                 {
                     List<string> aliassesToWrite = location.ParseLocationAliases();
 
@@ -134,25 +129,30 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
             return result;
         }
 
-        private static IDictionary<WaterQualityLoad, int> CreateLoadLocationInformation(WaterQualityModel waterQualityModel)
+        private static IDictionary<WaterQualityLoad, int> CreateLoadLocationInformation(
+            WaterQualityModel waterQualityModel)
         {
             var loadsInformation = new Dictionary<WaterQualityLoad, int>(waterQualityModel.Loads.Count);
-            foreach (var waterQualityLoad in waterQualityModel.Loads)
+            foreach (WaterQualityLoad waterQualityLoad in waterQualityModel.Loads)
             {
-                loadsInformation[waterQualityLoad] = waterQualityModel.GetSegmentIndexForLocation(waterQualityLoad.Geometry.Coordinate);
+                loadsInformation[waterQualityLoad] =
+                    waterQualityModel.GetSegmentIndexForLocation(waterQualityLoad.Geometry.Coordinate);
             }
+
             return loadsInformation;
         }
 
-        private static IDictionary<string, IList<int>> CreateOutputLocationInformation(WaterQualityModel waterQualityModel)
+        private static IDictionary<string, IList<int>> CreateOutputLocationInformation(
+            WaterQualityModel waterQualityModel)
         {
-            var obsInformation = GetOutputLocationsForObservationAreas(waterQualityModel);
+            Dictionary<string, IList<int>> obsInformation = GetOutputLocationsForObservationAreas(waterQualityModel);
             AddOutputLocationsForObservationLocations(obsInformation, waterQualityModel);
 
             return obsInformation;
         }
 
-        private static Dictionary<string, IList<int>> GetOutputLocationsForObservationAreas(WaterQualityModel waterQualityModel)
+        private static Dictionary<string, IList<int>> GetOutputLocationsForObservationAreas(
+            WaterQualityModel waterQualityModel)
         {
             if (waterQualityModel.ModelSettings.MonitoringOutputLevel == MonitoringOutputLevel.None ||
                 waterQualityModel.ModelSettings.MonitoringOutputLevel == MonitoringOutputLevel.Points)
@@ -160,28 +160,35 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
                 return new Dictionary<string, IList<int>>();
             }
 
-            var obsInformation = waterQualityModel.ObservationAreas.GetOutputLocations(); // Get cell ID's for layer 0
+            Dictionary<string, IList<int>>
+                obsInformation = waterQualityModel.ObservationAreas.GetOutputLocations(); // Get cell ID's for layer 0
 
             // Add remaining cell ID's for remaining layers [1..n]
             if (waterQualityModel.NumberOfWaqSegmentLayers > 1)
             {
-                foreach (var layer0ObservationAreaLocations in obsInformation.ToArray())
+                foreach (KeyValuePair<string, IList<int>> layer0ObservationAreaLocations in obsInformation.ToArray())
                 {
-                    var layer0CellIds = layer0ObservationAreaLocations.Value;
-                    var remainingIdsToAdd = new List<int>((waterQualityModel.NumberOfWaqSegmentLayers - 1) * layer0CellIds.Count);
-                    for (int i = 1; i < waterQualityModel.NumberOfWaqSegmentLayers; i++)
+                    IList<int> layer0CellIds = layer0ObservationAreaLocations.Value;
+                    var remainingIdsToAdd =
+                        new List<int>((waterQualityModel.NumberOfWaqSegmentLayers - 1) * layer0CellIds.Count);
+                    for (var i = 1; i < waterQualityModel.NumberOfWaqSegmentLayers; i++)
                     {
-                        var cellsOnLayerI = layer0CellIds.Select(id => id + i * waterQualityModel.NumberOfDelwaqSegmentsPerHydrodynamicLayer).ToArray();
+                        int[] cellsOnLayerI = layer0CellIds
+                                              .Select(id => id + (i * waterQualityModel
+                                                                      .NumberOfDelwaqSegmentsPerHydrodynamicLayer))
+                                              .ToArray();
                         remainingIdsToAdd.AddRange(cellsOnLayerI);
                     }
+
                     obsInformation[layer0ObservationAreaLocations.Key].AddRange(remainingIdsToAdd);
                 }
             }
-            
+
             return obsInformation;
         }
 
-        private static void AddOutputLocationsForObservationLocations(IDictionary<string, IList<int>> obsInformation, WaterQualityModel waterQualityModel)
+        private static void AddOutputLocationsForObservationLocations(IDictionary<string, IList<int>> obsInformation,
+                                                                      WaterQualityModel waterQualityModel)
         {
             if (waterQualityModel.ModelSettings.MonitoringOutputLevel == MonitoringOutputLevel.None ||
                 waterQualityModel.ModelSettings.MonitoringOutputLevel == MonitoringOutputLevel.Areas)
@@ -189,7 +196,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
                 return;
             }
 
-            foreach (var obsPoint in waterQualityModel.ObservationPoints)
+            foreach (WaterQualityObservationPoint obsPoint in waterQualityModel.ObservationPoints)
             {
                 int cellId = waterQualityModel.GetSegmentIndexForLocation2D(new Coordinate(obsPoint.X, obsPoint.Y));
 
@@ -199,18 +206,22 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
                     {
                         // single points are written as
                         // 'name' 1 segment_number
-                        obsInformation[obsPoint.Name] = new[] { waterQualityModel.GetSegmentIndexForLocation(obsPoint.Geometry.Coordinate) };
+                        obsInformation[obsPoint.Name] = new[]
+                        {
+                            waterQualityModel.GetSegmentIndexForLocation(obsPoint.Geometry.Coordinate)
+                        };
                     }
                         break;
                     case ObservationPointType.Average:
                     {
                         // column average points are written as
                         // 'name' num_layers segment1 segment2 ...
-                        int[] cellSegments = new int[waterQualityModel.NumberOfWaqSegmentLayers];
+                        var cellSegments = new int[waterQualityModel.NumberOfWaqSegmentLayers];
 
-                        for (int l = 0; l < waterQualityModel.NumberOfWaqSegmentLayers; l++)
+                        for (var l = 0; l < waterQualityModel.NumberOfWaqSegmentLayers; l++)
                         {
-                            cellSegments[l] = cellId + l * waterQualityModel.NumberOfDelwaqSegmentsPerHydrodynamicLayer;
+                            cellSegments[l] =
+                                cellId + (l * waterQualityModel.NumberOfDelwaqSegmentsPerHydrodynamicLayer);
                         }
 
                         obsInformation[obsPoint.Name] = cellSegments;
@@ -222,10 +233,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
                         // 'name_L1' 1 segment_number1
                         // 'name_L2' 1 segment_number2
                         // ...
-                        for (int l = 0; l < waterQualityModel.NumberOfWaqSegmentLayers; l++)
+                        for (var l = 0; l < waterQualityModel.NumberOfWaqSegmentLayers; l++)
                         {
                             string obsName = string.Format("{0}_L{1}", obsPoint.Name, l + 1);
-                            obsInformation[obsName] = new[] { cellId + l * waterQualityModel.NumberOfDelwaqSegmentsPerHydrodynamicLayer };
+                            obsInformation[obsName] = new[]
+                            {
+                                cellId + (l * waterQualityModel.NumberOfDelwaqSegmentsPerHydrodynamicLayer)
+                            };
                         }
                     }
                         break;

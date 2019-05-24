@@ -120,7 +120,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             return boundaryConditionSets
                    .SelectMany(bcs => bcs.BoundaryConditions
                                          .Where(bc => SupportedProcesses.Contains(bc.ProcessName) &&
-                                                      bc.DataType != BoundaryConditionDataType.Empty) // don't write empty bc!
+                                                      bc.DataType !=
+                                                      BoundaryConditionDataType.Empty) // don't write empty bc!
                                          .Select(bc => new Tuple<IBoundaryCondition, BoundaryConditionSet>(bc, bcs)))
                    .GroupBy(t => discriminator(t.Item1));
         }

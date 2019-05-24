@@ -19,26 +19,28 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         /// <summary>
         /// Reads the hydrodynamics file.
         /// </summary>
-        /// <returns>All parsed data in the file.</returns>
-        /// <exception cref="System.InvalidOperationException">When the hydro dynamics file
-        /// to be read is missing.</exception>
-        /// <exception cref="FormatException">When a parsing error occurs.</exception>
+        /// <returns> All parsed data in the file. </returns>
+        /// <exception cref="System.InvalidOperationException">
+        /// When the hydro dynamics file
+        /// to be read is missing.
+        /// </exception>
+        /// <exception cref="FormatException"> When a parsing error occurs. </exception>
         public static HydFileData ReadAll(FileInfo hydFile)
         {
             if (hydFile == null || !hydFile.Exists)
             {
-                var fullName = hydFile == null ? "" : hydFile.FullName;
-                throw new InvalidOperationException(String.Format("Cannot find hydrodynamics file ({0}).", fullName));
+                string fullName = hydFile == null ? "" : hydFile.FullName;
+                throw new InvalidOperationException(string.Format("Cannot find hydrodynamics file ({0}).", fullName));
             }
 
             var hydFileData = new HydFileData
-                {
-                    Path = hydFile,
-                    Checksum = FileUtils.GetChecksum(hydFile.FullName)
-                };
+            {
+                Path = hydFile,
+                Checksum = FileUtils.GetChecksum(hydFile.FullName)
+            };
 
-            var elementsOfInterest = GetAllHydFileElementsOfInterest();
-            using (var streamReader = hydFile.OpenText())
+            Dictionary<string, IHydFileElement> elementsOfInterest = GetAllHydFileElementsOfInterest();
+            using (StreamReader streamReader = hydFile.OpenText())
             {
                 IHydFileElement fileElement;
                 while ((fileElement = ReadNextElement(streamReader, elementsOfInterest)) != null)
@@ -58,10 +60,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         {
             if (string.IsNullOrEmpty(hydFileData.SchematizationRelativePath))
             {
-                throw new FormatException("Error parsing value for Hyd file element: waqgeom-file, value not specified");
+                throw new FormatException(
+                    "Error parsing value for Hyd file element: waqgeom-file, value not specified");
             }
 
-            string schematizationFilePath = Path.Combine(hydFileData.Path.DirectoryName, hydFileData.SchematizationRelativePath);
+            string schematizationFilePath =
+                Path.Combine(hydFileData.Path.DirectoryName, hydFileData.SchematizationRelativePath);
 
             hydFileData.Grid = UnstructuredGridFileHelper.LoadFromFile(schematizationFilePath, true);
         }
@@ -70,10 +74,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         {
             if (string.IsNullOrEmpty(hydFileData.BoundariesRelativePath))
             {
-                throw new FormatException("Error parsing value for Hyd file element: boundaries-file, value not specified");
+                throw new FormatException(
+                    "Error parsing value for Hyd file element: boundaries-file, value not specified");
             }
 
-            var boundariesFile = new FileInfo(Path.Combine(hydFileData.Path.DirectoryName, hydFileData.BoundariesRelativePath));
+            var boundariesFile =
+                new FileInfo(Path.Combine(hydFileData.Path.DirectoryName, hydFileData.BoundariesRelativePath));
 
             hydFileData.BoundaryNodeIds = BoundaryFileReader.ReadAll(boundariesFile);
             hydFileData.Boundaries = new EventedList<WaterQualityBoundary>(hydFileData.BoundaryNodeIds.Keys);
@@ -82,55 +88,135 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         private static Dictionary<string, IHydFileElement> GetAllHydFileElementsOfInterest()
         {
             return new Dictionary<string, IHydFileElement>
+            {
+                {"geometry", new SchematizationElement()},
+                {"z-layers-ztop", new KeyValueElement<double>((hydFileData, value) => hydFileData.ZTop = value)},
+                {"z-layers-zbot", new KeyValueElement<double>((hydFileData, value) => hydFileData.ZBot = value)},
                 {
-                    {"geometry",new SchematizationElement()},
-
-                    {"z-layers-ztop",new KeyValueElement<double>((hydFileData, value) => hydFileData.ZTop = value)},
-                    {"z-layers-zbot",new KeyValueElement<double>((hydFileData, value) => hydFileData.ZBot = value)},
-
-                    {"conversion-ref-time",new KeyValueElement<DateTime>((hydFileData, value) => hydFileData.ConversionReferenceTime = value)},
-                    {"conversion-start-time",new KeyValueElement<DateTime>((hydFileData, value) => hydFileData.ConversionStartTime = value)},
-                    {"conversion-stop-time",new KeyValueElement<DateTime>((hydFileData, value) => hydFileData.ConversionStopTime = value)},
-                    {"conversion-timestep",new KeyValueElement<TimeSpan>((hydFileData, value) => hydFileData.ConversionTimeStep = value)},
-
-                    {"number-water-quality-segments-per-layer",new KeyValueElement<int>((hydFileData, value) => hydFileData.NumberOfDelwaqSegmentsPerHydrodynamicLayer = value)},
-                    {"number-horizontal-exchanges",new KeyValueElement<int>((hydFileData, value) => hydFileData.NumberOfHorizontalExchanges = value)},
-                    {"number-vertical-exchanges",new KeyValueElement<int>((hydFileData, value) => hydFileData.NumberOfVerticalExchanges = value)},
-
-                    {"number-hydrodynamic-layers",new KeyValueElement<int>((hydFileData, value) => hydFileData.NumberOfHydrodynamicLayers = value)},
-                    {"hydrodynamic-layers",new KeyValueElement<double[]>((hydFileData, value) => hydFileData.HydrodynamicLayerThicknesses = value)},
-
-                    {"number-water-quality-layers",new KeyValueElement<int>((hydFileData, value) => hydFileData.NumberOfWaqSegmentLayers = value)},
-                    {"water-quality-layers",new KeyValueElement<int[]>((hydFileData, value) => hydFileData.NumberOfHydrodynamicLayersPerWaqSegmentLayer = value)},
-
-                    {"boundaries-file",new KeyValueElement<string>((hydFileData, value) => hydFileData.BoundariesRelativePath = value)},
-                    {"waqgeom-file",new KeyValueElement<string>((hydFileData, value) => hydFileData.SchematizationRelativePath = value)},
-                    {"volumes-file",new KeyValueElement<string>((hydFileData, value) => hydFileData.VolumesRelativePath = value)},
-                    {"areas-file",new KeyValueElement<string>((hydFileData, value) => hydFileData.AreasRelativePath = value)},
-                    {"flows-file",new KeyValueElement<string>((hydFileData, value) => hydFileData.FlowsRelativePath = value)},
-                    {"pointers-file",new KeyValueElement<string>((hydFileData, value) => hydFileData.PointersRelativePath = value)},
-                    {"lengths-file",new KeyValueElement<string>((hydFileData, value) => hydFileData.LengthsRelativePath = value)},
-                    {"salinity-file",new KeyValueElement<string>((hydFileData, value) => hydFileData.SalinityRelativePath = value)},
-                    {"temperature-file",new KeyValueElement<string>((hydFileData, value) => hydFileData.TemperatureRelativePath = value)},
-                    {"vert-diffusion-file",new KeyValueElement<string>((hydFileData, value) => hydFileData.VerticalDiffusionRelativePath = value)},
-                    {"horizontal-surfaces-file",new KeyValueElement<string>((hydFileData, value) => hydFileData.SurfacesRelativePath = value)},
-                    {"shear-stresses-file",new KeyValueElement<string>((hydFileData, value) => hydFileData.ShearStressesRelativePath = value)},
-                    {"attributes-file",new KeyValueElement<string>((hydFileData, value) => hydFileData.AttributesRelativePath = value)},
-                    {"velocities-file",new KeyValueElement<string>((hydFileData, value) => hydFileData.VelocitiesRelativePath = value)},
-                    {"widths-file",new KeyValueElement<string>((hydFileData, value) => hydFileData.WidthsRelativePath = value)},
-                    {"chezy-coefficients-file",new KeyValueElement<string>((hydFileData, value) => hydFileData.ChezyCoefficientsRelativePath = value)},
-
-                };
+                    "conversion-ref-time",
+                    new KeyValueElement<DateTime>((hydFileData, value) => hydFileData.ConversionReferenceTime = value)
+                },
+                {
+                    "conversion-start-time",
+                    new KeyValueElement<DateTime>((hydFileData, value) => hydFileData.ConversionStartTime = value)
+                },
+                {
+                    "conversion-stop-time",
+                    new KeyValueElement<DateTime>((hydFileData, value) => hydFileData.ConversionStopTime = value)
+                },
+                {
+                    "conversion-timestep",
+                    new KeyValueElement<TimeSpan>((hydFileData, value) => hydFileData.ConversionTimeStep = value)
+                },
+                {
+                    "number-water-quality-segments-per-layer",
+                    new KeyValueElement<int>((hydFileData, value) =>
+                                                 hydFileData.NumberOfDelwaqSegmentsPerHydrodynamicLayer = value)
+                },
+                {
+                    "number-horizontal-exchanges",
+                    new KeyValueElement<int>((hydFileData, value) => hydFileData.NumberOfHorizontalExchanges = value)
+                },
+                {
+                    "number-vertical-exchanges",
+                    new KeyValueElement<int>((hydFileData, value) => hydFileData.NumberOfVerticalExchanges = value)
+                },
+                {
+                    "number-hydrodynamic-layers",
+                    new KeyValueElement<int>((hydFileData, value) => hydFileData.NumberOfHydrodynamicLayers = value)
+                },
+                {
+                    "hydrodynamic-layers",
+                    new KeyValueElement<double[]>((hydFileData, value) =>
+                                                      hydFileData.HydrodynamicLayerThicknesses = value)
+                },
+                {
+                    "number-water-quality-layers",
+                    new KeyValueElement<int>((hydFileData, value) => hydFileData.NumberOfWaqSegmentLayers = value)
+                },
+                {
+                    "water-quality-layers",
+                    new KeyValueElement<int[]>((hydFileData, value) =>
+                                                   hydFileData.NumberOfHydrodynamicLayersPerWaqSegmentLayer = value)
+                },
+                {
+                    "boundaries-file",
+                    new KeyValueElement<string>((hydFileData, value) => hydFileData.BoundariesRelativePath = value)
+                },
+                {
+                    "waqgeom-file",
+                    new KeyValueElement<string>((hydFileData, value) => hydFileData.SchematizationRelativePath = value)
+                },
+                {
+                    "volumes-file",
+                    new KeyValueElement<string>((hydFileData, value) => hydFileData.VolumesRelativePath = value)
+                },
+                {
+                    "areas-file",
+                    new KeyValueElement<string>((hydFileData, value) => hydFileData.AreasRelativePath = value)
+                },
+                {
+                    "flows-file",
+                    new KeyValueElement<string>((hydFileData, value) => hydFileData.FlowsRelativePath = value)
+                },
+                {
+                    "pointers-file",
+                    new KeyValueElement<string>((hydFileData, value) => hydFileData.PointersRelativePath = value)
+                },
+                {
+                    "lengths-file",
+                    new KeyValueElement<string>((hydFileData, value) => hydFileData.LengthsRelativePath = value)
+                },
+                {
+                    "salinity-file",
+                    new KeyValueElement<string>((hydFileData, value) => hydFileData.SalinityRelativePath = value)
+                },
+                {
+                    "temperature-file",
+                    new KeyValueElement<string>((hydFileData, value) => hydFileData.TemperatureRelativePath = value)
+                },
+                {
+                    "vert-diffusion-file",
+                    new KeyValueElement<string>((hydFileData, value) =>
+                                                    hydFileData.VerticalDiffusionRelativePath = value)
+                },
+                {
+                    "horizontal-surfaces-file",
+                    new KeyValueElement<string>((hydFileData, value) => hydFileData.SurfacesRelativePath = value)
+                },
+                {
+                    "shear-stresses-file",
+                    new KeyValueElement<string>((hydFileData, value) => hydFileData.ShearStressesRelativePath = value)
+                },
+                {
+                    "attributes-file",
+                    new KeyValueElement<string>((hydFileData, value) => hydFileData.AttributesRelativePath = value)
+                },
+                {
+                    "velocities-file",
+                    new KeyValueElement<string>((hydFileData, value) => hydFileData.VelocitiesRelativePath = value)
+                },
+                {
+                    "widths-file",
+                    new KeyValueElement<string>((hydFileData, value) => hydFileData.WidthsRelativePath = value)
+                },
+                {
+                    "chezy-coefficients-file",
+                    new KeyValueElement<string>((hydFileData, value) =>
+                                                    hydFileData.ChezyCoefficientsRelativePath = value)
+                },
+            };
         }
 
         /// <summary>
         /// Reads the next key-value element in the file.
         /// </summary>
-        /// <param name="streamReader">The stream reader.</param>
-        /// <param name="elementsOfInterest"></param>
-        /// <returns>The next key-value element, or null when at the end of the file.</returns>
-        /// <exception cref="FormatException">When a parsing error occurs.</exception>
-        private static IHydFileElement ReadNextElement(TextReader streamReader, Dictionary<string, IHydFileElement> elementsOfInterest)
+        /// <param name="streamReader"> The stream reader. </param>
+        /// <param name="elementsOfInterest"> </param>
+        /// <returns> The next key-value element, or null when at the end of the file. </returns>
+        /// <exception cref="FormatException"> When a parsing error occurs. </exception>
+        private static IHydFileElement ReadNextElement(TextReader streamReader,
+                                                       Dictionary<string, IHydFileElement> elementsOfInterest)
         {
             KeyValuePair<string, string>? keyValuePair;
             while ((keyValuePair = ReadKeyValuePair(streamReader)) != null)
@@ -143,10 +229,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                     }
                     catch (FormatException ex)
                     {
-                        throw new FormatException(String.Format("Error parsing value for Hyd file element: {0}", keyValuePair.Value.Key), ex);
+                        throw new FormatException(
+                            string.Format("Error parsing value for Hyd file element: {0}", keyValuePair.Value.Key), ex);
                     }
                 }
             }
+
             return null;
         }
 
@@ -155,7 +243,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             string line;
             while ((line = streamReader.ReadLine()) != null)
             {
-                var lineElements = GetWhiteSpaceSeparatedStrings(line);
+                string[] lineElements = GetWhiteSpaceSeparatedStrings(line);
                 if (lineElements.Length == 0)
                 {
                     // Empty line, read next
@@ -164,12 +252,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 
                 if (lineElements.Length == 1)
                 {
-                    return ReadCollectionKeyValuePair(streamReader,  lineElements[0]);
+                    return ReadCollectionKeyValuePair(streamReader, lineElements[0]);
                 }
 
                 // Normal key-value pair:
                 return ReadKeyValuePair(lineElements);
             }
+
             return null;
         }
 
@@ -181,25 +270,28 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         private static KeyValuePair<string, string> ReadCollectionKeyValuePair(TextReader streamReader, string keyName)
         {
             string line;
-            var collectionEndKey = "end-" + keyName;
+            string collectionEndKey = "end-" + keyName;
             var endOfCollectionReached = false;
 
             // Read all lines between start and end keywords:
             var list = new List<string>();
             while ((line = streamReader.ReadLine()) != null)
             {
-                var lineElement = line.Trim();
+                string lineElement = line.Trim();
                 if (Equals(lineElement, collectionEndKey))
                 {
                     endOfCollectionReached = true;
                     break;
                 }
+
                 list.Add(lineElement);
             }
 
             if (!endOfCollectionReached)
             {
-                throw new FormatException(String.Format("Error parsing value for Hyd file element: {0}, no 'end-' key found for this collection", keyName));
+                throw new FormatException(string.Format(
+                                              "Error parsing value for Hyd file element: {0}, no 'end-' key found for this collection",
+                                              keyName));
             }
 
             return new KeyValuePair<string, string>(keyName, string.Join(" ", list));

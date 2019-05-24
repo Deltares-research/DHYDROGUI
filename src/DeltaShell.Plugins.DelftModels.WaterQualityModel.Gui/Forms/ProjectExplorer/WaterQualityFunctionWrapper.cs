@@ -10,9 +10,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.ProjectExpl
         private readonly IFunction function;
 
         /// <summary>
-        /// Creates a water quality function wrapper with <param name="function"/>
+        /// Creates a water quality function wrapper with
+        /// <param name="function" />
         /// </summary>
-        /// <param name="function">The function that is wrapped by the water quality function wrapper</param>
+        /// <param name="function"> The function that is wrapped by the water quality function wrapper </param>
         public WaterQualityFunctionWrapper(IFunction function)
         {
             this.function = function;
@@ -21,6 +22,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.ProjectExpl
         /// <summary>
         /// The function that is wrapped by the water quality function wrapper
         /// </summary>
-        public IFunction Function { get { return function; } }
+        public IFunction Function => function;
     }
 }

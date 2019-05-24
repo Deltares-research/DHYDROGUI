@@ -23,8 +23,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave
     {
         [Description("Jonswap")]
         Jonswap,
+
         [Description("Pierson-Moskowitz")]
         PiersonMoskowitz,
+
         [Description("Gauss")]
         Gauss
     }
@@ -33,6 +35,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
     {
         [Description("Peak")]
         Peak,
+
         [Description("Mean")]
         Mean
     }
@@ -41,6 +44,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
     {
         [Description("Power")]
         Power,
+
         [Description("Degrees")]
         Degrees
     }

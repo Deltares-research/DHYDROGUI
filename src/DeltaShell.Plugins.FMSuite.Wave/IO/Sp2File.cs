@@ -14,7 +14,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(Sp2File));
 
-        public IDictionary<Coordinate,IFunction> Read(string sp2FilePath)
+        public IDictionary<Coordinate, IFunction> Read(string sp2FilePath)
         {
             IList<Coordinate> coordinates = null;
 
@@ -24,20 +24,29 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
 
                 while (GetNextLine() != null)
                 {
-                    if (CurrentLine.Trim().StartsWith("$")) continue;
-                    if (CurrentLine.Trim().StartsWith("SWAN")) continue;
+                    if (CurrentLine.Trim().StartsWith("$"))
+                    {
+                        continue;
+                    }
+
+                    if (CurrentLine.Trim().StartsWith("SWAN"))
+                    {
+                        continue;
+                    }
 
                     // read coordinates
                     if (CurrentLine.Trim().StartsWith("LOCATIONS"))
                     {
-                        var fields = GetNextLine().Trim().Split(new[] {' '}, StringSplitOptions.RemoveEmptyEntries);
+                        string[] fields = GetNextLine().Trim().Split(new[]
+                        {
+                            ' '
+                        }, StringSplitOptions.RemoveEmptyEntries);
                         int nrOfCoordinates = int.Parse(fields[0], CultureInfo.InvariantCulture);
                         coordinates = ReadCoordinates(nrOfCoordinates).ToList();
                     }
 
                     break; // currently, all we need are coordinates
                 }
-
             }
             catch (Exception e)
             {
@@ -50,26 +59,28 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
 
             // todo: read wave enery density functions
             var data = new Dictionary<Coordinate, IFunction>();
-            if (coordinates != null) coordinates.ForEach(c => data.Add(c, null));
+            if (coordinates != null)
+            {
+                coordinates.ForEach(c => data.Add(c, null));
+            }
+
             return data;
         }
 
-        
-
         private IEnumerable<Coordinate> ReadCoordinates(int nrOfCoordinates)
         {
-            for (int i = 0; i < nrOfCoordinates; ++i)
+            for (var i = 0; i < nrOfCoordinates; ++i)
             {
-                var fields = GetNextLine().Trim().Split(new[]{' '}, StringSplitOptions.RemoveEmptyEntries);
-                var x = double.Parse(fields[0], CultureInfo.InvariantCulture);
-                var y = double.Parse(fields[1], CultureInfo.InvariantCulture);
-                yield return new Coordinate(x,y);
+                string[] fields = GetNextLine().Trim().Split(new[]
+                {
+                    ' '
+                }, StringSplitOptions.RemoveEmptyEntries);
+                double x = double.Parse(fields[0], CultureInfo.InvariantCulture);
+                double y = double.Parse(fields[1], CultureInfo.InvariantCulture);
+                yield return new Coordinate(x, y);
             }
-        } 
-        
-        public void Write(IDictionary<Coordinate, IFunction> data, string sp2FilePath)
-        {
-
         }
+
+        public void Write(IDictionary<Coordinate, IFunction> data, string sp2FilePath) {}
     }
 }

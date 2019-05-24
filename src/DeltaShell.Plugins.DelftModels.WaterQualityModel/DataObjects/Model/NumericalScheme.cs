@@ -7,15 +7,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model
     /// </summary>
     /// <remarks>
     /// The enumeration indices correspond to the following delwaq definitions:
-    ///  1 - 1st order upwind in time and space
-    ///  2 - Modified 2nd order Runge Kutta in time, 1st order upwind in space
-    ///  3 - 2nd order Lax Wendroff
-    ///  4 - Alternating direction implicit
-    ///  5 - 2nd order Flux Corrected Transport (Boris and Book)
-    ///  6 - Implicit steady state, direct method, 1st order upwind
-    ///  7 - Implicit steady state, direct method 2nd order
-    ///  8 - Iterative steady state, backward differences
-    ///  9 - Iterative steady state, central differences
+    /// 1 - 1st order upwind in time and space
+    /// 2 - Modified 2nd order Runge Kutta in time, 1st order upwind in space
+    /// 3 - 2nd order Lax Wendroff
+    /// 4 - Alternating direction implicit
+    /// 5 - 2nd order Flux Corrected Transport (Boris and Book)
+    /// 6 - Implicit steady state, direct method, 1st order upwind
+    /// 7 - Implicit steady state, direct method 2nd order
+    /// 8 - Iterative steady state, backward differences
+    /// 9 - Iterative steady state, central differences
     /// 10 - Implicit, direct method, 1st order upwind
     /// 11 - Horizontally method 1, vertically implicit 2nd order
     /// 12 - Horizontally method 5, vertically implicit 2nd order
@@ -34,24 +34,34 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model
     {
         [Description("Scheme 1")]
         Scheme1 = 1,
+
         [Description("Scheme 5")]
         Scheme5 = 5,
+
         [Description("Scheme 10")]
         Scheme10 = 10,
+
         [Description("Scheme 11")]
         Scheme11 = 11,
+
         [Description("Scheme 12")]
         Scheme12 = 12,
+
         [Description("Scheme 13")]
         Scheme13 = 13,
+
         [Description("Scheme 14")]
         Scheme14 = 14,
+
         [Description("Scheme 15")]
         Scheme15 = 15,
+
         [Description("Scheme 16")]
         Scheme16 = 16,
+
         [Description("Scheme 21")]
         Scheme21 = 21,
+
         [Description("Scheme 22")]
         Scheme22 = 22
     }

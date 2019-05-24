@@ -38,6 +38,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor
         }
 
         private WaveBoundaryCondition data;
+
         public WaveBoundaryCondition Data
         {
             get => data;
@@ -57,11 +58,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor
         {
             // workaround for .net 4 issue
             // https://connect.microsoft.com/VisualStudio/feedback/details/683913/binding-to-a-nested-property-does-not-work-in-net-4#
-            var bindingSource = new BindingSource(data, ""); 
-            
-            shapeTypeBox.DataBindings.Add(new Binding("SelectedValue", bindingSource, "ShapeType", false, DataSourceUpdateMode.OnPropertyChanged));
-            periodTypeBox.DataBindings.Add(new Binding("SelectedValue", bindingSource, "PeriodType", false, DataSourceUpdateMode.OnPropertyChanged));
-            spreadingTypeBox.DataBindings.Add(new Binding("SelectedValue", bindingSource, "DirectionalSpreadingType", false, DataSourceUpdateMode.OnPropertyChanged));
+            var bindingSource = new BindingSource(data, "");
+
+            shapeTypeBox.DataBindings.Add(new Binding("SelectedValue", bindingSource, "ShapeType", false,
+                                                      DataSourceUpdateMode.OnPropertyChanged));
+            periodTypeBox.DataBindings.Add(new Binding("SelectedValue", bindingSource, "PeriodType", false,
+                                                       DataSourceUpdateMode.OnPropertyChanged));
+            spreadingTypeBox.DataBindings.Add(new Binding("SelectedValue", bindingSource, "DirectionalSpreadingType",
+                                                          false, DataSourceUpdateMode.OnPropertyChanged));
             peakEnhBox.DataBindings.Add(new Binding("Text", bindingSource, "PeakEnhancementFactor"));
             gaussSpreadBox.DataBindings.Add(new Binding("Text", bindingSource, "GaussianSpreadingValue"));
         }

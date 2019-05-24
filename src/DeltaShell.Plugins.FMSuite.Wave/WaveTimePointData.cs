@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         public double WaterLevelConstant { get; set; }
         public double VelocityXConstant { get; set; }
         public double VelocityYConstant { get; set; }
-       
+
         // constant wind
         public double WindSpeedConstant { get; set; }
         public double WindDirectionConstant { get; set; }
@@ -32,10 +32,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         /// </summary>
         public IFunction InputFields { get; set; }
 
-        public IList<DateTime> TimePoints
-        {
-            get { return InputFields.Arguments[0].Values.OfType<DateTime>().ToList(); }
-        }
+        public IList<DateTime> TimePoints => InputFields.Arguments[0].Values.OfType<DateTime>().ToList();
 
         public WaveInputFieldData()
         {
@@ -62,10 +59,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave
     {
         [Description("Constant")]
         Constant,
+
         [Description("Per Timepoint")]
         TimeVarying,
+
         [Description("From File")]
         FromInputFiles
     }
-
 }

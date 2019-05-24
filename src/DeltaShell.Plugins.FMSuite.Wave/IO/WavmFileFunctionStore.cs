@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Functions;
+using DelftTools.Utils.NetCdf;
 using DeltaShell.Plugins.FMSuite.Common.FunctionStores;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using NetTopologySuite.Extensions.Coverages;
@@ -18,9 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
         public CurvilinearGrid Grid { get; private set; }
 
         //nhib
-        protected WavmFileFunctionStore() :base()
-        {
-        }
+        protected WavmFileFunctionStore() : base() {}
 
         public WavmFileFunctionStore(string ncPath) : base(ncPath)
         {
@@ -31,15 +30,23 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
         {
             Grid = ReadGridFromFile();
 
-            var dimNames = netCdfFile.GetAllDimensions().Select(d => netCdfFile.GetDimensionName(d));
-            if (dimNames.Intersect(new[] {TimeDimensionNames[0], NSizeDimensionName, MSizeDimensionName}).Count() != 3)
+            IEnumerable<string> dimNames = netCdfFile.GetAllDimensions().Select(d => netCdfFile.GetDimensionName(d));
+            if (dimNames.Intersect(new[]
+            {
+                TimeDimensionNames[0],
+                NSizeDimensionName,
+                MSizeDimensionName
+            }).Count() != 3)
             {
                 yield break;
             }
 
-            foreach (var varInfo in dataVariables)
+            foreach (NetCdfVariableInfo varInfo in dataVariables)
             {
-                if (!varInfo.IsTimeDependent || varInfo.NumDimensions != 3) continue;
+                if (!varInfo.IsTimeDependent || varInfo.NumDimensions != 3)
+                {
+                    continue;
+                }
 
                 var coverage = new CurvilinearCoverage(Grid) {IsTimeDependent = true};
                 coverage.Store = this;
@@ -50,7 +57,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 coverage.Arguments[0].Attributes[NcRefDateAttribute] = varInfo.ReferenceDate;
                 coverage.Arguments[0].IsEditable = false;
 
-                var variableDims = netCdfFile.GetDimensions(varInfo.NetCdfDataVariable).ToList();
+                List<NetCdfDimension> variableDims = netCdfFile.GetDimensions(varInfo.NetCdfDataVariable).ToList();
                 coverage.Arguments[1].Name = "N";
                 coverage.Arguments[1].Attributes[NcNameAttribute] = netCdfFile.GetDimensionName(variableDims[1]);
                 coverage.Arguments[1].Attributes[NcUseVariableSizeAttribute] = "false";
@@ -61,7 +68,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 coverage.Arguments[2].Attributes[NcUseVariableSizeAttribute] = "false";
                 coverage.Arguments[2].IsEditable = false;
 
-                var variableName = netCdfFile.GetVariableName(varInfo.NetCdfDataVariable);
+                string variableName = netCdfFile.GetVariableName(varInfo.NetCdfDataVariable);
                 coverage.Components[0].Name = variableName;
                 coverage.Components[0].Attributes[NcNameAttribute] = variableName;
                 coverage.Components[0].Attributes[NcUseVariableSizeAttribute] = "true";
@@ -76,17 +83,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
 
         private CurvilinearGrid ReadGridFromFile()
         {
-            var grid = CurvilinearGrid.CreateDefault();
+            CurvilinearGrid grid = CurvilinearGrid.CreateDefault();
 
-            var sizeN = netCdfFile.GetDimensionLength(NSizeDimensionName);
-            var sizeM = netCdfFile.GetDimensionLength(MSizeDimensionName);
+            int sizeN = netCdfFile.GetDimensionLength(NSizeDimensionName);
+            int sizeM = netCdfFile.GetDimensionLength(MSizeDimensionName);
 
             using (var nc = new NetCdfFileWrapper(netCdfFile.Path))
             {
-                var x = nc.GetValues1D<double>(XCoordinateVariableName);
-                var y = nc.GetValues1D<double>(YCoordinateVariableName);
+                IList<double> x = nc.GetValues1D<double>(XCoordinateVariableName);
+                IList<double> y = nc.GetValues1D<double>(YCoordinateVariableName);
                 grid.Resize(sizeN, sizeM, x, y);
             }
+
             return grid;
         }
     }

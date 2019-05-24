@@ -7,9 +7,9 @@ using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 {
-    public class WaqProcessesRules: NGHSFileBase
+    public class WaqProcessesRules : NGHSFileBase
     {
-        const string waqCoefficientValidationsCvFileName = "DWAQ_allowed_values.csv";
+        private const string waqCoefficientValidationsCvFileName = "DWAQ_allowed_values.csv";
         private const int numberOfColumns = 6;
         private const string commentDelimeter = "#";
         private const char separator = ',';
@@ -19,15 +19,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         /// <summary>
         /// Reads the validation CSV.
         /// </summary>
-        /// <param name="directoryPath">The directory path.</param>
-        /// <returns></returns>
+        /// <param name="directoryPath"> The directory path. </param>
+        /// <returns> </returns>
         public IList<WaqProcessValidationRule> ReadValidationCsv(string directoryPath)
         {
             directoryPath = string.IsNullOrEmpty(directoryPath) ? string.Empty : directoryPath;
-            var filePath = Path.Combine(directoryPath, waqCoefficientValidationsCvFileName);
+            string filePath = Path.Combine(directoryPath, waqCoefficientValidationsCvFileName);
             if (!File.Exists(filePath))
             {
-                var errMssg = Resources.WaqProcessesRules_ReadValidationCsv_File__0__not_found_in_the_path__1___No_validations_will_be_done_for_the_coefficients_;
+                string errMssg = Resources
+                    .WaqProcessesRules_ReadValidationCsv_File__0__not_found_in_the_path__1___No_validations_will_be_done_for_the_coefficients_;
                 Log.ErrorFormat(errMssg, waqCoefficientValidationsCvFileName, filePath);
                 return new List<WaqProcessValidationRule>();
             }
@@ -37,15 +38,19 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             try
             {
                 string line = null;
-                while((line = GetNextLine()) != null)
+                while ((line = GetNextLine()) != null)
                 {
                     /* NGHSFileBase already skips the commented lines, but just in case. */
-                    if (line.StartsWith(commentDelimeter)) continue;
+                    if (line.StartsWith(commentDelimeter))
+                    {
+                        continue;
+                    }
 
-                    var lineFields = line.Split(separator);
+                    string[] lineFields = line.Split(separator);
                     if (lineFields.Length != numberOfColumns)
                     {
-                        Log.Warn($"Skipped line {line} due to incorrect number of columns (expected {numberOfColumns}, read {lineFields.Length}) from {filePath}.");
+                        Log.Warn(
+                            $"Skipped line {line} due to incorrect number of columns (expected {numberOfColumns}, read {lineFields.Length}) from {filePath}.");
                         continue;
                     }
 
@@ -70,7 +75,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 
         private static Type GetProcessValueType(string valueName)
         {
-            var normValue = valueName.Replace(" ", "").ToLowerInvariant();
+            string normValue = valueName.Replace(" ", "").ToLowerInvariant();
             switch (normValue)
             {
                 case "int":

@@ -23,13 +23,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
             InitializeComponent();
 
             dataTableView = new TableView {Dock = DockStyle.Fill};
-            dataTableView.PasteController = new TableViewArgumentBasedPasteController(dataTableView, new[] { 0 })
+            dataTableView.PasteController = new TableViewArgumentBasedPasteController(dataTableView, new[]
             {
-                SkipRowsWithMissingArgumentValues = true
-            };
+                0
+            }) {SkipRowsWithMissingArgumentValues = true};
             dataTableView.ShowImportExportToolbar = true;
 
-            var hydroDataSource = EnumBindingHelper.ToList<InputFieldDataType>();
+            IList<KeyValuePair<InputFieldDataType, string>> hydroDataSource =
+                EnumBindingHelper.ToList<InputFieldDataType>();
             hydroDataSource.RemoveAllWhere(kvp => kvp.Key == InputFieldDataType.FromInputFiles);
             hydroComboBox.DataSource = hydroDataSource;
             hydroComboBox.DisplayMember = "Value";
@@ -60,12 +61,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
         }
 
         private WaveInputFieldData data;
+
         public object Data
         {
-            get
-            {
-                return data;
-            }
+            get => data;
             set
             {
                 data = value as WaveInputFieldData;
@@ -76,14 +75,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
                 tablePanel.Controls.Clear();
                 dataTableView.BestFitColumns();
                 dataTableView.Columns[0].Width = 160;
-                
+
                 tablePanel.Controls.Add(dataTableView);
-                
+
                 UpdateBindings(data);
 
                 waveMeteoDataEditor1.Data = data != null
-                    ? data.MeteoData
-                    : null;
+                                                ? data.MeteoData
+                                                : null;
                 waveMeteoDataEditor1.ImportFileIntoModelDirectory = s => ImportFileIntoModelDirectory(s);
 
                 if (data != null)
@@ -108,17 +107,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
             dataTableView.Columns[1].Visible = selHydroDataType == InputFieldDataType.TimeVarying;
             dataTableView.Columns[2].Visible = selHydroDataType == InputFieldDataType.TimeVarying;
             dataTableView.Columns[3].Visible = selHydroDataType == InputFieldDataType.TimeVarying;
-            
+
             dataTableView.Columns[4].Visible = selWindDataType == InputFieldDataType.TimeVarying;
             dataTableView.Columns[5].Visible = selWindDataType == InputFieldDataType.TimeVarying;
 
             // ensures proper order (see TOOLS-9526)
-            int displayIndex = 0;
+            var displayIndex = 0;
             dataTableView.Columns.ForEach(c =>
+            {
+                if (c.Visible)
                 {
-                    if (c.Visible)
-                        c.DisplayIndex = displayIndex++;
-                });
+                    c.DisplayIndex = displayIndex++;
+                }
+            });
         }
 
         private void UpdateBindings(WaveInputFieldData inputFieldData)
@@ -135,47 +136,41 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
             if (inputFieldData != null)
             {
                 hydroComboBox.DataBindings.Add(new Binding("SelectedValue", inputFieldData,
-                                                      TypeUtils.GetMemberName(() => inputFieldData.HydroDataType)));
+                                                           TypeUtils.GetMemberName(
+                                                               () => inputFieldData.HydroDataType)));
                 windComboBox.DataBindings.Add(new Binding("SelectedValue", inputFieldData,
-                                                     TypeUtils.GetMemberName(() => inputFieldData.WindDataType)));
+                                                          TypeUtils.GetMemberName(() => inputFieldData.WindDataType)));
 
                 waterlevelBox.DataBindings.Add(new Binding("Text", inputFieldData,
                                                            TypeUtils.GetMemberName(
                                                                () => inputFieldData.WaterLevelConstant)));
                 velocityXBox.DataBindings.Add(new Binding("Text", inputFieldData,
-                                                           TypeUtils.GetMemberName(
-                                                               () => inputFieldData.VelocityXConstant)));
+                                                          TypeUtils.GetMemberName(
+                                                              () => inputFieldData.VelocityXConstant)));
                 velocityYBox.DataBindings.Add(new Binding("Text", inputFieldData,
-                                                           TypeUtils.GetMemberName(
-                                                               () => inputFieldData.VelocityYConstant)));
-
+                                                          TypeUtils.GetMemberName(
+                                                              () => inputFieldData.VelocityYConstant)));
 
                 windSpeedBox.DataBindings.Add(new Binding("Text", inputFieldData,
                                                           TypeUtils.GetMemberName(
                                                               () => inputFieldData.WindSpeedConstant)));
                 windDirectionBox.DataBindings.Add(new Binding("Text", inputFieldData,
-                                                         TypeUtils.GetMemberName(
-                                                             () => inputFieldData.WindDirectionConstant)));
+                                                              TypeUtils.GetMemberName(
+                                                                  () => inputFieldData.WindDirectionConstant)));
             }
         }
 
         public Image Image { get; set; }
-        public void EnsureVisible(object item)
-        {
-        }
+        public void EnsureVisible(object item) {}
 
         public ViewInfo ViewInfo { get; set; }
         public IEnumerable<IFeature> SelectedFeatures { get; set; }
         public event EventHandler SelectedFeaturesChanged;
         public ILayer Layer { get; set; }
 
-        public void OnActivated()
-        {
-        }
+        public void OnActivated() {}
 
-        public void OnDeactivated()
-        {
-        }
+        public void OnDeactivated() {}
 
         private void exportToBoundaryButton_Click(object sender, EventArgs e)
         {
@@ -186,6 +181,5 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
         {
             ImportFromBoundaryCondition();
         }
-
     }
 }

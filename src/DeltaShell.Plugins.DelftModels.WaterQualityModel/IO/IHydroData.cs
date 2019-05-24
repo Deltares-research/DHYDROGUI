@@ -175,26 +175,30 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         /// Determines whether the hydro dynamics data has data available for a specific
         /// function, process or substance.
         /// </summary>
-        /// <param name="functionName">Name of the function.</param>
-        /// <returns>True if data is available, false otherwise.</returns>
+        /// <param name="functionName"> Name of the function. </param>
+        /// <returns> True if data is available, false otherwise. </returns>
         bool HasDataFor(string functionName);
 
         /// <summary>
         /// Gets the file path for a given function when available in the hydro data.
         /// </summary>
-        /// <param name="functionName">Name of the funcion.</param>
-        /// <returns>The filepath for the given function if <see cref="HasDataFor"/> returns
-        /// true for <paramref name="functionName"/>.</returns>
-        /// <exception cref="InvalidOperationException">When <see cref="HasDataFor"/> returns
-        /// false for <paramref name="functionName"/>.</exception>
+        /// <param name="functionName"> Name of the funcion. </param>
+        /// <returns>
+        /// The filepath for the given function if <see cref="HasDataFor" /> returns
+        /// true for <paramref name="functionName" />.
+        /// </returns>
+        /// <exception cref="InvalidOperationException">
+        /// When <see cref="HasDataFor" /> returns
+        /// false for <paramref name="functionName" />.
+        /// </exception>
         string GetFilePathFor(string functionName);
 
         /// <summary>
         /// Determines whether this hydro dynamical data has the same schematization (grid
         /// and layer definitions) as another hydro data.
         /// </summary>
-        /// <param name="data">The data.</param>
-        /// <returns>True if the schematizations are the same, false otherwise.</returns>
+        /// <param name="data"> The data. </param>
+        /// <returns> True if the schematizations are the same, false otherwise. </returns>
         bool HasSameSchematization(IHydroData data);
 
         event EventHandler<EventArgs<string>> DataChanged;

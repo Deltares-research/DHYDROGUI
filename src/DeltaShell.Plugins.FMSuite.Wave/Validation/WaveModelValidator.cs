@@ -5,20 +5,20 @@ using NetTopologySuite.Extensions.Features;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Validation
 {
-    public class WaveModelValidator : IValidator<WaveModel,WaveModel>
+    public class WaveModelValidator : IValidator<WaveModel, WaveModel>
     {
         public ValidationReport Validate(WaveModel model, WaveModel target = null)
         {
-            return new ValidationReport(model.Name + " (Waves Model)", new []
-                {
-                    WaveDomainValidator.Validate(model),
-                    WaveTimePointValidator.Validate(model),
-                    WaveBoundaryConditionValidator.Validate(model.BoundaryConditions),
-                    WaveAreaValidator.Validate(model),
-                    WaveCouplingValidator.Validate(model),
-                    WavePropertiesValidator.Validate(model),
-                    WaveOutputParametersValidator.Validate(model)
-                });
+            return new ValidationReport(model.Name + " (Waves Model)", new[]
+            {
+                WaveDomainValidator.Validate(model),
+                WaveTimePointValidator.Validate(model),
+                WaveBoundaryConditionValidator.Validate(model.BoundaryConditions),
+                WaveAreaValidator.Validate(model),
+                WaveCouplingValidator.Validate(model),
+                WavePropertiesValidator.Validate(model),
+                WaveOutputParametersValidator.Validate(model)
+            });
         }
     }
 
@@ -26,8 +26,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
     {
         public static ValidationReport Validate(WaveModel model)
         {
-            var subReports = model.ObservationCrossSections.Select(cs => new ValidationReport(cs.Name, ValidateObservationCrossSection(cs)));
-            
+            IEnumerable<ValidationReport> subReports =
+                model.ObservationCrossSections.Select(
+                    cs => new ValidationReport(cs.Name, ValidateObservationCrossSection(cs)));
+
             return new ValidationReport("Waves Model Area", subReports);
         }
 
@@ -35,7 +37,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
         {
             if (cs.Name.Length > 8)
             {
-                yield return new ValidationIssue(cs.Name, ValidationSeverity.Error, "Name of the observation cross section is too long. Maximum: 8 characters.");
+                yield return new ValidationIssue(cs.Name, ValidationSeverity.Error,
+                                                 "Name of the observation cross section is too long. Maximum: 8 characters.");
             }
         }
     }

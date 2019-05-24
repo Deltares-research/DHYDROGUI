@@ -11,7 +11,6 @@ using DelftTools.Functions;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
-using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
 using DelftTools.Utils.Threading;
@@ -36,9 +35,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.FunctionLis
         #region Column property names
 
         private readonly string namePropertyName = TypeUtils.GetMemberName<FunctionWrapper>(fw => fw.Name);
-        private readonly string descriptionPropertyName = TypeUtils.GetMemberName<FunctionWrapper>(fw => fw.Description);
-        private readonly string functionTypePropertyName = TypeUtils.GetMemberName<FunctionWrapper>(fw => fw.FunctionType);
-        private readonly string defaultValuePropertyName = TypeUtils.GetMemberName<FunctionWrapper>(fw => fw.DefaultValue);
+
+        private readonly string descriptionPropertyName =
+            TypeUtils.GetMemberName<FunctionWrapper>(fw => fw.Description);
+
+        private readonly string functionTypePropertyName =
+            TypeUtils.GetMemberName<FunctionWrapper>(fw => fw.FunctionType);
+
+        private readonly string defaultValuePropertyName =
+            TypeUtils.GetMemberName<FunctionWrapper>(fw => fw.DefaultValue);
+
         private readonly string unitPropertyName = TypeUtils.GetMemberName<FunctionWrapper>(fw => fw.Unit);
         private readonly string urlPropertyName = TypeUtils.GetMemberName<FunctionWrapper>(fw => fw.Url);
         private readonly string argumentPropertyName = TypeUtils.GetMemberName<FunctionWrapper>(fw => fw.Arguments);
@@ -47,7 +53,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.FunctionLis
         private bool useInitialValueColumn;
 
         #endregion
-
 
         public FunctionListView()
         {
@@ -58,10 +63,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.FunctionLis
             functionCreators.CollectionChanged += FunctionCreatorsCollectionChanged;
 
             functionCollectionChangedDelayedEventHandler =
-                new DelayedEventHandler<EventArgs>(delegate { UpdateTableView(); UpdateFunctionViewPanel(); })
-                    {
-                        SynchronizingObject = this
-                    };
+                new DelayedEventHandler<EventArgs>(delegate
+                {
+                    UpdateTableView();
+                    UpdateFunctionViewPanel();
+                }) {SynchronizingObject = this};
 
             splitContainer1.Panel2Collapsed = true;
 
@@ -74,14 +80,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.FunctionLis
         /// </summary>
         public bool UseInitialValueColumn
         {
-            get { return useInitialValueColumn; }
+            get => useInitialValueColumn;
             set
             {
-                if (useInitialValueColumn == value) return;
+                if (useInitialValueColumn == value)
+                {
+                    return;
+                }
 
                 useInitialValueColumn = value;
                 defaultValueColumn.Caption = GetDefaultValueColumnName();
-            } 
+            }
         }
 
         private ITableViewColumn defaultValueColumn;
@@ -97,20 +106,25 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.FunctionLis
             tableView.AllowDeleteRow = false;
             tableView.EditButtons = false;
             tableView.RowHeight += 2;
-            
+
             tableView.AddColumn(namePropertyName, Resources.FunctionListView_InitializeTableView_Name);
             tableView.AddColumn(descriptionPropertyName, Resources.FunctionListView_InitializeTableView_Description);
             tableView.AddColumn(functionTypePropertyName, Resources.FunctionListView_InitializeTableView_Function_type);
-            
+
             defaultValueColumn = tableView.AddColumn(defaultValuePropertyName, GetDefaultValueColumnName());
             tableView.AddColumn(unitPropertyName, Resources.FunctionListView_InitializeTableView_Unit);
-            segmentFunctionColumn = tableView.AddColumn(urlPropertyName, Resources.FunctionListView_InitializeTableView_SegmentFunctionFilePath);
-            tableView.AddColumn(argumentPropertyName, Resources.FunctionListView_InitializeTableView_Arguments, true, 100);
-            tableView.AddColumn(componentsPropertyName, Resources.FunctionListView_InitializeTableView_Components, true, 100);
+            segmentFunctionColumn = tableView.AddColumn(urlPropertyName,
+                                                        Resources
+                                                            .FunctionListView_InitializeTableView_SegmentFunctionFilePath);
+            tableView.AddColumn(argumentPropertyName, Resources.FunctionListView_InitializeTableView_Arguments, true,
+                                100);
+            tableView.AddColumn(componentsPropertyName, Resources.FunctionListView_InitializeTableView_Components, true,
+                                100);
             tableView.AddColumn(editPropertyName, Resources.FunctionListView_InitializeTableView_Edit);
 
-            tableView.GetColumnByName(editPropertyName).Editor = new ButtonTypeEditor { ButtonClickAction = OpenViewForFunction };
-            
+            tableView.GetColumnByName(editPropertyName).Editor =
+                new ButtonTypeEditor {ButtonClickAction = OpenViewForFunction};
+
             //Execute BestFitColumns to make the columns always readable and add a scrollbar if not.
             tableView.BestFitColumns();
 
@@ -126,27 +140,27 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.FunctionLis
         private string GetDefaultValueColumnName()
         {
             return UseInitialValueColumn
-                ? Resources.FunctionListView_GetDefaultValueColumnName_Initial_value
-                : Resources.FunctionListView_InitializeTableView_Default_value;
+                       ? Resources.FunctionListView_GetDefaultValueColumnName_Initial_value
+                       : Resources.FunctionListView_InitializeTableView_Default_value;
         }
 
         public object Data
         {
-            get { return functions; }
+            get => functions;
             set
             {
                 if (functions != null)
                 {
                     functions.CollectionChanged -= functionCollectionChangedDelayedEventHandler;
-                    ((INotifyPropertyChange)functions).PropertyChanged -= OnPropertyChanged;
+                    ((INotifyPropertyChange) functions).PropertyChanged -= OnPropertyChanged;
                 }
-                
+
                 functions = (IEventedList<IFunction>) value;
 
                 if (functions != null)
                 {
                     functions.CollectionChanged += functionCollectionChangedDelayedEventHandler;
-                    ((INotifyPropertyChange)functions).PropertyChanged += OnPropertyChanged;
+                    ((INotifyPropertyChange) functions).PropertyChanged += OnPropertyChanged;
                 }
 
                 UpdateTableView();
@@ -157,12 +171,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.FunctionLis
 
         public Image Image { get; set; }
 
-        public void EnsureVisible(object item) { }
+        public void EnsureVisible(object item) {}
         public ViewInfo ViewInfo { get; set; }
 
         public IGui Gui
         {
-            get { return gui; }
+            get => gui;
             set
             {
                 gui = value;
@@ -172,20 +186,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.FunctionLis
         }
 
         /// <summary>
-        /// Collection of function creators (<see cref="IFunctionTypeCreator"/>) to identify and change functions
+        /// Collection of function creators (<see cref="IFunctionTypeCreator" />) to identify and change functions
         /// </summary>
-        public ICollection<IFunctionTypeCreator> FunctionCreators
-        {
-            get { return functionCreators; }
-        }
+        public ICollection<IFunctionTypeCreator> FunctionCreators => functionCreators;
 
         /// <summary>
         /// Whether arguments are shown in the table view or not
         /// </summary>
         public bool ShowArguments
         {
-            get { return tableView.GetColumnByName(argumentPropertyName).Visible; }
-            set { tableView.GetColumnByName(argumentPropertyName).Visible = value; }
+            get => tableView.GetColumnByName(argumentPropertyName).Visible;
+            set => tableView.GetColumnByName(argumentPropertyName).Visible = value;
         }
 
         /// <summary>
@@ -193,8 +204,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.FunctionLis
         /// </summary>
         public bool ShowComponents
         {
-            get { return tableView.GetColumnByName(componentsPropertyName).Visible; }
-            set { tableView.GetColumnByName(componentsPropertyName).Visible = value; }
+            get => tableView.GetColumnByName(componentsPropertyName).Visible;
+            set => tableView.GetColumnByName(componentsPropertyName).Visible = value;
         }
 
         /// <summary>
@@ -202,14 +213,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.FunctionLis
         /// </summary>
         public bool ShowNamesReadOnly
         {
-            get { return tableView.GetColumnByName(namePropertyName).ReadOnly; }
-            set { tableView.GetColumnByName(namePropertyName).ReadOnly = value; }
+            get => tableView.GetColumnByName(namePropertyName).ReadOnly;
+            set => tableView.GetColumnByName(namePropertyName).ReadOnly = value;
         }
 
         public bool ShowDescriptionsReadOnly
         {
-            get { return tableView.GetColumnByName(descriptionPropertyName).ReadOnly; }
-            set { tableView.GetColumnByName(descriptionPropertyName).ReadOnly = value; }
+            get => tableView.GetColumnByName(descriptionPropertyName).ReadOnly;
+            set => tableView.GetColumnByName(descriptionPropertyName).ReadOnly = value;
         }
 
         /// <summary>
@@ -217,8 +228,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.FunctionLis
         /// </summary>
         public bool ShowUnitsReadOnly
         {
-            get { return tableView.GetColumnByName(unitPropertyName).ReadOnly; }
-            set { tableView.GetColumnByName(unitPropertyName).ReadOnly = value; }
+            get => tableView.GetColumnByName(unitPropertyName).ReadOnly;
+            set => tableView.GetColumnByName(unitPropertyName).ReadOnly = value;
         }
 
         /// <summary>
@@ -226,8 +237,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.FunctionLis
         /// </summary>
         public bool ShowEditButtons
         {
-            get { return tableView.GetColumnByName(editPropertyName).Visible; }
-            set { tableView.GetColumnByName(editPropertyName).Visible = value; }
+            get => tableView.GetColumnByName(editPropertyName).Visible;
+            set => tableView.GetColumnByName(editPropertyName).Visible = value;
         }
 
         /// <summary>
@@ -238,14 +249,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.FunctionLis
 
         public IEditableObject DataOwner
         {
-            get { return dataOwner; }
+            get => dataOwner;
             set
             {
                 dataOwner = value;
 
                 // Update FunctionOwner of FunctionWrapper objects
-                var functionWrappers = (IEnumerable<FunctionWrapper>)tableView.Data;
-                foreach (var functionWrapper in functionWrappers)
+                var functionWrappers = (IEnumerable<FunctionWrapper>) tableView.Data;
+                foreach (FunctionWrapper functionWrapper in functionWrappers)
                 {
                     functionWrapper.FunctionOwner = dataOwner;
                 }
@@ -257,7 +268,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.FunctionLis
             functionCollectionChangedDelayedEventHandler.Enabled = false;
             functionCollectionChangedDelayedEventHandler.Dispose();
 
-            if (disposing && (components != null))
+            if (disposing && components != null)
             {
                 components.Dispose();
             }
@@ -268,13 +279,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.FunctionLis
         private bool ReadOnlyCellFilter(TableViewCell tableViewCell)
         {
             // Default value should be readonly when data coming from external source.
-            if (IsDefaultValueCellReadOnly == null 
+            if (IsDefaultValueCellReadOnly == null
                 || tableViewCell.Column != defaultValueColumn && tableViewCell.Column != segmentFunctionColumn)
+            {
                 return false;
+            }
 
-            var functionCorrespondingToCell = GetFunctionForCell(tableViewCell.RowIndex);
-            return functionCorrespondingToCell == null 
-                   || IsDefaultValueCellReadOnly(functionCorrespondingToCell) 
+            IFunction functionCorrespondingToCell = GetFunctionForCell(tableViewCell.RowIndex);
+            return functionCorrespondingToCell == null
+                   || IsDefaultValueCellReadOnly(functionCorrespondingToCell)
                    || tableViewCell.Column == segmentFunctionColumn && !functionCorrespondingToCell.IsSegmentFile();
         }
 
@@ -290,31 +303,44 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.FunctionLis
 
             // Function should not be constant, but either dependent on time or space in order to be active. 
             // Constant values can be adapted in the FunctionListView itself. 
-            if (functionWrapper == null || Gui == null || functionWrapper.Function.IsConst()) return;
+            if (functionWrapper == null || Gui == null || functionWrapper.Function.IsConst())
+            {
+                return;
+            }
 
             object viewData = functionWrapper.Function;
 
             if (viewData is ICoverage)
             {
-                viewData = ((WaterQualityModel)DataOwner).GetDataItemByValue(viewData);
+                viewData = ((WaterQualityModel) DataOwner).GetDataItemByValue(viewData);
             }
 
             if (functionWrapper.Function.IsSegmentFile())
             {
-                   //Create dialog asking for the file location.
-                   var openFileDialog = new OpenFileDialog();
-                if (openFileDialog.ShowDialog() != DialogResult.OK) return;
+                //Create dialog asking for the file location.
+                var openFileDialog = new OpenFileDialog();
+                if (openFileDialog.ShowDialog() != DialogResult.OK)
+                {
+                    return;
+                }
 
-                var filePath = openFileDialog.FileName;
+                string filePath = openFileDialog.FileName;
 
                 var fileFunction = functionWrapper.Function as SegmentFileFunction;
-                if( fileFunction != null) fileFunction.UrlPath = filePath;
+                if (fileFunction != null)
+                {
+                    fileFunction.UrlPath = filePath;
+                }
 
                 UpdateTableView();
                 return;
             }
 
-            if (viewData == null) return;
+            if (viewData == null)
+            {
+                return;
+            }
+
             Gui.DocumentViewsResolver.OpenViewForData(viewData);
         }
 
@@ -322,8 +348,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.FunctionLis
         {
             if (functions != null)
             {
-                List<FunctionWrapper> wrappers = new List<FunctionWrapper>();
-                foreach (var function in functions)
+                var wrappers = new List<FunctionWrapper>();
+                foreach (IFunction function in functions)
                 {
                     // check toLower, because the parameter names are case insensitive.
                     if (!ExcludeList.Contains(function.Name.ToLowerInvariant()))
@@ -348,10 +374,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.FunctionLis
 
             panel1.Controls.Clear();
 
-            if (functionWrapper == null || Gui == null || functionWrapper.Function.IsConst()) return;
+            if (functionWrapper == null || Gui == null || functionWrapper.Function.IsConst())
+            {
+                return;
+            }
 
-            var view = Gui.DocumentViewsResolver.CreateViewForData(functionWrapper.Function, info => info.ViewType == typeof(CoverageTableView)) as Control;
-            if (view == null) return;
+            var view = Gui.DocumentViewsResolver.CreateViewForData(functionWrapper.Function,
+                                                                   info => info.ViewType == typeof(CoverageTableView))
+                           as Control;
+            if (view == null)
+            {
+                return;
+            }
 
             view.Dock = DockStyle.Fill;
             panel1.Controls.Add(view);
@@ -370,14 +404,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.FunctionLis
 
         private void UpdateFunctionTypeEditor()
         {
-            var function = GetFunctionForCell(tableView.FocusedRowIndex);
-            if (function == null) return;
+            IFunction function = GetFunctionForCell(tableView.FocusedRowIndex);
+            if (function == null)
+            {
+                return;
+            }
 
             // HACK : Need to set entire editor because items are only set when setting editor
             tableView.GetColumnByName(functionTypePropertyName).Editor = new ComboBoxTypeEditor
             {
                 Items = functionCreators.Where(fc => fc.IsAllowed(function)).Select(fc => fc.FunctionTypeName).ToList(),
-                ItemsMandatory = false // Show items that might have been filtered out for this row but have been selected for a different row
+                ItemsMandatory =
+                    false // Show items that might have been filtered out for this row but have been selected for a different row
             };
         }
 

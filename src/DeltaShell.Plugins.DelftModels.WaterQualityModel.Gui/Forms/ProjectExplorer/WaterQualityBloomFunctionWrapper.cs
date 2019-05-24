@@ -9,9 +9,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.ProjectExpl
     public class WaterQualityBloomFunctionWrapper
     {
         /// <summary>
-        /// Creates a water quality function data wrapper with <param name="functions"/>
+        /// Creates a water quality function data wrapper with
+        /// <param name="functions" />
         /// </summary>
-        /// <param name="functions">The functions that are wrapped by the water quality function data wrapper</param>
+        /// <param name="functions"> The functions that are wrapped by the water quality function data wrapper </param>
         public WaterQualityBloomFunctionWrapper(IEventedList<IFunction> functions)
         {
             Functions = functions;

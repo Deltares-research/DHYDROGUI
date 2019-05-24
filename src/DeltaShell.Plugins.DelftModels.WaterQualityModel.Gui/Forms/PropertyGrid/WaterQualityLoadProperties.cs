@@ -7,18 +7,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
     [DisplayName("Load")]
     public class WaterQualityLoadProperties : NameblePointFeatureProperties
     {
-        private WaterQualityLoad WaterQualityLoad
-        {
-            get { return (WaterQualityLoad)data; }
-        }
+        private WaterQualityLoad WaterQualityLoad => (WaterQualityLoad) data;
 
         [Category("General")]
         [DisplayName("Load type")]
         [PropertyOrder(2)]
         public string LoadType
         {
-            get { return WaterQualityLoad.LoadType; }
-            set { WaterQualityLoad.LoadType = value; }
+            get => WaterQualityLoad.LoadType;
+            set => WaterQualityLoad.LoadType = value;
         }
 
         [Category("General")]
@@ -27,8 +24,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
         [PropertyOrder(3)]
         public string LocationAliases
         {
-            get { return WaterQualityLoad.LocationAliases; }
-            set { WaterQualityLoad.LocationAliases = value; }
+            get => WaterQualityLoad.LocationAliases;
+            set => WaterQualityLoad.LocationAliases = value;
         }
     }
 }

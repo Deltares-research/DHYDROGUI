@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties;
-
 using GeoAPI.Extensions.Feature;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
@@ -11,20 +10,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
     {
         public const string NewNameFormat = "Load {0}";
 
-        public override string Name { get { return "Dry waste loads from GIS importer"; } }
-        public override Bitmap Image { get { return Resources.weight; } }
+        public override string Name => "Dry waste loads from GIS importer";
+        public override Bitmap Image => Resources.weight;
 
-        protected override string NewNameFormatString
-        {
-            get { return NewNameFormat; }
-        }
+        protected override string NewNameFormatString => NewNameFormat;
 
         protected override WaterQualityLoad CreateFeature()
         {
             return new WaterQualityLoad();
         }
 
-        protected override void ReadAttributes(WaterQualityLoad newFeature, IFeature feature, IEnumerable<WaterQualityLoad> list)
+        protected override void ReadAttributes(WaterQualityLoad newFeature, IFeature feature,
+                                               IEnumerable<WaterQualityLoad> list)
         {
             base.ReadAttributes(newFeature, feature, list);
 
@@ -39,7 +36,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 
             if (feature.Attributes.ContainsKey(WaterQualityLoad.LocationAliasExportName))
             {
-                newFeature.LocationAliases = feature.Attributes[WaterQualityLoad.LocationAliasExportName] as string ?? string.Empty;
+                newFeature.LocationAliases = feature.Attributes[WaterQualityLoad.LocationAliasExportName] as string ??
+                                             string.Empty;
             }
             else
             {

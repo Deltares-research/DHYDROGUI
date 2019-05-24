@@ -1,6 +1,4 @@
-using System;
 using System.IO;
-using System.Reflection;
 using DeltaShell.Dimr;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils
@@ -18,6 +16,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils
         {
             DimrApiDataSet.SetSharedPath();
         }
+
         /// <summary>
         /// Gets the delwaq root folder file-path.
         /// </summary>
@@ -26,25 +25,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils
             return DWaqDllPath;
         }
 
-        private static string DWaqDllPath
-        {
-            get
-            {
-                return Path.Combine(DimrApiDataSet.KernelsDirectory, "x64", delwaq_kernel);
-            }
-        }
+        private static string DWaqDllPath => Path.Combine(DimrApiDataSet.KernelsDirectory, "x64", delwaq_kernel);
 
         public static string GetDelwaqKernelPluginFolderPath()
         {
             string assemblyFolder = Path.GetDirectoryName(typeof(DelwaqFileStructureHelper).Assembly.Location);
-           return Path.Combine(assemblyFolder, delwaq_plugin);
-            
+            return Path.Combine(assemblyFolder, delwaq_plugin);
         }
 
         /// <summary>
         /// Gets the folder file-path where the delwaq binaries can be found.
         /// </summary>
-        /// 
         public static string GetDelwaqBinariesFolderPath()
         {
             return Path.Combine(GetDelwaqKernelMainFolderPath(), "bin");

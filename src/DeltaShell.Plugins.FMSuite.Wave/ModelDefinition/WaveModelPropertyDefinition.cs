@@ -2,9 +2,7 @@
 
 namespace DeltaShell.Plugins.FMSuite.Wave.ModelDefinition
 {
-    public class WaveModelPropertyDefinition : ModelPropertyDefinition
-    {
-    }
+    public class WaveModelPropertyDefinition : ModelPropertyDefinition {}
 
     public static class KnownWaveCategories
     {

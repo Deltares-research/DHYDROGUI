@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-
 using DelftTools.Shell.Core;
-
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.BoundaryData;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Model;
 
@@ -11,26 +9,30 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 {
     public class DataTableImporter : IFileImporter
     {
-        public string Name { get { return "Data table importer"; } }
+        public string Name => "Data table importer";
 
-        public string Category { get { return "WAQ data tables"; } }
-        public string Description
+        public string Category => "WAQ data tables";
+
+        public string Description => string.Empty;
+
+        public Bitmap Image => null;
+
+        public IEnumerable<Type> SupportedItemTypes
         {
-            get { return string.Empty; }
+            get
+            {
+                yield return typeof(DataTableManager);
+            }
         }
-
-        public Bitmap Image {  get { return null; } }
-
-        public IEnumerable<Type> SupportedItemTypes { get { yield return typeof(DataTableManager); } }
 
         public bool CanImportOn(object targetObject)
         {
             return true;
         }
 
-        public bool CanImportOnRootLevel { get { return false; } }
+        public bool CanImportOnRootLevel => false;
 
-        public string FileFilter { get { return "WAQ data table (*.csv)|*.csv"; } }
+        public string FileFilter => "WAQ data table (*.csv)|*.csv";
 
         public string TargetDataDirectory { get; set; }
 
@@ -38,7 +40,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 
         public ImportProgressChangedDelegate ProgressChanged { get; set; }
 
-        public bool OpenViewAfterImport { get { return false; } }
+        public bool OpenViewAfterImport => false;
 
         public object ImportItem(string path, object target = null)
         {
@@ -48,13 +50,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                 throw new NotSupportedException("Target of import must be an instance of DataTableManager.");
             }
 
+            DataTableCsvContents readDataTableData =
+                DataTableCsvFileReader.Read(
+                    path, WaqFileBasedPreProcessor.GetDataTableUseforsRelativeFolderPath(targetManager));
 
-            var readDataTableData = DataTableCsvFileReader.Read(path, WaqFileBasedPreProcessor.GetDataTableUseforsRelativeFolderPath(targetManager));
-
-            targetManager.CreateNewDataTable(readDataTableData.Name, 
-                readDataTableData.CreateDataTableDelwaqFormat(), 
-                readDataTableData.GetSubstanceUseforFileName(), 
-                readDataTableData.CreateDefaultSubstanceUseforContents());
+            targetManager.CreateNewDataTable(readDataTableData.Name,
+                                             readDataTableData.CreateDataTableDelwaqFormat(),
+                                             readDataTableData.GetSubstanceUseforFileName(),
+                                             readDataTableData.CreateDefaultSubstanceUseforContents());
 
             return targetManager;
         }

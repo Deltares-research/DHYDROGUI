@@ -15,7 +15,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.ProjectExpl
     /// <summary>
     /// Water quality function data wrapper node presenter
     /// </summary>
-    public class WaterQualityFunctionDataWrapperNodePresenter : TreeViewNodePresenterBase<WaterQualityFunctionDataWrapper>
+    public class
+        WaterQualityFunctionDataWrapperNodePresenter : TreeViewNodePresenterBase<WaterQualityFunctionDataWrapper>
     {
         private static readonly Bitmap FolderImage = Resources.Folder;
 
@@ -35,7 +36,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.ProjectExpl
             var waterQualityModel = dataItem.Owner as WaterQualityModel;
             if (waterQualityModel != null)
             {
-                return waterQualityModel.AllDataItems.Where(di => di.Role.HasFlag(DataItemRole.Input) && ShowDataItem(di, parentNodeData.Functions));
+                return waterQualityModel.AllDataItems.Where(
+                    di => di.Role.HasFlag(DataItemRole.Input) &&
+                          ShowDataItem(di, parentNodeData.Functions));
             }
 
             return Enumerable.Empty<IDataItem>();
@@ -49,7 +52,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.ProjectExpl
 
         private static bool ShowFunction(IFunction function)
         {
-            return function != null && !function.IsConst() && !function.IsFromHydroDynamics() && !function.IsSegmentFile();
+            return function != null && !function.IsConst() && !function.IsFromHydroDynamics() &&
+                   !function.IsSegmentFile();
         }
     }
 }

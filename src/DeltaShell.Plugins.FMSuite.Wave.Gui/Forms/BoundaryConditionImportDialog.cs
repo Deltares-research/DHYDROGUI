@@ -30,7 +30,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Forms
             }
 
             if (Path.GetExtension(openFileDialog.FileName) == ".sp2" &&
-                MessageBox.Show("This will delete all currently defined boundary conditions in the model, continue?", "Warning",
+                MessageBox.Show("This will delete all currently defined boundary conditions in the model, continue?",
+                                "Warning",
                                 MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.Cancel)
             {
                 return DelftDialogResult.Cancel;
@@ -44,13 +45,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Forms
         {
             return ShowModal();
         }
-        
+
         public object Data { get; set; }
 
-        public void Dispose(){}
+        public void Dispose() {}
         public string Text { get; set; }
         public Image Image { get; set; }
-        public void EnsureVisible(object item){}
+        public void EnsureVisible(object item) {}
         public bool Visible { get; private set; }
         public ViewInfo ViewInfo { get; set; }
     }

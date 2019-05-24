@@ -15,11 +15,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
         [ResourcesDescription(typeof(GisResources), "OverwriteValueOperation_X_Description")]
         public double X
         {
-            get { return data.X; }
+            get => data.X;
             set
             {
                 if (double.IsNaN(value) || double.IsInfinity(value))
+                {
                     return;
+                }
 
                 data.X = value;
             }
@@ -31,11 +33,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
         [ResourcesDescription(typeof(GisResources), "OverwriteValueOperation_Y_Description")]
         public double Y
         {
-            get { return data.Y; }
+            get => data.Y;
             set
             {
                 if (double.IsNaN(value) || double.IsInfinity(value))
+                {
                     return;
+                }
 
                 data.Y = value;
             }
@@ -47,10 +51,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
         [ResourcesDescription(typeof(Resources), "OverwriteLabelOperation_Label_Description")]
         public string Value
         {
-            get { return data.Label; }
+            get => data.Label;
             set
             {
-                if (string.IsNullOrWhiteSpace(value)) return;
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    return;
+                }
 
                 data.Label = value;
             }

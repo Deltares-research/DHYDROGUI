@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DelftTools.Shell.Core.Workflow;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.Gui.Editors;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor;
@@ -14,7 +13,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
 
         public override void OnBoundaryConditionSelectionChanged(IBoundaryCondition boundaryCondition)
         {
-            var selectedPointIndex = Editor.SelectedSupportPointIndex;
+            int selectedPointIndex = Editor.SelectedSupportPointIndex;
 
             var view = (WaveBoundaryConditionDataView) Editor.BoundaryConditionDataView;
             if (view != null)
@@ -22,14 +21,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
                 Editor.SelectedSupportPointChanged -= view.OnSelectedPointChanged;
                 view.Data = null;
             }
+
             view = new WaveBoundaryConditionDataView
-                {
-                    Data = boundaryCondition, 
-                    SelectedPointIndex = selectedPointIndex,
-                    ImportIntoModelDirectory = ImportIntoModelDirectory,
-                    Model = Model
-                    
-                };
+            {
+                Data = boundaryCondition,
+                SelectedPointIndex = selectedPointIndex,
+                ImportIntoModelDirectory = ImportIntoModelDirectory,
+                Model = Model
+            };
             Editor.SelectedSupportPointChanged += view.OnSelectedPointChanged;
             Editor.BoundaryConditionDataView = view;
             Editor.ChildViews.Add(view);
@@ -39,7 +38,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
 
         public override IEnumerable<string> SupportedProcessNames
         {
-            get { yield return WaveBoundaryCondition.WaveProcessName; }
+            get
+            {
+                yield return WaveBoundaryCondition.WaveProcessName;
+            }
         }
 
         public WaveModel Model { get; set; }
@@ -57,6 +59,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
             {
                 yield break;
             }
+
             yield return WaveQuantityName;
         }
 

@@ -31,25 +31,29 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Ribbon
 
             mapTab.Group = geospatialContextualGroup;
 
-            buttonCommands.Add(ButtonAddObservationPoint, new MapToolCommand(WaterQualityModelGuiPlugin.AddObservationPointMapToolName));
-            buttonCommands.Add(ButtonAddLoad, new MapToolCommand(WaterQualityModelGuiPlugin.AddWaterQualityLoadMapToolName));
-            buttonCommands.Add(ButtonFindGridCell, new MapToolCommand(WaterQualityModelGuiPlugin.FindGridCellMapToolName));
+            buttonCommands.Add(ButtonAddObservationPoint,
+                               new MapToolCommand(WaterQualityModelGuiPlugin.AddObservationPointMapToolName));
+            buttonCommands.Add(ButtonAddLoad,
+                               new MapToolCommand(WaterQualityModelGuiPlugin.AddWaterQualityLoadMapToolName));
+            buttonCommands.Add(ButtonFindGridCell,
+                               new MapToolCommand(WaterQualityModelGuiPlugin.FindGridCellMapToolName));
 
             setLabelCommand = new SetLabelCommand();
             spatialOperationCommands.Add(setLabelCommand);
             // with this call, the set label command is sent to the sharpmapgisguiplugin as its owner.
             // It's not added to the list of Commands.
-            SharpMapGisGuiPlugin.Instance.AddSpatialOperationCommand(ButtonSetLabel, setLabelCommand, typeof(SetLabelOperation), Properties.Resources.price_tag);
+            SharpMapGisGuiPlugin.Instance.AddSpatialOperationCommand(ButtonSetLabel, setLabelCommand,
+                                                                     typeof(SetLabelOperation),
+                                                                     Properties.Resources.price_tag);
 
             overwriteLabelCommand = new OverwriteLabelCommand();
             spatialOperationCommands.Add(overwriteLabelCommand);
-            SharpMapGisGuiPlugin.Instance.AddSpatialOperationCommand(ButtonOverwriteLabel, overwriteLabelCommand, typeof(OverwriteLabelOperation), GisResources.marker);
+            SharpMapGisGuiPlugin.Instance.AddSpatialOperationCommand(ButtonOverwriteLabel, overwriteLabelCommand,
+                                                                     typeof(OverwriteLabelOperation),
+                                                                     GisResources.marker);
         }
 
-        public IEnumerable<ICommand> Commands
-        {
-            get { return buttonCommands.Values; }
-        }
+        public IEnumerable<ICommand> Commands => buttonCommands.Values;
 
         public object GetRibbonControl()
         {
@@ -58,10 +62,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Ribbon
 
         public void ValidateItems()
         {
-            foreach (var buttonCommandPair in buttonCommands)
+            foreach (KeyValuePair<UIElement, ICommand> buttonCommandPair in buttonCommands)
             {
-                var button = buttonCommandPair.Key;
-                var command = buttonCommandPair.Value;
+                UIElement button = buttonCommandPair.Key;
+                ICommand command = buttonCommandPair.Value;
 
                 button.IsEnabled = command.Enabled;
 
@@ -76,7 +80,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Ribbon
         public bool IsContextualTabVisible(string tabGroupName, string tabName)
         {
             if (tabName != "tabRegion")
+            {
                 return false;
+            }
 
             // return true if any button is enabled on the tab
             return buttonCommands.Keys.Any(b => b.IsEnabled);
@@ -84,7 +90,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Ribbon
 
         private void OnClick(object sender, RoutedEventArgs e)
         {
-            buttonCommands[(UIElement)sender].Execute();
+            buttonCommands[(UIElement) sender].Execute();
             ValidateItems();
         }
 

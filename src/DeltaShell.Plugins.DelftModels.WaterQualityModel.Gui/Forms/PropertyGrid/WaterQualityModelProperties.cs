@@ -27,26 +27,20 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
         [Description("Name of model")]
         public string Name
         {
-            get { return data.Name; }
-            set { data.Name = value; }
+            get => data.Name;
+            set => data.Name = value;
         }
 
         [PropertyOrder(2)]
         [Category("\t\t\t\t\t\tGeneral")]
         [Description("Status of model run")]
-        public ActivityStatus Status
-        {
-            get { return data.Status; }
-        }
+        public ActivityStatus Status => data.Status;
 
         [PropertyOrder(3)]
         [Category("\t\t\t\t\t\tGeneral")]
         [DisplayName("Hydrodynamics source")]
         [Description("Source of the hydro dynamica")]
-        public string HydroDataImporter
-        {
-            get { return data.HydroData != null ? data.HydroData.ToString() : ""; }
-        }
+        public string HydroDataImporter => data.HydroData != null ? data.HydroData.ToString() : "";
 
         [Category("\t\t\t\t\t\tGeneral")]
         [PropertyOrder(3)]
@@ -56,7 +50,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
         [Editor(typeof(CoordinateSystemTypeEditor), typeof(UITypeEditor))]
         public ICoordinateSystem CoordinateSystem
         {
-            get { return data.CoordinateSystem; }
+            get => data.CoordinateSystem;
             set
             {
                 try
@@ -66,7 +60,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
                 catch (CoordinateTransformException e)
                 {
                     MessageBox.Show("Cannot convert map to coordinate system: " + e.Message,
-                        "Coordinate transformation error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                    "Coordinate transformation error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
@@ -76,10 +70,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
         [DisplayName("Working directory")]
         [Description("Directory where model runs")]
         [ReadOnly(true)]
-        public string WorkDirectory
-        {
-            get { return data.ModelSettings.WorkDirectory; }
-        }
+        public string WorkDirectory => data.ModelSettings.WorkDirectory;
 
         [PropertyOrder(7)]
         [Category("\t\t\t\t\t\tGeneral")]
@@ -87,8 +78,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
         [Description("Toggles the correction in calculation for evaporation")]
         public bool CorrectForEvaporation
         {
-            get { return data.ModelSettings.CorrectForEvaporation; }
-            set { data.ModelSettings.CorrectForEvaporation = value; }
+            get => data.ModelSettings.CorrectForEvaporation;
+            set => data.ModelSettings.CorrectForEvaporation = value;
         }
 
         [PropertyOrder(8)]
@@ -97,8 +88,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
         [Description("Processes active")]
         public bool ProcessesActive
         {
-            get { return data.ModelSettings.ProcessesActive; }
-            set { data.ModelSettings.ProcessesActive = value; }
+            get => data.ModelSettings.ProcessesActive;
+            set => data.ModelSettings.ProcessesActive = value;
         }
 
         [PropertyOrder(9)]
@@ -108,17 +99,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
         [TypeConverter(typeof(EnumDescriptionAttributeTypeConverter))]
         public MonitoringOutputLevel MonitoringOutputLevel
         {
-            get { return data.ModelSettings.MonitoringOutputLevel; }
-            set { data.ModelSettings.MonitoringOutputLevel = value; }
+            get => data.ModelSettings.MonitoringOutputLevel;
+            set => data.ModelSettings.MonitoringOutputLevel = value;
         }
 
         [PropertyOrder(13)]
         [Category("\t\t\t\t\t\tGeneral")]
         [DisplayName("Vertical schematization type")]
-        public LayerType LayerType
-        {
-            get { return data.LayerType; }
-        }
+        public LayerType LayerType => data.LayerType;
 
         [PropertyOrder(14)]
         [Category("\t\t\t\t\t\tGeneral")]
@@ -134,21 +122,22 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
                     return new string[0];
                 }
 
-                var hydroLayersPerWaqLayer = data.HydroData.NumberOfHydrodynamicLayersPerWaqSegmentLayer;
-                var hydroLayerThicknesses = data.HydroData.HydrodynamicLayerThicknesses;
+                int[] hydroLayersPerWaqLayer = data.HydroData.NumberOfHydrodynamicLayersPerWaqSegmentLayer;
+                double[] hydroLayerThicknesses = data.HydroData.HydrodynamicLayerThicknesses;
                 var result = new double[hydroLayersPerWaqLayer.Length];
 
                 for (int i = 0, layerCount = 0; i < result.Length; i++)
                 {
                     result[i] = 0;
-                    for (int j = 0; j < hydroLayersPerWaqLayer[i]; j++)
+                    for (var j = 0; j < hydroLayersPerWaqLayer[i]; j++)
                     {
                         result[i] += hydroLayerThicknesses[layerCount + j];
                     }
 
                     layerCount += hydroLayersPerWaqLayer[i];
                 }
-                return result.Select(d=> d.ToString("F3", CultureInfo.InvariantCulture)).ToArray();
+
+                return result.Select(d => d.ToString("F3", CultureInfo.InvariantCulture)).ToArray();
             }
         }
 
@@ -159,8 +148,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
         [TypeConverter(typeof(DeltaShellDateTimeConverter))]
         public DateTime StartTime
         {
-            get { return data.StartTime; }
-            set { data.StartTime = value; }
+            get => data.StartTime;
+            set => data.StartTime = value;
         }
 
         [PropertyOrder(2)]
@@ -170,8 +159,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
         [TypeConverter(typeof(DeltaShellDateTimeConverter))]
         public DateTime StopTime
         {
-            get { return data.StopTime; }
-            set { data.StopTime = value; }
+            get => data.StopTime;
+            set => data.StopTime = value;
         }
 
         [PropertyOrder(3)]
@@ -181,8 +170,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
         [TypeConverter(typeof(DeltaShellTimeSpanConverter))]
         public TimeSpan TimeStep
         {
-            get { return data.TimeStep; }
-            set { data.TimeStep = value; }
+            get => data.TimeStep;
+            set => data.TimeStep = value;
         }
 
         [PropertyOrder(1)]
@@ -190,51 +179,48 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
         [DisplayName("Observation points and areas (his)")]
         [Description("Timers for output on observation points and areas")]
         [TypeConverter(typeof(ExpandableObjectConverter))]
-        public WaterQualityTimeSettingsProperties HisOutput
-        {
-            get { return new WaterQualityTimeSettingsProperties(new WaterQualityTimeSettings(data.ModelSettings, WaterQualityTimeSettingsType.His)); }
-        }
+        public WaterQualityTimeSettingsProperties HisOutput =>
+            new WaterQualityTimeSettingsProperties(
+                new WaterQualityTimeSettings(data.ModelSettings, WaterQualityTimeSettingsType.His));
 
         [PropertyOrder(2)]
         [Category("\t\t\t\tOutput timers")]
         [DisplayName("Model wide (map)")]
         [Description("Timers for output on model wide (map)")]
         [TypeConverter(typeof(ExpandableObjectConverter))]
-        public WaterQualityTimeSettingsProperties MapOutput
-        {
-            get { return new WaterQualityTimeSettingsProperties(new WaterQualityTimeSettings(data.ModelSettings, WaterQualityTimeSettingsType.Map)); }
-        }
+        public WaterQualityTimeSettingsProperties MapOutput =>
+            new WaterQualityTimeSettingsProperties(
+                new WaterQualityTimeSettings(data.ModelSettings, WaterQualityTimeSettingsType.Map));
 
         [PropertyOrder(3)]
         [Category("\t\t\t\tOutput timers")]
         [DisplayName("Balances (mon)")]
         [Description("Timers for balance output")]
         [TypeConverter(typeof(ExpandableObjectConverter))]
-        public WaterQualityTimeSettingsProperties BalanceOutput
-        {
-            get { return new WaterQualityTimeSettingsProperties(new WaterQualityTimeSettings(data.ModelSettings, WaterQualityTimeSettingsType.Balance)); }
-        }
+        public WaterQualityTimeSettingsProperties BalanceOutput =>
+            new WaterQualityTimeSettingsProperties(
+                new WaterQualityTimeSettings(data.ModelSettings, WaterQualityTimeSettingsType.Balance));
 
         [PropertyOrder(1)]
         [Category("\t\t\tNumerical options")]
         [DisplayName("Integration method")]
         [Description("Integration method\n" +
-        " Scheme  1 - 1st order upwind in time and space\n" +
-        " Scheme  5 - 2nd order Flux Corrected Transport (Boris and Book)\n" +
-        " Scheme 10 - Implicit, direct method, 1st order upwind\n" +
-        " Scheme 11 - Horizontally method 1, vertically implicit 2nd order\n" +
-        " Scheme 12 - Horizontally method 5, vertically implicit 2nd order\n" +
-        " Scheme 13 - Horizontally method 1, vertically implicit 1st order\n" +
-        " Scheme 14 - Horizontally method 5, vertically implicit 1st order\n" +
-        " Scheme 15 - Implicit iterative Method, 1st order upwind in space and time\n" +
-        " Scheme 16 - Implicit Iterative Method, 1st order upwind in horizontal and time, 2nd order vertically\n" +
-        " Scheme 21 - Self adapting Theta Method, implicit vertically, FCT (Zalezac)\n" +
-        " Scheme 22 - Self adapting Theta Method, implicit vertically, FCT (Boris and Book)")]
+                     " Scheme  1 - 1st order upwind in time and space\n" +
+                     " Scheme  5 - 2nd order Flux Corrected Transport (Boris and Book)\n" +
+                     " Scheme 10 - Implicit, direct method, 1st order upwind\n" +
+                     " Scheme 11 - Horizontally method 1, vertically implicit 2nd order\n" +
+                     " Scheme 12 - Horizontally method 5, vertically implicit 2nd order\n" +
+                     " Scheme 13 - Horizontally method 1, vertically implicit 1st order\n" +
+                     " Scheme 14 - Horizontally method 5, vertically implicit 1st order\n" +
+                     " Scheme 15 - Implicit iterative Method, 1st order upwind in space and time\n" +
+                     " Scheme 16 - Implicit Iterative Method, 1st order upwind in horizontal and time, 2nd order vertically\n" +
+                     " Scheme 21 - Self adapting Theta Method, implicit vertically, FCT (Zalezac)\n" +
+                     " Scheme 22 - Self adapting Theta Method, implicit vertically, FCT (Boris and Book)")]
         [TypeConverter(typeof(EnumDescriptionAttributeTypeConverter))]
         public NumericalScheme IntegrationMethodNumber
         {
-            get { return data.ModelSettings.NumericalScheme; }
-            set { data.ModelSettings.NumericalScheme = value; }
+            get => data.ModelSettings.NumericalScheme;
+            set => data.ModelSettings.NumericalScheme = value;
         }
 
         [PropertyOrder(2)]
@@ -243,8 +229,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
         [Description("Use first order(true) or second order (false) approximation over open boundaries")]
         public bool UseFirstOrder
         {
-            get { return data.ModelSettings.UseFirstOrder; }
-            set { data.ModelSettings.UseFirstOrder = value; }
+            get => data.ModelSettings.UseFirstOrder;
+            set => data.ModelSettings.UseFirstOrder = value;
         }
 
         [PropertyOrder(3)]
@@ -254,8 +240,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
         [Description("Maximum number of iterations.")]
         public int IterationMaximum
         {
-            get { return data.ModelSettings.IterationMaximum; }
-            set { data.ModelSettings.IterationMaximum = value; }
+            get => data.ModelSettings.IterationMaximum;
+            set => data.ModelSettings.IterationMaximum = value;
         }
 
         [PropertyOrder(4)]
@@ -265,8 +251,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
         [Description("Iteration tolerance used for convergence.")]
         public double Tolerance
         {
-            get { return data.ModelSettings.Tolerance; }
-            set { data.ModelSettings.Tolerance = value; }
+            get => data.ModelSettings.Tolerance;
+            set => data.ModelSettings.Tolerance = value;
         }
 
         [PropertyOrder(5)]
@@ -276,18 +262,19 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
         [Description("Write the iteration report or not.")]
         public bool WriteIterationReport
         {
-            get { return data.ModelSettings.WriteIterationReport; }
-            set { data.ModelSettings.WriteIterationReport = value; }
+            get => data.ModelSettings.WriteIterationReport;
+            set => data.ModelSettings.WriteIterationReport = value;
         }
 
         [PropertyOrder(6)]
         [Category("\t\t\tNumerical options")]
         [DisplayName("Closure error correction")]
-        [Description("Indicates whether Delwaq should correct water volumes to guarantee continuous concentrations (true) when wrapping hydro dynamic data or use the data as it is (causing discontinuities in concentrations)")]
+        [Description(
+            "Indicates whether Delwaq should correct water volumes to guarantee continuous concentrations (true) when wrapping hydro dynamic data or use the data as it is (causing discontinuities in concentrations)")]
         public bool ClosureErrorCorrection
         {
-            get { return data.ModelSettings.ClosureErrorCorrection; }
-            set { data.ModelSettings.ClosureErrorCorrection = value; }
+            get => data.ModelSettings.ClosureErrorCorrection;
+            set => data.ModelSettings.ClosureErrorCorrection = value;
         }
 
         [PropertyOrder(7)]
@@ -296,18 +283,19 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
         [Description("Cells are considered to contain no water if their water level falls below this threshold.")]
         public double DryCellThreshold
         {
-            get { return data.ModelSettings.DryCellThreshold; }
-            set { data.ModelSettings.DryCellThreshold = value; }
+            get => data.ModelSettings.DryCellThreshold;
+            set => data.ModelSettings.DryCellThreshold = value;
         }
 
         [PropertyOrder(8)]
         [Category("\t\t\tNumerical options")]
         [DisplayName("Nr of cores to use (0 = max)")]
-        [Description("Number of threads used during the calculation. A value of 0 indicates that all available threads should be used.")]
+        [Description(
+            "Number of threads used during the calculation. A value of 0 indicates that all available threads should be used.")]
         public int NrOfThreads
         {
-            get { return data.ModelSettings.NrOfThreads; }
-            set { data.ModelSettings.NrOfThreads = value; }
+            get => data.ModelSettings.NrOfThreads;
+            set => data.ModelSettings.NrOfThreads = value;
         }
 
         [PropertyOrder(1)]
@@ -317,8 +305,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
         [DynamicReadOnly]
         public double HorizontalDispersion
         {
-            get { return data.HorizontalDispersion; }
-            set { data.HorizontalDispersion = value; }
+            get => data.HorizontalDispersion;
+            set => data.HorizontalDispersion = value;
         }
 
         [PropertyOrder(2)]
@@ -327,8 +315,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
         [Description("Uniform dispersion occurring in vertical direction ([m^2/s]).")]
         public double VerticalDispersion
         {
-            get { return data.VerticalDispersion; }
-            set { data.VerticalDispersion = value; }
+            get => data.VerticalDispersion;
+            set => data.VerticalDispersion = value;
         }
 
         [PropertyOrder(3)]
@@ -337,8 +325,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
         [Description("Use additional vertical dispersion from hydro dynamics data.")]
         public bool UseAdditionalHydrodynamicVerticalDiffusion
         {
-            get { return data.UseAdditionalHydrodynamicVerticalDiffusion; }
-            set { data.UseAdditionalHydrodynamicVerticalDiffusion = value; }
+            get => data.UseAdditionalHydrodynamicVerticalDiffusion;
+            set => data.UseAdditionalHydrodynamicVerticalDiffusion = value;
         }
 
         [PropertyOrder(4)]
@@ -347,8 +335,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
         [Description("No dispersion if the flow rate is zero")]
         public bool NoDispersionIfFlowIsZero
         {
-            get { return data.ModelSettings.NoDispersionIfFlowIsZero; }
-            set { data.ModelSettings.NoDispersionIfFlowIsZero = value; }
+            get => data.ModelSettings.NoDispersionIfFlowIsZero;
+            set => data.ModelSettings.NoDispersionIfFlowIsZero = value;
         }
 
         [PropertyOrder(5)]
@@ -357,8 +345,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
         [Description("Use no dispersion over open boundaries")]
         public bool NoDispersionOverOpenBoundaries
         {
-            get { return data.ModelSettings.NoDispersionOverOpenBoundaries; }
-            set { data.ModelSettings.NoDispersionOverOpenBoundaries = value; }
+            get => data.ModelSettings.NoDispersionOverOpenBoundaries;
+            set => data.ModelSettings.NoDispersionOverOpenBoundaries = value;
         }
 
         [PropertyOrder(1)]
@@ -367,8 +355,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
         [Category("\tRestart parameters")]
         public bool UseRestart
         {
-            get { return data.UseRestart; }
-            set { data.UseRestart = value; }
+            get => data.UseRestart;
+            set => data.UseRestart = value;
         }
 
         [PropertyOrder(2)]
@@ -377,8 +365,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
         [Category("\tRestart parameters")]
         public bool WriteRestart
         {
-            get { return data.WriteRestart; }
-            set { data.WriteRestart = value; }
+            get => data.WriteRestart;
+            set => data.WriteRestart = value;
         }
 
         [PropertyOrder(3)]
@@ -387,8 +375,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
         [Category("\tRestart parameters")]
         public bool UseSaveStateTimeRange
         {
-            get { return data.UseSaveStateTimeRange; }
-            set { data.UseSaveStateTimeRange = value; }
+            get => data.UseSaveStateTimeRange;
+            set => data.UseSaveStateTimeRange = value;
         }
 
         [PropertyOrder(4)]
@@ -399,8 +387,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
         [DynamicReadOnly]
         public DateTime SaveStateStartTime
         {
-            get { return data.SaveStateStartTime; }
-            set { data.SaveStateStartTime = value; }
+            get => data.SaveStateStartTime;
+            set => data.SaveStateStartTime = value;
         }
 
         [PropertyOrder(5)]
@@ -411,8 +399,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
         [DynamicReadOnly]
         public DateTime SaveStateStopTime
         {
-            get { return data.SaveStateStopTime; }
-            set { data.SaveStateStopTime = value; }
+            get => data.SaveStateStopTime;
+            set => data.SaveStateStopTime = value;
         }
 
         [PropertyOrder(6)]
@@ -423,10 +411,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
         [DynamicReadOnly]
         public TimeSpan SaveStateTimeStep
         {
-            get { return data.SaveStateTimeStep; }
-            set { data.SaveStateTimeStep = value; }
+            get => data.SaveStateTimeStep;
+            set => data.SaveStateTimeStep = value;
         }
-
 
         [PropertyOrder(1)]
         [Category("Balance options")]
@@ -434,8 +421,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
         [Description("Determines if balance output should be calculated")]
         public bool BalanceOutputLevel
         {
-            get { return data.ModelSettings.Balance; }
-            set { data.ModelSettings.Balance = value; }
+            get => data.ModelSettings.Balance;
+            set => data.ModelSettings.Balance = value;
         }
 
         [PropertyOrder(2)]
@@ -445,8 +432,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
         [TypeConverter(typeof(EnumDescriptionAttributeTypeConverter))]
         public BalanceUnit BalanceUnit
         {
-            get { return data.ModelSettings.BalanceUnit; }
-            set { data.ModelSettings.BalanceUnit = value; }
+            get => data.ModelSettings.BalanceUnit;
+            set => data.ModelSettings.BalanceUnit = value;
         }
 
         [PropertyOrder(3)]
@@ -456,8 +443,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
                      "have them 'lumped' into a single term (true)")]
         public bool LumpProcesses
         {
-            get { return data.ModelSettings.LumpProcesses; }
-            set { data.ModelSettings.LumpProcesses = value; }
+            get => data.ModelSettings.LumpProcesses;
+            set => data.ModelSettings.LumpProcesses = value;
         }
 
         [PropertyOrder(4)]
@@ -467,8 +454,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
                      "have them 'lumped' into a single term (true)")]
         public bool LumpLoads
         {
-            get { return data.ModelSettings.LumpLoads; }
-            set { data.ModelSettings.LumpLoads = value; }
+            get => data.ModelSettings.LumpLoads;
+            set => data.ModelSettings.LumpLoads = value;
         }
 
         [PropertyOrder(5)]
@@ -478,8 +465,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
                      "have them 'lumped' into a single term (true)")]
         public bool LumpTransport
         {
-            get { return data.ModelSettings.LumpTransport; }
-            set { data.ModelSettings.LumpTransport = value; }
+            get => data.ModelSettings.LumpTransport;
+            set => data.ModelSettings.LumpTransport = value;
         }
 
         [PropertyOrder(6)]
@@ -489,8 +476,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
                      "terms accumulated over time)")]
         public bool SuppressTime
         {
-            get { return data.ModelSettings.SuppressTime; }
-            set { data.ModelSettings.SuppressTime = value; }
+            get => data.ModelSettings.SuppressTime;
+            set => data.ModelSettings.SuppressTime = value;
         }
 
         [PropertyOrder(7)]
@@ -500,8 +487,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
                      "monitoring areas (leaving only the overall mass balance term)")]
         public bool SuppressSpace
         {
-            get { return data.ModelSettings.SuppressSpace; }
-            set { data.ModelSettings.SuppressSpace = value; }
+            get => data.ModelSettings.SuppressSpace;
+            set => data.ModelSettings.SuppressSpace = value;
         }
 
         [PropertyOrder(8)]
@@ -510,8 +497,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
         [Description("Determines if balance output is generated for monitoring points")]
         public bool NoBalanceMonitoringPoints
         {
-            get { return data.ModelSettings.NoBalanceMonitoringPoints; }
-            set { data.ModelSettings.NoBalanceMonitoringPoints = value; }
+            get => data.ModelSettings.NoBalanceMonitoringPoints;
+            set => data.ModelSettings.NoBalanceMonitoringPoints = value;
         }
 
         [PropertyOrder(9)]
@@ -520,8 +507,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
         [Description("Determines if balance output is generated for monitoring areas")]
         public bool NoBalanceMonitoringAreas
         {
-            get { return data.ModelSettings.NoBalanceMonitoringAreas; }
-            set { data.ModelSettings.NoBalanceMonitoringAreas = value; }
+            get => data.ModelSettings.NoBalanceMonitoringAreas;
+            set => data.ModelSettings.NoBalanceMonitoringAreas = value;
         }
 
         [PropertyOrder(10)]
@@ -530,8 +517,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
         [Description("Determines if balance output is generated model wide")]
         public bool NoBalanceMonitoringModelWide
         {
-            get { return data.ModelSettings.NoBalanceMonitoringModelWide; }
-            set { data.ModelSettings.NoBalanceMonitoringModelWide = value; }
+            get => data.ModelSettings.NoBalanceMonitoringModelWide;
+            set => data.ModelSettings.NoBalanceMonitoringModelWide = value;
         }
 
         [DynamicReadOnlyValidationMethod]

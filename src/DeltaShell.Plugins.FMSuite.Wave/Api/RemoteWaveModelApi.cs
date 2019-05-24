@@ -16,7 +16,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Api
         {
             RemotingTypeConverters.RegisterTypeConverter(new LoggerToProtoConverter());
             remoteInstanceApi =
-                RemoteInstanceContainer.CreateInstance<IWaveModelApi, WaveModelApi>(Environment.Is64BitOperatingSystem, null, showConsole, typeof(DimrApi).Assembly);}
+                RemoteInstanceContainer.CreateInstance<IWaveModelApi, WaveModelApi>(
+                    Environment.Is64BitOperatingSystem, null, showConsole, typeof(DimrApi).Assembly);
+        }
 
         public int Initialize(string mdwFilePath)
         {
@@ -67,26 +69,27 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Api
         {
             remoteInstanceApi.SetValues(variable, index, values);
         }
-        
-        public DateTime StartTime { get { return remoteInstanceApi.StartTime; } }
-        public DateTime StopTime { get { return remoteInstanceApi.StopTime; } }
 
-        public DateTime CurrentTime
+        public DateTime StartTime => remoteInstanceApi.StartTime;
+        public DateTime StopTime => remoteInstanceApi.StopTime;
+
+        public DateTime CurrentTime => remoteInstanceApi.CurrentTime;
+
+        public TimeSpan TimeStep => remoteInstanceApi.TimeStep;
+        public string[] VariableNames => remoteInstanceApi.VariableNames;
+
+        public Logger Logger
         {
-            get { return remoteInstanceApi.CurrentTime; }
+            get => remoteInstanceApi.Logger;
+            set => remoteInstanceApi.Logger = value;
         }
-
-        public TimeSpan TimeStep { get { return remoteInstanceApi.TimeStep; } }
-        public string[] VariableNames { get { return remoteInstanceApi.VariableNames; } }
-        public Logger Logger { get { return remoteInstanceApi.Logger; } set { remoteInstanceApi.Logger = value; } }
 
         public DateTime ReferenceDateTime
         {
-            get { return remoteInstanceApi.ReferenceDateTime; }
-            set { remoteInstanceApi.ReferenceDateTime = value; }
+            get => remoteInstanceApi.ReferenceDateTime;
+            set => remoteInstanceApi.ReferenceDateTime = value;
         }
 
-        
         ~RemoteWaveModelApi()
         {
             // in case someone forgets to dispose..
@@ -96,7 +99,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Api
         public void Dispose()
         {
             if (disposed)
+            {
                 return;
+            }
 
             GC.SuppressFinalize(this);
             DisposeInternal();
@@ -105,7 +110,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Api
         private void DisposeInternal()
         {
             if (remoteInstanceApi != null)
+            {
                 RemoteInstanceContainer.RemoveInstance(remoteInstanceApi);
+            }
+
             remoteInstanceApi = null;
             disposed = true;
             Thread.Sleep(100); // wait for process to truly exit

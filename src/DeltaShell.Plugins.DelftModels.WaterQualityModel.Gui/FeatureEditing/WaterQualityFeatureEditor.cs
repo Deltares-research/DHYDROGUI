@@ -7,6 +7,7 @@ using SharpMap.Api.Layers;
 using SharpMap.Editors;
 using SharpMap.Editors.Interactors;
 using SharpMap.Layers;
+using SharpMap.Styles;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.FeatureEditing
 {
@@ -15,7 +16,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.FeatureEditing
         public override IFeatureInteractor CreateInteractor(ILayer layer, IFeature feature)
         {
             var vectorLayer = layer as VectorLayer;
-            var vectorStyle = (vectorLayer != null ? vectorLayer.Style : null);
+            VectorStyle vectorStyle = vectorLayer != null ? vectorLayer.Style : null;
 
             if (feature.Geometry is IPoint)
             {
@@ -27,7 +28,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.FeatureEditing
 
         public override IFeature AddNewFeatureByGeometry(ILayer layer, IGeometry geometry)
         {
-            var addNewFeatureByGeometry = base.AddNewFeatureByGeometry(layer, geometry);
+            IFeature addNewFeatureByGeometry = base.AddNewFeatureByGeometry(layer, geometry);
             var load = addNewFeatureByGeometry as WaterQualityLoad;
             if (load != null)
             {

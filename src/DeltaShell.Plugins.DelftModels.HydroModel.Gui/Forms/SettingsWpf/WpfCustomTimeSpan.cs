@@ -12,38 +12,45 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
     public class WpfCustomTimeSpan : TimeSpanUpDown
     {
         private bool[] timeFrameIsChecked = new bool[5];
-       
+
         /// <summary>
-        /// Converts the a <see cref="string"/> value into a <see cref="TimeSpan"/> object.
+        /// Converts the a <see cref="string" /> value into a <see cref="TimeSpan" /> object.
         /// </summary>
-        /// <param name="text">The <see cref="string"/> value to convert.</param>
-        /// <returns>A <see cref="TimeSpan"/> object that represents the <paramref name="text"/> argument.</returns>
-        /// <remarks><param name="text"/> is expected to be in the form "dd'd' hh:mm:ss.fff" or "dd hh:mm:ss.fff". If
-        /// not, it will return a default <see cref="TimeSpan"/> object.</remarks>
+        /// <param name="text"> The <see cref="string" /> value to convert. </param>
+        /// <returns> A <see cref="TimeSpan" /> object that represents the <paramref name="text" /> argument. </returns>
+        /// <remarks>
+        /// <param name="text" />
+        /// is expected to be in the form "dd'd' hh:mm:ss.fff" or "dd hh:mm:ss.fff". If
+        /// not, it will return a default <see cref="TimeSpan" /> object.
+        /// </remarks>
         protected override TimeSpan? ConvertTextToValue(string text)
         {
             ReAssignCurrentSelectedTimeFrame();
             if (string.IsNullOrEmpty(text))
+            {
                 return Value;
-           
+            }
+
             //dd'd' hh:mm:ss.fff
             // Separate the above fields
-            var dhhmmssfff = text.Split(' ',':','.');
+            string[] dhhmmssfff = text.Split(' ', ':', '.');
             if (dhhmmssfff[0].Contains("d"))
             {
-                var expValue = dhhmmssfff[0].Split('d');
+                string[] expValue = dhhmmssfff[0].Split('d');
                 dhhmmssfff[0] = expValue[0];
             }
 
-            if ( dhhmmssfff.Length !=5 )
+            if (dhhmmssfff.Length != 5)
+            {
                 return new TimeSpan(0);
+            }
 
-            var d = int.Parse(dhhmmssfff[0]);
-            var hh = ConvertToValidDigit(dhhmmssfff[1]);
-            var mm = ConvertToValidDigit(dhhmmssfff[2]);
-            var ss = ConvertToValidDigit(dhhmmssfff[3]);
-            var fff = ConvertToValidDigit(dhhmmssfff[4]);
-            
+            int d = int.Parse(dhhmmssfff[0]);
+            int hh = ConvertToValidDigit(dhhmmssfff[1]);
+            int mm = ConvertToValidDigit(dhhmmssfff[2]);
+            int ss = ConvertToValidDigit(dhhmmssfff[3]);
+            int fff = ConvertToValidDigit(dhhmmssfff[4]);
+
             var currentTimeSpan = new TimeSpan(d, hh, mm, ss, fff);
             return currentTimeSpan;
         }
@@ -55,14 +62,16 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
         }
 
         /// <summary>
-        /// Converts the inner <see cref="TimeSpan"/> value into a string representation of the form "dd'd' hh:mm:ss.fff".
+        /// Converts the inner <see cref="TimeSpan" /> value into a string representation of the form "dd'd' hh:mm:ss.fff".
         /// </summary>
         protected override string ConvertValueToText()
         {
             if (!Value.HasValue)
+            {
                 return string.Empty;
+            }
 
-            return string.Format(@"{0:%d\d\ hh\:mm\:ss\.fff}", this.Value.Value);
+            return string.Format(@"{0:%d\d\ hh\:mm\:ss\.fff}", Value.Value);
         }
 
         protected override void OnTextChanged(string previousValue, string currentValue)
@@ -70,12 +79,15 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
             if (string.IsNullOrEmpty(currentValue))
             {
                 if (UpdateValueOnEnterKey)
+                {
                     return;
+                }
+
                 Value = new TimeSpan?();
             }
             else
             {
-                TimeSpan? nullable = this.Value;
+                TimeSpan? nullable = Value;
                 if (nullable.HasValue)
                 {
                     nullable = Value;
@@ -83,14 +95,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
 
                 if (!TimeSpan.TryParse(currentValue, out TimeSpan result))
                 {
-                    string[] strArray = currentValue.Split(' ',':', '.');
+                    string[] strArray = currentValue.Split(' ', ':', '.');
                     if (strArray.Count<string>() >= 2 && !strArray.Any(x => string.IsNullOrEmpty(x)))
                     {
-                        var days = strArray[0].Split('d');
+                        string[] days = strArray[0].Split('d');
                         result = new TimeSpan(int.Parse(days[0]),
                                               int.Parse(strArray[1]),
                                               int.Parse(strArray[2]),
-                                              (this.ShowSeconds ? int.Parse(strArray[2]) : 0),
+                                              ShowSeconds ? int.Parse(strArray[2]) : 0,
                                               int.Parse(strArray.Last()));
                     }
                 }
@@ -101,7 +113,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
         }
 
         /// <summary>
-        /// Event that fires when the value of an selected date time part of <see cref="TimeSpan"/> is increased".
+        /// Event that fires when the value of an selected date time part of <see cref="TimeSpan" /> is increased".
         /// </summary>
         protected override void OnIncrement()
         {
@@ -113,7 +125,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
         }
 
         /// <summary>
-        /// Event that fires when the value of an selected date time part of <see cref="TimeSpan"/> is decreased".
+        /// Event that fires when the value of an selected date time part of <see cref="TimeSpan" /> is decreased".
         /// </summary>
         protected override void OnDecrement()
         {
@@ -128,24 +140,28 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
         {
             if (Value != null)
             {
-                var currentTimeSpan = (TimeSpan)Value;
+                var currentTimeSpan = (TimeSpan) Value;
 
                 if (CurrentDateTimePart == DateTimePart.Day)
                 {
                     currentTimeSpan = currentTimeSpan.Add(new TimeSpan(value, 0, 0, 0, 0));
                 }
+
                 if (CurrentDateTimePart == DateTimePart.Hour24)
                 {
                     currentTimeSpan = currentTimeSpan.Add(new TimeSpan(0, value, 0, 0, 0));
                 }
+
                 if (CurrentDateTimePart == DateTimePart.Minute)
                 {
                     currentTimeSpan = currentTimeSpan.Add(new TimeSpan(0, 0, value, 0, 0));
                 }
+
                 if (CurrentDateTimePart == DateTimePart.Second)
                 {
                     currentTimeSpan = currentTimeSpan.Add(new TimeSpan(0, 0, 0, value, 0));
                 }
+
                 if (CurrentDateTimePart == DateTimePart.Millisecond)
                 {
                     currentTimeSpan = currentTimeSpan.Add(new TimeSpan(0, 0, 0, 0, value));
@@ -162,27 +178,31 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
             {
                 timeFrameIsChecked[0] = true;
                 CurrentDateTimePart = CurrentDateTimePart - 5;
-                
+
                 return;
             }
+
             if (CurrentDateTimePart == DateTimePart.Minute && !timeFrameIsChecked[1])
             {
                 timeFrameIsChecked[1] = true;
                 CurrentDateTimePart = CurrentDateTimePart - 1;
                 return;
             }
+
             if (CurrentDateTimePart == DateTimePart.Second && !timeFrameIsChecked[2])
             {
                 timeFrameIsChecked[2] = true;
                 CurrentDateTimePart = CurrentDateTimePart - 6;
                 return;
             }
+
             if (CurrentDateTimePart == DateTimePart.Millisecond && !timeFrameIsChecked[3])
             {
                 timeFrameIsChecked[3] = true;
                 CurrentDateTimePart = CurrentDateTimePart - 5;
                 return;
             }
+
             if (CurrentDateTimePart == DateTimePart.Day && !timeFrameIsChecked[4])
             {
                 timeFrameIsChecked[4] = true;

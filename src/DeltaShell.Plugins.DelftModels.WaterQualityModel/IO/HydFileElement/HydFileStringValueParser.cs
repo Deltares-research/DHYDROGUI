@@ -8,22 +8,23 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO.HydFileElement
 {
     public static class HydFileStringValueParser
     {
-        private static readonly IDictionary<string, HydroDynamicModelType> HydFileGeometryDefinitionMapping = new Dictionary
-            <string, HydroDynamicModelType>
-            {
-                {"unstructured",HydroDynamicModelType.Unstructured},
-                {"curvilinear-grid",HydroDynamicModelType.Curvilinear},
-                {"finite-elements",HydroDynamicModelType.FiniteElements},
-                {"network",HydroDynamicModelType.HydroNetwork},
-            };
+        private static readonly IDictionary<string, HydroDynamicModelType> HydFileGeometryDefinitionMapping =
+            new Dictionary
+                <string, HydroDynamicModelType>
+                {
+                    {"unstructured", HydroDynamicModelType.Unstructured},
+                    {"curvilinear-grid", HydroDynamicModelType.Curvilinear},
+                    {"finite-elements", HydroDynamicModelType.FiniteElements},
+                    {"network", HydroDynamicModelType.HydroNetwork},
+                };
 
         private static readonly IDictionary<string, LayerType> HydFileLayerTypeMapping = new Dictionary
             <string, LayerType>
-        {
-            { "", LayerType.Sigma },
-            { "sigma", LayerType.Sigma },
-            { "z-layers", LayerType.ZLayer },
-        };
+            {
+                {"", LayerType.Sigma},
+                {"sigma", LayerType.Sigma},
+                {"z-layers", LayerType.ZLayer},
+            };
 
         /// <summary>
         /// Describes the pattern "[some text][optional layer type post fix that is whitespace separated]".
@@ -36,7 +37,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO.HydFileElement
 
             object result = null;
 
-            if (typeof (T) == typeof (int))
+            if (typeof(T) == typeof(int))
             {
                 result = ParseInt(textToParse, culture);
             }
@@ -91,17 +92,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO.HydFileElement
                 return LayerType.Undefined;
             }
 
-            var match = Regex.Match(textToParse.ToLower(), geometryDefinitionRegex);
+            Match match = Regex.Match(textToParse.ToLower(), geometryDefinitionRegex);
             if (match.Success)
             {
-                var lowerTextToParse = match.Groups["layerType"].Value;
+                string lowerTextToParse = match.Groups["layerType"].Value;
                 if (HydFileLayerTypeMapping.ContainsKey(lowerTextToParse))
                 {
                     return HydFileLayerTypeMapping[lowerTextToParse];
                 }
             }
 
-            throw new FormatException(String.Format("The text '{0}' is not a valid geometry definition string.", textToParse));
+            throw new FormatException(string.Format("The text '{0}' is not a valid geometry definition string.",
+                                                    textToParse));
         }
 
         private static HydroDynamicModelType ParseHydFileGeometryDefinition(string textToParse, CultureInfo culture)
@@ -111,17 +113,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO.HydFileElement
                 return HydroDynamicModelType.Undefined;
             }
 
-            var match = Regex.Match(textToParse.ToLower(), geometryDefinitionRegex);
+            Match match = Regex.Match(textToParse.ToLower(), geometryDefinitionRegex);
             if (match.Success)
             {
-                var lowerTextToParse = match.Groups["geometryDefinition"].Value;
+                string lowerTextToParse = match.Groups["geometryDefinition"].Value;
                 if (HydFileGeometryDefinitionMapping.ContainsKey(lowerTextToParse))
                 {
                     return HydFileGeometryDefinitionMapping[lowerTextToParse];
                 }
             }
 
-            throw new FormatException(String.Format("The text '{0}' is not a valid geometry definition string.", textToParse));
+            throw new FormatException(string.Format("The text '{0}' is not a valid geometry definition string.",
+                                                    textToParse));
         }
 
         private static TimeSpan ParseTimeSpan(string textToParse, CultureInfo culture)
@@ -132,14 +135,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO.HydFileElement
             }
 
             // Regex using capture groups to match to the pattern 'ddddddddhhmmss':
-            var match = Regex.Match(textToParse, @"'(?<day>\d{8})(?<hour>\d{2})(?<minute>\d{2})(?<second>\d{2})'");
+            Match match = Regex.Match(textToParse, @"'(?<day>\d{8})(?<hour>\d{2})(?<minute>\d{2})(?<second>\d{2})'");
             if (!match.Success)
-                throw new FormatException(String.Format("Timespan ({0}) is not given in expected format of 'ddddddddhhmmss'.", textToParse));
+            {
+                throw new FormatException(
+                    string.Format("Timespan ({0}) is not given in expected format of 'ddddddddhhmmss'.", textToParse));
+            }
 
-            var day = int.Parse(match.Groups["day"].Value);
-            var hour = int.Parse(match.Groups["hour"].Value);
-            var minute = int.Parse(match.Groups["minute"].Value);
-            var second = int.Parse(match.Groups["second"].Value);
+            int day = int.Parse(match.Groups["day"].Value);
+            int hour = int.Parse(match.Groups["hour"].Value);
+            int minute = int.Parse(match.Groups["minute"].Value);
+            int second = int.Parse(match.Groups["second"].Value);
 
             try
             {
@@ -153,18 +159,24 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO.HydFileElement
 
         private static DateTime ParseDateTime(string textToParse, CultureInfo culture)
         {
-            if (String.IsNullOrWhiteSpace(textToParse))
+            if (string.IsNullOrWhiteSpace(textToParse))
             {
                 return DateTime.MinValue;
             }
 
             DateTime result;
-            if (DateTime.TryParseExact(textToParse.Trim('\''), new[] { "yyyyMMddHHmmss", "yyyyMMdd HHmmss", "HH:mm:ss,dd-MM-yyyy", "HH:mm:ss, dd-MM-yyyy" }, culture, DateTimeStyles.None, out result))
+            if (DateTime.TryParseExact(textToParse.Trim('\''), new[]
+            {
+                "yyyyMMddHHmmss",
+                "yyyyMMdd HHmmss",
+                "HH:mm:ss,dd-MM-yyyy",
+                "HH:mm:ss, dd-MM-yyyy"
+            }, culture, DateTimeStyles.None, out result))
             {
                 return result;
             }
 
-            throw new FormatException(String.Format("'{0}' could not be converted to a valid DateTime", textToParse));
+            throw new FormatException(string.Format("'{0}' could not be converted to a valid DateTime", textToParse));
         }
 
         private static T[] ParseArray<T>(string textToParse, CultureInfo culture)
@@ -173,11 +185,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO.HydFileElement
             {
                 return new T[0];
             }
-            
-            var items = Regex.Split(textToParse, @"\s+").Where(s => !String.IsNullOrWhiteSpace(s)).ToArray();
+
+            string[] items = Regex.Split(textToParse, @"\s+").Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
 
             var array = new T[items.Length];
-            for (int i = 0; i < items.Length; i++)
+            for (var i = 0; i < items.Length; i++)
             {
                 array[i] = Parse<T>(items[i], culture);
             }
@@ -191,13 +203,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO.HydFileElement
             {
                 return string.Empty;
             }
-            
-            var match = Regex.Match(textToParse, "'(?<fileName>.+)'");
+
+            Match match = Regex.Match(textToParse, "'(?<fileName>.+)'");
             if (match.Success)
             {
                 return match.Groups["fileName"].Value.Trim();
             }
-            
+
             throw new FormatException("No filename between \' characters is given.");
         }
 
@@ -210,14 +222,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO.HydFileElement
                 return result;
             }
 
-            var message = String.Format("Value ({0}) must fall within the range [{1}, {2}].", textToParse, double.MinValue, double.MaxValue);
+            string message = string.Format("Value ({0}) must fall within the range [{1}, {2}].", textToParse,
+                                           double.MinValue, double.MaxValue);
             throw new FormatException(message);
         }
 
         private static int ParseInt(string textToParse, CultureInfo culture)
         {
             int result;
-            if (String.IsNullOrWhiteSpace(textToParse))
+            if (string.IsNullOrWhiteSpace(textToParse))
             {
                 return 0;
             }
@@ -227,7 +240,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO.HydFileElement
                 return result;
             }
 
-            var message = String.Format("Value ({0}) must fall within the range [{1}, {2}].", textToParse, int.MinValue, int.MaxValue);
+            string message = string.Format("Value ({0}) must fall within the range [{1}, {2}].", textToParse,
+                                           int.MinValue, int.MaxValue);
             throw new FormatException(message);
         }
     }
