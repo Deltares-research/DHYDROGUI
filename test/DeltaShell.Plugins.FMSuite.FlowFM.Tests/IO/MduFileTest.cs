@@ -752,9 +752,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var mduFile = new MduFile();
             var originalArea = new HydroArea();
             var originalModelDefinition = new WaterFlowFMModelDefinition(mduDir, modelName);
-            var allFixedWeirsAndCorrespondingProperties = new Dictionary<FixedWeir, ModelFeatureCoordinateData<FixedWeir>>();
 
-            mduFile.Read(mduFileName, originalModelDefinition, originalArea, allFixedWeirsAndCorrespondingProperties);
+            mduFile.Read(mduFileName, originalModelDefinition, originalArea, null);
 
             var dryPointsOnArea = originalArea.DryPoints;
             Assert.AreEqual(8, dryPointsOnArea.Count);
