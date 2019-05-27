@@ -1,24 +1,14 @@
 ﻿using System;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
 using NUnit.Framework;
-using PostSharp.Aspects.Advices;
-using Xceed.Wpf.Toolkit;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
 {
     [TestFixture]
-    public class WpfCustomTimeSpanTest : WpfCustomTimeSpan
+    public class WpfCustomTimeSpanTest:WpfCustomTimeSpan
     {
         [Test]
         public void Test_CreateWpfCustomTimeSpan()
-        {
-            var control = new WpfCustomTimeSpan();
-
-            Assert.IsNotNull(control);
-        }
-
-        [Test]
-        public void Test2_CreateWpfCustomTimeSpan()
         {
             var control = new WpfCustomTimeSpan();
             Assert.IsNotNull(control);
@@ -29,7 +19,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
         [Test]
         [TestCase("thisIsNotATimeSpanValue")]
         [TestCase("0d 00h:00m:00s.000f")]
-        [TestCase("23d 13 01:61:61.1001")]
         [TestCase("10.10.10")]
         [TestCase("10:10:10:10")]
         [TestCase("10:10")]
@@ -37,13 +26,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
         {
             var control = new WpfCustomTimeSpan();
             Assert.IsNotNull(control);
-
+            
             //Expected:
             var expectedResult = new TimeSpan(0);
 
             //Ensure the value is converted as expected
             TimeSpan? convertedValue = null;
-            Assert.DoesNotThrow(() => convertedValue = base.ConvertTextToValue(text));
+            Assert.DoesNotThrow( () => convertedValue = base.ConvertTextToValue(text));
             Assert.IsNotNull(convertedValue);
             Assert.AreEqual(expectedResult, convertedValue);
         }
@@ -52,6 +41,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
         [TestCase("0d 00:00:00.000", 0, 0, 0, 0, 0)]
         [TestCase("0d 25:61:61.1001", 1, 2, 2, 2, 1)]
         [TestCase("23 01:61:61.1001", 23, 2, 2, 2, 1)]
+        [TestCase("23d 13 01:61:61.1001", 23, 2, 2, 2, 1)]
         public void Test_WpfCustomTimeSpan_ConvertTextToValue_Given_Valid_Input(string text, int d, int hh, int mm, int ss, int fff)
         {
             var control = new WpfCustomTimeSpan();
@@ -106,32 +96,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
             var convertedValue = string.Empty;
             Assert.DoesNotThrow(() => convertedValue = base.ConvertValueToText());
             Assert.AreEqual(expectedValue, convertedValue);
-        }
-        #endregion
-
-        #region DateTimePartSelection
-
-        [Test]
-        [TestCase("Day")]
-        [TestCase(1, 3, 5, 6, 7, "1d 03:05:06.007")]
-        [TestCase(0, 25, 61, 61, 1001, "1d 02:02:02.001")]
-        public void GivenWpfCustomTimeSpanValue_WhenSelectingCurrentDateTimePart_TheSelectedTimeSpanValueIsUpdatedOnlyOnce()
-        {
-            Value = new TimeSpan(0,0,0,0,0);
-            var timeSpanValue = Value.Value;
-           
-            //Current selected date time part is wrong at first selection
-            CurrentDateTimePart = DateTimePart.Day;
-            Assert.True(Value.HasValue);
-            Assert.DoesNotThrow(OnIncrement);
-
-            CurrentDateTimePart = DateTimePart.Day;
-            Assert.That(timeSpanValue.Milliseconds, Is.EqualTo(1));
-
-            //Day time part is selected for the second time but now correct value is updated
-            CurrentDateTimePart = DateTimePart.Day;
-            OnIncrement();
-            Assert.That(timeSpanValue.Days, Is.EqualTo(1));
         }
         #endregion
     }
