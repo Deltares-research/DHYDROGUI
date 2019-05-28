@@ -188,7 +188,7 @@ namespace DeltaShell.NGHS.IO.Grid
 
                         var netCdfVariable = netCdfFile.GetVariableByName(meshName + nodeZVariableName);
                         if (netCdfVariable == null)
-                            return;
+                            continue;
 
                         netCdfFile.ReDefine();
 
