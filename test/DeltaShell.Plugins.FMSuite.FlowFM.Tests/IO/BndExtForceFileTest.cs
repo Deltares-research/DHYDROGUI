@@ -150,7 +150,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var reader = new BndExtForceFile();
             var embankmentFilePath = Path.Combine(Directory.GetParent(boundaryFilePath).FullName, "Embankment01_bnk.pliz");
             var warningMessage = $"Embankment file '{embankmentFilePath}' with only 1 point detected and it will not be imported.";
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => reader.Read(boundaryFilePath, modelDefinition), warningMessage);
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => reader.Read(boundaryFilePath, modelDefinition, boundaryFilePath), warningMessage);
 
             // Then
             Assert.That(modelDefinition.Embankments.Count, Is.EqualTo(1), "Embankments with just one coordinate in its geometry should not end up in an FM model.");
@@ -170,7 +170,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var newModelDefinition = new WaterFlowFMModelDefinition();
 
             var reader = new BndExtForceFile();
-            reader.Read("testbnd.ext", newModelDefinition);
+            reader.Read("testbnd.ext", newModelDefinition, "testbnd.ext");
 
             // Then
             Assert.AreEqual(2, newModelDefinition.Boundaries.Count);
@@ -178,14 +178,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
-        public void ReadMixedQuantities()
+        [TestCase("BcFiles\\MixedQuantities.ext", "BcFiles\\MixedQuantities.ext"), Category(TestCategory.DataAccess)]
+        [TestCase("BcFiles\\ModelBndExtForceFileAndMduInDifferentFoldersPathsRelativeToMdu\\BndExtFolder\\MixedQuantities.ext",
+             "BcFiles\\ModelBndExtForceFileAndMduInDifferentFoldersPathsRelativeToMdu\\MduFolder\\EmptyMduFile.mdu"), Category(TestCategory.DataAccess)]
+        [TestCase("BcFiles\\ModelBndExtForceFileAndMduInDifferentFoldersPathsRelativeToBndExt\\BndExtFolder\\MixedQuantities.ext",
+             "BcFiles\\ModelBndExtForceFileAndMduInDifferentFoldersPathsRelativeToBndExt\\BndExtFolder\\MixedQuantities.ext"), Category(TestCategory.DataAccess)]
+        public void ReadMixedQuantities(string bndExtFilePath, string bndExtSubFilesReferenceFilePath)
         {
-            var testFilePath = TestHelper.GetTestFilePath("BcFiles\\MixedQuantities.ext");
+            var absoluteBndExtFilePath = TestHelper.GetTestFilePath(bndExtFilePath);
+            var absoluteBndExtSubFilesReferenceFilePath = TestHelper.GetTestFilePath(bndExtSubFilesReferenceFilePath);
+
             var modelDefinition = new WaterFlowFMModelDefinition();
 
             var reader = new BndExtForceFile();
-            reader.Read(testFilePath, modelDefinition);
+            reader.Read(absoluteBndExtFilePath, modelDefinition, absoluteBndExtSubFilesReferenceFilePath);
 
             Assert.AreEqual(1, modelDefinition.BoundaryConditionSets.Count);
             Assert.AreEqual(2, modelDefinition.BoundaryConditionSets[0].BoundaryConditions.Count);
@@ -242,7 +248,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var newModelDefinition = new WaterFlowFMModelDefinition();
 
             var reader = new BndExtForceFile();
-            reader.Read("testbnd.ext", newModelDefinition);
+            reader.Read("testbnd.ext", newModelDefinition, "testbnd.ext");
 
             Assert.AreEqual(2, newModelDefinition.Boundaries.Count);
             Assert.AreEqual(2, newModelDefinition.BoundaryConditionSets.Count);
@@ -295,7 +301,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var newModelDefinition = new WaterFlowFMModelDefinition();
 
             var reader = new BndExtForceFile();
-            reader.Read("testbnd.ext", newModelDefinition);
+            reader.Read("testbnd.ext", newModelDefinition, "testbnd.ext");
 
             // Then
             Assert.AreEqual(thatcherHarlemanTimeLag,
@@ -348,7 +354,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var newModelDefinition = new WaterFlowFMModelDefinition();
 
             var reader = new BndExtForceFile();
-            reader.Read("testbnd.ext", newModelDefinition);
+            reader.Read("testbnd.ext", newModelDefinition, "testbnd.ext");
 
             Assert.AreEqual(2, newModelDefinition.Boundaries.Count);
             Assert.AreEqual(2, newModelDefinition.BoundaryConditionSets.Count);
@@ -411,7 +417,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var newModelDefinition = new WaterFlowFMModelDefinition();
 
             var reader = new BndExtForceFile();
-            reader.Read("testbnd.ext", newModelDefinition);
+            reader.Read("testbnd.ext", newModelDefinition, "testbnd.ext");
 
             Assert.AreEqual(2, newModelDefinition.Boundaries.Count);
             Assert.AreEqual(2, newModelDefinition.BoundaryConditionSets.Count);
@@ -471,7 +477,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var newModelDefinition = new WaterFlowFMModelDefinition();
 
             var reader = new BndExtForceFile();
-            reader.Read("testbnd.ext", newModelDefinition);
+            reader.Read("testbnd.ext", newModelDefinition, "testbnd.ext");
 
             Assert.AreEqual(2, newModelDefinition.Boundaries.Count);
             Assert.AreEqual(2, newModelDefinition.BoundaryConditionSets.Count);
@@ -551,7 +557,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var newModelDefinition = new WaterFlowFMModelDefinition();
 
             var reader = new BndExtForceFile();
-            reader.Read("testbnd.ext", newModelDefinition);
+            reader.Read("testbnd.ext", newModelDefinition, "testbnd.ext");
 
             Assert.AreEqual(2, newModelDefinition.Boundaries.Count);
             Assert.AreEqual(2, newModelDefinition.BoundaryConditionSets.Count);
@@ -613,7 +619,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var newModelDefinition = new WaterFlowFMModelDefinition();
 
             var reader = new BndExtForceFile();
-            reader.Read("testbnd.ext", newModelDefinition);
+            reader.Read("testbnd.ext", newModelDefinition, "testbnd.ext");
 
             Assert.AreEqual(2, newModelDefinition.Boundaries.Count);
             Assert.AreEqual(2, newModelDefinition.BoundaryConditionSets.Count);
@@ -709,7 +715,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var newModelDefinition = new WaterFlowFMModelDefinition();
 
             var reader = new BndExtForceFile();
-            reader.Read("testbnd.ext", newModelDefinition);
+            reader.Read("testbnd.ext", newModelDefinition, "testbnd.ext");
 
             Assert.AreEqual(2, newModelDefinition.Boundaries.Count);
             Assert.AreEqual(2, newModelDefinition.BoundaryConditionSets.Count);
@@ -737,7 +743,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var def = new WaterFlowFMModelDefinition();
             var extPath = TestHelper.GetTestFilePath(@"banks\flooding1d2d_bnd.ext");
 
-            new BndExtForceFile().Read(extPath, def);
+            new BndExtForceFile().Read(extPath, def, extPath);
 
             Assert.AreEqual(0, def.Boundaries.Count);
             Assert.AreEqual(0, def.BoundaryConditionSets.Count);
@@ -747,7 +753,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             new BndExtForceFile().Write(newExtPath, def);
 
             var newDef = new WaterFlowFMModelDefinition();
-            new BndExtForceFile().Read(newExtPath, newDef);
+            new BndExtForceFile().Read(newExtPath, newDef, newExtPath);
 
             Assert.AreEqual(0, newDef.Boundaries.Count);
             Assert.AreEqual(0, newDef.BoundaryConditionSets.Count);
@@ -875,7 +881,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             bndExtForceFile.Write(extFileName, model.ModelDefinition);
             var modelDefinition = new WaterFlowFMModelDefinition(Path.GetTempPath(),"myModel");
             bndExtForceFile = new BndExtForceFile();
-            bndExtForceFile.Read(extFileName, modelDefinition);
+            bndExtForceFile.Read(extFileName, modelDefinition, extFileName);
         }
 
         [Test]

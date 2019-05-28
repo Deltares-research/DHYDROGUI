@@ -77,17 +77,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
         public bool WriteToDisk { get; set; }
 
-        private string filePath;
+        private string BndExtFilePath { get; set; }
 
-        private string FilePath
+        private string BndExtSubFilesReferenceFilePath { get; set; }
+
+        private string GetFullPathForReading(string relativePath)
         {
-            get => filePath;
-            set => filePath = value;
+            return Path.Combine(Path.GetDirectoryName(BndExtSubFilesReferenceFilePath), relativePath);
         }
 
-        private string GetFullPath(string relativePath)
+        private string GetFullPathForWriting(string relativePath)
         {
-            return Path.Combine(Path.GetDirectoryName(FilePath), relativePath);
+            return Path.Combine(Path.GetDirectoryName(BndExtFilePath), relativePath);
         }
 
         public BndExtForceFile()
@@ -116,7 +117,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                            IList<BoundaryConditionSet> boundaryConditionSets, IList<Embankment> embankments,
                            WaterFlowFMProperty modelProperty, DateTime refDate)
         {
-            FilePath = filePath;
+            BndExtFilePath = filePath;
             IList<DelftIniCategory> bndExtForceFileItems =
                 WriteBndExtForceFileSubFiles(modelDefinitionModelName, boundaryConditionSets, refDate);
             IList<DelftIniCategory> embankmentForceFileItems = WriteEmbankmentFiles(embankments);
@@ -125,18 +126,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             if (allItems.Count > 0)
             {
                 WriteBndExtForceFile(allItems);
-                modelProperty.SetValueAsString(Path.GetFileName(FilePath));
+                modelProperty.SetValueAsString(Path.GetFileName(BndExtFilePath));
             }
             else
             {
-                FileUtils.DeleteIfExists(FilePath);
+                FileUtils.DeleteIfExists(BndExtFilePath);
                 modelProperty.SetValueAsString(string.Empty);
             }
         }
 
         private void WriteBndExtForceFile(IEnumerable<DelftIniCategory> bndExtForceFileItems)
         {
-            OpenOutputFile(FilePath);
+            OpenOutputFile(BndExtFilePath);
             try
             {
                 foreach (DelftIniCategory bndExtForceFileItem in bndExtForceFileItems)
@@ -245,7 +246,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
                 if (WriteToDisk)
                 {
-                    new PlizFile<Embankment>().Write(GetFullPath(existingFile), new[]
+                    new PlizFile<Embankment>().Write(GetFullPathForWriting(existingFile), new[]
                     {
                         embankment
                     });
@@ -276,7 +277,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
                 if (WriteToDisk)
                 {
-                    new PliFile<Feature2D>().Write(GetFullPath(existingFile), new[]
+                    new PliFile<Feature2D>().Write(GetFullPathForWriting(existingFile), new[]
                     {
                         boundaryConditionSet.Feature
                     });
@@ -414,7 +415,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 foreach (KeyValuePair<string, IList<Tuple<IBoundaryCondition, BoundaryConditionSet>>>
                              fileNamesToBoundaryCondition in fileNamesToBoundaryConditions)
                 {
-                    string fullPath = GetFullPath(fileNamesToBoundaryCondition.Key);
+                    string fullPath = GetFullPathForWriting(fileNamesToBoundaryCondition.Key);
 
                     bcFile.CorrectionFile = fullPath.EndsWith("_corr.bc");
 
@@ -432,9 +433,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
         #region read logic
 
-        public void Read(string bndExtForceFilePath, WaterFlowFMModelDefinition modelDefinition)
+        public void Read(string bndExtForceFilePath, WaterFlowFMModelDefinition modelDefinition, string bndExtSubFilesReferenceFilePath)
         {
-            FilePath = bndExtForceFilePath;
+            BndExtFilePath = bndExtForceFilePath;
+            BndExtSubFilesReferenceFilePath = bndExtSubFilesReferenceFilePath;
 
             IList<DelftIniCategory> bndBlocks = new DelftIniReader().ReadDelftIniFile(bndExtForceFilePath);
 
@@ -458,11 +460,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
                 if (string.IsNullOrEmpty(locationFile))
                 {
-                    Log.WarnFormat("Empty location file encountered in boundary ext-force file {0}", FilePath);
+                    Log.WarnFormat("Empty location file encountered in boundary ext-force file {0}", BndExtFilePath);
                     continue;
                 }
 
-                string pliFilePath = GetFullPath(locationFile);
+                string pliFilePath = GetFullPathForReading(locationFile);
 
                 if (!File.Exists(pliFilePath))
                 {
@@ -693,7 +695,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             foreach (DelftIniCategory delftIniCategory in bndBlocks)
             {
                 IEnumerable<string> bcFiles = delftIniCategory.GetPropertyValues(ForcingFileKey);
-                bcFilePaths.AddRange(bcFiles.Select(GetFullPath));
+                bcFilePaths.AddRange(bcFiles.Select(GetFullPathForReading));
             }
 
             return bcFilePaths;

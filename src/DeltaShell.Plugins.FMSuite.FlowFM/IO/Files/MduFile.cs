@@ -1211,7 +1211,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 if (forceFilePath != null && File.Exists(forceFilePath))
                 {
                     BoundaryExternalForcingsFile = new BndExtForceFile();
-                    BoundaryExternalForcingsFile.Read(forceFilePath, modelDefinition);
+
+                    string bndExtSubFilesReferenceFilePath = pathsRelativeToParent ? forceFilePath : filePath;
+
+                    BoundaryExternalForcingsFile.Read(forceFilePath, modelDefinition, bndExtSubFilesReferenceFilePath);
                 }
             }
 

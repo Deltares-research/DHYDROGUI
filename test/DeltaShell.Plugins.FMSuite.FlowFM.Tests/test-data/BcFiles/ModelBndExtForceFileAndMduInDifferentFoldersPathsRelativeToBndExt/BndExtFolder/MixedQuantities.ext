@@ -1,0 +1,10 @@
+[boundary]
+quantity=waterlevelbnd
+locationfile=../MduFolder/MixedQuantities.pli
+forcingfile=../MduFolder/MixedQuantities.bc
+
+[boundary]
+quantity=salinitybnd
+locationfile=../MduFolder/MixedQuantities.pli
+forcingfile=../MduFolder/MixedQuantities.bc
+return_time=42
