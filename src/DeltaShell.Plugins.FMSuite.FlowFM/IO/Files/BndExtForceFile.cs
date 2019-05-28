@@ -77,9 +77,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
         public bool WriteToDisk { get; set; }
 
-        private string BndExtFilePath { get; set; }
+        private string bndExtFilePath;
 
-        private string BndExtSubFilesReferenceFilePath { get; set; }
+        private string BndExtFilePath
+        {
+            get => bndExtFilePath;
+            set => bndExtFilePath = value;
+        }
+        
+        private string bndExtSubFilesReferenceFilePath;
+
+        private string BndExtSubFilesReferenceFilePath
+        {
+            get => bndExtSubFilesReferenceFilePath;
+            set => bndExtSubFilesReferenceFilePath = value;
+        }
 
         private string GetFullPathForReading(string relativePath)
         {

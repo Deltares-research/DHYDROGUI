@@ -250,7 +250,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 /* Write pli file seperately, is not responsibility of MorphologyFile */
                 var bndExtForceFile = new BndExtForceFile {WriteToDisk = true};
-                TypeUtils.SetField(bndExtForceFile, "filePath", morFile);
+                TypeUtils.SetField(bndExtForceFile, "bndExtFilePath", morFile);
                 TypeUtils.CallPrivateMethod(bndExtForceFile, "WritePolyLines", modelDefinition.BoundaryConditionSets);
 
                 /* Write bcm file seperately, is not responsibility of MorphologyFile */
