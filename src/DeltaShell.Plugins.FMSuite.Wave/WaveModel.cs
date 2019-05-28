@@ -490,10 +490,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             ObservationPoints = ModelDefinition.ObservationPoints;
             ObservationCrossSections = ModelDefinition.ObservationCrossSections;
 
-            disposableItems.Add(new FeatureDataSyncer<Feature2D, WaveBoundaryCondition>(Boundaries, BoundaryConditions,
-                                                                                        f =>
-                                                                                            CreateWaveBoundaryCondition(
-                                                                                                f, this)));
+            disposableItems.Add(new FeatureDataSyncer<Feature2D, WaveBoundaryCondition>(
+                                    Boundaries,
+                                    BoundaryConditions,
+                                    f => CreateWaveBoundaryCondition(f, this)));
         }
 
         private static void BuildModelFromMdw(WaveModel model, string mdwFilePath)

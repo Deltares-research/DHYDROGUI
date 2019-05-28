@@ -76,16 +76,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                     {
                         KeyValuePair<DateTime, IDictionary<string, string>> data = substanceData;
                         IEnumerable<string> substanceDataValues = substancesForLocation.Select(substance =>
-                                                                                                   data
-                                                                                                       .Value
-                                                                                                       .ContainsKey(
-                                                                                                           substance)
-                                                                                                       ? data
-                                                                                                         .Value[
-                                                                                                             substance]
-                                                                                                         .ToString(
-                                                                                                             CultureInfo
-                                                                                                                 .InvariantCulture)
+                                                                                                   data.Value.ContainsKey(substance)
+                                                                                                       ? data.Value[substance].ToString(CultureInfo.InvariantCulture)
                                                                                                        : "-999");
                         writer.WriteLine("{0} {1}",
                                          substanceData.Key.ToString("yyyy/MM/dd-HH:mm:ss",

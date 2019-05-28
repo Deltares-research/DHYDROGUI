@@ -128,13 +128,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.ModelDefinition
                         propertiesDefinitionFile, "MdwGroup");
 
                 // override default reference date property value with current date
-                ModelPropertyDefinition referenceDatePropertyDefinition = ModelSchema
-                                                                          .ModelDefinitionCategory[
-                                                                              KnownWaveCategories.GeneralCategory]
-                                                                          ?.PropertyDefinitions
-                                                                          .FirstOrDefault(
-                                                                              p => p.FilePropertyName ==
-                                                                                   KnownWaveProperties.ReferenceDate);
+                ModelPropertyDefinition referenceDatePropertyDefinition =
+                    ModelSchema.ModelDefinitionCategory[KnownWaveCategories.GeneralCategory]?
+                               .PropertyDefinitions
+                               .FirstOrDefault(p => p.FilePropertyName == KnownWaveProperties.ReferenceDate);
+
                 if (referenceDatePropertyDefinition != null)
                 {
                     referenceDatePropertyDefinition.DefaultValueAsString = DateTime.Now.ToString("yyyy-MM-dd");

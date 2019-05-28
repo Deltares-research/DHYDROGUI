@@ -75,9 +75,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                 }
                 else
                 {
-                    WaveModel ownerWaveModel = GetWaveModels
-                                               ?.Invoke().FirstOrDefault(
-                                                   w => w.GetAllItemsRecursive().Contains(discreteGrid));
+                    WaveModel ownerWaveModel =
+                        GetWaveModels?.Invoke().FirstOrDefault(w => w.GetAllItemsRecursive()
+                                                                     .Contains(discreteGrid));
+
                     coordinateSystem = ownerWaveModel == null ? null : ownerWaveModel.CoordinateSystem;
                 }
 

@@ -20,11 +20,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
         /// <remarks> <paramref name="waveBoundaryConditions" /> should not be null. </remarks>
         public static ValidationReport Validate(IEnumerable<WaveBoundaryCondition> waveBoundaryConditions)
         {
-            IEnumerable<ValidationReport> subReports = waveBoundaryConditions.Where(bc => bc != null)
-                                                                             .Select(bc => new ValidationReport(
-                                                                                         bc.Name,
-                                                                                         ValidateBoundaryCondition(
-                                                                                             bc)));
+            IEnumerable<ValidationReport> subReports =
+                waveBoundaryConditions.Where(bc => bc != null)
+                                      .Select(bc => new ValidationReport(bc.Name, ValidateBoundaryCondition(bc)));
 
             return new ValidationReport("Waves Model Boundary Conditions", subReports);
         }
@@ -60,12 +58,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                                             .WaveBoundaryConditionValidator_ValidateBoundaryCondition_Boundary_condition_contains_internal_geometry_points,
                                         boundaryCondition);
             }
-            else if (!boundaryCondition.IsHorizontallyUniform && Enumerable
-                                                                 .Range(
-                                                                     1,
-                                                                     boundaryCondition
-                                                                         .Feature.Geometry.Coordinates.Length - 2)
-                                                                 .Except(boundaryCondition.DataPointIndices).Any())
+            else if (!boundaryCondition.IsHorizontallyUniform &&
+                     Enumerable.Range(1, boundaryCondition.Feature.Geometry.Coordinates.Length - 2)
+                               .Except(boundaryCondition.DataPointIndices).Any())
             {
                 yield return
                     new ValidationIssue(boundaryCondition.VariableDescription, ValidationSeverity.Info,

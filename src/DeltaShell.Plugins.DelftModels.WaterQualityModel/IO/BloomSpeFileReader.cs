@@ -7,9 +7,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 {
     public static class BloomSpeFileReader
     {
-        private const int
-            KORT_INDEX =
-                3; // word index of KORT. There are 2 KORT headers, so it cannot be determined from the file while reading.
+        // word index of KORT. There are 2 KORT headers, so it cannot be determined from the file while reading.
+        private const int KORT_INDEX = 3;
 
         private const int DESCRIPTION_CHAR_INDEX = 34;
         private const int DESCRIPTION_CHAR_LENGTH = 31;

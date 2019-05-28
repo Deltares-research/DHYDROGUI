@@ -35,12 +35,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils
         /// The function to determine if the creator can be
         /// used for a given function or not.
         /// </param>
-        public FunctionTypeCreator(string name, Func<IFunction, bool> checkFunction,
+        public FunctionTypeCreator(string name,
+                                   Func<IFunction, bool> checkFunction,
                                    Func<IFunction, IFunction> transformFunction,
                                    Func<IFunction, double> getDefaultValueFunction,
                                    Action<IFunction, double> setDefaultValueFunction,
-                                   Func<IFunction, string> getUnitFunction, Action<IFunction, string> setUnitFunction,
-                                   Func<IFunction, string> getUrlFunction, Action<IFunction, string> setUrlFunction,
+                                   Func<IFunction, string> getUnitFunction,
+                                   Action<IFunction, string> setUnitFunction,
+                                   Func<IFunction, string> getUrlFunction,
+                                   Action<IFunction, string> setUrlFunction,
                                    Func<IFunction, bool> isAllowedFunction)
         {
             this.name = name;

@@ -70,18 +70,28 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils
             Func<IFunction, bool> isAllowedFunction,
             Func<IFunction, string> getFilePath)
         {
-            return CreateNewFunctionTypeCreator("From hydro data", f => f.IsFromHydroDynamics(),
-                                                delegate(string name, double defaultValue, string compName,
-                                                         string unitName, string description, string url)
+            return CreateNewFunctionTypeCreator("From hydro data",
+                                                f => f.IsFromHydroDynamics(),
+                                                delegate(
+                                                    string name,
+                                                    double defaultValue,
+                                                    string compName,
+                                                    string unitName,
+                                                    string description,
+                                                    string url)
                                                 {
                                                     FunctionFromHydroDynamics functionFromHydroDynamics =
-                                                        WaterQualityFunctionFactory.CreateFunctionFromHydroDynamics(
-                                                            name, defaultValue, compName, unitName, description, url);
-                                                    functionFromHydroDynamics.FilePath =
-                                                        getFilePath(functionFromHydroDynamics);
+                                                        WaterQualityFunctionFactory.CreateFunctionFromHydroDynamics(name,
+                                                                                                                    defaultValue,
+                                                                                                                    compName,
+                                                                                                                    unitName,
+                                                                                                                    description,
+                                                                                                                    url);
+                                                    functionFromHydroDynamics.FilePath = getFilePath(functionFromHydroDynamics);
 
                                                     return functionFromHydroDynamics;
-                                                }, isAllowedFunction);
+                                                },
+                                                isAllowedFunction);
         }
 
         /// <summary>

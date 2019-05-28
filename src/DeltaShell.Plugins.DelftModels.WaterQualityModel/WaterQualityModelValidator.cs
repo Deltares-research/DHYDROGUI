@@ -131,9 +131,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                 else
                 {
                     List<WaqProcessValidationRule> parameterRules = rules
-                                                                    .Where(
-                                                                        pr => GetWaqRulesParameterAndProcessInLibrary(
-                                                                            pr, parameter.Name, library.Processes))
+                                                                    .Where(pr => GetWaqRulesParameterAndProcessInLibrary(pr,
+                                                                                                                         parameter.Name,
+                                                                                                                         library.Processes))
                                                                     .ToList();
                     if (parameter.IsWithinRulesLimits(parameterRules, processCoefficients, out reasonList))
                     {

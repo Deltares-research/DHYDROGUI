@@ -231,12 +231,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         private static void UpdateOutputParameterOutputCoverageDataItems(
             WaterQualityModel waterQualityModel, WaterQualityOutputParameter outputParameter)
         {
-            IDataItem existingOutputCoverageDataItem = waterQualityModel.OutputParametersDataItemSet.DataItems
-                                                                        .Where(dataItem =>
-                                                                                   dataItem.Role.HasFlag(
-                                                                                       DataItemRole.Output))
-                                                                        .FirstOrDefault(
-                                                                            di => di.Name == outputParameter.Name);
+            IDataItem existingOutputCoverageDataItem =
+                waterQualityModel.OutputParametersDataItemSet.DataItems
+                                 .Where(dataItem => dataItem.Role.HasFlag(DataItemRole.Output))
+                                 .FirstOrDefault(di => di.Name == outputParameter.Name);
 
             if (outputParameter.ShowInMap && existingOutputCoverageDataItem == null)
             {
@@ -475,20 +473,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             string monitoringAreaName = monitoringOutputDataItemObject.ToString();
             if (!string.IsNullOrEmpty(monitoringAreaName))
             {
-                WaterQualityObservationVariableOutput monitoringPointOutputDataItemToRemove = waterQualityModel
-                                                                                              .ObservationVariableOutputs
-                                                                                              .Where(
-                                                                                                  o =>
-                                                                                                      !(o.ObservationVariable
-                                                                                                            is
-                                                                                                            WaterQualityObservationPoint
-                                                                                                       ))
-                                                                                              .FirstOrDefault(
-                                                                                                  ovo =>
-                                                                                                      monitoringAreaName
-                                                                                                          .Equals(
-                                                                                                              ovo
-                                                                                                                  .Name));
+                WaterQualityObservationVariableOutput monitoringPointOutputDataItemToRemove =
+                    waterQualityModel.ObservationVariableOutputs
+                                     .Where(o => !(o.ObservationVariable is WaterQualityObservationPoint))
+                                     .FirstOrDefault(ovo => monitoringAreaName.Equals(ovo.Name));
+
                 if (monitoringPointOutputDataItemToRemove == null)
                 {
                     return;

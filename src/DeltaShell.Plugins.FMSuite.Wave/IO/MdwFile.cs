@@ -732,18 +732,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                         propertyDefinition.Value.FileCategoryName;
 
                     //Both available
-                    List<DelftIniCategory> categoryOfDependentOnProperty = mdwCategories
-                                                                           .Where(mc => mc.Properties.Any(
-                                                                                      p => p.Name.Equals(
-                                                                                          nameOfDependentOnProperty)))
-                                                                           .ToList();
-                    List<DelftIniCategory> categoryOfPropertyWithMultipleDefaultValues = mdwCategories
-                                                                                         .Where(mc => mc.Properties.Any(
-                                                                                                    p =>
-                                                                                                        p.Name
-                                                                                                         .Equals(
-                                                                                                             nameOfPropertyWithMultipleDefaultValues)))
-                                                                                         .ToList();
+                    List<DelftIniCategory> categoryOfDependentOnProperty =
+                        mdwCategories.Where(mc => mc.Properties
+                                                    .Any(p => p.Name.Equals(nameOfDependentOnProperty)))
+                                     .ToList();
+
+                    List<DelftIniCategory> categoryOfPropertyWithMultipleDefaultValues =
+                        mdwCategories.Where(mc => mc.Properties
+                                                    .Any(p => p.Name.Equals(nameOfPropertyWithMultipleDefaultValues)))
+                                     .ToList();
 
                     //Situation in which property with multiple default values is missing and corresponding default value will be set.
                     if (!categoryOfPropertyWithMultipleDefaultValues.Any() && categoryOfDependentOnProperty.Any())

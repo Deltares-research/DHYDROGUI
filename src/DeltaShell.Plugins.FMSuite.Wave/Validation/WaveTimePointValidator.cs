@@ -35,22 +35,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
 
         private static void ValidateBoundaryConditionTimePoints()
         {
-            List<WaveBoundaryCondition> boundaryConditionWithParameterizedSpectrumTimeSeries = waveModel
-                                                                                               .BoundaryConditions
-                                                                                               .Where(bc =>
-                                                                                                          bc.DataType ==
-                                                                                                          BoundaryConditionDataType
-                                                                                                              .ParameterizedSpectrumTimeseries &&
-                                                                                                          bc.PointData
-                                                                                                            .SelectMany(
-                                                                                                                b =>
-                                                                                                                    b.Arguments
-                                                                                                                         [0]
-                                                                                                                     .GetValues
-                                                                                                                     <DateTime
-                                                                                                                     >())
-                                                                                                            .Any())
-                                                                                               .ToList();
+            List<WaveBoundaryCondition> boundaryConditionWithParameterizedSpectrumTimeSeries =
+                waveModel.BoundaryConditions
+                         .Where(bc => bc.DataType == BoundaryConditionDataType.ParameterizedSpectrumTimeseries &&
+                                      bc.PointData.SelectMany(b => b.Arguments[0].GetValues<DateTime>())
+                                        .Any())
+                         .ToList();
 
             if (boundaryConditionWithParameterizedSpectrumTimeSeries.Count == 0)
             {

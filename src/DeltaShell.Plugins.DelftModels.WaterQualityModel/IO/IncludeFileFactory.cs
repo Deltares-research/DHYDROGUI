@@ -142,15 +142,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                 writer.WriteLine("; output control (see DELWAQ-manual)");
                 writer.WriteLine("; yyyy/mm/dd-hh:mm:ss  yyyy/mm/dd-hh:mm:ss  dddhhmmss");
                 writer.WriteLine((string) "{0} for balance output",
-                                 (object) CreateDelwaqTimeSettingsInputString(
-                                     waqSettings.BalanceStartTime, waqSettings.BalanceStopTime,
-                                     waqSettings.BalanceTimeStep));
+                                 (object) CreateDelwaqTimeSettingsInputString(waqSettings.BalanceStartTime,
+                                                                              waqSettings.BalanceStopTime,
+                                                                              waqSettings.BalanceTimeStep));
                 writer.WriteLine((string) "{0} for map output",
-                                 (object) CreateDelwaqTimeSettingsInputString(
-                                     waqSettings.MapStartTime, waqSettings.MapStopTime, waqSettings.MapTimeStep));
+                                 (object) CreateDelwaqTimeSettingsInputString(waqSettings.MapStartTime,
+                                                                              waqSettings.MapStopTime,
+                                                                              waqSettings.MapTimeStep));
                 writer.WriteLine((string) "{0} for his output",
-                                 (object) CreateDelwaqTimeSettingsInputString(
-                                     waqSettings.HisStartTime, waqSettings.HisStopTime, waqSettings.HisTimeStep));
+                                 (object) CreateDelwaqTimeSettingsInputString(waqSettings.HisStartTime,
+                                                                              waqSettings.HisStopTime,
+                                                                              waqSettings.HisTimeStep));
 
                 return writer.ToString();
             }

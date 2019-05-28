@@ -59,12 +59,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Importers
                 throw new NotSupportedException("Need a valid target to import the grid file into");
             }
 
-            WaveModel model = getModels().First(m =>
-                                                    WaveDomainHelper
-                                                        .GetAllDomains(m.OuterDomain)
-                                                        .Any(d => Equals(d.Grid, targetGrid)));
+            WaveModel model = getModels().First(m => WaveDomainHelper.GetAllDomains(m.OuterDomain)
+                                                                     .Any(d => Equals(d.Grid, targetGrid)));
             WaveDomainData domain =
-                WaveDomainHelper.GetAllDomains(model.OuterDomain).First(d => Equals(d.Grid, targetGrid));
+                WaveDomainHelper.GetAllDomains(model.OuterDomain)
+                                .First(d => Equals(d.Grid, targetGrid));
 
             model.BeginEdit(new DefaultEditAction("Importing grid"));
             try

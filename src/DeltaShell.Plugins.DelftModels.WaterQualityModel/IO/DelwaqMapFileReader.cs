@@ -37,18 +37,21 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                                                    int timeStepIndex, string substanceName, int segmentIndex = -1)
         {
             return DoWithMapFileBinairyReader(delwaqOutputFile,
-                                              binaryReader =>
-                                                  ReadTimeStepData(binaryReader, mapFileMeta, timeStepIndex,
-                                                                   substanceName, segmentIndex));
+                                              binaryReader => ReadTimeStepData(binaryReader,
+                                                                               mapFileMeta,
+                                                                               timeStepIndex,
+                                                                               substanceName,
+                                                                               segmentIndex));
         }
 
         public static List<double> GetTimeSeriesData(string delwaqOutputFile, MapFileMetaData mapFileMeta,
                                                      string substanceName, int segmentIndex)
         {
             return DoWithMapFileBinairyReader(delwaqOutputFile,
-                                              binaryReader =>
-                                                  ReadTimeSeriesData(binaryReader, mapFileMeta, substanceName,
-                                                                     segmentIndex));
+                                              binaryReader => ReadTimeSeriesData(binaryReader,
+                                                                                 mapFileMeta,
+                                                                                 substanceName,
+                                                                                 segmentIndex));
         }
 
         private static MapFileMetaData ReadMapFileMetaData(BinaryReader delwaqOutputFileReader)
