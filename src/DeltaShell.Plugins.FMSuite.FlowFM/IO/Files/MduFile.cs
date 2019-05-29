@@ -567,21 +567,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             SetValueToPropertyIfExists(properties, KnownProperties.Version, FMDllVersion);
             SetValueToPropertyIfExists(properties, KnownProperties.GuiVersion, FMSuiteFlowModelVersion);
             IEnumerable<IGrouping<string, WaterFlowFMProperty>> propertiesByGroup = properties
-                                                                                    .Where(IsMduFileProperty)
+                                                                                    .Where(p => p.PropertyDefinition.FileCategoryName != "GUIOnly")
                                                                                     .GroupBy(p => p.PropertyDefinition
                                                                                                    .FileCategoryName);
 
             propertiesByGroup = RemoveMorAndSedPropertiesIfNeeded(propertiesByGroup, properties, config);
 
             return propertiesByGroup;
-        }
-
-        private static bool IsMduFileProperty(WaterFlowFMProperty property)
-        {
-            return property.PropertyDefinition.FileCategoryName != "GUIOnly"
-                   // remove unknown properties that should be located on the sed/mor files
-                   && property.PropertyDefinition.UnknownPropertySource != PropertySource.MorphologyFile
-                   && property.PropertyDefinition.UnknownPropertySource != PropertySource.SedimentFile;
         }
 
         private void WriteMduLine(WaterFlowFMProperty prop, string pathValue)

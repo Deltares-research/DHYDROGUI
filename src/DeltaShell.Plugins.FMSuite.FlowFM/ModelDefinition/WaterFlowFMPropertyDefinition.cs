@@ -9,8 +9,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             get => FilePropertyName;
             set => FilePropertyName = value;
         }
-
-        public PropertySource UnknownPropertySource { get; set; }
     }
 
     public static class KnownProperties

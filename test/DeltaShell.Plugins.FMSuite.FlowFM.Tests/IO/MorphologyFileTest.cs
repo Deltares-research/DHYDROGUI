@@ -4,8 +4,9 @@ using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccess;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;
@@ -15,8 +16,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccess;
-using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 {
@@ -65,11 +64,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
         private static void ValidateAllUnknownProperties(WaterFlowFMModelDefinition modelDefinition)
         {
-            var properties = modelDefinition.Properties;
+            var properties = modelDefinition.UnknownMorphologyProperties;
 
-            var propertiesMorphologyCategory = properties.Where(p => p.PropertyDefinition.Category.Equals(MorphologyFile.Header)
-                                                                     && p.PropertyDefinition.UnknownPropertySource.Equals(PropertySource.MorphologyFile))
-                                                         .ToList();
+            var propertiesMorphologyCategory = properties
+                                               .Where(p => p.PropertyDefinition.Category.Equals(MorphologyFile.Header))
+                                               .ToList();
+
             Assert.AreEqual(4, propertiesMorphologyCategory.Count);
             ValidatePropertiesCategory(propertiesMorphologyCategory, MorphologyFile.Header);
 
@@ -80,7 +80,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
         private static void ValidatePropertiesCategory(List<WaterFlowFMProperty> properties, string categoryName)
         {
-            Assert.IsTrue(properties.All(p => p.PropertyDefinition.UnknownPropertySource.Equals(PropertySource.MorphologyFile)));
             Assert.IsTrue(properties.All(p => p.PropertyDefinition.FileCategoryName.Equals(categoryName)));
             Assert.IsTrue(properties.All(p => p.PropertyDefinition.Category.Equals(categoryName)));
 
@@ -131,20 +130,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var propertyDefinitionMorphologyCategory = WaterFlowFMProperty.CreatePropertyDefinitionForUnknownProperty(
                 KnownProperties.morphology,
                 customPropertyName,
-                "",
-                PropertySource.MorphologyFile);
+                "");
 
             var propertyDefinitionCustomCategory = WaterFlowFMProperty.CreatePropertyDefinitionForUnknownProperty(
                 customCategoryName,
                 customPropertyName,
-                "",
-                PropertySource.MorphologyFile);
+                "");
 
             var customPropertyMorphologyCategory = new WaterFlowFMProperty(propertyDefinitionMorphologyCategory, value1);
             var customPropertyCustomCategory = new WaterFlowFMProperty(propertyDefinitionCustomCategory, value2);
 
-            modelDefinition.AddProperty(customPropertyMorphologyCategory);
-            modelDefinition.AddProperty(customPropertyCustomCategory);
+            modelDefinition.UnknownMorphologyProperties.Add(customPropertyMorphologyCategory);
+            modelDefinition.UnknownMorphologyProperties.Add(customPropertyCustomCategory);
             return modelDefinition;
         }
 

@@ -123,21 +123,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         private static IEnumerable<DelftIniCategory> CreateUnknownDelftIniCategories(
             WaterFlowFMModelDefinition modelDefinition)
         {
-            IEnumerable<WaterFlowFMProperty> customPropertiesOfCustomGroups = modelDefinition.Properties
-                                                                                             .Where(
-                                                                                                 p =>
-                                                                                                     p.PropertyDefinition
-                                                                                                      .UnknownPropertySource
-                                                                                                      .Equals(
-                                                                                                          PropertySource
-                                                                                                              .SedimentFile)
-                                                                                                     && !knownCategories
-                                                                                                         .Contains(
-                                                                                                             p.PropertyDefinition
-                                                                                                              .FileCategoryName));
+            IEnumerable<WaterFlowFMProperty> customPropertiesOfCustomGroups =
+                modelDefinition.UnknownSedimentProperties
+                               .Where(p => !knownCategories.Contains(p.PropertyDefinition.FileCategoryName));
 
-            return MorphologySedimentIniFileHelper.CreateDelftIniCategoriesFromModelProperties(
-                customPropertiesOfCustomGroups);
+            return MorphologySedimentIniFileHelper
+                .CreateDelftIniCategoriesFromModelProperties(customPropertiesOfCustomGroups);
         }
 
         private static List<DelftIniCategory> WriteHeaders(WaterFlowFMModelDefinition modelDefinition,
@@ -316,21 +307,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                                                                    DelftIniCategory category, string categoryName)
         {
             IEnumerable<WaterFlowFMProperty> properties = modelDefinition
-                                                          .Properties
-                                                          .Where(p => IsUnknownSedimentPropertyForCategory(
-                                                                     categoryName, p));
+                                                          .UnknownSedimentProperties
+                                                          .Where(p => p.PropertyDefinition.Category.Equals(categoryName));
 
             foreach (WaterFlowFMProperty property in properties)
             {
                 category.AddProperty(property.PropertyDefinition.FilePropertyName, property.GetValueAsString());
             }
-        }
-
-        private static bool IsUnknownSedimentPropertyForCategory(string category, WaterFlowFMProperty p)
-        {
-            return p.PropertyDefinition.FileCategoryName != "GUIOnly"
-                   && p.PropertyDefinition.Category.Equals(category)
-                   && p.PropertyDefinition.UnknownPropertySource.Equals(PropertySource.SedimentFile);
         }
 
         private static void AddUnknownSedimentProperty(DelftIniProperty delftIniProperty,
@@ -341,13 +324,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 WaterFlowFMProperty.CreatePropertyDefinitionForUnknownProperty(
                     categoryName,
                     delftIniProperty.Name,
-                    delftIniProperty.Comment,
-                    PropertySource.SedimentFile);
+                    delftIniProperty.Comment);
 
             propertyDefinition.Category = sedimentFractionName ?? categoryName;
 
             var newProperty = new WaterFlowFMProperty(propertyDefinition, delftIniProperty.Value);
-            definition.AddProperty(newProperty);
+            definition.UnknownSedimentProperties.Add(newProperty);
 
             string propertyValue = delftIniProperty.Value;
             if (!string.IsNullOrEmpty(propertyValue))
