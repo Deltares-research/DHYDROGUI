@@ -250,6 +250,7 @@
     <Compile Include="FeatureData\FlowBoundaryConditionTest.cs" />
     <Compile Include="FeatureData\ModelFeatureCoordinateDataTest.cs" />
     <Compile Include="FeatureData\SourceAndSinkTest.cs" />
+    <Compile Include="FlowFMApplicationPluginTest.cs" />
     <Compile Include="FlowFMTestHelper.cs" />
     <Compile Include="GridWizardMapToolHelperTest.cs" />
     <Compile Include="Grid\UnstructuredGridNetCdfFileWriterTest.cs" />

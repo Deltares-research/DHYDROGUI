@@ -479,21 +479,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 {
                     Mode = Feature2DImportExportMode.Export
                 };
-            yield return new PliFileImporterExporter<IWeir, Feature2D>
+            yield return new PliFileImporterExporter<Weir2D, Weir2D>
             {
                 Mode = Feature2DImportExportMode.Export,
-                CreateFromFeature = f => new Weir(f.Name, true) {Geometry = f.Geometry},
-                GetFeature = w => new Feature2D
+                CreateFromFeature = f => new Weir2D(f.Name, true) {Geometry = f.Geometry},
+                GetFeature = w => new Weir2D
                 {
                     Name = w.Name,
                     Geometry = w.Geometry
                 }
             };
-            yield return new PliFileImporterExporter<IPump, Feature2D>
+            yield return new PliFileImporterExporter<Pump2D, Pump2D>
             {
                 Mode = Feature2DImportExportMode.Export,
-                CreateFromFeature = f => new Pump(f.Name, true) {Geometry = f.Geometry},
-                GetFeature = w => new Feature2D
+                CreateFromFeature = f => new Pump2D(f.Name, true) {Geometry = f.Geometry},
+                GetFeature = w => new Pump2D
                 {
                     Name = w.Name,
                     Geometry = w.Geometry
