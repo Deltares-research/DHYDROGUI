@@ -176,23 +176,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.AreEqual(2, newModelDefinition.Boundaries.Count);
             Assert.AreEqual(2, newModelDefinition.BoundaryConditionSets.Count);
         }
-
-        [Test]
-        [TestCase("BcFiles\\MixedQuantities.ext", "BcFiles\\MixedQuantities.ext"), Category(TestCategory.DataAccess)]
+        
+        [TestCase("BcFiles\\MixedQuantities.ext", "BcFiles\\MixedQuantities.ext")]
         [TestCase("BcFiles\\ModelBndExtForceFileAndMduInDifferentFoldersPathsRelativeToMdu\\BndExtFolder\\MixedQuantities.ext",
-             "BcFiles\\ModelBndExtForceFileAndMduInDifferentFoldersPathsRelativeToMdu\\MduFolder\\EmptyMduFile.mdu"), Category(TestCategory.DataAccess)]
+             "BcFiles\\ModelBndExtForceFileAndMduInDifferentFoldersPathsRelativeToMdu\\MduFolder\\EmptyMduFile.mdu")]
         [TestCase("BcFiles\\ModelBndExtForceFileAndMduInDifferentFoldersPathsRelativeToBndExt\\BndExtFolder\\MixedQuantities.ext",
-             "BcFiles\\ModelBndExtForceFileAndMduInDifferentFoldersPathsRelativeToBndExt\\BndExtFolder\\MixedQuantities.ext"), Category(TestCategory.DataAccess)]
+             "BcFiles\\ModelBndExtForceFileAndMduInDifferentFoldersPathsRelativeToBndExt\\BndExtFolder\\MixedQuantities.ext")]
+        [Category(TestCategory.DataAccess)]
         public void ReadMixedQuantities(string bndExtFilePath, string bndExtSubFilesReferenceFilePath)
         {
+            // Given
             var absoluteBndExtFilePath = TestHelper.GetTestFilePath(bndExtFilePath);
             var absoluteBndExtSubFilesReferenceFilePath = TestHelper.GetTestFilePath(bndExtSubFilesReferenceFilePath);
 
             var modelDefinition = new WaterFlowFMModelDefinition();
 
-            var reader = new BndExtForceFile();
-            reader.Read(absoluteBndExtFilePath, modelDefinition, absoluteBndExtSubFilesReferenceFilePath);
-
+            // When
+            var bndExtForceFile = new BndExtForceFile();
+            bndExtForceFile.Read(absoluteBndExtFilePath, modelDefinition, absoluteBndExtSubFilesReferenceFilePath);
+            
+            // Then
             Assert.AreEqual(1, modelDefinition.BoundaryConditionSets.Count);
             Assert.AreEqual(2, modelDefinition.BoundaryConditionSets[0].BoundaryConditions.Count);
 
@@ -210,6 +213,58 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             CollectionAssert.AreEquivalent(new[]{3,4}, waterlevelBoundaryCondition.GetDataAtPoint(0).GetValues<double>());
             CollectionAssert.AreEquivalent(new[]{5,6}, waterlevelBoundaryCondition.GetDataAtPoint(1).GetValues<double>());
         }
+
+        [TestCase("BcFiles\\ModelBndExtForceFileAndMduInDifferentFoldersPathsRelativeToMdu\\BndExtFolder\\MixedQuantities.ext",
+             "BcFiles\\ModelBndExtForceFileAndMduInDifferentFoldersPathsRelativeToMdu\\MduFolder\\EmptyMduFile.mdu")]
+        [TestCase("BcFiles\\ModelBndExtForceFileAndMduInDifferentFoldersPathsRelativeToBndExt\\BndExtFolder\\MixedQuantities.ext",
+             "BcFiles\\ModelBndExtForceFileAndMduInDifferentFoldersPathsRelativeToBndExt\\BndExtFolder\\MixedQuantities.ext")]
+        [Category(TestCategory.DataAccess)]
+        public void ReadAndWriteMixedQuantities(string bndExtFilePath, string bndExtSubFilesReferenceFilePath)
+        {
+            // Given
+            var absoluteBndExtFilePath = TestHelper.GetTestFilePath(bndExtFilePath);
+            var absoluteBndExtSubFilesReferenceFilePath = TestHelper.GetTestFilePath(bndExtSubFilesReferenceFilePath);
+
+            var modelDefinition = new WaterFlowFMModelDefinition();
+
+            // When
+            var bndExtForceFile = new BndExtForceFile();
+            bndExtForceFile.Read(absoluteBndExtFilePath, modelDefinition, absoluteBndExtSubFilesReferenceFilePath);
+
+            string saveDirectoryPath = Path.Combine(TestHelper.GetTestDataDirectory(), "BcFiles", "save");
+            string saveBndExtFilePath = Path.Combine(saveDirectoryPath, "MixedQuantities.ext");
+
+            FileUtils.DeleteIfExists(saveDirectoryPath);
+
+            // In one test to test that the read method with respect to Ext file or Mdu file,
+            // will not influence the writing always with respect to Ext force file.
+            bndExtForceFile.Write(saveBndExtFilePath, modelDefinition);
+
+            Assert.True(File.Exists(saveBndExtFilePath));
+
+            using (var file = new StreamReader(saveBndExtFilePath))
+            {
+                string line;
+                while ((line = file.ReadLine()) != null)
+                {
+                    if (line.Contains("locationfile"))
+                    {
+                        string[] parts = line.Split('=');
+                        string expectedSavedLocationFilePath = Path.Combine(Path.GetDirectoryName(saveBndExtFilePath), parts[1].Trim());
+                        Assert.IsTrue(File.Exists(expectedSavedLocationFilePath));
+                    }
+                    if (line.Contains("forcingfile"))
+                    {
+                        string[] parts = line.Split('=');
+                        string expectedSavedForcingFilePath = Path.Combine(Path.GetDirectoryName(saveBndExtFilePath), parts[1].Trim());
+                        Assert.IsTrue(File.Exists(expectedSavedForcingFilePath));
+                    }
+                }
+                file.Close();
+            }
+            Directory.Delete(saveDirectoryPath, true);
+        }
+
 
         [Test]
         [Category(TestCategory.DataAccess)]
