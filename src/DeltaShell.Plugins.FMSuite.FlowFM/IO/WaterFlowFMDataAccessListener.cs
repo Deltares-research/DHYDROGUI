@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using DelftTools.Functions.Generic;
 using DelftTools.Shell.Core.Dao;
 using DelftTools.Shell.Core.Workflow;
@@ -15,6 +12,9 @@ using GeoAPI.Extensions.Coverages;
 using log4net;
 using NetTopologySuite.Extensions.Coverages;
 using SharpMap.SpatialOperations;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
@@ -49,7 +49,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
                 // BedLevel dataitem value used to be exclusively UnstructuredGridVertexCoverages, now it needs to be more generic
                 IDataItem bedLevelDataItem =
-                    model.DataItems.FirstOrDefault(di => di.Name == WaterFlowFMModelDefinition.BathymetryDataItemName);
+                    GetDataItemByName(model.DataItems, WaterFlowFMModelDefinition.BathymetryDataItemName);
+
                 if (bedLevelDataItem != null)
                 {
                     bedLevelDataItem.ValueType = typeof(UnstructuredGridCoverage);
@@ -124,7 +125,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private static bool SynchronizeDataItemValue(WaterFlowFMModel model, string name, object value)
         {
-            IDataItem dataItem = model.DataItems.FirstOrDefault(di => di.Name == name);
+            IDataItem dataItem = GetDataItemByName(model.DataItems, name);
 
             if (dataItem == null)
             {
@@ -178,6 +179,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private static void LoadSpatialData(WaterFlowFMModel waterFlowFMModel)
         {
+            // we do not want to import the spatial operations since the converted (z-) values are read from the net file
+            ClearSpatialOperations(waterFlowFMModel, WaterFlowFMModelDefinition.BathymetryDataItemName);
+
             SynchronizeDataItemValue(waterFlowFMModel, WaterFlowFMModelDefinition.BathymetryDataItemName,
                                      waterFlowFMModel.Bathymetry);
             SynchronizeDataItemValue(waterFlowFMModel, WaterFlowFMModelDefinition.RoughnessDataItemName,
@@ -206,7 +210,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             waterFlowFMModel.ImportSpatialOperationsAfterLoading();
 
             // update intermediate results in operation stack after loading project:
-            ExecuteOperations(waterFlowFMModel, waterFlowFMModel.Bathymetry);
             ExecuteOperations(waterFlowFMModel, waterFlowFMModel.Roughness);
             ExecuteOperations(waterFlowFMModel, waterFlowFMModel.InitialWaterLevel);
             ExecuteOperations(waterFlowFMModel, waterFlowFMModel.Viscosity);
@@ -225,6 +228,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             foreach (UnstructuredGridCellCoverage fraction in waterFlowFMModel.InitialFractions)
             {
                 ExecuteOperations(waterFlowFMModel, fraction);
+            }
+        }
+
+        /// <summary>
+        /// Removes the spatial operations from a spatial data data item.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <param name="dataItemName">Name of the data item.</param>
+        private static void ClearSpatialOperations(WaterFlowFMModel model, string dataItemName)
+        {
+            IDataItem bedLevelDataItem = GetDataItemByName(model.DataItems, dataItemName);
+
+            if (bedLevelDataItem != null)
+            {
+                bedLevelDataItem.ValueConverter = null;
             }
         }
 
@@ -254,6 +272,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 EventSettings.BubblingEnabled = eventBubblingEnabled;
             }
+        }
+
+        private static IDataItem GetDataItemByName(IEnumerable<IDataItem> dataItems, string dataItemName)
+        {
+            return dataItems.FirstOrDefault(di => di.Name == dataItemName);
         }
     }
 }
