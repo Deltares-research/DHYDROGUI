@@ -55,7 +55,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             IFileExporter relevantExporter =
                 filteredExporters.FirstOrDefault(e => IsOfGenericType(e, typeof(PliFileImporterExporter<,>)));
 
-            Assert.That(relevantExporter, Is.Not.Null);
+            Assert.That(relevantExporter, Is.Not.Null, 
+                        "Expected a PliFileImporterExporter within the list of exporters, but found none.");
         }
 
         /// <summary>

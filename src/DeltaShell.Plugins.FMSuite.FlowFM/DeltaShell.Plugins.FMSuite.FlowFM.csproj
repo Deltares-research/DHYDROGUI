@@ -178,6 +178,9 @@
     <Compile Include="IO\ImportExport\Importers\BcmFileImporter.cs" />
     <Compile Include="IO\ImportExport\ImportersExporters\ObsFileImporterExporter.cs" />
     <Compile Include="IO\ImportExport\ImportersExporters\PlizFileImporterExporter.cs" />
+    <Compile Include="IO\ImportExport\Importers\ShapeFileImporter.cs" />
+    <Compile Include="IO\ImportExport\Importers\ShapeFileImporterFactory.cs" />
+    <Compile Include="IO\ImportExport\Importers\ShapeFileImporterHelper.cs" />
     <Compile Include="IO\ImportExport\Importers\SourceAndSinkImportExtensions.cs" />
     <Compile Include="IO\DataAccessObjects\IUnsupportedFileBasedExtForceFileItem.cs" />
     <Compile Include="IO\MduFileWriteConfig.cs" />

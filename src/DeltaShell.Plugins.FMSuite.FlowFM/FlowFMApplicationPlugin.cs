@@ -361,6 +361,35 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 WindFileImporter = true,
                 GetModelForWindTimeSeries = GetModelForWindField
             };
+
+            // ShapeFileImporter
+            yield return ShapeFileImporterFactory.Construct<ILineString, LandBoundary2D>(
+                ShapeFileImporterFactory.AfterFeatureCreateActions.TryAddName);
+            yield return ShapeFileImporterFactory.Construct<IPoint,      GroupablePointFeature>(); // DryPoints
+            yield return ShapeFileImporterFactory.Construct<IPolygon,    GroupableFeature2DPolygon>(
+                ShapeFileImporterFactory.AfterFeatureCreateActions.TryAddName); // DryAreas | Enclosure
+            yield return ShapeFileImporterFactory.Construct<ILineString, ThinDam2D>(
+                ShapeFileImporterFactory.AfterFeatureCreateActions.TryAddName);
+            yield return ShapeFileImporterFactory.Construct<ILineString, FixedWeir>(
+                ShapeFileImporterFactory.AfterFeatureCreateActions.TryAddName);
+            yield return ShapeFileImporterFactory.Construct<IPoint,      GroupableFeature2DPoint>(
+                ShapeFileImporterFactory.AfterFeatureCreateActions.TryAddName); // ObservationPoint
+            yield return ShapeFileImporterFactory.Construct<ILineString, ObservationCrossSection2D>(
+                ShapeFileImporterFactory.AfterFeatureCreateActions.TryAddName);
+            yield return ShapeFileImporterFactory.Construct<ILineString, Embankment>(
+                ShapeFileImporterFactory.AfterFeatureCreateActions.TryAddName);
+            yield return ShapeFileImporterFactory.Construct<ILineString, BridgePillar>(
+                ShapeFileImporterFactory.AfterFeatureCreateActions.TryAddName);
+            yield return ShapeFileImporterFactory.Construct<ILineString, Pump2D>(
+                ShapeFileImporterFactory.AfterFeatureCreateActions.Chain<Pump2D>(
+                    ShapeFileImporterFactory.AfterFeatureCreateActions.TryAddName,
+                    ShapeFileImporterFactory.AfterFeatureCreateActions.TryAddCapacity));
+            yield return ShapeFileImporterFactory.Construct<ILineString, Weir2D>(
+                ShapeFileImporterFactory.AfterFeatureCreateActions.Chain<Weir2D>(
+                    ShapeFileImporterFactory.AfterFeatureCreateActions.TryAddName,
+                    ShapeFileImporterFactory.AfterFeatureCreateActions.TryAddWeirFormula,
+                    ShapeFileImporterFactory.AfterFeatureCreateActions.TryAddCrestWidth,
+                    ShapeFileImporterFactory.AfterFeatureCreateActions.TryAddCrestLevel));
         }
 
         private WaterFlowFMModel GetModelFor<T>(object target, params Func<HydroArea, IEnumerable<T>>[] listSelectors)
