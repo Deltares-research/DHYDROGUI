@@ -28,6 +28,8 @@ namespace DeltaShell.NGHS.TestUtils
     /// <seealso cref="System.IDisposable" />
     public sealed class TemporaryDirectory : IDisposable
     {
+        /// <summary> Get the absolute path of this <see cref="TemporaryDirectory"/>. </summary>
+        /// <value> The absolute path of this <see cref="TemporaryDirectory"/>. </value>
         public string Path { get; private set; }
 
         /// <summary>
