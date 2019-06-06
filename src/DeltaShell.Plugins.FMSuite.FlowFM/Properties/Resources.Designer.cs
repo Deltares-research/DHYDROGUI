@@ -637,6 +637,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unsupported keyword &lt;{0}&gt; detected and will be passed to the computational core. Note that some data or the connection to linked files may be lost..
+        /// </summary>
+        public static string MorphologyFile_ReadCategoryProperties_Unsupported_keyword___0___detected_and_will_be_passed_to_the_computational_core__Note_that_some_data_or_the_connection_to_linked_files_may_be_lost_ {
+            get {
+                return ResourceManager.GetString("MorphologyFile_ReadCategoryProperties_Unsupported_keyword___0___detected_and_will" +
+                        "_be_passed_to_the_computational_core__Note_that_some_data_or_the_connection_to_l" +
+                        "inked_files_may_be_lost_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap Observation {

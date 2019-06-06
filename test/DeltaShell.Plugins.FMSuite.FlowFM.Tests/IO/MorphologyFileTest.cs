@@ -16,6 +16,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DeltaShell.NGHS.TestUtils;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
+using log4net.Appender;
+using log4net.Config;
+using log4net.Core;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 {
@@ -60,6 +65,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             });
 
             #endregion
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void GivenAMorphologyFileWithUnknownProperties_WhenReading_ThenTheCorrectWarningsAreGiven()
+        {
+            // Given
+            string mduFilePath =
+                TestHelper.GetTestFilePath(@"sedmor\FlowFMCustomProperties\FlowFMCustomPropertiesSedMor.mdu");
+            var modelDefinition = new WaterFlowFMModelDefinition();
+            modelDefinition.GetModelProperty(KnownProperties.MorFile).Value = "MorCustomProperties.mor";
+
+            // When
+            List<string> logMessages = LogTestHelper
+                                       .GetRenderedMessages(() => MorphologyFile.Read(mduFilePath, modelDefinition))
+                                       .ToList();
+
+            // Then
+            Assert.AreEqual(1, logMessages.Count, "One grouped message was expected to be generated.");
+            AssertMessageContainsWarningForEachUnknownProperty(logMessages[0]);
         }
 
         private static void ValidateAllUnknownProperties(WaterFlowFMModelDefinition modelDefinition)
@@ -205,6 +230,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 FileUtils.DeleteIfExists(morFile);
             }
         }
+
         [Test]
         public void SaveLoadMorWithBoundaryConditionsFile()
         {
@@ -279,6 +305,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 FileUtils.DeleteIfExists(morFile);
             }
         }
+
         private static void FillTimeSeries(IFunction function, Func<int, double> mapping, DateTime start, DateTime stop, int steps)
         {
             var deltaT = stop - start;
@@ -286,6 +313,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var values = Enumerable.Range(0, steps).Select(mapping);
             FunctionHelper.SetValuesRaw(function.Arguments[0], times);
             FunctionHelper.SetValuesRaw(function.Components[0], values);
+        }
+
+        private static void AssertMessageContainsWarningForEachUnknownProperty(string message)
+        {
+            AssertMessageContainsWarningForProperty(message, "CustomStringProp");
+            AssertMessageContainsWarningForProperty(message, "CustomBoolProp");
+            AssertMessageContainsWarningForProperty(message, "CustomDoubleProp");
+            AssertMessageContainsWarningForProperty(message, "CustomIntProp");
+        }
+
+        private static void AssertMessageContainsWarningForProperty(string message, string propertyName)
+        {
+            string expectedMessage = string.Format(
+                Resources
+                    .MorphologyFile_ReadCategoryProperties_Unsupported_keyword___0___detected_and_will_be_passed_to_the_computational_core__Note_that_some_data_or_the_connection_to_linked_files_may_be_lost_,
+                propertyName);
+            Assert.IsTrue(message.Contains(expectedMessage), $"The following warning is missing: <{expectedMessage}>");
         }
     }
 }

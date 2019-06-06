@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DeltaShell.NGHS.IO.Handlers;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files;
@@ -29,6 +30,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         private static SedMorDelftIniWriter writer;
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(MorphologyFile));
+        private static ILogHandler logHandler;
 
         public static SedMorDelftIniWriter Writer => writer ?? (writer = new SedMorDelftIniWriter());
 
@@ -150,6 +152,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
         public static void Read(string mduFilePath, WaterFlowFMModelDefinition modelDefinition)
         {
+            logHandler = new LogHandler("reading the morphology file");
+
             if (!modelDefinition.GetModelProperty(KnownProperties.MorFile).Value.Equals(string.Empty))
             {
                 IList<IDelftIniCategory> boundaryCategories = null;
@@ -167,6 +171,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             // TODO: Remove this please!
             // This is a bloody awful HACK, because we do not want to adapt the MapFormat to the kernels
             modelDefinition.SetMapFormatPropertyValue();
+
+            logHandler.LogReport();
         }
 
         private static void ReadMorphologyBoundaryConditions(string mduFilePath, string bcmFile,
@@ -247,6 +253,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 {
                     WaterFlowFMProperty property =
                         CreateModelPropertyForUnknownDelftIniProperty(categoryName, delftIniProperty);
+
+                    logHandler.ReportWarningFormat(
+                        Resources.MorphologyFile_ReadCategoryProperties_Unsupported_keyword___0___detected_and_will_be_passed_to_the_computational_core__Note_that_some_data_or_the_connection_to_linked_files_may_be_lost_, delftIniProperty.Name);
 
                     modelDefinition.UnknownMorphologyProperties.Add(property);
 
