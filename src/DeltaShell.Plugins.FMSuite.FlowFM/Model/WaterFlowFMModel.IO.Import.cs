@@ -171,7 +171,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
                 var samplesOperation = (ImportSamplesOperation) spatialOperationList[0];
                 var coverage = (UnstructuredGridCoverage) dataItem.Value;
-                List<IPointValue> xyzFile = new XyzFile().Read(samplesOperation.FilePath).ToList();
+                List<IPointValue> xyzFile = XyzFile.Read(samplesOperation.FilePath).ToList();
 
                 int componentValueCount =
                     coverage.Arguments.Aggregate(

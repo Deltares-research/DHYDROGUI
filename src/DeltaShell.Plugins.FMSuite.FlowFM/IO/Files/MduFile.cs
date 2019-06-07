@@ -76,7 +76,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         private PliFile<ObservationCrossSection2D> obsCrsFile;
         private PolFile<GroupableFeature2DPolygon> dryAreaFile;
         private PolFile<GroupableFeature2DPolygon> enclosureFile;
-        private XyzFile dryPointFile;
 
         // the following mdu-referenced files are written by the UI, or at least should not be copied along blindly 
         // (please keep this list up-to-date!):
@@ -819,11 +818,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                     MduFileHelper.GetMultipleSubfilePath(targetMduFilePath, waterFlowFMProperty).ToList();
                 featuresFilePaths.RemoveAllWhere(ffp => ffp == null);
 
-                if (dryPointFile == null)
-                {
-                    dryPointFile = new XyzFile();
-                }
-
                 if (dryAreaFile == null)
                 {
                     dryAreaFile = new PolFile<GroupableFeature2DPolygon>();
@@ -849,7 +843,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                                 dryPointsPerGroup, fileName, fileNameWithoutExtension);
                         IList<GroupablePointFeature> featuresToWrite =
                             dryPoints.Count > 0 && groupFeatures != null ? groupFeatures : dryPoints;
-                        dryPointFile.Write(featuresFilePath, featuresToWrite.Select(p => new PointValue
+                        XyzFile.Write(featuresFilePath, featuresToWrite.Select(p => new PointValue
                         {
                             X = p.X,
                             Y = p.Y,
@@ -1581,11 +1575,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 return;
             }
 
-            if (dryPointFile == null)
-            {
-                dryPointFile = new XyzFile();
-            }
-
             if (dryAreaFile == null)
             {
                 dryAreaFile = new PolFile<GroupableFeature2DPolygon>();
@@ -1600,7 +1589,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 //we can assure that backwards compatibility is ensure i.e. some old mdu files still refer to the dry point file without the _dry suffix.
                 if (featureFilePathExtension != null && featureFilePath.EndsWith(DryPointExtensionWithoutSuffix))
                 {
-                    IList<IPointValue> pointValues = dryPointFile.Read(featureFilePath);
+                    IList<IPointValue> pointValues = XyzFile.Read(featureFilePath);
                     bool isDefaultGroup = groupName.Replace(featureFilePathExtension, string.Empty).Trim()
                                                    .Equals(mduPathName);
                     IEnumerable<GroupablePointFeature> dryPointsToAdd =

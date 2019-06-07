@@ -291,8 +291,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 string xyzFilePath = Path.Combine(directoryName,
                                                   spatialOperation.Name + "." + XyzFile.Extension);
 
-                var newFile = new XyzFile();
-                newFile.Write(xyzFilePath, xyValuePoints);
+                XyzFile.Write(xyzFilePath, xyValuePoints);
             }
             else
             {

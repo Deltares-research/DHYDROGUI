@@ -780,8 +780,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
                 {
                     string xyzFilePath = Path.Combine(directoryName, forceFileItem.FileName);
 
-                    var newFile = new XyzFile();
-                    newFile.Write(xyzFilePath, operation.GetPoints());
+                    XyzFile.Write(xyzFilePath, operation.GetPoints());
                 }
                 else
                 {
