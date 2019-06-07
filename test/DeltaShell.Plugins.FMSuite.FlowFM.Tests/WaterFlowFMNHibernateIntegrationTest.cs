@@ -291,9 +291,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
                 var loadedModel = (WaterFlowFMModel)app.Project.RootFolder.Items[0];
                 var loadedDi = loadedModel.GetDataItemByValue(loadedModel.Bathymetry);
-                var loadedOperations = ((SpatialOperationSetValueConverter)loadedDi.ValueConverter).SpatialOperationSet.Operations;
+                var loadedOperations = (SpatialOperationSetValueConverter) loadedDi.ValueConverter;
 
-                //Assert.AreEqual(2, loadedOperations.Count);
+                Assert.IsNull(loadedOperations,
+                              "No spatial operations for bed level should be loaded.");
             }
         }
 
