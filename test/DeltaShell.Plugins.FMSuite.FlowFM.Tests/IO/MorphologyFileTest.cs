@@ -8,7 +8,9 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccess;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Geometries;
+using log4net.Core;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
@@ -16,11 +18,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using DeltaShell.NGHS.TestUtils;
-using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
-using log4net.Appender;
-using log4net.Config;
-using log4net.Core;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 {
@@ -78,12 +75,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             modelDefinition.GetModelProperty(KnownProperties.MorFile).Value = "MorCustomProperties.mor";
 
             // When
-            List<string> logMessages = LogTestHelper
-                                       .GetRenderedMessages(() => MorphologyFile.Read(mduFilePath, modelDefinition))
-                                       .ToList();
+            List<string> logMessages = TestHelper.GetAllRenderedMessages(
+                                                     () => MorphologyFile.Read(mduFilePath, modelDefinition),
+                                                     Level.Warn)
+                                                 .ToList();
 
             // Then
-            Assert.AreEqual(1, logMessages.Count, "One grouped message was expected to be generated.");
+            Assert.AreEqual(1, logMessages.Count, "One grouped warning message was expected to be generated.");
             AssertMessageContainsWarningForEachUnknownProperty(logMessages[0]);
         }
 
