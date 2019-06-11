@@ -159,7 +159,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                                          modelDefinition, 
                                          logHandler,
                                          out IList<IDelftIniCategory> boundaryCategories);
+
                 string bcmFile = modelDefinition.GetModelProperty(KnownProperties.BcmFile).Value.ToString();
+
                 if (!string.IsNullOrEmpty(bcmFile)
                     && boundaryCategories.Count > 0)
                 {
@@ -279,7 +281,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                                                                          string categoryName)
         {
             return modelDefinition.Properties.FirstOrDefault(
-                p => p.PropertyDefinition.FilePropertyName == delftIniProperty.Name
+                p => string.Equals(p.PropertyDefinition.FilePropertyName,
+                                   delftIniProperty.Name,
+                                   StringComparison.InvariantCultureIgnoreCase)
                      && p.PropertyDefinition.Category == categoryName);
         }
 

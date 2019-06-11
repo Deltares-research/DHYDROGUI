@@ -64,6 +64,41 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             #endregion
         }
 
+        /// <summary>
+        /// GIVEN a morphology file with case insensitive properties
+        /// WHEN Reading
+        /// THEN no unknown properties are given
+        /// </summary>
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void GivenAMorphologyFileWithCaseInsensitiveProperties_WhenReading_ThenNoUnknownPropertiesAreGiven()
+        {
+            // Given
+            string mduFilePath =
+                TestHelper.GetTestFilePath(@"sedmor\FlowFMCaseInsensitiveProperties\FlowFMCaseInsensitivePropertiesSedMor.mdu");
+            var modelDefinition = new WaterFlowFMModelDefinition();
+            modelDefinition.GetModelProperty(KnownProperties.MorFile).Value = "MorCaseInsensitiveProperties.mor";
+
+            // When
+            List<string> logMessages = TestHelper.GetAllRenderedMessages(
+                                                     () => MorphologyFile.Read(mduFilePath, modelDefinition),
+                                                     Level.Warn)
+                                                 .ToList();
+
+            // Then
+            Assert.AreEqual(0, logMessages.Count, "No warning messages were expected to be generated.");
+
+            IList<WaterFlowFMProperty> properties = modelDefinition.UnknownMorphologyProperties;
+
+            List<WaterFlowFMProperty> propertiesMorphologyCategory = 
+                properties.Where(p => p.PropertyDefinition.Category.Equals(MorphologyFile.Header))
+                          .ToList();
+
+            Assert.AreEqual(0, propertiesMorphologyCategory.Count);
+        }
+
+
+        // 
         [Test]
         [Category(TestCategory.DataAccess)]
         public void GivenAMorphologyFileWithUnknownProperties_WhenReading_ThenTheCorrectWarningsAreGiven()
