@@ -15,7 +15,7 @@
     AlfaBs                = 1                      
     AlfaBn                = 1.5                    
     Ashld                 = 0.85                   
-    Bslhd                 = 0.5                    
+    Bshld                 = 0.5                    
     Cshld                 = 0                      
     Dshld                 = 0                      
     CoulFri               = 0                      
