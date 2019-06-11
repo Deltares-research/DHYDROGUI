@@ -136,5 +136,25 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             Assert.Throws<FormatException>(() => FMParser.FromString("1", dataType));
             Assert.AreEqual(dataType.GetEnumValues().GetValue(1), FMParser.FromString("e", dataType));
         }
+
+        /// <summary>
+        /// GIVEN an input boolean string
+        /// WHEN FromString is called
+        /// THEN the correct value is returned
+        /// </summary>
+        [TestCase("0", false)]
+        [TestCase("false", false)]
+        [TestCase("False", false)]
+        [TestCase("1", true)]
+        [TestCase("True", true)]
+        [TestCase("true", true)]
+        public void GivenAnInputBooleanString_WhenFromStringIsCalled_ThenTheCorrectValueIsReturned(string inputString, bool expectedOutput)
+        {
+            // When
+            bool result = (bool) FMParser.FromString(inputString, typeof(bool));
+
+            // Then
+            Assert.That(result, Is.EqualTo(expectedOutput));
+        }
     }
 }
