@@ -83,8 +83,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             // Then
             WaterFlowFMModelDefinition modelDefinition = model.ModelDefinition;
-            Assert.AreEqual(12, modelDefinition.UnknownSedimentProperties.Count,
-                            "Unexpected number of unknown sediment properties in model definition: exactly and only 12 unknown properties should have been added.");
+
+            const int expectedNUnknownProperties = 12;
+            Assert.AreEqual(expectedNUnknownProperties, modelDefinition.UnknownSedimentProperties.Count,
+                            $"Unexpected number of unknown sediment properties in model definition: exactly and only {expectedNUnknownProperties} unknown properties should have been added.");
             Assert.AreEqual(originalNumberKnownProperties, modelDefinition.Properties.Count,
                             "Unexpected number of known properties in model definition.");
             ValidateAllUnknownProperties(model.ModelDefinition);

@@ -112,9 +112,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 
         public IList<IUnsupportedFileBasedExtForceFileItem> UnsupportedFileBasedExtForceFileItems { get; private set; }
 
-        public IList<WaterFlowFMProperty> UnknownMorphologyProperties { get; set; }
+        public IList<WaterFlowFMProperty> UnknownMorphologyProperties { get; private set; }
 
-        public IList<WaterFlowFMProperty> UnknownSedimentProperties { get; set; }
+        public IList<WaterFlowFMProperty> UnknownSedimentProperties { get; private set; }
 
         public HeatFluxModel HeatFluxModel { get; private set; }
 

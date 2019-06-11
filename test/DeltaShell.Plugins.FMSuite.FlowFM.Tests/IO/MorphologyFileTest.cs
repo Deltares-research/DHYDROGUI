@@ -324,8 +324,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         private static void AssertMessageContainsWarningForProperty(string message, string propertyName)
         {
             string expectedMessage = string.Format(
-                Resources
-                    .MorphologyFile_ReadCategoryProperties_Unsupported_keyword___0___detected_and_will_be_passed_to_the_computational_core__Note_that_some_data_or_the_connection_to_linked_files_may_be_lost_,
+                Resources.MorphologyFile_ReadCategoryProperties_Unsupported_keyword___0___detected_and_will_be_passed_to_the_computational_core__Note_that_some_data_or_the_connection_to_linked_files_may_be_lost_,
                 propertyName);
             Assert.IsTrue(message.Contains(expectedMessage), $"The following warning is missing: <{expectedMessage}>");
         }
