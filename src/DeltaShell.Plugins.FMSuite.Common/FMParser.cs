@@ -240,7 +240,9 @@ namespace DeltaShell.Plugins.FMSuite.Common
 
             if (dataType == typeof(bool))
             {
-                return str.Trim().Equals("1") || str.Trim().ToLower().Equals("true"); //simple version
+                string strTrim = str.Trim();
+                return strTrim.Equals("1") || 
+                       strTrim.Equals("true", StringComparison.InvariantCultureIgnoreCase); //simple version
             }
 
             if (dataType == typeof(DateTime))
