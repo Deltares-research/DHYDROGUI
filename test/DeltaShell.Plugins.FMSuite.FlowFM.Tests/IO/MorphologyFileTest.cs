@@ -131,18 +131,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                           .ToList();
 
             Assert.AreEqual(4, propertiesMorphologyCategory.Count);
-            ValidatePropertiesCategory(propertiesMorphologyCategory, MorphologyFile.Header);
+            ValidatePropertiesCategory(propertiesMorphologyCategory, MorphologyFile.Header, KnownProperties.morphology);
 
             const string customCategoryName = "CustomCategory";
             List<WaterFlowFMProperty> propertiesUnknownCategory = 
                 properties.Where(p => p.PropertyDefinition.FileCategoryName.Equals(customCategoryName)).ToList();
-            ValidatePropertiesCategory(propertiesUnknownCategory, customCategoryName);
+            ValidatePropertiesCategory(propertiesUnknownCategory, customCategoryName, customCategoryName);
         }
 
-        private static void ValidatePropertiesCategory(List<WaterFlowFMProperty> properties, string categoryName)
+        private static void ValidatePropertiesCategory(List<WaterFlowFMProperty> properties, 
+                                                       string categoryName,
+                                                       string fileCategoryName)
         {
             Assert.IsTrue(properties.All(p => p.PropertyDefinition.UnknownPropertySource.Equals(PropertySource.MorphologyFile)));
-            Assert.IsTrue(properties.All(p => p.PropertyDefinition.FileCategoryName.Equals(categoryName)));
+            Assert.IsTrue(properties.All(p => p.PropertyDefinition.FileCategoryName.Equals(fileCategoryName)));
             Assert.IsTrue(properties.All(p => p.PropertyDefinition.Category.Equals(categoryName)));
 
             ValidateProperty(properties, "CustomStringProp", "\"777\"");

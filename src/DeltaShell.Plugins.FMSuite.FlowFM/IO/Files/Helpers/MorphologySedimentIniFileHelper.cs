@@ -63,7 +63,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
             IEnumerable<WaterFlowFMProperty> customPropertiesOfCustomGroups)
         {
             IEnumerable<IGrouping<string, WaterFlowFMProperty>> categories =
-                customPropertiesOfCustomGroups.GroupBy(p => p.PropertyDefinition.FileCategoryName.ToLower());
+                customPropertiesOfCustomGroups.GroupBy(p => p.PropertyDefinition.FileCategoryName);
 
             foreach (IGrouping<string, WaterFlowFMProperty> category in categories)
             {

@@ -287,8 +287,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         private static WaterFlowFMProperty CreateModelPropertyForUnknownDelftIniProperty(
             string categoryName, IDelftIniProperty delftIniProperty)
         {
+            string fileCategoryName = categoryName;
+            if (fileCategoryName.Equals(KnownProperties.morphology, StringComparison.InvariantCultureIgnoreCase))
+            {
+                fileCategoryName = KnownProperties.morphology;
+            }
+
             WaterFlowFMPropertyDefinition propertyDefinition =
-                WaterFlowFMProperty.CreatePropertyDefinitionForUnknownProperty(categoryName,
+                WaterFlowFMProperty.CreatePropertyDefinitionForUnknownProperty(fileCategoryName,
                                                                                delftIniProperty.Name,
                                                                                delftIniProperty.Comment,
                                                                                PropertySource.MorphologyFile);
