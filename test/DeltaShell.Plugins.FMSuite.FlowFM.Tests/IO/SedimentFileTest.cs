@@ -75,45 +75,39 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         {
             // Given
             var model = new WaterFlowFMModel();
-            int originalNumberKnownProperties = model.ModelDefinition.Properties.Count;
-            string sedFilePath = TestHelper.GetTestFilePath(@"sedmor\FlowFMCustomProperties\SedCustomProperties.sed");
+            var properties = model.ModelDefinition.Properties;
+            var originalNumberOfProperties = properties.Count;
+            var sedFilePath = TestHelper.GetTestFilePath(@"sedmor\FlowFMCustomProperties\SedCustomProperties.sed");
 
             // When
             SedimentFile.LoadSediments(sedFilePath, model);
 
             // Then
-            WaterFlowFMModelDefinition modelDefinition = model.ModelDefinition;
-
-            const int expectedNUnknownProperties = 12;
-            Assert.AreEqual(expectedNUnknownProperties, modelDefinition.UnknownSedimentProperties.Count,
-                            $"Unexpected number of unknown sediment properties in model definition: exactly and only {expectedNUnknownProperties} unknown properties should have been added.");
-            Assert.AreEqual(originalNumberKnownProperties, modelDefinition.Properties.Count,
-                            "Unexpected number of known properties in model definition.");
+            Assert.AreEqual(originalNumberOfProperties + 12, properties.Count,
+                            "Unexpected number of properties in model definition: exactly and only 12 unknown properties should have been added to the original properties.");
             ValidateAllUnknownProperties(model.ModelDefinition);
         }
 
         private static void ValidateAllUnknownProperties(WaterFlowFMModelDefinition modelDefinition)
         {
-            IList<WaterFlowFMProperty> properties = modelDefinition.UnknownSedimentProperties;
+            var properties = modelDefinition.Properties;
 
             const string sedimentFraction1Name = "sed1";
-            List<WaterFlowFMProperty> unknownPropertiesForSed1 =
-                properties.Where(p => p.PropertyDefinition.Category.Equals(sedimentFraction1Name)).ToList();
+            var unknownPropertiesForSed1 = properties.Where(p => p.PropertyDefinition.Category.Equals(sedimentFraction1Name)).ToList();
             ValidatePropertiesCategory(unknownPropertiesForSed1, SedimentFile.Header, sedimentFraction1Name);
 
             const string sedimentFraction2Name = "sed2";
-            List<WaterFlowFMProperty> unknownPropertiesForSed2 =
-                properties.Where(p => p.PropertyDefinition.Category.Equals(sedimentFraction2Name)).ToList();
+            var unknownPropertiesForSed2 = properties.Where(p => p.PropertyDefinition.Category.Equals(sedimentFraction2Name)).ToList();
             ValidatePropertiesCategory(unknownPropertiesForSed2, SedimentFile.Header, sedimentFraction2Name);
 
             const string customCategoryName = "MyCustomCategory";
-            List<WaterFlowFMProperty> propertiesUnknownCategory =
-                properties.Where(p => p.PropertyDefinition.FileCategoryName == customCategoryName).ToList();
+            var propertiesUnknownCategory = properties.Where(p => p.PropertyDefinition.FileCategoryName == customCategoryName).ToList();
             ValidatePropertiesCategory(propertiesUnknownCategory, customCategoryName, customCategoryName);
         }
 
         private static void ValidatePropertiesCategory(List<WaterFlowFMProperty> properties, string fileCategoryName, string categoryName)
         {
+            Assert.IsTrue(properties.All(p => p.PropertyDefinition.UnknownPropertySource.Equals(PropertySource.SedimentFile)));
             Assert.IsTrue(properties.All(p => p.PropertyDefinition.FileCategoryName.Equals(fileCategoryName)));
             Assert.IsTrue(properties.All(p => p.PropertyDefinition.Category.Equals(categoryName)));
 

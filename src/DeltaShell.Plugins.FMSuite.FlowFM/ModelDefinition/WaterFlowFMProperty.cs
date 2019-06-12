@@ -9,7 +9,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             base(propertyDefinition, valueAsString) {}
 
         public static WaterFlowFMPropertyDefinition CreatePropertyDefinitionForUnknownProperty(
-            string mduGroupName, string mduPropertyName, string comment)
+            string mduGroupName,
+            string mduPropertyName,
+            string comment,
+            PropertySource propertySource = PropertySource.MduFile)
         {
             return new WaterFlowFMPropertyDefinition
             {
@@ -26,6 +29,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                 Description = comment,
                 IsDefinedInSchema = false,
                 IsFile = false,
+                UnknownPropertySource = propertySource
             };
         }
 
@@ -36,5 +40,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         {
             return new WaterFlowFMProperty(PropertyDefinition, GetValueAsString());
         }
+    }
+
+    public enum PropertySource
+    {
+        None,
+        MduFile,
+        MorphologyFile,
+        SedimentFile
     }
 }

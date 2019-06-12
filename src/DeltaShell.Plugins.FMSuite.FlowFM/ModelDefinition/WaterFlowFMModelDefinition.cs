@@ -112,10 +112,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 
         public IList<IUnsupportedFileBasedExtForceFileItem> UnsupportedFileBasedExtForceFileItems { get; private set; }
 
-        public IList<WaterFlowFMProperty> UnknownMorphologyProperties { get; private set; }
-
-        public IList<WaterFlowFMProperty> UnknownSedimentProperties { get; private set; }
-
         public HeatFluxModel HeatFluxModel { get; private set; }
 
         public IEventedList<Feature2D> Boundaries { get; private set; }
@@ -210,8 +206,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             BoundaryConditionSets = new EventedList<BoundaryConditionSet>();
             WindFields = new EventedList<IWindField>();
             UnsupportedFileBasedExtForceFileItems = new EventedList<IUnsupportedFileBasedExtForceFileItem>();
-            UnknownMorphologyProperties = new List<WaterFlowFMProperty>();
-            UnknownSedimentProperties = new List<WaterFlowFMProperty>();
             SourcesAndSinks = new EventedList<SourceAndSink>();
             Pipes = new EventedList<Feature2D>();
             SpatialOperations = new Dictionary<string, IList<ISpatialOperation>>();
