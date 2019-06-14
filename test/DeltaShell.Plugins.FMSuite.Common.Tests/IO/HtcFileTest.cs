@@ -2,6 +2,7 @@
 using System.IO;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
+using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files;
 using NUnit.Framework;
 
@@ -21,41 +22,42 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         [Test]
         public void GivenHtcFile_WhenReading_GridFileNameIsReturned()
         {
-            
-            var testFilePath = TestHelper.GetTestFilePath(@"heatFluxFiles\meteo.htc");
-            testFilePath = TestHelper.CreateLocalCopy(testFilePath);
-            var htcDir = Path.GetDirectoryName(testFilePath);
-            Assert.IsNotNull(htcDir);
+            // Given
+            string sourceGriddedHeatFluxFile = TestHelper.GetTestFilePath(@"heatFluxFiles\meteo.htc");
 
-            try
+            using (var temp = new TemporaryDirectory())
             {
-                string gridFilePath = HtcFile.GetCorrespondingGridFilePath(testFilePath);
+                string copyGriddedHeatFluxFile = Path.Combine(temp.Path, "meteo.htc");
+                FileUtils.CopyFile(sourceGriddedHeatFluxFile, copyGriddedHeatFluxFile);
+
+                string htcDir = Path.GetDirectoryName(copyGriddedHeatFluxFile);
+                Assert.IsNotNull(htcDir);
+                // When
+                string gridFilePath = HtcFile.GetCorrespondingGridFilePath(copyGriddedHeatFluxFile);
+
+                //Then
                 Assert.That(gridFilePath,
-                    Is.EqualTo(Path.Combine(htcDir, "meteo.grd")));
-            }
-            finally
-            {
-                FileUtils.DeleteIfExists(Path.GetDirectoryName(testFilePath));
+                            Is.EqualTo(Path.Combine(htcDir, "meteo.grd")));
             }
         }
 
+
         [Test]
-        public void GivenHtcFilePath_WhenReadingAndNoGridFileNameIsFound_ExceptionShouldBeReturned()
+        public void GivenHtcFilePath_WhenReadingAndNoGridFileNameIsFound_ExceptionShouldBeThrown()
         {
-            var testFilePath = TestHelper.GetTestFilePath(@"heatFluxFiles\meteo2.htc");
-            testFilePath = TestHelper.CreateLocalCopy(testFilePath);
-            var htcDir = Path.GetDirectoryName(testFilePath);
-            Assert.IsNotNull(htcDir);
+            string sourceGriddedHeatFluxFile = TestHelper.GetTestFilePath(@"heatFluxFiles\meteo2.htc");
 
-            try
+            using (var temp = new TemporaryDirectory())
             {
-                Assert.Throws<InvalidOperationException>(() => { HtcFile.GetCorrespondingGridFilePath(testFilePath); },
+                string copyGriddedHeatFluxFile = Path.Combine(temp.Path, "meteo2.htc");
+                FileUtils.CopyFile(sourceGriddedHeatFluxFile, copyGriddedHeatFluxFile);
+
+                string htcDir = Path.GetDirectoryName(copyGriddedHeatFluxFile);
+                Assert.IsNotNull(htcDir);
+
+                Assert.Throws<InvalidOperationException>(
+                    () => { HtcFile.GetCorrespondingGridFilePath(copyGriddedHeatFluxFile); },
                     "Relative Grid file path is missing in the *.htc file");
-
-            }
-            finally
-            {
-                FileUtils.DeleteIfExists(Path.GetDirectoryName(testFilePath));
             }
         }
     }

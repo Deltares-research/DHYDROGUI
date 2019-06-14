@@ -11,12 +11,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.ModelDefinition
     [TestFixture]
     public class HeatFluxModelTest
     {
-        [Test]
-        public void GivenAGriddedHeatFluxModel_WhenSavingAs_ThenTheFilesShouldBeCopiedAndNewPathsShouldBeSet()
+        [TestCase(true)]
+        [TestCase(false)]
+        public void GivenAGriddedHeatFluxModel_WhenSavingAsOrExporting_ThenTheFilesShouldBeCopiedAndNewPathsShouldBeSetOnlyIfSwitchToIsTrue(bool switchTo)
         {
             //Given
-            string sourceGriddedHeatFluxFile = TestHelper.GetTestFilePath(@"heatFluxFiles\meteo.htc");
-            string sourceGridFile = TestHelper.GetTestFilePath(@"heatFluxFiles\meteo.grd");
+            string sourceGriddedHeatFluxFile = TestHelper.GetTestFilePath(@"heatFluxFiles\GriddedHeatFluxModel\meteo.htc");
+            string sourceGridFile = TestHelper.GetTestFilePath(@"heatFluxFiles\GriddedHeatFluxModel\meteo.grd");
             
             using (var temp = new TemporaryDirectory())
             {
@@ -36,50 +37,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.ModelDefinition
                 string expectedTargetGridFile = Path.Combine(temp.Path, "save", "meteo.grd");
 
                 //When
-                heatFluxModel.CopyTo(targetGriddedHeatFluxFile, true);
+                heatFluxModel.CopyTo(targetGriddedHeatFluxFile, switchTo);
 
                 //Then
                 Assert.IsTrue(File.Exists(targetGriddedHeatFluxFile));
                 Assert.IsTrue(File.Exists(expectedTargetGridFile));
 
-                Assert.AreEqual(heatFluxModel.GriddedHeatFluxFilePath, targetGriddedHeatFluxFile);
-                Assert.AreEqual(heatFluxModel.GridFilePath, expectedTargetGridFile);
-            }
-        }
-
-        [Test]
-        public void GivenAGriddedHeatFluxModel_WhenExporting_ThenOnlyTheFilesShouldBeCopied()
-        {
-            //Given
-            string sourceGriddedHeatFluxFile = TestHelper.GetTestFilePath(@"heatFluxFiles\meteo.htc");
-            string sourceGridFile = TestHelper.GetTestFilePath(@"heatFluxFiles\meteo.grd");
-
-            using (var temp = new TemporaryDirectory())
-            {
-                string copyGriddedHeatFluxFile = Path.Combine(temp.Path, "meteo.htc");
-                string copyGridFile = Path.Combine(temp.Path, "meteo.grd");
-
-                FileUtils.CopyFile(sourceGriddedHeatFluxFile, copyGriddedHeatFluxFile);
-                FileUtils.CopyFile(sourceGridFile, copyGridFile);
-
-                var heatFluxModel = new HeatFluxModel()
+                if (switchTo)
                 {
-                    GriddedHeatFluxFilePath = copyGriddedHeatFluxFile,
-                    GridFilePath = copyGridFile
-                };
-
-                string targetGriddedHeatFluxFile = Path.Combine(temp.Path, "save", "meteo.htc");
-                string expectedTargetGridFile = Path.Combine(temp.Path, "save", "meteo.grd");
-
-                //When
-                heatFluxModel.CopyTo(targetGriddedHeatFluxFile, false);
-
-                //Then
-                Assert.IsTrue(File.Exists(targetGriddedHeatFluxFile));
-                Assert.IsTrue(File.Exists(expectedTargetGridFile));
-
-                Assert.AreEqual(heatFluxModel.GriddedHeatFluxFilePath, copyGriddedHeatFluxFile);
-                Assert.AreEqual(heatFluxModel.GridFilePath, copyGridFile);
+                    Assert.AreEqual(heatFluxModel.GriddedHeatFluxFilePath, targetGriddedHeatFluxFile);
+                    Assert.AreEqual(heatFluxModel.GridFilePath, expectedTargetGridFile);
+                }
+                else
+                {
+                    Assert.AreEqual(heatFluxModel.GriddedHeatFluxFilePath, copyGriddedHeatFluxFile);
+                    Assert.AreEqual(heatFluxModel.GridFilePath, copyGridFile);
+                }
             }
         }
     }

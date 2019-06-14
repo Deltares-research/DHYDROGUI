@@ -924,9 +924,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         {
             using (var temp = new TemporaryDirectory())
             {
-                string sourceExtFile = TestHelper.GetTestFilePath(@"heatFluxFiles\htccase.ext");
-                string sourceHeatFluxFile = TestHelper.GetTestFilePath(@"heatFluxFiles\meteo.htc");
-                string sourceGridFile = TestHelper.GetTestFilePath(@"heatFluxFiles\meteo.grd");
+                string sourceExtFile = TestHelper.GetTestFilePath(@"heatFluxFiles\GriddedHeatFluxModel\htccase.ext");
+                string sourceHeatFluxFile = TestHelper.GetTestFilePath(@"heatFluxFiles\GriddedHeatFluxModel\meteo.htc");
+                string sourceGridFile = TestHelper.GetTestFilePath(@"heatFluxFiles\GriddedHeatFluxModel\meteo.grd");
 
                 var def = new WaterFlowFMModelDefinition();
                 def.HeatFluxModel.Type = HeatFluxModelType.Composite;
@@ -957,6 +957,42 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 Assert.IsTrue(File.Exists(savedExtFile));
                 Assert.IsTrue(File.Exists(expectedSavedHeatFluxFile));
                 Assert.IsTrue(File.Exists(expectedSavedGridFile));
+            }
+        }
+
+        [Test]
+        public void GivenAnUniformdHeatFluxModel_WhenReadingAndWriting_ThenAllDataShouldRemain()
+        {
+            using (var temp = new TemporaryDirectory())
+            {
+                string sourceExtFile = TestHelper.GetTestFilePath(@"heatFluxFiles\UniformHeatFluxModel\htccase.ext");
+                string sourceTimFile = TestHelper.GetTestFilePath(@"heatFluxFiles\UniformHeatFluxModel\meteo.tim");
+                
+                var def = new WaterFlowFMModelDefinition();
+                def.HeatFluxModel.Type = HeatFluxModelType.Composite;
+
+                string copyExtFile = Path.Combine(temp.Path, "htccase.ext");
+                string copyTimFile = Path.Combine(temp.Path, "meteo.tim");
+                
+                FileUtils.CopyFile(sourceExtFile, copyExtFile);
+                FileUtils.CopyFile(sourceTimFile, copyTimFile);
+                
+                var extForceFile = new ExtForceFile();
+                extForceFile.Read(copyExtFile, def, copyExtFile);
+
+                Assert.IsNull(def.HeatFluxModel.GriddedHeatFluxFilePath);
+                Assert.IsNull(def.HeatFluxModel.GridFilePath);
+
+                string savedExtFile = Path.Combine(temp.Path, "save", "htccase.ext");
+                string expectedSavedTimFile = Path.Combine(temp.Path, "save", "meteo.tim");
+                
+                string saveDirectory = Path.GetDirectoryName(savedExtFile);
+                FileUtils.CreateDirectoryIfNotExists(saveDirectory);
+
+                extForceFile.Write(savedExtFile, def);
+
+                Assert.IsTrue(File.Exists(savedExtFile));
+                Assert.IsTrue(File.Exists(expectedSavedTimFile));
             }
         }
 
