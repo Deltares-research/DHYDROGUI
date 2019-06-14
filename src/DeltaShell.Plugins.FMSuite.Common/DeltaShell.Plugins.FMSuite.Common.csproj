@@ -147,6 +147,8 @@
     <Compile Include="FeatureData\VerticalProfileDefinition.cs" />
     <Compile Include="FeatureData\IWindField.cs" />
     <Compile Include="FeatureData\UniformWindField.cs" />
+    <Compile Include="IO\Files\HtcFile.cs" />
+    <Compile Include="IO\Readers\HtcFileReader.cs" />
     <Compile Include="Wind\FileBasedWindDefinition.cs" />
     <Compile Include="IO\Readers\ApwxwyFileReader.cs" />
     <Compile Include="IO\ImportExport\Exporters\Delft3DDepthFileExporter.cs" />

@@ -1,23 +1,20 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Units;
 using DelftTools.Utils.Aop;
+using DelftTools.Utils.IO;
+using DeltaShell.Plugins.FMSuite.Common.IO.Files;
+using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 {
-    public enum HeatFluxModelType
-    {
-        None = 0,
-        TransportOnly = 1,
-        ExcessTemperature = 3,
-        Composite = 5,
-    }
-
     [Entity]
     public class HeatFluxModel
     {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(HeatFluxModel));
         private HeatFluxModelType modelType;
         private IFunction meteoData;
         private bool containsSolarRadiation;
@@ -36,10 +33,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                     {
                         meteoData = null;
                         containsSolarRadiation = false;
+                        GridFilePath = null;
+                        GriddedHeatFluxFilePath = null;
                     }
                         break;
                     case HeatFluxModelType.Composite:
                     {
+                        GridFilePath = null;
+                        GriddedHeatFluxFilePath = null;
                         meteoData = CreateTimeseriesMeteoData();
                         UpdateSolarRadiationInMeteoData();
                     }
@@ -115,6 +116,49 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             });
 
             return result;
+        }
+
+        public string GridFilePath { get; set; }
+
+        public string GriddedHeatFluxFilePath { get; set; }
+
+        public void CopyTo(string destinationPath, bool switchTo = true)
+        {
+            if (!File.Exists(GriddedHeatFluxFilePath))
+            {
+                throw new FileNotFoundException($"Could not find heat flux data file {GriddedHeatFluxFilePath}");
+            }
+
+            if (!File.Exists(GridFilePath))
+            {
+                throw new FileNotFoundException($"Could not find heat flux grid file {GridFilePath}");
+            }
+            
+            string sourceGriddedHeatFluxFile = Path.GetFullPath(GriddedHeatFluxFilePath);
+            string sourceGridFile = Path.GetFullPath(GridFilePath);
+            destinationPath = Path.GetFullPath(destinationPath);
+
+            string targetDirectory = Path.GetDirectoryName(destinationPath);
+
+            FileUtils.CreateDirectoryIfNotExists(targetDirectory);
+
+            if (sourceGriddedHeatFluxFile != destinationPath)
+            {
+                File.Copy(GriddedHeatFluxFilePath, destinationPath, true);
+                GriddedHeatFluxFilePath = switchTo ? destinationPath : GriddedHeatFluxFilePath;
+            }
+
+            string destGridFilePath = GetCorrespondingGridFilePath(destinationPath);
+            if (sourceGridFile != Path.GetFullPath(destGridFilePath))
+            {
+                File.Copy(GridFilePath, destGridFilePath, true);
+                GridFilePath = switchTo ? destGridFilePath : GridFilePath;
+            }
+        }
+       
+        public static string GetCorrespondingGridFilePath(string filePath)
+        {
+            return HtcFile.GetCorrespondingGridFilePath(filePath);
         }
     }
 }

@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.Sediment;
@@ -916,6 +917,47 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             Assert.IsTrue(File.Exists("chan2_east_outflow.pli"));
             Assert.IsTrue(File.Exists("chan2_east_outflow.tim"));
+        }
+
+        [Test]
+        public void GivenAGriddedHeatFluxModel_WhenReadingAndWriting_ThenAllDataShouldRemain()
+        {
+            using (var temp = new TemporaryDirectory())
+            {
+                string sourceExtFile = TestHelper.GetTestFilePath(@"heatFluxFiles\htccase.ext");
+                string sourceHeatFluxFile = TestHelper.GetTestFilePath(@"heatFluxFiles\meteo.htc");
+                string sourceGridFile = TestHelper.GetTestFilePath(@"heatFluxFiles\meteo.grd");
+
+                var def = new WaterFlowFMModelDefinition();
+                def.HeatFluxModel.Type = HeatFluxModelType.Composite;
+
+                string copyExtFile = Path.Combine(temp.Path, "htccase.ext");
+                string copyHeatFluxFile = Path.Combine(temp.Path, "meteo.htc");
+                string copyGridFile = Path.Combine(temp.Path, "meteo.grd");
+
+                FileUtils.CopyFile(sourceExtFile, copyExtFile);
+                FileUtils.CopyFile(sourceHeatFluxFile, copyHeatFluxFile);
+                FileUtils.CopyFile(sourceGridFile, copyGridFile);
+
+                var extForceFile = new ExtForceFile();
+                extForceFile.Read(copyExtFile, def, copyExtFile);
+
+                Assert.IsNotNull(def.HeatFluxModel.GriddedHeatFluxFilePath);
+                Assert.IsNotNull(def.HeatFluxModel.GridFilePath);
+
+                string savedExtFile = Path.Combine(temp.Path, "save", "htccase.ext");
+                string expectedSavedHeatFluxFile = Path.Combine(temp.Path, "save", "meteo.htc");
+                string expectedSavedGridFile = Path.Combine(temp.Path, "save", "meteo.grd");
+
+                string saveDirectory = Path.GetDirectoryName(savedExtFile);
+                FileUtils.CreateDirectoryIfNotExists(saveDirectory);
+
+                extForceFile.Write(savedExtFile, def);
+
+                Assert.IsTrue(File.Exists(savedExtFile));
+                Assert.IsTrue(File.Exists(expectedSavedHeatFluxFile));
+                Assert.IsTrue(File.Exists(expectedSavedGridFile));
+            }
         }
 
         private static void ValidateUnknownQuantities(WaterFlowFMModelDefinition def)

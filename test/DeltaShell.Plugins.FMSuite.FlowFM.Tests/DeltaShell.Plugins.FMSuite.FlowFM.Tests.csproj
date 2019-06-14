@@ -347,6 +347,7 @@
     <Compile Include="Layers\UnstructuredGridLayerTest.cs" />
     <Compile Include="Layers\UnstructuredGridVertexFillCoverageLayerTest.cs" />
     <Compile Include="Gui\FlowFMMapLayerProviderTest.cs" />
+    <Compile Include="ModelDefinition\HeatFluxModelTest.cs" />
     <Compile Include="ModelDefinition\ISedimentFractionExtensionsTests.cs" />
     <Compile Include="QuantityGeneratorTest.cs" />
     <Compile Include="ScriptingTest\FlowFlexibleMeshFunctionsScriptTest.cs" />

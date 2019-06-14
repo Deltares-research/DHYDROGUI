@@ -290,62 +290,129 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                     return;
                 case HeatFluxModelType.ExcessTemperature:
                 case HeatFluxModelType.Composite:
-                    ReadCompositeTemperatureData(extForceFileItems, modelDefinition.HeatFluxModel, modelReferenceDate);
+                    ReadCompositeTemperatureData(extForceFileItems, modelDefinition, modelReferenceDate);
                     return;
             }
         }
 
         private void ReadCompositeTemperatureData(IEnumerable<ExtForceFileItem> extForceFileItems,
-                                                  HeatFluxModel heatFluxModel, DateTime modelReferenceDate)
+                                                  WaterFlowFMModelDefinition modelDefinition, DateTime modelReferenceDate)
         {
+            HeatFluxModel heatFluxModel = modelDefinition.HeatFluxModel;
+
             ExtForceFileItem forceFileItem =
                 extForceFileItems.LastOrDefault(e => e.Quantity == ExtForceQuantNames.MeteoData ||
                                                      e.Quantity == ExtForceQuantNames.MeteoDataWithRadiation);
-
-            if (forceFileItem == null)
+            try
             {
-                return;
+                if (forceFileItem == null)
+                {
+                    return;
+                }
+
+                supportedExtForceFileItems.Add(forceFileItem);
+
+                heatFluxModel.ContainsSolarRadiation =
+                    forceFileItem.Quantity == ExtForceQuantNames.MeteoDataWithRadiation;
+                string extension = Path.GetExtension(forceFileItem.FileName);
+
+                string filePath = GetOtherFilePathInSameDirectory(ExtSubFilesReferenceFilePath, forceFileItem.FileName);
+                if (extension == ".tim")
+                {
+                    new TimFile().Read(filePath, heatFluxModel.MeteoData, modelReferenceDate);
+                    existingForceFileItems[forceFileItem] = heatFluxModel.MeteoData;
+                }
+                else if (extension == ".htc")
+                {
+                    string gridFilePath = HeatFluxModel.GetCorrespondingGridFilePath(filePath);
+
+                    if (File.Exists(gridFilePath))
+                    {
+                        heatFluxModel.GriddedHeatFluxFilePath = filePath;
+                        heatFluxModel.GridFilePath = gridFilePath;
+
+                        existingForceFileItems[forceFileItem] = heatFluxModel.Type;
+                    }
+                    else
+                    {
+                        throw new FileNotFoundException($"Could not find heat flux grid file {gridFilePath}");
+                    }
+                }
             }
-
-            supportedExtForceFileItems.Add(forceFileItem);
-
-            heatFluxModel.ContainsSolarRadiation = forceFileItem.Quantity == ExtForceQuantNames.MeteoDataWithRadiation;
-
-            string filePath = GetOtherFilePathInSameDirectory(ExtSubFilesReferenceFilePath, forceFileItem.FileName);
-
-            new TimFile().Read(filePath, heatFluxModel.MeteoData, modelReferenceDate);
-            existingForceFileItems[forceFileItem] = heatFluxModel.MeteoData;
+            catch (Exception ex)
+            {
+                heatFluxModel.Type = HeatFluxModelType.None;
+                modelDefinition.GetModelProperty(KnownProperties.Temperature).SetValueAsString("0");
+                log.ErrorFormat(
+                    "An error occured while reading Quantity {0} of file {1}: {2} Process temperature is reset to None ",
+                    forceFileItem.Quantity, ExtFilePath, ex.Message);
+            }
         }
 
-        private IEnumerable<ExtForceFileItem> WriteHeatFluxModelData(WaterFlowFMModelDefinition modelDefinition)
+        private IEnumerable<ExtForceFileItem> WriteHeatFluxModelData(WaterFlowFMModelDefinition modelDefinition, bool switchTo = true)
         {
-            if (modelDefinition.HeatFluxModel.MeteoData == null)
+            var extForceFileItems = new List<ExtForceFileItem>();
+            try
             {
-                yield break;
+                int temperatureProcessNumber = (int)modelDefinition.HeatFluxModel.Type;
+                
+                // Process Temperature is Uniform Composite Model (Temperature 5 in MDU, but *.tim file)
+                if (temperatureProcessNumber == 5 && modelDefinition.HeatFluxModel.GriddedHeatFluxFilePath == null)
+                {
+                    ExtForceFileItem extForceFileItem =
+                        GetExistingForceFileItemOrNull(modelDefinition.HeatFluxModel.MeteoData)
+                        ??
+                        new ExtForceFileItem(
+                            modelDefinition.HeatFluxModel.ContainsSolarRadiation
+                                ? ExtForceQuantNames.MeteoDataWithRadiation
+                                : ExtForceQuantNames.MeteoData)
+                        {
+                            FileName = modelDefinition.ModelName + "_meteo.tim",
+                            FileType = ExtForceQuantNames.FileTypes.Uniform,
+                            Method = 1,
+                            Operand = ExtForceQuantNames.OperatorToStringMapping[
+                                Operator.Overwrite]
+                        };
+
+                    if (WriteToDisk)
+                    {
+                        string path = GetOtherFilePathInSameDirectory(ExtFilePath, extForceFileItem.FileName);
+                        new TimFile().Write(path, modelDefinition.HeatFluxModel.MeteoData,
+                                            (DateTime) modelDefinition.GetModelProperty(KnownProperties.RefDate).Value);
+                    }
+
+                    extForceFileItems.Add(extForceFileItem);
+                }
+                // Process Temperature is Gridded Composite Model (Temperature 5 in MDU, but *.htc and *.grd file)
+                else if (temperatureProcessNumber == 5 && modelDefinition.HeatFluxModel.GriddedHeatFluxFilePath != null)
+                {
+                    ExtForceFileItem extForceFileItem =
+                        GetExistingForceFileItemOrNull(modelDefinition.HeatFluxModel.Type);
+
+                    // extForceFileItem should be existing, since it should be created during the import and a Gridded Composite
+                    // Model heat flux cannot be created in the GUI
+                    if (extForceFileItem == null)
+                    {
+                        throw new InvalidOperationException("heat flux model was not correctly imported");
+                    }
+
+                    if (WriteToDisk)
+                    {
+                        string newPath = Path.Combine(Path.GetDirectoryName(ExtFilePath), extForceFileItem.FileName);
+
+                        modelDefinition.HeatFluxModel.CopyTo(newPath, switchTo);
+                    }
+
+                    extForceFileItems.Add(extForceFileItem);
+                }
+
+                return extForceFileItems;
             }
-
-            ExtForceFileItem extForceFileItem = GetExistingForceFileItemOrNull(modelDefinition.HeatFluxModel)
-                                                ??
-                                                new ExtForceFileItem(
-                                                    modelDefinition.HeatFluxModel.ContainsSolarRadiation
-                                                        ? ExtForceQuantNames.MeteoDataWithRadiation
-                                                        : ExtForceQuantNames.MeteoData)
-                                                {
-                                                    FileName = modelDefinition.ModelName + "_meteo.tim",
-                                                    FileType = ExtForceQuantNames.FileTypes.Uniform,
-                                                    Method = 1,
-                                                    Operand = ExtForceQuantNames.OperatorToStringMapping[
-                                                        Operator.Overwrite]
-                                                };
-
-            if (WriteToDisk)
+            catch (Exception ex)
             {
-                string path = GetOtherFilePathInSameDirectory(ExtFilePath, extForceFileItem.FileName);
-                new TimFile().Write(path, modelDefinition.HeatFluxModel.MeteoData,
-                                    (DateTime) modelDefinition.GetModelProperty(KnownProperties.RefDate).Value);
+                log.ErrorFormat("Error during writing the heat flux model: {0}", ex.Message);
+                return extForceFileItems;
             }
-
-            yield return extForceFileItem;
         }
 
         private void ReadSpatialData(IList<ExtForceFileItem> extForceFileItems,
@@ -670,16 +737,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         /// <param name="modelDefinition"> External forcings data </param>
         /// <param name="writeBoundaryConditions"> Whether we are writing boundary conditions. </param>
         public void Write(string extForceFilePath, WaterFlowFMModelDefinition modelDefinition,
-                          bool writeBoundaryConditions = true)
+                          bool writeBoundaryConditions = true, bool switchTo = true)
         {
             ExtFilePath = extForceFilePath;
-            Write(modelDefinition, writeBoundaryConditions);
+            Write(modelDefinition, writeBoundaryConditions, switchTo);
         }
 
-        private void Write(WaterFlowFMModelDefinition modelDefinition, bool writeBoundaryConditions = true)
+        private void Write(WaterFlowFMModelDefinition modelDefinition, bool writeBoundaryConditions, bool switchTo)
         {
             IList<ExtForceFileItem> extForceFileItems =
-                WriteExtForceFileSubFiles(modelDefinition, writeBoundaryConditions);
+                WriteExtForceFileSubFiles(modelDefinition, writeBoundaryConditions, switchTo);
 
             if (extForceFileItems.Any())
             {
@@ -751,11 +818,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                                                                        bool switchTo, bool writeBoundaryConditions)
         {
             ExtFilePath = path;
-            return WriteExtForceFileSubFiles(modelDefinition, writeBoundaryConditions);
+            return WriteExtForceFileSubFiles(modelDefinition, writeBoundaryConditions, switchTo);
         }
 
         private IList<ExtForceFileItem> WriteExtForceFileSubFiles(WaterFlowFMModelDefinition modelDefinition,
-                                                                  bool writeBoundaryConditions)
+                                                                  bool writeBoundaryConditions, bool switchTo = true)
         {
             var extForceFileItems = new List<ExtForceFileItem>();
 
@@ -818,7 +885,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
             extForceFileItems.AddRange(WriteWindItems(modelDefinition).Distinct());
 
-            extForceFileItems.AddRange(WriteHeatFluxModelData(modelDefinition).Distinct());
+            extForceFileItems.AddRange(WriteHeatFluxModelData(modelDefinition, switchTo).Distinct());
 
             extForceFileItems.AddRange(WriteUnknownQuantities(modelDefinition));
 

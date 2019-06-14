@@ -199,7 +199,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
             if (config.WriteExtForcings)
             {
-                WriteExternalForcings(targetMduFilePath, modelDefinition, hydroArea);
+                WriteExternalForcings(targetMduFilePath, modelDefinition, hydroArea, switchTo);
             }
 
             if (modelDefinition.UseMorphologySediment && config.WriteMorphologySediment)
@@ -407,7 +407,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         }
 
         private void WriteExternalForcings(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition,
-                                           HydroArea hydroArea)
+                                           HydroArea hydroArea, bool switchTo = true)
         {
             string exportDirectory = System.IO.Path.GetDirectoryName(targetMduFilePath);
 
@@ -438,7 +438,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
             // will check if indeed the file is written)
             ExternalForcingsFile.Write(extForceFilePath, modelDefinition,
-                                       !(newFormatBoundaryConditions || newBoundaries));
+                                       !(newFormatBoundaryConditions || newBoundaries), switchTo);
 
             if (newFormatBoundaryConditions || newBoundaries || hasEmbankments)
             {
