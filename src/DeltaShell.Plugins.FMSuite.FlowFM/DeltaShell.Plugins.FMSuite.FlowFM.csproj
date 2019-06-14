@@ -167,6 +167,7 @@
     <Compile Include="IO\Files\BcmFile.cs" />
     <Compile Include="IO\DataAccessBuilders\BcmFileFlowBoundaryDataBuilder.cs" />
     <Compile Include="IO\DelftIniCategoryExtension.cs" />
+    <Compile Include="IO\Files\Helpers\MorphologyFileBackwardsCompatibilityHelper.cs" />
     <Compile Include="IO\ImportExport\Exporters\BcmFileExporter.cs" />
     <Compile Include="IO\ImportExport\Exporters\FMGridPartitionExporter.cs" />
     <Compile Include="IO\ImportExport\Exporters\FMModelPartitionExporter.cs" />

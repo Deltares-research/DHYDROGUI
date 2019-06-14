@@ -648,6 +648,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Backwards Compatibility: &apos;{0}&apos; has been updated to &apos;{1}&apos;.
+        /// </summary>
+        public static string MorphologyFileBackwardsCompatibilityHelper_GetUpdatedPropertyName_Backwards_Compatibility____0___has_been_updated_to___1__ {
+            get {
+                return ResourceManager.GetString("MorphologyFileBackwardsCompatibilityHelper_GetUpdatedPropertyName_Backwards_Compa" +
+                        "tibility____0___has_been_updated_to___1__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap Observation {

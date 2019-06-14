@@ -252,6 +252,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
             foreach (DelftIniProperty delftIniProperty in delftIniCategory.Properties)
             {
+                // Backwards Compatibility
+                delftIniProperty.Name = 
+                    MorphologyFileBackwardsCompatibilityHelper.GetUpdatedPropertyName(delftIniProperty.Name,
+                                                                                      logHandler) ??
+                    delftIniProperty.Name;
+
                 WaterFlowFMProperty existingProperty =
                     GetExistingPropertyInCategory(modelDefinition, delftIniProperty, categoryName);
                 if (existingProperty == null)
