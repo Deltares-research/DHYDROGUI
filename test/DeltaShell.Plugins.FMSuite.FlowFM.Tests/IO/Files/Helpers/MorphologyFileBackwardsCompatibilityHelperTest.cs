@@ -53,20 +53,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.Helpers
         /// WHEN GetUpdatedPropertyName is called
         /// THEN a warning message is reported with the mapping
         /// </summary>
-        [Test]
+        [TestCase("bslhd", "Bshld")]
+        [TestCase("BSlhd", "Bshld")]
         public void GivenAPropertyNameForWhichAMappingExistsAndAILogHandler_WhenGetUpdatedPropertyNameIsCalled_ThenAWarningMessageIsReportedWithTheMapping(string propertyName, string expectedMapping)
         {
             // Given
             var logHandlerMock = MockRepository.GenerateStrictMock<ILogHandler>();
             logHandlerMock.Expect(l => l.ReportWarningFormat(
-                                      Arg<string>.Is.Equal(Resources.MorphologyFileBackwardsCompatibilityHelper_GetUpdatedPropertyName_Backwards_Compatibility____0___has_been_updated_to___1__),
-                                      Arg<string>.Is.Equal(propertyName),
-                                      Arg<string>.Is.Equal(expectedMapping)))
+                                      Arg<string>.Matches(fp => fp.Equals(Resources.MorphologyFileBackwardsCompatibilityHelper_GetUpdatedPropertyName_Backwards_Compatibility____0___has_been_updated_to___1__)),
+                                      Arg<object[]>.Matches(fs => fs.Length == 2 &&
+                                                                  fs[0].Equals(propertyName) && 
+                                                                  fs[1].Equals(expectedMapping))))
                           .Repeat.Once();
 
             // When
             logHandlerMock.Replay();
-            MorphologyFileBackwardsCompatibilityHelper.GetUpdatedPropertyName(propertyName);
+            MorphologyFileBackwardsCompatibilityHelper.GetUpdatedPropertyName(propertyName, 
+                                                                              logHandlerMock);
 
             // Then
             logHandlerMock.VerifyAllExpectations();
