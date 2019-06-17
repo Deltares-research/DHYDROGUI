@@ -7,6 +7,7 @@ using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 {
+    [Category(TestCategory.DataAccess)]
     [TestFixture]
     public class HtcFileReaderTest
     {

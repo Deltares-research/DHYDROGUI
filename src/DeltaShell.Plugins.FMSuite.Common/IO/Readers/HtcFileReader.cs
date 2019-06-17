@@ -1,23 +1,27 @@
-﻿using System;
-using System.Text.RegularExpressions;
-using DelftTools.Utils.RegularExpressions;
-using DeltaShell.NGHS.IO;
+﻿using DeltaShell.NGHS.IO;
 using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.Common.IO.Readers
 {
+    /// <summary>
+    /// Reader for finding the relative grid file path in the htc file
+    /// </summary>
     public class HtcFileReader : NGHSFileBase
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(HtcFileReader));
         private readonly string filePath;
-        private const string GridFileIdentifier = "grid_file";
-        private const string KeyValueCommentPattern = @"^\s*(?<key>[^=\s]+)\s*=\s*(?<value>[^#=]*)(#(?<comment>.*))?$";
-
+        private const string GridFileKeyword = "grid_file";
+        private const string endOfHeaderKeyword = "time";
+        
         public HtcFileReader(string filePath)
         {
             this.filePath = filePath;
         }
 
+        /// <summary>
+        /// Using a pattern, the relative grid file path can be found in the header of the file
+        /// </summary>
+        /// <returns></returns>
         public string ReadGridFileNameWithExtension()
         {
             OpenInputFile(filePath);
@@ -28,15 +32,15 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Readers
                 while ((line = GetNextLine()) != null)
                 {
                     string[] fields = GetKeyValueComment(line);
-                    if (fields[0].Trim() == GridFileIdentifier)
+                    string foundKeyWordTrimmed = fields[0].Trim();
+                    if (foundKeyWordTrimmed == GridFileKeyword)
                     {
                         return fields[1].Trim();
                     }
-                    else if (fields[0].Trim().ToLower() == "time")
+                    else if (foundKeyWordTrimmed.ToLower() == endOfHeaderKeyword)
                     {
                         break;
                     }
-
                 }
             }
             finally
@@ -48,21 +52,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Readers
 
         private string[] GetKeyValueComment(string line)
         {
-
-            var result = new string[3];
-
-            MatchCollection matches = RegularExpression.GetMatches(KeyValueCommentPattern, line);
-            if (matches.Count == 0)
-            {
-                throw new FormatException(string.Format("Invalid key-value-comment line on line {0} in file {1}",
-                                                        LineNumber, InputFilePath));
-            }
-
-            result[0] = matches[0].Groups["key"].Value.Trim();
-            result[1] = matches[0].Groups["value"].Value.Trim();
-            result[2] = matches[0].Groups["comment"].Value.Trim(); // Returns "" if comment group not matched
-
-            return result;
+           return ReaderHelper.GetKeyValueComment(line, LineNumber, InputFilePath);
         }
     }
 }
