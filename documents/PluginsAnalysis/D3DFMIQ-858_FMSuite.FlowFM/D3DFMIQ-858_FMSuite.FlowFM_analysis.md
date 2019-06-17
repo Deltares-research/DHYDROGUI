@@ -139,7 +139,7 @@ and the `WaterFlowFMModel` class uses these classes. Due to this implementation 
 
 `DataItems` are objects existing in all plugins and over time their responsibilities 
 increased varying from saving parameters till sharing parameters between different
-models. Since the `WaterFlowFMModel` is file-based, there is little reliance on `DataItems
+models. Since the `WaterFlowFMModel` is file-based, there is little reliance on `DataItems`
 for saving purposes. However, they are also used to couple models, work with spatial
 operations, during merging, and for restart files.
 
@@ -151,7 +151,7 @@ This would solve several of our problems, and prevent future problems.
 
 The entry point for the IO operations is the `WaterFlowFMModel`, however a large 
 section of the actual logic is located within the different `File` classes. These
-File classes suffer from similar problems as the `WaterFlowFMModel` class. They 
+`File` classes suffer from similar problems as the `WaterFlowFMModel` class. They 
 contain more than 1000 lines of code, and have accumulated a large number of 
 responsibilities. This violates the single responsibility principle. 
 
@@ -168,7 +168,7 @@ different `File` classes. It requires a large number of if-else statements to be
 making the code more complex.
 Furthermore, a large portion of the logic of these file classes is currently private within these classes, 
 making it hard to test and reuse. This reduces cohesion within these classes. Most of these private methods are 
-responsible for writing a certain aspect of the file corresponding with the `File`-class. 
+responsible for writing a certain aspect of the file corresponding with the `File` class. 
 In order to improve cohesion, these functions should be extracted and publicly exposed. 
 This would also improve the ease of testing. Finally, documentation should be added
 to these functions, explaining their expectations and responsibilities.
@@ -179,7 +179,7 @@ classes do not need refactoring, however the priority is a lot lower.
 #### MduFile \newline
 
 As mentioned before, the `MduFile` is both responsible for reading and writing
-MduFiles. However, due to the mdu file being the master definition file, it has
+mdu files. However, due to the mdu file being the master definition file, it has
 been assigned a coordinating/managing role within the IO processes. 
 
 For writing it has the following responsibilities:
@@ -188,15 +188,15 @@ For writing it has the following responsibilities:
 * Ensure that all other files referenced by the mdu but not written in the GUI 
   are copied.
 * Ensure that all other `File` classes are called.
-* Write the mdu-file and the properties itself, by interacting with the file system.
+* Write the mdu file and the properties itself, by interacting with the file system.
 
 For reading it has the following responsibilities:
 
-* Reading the mdu-file and the contained properties itself, by interacting with
+* Reading the mdu file and the contained properties itself, by interacting with
   the file system, and interpreting the values. This includes some backward
   compatibility, by mapping values to newer values and keeping unknown properties.
 * Setting all the output time properties.
-* Ensuring that all other File read classes are called.
+* Ensuring that all other `File` read classes are called.
 
 This set of responsibilities is too large, and violates the single responsibility 
 principle. In order to improve the separation of concerns, each of these 
@@ -283,7 +283,7 @@ On the other hand, the D-Flow FM plugin can be improved by using the same implem
 the same type of issues.  
 
 A good example is the implementation of model properties that are not supported by the GUI.
-Different `File`-classes handle these in different ways. During the import we want to put them in the memory of the program, 
+Different `File` classes handle these in different ways. During the import we want to put them in the memory of the program, 
 then do nothing with this information and during an export we want to write these model properties, 
 so that the kernel can calculate with these properties. For some files, these unknown properties 
 for the GUI are stored in separate objects in the model. However, other file types are using another 
