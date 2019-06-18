@@ -12,6 +12,7 @@ using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using System;
+using System.IO;
 using System.Linq;
 using DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
@@ -22,6 +23,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
     [Category(TestCategory.DataAccess)]
     public class FMHisFileFunctionStoreTest
     {
+        [Test]
+        public void OpenHisFile_D3DFMIQ933()
+        {
+            // 1. Set up test model
+            var filePath = TestHelper.GetTestFilePath("output_hisfiles\\D3DFMIQ933.nc");
+            Assert.That(File.Exists(filePath), Is.True);
+
+            var store = new FMHisFileFunctionStore(filePath);
+            Assert.IsNotNull(store);
+        }
+
+
         [Test]
         public void OpenHisFileCheckFunctions()
         {
