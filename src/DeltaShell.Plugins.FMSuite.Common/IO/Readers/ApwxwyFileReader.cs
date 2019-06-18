@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Text.RegularExpressions;
-using DelftTools.Utils.RegularExpressions;
 using DeltaShell.NGHS.IO;
 using log4net;
 
@@ -11,8 +9,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Readers
         private static readonly ILog Log = LogManager.GetLogger(typeof(ApwxwyFileReader));
         private readonly string filePath;
         private const string GridFileIdentifier = "grid_file";
-        private const string KeyValueCommentPattern = @"^\s*(?<key>[^=\s]+)\s*=\s*(?<value>[^#=]*)(#(?<comment>.*))?$";
-
+        
         public ApwxwyFileReader(string filePath)
         {
             this.filePath = filePath;
@@ -49,20 +46,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Readers
         {
             try
             {
-                var result = new string[3];
-
-                MatchCollection matches = RegularExpression.GetMatches(KeyValueCommentPattern, line);
-                if (matches.Count == 0)
-                {
-                    throw new FormatException(string.Format("Invalid key-value-comment line on line {0} in file {1}",
-                                                            LineNumber, InputFilePath));
-                }
-
-                result[0] = matches[0].Groups["key"].Value.Trim();
-                result[1] = matches[0].Groups["value"].Value.Trim();
-                result[2] = matches[0].Groups["comment"].Value.Trim(); // Returns "" if comment group not matched
-
-                return result;
+                return ReaderHelper.GetKeyValueComment(line, LineNumber, InputFilePath);
             }
             catch (Exception ex)
             {

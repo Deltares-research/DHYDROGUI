@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
@@ -27,6 +28,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
     {
         // Known file extensions
         public const string Extension = ".ext";
+        public const string GriddedHeatFluxModelExtension = ".htc";
+        public const string UniformHeatFluxModelExtension = ".tim";
+
 
         // keywords in file used for modelDefinition specific data
         public const string FricTypeKey = "IFRCTYP";
@@ -317,12 +321,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 string extension = Path.GetExtension(forceFileItem.FileName);
 
                 string filePath = GetOtherFilePathInSameDirectory(ExtSubFilesReferenceFilePath, forceFileItem.FileName);
-                if (extension == ".tim")
+                if (extension == UniformHeatFluxModelExtension)
                 {
                     new TimFile().Read(filePath, heatFluxModel.MeteoData, modelReferenceDate);
                     existingForceFileItems[forceFileItem] = heatFluxModel.MeteoData;
                 }
-                else if (extension == ".htc")
+                else if (extension == GriddedHeatFluxModelExtension)
                 {
                     string gridFilePath = HeatFluxModel.GetCorrespondingGridFilePath(filePath);
 
@@ -339,7 +343,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex is FileNotFoundException || ex is ArgumentNullException ||
+                                       ex is InvalidOperationException || ex is ArgumentException ||
+                                       ex is IOException || ex is FormatException)
             {
                 heatFluxModel.Type = HeatFluxModelType.None;
                 modelDefinition.GetModelProperty(KnownProperties.Temperature).SetValueAsString("0");
@@ -349,13 +355,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
         }
 
-        private IEnumerable<ExtForceFileItem> WriteHeatFluxModelData(WaterFlowFMModelDefinition modelDefinition, bool switchTo = true)
+        private IEnumerable<ExtForceFileItem> WriteHeatFluxModelData(WaterFlowFMModelDefinition modelDefinition,
+                                                                     bool switchTo = true)
         {
             var extForceFileItems = new List<ExtForceFileItem>();
             try
             {
-                int temperatureProcessNumber = (int)modelDefinition.HeatFluxModel.Type;
-                
+                int temperatureProcessNumber = (int) modelDefinition.HeatFluxModel.Type;
+
                 // Process Temperature is Uniform Composite Model (Temperature 5 in MDU, but *.tim file)
                 if (temperatureProcessNumber == 5 && modelDefinition.HeatFluxModel.GriddedHeatFluxFilePath == null)
                 {
@@ -408,7 +415,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
                 return extForceFileItems;
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex is FileNotFoundException || ex is InvalidOperationException ||
+                                       ex is ArgumentException || ex is PathTooLongException ||
+                                       ex is UnauthorizedAccessException || ex is DirectoryNotFoundException ||
+                                       ex is IOException || ex is SecurityException)
             {
                 log.ErrorFormat("Error during writing the heat flux model: {0}", ex.Message);
                 return extForceFileItems;

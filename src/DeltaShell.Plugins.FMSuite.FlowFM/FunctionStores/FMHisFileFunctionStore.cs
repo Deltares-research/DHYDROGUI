@@ -4,9 +4,11 @@ using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Filters;
 using DelftTools.Functions.Generic;
+using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Units;
+using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.NetCdf;
 using DeltaShell.Plugins.FMSuite.Common.FunctionStores;
@@ -37,31 +39,30 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
         protected const string StandardNameAttribute = "standard_name";
         protected const string LongNameAttribute = "long_name";
         protected const string UnitAttribute = "units";
+        private const string featureName_Stations = "stations";
+        private const string featureName_CrossSection = "cross_section";
+        private const string featureName_GeneralStructures = "general_structures";
 
-        private static readonly IList<string> DiscardedFeatures = new[]
-        {
-            "weirgens",
-            "gategens",
-            "pumps"
-        };
+//        private static readonly IList<string> DiscardedFeatures = new[]
+//        {
+////            "weirgens",
+////            "gategens",
+////            "pumps"
+//        };
 
         // nhib
         protected FMHisFileFunctionStore() {}
 
-        public FMHisFileFunctionStore(string hisPath, ICoordinateSystem coordinateSystem = null,
-                                      IEnumerable<Feature2D> modelObsPoints = null,
-                                      IEnumerable<Feature2D> modelObsCrossSections = null,
-                                      IEnumerable<Weir2D> modelGeneralStructures = null)
+        public FMHisFileFunctionStore(string hisPath, ICoordinateSystem coordinateSystem = null, HydroArea area = null)
             : base(hisPath) //loads the actual functions
         {
             CoordinateSystem = coordinateSystem;
 
             using (ReconnectToMapFile())
             {
-                stationFeatures = InitializeStationFeatures(modelObsPoints ?? new Feature2D[0]);
-                crossSectionFeatures = InitializeCrossSectionFeatures(modelObsCrossSections ?? new Feature2D[0]);
-                generalStructuresFeatures =
-                    InitializeGeneralStructuresFeatures(modelGeneralStructures ?? new Weir2D[0]);
+                stationFeatures = InitializeStationFeatures((area?.ObservationPoints as IEnumerable<Feature2D>) ?? new Feature2D[0]);
+                crossSectionFeatures = InitializeCrossSectionFeatures((area?.ObservationCrossSections as IEnumerable<Feature2D>) ?? new Feature2D[0]);
+                generalStructuresFeatures = InitializeGeneralStructuresFeatures((area?.Weirs as IEnumerable<Weir2D>) ?? new Weir2D[0]).ToList();
             }
 
             // initialize 'Features' collection of each coverage
@@ -103,10 +104,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
 
                     string secondDimensionName = netCdfFile.GetDimensionName(dimensions[1]);
 
-                    if (DiscardedFeatures.Contains(secondDimensionName))
-                    {
-                        continue;
-                    }
+//                    if (DiscardedFeatures.Contains(secondDimensionName))
+//                    {
+//                        continue;
+//                    }
 
                     var featureVariable = new Variable<IFeature>
                     {
@@ -167,17 +168,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
         private void InsertFeaturesInCoverage(IFeatureCoverage coverage)
         {
             string featureName = coverage.FeatureVariable.Attributes[NcNameAttribute];
-            if (featureName == "stations" && stationFeatures != null)
+            if (featureName == featureName_Stations && stationFeatures != null)
             {
                 coverage.Features = new EventedList<IFeature>(stationFeatures);
             }
 
-            if (featureName == "cross_section" && crossSectionFeatures != null)
+            if (featureName == featureName_CrossSection && crossSectionFeatures != null)
             {
                 coverage.Features = new EventedList<IFeature>(crossSectionFeatures);
             }
 
-            if (featureName == "general_structures" && generalStructuresFeatures != null)
+            if (featureName == featureName_GeneralStructures && generalStructuresFeatures != null)
             {
                 coverage.Features = new EventedList<IFeature>(generalStructuresFeatures);
             }
@@ -196,7 +197,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                 string dimensionName = function.Attributes[NcNameAttribute];
                 switch (dimensionName)
                 {
-                    case "stations":
+                    case featureName_Stations:
                         if (cachedStationsArray == null)
                         {
                             cachedStationsArray = new MultiDimensionalArray<IFeature>(stationFeatures,
@@ -207,7 +208,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                         }
 
                         return (MultiDimensionalArray<T>) cachedStationsArray;
-                    case "cross_section":
+                    case featureName_CrossSection:
                         if (cachedCrossSectionsArray == null)
                         {
                             cachedCrossSectionsArray = new MultiDimensionalArray<IFeature>(crossSectionFeatures,
@@ -218,7 +219,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                         }
 
                         return (MultiDimensionalArray<T>) cachedCrossSectionsArray;
-                    case "general_structures":
+                    case featureName_GeneralStructures:
                         if (cachedGeneralStructures == null)
                         {
                             cachedGeneralStructures = new MultiDimensionalArray<IFeature>(generalStructuresFeatures,
@@ -237,27 +238,52 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             return base.GetVariableValuesCore<T>(function, filters);
         }
 
+        //        private string GetNetCdfName(IWeirFormula weirFormula)
+        //        {
+        //            var name = "general_structure_name";
+        //
+        //            if (weirFormula as SimpleWeirFormula != null)
+        //                return "weirgen_name";
+        //
+        //            if (weirFormula as GatedWeirFormula != null)
+        //                return "gategen_weir_name";
+        //
+        //            return name;
+        //        }
+
+        private IList<string> GeneralStuctures = new List<string>()
+        {
+            "general_structure_name",
+            "weirgen_name",
+            "gategen_name"
+        };
+
         private IList<IFeature> InitializeGeneralStructuresFeatures(IEnumerable<IFeature> modelGeneralStructures)
         {
             var results = new List<IFeature>();
 
-            NetCdfVariable generalStructureNameVariable = netCdfFile.GetVariableByName("general_structure_name");
-            if (generalStructureNameVariable == null)
+            var variables = GeneralStuctures.Select(gs => netCdfFile.GetVariableByName(gs));
+            foreach (var netCdfVariable in variables)
             {
-                return results;
-            }
-
-            string[] names = netCdfFile.Read(generalStructureNameVariable).Cast<char[]>().Select(CharArrayToString)
-                                       .ToArray();
-            for (var i = 0; i < names.Length; i++)
-            {
-                // first try to find the right one in the model features, otherwise we skip it for now. We are not ready to fill in all the data just yet.
-                results.Add(
-                    modelGeneralStructures.FirstOrDefault(m => m as Weir2D != null && (m as Weir2D).Name == names[i]) ??
-                    CreateGeneralStructureFromNetCdf(i, names));
+                if (netCdfVariable == null)
+                    continue;
+                var names = netCdfFile.Read(netCdfVariable)
+                                      .Cast<char[]>()
+                                      .Select(CharArrayToString);
+                foreach (var name in names)
+                {
+                    var feature = GetValidFeature(modelGeneralStructures, name);
+                    results.Add(feature);
+                }
             }
 
             return results;
+        }
+
+        private static IFeature GetValidFeature(IEnumerable<IFeature> modelGeneralStructures, string name)
+        {
+            return modelGeneralStructures.FirstOrDefault(m => m as IWeir != null && (m as IWeir).Name == name) 
+                   ?? CreateGeneralStructureFromNetCdf(name);
         }
 
         private IList<IFeature> InitializeCrossSectionFeatures(IEnumerable<Feature2D> modelObsCrossSections)
@@ -345,11 +371,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             };
         }
 
-        private static Weir2D CreateGeneralStructureFromNetCdf(int i, string[] names)
+        private static Weir2D CreateGeneralStructureFromNetCdf(string name)
         {
             return new Weir2D
             {
-                Name = names[i],
+                Name = name,
                 WeirFormula = new GeneralStructureWeirFormula()
             };
         }
