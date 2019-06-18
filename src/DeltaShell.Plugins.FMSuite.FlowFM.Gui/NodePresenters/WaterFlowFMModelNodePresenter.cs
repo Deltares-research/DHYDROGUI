@@ -142,14 +142,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
             yield return new FmModelTreeShortcut(WaterFlowFMModelDefinition.ViscosityDataItemName, Resources.tube, model, model.Viscosity, ShortCutType.SpatialCoverage);
             yield return new FmModelTreeShortcut(WaterFlowFMModelDefinition.DiffusivityDataItemName, Resources.drop, model, model.Diffusivity, ShortCutType.SpatialCoverage);
 
-            if (model.ModelDefinition.HeatFluxModel.MeteoData != null &&
-                model.ModelDefinition.HeatFluxModel.GriddedHeatFluxFilePath == null &&
-                model.ModelDefinition.HeatFluxModel.GridFilePath == null)
+            if (IsUniformHeatFluxModel(model.ModelDefinition.HeatFluxModel))
             {
                 yield return model.ModelDefinition.HeatFluxModel;
             }
 
             yield return model.WindFields;
+        }
+
+        private static bool IsUniformHeatFluxModel(HeatFluxModel heatFluxModel)
+        {
+
+            return heatFluxModel.MeteoData != null &&
+                   heatFluxModel.GriddedHeatFluxFilePath == null &&
+                   heatFluxModel.GridFilePath == null;
+
         }
 
         private IEnumerable GetOutputItems(WaterFlowFMModel model)

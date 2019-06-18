@@ -14,6 +14,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
     [Entity]
     public class HeatFluxModel
     {
+        public string GridFilePath { get; set; }
+        public string GriddedHeatFluxFilePath { get; set; }
+        public IFunction MeteoData => meteoData;
+
         private static readonly ILog Log = LogManager.GetLogger(typeof(HeatFluxModel));
         private HeatFluxModelType modelType;
         private IFunction meteoData;
@@ -94,8 +98,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             }
         }
 
-        public IFunction MeteoData => meteoData;
-
         [EditAction]
         private IFunction CreateTimeseriesMeteoData()
         {
@@ -117,11 +119,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 
             return result;
         }
-
-        public string GridFilePath { get; set; }
-
-        public string GriddedHeatFluxFilePath { get; set; }
-
+        /// <summary>
+        /// CopyTo method copies file-based model data to save location. switchTo is true for saving and false for exporting. 
+        /// </summary>
+        /// <param name="destinationPath"></param>
+        /// <param name="switchTo"></param>
         public void CopyTo(string destinationPath, bool switchTo = true)
         {
             if (!File.Exists(GriddedHeatFluxFilePath))

@@ -24,7 +24,7 @@ morphology,ISlope,morphology,,Bed slope formulation: No bed slope|Bagnold formul
 morphology,AlfaBs,morphology,Bed load transport,Streamwise bed gradient factor,Double,1,0.0,,FALSE,,ISlope=2|3|4,,,,"Streamwise bed gradient factor for bed load transport (if ISlope>=2)",-
 morphology,AlfaBn,morphology,Bed load transport,Transverse bed gradient factor,Double,1.5,0.0,,FALSE,,ISlope=2,,,,"Transverse bed gradient factor for bed load transport (if ISlope=2)",-
 morphology,Ashld,morphology,Bed load transport,Ashld,Double,0.85,0.0,,FALSE,,ISlope=3,,,,"Bed load transport direction calibration coefficient (if ISlope=3)",-
-morphology,Bshld,morphology,Bed load transport,Bslhd,Double,0.5,0,,FALSE,,ISlope=3,,,,"Bed load transport direction power of Shields parameter (if ISlope=3)",-
+morphology,Bshld,morphology,Bed load transport,Bshld,Double,0.5,0,,FALSE,,ISlope=3,,,,"Bed load transport direction power of Shields parameter (if ISlope=3)",-
 morphology,Cshld,morphology,Bed load transport,Cshld,Double,0,0,,FALSE,,ISlope=3,,,,"Bed load transport direction power of specific grainsize / waterdepth ratio (if ISlope=3)",-
 morphology,Dshld,morphology,Bed load transport,Dshld,Double,0,0,,FALSE,,ISlope=3,,,,"Bed load transport direction power of specific grainsize / mean grainsize ratio (if ISlope=3)",-
 morphology,CoulFri,morphology,Bed load transport,CoulFri,Double,0,0,,FALSE,,ISlope=4,,,,"Coulomb friction coefficient (if ISlope=4)",-
