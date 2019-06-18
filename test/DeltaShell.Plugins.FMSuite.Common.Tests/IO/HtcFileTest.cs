@@ -15,7 +15,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         [Test]
         public void GivenNullForHtcFile_WhenReading_ExceptionShouldBeThrown()
         {
-            Assert.Throws<InvalidOperationException>(() => { HtcFile.GetCorrespondingGridFilePath(null); },
+            Assert.Throws<ArgumentNullException>(() => { HtcFile.GetCorrespondingGridFilePath(null); },
                                                      "Heat flux file path is not valid");
         }
 
@@ -35,7 +35,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 // When
                 string gridFilePath = HtcFile.GetCorrespondingGridFilePath(copyGriddedHeatFluxFile);
 
-                //Then
+                // Then
                 Assert.That(gridFilePath,
                             Is.EqualTo(Path.Combine(htcDir, "meteo.grd")));
             }
@@ -45,6 +45,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         [Test]
         public void GivenHtcFilePath_WhenReadingAndNoGridFileNameIsFound_ExceptionShouldBeThrown()
         {
+            // Given
             string sourceGriddedHeatFluxFile = TestHelper.GetTestFilePath(@"heatFluxFiles\meteo2.htc");
 
             using (var temp = new TemporaryDirectory())
@@ -55,6 +56,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 string htcDir = Path.GetDirectoryName(copyGriddedHeatFluxFile);
                 Assert.IsNotNull(htcDir);
 
+                // When Then
                 Assert.Throws<InvalidOperationException>(
                     () => { HtcFile.GetCorrespondingGridFilePath(copyGriddedHeatFluxFile); },
                     "Relative Grid file path is missing in the *.htc file");
