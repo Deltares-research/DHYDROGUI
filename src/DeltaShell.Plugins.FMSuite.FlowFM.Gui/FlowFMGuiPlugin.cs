@@ -544,6 +544,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             {
                 SubscribeToProjectPropertyChanged(project);
             }
+
+            base.Gui.Application.ProjectOpened += CleanFlowFmViewContextUponLoadingProjectHack;
         }
 
         private void SubscribeToActivityEvents()
@@ -564,6 +566,29 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             if (project != null)
             {
                 UnsubscribeToProjectPropertyChanged(project);
+            }
+
+            base.Gui.Application.ProjectOpened -= CleanFlowFmViewContextUponLoadingProjectHack;
+        }
+
+        /// <summary>
+        /// This method has been added to "refresh" the ViewContext upon
+        /// loading. This will ensure the right scale is used within the bed
+        /// level. However to achieve this desired effect, it will delete the
+        /// complete view context for the flow fm model.
+        /// </summary>
+        /// <param name="project"> The project which is loaded. </param>
+        /// <remarks>
+        /// See issue: D3DFMIQ-1099.
+        /// This is a rather nuclear option, and should really be fixed when
+        /// the grid is read.
+        /// </remarks>
+        private static void CleanFlowFmViewContextUponLoadingProjectHack(Project project)
+        {
+            IModel model = project?.RootFolder?.Models?.FirstOrDefault(m => m is WaterFlowFMModel);
+            if (model is WaterFlowFMModel fmModel)
+            {
+                (project.ViewContextManager as GuiContextManager)?.RemoveViewContextsForItem(fmModel);
             }
         }
 
