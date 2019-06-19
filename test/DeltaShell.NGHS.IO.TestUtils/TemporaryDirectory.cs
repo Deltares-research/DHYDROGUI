@@ -42,12 +42,12 @@ namespace DeltaShell.NGHS.IO.TestUtils
         {
             Path = FileUtils.CreateTempDirectory();
         }
-        
+
         /// <summary>
         /// Copies all test data to temporary directory.
         /// </summary>
         /// <param name="relativeTestDataFilePaths">The relative test data file paths.</param>
-        /// <returns></returns>
+        /// <returns> List with file paths of copies in temp </returns>
         public List<string> CopyAllTestDataToTempDirectory(string[] relativeTestDataFilePaths)
         {
             var copiesInTempFilePathList = new List<string>();
@@ -65,7 +65,7 @@ namespace DeltaShell.NGHS.IO.TestUtils
         /// Copies the test data file to temporary directory.
         /// </summary>
         /// <param name="relativeTestDataFilePath">The relative test data file path.</param>
-        /// <returns></returns>
+        /// <returns> file path of copy in temp</returns>
         public string CopyTestDataFileToTempDirectory(string relativeTestDataFilePath)
         {
             string sourceFilePath = TestHelper.GetTestFilePath(relativeTestDataFilePath);
