@@ -24,8 +24,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
 {
     /// <summary>
     /// Reads an Unstruc HIS file and acts as the backing store. The his files contains timeseries on stations and cross
-    /// sections.
-    /// These correspond to observation points and obs. cross sections in the model. These features can either be generated
+    /// sections and general structures.
+    /// These correspond to observation points and obs. cross sections in the model as well as general structures. These features can either be generated
     /// from
     /// the netcdf file (in case you import the HIS file standalone), or be inserted from the model, to ensure the instances
     /// are
@@ -39,40 +39,40 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
 
         #region Feature names and coverage helpers
 
-        private static string featureName_Stations = "stations";
-        private static string featureName_CrossSection = "cross_section";
-        private static string featureName_GeneralStructures = "general_structures";
-        private static string featureName_Weirgens = "weirgens";
-        private static string featureName_Gategens = "gategens";
-        private static string featureName_Pumps = "pumps";
+        private const string featureNameStations = "stations";
+        private const string featureNameCrossSection = "cross_section";
+        private const string featureNameGeneralStructures = "general_structures";
+        private const string featureNameWeirgens = "weirgens";
+        private const string featureNameGategens = "gategens";
+        private const string featureNamePumps = "pumps";
 
-        private Dictionary<string, IEnumerable<IFeature>> FeaturesDictionary =
+        private readonly Dictionary<string, IEnumerable<IFeature>> featuresDictionary =
             new Dictionary<string, IEnumerable<IFeature>>()
             {
-                {featureName_Stations, null },
-                {featureName_CrossSection, null },
-                {featureName_GeneralStructures, null },
-                {featureName_Weirgens, null },
-                {featureName_Gategens, null },
-                {featureName_Pumps, null },
+                {featureNameStations, null },
+                {featureNameCrossSection, null },
+                {featureNameGeneralStructures, null },
+                {featureNameWeirgens, null },
+                {featureNameGategens, null },
+                {featureNamePumps, null },
             };
 
-        private IDictionary<string, IMultiDimensionalArray<IFeature>> cachedFeatures =
+        private readonly IDictionary<string, IMultiDimensionalArray<IFeature>> cachedFeatures =
             new Dictionary<string, IMultiDimensionalArray<IFeature>>()
             {
-                {featureName_Stations, null},
-                {featureName_CrossSection, null},
-                {featureName_GeneralStructures, null},
-                {featureName_Weirgens, null},
-                {featureName_Gategens, null},
-                {featureName_Pumps, null},
+                {featureNameStations, null},
+                {featureNameCrossSection, null},
+                {featureNameGeneralStructures, null},
+                {featureNameWeirgens, null},
+                {featureNameGategens, null},
+                {featureNamePumps, null},
             };
 
-        private IList<KeyValuePair<string, string>> GeneralStuctures = new List<KeyValuePair<string, string>>()
+        private readonly IList<KeyValuePair<string, string>> generalStuctures = new List<KeyValuePair<string, string>>()
         {
-            new KeyValuePair<string, string>("general_structure_name", featureName_GeneralStructures),
-            new KeyValuePair<string, string>("weirgen_name", featureName_Weirgens),
-            new KeyValuePair<string, string>("gategen_name", featureName_Gategens)
+            new KeyValuePair<string, string>("general_structure_name", featureNameGeneralStructures),
+            new KeyValuePair<string, string>("weirgen_name", featureNameWeirgens),
+            new KeyValuePair<string, string>("gategen_name", featureNameGategens)
         };
 
         #endregion
@@ -191,12 +191,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             }
 
             var dimensionName = function.Attributes[NcNameAttribute];
-            if (FeaturesDictionary.ContainsKey(dimensionName))
+            if (featuresDictionary.ContainsKey(dimensionName))
             {
                 IMultiDimensionalArray<IFeature> cachedArray;
                 if (!cachedFeatures.TryGetValue(dimensionName, out cachedArray) || cachedArray == null)
                 {
-                    var features = FeaturesDictionary[dimensionName].ToList();
+                    var features = featuresDictionary[dimensionName].ToList();
                     var functionSize = GetSize(function);
                     cachedArray = new MultiDimensionalArray<IFeature>(features, new[]{ functionSize });
                     cachedFeatures[dimensionName] = cachedArray;
@@ -213,7 +213,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
         {
             var featureName = coverage.FeatureVariable.Attributes[NcNameAttribute];
             IEnumerable<IFeature> features;
-            if (FeaturesDictionary.TryGetValue(featureName, out features) && features != null)
+            if (featuresDictionary.TryGetValue(featureName, out features) && features != null)
             {
                 coverage.Features= new EventedList<IFeature>(features);
             }
@@ -239,13 +239,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                 results.Add(validFeature);
             }
 
-            AddFeaturesToDictionary(featureName_Pumps, results);
+            AddFeaturesToDictionary(featureNamePumps, results);
         }
 
         private void InitializeGeneralStructuresFeatures(IEnumerable<IFeature> modelGeneralStructures)
         {
             // Iterate over all possible general structures
-            foreach (var gsVariable in GeneralStuctures)
+            foreach (var gsVariable in generalStuctures)
             {
                 // Find whether they are present in the netcdf file
                 var names = GetNetCdfFeatureVariableNames(gsVariable.Key);
@@ -292,7 +292,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                 }
             }
 
-            AddFeaturesToDictionary(featureName_CrossSection, results);
+            AddFeaturesToDictionary(featureNameCrossSection, results);
         }
 
         private void InitializeStationFeatures(IEnumerable<Feature2D> modelObsPoints)
@@ -324,7 +324,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                 }
             }
 
-            AddFeaturesToDictionary(featureName_Stations, results);
+            AddFeaturesToDictionary(featureNameStations, results);
         }
 
         #endregion
@@ -333,13 +333,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
 
         private void AddFeaturesToDictionary(string featureName, IEnumerable<IFeature> results)
         {
-            if (FeaturesDictionary.ContainsKey(featureName))
+            if (featuresDictionary.ContainsKey(featureName))
             {
-                FeaturesDictionary[featureName] = results;
+                featuresDictionary[featureName] = results;
             }
             else
             {
-                FeaturesDictionary.Add(featureName, results);
+                featuresDictionary.Add(featureName, results);
             }
         }
 
@@ -367,7 +367,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
         {
             var variableByName = netCdfFile.GetVariableByName(variableName);
             return variableByName == null 
-                ? null 
+                ? null
                 : netCdfFile.Read(variableByName);
         }
 
@@ -386,6 +386,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
 
         private static IGeometry CreateLineString(int i, Array xs, Array ys)
         {
+            if (xs is null || ys is null)
+                return null;
+
             var coordinates = new List<Coordinate>();
             var arrayLength = xs.GetLength(1);
             for (var j = 0; j < arrayLength; j++)
@@ -404,6 +407,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
 
         private static IGeometry CreatePoint(int i, Array xs, Array ys)
         {
+            if (xs is null || ys is null)
+                return null;
+
             var xValue = (double) xs.GetValue(i);
             var yValue = (double) ys.GetValue(i);
             return new Point(xValue, yValue);

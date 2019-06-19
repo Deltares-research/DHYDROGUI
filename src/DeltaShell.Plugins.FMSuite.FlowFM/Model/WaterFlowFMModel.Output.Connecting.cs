@@ -129,13 +129,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 else
                 {
                     OutputHisFileStore = new FMHisFileFunctionStore(hisFilePath, CoordinateSystem, Area);
-//                    OutputHisFileStore = new FMHisFileFunctionStore(hisFilePath, CoordinateSystem,
-//                                                                    Area.ObservationPoints,
-//                                                                    Area.ObservationCrossSections,
-//                                                                    Area.Weirs.Where(
-//                                                                        w =>
-//                                                                            w.WeirFormula is
-//                                                                                GeneralStructureWeirFormula));
                 }
             }
 
