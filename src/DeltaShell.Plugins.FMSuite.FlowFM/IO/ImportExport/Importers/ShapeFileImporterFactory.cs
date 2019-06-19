@@ -105,17 +105,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
                                                       IEnumerable<TFeature2D> targets)
                 where TFeature2D : IFeature, INameable
             {
-                if (srcFeature.Attributes.ContainsKey("Name") && 
-                    srcFeature.Attributes["Name"] is string name)
-                {
-                    targetFeature.Name = name;
-                }
-                else
-                {
-                    targetFeature.Name = "imported_feature";
-                }
+                targetFeature.Name = TryGetValue(srcFeature, "Name", out string name) ? name : "imported_feature";
 
-                // Ensure that we have an unique name.
+                // Ensure that we have a unique name.
                 if (targets.Any(f => f.Name.Equals(targetFeature.Name)))
                 {
                     targetFeature.Name = NamingHelper.GetUniqueName(targetFeature.Name + "_{0}", targets);
@@ -145,8 +137,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
                                                             IEnumerable<TFeature2D> _)
                 where TFeature2D : Weir2D
             {
-                if (srcFeature.Attributes.ContainsKey("CrestWidth") &&
-                    srcFeature.Attributes["CrestWidth"] is double crestWidth)
+                if (TryGetValue(srcFeature, "CrestWidth", out double crestWidth))
                 {
                     targetFeature.CrestWidth = crestWidth;
                 }
@@ -175,8 +166,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
                                                             IEnumerable<TFeature2D> _)
                 where TFeature2D : Weir2D
             {
-                if (srcFeature.Attributes.ContainsKey("CrestLevel") &&
-                    srcFeature.Attributes["CrestLevel"] is double crestLevel)
+                if (TryGetValue(srcFeature, "CrestLevel", out double crestLevel))
                 {
                     targetFeature.CrestLevel = crestLevel;
                 }
@@ -206,8 +196,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
                                                              IEnumerable<TFeature2D> _)
                 where TFeature2D : Weir2D
             {
-                if (!srcFeature.Attributes.ContainsKey("FormulaName") ||
-                    !(srcFeature.Attributes["FormulaName"] is string formulaName))
+                if (!TryGetValue(srcFeature, "FormulaName", out string formulaName))
                 {
                     return;
                 }
@@ -249,11 +238,37 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
                                                           IEnumerable<TFeature2D> _)
                 where TFeature2D : Pump2D
             {
-                if (srcFeature.Attributes.ContainsKey("Capacity") &&
-                    srcFeature.Attributes["Capacity"] is double capacity)
+                if (TryGetValue(srcFeature, "Capacity", out double capacity))
                 {
                     targetFeature.Capacity = capacity;
                 }
+            }
+
+            /// <summary>
+            /// Try and get the value of type <typeparamref name="T"/> associated with
+            /// <paramref name="key"/> from <paramref name="feat"/>.
+            /// </summary>
+            /// <typeparam name="T"> The type of the object associated with <paramref name="key"/>. </typeparam>
+            /// <param name="feature"> The feature from which the value is obtained. </param>
+            /// <param name="key"> The key. </param>
+            /// <param name="returnValue"> The return value. </param>
+            /// <returns>
+            /// IF key IN feature AND feature[key] is of type T THEN
+            ///   <c>true</c>
+            /// ELSE
+            ///   <c> false </c>
+            /// </returns>
+            private static bool TryGetValue<T>(IFeature feature, string key, out T returnValue)
+            {
+                if (feature.Attributes.ContainsKey(key) &&
+                    feature.Attributes[key] is T value)
+                {
+                    returnValue = value;
+                    return true;
+                }
+
+                returnValue = default(T);
+                return false;
             }
         }
     }
