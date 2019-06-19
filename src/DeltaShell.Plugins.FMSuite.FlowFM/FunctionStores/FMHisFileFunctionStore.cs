@@ -4,9 +4,11 @@ using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Filters;
 using DelftTools.Functions.Generic;
+using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Units;
+using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.NetCdf;
 using DeltaShell.Plugins.FMSuite.Common.FunctionStores;
@@ -31,62 +33,84 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
     /// </summary>
     public class FMHisFileFunctionStore : FMNetCdfFileFunctionStore
     {
-        private readonly IList<IFeature> stationFeatures;
-        private readonly IList<IFeature> crossSectionFeatures;
-        private readonly IList<IFeature> generalStructuresFeatures;
         protected const string StandardNameAttribute = "standard_name";
         protected const string LongNameAttribute = "long_name";
         protected const string UnitAttribute = "units";
 
-        private static readonly IList<string> DiscardedFeatures = new[]
+        #region Feature names and coverage helpers
+
+        private static string featureName_Stations = "stations";
+        private static string featureName_CrossSection = "cross_section";
+        private static string featureName_GeneralStructures = "general_structures";
+        private static string featureName_Weirgens = "weirgens";
+        private static string featureName_Gategens = "gategens";
+        private static string featureName_Pumps = "pumps";
+
+        private Dictionary<string, IEnumerable<IFeature>> FeaturesDictionary =
+            new Dictionary<string, IEnumerable<IFeature>>()
+            {
+                {featureName_Stations, null },
+                {featureName_CrossSection, null },
+                {featureName_GeneralStructures, null },
+                {featureName_Weirgens, null },
+                {featureName_Gategens, null },
+                {featureName_Pumps, null },
+            };
+
+        private IDictionary<string, IMultiDimensionalArray<IFeature>> cachedFeatures =
+            new Dictionary<string, IMultiDimensionalArray<IFeature>>()
+            {
+                {featureName_Stations, null},
+                {featureName_CrossSection, null},
+                {featureName_GeneralStructures, null},
+                {featureName_Weirgens, null},
+                {featureName_Gategens, null},
+                {featureName_Pumps, null},
+            };
+
+        private IList<KeyValuePair<string, string>> GeneralStuctures = new List<KeyValuePair<string, string>>()
         {
-            "weirgens",
-            "gategens",
-            "pumps"
+            new KeyValuePair<string, string>("general_structure_name", featureName_GeneralStructures),
+            new KeyValuePair<string, string>("weirgen_name", featureName_Weirgens),
+            new KeyValuePair<string, string>("gategen_name", featureName_Gategens)
         };
 
-        // nhib
-        protected FMHisFileFunctionStore() {}
+        #endregion
 
-        public FMHisFileFunctionStore(string hisPath, ICoordinateSystem coordinateSystem = null,
-                                      IEnumerable<Feature2D> modelObsPoints = null,
-                                      IEnumerable<Feature2D> modelObsCrossSections = null,
-                                      IEnumerable<Weir2D> modelGeneralStructures = null)
+        public ICoordinateSystem CoordinateSystem { get; set; }
+        protected FMHisFileFunctionStore() { }
+
+        public FMHisFileFunctionStore(string hisPath, ICoordinateSystem coordinateSystem = null, HydroArea area = null)
             : base(hisPath) //loads the actual functions
         {
             CoordinateSystem = coordinateSystem;
 
             using (ReconnectToMapFile())
             {
-                stationFeatures = InitializeStationFeatures(modelObsPoints ?? new Feature2D[0]);
-                crossSectionFeatures = InitializeCrossSectionFeatures(modelObsCrossSections ?? new Feature2D[0]);
-                generalStructuresFeatures =
-                    InitializeGeneralStructuresFeatures(modelGeneralStructures ?? new Weir2D[0]);
+                InitializeStationFeatures((area?.ObservationPoints as IEnumerable<Feature2D>) ?? new Feature2D[0]);
+                InitializeCrossSectionFeatures((area?.ObservationCrossSections as IEnumerable<Feature2D>) ?? new Feature2D[0]);
+                InitializePumpFeatures(area?.Pumps ?? Enumerable.Empty<Pump2D>());
+                InitializeGeneralStructuresFeatures((area?.Weirs as IEnumerable<Weir2D>) ?? new Weir2D[0]);
             }
 
             // initialize 'Features' collection of each coverage
-            foreach (IFeatureCoverage featureCoverage in Functions.OfType<IFeatureCoverage>())
-            {
-                InsertFeaturesInCoverage(featureCoverage);
-            }
+            Functions?.OfType<IFeatureCoverage>().ForEach(InsertFeaturesInCoverage);
         }
-
-        public ICoordinateSystem CoordinateSystem { get; set; }
 
         protected override IEnumerable<IFunction> ConstructFunctions(IEnumerable<NetCdfVariableInfo> dataVariables)
         {
             // add special velocity timeseries?
             foreach (NetCdfVariableInfo timeVariable in dataVariables.Where(v => v.IsTimeDependent))
             {
-                NetCdfVariable netcdfVariable = timeVariable.NetCdfDataVariable;
+                var netcdfVariable = timeVariable.NetCdfDataVariable;
 
-                List<NetCdfDimension> dimensions = netCdfFile.GetDimensions(netcdfVariable).ToList();
+                var dimensions = netCdfFile.GetDimensions(netcdfVariable).ToList();
 
-                string variableName = netCdfFile.GetVariableName(netcdfVariable);
-                string longName = netCdfFile.GetAttributeValue(netcdfVariable, LongNameAttribute) ??
+                var variableName = netCdfFile.GetVariableName(netcdfVariable);
+                var longName = netCdfFile.GetAttributeValue(netcdfVariable, LongNameAttribute) ??
                                   netCdfFile.GetAttributeValue(netcdfVariable, StandardNameAttribute);
-                string coverageLongName = longName != null
-                                              ? string.Format("{0} ({1})", longName, variableName)
+                var coverageLongName = longName != null
+                                              ? string.Format($"{longName} ({variableName})")
                                               : variableName;
 
                 IFunction function;
@@ -101,13 +125,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                         CoordinateSystem = CoordinateSystem
                     };
 
-                    string secondDimensionName = netCdfFile.GetDimensionName(dimensions[1]);
-
-                    if (DiscardedFeatures.Contains(secondDimensionName))
-                    {
-                        continue;
-                    }
-
+                    var secondDimensionName = netCdfFile.GetDimensionName(dimensions[1]);
                     var featureVariable = new Variable<IFeature>
                     {
                         IsEditable = false,
@@ -164,194 +182,165 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             }
         }
 
-        private void InsertFeaturesInCoverage(IFeatureCoverage coverage)
-        {
-            string featureName = coverage.FeatureVariable.Attributes[NcNameAttribute];
-            if (featureName == "stations" && stationFeatures != null)
-            {
-                coverage.Features = new EventedList<IFeature>(stationFeatures);
-            }
-
-            if (featureName == "cross_section" && crossSectionFeatures != null)
-            {
-                coverage.Features = new EventedList<IFeature>(crossSectionFeatures);
-            }
-
-            if (featureName == "general_structures" && generalStructuresFeatures != null)
-            {
-                coverage.Features = new EventedList<IFeature>(generalStructuresFeatures);
-            }
-        }
-
-        private IMultiDimensionalArray<IFeature> cachedStationsArray;
-        private IMultiDimensionalArray<IFeature> cachedCrossSectionsArray;
-        private IMultiDimensionalArray<IFeature> cachedGeneralStructures;
-
         protected override IMultiDimensionalArray<T> GetVariableValuesCore<T>(
             IVariable function, IVariableFilter[] filters)
         {
-            if (function.Attributes[NcUseVariableSizeAttribute] == "false"
-            ) // has no explicit variable: stations / cross sections, composited from multiple vars
+            if (function.Attributes[NcUseVariableSizeAttribute] != "false")
             {
-                string dimensionName = function.Attributes[NcNameAttribute];
-                switch (dimensionName)
+                return base.GetVariableValuesCore<T>(function, filters);
+            }
+
+            var dimensionName = function.Attributes[NcNameAttribute];
+            if (FeaturesDictionary.ContainsKey(dimensionName))
+            {
+                IMultiDimensionalArray<IFeature> cachedArray;
+                if (!cachedFeatures.TryGetValue(dimensionName, out cachedArray) || cachedArray == null)
                 {
-                    case "stations":
-                        if (cachedStationsArray == null)
-                        {
-                            cachedStationsArray = new MultiDimensionalArray<IFeature>(stationFeatures,
-                                                                                      new[]
-                                                                                      {
-                                                                                          GetSize(function)
-                                                                                      });
-                        }
+                    var features = FeaturesDictionary[dimensionName].ToList();
+                    var functionSize = GetSize(function);
+                    cachedArray = new MultiDimensionalArray<IFeature>(features, new[]{ functionSize });
+                    cachedFeatures[dimensionName] = cachedArray;
+                }
 
-                        return (MultiDimensionalArray<T>) cachedStationsArray;
-                    case "cross_section":
-                        if (cachedCrossSectionsArray == null)
-                        {
-                            cachedCrossSectionsArray = new MultiDimensionalArray<IFeature>(crossSectionFeatures,
-                                                                                           new[]
-                                                                                           {
-                                                                                               GetSize(function)
-                                                                                           });
-                        }
+                return (MultiDimensionalArray<T>)cachedArray;
+            }
 
-                        return (MultiDimensionalArray<T>) cachedCrossSectionsArray;
-                    case "general_structures":
-                        if (cachedGeneralStructures == null)
-                        {
-                            cachedGeneralStructures = new MultiDimensionalArray<IFeature>(generalStructuresFeatures,
-                                                                                          new[]
-                                                                                          {
-                                                                                              GetSize(function)
-                                                                                          });
-                        }
+            throw new ArgumentException(string.Format("Unexpected dimension name: {0}", dimensionName));
 
-                        return (MultiDimensionalArray<T>) cachedGeneralStructures;
-                    default:
-                        throw new ArgumentException(string.Format("Unexpected dimension name: {0}", dimensionName));
+        }
+
+        private void InsertFeaturesInCoverage(IFeatureCoverage coverage)
+        {
+            var featureName = coverage.FeatureVariable.Attributes[NcNameAttribute];
+            IEnumerable<IFeature> features;
+            if (FeaturesDictionary.TryGetValue(featureName, out features) && features != null)
+            {
+                coverage.Features= new EventedList<IFeature>(features);
+            }
+        }
+
+        #region Feature Initialization
+
+        private void InitializePumpFeatures(IEnumerable<IFeature> pumpFeatures)
+        {
+            // Extract all possible pumps for later pairing with features
+            var pumpNames = GetNetCdfFeatureVariableNames("pump_name");
+            if (!pumpNames.Any()) return;
+
+            var results = new List<IFeature>();
+            foreach (var name in pumpNames)
+            {
+                var validFeature = pumpFeatures.FirstOrDefault(m => m is IPump && (m as IPump).Name == name);
+                if (validFeature == null)
+                {
+                    validFeature = new Pump2D(name);
+                }
+
+                results.Add(validFeature);
+            }
+
+            AddFeaturesToDictionary(featureName_Pumps, results);
+        }
+
+        private void InitializeGeneralStructuresFeatures(IEnumerable<IFeature> modelGeneralStructures)
+        {
+            // Iterate over all possible general structures
+            foreach (var gsVariable in GeneralStuctures)
+            {
+                // Find whether they are present in the netcdf file
+                var names = GetNetCdfFeatureVariableNames(gsVariable.Key);
+                var results = new List<IFeature>();
+                foreach (var name in names)
+                {
+                    var validFeature = modelGeneralStructures.OfType<IWeir>().FirstOrDefault(m => m.Name.Equals(name))
+                        ?? CreateGeneralStructureFromNetCdf(name);
+                    results.Add(validFeature);
+                }
+
+                if (results.Any())
+                {
+                    AddFeaturesToDictionary(gsVariable.Value, results);
+                }
+            }
+        }
+
+        private void InitializeCrossSectionFeatures(IEnumerable<Feature2D> modelObsCrossSections)
+        {
+            // Extract all possible cross section names for later pairing with features
+            var crossSectionNames = GetNetCdfFeatureVariableNames("cross_section_name");
+            if (!crossSectionNames.Any()) return;
+
+            // Get all coordinates available.
+            var xs = GetNetCdfVariableArray("cross_section_x_coordinate");
+            var ys = GetNetCdfVariableArray("cross_section_y_coordinate");
+
+            // Match all available features with occurrences found in the NetCdfFile
+            var results = new List<IFeature>();
+            foreach (var crossSectionName in crossSectionNames)
+            {
+                // first try to find the right one in the model features, otherwise create our own feature
+                var validFeature = modelObsCrossSections.FirstOrDefault(m => m.Name.Equals(crossSectionName));
+                if (validFeature == null)
+                {
+                    var idx = crossSectionNames.IndexOf(crossSectionName);
+                    var geometry = CreateLineString(idx, xs, ys);
+                    validFeature = CreateFeature2D(crossSectionName, geometry);
+                }
+                if (validFeature != null)
+                {
+                    results.Add(validFeature);
                 }
             }
 
-            return base.GetVariableValuesCore<T>(function, filters);
+            AddFeaturesToDictionary(featureName_CrossSection, results);
         }
 
-        private IList<IFeature> InitializeGeneralStructuresFeatures(IEnumerable<IFeature> modelGeneralStructures)
+        private void InitializeStationFeatures(IEnumerable<Feature2D> modelObsPoints)
         {
-            var results = new List<IFeature>();
-
-            NetCdfVariable generalStructureNameVariable = netCdfFile.GetVariableByName("general_structure_name");
-            if (generalStructureNameVariable == null)
-            {
-                return results;
-            }
-
-            string[] names = netCdfFile.Read(generalStructureNameVariable).Cast<char[]>().Select(CharArrayToString)
-                                       .ToArray();
-            for (var i = 0; i < names.Length; i++)
-            {
-                // first try to find the right one in the model features, otherwise we skip it for now. We are not ready to fill in all the data just yet.
-                results.Add(
-                    modelGeneralStructures.FirstOrDefault(m => m as Weir2D != null && (m as Weir2D).Name == names[i]) ??
-                    CreateGeneralStructureFromNetCdf(i, names));
-            }
-
-            return results;
-        }
-
-        private IList<IFeature> InitializeCrossSectionFeatures(IEnumerable<Feature2D> modelObsCrossSections)
-        {
-            var results = new List<IFeature>();
-
-            NetCdfVariable crossSectionNameVariable = netCdfFile.GetVariableByName("cross_section_name");
-            if (crossSectionNameVariable == null)
-            {
-                return results;
-            }
-
-            string[] names = netCdfFile.Read(crossSectionNameVariable)
-                                       .Cast<char[]>().Select(CharArrayToString).ToArray();
-            Array xs = netCdfFile.Read(netCdfFile.GetVariableByName("cross_section_x_coordinate"));
-            Array ys = netCdfFile.Read(netCdfFile.GetVariableByName("cross_section_y_coordinate"));
-
-            for (var i = 0; i < xs.GetLength(0); i++)
-            {
-                // first try to find the right one in the model features, otherwise create our own feature
-                results.Add(modelObsCrossSections.FirstOrDefault(m => m.Name == names[i]) ??
-                            CreateCrossSectionFromNetCdf(i, names, xs, ys));
-            }
-
-            return results;
-        }
-
-        private IList<IFeature> InitializeStationFeatures(IEnumerable<Feature2D> modelObsPoints)
-        {
-            var results = new List<IFeature>();
-
-            NetCdfVariable stationIdVariable = netCdfFile.GetVariableByName("station_id");
-            if (stationIdVariable == null)
-            {
-                return results;
-            }
-
-            string[] ids = netCdfFile.Read(stationIdVariable)
-                                     .Cast<char[]>().Select(CharArrayToString).ToArray();
-
+            // Extract all possible station ids for later pairing with features
+            var stationIds = GetNetCdfFeatureVariableNames("station_id");
+            if (!stationIds.Any())
+                return;
+            
+            // Get all coordinates available.
             // TODO: xs and yx are now time dependent, evetually we will need to re-think this... for now, just take the 1st dimension
+            var xs = GetNetCdfVariableArray<double>("station_x_coordinate").ToArray();
+            var ys = GetNetCdfVariableArray<double>("station_y_coordinate").ToArray();
 
-            double[] xs = netCdfFile.Read(netCdfFile.GetVariableByName("station_x_coordinate"))
-                                    .Cast<double>().ToArray();
-            double[] ys = netCdfFile.Read(netCdfFile.GetVariableByName("station_y_coordinate"))
-                                    .Cast<double>().ToArray();
-
-            for (var i = 0; i < ids.Length; i++)
+            // Match all available features with occurrences found in the NetCdfFile
+            var results = new List<IFeature>();
+            foreach (var stationId in stationIds)
             {
-                // first try to find the right one in the model features, otherwise create our own feature
-                results.Add(modelObsPoints.FirstOrDefault(m => m.Name == ids[i]) ??
-                            CreateStationFromNetCdf(i, ids, xs, ys));
-            }
-
-            return results;
-        }
-
-        private static Feature2D CreateCrossSectionFromNetCdf(int i, string[] names, Array xs, Array ys)
-        {
-            var coordinates = new List<Coordinate>();
-            for (var j = 0; j < xs.GetLength(1); j++)
-            {
-                var x = (double) xs.GetValue(i, j);
-                var y = (double) ys.GetValue(i, j);
-
-                if (x < NetCdfConstants.FillValues.NcFillFloat) // use default fill value here..
+                var validFeature = modelObsPoints.FirstOrDefault(m => m.Name.Equals(stationId)); 
+                if(validFeature == null)
                 {
-                    coordinates.Add(new Coordinate(x, y));
+                    var idx = stationIds.IndexOf(stationId);
+                    var point = CreatePoint(idx, xs, ys);
+                    validFeature = CreateFeature2D(stationId, point);
+                };   
+                if (validFeature != null)
+                {
+                    results.Add(validFeature);
                 }
             }
 
-            return new Feature2D
-            {
-                Name = names[i],
-                Geometry = new LineString(coordinates.ToArray()),
-            };
+            AddFeaturesToDictionary(featureName_Stations, results);
         }
 
-        private static Feature2D CreateStationFromNetCdf(int i, string[] ids, Array xs, Array ys)
-        {
-            return new Feature2D
-            {
-                Name = ids[i],
-                Geometry = new Point((double) xs.GetValue(i), (double) ys.GetValue(i))
-            };
-        }
+        #endregion
 
-        private static Weir2D CreateGeneralStructureFromNetCdf(int i, string[] names)
+        #region Private methods
+
+        private void AddFeaturesToDictionary(string featureName, IEnumerable<IFeature> results)
         {
-            return new Weir2D
+            if (FeaturesDictionary.ContainsKey(featureName))
             {
-                Name = names[i],
-                WeirFormula = new GeneralStructureWeirFormula()
-            };
+                FeaturesDictionary[featureName] = results;
+            }
+            else
+            {
+                FeaturesDictionary.Add(featureName, results);
+            }
         }
 
         private static string CharArrayToString(char[] chars)
@@ -362,5 +351,82 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                 ' '
             });
         }
+
+        private IList<string> GetNetCdfFeatureVariableNames(string variableName)
+        {
+            var variableArray = GetNetCdfVariableArray<char[]>(variableName);
+            var variableContent = variableArray?.Select(CharArrayToString).ToList();
+
+            if (variableContent == null || !variableContent.Any())
+                return new List<string>();
+
+            return variableContent;
+        }
+
+        private Array GetNetCdfVariableArray(string variableName)
+        {
+            var variableByName = netCdfFile.GetVariableByName(variableName);
+            return variableByName == null 
+                ? null 
+                : netCdfFile.Read(variableByName);
+        }
+
+        private IEnumerable<T> GetNetCdfVariableArray<T>(string variableName)
+        {
+            var variableArray = GetNetCdfVariableArray(variableName);
+            if (variableArray == null)
+                return Enumerable.Empty<T>();
+            var variableArrayT = variableArray.Cast<T>();
+            return variableArrayT;
+        }
+
+        #endregion
+
+        #region IFeature helpers
+
+        private static IGeometry CreateLineString(int i, Array xs, Array ys)
+        {
+            var coordinates = new List<Coordinate>();
+            var arrayLength = xs.GetLength(1);
+            for (var j = 0; j < arrayLength; j++)
+            {
+                var x = (double) xs.GetValue(i, j);
+                var y = (double) ys.GetValue(i, j);
+
+                if (x < NetCdfConstants.FillValues.NcFillFloat) // use default fill value here..
+                {
+                    coordinates.Add(new Coordinate(x, y));
+                }
+            }
+            var geometry = new LineString(coordinates.ToArray());
+            return geometry;
+        }
+
+        private static IGeometry CreatePoint(int i, Array xs, Array ys)
+        {
+            var xValue = (double) xs.GetValue(i);
+            var yValue = (double) ys.GetValue(i);
+            return new Point(xValue, yValue);
+        }
+
+        private static Feature2D CreateFeature2D(string idName, IGeometry geometry)
+        {
+            return new Feature2D
+            {
+                Name = idName,
+                Geometry = geometry
+            };
+        }
+
+        private static Weir2D CreateGeneralStructureFromNetCdf(string name)
+        {
+            return new Weir2D
+            {
+                Name = name,
+                WeirFormula = new GeneralStructureWeirFormula()
+            };
+        }
+
+        #endregion
     }
 }
