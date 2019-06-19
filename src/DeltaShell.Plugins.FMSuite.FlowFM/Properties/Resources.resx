@@ -578,4 +578,7 @@ Manhole with unique id '{4}' is not imported.</value>
   <data name="MorphologyFileBackwardsCompatibilityHelper_GetUpdatedPropertyName_Backwards_Compatibility____0___has_been_updated_to___1__" xml:space="preserve">
     <value>Backwards Compatibility: '{0}' has been updated to '{1}'</value>
   </data>
+  <data name="ShapeFileImporterHelper_Read_Shape_type__0__is_not_matching_expected_type__1__" xml:space="preserve">
+    <value>Shape type {0} is not matching expected type {1}.</value>
+  </data>
 </root>

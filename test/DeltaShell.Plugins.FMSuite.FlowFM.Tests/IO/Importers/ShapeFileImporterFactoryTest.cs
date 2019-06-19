@@ -54,30 +54,30 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
 
             // Verify ordering
             action1.Expect(e => e.Invoke(expectedSrcArg, expectedDestArg, expectedTargetsArg))
-                   .WhenCalled(w => action2.AssertWasNotCalled(f => f.Invoke(expectedSrcArg, 
-                                                                                   expectedDestArg, 
-                                                                                   expectedTargetsArg)))
+                   .WhenCalled(w => action2.AssertWasNotCalled(f => f.Invoke(expectedSrcArg,
+                                                                             expectedDestArg, 
+                                                                             expectedTargetsArg)))
                    .WhenCalled(w => action3.AssertWasNotCalled(f => f.Invoke(expectedSrcArg, 
-                                                                                   expectedDestArg, 
-                                                                                   expectedTargetsArg)))
+                                                                             expectedDestArg, 
+                                                                             expectedTargetsArg)))
                    .Repeat.Once();
 
             action2.Expect(e => e.Invoke(expectedSrcArg, expectedDestArg, expectedTargetsArg))
                    .WhenCalled(w => action1.AssertWasCalled(f => f.Invoke(expectedSrcArg, 
-                                                                                expectedDestArg, 
-                                                                                expectedTargetsArg)))
+                                                                          expectedDestArg, 
+                                                                          expectedTargetsArg)))
                    .WhenCalled(w => action3.AssertWasNotCalled(f => f.Invoke(expectedSrcArg, 
-                                                                                   expectedDestArg, 
-                                                                                   expectedTargetsArg)))
+                                                                             expectedDestArg, 
+                                                                             expectedTargetsArg)))
                    .Repeat.Once();
 
             action3.Expect(e => e.Invoke(expectedSrcArg, expectedDestArg, expectedTargetsArg))
                    .WhenCalled(w => action1.AssertWasCalled(f => f.Invoke(expectedSrcArg, 
-                                                                                expectedDestArg, 
-                                                                                expectedTargetsArg)))
+                                                                          expectedDestArg, 
+                                                                          expectedTargetsArg)))
                    .WhenCalled(w => action2.AssertWasCalled(f => f.Invoke(expectedSrcArg, 
-                                                                                expectedDestArg, 
-                                                                                expectedTargetsArg)))
+                                                                          expectedDestArg, 
+                                                                          expectedTargetsArg)))
                    .Repeat.Once();
 
             action1.Replay();

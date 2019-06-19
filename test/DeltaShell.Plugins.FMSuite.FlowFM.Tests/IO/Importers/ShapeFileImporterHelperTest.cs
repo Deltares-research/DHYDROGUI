@@ -145,8 +145,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             shapeFile.Replay();
 
             // When
-            var result = (bool) TypeUtils.CallStaticGenericMethod(typeof(ShapeFileImporterHelper),
-                                                                  "IsShapeTypeValid", 
+            var result = (bool) TypeUtils.CallStaticGenericMethod(typeof(ShapeFileImporterHelperTest),
+                                                                  nameof(IsShapeTypeValidWrapper), 
                                                                   genericType, 
                                                                   shapeFile);
 
@@ -154,6 +154,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             shapeFile.VerifyAllExpectations();
             Assert.That(result, Is.EqualTo(expectedVal), 
                         $"Expected a different result for IsShapeTypeValid<{genericType}> with {shapeType}.");
+        }
+
+        // Ensure our type reflection only relies on functions internal to our class.
+        public static bool IsShapeTypeValidWrapper<T>(ShapeFile shapeFile) where T : IGeometry
+        {
+            return ShapeFileImporterHelper.IsShapeTypeValid<T>(shapeFile);
         }
 
         /// <summary>
