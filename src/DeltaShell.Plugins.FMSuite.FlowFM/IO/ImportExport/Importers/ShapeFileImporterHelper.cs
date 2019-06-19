@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 using log4net;
@@ -44,8 +46,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
                 }
                 else
                 {
-                    Log?.Error(
-                        $"Shape type {shapeFileReader.ShapeType} is not matching expected type {typeof(TGeometry)}.");
+                    Log?.Error(string.Format(Resources.ShapeFileImporterHelper_Read_Shape_type__0__is_not_matching_expected_type__1__, shapeFileReader.ShapeType, typeof(TGeometry)));
                 }
 
                 shapeFileReader.Close();
@@ -108,7 +109,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
 
             IGeometry result = null;
 
-            if (typeof(T) == typeof(IPoint))
+            Type t = typeof(T);
+            if (t == typeof(IPoint))
             {
                 Coordinate coordinate = coordinates.FirstOrDefault();
                 if (coordinate != null)
@@ -116,11 +118,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
                     result = factory.CreatePoint(coordinate);
                 }
             }
-            else if (typeof(T) == typeof(ILineString))
+            else if (t == typeof(ILineString))
             {
                 result = factory.CreateLineString(coordinates);
             }
-            else if (typeof(T) == typeof(IPolygon))
+            else if (t == typeof(IPolygon))
             {
                 result = factory.CreatePolygon(coordinates);
             }

@@ -850,6 +850,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Shape type {0} is not matching expected type {1}..
+        /// </summary>
+        public static string ShapeFileImporterHelper_Read_Shape_type__0__is_not_matching_expected_type__1__ {
+            get {
+                return ResourceManager.GetString("ShapeFileImporterHelper_Read_Shape_type__0__is_not_matching_expected_type__1__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Additional values detected for one or more physical processes.
         /// </summary>
         public static string SourceAndSinkImporterHelper_TryAdjustSalinityAndTemperatureComponents_Additional_values_detected_for_one_or_more_physical_processes {
