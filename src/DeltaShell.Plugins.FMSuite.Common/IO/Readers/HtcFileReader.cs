@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using DeltaShell.NGHS.IO;
-using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.Common.IO.Readers
 {

@@ -1,13 +1,20 @@
-﻿using DelftTools.TestUtils;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO;
+using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccess;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
+using DeltaShell.Plugins.FMSuite.FlowFM.Sediment;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
@@ -20,14 +27,6 @@ using SharpMap.Api.SpatialOperations;
 using SharpMap.Data.Providers;
 using SharpMap.SpatialOperations;
 using SharpMapTestUtils;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using DeltaShell.NGHS.IO.TestUtils;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
-using DeltaShell.Plugins.FMSuite.FlowFM.Model;
-using DeltaShell.Plugins.FMSuite.FlowFM.Sediment;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 {
@@ -918,20 +917,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.IsTrue(File.Exists("chan2_east_outflow.pli"));
             Assert.IsTrue(File.Exists("chan2_east_outflow.tim"));
         }
-
-        //private List CopyTestDataFilesToTempDirectory(TemporaryDirectory temp, params string[] list)
-        //{
-        //    var copiesInTempFilePathList = new List<string>();
-
-        //    foreach (string relativeTestDataFilePath in list)
-        //    {
-        //        string copyInTempFilePath = temp.CopyTestDataFileToTempDirectory(relativeTestDataFilePath);
-        //        copiesInTempFilePathList.Add(copyInTempFilePath);
-        //    }
-
-        //    return copiesInTempFilePathList;
-        //}
-        
 
         [Test]
         [TestCase("uniform", @"heatFluxFiles\UniformHeatFluxModel\htccase.ext", @"heatFluxFiles\UniformHeatFluxModel\meteo.tim")]
