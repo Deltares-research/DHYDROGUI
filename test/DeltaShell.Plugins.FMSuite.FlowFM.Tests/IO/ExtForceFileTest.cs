@@ -921,7 +921,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Test]
         [TestCase("uniform", @"heatFluxFiles\UniformHeatFluxModel\htccase.ext", @"heatFluxFiles\UniformHeatFluxModel\meteo.tim")]
         [TestCase("gridded", @"heatFluxFiles\GriddedHeatFluxModel\htccase.ext", @"heatFluxFiles\GriddedHeatFluxModel\meteo.htc", @"heatFluxFiles\GriddedHeatFluxModel\meteo.grd")]
-        public void GivenAdHeatFluxModel_WhenReadingAndWriting_ThenAllDataShouldRemain(string heatFluxModelVersion, params string[] relativeTestDataFilePaths)
+        public void GivenAHeatFluxModel_WhenReadingAndWriting_ThenAllDataShouldRemain(string heatFluxModelVersion, params string[] relativeTestDataFilePaths)
         {
             // Given
             using (var temp = new TemporaryDirectory())
