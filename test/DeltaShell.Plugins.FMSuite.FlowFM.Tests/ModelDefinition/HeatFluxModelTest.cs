@@ -16,25 +16,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.ModelDefinition
         public void GivenAGriddedHeatFluxModel_WhenSavingAsOrExporting_ThenTheFilesShouldBeCopiedAndNewPathsShouldBeSetOnlyIfSwitchToIsTrue(bool switchTo)
         {
             //Given
-            string sourceGriddedHeatFluxFile = TestHelper.GetTestFilePath(@"heatFluxFiles\GriddedHeatFluxModel\meteo.htc");
-            string sourceGridFile = TestHelper.GetTestFilePath(@"heatFluxFiles\GriddedHeatFluxModel\meteo.grd");
-            
             using (var temp = new TemporaryDirectory())
             {
-                string copyGriddedHeatFluxFile = Path.Combine(temp.Path, "meteo.htc");
-                string copyGridFile = Path.Combine(temp.Path, "meteo.grd");
+                string copyinTempGriddedHeatFluxFilePath = temp.CopyTestDataFileToTempDirectory(@"heatFluxFiles\GriddedHeatFluxModel\meteo.htc");
+                string copyInTempGridFilePath = temp.CopyTestDataFileToTempDirectory(@"heatFluxFiles\GriddedHeatFluxModel\meteo.grd");
 
-                FileUtils.CopyFile(sourceGriddedHeatFluxFile, copyGriddedHeatFluxFile);
-                FileUtils.CopyFile(sourceGridFile, copyGridFile);
-                
                 var heatFluxModel = new HeatFluxModel()
                 {
-                    GriddedHeatFluxFilePath = copyGriddedHeatFluxFile,
-                    GridFilePath = copyGridFile
+                    GriddedHeatFluxFilePath = copyinTempGriddedHeatFluxFilePath,
+                    GridFilePath = copyInTempGridFilePath
                 };
 
-                string targetGriddedHeatFluxFile = Path.Combine(temp.Path, "save", "meteo.htc");
-                string expectedTargetGridFile = Path.Combine(temp.Path, "save", "meteo.grd");
+                string absoluteSaveFolderInTempPath = Path.Combine(temp.Path, "save");
+
+                string targetGriddedHeatFluxFile = Path.Combine(absoluteSaveFolderInTempPath, "meteo.htc");
+                string expectedTargetGridFile = Path.Combine(absoluteSaveFolderInTempPath, "meteo.grd");
 
                 //When
                 heatFluxModel.CopyTo(targetGriddedHeatFluxFile, switchTo);
@@ -45,13 +41,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.ModelDefinition
 
                 if (switchTo)
                 {
-                    Assert.AreEqual(heatFluxModel.GriddedHeatFluxFilePath, targetGriddedHeatFluxFile);
-                    Assert.AreEqual(heatFluxModel.GridFilePath, expectedTargetGridFile);
+                    Assert.AreEqual(heatFluxModel.GriddedHeatFluxFilePath, targetGriddedHeatFluxFile, "The GriddedHeatFluxFilePath is not correctly set after a save");
+                    Assert.AreEqual(heatFluxModel.GridFilePath, expectedTargetGridFile, "The GridFilePath is not correctly set after a save");
                 }
                 else
                 {
-                    Assert.AreEqual(heatFluxModel.GriddedHeatFluxFilePath, copyGriddedHeatFluxFile);
-                    Assert.AreEqual(heatFluxModel.GridFilePath, copyGridFile);
+                    Assert.AreEqual(heatFluxModel.GriddedHeatFluxFilePath, copyinTempGriddedHeatFluxFilePath, "The GriddedHeatFluxFilePath is not correctly set after an export");
+                    Assert.AreEqual(heatFluxModel.GridFilePath, copyInTempGridFilePath, "The GridFilePath is not correctly set after an export");
                 }
             }
         }
