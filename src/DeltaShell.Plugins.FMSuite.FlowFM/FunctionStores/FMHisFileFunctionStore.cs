@@ -223,15 +223,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
 
         private void InitializePumpFeatures(IEnumerable<IFeature> pumpFeatures)
         {
+            // Extract all possible pumps for later pairing with features
             var pumpNames = GetNetCdfFeatureVariableNames("pump_name");
             if (!pumpNames.Any()) return;
 
             var results = new List<IFeature>();
             foreach (var name in pumpNames)
             {
-                var feature = pumpFeatures.FirstOrDefault(m => m is IPump && (m as IPump).Name == name);
-                if( feature == null) feature = new Pump2D(name);
-                results.Add(feature);
+                var validFeature = pumpFeatures.FirstOrDefault(m => m is IPump && (m as IPump).Name == name);
+                if (validFeature == null)
+                {
+                    validFeature = new Pump2D(name);
+                }
+
+                results.Add(validFeature);
             }
 
             AddFeaturesToDictionary(featureName_Pumps, results);
@@ -324,6 +329,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
 
         #endregion
 
+        #region Private methods
+
         private void AddFeaturesToDictionary(string featureName, IEnumerable<IFeature> results)
         {
             if (FeaturesDictionary.ContainsKey(featureName))
@@ -334,6 +341,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             {
                 FeaturesDictionary.Add(featureName, results);
             }
+        }
+
+        private static string CharArrayToString(char[] chars)
+        {
+            return new string(chars).TrimEnd(new[]
+            {
+                '\0',
+                ' '
+            });
         }
 
         private IList<string> GetNetCdfFeatureVariableNames(string variableName)
@@ -363,6 +379,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             var variableArrayT = variableArray.Cast<T>();
             return variableArrayT;
         }
+
+        #endregion
 
         #region IFeature helpers
 
@@ -410,14 +428,5 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
         }
 
         #endregion
-
-        private static string CharArrayToString(char[] chars)
-        {
-            return new string(chars).TrimEnd(new[]
-            {
-                '\0',
-                ' '
-            });
-        }
     }
 }
