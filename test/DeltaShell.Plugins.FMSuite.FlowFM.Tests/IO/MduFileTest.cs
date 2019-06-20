@@ -5,6 +5,7 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
+using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO.Grid;
@@ -765,7 +766,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         public void Test_ImportMdu_Without_DryArea_Suffix_Gets_DryAreas()
         {
             // 1. Set up test model
-            var expectedAreas = 4;
+            const int expectedAreas = 4;
             WaterFlowFMModelDefinition modelDefinition = null;
             var mduFile = new MduFile();
             var originalArea = new HydroArea();
@@ -781,13 +782,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 Action readMduFile = () => mduFile.Read(mduFileName, modelDefinition, originalArea, null);
 
                 // 3. Run test (Import areas)
-                Assert.DoesNotThrow(() => createModelDefinition.Invoke());
-                Assert.DoesNotThrow(() => readMduFile.Invoke());
+                Assert.DoesNotThrow(() => createModelDefinition.Invoke(), "Test fail while trying to create a model definition object.");
+                Assert.DoesNotThrow(() => readMduFile.Invoke(), "Test fail while trying to read the MDU file.");
 
                 // 4. Verify final expectations
-                var dryPointsOnArea = originalArea.DryAreas;
-                Assert.That(dryPointsOnArea.Count, Is.EqualTo(expectedAreas));
-
+                int importedDryAreas = originalArea.DryAreas.Count;
+                Assert.That(importedDryAreas, Is.EqualTo(expectedAreas), $"Imported number of areas {importedDryAreas} does not match the expected amount ({expectedAreas}");
             }
         }
     }
