@@ -758,5 +758,33 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var dryPointsOnArea = originalArea.DryPoints;
             Assert.AreEqual(8, dryPointsOnArea.Count);
         }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void Test_ImportMdu_Without_DryArea_Suffix_Gets_DryAreas()
+        {
+            // 1. Set up test model
+            var expectedAreas = 4;
+            WaterFlowFMModelDefinition modelDefinition = null;
+            var mduFile = new MduFile();
+            var originalArea = new HydroArea();
+
+            var mduFileName = TestHelper.GetTestFilePath(@"ModelWithDrypointData\D3DFMIQ-1037\FlowFM.mdu");
+            mduFileName = TestHelper.CreateLocalCopy(mduFileName);
+            mduDir = Path.GetDirectoryName(mduFileName);
+            modelName = Path.GetFileName(mduFileName);
+
+            // 2. Set initial expectations.
+            Action createModelDefinition = () => modelDefinition = new WaterFlowFMModelDefinition(mduDir, modelName);
+            Action readMduFile = () => mduFile.Read(mduFileName, modelDefinition, originalArea, null);
+
+            // 3. Run test (Import areas)
+            Assert.DoesNotThrow( () => createModelDefinition.Invoke() );
+            Assert.DoesNotThrow( () => readMduFile.Invoke() );
+            
+            // 4. Verify final expectations
+            var dryPointsOnArea = originalArea.DryAreas;
+            Assert.That(dryPointsOnArea.Count, Is.EqualTo(expectedAreas));
+        }
     }
 }
