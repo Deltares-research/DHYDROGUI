@@ -8,7 +8,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
     public class ImportedFMNetFile : Unique<long>
     {
         // nhib
-        protected ImportedFMNetFile() {}
+        public ImportedFMNetFile() {}
 
         public ImportedFMNetFile(string path)
         {
