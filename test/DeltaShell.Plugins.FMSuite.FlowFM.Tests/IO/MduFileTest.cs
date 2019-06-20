@@ -8,6 +8,7 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO.Grid;
+using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
@@ -768,23 +769,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             WaterFlowFMModelDefinition modelDefinition = null;
             var mduFile = new MduFile();
             var originalArea = new HydroArea();
+            using (var temporaryDirectory = new TemporaryDirectory())
+            {
+                string mduFileName = TestHelper.GetTestFilePath(@"ModelWithDrypointData\D3DFMIQ-1037\FlowFM.mdu");
+                mduFileName = temporaryDirectory.CopyTestDataFileToTempDirectory(mduFileName);
+                mduDir = Path.GetDirectoryName(mduFileName);
+                modelName = Path.GetFileName(mduFileName);
 
-            var mduFileName = TestHelper.GetTestFilePath(@"ModelWithDrypointData\D3DFMIQ-1037\FlowFM.mdu");
-            mduFileName = TestHelper.CreateLocalCopy(mduFileName);
-            mduDir = Path.GetDirectoryName(mduFileName);
-            modelName = Path.GetFileName(mduFileName);
+                // 2. Set initial expectations.
+                Action createModelDefinition = () => modelDefinition = new WaterFlowFMModelDefinition(mduDir, modelName);
+                Action readMduFile = () => mduFile.Read(mduFileName, modelDefinition, originalArea, null);
 
-            // 2. Set initial expectations.
-            Action createModelDefinition = () => modelDefinition = new WaterFlowFMModelDefinition(mduDir, modelName);
-            Action readMduFile = () => mduFile.Read(mduFileName, modelDefinition, originalArea, null);
+                // 3. Run test (Import areas)
+                Assert.DoesNotThrow(() => createModelDefinition.Invoke());
+                Assert.DoesNotThrow(() => readMduFile.Invoke());
 
-            // 3. Run test (Import areas)
-            Assert.DoesNotThrow( () => createModelDefinition.Invoke() );
-            Assert.DoesNotThrow( () => readMduFile.Invoke() );
-            
-            // 4. Verify final expectations
-            var dryPointsOnArea = originalArea.DryAreas;
-            Assert.That(dryPointsOnArea.Count, Is.EqualTo(expectedAreas));
+                // 4. Verify final expectations
+                var dryPointsOnArea = originalArea.DryAreas;
+                Assert.That(dryPointsOnArea.Count, Is.EqualTo(expectedAreas));
+
+            }
         }
     }
 }
