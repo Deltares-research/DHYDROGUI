@@ -586,21 +586,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         /// </remarks>
         private static void CleanFlowFmViewContextUponLoadingProjectHack(Project project)
         {
-            IModel model = project?.RootFolder?.Models?.FirstOrDefault(m => m is WaterFlowFMModel);
-            if (!(model is WaterFlowFMModel fmModel)) return;
+            IEnumerable<IModel> models = project?.RootFolder?.Models?.Where(m => m is WaterFlowFMModel);
 
-            UnstructuredGridCoverage bathymetry = fmModel.Bathymetry;
+            if (models == null) return;
 
-            var viewContext = (project.ViewContextManager as GuiContextManager)?
-                              .GetViewContext(typeof(ProjectItemMapView), fmModel) as ProjectItemMapViewContext;
-
-            GeneratedMapLayerInfo bedLevelLayer = viewContext?.GeneratedMapLayerInfoList?
-                                                              .FirstOrDefault(l => l.Name.Equals("Bed Level"));
-
-            if (bathymetry.Components[0].MinValue is double minValue &&
-                bathymetry.Components[0].MaxValue is double maxValue)
+            foreach (IModel model in models)
             {
-                bedLevelLayer?.Theme?.ScaleTo(minValue, maxValue);
+                if (!(model is WaterFlowFMModel fmModel)) continue;
+
+                UnstructuredGridCoverage bathymetry = fmModel.Bathymetry;
+
+                var viewContext = (project.ViewContextManager as GuiContextManager)?
+                                  .GetViewContext(typeof(ProjectItemMapView), fmModel) as ProjectItemMapViewContext;
+
+                GeneratedMapLayerInfo bedLevelLayer = viewContext?.GeneratedMapLayerInfoList?
+                    .FirstOrDefault(l => l.Name.Equals("Bed Level"));
+
+                if (bathymetry?.Components?[0]?.MinValue is double minValue &&
+                    bathymetry?.Components?[0]?.MaxValue is double maxValue)
+                {
+                    bedLevelLayer?.Theme?.ScaleTo(minValue, maxValue);
+                }
             }
         }
 
