@@ -346,8 +346,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 newProperty.SetValueAsString(propertyValue);
             }
 
-            logHandler.ReportWarningFormat(Resources.MorphologySediment_ReadCategoryProperties_Unsupported_keyword___0___detected_and_will_be_passed_to_the_computational_core__Note_that_some_data_or_the_connection_to_linked_files_may_be_lost_,
-                                           delftIniProperty.Name);
+            logHandler.ReportWarningFormat(Resources.MorphologySediment_ReadCategoryProperties_Unsupported_keyword___0___at_line___1___detected_and_will_be_passed_to_the_computational_core__Note_that_some_data_or_the_connection_to_linked_files_may_be_lost_,
+                                           delftIniProperty.Name, delftIniProperty.LineNumber);
         }
 
         private static void AddFormulaTypeProperties(ISedimentFraction sedimentFraction,

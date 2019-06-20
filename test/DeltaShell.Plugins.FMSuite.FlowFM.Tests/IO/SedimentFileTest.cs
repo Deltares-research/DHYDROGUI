@@ -1000,8 +1000,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 string propName = names[i];
 
                 mock.Expect(lh => lh.ReportWarningFormat(
-                                Arg<string>.Matches(m => m.Equals(Resources.MorphologySediment_ReadCategoryProperties_Unsupported_keyword___0___detected_and_will_be_passed_to_the_computational_core__Note_that_some_data_or_the_connection_to_linked_files_may_be_lost_)),
-                                Arg<object[]>.Matches(o => o.Length == 1 && (o[0] as string).Equals(propName))))
+                                Arg<string>.Matches(m => m.Equals(Resources.MorphologySediment_ReadCategoryProperties_Unsupported_keyword___0___at_line___1___detected_and_will_be_passed_to_the_computational_core__Note_that_some_data_or_the_connection_to_linked_files_may_be_lost_)),
+                                Arg<object[]>.Matches(o => o.Length == 2 && (o[0] as string).Equals(propName) && (o[1] is int))))
                     .Repeat.Once();
             }
         }
