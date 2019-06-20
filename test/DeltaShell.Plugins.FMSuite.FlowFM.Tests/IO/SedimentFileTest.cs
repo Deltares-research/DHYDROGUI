@@ -20,8 +20,14 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DeltaShell.NGHS.IO;
+using DeltaShell.NGHS.IO.Handlers;
+using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.NGHS.IO.TestUtils;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.Sediment;
+using Rhino.Mocks;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 {
@@ -30,7 +36,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
     public class SedimentFileTest
     {
         [Test]
-        [Category(TestCategory.DataAccess)]
         // The way the sediment reader it's developed forces a model to be created in order to import the .sed file properties
         public void GivenAnMduWithSedimentFileWithUnknownProperties_WhenReadingAndWriting_ThenTheCorrectPropertiesAreCreatedAndCorrectlyWrittenToTheFile()
         {
@@ -70,7 +75,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
         public void GivenASedimentFileWithUnknownProperties_WhenReading_ThenOnlyUnknownAndCorrectSedimentPropertiesAreAddedToModelDefinition()
         {
             // Given
@@ -892,5 +896,186 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.That(values[7], Is.EqualTo(10.0).Within(0.1));
             Assert.That(values[8], Is.EqualTo(-999.0).Within(0.1));
         }
+
+        /// <summary>
+        /// GIVEN a SedFile without unknown features
+        ///   AND a FM Model
+        ///   AND a logHandler
+        /// WHEN LoadSediments is called with these parameters
+        /// THEN no warning messages are logged
+        /// </summary>
+        [Test]
+        public void GivenASedFileWithoutUnknownFeaturesAndAFMModelAndALogHandler_WhenLoadSedimentsIsCalledWithTheseParameters_ThenNoWarningMessagesAreLogged()
+        {
+            using (var tempDir = new TemporaryDirectory())
+            using (var model = new WaterFlowFMModel()) // :(
+            {
+                // Given
+                string sedPath = Path.Combine(tempDir.Path, "sedfile.sed");
+
+                CreateSedFile(sedPath, 0, 0, 0);
+
+                var logHandlerMock = MockRepository.GenerateStrictMock<ILogHandler>();
+                logHandlerMock.Expect(lh => lh.LogReport()).Repeat.Any();
+                logHandlerMock.Expect(lh => lh.ReportError(null)).IgnoreArguments().Repeat.Never();
+                logHandlerMock.Expect(lh => lh.ReportInfo(null)).IgnoreArguments().Repeat.Never();
+                logHandlerMock.Expect(lh => lh.ReportWarning(null)).IgnoreArguments().Repeat.Never();
+                logHandlerMock.Expect(lh => lh.ReportErrorFormat(null)).IgnoreArguments().Repeat.Never();
+                logHandlerMock.Expect(lh => lh.ReportInfoFormat(null)).IgnoreArguments().Repeat.Never();
+                logHandlerMock.Expect(lh => lh.ReportWarningFormat(null)).IgnoreArguments().Repeat.Never();
+
+                logHandlerMock.Replay();
+                // When
+                SedimentFile.LoadSediments(sedPath, model, logHandlerMock);
+
+                // Then
+                logHandlerMock.VerifyAllExpectations();
+            }
+        }
+
+        /// <summary>
+        /// GIVEN a SedFile with unknown features
+        ///   AND a FM Model
+        ///   AND a logHandler
+        /// WHEN LoadSediments is called with these parameters
+        /// THEN the correct warning message is logged
+        /// </summary>
+        [TestCase(0, 0, 1)]
+        [TestCase(0, 0, 2)]
+        [TestCase(0, 1, 0)]
+        [TestCase(0, 1, 1)]
+        [TestCase(0, 1, 2)]
+        [TestCase(0, 2, 0)]
+        [TestCase(0, 2, 1)]
+        [TestCase(0, 2, 2)]
+        [TestCase(1, 0, 0)]
+        [TestCase(1, 0, 1)]
+        [TestCase(1, 0, 2)]
+        [TestCase(1, 1, 0)]
+        [TestCase(1, 1, 1)]
+        [TestCase(1, 1, 2)]
+        [TestCase(1, 2, 0)]
+        [TestCase(1, 2, 1)]
+        [TestCase(1, 2, 2)]
+        [TestCase(2, 0, 0)]
+        [TestCase(2, 0, 1)]
+        [TestCase(2, 0, 2)]
+        [TestCase(2, 1, 0)]
+        [TestCase(2, 1, 1)]
+        [TestCase(2, 1, 2)]
+        [TestCase(2, 2, 0)]
+        [TestCase(2, 2, 1)]
+        [TestCase(2, 2, 2)]
+
+        public void GivenASedFileWithUnknownFeaturesAndAFMModelAndALogHandler_WhenLoadSedimentsIsCalledWithTheseParameters_ThenTheCorrectWarningMessageIsLogged(int nUnknownOverall, int nUnknownSediment, int nUnknownUnknown)
+        {
+            using (var tempDir = new TemporaryDirectory())
+            using (var model = new WaterFlowFMModel()) // :(
+            {
+                // Given
+                string sedPath = Path.Combine(tempDir.Path, "sedfile.sed");
+
+                CreateSedFile(sedPath, nUnknownOverall, nUnknownSediment, nUnknownUnknown);
+
+                var logHandlerMock = MockRepository.GenerateStrictMock<ILogHandler>();
+                logHandlerMock.Expect(lh => lh.LogReport()).Repeat.Once();
+
+                setUpExpectationsReportWarning(logHandlerMock, nUnknownOverall, iniPropertyNamesOverall);
+                setUpExpectationsReportWarning(logHandlerMock, nUnknownSediment, iniPropertyNamesSedimentFraction);
+                setUpExpectationsReportWarning(logHandlerMock, nUnknownUnknown, iniPropertyNamesUnknown);
+
+                logHandlerMock.Replay();
+                // When
+                SedimentFile.LoadSediments(sedPath, model, logHandlerMock);
+
+                // Then
+                logHandlerMock.VerifyAllExpectations();
+            }
+        }
+
+        private static void setUpExpectationsReportWarning(ILogHandler mock, int nUnknown, IReadOnlyList<string> names)
+        {
+            for (var i = 0; i < nUnknown; i++)
+            {
+                string propName = names[i];
+
+                mock.Expect(lh => lh.ReportWarningFormat(
+                                Arg<string>.Matches(m => m.Equals(Resources.MorphologySediment_ReadCategoryProperties_Unsupported_keyword___0___detected_and_will_be_passed_to_the_computational_core__Note_that_some_data_or_the_connection_to_linked_files_may_be_lost_)),
+                                Arg<object[]>.Matches(o => o.Length == 1 && (o[0] as string).Equals(propName))))
+                    .Repeat.Once();
+            }
+        }
+
+        private static void CreateSedFile(string path, 
+                                          int nUnknownOverall,
+                                          int nUnknownSediment,
+                                          int nUnknownUnknown)
+        {
+            var iniCategories = new List<IDelftIniCategory>();
+
+            // General Category
+            var sedimentFileInformationCategory = new DelftIniCategory(SedimentFile.GeneralHeader);
+            sedimentFileInformationCategory.AddProperty(SedimentFile.FileCreatedBy, "This sexy test helper.");
+            sedimentFileInformationCategory.AddProperty(SedimentFile.FileCreationDate, "Wed Jan 24 1852, 10:58:04", "Gee that is old");
+            sedimentFileInformationCategory.AddProperty(SedimentFile.FileVersion, "02.00");
+
+            iniCategories.Add(sedimentFileInformationCategory);
+
+            // Overall Category
+            var sedimentOverall = new DelftIniCategory(SedimentFile.OverallHeader);
+            sedimentOverall.AddSedimentProperty("Cref", "1600", "kg/m³", "Reference density for hindered settling calculations");
+
+            for (var i = 0; i < nUnknownOverall; i++)
+            {
+                sedimentOverall.AddProperty(iniPropertyNamesOverall[i], "Lekker", "#Toch?");
+            }
+
+            iniCategories.Add(sedimentOverall);
+
+            // Sediment Category
+            var sedimentFracCat = new DelftIniCategory(SedimentFile.Header);
+            sedimentFracCat.AddSedimentProperty("Name", "#sand#", "", "Name of sediment fraction");
+            sedimentFracCat.AddSedimentProperty("SedTyp", "sand", "", "Must be \"sand\", \"mud\" or \"bedload\"");
+
+            sedimentFracCat.AddSedimentProperty("IniSedThick", "0", "m", "Initial sediment layer thickness at bed");
+            sedimentFracCat.AddSedimentProperty("FacDss", "1", "", "Factor for suspended sediment diameter");
+            sedimentFracCat.AddSedimentProperty("RhoSol", "2650", "kg/m³", "Specific density");
+            sedimentFracCat.AddSedimentProperty("TraFrm", "-1", "", "Integer selecting the transport formula");
+            sedimentFracCat.AddSedimentProperty("CDryB", "1600", "kg/m³", "Dry bed density");
+            sedimentFracCat.AddSedimentProperty("SedDia", "0.0002", "m", "Median sediment diameter(D50)");
+            sedimentFracCat.AddSedimentProperty("IopSus", "0", "","Option for determining suspended sediment diameter");
+            sedimentFracCat.AddSedimentProperty("AksFac", "1", "", "Calibration factor for Van Rijn’s reference height");
+            sedimentFracCat.AddSedimentProperty("Rwave", "2", "", "Calibration factor wave roughness height");
+            sedimentFracCat.AddSedimentProperty("RDC",    "0.01","m", "Current related roughness ks");
+            sedimentFracCat.AddSedimentProperty("RDW", "0.02", "m", "Wave related roughness kw");
+            sedimentFracCat.AddSedimentProperty("IopKCW", "1", "", "Option for ks and kw");
+            sedimentFracCat.AddSedimentProperty("EpsPar", "False", "", "Use Van Rijn's parabolic mixing coefficient");
+
+            for (var i = 0; i < nUnknownSediment; i++)
+            {
+                sedimentFracCat.AddProperty(iniPropertyNamesSedimentFraction[i], "Lekker", "#Toch");
+            }
+
+            iniCategories.Add(sedimentFracCat);
+
+            // Optional unknown category
+            if (nUnknownUnknown > 0)
+            {
+                var unknownCategory = new DelftIniCategory("I_am_an_unknown_category");
+
+                for (var i = 0; i < nUnknownUnknown; i++)
+                {
+                    unknownCategory.AddProperty(iniPropertyNamesUnknown[i], "Lekker", "Toch");
+                }
+
+                iniCategories.Add(unknownCategory);
+            }
+
+            new DelftIniWriter().WriteDelftIniFile(iniCategories, path, false);
+        }
+
+        private static readonly string[] iniPropertyNamesOverall = { "Bros", "Bounty" };
+        private static readonly string[] iniPropertyNamesSedimentFraction = { "MilkyWay", "Snickers" };
+        private static readonly string[] iniPropertyNamesUnknown = { "Toblerone", "Twix" };
     }
 }

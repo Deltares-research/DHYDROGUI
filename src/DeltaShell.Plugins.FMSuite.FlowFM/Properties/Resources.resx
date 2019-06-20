@@ -572,13 +572,13 @@ Manhole with unique id '{4}' is not imported.</value>
   <data name="ExtForceFile_GetMessageUnexpectedKeyword_Unexpected_keyword__0__on_line__1__of_file__2_" xml:space="preserve">
     <value>Unexpected keyword {0} on line {1} of file {2}</value>
   </data>
-  <data name="MorphologyFile_ReadCategoryProperties_Unsupported_keyword___0___detected_and_will_be_passed_to_the_computational_core__Note_that_some_data_or_the_connection_to_linked_files_may_be_lost_" xml:space="preserve">
-    <value>Unsupported keyword &lt;{0}&gt; detected and will be passed to the computational core. Note that some data or the connection to linked files may be lost.</value>
-  </data>
   <data name="MorphologyFileBackwardsCompatibilityHelper_GetUpdatedPropertyName_Backwards_Compatibility____0___has_been_updated_to___1__" xml:space="preserve">
     <value>Backwards Compatibility: '{0}' has been updated to '{1}'</value>
   </data>
   <data name="ShapeFileImporterHelper_Read_Shape_type__0__is_not_matching_expected_type__1__" xml:space="preserve">
     <value>Shape type {0} is not matching expected type {1}.</value>
+  </data>
+  <data name="MorphologySediment_ReadCategoryProperties_Unsupported_keyword___0___detected_and_will_be_passed_to_the_computational_core__Note_that_some_data_or_the_connection_to_linked_files_may_be_lost_" xml:space="preserve">
+    <value>Unsupported keyword &lt;{0}&gt; detected and will be passed to the computational core. Note that some data or the connection to linked files may be lost.</value>
   </data>
 </root>

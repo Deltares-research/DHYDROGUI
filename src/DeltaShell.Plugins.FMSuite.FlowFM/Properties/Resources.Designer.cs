@@ -637,23 +637,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unsupported keyword &lt;{0}&gt; detected and will be passed to the computational core. Note that some data or the connection to linked files may be lost..
-        /// </summary>
-        public static string MorphologyFile_ReadCategoryProperties_Unsupported_keyword___0___detected_and_will_be_passed_to_the_computational_core__Note_that_some_data_or_the_connection_to_linked_files_may_be_lost_ {
-            get {
-                return ResourceManager.GetString("MorphologyFile_ReadCategoryProperties_Unsupported_keyword___0___detected_and_will" +
-                        "_be_passed_to_the_computational_core__Note_that_some_data_or_the_connection_to_l" +
-                        "inked_files_may_be_lost_", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Backwards Compatibility: &apos;{0}&apos; has been updated to &apos;{1}&apos;.
         /// </summary>
         public static string MorphologyFileBackwardsCompatibilityHelper_GetUpdatedPropertyName_Backwards_Compatibility____0___has_been_updated_to___1__ {
             get {
                 return ResourceManager.GetString("MorphologyFileBackwardsCompatibilityHelper_GetUpdatedPropertyName_Backwards_Compa" +
                         "tibility____0___has_been_updated_to___1__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unsupported keyword &lt;{0}&gt; detected and will be passed to the computational core. Note that some data or the connection to linked files may be lost..
+        /// </summary>
+        public static string MorphologySediment_ReadCategoryProperties_Unsupported_keyword___0___detected_and_will_be_passed_to_the_computational_core__Note_that_some_data_or_the_connection_to_linked_files_may_be_lost_ {
+            get {
+                return ResourceManager.GetString("MorphologySediment_ReadCategoryProperties_Unsupported_keyword___0___detected_and_" +
+                        "will_be_passed_to_the_computational_core__Note_that_some_data_or_the_connection_" +
+                        "to_linked_files_may_be_lost_", resourceCulture);
             }
         }
         
