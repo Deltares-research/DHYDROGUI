@@ -1,14 +1,14 @@
-﻿using DeltaShell.NGHS.IO;
-using log4net;
+﻿using System;
+using System.IO;
+using DeltaShell.NGHS.IO;
 
 namespace DeltaShell.Plugins.FMSuite.Common.IO.Readers
 {
     /// <summary>
-    /// Reader for finding the relative grid file path in the htc file
+    /// Reader for finding the relative grid file path in the htc file.
     /// </summary>
     public class HtcFileReader : NGHSFileBase
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(HtcFileReader));
         private readonly string filePath;
         private const string GridFileKeyword = "grid_file";
         private const string endOfHeaderKeyword = "time";
@@ -22,6 +22,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Readers
         /// Using a pattern, the relative grid file path can be found in the header of the file
         /// </summary>
         /// <returns></returns>
+        /// <exception cref="ArgumentNullException">Gridded heat flux file path is null</exception>
+        /// <exception cref="FileNotFoundException">The file cannot be found.</exception>
+        /// <exception cref="DirectoryNotFoundException">The specified path is invalid, such as being on an unmapped drive.</exception>
+        /// <exception cref="IOException"><paramref name="filePath"/> includes an incorrect or invalid syntax for file name, directory name, or volume label.</exception>
         public string ReadGridFileNameWithExtension()
         {
             OpenInputFile(filePath);

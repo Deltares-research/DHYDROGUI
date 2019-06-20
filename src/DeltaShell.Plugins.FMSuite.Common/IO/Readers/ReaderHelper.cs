@@ -4,9 +4,21 @@ using DelftTools.Utils.RegularExpressions;
 
 namespace DeltaShell.Plugins.FMSuite.Common.IO.Readers
 {
+    /// <summary>
+    /// ReaderHelper for shared read logic. 
+    /// </summary>
     public static class ReaderHelper
     {
         private const string KeyValueCommentPattern = @"^\s*(?<key>[^=\s]+)\s*=\s*(?<value>[^#=]*)(#(?<comment>.*))?$";
+
+        /// <summary>
+        /// Gets the key value and comment part of a line, by using the KeyValueCommentPattern.
+        /// </summary>
+        /// <param name="line">The line.</param>
+        /// <param name="lineNumber">The line number.</param>
+        /// <param name="inputFilePath">The input file path.</param>
+        /// <returns></returns>
+        /// <exception cref="FormatException">Invalid key-value-comment line on line {lineNumber} in file {inputFilePath}</exception>
         public static string[] GetKeyValueComment(string line, int lineNumber, string inputFilePath)
         {
 

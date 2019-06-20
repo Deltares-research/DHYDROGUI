@@ -41,7 +41,9 @@ using DeltaShell.Plugins.SharpMapGis.Gui;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms.CoverageViews;
 using Mono.Addins;
+using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
+using SharpMap.Api;
 using SharpMap.Api.Layers;
 using SharpMap.Data.Providers;
 using SharpMap.Layers;
@@ -572,23 +574,39 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         }
 
         /// <summary>
-        /// This method has been added to "refresh" the ViewContext upon
-        /// loading. This will ensure the right scale is used within the bed
-        /// level. However to achieve this desired effect, it will delete the
-        /// complete view context for the flow fm model.
+        /// This method has been added to "refresh" the min max values of the bathymetry.
+        /// Due to the way they are currently handled, the wrong min and max data is loaded on
+        /// the bed level. We fix this by setting the min max value of the bathymetry directly
+        /// on the layer.
         /// </summary>
         /// <param name="project"> The project which is loaded. </param>
         /// <remarks>
         /// See issue: D3DFMIQ-1099.
-        /// This is a rather nuclear option, and should really be fixed when
-        /// the grid is read.
+        /// This is somewhat of a nuclear option, and should really be fixed when grid is read.
         /// </remarks>
         private static void CleanFlowFmViewContextUponLoadingProjectHack(Project project)
         {
-            IModel model = project?.RootFolder?.Models?.FirstOrDefault(m => m is WaterFlowFMModel);
-            if (model is WaterFlowFMModel fmModel)
+            IEnumerable<IModel> models = project?.RootFolder?.Models?.Where(m => m is WaterFlowFMModel);
+
+            if (models == null) return;
+
+            foreach (IModel model in models)
             {
-                (project.ViewContextManager as GuiContextManager)?.RemoveViewContextsForItem(fmModel);
+                if (!(model is WaterFlowFMModel fmModel)) continue;
+
+                UnstructuredGridCoverage bathymetry = fmModel.Bathymetry;
+
+                var viewContext = (project.ViewContextManager as GuiContextManager)?
+                                  .GetViewContext(typeof(ProjectItemMapView), fmModel) as ProjectItemMapViewContext;
+
+                GeneratedMapLayerInfo bedLevelLayer = viewContext?.GeneratedMapLayerInfoList?
+                    .FirstOrDefault(l => l.Name.Equals("Bed Level"));
+
+                if (bathymetry?.Components?[0]?.MinValue is double minValue &&
+                    bathymetry?.Components?[0]?.MaxValue is double maxValue)
+                {
+                    bedLevelLayer?.Theme?.ScaleTo(minValue, maxValue);
+                }
             }
         }
 
