@@ -176,6 +176,7 @@
     <Compile Include="Editors\BoundaryConditionExtensions.cs" />
     <Compile Include="Editors\Buttons\EditCoverageLayersButton.cs" />
     <Compile Include="Editors\Buttons\EditDepthLayersButton.cs" />
+    <Compile Include="Editors\FlowBoundaryConditionPointData.cs" />
     <Compile Include="Editors\ModelFeatureCoordinateDataEditor\CoordinateDataRow.cs" />
     <Compile Include="Editors\ModelFeatureCoordinateDataEditor\CoordinateDataRowGeometryPropertyDescriptor.cs" />
     <Compile Include="Editors\ModelFeatureCoordinateDataEditor\GeometryPropertyDescriptorType.cs" />

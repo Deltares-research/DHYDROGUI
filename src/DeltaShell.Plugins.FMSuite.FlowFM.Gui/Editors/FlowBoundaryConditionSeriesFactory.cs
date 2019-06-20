@@ -18,74 +18,6 @@ using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 {
-    public class FlowBoundaryConditionPointData
-    {
-        public FlowBoundaryConditionPointData(FlowBoundaryCondition boundaryCondition, int supportPoint, bool useLayers)
-        {
-            BoundaryCondition = boundaryCondition;
-            SupportPoint = supportPoint;
-            UseLayers = useLayers;
-        }
-
-        public FlowBoundaryCondition BoundaryCondition { get; private set; }
-
-        private int SupportPoint { get; set; }
-
-        public IFunction Function
-        {
-            get { return BoundaryCondition == null ? null : BoundaryCondition.GetDataAtPoint(SupportPoint); }
-        }
-
-        public BoundaryConditionDataType ForcingType
-        {
-            get { return BoundaryCondition == null ? BoundaryConditionDataType.Empty : BoundaryCondition.DataType; }
-        }
-        
-        public int ForcingTypeDimension
-        {
-            get
-            {
-                if (BoundaryCondition.FlowQuantity == FlowBoundaryQuantityType.MorphologyBedLoadTransport)
-                    return BoundaryCondition.SedimentFractionNames.Count;
-                switch (ForcingType)
-                {
-                    case BoundaryConditionDataType.Empty:
-                        return 0;
-                    case BoundaryConditionDataType.TimeSeries:
-                    case BoundaryConditionDataType.Qh:
-                        return 1;
-                    case BoundaryConditionDataType.AstroComponents:
-                    case BoundaryConditionDataType.Harmonics:
-                        return 2;
-                    case BoundaryConditionDataType.AstroCorrection:
-                    case BoundaryConditionDataType.HarmonicCorrection:
-                        return 4;
-                    default:
-                        throw new NotImplementedException("Forcing type unknown to flow module.");
-                }
-            }
-        }
-
-        public int VariableDimension
-        {
-            get { return BoundaryCondition == null ? 0 : BoundaryCondition.VariableDimension; }
-        }
-
-        public bool UseLayers { get; private set; }
-
-        public IEnumerable<IVariable> FilterLayersAndComponents(int layer, int variableComponent)
-        {
-            if (Function == null) yield break;
-
-            var startIndex = (variableComponent + layer*VariableDimension)*ForcingTypeDimension;
-
-            for (var i = startIndex; i < startIndex + ForcingTypeDimension; i++)
-            {
-                yield return Function.Components[i];
-            }
-        }
-    }
-
     public class FlowBoundaryConditionSeriesFactory
     {
         private static readonly Color[] signalColors = new[]
@@ -282,21 +214,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
         private IFunction CreateTimeSeries(IList<FlowBoundaryConditionPointData> pointData)
         {
-            if (pointData == null) return null;
-
-            var firstWrapper = pointData.FirstOrDefault(CanCreateTimeSeries);
-
+            FlowBoundaryConditionPointData firstWrapper = pointData?.FirstOrDefault(CanCreateTimeSeries);
             if (firstWrapper == null)
             {
                 return null;
             }
 
-            var name = firstWrapper.Function.Name;
-
-            var unit = firstWrapper.Function.Components.First().Unit; //assertion: amplitude comes first.
-
-            var times = ComputeSampleTimeStamps(pointData.Select(f => f.Function.Arguments.FirstOrDefault()),
-                                                StartTime, StopTime);
+            string name = firstWrapper.Function.Name;
+            IUnit unit = firstWrapper.Function.Components.First().Unit; //assertion: amplitude comes first.
+            IList<DateTime> times =
+                ComputeSampleTimeStamps(pointData.Select(f => f.Function.Arguments.FirstOrDefault()), StartTime,
+                                        StopTime);
 
             var function = new Function {Name = pointData.Count == 1 ? name : ("Total " + name)};
             function.Arguments.Add(new Variable<DateTime>("Time", new Unit("hours", "h")));
@@ -304,25 +232,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
             if (firstWrapper.BoundaryCondition.FlowQuantity == FlowBoundaryQuantityType.MorphologyBedLoadTransport)
             {
-                for (var i = 0; i < firstWrapper.VariableDimension; ++i)
+                for (var variableDimension = 0; variableDimension < firstWrapper.VariableDimension; ++variableDimension)
                 {
-                    for(var comp= 0; comp < firstWrapper.Function.Components.Count; ++comp)
+                    for(var functionComponents = 0; functionComponents  < firstWrapper.Function.Components.Count; ++functionComponents )
                     {
-                        var values = Enumerable.Repeat((double)0, times.Count).ToList();
-                        foreach (var condition in pointData)
+                        List<double> values = Enumerable.Repeat((double)0, times.Count).ToList();
+                        foreach (FlowBoundaryConditionPointData condition in pointData)
                         {
                             if (!CanCreateTimeSeries(condition)) continue;
 
-                            var summedComponents = condition.FilterLayersAndComponents(0, i).ToList();
-
-                            summedComponents = new List<IVariable>() { summedComponents[comp] };
-                            // only use zeroth layer for sum.
-                            FillValues(condition.ForcingType, condition.Function.Arguments[0], summedComponents, times,
-                                  values, condition.BoundaryCondition.Factor, condition.BoundaryCondition.Offset);
+                            List<IVariable> summedComponents = condition.FilterLayersAndComponents(0, variableDimension).ToList();
+                            int totalSummedComponents = summedComponents.Count;
+                            if (functionComponents  < totalSummedComponents)
+                            {
+                                summedComponents = new List<IVariable>() { summedComponents[functionComponents ] };
+                                // only use zeroth layer for sum.
+                                FillValues(condition.ForcingType, condition.Function.Arguments[0], summedComponents, times,
+                                           values, condition.BoundaryCondition.Factor, condition.BoundaryCondition.Offset);
+                            }
                         }
-                        function.Components.Add(new Variable<double>(firstWrapper.Function.Components[comp].Name, unit));
+                        function.Components.Add(new Variable<double>(firstWrapper.Function.Components[functionComponents ].Name, unit));
                         function.Components.Last().SetValues(values);
-                        function.Components.Last().NoDataValue = Double.NaN;
+                        function.Components.Last().NoDataValue = double.NaN;
                     }
                 }
                 return function;
