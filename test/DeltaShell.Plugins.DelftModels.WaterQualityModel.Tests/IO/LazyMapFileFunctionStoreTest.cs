@@ -7,9 +7,11 @@ using DelftTools.Functions.Generic;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
 using NUnit.Framework;
+using Rhino.Mocks;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
 {
@@ -152,27 +154,22 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         }
 
         [Test]
-        [ExpectedException(typeof(NotImplementedException))]
         public void
             GivenAFunctionStoreCall_WhenTheFunctionIsIndependentAndNotDateTimeAsType_ThenANotImplementedExceptionShouldBeThrown()
         {
             //Given
             var store = new LazyMapFileFunctionStore {Path = mapFilePath};
-
-            var timeFilter = new VariableValueFilter<DateTime>
-            {
-                Values = new[] {timeStep7}
-            };
-
             var component = new Variable<double>("Salinity");
             var function = new Function("Salinity");
 
             function.Components.Add(component);
 
-            //When
-            var values = store.GetVariableValues(component, timeFilter);
-
-            //Then NotImplementedException
+            Assert.That(
+                // When
+                () => store.GetVariableValues(component),
+                // Then
+                Throws.TypeOf<NotSupportedException>().With.Message.EqualTo(
+                    string.Format(Resources.LazyMapFileFunctionStore_GetArgumentValues_Filters_of_type___0___can_only_filter_on_functions_with_value_type___1___, typeof(VariableValueFilter<DateTime>), typeof(DateTime))));
         }
 
         [Test]

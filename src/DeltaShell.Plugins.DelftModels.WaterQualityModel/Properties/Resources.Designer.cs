@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -97,6 +97,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties {
             get {
                 object obj = ResourceManager.GetObject("hydFile", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Filters of type &lt;{0}&gt; can only filter on functions with value type &lt;{1}&gt;..
+        /// </summary>
+        public static string LazyMapFileFunctionStore_GetArgumentValues_Filters_of_type___0___can_only_filter_on_functions_with_value_type___1___ {
+            get {
+                return ResourceManager.GetString("LazyMapFileFunctionStore_GetArgumentValues_Filters_of_type___0___can_only_filter_" +
+                        "on_functions_with_value_type___1___", resourceCulture);
             }
         }
         

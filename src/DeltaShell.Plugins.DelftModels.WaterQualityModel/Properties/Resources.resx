@@ -647,4 +647,7 @@ INCLUDE 'includes_deltashell/B8_initials.inc'       ; From UI: Initials
   <data name="WaqValidationRulesExtension_GetWaqProcessValidationRuleAsString_Process_coefficient__0___value__1____2__3__" xml:space="preserve">
     <value>Process coefficient {0} (value:{1}) {2}{3}.</value>
   </data>
+  <data name="LazyMapFileFunctionStore_GetArgumentValues_Filters_of_type___0___can_only_filter_on_functions_with_value_type___1___" xml:space="preserve">
+    <value>Filters of type &lt;{0}&gt; can only filter on functions with value type &lt;{1}&gt;.</value>
+  </data>
 </root>

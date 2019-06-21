@@ -9,6 +9,7 @@ using DelftTools.Functions.Generic;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 {
@@ -187,7 +188,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             }
 
             throw new NotSupportedException(
-                $"Filters of type <{typeof(VariableValueFilter<DateTime>)}> can only filter on functions with value type <{typeof(DateTime)}>.");
+                string.Format(Resources.LazyMapFileFunctionStore_GetArgumentValues_Filters_of_type___0___can_only_filter_on_functions_with_value_type___1___, typeof(VariableValueFilter<DateTime>), typeof(DateTime)));
         }
 
         private List<double> GetTimeDataForSpecificLocation(IVariable function, IVariableFilter[] filters)
