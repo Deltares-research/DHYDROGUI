@@ -129,7 +129,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters
         /// For UnstructuredGridCoverages only the bathymetry coverage of the model can be exported [TOOLS-22932].
         /// </summary>
         /// <param name="item">Item to export</param>
-        /// <returns>True or false</returns>
+        /// <returns>A boolean indicating whether this exporter can export the provided <paramref name="item"/></returns>
         public bool CanExportFor(object item)
         {
             if (item is UnstructuredGrid || item is ImportedFMNetFile)
@@ -137,8 +137,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters
                 return true;
             }
 
-            var unstructuredGridCoverage = item as UnstructuredGridCoverage;
-            if (unstructuredGridCoverage == null)
+            if (!(item is UnstructuredGridCoverage unstructuredGridCoverage))
             {
                 return false;
             }

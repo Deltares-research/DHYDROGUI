@@ -186,7 +186,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                                                                       : argumentTimeFilter.Values);
             }
 
-            throw new NotImplementedException();
+            throw new NotSupportedException(
+                $"Filters of type <{typeof(VariableValueFilter<DateTime>)}> can only filter on functions with value type <{typeof(DateTime)}>.");
         }
 
         private List<double> GetTimeDataForSpecificLocation(IVariable function, IVariableFilter[] filters)
