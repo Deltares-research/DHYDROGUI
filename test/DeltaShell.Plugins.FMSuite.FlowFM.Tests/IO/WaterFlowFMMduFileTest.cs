@@ -726,11 +726,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
-        public void GivenAProjectFolderWithFeatureFilesOutsideOfTheMduFolder_WhenReadingMdu_ThenAllFilesAreCopiedAndRead()
+        [Category(TestCategory.DataAccess)]
+        [TestCase(@"HydroAreaCollection\MduFileProjects\FilesOutsideMduFolderProject.dsproj_data\PathsRelativeToMdu")]
+        [TestCase(@"HydroAreaCollection\MduFileProjects\FilesOutsideMduFolderProject.dsproj_data\PathsRelativeToParent")]
+        public void GivenAProjectFolderWithFeatureFilesOutsideOfTheMduFolder_WhenReadingMdu_ThenAllFilesExceptStructuresAreCopiedAndEverythingShouldBeRead(string modelDirectory)
         {
             // Preparations
-            var localPath = TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath(@"HydroAreaCollection\MduFileProjects"));
-            var mduFilePath = Path.Combine(localPath, @"FilesOutsideMduFolderProject.dsproj_data\FlowFM\FlowFM.mdu");
+            var localPath = TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath(modelDirectory));
+            var mduFilePath = Path.Combine(localPath, @"FlowFM\FlowFM.mdu");
 
             var featureFileDirectory = Path.GetDirectoryName(Path.GetDirectoryName(mduFilePath));
             var mduFileFolder = Path.GetDirectoryName(mduFilePath);
@@ -758,9 +761,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         [TestCase(@"FilesInsideMduSubFolderProject.dsproj_data\FlowFM\FlowFM.mdu")]
         [TestCase(@"FilesInsideMduSubFolderButWithRelativePathsProject.dsproj_data\FlowFM\FlowFM.mdu")]
-        public void GivenAProjectFolderWithFeatureFilesInsideOfAnMduSubFolder_WhenReadingMdu_ThenAllFilesAreRead(string mduProjectFilePath)
+        public void GivenAProjectFolderWithFeatureFilesInsideOfAnMduSubFolder_WhenReadingMdu_ThenAllFilesAreReadAndNotCopied(string mduProjectFilePath)
         {
             // Preparations
             var localPath = TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath(@"HydroAreaCollection\MduFileProjects"));

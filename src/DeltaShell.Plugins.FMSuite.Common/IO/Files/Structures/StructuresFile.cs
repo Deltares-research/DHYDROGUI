@@ -164,22 +164,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
                 throw;
             }
         }
-
-        /// <summary>
-        /// oldDirectory and newDirectory point to locations of a structures file (.ini) from which an IStructure object needs to
-        /// be created.
-        /// Whenever oldDirectory and newDirectory are pointing to different directories, a polyline file (.pli) will be copied
-        /// from oldDirectory to newDirectory.
-        /// </summary>
-        /// <param name="polylineFileName"> Name with extension of the referred polyline file. </param>
-        /// <param name="newDirectory"> The directory to which the polyline file needs to be copied. </param>
-        /// <param name="oldDirectory"> The directory from which the polyline file need to be copied. </param>
-        private static void CopyPolylineFile(string polylineFileName, string newDirectory, string oldDirectory)
-        {
-            string polylineFilePath = Path.Combine(oldDirectory, polylineFileName);
-            File.Copy(polylineFilePath, Path.Combine(newDirectory, polylineFileName));
-        }
-
+        
         private static IEnumerable<IStructure> GetSupportedStructures(IEnumerable<IStructure> structures)
         {
             var list = new List<IStructure>();
