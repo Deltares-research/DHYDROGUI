@@ -56,11 +56,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
 
         public DateTime ReferenceDate { private get; set; }
 
-        public IList<IStructure> CopyFileAndRead(string filePath, string oldFilePath)
+        public IList<IStructure> CopyFileAndRead(string filePath, string structuresSubFilesReferenceFilePath)
         {
             return
                 ReadStructures2D(filePath)
-                    .Select(s => ConvertStructure(s, filePath, oldFilePath))
+                    .Select(s => ConvertStructure(s, structuresSubFilesReferenceFilePath))
                     .Where(s => s != null)
                     .ToList();
         }
@@ -143,17 +143,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             }
         }
 
-        private IStructure ConvertStructure(Structure2D structure, string filePath, string oldFilePath = null)
+        private IStructure ConvertStructure(Structure2D structure, string structuresSubFilesReferenceFilePath)
         {
             try
             {
-                if (oldFilePath != null && !filePath.Equals(oldFilePath))
-                {
-                    CopyPolylineFile(structure.GetProperty(KnownStructureProperties.PolylineFile).GetValueAsString(),
-                                     Path.GetDirectoryName(filePath), Path.GetDirectoryName(oldFilePath));
-                }
-
-                return StructureFactory.CreateStructure(structure, filePath, ReferenceDate, oldFilePath);
+                return StructureFactory.CreateStructure(structure, structuresSubFilesReferenceFilePath, ReferenceDate);
             }
             catch (Exception e)
             {

@@ -1460,10 +1460,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 IList<TFeat> featuresToAdd;
                 if (fileReader is StructuresFile)
                 {
+                    string structuresSubFilesReferenceFilePath =
+                        (bool) modelDefinition.GetModelProperty(KnownProperties.PathsRelativeToParent).Value
+                            ? featuresFilePath : mduFilePath;
                     var structuresFile = fileReader as StructuresFile;
                     featuresToAdd =
-                        (IList<TFeat>) structuresFile.CopyFileAndRead(featuresFilePath,
-                                                                      replacedFilePaths[featuresFilePath]);
+                        (IList<TFeat>) structuresFile.CopyFileAndRead(featuresFilePath, structuresSubFilesReferenceFilePath);
                 }
                 else
                 {
@@ -1652,7 +1654,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }).ToList();
 
             RemoveAllNonExistentFilePaths(featureFilePaths, mduFilePath, modelDefinition, propertyKey);
-            RemoveAllStructuresFilesWithBadReferences(featureFilePaths, modelDefinition);
+            if (propertyKey == KnownProperties.StructuresFile)
+            {
+                RemoveAllStructuresFilesWithBadReferences(featureFilePaths, mduFilePath, modelDefinition);
+            }
+
             modelDefinition.GetModelProperty(propertyKey).SetValueAsString(string.Join(" ", featureFilePaths));
         }
 
@@ -1683,14 +1689,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         /// Removes all structures files that contain references to feature files that do not exist.
         /// </summary>
         /// <param name="featureFilePaths"> The group names of all features, retrieved from the mdu file of the FM Model. </param>
+        /// <param name="mduFilePath"> The file path of the mdu file. </param>
         /// <param name="modelDefinition"> The model definition of the FM Model. </param>
-        private static void RemoveAllStructuresFilesWithBadReferences(ICollection<string> featureFilePaths,
+       private static void RemoveAllStructuresFilesWithBadReferences(ICollection<string> featureFilePaths, string mduFilePath,
                                                                       WaterFlowFMModelDefinition modelDefinition)
         {
+            var pathsRelativeToParent =
+                (bool) modelDefinition.GetModelProperty(KnownProperties.PathsRelativeToParent).Value;
+
             var structureFilesWithBadReferences = new List<string>();
-            foreach (string filePath in featureFilePaths.Where(fp => fp.EndsWith(StructuresExtension)))
+            foreach (string filePath in featureFilePaths)
             {
                 string structureFilePath = System.IO.Path.GetFullPath(filePath);
+
+                string structuresSubFilesReferenceFilePath = pathsRelativeToParent ? filePath : mduFilePath;
+
                 var fileReader = new StructuresFile
                 {
                     StructureSchema = modelDefinition.StructureSchema,
@@ -1702,7 +1715,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 {
                     string featureFileName = f.GetProperty(KnownStructureProperties.PolylineFile).GetValueAsString();
                     string featureFilePath =
-                        System.IO.Path.Combine(System.IO.Path.GetDirectoryName(structureFilePath), featureFileName);
+                        System.IO.Path.Combine(System.IO.Path.GetDirectoryName(structuresSubFilesReferenceFilePath), featureFileName);
+
                     if (!File.Exists(featureFilePath))
                     {
                         referencesToNonExistentFilesExist = true;
@@ -1743,7 +1757,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                     System.IO.Path.GetFullPath(System.IO.Path.Combine(mduDirectory, featureGroupNames[i]));
                 Match isOutsideMduFolderMatch =
                     new Regex(@"\.{2,}").Match(FileUtils.GetRelativePath(mduDirectory, filePath, true));
-                if (!isOutsideMduFolderMatch.Success) // File is situated inside mdu-folder or in a subfolder
+                if (!isOutsideMduFolderMatch.Success || propertyKey == KnownProperties.StructuresFile) // File is situated inside mdu-folder or in a subfolder 
                 {
                     featureGroupNames[i] = filePath;
                     oldFilePaths.Add(filePath, filePath);
