@@ -58,6 +58,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         public const string ObsExtension = "_obs.xyn";
         public const string ObsCrossExtension = "_crs.pli";
         public const string ObsCrossAlternativeExtension = "_crs.pliz";
+        private const string PolExtension = ".pol";
         public const string DryAreaExtension = "_dry.pol";
         public const string DryPointExtension = "_dry.xyz";
         public const string DryPointExtensionWithoutSuffix = ".xyz";
@@ -1608,14 +1609,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                         });
                     hydroArea.DryPoints.AddRange(dryPointsToAdd);
                 }
-                else if (featureFilePath.EndsWith(DryAreaExtension))
+                // D3DFMIQ-1037: We want to import all kind of dry areas as long as they come from a .pol file (regardles of their suffix).
+                else if (featureFilePath.EndsWith(PolExtension))
                 {
                     IList<GroupableFeature2DPolygon> dryAreasToAdd = dryAreaFile.Read(featureFilePath);
                     dryAreasToAdd.ForEach(f =>
                     {
                         f.GroupName = groupName;
                         f.IsDefaultGroup = groupName != null &&
-                                           groupName.Replace(DryAreaExtension, string.Empty).Trim().Equals(mduPathName);
+                                           groupName.Replace(PolExtension, string.Empty).Trim().Equals(mduPathName);
                     });
                     hydroArea.DryAreas.AddRange(dryAreasToAdd);
                 }
