@@ -7,6 +7,7 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Validation;
 using DeltaShell.NGHS.IO;
+using DeltaShell.NGHS.IO.Handlers;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Readers;
@@ -323,8 +324,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                    && p.PropertyDefinition.UnknownPropertySource.Equals(PropertySource.SedimentFile);
         }
 
-        private static void AddUnknownSedimentProperty(DelftIniProperty delftIniProperty,
+        private static void AddUnknownSedimentProperty(IDelftIniProperty delftIniProperty,
                                                        WaterFlowFMModelDefinition definition, string categoryName,
+                                                       ILogHandler logHandler,
                                                        string sedimentFractionName = null)
         {
             WaterFlowFMPropertyDefinition propertyDefinition =
@@ -343,6 +345,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             {
                 newProperty.SetValueAsString(propertyValue);
             }
+
+            logHandler.ReportWarningFormat(Resources.MorphologySediment_ReadCategoryProperties_Unsupported_keyword___0___at_line___1___detected_and_will_be_passed_to_the_computational_core__Note_that_some_data_or_the_connection_to_linked_files_may_be_lost_,
+                                           delftIniProperty.Name, delftIniProperty.LineNumber);
         }
 
         private static void AddFormulaTypeProperties(ISedimentFraction sedimentFraction,
@@ -408,9 +413,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 fraction.AvailableSedimentTypes.FirstOrDefault(st => st.Key == sedimentTypeKey);
             if (sedimentType == null)
             {
-                throw new ArgumentNullException(string.Format(
-                                                    "Sediment Type {0} in sediment file {1} is unknown to deltashell",
-                                                    sedimentTypeKey, path));
+                throw new ArgumentNullException(
+                    $"Sediment Type {sedimentTypeKey} in sediment file {path} is unknown to deltashell");
             }
 
             foreach (ISedimentProperty sedimentProperty in sedimentType.Properties)
@@ -490,10 +494,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             spatialOperations.Add(operation);
         }
 
-        public static void LoadSediments(string path, WaterFlowFMModel model)
+        /// <summary>
+        /// Load the sediment data from the sed file at <paramref name="path"/> to the specified <paramref name="model"/>.
+        /// </summary>
+        /// <param name="path">The path.</param>
+        /// <param name="model">The model.</param>
+        /// <param name="logHandler">An optional log handler.</param>
+        /// <remarks>
+        /// If no <paramref name="logHandler"/> is specified or if it specified as null, then a default
+        /// log handler will be created and used.
+        /// </remarks>
+        public static void LoadSediments(string path, WaterFlowFMModel model, ILogHandler logHandler = null)
         {
             try
             {
+                logHandler = logHandler ?? new LogHandler("reading the sediment file");
+
                 WaterFlowFMModelDefinition definition = model.ModelDefinition;
                 IList<DelftIniCategory> sedCategories = new SedMorDelftIniReader().ReadDelftIniFile(path);
                 foreach (DelftIniCategory category in sedCategories)
@@ -505,7 +521,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                         continue;
                     }
 
-                    /*Load paramaters related to the model*/
+                    /*Load parameters related to the model*/
                     if (SectionLoaders.TryGetValue(categoryName,
                                                    out Action<IDelftIniCategory, string, WaterFlowFMModel> loader))
                     {
@@ -517,16 +533,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                         case GeneralHeader:
                             continue;
                         case OverallHeader:
-                            StoreUnknownPropertiesForOverallCategory(model, category, definition);
+                            StoreUnknownPropertiesForOverallCategory(model, category, definition, logHandler);
                             break;
                         case Header:
-                            StoreUnknownPropertiesForSedimentFractionCategory(model, category, definition);
+                            StoreUnknownPropertiesForSedimentFractionCategory(model, category, definition, logHandler);
                             break;
                         default:
-                            StoreUnknownPropertiesForUnknownCategory(category, definition);
+                            StoreUnknownPropertiesForUnknownCategory(category, definition, logHandler);
                             break;
                     }
                 }
+
+                logHandler.LogReport();
             }
             catch (Exception exception)
             {
@@ -534,35 +552,43 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
         }
 
-        private static void StoreUnknownPropertiesForOverallCategory(WaterFlowFMModel model, DelftIniCategory category,
-                                                                     WaterFlowFMModelDefinition definition)
+        private static void StoreUnknownPropertiesForOverallCategory(WaterFlowFMModel model, 
+                                                                     IDelftIniCategory category,
+                                                                     WaterFlowFMModelDefinition definition,
+                                                                     ILogHandler logHandler)
         {
-            IEventedList<ISedimentProperty> overallProps = model.SedimentOverallProperties;
-            if (overallProps != null)
+            if (model.SedimentOverallProperties == null)
             {
-                foreach (DelftIniProperty readProp in category.Properties)
+                return;
+            }
+
+            ISet<string> overallProps = new HashSet<string>(model.SedimentOverallProperties.Select(p => p.Name));
+
+            foreach (DelftIniProperty readProp in category.Properties)
+            {
+                if (!overallProps.Contains(readProp.Name))
                 {
-                    if (!overallProps.Any(p => p.Name.Equals(readProp.Name)))
-                    {
-                        AddUnknownSedimentProperty(readProp, definition, OverallHeader);
-                    }
+                    AddUnknownSedimentProperty(readProp, definition, OverallHeader, logHandler);
                 }
             }
         }
 
-        private static void StoreUnknownPropertiesForUnknownCategory(DelftIniCategory category,
-                                                                     WaterFlowFMModelDefinition definition)
+        private static void StoreUnknownPropertiesForUnknownCategory(IDelftIniCategory category,
+                                                                     WaterFlowFMModelDefinition definition,
+                                                                     ILogHandler logHandler)
         {
             string categoryName = category.Name;
 
             foreach (DelftIniProperty property in category.Properties)
             {
-                AddUnknownSedimentProperty(property, definition, categoryName);
+                AddUnknownSedimentProperty(property, definition, categoryName, logHandler);
             }
         }
 
-        private static void StoreUnknownPropertiesForSedimentFractionCategory(
-            WaterFlowFMModel model, DelftIniCategory category, WaterFlowFMModelDefinition definition)
+        private static void StoreUnknownPropertiesForSedimentFractionCategory(WaterFlowFMModel model, 
+                                                                              IDelftIniCategory category, 
+                                                                              WaterFlowFMModelDefinition definition,
+                                                                              ILogHandler logHandler)
         {
             DelftIniProperty sedimentNameProperty = category.Properties.FirstOrDefault(p => p.Name.Equals(Name.Key));
             string sedimentFractionName = sedimentNameProperty?.Value;
@@ -591,7 +617,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
             category.Properties
                     .Where(p => !allsedimentPropertyNames.Contains(p.Name))
-                    .ForEach(p => AddUnknownSedimentProperty(p, definition, Header, sedimentFractionName));
+                    .ForEach(p => AddUnknownSedimentProperty(p, definition, Header, logHandler, sedimentFractionName));
         }
 
         #endregion

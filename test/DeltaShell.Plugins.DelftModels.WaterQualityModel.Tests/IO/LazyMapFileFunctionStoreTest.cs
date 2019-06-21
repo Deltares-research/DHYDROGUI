@@ -252,29 +252,22 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         }
 
         [Test]
-        [ExpectedException(typeof(NotImplementedException))]
-        public void
-            GivenAFunctionStoreCall_WhenFiltersAreMissingForLocationAndTime_ThenANotImplementedExceptionShouldBeThrown()
+        public void GivenAFunctionStoreCall_WhenFiltersAreMissingForLocationAndTime_ThenAnEmptyListShouldBeReturned()
         {
-            //Given
+            // Given
             var store = new LazyMapFileFunctionStore {Path = mapFilePath};
-
-            var timeFilter = new VariableValueFilter<double>
-            {
-                Values = new[] {1.2}
-            };
-
             var component = new Variable<double>("Salinity");
             var function = new Function("Salinity");
-
             function.Arguments.Add(new Variable<DateTime>("datetime"));
             function.Arguments.Add(new Variable<int>("cell_index"));
             function.Components.Add(component);
 
-            //When
-            var values = store.GetVariableValues(component, timeFilter);
+            // When
+            IMultiDimensionalArray values = store.GetVariableValues(component);
 
-            //Then NotImplementedException
+            // Then
+            Assert.That(values, Is.Empty,
+                        "When values are queried from the LazyMapFileFunctionStore without filters an empty list should be returned.");
         }
     }
 }

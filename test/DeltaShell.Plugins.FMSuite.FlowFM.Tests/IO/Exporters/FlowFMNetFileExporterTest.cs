@@ -4,16 +4,17 @@ using DelftTools.Utils.IO;
 using DeltaShell.Core;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
 using NUnit.Framework;
+using System;
 using System.IO;
 using System.Linq;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
-using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
 {
@@ -29,14 +30,30 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
         }
 
         [Test]
-        public void CanExport()
+        public void GivenAFlowFMNetFileExporterAndFmModel_WhenCanExportFor_ThenReturnsTrueOnlyForUnstructuredGridCoverageBathymetryOfModel()
         {
+            // Given
             var fmModel = new WaterFlowFMModel();
-
             exporter.GetModelForGrid = g => fmModel;
-            
-            Assert.IsTrue(exporter.CanExportFor(fmModel.Bathymetry));
-            Assert.IsFalse(exporter.CanExportFor(fmModel.InitialWaterLevel));
+
+            // When, Then
+            Assert.IsTrue(exporter.CanExportFor(fmModel.Bathymetry),
+                          "FlowFMNetFileExporter should be able to export the bathymetry (UnstructuredGridCoverage) of the model.");
+            Assert.IsFalse(exporter.CanExportFor(fmModel.InitialWaterLevel),
+                           "FlowFMNetFileExporter should not be able to export UnstructuredGridCoverages other than the bathymetry coverage of the model.");
+        }
+
+        [TestCase(typeof(UnstructuredGrid))]
+        [TestCase(typeof(ImportedFMNetFile))]
+        public void GivenAFlowFMNetFileExporterAndFmModel_WhenCanExportFor_ThenReturnsTrueForTheseTypes(Type type)
+        {
+            // Given
+            var fmModel = new WaterFlowFMModel();
+            exporter.GetModelForGrid = g => fmModel;
+
+            // When, Then
+            Assert.IsTrue(exporter.CanExportFor(Activator.CreateInstance(type)),
+                          $"FlowFMNetFileExporter should be able to export for data type <{type}>.");
         }
 
         [TestCase("simplebox_hex7_map.nc", "mesh2d_node_z")] // UGrid
