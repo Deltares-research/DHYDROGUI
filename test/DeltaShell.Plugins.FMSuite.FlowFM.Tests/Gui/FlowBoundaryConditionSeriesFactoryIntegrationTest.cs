@@ -1,7 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
+using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors;
@@ -14,7 +17,6 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 {
     [TestFixture]
-    [Category(TestCategory.Integration)]
     public class FlowBoundaryConditionSeriesFactoryIntegrationTest
     {
         [Test]
@@ -22,11 +24,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         public void Given_FmModel_With_Empty_FlowBoundaryCondition_When_Changed_To_BedLoadTransport_ThenBoundaryConditionAreOfBedLoadTransportType()
         {
             //Given
-            var expectedBackgroundFunctions = 3;
+            const int expectedBackgroundFunctions = 3;
+            const int supportPoint = 1;
+            const bool useLayers = true;
             FlowBoundaryQuantityType expectedBoundaryQuantyType = FlowBoundaryQuantityType.MorphologyBedLoadTransport;
+
             string mduPath = TestHelper.GetTestFilePath(@"ExBedLoadTransportBoundary\FlowFM.mdu");
-            string localMduFilePath = TestHelper.CreateLocalCopy(mduPath);
-            var model = new WaterFlowFMModel(localMduFilePath);
+            var model = new WaterFlowFMModel(mduPath);
 
             FlowBoundaryCondition boundaryCondition = model.ModelDefinition.BoundaryConditions.ElementAt(0) as FlowBoundaryCondition;
             Assert.That(boundaryCondition, Is.Not.Null);
@@ -34,38 +38,29 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             //When
             Feature2D feature = CreateFeature2D();
             boundaryCondition = ChangeFlowBoundaryConditionToBedLoadTransportQuantityType(feature);
-            int supportPoint = 1;
-            bool useLayers = true;
-            var flowBoundaryConditionPointDataA = new FlowBoundaryConditionPointData(boundaryCondition, supportPoint, useLayers);
-            var flowBoundaryConditionPointDataB = new FlowBoundaryConditionPointData(boundaryCondition, supportPoint, useLayers);
-            var flowBoundaryConditionPointDataC = new FlowBoundaryConditionPointData(boundaryCondition, supportPoint, useLayers);
-
+            IEnumerable<FlowBoundaryConditionPointData> flowBoundaryConditions =
+                Enumerable.Repeat(new FlowBoundaryConditionPointData(boundaryCondition, supportPoint, useLayers), 3);
             var factory = new FlowBoundaryConditionSeriesFactory
             {
-                BackgroundFunctions = new EventedList<FlowBoundaryConditionPointData>()
-                {
-                    flowBoundaryConditionPointDataA,
-                    flowBoundaryConditionPointDataB,
-                    flowBoundaryConditionPointDataC
-                }
+                BackgroundFunctions = new EventedList<FlowBoundaryConditionPointData>(flowBoundaryConditions)
             };
 
             //Then
             int totalOfBackGroundFunctions = factory.BackgroundFunctions.Count;
-            Assert.That(totalOfBackGroundFunctions, Is.EqualTo(expectedBackgroundFunctions));
+            Assert.That(totalOfBackGroundFunctions, Is.EqualTo(expectedBackgroundFunctions), $"Expected number of functions ({expectedBackgroundFunctions}) does not match retrieved ({totalOfBackGroundFunctions}) ");
 
-            FlowBoundaryQuantityType boundaryConditionFlowQuantity1 = GetBackgroundFunctionFlowQuantityType(factory, 0);
-            FlowBoundaryQuantityType boundaryConditionFlowQuantity2 = GetBackgroundFunctionFlowQuantityType(factory, 1);
-            FlowBoundaryQuantityType boundaryConditionFlowQuantity3 = GetBackgroundFunctionFlowQuantityType(factory, 2);
+            FlowBoundaryCondition flowBoundaryCondition1 = GetBackgroundFunctionFlowQuantityType(factory, 0);
+            FlowBoundaryCondition flowBoundaryCondition2 = GetBackgroundFunctionFlowQuantityType(factory, 1);
+            FlowBoundaryCondition flowBoundaryCondition3 = GetBackgroundFunctionFlowQuantityType(factory, 2);
 
-            Assert.That(boundaryConditionFlowQuantity1 , Is.EqualTo(expectedBoundaryQuantyType));
-            Assert.That(boundaryConditionFlowQuantity2 , Is.EqualTo(expectedBoundaryQuantyType));
-            Assert.That(boundaryConditionFlowQuantity3 , Is.EqualTo(expectedBoundaryQuantyType));
+            Assert.That(flowBoundaryCondition1.FlowQuantity, Is.EqualTo(expectedBoundaryQuantyType), $"Boundary {flowBoundaryCondition1.Name} expected type {expectedBoundaryQuantyType}, but was {flowBoundaryCondition1.FlowQuantity}.");
+            Assert.That(flowBoundaryCondition2.FlowQuantity, Is.EqualTo(expectedBoundaryQuantyType), $"Boundary {flowBoundaryCondition2.Name} expected type {expectedBoundaryQuantyType}, but was {flowBoundaryCondition2.FlowQuantity}.");
+            Assert.That(flowBoundaryCondition3.FlowQuantity, Is.EqualTo(expectedBoundaryQuantyType), $"Boundary {flowBoundaryCondition3.Name} expected type {expectedBoundaryQuantyType}, but was {flowBoundaryCondition3.FlowQuantity}.");
         }
 
-        private static FlowBoundaryQuantityType GetBackgroundFunctionFlowQuantityType(FlowBoundaryConditionSeriesFactory factory, int elementIndex)
+        private static FlowBoundaryCondition GetBackgroundFunctionFlowQuantityType(FlowBoundaryConditionSeriesFactory factory, int elementIndex)
         {
-            return factory.BackgroundFunctions.ElementAt(elementIndex).BoundaryCondition.FlowQuantity;
+            return factory.BackgroundFunctions.ElementAt(elementIndex).BoundaryCondition;
         }
 
         #region Helper methods
@@ -82,7 +77,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 }
             };
             flowBoundaryCondition.AddPoint(0);
-            Assert.NotNull(flowBoundaryCondition);
+            Assert.That(flowBoundaryCondition, Is.Not.Null, "There was a problem while trying to create a test FlowBoundaryCondition.");
             return flowBoundaryCondition;
         }
 
