@@ -56,6 +56,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
 
         public DateTime ReferenceDate { private get; set; }
 
+        /// <summary>
+        /// Method reads the structures file, creates temporary data access objects ("structures") and
+        /// finally from these "structures" weirs with different weirformulas and pumps will be created (ConvertStructure step)
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <param name="structuresSubFilesReferenceFilePath"></param>
+        /// <returns>List with weirs with different weirformulas and pumps</returns>
         public IList<IStructure> ReadStructuresFileRelativeToReferenceFile(string filePath, string structuresSubFilesReferenceFilePath)
         {
             return
@@ -65,6 +72,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
                     .ToList();
         }
 
+        /// <summary>
+        ///  Method reads ini file and creates temporary data access objects ("structures") 
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns>List with structures</returns>
         public IEnumerable<Structure2D> ReadStructures2D(string filePath)
         {
             IList<DelftIniCategory> categories = new DelftIniReader().ReadDelftIniFile(filePath);
