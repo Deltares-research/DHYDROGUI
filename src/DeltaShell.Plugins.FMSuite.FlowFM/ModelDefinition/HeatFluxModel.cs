@@ -18,7 +18,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         public string GriddedHeatFluxFilePath { get; set; }
         public IFunction MeteoData => meteoData;
 
-        private static readonly ILog Log = LogManager.GetLogger(typeof(HeatFluxModel));
         private HeatFluxModelType modelType;
         private IFunction meteoData;
         private bool containsSolarRadiation;

@@ -56,15 +56,27 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
 
         public DateTime ReferenceDate { private get; set; }
 
-        public IList<IStructure> CopyFileAndRead(string filePath, string oldFilePath)
+        /// <summary>
+        /// Method reads the structures file, creates temporary data access objects ("structures") and
+        /// finally from these "structures" weirs with different weirformulas and pumps will be created (ConvertStructure step)
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <param name="structuresSubFilesReferenceFilePath"></param>
+        /// <returns>List with weirs with different weirformulas and pumps</returns>
+        public IList<IStructure> ReadStructuresFileRelativeToReferenceFile(string filePath, string structuresSubFilesReferenceFilePath)
         {
             return
                 ReadStructures2D(filePath)
-                    .Select(s => ConvertStructure(s, filePath, oldFilePath))
+                    .Select(s => ConvertStructure(s, structuresSubFilesReferenceFilePath))
                     .Where(s => s != null)
                     .ToList();
         }
 
+        /// <summary>
+        ///  Method reads ini file and creates temporary data access objects ("structures") 
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns>List with structures</returns>
         public IEnumerable<Structure2D> ReadStructures2D(string filePath)
         {
             IList<DelftIniCategory> categories = new DelftIniReader().ReadDelftIniFile(filePath);
@@ -143,17 +155,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             }
         }
 
-        private IStructure ConvertStructure(Structure2D structure, string filePath, string oldFilePath = null)
+        private IStructure ConvertStructure(Structure2D structure, string structuresSubFilesReferenceFilePath)
         {
             try
             {
-                if (oldFilePath != null && !filePath.Equals(oldFilePath))
-                {
-                    CopyPolylineFile(structure.GetProperty(KnownStructureProperties.PolylineFile).GetValueAsString(),
-                                     Path.GetDirectoryName(filePath), Path.GetDirectoryName(oldFilePath));
-                }
-
-                return StructureFactory.CreateStructure(structure, filePath, ReferenceDate, oldFilePath);
+                return StructureFactory.CreateStructure(structure, structuresSubFilesReferenceFilePath, ReferenceDate);
             }
             catch (Exception e)
             {
@@ -170,22 +176,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
                 throw;
             }
         }
-
-        /// <summary>
-        /// oldDirectory and newDirectory point to locations of a structures file (.ini) from which an IStructure object needs to
-        /// be created.
-        /// Whenever oldDirectory and newDirectory are pointing to different directories, a polyline file (.pli) will be copied
-        /// from oldDirectory to newDirectory.
-        /// </summary>
-        /// <param name="polylineFileName"> Name with extension of the referred polyline file. </param>
-        /// <param name="newDirectory"> The directory to which the polyline file needs to be copied. </param>
-        /// <param name="oldDirectory"> The directory from which the polyline file need to be copied. </param>
-        private static void CopyPolylineFile(string polylineFileName, string newDirectory, string oldDirectory)
-        {
-            string polylineFilePath = Path.Combine(oldDirectory, polylineFileName);
-            File.Copy(polylineFilePath, Path.Combine(newDirectory, polylineFileName));
-        }
-
+        
         private static IEnumerable<IStructure> GetSupportedStructures(IEnumerable<IStructure> structures)
         {
             var list = new List<IStructure>();
