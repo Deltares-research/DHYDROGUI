@@ -365,17 +365,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
         private static void AssertMessageContainsWarningForEachUnknownProperty(string message)
         {
-            AssertMessageContainsWarningForProperty(message, "CustomStringProp");
-            AssertMessageContainsWarningForProperty(message, "CustomBoolProp");
-            AssertMessageContainsWarningForProperty(message, "CustomDoubleProp");
-            AssertMessageContainsWarningForProperty(message, "CustomIntProp");
+            AssertMessageContainsWarningForProperty(message, "CustomStringProp", 35);
+            AssertMessageContainsWarningForProperty(message, "CustomBoolProp", 36);
+            AssertMessageContainsWarningForProperty(message, "CustomDoubleProp", 37);
+            AssertMessageContainsWarningForProperty(message, "CustomIntProp", 38);
+
+            AssertMessageContainsWarningForProperty(message, "CustomStringProp", 40);
+            AssertMessageContainsWarningForProperty(message, "CustomBoolProp", 41);
+            AssertMessageContainsWarningForProperty(message, "CustomDoubleProp", 42);
+            AssertMessageContainsWarningForProperty(message, "CustomIntProp", 43);
+
         }
 
-        private static void AssertMessageContainsWarningForProperty(string message, string propertyName)
+        private static void AssertMessageContainsWarningForProperty(string message, string propertyName, int lineNumber)
         {
             string expectedMessage = string.Format(
-                Resources.MorphologyFile_ReadCategoryProperties_Unsupported_keyword___0___detected_and_will_be_passed_to_the_computational_core__Note_that_some_data_or_the_connection_to_linked_files_may_be_lost_,
-                propertyName);
+                Resources.MorphologySediment_ReadCategoryProperties_Unsupported_keyword___0___at_line___1___detected_and_will_be_passed_to_the_computational_core__Note_that_some_data_or_the_connection_to_linked_files_may_be_lost_,
+                propertyName, 
+                lineNumber);
             Assert.IsTrue(message.Contains(expectedMessage), $"The following warning is missing: <{expectedMessage}>");
         }
     }

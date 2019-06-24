@@ -1,13 +1,7 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using DelftTools.Functions;
-using DelftTools.TestUtils;
+﻿using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.Adaptors;
 using DeltaShell.NGHS.IO.Grid;
-using DeltaShell.Plugins.FMSuite.Common.FeatureData;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
@@ -16,6 +10,9 @@ using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
 using NUnit.Framework;
 using Rhino.Mocks;
+using System;
+using System.IO;
+using System.Linq;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
 {
@@ -170,13 +167,31 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
             Assert.That(exporter.FileFilter, Is.EqualTo(expectedVal));
         }
 
-
         [Test]
-        public void GivenAGeometryZipExporter_WhenCanExportForIsCalledWithNull_ThenTrueIsReturned()
+        public void GivenAGeometryZipExporterAndFmModel_WhenCanExportFor_ThenReturnsTrueOnlyForUnstructuredGridCoverageBathymetryOfModel()
         {
-            Assert.That(exporter.CanExportFor(null), Is.True);
+            // Given
+            var fmModel = new WaterFlowFMModel();
+            exporter.GetModelForGrid = g => fmModel;
+
+            // When, Then
+            Assert.IsTrue(exporter.CanExportFor(fmModel.Bathymetry),
+                          "GeometryZipExporter should be able to export the bathymetry (UnstructuredGridCoverage) of the model.");
+            Assert.IsFalse(exporter.CanExportFor(fmModel.InitialWaterLevel),
+                           "GeometryZipExporter should not be able to export anything other than the bathymetry of the model.");
         }
 
+        [Test]
+        public void GivenAGeometryZipExporterAndFmModel_WhenCanExportFor_ThenReturnsTrueForAnUnstructuredGrid()
+        {
+            // Given
+            var fmModel = new WaterFlowFMModel();
+            exporter.GetModelForGrid = g => fmModel;
+
+            // When, Then
+            Assert.IsTrue(exporter.CanExportFor(new UnstructuredGrid()),
+                          "GeometryZipExporter should be able to export an UnstructuredGrid.");
+        }
 
         [Test]
         public void GivenAGeometryZipExporter_WhenExportIsCalledWithNull_ThenFalseIsReturned()

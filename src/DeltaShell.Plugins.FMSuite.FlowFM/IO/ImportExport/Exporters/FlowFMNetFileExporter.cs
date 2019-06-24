@@ -124,15 +124,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters
         [ExcludeFromCodeCoverage]
         public Bitmap Icon => Resources.unstruc;
 
+        /// <summary>
+        /// Checks if the item can be exported.
+        /// For UnstructuredGridCoverages only the bathymetry coverage of the model can be exported [TOOLS-22932].
+        /// </summary>
+        /// <param name="item">Item to export</param>
+        /// <returns>True or false</returns>
         public bool CanExportFor(object item)
         {
-            // only support model bathymetry for UnstructuredGridCoverages (TOOLS-22932)
-            var unstructuredGridCoverage = item as UnstructuredGridCoverage;
+            if (item is UnstructuredGrid || item is ImportedFMNetFile)
+            {
+                return true;
+            }
 
-            return unstructuredGridCoverage == null ||
-                   GetModelForGrid != null && (GetModelForGrid(unstructuredGridCoverage.Grid) == null
-                                               || GetModelForGrid(unstructuredGridCoverage.Grid).Bathymetry ==
-                                               unstructuredGridCoverage);
+            var unstructuredGridCoverage = item as UnstructuredGridCoverage;
+            if (unstructuredGridCoverage == null)
+            {
+                return false;
+            }
+
+            return GetModelForGrid?.Invoke(unstructuredGridCoverage.Grid)?.Bathymetry == unstructuredGridCoverage;
         }
 
         #endregion

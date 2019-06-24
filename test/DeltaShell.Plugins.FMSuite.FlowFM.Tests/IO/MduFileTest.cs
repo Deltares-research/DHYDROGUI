@@ -767,19 +767,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         {
             // 1. Set up test model
             const int expectedAreas = 4;
+            string mduFilePath = @"ModelWithDrypointData\D3DFMIQ-1037\FlowFM.mdu";
             WaterFlowFMModelDefinition modelDefinition = null;
             var mduFile = new MduFile();
             var originalArea = new HydroArea();
+
             using (var temporaryDirectory = new TemporaryDirectory())
             {
-                string mduFileName = TestHelper.GetTestFilePath(@"ModelWithDrypointData\D3DFMIQ-1037\FlowFM.mdu");
-                mduFileName = temporaryDirectory.CopyTestDataFileToTempDirectory(mduFileName);
-                mduDir = Path.GetDirectoryName(mduFileName);
-                modelName = Path.GetFileName(mduFileName);
+                mduFilePath = temporaryDirectory.CopyTestDataFileAndDirectoryToTempDirectory(mduFilePath);
+                string mduDirectoryPath = Path.GetDirectoryName(mduFilePath);
+                Assert.That(File.Exists(mduFilePath), $"MDU File was not found at {mduFilePath}.");
+                modelName = Path.GetFileName(mduFilePath);
 
                 // 2. Set initial expectations.
-                Action createModelDefinition = () => modelDefinition = new WaterFlowFMModelDefinition(mduDir, modelName);
-                Action readMduFile = () => mduFile.Read(mduFileName, modelDefinition, originalArea, null);
+                Action createModelDefinition = () => modelDefinition = new WaterFlowFMModelDefinition(mduDirectoryPath, modelName);
+                Action readMduFile = () => mduFile.Read(mduFilePath, modelDefinition, originalArea, null);
 
                 // 3. Run test (Import areas)
                 Assert.DoesNotThrow(() => createModelDefinition.Invoke(), "Test fail while trying to create a model definition object.");

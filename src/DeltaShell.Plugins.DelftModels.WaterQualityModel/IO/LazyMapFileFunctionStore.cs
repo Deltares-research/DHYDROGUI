@@ -197,7 +197,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 
             if (locationFilter == null && timeFilter == null)
             {
-                throw new NotImplementedException();
+                return new List<double>();
             }
 
             int locationIndex = locationFilter != null ? locationFilter.Values[0] : -1;
