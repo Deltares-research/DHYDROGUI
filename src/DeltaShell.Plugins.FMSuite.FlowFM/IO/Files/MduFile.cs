@@ -1465,7 +1465,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                             ? featuresFilePath : mduFilePath;
                     var structuresFile = fileReader as StructuresFile;
                     featuresToAdd =
-                        (IList<TFeat>) structuresFile.CopyFileAndRead(featuresFilePath, structuresSubFilesReferenceFilePath);
+                        (IList<TFeat>) structuresFile.ReadStructuresFileRelativeToReferenceFile(featuresFilePath, structuresSubFilesReferenceFilePath);
                 }
                 else
                 {

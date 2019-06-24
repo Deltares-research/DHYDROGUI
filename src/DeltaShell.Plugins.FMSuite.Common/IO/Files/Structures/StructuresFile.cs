@@ -56,7 +56,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
 
         public DateTime ReferenceDate { private get; set; }
 
-        public IList<IStructure> CopyFileAndRead(string filePath, string structuresSubFilesReferenceFilePath)
+        public IList<IStructure> ReadStructuresFileRelativeToReferenceFile(string filePath, string structuresSubFilesReferenceFilePath)
         {
             return
                 ReadStructures2D(filePath)
