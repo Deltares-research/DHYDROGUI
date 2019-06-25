@@ -627,6 +627,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 }
             }
 
+        /// <summary>
+        /// The test case data for the GivenAMduFileWithMoreColumnsThanNeeded_WhenReadIsCalled_ThenASingleErrorMessageIsLogged.
+        /// </summary>
+        private IEnumerable<TestCaseData> WeirWarningMessageTestCaseData
+        {
+            get
+            {
+                //                             mduName     |  fixedWeirPlizFileName   | weirScheme | columnDifference | expectedSubMsgFormat
+                yield return new TestCaseData("FlowFM3.mdu",  "TwoFixedWeirs_fxw.pliz",           6,                 5, Resources.MduFile_Read_Based_on_the_Fixed_Weir_Scheme__0___there_are_too_many_column_s__defined_for__1__in_the_imported_fixed_weir_file__The_last__2__column_s__have_been_ignored);
+                yield return new TestCaseData("FlowFM2.mdu", "TwoFixedWeirs_fxw2.pliz",           9,                 7, Resources.MduFile_Read_Based_on_the_Fixed_Weir_Scheme__0___there_are_not_enough_column_s__defined_for__1__in_the_imported_fixed_weir_file__The_last__2__column_s__have_been_generated_using_default_values);
+            }
+        }
 
         /// <summary>
         /// GIVEN a MduFile
@@ -634,22 +646,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         ///   AND some fixedWeirs properties
         ///   AND some mdu file with fixed weirs with more columns than needed
         /// WHEN Read is called
-        /// THEN a single error message
+        /// THEN a single error message is logged
         ///  AND the error message contains a warning for each weir
         /// </summary>
-        [Test]
+        [Test, TestCaseSource(nameof(WeirWarningMessageTestCaseData))]
         [Category(TestCategory.DataAccess)]
-        public void GivenAMduFileWithMoreColumnsThanNeeded_WhenReadIsCalled_ThenASingleErrorMessageAndTheErrorMessageContainsAWarningForEachWeir()
+        public void GivenAMduFileWithMoreColumnsThanNeeded_WhenReadIsCalled_ThenASingleErrorMessageIsLogged(string mduName, string fixedWeirPlizFileName, int weirScheme, int columnDifference, string expectedSubMsgFormat)
         {
             using (var tempDir = new TemporaryDirectory())
             {
                 // Given
                 // Get the file data
-                const string mduName = "FlowFM3.mdu";
                 string srcFilePath = TestHelper.GetTestFilePath(@"HydroAreaCollection\FlowFMFixedWeirs\");
 
                 tempDir.CopyAllTestDataToTempDirectory(Path.Combine(srcFilePath, mduName),
-                                                       Path.Combine(srcFilePath, "TwoFixedWeirs_fxw.pliz"),
+                                                       Path.Combine(srcFilePath, fixedWeirPlizFileName),
                                                        Path.Combine(srcFilePath, "FlowFM_net.nc"));
 
                 var originalArea = new HydroArea();
@@ -683,76 +694,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 subMsgs = subMsgs.Select(s => s.Trim()).ToList(); // Remove excessive white characters.
 
                 Assert.That(subMsgs, Has.Count.EqualTo(2), "Expected 2 sub messages within the warning message.");
-                Assert.That(subMsgs[0], Is.EqualTo(string.Format(Resources.MduFile_Read_Based_on_the_Fixed_Weir_Scheme__0___there_are_too_many_column_s__defined_for__1__in_the_imported_fixed_weir_file__The_last__2__column_s__have_been_ignored, 6, "Weir01", 5)),
+                Assert.That(subMsgs[0], Is.EqualTo(string.Format(expectedSubMsgFormat, weirScheme, "Weir01", columnDifference)),
                             "Expected a different string as first sub message.");
-                Assert.That(subMsgs[1], Is.EqualTo(string.Format(Resources.MduFile_Read_Based_on_the_Fixed_Weir_Scheme__0___there_are_too_many_column_s__defined_for__1__in_the_imported_fixed_weir_file__The_last__2__column_s__have_been_ignored, 6, "Weir02", 5)),
-                            "Expected a different string as second sub message.");
+                Assert.That(subMsgs[1], Is.EqualTo(string.Format(expectedSubMsgFormat, weirScheme, "Weir02", columnDifference)),
+                            "Expected a different string as first sub message.");
+
             }
         }
-
-
-        /// <summary>
-        /// GIVEN a MduFile
-        ///   AND a hydroArea
-        ///   AND some fixedWeirs properties
-        ///   AND some mdu file with fixed weirs with less columns than needed
-        /// WHEN Read is called
-        /// THEN a single error message
-        ///  AND the error message contains a warning for each weir
-        /// </summary>
-        [Test]
-        [Category(TestCategory.DataAccess)]
-        public void GivenAMduFileWithFixedWeirsWithLessColumnsThanNeeded_WhenReadIsCalled_ThenASingleErrorMessageAndTheErrorMessageContainsAWarningForEachWeir()
-        {
-            using (var tempDir = new TemporaryDirectory())
-            {
-                // Given
-                // Get the file data
-                const string mduName = "FlowFM2.mdu";
-                string srcFilePath = TestHelper.GetTestFilePath(@"HydroAreaCollection\FlowFMFixedWeirs\");
-
-                tempDir.CopyAllTestDataToTempDirectory(Path.Combine(srcFilePath, mduName),
-                                                       Path.Combine(srcFilePath, "TwoFixedWeirs_fxw2.pliz"),
-                                                       Path.Combine(srcFilePath, "FlowFM_net.nc"));
-
-                var originalArea = new HydroArea();
-                var originalMd = new WaterFlowFMModelDefinition(mduDir, modelName);
-                var allFixedWeirsAndCorrespondingProperties =
-                    new Dictionary<FixedWeir, ModelFeatureCoordinateData<FixedWeir>>();
-
-                var mduFile = new MduFile();
-
-                string readPath = Path.Combine(tempDir.Path, mduName);
-
-                // When
-                void testAction()
-                {
-                    mduFile.Read(readPath, originalMd, originalArea, allFixedWeirsAndCorrespondingProperties);
-                }
-
-                List<string> msgs = TestHelper.GetAllRenderedMessages(testAction).ToList();
-
-                // Then
-                Assert.That(msgs, Has.Count.EqualTo(1), "Expected a single grouped warning message:");
-
-                string msg = msgs.First();
-
-                const string expectedMsgHeader = "During reading the Fixed Weirs the following log messages were produced:";
-                Assert.That(msg, Is.StringStarting(expectedMsgHeader), "Expected the header of the message to be different:");
-
-
-                List<string> subMsgs = msg.Split(new[] { "\n- " }, StringSplitOptions.None).ToList();
-                subMsgs.RemoveAt(0); // Remove header msg.
-                subMsgs = subMsgs.Select(s => s.Trim()).ToList(); // Remove excessive white characters.
-
-                Assert.That(subMsgs, Has.Count.EqualTo(2), "Expected 2 sub messages within the warning message.");
-                Assert.That(subMsgs[0], Is.EqualTo(string.Format(Resources.MduFile_Read_Based_on_the_Fixed_Weir_Scheme__0___there_are_not_enough_column_s__defined_for__1__in_the_imported_fixed_weir_file__The_last__2__column_s__have_been_generated_using_default_values, 9, "Weir01", 7)),
-                            "Expected a different string as first sub message.");
-                Assert.That(subMsgs[1], Is.EqualTo(string.Format(Resources.MduFile_Read_Based_on_the_Fixed_Weir_Scheme__0___there_are_not_enough_column_s__defined_for__1__in_the_imported_fixed_weir_file__The_last__2__column_s__have_been_generated_using_default_values, 9, "Weir02", 7)),
-                            "Expected a different string as second sub message.");
-            }
-        }
-
 
         [Category(TestCategory.DataAccess)]
         [Test]
