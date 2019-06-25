@@ -84,7 +84,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.IsTrue(lines.Any(l => l.Contains("ModelWithMorphology.sed")));
         }
 
-        [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Integration)]
         [Test]
         public void Test_MduFile_Read_Loads_BridgePillars()
@@ -370,7 +369,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             );
         }
 
-        [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Integration)]
         [TestCase(@"TestModelWithNcInSubFolder\trynet.mdu", "Sub\\gridtry.nc")]
         [TestCase(@"TestModelWithoutNcInSubFolder\trynet.mdu", "gridtry.nc")]
@@ -408,7 +406,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             }
         }
 
-        [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Integration)]
         [TestCase(@"cs_after_save\before_save_AmersfoortRDNew_net.nc", 28992, "Amersfoort / RD New")]
         [TestCase(@"cs_after_save\before_save_AmersfoortRDOld_net.nc", 28991, "Amersfoort / RD Old")]
@@ -439,7 +436,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             FileUtils.DeleteIfExists(workingDirectory);
         }
 
-        [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Integration)]
         [TestCase(true, @"update_CS_netfile\amersfoortRDNew_net.nc", 28992, true)]
         [TestCase(true, @"update_CS_netfile\unknown_projected_net.nc", 28992, false)]
@@ -475,7 +471,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.That(result, Is.EqualTo(expected));
         }
 
-        [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Integration)]
         [Test]
         public void GivenAnMduToReadWithFixedWeirs_WhenTheSchemeNumbersRequiresMoreColumnsThanGivenInPlizFile_ThenAllMissingPropertiesShouldBeCreatedUsingTheDefaultValues()
@@ -562,7 +557,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             }
         }
 
-        [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Integration)]
         [Test]
         public void GivenAnMduToReadWithFixedWeirs_WhenTheSchemeNumbersRequiresLessColumnsThanGivenInPlizFile_ThenOnlyTheNeededPropertiesShouldBeCreatedAfterReadingThePlizFile()
