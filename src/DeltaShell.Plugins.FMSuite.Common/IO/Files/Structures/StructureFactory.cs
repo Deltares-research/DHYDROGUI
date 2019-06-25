@@ -33,7 +33,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
         /// Pump, Weir, Gate
         /// </summary>
         /// <param name="structure2D"> The description of the structure. </param>
-        /// <param name="structuresSubFilesReferenceFilePath"> Filepath of the <see cref="StructuresFile" />. </param>
+        /// <param name="structuresSubFilesReferenceFilePath"> Filepath of the reference file. This is structures file or Mdu
+        /// dependent on the PathsRelativeToParent option in the Mdu. </param>
         /// <param name="refDate"> Reference date for the model, required for time dependent data. </param>
         /// <returns> Returns the constructed structure. </returns>
         public static IStructure1D CreateStructure(Structure2D structure2D, string structuresSubFilesReferenceFilePath, DateTime refDate)
@@ -52,7 +53,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
         /// </summary>
         /// <param name="structure"> Structure to be updated. </param>
         /// <param name="structure2D"> Source of data to update <paramref name="structure" />. </param>
-        /// <param name="structuresSubFilesReferenceFilePath"> Filepath of the <see cref="StructuresFile" />. </param>
+        /// <param name="structuresSubFilesReferenceFilePath"> Filepath of the reference file. This is structures file or Mdu
+        /// dependent on the PathsRelativeToParent option in the Mdu. </param>
         private static void SetCommonStructureData(IStructure1D structure, Structure2D structure2D, string structuresSubFilesReferenceFilePath)
         {
             ModelProperty property = structure2D.GetProperty(KnownStructureProperties.Name);
@@ -169,7 +171,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
         /// Create and set pump related data.
         /// </summary>
         /// <param name="structure"> Source of data to create structure with. </param>
-        /// <param name="structuresSubFilesReferenceFilePath"> Filepath of the <see cref="StructuresFile" />. </param>
+        /// <param name="structuresSubFilesReferenceFilePath"> Filepath of the reference file. This is structures file or Mdu
+        /// dependent on the PathsRelativeToParent option in the Mdu. </param>
         /// <param name="refDate"> Reference data used for <see cref="TimFile" />s. </param>
         /// <returns> The created pump. </returns>
         private static Pump2D CreatePumpCore(Structure2D structure, string structuresSubFilesReferenceFilePath, DateTime refDate)
@@ -233,7 +236,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
         /// Create a simple weir.
         /// </summary>
         /// <param name="structure2D"> Source of data to create structure with. </param>
-        /// <param name="structuresSubFilesReferenceFilePath"> Filepath of the <see cref="StructuresFile" />. </param>
+        /// <param name="structuresSubFilesReferenceFilePath"> Filepath of the reference file. This is structures file or Mdu
+        /// dependent on the PathsRelativeToParent option in the Mdu. </param>
         /// <param name="refDate"> Reference data used for <see cref="TimFile" />s. </param>
         /// <returns> The created simple weir. </returns>
         private static IWeir CreateSimpleWeirCore(Structure2D structure2D, string structuresSubFilesReferenceFilePath, DateTime refDate)
@@ -266,7 +270,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
         /// Create a weir that has a General Structure formula.
         /// </summary>
         /// <param name="structure2D"> Source of data to create structure with. </param>
-        /// <param name="structuresSubFilesReferenceFilePath"> Filepath of the <see cref="StructuresFile" />. </param>
+        /// <param name="structuresSubFilesReferenceFilePath"> Filepath of the reference file. This is structures file or Mdu
+        /// dependent on the PathsRelativeToParent option in the Mdu. </param>
         /// <param name="refDate"> Reference data used for <see cref="TimFile" />s. </param>
         /// <returns> The created simple weir. </returns>
         private static IWeir CreateGeneralStructureCore(Structure2D structure2D, string structuresSubFilesReferenceFilePath, DateTime refDate)
@@ -366,7 +371,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
         /// Create a weir.
         /// </summary>
         /// <param name="structure2D"> Source of data to create structure with. </param>
-        /// <param name="structuresSubFilesReferenceFilePath"> Filepath of the <see cref="StructuresFile" />. </param>
+        /// <param name="structuresSubFilesReferenceFilePath"> Filepath of the reference file. This is structures file or Mdu
+        /// dependent on the PathsRelativeToParent option in the Mdu. </param>
         /// <param name="refDate"> Reference data used for <see cref="TimFile" />s. </param>
         /// <returns> The created weir. </returns>
         private static Weir2D CreateWeirCore(Structure2D structure2D, string structuresSubFilesReferenceFilePath, DateTime refDate)

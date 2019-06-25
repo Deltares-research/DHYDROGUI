@@ -60,13 +60,14 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
         /// Method reads the structures file, creates temporary data access objects ("structures") and
         /// finally from these "structures" weirs with different weirformulas and pumps will be created (ConvertStructure step)
         /// </summary>
-        /// <param name="filePath"></param>
-        /// <param name="structuresSubFilesReferenceFilePath"></param>
+        /// <param name="structuresFilePath"> File path of the structures file</param>
+        /// <param name="structuresSubFilesReferenceFilePath"> Filepath of the reference file. This is structures file or Mdu
+        /// dependent on the PathsRelativeToParent option in the Mdu. </param>
         /// <returns>List with weirs with different weirformulas and pumps</returns>
-        public IList<IStructure> ReadStructuresFileRelativeToReferenceFile(string filePath, string structuresSubFilesReferenceFilePath)
+        public IList<IStructure> ReadStructuresFileRelativeToReferenceFile(string structuresFilePath, string structuresSubFilesReferenceFilePath)
         {
             return
-                ReadStructures2D(filePath)
+                ReadStructures2D(structuresFilePath)
                     .Select(s => ConvertStructure(s, structuresSubFilesReferenceFilePath))
                     .Where(s => s != null)
                     .ToList();
