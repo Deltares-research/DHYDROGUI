@@ -644,19 +644,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         /// GIVEN a MduFile
         ///   AND a hydroArea
         ///   AND some fixedWeirs properties
-        ///   AND some mdu file with fixed weirs with more columns than needed
+        ///   AND some mdu file with fixed weirs with a different number of columns than needed
         /// WHEN Read is called
         /// THEN a single error message is logged
         ///  AND the error message contains a warning for each weir
         /// </summary>
         [Test, TestCaseSource(nameof(WeirWarningMessageTestCaseData))]
         [Category(TestCategory.DataAccess)]
-        public void GivenAMduFileWithMoreColumnsThanNeeded_WhenReadIsCalled_ThenASingleErrorMessageIsLogged(string mduName, string fixedWeirPlizFileName, int weirScheme, int columnDifference, string expectedSubMsgFormat)
+        public void GivenAMduFileWithADifferentNumberOfColumnsThanNeeded_WhenReadIsCalled_ThenASingleErrorMessageIsLogged(string mduName, string fixedWeirPlizFileName, int weirScheme, int columnDifference, string expectedSubMsgFormat)
         {
             using (var tempDir = new TemporaryDirectory())
             {
                 // Given
-                // Get the file data
                 string srcFilePath = TestHelper.GetTestFilePath(@"HydroAreaCollection\FlowFMFixedWeirs\");
 
                 tempDir.CopyAllTestDataToTempDirectory(Path.Combine(srcFilePath, mduName),
@@ -697,7 +696,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 Assert.That(subMsgs[0], Is.EqualTo(string.Format(expectedSubMsgFormat, weirScheme, "Weir01", columnDifference)),
                             "Expected a different string as first sub message.");
                 Assert.That(subMsgs[1], Is.EqualTo(string.Format(expectedSubMsgFormat, weirScheme, "Weir02", columnDifference)),
-                            "Expected a different string as first sub message.");
+                            "Expected a different string as second sub message.");
 
             }
         }
