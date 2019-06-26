@@ -368,7 +368,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                 }
             }
 
-            return base.GetVariableValuesCore<T>(function, filters);
+            try
+            {
+                return base.GetVariableValuesCore<T>(function, filters);
+            }
+            catch (Exception e) when (e.Message.Contains("NetCDF error code"))
+            {
+                log.Error($"While reading variable {function.Name} from the file {System.IO.Path.GetFileName(Path)} an error was encountered: {e.Message}");
+                int functionSize = GetSize(function);
+                return new MultiDimensionalArray<T>(new List<T>(new T[functionSize]), functionSize);
+            }
         }
 
         private UnstructuredGridCoverage AddCustomVelocityCoverage(UnstructuredGridCoverage ucxCoverage,
