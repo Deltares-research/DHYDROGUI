@@ -25,7 +25,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
         {
             if (filePath == null)
             {
-                throw new ArgumentNullException("Heat flux file path is not valid");
+                throw new ArgumentNullException($"Heat flux file path {0} is not valid", filePath);
             }
 
             string htcDir = Path.GetDirectoryName(filePath);

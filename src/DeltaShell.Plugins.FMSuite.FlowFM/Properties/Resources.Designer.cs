@@ -566,6 +566,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Based on the Fixed Weir Scheme {0}, there are not enough column(s) defined for {1} in the imported fixed weir file. The last {2} column(s) have been generated using default values.
+        /// </summary>
+        public static string MduFile_Read_Based_on_the_Fixed_Weir_Scheme__0___there_are_not_enough_column_s__defined_for__1__in_the_imported_fixed_weir_file__The_last__2__column_s__have_been_generated_using_default_values {
+            get {
+                return ResourceManager.GetString("MduFile_Read_Based_on_the_Fixed_Weir_Scheme__0___there_are_not_enough_column_s__d" +
+                        "efined_for__1__in_the_imported_fixed_weir_file__The_last__2__column_s__have_been" +
+                        "_generated_using_default_values", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Based on the Fixed Weir Scheme {0}, there are too many column(s) defined for {1} in the imported fixed weir file. The last {2} column(s) have been ignored.
+        /// </summary>
+        public static string MduFile_Read_Based_on_the_Fixed_Weir_Scheme__0___there_are_too_many_column_s__defined_for__1__in_the_imported_fixed_weir_file__The_last__2__column_s__have_been_ignored {
+            get {
+                return ResourceManager.GetString("MduFile_Read_Based_on_the_Fixed_Weir_Scheme__0___there_are_too_many_column_s__def" +
+                        "ined_for__1__in_the_imported_fixed_weir_file__The_last__2__column_s__have_been_i" +
+                        "gnored", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Multiple enclosures added to the model. Validate or run will fail if more than one enclosure is present..
         /// </summary>
         public static string MduFile_ReadAreaFeatures_Multiple_enclosures_added_to_the_model__Validate_or_run_will_fail_if_more_than_one_enclosure_is_present_ {

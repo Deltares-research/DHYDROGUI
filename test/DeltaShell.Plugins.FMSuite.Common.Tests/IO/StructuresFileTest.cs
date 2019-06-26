@@ -12,6 +12,7 @@ using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
@@ -752,6 +753,55 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
                 Assert.That(fileContents, Is.EqualTo(expectedFileContents));
             });
+        }
+
+        [Test]
+        public void GivenAStructureFileWithAGeneralStructure_WhenReading_ThenAllSubfilesOfTheGeneralStructureShouldBeRead()
+        {
+            // Given
+            using (var temp = new TemporaryDirectory())
+            {
+                var filesList = new[]
+                {
+                    @"structures\generalstructure\testmodel_structures.ini",
+                    @"structures\generalstructure\structure01.pli",
+                    @"structures\generalstructure\structure01_CrestLevel.tim",
+                    @"structures\generalstructure\structure01_GateLowerEdgeLevel.tim"
+                };
+
+                List<string> copiesInTempFilePaths =
+                    temp.CopyAllTestDataToTempDirectory(filesList);
+
+                var structureFile = new StructuresFile
+                {
+                    StructureSchema = new WaterFlowFMModelDefinition().StructureSchema
+                };
+
+                string copyOfIniInTempFilePath = copiesInTempFilePaths[0];
+
+                // When
+                IList<IStructure> structures = structureFile.ReadStructuresFileRelativeToReferenceFile(copyOfIniInTempFilePath,
+                                                                             copyOfIniInTempFilePath);
+                
+                // Then
+                Assert.AreEqual(1, structures.Count, "The ini file for the structures is not correctly read");
+
+                var generalStructure = structures[0] as Weir2D;
+                Assert.IsNotNull(generalStructure, "The ini file for the structures is not correctly read");
+
+                var weirFormula = generalStructure.WeirFormula as GeneralStructureWeirFormula;
+                Assert.IsNotNull(weirFormula, "The ini file for the structures is not correctly read");
+
+                Assert.IsTrue(generalStructure.UseCrestLevelTimeSeries, "The tim file for the crest level is not correctly read");
+                Assert.AreEqual(new [] {5, 6}, generalStructure.CrestLevelTimeSeries.Components[0].Values, 
+                                "The tim file for the crest level is not correctly read");
+
+                Assert.IsTrue(weirFormula.UseLowerEdgeLevelTimeSeries, "The tim file for the lower edge level is not correctly read");
+                Assert.AreEqual(new []{3 ,4}, weirFormula.LowerEdgeLevelTimeSeries.Components[0].Values, 
+                                "The tim file for the lower edge level is not correctly read");
+
+                Assert.AreEqual(2, generalStructure.Geometry.Coordinates.Length, "The pli file for the geometry is not correctly read"); 
+            }
         }
 
         private static Weir2D ValidatedWeir(IList<IStructure> structures)

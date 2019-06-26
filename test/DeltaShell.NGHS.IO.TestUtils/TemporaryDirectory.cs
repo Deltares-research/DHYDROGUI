@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
@@ -50,7 +49,7 @@ namespace DeltaShell.NGHS.IO.TestUtils
         /// </summary>
         /// <param name="relativeTestDataFilePaths">The relative test data file paths.</param>
         /// <returns> List with file paths of copies in temp </returns>
-        public List<string> CopyAllTestDataToTempDirectory(string[] relativeTestDataFilePaths)
+        public List<string> CopyAllTestDataToTempDirectory(params string[] relativeTestDataFilePaths)
         {
             var copiesInTempFilePathList = new List<string>();
 
@@ -87,18 +86,14 @@ namespace DeltaShell.NGHS.IO.TestUtils
         /// <returns> Directory path of copy in temp</returns>
         public string CopyTestDataFileAndDirectoryToTempDirectory(string relativeTestDataFilePath)
         {
-            // Get Paths
             string sourceFilePath = TestHelper.GetTestFilePath(relativeTestDataFilePath);
             string sourceDirectoryPath = System.IO.Path.GetDirectoryName(sourceFilePath);
 
-            // Get Copy Path
             string sourceDirectoryName = System.IO.Path.GetFileName(sourceDirectoryPath);
             string targetDirectoryPath = System.IO.Path.Combine(Path, sourceDirectoryName);
 
-            // Copy directories
             FileUtils.CopyDirectory(sourceDirectoryPath, targetDirectoryPath);
 
-            // Get new file path for argument filename
             string sourceFileName = System.IO.Path.GetFileName(sourceFilePath);
             return System.IO.Path.Combine(targetDirectoryPath, sourceFileName);
         }

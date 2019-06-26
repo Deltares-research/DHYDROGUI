@@ -14,6 +14,7 @@ using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.NetCdf;
 using DeltaShell.NGHS.IO.Grid;
+using DeltaShell.NGHS.IO.Handlers;
 using DeltaShell.Plugins.FMSuite.Common;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures;
@@ -1078,6 +1079,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             //fix for fixed weirs
             fixedWeirProperties?.Clear();
 
+            var logHandler = new LogHandler("reading the Fixed Weirs");
+
             foreach (FixedWeir fixedWeir in hydroArea.FixedWeirs)
             {
                 var modelFeatureCoordinateData = new ModelFeatureCoordinateData<FixedWeir> {Feature = fixedWeir};
@@ -1096,14 +1099,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
                 if (modelFeatureCoordinateData.DataColumns.Count < fixedWeir.Attributes.Count)
                 {
-                    Log.Warn(
-                        $"Based on the Fixed Weir Scheme {scheme}, there are too many column(s) defined for {fixedWeir} in the imported fixed weir file. The last {difference} column(s) have been ignored");
+                    logHandler.ReportWarningFormat(Resources.MduFile_Read_Based_on_the_Fixed_Weir_Scheme__0___there_are_too_many_column_s__defined_for__1__in_the_imported_fixed_weir_file__The_last__2__column_s__have_been_ignored,
+                                                   scheme, fixedWeir, difference);
                 }
 
                 if (modelFeatureCoordinateData.DataColumns.Count > fixedWeir.Attributes.Count)
                 {
-                    Log.Warn(
-                        $"Based on the Fixed Weir Scheme {scheme}, there are not enough column(s) defined for {fixedWeir} in the imported fixed weir file. The last {difference} column(s) have been generated using default values");
+                    logHandler.ReportWarningFormat(Resources.MduFile_Read_Based_on_the_Fixed_Weir_Scheme__0___there_are_not_enough_column_s__defined_for__1__in_the_imported_fixed_weir_file__The_last__2__column_s__have_been_generated_using_default_values,
+                                                   scheme, fixedWeir, difference);
                 }
 
                 for (var index = 0; index < modelFeatureCoordinateData.DataColumns.Count; index++)
@@ -1129,6 +1132,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
                 fixedWeirProperties.Add(fixedWeir, modelFeatureCoordinateData);
             }
+
+            logHandler.LogReport();
 
             foreach (FixedWeir fixedWeir in hydroArea.FixedWeirs)
             {
@@ -1461,10 +1466,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 IList<TFeat> featuresToAdd;
                 if (fileReader is StructuresFile)
                 {
+                    string structuresSubFilesReferenceFilePath =
+                        (bool) modelDefinition.GetModelProperty(KnownProperties.PathsRelativeToParent).Value
+                            ? featuresFilePath : mduFilePath;
                     var structuresFile = fileReader as StructuresFile;
                     featuresToAdd =
-                        (IList<TFeat>) structuresFile.CopyFileAndRead(featuresFilePath,
-                                                                      replacedFilePaths[featuresFilePath]);
+                        (IList<TFeat>) structuresFile.ReadStructuresFileRelativeToReferenceFile(featuresFilePath, structuresSubFilesReferenceFilePath);
                 }
                 else
                 {
@@ -1654,7 +1661,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }).ToList();
 
             RemoveAllNonExistentFilePaths(featureFilePaths, mduFilePath, modelDefinition, propertyKey);
-            RemoveAllStructuresFilesWithBadReferences(featureFilePaths, modelDefinition);
+            if (propertyKey == KnownProperties.StructuresFile)
+            {
+                RemoveAllStructuresFilesWithBadReferences(featureFilePaths, mduFilePath, modelDefinition);
+            }
+
             modelDefinition.GetModelProperty(propertyKey).SetValueAsString(string.Join(" ", featureFilePaths));
         }
 
@@ -1685,14 +1696,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         /// Removes all structures files that contain references to feature files that do not exist.
         /// </summary>
         /// <param name="featureFilePaths"> The group names of all features, retrieved from the mdu file of the FM Model. </param>
+        /// <param name="mduFilePath"> The file path of the mdu file. </param>
         /// <param name="modelDefinition"> The model definition of the FM Model. </param>
-        private static void RemoveAllStructuresFilesWithBadReferences(ICollection<string> featureFilePaths,
+       private static void RemoveAllStructuresFilesWithBadReferences(ICollection<string> featureFilePaths, string mduFilePath,
                                                                       WaterFlowFMModelDefinition modelDefinition)
         {
+            var pathsRelativeToParent =
+                (bool) modelDefinition.GetModelProperty(KnownProperties.PathsRelativeToParent).Value;
+
             var structureFilesWithBadReferences = new List<string>();
-            foreach (string filePath in featureFilePaths.Where(fp => fp.EndsWith(StructuresExtension)))
+            foreach (string filePath in featureFilePaths)
             {
                 string structureFilePath = System.IO.Path.GetFullPath(filePath);
+
+                string structuresSubFilesReferenceFilePath = pathsRelativeToParent ? filePath : mduFilePath;
+
                 var fileReader = new StructuresFile
                 {
                     StructureSchema = modelDefinition.StructureSchema,
@@ -1704,7 +1722,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 {
                     string featureFileName = f.GetProperty(KnownStructureProperties.PolylineFile).GetValueAsString();
                     string featureFilePath =
-                        System.IO.Path.Combine(System.IO.Path.GetDirectoryName(structureFilePath), featureFileName);
+                        System.IO.Path.Combine(System.IO.Path.GetDirectoryName(structuresSubFilesReferenceFilePath), featureFileName);
+
                     if (!File.Exists(featureFilePath))
                     {
                         referencesToNonExistentFilesExist = true;
@@ -1745,7 +1764,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                     System.IO.Path.GetFullPath(System.IO.Path.Combine(mduDirectory, featureGroupNames[i]));
                 Match isOutsideMduFolderMatch =
                     new Regex(@"\.{2,}").Match(FileUtils.GetRelativePath(mduDirectory, filePath, true));
-                if (!isOutsideMduFolderMatch.Success) // File is situated inside mdu-folder or in a subfolder
+                if (!isOutsideMduFolderMatch.Success || propertyKey == KnownProperties.StructuresFile) // File is situated inside mdu-folder or in a subfolder 
                 {
                     featureGroupNames[i] = filePath;
                     oldFilePaths.Add(filePath, filePath);

@@ -726,16 +726,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
-        public void GivenAProjectFolderWithFeatureFilesOutsideOfTheMduFolder_WhenReadingMdu_ThenAllFilesAreCopiedAndRead()
+        [Category(TestCategory.DataAccess)]
+        [TestCase(@"HydroAreaCollection\MduFileProjects\FilesOutsideMduFolderProject.dsproj_data\PathsRelativeToMdu")]
+        [TestCase(@"HydroAreaCollection\MduFileProjects\FilesOutsideMduFolderProject.dsproj_data\PathsRelativeToParent")]
+        public void GivenAProjectFolderWithFeatureFilesOutsideOfTheMduFolder_WhenReadingMdu_ThenAllFilesExceptStructuresAreCopiedAndEverythingShouldBeRead(string modelDirectory)
         {
             // Preparations
-            var localPath = TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath(@"HydroAreaCollection\MduFileProjects"));
-            var mduFilePath = Path.Combine(localPath, @"FilesOutsideMduFolderProject.dsproj_data\FlowFM\FlowFM.mdu");
+            var localPath = TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath(modelDirectory));
+            var mduFilePath = Path.Combine(localPath, @"FlowFM\FlowFM.mdu");
 
             var featureFileDirectory = Path.GetDirectoryName(Path.GetDirectoryName(mduFilePath));
             var mduFileFolder = Path.GetDirectoryName(mduFilePath);
-            CheckIfFilesWereCopied(featureFileDirectory, mduFileFolder, false);
-
+            
             var modelName = Path.GetFileNameWithoutExtension(mduFilePath);
             var area = new HydroArea();
             var modelDefinition = new WaterFlowFMModelDefinition(mduFilePath, modelName);
@@ -759,9 +761,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         [TestCase(@"FilesInsideMduSubFolderProject.dsproj_data\FlowFM\FlowFM.mdu")]
         [TestCase(@"FilesInsideMduSubFolderButWithRelativePathsProject.dsproj_data\FlowFM\FlowFM.mdu")]
-        public void GivenAProjectFolderWithFeatureFilesInsideOfAnMduSubFolder_WhenReadingMdu_ThenAllFilesAreRead(string mduProjectFilePath)
+        public void GivenAProjectFolderWithFeatureFilesInsideOfAnMduSubFolder_WhenReadingMdu_ThenAllFilesAreReadAndNotCopied(string mduProjectFilePath)
         {
             // Preparations
             var localPath = TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath(@"HydroAreaCollection\MduFileProjects"));
@@ -829,9 +832,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
-        [TestCase(@"MissingFeatureFilesProject.dsproj_data\FlowFM.mdu")]
-        [TestCase(@"DuplicateFilesProject.dsproj_data\FlowFM\FlowFM.mdu")]
-        public void GivenMduFileWithReferencesToNonExistentFilesOrFileNamesThatAlreadyExistInTheMduFolder_WhenReadingMdu_ThenTheseFeaturesAreNotRead(string mduProjectFilePath)
+        [TestCase(@"MissingFeatureFilesProject.dsproj_data\FlowFM.mdu", false)]
+        [TestCase(@"DuplicateFilesProject.dsproj_data\FlowFM\FlowFM.mdu", true)]
+        public void GivenMduFileWithReferencesToNonExistentFilesOrFileNamesThatAlreadyExistInTheMduFolder_WhenReadingMdu_ThenTheseFeaturesAreNotReadExceptStructuresIfPresent(string mduProjectFilePath, bool structuresShouldBeRead)
         {
             // Preparations
             var localPath = TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath(@"HydroAreaCollection\MduFileProjects"));
@@ -850,9 +853,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.That(area.Enclosures.Count, Is.EqualTo(1));
             Assert.That(area.FixedWeirs.Count, Is.EqualTo(0));
             Assert.That(area.ObservationPoints.Count, Is.EqualTo(2));
-            Assert.That(area.Pumps.Count, Is.EqualTo(0));
+            if (structuresShouldBeRead)
+            {
+                Assert.That(area.Pumps.Count, Is.EqualTo(1));
+                Assert.That(area.Weirs.Count, Is.EqualTo(2));
+            }
+            else
+            {
+                Assert.That(area.Pumps.Count, Is.EqualTo(0));
+                Assert.That(area.Weirs.Count, Is.EqualTo(0));
+            }
+
             Assert.That(area.ThinDams.Count, Is.EqualTo(0));
-            Assert.That(area.Weirs.Count, Is.EqualTo(0));
             Assert.That(area.ObservationCrossSections.Count, Is.EqualTo(0));
             Assert.That(area.LandBoundaries.Count, Is.EqualTo(0));
         }
@@ -1572,7 +1584,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         private static void CheckIfFilesWereCopied(string fromFolder, string toFolder, bool checkIfTrue)
         {
             var toFolderFileNames = new DirectoryInfo(toFolder).GetFiles().Select(f => f.Name);
-            var fromFolderFileNames = new DirectoryInfo(fromFolder).GetFiles().Select(f => f.Name);
+            var fromFolderFileNames = new DirectoryInfo(fromFolder)
+                                      .GetFiles().Select(f => f.Name)
+                                      .Where(n => !n.EndsWith("_structures.ini") && !n.Contains("gate") &&
+                                                  !n.Contains("pump") && !n.Contains("weir"));
             foreach (var fileName in fromFolderFileNames)
             {
                 Assert.That(toFolderFileNames.Contains(fileName), Is.EqualTo(checkIfTrue));

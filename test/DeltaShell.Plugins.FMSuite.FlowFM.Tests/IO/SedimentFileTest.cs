@@ -899,13 +899,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
         /// <summary>
         /// GIVEN a SedFile without unknown features
-        ///   AND a FM Model
+        ///   AND an FM Model
         ///   AND a logHandler
         /// WHEN LoadSediments is called with these parameters
         /// THEN no warning messages are logged
         /// </summary>
         [Test]
-        public void GivenASedFileWithoutUnknownFeaturesAndAFMModelAndALogHandler_WhenLoadSedimentsIsCalledWithTheseParameters_ThenNoWarningMessagesAreLogged()
+        public void GivenASedFileWithoutUnknownFeaturesAndAnFMModelAndALogHandler_WhenLoadSedimentsIsCalledWithTheseParameters_ThenNoWarningMessagesAreLogged()
         {
             using (var tempDir = new TemporaryDirectory())
             using (var model = new WaterFlowFMModel()) // :(
@@ -935,7 +935,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
         /// <summary>
         /// GIVEN a SedFile with unknown features
-        ///   AND a FM Model
+        ///   AND an FM Model
         ///   AND a logHandler
         /// WHEN LoadSediments is called with these parameters
         /// THEN the correct warning message is logged
@@ -967,10 +967,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [TestCase(2, 2, 1)]
         [TestCase(2, 2, 2)]
 
-        public void GivenASedFileWithUnknownFeaturesAndAFMModelAndALogHandler_WhenLoadSedimentsIsCalledWithTheseParameters_ThenTheCorrectWarningMessageIsLogged(int nUnknownOverall, int nUnknownSediment, int nUnknownUnknown)
+        public void GivenASedFileWithUnknownFeaturesAndAnFMModelAndALogHandler_WhenLoadSedimentsIsCalledWithTheseParameters_ThenTheCorrectWarningMessageIsLogged(int nUnknownOverall, int nUnknownSediment, int nUnknownUnknown)
         {
             using (var tempDir = new TemporaryDirectory())
-            using (var model = new WaterFlowFMModel()) // :(
+            using (var model = new WaterFlowFMModel())
             {
                 // Given
                 string sedPath = Path.Combine(tempDir.Path, "sedfile.sed");
@@ -1033,23 +1033,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             iniCategories.Add(sedimentOverall);
 
             // Sediment Category
-            var sedimentFracCat = new DelftIniCategory(SedimentFile.Header);
-            sedimentFracCat.AddSedimentProperty("Name", "#sand#", "", "Name of sediment fraction");
-            sedimentFracCat.AddSedimentProperty("SedTyp", "sand", "", "Must be \"sand\", \"mud\" or \"bedload\"");
 
-            sedimentFracCat.AddSedimentProperty("IniSedThick", "0", "m", "Initial sediment layer thickness at bed");
-            sedimentFracCat.AddSedimentProperty("FacDss", "1", "", "Factor for suspended sediment diameter");
-            sedimentFracCat.AddSedimentProperty("RhoSol", "2650", "kg/m³", "Specific density");
-            sedimentFracCat.AddSedimentProperty("TraFrm", "-1", "", "Integer selecting the transport formula");
-            sedimentFracCat.AddSedimentProperty("CDryB", "1600", "kg/m³", "Dry bed density");
-            sedimentFracCat.AddSedimentProperty("SedDia", "0.0002", "m", "Median sediment diameter(D50)");
-            sedimentFracCat.AddSedimentProperty("IopSus", "0", "","Option for determining suspended sediment diameter");
-            sedimentFracCat.AddSedimentProperty("AksFac", "1", "", "Calibration factor for Van Rijn’s reference height");
-            sedimentFracCat.AddSedimentProperty("Rwave", "2", "", "Calibration factor wave roughness height");
-            sedimentFracCat.AddSedimentProperty("RDC",    "0.01","m", "Current related roughness ks");
-            sedimentFracCat.AddSedimentProperty("RDW", "0.02", "m", "Wave related roughness kw");
-            sedimentFracCat.AddSedimentProperty("IopKCW", "1", "", "Option for ks and kw");
-            sedimentFracCat.AddSedimentProperty("EpsPar", "False", "", "Use Van Rijn's parabolic mixing coefficient");
+            // Sediment Category
+            var sedimentFracCat = new DelftIniCategory(SedimentFile.Header);
+
+            ISedimentType sedType = SedimentFractionHelper.GetSedimentationTypes().First();
+
+            sedimentFracCat.AddSedimentProperty("Name", sedType.Name, "", "Name of sediment fraction");
+            sedimentFracCat.AddSedimentProperty("SedTyp", sedType.Key, "", "Must be \"sand\", \"mud\" or \"bedload\"");
+
+            foreach (ISedimentProperty prop in sedType.Properties)
+            {
+                prop.SedimentPropertyWrite(sedimentFracCat);
+            }
 
             for (var i = 0; i < nUnknownSediment; i++)
             {
