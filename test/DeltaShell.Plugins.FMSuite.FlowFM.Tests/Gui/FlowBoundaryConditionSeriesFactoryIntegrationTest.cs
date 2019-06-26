@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
@@ -28,26 +27,33 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             const int supportPoint = 1;
             const bool useLayers = true;
             FlowBoundaryQuantityType expectedBoundaryQuantyType = FlowBoundaryQuantityType.MorphologyBedLoadTransport;
+            FlowBoundaryConditionSeriesFactory factory = null;
 
-            string mduPath = TestHelper.GetTestFilePath(@"ExBedLoadTransportBoundary\FlowFM.mdu");
-            var model = new WaterFlowFMModel(mduPath);
-
-            FlowBoundaryCondition boundaryCondition = model.ModelDefinition.BoundaryConditions.ElementAt(0) as FlowBoundaryCondition;
-            Assert.That(boundaryCondition, Is.Not.Null);
-            
-            //When
-            Feature2D feature = CreateFeature2D();
-            boundaryCondition = ChangeFlowBoundaryConditionToBedLoadTransportQuantityType(feature);
-            IEnumerable<FlowBoundaryConditionPointData> flowBoundaryConditions =
-                Enumerable.Repeat(new FlowBoundaryConditionPointData(boundaryCondition, supportPoint, useLayers), 3);
-            var factory = new FlowBoundaryConditionSeriesFactory
+            using (var tempDirectory = new TemporaryDirectory())
             {
-                BackgroundFunctions = new EventedList<FlowBoundaryConditionPointData>(flowBoundaryConditions)
-            };
+                // Get test data
+                string mduPath = TestHelper.GetTestFilePath(@"ExBedLoadTransportBoundary\FlowFM.mdu");
+                mduPath = tempDirectory.CopyTestDataFileAndDirectoryToTempDirectory(mduPath);
+                var model = new WaterFlowFMModel(mduPath);
+                FlowBoundaryCondition boundaryCondition = model.ModelDefinition.BoundaryConditions.ElementAt(0) as FlowBoundaryCondition;
+                Assert.That(boundaryCondition, Is.Not.Null);
+
+                //When
+                Feature2D feature = CreateFeature2D();
+                boundaryCondition = ChangeFlowBoundaryConditionToBedLoadTransportQuantityType(feature);
+                Func<FlowBoundaryConditionPointData> createPointData = () =>
+                    new FlowBoundaryConditionPointData(boundaryCondition, supportPoint, useLayers);
+                IEnumerable<FlowBoundaryConditionPointData> flowBoundaryConditions = Enumerable.Repeat(createPointData.Invoke(), 3);
+                factory = new FlowBoundaryConditionSeriesFactory
+                {
+                    BackgroundFunctions = new EventedList<FlowBoundaryConditionPointData>(flowBoundaryConditions)
+                };
+            }
 
             //Then
             int totalOfBackGroundFunctions = factory.BackgroundFunctions.Count;
-            Assert.That(totalOfBackGroundFunctions, Is.EqualTo(expectedBackgroundFunctions), $"Expected number of functions ({expectedBackgroundFunctions}) does not match retrieved ({totalOfBackGroundFunctions}) ");
+            string errorMssgWrongFunctionNumber = $"Expected number of functions ({expectedBackgroundFunctions}) does not match retrieved ({totalOfBackGroundFunctions}) ";
+            Assert.That(totalOfBackGroundFunctions, Is.EqualTo(expectedBackgroundFunctions), errorMssgWrongFunctionNumber);
 
             FlowBoundaryCondition flowBoundaryCondition1 = GetBackgroundFunctionFlowQuantityType(factory, 0);
             FlowBoundaryCondition flowBoundaryCondition2 = GetBackgroundFunctionFlowQuantityType(factory, 1);
