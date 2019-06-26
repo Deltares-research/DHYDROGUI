@@ -374,7 +374,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             }
             catch (Exception e) when (e.Message.Contains("NetCDF error code"))
             {
-                log.Error($"While reading variable {function.Name} from the file {System.IO.Path.GetFileName(Path)} an error was encountered: {e.Message}");
+                log.Error(string.Format(Resources.FMMapFileFunctionStore_GetVariableValuesCore_While_reading_variable__0__from_the_file__1__an_error_was_encountered___2_, function.Name, System.IO.Path.GetFileName(Path), e.Message));
                 int functionSize = GetSize(function);
                 return new MultiDimensionalArray<T>(new List<T>(new T[functionSize]), functionSize);
             }
