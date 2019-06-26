@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 
@@ -48,7 +49,7 @@ namespace DeltaShell.NGHS.IO.TestUtils
         /// </summary>
         /// <param name="relativeTestDataFilePaths">The relative test data file paths.</param>
         /// <returns> List with file paths of copies in temp </returns>
-        public List<string> CopyAllTestDataToTempDirectory(string[] relativeTestDataFilePaths)
+        public List<string> CopyAllTestDataToTempDirectory(params string[] relativeTestDataFilePaths)
         {
             var copiesInTempFilePathList = new List<string>();
 

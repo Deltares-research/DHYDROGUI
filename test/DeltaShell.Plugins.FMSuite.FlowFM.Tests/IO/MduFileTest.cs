@@ -85,7 +85,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.IsTrue(lines.Any(l => l.Contains("ModelWithMorphology.sed")));
         }
 
-        [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Integration)]
         [Test]
         public void Test_MduFile_Read_Loads_BridgePillars()
@@ -371,7 +370,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             );
         }
 
-        [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Integration)]
         [TestCase(@"TestModelWithNcInSubFolder\trynet.mdu", "Sub\\gridtry.nc")]
         [TestCase(@"TestModelWithoutNcInSubFolder\trynet.mdu", "gridtry.nc")]
@@ -409,7 +407,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             }
         }
 
-        [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Integration)]
         [TestCase(@"cs_after_save\before_save_AmersfoortRDNew_net.nc", 28992, "Amersfoort / RD New")]
         [TestCase(@"cs_after_save\before_save_AmersfoortRDOld_net.nc", 28991, "Amersfoort / RD Old")]
@@ -440,7 +437,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             FileUtils.DeleteIfExists(workingDirectory);
         }
 
-        [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Integration)]
         [TestCase(true, @"update_CS_netfile\amersfoortRDNew_net.nc", 28992, true)]
         [TestCase(true, @"update_CS_netfile\unknown_projected_net.nc", 28992, false)]
@@ -476,7 +472,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.That(result, Is.EqualTo(expected));
         }
 
-        [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Integration)]
         [Test]
         public void GivenAnMduToReadWithFixedWeirs_WhenTheSchemeNumbersRequiresMoreColumnsThanGivenInPlizFile_ThenAllMissingPropertiesShouldBeCreatedUsingTheDefaultValues()
@@ -563,7 +558,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             }
         }
 
-        [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Integration)]
         [Test]
         public void GivenAnMduToReadWithFixedWeirs_WhenTheSchemeNumbersRequiresLessColumnsThanGivenInPlizFile_ThenOnlyTheNeededPropertiesShouldBeCreatedAfterReadingThePlizFile()
@@ -633,6 +627,80 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     FileUtils.DeleteIfExists(mduDir);
                 }
             }
+
+        /// <summary>
+        /// The test case data for the GivenAMduFileWithMoreColumnsThanNeeded_WhenReadIsCalled_ThenASingleErrorMessageIsLogged.
+        /// </summary>
+        private IEnumerable<TestCaseData> WeirWarningMessageTestCaseData
+        {
+            get
+            {
+                //                             mduName     |  fixedWeirPlizFileName   | weirScheme | columnDifference | expectedSubMsgFormat
+                yield return new TestCaseData("FlowFM3.mdu",  "TwoFixedWeirs_fxw.pliz",           6,                 5, Resources.MduFile_Read_Based_on_the_Fixed_Weir_Scheme__0___there_are_too_many_column_s__defined_for__1__in_the_imported_fixed_weir_file__The_last__2__column_s__have_been_ignored);
+                yield return new TestCaseData("FlowFM2.mdu", "TwoFixedWeirs_fxw2.pliz",           9,                 7, Resources.MduFile_Read_Based_on_the_Fixed_Weir_Scheme__0___there_are_not_enough_column_s__defined_for__1__in_the_imported_fixed_weir_file__The_last__2__column_s__have_been_generated_using_default_values);
+            }
+        }
+
+        /// <summary>
+        /// GIVEN a MduFile
+        ///   AND a hydroArea
+        ///   AND some fixedWeirs properties
+        ///   AND some mdu file with fixed weirs with a different number of columns than needed
+        /// WHEN Read is called
+        /// THEN a single error message is logged
+        ///  AND the error message contains a warning for each weir
+        /// </summary>
+        [Test, TestCaseSource(nameof(WeirWarningMessageTestCaseData))]
+        [Category(TestCategory.DataAccess)]
+        public void GivenAMduFileWithADifferentNumberOfColumnsThanNeeded_WhenReadIsCalled_ThenASingleErrorMessageIsLogged(string mduName, string fixedWeirPlizFileName, int weirScheme, int columnDifference, string expectedSubMsgFormat)
+        {
+            using (var tempDir = new TemporaryDirectory())
+            {
+                // Given
+                string srcFilePath = TestHelper.GetTestFilePath(@"HydroAreaCollection\FlowFMFixedWeirs\");
+
+                tempDir.CopyAllTestDataToTempDirectory(Path.Combine(srcFilePath, mduName),
+                                                       Path.Combine(srcFilePath, fixedWeirPlizFileName),
+                                                       Path.Combine(srcFilePath, "FlowFM_net.nc"));
+
+                var originalArea = new HydroArea();
+                var originalMd = new WaterFlowFMModelDefinition(mduDir, modelName);
+                var allFixedWeirsAndCorrespondingProperties =
+                    new Dictionary<FixedWeir, ModelFeatureCoordinateData<FixedWeir>>();
+
+                var mduFile = new MduFile();
+
+                string readPath = Path.Combine(tempDir.Path, mduName);
+
+                // When
+                void testAction()
+                {
+                    mduFile.Read(readPath, originalMd, originalArea, allFixedWeirsAndCorrespondingProperties);
+                }
+
+                List<string> msgs = TestHelper.GetAllRenderedMessages(testAction).ToList();
+
+                // Then
+                Assert.That(msgs, Has.Count.EqualTo(1), "Expected a single grouped warning message:");
+
+                string msg = msgs.First();
+
+                const string expectedMsgHeader = "During reading the Fixed Weirs the following log messages were produced:";
+                Assert.That(msg, Is.StringStarting(expectedMsgHeader), "Expected the header of the message to be different:");
+
+
+                List<string> subMsgs = msg.Split(new[] { "\n- " }, StringSplitOptions.None).ToList();
+                subMsgs.RemoveAt(0); // Remove header msg.
+                subMsgs = subMsgs.Select(s => s.Trim()).ToList(); // Remove excessive white characters.
+
+                Assert.That(subMsgs, Has.Count.EqualTo(2), "Expected 2 sub messages within the warning message.");
+                Assert.That(subMsgs[0], Is.EqualTo(string.Format(expectedSubMsgFormat, weirScheme, "Weir01", columnDifference)),
+                            "Expected a different string as first sub message.");
+                Assert.That(subMsgs[1], Is.EqualTo(string.Format(expectedSubMsgFormat, weirScheme, "Weir02", columnDifference)),
+                            "Expected a different string as second sub message.");
+
+            }
+        }
 
         [Category(TestCategory.DataAccess)]
         [Test]

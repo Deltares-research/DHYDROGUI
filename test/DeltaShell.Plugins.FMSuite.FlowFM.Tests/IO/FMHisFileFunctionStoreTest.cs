@@ -233,67 +233,82 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var mduPath = TestHelper.GetTestFilePath(@"roughness\bendprof.mdu");
             var localMduFilePath = TestHelper.CreateLocalCopy(mduPath);
 
-            var model = new WaterFlowFMModel(localMduFilePath);
-
-            var weir = new Weir2D("weir", true)
+            using (var model = new WaterFlowFMModel(localMduFilePath))
             {
-                Geometry = new LineString(new[] {new Coordinate(51.0, -180.0), new Coordinate(150.0, -180.0)}),
-                CrestWidth = 42.0,
-                UseCrestLevelTimeSeries = true
-            };
-            weir.CrestLevelTimeSeries[model.StartTime] = 10.0;
-            weir.CrestLevelTimeSeries[model.StartTime.AddHours(1)] = 7.5;
-            weir.CrestLevelTimeSeries[model.StartTime.AddHours(2)] = 2.5;
-            weir.CrestLevelTimeSeries[model.StopTime.AddSeconds(1)] = 5.5;
-            model.Area.Weirs.Add(weir);
 
-            var gate = new Weir2D("weir",true)
-            {
-                Geometry = new LineString(new[] {new Coordinate(-149.1, -180.0), new Coordinate(-50.1, -180.0)}),
-                WeirFormula = new GatedWeirFormula(true)
+                var weir = new Weir2D("weir1", true)
                 {
-                    UseHorizontalDoorOpeningWidthTimeSeries = true,
-                    UseLowerEdgeLevelTimeSeries = true
-                },
-                CrestLevel = 102.0,
-                CrestWidth = 42.0
-            };
+                    Geometry = new LineString(new[]
+                    {
+                        new Coordinate(51.0, -180.0),
+                        new Coordinate(150.0, -180.0)
+                    }),
+                    CrestWidth = 42.0,
+                    UseCrestLevelTimeSeries = true
+                };
+                weir.CrestLevelTimeSeries[model.StartTime] = 10.0;
+                weir.CrestLevelTimeSeries[model.StartTime.AddHours(1)] = 7.5;
+                weir.CrestLevelTimeSeries[model.StartTime.AddHours(2)] = 2.5;
+                weir.CrestLevelTimeSeries[model.StopTime.AddSeconds(1)] = 5.5;
+                model.Area.Weirs.Add(weir);
 
-            var gatedWeirFormula = gate.WeirFormula as GatedWeirFormula;
+                var gate = new Weir2D("weir2", true)
+                {
+                    Geometry = new LineString(new[]
+                    {
+                        new Coordinate(-149.1, -180.0),
+                        new Coordinate(-50.1, -180.0)
+                    }),
+                    WeirFormula = new GatedWeirFormula(true)
+                    {
+                        UseHorizontalDoorOpeningWidthTimeSeries = true,
+                        UseLowerEdgeLevelTimeSeries = true
+                    },
+                    CrestLevel = 102.0,
+                    CrestWidth = 42.0
+                };
 
-            Assert.NotNull(gatedWeirFormula);
+                var gatedWeirFormula = gate.WeirFormula as GatedWeirFormula;
 
-            gatedWeirFormula.HorizontalDoorOpeningWidthTimeSeries[model.StartTime] = 0.0;
-            gatedWeirFormula.HorizontalDoorOpeningWidthTimeSeries[model.StartTime.AddHours(1)] = 0.0;
-            gatedWeirFormula.HorizontalDoorOpeningWidthTimeSeries[model.StartTime.AddHours(2)] = 25.0;
-            gatedWeirFormula.HorizontalDoorOpeningWidthTimeSeries[model.StopTime.AddSeconds(1)] = 25.0;
+                Assert.NotNull(gatedWeirFormula);
 
-            gatedWeirFormula.LowerEdgeLevelTimeSeries[model.StartTime] = 8.5;
-            gatedWeirFormula.LowerEdgeLevelTimeSeries[model.StartTime.AddHours(1)] = 6.5;
-            gatedWeirFormula.LowerEdgeLevelTimeSeries[model.StartTime.AddHours(2)] = 0.0;
-            gatedWeirFormula.LowerEdgeLevelTimeSeries[model.StopTime.AddSeconds(1)] = -10.0;
-            model.Area.Weirs.Add(gate);
+                gatedWeirFormula.HorizontalDoorOpeningWidthTimeSeries[model.StartTime] = 0.0;
+                gatedWeirFormula.HorizontalDoorOpeningWidthTimeSeries[model.StartTime.AddHours(1)] = 0.0;
+                gatedWeirFormula.HorizontalDoorOpeningWidthTimeSeries[model.StartTime.AddHours(2)] = 25.0;
+                gatedWeirFormula.HorizontalDoorOpeningWidthTimeSeries[model.StopTime.AddSeconds(1)] = 25.0;
 
-            var pump = new Pump2D("pump", true)
-            {
-                Geometry = new LineString(new[] {new Coordinate(0.0, 51.5), new Coordinate(0.0, 81.2)}),
-                UseCapacityTimeSeries = true
-            };
-            pump.CapacityTimeSeries[model.StartTime] = 5.0;
-            pump.CapacityTimeSeries[model.StartTime.AddHours(1)] = 20.0;
-            pump.CapacityTimeSeries[model.StartTime.AddHours(2)] = 10.4;
-            pump.CapacityTimeSeries[model.StopTime.AddSeconds(1)] = 0.0;
-            model.Area.Pumps.Add(pump);
+                gatedWeirFormula.LowerEdgeLevelTimeSeries[model.StartTime] = 8.5;
+                gatedWeirFormula.LowerEdgeLevelTimeSeries[model.StartTime.AddHours(1)] = 6.5;
+                gatedWeirFormula.LowerEdgeLevelTimeSeries[model.StartTime.AddHours(2)] = 0.0;
+                gatedWeirFormula.LowerEdgeLevelTimeSeries[model.StopTime.AddSeconds(1)] = -10.0;
+                model.Area.Weirs.Add(gate);
 
-            ActivityRunner.RunActivity(model);
+                var pump = new Pump2D("pump", true)
+                {
+                    Geometry = new LineString(new[]
+                    {
+                        new Coordinate(0.0, 51.5),
+                        new Coordinate(0.0, 81.2)
+                    }),
+                    UseCapacityTimeSeries = true
+                };
+                pump.CapacityTimeSeries[model.StartTime] = 5.0;
+                pump.CapacityTimeSeries[model.StartTime.AddHours(1)] = 20.0;
+                pump.CapacityTimeSeries[model.StartTime.AddHours(2)] = 10.4;
+                pump.CapacityTimeSeries[model.StopTime.AddSeconds(1)] = 0.0;
+                model.Area.Pumps.Add(pump);
 
-            Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
+                ActivityRunner.RunActivity(model);
 
-            var dischargeFunction =
-                model.OutputHisFileStore.Functions.FirstOrDefault(f => f.Components[0].Name == "cross_section_discharge") as
-                    FeatureCoverage;
-            Assert.IsNotNull(dischargeFunction);
-            Assert.AreEqual(2, dischargeFunction.Arguments[1].Values.Count);
+                Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
+
+                var dischargeFunction =
+                    model.OutputHisFileStore.Functions.FirstOrDefault(
+                            f => f.Components[0].Name == "cross_section_discharge") as
+                        FeatureCoverage;
+                Assert.IsNotNull(dischargeFunction);
+                Assert.AreEqual(2, dischargeFunction.Arguments[1].Values.Count);
+            }
 
             // TODO: check structure output, once we support it.
         }

@@ -14,6 +14,7 @@ using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.NetCdf;
 using DeltaShell.NGHS.IO.Grid;
+using DeltaShell.NGHS.IO.Handlers;
 using DeltaShell.Plugins.FMSuite.Common;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures;
@@ -1078,6 +1079,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             //fix for fixed weirs
             fixedWeirProperties?.Clear();
 
+            var logHandler = new LogHandler("reading the Fixed Weirs");
+
             foreach (FixedWeir fixedWeir in hydroArea.FixedWeirs)
             {
                 var modelFeatureCoordinateData = new ModelFeatureCoordinateData<FixedWeir> {Feature = fixedWeir};
@@ -1096,14 +1099,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
                 if (modelFeatureCoordinateData.DataColumns.Count < fixedWeir.Attributes.Count)
                 {
-                    Log.Warn(
-                        $"Based on the Fixed Weir Scheme {scheme}, there are too many column(s) defined for {fixedWeir} in the imported fixed weir file. The last {difference} column(s) have been ignored");
+                    logHandler.ReportWarningFormat(Resources.MduFile_Read_Based_on_the_Fixed_Weir_Scheme__0___there_are_too_many_column_s__defined_for__1__in_the_imported_fixed_weir_file__The_last__2__column_s__have_been_ignored,
+                                                   scheme, fixedWeir, difference);
                 }
 
                 if (modelFeatureCoordinateData.DataColumns.Count > fixedWeir.Attributes.Count)
                 {
-                    Log.Warn(
-                        $"Based on the Fixed Weir Scheme {scheme}, there are not enough column(s) defined for {fixedWeir} in the imported fixed weir file. The last {difference} column(s) have been generated using default values");
+                    logHandler.ReportWarningFormat(Resources.MduFile_Read_Based_on_the_Fixed_Weir_Scheme__0___there_are_not_enough_column_s__defined_for__1__in_the_imported_fixed_weir_file__The_last__2__column_s__have_been_generated_using_default_values,
+                                                   scheme, fixedWeir, difference);
                 }
 
                 for (var index = 0; index < modelFeatureCoordinateData.DataColumns.Count; index++)
@@ -1129,6 +1132,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
                 fixedWeirProperties.Add(fixedWeir, modelFeatureCoordinateData);
             }
+
+            logHandler.LogReport();
 
             foreach (FixedWeir fixedWeir in hydroArea.FixedWeirs)
             {
