@@ -587,4 +587,7 @@ Manhole with unique id '{4}' is not imported.</value>
   <data name="MduFile_Read_Based_on_the_Fixed_Weir_Scheme__0___there_are_not_enough_column_s__defined_for__1__in_the_imported_fixed_weir_file__The_last__2__column_s__have_been_generated_using_default_values" xml:space="preserve">
     <value>Based on the Fixed Weir Scheme {0}, there are not enough column(s) defined for {1} in the imported fixed weir file. The last {2} column(s) have been generated using default values</value>
   </data>
+  <data name="FMMapFileFunctionStore_GetVariableValuesCore_While_reading_variable__0__from_the_file__1__an_error_was_encountered___2_" xml:space="preserve">
+    <value>While reading variable {0} from the file {1} an error was encountered: {2}</value>
+  </data>
 </root>

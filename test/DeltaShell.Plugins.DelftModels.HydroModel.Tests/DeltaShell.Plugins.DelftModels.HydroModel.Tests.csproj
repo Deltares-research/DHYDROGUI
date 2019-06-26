@@ -231,6 +231,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AcceptanceModelExportHelper.cs" />
+    <Compile Include="AcceptanceModelExportResultConfig.cs" />
     <Compile Include="AcceptanceModelsTest.cs" />
     <Compile Include="DimrApiWrapperIntegrationTest.cs" />
     <Compile Include="Export\DHydroConfigXmlExporterTest.cs" />

@@ -283,6 +283,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to While reading variable {0} from the file {1} an error was encountered: {2}.
+        /// </summary>
+        public static string FMMapFileFunctionStore_GetVariableValuesCore_While_reading_variable__0__from_the_file__1__an_error_was_encountered___2_ {
+            get {
+                return ResourceManager.GetString("FMMapFileFunctionStore_GetVariableValuesCore_While_reading_variable__0__from_the_" +
+                        "file__1__an_error_was_encountered___2_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Output snapped feature layers location not found at: {0}.
         /// </summary>
         public static string FMOutputSnappedFeaturesGroupLayerData_GetValidLayersLocation_Output_snapped_feature_layers_location_not_found_at___0_ {
