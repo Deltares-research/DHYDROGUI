@@ -5,6 +5,7 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
+using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO.Grid;
@@ -826,6 +827,38 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             var dryPointsOnArea = originalArea.DryPoints;
             Assert.AreEqual(8, dryPointsOnArea.Count);
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void Test_ImportMdu_Without_DryArea_Suffix_Gets_DryAreas()
+        {
+            // 1. Set up test model
+            const int expectedAreas = 4;
+            string mduFilePath = @"ModelWithDrypointData\D3DFMIQ-1037\FlowFM.mdu";
+            WaterFlowFMModelDefinition modelDefinition = null;
+            var mduFile = new MduFile();
+            var originalArea = new HydroArea();
+
+            using (var temporaryDirectory = new TemporaryDirectory())
+            {
+                mduFilePath = temporaryDirectory.CopyTestDataFileAndDirectoryToTempDirectory(mduFilePath);
+                string mduDirectoryPath = Path.GetDirectoryName(mduFilePath);
+                Assert.That(File.Exists(mduFilePath), $"MDU File was not found at {mduFilePath}.");
+                modelName = Path.GetFileName(mduFilePath);
+
+                // 2. Set initial expectations.
+                Action createModelDefinition = () => modelDefinition = new WaterFlowFMModelDefinition(mduDirectoryPath, modelName);
+                Action readMduFile = () => mduFile.Read(mduFilePath, modelDefinition, originalArea, null);
+
+                // 3. Run test (Import areas)
+                Assert.DoesNotThrow(() => createModelDefinition.Invoke(), "Test fail while trying to create a model definition object.");
+                Assert.DoesNotThrow(() => readMduFile.Invoke(), "Test fail while trying to read the MDU file.");
+
+                // 4. Verify final expectations
+                int importedDryAreas = originalArea.DryAreas.Count;
+                Assert.That(importedDryAreas, Is.EqualTo(expectedAreas), $"Imported number of areas {importedDryAreas} does not match the expected amount ({expectedAreas}");
+            }
         }
     }
 }

@@ -12,17 +12,22 @@ using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using DeltaShell.NGHS.IO.TestUtils;
+using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
 using DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 {
     [TestFixture]
-    [Category(TestCategory.DataAccess)]
     public class FMHisFileFunctionStoreTest
     {
+
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void OpenHisFileCheckFunctions()
         {
             var store = new FMHisFileFunctionStore(TestHelper.GetTestFilePath("output_hisfiles\\sfbay_his.nc"));
@@ -30,6 +35,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void OpenStationsWaterLevelTimeSeries()
         {
             var store = new FMHisFileFunctionStore(TestHelper.GetTestFilePath("output_hisfiles\\sfbay_his.nc"));
@@ -49,6 +55,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void OpenStationsWaterLevelTimeSeriesCheckWithTimeFilter()
         {
             var store = new FMHisFileFunctionStore(TestHelper.GetTestFilePath("output_hisfiles\\sfbay_his.nc"));
@@ -59,6 +66,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void ShowWaterBalanceTimeSeries()
         {
             var store = new FMHisFileFunctionStore(TestHelper.GetTestFilePath("output_hisfiles\\har_1d2d_his.nc"));
@@ -75,6 +83,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void OpenStationsWaterLevelTimeSeriesCheckWithStationFilter()
         {
             var store = new FMHisFileFunctionStore(TestHelper.GetTestFilePath("output_hisfiles\\sfbay_his.nc"));
@@ -86,6 +95,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
         
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void OpenCrossSectionDischargeTimeSeries()
         {
             var store = new FMHisFileFunctionStore(TestHelper.GetTestFilePath("output_hisfiles\\sfbay_his.nc"));
@@ -111,6 +121,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void OpenGeneralStructureTimeSeries()
         {
             var store = new FMHisFileFunctionStore(TestHelper.GetTestFilePath("output_hisfiles\\generalStructure_his.nc"));
@@ -186,6 +197,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]
         public void OpenHisFile()
         {
@@ -214,6 +226,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]
         public void RunFMModelWithStructuresReadHisFile()
         {
@@ -298,6 +311,45 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             }
 
             // TODO: check structure output, once we support it.
+        }
+
+        [Test]
+        [TestCase("general_structures")]
+        [TestCase("weirgens")]
+        [TestCase("gategens")]
+        [TestCase("pumps")]
+        [TestCase("cross_section")]
+        [TestCase("stations")]
+        [Category(TestCategory.Integration)]
+        public void FMHisFileFunctionStore_Imports_Coverages_For_Feature(string featureName)
+        {
+            // 1. Set up test model.
+            const string fileName = "output_hisfiles\\D3DFMIQ933.nc";
+            FMHisFileFunctionStore functionStore = null;
+
+            // 2. Set initial expectations
+            Action<string> testAction = (filePath) => functionStore = new FMHisFileFunctionStore(filePath);
+
+            // 3. Create function store.
+            using (var temporaryDirectory = new TemporaryDirectory())
+            {
+                string mduFile = temporaryDirectory.CopyTestDataFileToTempDirectory(fileName);
+                Assert.That(File.Exists(mduFile), Is.True, $"MduFile {fileName} could not be found.");
+                Assert.DoesNotThrow( () => testAction.Invoke(mduFile));
+            }
+
+            // 4. Verify final expectations.
+            Assert.That(functionStore, Is.Not.Null, "No Store Function was created with the FMHisFileFunctionStore constructor.");
+            string errorMssgNoCoveragesFound = $"No FileBasedFeatureCoverage was created from file {fileName}.";
+            List<FileBasedFeatureCoverage> functions = functionStore.Functions.OfType<FileBasedFeatureCoverage>().ToList();
+            Assert.That(functions, Is.Not.Null, errorMssgNoCoveragesFound);
+            Assert.That(functions.Any(), Is.True, errorMssgNoCoveragesFound);
+
+            FileBasedFeatureCoverage featureFunction = functions.FirstOrDefault( f => f.FeatureVariable.Name.Equals(featureName));
+            string errorMssgNoFeaturesForCoverage = $"Features for {featureName} were not loaded from his file {fileName}";
+            Assert.That(featureFunction, Is.Not.Null, errorMssgNoFeaturesForCoverage);
+            Assert.That(featureFunction.Features, Is.Not.Null, errorMssgNoFeaturesForCoverage);
+            Assert.That(featureFunction.Features, Is.Not.Empty, errorMssgNoFeaturesForCoverage);
         }
     }
 }
