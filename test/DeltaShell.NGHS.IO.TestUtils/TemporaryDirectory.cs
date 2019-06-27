@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 
@@ -78,7 +77,26 @@ namespace DeltaShell.NGHS.IO.TestUtils
 
             return copyFilePath;
         }
-      
+
+        /// <summary>
+        /// Copies the test data directory of a file to a temporary directory.
+        /// </summary>
+        /// <param name="relativeTestDataFilePath">The relative test data file path.</param>
+        /// <returns> Directory path of copy in temp</returns>
+        public string CopyTestDataFileAndDirectoryToTempDirectory(string relativeTestDataFilePath)
+        {
+            string sourceFilePath = TestHelper.GetTestFilePath(relativeTestDataFilePath);
+            string sourceDirectoryPath = System.IO.Path.GetDirectoryName(sourceFilePath);
+
+            string sourceDirectoryName = System.IO.Path.GetFileName(sourceDirectoryPath);
+            string targetDirectoryPath = System.IO.Path.Combine(Path, sourceDirectoryName);
+
+            FileUtils.CopyDirectory(sourceDirectoryPath, targetDirectoryPath);
+
+            string sourceFileName = System.IO.Path.GetFileName(sourceFilePath);
+            return System.IO.Path.Combine(targetDirectoryPath, sourceFileName);
+        }
+
         private void Dispose()
         {
             FileUtils.DeleteIfExists(Path);
