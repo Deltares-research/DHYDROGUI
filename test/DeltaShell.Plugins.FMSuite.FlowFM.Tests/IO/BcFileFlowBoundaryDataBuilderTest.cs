@@ -10,6 +10,8 @@ using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccess;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
@@ -645,7 +647,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             // Given
             const string boundaryName = "boundary";
             var boundaryConditionSet = CreateBoundaryConditionSet(boundaryName, firstSedimentFractionName);
-            var dataBlock = CreateBcBlockData(boundaryName, boundaryConditionSet.SupportPointNames.First(), secondSedimentFractionName);
+            var dataBlock = CreateBcBlockDataSediment(boundaryName, boundaryConditionSet.SupportPointNames.First(), secondSedimentFractionName);
 
             // When
             new BcFileFlowBoundaryDataBuilder().InsertBoundaryData(new[] {boundaryConditionSet}, dataBlock);
@@ -662,6 +664,34 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 NoBoundaryWithSedimentFractionMessage(firstSedimentFractionName));
             Assert.IsTrue(sedimentFractionNames.Contains(secondSedimentFractionName),
                 NoBoundaryWithSedimentFractionMessage(secondSedimentFractionName));
+        }
+
+        /// <summary>
+        /// GIVEN a BoundaryConditionSet
+        ///   AND a BcBlockData with a time unit starting at pm
+        /// WHEN InsertBoundaryData is called
+        /// THEN no format error is thrown
+        /// </summary>
+        [Test]
+        public void GivenABoundaryConditionSetAndABcBlockDataWithATimeUnitStartingAtPm_WhenInsertBoundaryDataIsCalled_ThenNoFormatErrorIsThrown()
+        {
+            // Given
+            const string boundaryName = "tfl_01_0001";
+            const string timeUnit = "seconds since 1992-09-01 18:00:00";
+            const string valUnit = "m";
+            const string quantity = "waterlevelbnd";
+
+            BcBlockData dataBlock = CreateBcBlockData(boundaryName, "support", timeUnit, valUnit, quantity);
+            BoundaryConditionSet boundaryConditionSet = CreateBoundaryConditionSet(boundaryName, "sand");
+
+            // When
+            void testAction()
+            {
+                new BcFileFlowBoundaryDataBuilder().InsertBoundaryData(new[] { boundaryConditionSet }, dataBlock);
+            }
+
+            // Then
+            Assert.DoesNotThrow(testAction, $"Expected {nameof(BcFileFlowBoundaryDataBuilder.InsertBoundaryData)} not to throw a format error:");
         }
 
         private static string NoBoundaryWithSedimentFractionMessage(string sedimentFractionName)
@@ -694,21 +724,36 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             return boundaryConditionSet;
         }
 
-        private static BcBlockData CreateBcBlockData(string boundaryName, string supportPointName, string sedimentFractionName)
+        private static BcBlockData CreateBcBlockDataSediment(string boundaryName,
+                                                             string supportPointName, 
+                                                             string sedimentFractionName)
+        {
+            const string timeUnit = "seconds since 2001-01-01 00:00:00";
+            const string valUnit = "kg/m³";
+            var quantity = $"sedfracbnd{sedimentFractionName}";
+
+            return CreateBcBlockData(boundaryName, supportPointName, timeUnit, valUnit, quantity);
+        }
+
+        private static BcBlockData CreateBcBlockData(string boundaryName, 
+                                                     string supportPointName, 
+                                                     string timeUnit,
+                                                     string valUnit,
+                                                     string quantity)
         {
             var timeQuantity = new BcQuantityData
             {
                 Quantity = "time",
-                Unit = "seconds since 2001-01-01 00:00:00"
+                Unit = timeUnit
             };
-            timeQuantity.Values.AddRange(new[] {"0", "43200", "86400"});
+            timeQuantity.Values.AddRange(new[] { "0", "43200", "86400" });
 
             var fractionQuantity = new BcQuantityData
             {
-                Quantity = $"sedfracbnd{sedimentFractionName}",
-                Unit = "kg/m³"
+                Quantity = quantity,
+                Unit = valUnit
             };
-            fractionQuantity.Values.AddRange(new[] {"1", "2", "3"});
+            fractionQuantity.Values.AddRange(new[] { "1", "2", "3" });
 
             var dataBlock = new BcBlockData
             {
@@ -721,7 +766,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             };
             dataBlock.SupportPoint = $"{boundaryName}_0001";
 
-            dataBlock.Quantities.AddRange(new[] {timeQuantity, fractionQuantity});
+            dataBlock.Quantities.AddRange(new[] { timeQuantity, fractionQuantity });
 
             return dataBlock;
         }
