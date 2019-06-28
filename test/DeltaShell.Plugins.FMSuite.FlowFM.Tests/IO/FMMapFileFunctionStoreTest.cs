@@ -8,9 +8,16 @@ using NetTopologySuite.Extensions.Grids;
 using NUnit.Framework;
 using SharpMap.Extensions.CoordinateSystems;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DelftTools.Functions;
+using DelftTools.Functions.Generic;
+using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
+
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 {
@@ -414,6 +421,75 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     Assert.Fail("Something went wrong sizing shape and object of mesh2d_sxtot (we cannot render in OpenGL!): " + e.Message);
                 }
             });
+        }
+
+        /// <summary>
+        /// GIVEN a 3D map file
+        ///   AND a function store reading this map file
+        /// WHEN variables are retrieved
+        /// THEN no exception is thrown
+        ///  AND an error is logged.
+        /// </summary>
+        [Test]
+        public void GivenA3DMapFileAndAFunctionStoreReadingThisMapFile_WhenVariablesAreRetrieved_ThenNoExceptionIsThrownAndAnErrorIsLogged()
+        {
+            using (var tempDir = new TemporaryDirectory())
+            {
+                // Given
+                Get3DMapFile(tempDir);
+                const string mapFileName = "map3D.nc";
+
+                string mapFilePath = Path.Combine(tempDir.Path, mapFileName);
+
+
+                var store = new FMMapFileFunctionStore(null)
+                {
+                    Path = mapFilePath,
+                };
+
+
+                const string compName = "mesh2d_q1";
+                var function = 
+                    (UnstructuredGridEdgeCoverage) store.Functions
+                                                        .FirstOrDefault(f => f.Components[0].Name == compName);
+
+                // When
+                void testAction()
+                {
+                    DateTime filterTime = function.Time.Values.FirstOrDefault();
+                    var filter = new VariableValueFilter<DateTime>(function.Time, filterTime);
+
+                    IMultiDimensionalArray filteredValues = function.GetValues(filter);
+
+                    // Trigger lazy initialization
+                    IEnumerator _ =  filteredValues.GetEnumerator();
+                }
+
+                void executeTestActionWithoutException()
+                {
+                    Assert.DoesNotThrow(testAction);
+                }
+
+                List<string> msgs = TestHelper.GetAllRenderedMessages(executeTestActionWithoutException)?.ToList();
+
+                // Then
+                Assert.That(msgs, Is.Not.Null, "Expected the messages not to be null:");
+                Assert.That(msgs, Has.Count.EqualTo(1), "Expected a single message when accessing a variable:");
+
+                string expectedMsg = string.Format(Resources.FMMapFileFunctionStore_GetVariableValuesCore_While_reading_variable__0__from_the_file__1__an_error_was_encountered___2_,
+                                                   compName, mapFileName, ""); // we ignore the actual error message, and just test for the beginning of the message.
+                Assert.That(msgs[0], Is.StringStarting(expectedMsg), "Expected a different msg:");
+            }
+        }
+
+        private static void Get3DMapFile(TemporaryDirectory tempDir)
+        {
+            const string zipName = "map3d.zip";
+            const string relPath = @"output_mapfiles\" + zipName;
+
+            string srcPath = TestHelper.GetTestFilePath(relPath);
+
+            ZipFileUtils.Extract(srcPath, tempDir.Path);
         }
     }
 }
