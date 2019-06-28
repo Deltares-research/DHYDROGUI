@@ -318,7 +318,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                     int idx = stationIds.IndexOf(stationId);
                     IGeometry point = CreatePoint(idx, xs, ys);
                     validFeature = CreateFeature2D(stationId, point);
-                };   
+                }
                 if (validFeature != null)
                 {
                     results.Add(validFeature);
