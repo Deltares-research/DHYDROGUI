@@ -8,6 +8,7 @@
              xmlns:settingsWpf="clr-namespace:DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:attachedProperties="clr-namespace:DelftTools.Controls.Wpf.AttachedProperties;assembly=DelftTools.Controls.Wpf"
+             xmlns:controls="clr-namespace:DelftTools.Controls.Wpf.Controls;assembly=DelftTools.Controls.Wpf"
              mc:Ignorable="d" 
              x:Name="UserControl"
              d:DesignHeight="400" d:DesignWidth="1000" 
@@ -229,14 +230,7 @@
                 <TextBlock 
                     Text="{Binding Label}" 
                     Style="{StaticResource LabelTextBlockStyle}"/>
-                <xctk:TimeSpanUpDown
-                    Grid.Column="1"
-                    FractionalSecondsDigitsCount="3" 
-                    Style="{StaticResource ControlWithErrorStyle}"
-                    Value="{Binding Value, Mode=TwoWay, ValidatesOnDataErrors=True}"
-                    Minimum="00:00:00.001"
-                    DefaultValue="{Binding Value}"
-                    TextAlignment="Left"/>
+                <controls:TimeSpanView Grid.Column="1" CurrentTimeSpan="{Binding Value}" />
             </Grid>
         </DataTemplate>
 
