@@ -82,7 +82,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
                     "Continue with new grid?", "Failed to reload grid.", MessageBoxButtons.YesNo);
                 if (dialogResult == DialogResult.Yes)
                 {
-                    model.Grid = NetFileImporter.ImportGrid(model.NetFilePath) ?? new UnstructuredGrid();
+                    try
+                    {
+                        model.Grid = NetFileImporter.ImportGrid(model.NetFilePath) ?? new UnstructuredGrid();
+                    }
+                    catch (Exception e) when (e.Message.Contains("NetCDF error code -51"))
+                    {
+                        log.ErrorFormat("Could not read {0}; the following exception was thrown: {1}", model.NetFilePath, e.Message);
+                    }
                 }
                 else
                 {
