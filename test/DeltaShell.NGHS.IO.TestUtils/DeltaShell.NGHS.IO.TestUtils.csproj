@@ -103,10 +103,13 @@
     <Compile Include="CrossSectionDefinitionFileWritersTestHelper.cs" />
     <Compile Include="FileComparer.cs" />
     <Compile Include="FileWriterTestHelper.cs" />
+    <Compile Include="GridGeomLibWrapper.cs" />
+    <Compile Include="IoNetcdfLibWrapper.cs" />
     <Compile Include="LocationFileReaderTestHelper.cs" />
     <Compile Include="NetworkAndGridReaderTestHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StructureFileWriterTestHelper.cs" />
+    <Compile Include="GridTestHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\DelftTools.Hydro\DelftTools.Hydro.csproj">

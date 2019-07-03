@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Runtime.InteropServices;
 
 namespace DeltaShell.NGHS.IO.Grid
@@ -90,22 +91,17 @@ namespace DeltaShell.NGHS.IO.Grid
                 Marshal.Copy(mesh1DPointIdx, 0, intPtrMesh1Dindexes, numberOf1D2DLinks);
                 Marshal.Copy(mesh2DFaceIdx, 0, intPtrMesh2Dindexes, numberOf1D2DLinks);
                 Marshal.Copy(linkType, 0, intPtrContactType, numberOf1D2DLinks);
-
-                GridWrapper.interop_charinfo[] linkInfo = new GridWrapper.interop_charinfo[numberOf1D2DLinks];
-
-                for (int i = 0; i < numberOf1D2DLinks; i++)
+                using (var register = new UnmanagedMemoryRegister())
                 {
-                    string tmpstring;
-                    tmpstring = linkIds[i] ?? string.Empty;
-                    tmpstring = tmpstring.PadRight(GridWrapper.idssize, ' ');
-                    linkInfo[i].ids = tmpstring.ToCharArray();
-                    tmpstring = linkLongNames[i] ?? string.Empty;
-                    tmpstring = tmpstring.PadRight(GridWrapper.longnamessize, ' ');
-                    linkInfo[i].longnames = tmpstring.ToCharArray();
-                }
-                var ierr = wrapper.Write1D2DLinks(ioncId, meshLinks1D2DIdx, intPtrMesh1Dindexes, intPtrMesh2Dindexes, intPtrContactType, linkInfo, numberOf1D2DLinks);
+                    var idsBuffer = StringBufferHandling.MakeStringBuffer(ref linkIds, GridWrapper.idssize);
+                    var longNamesBuffer = StringBufferHandling.MakeStringBuffer(ref linkLongNames, GridWrapper.longnamessize);
+                    IntPtr idsPtr = register.AddString(ref idsBuffer);
+                    IntPtr longNamesPtr = register.AddString(ref longNamesBuffer);
 
-                return ierr;
+                    var ierr = wrapper.Write1D2DLinks(ioncId, meshLinks1D2DIdx, intPtrMesh1Dindexes, intPtrMesh2Dindexes, intPtrContactType, idsPtr, longNamesPtr, numberOf1D2DLinks);
+
+                    return ierr;
+                }
             }
             catch
             {
@@ -181,31 +177,36 @@ namespace DeltaShell.NGHS.IO.Grid
 
             try
             {
-                var linksInfo = new GridWrapper.interop_charinfo[numberOf1D2DLinks];
-                ierr = wrapper.Read1D2DLinks(ioncId, meshLinks1D2DIdx, ref mesh1DPointIdxPtr, ref mesh2DFaceIdxPtr, ref linkTypePtr, ref linksInfo, ref numberOf1D2DLinks);
-
-                if (ierr != GridApiDataSet.GridConstants.NOERR)
+                using (var register = new UnmanagedMemoryRegister())
                 {
+                    var idsBuffer = StringBufferHandling.MakeStringBuffer(numberOf1D2DLinks, GridWrapper.idssize);
+                    var longNamesBuffer =
+                        StringBufferHandling.MakeStringBuffer(numberOf1D2DLinks, GridWrapper.longnamessize);
+                    IntPtr idsPtr = register.AddString(ref idsBuffer);
+                    IntPtr longNamesPtr = register.AddString(ref longNamesBuffer);
+
+                    ierr = wrapper.Read1D2DLinks(ioncId, meshLinks1D2DIdx, ref mesh1DPointIdxPtr, ref mesh2DFaceIdxPtr,
+                        ref linkTypePtr, ref idsPtr, ref longNamesPtr, ref numberOf1D2DLinks);
+
+                    if (ierr != GridApiDataSet.GridConstants.NOERR)
+                    {
+                        return ierr;
+                    }
+
+                    mesh1DPointIdx = new int[numberOf1D2DLinks];
+                    mesh2DFaceIdx = new int[numberOf1D2DLinks];
+                    linkType = new int[numberOf1D2DLinks];
+
+                    Marshal.Copy(mesh1DPointIdxPtr, mesh1DPointIdx, 0, numberOf1D2DLinks);
+                    Marshal.Copy(mesh2DFaceIdxPtr, mesh2DFaceIdx, 0, numberOf1D2DLinks);
+                    Marshal.Copy(linkTypePtr, linkType, 0, numberOf1D2DLinks);
+                    linkIds = StringBufferHandling.ParseString(idsPtr, numberOf1D2DLinks, GridWrapper.idssize)
+                        .ToArray();
+                    linkLongNames = StringBufferHandling
+                        .ParseString(longNamesPtr, numberOf1D2DLinks, GridWrapper.longnamessize).ToArray();
+
                     return ierr;
                 }
-
-                mesh1DPointIdx = new int[numberOf1D2DLinks];
-                mesh2DFaceIdx = new int[numberOf1D2DLinks];
-                linkType = new int[numberOf1D2DLinks];
-                linkIds = new string[numberOf1D2DLinks];
-                linkLongNames = new string[numberOf1D2DLinks];
-
-                Marshal.Copy(mesh1DPointIdxPtr, mesh1DPointIdx, 0, numberOf1D2DLinks);
-                Marshal.Copy(mesh2DFaceIdxPtr, mesh2DFaceIdx, 0, numberOf1D2DLinks);
-                Marshal.Copy(linkTypePtr, linkType, 0, numberOf1D2DLinks);
-
-                for (int i = 0; i< numberOf1D2DLinks; ++i)
-                {
-                    linkIds[i] = new string(linksInfo[i].ids).Trim();
-                    linkLongNames[i] = new string(linksInfo[i].longnames).Trim(); 
-                }
-
-                return ierr;
             }
             catch
             {

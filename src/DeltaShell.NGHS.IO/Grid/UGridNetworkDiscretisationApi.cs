@@ -76,19 +76,17 @@ namespace DeltaShell.NGHS.IO.Grid
                 Marshal.Copy(offset, 0, offsetPtr, numberOfDiscretisationPoints);
                 Marshal.Copy(discretisationPointsX, 0, discretisationPointsXPtr, numberOfDiscretisationPoints);
                 Marshal.Copy(discretisationPointsY, 0, discretisationPointsYPtr, numberOfDiscretisationPoints);
-                var idInfo = new GridWrapper.interop_charinfo[numberOfDiscretisationPoints];
-                for (var i = 0; i < numberOfDiscretisationPoints; i++)
-                {
-                    string tmpString;
-                    tmpString = discretisationPointIds[i] ?? string.Empty;
-                    tmpString = tmpString.PadRight(GridWrapper.idssize, ' ');
-                    idInfo[i].ids = tmpString.ToCharArray();
-                    tmpString = discretisationPointLongnames[i] ?? string.Empty;
-                    tmpString = tmpString.PadRight(GridWrapper.longnamessize, ' ');
-                    idInfo[i].longnames = tmpString.ToCharArray();
-                }
 
-                return wrapper.Write1DMeshDiscretisationPoints(ioncId, meshIdForWriting, branchIdxPtr, offsetPtr, discretisationPointsXPtr, discretisationPointsYPtr, idInfo, numberOfDiscretisationPoints, startIndex);
+                using (var register = new UnmanagedMemoryRegister())
+                {
+                    var idsBuffer = StringBufferHandling.MakeStringBuffer(ref discretisationPointIds, GridWrapper.idssize);
+                    var longNamesBuffer = StringBufferHandling.MakeStringBuffer(ref discretisationPointLongnames, GridWrapper.longnamessize);
+                    IntPtr idsPtr = register.AddString(ref idsBuffer);
+                    IntPtr longNamesPtr = register.AddString(ref longNamesBuffer);
+
+                    var ierr = wrapper.Write1DMeshDiscretisationPoints(ioncId, meshIdForWriting, branchIdxPtr, offsetPtr, discretisationPointsXPtr, discretisationPointsYPtr, idsPtr, longNamesPtr, numberOfDiscretisationPoints, startIndex);
+                    return ierr;
+                }
             }
             catch
             {
@@ -203,53 +201,54 @@ namespace DeltaShell.NGHS.IO.Grid
                 discretisationPointsXPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * numberOfDiscretisationPoints);
                 discretisationPointsYPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * numberOfDiscretisationPoints);
 
-                var meshpointsinfo = new GridWrapper.interop_charinfo[numberOfDiscretisationPoints];
-                var startIndex = 0;
-                ierr = wrapper.Read1DMeshDiscretisationPoints(ioncId, meshId, ref branchIdxPtr, ref offsetPtr, ref discretisationPointsXPtr, ref discretisationPointsYPtr, meshpointsinfo, numberOfDiscretisationPoints, startIndex);
-                if (ierr != GridApiDataSet.GridConstants.NOERR)
+                using (var register = new UnmanagedMemoryRegister())
                 {
-                    return ierr;
+                    var idsBuffer = StringBufferHandling.MakeStringBuffer(numberOfDiscretisationPoints, GridWrapper.idssize);
+                    var longNamesBuffer = StringBufferHandling.MakeStringBuffer(numberOfDiscretisationPoints, GridWrapper.longnamessize);
+                    IntPtr idsPtr = register.AddString(ref idsBuffer);
+                    IntPtr longNamesPtr = register.AddString(ref longNamesBuffer);
+
+                    var startIndex = 0;
+                    ierr = wrapper.Read1DMeshDiscretisationPoints(ioncId, meshId, ref branchIdxPtr, ref offsetPtr, ref discretisationPointsXPtr, ref discretisationPointsYPtr, ref idsPtr, ref longNamesPtr, numberOfDiscretisationPoints, startIndex);
+                    if (ierr != GridApiDataSet.GridConstants.NOERR)
+                    {
+                        return ierr;
+                    }
+
+                    var tmpbranchIdx = new int[numberOfDiscretisationPoints];
+                    var tmpoffset = new double[numberOfDiscretisationPoints];
+                    var tmpdiscretisationPointsX = new double[numberOfDiscretisationPoints];
+                    var tmpdiscretisationPointsY = new double[numberOfDiscretisationPoints];
+
+                    Marshal.Copy(branchIdxPtr, tmpbranchIdx, 0, numberOfDiscretisationPoints);
+                    Marshal.Copy(offsetPtr, tmpoffset, 0, numberOfDiscretisationPoints);
+                    Marshal.Copy(discretisationPointsXPtr, tmpdiscretisationPointsX, 0, numberOfDiscretisationPoints);
+                    Marshal.Copy(discretisationPointsYPtr, tmpdiscretisationPointsY, 0, numberOfDiscretisationPoints);
+
+                    var tmpids = StringBufferHandling.ParseString(idsPtr, numberOfDiscretisationPoints, GridWrapper.idssize).ToArray();
+                    var tmpnames = StringBufferHandling.ParseString(longNamesPtr, numberOfDiscretisationPoints, GridWrapper.longnamessize).ToArray();
+
+                    var countRealpoints = tmpbranchIdx.Count(id => id != int.MinValue + 1);
+                    branchIdx = new int[countRealpoints];
+                    offset = new double[countRealpoints];
+                    discretisationPointsX = new double[countRealpoints];
+                    discretisationPointsY = new double[countRealpoints];
+                    ids = new string[countRealpoints];
+                    names = new string[countRealpoints];
+                    var j = 0;
+                    for (int i = 0; i < numberOfDiscretisationPoints; i++)
+                    {
+                        if (tmpbranchIdx[i] == int.MinValue + 1) continue;
+                        branchIdx[j] = tmpbranchIdx[i];
+                        offset[j] = tmpoffset[i];
+                        discretisationPointsX[j] = tmpdiscretisationPointsX[i];
+                        discretisationPointsY[j] = tmpdiscretisationPointsY[i];
+                        ids[j] = tmpids[i];
+                        names[j] = tmpnames[i];
+                        j++;
+                    }
+                    return GridApiDataSet.GridConstants.NOERR;
                 }
-
-                var tmpbranchIdx = new int[numberOfDiscretisationPoints];
-                var tmpoffset = new double[numberOfDiscretisationPoints];
-                var tmpdiscretisationPointsX = new double[numberOfDiscretisationPoints];
-                var tmpdiscretisationPointsY = new double[numberOfDiscretisationPoints];
-
-                Marshal.Copy(branchIdxPtr, tmpbranchIdx, 0, numberOfDiscretisationPoints);
-                Marshal.Copy(offsetPtr, tmpoffset, 0, numberOfDiscretisationPoints);
-                Marshal.Copy(discretisationPointsXPtr, tmpdiscretisationPointsX, 0, numberOfDiscretisationPoints);
-                Marshal.Copy(discretisationPointsYPtr, tmpdiscretisationPointsY, 0, numberOfDiscretisationPoints);
-
-                var tmpids = new string[numberOfDiscretisationPoints];
-                var tmpnames = new string[numberOfDiscretisationPoints];
-
-                for (int i = 0; i < numberOfDiscretisationPoints; ++i)
-                {
-                    tmpids[i] = new string(meshpointsinfo[i].ids).Trim();
-                    tmpnames[i] = new string(meshpointsinfo[i].longnames).Trim();
-                }
-
-                var countRealpoints = tmpbranchIdx.Count(id => id != int.MinValue + 1);
-                branchIdx = new int[countRealpoints];
-                offset = new double[countRealpoints];
-                discretisationPointsX = new double[countRealpoints];
-                discretisationPointsY = new double[countRealpoints];
-                ids = new string[countRealpoints];
-                names = new string[countRealpoints];
-                var j = 0;
-                for (int i = 0; i < numberOfDiscretisationPoints; i++)
-                {
-                    if(tmpbranchIdx[i] == int.MinValue + 1) continue;
-                    branchIdx[j] = tmpbranchIdx[i];
-                    offset[j] = tmpoffset[i];
-                    discretisationPointsX[j] = tmpdiscretisationPointsX[i];
-                    discretisationPointsY[j] = tmpdiscretisationPointsY[i];
-                    ids[j] = tmpids[i];
-                    names[j] = tmpnames[i];
-                    j++;
-                }
-                return GridApiDataSet.GridConstants.NOERR;
             }
             catch
             {

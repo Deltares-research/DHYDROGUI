@@ -70,7 +70,9 @@ namespace DeltaShell.NGHS.IO.Grid
             {
                 using (var uGrid = new UGrid(path))
                 {
-                    var mesh2DId = uGrid.GetMesh2DIds()[0];
+                    var mesh2DIds = uGrid.GetMesh2DIds();
+                    if (!mesh2DIds.Any()) return zValues;
+                    var mesh2DId = mesh2DIds[0];
                     switch (location)
                     {
                         case BedLevelLocation.Faces:

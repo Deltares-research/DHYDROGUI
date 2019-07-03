@@ -209,6 +209,7 @@
     <Compile Include="Grid\RemoteUGrid2DMeshApi.cs" />
     <Compile Include="Grid\RemoteUGridNetworkApi.cs" />
     <Compile Include="Grid\RemoteUGridNetworkDiscretisationApi.cs" />
+    <Compile Include="Grid\StringBufferHandling.cs" />
     <Compile Include="Grid\UGrid1D2DLinks.cs" />
     <Compile Include="Grid\UGrid1D2DLinksAdapter.cs" />
     <Compile Include="Grid\UGrid1D2DLinksApi.cs" />
@@ -228,6 +229,7 @@
     <Compile Include="Grid\UGridNetworkDiscretisationApi.cs" />
     <Compile Include="Grid\UGridMeshType.cs" />
     <Compile Include="Grid\UGridToNetworkAdapter.cs" />
+    <Compile Include="Grid\UnmanagedMemoryRegister.cs" />
     <Compile Include="Grid\UnstructuredGridFileHelper.cs" />
     <Compile Include="Grid\WorkAroundNetFile.cs" />
     <Compile Include="Helpers\ConfigurationSetting.cs" />

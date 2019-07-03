@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -64,21 +65,16 @@ namespace DeltaShell.NGHS.IO.Grid
             {
                 Marshal.Copy(nodesX, 0, xPtr, numberOfNodes);
                 Marshal.Copy(nodesY, 0, yPtr, numberOfNodes);
-                GridWrapper.interop_charinfo[] nodesinfo = new GridWrapper.interop_charinfo[numberOfNodes];
-
-                for (int i = 0; i < numberOfNodes; i++)
+                using (var register = new UnmanagedMemoryRegister())
                 {
-                    string tmpstring;
-                    tmpstring = nodesids[i] ?? string.Empty;
-                    tmpstring = tmpstring.PadRight(GridWrapper.idssize, ' ');
-                    nodesinfo[i].ids = tmpstring.ToCharArray();
-                    tmpstring = nodeslongNames[i] ?? string.Empty;
-                    tmpstring = tmpstring.PadRight(GridWrapper.longnamessize, ' ');
-                    nodesinfo[i].longnames = tmpstring.ToCharArray();
+                    var idsBuffer = StringBufferHandling.MakeStringBuffer(ref nodesids, GridWrapper.idssize);
+                    var longNamesBuffer = StringBufferHandling.MakeStringBuffer(ref nodeslongNames, GridWrapper.longnamessize);
+                    IntPtr idsPtr = register.AddString(ref idsBuffer);
+                    IntPtr longNamesPtr = register.AddString(ref longNamesBuffer);
+
+                    var ierr = wrapper.Write1DNetworkNodes(ioncId, networkIdForWriting, xPtr, yPtr, idsPtr, longNamesPtr, numberOfNodes);
+                    return ierr;
                 }
-                var ierr = wrapper.Write1DNetworkNodes(ioncId, networkIdForWriting, xPtr, yPtr,
-                    nodesinfo, numberOfNodes);
-                return ierr;
             }
             catch
             {
@@ -132,26 +128,24 @@ namespace DeltaShell.NGHS.IO.Grid
                 Marshal.Copy(nbranchgeometrypoints, 0, nrOfGeometryPointsInBranchPtr, numberOfBranches);
                 Marshal.Copy(branchOrderNumbers, 0, branchOrderNumbersPtr, numberOfBranches);
 
-                GridWrapper.interop_charinfo[] branchinfo = new GridWrapper.interop_charinfo[numberOfBranches];
+                using (var register = new UnmanagedMemoryRegister())
+                {
+                    var idsBuffer = StringBufferHandling.MakeStringBuffer(ref branchIds, GridWrapper.idssize);
+                    var longNamesBuffer = StringBufferHandling.MakeStringBuffer(ref branchLongnames, GridWrapper.longnamessize);
 
-                for (int i = 0; i < numberOfBranches; i++)
-                {
-                    string tmpstring;
-                    tmpstring = branchIds[i] ?? string.Empty;
-                    tmpstring = tmpstring.PadRight(GridWrapper.idssize, ' ');
-                    branchinfo[i].ids = tmpstring.ToCharArray();
-                    tmpstring = branchLongnames[i] ?? string.Empty;
-                    tmpstring = tmpstring.PadRight(GridWrapper.longnamessize, ' ');
-                    branchinfo[i].longnames = tmpstring.ToCharArray();
+                    IntPtr idsPtr = register.AddString(ref idsBuffer);
+                    IntPtr longNamesPtr = register.AddString(ref longNamesBuffer);
+
+                    var ierr = wrapper.Write1DNetworkBranches(ioncId, networkIdForWriting, sourceIdPtr, targetIdPtr, idsPtr, longNamesPtr, branchLengthsPtr, nrOfGeometryPointsInBranchPtr, numberOfBranches);
+
+                    if (ierr == GridApiDataSet.GridConstants.NOERR)
+                    {
+                        ierr = wrapper.Put1DNetworkBranchorder(ioncId, networkIdForWriting, branchOrderNumbersPtr,
+                            numberOfBranches);
+                    }
+
+                    return ierr;
                 }
-                var ierr = wrapper.Write1DNetworkBranches(ioncId, networkIdForWriting, sourceIdPtr,
-                    targetIdPtr, branchinfo, branchLengthsPtr, nrOfGeometryPointsInBranchPtr,
-                    numberOfBranches);
-                if (ierr == GridApiDataSet.GridConstants.NOERR)
-                {
-                    ierr = wrapper.Put1DNetworkBranchorder(ioncId, networkIdForWriting, branchOrderNumbersPtr, numberOfBranches);
-                }
-                return ierr;
             }
             catch
             {
@@ -280,34 +274,38 @@ namespace DeltaShell.NGHS.IO.Grid
 
             IntPtr nodesXPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * numberOfNetworkNodes);
             IntPtr nodesYPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * numberOfNetworkNodes);
-
+            
             try
             {
-                var nodesinfo = new GridWrapper.interop_charinfo[numberOfNetworkNodes];
-
-                var ierr = wrapper.Read1DNetworkNodes(ioncId, networkId, ref nodesXPtr, ref nodesYPtr, nodesinfo, numberOfNetworkNodes);
-
-                if (ierr != GridApiDataSet.GridConstants.NOERR)
+                using (var register = new UnmanagedMemoryRegister())
                 {
+                    var idsBuffer = StringBufferHandling.MakeStringBuffer(numberOfNetworkNodes, GridWrapper.idssize);
+                    var longNamesBuffer =
+                        StringBufferHandling.MakeStringBuffer(numberOfNetworkNodes, GridWrapper.longnamessize);
+                    IntPtr idsPtr = register.AddString(ref idsBuffer);
+                    IntPtr longNamesPtr = register.AddString(ref longNamesBuffer);
+
+                    var ierr = wrapper.Read1DNetworkNodes(ioncId, networkId, ref nodesXPtr, ref nodesYPtr, idsPtr,
+                        longNamesPtr, numberOfNetworkNodes);
+
+                    if (ierr != GridApiDataSet.GridConstants.NOERR)
+                    {
+                        return ierr;
+                    }
+
+                    nodesX = new double[numberOfNetworkNodes];
+                    nodesY = new double[numberOfNetworkNodes];
+
+                    Marshal.Copy(nodesXPtr, nodesX, 0, numberOfNetworkNodes);
+                    Marshal.Copy(nodesYPtr, nodesY, 0, numberOfNetworkNodes);
+
+                    nodesIds = StringBufferHandling.ParseString(idsPtr, numberOfNetworkNodes, GridWrapper.idssize)
+                        .ToArray();
+                    nodesLongnames = StringBufferHandling
+                        .ParseString(longNamesPtr, numberOfNetworkNodes, GridWrapper.longnamessize).ToArray();
+
                     return ierr;
                 }
-
-                nodesX = new double[numberOfNetworkNodes];
-                nodesY = new double[numberOfNetworkNodes];
-
-                Marshal.Copy(nodesXPtr, nodesX, 0, numberOfNetworkNodes);
-                Marshal.Copy(nodesYPtr, nodesY, 0, numberOfNetworkNodes);
-
-                nodesIds = new string[numberOfNetworkNodes];
-                nodesLongnames = new string[numberOfNetworkNodes];
-
-                for (int i = 0; i < numberOfNetworkNodes; ++i)
-                {
-                    nodesIds[i] = new string(nodesinfo[i].ids).Trim();
-                    nodesLongnames[i] = new string(nodesinfo[i].longnames).Trim(); 
-                }
-
-                return ierr;
             }
             catch
             {
@@ -371,41 +369,41 @@ namespace DeltaShell.NGHS.IO.Grid
 
             try
             {
-                var branchinfo = new GridWrapper.interop_charinfo[numberOfNetworkBranches];
-                var ierr = wrapper.Read1DNetworkBranches(ioncId, networkId, ref sourceNodePtr,
-                    ref targetNodePtr, ref branchLengthPtr, branchinfo, ref branchGeoPointsPtr, numberOfNetworkBranches);
+                using (var register = new UnmanagedMemoryRegister())
+                { 
+                    var idsBuffer = StringBufferHandling.MakeStringBuffer(numberOfNetworkBranches, GridWrapper.idssize);
+                    var longNamesBuffer = StringBufferHandling.MakeStringBuffer(numberOfNetworkBranches, GridWrapper.longnamessize);
+                    IntPtr idsPtr = register.AddString(ref idsBuffer);
+                    IntPtr longNamesPtr = register.AddString(ref longNamesBuffer);
 
-                if (ierr == GridApiDataSet.GridConstants.NOERR)
-                {
-                    ierr = wrapper.Get1DNetworkBranchorder(ioncId, networkId, ref branchOrderNumbersPtr, numberOfNetworkBranches);
-                }
+                    var ierr = wrapper.Read1DNetworkBranches(ioncId, networkId, ref sourceNodePtr,
+                        ref targetNodePtr, ref branchLengthPtr,ref idsPtr, ref longNamesPtr, ref branchGeoPointsPtr, numberOfNetworkBranches);
 
-                if (ierr != GridApiDataSet.GridConstants.NOERR)
-                {
+                    if (ierr == GridApiDataSet.GridConstants.NOERR)
+                    {
+                        ierr = wrapper.Get1DNetworkBranchorder(ioncId, networkId, ref branchOrderNumbersPtr, numberOfNetworkBranches);
+                    }
+
+                    if (ierr != GridApiDataSet.GridConstants.NOERR)
+                    {
+                        return ierr;
+                    }
+
+                    sourceNodes = new int[numberOfNetworkBranches];
+                    targetNodes = new int[numberOfNetworkBranches];
+                    branchLengths = new double[numberOfNetworkBranches];
+                    branchGeoPoints = new int[numberOfNetworkBranches];
+                    branchIds = StringBufferHandling.ParseString(idsPtr, numberOfNetworkBranches, GridWrapper.idssize).ToArray();
+                    branchLongnames = StringBufferHandling.ParseString(longNamesPtr, numberOfNetworkBranches, GridWrapper.longnamessize).ToArray(); ;
+                    branchOrderNumbers = new int[numberOfNetworkBranches];
+
+                    Marshal.Copy(sourceNodePtr, sourceNodes, 0, numberOfNetworkBranches);
+                    Marshal.Copy(targetNodePtr, targetNodes, 0, numberOfNetworkBranches);
+                    Marshal.Copy(branchLengthPtr, branchLengths, 0, numberOfNetworkBranches);
+                    Marshal.Copy(branchGeoPointsPtr, branchGeoPoints, 0, numberOfNetworkBranches);
+                    Marshal.Copy(branchOrderNumbersPtr, branchOrderNumbers, 0, numberOfNetworkBranches);
                     return ierr;
                 }
-
-                sourceNodes = new int[numberOfNetworkBranches];
-                targetNodes = new int[numberOfNetworkBranches];
-                branchLengths = new double[numberOfNetworkBranches];
-                branchGeoPoints = new int[numberOfNetworkBranches];
-                branchIds = new string[numberOfNetworkBranches];
-                branchLongnames = new string[numberOfNetworkBranches];
-                branchOrderNumbers = new int[numberOfNetworkBranches];
-
-                Marshal.Copy(sourceNodePtr, sourceNodes, 0, numberOfNetworkBranches);
-                Marshal.Copy(targetNodePtr, targetNodes, 0, numberOfNetworkBranches);
-                Marshal.Copy(branchLengthPtr, branchLengths, 0, numberOfNetworkBranches);
-                Marshal.Copy(branchGeoPointsPtr, branchGeoPoints, 0, numberOfNetworkBranches);
-                Marshal.Copy(branchOrderNumbersPtr, branchOrderNumbers, 0, numberOfNetworkBranches);
-
-                for (int i = 0; i < numberOfNetworkBranches; ++i)
-                {
-                    branchIds[i] = new string(branchinfo[i].ids).Trim();
-                    branchLongnames[i] = new string(branchinfo[i].longnames).Trim(); 
-                }
-
-                return ierr;
             }
             catch
             {

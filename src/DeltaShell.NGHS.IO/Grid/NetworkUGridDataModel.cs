@@ -201,7 +201,7 @@ namespace DeltaShell.NGHS.IO.Grid
                 NodesX = nonManholeNetworkNodes.Select(n => n.Geometry.Coordinates[0].X).Concat(compartmentsX).ToArray();
                 NodesY = nonManholeNetworkNodes.Select(n => n.Geometry.Coordinates[0].Y).Concat(compartmentsY).ToArray();
                 NodesNames = nonManholeNetworkNodes.Select(n => n.Name).Concat(compartments.Select(c => c.Name)).ToArray();
-                NodesDescriptions = nonManholeNetworkNodes.Select(n => n.Description).Concat(compartments.Select(c => string.Empty)).ToArray();
+                NodesDescriptions = nonManholeNetworkNodes.OfType<IHydroNode>().Select(n => n.LongName).Concat(compartments.Select(c => string.Empty)).ToArray();
             }
 
             if (network.Branches != null)

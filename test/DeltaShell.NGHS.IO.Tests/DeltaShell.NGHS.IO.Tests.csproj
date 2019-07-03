@@ -145,6 +145,7 @@
     <Compile Include="Grid\AGridTests.cs" />
     <Compile Include="Grid\GridApiTests.cs" />
     <Compile Include="Grid\LUCAGridTests.cs" />
+    <Compile Include="Grid\NewUGridTests.cs" />
     <Compile Include="Grid\TwoDimensionalArrayExtensions.cs" />
     <Compile Include="Grid\UGrid1D2DLinksApiTests..cs" />
     <Compile Include="Grid\UGrid1D2DLinksAdapterTests.cs" />

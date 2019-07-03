@@ -127,7 +127,11 @@ namespace DeltaShell.NGHS.IO.Grid
                 }
                 else
                 {
-                    node = new HydroNode { Name = nodesNames[i] == "" ? null : nodesNames[i] };
+                    node = new HydroNode
+                    {
+                        Name = nodesNames[i] == "" ? null : nodesNames[i],
+                        LongName = nodesDescriptions[i] == "" ? null : nodesDescriptions[i]
+                    };
                 }
 
                 if (node == null) continue;
