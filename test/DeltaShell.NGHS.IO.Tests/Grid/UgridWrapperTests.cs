@@ -16,6 +16,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
     [Ignore("should be in unit test of io_netcdf kernel")]
     public class UgridWrapperTests
     {
+        /*
         /// <summary>
         /// It's a partly copy of https://svn.oss.deltares.nl/repos/delft3d/trunk/src/utils_lgpl/io_netcdf/packages/tests/UGrid.tests/UGridTests.cs
         /// </summary>
@@ -943,6 +944,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             ierr = wrapper.Close(fileId);
             Assert.That(ierr, Is.EqualTo(0));
         }
-
+        */
     }
 }

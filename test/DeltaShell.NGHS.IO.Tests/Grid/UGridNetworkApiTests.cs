@@ -83,7 +83,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             Assert.AreEqual(-1, TypeUtils.GetField(UGridNetworkDiscretisationApi, MeshIdForWritingVarName));
         }
-
+        /*
         #region Write Network
 
         [Test]
@@ -2685,5 +2685,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
 
         #endregion
+        */
     }
 }
