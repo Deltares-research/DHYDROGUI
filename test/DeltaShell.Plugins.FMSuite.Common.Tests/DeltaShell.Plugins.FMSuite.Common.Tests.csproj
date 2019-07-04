@@ -150,7 +150,6 @@
     <Compile Include="ModelSchema\ModelPropertyValueParsingExtensionsTest.cs" />
     <Compile Include="ModelSchema\ModelPropertyTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RgfGrid\RgfConfigTest.cs" />
     <Compile Include="StructuresTestHelper.cs" />
     <Compile Include="TestClassSetup.cs" />
     <Compile Include="TestModelProperty.cs" />
