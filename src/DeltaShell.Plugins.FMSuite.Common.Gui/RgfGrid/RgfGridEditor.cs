@@ -26,8 +26,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.RgfGrid
     {
         public const string MfeAppProcessName = "mfe_app";
 
-        private static string FMGridKeyword = "DFLOW_FM";
-        private const string GrdKeyword = "RGF";
         private const string GrdNetCdfKeyword = "RGF_NETCDF";
         private const string RgfGridConfigurationFileName = "rgfgrid.d3d";
 
@@ -171,7 +169,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.RgfGrid
                     };
 
                     config.AddGridFileNames(new Tuple<string, string>(copies[0].FileName, 
-                                                                      copies[0].Type == GridType.FM ? FMGridKeyword : GrdKeyword ));
+                                                                      copies[0].Type == GridType.FM ? RgfConfig.FMGridKeyword : RgfConfig.GrdKeyword ));
 
                     new DelftIniWriter().WriteDelftIniFile(config.ToDelftIniCategories(),
                                                            Path.Combine(tempDir, RgfGridConfigurationFileName));
@@ -331,7 +329,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.RgfGrid
                     {
                         FileName = fileName,
                         FilePath = Path.Combine(currentDirectory, fileName),
-                        Type = (type == GrdKeyword || type == GrdNetCdfKeyword ? GridType.GRD : GridType.FM)
+                        Type = (type == RgfConfig.GrdKeyword || type == GrdNetCdfKeyword ? GridType.GRD : GridType.FM)
                     });
 
                 }
