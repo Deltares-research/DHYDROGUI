@@ -1097,13 +1097,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
                 int difference = Math.Abs(modelFeatureCoordinateData.DataColumns.Count - numberFixedWeirAttributes);
 
-                if (modelFeatureCoordinateData.DataColumns.Count < fixedWeir.Attributes.Count)
+                if (scheme != "0" && modelFeatureCoordinateData.DataColumns.Count < fixedWeir.Attributes.Count)
                 {
                     logHandler.ReportWarningFormat(Resources.MduFile_Read_Based_on_the_Fixed_Weir_Scheme__0___there_are_too_many_column_s__defined_for__1__in_the_imported_fixed_weir_file__The_last__2__column_s__have_been_ignored,
                                                    scheme, fixedWeir, difference);
                 }
 
-                if (modelFeatureCoordinateData.DataColumns.Count > fixedWeir.Attributes.Count)
+                if (scheme != "0" && modelFeatureCoordinateData.DataColumns.Count > fixedWeir.Attributes.Count)
                 {
                     logHandler.ReportWarningFormat(Resources.MduFile_Read_Based_on_the_Fixed_Weir_Scheme__0___there_are_not_enough_column_s__defined_for__1__in_the_imported_fixed_weir_file__The_last__2__column_s__have_been_generated_using_default_values,
                                                    scheme, fixedWeir, difference);
