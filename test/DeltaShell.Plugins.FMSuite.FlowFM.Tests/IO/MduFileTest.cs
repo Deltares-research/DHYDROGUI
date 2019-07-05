@@ -628,6 +628,53 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         /// <summary>
+        /// GIVEN a pliz file containing fixed weirs with some number of columns
+        ///   AND an mdu file referencing this pliz file and fixed weir scheme 0
+        /// WHEN this mdu file is imported
+        /// THEN no messages concerning the the fixed weir columns are generated
+        /// </summary>
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void GivenAPlizFileAndAnMduFileWithFixedWeirScheme0_WhenThisMduFileIsImported_ThenNoMessagesConcerningTheTheFixedWeirColumnsAreGenerated()
+        {
+            using (var tempDir = new TemporaryDirectory())
+            {
+                // Given
+                string srcPath = TestHelper.GetTestFilePath(@"HydroAreaCollection\FlowFMFixedWeirs\");
+
+                const string mduFileName = "FlowFM4.mdu";
+                const string plizFileName = "TwoFixedweirs_fxw.pliz";
+
+                tempDir.CopyAllTestDataToTempDirectory(Path.Combine(srcPath, mduFileName),
+                                                       Path.Combine(srcPath, plizFileName));
+
+                var mduFile = new MduFile();
+
+                var originalArea = new HydroArea();
+                var originalMd = new WaterFlowFMModelDefinition(mduDir, modelName);
+                var allFixedWeirsAndCorrespondingProperties = new Dictionary<FixedWeir, ModelFeatureCoordinateData<FixedWeir>>();
+
+                // When
+                void TestAction()
+                {
+                    mduFile.Read(Path.Combine(tempDir.Path, mduFileName),
+                                 originalMd,
+                                 originalArea,
+                                 allFixedWeirsAndCorrespondingProperties);
+                }
+
+                IEnumerable<string> msgs = TestHelper.GetAllRenderedMessages(TestAction);
+
+                // Then
+                Assert.That(msgs, Is.Not.Null, "Expected the rendered messages not to be null.");
+
+                const string unexpectedMsgHeader = "During reading the Fixed Weirs the following log messages were produced:";
+                Assert.That(msgs.Any(m => m.StartsWith(unexpectedMsgHeader)), Is.False,
+                            "Expected no messages concerning reading of Fixed Weirs, but some exist.");
+            }
+        }
+
+        /// <summary>
         /// The test case data for the GivenAMduFileWithMoreColumnsThanNeeded_WhenReadIsCalled_ThenASingleErrorMessageIsLogged.
         /// </summary>
         private IEnumerable<TestCaseData> WeirWarningMessageTestCaseData
