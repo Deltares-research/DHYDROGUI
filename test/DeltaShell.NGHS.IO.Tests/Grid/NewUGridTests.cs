@@ -13,6 +13,8 @@ using NUnit.Framework;
 
 namespace DeltaShell.NGHS.IO.Tests.Grid
 {
+    [TestFixture]
+    [Ignore("should be in unit test of io_netcdf kernel")]
     public class NewUGridTests
     {
         //Constructor loads the library

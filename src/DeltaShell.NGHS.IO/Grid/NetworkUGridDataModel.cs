@@ -198,8 +198,10 @@ namespace DeltaShell.NGHS.IO.Grid
                 });
 
                 NumberOfNodes = nonManholeNetworkNodes.Count + compartmentCount;
-                NodesX = nonManholeNetworkNodes.Select(n => n.Geometry.Coordinates[0].X).Concat(compartmentsX).ToArray();
-                NodesY = nonManholeNetworkNodes.Select(n => n.Geometry.Coordinates[0].Y).Concat(compartmentsY).ToArray();
+                NodesX = nonManholeNetworkNodes
+                    .Select(n => n.Geometry.Coordinates.Any() ? n.Geometry.Coordinates[0].X : 0).Concat(compartmentsX)
+                    .ToArray();
+                NodesY = nonManholeNetworkNodes.Select(n => n.Geometry.Coordinates.Any() ? n.Geometry.Coordinates[0].Y : 0).Concat(compartmentsY).ToArray();
                 NodesNames = nonManholeNetworkNodes.Select(n => n.Name).Concat(compartments.Select(c => c.Name)).ToArray();
                 NodesDescriptions = nonManholeNetworkNodes.OfType<IHydroNode>().Select(n => n.LongName).Concat(compartments.Select(c => string.Empty)).ToArray();
             }

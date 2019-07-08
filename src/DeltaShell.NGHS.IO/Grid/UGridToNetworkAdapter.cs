@@ -146,7 +146,7 @@ namespace DeltaShell.NGHS.IO.Grid
 
         public static NetworkUGridDataModel ReadNetworkDataModelFromUGrid(string netFilePath)
         {
-            Func<int[], int> getFirstNetworkId = networkIds => networkIds[0];
+            Func<int[], int> getFirstNetworkId = networkIds => networkIds.Any() ? networkIds[0] : 0;
 
             return ReadNetworkDataModelFromUGrid(netFilePath, getFirstNetworkId);
         }

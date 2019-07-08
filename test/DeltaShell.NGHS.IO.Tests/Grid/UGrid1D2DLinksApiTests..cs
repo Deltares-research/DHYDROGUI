@@ -134,7 +134,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [TestCase(true)]
         public void Write1D2DLinksApiCallTest(bool remote)
         {
-            /*
+            
             // arrange
             var nLinks = 2;
             var mesh1DIndexes = new[] { 1, 2};
@@ -147,14 +147,15 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             IntPtr mesh1DIndexesXPtr = IntPtr.Zero;
             IntPtr mesh2DIndexesXPtr = IntPtr.Zero;
             IntPtr linkTypesXPtr = IntPtr.Zero;
-            var linksInfo = new GridWrapper.interop_charinfo[nLinks];
+            IntPtr idsPtr = IntPtr.Zero;
+            IntPtr longnamesPtr = IntPtr.Zero;
 
             uGrid1D2DLinksApi.Expect(a => a.Initialized).Return(true).Repeat.Any();
             uGrid1D2DLinksApi.Expect(a => a.Links1D2DReadyForWritingOrReading).Return(true).Repeat.Any();
 
             var wrapper = mocks.DynamicMock<GridWrapper>();
 
-            wrapper.Expect(w => w.Write1D2DLinks(fileId, links1D2DIdx, mesh1DIndexesXPtr, mesh2DIndexesXPtr, linkTypesXPtr, linksInfo, nLinks))
+            wrapper.Expect(w => w.Write1D2DLinks(fileId, links1D2DIdx, mesh1DIndexesXPtr, mesh2DIndexesXPtr, linkTypesXPtr, idsPtr, longnamesPtr, nLinks))
                 .IgnoreArguments()
                 .OutRef(mesh1DIndexesXPtr, mesh2DIndexesXPtr, linkTypesXPtr)
                 .Return(GridApiDataSet.GridConstants.NOERR)
@@ -188,7 +189,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 var result = uGrid1D2DLinksApi.Write1D2DLinks(mesh1DIndexes, mesh2DIndexes, linkTypes, linkIds, linkLongnames, nLinks);
                 Assert.AreEqual(GridApiDataSet.GridConstants.NOERR, result);
             }
-            */
+            
         }
 
     }

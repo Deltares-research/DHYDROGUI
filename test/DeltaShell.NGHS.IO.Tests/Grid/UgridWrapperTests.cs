@@ -16,7 +16,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
     [Ignore("should be in unit test of io_netcdf kernel")]
     public class UgridWrapperTests
     {
-        /*
+        
         /// <summary>
         /// It's a partly copy of https://svn.oss.deltares.nl/repos/delft3d/trunk/src/utils_lgpl/io_netcdf/packages/tests/UGrid.tests/UGridTests.cs
         /// </summary>
@@ -129,51 +129,69 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 Assert.That(rnGeometry, Is.EqualTo(nGeometry));
 
                 //4. Get nodes info and coordinates
-                GridWrapper.interop_charinfo[] nodesinfo = new GridWrapper.interop_charinfo[4];
-                ierr = wrapper.Read1DNetworkNodes(ioncId, networkId, ref c_nodesX, ref c_nodesY,
-                    nodesinfo, rnNodes);
-                Assert.That(ierr, Is.EqualTo(0));
-
-                double[] rc_nodesX = new double[4];
-                double[] rc_nodesY = new double[4];
-                Marshal.Copy(c_nodesX, rc_nodesX, 0, 4);
-                Marshal.Copy(c_nodesY, rc_nodesY, 0, 4);
-                for (int i = 0; i < rnNodes; i++)
+                using (var register = new UnmanagedMemoryRegister())
                 {
-                    string tmpstring = new string(nodesinfo[i].ids);
-                    Assert.That(tmpstring.Trim(), Is.EqualTo(nodesids[i]));
-                    tmpstring = new string(nodesinfo[i].longnames);
-                    Assert.That(tmpstring.Trim(), Is.EqualTo(nodeslongNames[i]));
-                    Assert.That(rc_nodesX[i], Is.EqualTo(nodesX[i]));
-                    Assert.That(rc_nodesY[i], Is.EqualTo(nodesY[i]));
+                    var idsBuffer = StringBufferHandling.MakeStringBuffer(rnNodes, GridWrapper.idssize);
+                    var longNamesBuffer =
+                        StringBufferHandling.MakeStringBuffer(rnNodes, GridWrapper.longnamessize);
+                    IntPtr idsPtr = register.AddString(ref idsBuffer);
+                    IntPtr longNamesPtr = register.AddString(ref longNamesBuffer);
+
+
+                    ierr = wrapper.Read1DNetworkNodes(ioncId, networkId, ref c_nodesX, ref c_nodesY, ref idsPtr,
+                        ref longNamesPtr, rnNodes);
+
+
+                    Assert.That(ierr, Is.EqualTo(0));
+
+                    double[] rc_nodesX = new double[4];
+                    double[] rc_nodesY = new double[4];
+                    Marshal.Copy(c_nodesX, rc_nodesX, 0, 4);
+                    Marshal.Copy(c_nodesY, rc_nodesY, 0, 4);
+                    var nodeIds = StringBufferHandling.ParseString(idsPtr, rnNodes, GridWrapper.idssize);
+                    var nodeLongNames = StringBufferHandling.ParseString(longNamesPtr, rnNodes, GridWrapper.longnamessize);
+                    for (int i = 0; i < rnNodes; i++)
+                    {
+                        Assert.That(nodeIds[i].Trim(), Is.EqualTo(nodesids[i]));
+                        Assert.That(nodeLongNames[i].Trim(), Is.EqualTo(nodeslongNames[i]));
+                        Assert.That(rc_nodesX[i], Is.EqualTo(nodesX[i]));
+                        Assert.That(rc_nodesY[i], Is.EqualTo(nodesY[i]));
+                    }
                 }
 
                 //5. Get the branch info and coordinates
-                GridWrapper.interop_charinfo[] branchinfo = new GridWrapper.interop_charinfo[3];
-                ierr = wrapper.Read1DNetworkBranches(ioncId, networkId, ref c_sourcenodeid,
-                    ref c_targetnodeid,
-                    ref c_branchlengths, branchinfo, ref c_nbranchgeometrypoints, rnBranches);
-                Assert.That(ierr, Is.EqualTo(0));
-
-                int[] rc_targetnodeid = new int[3];
-                int[] rc_sourcenodeid = new int[3];
-                double[] rc_branchlengths = new double[3];
-                int[] rc_nbranchgeometrypoints = new int[3];
-                Marshal.Copy(c_targetnodeid, rc_targetnodeid, 0, 3);
-                Marshal.Copy(c_sourcenodeid, rc_sourcenodeid, 0, 3);
-                Marshal.Copy(c_branchlengths, rc_branchlengths, 0, 3);
-                Marshal.Copy(c_nbranchgeometrypoints, rc_nbranchgeometrypoints, 0, 3);
-
-                for (int i = 0; i < rnBranches; i++)
+                using (var register = new UnmanagedMemoryRegister())
                 {
-                    string tmpstring = new string(branchinfo[i].ids);
-                    Assert.That(tmpstring.Trim(), Is.EqualTo(branchids[i]));
-                    tmpstring = new string(branchinfo[i].longnames);
-                    Assert.That(tmpstring.Trim(), Is.EqualTo(branchlongNames[i]));
-                    Assert.That(rc_targetnodeid[i], Is.EqualTo(targetnodeid[i])); // TODO Test deltaShellClones2dMesh fails here.
-                    Assert.That(rc_sourcenodeid[i], Is.EqualTo(sourcenodeid[i]));
-                    Assert.That(rc_branchlengths[i], Is.EqualTo(branchlengths[i]));
-                    Assert.That(rc_nbranchgeometrypoints[i], Is.EqualTo(nbranchgeometrypoints[i]));
+                    var idsBuffer = StringBufferHandling.MakeStringBuffer(rnBranches, GridWrapper.idssize);
+                    var longNamesBuffer = StringBufferHandling.MakeStringBuffer(rnBranches, GridWrapper.longnamessize);
+                    IntPtr idsPtr = register.AddString(ref idsBuffer);
+                    IntPtr longNamesPtr = register.AddString(ref longNamesBuffer);
+
+
+                    ierr = wrapper.Read1DNetworkBranches(ioncId, networkId, ref c_sourcenodeid,
+                        ref c_targetnodeid,
+                        ref c_branchlengths, ref idsPtr, ref longNamesPtr, ref c_nbranchgeometrypoints, rnBranches);
+                    Assert.That(ierr, Is.EqualTo(0));
+
+                    int[] rc_targetnodeid = new int[3];
+                    int[] rc_sourcenodeid = new int[3];
+                    double[] rc_branchlengths = new double[3];
+                    int[] rc_nbranchgeometrypoints = new int[3];
+                    Marshal.Copy(c_targetnodeid, rc_targetnodeid, 0, 3);
+                    Marshal.Copy(c_sourcenodeid, rc_sourcenodeid, 0, 3);
+                    Marshal.Copy(c_branchlengths, rc_branchlengths, 0, 3);
+                    Marshal.Copy(c_nbranchgeometrypoints, rc_nbranchgeometrypoints, 0, 3);
+                    var readBranchIds = StringBufferHandling.ParseString(idsPtr, rnBranches, GridWrapper.idssize);
+                    var readBranchLongnames = StringBufferHandling.ParseString(longNamesPtr, rnBranches, GridWrapper.longnamessize);
+                    for (int i = 0; i < rnBranches; i++)
+                    {
+                        Assert.That(readBranchIds[i].Trim(), Is.EqualTo(branchids[i]));
+                        Assert.That(readBranchLongnames[i].Trim(), Is.EqualTo(branchlongNames[i]));
+                        Assert.That(rc_targetnodeid[i], Is.EqualTo(targetnodeid[i])); // TODO Test deltaShellClones2dMesh fails here.
+                        Assert.That(rc_sourcenodeid[i], Is.EqualTo(sourcenodeid[i]));
+                        Assert.That(rc_branchlengths[i], Is.EqualTo(branchlengths[i]));
+                        Assert.That(rc_nbranchgeometrypoints[i], Is.EqualTo(nbranchgeometrypoints[i]));
+                    }
                 }
 
                 //6. Get the 1d branch geometry
@@ -206,17 +224,24 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 Assert.That(rnmeshpoints, Is.EqualTo(nmesh1dPoints));
 
                 //9. Get the coordinates of the mesh points
-                GridWrapper.interop_charinfo[] meshpointsinfo = new GridWrapper.interop_charinfo[rnmeshpoints];
-                ierr = wrapper.Read1DMeshDiscretisationPoints(ioncId, networkId, ref c_branchidx, ref c_offset, ref c_discretisationPointsX, ref c_discretisationPointsY,  meshpointsinfo, rnmeshpoints, startIndex);
-                Assert.That(ierr, Is.EqualTo(0));
-                int[] rc_branchidx = new int[rnmeshpoints];
-                double[] rc_offset = new double[rnmeshpoints];
-                Marshal.Copy(c_branchidx, rc_branchidx, 0, rnmeshpoints);
-                Marshal.Copy(c_offset, rc_offset, 0, rnmeshpoints);
-                for (int i = 0; i < rnmeshpoints; i++)
+                using (var register = new UnmanagedMemoryRegister())
                 {
-                    Assert.That(rc_branchidx[i], Is.EqualTo(branchidx[i]));
-                    Assert.That(rc_offset[i], Is.EqualTo(offset[i]));
+                    var idsBuffer = StringBufferHandling.MakeStringBuffer(rnmeshpoints, GridWrapper.idssize);
+                    var longNamesBuffer = StringBufferHandling.MakeStringBuffer(rnmeshpoints, GridWrapper.longnamessize);
+                    IntPtr idsPtr = register.AddString(ref idsBuffer);
+                    IntPtr longNamesPtr = register.AddString(ref longNamesBuffer);
+
+                    ierr = wrapper.Read1DMeshDiscretisationPoints(ioncId, networkId, ref c_branchidx, ref c_offset, ref c_discretisationPointsX, ref c_discretisationPointsY, ref idsPtr, ref longNamesPtr, rnmeshpoints, startIndex);
+                    Assert.That(ierr, Is.EqualTo(0));
+                    int[] rc_branchidx = new int[rnmeshpoints];
+                    double[] rc_offset = new double[rnmeshpoints];
+                    Marshal.Copy(c_branchidx, rc_branchidx, 0, rnmeshpoints);
+                    Marshal.Copy(c_offset, rc_offset, 0, rnmeshpoints);
+                    for (int i = 0; i < rnmeshpoints; i++)
+                    {
+                        Assert.That(rc_branchidx[i], Is.EqualTo(branchidx[i]));
+                        Assert.That(rc_offset[i], Is.EqualTo(offset[i]));
+                    }
                 }
             } 
             finally
@@ -315,28 +340,36 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 int ierr = wrapper.GetNumberOf1D2DLinks(ref ioncId, ref mesh1D2D, ref r_nlinks);
                 Assert.That(ierr, Is.EqualTo(0));
                 Assert.That(r_nlinks, Is.EqualTo(nlinks));
-                GridWrapper.interop_charinfo[] linksinfo = new GridWrapper.interop_charinfo[nlinks];
-
-                //2. Get the links values
-                ierr = wrapper.Read1D2DLinks(ioncId, mesh1D2D, ref c_mesh1indexes, ref c_mesh2indexes,
-                    ref c_linktypes,
-                    ref linksinfo, ref nlinks);
-                Assert.That(ierr, Is.EqualTo(0));
-                int[] rc_mesh1indexes = new int[nlinks];
-                int[] rc_mesh2indexes = new int[nlinks];
-                int[] rc_linktypes = new int[nlinks];
-                Marshal.Copy(c_mesh1indexes, rc_mesh1indexes, 0, nlinks);
-                Marshal.Copy(c_mesh2indexes, rc_mesh2indexes, 0, nlinks);
-                Marshal.Copy(c_linktypes, rc_linktypes, 0, nlinks);
-                for (int i = 0; i < nlinks; i++)
+                
+                using (var register = new UnmanagedMemoryRegister())
                 {
-                    string tmpstring = new string(linksinfo[i].ids);
-                    Assert.That(tmpstring.Trim(), Is.EqualTo(linksids[i]));
-                    tmpstring = new string(linksinfo[i].longnames);
-                    Assert.That(tmpstring.Trim(), Is.EqualTo(linkslongnames[i]));
-                    Assert.That(rc_mesh1indexes[i], Is.EqualTo(mesh1indexes[i]));
-                    Assert.That(rc_mesh2indexes[i], Is.EqualTo(mesh2indexes[i]));
-                    Assert.That(rc_linktypes[i], Is.EqualTo(linktypes[i]));
+                    var idsBuffer = StringBufferHandling.MakeStringBuffer(nlinks, GridWrapper.idssize);
+                    var longNamesBuffer =
+                        StringBufferHandling.MakeStringBuffer(nlinks, GridWrapper.longnamessize);
+                    IntPtr idsPtr = register.AddString(ref idsBuffer);
+                    IntPtr longNamesPtr = register.AddString(ref longNamesBuffer);
+
+                    //2. Get the links values
+                    ierr = wrapper.Read1D2DLinks(ioncId, mesh1D2D, ref c_mesh1indexes, ref c_mesh2indexes,
+                        ref c_linktypes,
+                        ref idsPtr, ref longNamesPtr, ref nlinks);
+                    Assert.That(ierr, Is.EqualTo(0));
+                    int[] rc_mesh1indexes = new int[nlinks];
+                    int[] rc_mesh2indexes = new int[nlinks];
+                    int[] rc_linktypes = new int[nlinks];
+                    Marshal.Copy(c_mesh1indexes, rc_mesh1indexes, 0, nlinks);
+                    Marshal.Copy(c_mesh2indexes, rc_mesh2indexes, 0, nlinks);
+                    Marshal.Copy(c_linktypes, rc_linktypes, 0, nlinks);
+                    var readLnkIds = StringBufferHandling.ParseString(idsPtr, nlinks, GridWrapper.idssize);
+                    var readLnkLongnames = StringBufferHandling.ParseString(longNamesPtr, nlinks, GridWrapper.longnamessize);
+                    for (int i = 0; i < nlinks; i++)
+                    {
+                        Assert.That(readLnkIds[i].Trim(), Is.EqualTo(linksids[i]));
+                        Assert.That(readLnkLongnames[i].Trim(), Is.EqualTo(linkslongnames[i]));
+                        Assert.That(rc_mesh1indexes[i], Is.EqualTo(mesh1indexes[i]));
+                        Assert.That(rc_mesh2indexes[i], Is.EqualTo(mesh2indexes[i]));
+                        Assert.That(rc_linktypes[i], Is.EqualTo(linktypes[i]));
+                    }
                 }
             }
             finally
@@ -407,20 +440,21 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 Marshal.Copy(offset, 0, c_offset, nmesh1dPoints);
                 Marshal.Copy(discretisationPointsX, 0, c_discretisationPointsX, nmesh1dPoints);
                 Marshal.Copy(discretisationPointsY, 0, c_discretisationPointsY, nmesh1dPoints);
-                GridWrapper.interop_charinfo[] meshnodeidsinfo = new GridWrapper.interop_charinfo[nmesh1dPoints];
-                for (int i = 0; i < nmesh1dPoints; i++)
-                {
-                    tmpstring = meshpointsids[i];
-                    tmpstring = tmpstring.PadRight(GridWrapper.idssize, ' ');
-                    meshnodeidsinfo[i].ids = tmpstring.ToCharArray();
-                    tmpstring = meshpointslongnames[i];
-                    tmpstring = tmpstring.PadRight(GridWrapper.longnamessize, ' ');
-                    meshnodeidsinfo[i].longnames = tmpstring.ToCharArray();
-                }
 
-                //4. Write the discretization points
-                ierr = wrapper.Write1DMeshDiscretisationPoints(fileId, mesh1DId, c_branchidx, c_offset, c_discretisationPointsX, c_discretisationPointsY, meshnodeidsinfo, nmesh1dPoints, startIndex);
-                Assert.That(ierr, Is.EqualTo(0));
+                using (var register = new UnmanagedMemoryRegister())
+                {
+                    var idsBuffer = StringBufferHandling.MakeStringBuffer(ref meshpointsids, GridWrapper.idssize);
+                    var longNamesBuffer =
+                        StringBufferHandling.MakeStringBuffer(ref meshpointslongnames, GridWrapper.longnamessize);
+                    IntPtr idsPtr = register.AddString(ref idsBuffer);
+                    IntPtr longNamesPtr = register.AddString(ref longNamesBuffer);
+
+
+                    //4. Write the discretization points
+                    ierr = wrapper.Write1DMeshDiscretisationPoints(fileId, mesh1DId, c_branchidx, c_offset,
+                        c_discretisationPointsX, c_discretisationPointsY, idsPtr, longNamesPtr, nmesh1dPoints, startIndex);
+                    Assert.That(ierr, Is.EqualTo(0));
+                }
 
                 #endregion
 
@@ -430,36 +464,38 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 //1. Write 1d network network nodes
                 Marshal.Copy(nodesX, 0, c_nodesX, nNodes);
                 Marshal.Copy(nodesY, 0, c_nodesY, nNodes);
-                GridWrapper.interop_charinfo[] nodesinfo = new GridWrapper.interop_charinfo[4];
-                for (int i = 0; i < nNodes; i++)
+                using (var register = new UnmanagedMemoryRegister())
                 {
-                    tmpstring = nodesids[i];
-                    tmpstring = tmpstring.PadRight(GridWrapper.idssize, ' ');
-                    nodesinfo[i].ids = tmpstring.ToCharArray();
-                    tmpstring = nodeslongNames[i];
-                    tmpstring = tmpstring.PadRight(GridWrapper.longnamessize, ' ');
-                    nodesinfo[i].longnames = tmpstring.ToCharArray();
+                    var idsBuffer = StringBufferHandling.MakeStringBuffer(ref nodesids, GridWrapper.idssize);
+                    var longNamesBuffer =
+                        StringBufferHandling.MakeStringBuffer(ref nodeslongNames, GridWrapper.longnamessize);
+                    IntPtr idsPtr = register.AddString(ref idsBuffer);
+                    IntPtr longNamesPtr = register.AddString(ref longNamesBuffer);
+
+
+                    ierr = wrapper.Write1DNetworkNodes(fileId, networkId, c_nodesX, c_nodesY, idsPtr, longNamesPtr,
+                        nNodes);
+                    Assert.That(ierr, Is.EqualTo(0));
                 }
-                ierr = wrapper.Write1DNetworkNodes(fileId, networkId, c_nodesX, c_nodesY, nodesinfo, nNodes);
-                Assert.That(ierr, Is.EqualTo(0));
 
                 //2. Write 1d network branches
                 Marshal.Copy(sourcenodeid, 0, c_source_edge_nodeid, nBranches);
                 Marshal.Copy(targetnodeid, 0, c_target_edge_nodeid, nBranches);
                 //Marshal.Copy(branchlengths, 0, c_branchlengths, nBranches);
                 Marshal.Copy(nbranchgeometrypoints, 0, c_nbranchgeometrypoints, nBranches);
-                GridWrapper.interop_charinfo[] branchinfo = new GridWrapper.interop_charinfo[3];
-                for (int i = 0; i < nBranches; i++)
+                using (var register = new UnmanagedMemoryRegister())
                 {
-                    tmpstring = branchids[i];
-                    tmpstring = tmpstring.PadRight(GridWrapper.idssize, ' ');
-                    branchinfo[i].ids = tmpstring.ToCharArray();
-                    tmpstring = branchlongNames[i];
-                    tmpstring = tmpstring.PadRight(GridWrapper.longnamessize, ' ');
-                    branchinfo[i].longnames = tmpstring.ToCharArray();
+                    var idsBuffer = StringBufferHandling.MakeStringBuffer(ref branchids, GridWrapper.idssize);
+                    var longNamesBuffer =
+                        StringBufferHandling.MakeStringBuffer(ref branchlongNames, GridWrapper.longnamessize);
+                    IntPtr idsPtr = register.AddString(ref idsBuffer);
+                    IntPtr longNamesPtr = register.AddString(ref longNamesBuffer);
+
+
+                    ierr = wrapper.Write1DNetworkBranches(fileId, networkId, c_source_edge_nodeid, c_target_edge_nodeid,
+                        idsPtr, longNamesPtr, c_branchlengths, c_nbranchgeometrypoints, nBranches, startIndex);
+                    Assert.That(ierr, Is.EqualTo(0));
                 }
-                ierr = wrapper.Write1DNetworkBranches(fileId, networkId, c_source_edge_nodeid, c_target_edge_nodeid, branchinfo, c_branchlengths, c_nbranchgeometrypoints, nBranches, startIndex);
-                Assert.That(ierr, Is.EqualTo(0));
 
                 //3. Write 1d network geometry
                 Marshal.Copy(geopointsX, 0, c_geopointsX, nGeometry);
@@ -530,19 +566,21 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 Marshal.Copy(mesh1indexes, 0, c_mesh1indexes, nlinks);
                 Marshal.Copy(mesh2indexes, 0, c_mesh2indexes, nlinks);
                 Marshal.Copy(linktypes, 0, c_contacttype, nlinks);
-                GridWrapper.interop_charinfo[] contactinfo = new GridWrapper.interop_charinfo[4];
-                for (int i = 0; i < nlinks; i++)
+
+                using (var register = new UnmanagedMemoryRegister())
                 {
-                    tmpstring = linksids[i];
-                    tmpstring = tmpstring.PadRight(GridWrapper.idssize, ' ');
-                    contactinfo[i].ids = tmpstring.ToCharArray();
-                    tmpstring = linkslongnames[i];
-                    tmpstring = tmpstring.PadRight(GridWrapper.longnamessize, ' ');
-                    contactinfo[i].longnames = tmpstring.ToCharArray();
+                    var idsBuffer = StringBufferHandling.MakeStringBuffer(ref linksids, GridWrapper.idssize);
+                    var longNamesBuffer =
+                        StringBufferHandling.MakeStringBuffer(ref linkslongnames, GridWrapper.longnamessize);
+                    IntPtr idsPtr = register.AddString(ref idsBuffer);
+                    IntPtr longNamesPtr = register.AddString(ref longNamesBuffer);
+
+
+                    ierr = wrapper.Write1D2DLinks(fileId, mesh1D2DId, c_mesh1indexes, c_mesh2indexes, c_contacttype,
+                        idsPtr, longNamesPtr,
+                        nlinks);
+                    Assert.That(ierr, Is.EqualTo(0));
                 }
-                ierr = wrapper.Write1D2DLinks(fileId, mesh1D2DId, c_mesh1indexes, c_mesh2indexes, c_contacttype, contactinfo,
-                    nlinks);
-                Assert.That(ierr, Is.EqualTo(0));
 
             }
             finally
@@ -944,6 +982,5 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             ierr = wrapper.Close(fileId);
             Assert.That(ierr, Is.EqualTo(0));
         }
-        */
     }
 }

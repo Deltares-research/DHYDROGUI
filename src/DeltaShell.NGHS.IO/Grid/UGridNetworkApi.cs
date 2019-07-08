@@ -285,8 +285,8 @@ namespace DeltaShell.NGHS.IO.Grid
                     IntPtr idsPtr = register.AddString(ref idsBuffer);
                     IntPtr longNamesPtr = register.AddString(ref longNamesBuffer);
 
-                    var ierr = wrapper.Read1DNetworkNodes(ioncId, networkId, ref nodesXPtr, ref nodesYPtr, idsPtr,
-                        longNamesPtr, numberOfNetworkNodes);
+                    var ierr = wrapper.Read1DNetworkNodes(ioncId, networkId, ref nodesXPtr, ref nodesYPtr, ref idsPtr,
+                        ref longNamesPtr, numberOfNetworkNodes);
 
                     if (ierr != GridApiDataSet.GridConstants.NOERR)
                     {

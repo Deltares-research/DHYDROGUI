@@ -53,8 +53,8 @@ namespace DeltaShell.NGHS.IO.Grid
                     return ierr;
                 }
 
-                var mesh1Idx = mesh1DIds[0];
-                var mesh2Idx = mesh2DIds[0];
+                var mesh1Idx = mesh1DIds.Any() ? mesh1DIds[0] : 0;
+                var mesh2Idx = mesh2DIds.Any() ? mesh2DIds[0] : 0;
 
                 if (ierr != GridApiDataSet.GridConstants.NOERR)
                 {

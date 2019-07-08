@@ -107,7 +107,9 @@ namespace DeltaShell.NGHS.IO.Grid
                 case GridApiDataSet.DataSetConventions.CONV_UGRID:
                     using (var uGrid = new UGrid(path, GridApiDataSet.NetcdfOpenMode.nf90_write))
                     {
-                        var mesh2DId = uGrid.GetMesh2DIds()[0];
+                        var mesh2DIds = uGrid.GetMesh2DIds();
+                        if (!mesh2DIds.Any()) break;
+                        var mesh2DId = mesh2DIds[0];
                         switch (location)
                         {
                             case BedLevelLocation.Faces:

@@ -948,7 +948,7 @@ namespace DeltaShell.NGHS.IO.Grid
             return ionc_get_1d_network_branches_geometry_coordinate_count_dll(ref ioncId, ref networkId, ref numberOfGeometryPoints);
         }
 
-        public virtual int Read1DNetworkNodes(int ioncId, int networkId, ref IntPtr xNodesPtr, ref IntPtr yNodesPtr, IntPtr ids, IntPtr longNames, int numberOfNodes)
+        public virtual int Read1DNetworkNodes(int ioncId, int networkId, ref IntPtr xNodesPtr, ref IntPtr yNodesPtr, ref IntPtr ids, ref IntPtr longNames, int numberOfNodes)
         {
             return ionc_read_1d_network_nodes_dll(ref ioncId, ref networkId, ref xNodesPtr, ref yNodesPtr,
                 ref ids, ref longNames, ref numberOfNodes);

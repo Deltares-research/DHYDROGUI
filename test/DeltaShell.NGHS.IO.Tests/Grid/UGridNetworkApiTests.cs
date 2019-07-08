@@ -83,7 +83,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             Assert.AreEqual(-1, TypeUtils.GetField(UGridNetworkDiscretisationApi, MeshIdForWritingVarName));
         }
-        /*
+        
         #region Write Network
 
         [Test]
@@ -290,12 +290,14 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int nwid = 0;
             IntPtr nodesXPtr = IntPtr.Zero;
             IntPtr nodesYPtr = IntPtr.Zero;
-            var nodesInfo = new GridWrapper.interop_charinfo[nNodes];
+            IntPtr idsPtr = IntPtr.Zero;
+            IntPtr longNamesPtr = IntPtr.Zero;
+            
 
             wrapper.Expect(w => w.Write1DNetworkNodes(id, nwid, nodesXPtr, nodesYPtr,
-                nodesInfo, nNodes))
+                idsPtr, longNamesPtr, nNodes))
                 .IgnoreArguments()
-                .OutRef(id, nwid, nodesXPtr, nodesYPtr, nNodes)
+                .OutRef(id, nwid, nodesXPtr, nodesYPtr, idsPtr, longNamesPtr, nNodes)
                 .Return(GridApiDataSet.GridConstants.NOERR)
                 .Repeat.Twice();
 
@@ -342,12 +344,14 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int nwid = 0;
             IntPtr nodesXPtr = IntPtr.Zero;
             IntPtr nodesYPtr = IntPtr.Zero;
-            var nodesInfo = new GridWrapper.interop_charinfo[nNodes];
+            IntPtr idsPtr = IntPtr.Zero;
+            IntPtr longNamesPtr = IntPtr.Zero;
+
 
             wrapper.Expect(w => w.Write1DNetworkNodes(id, nwid, nodesXPtr, nodesYPtr,
-                nodesInfo, nNodes))
+                idsPtr, longNamesPtr, nNodes))
                 .IgnoreArguments()
-                .OutRef(id, nwid, nodesXPtr, nodesYPtr, nNodes)
+                .OutRef(id, nwid, nodesXPtr, nodesYPtr, idsPtr, longNamesPtr, nNodes)
                 .Return(GridApiDataSet.GridConstants.TESTING_ERROR) // Return an arbitrary error
                 .Repeat.Twice();
 
@@ -395,12 +399,14 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int nwid = 0;
             IntPtr nodesXPtr = IntPtr.Zero;
             IntPtr nodesYPtr = IntPtr.Zero;
-            var nodesInfo = new GridWrapper.interop_charinfo[nNodes];
+            IntPtr idsPtr = IntPtr.Zero;
+            IntPtr longNamesPtr = IntPtr.Zero;
+            
 
             wrapper.Expect(w => w.Write1DNetworkNodes(id, nwid, nodesXPtr, nodesYPtr,
-                nodesInfo, nNodes))
+                idsPtr, longNamesPtr, nNodes))
                 .IgnoreArguments()
-                .OutRef(id, nwid, nodesXPtr, nodesYPtr, nNodes)
+                .OutRef(id, nwid, nodesXPtr, nodesYPtr, idsPtr, longNamesPtr, nNodes)
                 .Return(GridApiDataSet.GridConstants.GENERAL_FATAL_ERR)
                 .Throw(new Exception("myTest"))
                 .Repeat.Twice();
@@ -524,14 +530,16 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             IntPtr targetNodesPtr = IntPtr.Zero;
             IntPtr branchLengthPtr = IntPtr.Zero;
             IntPtr branchGeoPtr = IntPtr.Zero;
-            var branchesInfo = new GridWrapper.interop_charinfo[nBranches];
+            IntPtr idsPtr = IntPtr.Zero;
+            IntPtr longNamesPtr = IntPtr.Zero;
+
 
             wrapper.Expect(
                 w =>
-                    w.Write1DNetworkBranches(id, nwid, sourceNodesPtr, targetNodesPtr, branchesInfo, branchLengthPtr,
+                    w.Write1DNetworkBranches(id, nwid, sourceNodesPtr, targetNodesPtr, idsPtr, longNamesPtr, branchLengthPtr,
                         branchGeoPtr, nBranches))
                 .IgnoreArguments()
-                .OutRef(id, nwid, sourceNodesPtr, targetNodesPtr, branchLengthPtr, branchGeoPtr, nBranches)
+                .OutRef(id, nwid, sourceNodesPtr, targetNodesPtr, branchLengthPtr, branchGeoPtr, idsPtr, longNamesPtr, nBranches)
                 .Return(GridApiDataSet.GridConstants.NOERR)
                 .Repeat.Twice();
 
@@ -589,14 +597,15 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             IntPtr targetNodesPtr = IntPtr.Zero;
             IntPtr branchLengthPtr = IntPtr.Zero;
             IntPtr branchGeoPtr = IntPtr.Zero;
-            var branchesInfo = new GridWrapper.interop_charinfo[nBranches];
+            IntPtr idsPtr = IntPtr.Zero;
+            IntPtr longNamesPtr = IntPtr.Zero;
 
             wrapper.Expect(
                 w =>
-                    w.Write1DNetworkBranches(id, nwid, sourceNodesPtr, targetNodesPtr, branchesInfo, branchLengthPtr,
+                    w.Write1DNetworkBranches(id, nwid, sourceNodesPtr, targetNodesPtr, idsPtr, longNamesPtr, branchLengthPtr,
                         branchGeoPtr, nBranches))
                 .IgnoreArguments()
-                .OutRef(id, nwid, sourceNodesPtr, targetNodesPtr, branchLengthPtr, branchGeoPtr, nBranches)
+                .OutRef(id, nwid, sourceNodesPtr, targetNodesPtr, branchLengthPtr, branchGeoPtr, idsPtr, longNamesPtr, nBranches)
                 .Return(GridApiDataSet.GridConstants.TESTING_ERROR)
                 .Repeat.Twice();
 
@@ -652,14 +661,15 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             IntPtr targetNodesPtr = IntPtr.Zero;
             IntPtr branchLengthPtr = IntPtr.Zero;
             IntPtr branchGeoPtr = IntPtr.Zero;
-            var branchesInfo = new GridWrapper.interop_charinfo[nBranches];
+            IntPtr idsPtr = IntPtr.Zero;
+            IntPtr longNamesPtr = IntPtr.Zero;
 
             wrapper.Expect(
                 w =>
-                    w.Write1DNetworkBranches(id, nwid, sourceNodesPtr, targetNodesPtr, branchesInfo, branchLengthPtr,
+                    w.Write1DNetworkBranches(id, nwid, sourceNodesPtr, targetNodesPtr, idsPtr, longNamesPtr, branchLengthPtr,
                         branchGeoPtr, nBranches))
                 .IgnoreArguments()
-                .OutRef(id, nwid, sourceNodesPtr, targetNodesPtr, branchLengthPtr, branchGeoPtr, nBranches)
+                .OutRef(id, nwid, sourceNodesPtr, targetNodesPtr, branchLengthPtr, branchGeoPtr, idsPtr, longNamesPtr, nBranches)
                 .Return(GridApiDataSet.GridConstants.NOERR)
                 .Throw(new Exception("myTest"))
                 .Repeat.Twice();
@@ -1430,11 +1440,12 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             IntPtr nodesXPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof (double))*nNodes);
             IntPtr nodesYPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof (double))*nNodes);
+            IntPtr idsPtr = IntPtr.Zero;
+            IntPtr longNamesPtr = IntPtr.Zero;
 
-            GridWrapper.interop_charinfo[] nodesinfo = new GridWrapper.interop_charinfo[nNodes];
-            wrapper.Expect(w => w.Read1DNetworkNodes(id, nwid, ref nodesXPtr, ref nodesYPtr, nodesinfo,
+            wrapper.Expect(w => w.Read1DNetworkNodes(id, nwid, ref nodesXPtr, ref nodesYPtr, ref idsPtr, ref longNamesPtr,
                 nNodes))
-                .OutRef(nodesXPtr, nodesYPtr)
+                .OutRef(nodesXPtr, nodesYPtr, idsPtr, longNamesPtr)
                 .IgnoreArguments()
                 .Return(GridApiDataSet.GridConstants.NOERR)
                 .Repeat.Any();
@@ -1478,11 +1489,13 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             IntPtr nodesXPtr = IntPtr.Zero;
             IntPtr nodesYPtr = IntPtr.Zero;
+            IntPtr idsPtr = IntPtr.Zero;
+            IntPtr longNamesPtr = IntPtr.Zero;
 
-            GridWrapper.interop_charinfo[] nodesinfo = new GridWrapper.interop_charinfo[nNodes];
-            wrapper.Expect(w => w.Read1DNetworkNodes(id, nwid, ref nodesXPtr, ref nodesYPtr, nodesinfo,
+
+            wrapper.Expect(w => w.Read1DNetworkNodes(id, nwid, ref nodesXPtr, ref nodesYPtr, ref idsPtr, ref longNamesPtr,
                 nNodes))
-                .OutRef(nodesXPtr, nodesYPtr)
+                .OutRef(nodesXPtr, nodesYPtr, idsPtr, longNamesPtr)
                 .IgnoreArguments()
                 .Return(GridApiDataSet.GridConstants.TESTING_ERROR)
                 .Repeat.Any();
@@ -1526,11 +1539,12 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             IntPtr nodesXPtr = IntPtr.Zero;
             IntPtr nodesYPtr = IntPtr.Zero;
+            IntPtr idsPtr = IntPtr.Zero;
+            IntPtr longNamesPtr = IntPtr.Zero;
 
-            GridWrapper.interop_charinfo[] nodesinfo = new GridWrapper.interop_charinfo[nNodes];
-            wrapper.Expect(w => w.Read1DNetworkNodes(id, nwid, ref nodesXPtr, ref nodesYPtr, nodesinfo,
+            wrapper.Expect(w => w.Read1DNetworkNodes(id, nwid, ref nodesXPtr, ref nodesYPtr, ref idsPtr, ref longNamesPtr,
                 nNodes))
-                .OutRef(id, nwid, nodesXPtr, nodesYPtr, nodesinfo, nNodes)
+                .OutRef(id, nwid, nodesXPtr, nodesYPtr, idsPtr, longNamesPtr, nNodes)
                 .IgnoreArguments()
                 .Return(GridApiDataSet.GridConstants.TESTING_ERROR)
                 .Throw(new Exception("myTest"))
@@ -1619,12 +1633,13 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             IntPtr targetNodePtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof (int))*nBranches);
             IntPtr branchLengthPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof (double))*nBranches);
             IntPtr branchGeoPointsPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof (int))*nBranches);
+            IntPtr idsPtr = IntPtr.Zero;
+            IntPtr longNamesPtr = IntPtr.Zero;
 
-            GridWrapper.interop_charinfo[] branchinfo = new GridWrapper.interop_charinfo[nBranches];
             wrapper.Expect(w => w.Read1DNetworkBranches(id, nwid, ref sourceNodePtr,
-                ref targetNodePtr, ref branchLengthPtr, branchinfo, ref branchGeoPointsPtr, nBranches))
+                ref targetNodePtr, ref branchLengthPtr, ref idsPtr, ref longNamesPtr, ref branchGeoPointsPtr, nBranches))
                 .IgnoreArguments()
-                .OutRef(sourceNodePtr, targetNodePtr, branchLengthPtr, branchGeoPointsPtr)
+                .OutRef(sourceNodePtr, targetNodePtr, branchLengthPtr, idsPtr, longNamesPtr, branchGeoPointsPtr)
                 .Return(GridApiDataSet.GridConstants.NOERR)
                 .Repeat.Any();
 
@@ -1678,12 +1693,14 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             IntPtr targetNodePtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof (int))*nBranches);
             IntPtr branchLengthPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof (double))*nBranches);
             IntPtr branchGeoPointsPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof (int))*nBranches);
+            IntPtr idsPtr = IntPtr.Zero;
+            IntPtr longNamesPtr = IntPtr.Zero;
 
-            GridWrapper.interop_charinfo[] branchinfo = new GridWrapper.interop_charinfo[nBranches];
+
             wrapper.Expect(w => w.Read1DNetworkBranches(id, nwid, ref sourceNodePtr,
-                ref targetNodePtr, ref branchLengthPtr, branchinfo, ref branchGeoPointsPtr, nBranches))
+                ref targetNodePtr, ref branchLengthPtr, ref idsPtr, ref longNamesPtr, ref branchGeoPointsPtr, nBranches))
                 .IgnoreArguments()
-                .OutRef(sourceNodePtr, targetNodePtr, branchLengthPtr, branchGeoPointsPtr)
+                .OutRef(sourceNodePtr, targetNodePtr, branchLengthPtr, idsPtr, longNamesPtr, branchGeoPointsPtr)
                 .Return(GridApiDataSet.GridConstants.NOERR)
                 .Repeat.Once();
 
@@ -1737,12 +1754,13 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             IntPtr targetNodePtr = IntPtr.Zero;
             IntPtr branchLengthPtr = IntPtr.Zero;
             IntPtr branchGeoPointsPtr = IntPtr.Zero;
+            IntPtr idsPtr = IntPtr.Zero;
+            IntPtr longNamesPtr = IntPtr.Zero;
 
-            GridWrapper.interop_charinfo[] branchinfo = new GridWrapper.interop_charinfo[nBranches];
             wrapper.Expect(w => w.Read1DNetworkBranches(id, nwid, ref sourceNodePtr,
-                ref targetNodePtr, ref branchLengthPtr, branchinfo, ref branchGeoPointsPtr, nBranches))
+                ref targetNodePtr, ref branchLengthPtr, ref idsPtr, ref longNamesPtr, ref branchGeoPointsPtr, nBranches))
                 .IgnoreArguments()
-                .OutRef(sourceNodePtr, targetNodePtr, branchLengthPtr, branchGeoPointsPtr)
+                .OutRef(sourceNodePtr, targetNodePtr, branchLengthPtr, idsPtr, longNamesPtr, branchGeoPointsPtr)
                 .Return(GridApiDataSet.GridConstants.TESTING_ERROR)
                 .Repeat.Any();
 
@@ -1807,12 +1825,13 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             IntPtr targetNodePtr = IntPtr.Zero;
             IntPtr branchLengthPtr = IntPtr.Zero;
             IntPtr branchGeoPointsPtr = IntPtr.Zero;
+            IntPtr idsPtr = IntPtr.Zero;
+            IntPtr longNamesPtr = IntPtr.Zero;
 
-            GridWrapper.interop_charinfo[] branchinfo = new GridWrapper.interop_charinfo[nBranches];
             wrapper.Expect(w => w.Read1DNetworkBranches(id, nwid, ref sourceNodePtr,
-                ref targetNodePtr, ref branchLengthPtr, branchinfo, ref branchGeoPointsPtr, nBranches))
+                ref targetNodePtr, ref branchLengthPtr, ref idsPtr, ref longNamesPtr, ref branchGeoPointsPtr, nBranches))
                 .IgnoreArguments()
-                .OutRef(id, nwid, sourceNodePtr, targetNodePtr, branchLengthPtr, branchinfo, branchGeoPointsPtr,
+                .OutRef(id, nwid, sourceNodePtr, targetNodePtr, branchLengthPtr, idsPtr, longNamesPtr, branchGeoPointsPtr,
                     nBranches)
                 .Return(GridApiDataSet.GridConstants.TESTING_ERROR)
                 .Throw(new Exception("myTest"))
@@ -2318,7 +2337,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 w =>
                     w.Write1DMeshDiscretisationPoints(Arg<int>.Is.Anything, Arg<int>.Is.Anything,
                         Arg<IntPtr>.Is.Anything, Arg<IntPtr>.Is.Anything, Arg<IntPtr>.Is.Anything, Arg<IntPtr>.Is.Anything,
-                        Arg<GridWrapper.interop_charinfo[]>.Is.Anything, Arg<int>.Is.Anything,
+                        Arg<IntPtr>.Is.Anything,Arg<IntPtr>.Is.Anything, Arg<int>.Is.Anything,
                         Arg<int>.Is.Anything))
                 .IgnoreArguments()
                 .Return(GridApiDataSet.GridConstants.NOERR)
@@ -2363,7 +2382,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                     w.Write1DMeshDiscretisationPoints(Arg<int>.Is.Anything, Arg<int>.Is.Anything,
                             Arg<IntPtr>.Is.Anything, Arg<IntPtr>.Is.Anything,
                             Arg<IntPtr>.Is.Anything, Arg<IntPtr>.Is.Anything,
-                            Arg<GridWrapper.interop_charinfo[]>.Is.Anything, Arg<int>.Is.Anything,
+                            Arg<IntPtr>.Is.Anything, Arg<IntPtr>.Is.Anything, Arg<int>.Is.Anything,
                             Arg<int>.Is.Anything))
                 .IgnoreArguments()
                 .Return(GridApiDataSet.GridConstants.TESTING_ERROR)
@@ -2410,7 +2429,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                     w.Write1DMeshDiscretisationPoints(Arg<int>.Is.Anything, Arg<int>.Is.Anything,
                             Arg<IntPtr>.Is.Anything, Arg<IntPtr>.Is.Anything,
                             Arg<IntPtr>.Is.Anything, Arg<IntPtr>.Is.Anything,
-                            Arg<GridWrapper.interop_charinfo[]>.Is.Anything, Arg<int>.Is.Anything,
+                            Arg<IntPtr>.Is.Anything, Arg<IntPtr>.Is.Anything, Arg<int>.Is.Anything,
                             Arg<int>.Is.Anything))
                 .IgnoreArguments()
                 .Return(GridApiDataSet.GridConstants.NOERR)
@@ -2660,7 +2679,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                     w.Write1DMeshDiscretisationPoints(Arg<int>.Is.Anything, Arg<int>.Is.Anything,
                             Arg<IntPtr>.Is.Anything, Arg<IntPtr>.Is.Anything,
                             Arg<IntPtr>.Is.Anything, Arg<IntPtr>.Is.Anything,
-                            Arg<GridWrapper.interop_charinfo[]>.Is.Anything, Arg<int>.Is.Anything,
+                            Arg<IntPtr>.Is.Anything, Arg<IntPtr>.Is.Anything, Arg<int>.Is.Anything,
                             Arg<int>.Is.Anything))
                 .IgnoreArguments()
                 .Return(GridApiDataSet.GridConstants.NOERR)
@@ -2685,6 +2704,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
 
         #endregion
-        */
+        
     }
 }
