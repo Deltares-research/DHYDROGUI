@@ -46,6 +46,9 @@
       <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.44324\lib\net461\DeltaShell\BasicModelInterface.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="ControlzEx">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.44324\lib\net461\DeltaShell\ControlzEx.dll</HintPath>
+    </Reference>
     <Reference Include="DelftTools.Controls">
       <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.44324\lib\net461\DeltaShell\DelftTools.Controls.dll</HintPath>
       <Private>False</Private>

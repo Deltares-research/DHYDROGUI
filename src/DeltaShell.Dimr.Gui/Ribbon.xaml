@@ -29,7 +29,7 @@
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <Label Grid.Column="0" Grid.Row="0" Content="Configure DIMR Logfile loglevel"/>
-                    <ComboBox Grid.Column="0" Grid.Row="1" VerticalAlignment="" SelectedItem="{Binding CurrentLogfileLevel}" ItemsSource="{Binding Levels}" Width="150" IsEditable="True" IsReadOnly="True"/>
+                    <ComboBox Grid.Column="0" Grid.Row="1" SelectedItem="{Binding CurrentLogfileLevel}" ItemsSource="{Binding Levels}" Width="150" IsEditable="True" IsReadOnly="True"/>
                     <Label Grid.Column="1" Grid.Row="0" Content="Configure DIMR userfeedback loglevel"/>
                     <ComboBox Grid.Column="1" Grid.Row="1" SelectedItem="{Binding CurrentFeedbackLevel}" ItemsSource="{Binding Levels}" Width="150" IsEditable="True" IsReadOnly="True"/>
                 </Grid>
