@@ -600,6 +600,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                                   .GetViewContext(typeof(ProjectItemMapView), fmModel) as ProjectItemMapViewContext;
 
                 GeneratedMapLayerInfo bedLevelLayer = viewContext?.GeneratedMapLayerInfoList?
+                    .Where(l => l != null && l.Name != null)
                     .FirstOrDefault(l => l.Name.Equals("Bed Level"));
 
                 if (bathymetry?.Components?[0]?.MinValue is double minValue &&
