@@ -19,10 +19,20 @@
                 <fluent:RibbonGroupBox.DataContext>
                     <viewModels:DIMRConfigRibbonViewModel/>
                 </fluent:RibbonGroupBox.DataContext>
-                <Label Content="Configure DIMR Logfile loglevel"/>
-                <ComboBox SelectedItem="{Binding CurrentLogfileLevel}" ItemsSource="{Binding Levels}" Width="150" IsEditable="True" IsReadOnly="True"/>
-                <Label Content="Configure DIMR userfeedback loglevel"/>
-                <ComboBox SelectedItem="{Binding CurrentFeedbackLevel}" ItemsSource="{Binding Levels}" Width="150" IsEditable="True" IsReadOnly="True"/>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Column="0" Grid.Row="0" Content="Configure DIMR Logfile loglevel"/>
+                    <ComboBox Grid.Column="0" Grid.Row="1" VerticalAlignment="" SelectedItem="{Binding CurrentLogfileLevel}" ItemsSource="{Binding Levels}" Width="150" IsEditable="True" IsReadOnly="True"/>
+                    <Label Grid.Column="1" Grid.Row="0" Content="Configure DIMR userfeedback loglevel"/>
+                    <ComboBox Grid.Column="1" Grid.Row="1" SelectedItem="{Binding CurrentFeedbackLevel}" ItemsSource="{Binding Levels}" Width="150" IsEditable="True" IsReadOnly="True"/>
+                </Grid>
             </fluent:RibbonGroupBox>
         </fluent:RibbonTabItem>
     </fluent:Ribbon>
