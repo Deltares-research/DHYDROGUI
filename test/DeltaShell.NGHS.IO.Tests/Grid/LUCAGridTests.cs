@@ -21,6 +21,7 @@ using GeometryFactory = SharpMap.Converters.Geometries.GeometryFactory;
 namespace DeltaShell.NGHS.IO.Tests.Grid
 {
     [TestFixture]
+    [Ignore("why do we need unit tests in deltashell for a kernel??")]
     public class LUCAGridTests
     {
         [Test]
