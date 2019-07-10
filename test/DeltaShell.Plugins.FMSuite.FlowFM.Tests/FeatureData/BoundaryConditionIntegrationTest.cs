@@ -15,6 +15,8 @@ using NetTopologySuite.Geometries;
 using NetTopologySuite.Extensions.Features;
 using NUnit.Framework;
 using Rhino.Mocks;
+using SharpMap;
+using SharpMap.Extensions.CoordinateSystems;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
 {
@@ -22,6 +24,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
     [Category(TestCategory.Slow)]
     public class BoundaryConditionIntegrationTest
     {
+        [TestFixtureSetUp]
+        public void SetMapCoordinateSystemFactory()
+        {
+            if (Map.CoordinateSystemFactory == null)
+                Map.CoordinateSystemFactory = new OgrCoordinateSystemFactory();
+        }
+
         private static WaterFlowFMModel CreateWaterFlowFMModel()
         {
             var mduPath = TestHelper.GetTestFilePath(@"simpleBox\simplebox.mdu");
