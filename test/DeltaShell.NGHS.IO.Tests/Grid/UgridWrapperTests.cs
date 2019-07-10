@@ -3,6 +3,7 @@ using DeltaShell.NGHS.IO.Grid;
 using NUnit.Framework;
 using System;
 using System.IO;
+using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using DelftTools.Utils.Interop;
@@ -138,8 +139,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                     IntPtr longNamesPtr = register.AddString(ref longNamesBuffer);
 
 
-                    ierr = wrapper.Read1DNetworkNodes(ioncId, networkId, ref c_nodesX, ref c_nodesY, ref idsPtr,
-                        ref longNamesPtr, rnNodes);
+                    ierr = wrapper.Read1DNetworkNodes(ioncId, networkId, ref c_nodesX, ref c_nodesY, ref idsPtr, ref longNamesPtr, rnNodes);
 
 
                     Assert.That(ierr, Is.EqualTo(0));
@@ -401,6 +401,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             //Network variables
             IntPtr c_nodesX = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nNodes);
             IntPtr c_nodesY = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nNodes);
+            IntPtr c_branchlengths_from_gridgeom = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nBranches);
             IntPtr c_branchlengths = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nBranches);
             IntPtr c_nbranchgeometrypoints = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nBranches);
             IntPtr c_geopointsX = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nGeometry);
@@ -427,12 +428,12 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 Marshal.Copy(targetnodeid, 0, c_target_edge_nodeid, nBranches);
                 Marshal.Copy(marshal_network_sourcetargetnodesid, 0, c_network_sourcetargetnodeids, nedgenodes);
                 Marshal.Copy(offset, 0, c_branchoffset, nmesh1dPoints);
-                Marshal.Copy(branchlengths, 0, c_branchlengths, nBranches);
+                Marshal.Copy(branchlengths, 0, c_branchlengths_from_gridgeom, nBranches);
 
 
                 var gridwrapper = new GridGeomWrapper();
                 var nReturnEdges = -1;
-                ierr = gridwrapper.CreateEdgeNodes(ref c_branchoffset, ref c_branchlengths, ref c_branchidx, ref c_network_sourcetargetnodeids, ref c_meh1d_sourcetargetnodeids, ref nBranches, ref nmesh1dPoints, ref nReturnEdges, ref startIndex);
+                ierr = gridwrapper.CreateEdgeNodes(ref c_branchoffset, ref c_branchlengths_from_gridgeom, ref c_branchidx, ref c_network_sourcetargetnodeids, ref c_meh1d_sourcetargetnodeids, ref nBranches, ref nmesh1dPoints, ref nReturnEdges, ref startIndex);
                 Assert.That(ierr, Is.EqualTo(0));
                 Assert.That(nReturnEdges, Is.GreaterThan(0));
 
@@ -481,7 +482,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 //2. Write 1d network branches
                 Marshal.Copy(sourcenodeid, 0, c_source_edge_nodeid, nBranches);
                 Marshal.Copy(targetnodeid, 0, c_target_edge_nodeid, nBranches);
-                //Marshal.Copy(branchlengths, 0, c_branchlengths, nBranches);
+                Marshal.Copy(branchlengths, 0, c_branchlengths, nBranches);
                 Marshal.Copy(nbranchgeometrypoints, 0, c_nbranchgeometrypoints, nBranches);
                 using (var register = new UnmanagedMemoryRegister())
                 {
@@ -524,7 +525,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 FreeMe(c_discretisationPointsY);
                 FreeMe(c_nodesX);
                 FreeMe(c_nodesY);
-                //FreeMe(c_branchlengths);
+                //FreeMe(c_branchlengths_from_gridgeom);
+                FreeMe(c_branchlengths);
                 FreeMe(c_nbranchgeometrypoints);
                 FreeMe(c_geopointsX);
                 FreeMe(c_geopointsY);
@@ -624,7 +626,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
         //////create the netcdf files
         [Test]
-        [RequiresThread]
+        [HandleProcessCorruptedStateExceptions]
         [NUnit.Framework.Category(TestCategory.DataAccess)]
         public void Create1dUGRIDNetcdf()
         { 
@@ -664,6 +666,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
         //////create the netcdf files
         [Test]
+        [HandleProcessCorruptedStateExceptions]
         [NUnit.Framework.Category(TestCategory.DataAccess)]
         public void Create1d2dLinks_CheckNumberOfLinks()
         {
@@ -726,6 +729,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
         ////// read the netcdf file created in the test above
         [Test]
+        [HandleProcessCorruptedStateExceptions]
         [NUnit.Framework.Category(TestCategory.DataAccess)]
         public void Read1dUGRIDNetcdf()
         {
@@ -759,6 +763,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         // Deltashell creates a new file to write the 1d geometry and mesh as in the first test create1dUGRIDNetcdf
         // and clones the 2d mesh data read from a file produced by RGFgrid. 
         [Test]
+        [HandleProcessCorruptedStateExceptions]
         [NUnit.Framework.Category(TestCategory.DataAccess)]
         public void DeltaShellClones2dMesh()
         {
@@ -777,8 +782,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             //2. Now we create a new empty file where to save 1d and 2d meshes
             int targetFileId   = -1;  //file id  
             int targetMode     =  1;  //create in write mode
-            string target_path = TestHelper.GetTestFilePath(@"ugrid\target.nc");
-            target_path = TestHelper.CreateLocalCopy(target_path);
+            string target_path = Path.Combine(Environment.CurrentDirectory, @"ugrid\target.nc");
             FileUtils.DeleteIfExists(target_path);
             Assert.IsFalse(File.Exists(target_path));
             
@@ -857,6 +861,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
 
         [Test]
+        [HandleProcessCorruptedStateExceptions]
         [NUnit.Framework.Category(TestCategory.DataAccess)]
         public void Load1D2DlinksTest()
         {
@@ -904,6 +909,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
 
         [Test]
+        [HandleProcessCorruptedStateExceptions]
         [NUnit.Framework.Category(TestCategory.DataAccess)]
         public void SaveAndLoad1D2DlinksTest()
         {

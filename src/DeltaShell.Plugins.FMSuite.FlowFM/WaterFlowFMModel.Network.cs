@@ -83,6 +83,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 ((INotifyCollectionChange)network).CollectionChanged += NetworkCollectionChanged;
                 ((INotifyPropertyChanged)network).PropertyChanged += NetworkPropertyChanged;
+                ((INotifyPropertyChanged)network).PropertyChanged += NetworkCoordinateSystemPropertyChanged;
             }
         }
 
@@ -92,6 +93,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 ((INotifyCollectionChange)network).CollectionChanged -= NetworkCollectionChanged;
                 ((INotifyPropertyChanged)network).PropertyChanged -= NetworkPropertyChanged;
+                ((INotifyPropertyChanged)network).PropertyChanged -= NetworkCoordinateSystemPropertyChanged;
             }
         }
 
@@ -263,6 +265,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 OnEndingBranchSplit((BranchSplitAction)Network.CurrentEditAction);
             }
+        }
+        /// <summary>
+        /// - Synchronize the coordinate system in the model with the network coordinate system
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        
+        private void NetworkCoordinateSystemPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
             if (sender == Network && e.PropertyName == nameof(CoordinateSystem))
             {
                 CoordinateSystem = Network.CoordinateSystem;
