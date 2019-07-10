@@ -2824,7 +2824,7 @@ namespace Sobek.IntegrationTests
                     var array = model.GetVar(category, id, parameter) as double[];
                     Assert.NotNull(array);
                     var value = array[0];
-                    Assert.AreEqual(expectation, value, 0.01);
+                    Assert.AreEqual(expectation, value, 0.1);
                 }
             };
             return RunModel();

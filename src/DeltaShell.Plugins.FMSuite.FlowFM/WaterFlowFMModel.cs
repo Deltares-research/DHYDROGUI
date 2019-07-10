@@ -2028,13 +2028,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 ModelDefinition.Bathymetry = Bathymetry;
             }
 
-            InitializeAreaDataColumns();
+            if (!IsEditing)
+                InitializeAreaDataColumns();
             ReloadGrid(); 
 
             FeatureFile1D2DWriter.Write1D2DFeatures(mduPath, this);
             mduFile.Write(mduPath, ModelDefinition, Area, allFixedWeirsAndCorrespondingProperties, switchTo: switchTo, writeExtForcings: writeExtForcings, writeFeatures: writeFeatures, disableFlowNodeRenumbering: DisableFlowNodeRenumbering, sedimentModelData: UseMorSed ? this : null);
-
-            RestoreAreaDataColumns();
+            if (!IsEditing)
+                RestoreAreaDataColumns();
 
             if (switchTo)
             {

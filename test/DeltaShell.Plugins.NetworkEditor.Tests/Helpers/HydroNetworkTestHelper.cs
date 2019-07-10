@@ -83,7 +83,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Helpers
             Assert.AreEqual(primaryNode.Name, secondaryNode.Name);
             Assert.AreEqual(primaryNode.Geometry.Coordinate.X, secondaryNode.Geometry.Coordinate.X);
             Assert.AreEqual(primaryNode.Geometry.Coordinate.Y, secondaryNode.Geometry.Coordinate.Y);
-            Assert.AreEqual(primaryNode.Description, secondaryNode.Description);
+            Assert.That(primaryNode, Is.InstanceOf<IHydroNode>());
+            Assert.That(secondaryNode, Is.InstanceOf<IHydroNode>());
+            Assert.AreEqual(((IHydroNode)primaryNode).LongName, ((IHydroNode)secondaryNode).LongName);
         }
 
         private static void CompareManholes(IManhole primaryManhole, IManhole secondaryManhole)

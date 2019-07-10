@@ -14,13 +14,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Helpers
         public static IDiscretization CreateNetworkAndDiscretisation()
         {
             var network = new HydroNetwork { Name = GridApiDataSet.DataSetNames.Network };
-            var hydroNode1 = new HydroNode { Name = "my Node 1", Description = "node 1 description", Geometry = new Point(-187.96667, 720.81667), Network = network };
+            var hydroNode1 = new HydroNode { Name = "my Node 1", LongName = "node 1 description", Description = "node 1 description", Geometry = new Point(-187.96667, 720.81667), Network = network };
             network.Nodes.Add(hydroNode1);
-            var hydroNode2 = new HydroNode { Name = "my Node 2", Description = "node 2 description", Geometry = new Point(2195.7333, 708.71667), Network = network };
+            var hydroNode2 = new HydroNode { Name = "my Node 2", LongName = "node 2 description", Description = "node 2 description", Geometry = new Point(2195.7333, 708.71667), Network = network };
             network.Nodes.Add(hydroNode2);
-            var hydroNode3 = new HydroNode { Name = "my Node 3", Description = "node 3 description", Geometry = new Point(4071.4928, 690.94861), Network = network };
+            var hydroNode3 = new HydroNode { Name = "my Node 3", LongName = "node 3 description", Description = "node 3 description", Geometry = new Point(4071.4928, 690.94861), Network = network };
             network.Nodes.Add(hydroNode3);
-            var hydroNode4 = new HydroNode { Name = "my Node  4", Description = "node 4 description", Geometry = new Point(3445.4246, 1540.1838), Network = network };
+            var hydroNode4 = new HydroNode { Name = "my Node  4", LongName = "node 4 description", Description = "node 4 description", Geometry = new Point(3445.4246, 1540.1838), Network = network };
             network.Nodes.Add(hydroNode4);
 
             var branch1 = new Branch
@@ -124,9 +124,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Helpers
         public static IDiscretization CreateSimpleNetworkAndDiscretisation()
         {
             var network = new HydroNetwork { Name = GridApiDataSet.DataSetNames.Network };
-            var hydroNode1 = new HydroNode { Name = "my Node1", Geometry = new Point(1, 4), Network = network, Description = "my node 1 description" };
+            var hydroNode1 = new HydroNode { Name = "my Node1", Geometry = new Point(1, 4), Network = network, LongName = "my node 1 description" , Description = "my node 1 description" };
             network.Nodes.Add(hydroNode1);
-            var hydroNode2 = new HydroNode { Name = "myNode2", Geometry = new Point(5, 1), Network = network, Description = "my node 2 description" };
+            var hydroNode2 = new HydroNode { Name = "myNode2", Geometry = new Point(5, 1), Network = network, LongName = "my node 2 description" , Description = "my node 2 description" };
             network.Nodes.Add(hydroNode2);
             var branch1 = new Branch
             {
@@ -151,16 +151,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Helpers
             };
 
             // add source node
-            networkDiscretisation.Locations.Values.Add(new NetworkLocation(branch1, 0) {Name = "point_1"});
+            networkDiscretisation.Locations.Values.Add(new NetworkLocation(branch1, 0) {Name = "point_1", LongName = "point 1"});
             // add calculation points
-            var location1 = new NetworkLocation(branch1, 1) {Name = "point_2"};
+            var location1 = new NetworkLocation(branch1, 1) {Name = "point_2", LongName = "point 2" };
             networkDiscretisation.Locations.Values.Add(location1);
-            var location2 = new NetworkLocation(branch1, 2.5) {Name = "point_3"};
+            var location2 = new NetworkLocation(branch1, 2.5) {Name = "point_3", LongName = "point 3" };
             networkDiscretisation.Locations.Values.Add(location2);
-            var location3 = new NetworkLocation(branch1, 4) { Name = "point_4" };
+            var location3 = new NetworkLocation(branch1, 4) { Name = "point_4", LongName = "point 4" };
             networkDiscretisation.Locations.Values.Add(location3);
             // add target node
-            networkDiscretisation.Locations.Values.Add(new NetworkLocation(branch1, 5) { Name = "point_5" });
+            networkDiscretisation.Locations.Values.Add(new NetworkLocation(branch1, 5) { Name = "point_5", LongName = "point 5" });
 
             return networkDiscretisation;
         }

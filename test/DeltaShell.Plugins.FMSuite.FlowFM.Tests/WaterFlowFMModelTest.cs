@@ -1067,6 +1067,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         public void FmModelGetVarCellsToFeaturesNameShouldReturnEmptyTimeseries()
         {
+            if (Map.CoordinateSystemFactory == null)
+            {
+                Map.CoordinateSystemFactory = new OgrCoordinateSystemFactory();
+            }
             var model = new WaterFlowFMModel(TestHelper.GetTestFilePath(@"flow1d2dLinks\FlowFM.mdu"));
             var timeSeries = model.GetVar(WaterFlowFMModel.CellsToFeaturesName) as ITimeSeries[];
             Assert.IsNotNull(timeSeries);

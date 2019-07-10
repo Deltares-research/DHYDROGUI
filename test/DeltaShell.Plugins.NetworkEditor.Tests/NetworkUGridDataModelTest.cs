@@ -18,9 +18,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         private IHydroNetwork TestNetwork()
         {
             var network = new HydroNetwork { Name = "my Network" };
-            var hydroNode1 = new HydroNode { Name = "my Node1", Description = "Node 1 Description", Geometry = new Point(0, 0), Network = network };
+            var hydroNode1 = new HydroNode { Name = "my Node1", LongName= "Node 1 Description", Description = "Node 1 Description", Geometry = new Point(0, 0), Network = network };
             network.Nodes.Add(hydroNode1);
-            var hydroNode2 = new HydroNode { Name = "my Node2", Description = "Node 2 Description", Geometry = new Point(3, 4), Network = network };
+            var hydroNode2 = new HydroNode { Name = "my Node2", LongName = "Node 2 Description", Description = "Node 2 Description", Geometry = new Point(3, 4), Network = network };
             network.Nodes.Add(hydroNode2);
             var branch1 = new Branch
             {

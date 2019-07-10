@@ -312,6 +312,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     return false;
                 }) : (v => v.IsTimeDependent && v.NumDimensions > 1 && v.NumDimensions <= 2);
             var timeDepVariables = dataVariables.Where(timeDepVarSelectionCriteria).ToList();
+            boundaryCellValues.Clear();
             var functions = timeDepVariables.SelectMany(ProcessTimeDependent1D2DLinkVariable).Where(c => c != null).ToList();
             return functions;
         }

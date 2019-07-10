@@ -18,6 +18,7 @@ namespace DeltaShell.NGHS.IO.Grid
         static GridApi()
         {
             RemotingTypeConverters.RegisterTypeConverter(new UgridGlobalMetaDataToProtoConverter());
+            DimrApiDataSet.SetSharedPath();
             NativeLibrary.LoadNativeDll(GridApiDataSet.GRIDDLL_NAME, DimrApiDataSet.SharedDllPath);
         }
 
