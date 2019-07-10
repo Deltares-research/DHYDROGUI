@@ -1854,9 +1854,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 Assert.That(otherModel.ModelDefinition.FmMeteoFields.FirstOrDefault().Data.Components[0].Unit.Name, Is.StringContaining("millimeters per day"));
                 Assert.That(otherModel.ModelDefinition.FmMeteoFields.FirstOrDefault().Data.Components[0].Unit.Symbol, Is.StringContaining("mm day-1"));
                 Assert.That(otherModel.ModelDefinition.FmMeteoFields.FirstOrDefault().Data.Components[0].Values.Count, Is.EqualTo(3));
-                Assert.That(otherModel.ModelDefinition.FmMeteoFields.FirstOrDefault().Data.Components[0].Values[0], Is.EqualTo(meteoPrecipitationSeries.Data.Components[0].Values[0]));
-                Assert.That(otherModel.ModelDefinition.FmMeteoFields.FirstOrDefault().Data.Components[0].Values[1], Is.EqualTo(meteoPrecipitationSeries.Data.Components[0].Values[1]));
-                Assert.That(otherModel.ModelDefinition.FmMeteoFields.FirstOrDefault().Data.Components[0].Values[2], Is.EqualTo(meteoPrecipitationSeries.Data.Components[0].Values[2]));
+                Assert.That(otherModel.ModelDefinition.FmMeteoFields.FirstOrDefault().Data.Components[0].Values[0], Is.EqualTo(clone.Data.Components[0].Values[0]));
+                Assert.That(otherModel.ModelDefinition.FmMeteoFields.FirstOrDefault().Data.Components[0].Values[1], Is.EqualTo(clone.Data.Components[0].Values[1]));
+                Assert.That(otherModel.ModelDefinition.FmMeteoFields.FirstOrDefault().Data.Components[0].Values[2], Is.EqualTo(clone.Data.Components[0].Values[2]));
                 
             });
         }

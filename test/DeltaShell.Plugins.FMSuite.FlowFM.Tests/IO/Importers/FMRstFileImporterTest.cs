@@ -7,6 +7,8 @@ using DeltaShell.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using NUnit.Framework;
+using SharpMap;
+using SharpMap.Extensions.CoordinateSystems;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
 {
@@ -14,6 +16,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
     [Category(TestCategory.Slow)]
     public class FMRstFileImporterTest
     {
+        [TestFixtureSetUp]
+        public void SetMapCoordinateSystemFactory()
+        {
+            if (Map.CoordinateSystemFactory == null)
+                Map.CoordinateSystemFactory = new OgrCoordinateSystemFactory();
+        }
+
         //test is available on model in root
         [Test]
         public void FMRstFileImporterWorksOnModel()

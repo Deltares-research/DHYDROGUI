@@ -13,6 +13,8 @@ using NetTopologySuite.Geometries;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
 using NUnit.Framework;
+using SharpMap;
+using SharpMap.Extensions.CoordinateSystems;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 {
@@ -20,6 +22,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
     [Category(TestCategory.DataAccess)]
     public class FMHisFileFunctionStoreTest
     {
+        [TestFixtureSetUp]
+        public void SetMapCoordinateSystemFactory()
+        {
+            if (Map.CoordinateSystemFactory == null)
+                Map.CoordinateSystemFactory = new OgrCoordinateSystemFactory();
+        }
+
         [Test]
         public void OpenHisFileCheckFunctions()
         {

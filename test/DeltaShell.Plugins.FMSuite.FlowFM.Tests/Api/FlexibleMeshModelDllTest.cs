@@ -10,6 +10,8 @@ using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using Rhino.Mocks;
+using SharpMap;
+using SharpMap.Extensions.CoordinateSystems;
 using Point = NetTopologySuite.Geometries.Point;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
@@ -19,6 +21,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
     [Category(TestCategory.Slow)]
     public class FlexibleMeshModelDllTest
     {
+        [TestFixtureSetUp]
+        public void SetMapCoordinateSystemFactory()
+        {
+            if(Map.CoordinateSystemFactory == null)
+                Map.CoordinateSystemFactory =new OgrCoordinateSystemFactory(); 
+        }
         [Test]
         public void AssertUnstrucDllIsXpCompatible()
         {
@@ -154,7 +162,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
 
                 model.Execute();
                 result = model.GetVar(cat, pump.Name, "capacity");
-                Assert.AreEqual(95.0, ((double[]) result)[0]);
+                Assert.AreEqual(95.0, ((double[]) result)[0],0.1);
             }
 
         }

@@ -26,6 +26,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DeltaShell.NGHS.IO;
+using SharpMap;
+using SharpMap.Extensions.CoordinateSystems;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 {
@@ -73,6 +75,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Category(TestCategory.Slow)]
         public void ExportOutputCoverage()
         {
+            if(Map.CoordinateSystemFactory == null)
+                Map.CoordinateSystemFactory = new OgrCoordinateSystemFactory();
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
             var localMduFilePath = TestHelper.CreateLocalCopy(mduPath);
             var localMduDir = Path.GetDirectoryName(localMduFilePath);

@@ -4,7 +4,9 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Api;
 using NUnit.Framework;
+using SharpMap;
 using SharpMap.Api;
+using SharpMap.Extensions.CoordinateSystems;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
 {
@@ -13,6 +15,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
     [Category(TestCategory.Slow)]
     public class GridOperationApiTest
     {
+        [TestFixtureSetUp]
+        public void SetMapCoordinateSystemFactory()
+        {
+            if (Map.CoordinateSystemFactory == null)
+                Map.CoordinateSystemFactory = new OgrCoordinateSystemFactory();
+        }
+
         [Test]
         public void GetEdgeCellsViaApi()
         {
