@@ -658,7 +658,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     gui.Selection = area.DryAreas;
 
                     //switch back to drypoints layer and check speed of selection (<4000ms!) & selection count (== SelectTool.MaxSelectedFeatures)
-                    TestHelper.AssertIsFasterThan(4000, () => gui.Selection = area.DryPoints);
+                    TestHelper.AssertIsFasterThan(4400, () => gui.Selection = area.DryPoints);
                     Assert.AreEqual(SelectTool.MaxSelectedFeatures, projectItemMapView.MapView.MapControl.SelectedFeatures.Count());
                 });
             }
