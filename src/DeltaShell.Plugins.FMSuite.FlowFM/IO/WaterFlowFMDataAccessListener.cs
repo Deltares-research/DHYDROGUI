@@ -42,10 +42,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 UpdateDataItemNames(model);
                 FixImportFilePaths(model);
                 LoadSpatialData(model);
-                if (ProjectRepository.IsLegacyProject(ProjectRepository.Path))
-                {
-                    model.ClearOutput();
-                }
 
                 // BedLevel dataitem value used to be exclusively UnstructuredGridVertexCoverages, now it needs to be more generic
                 IDataItem bedLevelDataItem =
