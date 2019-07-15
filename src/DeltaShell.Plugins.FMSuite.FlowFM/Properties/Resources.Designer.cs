@@ -544,13 +544,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Copying file at location &apos;{0}&apos; to location &apos;{1}&apos; did not succeed,
-        ///because the file already exists. File import of feature file &apos;{0}&apos; has failed..
+        ///   Looks up a localized string similar to Copying file from location &apos;{0}&apos; to location &apos;{1}&apos; will overwrite the existing file at the new location..
         /// </summary>
-        public static string MduFile_CopyFilesToProjectFolderIfNeeded_CopyingFileDidNotSucceedBecauseFileAlreadyExists {
+        public static string MduFile_CopyFilesToProjectFolderIfNeeded_CopyingFileOverwritesFileThatAtNewLocation {
             get {
-                return ResourceManager.GetString("MduFile_CopyFilesToProjectFolderIfNeeded_CopyingFileDidNotSucceedBecauseFileAlrea" +
-                        "dyExists", resourceCulture);
+                return ResourceManager.GetString("MduFile_CopyFilesToProjectFolderIfNeeded_CopyingFileOverwritesFileThatAtNewLocati" +
+                        "on", resourceCulture);
             }
         }
         

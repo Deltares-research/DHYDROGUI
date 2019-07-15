@@ -1,10 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text.RegularExpressions;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.KnownStructureProperties;
@@ -35,6 +28,13 @@ using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Geometries;
 using SharpMap;
 using SharpMap.Api.SpatialOperations;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 {
@@ -1774,20 +1774,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                     string newFilePath = System.IO.Path.Combine(mduDirectory, System.IO.Path.GetFileName(filePath));
                     if (File.Exists(newFilePath))
                     {
-                        Log.ErrorFormat(
-                            Resources
-                                .MduFile_CopyFilesToProjectFolderIfNeeded_CopyingFileDidNotSucceedBecauseFileAlreadyExists,
-                            filePath, newFilePath);
-                        featureGroupNames[i] = null;
-                        continue;
+                        Log.InfoFormat(Resources.MduFile_CopyFilesToProjectFolderIfNeeded_CopyingFileOverwritesFileThatAtNewLocation,
+                                       filePath, newFilePath);
+                    }
+                    else
+                    {
+                        Log.InfoFormat(Resources.MduFile_CopyFilesToProjectFolderIfNeeded_CopiedFileFrom_0_to_1_BecauseTheFileExistedOutsideOfTheProjectFolder,
+                                       filePath, newFilePath, modelDefinition.ModelName);
                     }
 
-                    File.Copy(filePath, newFilePath);
+                    File.Copy(filePath, newFilePath, true);
                     oldFilePaths.Add(newFilePath, filePath);
-                    Log.InfoFormat(
-                        Resources
-                            .MduFile_CopyFilesToProjectFolderIfNeeded_CopiedFileFrom_0_to_1_BecauseTheFileExistedOutsideOfTheProjectFolder,
-                        filePath, newFilePath, modelDefinition.ModelName);
                     featureGroupNames[i] = newFilePath;
                 }
             }

@@ -302,9 +302,8 @@
     <value>File at location '{0}' does not exist, but is defined in MDU file at '{1}'
 at property '{2}'. Model information may have been lost while loading model '{3}'.</value>
   </data>
-  <data name="MduFile_CopyFilesToProjectFolderIfNeeded_CopyingFileDidNotSucceedBecauseFileAlreadyExists" xml:space="preserve">
-    <value>Copying file at location '{0}' to location '{1}' did not succeed,
-because the file already exists. File import of feature file '{0}' has failed.</value>
+  <data name="MduFile_CopyFilesToProjectFolderIfNeeded_CopyingFileOverwritesFileThatAtNewLocation" xml:space="preserve">
+    <value>Copying file from location '{0}' to location '{1}' will overwrite the existing file at the new location.</value>
   </data>
   <data name="MduFile_CopyFilesToProjectFolderIfNeeded_CopiedFileFrom_0_to_1_BecauseTheFileExistedOutsideOfTheProjectFolder" xml:space="preserve">
     <value>Copied file at location '{0}' to location '{1}',

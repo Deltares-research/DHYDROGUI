@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
@@ -9,16 +6,16 @@ using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
-using log4net;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
 {
     public static class StructureFactory
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(StructureFactory));
-
         private static readonly Dictionary<StructureType, Func<Structure2D, string, DateTime, IStructure1D>>
             CreateStructureType = new Dictionary<StructureType, Func<Structure2D, string, DateTime, IStructure1D>>
             {
@@ -321,11 +318,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
                 }
 
                 ModelProperty structureproperty = structure2D.GetProperty(property);
-                if (structureproperty == null)
-                {
-                    Log.WarnFormat("Property [{0}] is not supported and is skipped.", property);
-                }
-                else
+                if (structureproperty != null)
                 {
                     gsWeirFormula.SetPropertyValue(
                         property, FMParser.FromString<double>(structureproperty.GetValueAsString()));
@@ -334,12 +327,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
 
             ModelProperty horizontalDoorOpeningDirectionProperty =
                 structure2D.GetProperty(KnownGeneralStructureProperties.GateOpeningHorizontalDirection);
-            if (horizontalDoorOpeningDirectionProperty == null)
-            {
-                Log.WarnFormat("Property [{0}] is not supported and is skipped.",
-                               KnownGeneralStructureProperties.GateOpeningHorizontalDirection);
-            }
-            else
+            if (horizontalDoorOpeningDirectionProperty != null)
             {
                 gsWeirFormula.HorizontalDoorOpeningDirection =
                     (GateOpeningDirection) horizontalDoorOpeningDirectionProperty.Value;
