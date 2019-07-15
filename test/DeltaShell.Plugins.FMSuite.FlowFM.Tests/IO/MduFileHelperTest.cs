@@ -4,6 +4,8 @@ using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
+using log4net.Core;
 using NUnit.Framework;
 using Rhino.Mocks;
 using System.Collections.Generic;
@@ -217,13 +219,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 File.Create(sourceFilePath).Close();
 
                 // When
-                MduFileHelper.CopyFilesToMduFolderIfNeeded(
+                void TestAction() => MduFileHelper.CopyFilesToMduFolderIfNeeded(
                     new[] { sourceFilePath },
                     mduFilePath,
                     modelDefinition,
                     propertyKey);
 
                 // Then
+                var renderedInfoMessages = TestHelper.GetAllRenderedMessages(TestAction, Level.Info);
+                var expectedMessage = string.Format(Resources.MduFile_CopyFilesToProjectFolderIfNeeded_CopiedFileFrom_0_to_1_BecauseTheFileExistedOutsideOfTheProjectFolder,
+                                                    sourceFilePath, targetFilePath, modelDefinition.ModelName);
+                Assert.That(renderedInfoMessages.Contains(expectedMessage));
                 Assert.That(File.Exists(sourceFilePath),
                             "When importing an mdu, original referenced files should not be deleted.");
                 Assert.That(File.Exists(targetFilePath),
@@ -256,13 +262,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 File.WriteAllText(targetFilePath, "target");
 
                 // When
-                MduFileHelper.CopyFilesToMduFolderIfNeeded(
+                void TestAction() => MduFileHelper.CopyFilesToMduFolderIfNeeded(
                     new[] { sourceFilePath },
                     mduFilePath,
                     modelDefinition,
                     propertyKey);
 
                 // Then
+                var renderedLogMessages = TestHelper.GetAllRenderedMessages(TestAction, Level.Info);
+                var expectedMessage = string.Format(Resources.MduFile_CopyFilesToProjectFolderIfNeeded_CopyingFileOverwritesFileThatAtNewLocation,
+                                                    sourceFilePath, targetFilePath);
+                Assert.That(renderedLogMessages.Contains(expectedMessage));
                 Assert.That(File.Exists(sourceFilePath),
                             "When importing an mdu, original referenced files should not be deleted.");
                 Assert.That(File.Exists(targetFilePath),
