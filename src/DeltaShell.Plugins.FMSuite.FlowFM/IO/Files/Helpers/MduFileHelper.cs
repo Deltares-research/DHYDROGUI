@@ -289,12 +289,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
         /// <param name="mduFilePath"> The file path of the mdu file. </param>
         /// <param name="modelDefinition"> The model definition of the FM Model. </param>
         /// <param name="propertyKey"> The key that corresponds to the type of file that is being read. </param>
-        /// <param name="oldFilePaths"> Dictionary that relates the resulting file paths to their original file paths. </param>
-        public static void CopyFilesToProjectFolderIfNeeded(IList<string> featureGroupNames, 
+        public static void CopyFilesToProjectFolderIfNeeded(IList<string> featureGroupNames,
                                                             string mduFilePath,
                                                             WaterFlowFMModelDefinition modelDefinition,
-                                                            string propertyKey,
-                                                            ref Dictionary<string, string> oldFilePaths)
+                                                            string propertyKey)
         {
             string mduDirectory = Path.GetDirectoryName(Path.GetFullPath(mduFilePath));
             for (var i = 0; i < featureGroupNames.Count; i++)
@@ -307,7 +305,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
                 ) // File is situated inside mdu-folder or in a subfolder 
                 {
                     featureGroupNames[i] = filePath;
-                    oldFilePaths.Add(filePath, filePath);
                 }
                 else // File is situated outside of mdu-folder
                 {
@@ -328,7 +325,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
                     }
 
                     File.Copy(filePath, newFilePath, true);
-                    oldFilePaths.Add(newFilePath, filePath);
                     featureGroupNames[i] = newFilePath;
                 }
             }

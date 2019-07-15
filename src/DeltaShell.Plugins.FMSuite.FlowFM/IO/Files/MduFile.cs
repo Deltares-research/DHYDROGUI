@@ -1446,12 +1446,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                                                        string propertyKey, IList<TFeat> features, ref TFile fileReader,
                                                        string extension) where TFile : IFeature2DFileBase<TFeat>, new()
         {
-            var replacedFilePaths = new Dictionary<string, string>();
             WaterFlowFMProperty modelProperty = modelDefinition.GetModelProperty(propertyKey);
             IList<string> featuresFilePaths = MduFileHelper.GetMultipleSubfilePath(mduFilePath, modelProperty);
             RemoveBadFilePaths(ref featuresFilePaths, mduFilePath, modelDefinition, propertyKey);
-            MduFileHelper.CopyFilesToProjectFolderIfNeeded(featuresFilePaths, mduFilePath, modelDefinition, propertyKey,
-                                             ref replacedFilePaths);
+            MduFileHelper.CopyFilesToProjectFolderIfNeeded(featuresFilePaths, mduFilePath, modelDefinition, propertyKey);
 
             if (featuresFilePaths == null || featuresFilePaths.Count == 0)
             {
@@ -1576,15 +1574,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         private void ReadDryPointsAndDryAreas(string mduFilePath, WaterFlowFMModelDefinition modelDefinition,
                                               HydroArea hydroArea)
         {
-            var replacedFilePaths = new Dictionary<string, string>();
             string dryPointsPropertyKey = KnownProperties.DryPointsFile;
             string mduPathName = System.IO.Path.GetFileNameWithoutExtension(mduFilePath);
 
             WaterFlowFMProperty modelProperty = modelDefinition.GetModelProperty(dryPointsPropertyKey);
             IList<string> featureFilePaths = MduFileHelper.GetMultipleSubfilePath(mduFilePath, modelProperty);
             RemoveBadFilePaths(ref featureFilePaths, mduFilePath, modelDefinition, dryPointsPropertyKey);
-            MduFileHelper.CopyFilesToProjectFolderIfNeeded(featureFilePaths, mduFilePath, modelDefinition, dryPointsPropertyKey,
-                                             ref replacedFilePaths);
+            MduFileHelper.CopyFilesToProjectFolderIfNeeded(featureFilePaths, mduFilePath, modelDefinition, dryPointsPropertyKey);
             if (!featureFilePaths.Any())
             {
                 return;
