@@ -428,11 +428,11 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\PostSharp.5.0.55\build\PostSharp.props'))" />
     <Error Condition="!Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\PostSharp.5.0.55\build\PostSharp.targets'))" />
-    <Error Condition="!Exists('..\..\packages\RGFGRID.5.4.0.61089\build\net40\RGFGRID.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\RGFGRID.5.4.0.61089\build\net40\RGFGRID.targets'))" />
     <Error Condition="!Exists('..\..\packages\DeltaShell.Framework.1.4.0.44777\build\net461\DeltaShell.Framework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DeltaShell.Framework.1.4.0.44777\build\net461\DeltaShell.Framework.targets'))" />
+    <Error Condition="!Exists('..\..\packages\RGFGRID.5.4.0.61849\build\net40\RGFGRID.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\RGFGRID.5.4.0.61849\build\net40\RGFGRID.targets'))" />
   </Target>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Import Project="..\..\packages\PostSharp.5.0.55\build\PostSharp.targets" Condition="Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.targets')" />
-  <Import Project="..\..\packages\RGFGRID.5.4.0.61089\build\net40\RGFGRID.targets" Condition="Exists('..\..\packages\RGFGRID.5.4.0.61089\build\net40\RGFGRID.targets')" />
   <Import Project="..\..\packages\DeltaShell.Framework.1.4.0.44777\build\net461\DeltaShell.Framework.targets" Condition="Exists('..\..\packages\DeltaShell.Framework.1.4.0.44777\build\net461\DeltaShell.Framework.targets')" />
+  <Import Project="..\..\packages\RGFGRID.5.4.0.61849\build\net40\RGFGRID.targets" Condition="Exists('..\..\packages\RGFGRID.5.4.0.61849\build\net40\RGFGRID.targets')" />
 </Project>
