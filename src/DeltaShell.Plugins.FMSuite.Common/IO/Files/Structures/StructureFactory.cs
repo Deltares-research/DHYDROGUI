@@ -317,11 +317,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
                     continue;
                 }
 
-                ModelProperty structureproperty = structure2D.GetProperty(property);
-                if (structureproperty != null)
+                ModelProperty structureProperty = structure2D.GetProperty(property);
+                if (structureProperty != null)
                 {
                     gsWeirFormula.SetPropertyValue(
-                        property, FMParser.FromString<double>(structureproperty.GetValueAsString()));
+                        property, FMParser.FromString<double>(structureProperty.GetValueAsString()));
                 }
             }
 
