@@ -288,10 +288,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
         /// <param name="mduFilePath"> The file path of the mdu file. </param>
         /// <param name="modelDefinition"> The model definition of the FM Model. </param>
         /// <param name="propertyKey"> The key that corresponds to the type of file that is being read. </param>
-        public static void CopyFilesToProjectFolderIfNeeded(IList<string> featureGroupNames,
-                                                            string mduFilePath,
-                                                            WaterFlowFMModelDefinition modelDefinition,
-                                                            string propertyKey)
+        public static void CopyFilesToMduFolderIfNeeded(IList<string> featureGroupNames,
+                                                        string mduFilePath,
+                                                        WaterFlowFMModelDefinition modelDefinition,
+                                                        string propertyKey)
         {
             string mduDirectory = Path.GetDirectoryName(Path.GetFullPath(mduFilePath));
             for (var i = 0; i < featureGroupNames.Count; i++)
