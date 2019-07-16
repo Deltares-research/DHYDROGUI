@@ -1,29 +1,27 @@
-﻿using DelftTools.Hydro;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
+using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.Gui;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.Data.NHibernate;
+using DeltaShell.Plugins.FMSuite.Common.IO.ImportExport;
 using DeltaShell.Plugins.FMSuite.Common.Tests.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.ImportersExporters;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.NetworkEditor.Gui;
 using DeltaShell.Plugins.ProjectExplorer;
 using DeltaShell.Plugins.SharpMapGis;
 using DeltaShell.Plugins.SharpMapGis.Gui;
 using NUnit.Framework;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using DelftTools.Shell.Core;
-using DeltaShell.Plugins.FMSuite.Common.IO.ImportExport;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.ImportersExporters;
-using DeltaShell.Plugins.FMSuite.FlowFM.Model;
-using GeoAPI.Geometries;
-using NetTopologySuite.Geometries;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 {
@@ -86,43 +84,36 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
-        [Category(TestCategory.Integration)]
         [Category(TestCategory.DataAccess)]
-        [Category(TestCategory.Slow)]
-        public void GivenAPliFileForAPump_WhemImportingThisFile_ThenACorrectPumpShouldBeCreatedWhichCanBeTimeDependent()
+        public void GivenAPliFileForAPump_WhenImportingThisFile_ThenACorrectPumpShouldBeCreatedWhichCanBeTimeDependent()
         {
-            using (var gui = new DeltaShellGui())
-            {
-                // Given
-                var app = gui.Application;
-                app.Plugins.Add(new FlowFMApplicationPlugin());
+            // Given
+            var plugin = new FlowFMApplicationPlugin();
+            IEnumerable<IFileImporter> fileImporters = plugin.GetFileImporters();
+            PliFileImporterExporter<Pump2D, Pump2D> importer =
+                fileImporters.OfType<PliFileImporterExporter<Pump2D, Pump2D>>().Single();
 
-                // Run app to create all the File Importers
-                app.Run();
+            // Set delegates to null, since they are used for the relation between model en pump
+            // and we only want to test the creation of the pump based on the pli file
+            importer.AfterCreateAction = null;
+            importer.GetEditableObject = null;
 
-                PliFileImporterExporter<Pump2D, Pump2D> importer = gui.Application.FileImporters.OfType<PliFileImporterExporter<Pump2D, Pump2D>>().FirstOrDefault();
-                Assert.NotNull(importer, "During initialising the pli file importer for pumps was not created");
+            // When
+            List<Pump2D> pumps =
+                (List<Pump2D>) importer.ImportItem(TestHelper.GetTestFilePath("structures_all_types\\pump01.pli"));
 
-                // Set delegates to null, since they are used for the relation between model en pump
-                // and we only want to test the creation of the pump based on the pli file
-                importer.AfterCreateAction = null;
-                importer.GetEditableObject = null;
+            // Then
+            var counter = pumps.Count;
+            Assert.AreEqual(1, counter, $"{counter} pumps created instead of 1");
 
-                // When
-                List <Pump2D> pumps = (List<Pump2D>)importer.ImportItem(TestHelper.GetTestFilePath("structures_all_types\\pump01.pli"));
-               
-                // Then
-                var counter = pumps.Count;
-                Assert.AreEqual(1, counter, $"{counter} pumps created instead of 1");
+            Pump2D pump = pumps[0];
+            Assert.IsTrue(pump.CanBeTimedependent,
+                          "CreateDelegate of the importer is not correct. Pump2D should be created with \"CanBeTimedependent\" is true");
+            Assert.AreEqual(158031.3362860695, pump.Geometry.Coordinates[0].X, "Geometry of the pump is not correctly imported");
+            Assert.AreEqual(578431.3969514973, pump.Geometry.Coordinates[0].Y, "Geometry of the pump is not correctly imported");
 
-                Pump2D pump = pumps[0];
-                Assert.IsTrue(pump.CanBeTimedependent, "CreateDelegate of the importer is not correct. Pump2D should be created with \"CanBeTimedependent\" is true");
-                Assert.AreEqual(158031.3362860695, pump.Geometry.Coordinates[0].X, "Geometry of the pump is not correctly imported");
-                Assert.AreEqual(578431.3969514973, pump.Geometry.Coordinates[0].Y, "Geometry of the pump is not correctly imported");
-
-                Assert.AreEqual(158372.1368887129, pump.Geometry.Coordinates[4].X, "Geometry of the pump is not correctly imported");
-                Assert.AreEqual(578437.8625413019, pump.Geometry.Coordinates[4].Y, "Geometry of the pump is not correctly imported");
-            }
+            Assert.AreEqual(158372.1368887129, pump.Geometry.Coordinates[4].X, "Geometry of the pump is not correctly imported");
+            Assert.AreEqual(578437.8625413019, pump.Geometry.Coordinates[4].Y, "Geometry of the pump is not correctly imported");
         }
 
         [Test]
