@@ -286,6 +286,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 Mode = Feature2DImportExportMode.Import,
                 CreateFromFeature = f => new Pump2D(f.Name, true) {Geometry = f.Geometry},
+                CreateDelegate = delegate (List<Coordinate> points1, string name1)
+                {
+                    var pump2D = new Pump2D(true)
+                    {
+                        Name = name1,
+                        Geometry = PliFile<FixedWeir>.CreatePolyLineGeometry(points1)
+                    };
+                    return pump2D;
+                },
                 GetFeature = w => new Pump2D()
                 {
                     Name = w.Name,
