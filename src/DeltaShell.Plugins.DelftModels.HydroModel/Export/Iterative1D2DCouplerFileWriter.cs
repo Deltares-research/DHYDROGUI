@@ -2,15 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using DelftTools.Hydro;
-using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.IO;
 using DeltaShell.Dimr;
 using DeltaShell.NGHS.IO.FileWriters;
 using DeltaShell.NGHS.IO.FileWriters.General;
 using DeltaShell.NGHS.IO.Helpers;
+using NetTopologySuite.Extensions.Features;
 using SharpMap.Data.Providers;
-using Feature = NetTopologySuite.Extensions.Features.Feature;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
 {

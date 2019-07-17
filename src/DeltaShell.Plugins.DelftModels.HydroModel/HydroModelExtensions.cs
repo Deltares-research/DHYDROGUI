@@ -2,7 +2,6 @@
 using DelftTools.Shell.Core;
 using DelftTools.Utils.Editing;
 
-
 namespace DeltaShell.Plugins.DelftModels.HydroModel
 {
     public static class HydroModelExtensions
