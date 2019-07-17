@@ -1,8 +1,7 @@
-﻿using DeltaShell.NGHS.IO.FileReaders;
+﻿using System.IO;
+using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.Handlers;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd;
-using System.IO;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 {
