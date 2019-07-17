@@ -4,7 +4,6 @@ using System.Linq;
 using DelftTools.Utils.Aop;
 using BasicModelInterface;
 
-
 namespace DeltaShell.Dimr.Gui.ViewModels
 {
     [Entity]
