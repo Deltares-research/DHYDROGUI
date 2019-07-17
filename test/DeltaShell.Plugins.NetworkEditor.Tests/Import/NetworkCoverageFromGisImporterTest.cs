@@ -5,13 +5,12 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.NetworkEditor.Import;
 using GeoAPI.Extensions.Coverages;
-using NetTopologySuite.Geometries;
 using NetTopologySuite.Extensions.Coverages;
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using SharpMap.Api;
 using SharpMap.Data.Providers;
 using SharpMap.Extensions.Data.Providers;
-using Point = NetTopologySuite.Geometries.Point;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
 {

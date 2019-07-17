@@ -1,5 +1,7 @@
+using System;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
@@ -25,19 +27,17 @@ using DeltaShell.Plugins.SharpMapGis.Gui.Forms.LayerPropertiesEditor;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
-using NetTopologySuite.Geometries;
 using log4net;
 using log4net.Core;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Networks;
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using Rhino.Mocks;
 using SharpMap.Layers;
+using SharpMap.Rendering.Thematics;
 using SharpTestsEx;
 using Point = NetTopologySuite.Geometries.Point;
-using System;
-using System.Windows.Controls;
-using SharpMap.Rendering.Thematics;
 
 namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
 {

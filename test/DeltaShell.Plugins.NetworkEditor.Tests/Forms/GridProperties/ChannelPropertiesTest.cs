@@ -2,13 +2,12 @@
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
+using DelftTools.Utils.ComponentModel;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid;
 using GeoAPI.Extensions.Networks;
 using NetTopologySuite.Extensions.Networks;
-using NUnit.Framework;
-using Point = NetTopologySuite.Geometries.Point;
-using DelftTools.Utils.ComponentModel;
 using NetTopologySuite.Geometries;
+using NUnit.Framework;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.GridProperties
 {

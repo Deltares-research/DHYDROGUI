@@ -2,7 +2,6 @@
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView;
 using NUnit.Framework;
 
-
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
 {
     [TestFixture]

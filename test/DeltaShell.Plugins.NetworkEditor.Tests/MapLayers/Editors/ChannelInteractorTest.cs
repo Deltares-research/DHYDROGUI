@@ -16,7 +16,6 @@ using SharpMap.Converters.WellKnownText;
 using SharpMap.Editors.FallOff;
 using SharpMap.Editors.Interactors.Network;
 using SharpMap.Extensions.CoordinateSystems;
-using Point = NetTopologySuite.Geometries.Point;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Editors
 {

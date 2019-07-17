@@ -2,9 +2,9 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView;
 using NetTopologySuite.Extensions.Coverages;
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using SharpMap.Converters.WellKnownText;
-using Point = NetTopologySuite.Geometries.Point;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CompositeStructureView
 {

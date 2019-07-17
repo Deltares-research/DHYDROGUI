@@ -1,7 +1,6 @@
 ﻿using System.Windows.Threading;
 using NUnit.Framework;
 
-
 namespace DeltaShell.Plugins.NetworkEditor.Tests
 {
     /// <summary>

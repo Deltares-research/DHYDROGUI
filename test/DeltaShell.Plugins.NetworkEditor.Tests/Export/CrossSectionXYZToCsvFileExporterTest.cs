@@ -6,9 +6,9 @@ using DelftTools.Hydro.Helpers;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.NetworkEditor.ImportExportCsv;
 using GeoAPI.Geometries;
-using NetTopologySuite.Geometries;
 using NetTopologySuite.Extensions.Geometries;
 using NetTopologySuite.Extensions.Networks;
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Export
