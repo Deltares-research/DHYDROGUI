@@ -1,12 +1,12 @@
-﻿using DelftTools.Shell.Core.Workflow.DataItems;
+﻿using System.Collections.Generic;
+using System.Linq;
+using DelftTools.Shell.Core.Workflow.DataItems;
 using DeltaShell.Core;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using NUnit.Framework;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 {

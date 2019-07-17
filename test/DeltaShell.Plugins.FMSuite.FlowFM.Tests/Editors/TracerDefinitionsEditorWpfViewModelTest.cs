@@ -1,5 +1,4 @@
 ﻿using System.Collections.Specialized;
-using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;

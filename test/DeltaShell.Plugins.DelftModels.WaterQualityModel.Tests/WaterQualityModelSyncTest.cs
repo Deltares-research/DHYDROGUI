@@ -20,11 +20,10 @@ using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using SharpMap.SpatialOperations;
-
 using SharpMapTestUtils;
-using Point = NetTopologySuite.Geometries.Point;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 {

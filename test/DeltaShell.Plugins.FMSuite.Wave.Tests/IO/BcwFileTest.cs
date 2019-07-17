@@ -1,11 +1,11 @@
-﻿using DelftTools.Functions;
-using DelftTools.TestUtils;
-using DeltaShell.Plugins.FMSuite.Wave.IO;
-using NUnit.Framework;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DelftTools.Functions;
+using DelftTools.TestUtils;
+using DeltaShell.Plugins.FMSuite.Wave.IO;
+using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
 {

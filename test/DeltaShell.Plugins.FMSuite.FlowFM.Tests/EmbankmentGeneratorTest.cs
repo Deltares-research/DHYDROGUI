@@ -1,14 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using DelftTools.Hydro.CrossSections;
-using NUnit.Framework;
 using DelftTools.Hydro;
-using GeoAPI.Geometries;
-using NetTopologySuite.Geometries;
+using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
-using Point = NetTopologySuite.Geometries.Point;
+using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
+using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 {

@@ -1,21 +1,17 @@
 ﻿using System;
 using System.Globalization;
 using System.Linq;
-
 using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DelftTools.Utils.PropertyBag.Dynamic;
 using DelftTools.Utils.Reflection;
-
 using DeltaShell.Gui.Forms.PropertyGrid;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Extentions;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGrid;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils;
-
 using NUnit.Framework;
-
 using Rhino.Mocks;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests

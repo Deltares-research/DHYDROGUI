@@ -1,17 +1,17 @@
 ﻿using System;
+using System.Linq;
 using System.Windows.Controls;
+using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
 using DeltaShell.Gui;
 using DeltaShell.Plugins.FMSuite.Wave.Gui;
+using DeltaShell.Plugins.FMSuite.Wave.IO.Importers;
 using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.NetworkEditor.Gui;
 using DeltaShell.Plugins.ProjectExplorer;
 using DeltaShell.Plugins.SharpMapGis;
 using DeltaShell.Plugins.SharpMapGis.Gui;
 using NUnit.Framework;
-using System.Linq;
-using DeltaShell.Plugins.FMSuite.Wave.IO.Importers;
-using DelftTools.Shell.Core;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
 {

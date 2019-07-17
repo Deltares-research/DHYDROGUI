@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using NUnit.Framework;
 

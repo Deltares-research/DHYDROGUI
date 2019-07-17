@@ -6,7 +6,6 @@ using DeltaShell.Plugins.FMSuite.Common.Gui.RgfGrid;
 using GeoAPI.Geometries;
 using NUnit.Framework;
 
-
 namespace DeltaShell.Plugins.FMSuite.Common.Tests.RgfGrid
 {
     [TestFixture]

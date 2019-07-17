@@ -1,8 +1,6 @@
 ﻿using DelftTools.Utils;
 using DelftTools.Utils.Data;
-
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.BoundaryData;
-
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.DataObjects.BoundaryData

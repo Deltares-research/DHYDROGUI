@@ -1,16 +1,13 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
-
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.ObservationAreas;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using NUnit.Framework;
-
 using SharpMapTestUtils;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO

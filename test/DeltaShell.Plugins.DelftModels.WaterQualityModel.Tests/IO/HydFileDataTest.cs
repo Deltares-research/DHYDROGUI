@@ -6,7 +6,6 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.Data;
 using DelftTools.Utils.IO;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
-
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO

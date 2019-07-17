@@ -1,14 +1,14 @@
-﻿using DelftTools.Controls;
+﻿using System.Linq;
+using DelftTools.Controls;
 using DelftTools.Controls.Swf.TreeViewControls;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
+using DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
 using NUnit.Framework;
 using Rhino.Mocks;
-using System.Linq;
-using DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 {

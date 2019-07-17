@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-
 using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects;
@@ -8,9 +7,7 @@ using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.SubstanceProc
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.FeatureEditing;
 using DeltaShell.Plugins.SharpMapGis.Gui;
-
 using NUnit.Framework;
-
 using SharpMap;
 using SharpMap.Api.Layers;
 using SharpMap.Layers;

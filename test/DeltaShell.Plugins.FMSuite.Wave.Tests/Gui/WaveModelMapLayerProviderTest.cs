@@ -1,4 +1,7 @@
-﻿using DelftTools.Shell.Core;
+﻿using System.Drawing;
+using System.Linq;
+using System.Windows.Forms;
+using DelftTools.Shell.Core;
 using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
@@ -10,9 +13,6 @@ using NUnit.Framework;
 using SharpMap;
 using SharpMap.Api.Layers;
 using SharpMap.UI.Forms;
-using System.Drawing;
-using System.Linq;
-using System.Windows.Forms;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
 {

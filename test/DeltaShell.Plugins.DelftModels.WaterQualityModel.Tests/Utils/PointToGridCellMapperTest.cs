@@ -1,9 +1,6 @@
 ﻿using System;
-
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils;
-
 using NUnit.Framework;
-
 using SharpMapTestUtils;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Utils

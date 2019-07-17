@@ -1,8 +1,8 @@
 ﻿using DelftTools.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors;
 using GeoAPI.Geometries;
-using NetTopologySuite.Geometries;
 using NetTopologySuite.Extensions.Features;
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui

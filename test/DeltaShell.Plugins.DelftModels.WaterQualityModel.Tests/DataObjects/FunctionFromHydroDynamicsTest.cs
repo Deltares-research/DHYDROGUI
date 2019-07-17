@@ -1,5 +1,4 @@
 ﻿using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects;
-
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.DataObjects

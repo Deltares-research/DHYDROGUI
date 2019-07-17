@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Linq;
-
 using DelftTools.TestUtils;
-
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Extentions;
-
 using NetTopologySuite.Extensions.Coverages;
 using NUnit.Framework;
-
 using SharpMapTestUtils;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Extentions

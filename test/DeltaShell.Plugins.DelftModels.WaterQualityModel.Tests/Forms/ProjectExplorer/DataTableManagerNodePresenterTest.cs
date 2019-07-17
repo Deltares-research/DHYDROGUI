@@ -1,11 +1,8 @@
 ﻿using System.Linq;
-
 using DelftTools.Controls;
 using DelftTools.Controls.Swf.TreeViewControls;
-
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.BoundaryData;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.ProjectExplorer;
-
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Forms.ProjectExplorer

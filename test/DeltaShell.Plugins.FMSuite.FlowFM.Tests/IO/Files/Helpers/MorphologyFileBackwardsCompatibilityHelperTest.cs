@@ -5,7 +5,6 @@ using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using NUnit.Framework;
 using Rhino.Mocks;
 
-
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.Helpers
 {
     [TestFixture]
