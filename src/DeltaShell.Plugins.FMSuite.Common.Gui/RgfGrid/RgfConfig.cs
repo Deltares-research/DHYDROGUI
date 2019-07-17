@@ -6,7 +6,6 @@ using DelftTools.Utils.Collections.Extensions;
 using DeltaShell.NGHS.IO.Helpers;
 using GeoAPI.Geometries;
 
-
 namespace DeltaShell.Plugins.FMSuite.Common.Gui.RgfGrid
 {
     /// <summary>
