@@ -13,8 +13,8 @@ using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Extensions.Geometries;
-using NetTopologySuite.Geometries;
 using NetTopologySuite.Extensions.Networks;
+using NetTopologySuite.Geometries;
 using SharpMap.Api.Layers;
 using SharpMap.UI.Tools;
 

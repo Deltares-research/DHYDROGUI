@@ -10,11 +10,11 @@ using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Networks;
 using SharpMap.Api.Editors;
 using SharpMap.Api.Layers;
+using SharpMap.Converters.Geometries;
 using SharpMap.Editors;
 using SharpMap.Editors.Interactors.Network;
 using SharpMap.Rendering;
 using SharpMap.Styles;
-using GeometryFactory = SharpMap.Converters.Geometries.GeometryFactory;
 
 namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
 {

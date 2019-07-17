@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Drawing;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
+using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
 using SharpMap.Api;
 using SharpMap.Api.Layers;
 using SharpMap.CoordinateSystems.Transformations;
 using SharpMap.Rendering;
 using SharpMap.Styles;
-using NetTopologySuite.Extensions.Features;
 using log4net;
 
 namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
