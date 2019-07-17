@@ -21,6 +21,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
     public class NetworkDefinitionFileReaderTest
     {
         private IHydroNetwork originalNetwork;
+        private string networkFilePath = Path.Combine(FileWriterTestHelper.TargetPath, "NetworkDefinition.ini");
 
         [SetUp]
         public void SetUp()
@@ -45,14 +46,14 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
             var originalDiscretization = NetworkAndGridReaderTestHelper.GenerateDiscretization(branch, NetworkAndGridReaderTestHelper.NUM_DISCRETIZATION_LOCATIONS);
 
             // Write to file
-            NetworkAndGridWriter.WriteFile(FileWriterTestHelper.ModelFileNames.Network, originalNetwork, originalDiscretization);
+            NetworkAndGridWriter.WriteFile(networkFilePath, originalNetwork, originalDiscretization);
 
             // Read from file
             IHydroNetwork readNetwork = new HydroNetwork();
             IDiscretization readDiscretization = new Discretization();
 
             var networkDefinitionFileReader = new NetworkDefinitionFileReader((header, errorMessages) => {});
-            var readNetworkLocations = networkDefinitionFileReader.ReadNetworkDefinitionFile(FileWriterTestHelper.ModelFileNames.Network, readNetwork);
+            var readNetworkLocations = networkDefinitionFileReader.ReadNetworkDefinitionFile(networkFilePath, readNetwork);
             readDiscretization.Locations.Values.AddRange(readNetworkLocations.ToList());
 
             // Comparison
@@ -92,19 +93,19 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
             var originalDiscretization = NetworkAndGridReaderTestHelper.GenerateDiscretization(branch, NetworkAndGridReaderTestHelper.NUM_DISCRETIZATION_LOCATIONS);
 
             // Write to file
-            NetworkAndGridWriter.WriteFile(FileWriterTestHelper.ModelFileNames.Network, originalNetwork, originalDiscretization);
+            NetworkAndGridWriter.WriteFile(networkFilePath, originalNetwork, originalDiscretization);
 
             //screw up file
-            var categories = new DelftIniReader().ReadDelftIniFile(FileWriterTestHelper.ModelFileNames.Network);
+            var categories = new DelftIniReader().ReadDelftIniFile(networkFilePath);
             var firstNode = categories.FirstOrDefault(category => category.Name == "Node");
             if (firstNode == null) return;
             firstNode.Properties.RemoveAt(1);
-            new IniFileWriter().WriteIniFile(categories, FileWriterTestHelper.ModelFileNames.Network);
+            new IniFileWriter().WriteIniFile(categories, networkFilePath);
 
             // Read from model
             var errorReport = new List<string>();
             var networkDefinitionFileReader = new NetworkDefinitionFileReader((header, errorMessages) => { errorReport.AddRange(errorMessages); });
-            Assert.Throws<Exception>(() => networkDefinitionFileReader.ReadNetworkDefinitionFile(FileWriterTestHelper.ModelFileNames.Network, new HydroNetwork()));
+            Assert.Throws<Exception>(() => networkDefinitionFileReader.ReadNetworkDefinitionFile(networkFilePath, new HydroNetwork()));
 
             Assert.That(errorReport.Count, Is.GreaterThan(0));
         }
@@ -124,16 +125,16 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
                 NetworkAndGridReaderTestHelper.NUM_DISCRETIZATION_LOCATIONS);
 
             // Write to file
-            NetworkAndGridWriter.WriteFile(FileWriterTestHelper.ModelFileNames.Network, originalNetwork,
+            NetworkAndGridWriter.WriteFile(networkFilePath, originalNetwork,
                 originalDiscretization);
 
             //Remove categories
-            new IniFileWriter().WriteIniFile(new List<DelftIniCategory>(), FileWriterTestHelper.ModelFileNames.Network);
+            new IniFileWriter().WriteIniFile(new List<DelftIniCategory>(), networkFilePath);
 
             //Read from model
             var networkDefinitionFileReader = new NetworkDefinitionFileReader((header, errorMessages) => { });
             Assert.Throws<FileReadingException>(() => 
-                networkDefinitionFileReader.ReadNetworkDefinitionFile(FileWriterTestHelper.ModelFileNames.Network, new HydroNetwork()));
+                networkDefinitionFileReader.ReadNetworkDefinitionFile(networkFilePath, new HydroNetwork()));
         }
 
         [Test]

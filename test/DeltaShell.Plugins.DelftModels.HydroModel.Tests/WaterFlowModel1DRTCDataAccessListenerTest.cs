@@ -8,7 +8,6 @@ using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel;
 using DeltaShell.Plugins.NetCDF;
 using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.SharpMapGis;
@@ -35,7 +34,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 app.Plugins.Add(new NetworkEditorApplicationPlugin());
                 app.Plugins.Add(new RealTimeControlApplicationPlugin());
                 app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new WaterFlowModel1DApplicationPlugin());
 
                 app.Run();
 

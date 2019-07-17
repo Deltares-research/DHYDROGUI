@@ -17,7 +17,6 @@ namespace DelftTools.ModelExchange
         public enum ExchangeItemGroupType
         {
             nhi = 1,
-            sobek = 2,
             composer = 4,
             groundwater = 8,
             // next groups: 8, 16, etc
@@ -70,10 +69,6 @@ namespace DelftTools.ModelExchange
             }
 
             else if (exchangeItemGroups.HasFlag(ExchangeItemHelper.ExchangeItemGroupType.nhi))
-            {
-                throw new NotImplementedException("ExchangeItem Group" + exchangeItemGroups + "not yet implemented");
-            }
-            else if (exchangeItemGroups.HasFlag(ExchangeItemHelper.ExchangeItemGroupType.sobek))
             {
                 throw new NotImplementedException("ExchangeItem Group" + exchangeItemGroups + "not yet implemented");
             }

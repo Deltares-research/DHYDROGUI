@@ -11,9 +11,6 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Dimr;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation;
-using DeltaShell.Plugins.DeveloperTools.Builders;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using GeoAPI.Extensions.CoordinateSystems;
@@ -80,115 +77,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
             var linkCoverages = coupler.LinkCoverages;
             twoDimModel.VerifyAllExpectations();
-        }
-
-        [Test]
-        [NUnit.Framework.Category(TestCategory.WorkInProgress)]
-        [NUnit.Framework.Category(TestCategory.DataAccess)]
-        public void Iterative1D2DCouplerDataItemsTest()
-        {
-            var mduPath = TestHelper.GetTestFilePath(@"fmFloodingBoundary1\fmDemo.mdu");
-            var path = TestHelper.CreateLocalCopy(mduPath);
-
-            var flow1d = WaterFlowModel1DBuilder.CreateModelWithDemoNetwork();
-            var fm = new WaterFlowFMModel(path);
-            
-            var coupled = new Iterative1D2DCoupler
-            {
-                Name = "testCoupling",
-                Flow1DModel = flow1d,
-                Flow2DModel = fm,
-                HydroModel = new HydroModel() { Name = "myHydroModelName" }
-            };
-
-            Assert.IsNull(((Iterative1D2DCouplerData)coupled.Data).OutputDataItems.FirstOrDefault(), "Iterative1D2DCoupler DataItems collection should be empty");
-
-            var numberOfValues = 3;
-            var numberOfLinks = 5;
-            var variableNames = new[] {"1d2d_blah1", "1d2d_blah2", "1d2d_blah3"};
-
-            var timeSeriesList = variableNames.Select(n =>
-                {
-                    var timeSeries = new TimeSeries {Name = n};
-                    timeSeries.Arguments.Add(new Variable<FlowLink>("FlowLink"));
-                    timeSeries.Components.Add(new Variable<double>("value"));
-                    timeSeries.Time.SetValues(Enumerable.Range(0, numberOfValues).Select(i => DateTime.Now.AddHours(i)));
-                    timeSeries.Arguments[1].SetValues(Enumerable.Repeat(new FlowLink(0,1,new Edge(0,1)), numberOfLinks));
-                    timeSeries.SetValues(Enumerable.Range(0, numberOfValues*numberOfLinks).Select(Convert.ToDouble));
-                    return timeSeries;
-                }).OfType<ITimeSeries>().ToList();
-
-            fm.DataItems.Add(new DataItem(timeSeriesList) { Name = Iterative1D2DCoupler.CellsToFeaturesName });
-
-            IDataItem testData = ((Iterative1D2DCouplerData)coupled.Data).OutputDataItems.FirstOrDefault();
-            Assert.IsNotNull(testData, "Iterative1D2DCoupler DataItems collection should not be empty");
-            Assert.AreEqual(((HydroModel)testData.Owner).Name, "myHydroModelName", "Iterative1D2DCoupler must assign an Owner (its HydroModel) to created DataItems");
-        }
-
-        [Test]
-        [NUnit.Framework.Category(TestCategory.DataAccess)]
-        [NUnit.Framework.Category(TestCategory.Slow)]
-        [NUnit.Framework.Category(TestCategory.WorkInProgress)] // This test somehow doesn't work, but will be obsolete when DIMR arrives. 
-        public void Run1D2DMappingTest()
-        {
-            var mduPath = TestHelper.GetTestFilePath(@"fmFloodingBoundary1\fmDemo.mdu");
-            var path = TestHelper.CreateLocalCopy(mduPath);
-            using (var fm = new WaterFlowFMModel(path)
-            {
-                Name = "flowFm"
-            })
-            {
-                const double shift = 50.0;
-                using (var flow1d = new WaterFlowModel1D("flow1d"))
-                {
-                    var from = new Node("from")
-                    {
-                        Geometry = new Point(fm.GridExtent.MinX - shift, fm.GridExtent.MinY - shift)
-                    };
-                    var to = new Node("to")
-                    {
-                        Geometry = new Point(fm.GridExtent.MinX - shift, fm.GridExtent.MaxY + shift)
-                    };
-
-                    var channel = new Channel(from, to)
-                    {
-                        Name = "channel",
-                        Geometry = new LineString(new[] { from.Geometry.Coordinate, to.Geometry.Coordinate })
-                    };
-
-                    NetworkHelper.AddChannelToHydroNetwork(flow1d.Network, channel);
-                    flow1d.Network.Nodes.Add(from);
-                    flow1d.Network.Nodes.Add(to);
-                    CrossSectionHelper.AddCrossSection(channel, 500.0, 0.0);
-
-                    HydroNetworkHelper.GenerateDiscretization(flow1d.NetworkDiscretization, channel, 1.0, false, 1.0,
-                        false,
-                        false, true, 100.0);
-                    Assert.AreEqual(52, flow1d.NetworkDiscretization.Locations.GetValues().Count);
-
-                    flow1d.StartTime = fm.StartTime = fm.ReferenceTime.AddDays(1);
-                    flow1d.StopTime = fm.StopTime = fm.StartTime.AddHours(1);
-                    flow1d.TimeStep = fm.TimeStep = new TimeSpan(0, 0, 1, 0);
-
-                    var fmReport = fm.Validate();
-                    Assert.AreEqual(0, fmReport.ErrorCount);
-
-                    var flowReport = new WaterFlowModel1DModelValidator().Validate(flow1d);
-                    Assert.AreEqual(0, flowReport.ErrorCount);
-
-                    using (var coupler = new Iterative1D2DCoupler
-                    {
-                        Name = "testMapping",
-                        Flow1DModel = flow1d,
-                        Flow2DModel = fm
-                    })
-                    {
-                        ActivityRunner.RunActivity(coupler);
-
-                        Assert.AreEqual(ActivityStatus.Cleaned, coupler.Status);
-                    }
-                }
-            }
         }
 
         [Test]

@@ -14,7 +14,6 @@ using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM;
@@ -294,9 +293,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
             var fmModel = timeDependentModel as WaterFlowFMModel;
             if (fmModel != null) report = fmModel.Validate();
-            
-            var model1D = timeDependentModel as WaterFlowModel1D;
-            if (model1D != null) report = model1D.Validate();
             
             if (report == null)
                 throw new NotImplementedException(string.Format("Unable to Validate Root Model: {0}, did you forget to add support for this model type?", timeDependentModel.Name));

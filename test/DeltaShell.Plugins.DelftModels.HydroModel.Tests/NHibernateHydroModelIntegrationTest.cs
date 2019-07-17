@@ -8,9 +8,7 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DeltaShell.IntegrationTestUtils;
 using DeltaShell.Plugins.DelftModels.HydroModel.ValueConverters;
-using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.FMSuite.Wave;
@@ -33,8 +31,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             base.TestFixtureSetUp();
             factory.AddPlugin(new NetworkEditorApplicationPlugin());
             factory.AddPlugin(new HydroModelApplicationPlugin());
-            factory.AddPlugin(new WaterFlowModel1DApplicationPlugin());
-            factory.AddPlugin(new RainfallRunoffApplicationPlugin());
             factory.AddPlugin(new RealTimeControlApplicationPlugin());
             factory.AddPlugin(new WaterQualityModelApplicationPlugin());
             factory.AddPlugin(new FlowFMApplicationPlugin());

@@ -11,7 +11,6 @@ using DeltaShell.Dimr;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms;
 using DeltaShell.Plugins.DelftModels.HydroModel.Properties;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -146,8 +145,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms
             gui.Expect(g => g.Application).Return(application).Repeat.Any();
             gui.Expect(g => g.DocumentViewsResolver).Return(viewResolver).Repeat.Any();
             application.Expect(a => a.FileExporters).Return(fileExporters).Repeat.Any();
-            viewResolver.Expect(vr => vr.CreateViewForData(typeof(WaterFlowModel1DExporter))).IgnoreArguments().Return(null)
-                .Repeat.Any();
 
             mocks.ReplayAll();
 

@@ -9,10 +9,8 @@ using DeltaShell.Core;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.DelftModels.HydroModel;
-using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
@@ -213,7 +211,7 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
 
                 var savedHydroModel = app.Project.RootFolder.Models.OfType<HydroModel>().FirstOrDefault();
                 Assert.NotNull(savedHydroModel);
-                ValidateModel(savedHydroModel,ModelGroup.FMWaveRtcModels);
+                ValidateMinimalHydroFmModel(savedHydroModel);
 
                 var fmModel = savedHydroModel.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
                 Assert.NotNull(fmModel);
@@ -229,7 +227,7 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
 
                 savedHydroModel = app.Project.RootFolder.Models.OfType<HydroModel>().FirstOrDefault();
                 Assert.NotNull(savedHydroModel);
-                ValidateModel(savedHydroModel,ModelGroup.FMWaveRtcModels);
+                ValidateMinimalHydroFmModel(savedHydroModel);
 
                 fmModel = savedHydroModel.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
                 Assert.NotNull(fmModel);
@@ -445,60 +443,6 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
             Assert.AreEqual((int) 1, (int) controlGroup.Outputs.Count());
             var hydraulicRule1A = (HydraulicRule)controlGroup.Rules[0];
             Assert.AreEqual(1.0, hydraulicRule1A.Function[0.0]);
-        }
-
-        private void ValidateModel(HydroModel hydroModel, ModelGroup modelGroup)
-        {
-            switch (modelGroup)
-            {
-                case ModelGroup.SobekModels:
-                    ValidateMinimalHydroSobekModel(hydroModel);
-                    break;
-
-                case ModelGroup.FMWaveRtcModels:
-                    ValidateMinimalHydroFmModel(hydroModel);
-                    break;
-            }
-        }
-
-        private static void ValidateMinimalHydroSobekModel(HydroModel hydroModel)
-        {
-            // check nr of model (3 => RR, RTC and F1D)
-            Assert.AreEqual((int) 3, (int) hydroModel.Models.Count());
-
-            // Check if we have a RR model
-            Assert.NotNull(hydroModel.Models.OfType<IRainfallRunoffModel>().FirstOrDefault());
-
-            // Check if we have a RTC model
-            Assert.NotNull(hydroModel.Models.OfType<IRealTimeControlModel>().FirstOrDefault());
-
-            // Check if we have a F1D model
-            Assert.NotNull(hydroModel.Models.OfType<WaterFlowModel1D>().FirstOrDefault());
-
-            // Check the workflow
-            // - is is a sequential wf :
-            Assert.AreEqual(typeof (SequentialActivity), hydroModel.CurrentWorkflow.GetEntityType());
-
-            // - with 2 activities, RR and ParallelActivity (in this order) :
-            Assert.AreEqual((int) 2, (int) hydroModel.CurrentWorkflow.Activities.Count);
-            var activities = hydroModel.CurrentWorkflow.Activities;
-            Assert.NotNull(
-                activities.OfType<ActivityWrapper>().Select(a => a.Activity).OfType<RainfallRunoffModel>().FirstOrDefault());
-            var activityWrapperForRr = activities[0] as ActivityWrapper;
-            Assert.NotNull(activityWrapperForRr);
-            Assert.AreEqual(typeof (RainfallRunoffModel), activityWrapperForRr.Activity.GetEntityType());
-            Assert.AreEqual(typeof (ParallelActivity), activities[1].GetEntityType());
-
-            // - and in the parallel activity 2 models, RTC and F1D (in this order):
-            var parallelActivity = hydroModel.CurrentWorkflow.Activities.OfType<ParallelActivity>().FirstOrDefault();
-            Assert.NotNull(parallelActivity);
-            Assert.AreEqual((int) 2, (int) parallelActivity.Activities.Count);
-
-            var parallelActivities = parallelActivity.Activities.OfType<ActivityWrapper>().Select(a => a.Activity).ToList();
-            Assert.NotNull(parallelActivities.OfType<RealTimeControlModel>().FirstOrDefault());
-            Assert.NotNull(parallelActivities.OfType<WaterFlowModel1D>().FirstOrDefault());
-            Assert.AreEqual(typeof (RealTimeControlModel), parallelActivities[0].GetEntityType());
-            Assert.AreEqual(typeof (WaterFlowModel1D), parallelActivities[1].GetEntityType());
         }
 
         private static void ValidateMinimalHydroFmModel(HydroModel hydroModel)

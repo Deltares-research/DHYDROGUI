@@ -58,7 +58,6 @@ if wavePlugin.loaded:
 
 class ModelGroups:
     Empty = 0
-    SobekModels = 1
     FMWaveRtcModels = 2
     OverLandFlow1D2D = 3
     All = 4
@@ -77,10 +76,6 @@ class HydroModelBuilder(object):
             
         if modelGroup == ModelGroups.All:
             return True
-            
-        if modelGroup == ModelGroups.SobekModels:
-            if flow1DPlugin.loaded and (rrPlugin.loaded or rtcPlugin.loaded):
-                return True
                 
         if modelGroup == ModelGroups.FMWaveRtcModels:
             if fmPlugin.loaded and (wavePlugin.loaded or rtcPlugin.loaded):
@@ -122,7 +117,7 @@ class HydroModelBuilder(object):
     def build_model(self, modelGroup):
         model = HydroModel(Name="Integrated Model")
 
-        if (modelGroup == ModelGroups.SobekModels or modelGroup == ModelGroups.OverLandFlow1D2D or modelGroup == ModelGroups.All):
+        if (modelGroup == ModelGroups.OverLandFlow1D2D or modelGroup == ModelGroups.All):
 
             if hydroPlugin.loaded and flow1DPlugin.loaded:
                 # build network
@@ -133,7 +128,7 @@ class HydroModelBuilder(object):
                 flow = WaterFlowModel1D(Name=self.FLOW_MODEL_NAME)
                 model.Activities.Add(flow)
 
-        if (modelGroup == ModelGroups.SobekModels or modelGroup == ModelGroups.All):
+        if (modelGroup == ModelGroups.All):
 
             if hydroPlugin.loaded and rrPlugin.loaded:
                 # build basin
@@ -144,7 +139,7 @@ class HydroModelBuilder(object):
                 rr = RainfallRunoffModel(Name=self.RR_MODEL_NAME)
                 model.Activities.Add(rr)
                 
-        if (modelGroup == ModelGroups.SobekModels or modelGroup == ModelGroups.FMWaveRtcModels or modelGroup == ModelGroups.All):
+        if (modelGroup == ModelGroups.FMWaveRtcModels or modelGroup == ModelGroups.All):
 
             if rtcPlugin.loaded:
                 rtc = RealTimeControlModel(Name=self.RTC_MODEL_NAME)

@@ -63,7 +63,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         public HydroModel()
         {
-            Sobek2CompareTest = false;
             Name = "Integrated Model";
 
             creating = true;
@@ -762,7 +761,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                 ExplicitWorkingDirectory = workDirectory;
             }
 
-            FileUtils.CreateDirectoryIfNotExists(workDirectory, !Sobek2CompareTest);
+            FileUtils.CreateDirectoryIfNotExists(workDirectory);
         }
 
         public virtual ValidationReport Validate()
@@ -770,8 +769,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             return new HydroModelValidator().Validate(this);
         }
 
-        public virtual bool Sobek2CompareTest { get; set; }
-        
         protected override void OnProgressChanged()
         {
             if (dimrApi != null) dimrApi.ProcessMessages();

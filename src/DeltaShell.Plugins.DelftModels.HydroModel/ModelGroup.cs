@@ -7,7 +7,6 @@
     {
         All,
         Empty,
-        SobekModels,
         FMWaveRtcModels,
         OverLandFlow1D2D
     }
