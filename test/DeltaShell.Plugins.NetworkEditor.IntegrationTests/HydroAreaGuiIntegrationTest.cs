@@ -10,7 +10,6 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Gui;
 using DeltaShell.Plugins.CommonTools;
-using DeltaShell.Plugins.FMSuite.FlowFM.Tests;
 using DeltaShell.Plugins.NetworkEditor.Gui;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView;

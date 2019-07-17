@@ -194,11 +194,6 @@
       <Name>DeltaShell.Plugins.NetworkEditor</Name>
       <Private>False</Private>
     </ProjectReference>
-    <ProjectReference Include="..\DeltaShell.Plugins.FMSuite.FlowFM.Tests\DeltaShell.Plugins.FMSuite.FlowFM.Tests.csproj">
-      <Project>{19EC5699-52F8-4AD8-A888-C7B65F8F045B}</Project>
-      <Name>DeltaShell.Plugins.FMSuite.FlowFM.Tests</Name>
-      <Private>False</Private>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CaseAnalysisGuiIntegrationTest.cs" />

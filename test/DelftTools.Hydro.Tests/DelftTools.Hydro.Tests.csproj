@@ -201,11 +201,6 @@
       <Name>DelftTools.Hydro</Name>
       <Private>False</Private>
     </ProjectReference>
-    <ProjectReference Include="..\..\src\DeltaShell.Dimr\DeltaShell.Dimr.csproj">
-      <Project>{AD22CEC6-2A71-478C-96C3-B7ACDFE9B84B}</Project>
-      <Name>DeltaShell.Dimr</Name>
-      <Private>False</Private>
-    </ProjectReference>
     <ProjectReference Include="..\DeltaShell.NGHS.TestUtils\DeltaShell.NGHS.TestUtils.csproj">
       <Project>{4A0F7700-AA64-463F-A602-8C15E3886EC5}</Project>
       <Name>DeltaShell.NGHS.TestUtils</Name>
