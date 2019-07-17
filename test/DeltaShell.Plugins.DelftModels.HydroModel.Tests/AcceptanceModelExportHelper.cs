@@ -1,7 +1,6 @@
 ﻿using System.IO;
 using DelftTools.Utils.IO;
 
-
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 {
     /// <summary>

@@ -1,13 +1,9 @@
-﻿using System;
-using System.Drawing;
-using System.Windows.Forms;
-using DelftTools.Utils.Reflection;
+﻿using System.Drawing;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RTCShapes.Shapes;
 using Netron.GraphLib.UI;
 using NUnit.Framework;
 using Rhino.Mocks;
-using Rhino.Mocks.Impl;
 
 namespace DeltaShell.Plugins.DelftModels.RTCShapes.Tests
 {

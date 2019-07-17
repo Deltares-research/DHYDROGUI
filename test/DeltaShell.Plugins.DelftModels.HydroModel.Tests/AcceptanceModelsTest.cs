@@ -1,4 +1,9 @@
-﻿using DelftTools.Shell.Core;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Windows.Controls;
+using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Extensions;
@@ -18,6 +23,7 @@ using DeltaShell.Plugins.DelftModels.WaterQualityModel;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.Wave;
 using DeltaShell.Plugins.FMSuite.Wave.Gui;
 using DeltaShell.Plugins.NetCDF;
@@ -31,12 +37,6 @@ using DeltaShell.Plugins.SharpMapGis.Gui;
 using DeltaShell.Plugins.Toolbox;
 using DeltaShell.Plugins.Toolbox.Gui;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Windows.Controls;
-using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 {

@@ -11,8 +11,6 @@ using DeltaShell.Plugins.DelftModels.HydroModel.Import;
 using DeltaShell.Plugins.DelftModels.HydroModel.Properties;
 using NUnit.Framework;
 using Rhino.Mocks;
-using Is = NUnit.Framework.Is;
-
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
 {

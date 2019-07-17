@@ -5,8 +5,8 @@ using DelftTools.TestUtils;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Charting;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
 using GeoAPI.Extensions.Coverages;
-using NetTopologySuite.IO;
 using NetTopologySuite.Extensions.Coverages;
+using NetTopologySuite.IO;
 using NUnit.Framework;
 
 namespace DelftTools.Hydro.Tests.Forms

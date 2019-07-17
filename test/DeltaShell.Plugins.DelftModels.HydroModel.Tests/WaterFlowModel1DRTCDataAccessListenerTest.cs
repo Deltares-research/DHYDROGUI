@@ -1,9 +1,8 @@
-﻿using DelftTools.TestUtils;
-using DeltaShell.Core;
-using NUnit.Framework;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using DelftTools.Functions.Generic;
+using DelftTools.TestUtils;
+using DeltaShell.Core;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
@@ -11,6 +10,7 @@ using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.NetCDF;
 using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.SharpMapGis;
+using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 {

@@ -1,22 +1,19 @@
-﻿using System;
-using System.Linq;
-using DelftTools.Hydro;
+﻿using System.Linq;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Validation;
+using DeltaShell.Plugins.DelftModels.HydroModel.Properties;
 using DeltaShell.Plugins.DelftModels.HydroModel.Validation;
-using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
+using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.Wave;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 using NetTopologySuite.Extensions.Grids;
 using NUnit.Framework;
 using Rhino.Mocks;
-using SharpMapTestUtils;
-using Resources = DeltaShell.Plugins.DelftModels.HydroModel.Properties.Resources;
-using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using SharpMap.Extensions.CoordinateSystems;
+using SharpMapTestUtils;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Validation
 {

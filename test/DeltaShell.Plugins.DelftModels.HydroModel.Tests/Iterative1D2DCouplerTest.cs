@@ -1,27 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using DelftTools.Functions;
-using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
-using DelftTools.Hydro.Helpers;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
-using DelftTools.TestUtils;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Dimr;
-using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
+using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using GeoAPI.Extensions.CoordinateSystems;
-using NetTopologySuite.Geometries;
 using NetTopologySuite.Extensions.Coverages;
-using NetTopologySuite.Extensions.Grids;
-using NetTopologySuite.Extensions.Networks;
 using NUnit.Framework;
 using Rhino.Mocks;
-using Point = NetTopologySuite.Geometries.Point;
-using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 {
