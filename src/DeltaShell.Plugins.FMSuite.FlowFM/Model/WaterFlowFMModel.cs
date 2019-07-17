@@ -17,7 +17,6 @@ using DelftTools.Utils.ComponentModel;
 using DelftTools.Utils.Editing;
 using DelftTools.Utils.IO;
 using DeltaShell.Dimr;
-using DeltaShell.Plugins.FMSuite.Common;
 using DeltaShell.Plugins.FMSuite.Common.DepthLayers;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;

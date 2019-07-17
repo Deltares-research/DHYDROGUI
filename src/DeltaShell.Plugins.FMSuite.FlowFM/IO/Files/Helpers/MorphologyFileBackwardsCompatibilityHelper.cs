@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using DeltaShell.NGHS.IO.Handlers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 
-
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
 {
     /// <summary>

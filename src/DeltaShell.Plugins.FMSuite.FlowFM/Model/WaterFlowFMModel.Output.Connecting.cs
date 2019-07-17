@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using System.Linq;
-using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils;
 using DelftTools.Utils.Editing;

@@ -43,12 +43,9 @@ using DeltaShell.Plugins.SharpMapGis.Gui.Forms.CoverageViews;
 using Mono.Addins;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
-using SharpMap.Api;
 using SharpMap.Api.Layers;
 using SharpMap.Data.Providers;
 using SharpMap.Layers;
-using BridgePillar = DelftTools.Hydro.Structures.BridgePillar;
-using FeatureCollectionViewInfoHelper = DeltaShell.Plugins.FMSuite.Common.Gui.FeatureCollectionViewInfoHelper;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 {

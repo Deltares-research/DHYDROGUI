@@ -1,8 +1,13 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Utils;
-using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.NetCdf;
@@ -28,13 +33,8 @@ using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Geometries;
 using SharpMap;
 using SharpMap.Api.SpatialOperations;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text.RegularExpressions;
+using CollectionExtensions = DelftTools.Utils.Collections.CollectionExtensions;
+using EnumerableExtensions = DelftTools.Utils.Collections.EnumerableExtensions;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 {
@@ -725,7 +725,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                                         alternativeExtensions);
                 List<string> featuresFilePaths =
                     MduFileHelper.GetMultipleSubfilePath(targetMduFilePath, waterFlowFMProperty).ToList();
-                featuresFilePaths.RemoveAllWhere(ffp => ffp == null);
+                CollectionExtensions.RemoveAllWhere(featuresFilePaths, ffp => ffp == null);
 
                 if (fileWriter == null)
                 {
@@ -825,7 +825,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
                 List<string> featuresFilePaths =
                     MduFileHelper.GetMultipleSubfilePath(targetMduFilePath, waterFlowFMProperty).ToList();
-                featuresFilePaths.RemoveAllWhere(ffp => ffp == null);
+                CollectionExtensions.RemoveAllWhere(featuresFilePaths, ffp => ffp == null);
 
                 if (dryAreaFile == null)
                 {
@@ -1552,8 +1552,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 Log.WarnFormat(
                     "The following enclosure files do not contain the correct extension and will not be read. {0}",
                     enclosuresToRemove);
-                enclosureMultipleFilePath.RemoveAllWhere(
-                    efp => !efp.EndsWith(PolFile<GroupableFeature2DPolygon>.Extension));
+                CollectionExtensions.RemoveAllWhere(enclosureMultipleFilePath, efp => !efp.EndsWith(PolFile<GroupableFeature2DPolygon>.Extension));
             }
 
             if (enclosureMultipleFilePath.Count > 0)
@@ -1616,7 +1615,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 else if (featureFilePath.EndsWith(PolExtension))
                 {
                     IList<GroupableFeature2DPolygon> dryAreasToAdd = dryAreaFile.Read(featureFilePath);
-                    dryAreasToAdd.ForEach(f =>
+                    EnumerableExtensions.ForEach(dryAreasToAdd, f =>
                     {
                         f.GroupName = groupName;
                         f.IsDefaultGroup = groupName != null &&
@@ -1685,7 +1684,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                                MduFilePropertyDescriptionDictionary[propertyKey], modelDefinition.ModelName);
             }
 
-            featureFilePaths.RemoveAllWhere(gn => gn == null || nonExistentFilePaths.Contains(gn));
+            CollectionExtensions.RemoveAllWhere(featureFilePaths, gn => gn == null || nonExistentFilePaths.Contains(gn));
         }
 
         /// <summary>
@@ -1733,7 +1732,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 }
             }
 
-            featureFilePaths.RemoveAllWhere(gn => structureFilesWithBadReferences.Contains(gn));
+            CollectionExtensions.RemoveAllWhere(featureFilePaths, gn => structureFilesWithBadReferences.Contains(gn));
         }
 
         #endregion
@@ -1823,7 +1822,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 return;
             }
 
-            bridgePillars.ForEach(bp => bp.Attributes.Clear());
+            EnumerableExtensions.ForEach(bridgePillars, bp => bp.Attributes.Clear());
         }
 
         #endregion

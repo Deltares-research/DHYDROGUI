@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using BasicModelInterface;
 using DelftTools.Functions.Generic;
@@ -19,7 +18,6 @@ using SharpMap;
 using SharpMap.Api.Layers;
 using SharpMap.Layers;
 using SharpMap.UI.Tools;
-using SharpMap.UI.Tools.Decorations;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
 {
