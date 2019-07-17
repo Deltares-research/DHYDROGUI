@@ -279,7 +279,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
         }
 
         /// <summary>
-        /// This method copies feature files at the given featureGroupNames to locations in the mdu folder if the file paths point
+        /// This method copies feature files at the given <paramref name="featureGroupNames"/> to locations in the mdu folder if the file paths point
         /// to a location outside of the mdu folder. In case a file path has '../' in its path, the path is replaced by its absolute path.
         /// The corresponding ModelProperty is updated for every file path change.
         /// If the target file already exists, the file is overwritten.

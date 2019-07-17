@@ -851,15 +851,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             mduFile.Read(mduFilePath, modelDefinition, area, allFixedWeirsAndCorrespondingProperties);
 
             // Then
-            Assert.That(area.ObservationPoints.Count, Is.EqualTo(2));
-            Assert.That(area.Enclosures.Count, Is.EqualTo(1));
-            Assert.That(area.DryPoints.Count, Is.EqualTo(nExpectedFeatures));
-            Assert.That(area.FixedWeirs.Count, Is.EqualTo(nExpectedFeatures));
-            Assert.That(area.Pumps.Count, Is.EqualTo(nExpectedFeatures));
-            Assert.That(area.Weirs.Count, Is.EqualTo(nExpectedFeatures));
-            Assert.That(area.ThinDams.Count, Is.EqualTo(nExpectedFeatures));
-            Assert.That(area.ObservationCrossSections.Count, Is.EqualTo(nExpectedFeatures));
-            Assert.That(area.LandBoundaries.Count, Is.EqualTo(nExpectedFeatures));
+            const string errorMessage = "Expected a different number of {0}:";
+            Assert.That(area.ObservationPoints, Has.Count.EqualTo(2),
+                        string.Format(errorMessage, "ObservationPoints"));
+            Assert.That(area.Enclosures, Has.Count.EqualTo(1),
+                        string.Format(errorMessage, "Enclosures"));
+            Assert.That(area.DryPoints, Has.Count.EqualTo(nExpectedFeatures),
+                        string.Format(errorMessage, "DryPoints"));
+            Assert.That(area.FixedWeirs, Has.Count.EqualTo(nExpectedFeatures),
+                        string.Format(errorMessage, "FixedWeirs"));
+            Assert.That(area.Pumps, Has.Count.EqualTo(nExpectedFeatures),
+                        string.Format(errorMessage, "Pumps"));
+            Assert.That(area.Weirs, Has.Count.EqualTo(nExpectedFeatures),
+                        string.Format(errorMessage, "Weirs"));
+            Assert.That(area.ThinDams, Has.Count.EqualTo(nExpectedFeatures),
+                        string.Format(errorMessage, "ThinDams"));
+            Assert.That(area.ObservationCrossSections, Has.Count.EqualTo(nExpectedFeatures),
+                        string.Format(errorMessage, "ObservationCrossSections"));
+            Assert.That(area.LandBoundaries, Has.Count.EqualTo(nExpectedFeatures),
+                        string.Format(errorMessage, "LandBoundaries"));
         }
 
         [Test]
