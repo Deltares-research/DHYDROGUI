@@ -46,7 +46,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         [ExpectedException(typeof(InvalidOperationException), ExpectedMessage = "Substance process library is not set")]
         public void ImporterShouldThrowOnSubstanceProcessLibraryIsNull()
         {
-            new SubFileImporter().Import(null, Path.Combine(TestHelper.GetTestDataDirectory(), "IO", "Eutrof_simple.sub"));
+            new SubFileImporter().Import(null, Path.Combine(TestHelper.GetTestDataDirectory(), "ValidWaqModels", "Eutrof_simple_sobek.sub"));
         }
 
         [Test]
@@ -77,12 +77,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             Assert.AreEqual(0, library.OutputParameters.Count);
 
             // Perform import on empty substance process library
-            var testFilePath = TestHelper.GetTestFilePath(@"IO\Eutrof_simple.sub");
+            var testFilePath = TestHelper.GetTestFilePath(@"ValidWaqModels\Eutrof_simple_sobek.sub");
             new SubFileImporter().Import(library, testFilePath);
 
-            Assert.AreEqual("Eutrof_simple", library.Name);
+            Assert.AreEqual("Eutrof_simple_sobek", library.Name);
             Assert.AreEqual(12, library.Substances.Count);
-            Assert.AreEqual(56, library.Parameters.Count);
+            Assert.AreEqual(58, library.Parameters.Count);
             Assert.AreEqual(37, library.Processes.Count);
             Assert.AreEqual(15, library.OutputParameters.Count); // 11x imported output parameter, 4x default output parameter 
             Assert.AreEqual(testFilePath, library.ImportedSubstanceFilePath); //To check if the property ImportedSubstanceFilePath & the imported file path are equal.

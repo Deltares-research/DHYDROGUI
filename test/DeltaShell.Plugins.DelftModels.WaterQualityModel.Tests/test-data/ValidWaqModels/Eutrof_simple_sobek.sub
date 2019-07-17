@@ -58,6 +58,11 @@ substance 'SOD' inactive
    concentration-unit '(gO2/m3)'
    waste-load-unit    '-'
 end-substance
+parameter 'SWAdsP'
+   description   'switch PO4 adsorption <0=Kd|1=Langmuir|2=pHdep>'
+   unit          '(-)'
+   value          0
+end-parameter
 parameter 'Chezy'
    description   'Chezy coefficient'
    unit          '(m0.5/s)'
@@ -67,11 +72,6 @@ parameter 'Velocity'
    description   'Flow velocity'
    unit          '(m/s)'
    value          0.0
-end-parameter
-parameter 'SWAdsP'
-   description   'switch PO4 adsorption <0=Kd|1=Langmuir|2=pHdep>'
-   unit          '(-)'
-   value          0
 end-parameter
 parameter 'KdPO4AAP'
    description   'distrib. coeff. (-) or ads. eq. const.'

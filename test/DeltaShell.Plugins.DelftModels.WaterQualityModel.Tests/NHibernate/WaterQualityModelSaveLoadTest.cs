@@ -564,7 +564,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                     library.ImportedSubstanceFilePath = null;
                     
                     //Import 
-                    new SubFileImporter().Import(library, Path.Combine(TestHelper.GetTestDataDirectory(), "IO", "Eutrof_simple.sub"));
+                    new SubFileImporter().Import(library, Path.Combine(TestHelper.GetTestDataDirectory(), "ValidWaqModels", "Eutrof_simple_sobek.sub"));
 
                     // save it and close
                     var savePath = Path.Combine(Path.GetDirectoryName(localHydFile), "savedProject", "project1.dsproj");

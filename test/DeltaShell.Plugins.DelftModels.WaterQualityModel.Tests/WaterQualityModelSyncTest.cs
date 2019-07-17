@@ -38,11 +38,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             var waterQualityModel = new WaterQualityModel();
             // Perform import on empty substance process library
             var commonFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "IO");
-            new SubFileImporter().Import(waterQualityModel.SubstanceProcessLibrary, Path.Combine(commonFilePath, "Eutrof_simple.sub"));
+            new SubFileImporter().Import(waterQualityModel.SubstanceProcessLibrary, TestHelper.GetTestFilePath(@"ValidWaqModels\\Flow1D\\Eutrof_simple_sobek.sub"));
 
             // Initial conditions and process coefficients should be created
             Assert.AreEqual(12, waterQualityModel.InitialConditions.Count);
-            Assert.AreEqual(56, waterQualityModel.ProcessCoefficients.Count);
+            Assert.AreEqual(58, waterQualityModel.ProcessCoefficients.Count);
             Assert.AreEqual(23, waterQualityModel.GetOutputCoverages().Count());
 
             var firstInitialCondition = waterQualityModel.InitialConditions.First();

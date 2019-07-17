@@ -1670,7 +1670,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         [Category(TestCategory.Integration)]
         public void Import_Waq_Model_WithSegmentFiles_Creates_FunctionFromHydroDynamics()
         {
-            var testFilePath = TestHelper.GetTestFilePath(@"Zwolle\sobek.hyd");
+            var testFilePath = TestHelper.GetTestFilePath(@"ValidWaqModels\Flow1D\sobek.hyd");
             Assert.IsTrue(File.Exists(testFilePath));
 
             //Import the second model on top of waqmodel.
@@ -1686,7 +1686,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                 Assert.IsFalse(string.IsNullOrEmpty(waqModel.ChezyCoefficientsFilePath));
 
                 //Import the substances now.
-                var subsFilePath = TestHelper.GetTestFilePath(@"Zwolle\substances\02b_Oxygen_bod_sediment.sub");
+                var subsFilePath = TestHelper.GetTestFilePath(@"ValidWaqModels\\02b_Oxygen_bod_sediment.sub");
                 subsFilePath = TestHelper.CreateLocalCopy(subsFilePath);
 
                 Assert.IsNotNull(waqModel.SubstanceProcessLibrary);
@@ -1706,7 +1706,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         [Category(TestCategory.Integration)]
         public void Import_Waq_Model_WithSegmentFiles_OverExistingWaqModel_Update_SegmentFileFunctions()
         {
-            var zwolleFilePath = TestHelper.GetTestFilePath(@"Zwolle\sobek.hyd");
+            var zwolleFilePath = TestHelper.GetTestFilePath(@"ValidWaqModels\\Flow1D\\sobek.hyd");
             Assert.IsTrue(File.Exists(zwolleFilePath));
 
             //Import hyd file
@@ -1720,7 +1720,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                 Assert.IsTrue(string.IsNullOrEmpty(westernModel.ChezyCoefficientsFilePath));
 
                 //Import the substances now.
-                var subsFilePath = TestHelper.GetTestFilePath(@"Zwolle\substances\02b_Oxygen_bod_sediment.sub");
+                var subsFilePath = TestHelper.GetTestFilePath(@"ValidWaqModels\\02b_Oxygen_bod_sediment.sub");
                 Assert.IsTrue(File.Exists(subsFilePath));
                 Assert.IsNotNull(westernModel.SubstanceProcessLibrary);
                 new SubFileImporter().Import(westernModel.SubstanceProcessLibrary, subsFilePath);
