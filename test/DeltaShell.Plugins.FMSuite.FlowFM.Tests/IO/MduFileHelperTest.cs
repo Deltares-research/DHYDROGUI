@@ -216,7 +216,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 string targetFilePath = Path.Combine(mduDirPath, referencedFileName);
 
                 Directory.CreateDirectory(mduDirPath);
-                using (File.Create(sourceFilePath));
+                using (File.Create(sourceFilePath)) {}
 
                 // When
                 void TestAction() => MduFileHelper.CopyFilesToMduFolderIfNeeded(
