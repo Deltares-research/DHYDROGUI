@@ -165,10 +165,8 @@
     <Compile Include="CrossSections\CrossSectionDefinitionProxy.cs" />
     <Compile Include="CrossSections\CrossSectionDefinitionStandard.cs" />
     <Compile Include="CrossSections\CrossSectionDefinitionZw.cs" />
-    <Compile Include="CrossSections\CrossSectionLocation.cs" />
     <Compile Include="CrossSections\DataSets\CrossSectionDataSetNew.cs" />
     <Compile Include="CrossSections\DataSets\LightDataTable.cs" />
-    <Compile Include="CrossSections\ICrossSectionLocation.cs" />
     <Compile Include="CrossSections\StandardShapes\CrossSectionStandardShapeArch.cs" />
     <Compile Include="CrossSections\StandardShapes\CrossSectionStandardShapeBase.cs" />
     <Compile Include="CrossSections\StandardShapes\CrossSectionStandardShapeCunette.cs" />

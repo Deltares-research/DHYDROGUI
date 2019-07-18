@@ -176,9 +176,6 @@
     <Compile Include="ImportExportCsv\CrossSectionZWCsvImportExportSettings.cs" />
     <Compile Include="ImportExportCsv\CrossSectionZWFromCsvFileImporter.cs" />
     <Compile Include="ImportExportCsv\CrossSectionZWToCsvFileExporter.cs" />
-    <Compile Include="ImportExportCsv\CsvColumn.cs" />
-    <Compile Include="ImportExportCsv\CsvImporterHelper.cs" />
-    <Compile Include="ImportExportCsv\CustomEnumCsvConverter.cs" />
     <Compile Include="ImportExportCsv\CrossSectionCsvData.cs" />
     <Compile Include="MapLayers\AreaLayer.cs" />
     <Compile Include="MapLayers\AreaLayerStyles.cs" />

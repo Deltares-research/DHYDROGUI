@@ -86,22 +86,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             source.LinkedBy.Count.Should().Be.EqualTo(0);
         }
 
-        private class TimeDepModel : TimeDependentModelBase
-        {
-            protected override void OnInitialize()
-            {
-            }
-
-            protected override void OnExecute()
-            {
-                CurrentTime += TimeStep;
-                if (CurrentTime >= StopTime)
-                {
-                    Status = ActivityStatus.Done;
-                }
-            }
-        }
-
         [Test]
         public void TestOutputIsEmpty()
         {

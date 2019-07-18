@@ -4,21 +4,6 @@ namespace DeltaShell.NGHS.IO.FileWriters.Boundary
 {
     public static class BoundaryRegion
     {
-        public static class FunctionStrings
-        {
-            public const string TimeSeries = "timeseries";
-            public const string QhTable = "qhtable";
-            public const string Constant = "constant";
-        }
-
-        public static class TimeInterpolationStrings
-        {
-            public const string LinearAndExtrapolate = "linear-extrapolate";
-            public const string Linear = "linear";
-            public const string BlockFrom = "block-from";
-            public const string BlockTo = "block-to"; 
-        }
-
         public static class QuantityStrings
         {
             public const string WaterDischarge = "water_discharge";
