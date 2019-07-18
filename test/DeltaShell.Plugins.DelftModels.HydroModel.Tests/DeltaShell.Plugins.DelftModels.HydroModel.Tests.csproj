@@ -269,7 +269,6 @@
     <Compile Include="Readers\DHydroConfigXmlImporterTest.cs" />
     <Compile Include="Readers\HydroModelConverterTest.cs" />
     <Compile Include="Readers\HydroModelReaderTest.cs" />
-    <Compile Include="WaterFlowModel1DRTCDataAccessListenerTest.cs" />
     <Compile Include="TestClassSetup.cs" />
     <Compile Include="Validation\HydroModelValidatorTest.cs" />
     <Compile Include="ValueConverters\HydroLinksFeatureCoverageValueConverterTest.cs" />

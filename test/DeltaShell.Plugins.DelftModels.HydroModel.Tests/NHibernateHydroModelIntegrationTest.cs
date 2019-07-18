@@ -4,13 +4,16 @@ using System.Linq;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core;
+using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
+using DelftTools.Utils.Collections.Generic;
 using DeltaShell.IntegrationTestUtils;
 using DeltaShell.Plugins.DelftModels.HydroModel.ValueConverters;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel;
 using DeltaShell.Plugins.FMSuite.FlowFM;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.Wave;
 using DeltaShell.Plugins.NetworkEditor;
 using GeoAPI.Extensions.Coverages;
@@ -45,32 +48,37 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
             var retrievedHydroModel = SaveAndRetrieveObject(hydroModel);
 
-            Assert.AreEqual(5, retrievedHydroModel.Activities.Count);
-            Assert.AreEqual(4, retrievedHydroModel.Region.AllRegions.Count());
+            Assert.That(retrievedHydroModel.Activities, Has.Count.EqualTo(3),
+                        "3 activities (fm, waves, rtc) were expected in hydro model");
+            Assert.That(retrievedHydroModel.Region.AllRegions.Count(), Is.EqualTo(2),
+                        "2 regions were expected in hydro model");
         }
 
         [Test]
         public void SaveLoadHydroModelWithCurrentWorkflowData()
         {
             var hydroModelBuilder = new HydroModelBuilder();
-            var hydroModel = hydroModelBuilder.BuildModel(ModelGroup.OverLandFlow1D2D);
+            var hydroModel = hydroModelBuilder.BuildModel(ModelGroup.FMWaveRtcModels);
 
-            var workFlow = hydroModel.CurrentWorkflow as Iterative1D2DCoupler;
-            Assert.NotNull(workFlow);
-
-            var couplerData = ((Iterative1D2DCouplerData)workFlow.Data);
-            couplerData.MaxIteration = 5;
-            couplerData.MaxError = 2;
-            couplerData.Debug = true;
+            var activities = hydroModel.CurrentWorkflow.Activities;
+            ValidateWorkflow(activities);
 
             var retrievedHydroModel = SaveAndRetrieveObject(hydroModel);
-            
-            var retrievedCouplerData = (Iterative1D2DCouplerData) ((Iterative1D2DCoupler) retrievedHydroModel.CurrentWorkflow).Data;
 
-            Assert.AreEqual(5,retrievedCouplerData.MaxIteration);
-            Assert.AreEqual(2, retrievedCouplerData.MaxError);
-            Assert.AreEqual(true, retrievedCouplerData.Debug);
+            var retrievedWorkflowActivities = retrievedHydroModel.CurrentWorkflow.Activities;
+            ValidateWorkflow(retrievedWorkflowActivities);
+        }
 
+        private static void ValidateWorkflow(IEventedList<IActivity> activities)
+        {
+            Assert.That(activities, Has.Count.EqualTo(2),
+                        "2 activities were expected in the current workflow of the hydro model.");
+            var rtcModel = (activities.First() as ActivityWrapper)?.Activity as RealTimeControlModel;
+            Assert.That(rtcModel, Is.Not.Null,
+                        "Real time control model was expected to be in the current workflow of the hydro model");
+            var fmModel = (activities.Last() as ActivityWrapper)?.Activity as WaterFlowFMModel;
+            Assert.That(fmModel, Is.Not.Null,
+                        "WaterFlow FM model was expected to be in the current workflow of the hydro model");
         }
 
         [Test]

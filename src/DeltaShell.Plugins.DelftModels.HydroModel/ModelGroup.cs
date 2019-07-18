@@ -7,7 +7,6 @@
     {
         All,
         Empty,
-        FMWaveRtcModels,
-        OverLandFlow1D2D
+        FMWaveRtcModels
     }
 }
