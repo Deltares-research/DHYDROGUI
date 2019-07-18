@@ -21,9 +21,6 @@ namespace DeltaShell.Dimr
         private const string CF_FOLDER_NAME = "dflow1d";
         private const string RTCTOOLS_FOLDER_NAME = "drtc";
         private const string RR_FOLDER_NAME = "drr";
-        private const string ITERATIVE1D2D_FOLDER_NAME = "dflow1d2d";
-        
-
 
         public static string KernelsDirectory
         {
@@ -98,10 +95,6 @@ namespace DeltaShell.Dimr
             get { return Path.Combine(KernelsDirectory, "x64", RR_FOLDER_NAME, STANDARD_BINFOLDER_NAME); }
         }
 
-        public static string Iterative1D2DDllPath
-        {
-            get { return Path.Combine(KernelsDirectory, "x64", ITERATIVE1D2D_FOLDER_NAME, STANDARD_BINFOLDER_NAME); }
-        }
 
         public static void SetSharedPath()
         {

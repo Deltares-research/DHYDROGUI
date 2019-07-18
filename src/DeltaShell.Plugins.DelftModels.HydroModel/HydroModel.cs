@@ -482,16 +482,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
                 if (currentWorkflow != null)
                 {
-                    var coupler = currentWorkflow as Iterative1D2DCoupler;
-                    if (coupler != null)
-                    {
-                        var dimrModel = coupler.Flow2DModel as IDimrModel;
-                        if (dimrModel != null)
-                        {
-                            dimrModel.SetVar(new[] {false}, Iterative1D2DCoupler.IsPartOf1D2DModelPropertyName);
-                            dimrModel.SetVar(new[] {false}, Iterative1D2DCoupler.DisableFlowNodeRenumberingPropertyName);
-                        }
-                    }
                     currentWorkflow.StatusChanged -= CurrentWorkflowOnStatusChanged;
                 }
 
@@ -500,17 +490,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                 if (currentWorkflow != null)
                 {
                     currentWorkflow.StatusChanged += CurrentWorkflowOnStatusChanged;
-                    
-                    var coupler = currentWorkflow as Iterative1D2DCoupler;
-                    if (coupler != null)
-                    {
-                        var dimrModel = coupler.Flow2DModel as IDimrModel;
-                        if (dimrModel != null)
-                        {
-                            dimrModel.SetVar(new[] {true}, Iterative1D2DCoupler.IsPartOf1D2DModelPropertyName);
-                            dimrModel.SetVar(new[] {true}, Iterative1D2DCoupler.DisableFlowNodeRenumberingPropertyName);
-                        }
-                    }
                 }
 
                 currentWorkFlowData = null;

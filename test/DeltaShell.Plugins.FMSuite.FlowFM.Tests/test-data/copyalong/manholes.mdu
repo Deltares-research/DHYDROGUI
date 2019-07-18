@@ -57,7 +57,7 @@ TStart           = 0.                  # Start time w.r.t. RefDate (in TUnit)
 TStop            = 8640000.            # Stop  time w.r.t. RefDate (in TUnit)
 
 [external forcing]
-ExtForceFile     = manholes_1d2d.ext                    # *.ext
+ExtForceFile     = manholes.ext                    # *.ext
 
 [output]
 ObsFile          =                     # *.xyn Coords+name of observation stations.

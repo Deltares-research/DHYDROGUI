@@ -201,14 +201,12 @@
     </Compile>
     <Compile Include="HydroModelGuiPlugin.cs" />
     <Compile Include="HydroModelMapLayerProvider.cs" />
-    <Compile Include="Iterative1D2DCouplerLinkFeatureCollection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="PropertyClasses\Iterative1D2DCouplerProperties.cs" />
     <Compile Include="ValidateMergeModelObjects.cs" />
     <Compile Include="ViewModels\HydroModelTimeSettingsViewModel.cs" />
   </ItemGroup>
@@ -279,7 +277,9 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="PropertyClasses\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>

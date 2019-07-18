@@ -269,34 +269,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
-        public void ReadMapFileBoundaryLinkValues()
-        {
-            var path = TestHelper.GetTestFilePath("flow1d2dMapFile\\FlowFM_map.nc");
-
-            var store = new FMMapFileFunctionStore(null);
-
-            // triggers reading the nc file
-            store.Path = path;
-
-            var linkCoverageValues = store.BoundaryCellValues;
-            Assert.AreEqual(11, linkCoverageValues.Count); // Number of variables
-
-            var firstTimeSeries = linkCoverageValues[0];
-
-            Assert.AreEqual(2, firstTimeSeries.Time.Values.Count); // Number of timesteps
-            Assert.AreEqual(76, firstTimeSeries.Arguments[1].Values.Count); // Number of links
-
-            var timeSeries =
-                firstTimeSeries.GetValues(new VariableValueFilter<FlowLink>(firstTimeSeries.Arguments[1],
-                    (FlowLink) firstTimeSeries.Arguments[1].Values[0]));
-            Assert.AreEqual(2, timeSeries.Count);
-            Assert.AreEqual("m", firstTimeSeries.Components[0].Unit.Name);
-
-            var expectedValues = new[] { 0.0, -9.999 };
-            Assert.AreEqual(expectedValues, timeSeries);
-        }
-
-        [Test]
         [Category(TestCategory.Slow)]
         public void OpenUgridMapFileCheckFunctions()
         {

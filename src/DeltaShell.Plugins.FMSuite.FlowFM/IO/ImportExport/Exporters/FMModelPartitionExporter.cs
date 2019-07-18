@@ -82,8 +82,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters
 
                     netFileProperty.SetValueAsString(netFile);
                     igcSolverProperty.SetValueAsString(SolverType > 0 ? SolverType.ToString() : originalSolverType);
-                    var isPartOf1D2DModel =
-                        (bool) modelDefinition.GetModelProperty(GuiProperties.PartOf1D2DModel).Value;
 
                     var mduWriteConfig = new MduFileWriteConfig
                     {
@@ -94,8 +92,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters
                     new MduFile().WriteProperties(filePath,
                                                   modelDefinition.Properties,
                                                   mduWriteConfig,
-                                                  false,
-                                                  isPartOf1D2DModel);
+                                                  false);
                 }
 
                 netFileProperty.SetValueAsString(originalNetFile);

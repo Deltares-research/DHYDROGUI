@@ -136,7 +136,6 @@
     <Compile Include="Api\FlexibleMeshModelDll.cs" />
     <Compile Include="Api\IFlexibleMeshModelApi.cs" />
     <Compile Include="Api\RemoteFlexibleMeshModelApi.cs" />
-    <Compile Include="Api\TempImpl\GridHelper.cs" />
     <Compile Include="Api\UnstrucGridOperationApi.cs" />
     <Compile Include="Api\LocationInfoApiHelper.cs" />
     <Compile Include="Api\WriteNetGeomApi.cs" />
@@ -423,7 +422,9 @@
     <Resource Include="Resources\hurricane2.png" />
     <Resource Include="Resources\grid_2d.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Api\TempImpl\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>

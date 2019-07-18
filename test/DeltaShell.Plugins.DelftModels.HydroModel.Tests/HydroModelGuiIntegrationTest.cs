@@ -140,7 +140,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
         private IEnumerable<IFileExporter> GetApplicationFileExportersForDimr()
         {
-            return app.Plugins.SelectMany(p => p.GetFileExporters()).Plus(new Iterative1D2DCouplerExporter());
+            return app.Plugins.SelectMany(p => p.GetFileExporters());
         }
 
         [Test]

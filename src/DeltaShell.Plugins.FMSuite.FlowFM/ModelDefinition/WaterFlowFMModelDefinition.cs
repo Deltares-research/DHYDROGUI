@@ -320,23 +320,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 
         public void SetMapFormatPropertyValue()
         {
-            var isPartOf1D2DModel = (bool) GetModelProperty(GuiProperties.PartOf1D2DModel).Value;
-            if (isPartOf1D2DModel && MapFormat != MapFormatType.NetCdf)
+            if (!UseMorphologySediment || MapFormat == MapFormatType.Ugrid)
             {
-                MapFormat = MapFormatType.NetCdf;
-                Log.InfoFormat(
-                    Resources
-                        .WaterFlowFMModelDefinition_SetMapFormatPropertyValue_MapFormat_property_value_of_FlowFM_model__0__is_changed_to_1__because_it_is_part_of_an_1D2D_integrated_model_,
-                    ModelName);
+                return;
             }
-            else if (!isPartOf1D2DModel && UseMorphologySediment && MapFormat != MapFormatType.Ugrid)
-            {
-                MapFormat = MapFormatType.Ugrid;
-                Log.InfoFormat(
-                    Resources
-                        .WaterFlowFMModelDefinition_SetMapFormatPropertyValue_MapFormat_property_value_of_FlowFM_model__0__is_changed_to_4_due_to_activation_of_Morphology_,
-                    ModelName);
-            }
+
+            MapFormat = MapFormatType.Ugrid;
+            Log.InfoFormat(
+                Resources
+                    .WaterFlowFMModelDefinition_SetMapFormatPropertyValue_MapFormat_property_value_of_FlowFM_model__0__is_changed_to_4_due_to_activation_of_Morphology_,
+                ModelName);
         }
 
         public bool WriteSnappedFeatures

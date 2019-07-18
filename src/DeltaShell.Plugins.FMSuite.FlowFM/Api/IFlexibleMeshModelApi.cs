@@ -45,7 +45,5 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
         void SetValuesInt(string variable, int[] start, int[] count, int[] values);
 
         void SetValuesInt(string variable, int[] index, int[] values);
-
-        void Compute1d2dCoefficients();
     }
 }

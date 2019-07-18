@@ -6,8 +6,6 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Validation;
-using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
-using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.FMSuite.FlowFM.Validation;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
@@ -18,7 +16,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         public const string CellsToFeaturesName = "CellsToFeatures";
         public const string GridPropertyName = "Grid";
-        public const string IsPartOf1D2DModelPropertyName = "IsPartOf1D2DModel";
         public const string DisableFlowNodeRenumberingPropertyName = "DisableFlowNodeRenumbering";
 
         public virtual bool IsMasterTimeStep => true;
@@ -94,35 +91,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         public virtual void SetVar(Array values, string category, string itemName = null, string parameter = null)
         {
-            if (category == IsPartOf1D2DModelPropertyName)
-            {
-                var boolArray = values as bool[];
-                if (boolArray != null && boolArray.Length > 0)
-                {
-                    bool isPartOf1D2DModel = boolArray[0];
-                    // This property is made because 1D2D integrated models do not support UGrid format.
-                    // Remove when this dependency has vanished (DELFT3DFM-989)
-                    WaterFlowFMProperty isPartOf1D2DModelGuiProperty =
-                        ModelDefinition.GetModelProperty(GuiProperties.PartOf1D2DModel);
-                    if ((bool) isPartOf1D2DModelGuiProperty.Value != isPartOf1D2DModel)
-                    {
-                        isPartOf1D2DModelGuiProperty.Value = isPartOf1D2DModel;
-                        if (isPartOf1D2DModel && UseMorSed)
-                        {
-                            ModelDefinition.UseMorphologySediment = false;
-                            Log.InfoFormat(
-                                Resources
-                                    .WaterFlowFMModel_SetVar_FM_Model__0__is_part_of_a_1D2D_model_and_can_t_have_morphology_properties_and___or_sediments__Removing_these_properties_from_the_model,
-                                Name);
-                        }
-
-                        ModelDefinition.SetMapFormatPropertyValue();
-                    }
-                }
-
-                return;
-            }
-
             if (category == DisableFlowNodeRenumberingPropertyName)
             {
                 var boolArray = values as bool[];

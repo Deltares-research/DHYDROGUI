@@ -42,18 +42,9 @@ namespace DeltaShell.NGHS.IO.FileWriters.General
 
         public const int RetentionMajorVersion = 1;
         public const int RetentionMinorVersion = 0;
-
-        public const int Iterative1D2DCouplerMajorVersion = 1;
-        public const int Iterative1D2DCouplerMinorVersion = 0;
-
-        public const int Iterative1D2DCouplerMappingMajorVersion = 1;
-        public const int Iterative1D2DCouplerMappingMinorVersion = 0;
-
-
+        
         public static class FileTypeName
         {
-            public const string Iterative1D2DCouplerMapping = "1D2Dmapping";
-            public const string Iterative1D2DCoupler = "1D2D";
             public const string CrossSectionDefinition = "crossDef";
             public const string CrossSectionLocation = "crossLoc";
             public const string StructureDefinition = "structure";

@@ -57,7 +57,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             // Create model definition
             ModelDefinition = new WaterFlowFMModelDefinition();
             ModelDefinition.GetModelProperty(KnownProperties.NetFile).Value = Name + NetFile.FullExtension;
-            ModelDefinition.GetModelProperty(GuiProperties.PartOf1D2DModel).Value = false;
 
             SynchronizeModelDefinitions();
 

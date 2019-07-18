@@ -88,36 +88,18 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 {
                     HydroModelWorkFlowDataLookUp = new Dictionary<IHydroModelWorkFlowData, IList<int>>
                         {
-                            {new Iterative1D2DCouplerData(), new List<int>(new[]{1,4,7,2})}
+                            {new CompositeHydroModelWorkFlowData(), new List<int>(new[]{1,4,7,2})}
                         }
                 };
 
             var retrievedcompositeHydroModelWorkFlowData = SaveAndRetrieveObject(compositeHydroModelWorkFlowData);
-            var loadedIterative1D2DCouplerData = (Iterative1D2DCouplerData)retrievedcompositeHydroModelWorkFlowData.WorkFlowDatas.First();
+            var innerCompositeHydroModelWorkFlowData = (CompositeHydroModelWorkFlowData)retrievedcompositeHydroModelWorkFlowData.WorkFlowDatas.First();
 
-            loadedIterative1D2DCouplerData.MaxIteration = 2;
 
             // resave
             ProjectRepository.SaveOrUpdate(ProjectRepository.GetProject());
 
-            Assert.AreEqual(new List<int>(new[] { 1, 4, 7, 2 }), retrievedcompositeHydroModelWorkFlowData.HydroModelWorkFlowDataLookUp[loadedIterative1D2DCouplerData]);
-        }
-
-        [Test]
-        public void SaveAndLoadIterative1D2DCouplerData()
-        {
-            var iterative1D2DCouplerData = new Iterative1D2DCouplerData
-                {
-                    MaxError = 5,
-                    MaxIteration = 6,
-                    Debug = true
-                };
-
-            var retrievedIterative1D2DCouplerData = SaveAndRetrieveObject(iterative1D2DCouplerData);
-
-            Assert.AreEqual(5, retrievedIterative1D2DCouplerData.MaxError);
-            Assert.AreEqual(6, retrievedIterative1D2DCouplerData.MaxIteration);
-            Assert.AreEqual(true, retrievedIterative1D2DCouplerData.Debug);
+            Assert.AreEqual(new List<int>(new[] { 1, 4, 7, 2 }), retrievedcompositeHydroModelWorkFlowData.HydroModelWorkFlowDataLookUp[innerCompositeHydroModelWorkFlowData]);
         }
 
         [Test]

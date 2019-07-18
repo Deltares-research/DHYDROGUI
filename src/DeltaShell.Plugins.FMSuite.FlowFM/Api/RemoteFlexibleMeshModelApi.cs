@@ -256,19 +256,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             }
         }
 
-        public void Compute1d2dCoefficients()
-        {
-            try
-            {
-                remoteInstanceApi.Compute1d2dCoefficients();
-            }
-            catch (Exception e)
-            {
-                TryThrowWithKernelLoggedErrors(e, WorkingDirectory);
-                throw;
-            }
-        }
-
         public Type GetVariableType(string variable)
         {
             return remoteInstanceApi.GetVariableType(variable);

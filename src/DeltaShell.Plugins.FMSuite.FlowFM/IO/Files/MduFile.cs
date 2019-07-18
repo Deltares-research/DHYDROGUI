@@ -8,6 +8,7 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Utils;
+using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.NetCdf;
@@ -33,8 +34,6 @@ using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Geometries;
 using SharpMap;
 using SharpMap.Api.SpatialOperations;
-using CollectionExtensions = DelftTools.Utils.Collections.CollectionExtensions;
-using EnumerableExtensions = DelftTools.Utils.Collections.EnumerableExtensions;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 {
@@ -210,13 +209,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
 
             modelDefinition.SetMduTimePropertiesFromGuiProperties();
-            var isPartOf1D2DModel = (bool) modelDefinition.GetModelProperty(GuiProperties.PartOf1D2DModel).Value;
 
             // write at the end in case of updated file paths
             WriteProperties(targetMduFilePath,
                             modelDefinition.Properties,
-                            config,
-                            useNetCDFMapFormat: isPartOf1D2DModel);
+                            config);
 
             if (!switchTo)
             {

@@ -6,14 +6,12 @@ using System.Threading;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
 using DelftTools.Shell.Core.Workflow;
-using log4net;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using DeltaShell.Dimr;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.DelftModels.HydroModel.Import;
-using log4net.Appender;
-using log4net.Repository.Hierarchy;
+using log4net;
 using Mono.Addins;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel
@@ -85,9 +83,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                 }
             }
         }
-
-        public static Iterative1D2DCouplerAppender IterativeCouplerAppender { get; set; }
-
+        
         private void ApplicationProjectOpened(Project project)
         {
             // relink all dataitems (between rtc and flowFM) for all hydromodels
@@ -151,7 +147,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         public IEnumerable<IDataAccessListener> CreateDataAccessListeners()
         {
-            yield return new Iterative1D2DCouplerDataAccessListener();
+            return Enumerable.Empty<IDataAccessListener>();
         }
 
         public override IEnumerable<Assembly> GetPersistentAssemblies()
@@ -164,29 +160,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             var initializeThread = new Thread(InitializeModelBuilder) { Priority = ThreadPriority.BelowNormal };
             initializeThread.Start();
 
-            // register Iterative1D2DCoupler log appender
-            IterativeCouplerAppender = new Iterative1D2DCouplerAppender();
-
-            var rootLogger = ((Hierarchy)LogManager.GetRepository()).Root;
-            if (!rootLogger.Appenders.Cast<IAppender>().Any(a => a is Iterative1D2DCouplerAppender))
-            {
-                rootLogger.AddAppender(IterativeCouplerAppender);
-            }
-
             base.Activate();
-        }
-
-        public override void Deactivate()
-        {
-            // unregister Iterative1D2DCoupler log appender
-            var rootLogger = ((Hierarchy)LogManager.GetRepository()).Root;
-            if (IterativeCouplerAppender != null)
-            {
-                rootLogger.RemoveAppender(IterativeCouplerAppender);
-                IterativeCouplerAppender = null;
-            }
-
-            base.Deactivate();
         }
 
         public override IEnumerable<IFileExporter> GetFileExporters()

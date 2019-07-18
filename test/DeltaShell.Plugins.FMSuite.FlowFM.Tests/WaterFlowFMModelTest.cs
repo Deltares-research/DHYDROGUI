@@ -1052,18 +1052,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
         
         [Test]
-        public void FmModelSetVarUseNetCDFMapFormat()
-        {
-            var model = new WaterFlowFMModel();
-            var isPartOf1D2DModelGuiProperty = model.ModelDefinition.GetModelProperty(GuiProperties.PartOf1D2DModel);
-            isPartOf1D2DModelGuiProperty.Value = false;
-
-            Assert.IsFalse((bool)isPartOf1D2DModelGuiProperty.Value);
-            model.SetVar(new[] {true}, WaterFlowFMModel.IsPartOf1D2DModelPropertyName);
-            Assert.IsTrue((bool)isPartOf1D2DModelGuiProperty.Value);
-        }
-
-        [Test]
         public void FmModelSetVarDisableFlowNodeRenumbering()
         {
             var model = new WaterFlowFMModel();

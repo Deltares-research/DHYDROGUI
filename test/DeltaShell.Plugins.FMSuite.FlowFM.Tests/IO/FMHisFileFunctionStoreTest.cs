@@ -69,7 +69,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Category(TestCategory.DataAccess)]
         public void ShowWaterBalanceTimeSeries()
         {
-            var store = new FMHisFileFunctionStore(TestHelper.GetTestFilePath("output_hisfiles\\har_1d2d_his.nc"));
+            var store = new FMHisFileFunctionStore(TestHelper.GetTestFilePath("output_hisfiles\\har_fm_his.nc"));
             IFunction waterbalancetimeseries =
                 store.Functions.First(f => f.Components[0].Name == "WaterBalance_total_volume");
 

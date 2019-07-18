@@ -297,13 +297,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 const string path = "copyalong.dsproj";
                 app.SaveProjectAs(path);
 
-                var mduPath = TestHelper.GetTestFilePath(@"copyalong\manholes_1d2d.mdu");
+                var mduPath = TestHelper.GetTestFilePath(@"copyalong\manholes.mdu");
                 mduPath = TestHelper.CreateLocalCopy(mduPath);
                 var model = new WaterFlowFMModel(mduPath);
 
                 // upon adding to project, non-memory based stuff should be copied to the project temp directory
                 app.Project.RootFolder.Add(model);
-                var tempSaveInputDir = Path.GetFullPath(Path.Combine(path + "_data", "manholes_1d2d", "input"));
+                var tempSaveInputDir = Path.GetFullPath(Path.Combine(path + "_data", "manholes", "input"));
 
                 // check various files are copied along (even though they aren't supported yet by the UI):
                 var netFile = Path.Combine(tempSaveInputDir, "manholes_net.nc");

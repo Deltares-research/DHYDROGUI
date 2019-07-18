@@ -44,7 +44,6 @@
     <Compile Include="..\..\AssemblyInfo.Version.FM.cs">
       <Link>Properties\AssemblyInfo.Version.FM.cs</Link>
     </Compile>
-    <Compile Include="Api\Iterative1d2dApi.cs" />
     <Compile Include="CompositeHydroModelWorkFlowData.cs" />
     <Compile Include="Export\DimrConfigModelCoupler.cs" />
     <Compile Include="Export\DHydroConfigWriter.cs" />
@@ -53,15 +52,12 @@
     <Compile Include="Export\FeatureExtensions.cs" />
     <Compile Include="Export\IDimrConfigModelCoupler.cs" />
     <Compile Include="Export\IDimrConfigModelCouplerProvider.cs" />
-    <Compile Include="Export\Iterative1D2DCouplerExporter.cs" />
-    <Compile Include="Export\Iterative1D2DCouplerFileWriter.cs" />
     <Compile Include="HydroModelHelper.cs" />
     <Compile Include="Import\DHydroConfigXmlImporter.cs" />
     <Compile Include="Import\HydroModelConverter.cs" />
     <Compile Include="Import\HydroModelReader.cs" />
     <Compile Include="Import\ImportingFullModelAction.cs" />
     <Compile Include="Import\RtcXmlDirectoryLookup.cs" />
-    <Compile Include="Iterative1D2DCouplerDataAccessListener.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\PluginInfo.cs" />
     <Compile Include="Validation\HydroModelValidator.cs" />
@@ -72,10 +68,6 @@
     <Compile Include="HydroModel.FileBased.cs" />
     <Compile Include="IHydroModelWorkFlow.cs" />
     <Compile Include="IHydroModelWorkFlowData.cs" />
-    <Compile Include="Iterative1D2DCouplerAppender.cs" />
-    <Compile Include="Iterative1D2DCoupler.cs" />
-    <Compile Include="Iterative1D2DCouplerData.cs" />
-    <Compile Include="Iterative1D2DCouplerLink.cs" />
     <Compile Include="ModelCouplingFile.cs" />
     <Compile Include="ModelExchangeInfo.cs" />
     <Compile Include="HydroModel.cs" />
@@ -228,17 +220,13 @@
     <EmbeddedResource Include="IHydroModelWorkFlow.hbm.xml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Iterative1D2DCouplerData.hbm.xml" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="HydroModel.1.0.0.hbm.xml">
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\1d2d.gif" />
+    <Folder Include="Resources\" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>
