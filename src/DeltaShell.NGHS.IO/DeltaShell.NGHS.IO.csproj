@@ -120,6 +120,7 @@
     </Compile>
     <Compile Include="Adaptors\UGridToUnstructuredGridAdaptor.cs" />
     <Compile Include="DelftBcReader.cs" />
+    <Compile Include="DelftBcWriter.cs" />
     <Compile Include="DelftIniReader.cs" />
     <Compile Include="DelftIniWriter.cs" />
     <Compile Include="FileConverters\DelftXmlFileConverter.cs" />
@@ -141,9 +142,12 @@
     <Compile Include="FileReaders\Retention\RetentionFileReader.cs" />
     <Compile Include="FileReaders\Retention\RetentionPropertiesDTO.cs" />
     <Compile Include="FileReaders\SpatialData\SalinityConverter.cs" />
+    <Compile Include="FileReaders\SpatialData\SalinityFileReader.cs" />
     <Compile Include="FileReaders\SpatialData\SpatialDataConverter.cs" />
     <Compile Include="FileReaders\SpatialData\NetworkCoverageFileReader.cs" />
+    <Compile Include="FileWriters\Boundary\BoundaryFileWriter.cs" />
     <Compile Include="FileWriters\Boundary\BoundaryRegion.cs" />
+    <Compile Include="FileWriters\Boundary\DefinitionGeneratorBoundary.cs" />
     <Compile Include="FileWriters\CrossSectionDefinition\DefinitionGeneratorCrossSectionDefinition.cs" />
     <Compile Include="FileWriters\CrossSectionDefinition\DefinitionGeneratorCrossSectionDefinitionArch.cs" />
     <Compile Include="FileWriters\CrossSectionDefinition\DefinitionGeneratorCrossSectionDefinitionCircle.cs" />
