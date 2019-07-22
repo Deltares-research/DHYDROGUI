@@ -35,8 +35,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             foreach(var timeSeriesElement in timeSeriesElements)
             {
                 var timeSeriesItem = timeSeriesElement.header;
-
                 var locationId = timeSeriesItem.locationId;
+                var missingValue = timeSeriesItem.missVal;
+                var records = timeSeriesElement.@event;
+
                 var correspondingRuleOrCondition = GetCorrespondingRuleOrCondition(locationId, controlGroups);
 
                 if (!(correspondingRuleOrCondition is ITimeDependentRtcObject timeDependentObject))
@@ -45,10 +47,57 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                     continue;
                 }
 
-                var missingValue = timeSeriesItem.missVal;
-                var records = timeSeriesElement.@event;
+                if (!UsesTimeSeries(correspondingRuleOrCondition))
+                {
+                    logHandler.ReportWarningFormat(
+                        Resources
+                            .RealTimeControlTimeSeriesConnector_ConnectTimeSeries_Rule__with_id___0___does_not_seem_to_use_a_time_serie_as_setpoint__See_file____1___Therefore_the_time_serie_is_not_imported,
+                        locationId, RealTimeControlXMLFiles.XmlTimeSeries);
+                    continue;
+                }
 
-                SetTimeSeriesFromXmlRecords(timeDependentObject.TimeSeries, records, missingValue);
+                if (correspondingRuleOrCondition is IntervalRule intervalRule &&
+                    intervalRule.IntervalType == IntervalRule.IntervalRuleIntervalType.Fixed)
+                {
+                    SetDefaultValueIntervalRule(records, intervalRule);
+                }
+                else
+                {
+                    SetTimeSeriesFromXmlRecords(timeDependentObject.TimeSeries, records, missingValue);
+                }
+            }
+        }
+
+        private static bool UsesTimeSeries(RtcBaseObject rtcObject)
+        {
+            if (rtcObject is IntervalRule intervalRule &&
+                intervalRule.IntervalType == IntervalRule.IntervalRuleIntervalType.Signal)
+            {
+                return false;
+            }
+
+            if (rtcObject is PIDRule pidRule &&
+                pidRule.PidRuleSetpointType != PIDRule.PIDRuleSetpointType.TimeSeries)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        private void SetDefaultValueIntervalRule(List<EventComplexType> records, IntervalRule intervalRule)
+        {
+            double? fixedValue = records.FirstOrDefault()?.value;
+            if (fixedValue != null)
+            {
+                intervalRule.TimeSeries.Components[0].DefaultValue = fixedValue;
+            }
+            else
+            {
+                logHandler.ReportWarningFormat(
+                    Resources
+                        .RealTimeControlTimeSeriesSetter_For_interval_rule_with_id__0__there_is_no_time_data_found_in_file__1__for_setting_the_fixed_setpoint_value,
+                    intervalRule.Name, RealTimeControlXMLFiles.XmlTimeSeries);
             }
         }
 

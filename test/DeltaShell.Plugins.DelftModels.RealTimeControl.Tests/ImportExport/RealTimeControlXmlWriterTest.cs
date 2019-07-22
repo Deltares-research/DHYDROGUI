@@ -1,15 +1,17 @@
-﻿using System;
+﻿using DelftTools.Functions.Generic;
+using DelftTools.Shell.Core.Workflow;
+using DelftTools.TestUtils;
+using DeltaShell.Dimr;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
+using NUnit.Framework;
+using Rhino.Mocks;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
-using DelftTools.Functions.Generic;
-using DelftTools.Shell.Core.Workflow;
-using DeltaShell.Dimr;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport;
-using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
 {
@@ -144,6 +146,59 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
             var stateTimeStepElement = stateFilesElement.Element(ns + "stateTimeStep");
             Assert.That(stateTimeStepElement, Is.Not.Null);
             Assert.That(stateTimeStepElement.Value, Is.EqualTo(expectedTimeStep));
+        }
+
+        [TestCase(PIDRule.PIDRuleSetpointType.TimeSeries, false, 0)]
+        [TestCase(PIDRule.PIDRuleSetpointType.TimeSeries, true, 0)] // should never happen due to export validation
+        [TestCase(PIDRule.PIDRuleSetpointType.Constant, false, 1)]
+        [TestCase(PIDRule.PIDRuleSetpointType.Constant, true, 0)]
+        [TestCase(PIDRule.PIDRuleSetpointType.Signal, false, 1)]
+        [TestCase(PIDRule.PIDRuleSetpointType.Signal, true, 0)]
+        public void
+            GivenARealTimeControlXmlWriterAndAModelWithAPidRule_WhenGetTimeSeriesXmlIsCalled_ThenExpectedNumberOfWarningsIsGiven(PIDRule.PIDRuleSetpointType setPointType, bool hasEmptyTimeSeries, int nExpectedWarnings)
+        {
+            var expectedMessage = string.Format(Resources
+                .RealTimeControlXmlWriter_GetXmlTimeSeriesFromControlGroups_PIDRule__0__time_series_will_not_be_included_in_the_DIMR_XML_as_Set_Point_Type_is_not_TimeSeries, "PID Rule");
+            var expectedMessages = Enumerable.Repeat(expectedMessage, nExpectedWarnings).ToArray();
+
+            // Given
+            var model = CreateRealTimeControlModelWithPidRule(setPointType, hasEmptyTimeSeries);
+
+            TestHelper.AssertLogMessagesAreGenerated(
+                // When
+                () => RealTimeControlXmlWriter.GetTimeSeriesXml(DimrApiDataSet.RtcToolsDllPath, model, model.ControlGroups),
+                // Then
+                expectedMessages, nExpectedWarnings);
+        }
+
+        private RealTimeControlModel CreateRealTimeControlModelWithPidRule(PIDRule.PIDRuleSetpointType setPointType,
+            bool hasEmptyTimeSeries)
+        {
+            var model = new RealTimeControlModel();
+            var controlGroup = new ControlGroup();
+            var pidRule = CreatePidRule(setPointType, hasEmptyTimeSeries, model.StartTime, model.StopTime);
+            controlGroup.Rules.Add(pidRule);
+            model.ControlGroups.Add(controlGroup);
+
+            return model;
+        }
+
+        private static PIDRule CreatePidRule(PIDRule.PIDRuleSetpointType setPointType, bool hasEmptyTimeSeries,
+            DateTime start, DateTime stop)
+        {
+            var pidRule = new PIDRule
+            {
+                PidRuleSetpointType = setPointType,
+            };
+
+            if (hasEmptyTimeSeries)
+                return pidRule;
+
+            pidRule.TimeSeries.Time.AddValues(new[] {start, stop});
+            pidRule.TimeSeries[start] = 1d;
+            pidRule.TimeSeries[stop] = 1d;
+
+            return pidRule;
         }
     }
 }
