@@ -121,10 +121,10 @@
     <value>The maximum change of the controlled parameter, in 1 second.</value>
   </data>
   <data name="HydraulicRuleProperties_TimeLag_DisplayName" xml:space="preserve">
-    <value>Time lag (s)</value>
+    <value>Time lag [s]</value>
   </data>
   <data name="IntervalRuleProperties_Below_DisplayName" xml:space="preserve">
-    <value>Below output</value>
+    <value>Output below deadband</value>
   </data>
   <data name="IntervalRuleProperties_MaxSpeed_DisplayName" xml:space="preserve">
     <value>Maximum speed</value>
@@ -338,7 +338,7 @@
     <value>The name of the input to this condition.</value>
   </data>
   <data name="IntervalRuleProperties_AboutOutput_DisplayName" xml:space="preserve">
-    <value>Above output</value>
+    <value>Output above deadband</value>
   </data>
   <data name="ConstantSetpoint_Description" xml:space="preserve">
     <value>The constant reference value for the PID input.</value>
@@ -485,7 +485,7 @@
     <value>Minimum period in seconds between two active periods of the time controller</value>
   </data>
   <data name="RelativeTimeRuleProperties_MinimumPeriod_DisplayName" xml:space="preserve">
-    <value>Minimum period (s)</value>
+    <value>Minimum period [s]</value>
   </data>
   <data name="RealTimeControlModelNodePresenter_GetContextMenu_Validate___" xml:space="preserve">
     <value>Validate...</value>

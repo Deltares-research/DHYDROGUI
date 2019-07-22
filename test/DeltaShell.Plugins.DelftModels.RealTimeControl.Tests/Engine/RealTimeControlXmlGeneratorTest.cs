@@ -156,6 +156,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
             intervalRule.TimeSeries[new DateTime(2010, 1, 19, 12, 0, 0)] = 3.0;
             intervalRule.TimeSeries[new DateTime(2010, 1, 20, 12, 0, 0)] = 4.0;
             intervalRule.TimeSeries[new DateTime(2010, 1, 21, 12, 0, 0)] = 5.0;
+            intervalRule.ConstantValue = 6;
 
             controlGroup.Rules.Add(intervalRule);
 
@@ -163,7 +164,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
             controlGroup.Outputs.Add(output);
         }
 
-        private void SetUpLookupSignal()
+        private void SetUpLookupSignalForPidRule()
         {
             var input2 = new Input
             {
@@ -171,10 +172,29 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
                 Feature = new RtcTestFeature {Name = "MeasureStationB"}
             };
 
-
             lookupSignal = new LookupSignal("SetPointForPID");
             lookupSignal.Inputs.Add(input2);
             lookupSignal.RuleBases.Add(pidRule);
+
+            lookupSignal.Function[10.0] = 3.0;
+            lookupSignal.Function[100.0] = 6.0;
+            lookupSignal.Interpolation = InterpolationType.Linear;
+            lookupSignal.Extrapolation = ExtrapolationType.Constant;
+
+            controlGroup.Signals.Add(lookupSignal);
+        }
+
+        private void SetUpLookupSignalForIntervalRule()
+        {
+            var input2 = new Input
+            {
+                ParameterName = "Discharge",
+                Feature = new RtcTestFeature { Name = "MeasureStationB" }
+            };
+
+            lookupSignal = new LookupSignal("SetPointForIntervalRule");
+            lookupSignal.Inputs.Add(input2);
+            lookupSignal.RuleBases.Add(intervalRule);
 
             lookupSignal.Function[10.0] = 3.0;
             lookupSignal.Function[100.0] = 6.0;
@@ -482,7 +502,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
                 "</rtcToolsConfig>";
 
             SetUpGlobalPidRuleForGlobalControlGroup();
-            SetUpLookupSignal();
+            SetUpLookupSignalForPidRule();
 
             var xDocument = RealTimeControlXmlWriter.GetToolsConfigXml(XsdPath, new List<ControlGroup> {controlGroup});
             Assert.IsNotNull(xDocument);
@@ -791,10 +811,133 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
         }
 
         [Test]
+        [Category(TestCategory.Integration)]
+        public void GivenAnIntervalRuleWithSignalAsSetPoint_WhenAskingForTimeSeriesFile_ThenThisFileShouldNotBeCreated()
+        {
+            // Given
+            SetUpIntervalRule();
+            condition.TrueOutputs.Add(intervalRule);
+            condition.FalseOutputs.Add(intervalRule);
+            SetUpLookupSignalForIntervalRule();
+            intervalRule.IntervalType = IntervalRule.IntervalRuleIntervalType.Signal;
+            var controlGroupList = new List<ControlGroup> { controlGroup };
+
+            // When
+            var xDocument = RealTimeControlXmlWriter.GetTimeSeriesXml(XsdPath, realTimeControlModel, controlGroupList);
+
+            // Then
+            Assert.IsNull(xDocument);
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void GivenAnIntervalRuleWithSignalAsSetPoint_WhenAskingForDataConfigFile_ThenAReferenceToATimeSerieShouldNotBeWritten()
+        {
+            // Given
+            SetUpIntervalRule();
+            condition.TrueOutputs.Add(intervalRule);
+            condition.FalseOutputs.Add(intervalRule);
+            SetUpLookupSignalForIntervalRule();
+            intervalRule.IntervalType = IntervalRule.IntervalRuleIntervalType.Signal;
+            var controlGroupList = new List<ControlGroup> { controlGroup };
+
+            // When
+            var xDocument = RealTimeControlXmlWriter.GetDataConfigXml(XsdPath, realTimeControlModel, controlGroupList, null);
+
+            // Then
+            var header = "<rtcDataConfig" + FewsXmlheader + RtcDataConfigxsd + ">";
+            var strIntervalRule =
+                header +
+                "<importSeries><timeSeries id=\"[Input]MeasureStationA/Water level\"><OpenMIExchangeItem><elementId>MeasureStationA</elementId><quantityId>Water level</quantityId><unit>m</unit>" +
+                "</OpenMIExchangeItem>" +
+                "</timeSeries>" +
+                "</importSeries><exportSeries><CSVTimeSeriesFile decimalSeparator=\".\" delimiter=\",\" adjointOutput=\"false\">" +
+                "</CSVTimeSeriesFile><PITimeSeriesFile><timeSeriesFile>timeseries_export.xml</timeSeriesFile><useBinFile>false</useBinFile>" +
+                "</PITimeSeriesFile><timeSeries id=\"[Output]WeirdWeir/Crest level\"><OpenMIExchangeItem><elementId>WeirdWeir</elementId><quantityId>Crest level</quantityId><unit>m</unit>" +
+                "</OpenMIExchangeItem>" +
+                $"</timeSeries><timeSeries id=\"[Status]/Trigger31\" /><timeSeries id=\"[Status]/{intervalRule.Name}\" /><timeSeries id=\"[Signal]/SetPointForIntervalRule\" />" +
+                "</exportSeries>" +
+                "</rtcDataConfig>";
+            Assert.IsNotNull(xDocument);
+            Assert.AreEqual(strIntervalRule, xDocument.ToString(SaveOptions.DisableFormatting));
+        }
+        
+        [Category(TestCategory.Integration)]
+        [TestCase(IntervalRule.IntervalRuleIntervalType.Variable, 3)]
+        [TestCase(IntervalRule.IntervalRuleIntervalType.Fixed, 6)]
+        public void GivenAnIntervalRuleWithAVariableOrFixedSetPoint_WhenAskingForTimeSeriesFile_ThenThisFileShouldBeCreatedWithOneTimeSerie(IntervalRule.IntervalRuleIntervalType intervalRuleIntervalType, int expectedValueInTimeSeriesFile)
+        {
+            // Given
+            SetUpIntervalRule();
+            condition.TrueOutputs.Add(intervalRule);
+            condition.FalseOutputs.Add(intervalRule);
+            intervalRule.IntervalType = intervalRuleIntervalType;
+            var controlGroupList = new List<ControlGroup> { controlGroup };
+
+            // When
+            XDocument xDocument = RealTimeControlXmlWriter.GetTimeSeriesXml(XsdPath, realTimeControlModel, controlGroupList);
+
+            // Then
+            Assert.IsNotNull(xDocument);
+
+            string piTimeSeries =
+                "<TimeSeries" + PiXmlheader + PiTimeSeriesxsd + " version=\"1.2\">" +
+                $"<series><header><type>instantaneous</type><locationId>{RtcXmlTag.IntervalRule}/Interval Test</locationId><parameterId>SP</parameterId><timeStep unit=\"hour\" multiplier=\"7\" divider=\"1\" /><startDate date=\"2000-01-01\" time=\"00:15:30\" /><endDate date=\"2001-02-03\" time=\"04:15:45\" /><missVal>-999.0</missVal><stationName /><units />" +
+                $"</header><event date=\"2000-01-01\" time=\"00:15:30\" value=\"{expectedValueInTimeSeriesFile}\" /><event date=\"2001-02-03\" time=\"04:15:45\" value=\"{expectedValueInTimeSeriesFile}\" />" +
+                "</series>" +
+                "</TimeSeries>";
+
+            Assert.AreEqual(piTimeSeries, xDocument.ToString(SaveOptions.DisableFormatting));
+        }
+
+        [Category(TestCategory.Integration)]
+        [TestCase(IntervalRule.IntervalRuleIntervalType.Variable)]
+        [TestCase(IntervalRule.IntervalRuleIntervalType.Fixed)]
+        public void GivenAnIntervalRuleWithAVariableOrFixedSetPoint_WhenAskingForDataConfigFile_ThenAReferenceToATimeSerieShouldBeWritten(IntervalRule.IntervalRuleIntervalType intervalRuleIntervalType)
+        {
+            // Given
+            SetUpIntervalRule();
+            condition.TrueOutputs.Add(intervalRule);
+            condition.FalseOutputs.Add(intervalRule);
+            intervalRule.IntervalType = intervalRuleIntervalType;
+            var controlGroupList = new List<ControlGroup> { controlGroup };
+            string timeSeriesFileName = "timeseries_import.xml";
+
+            // When
+            XDocument xDocument = RealTimeControlXmlWriter.GetDataConfigXml(XsdPath, realTimeControlModel, controlGroupList, timeSeriesFileName);
+
+            // Then
+            Assert.IsNotNull(xDocument);
+
+            // Then
+            var header = "<rtcDataConfig" + FewsXmlheader + RtcDataConfigxsd + ">";
+            var strIntervalRule =
+                header +
+                $"<importSeries><PITimeSeriesFile><timeSeriesFile>{timeSeriesFileName}</timeSeriesFile><useBinFile>false</useBinFile></PITimeSeriesFile>" +
+                "<timeSeries id=\"[Input]MeasureStationA/Water level\"><OpenMIExchangeItem><elementId>MeasureStationA</elementId><quantityId>Water level</quantityId><unit>m</unit>" +
+                "</OpenMIExchangeItem>" +
+                "</timeSeries>" +
+                $"<timeSeries id=\"[SP]/{intervalRule.Name}\"><PITimeSeries><locationId>{RtcXmlTag.IntervalRule}/{intervalRule.Name}</locationId><parameterId>SP</parameterId>" +
+                "<interpolationOption>BLOCK</interpolationOption><extrapolationOption>BLOCK</extrapolationOption>" +
+                "</PITimeSeries>" +
+                "</timeSeries>" +
+                "</importSeries>" +
+                "<exportSeries><CSVTimeSeriesFile decimalSeparator=\".\" delimiter=\",\" adjointOutput=\"false\">" +
+                "</CSVTimeSeriesFile><PITimeSeriesFile><timeSeriesFile>timeseries_export.xml</timeSeriesFile><useBinFile>false</useBinFile>" +
+                "</PITimeSeriesFile><timeSeries id=\"[Output]WeirdWeir/Crest level\"><OpenMIExchangeItem><elementId>WeirdWeir</elementId><quantityId>Crest level</quantityId><unit>m</unit>" +
+                "</OpenMIExchangeItem>" +
+                $"</timeSeries><timeSeries id=\"[Status]/Trigger31\" /><timeSeries id=\"[Status]/{intervalRule.Name}\" />" +
+                "</exportSeries>" +
+                "</rtcDataConfig>";
+            Assert.IsNotNull(xDocument);
+            Assert.AreEqual(strIntervalRule, xDocument.ToString(SaveOptions.DisableFormatting));
+        }
+
+        [Test]
         public void GetToolsDataXml_OnePIDRuleOneLookupSignal()
         {
             SetUpGlobalPidRuleForGlobalControlGroup();
-            SetUpLookupSignal();
+            SetUpLookupSignalForPidRule();
 
             var strOutputXml = DataResultXml(input, output, true);
 

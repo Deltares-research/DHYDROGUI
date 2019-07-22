@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -461,6 +461,34 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Import time series for signals are not existing, export failed..
+        /// </summary>
+        public static string RealTimeControlModelIntervalRule_Import_time_series_for_signals_are_not_existing_export_failed {
+            get {
+                return ResourceManager.GetString("RealTimeControlModelIntervalRule_Import_time_series_for_signals_are_not_existing_" +
+                        "export_failed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Interval rule &apos;{0}&apos; has empty time series..
+        /// </summary>
+        public static string RealTimeControlModelIntervalRule_Interval_rule__0__has_empty_time_series {
+            get {
+                return ResourceManager.GetString("RealTimeControlModelIntervalRule_Interval_rule__0__has_empty_time_series", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Interval rule &apos;{0}&apos; requires 1 input..
+        /// </summary>
+        public static string RealTimeControlModelIntervalRule_Interval_rule__0__requires_1_input {
+            get {
+                return ResourceManager.GetString("RealTimeControlModelIntervalRule_Interval_rule__0__requires_1_input", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Run parameters.
         /// </summary>
         public static string RealTimeControlModelProperties_Category_RunParameters {
@@ -698,6 +726,27 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Rule with id &apos;{0}&apos; does not seem to use a time serie as setpoint. See file: &apos;{1}&apos;. Therefore, the time serie is not imported..
+        /// </summary>
+        public static string RealTimeControlTimeSeriesConnector_ConnectTimeSeries_Rule__with_id___0___does_not_seem_to_use_a_time_serie_as_setpoint__See_file____1___Therefore_the_time_serie_is_not_imported {
+            get {
+                return ResourceManager.GetString("RealTimeControlTimeSeriesConnector_ConnectTimeSeries_Rule__with_id___0___does_not" +
+                        "_seem_to_use_a_time_serie_as_setpoint__See_file____1___Therefore_the_time_serie_" +
+                        "is_not_imported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to For interval rule with id &apos;{0}&apos;, there is no time data found in file &apos;{1}&apos; for setting the fixed setpoint value..
+        /// </summary>
+        public static string RealTimeControlTimeSeriesSetter_For_interval_rule_with_id__0__there_is_no_time_data_found_in_file__1__for_setting_the_fixed_setpoint_value {
+            get {
+                return ResourceManager.GetString("RealTimeControlTimeSeriesSetter_For_interval_rule_with_id__0__there_is_no_time_da" +
+                        "ta_found_in_file__1__for_setting_the_fixed_setpoint_value", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to File &apos;{0}&apos; does not exist..
         /// </summary>
         public static string RealTimeControlTimeSeriesXmlReader_Read_File___0___does_not_exist_ {
@@ -863,12 +912,22 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to PIDRule {0} time series will not be included in the DIMR XML as Set Point Type is Constant.
+        ///   Looks up a localized string similar to IntervalRule {0} time series will not be included in the DIMR XML as &quot;Set Point Type&quot; is &quot;Signal&quot;.
         /// </summary>
-        public static string RealTimeControlXmlWriter_GetXmlTimeSeriesFromControlGroups_PIDRule__0__time_series_will_not_be_included_in_the_DIMR_XML_as_Set_Point_Type_is_Constant {
+        public static string RealTimeControlXmlWriter_GetXmlTimeSeriesFromControlGroups_IntervalRule__0__time_series_will_not_be_included_in_the_DIMR_XML_as_Set_Point_Type_is_Signal {
+            get {
+                return ResourceManager.GetString("RealTimeControlXmlWriter_GetXmlTimeSeriesFromControlGroups_IntervalRule__0__time_" +
+                        "series_will_not_be_included_in_the_DIMR_XML_as_Set_Point_Type_is_Signal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PIDRule {0} time series will not be included in the DIMR XML as &quot;Set Point Type&quot; is not &quot;TimeSeries&quot;.
+        /// </summary>
+        public static string RealTimeControlXmlWriter_GetXmlTimeSeriesFromControlGroups_PIDRule__0__time_series_will_not_be_included_in_the_DIMR_XML_as_Set_Point_Type_is_not_TimeSeries {
             get {
                 return ResourceManager.GetString("RealTimeControlXmlWriter_GetXmlTimeSeriesFromControlGroups_PIDRule__0__time_serie" +
-                        "s_will_not_be_included_in_the_DIMR_XML_as_Set_Point_Type_is_Constant", resourceCulture);
+                        "s_will_not_be_included_in_the_DIMR_XML_as_Set_Point_Type_is_not_TimeSeries", resourceCulture);
             }
         }
         

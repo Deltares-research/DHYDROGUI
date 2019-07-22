@@ -92,6 +92,62 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
                 "When calling the method (RealTimeControlTimeSeriesSetter.SetTimeSeries()) with null parameters it threw an unexpected exception.");
         }
 
+        [Test]
+        public void GivenTimeSeriesXmlObjectForAnIntervalRuleWithAFixedSetpoint_WhenSetTimeSeriesIsCalled_ThenTheConstantValueOfTimeSeriesShouldBeSetAsDefaultValue()
+        {
+            // Given
+            var timeSeriesElements = CreateTimeSeriesElementList(RtcXmlTag.IntervalRule, 2, 2);
+            controlGroup = CreateControlGroupWithAIntervalRule();
+
+            // When
+            timeSeriesSetter.SetTimeSeries(timeSeriesElements, new[] { controlGroup });
+            
+            // Then
+            TimeSeries intervalRuleTimeSeries = ((IntervalRule)controlGroup.Rules[0]).TimeSeries;
+
+            Assert.AreEqual(2, intervalRuleTimeSeries.Components[0].DefaultValue,"Fixed setpoint value of the interval rule is not imported" );
+            Assert.AreEqual(0, intervalRuleTimeSeries.GetValues().Count,
+                "Expected was that the number of time series record would be zero after importing the time serie on the interval rule with a fixed setpoint.");
+        }
+
+        [Test]
+        public void GivenTimeSeriesXmlObjectWithoutValuesForAnIntervalRuleWithAFixedSetpoint_WhenSetTimeSeriesIsCalled_ThenAWarningShouldBeGiven()
+        {
+            // Given
+            var locationId = CreateLocationId(RtcXmlTag.IntervalRule);
+
+            var timeSeriesElements = new List<TimeSeriesComplexType>
+            {
+                new TimeSeriesComplexType
+                {
+                    header = new HeaderComplexType
+                    {
+                        locationId = locationId
+                    }
+                }
+            };
+
+            controlGroup = CreateControlGroupWithAIntervalRule();
+
+            // When
+            timeSeriesSetter.SetTimeSeries(timeSeriesElements, new[] {controlGroup});
+            
+            // Then
+            IntervalRule intervalRule = ((IntervalRule)controlGroup.Rules[0]);
+
+            Assert.AreEqual(0, intervalRule.TimeSeries.Components[0].DefaultValue, "Fixed setpoint value should not be set");
+            Assert.AreEqual(0, intervalRule.TimeSeries.GetValues().Count,
+                "Expected was that the number of time series record would be zero after importing the time serie on the interval rule with a fixed setpoint.");
+
+            var expectedMessage = string.Format(
+                Resources.RealTimeControlTimeSeriesSetter_For_interval_rule_with_id__0__there_is_no_time_data_found_in_file__1__for_setting_the_fixed_setpoint_value,
+                intervalRule.Name, RealTimeControlXMLFiles.XmlTimeSeries);
+
+          // Then
+            Assert.IsTrue(logHandler.LogMessagesTable.WarningMessages.Contains(expectedMessage),
+                "The collected log messages did not contain the expected message.");
+        }
+
         private static string CreateLocationId(string tag)
         {
             return $"{tag}{ControlGroupName}/{ComponentName}";
@@ -182,6 +238,17 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
             var controlGroup = new ControlGroup {Name = ControlGroupName};
             controlGroup.Rules.Add(timeRule);
             Assert.AreEqual(0, timeRule.TimeSeries.GetValues().Count,
+                "Expected was that the number of time series record would be zero before setting the time series on the time rule.");
+
+            return controlGroup;
+        }
+
+        private static ControlGroup CreateControlGroupWithAIntervalRule()
+        {
+            var intervalRule = new IntervalRule(ComponentName);
+            var controlGroup = new ControlGroup { Name = ControlGroupName };
+            controlGroup.Rules.Add(intervalRule);
+            Assert.AreEqual(0, intervalRule.TimeSeries.GetValues().Count,
                 "Expected was that the number of time series record would be zero before setting the time series on the time rule.");
 
             return controlGroup;
