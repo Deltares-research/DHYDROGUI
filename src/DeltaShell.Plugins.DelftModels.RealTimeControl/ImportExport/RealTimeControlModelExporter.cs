@@ -35,19 +35,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             {
                 RealTimeControlXmlWriter.CopyXsds(directory);
 
-                realTimeControlModel.SetTimeLagHydraulicRulesToTimeSteps(realTimeControlModel.ControlGroups,
-                    realTimeControlModel.TimeStep);
+                realTimeControlModel.SetTimeLagHydraulicRulesToTimeSteps(realTimeControlModel.ControlGroups, realTimeControlModel.TimeStep);
 
                 WriteEngineXmlFiles(realTimeControlModel, directory);
 
                 WriteRestartFiles(path, realTimeControlModel, directory);
             }
-            catch (InvalidOperationException e) when (e.Message == Resources.RealTimeControlModelIntervalRule_Import_time_series_for_signals_are_not_existing_export_failed)
-            {
-                Log.Error(e.Message);
-            }
             catch (Exception e)
-
             {
                 Log.Warn(e.Message); // skip model validation exceptions
             }

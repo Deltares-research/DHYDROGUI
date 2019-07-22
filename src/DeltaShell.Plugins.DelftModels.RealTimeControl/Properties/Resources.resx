@@ -259,11 +259,8 @@
   <data name="RealTimeControlModelProperties_CoordinateSystem_DisplayName" xml:space="preserve">
     <value>Coordinate System</value>
   </data>
-  <data name="RealTimeControlXmlWriter_GetXmlTimeSeriesFromControlGroups_PIDRule__0__time_series_will_not_be_included_in_the_DIMR_XML_as_Set_Point_Type_is_not_TimeSeries" xml:space="preserve">
-    <value>PIDRule {0} time series will not be included in the DIMR XML as "Set Point Type" is not "TimeSeries"</value>
-  </data>
-  <data name="RealTimeControlXmlWriter_GetXmlTimeSeriesFromControlGroups_IntervalRule__0__time_series_will_not_be_included_in_the_DIMR_XML_as_Set_Point_Type_is_Signal" xml:space="preserve">
-    <value>IntervalRule {0} time series will not be included in the DIMR XML as "Set Point Type" is "Signal"</value>
+  <data name="RealTimeControlXmlWriter_GetXmlTimeSeriesFromControlGroups_PIDRule__0__time_series_will_not_be_included_in_the_DIMR_XML_as_Set_Point_Type_is_Constant" xml:space="preserve">
+    <value>PIDRule {0} time series will not be included in the DIMR XML as Set Point Type is Constant</value>
   </data>
   <data name="RealTimeControlControlGroupValidator_SeriesHasTimestepsThatExceedModelStopTime" xml:space="preserve">
     <value>Series '{0}' in RTC control group '{1}' has one or more timesteps that exceed the model stop time {2}.</value>
@@ -328,12 +325,6 @@
   <data name="RealTimeControlTimeSeriesConnector_ConnectTimeSeries_Object_with_id___0___does_not_seem_to_be_a_Time_Rule_or_Time_Condition__See_file____1___" xml:space="preserve">
     <value>Object with id '{0}' does not seem to be a Time Rule or Time Condition. See file: '{1}'.</value>
   </data>
-  <data name="RealTimeControlTimeSeriesConnector_ConnectTimeSeries_Rule__with_id___0___does_not_seem_to_use_a_time_serie_as_setpoint__See_file____1___Therefore_the_time_serie_is_not_imported" xml:space="preserve">
-    <value>Rule with id '{0}' does not seem to use a time serie as setpoint. See file: '{1}'. Therefore, the time serie is not imported.</value>
-  </data>
-  <data name="RealTimeControlTimeSeriesSetter_For_interval_rule_with_id__0__there_is_no_time_data_found_in_file__1__for_setting_the_fixed_setpoint_value" xml:space="preserve">
-    <value>For interval rule with id '{0}', there is no time data found in file '{1}' for setting the fixed setpoint value.</value>
-  </data>
   <data name="RealTimeControlTimeSeriesXmlReader_Read_File___0___does_not_exist_" xml:space="preserve">
     <value>File '{0}' does not exist.</value>
   </data>
@@ -396,14 +387,5 @@
   </data>
   <data name="RealTimeControlModelXmlReader_Please_note_that_Use_Restart_option_in_D-RTC_is_set_to_False" xml:space="preserve">
     <value>Please note that Use Restart option in D-RTC is set to False.</value>
-  </data>
-  <data name="RealTimeControlModelIntervalRule_Import_time_series_for_signals_are_not_existing_export_failed" xml:space="preserve">
-    <value>Import time series for signals are not existing, export failed.</value>
-  </data>
-  <data name="RealTimeControlModelIntervalRule_Interval_rule__0__has_empty_time_series" xml:space="preserve">
-    <value>Interval rule '{0}' has empty time series.</value>
-  </data>
-  <data name="RealTimeControlModelIntervalRule_Interval_rule__0__requires_1_input" xml:space="preserve">
-    <value>Interval rule '{0}' requires 1 input.</value>
   </data>
 </root>

@@ -557,13 +557,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                     // does require an explicit reference. This allows future implementations to user other exchange itens as input
                     // used by RelativeTimeRule and PIDRule
                     import.Add(ruleBase.OutputAsInputToDataConfigXml(Fns));
-
-                    if (ruleBase is IntervalRule intervalRule &&
-                        intervalRule.IntervalType == IntervalRule.IntervalRuleIntervalType.Signal)
-                    {
-                        continue;
-                    }
-
                     // add tines series that are part of the rules to the xml
                     foreach (var timeSeries in ruleBase.XmlImportTimeSeries(groupNameWithSeparator, timeDependentModel.StartTime, timeDependentModel.StopTime, timeDependentModel.TimeStep))
                     {
@@ -708,6 +701,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         /// Time series in rtcDataConfig.xml that are of type PITimeSeries (opposed to OpenMIExchangeItem) 
         /// have data in this xml file.
         /// </summary>
+        /// <param name="root"></param>
+        /// <param name="controlGroups"></param>
+        /// <param name="timeDependentModel"></param>
+        /// <returns></returns>
         private static void GetXmlTimeSeriesFromControlGroups(XElement root, IEnumerable<ControlGroup> controlGroups, ITimeDependentModel timeDependentModel)
         {
             var seriesNames = new HashSet<string>();
@@ -716,20 +713,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                 var groupNameWithSeparator = GetGroupNameWithSeparator(group.Name);
                 foreach (var ruleBase in group.Rules)
                 {
-                    if (ruleBase is PIDRule pidRule
-                        && pidRule.PidRuleSetpointType != PIDRule.PIDRuleSetpointType.TimeSeries)
+                    var ruleAsPid = ruleBase as PIDRule;
+                    if (ruleAsPid != null && ruleAsPid.PidRuleSetpointType == PIDRule.PIDRuleSetpointType.Constant)
                     {
-                        if (pidRule.TimeSeries.Time.Values.Count != 0)
-                        {
-                            Log.WarnFormat(Resources.RealTimeControlXmlWriter_GetXmlTimeSeriesFromControlGroups_PIDRule__0__time_series_will_not_be_included_in_the_DIMR_XML_as_Set_Point_Type_is_not_TimeSeries, pidRule.Name);
-                        }
-
-                        continue;
-                    }
-
-                    if (ruleBase is IntervalRule intervalRule && intervalRule.IntervalType == IntervalRule.IntervalRuleIntervalType.Signal)
-                    {
-                        Log.WarnFormat(Resources.RealTimeControlXmlWriter_GetXmlTimeSeriesFromControlGroups_IntervalRule__0__time_series_will_not_be_included_in_the_DIMR_XML_as_Set_Point_Type_is_Signal, intervalRule.Name);
+                        Log.WarnFormat(Resources.RealTimeControlXmlWriter_GetXmlTimeSeriesFromControlGroups_PIDRule__0__time_series_will_not_be_included_in_the_DIMR_XML_as_Set_Point_Type_is_Constant, ruleAsPid.Name);
                         continue;
                     }
                     foreach (var timeSeries in ruleBase.XmlImportTimeSeries(groupNameWithSeparator, timeDependentModel.StartTime, timeDependentModel.StopTime, timeDependentModel.TimeStep))

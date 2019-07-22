@@ -15,48 +15,35 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.PropertyGrid
         [ResourcesCategory(typeof(Resources), "Categories_General")]
         [ResourcesDisplayName(typeof(Resources), "Common_Name_DisplayName")]
         [ResourcesDescription(typeof(Resources), "Rule_Name_Description")]
-        [PropertyOrder(1)]
         public string Name
         {
-            get => data.Name;
-            set => data.Name = value;
+            get { return data.Name; }
+            set { data.Name = value; }
         }
 
         [ResourcesCategory(typeof(Resources), "Categories_General")]
         [ResourcesDisplayName(typeof(Resources), "Common_LongName_DisplayName")]
         [ResourcesDescription(typeof(Resources), "Rule_LongName_Description")]
-        [PropertyOrder(2)]
         public string LongName
         {
-            get => data.LongName;
-            set => data.LongName = value;
+            get { return data.LongName; }
+            set { data.LongName = value; }
         }
 
-        [ResourcesCategory(typeof(Resources), "Category_Data")]
-        [ResourcesDisplayName(typeof(Resources), "RelativeTimeRuleProperties_FromValue_DisplayName")]
-        [ResourcesDescription(typeof(Resources), "RelativeTimeRuleProperties_FromValue_Description")]
-        [PropertyOrder(3)]
-        public bool FromValue
+        // TODO: When Extrapolation is added, change the category reference to RTC_Category_InterpolationExtrapolation
+        [ResourcesCategory(typeof(Resources), "RelativeTimeRuleProperties_Category_Interpolation")]
+        [ResourcesDisplayName(typeof(Resources), "RelativeTimeRuleProperties_Interpolation_DisplayName")]
+        [ResourcesDescription(typeof(Resources), "RTC_Interpolation_Description")]
+        public InterpolationType Interpolation
         {
-            get => data.FromValue;
-            set => data.FromValue = value;
-        }
-
-        [ResourcesCategory(typeof(Resources), "Category_Data")]
-        [ResourcesDisplayName(typeof(Resources), "RelativeTimeRuleProperties_MinimumPeriod_DisplayName")]
-        [ResourcesDescription(typeof(Resources), "RelativeTimeRuleProperties_MinimumPeriod_Description")]
-        [PropertyOrder(4)]
-        public int MinimumPeriod
-        {
-            get => data.MinimumPeriod;
-            set => data.MinimumPeriod = value;
+            get { return data.Interpolation; }
+            set { data.Interpolation = value; }
         }
 
         [Editor(typeof(ViewPropertyEditor), typeof(UITypeEditor))]
-        [ResourcesCategory(typeof(Resources), "Category_Data")]
-        [ResourcesDisplayName(typeof(Resources), "RTC_Timeseries_DisplayName")]
+        [ResourcesCategory(typeof(Resources), "Category_Table")]
+        [ResourcesDisplayName(typeof(Resources), "Table_DisplayName")]
         [ResourcesDescription(typeof(Resources), "RTC_TimeSeries_Description")]
-        [PropertyOrder(5)]
         public Function Table
         {
             get
@@ -66,18 +53,25 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.PropertyGrid
 
                 return data.Function;
             }
-            set => data.Function = value;
+            set { data.Function = value; }
         }
 
-        // TODO: When Extrapolation is added, change the category reference to RTC_Category_InterpolationExtrapolation
-        [ResourcesCategory(typeof(Resources), "RelativeTimeRuleProperties_Category_Interpolation")]
-        [ResourcesDisplayName(typeof(Resources), "RelativeTimeRuleProperties_Interpolation_DisplayName")]
-        [ResourcesDescription(typeof(Resources), "RTC_Interpolation_Description")]
-        [PropertyOrder(6)]
-        public InterpolationType Interpolation
+        [ResourcesCategory(typeof(Resources), "Categories_General")]
+        [ResourcesDisplayName(typeof(Resources), "RelativeTimeRuleProperties_FromValue_DisplayName")]
+        [ResourcesDescription(typeof(Resources), "RelativeTimeRuleProperties_FromValue_Description")]
+        public bool FromValue
         {
-            get => data.Interpolation;
-            set => data.Interpolation = value;
+            get { return data.FromValue; }
+            set { data.FromValue = value; }
+        }
+
+        [ResourcesCategory(typeof(Resources), "Categories_General")]
+        [ResourcesDisplayName(typeof(Resources), "RelativeTimeRuleProperties_MinimumPeriod_DisplayName")]
+        [ResourcesDescription(typeof(Resources), "RelativeTimeRuleProperties_MinimumPeriod_Description")]
+        public int MinimumPeriod
+        {
+            get { return data.MinimumPeriod; }
+            set { data.MinimumPeriod = value; }
         }
 
         /// <summary>

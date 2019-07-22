@@ -8,11 +8,9 @@ using DelftTools.Functions.Generic;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Converters;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Xml;
 using log4net;
 using ValidationAspects;
-using ValidationAspects.Exceptions;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 {
@@ -84,7 +82,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
                 // create default time series only when it is really necessary (speeds-up app initialization)
                 if (timeSeries == null)
                 {
-                    timeSeries = CreateTimeSeries();
+                    timeSeries = new TimeSeries { Name = "Setpoints" };
+                    timeSeries.Time.InterpolationType = InterpolationType.Constant;
+                    timeSeries.Time.ExtrapolationType = ExtrapolationType.Constant;
+                    timeSeries.Components.Add(new Variable<double>
+                                                  {
+                                                      Name = "Value", 
+                                                      NoDataValue = -999.0
+                                                  });
+                    timeSeries.Components[0].Attributes[FunctionAttributes.StandardName] =
+                        FunctionAttributes.StandardNames.RtcIntervalRule;
                 }
 
                 return timeSeries;
@@ -92,23 +99,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 
             set { timeSeries = value; }
         }
-
-        private TimeSeries CreateTimeSeries()
-        {
-            var localTimeSeries = new TimeSeries {Name = "Setpoints"};
-            localTimeSeries.Time.InterpolationType = InterpolationType.Constant;
-            localTimeSeries.Time.ExtrapolationType = ExtrapolationType.Constant;
-            localTimeSeries.Components.Add(new Variable<double>
-            {
-                Name = "Value",
-                NoDataValue = -999.0
-            });
-            localTimeSeries.Components[0].Attributes[FunctionAttributes.StandardName] =
-                FunctionAttributes.StandardNames.RtcIntervalRule;
-
-            return localTimeSeries;
-        }
-
+        
         public IntervalRule()
             : this(null)
         {
@@ -220,30 +211,25 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
                 LocationId = GetXmlNameWithTag(prefix),
                 ParameterId = "SP",
                 TimeStep = timeStep,
+                TimeSeries = (TimeSeries) TimeSeries.Clone(),
+                InterpolationType = TimeSeries.Time.InterpolationType,
+                ExtrapolationType = (ExtrapolationTimeSeriesType) TimeSeries.Time.ExtrapolationType,
                 PeriodSpan = periodSpan
             };
 
-            if (IntervalType == IntervalRuleIntervalType.Fixed)
+            if (TimeSeries.Time.Values.Count > 0)
             {
-                xmlTimeSeries.TimeSeries = CreateTimeSeries();
-                xmlTimeSeries.InterpolationType = xmlTimeSeries.TimeSeries.Time.InterpolationType;
-                xmlTimeSeries.ExtrapolationType = (ExtrapolationTimeSeriesType)xmlTimeSeries.TimeSeries.Time.ExtrapolationType;
-
-                xmlTimeSeries.TimeSeries.Components[0].DefaultValue = TimeSeries.Components[0].DefaultValue;
-                xmlTimeSeries.TimeSeries.Time.AddValues(new[] { start, stop });
-            }
-            else if (IntervalType == IntervalRuleIntervalType.Variable)
-            {
-                xmlTimeSeries.TimeSeries = (TimeSeries) TimeSeries.Clone();
-                xmlTimeSeries.InterpolationType = TimeSeries.Time.InterpolationType;
-                xmlTimeSeries.ExtrapolationType = (ExtrapolationTimeSeriesType)TimeSeries.Time.ExtrapolationType;
-
                 XmlTimeSeriesTruncater.Truncate(xmlTimeSeries, startTime, endTime);
             }
-            else // Should never happen, since for signal setpoints this method should never be called.
+            else
             {
-               throw new InvalidOperationException(Resources.RealTimeControlModelIntervalRule_Import_time_series_for_signals_are_not_existing_export_failed);
+                xmlTimeSeries.StartTime = startTime;
+                xmlTimeSeries.EndTime = endTime;
+                xmlTimeSeries.TimeStep = timeStep;
+
+                xmlTimeSeries.TimeSeries.Time.AddValues(new [] { start, stop });
             }
+
 
             return xmlTimeSeries;
         }
@@ -291,22 +277,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
         [ValidationMethod]
         public static void Validate(IntervalRule intervalRule)
         {
-            var exceptions = new List<ValidationException>();
 
-            if ((intervalRule.IntervalType == IntervalRuleIntervalType.Variable) && (intervalRule.TimeSeries.Arguments[0].Values.Count == 0))
-            {
-                exceptions.Add(new ValidationException(string.Format(Resources.RealTimeControlModelIntervalRule_Interval_rule__0__has_empty_time_series, intervalRule.Name)));
-            }
-
-            if (intervalRule.Inputs.Count != 1)
-            {
-                exceptions.Add(new ValidationException(string.Format(Resources.RealTimeControlModelIntervalRule_Interval_rule__0__requires_1_input, intervalRule.Name)));
-            }
-
-            if (exceptions.Count > 0)
-            {
-                throw new ValidationContextException(exceptions);
-            }
+            //TimeSeries can be empty. The Default value of the componentt can be used as a constant.
+            //So... no validation at the moment
+            return;
         }
 
         public override object Clone()
