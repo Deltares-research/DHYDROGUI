@@ -204,8 +204,6 @@ class HydroModelBuilder(object):
 
     def auto_add_required_model_links(self, model, child, updateRegions=True, relinking=False):
         # query first region
-        network = self.get_first_by_type(model.Region.SubRegions, HydroNetwork)
-        basin = self.get_first_by_type(model.Region.SubRegions, DrainageBasin)
         area = self.get_first_by_type(model.Region.SubRegions, HydroArea)
         
         # query first model
