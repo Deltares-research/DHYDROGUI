@@ -19,9 +19,8 @@ namespace DelftTools.ModelExchange
             nhi = 1,
             composer = 4,
             groundwater = 8,
-            // next groups: 8, 16, etc
-            All = 15,
-        } ;
+            All = 13
+        }
         // ReSharper restore InconsistentNaming
 
         public static bool IncludeExchangeItemForSelectedEIGroup(ExchangeItemGroupType exchangeItemGroups, IFeature dataItemLocation, string quantityName, bool checkForInput = false)
