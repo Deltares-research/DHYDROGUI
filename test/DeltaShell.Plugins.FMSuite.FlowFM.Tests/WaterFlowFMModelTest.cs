@@ -21,6 +21,7 @@ using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
@@ -1040,17 +1041,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.IsTrue(grids[0].IsEmpty);
         }
 
-        [NUnit.Framework.Category(TestCategory.DataAccess)]
-        [NUnit.Framework.Category(TestCategory.Slow)]
         [Test]
         public void FmModelGetVarCellsToFeaturesNameShouldReturnEmptyTimeseries()
         {
-            var model = new WaterFlowFMModel(TestHelper.GetTestFilePath(@"flow1d2dLinks\input\FlowFM.mdu"));
+            var model = MockRepository.GeneratePartialMock<WaterFlowFMModel>();
+            model.Expect(m => m.OutputMapFileStore).Return(new FMMapFileFunctionStore(model)).Repeat.Any();
             var timeSeries = model.GetVar(WaterFlowFMModel.CellsToFeaturesName) as ITimeSeries[];
-            Assert.IsNotNull(timeSeries);
-            Assert.That(timeSeries.Length, Is.EqualTo(9)) ;
+            Assert.IsNotNull(timeSeries,
+                             "Time series was not expected to be null");
+            Assert.That(timeSeries.Length, Is.EqualTo(0),
+                        "Time series was expected to be empty.");
         }
-        
+
         [Test]
         public void FmModelSetVarDisableFlowNodeRenumbering()
         {
@@ -1183,11 +1185,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        [NUnit.Framework.Category(TestCategory.Integration)]
-        [NUnit.Framework.Category(TestCategory.VerySlow)]
+        [NUnit.Framework.Category(TestCategory.DataAccess)]
         public void GivenValidFmModel_WhenModelHasRun_ThenProgressTextHasBeenReset()
         {
-            var originalDir = TestHelper.GetTestFilePath("flow1d2dLinks");
+            var originalDir = TestHelper.GetTestFilePath("small");
             var testDir = FileUtils.CreateTempDirectory();
             var mduFilePath = Path.Combine(testDir, "input", "FlowFM.mdu");
             FileUtils.CopyDirectory(originalDir, testDir);
@@ -1282,7 +1283,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 fmModel.ReferenceTime = fmModel.StartTime;
                 fmModel.ProgressChanged += (sender, args) =>
                 {
-                    Assert.AreEqual(fmModel.ProgressText, messageList[counter]);
+                    Assert.AreEqual(fmModel.ProgressText, messageList[counter],
+                                    "Progress text when running FM model is different than expected.");
                     counter++;
                 };
                 ActivityRunner.RunActivity(fmModel);
