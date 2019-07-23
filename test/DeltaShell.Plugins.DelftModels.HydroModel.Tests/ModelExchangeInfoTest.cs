@@ -1,7 +1,7 @@
 ﻿using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Core.Workflow.DataItems.ValueConverters;
-using NUnit.Framework;
 using NetTopologySuite.Extensions.Features;
+using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 {

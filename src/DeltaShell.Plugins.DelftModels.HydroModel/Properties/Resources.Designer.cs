@@ -61,16 +61,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap coupled_1d2d {
-            get {
-                object obj = ResourceManager.GetObject("coupled_1d2d", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to &lt;control&gt;
         ///          The &lt;control&gt; specifies the workflow of the deltaresHydro executable.
         ///          It indicates which components are started in which order. If the data

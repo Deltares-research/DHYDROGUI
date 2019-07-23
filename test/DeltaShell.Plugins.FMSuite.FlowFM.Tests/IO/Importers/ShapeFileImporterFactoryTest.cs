@@ -10,7 +10,6 @@ using NetTopologySuite.Extensions.Features;
 using NUnit.Framework;
 using Rhino.Mocks;
 
-
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
 {
     [TestFixture]

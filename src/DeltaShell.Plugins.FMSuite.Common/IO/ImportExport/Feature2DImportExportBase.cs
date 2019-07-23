@@ -177,7 +177,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.ImportExport
 
         #region IFileExporter
 
-        string ICategorizableItem.Name => ExporterName;
+        string ICategorizableItem.Name => Mode == Feature2DImportExportMode.Export ? ExporterName : ImporterName;
 
         public virtual bool Export(object item, string path)
         {

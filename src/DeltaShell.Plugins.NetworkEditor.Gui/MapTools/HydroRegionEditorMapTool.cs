@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Drawing;
@@ -9,7 +8,6 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
-using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Drawing;
@@ -27,11 +25,9 @@ using log4net;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Geometries;
 using NetTopologySuite.Extensions.Networks;
-using SharpMap;
 using SharpMap.Api;
 using SharpMap.Api.Layers;
 using SharpMap.CoordinateSystems.Transformations;
-using SharpMap.Data.Providers;
 using SharpMap.Extensions.CoordinateSystems;
 using SharpMap.Layers;
 using SharpMap.Rendering;
@@ -41,7 +37,6 @@ using SharpMap.UI.Forms;
 using SharpMap.UI.Helpers;
 using SharpMap.UI.Tools;
 using Point = NetTopologySuite.Geometries.Point;
-using ShapeType = SharpMap.Styles.ShapeType;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
 {

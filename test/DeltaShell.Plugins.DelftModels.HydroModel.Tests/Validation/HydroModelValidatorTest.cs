@@ -1,23 +1,19 @@
-﻿using System;
-using System.Linq;
-using DelftTools.Hydro;
+﻿using System.Linq;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Validation;
+using DeltaShell.Plugins.DelftModels.HydroModel.Properties;
 using DeltaShell.Plugins.DelftModels.HydroModel.Validation;
-using DeltaShell.Plugins.DelftModels.RainfallRunoff;
-using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
+using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.Wave;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 using NetTopologySuite.Extensions.Grids;
 using NUnit.Framework;
 using Rhino.Mocks;
-using SharpMapTestUtils;
-using Resources = DeltaShell.Plugins.DelftModels.HydroModel.Properties.Resources;
-using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using SharpMap.Extensions.CoordinateSystems;
+using SharpMapTestUtils;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Validation
 {
@@ -54,37 +50,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Validation
             var issue = result.AllErrors.ToArray().First();
             Assert.AreEqual(ValidationSeverity.Error, issue.Severity);
             Assert.AreEqual(Resources.HydroModelValidator_Validate_Current_Workflow_cannot_be_empty, issue.Message);
-        }
-
-        [Test]
-        public void GivenIntegratedModelWithRainfallRunoffAsSequentialCurrentWorkflowWhenValidatingThenReturnHydroModelSpecificWorkflowValidationIssue()
-        {
-            // Setup
-            var workflowName = "RR as sequential activity";
-            var hydroModel = new HydroModel();
-
-            var workFlow = new SequentialActivity
-            {
-                Name = workflowName,
-                Activities = {new RainfallRunoffModel()}
-            };
-            hydroModel.CurrentWorkflow = workFlow;
-
-            var validationReport = validator.Validate(hydroModel);
-            var hydroModelSpecificReport = validationReport.SubReports
-                .Where(r => r.Category.Contains(hydroModelSpecificReportName)).ToArray().FirstOrDefault();
-            Assert.NotNull(hydroModelSpecificReport);
-
-            var hydroModelSpecificIssues = hydroModelSpecificReport.AllErrors.ToArray();
-            Assert.That(hydroModelSpecificIssues.Length, Is.EqualTo(1));
-
-            var workflowIssue = hydroModelSpecificIssues[0];
-            Assert.That(workflowIssue.Severity, Is.EqualTo(ValidationSeverity.Error));
-            Assert.That(workflowIssue.Message,
-                Is.EqualTo(string.Format(
-                    Resources
-                        .HydroModel_LogErrorsWhenUnsupportedWorkflow_The_workflow___0___is_currently_not_supported_in_DeltaShell,
-                    workflowName)));
         }
 
         [Test]

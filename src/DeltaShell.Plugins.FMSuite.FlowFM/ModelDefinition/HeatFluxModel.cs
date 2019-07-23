@@ -7,7 +7,6 @@ using DelftTools.Units;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.IO;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files;
-using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 {

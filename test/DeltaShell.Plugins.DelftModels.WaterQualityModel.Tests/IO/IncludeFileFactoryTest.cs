@@ -15,7 +15,6 @@ using DeltaShell.Plugins.DelftModels.WaterQualityModel.Model;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
-
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
@@ -1128,8 +1127,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         [Category(TestCategory.Integration)]
         public void Import_Waq_Model_WithSegmentFiles_Create_SegmentFileFunctions()
         {
-            var testFilePath = TestHelper.GetTestFilePath(@"Zwolle\sobek.hyd");
-            var subsFilePath = TestHelper.GetTestFilePath(@"Zwolle\substances\02b_Oxygen_bod_sediment.sub");
+            var testFilePath = TestHelper.GetTestFilePath(@"ValidWaqModels\\Flow1D\\sobek.hyd");
+            var subsFilePath = TestHelper.GetTestFilePath(@"ValidWaqModels\\02b_Oxygen_bod_sediment.sub");
 
             var importer = new HydFileImporter();
             using (var waqModel = importer.ImportItem(testFilePath) as WaterQualityModel)

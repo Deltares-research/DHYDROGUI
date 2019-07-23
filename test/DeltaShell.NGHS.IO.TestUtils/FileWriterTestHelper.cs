@@ -3,7 +3,6 @@ using System.IO;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
@@ -13,8 +12,7 @@ namespace DeltaShell.NGHS.IO.TestUtils
     public static class FileWriterTestHelper
     {
         public const string RelativeTargetDirectory = "FileWriters";
-        private static readonly string targetPath = Path.Combine(Environment.CurrentDirectory, RelativeTargetDirectory);
-        public static readonly ModelFileNames ModelFileNames = new ModelFileNames(Path.Combine(targetPath, ModelFileNames.ModelDefinitionFilename));
+        public static readonly string TargetPath = Path.Combine(Environment.CurrentDirectory, RelativeTargetDirectory);
 
         /// <summary>
         /// Setups a simple hydro network with 2 nodes and 1 branch.

@@ -1,4 +1,8 @@
-﻿using DelftTools.Controls;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using DelftTools.Controls;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
@@ -14,10 +18,6 @@ using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using NUnit.Framework;
 using Rhino.Mocks;
 using SharpMap;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
 {

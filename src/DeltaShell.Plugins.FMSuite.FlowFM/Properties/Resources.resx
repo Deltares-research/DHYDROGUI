@@ -190,14 +190,8 @@
   <data name="FMMapFileFunctionStore_ConstructFunctions_Time_dependent_variable___0___has_been_filtered_out" xml:space="preserve">
     <value>Will not import three dimensional time dependent variable ({0}), because the map file version does not support it.</value>
   </data>
-  <data name="WaterFlowFMModelDefinition_SetMapFormatPropertyValue_MapFormat_property_value_of_FlowFM_model__0__is_changed_to_1__because_it_is_part_of_an_1D2D_integrated_model_" xml:space="preserve">
-    <value>MapFormat property value of FlowFM model {0} is changed to 1, because it is part of an 1D2D integrated model.</value>
-  </data>
   <data name="WaterFlowFMModelDefinition_SetMapFormatPropertyValue_MapFormat_property_value_of_FlowFM_model__0__is_changed_to_4_due_to_activation_of_Morphology_" xml:space="preserve">
     <value>MapFormat property value of FlowFM model {0} is changed to 4 due to activation of Morphology.</value>
-  </data>
-  <data name="WaterFlowFMModel_SetVar_FM_Model__0__is_part_of_a_1D2D_model_and_can_t_have_morphology_properties_and___or_sediments__Removing_these_properties_from_the_model" xml:space="preserve">
-    <value>FM Model {0} is part of a 1D2D model and can't have morphology properties and / or sediments. Removing these properties from the model</value>
   </data>
   <data name="SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_Cannot_create_xyz_file_for_spatial_varying_initial_condition__0__because_it_is_a_value_spatial_operation__please_interpolate_the_operation_to_the_grid_or" xml:space="preserve">
     <value>Cannot create xyz file for spatial varying initial condition {0} because it is a value spatial operation. Please interpolate the operation to the grid or click the "Copy to spatial data"-button to generate the xyz file.</value>
@@ -243,9 +237,6 @@
   </data>
   <data name="UnstructuredGridCoverageExtensions_ToPointCloud_Spatial_data_is_not_consistent__number_of_coordinate_does_not_match_number_of_values" xml:space="preserve">
     <value>Spatial data is not consistent: number of coordinate does not match number of values</value>
-  </data>
-  <data name="GridHelper_CreateUnstructuredGridFromNetCdfFor1D2DLinks_It_was_not_possible_to_load_from_file___0___LogFilePath___1_" xml:space="preserve">
-    <value>It was not possible to load from file: {0}. LogFilePath: {1}</value>
   </data>
   <data name="WaterFlowFMSedimentMorphologyValidator_ValidateMorphology_Morphology___Sediment" xml:space="preserve">
     <value>Sediment/Morphology</value>
@@ -302,9 +293,8 @@
     <value>File at location '{0}' does not exist, but is defined in MDU file at '{1}'
 at property '{2}'. Model information may have been lost while loading model '{3}'.</value>
   </data>
-  <data name="MduFile_CopyFilesToProjectFolderIfNeeded_CopyingFileDidNotSucceedBecauseFileAlreadyExists" xml:space="preserve">
-    <value>Copying file at location '{0}' to location '{1}' did not succeed,
-because the file already exists. File import of feature file '{0}' has failed.</value>
+  <data name="MduFile_CopyFilesToProjectFolderIfNeeded_CopyingFileOverwritesFileThatAtNewLocation" xml:space="preserve">
+    <value>Copying file from location '{0}' to location '{1}' will overwrite the existing file at the new location.</value>
   </data>
   <data name="MduFile_CopyFilesToProjectFolderIfNeeded_CopiedFileFrom_0_to_1_BecauseTheFileExistedOutsideOfTheProjectFolder" xml:space="preserve">
     <value>Copied file at location '{0}' to location '{1}',

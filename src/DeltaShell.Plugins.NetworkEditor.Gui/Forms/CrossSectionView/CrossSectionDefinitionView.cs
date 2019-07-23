@@ -10,7 +10,7 @@ using DelftTools.Controls;
 using DelftTools.Controls.Swf.Charting;
 using DelftTools.Controls.Swf.Table;
 using DelftTools.Hydro.CrossSections;
-﻿using DelftTools.Utils.Threading;
+using DelftTools.Utils.Threading;
 using log4net;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView

@@ -13,7 +13,6 @@ using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.DelftModels.HydroModel.Properties;
 using log4net;
 
-
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
 {
     public class DHydroConfigXmlImporter : IFileImporter

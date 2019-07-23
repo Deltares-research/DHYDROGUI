@@ -510,7 +510,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         [Test]
         public void Import_WAQ_Model_OverExistingModel_Overwrites_Timers()
         {
-            var testFilePath = TestHelper.GetTestFilePath(@"ImportModels\westerscheldt.hyd");
+            var testFilePath = TestHelper.GetTestFilePath(@"ValidWaqModels\FM\FlowFM.hyd");
 
             using (var waqModel = new WaterQualityModel { Name = "Model 1" })
             using (var secondModel = new WaterQualityModel())

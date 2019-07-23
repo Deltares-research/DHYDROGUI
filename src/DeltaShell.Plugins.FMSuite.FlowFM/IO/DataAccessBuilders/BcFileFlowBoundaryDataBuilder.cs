@@ -1038,7 +1038,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccess
 
                     if (!succes)
                     {
-                        succes = DateTime.TryParseExact(dateString, "yyyy-MM-dd hh:mm:ss",
+                        succes = DateTime.TryParseExact(dateString, "yyyy-MM-dd HH:mm:ss",
                                                         CultureInfo.InvariantCulture,
                                                         DateTimeStyles.AdjustToUniversal, out startDate);
                     }

@@ -384,7 +384,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         [Test]
         public void Test_HydFileReader_SegmentProperties_AreSet()
         {
-            var testPath = TestHelper.GetTestFilePath(@"Zwolle\sobek.hyd");
+            var testPath = TestHelper.GetTestFilePath(@"ValidWaqModels\Flow1D\sobek.hyd");
             Assert.IsTrue(File.Exists(testPath));
             testPath = TestHelper.CreateLocalCopy(testPath);
             Assert.IsTrue(File.Exists(testPath));

@@ -2,18 +2,17 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Drawing;
+using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
-using DelftTools.Utils.Collections;
 using DelftTools.Utils.Editing;
 using GeoAPI.Extensions.Feature;
 using SharpMap.Api.Layers;
-using Image = System.Drawing.Image;
 using MessageBox = DelftTools.Controls.Swf.MessageBox;
-using UserControl = System.Windows.Forms.UserControl;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
 {

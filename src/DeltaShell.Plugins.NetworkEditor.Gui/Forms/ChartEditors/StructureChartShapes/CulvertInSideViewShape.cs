@@ -7,8 +7,8 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes;
 using GeoAPI.Geometries;
+using SharpMap.Converters.Geometries;
 using SharpMap.Styles;
-using GeometryFactory = SharpMap.Converters.Geometries.GeometryFactory;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChartShapes
 {

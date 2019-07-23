@@ -2,7 +2,6 @@
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
-using DelftTools.Utils;
 using DelftTools.Utils.Reflection;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Converters

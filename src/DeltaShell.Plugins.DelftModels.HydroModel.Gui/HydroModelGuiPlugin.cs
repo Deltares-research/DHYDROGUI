@@ -18,11 +18,10 @@ using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.ProjectExplorer;
-using DeltaShell.Plugins.DelftModels.HydroModel.Gui.PropertyClasses;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using Mono.Addins;
-using MessageBox = DelftTools.Controls.Swf.MessageBox;
 using HydroModelGuiProperties = DeltaShell.Plugins.DelftModels.HydroModel.Gui.Properties;
+using MessageBox = DelftTools.Controls.Swf.MessageBox;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
 {
@@ -83,7 +82,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
 
         public override IEnumerable<PropertyInfo> GetPropertyInfos()
         {
-            yield return new PropertyInfo<Iterative1D2DCoupler, Iterative1D2DCouplerProperties>();
+            return Enumerable.Empty<PropertyInfo>();
         }
 
         public override IGui Gui 

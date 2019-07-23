@@ -1,5 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="DeltaShell.Plugins.DelftModels.WaterFlowModel.PhysicalParameters" assembly="DeltaShell.Plugins.DelftModels.WaterFlowModel">
-  <subclass name="MeteoFunction" discriminator-value="meteo_function" extends="DelftTools.Functions.Function" lazy="false" >
-  </subclass>
-</hibernate-mapping>

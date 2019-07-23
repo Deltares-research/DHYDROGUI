@@ -1,7 +1,6 @@
 ﻿using System.Globalization;
 using System.Windows.Controls;
 
-
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
 {
     /// <summary>

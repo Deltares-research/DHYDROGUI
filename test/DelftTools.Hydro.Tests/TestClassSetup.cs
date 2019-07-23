@@ -1,7 +1,6 @@
 ﻿using System.Windows.Threading;
 using NUnit.Framework;
 
-
 namespace DelftTools.Hydro.Tests
 {
     /// <summary>

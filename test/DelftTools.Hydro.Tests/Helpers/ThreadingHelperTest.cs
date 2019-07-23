@@ -1,6 +1,6 @@
 ﻿using System.Linq;
-using NUnit.Framework;
 using DelftTools.Hydro.Helpers;
+using NUnit.Framework;
 
 namespace DelftTools.Hydro.Tests.Helpers
 {

@@ -13,7 +13,6 @@ using NUnit.Framework;
 using Rhino.Mocks;
 using SharpMap.Data.Providers;
 
-
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
 {
     [TestFixture]

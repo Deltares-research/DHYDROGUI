@@ -2,13 +2,16 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
+using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.IO;
 using DeltaShell.Core;
+using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
@@ -188,6 +191,90 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                 ActivityRunner.RunActivity(waqModel);
                 CheckDataItems(outputFileName, waqModel);
             });
+        }
+
+        [Test]
+        [Category(TestCategory.Slow)]
+        [Category(TestCategory.Integration)]
+        public void GivenAWaqModelInAProject_WhenSavingTheProjectInANewLocation_ThenAllPathsShouldSwitchToNewLocation()
+        {
+            var modelPathsDictionary = new Dictionary<string, IList<string>>
+            {
+                {"model directory", new List<string>()},
+                {"working directory", new List<string>()},
+                {"output directory", new List<string>()},
+                {"boundary data manager folder path", new List<string>()},
+                {"loads data manager folder path", new List<string>()}
+            };
+
+            using (var tempDir = new TemporaryDirectory())
+            {
+                // Given
+                string tempDirPath = tempDir.Path;
+                const string firstSaveName = "save1";
+                string firstSavePath = Path.Combine(tempDirPath, $"{firstSaveName}.dsproj");
+                string firstSaveFolder = firstSavePath + "_data";
+                const string secondSaveName = "save2";
+                string secondSavePath = Path.Combine(tempDirPath, $"{secondSaveName}.dsproj");
+                string secondSaveFolder = secondSavePath + "_data";
+
+                var model = new WaterQualityModel();
+
+                using (var app = GetConfiguredApplication())
+                {
+                    app.Run();
+                    app.Project.RootFolder.Add(model);
+                    AddCurrentModelPaths(model);
+
+                    // When (saving as first time)
+                    app.SaveProjectAs(firstSavePath);
+                    AddCurrentModelPaths(model);
+
+                    // When (saving as second time)
+                    app.SaveProjectAs(secondSavePath);
+                    AddCurrentModelPaths(model);
+                }
+
+                // Then
+                foreach (KeyValuePair<string, IList<string>> kvp in modelPathsDictionary)
+                {
+                    string key = kvp.Key;
+                    IList<string> paths = kvp.Value;
+
+                    string pathBeforeSave = paths[0];
+                    string pathAfterFirstSaveAs = paths[1];
+                    string pathAfterSecondSaveAs = paths[2];
+
+                    Assert.AreNotEqual(pathBeforeSave, pathAfterFirstSaveAs,
+                                       $"Path of the {key} should have changed after saving from temp to persistent location.");
+                    Assert.That(pathAfterFirstSaveAs.StartsWith(firstSaveFolder, StringComparison.InvariantCulture),
+                                $"The {key} should have been located inside the folder {firstSaveFolder}, but was at {pathAfterFirstSaveAs}");
+                    Assert.AreNotEqual(pathAfterFirstSaveAs, pathAfterSecondSaveAs,
+                                       $"Path of the {key} should have changed after saving project at a new location when project was already saved once.");
+                    Assert.That(pathAfterSecondSaveAs.StartsWith(secondSaveFolder, StringComparison.InvariantCulture),
+                                $"The {key} should have been located inside the folder {secondSaveFolder}");
+                }
+            }
+
+            void AddCurrentModelPaths(WaterQualityModel waqModel)
+            {
+                modelPathsDictionary["model directory"].Add(waqModel.ModelDataDirectory);
+                modelPathsDictionary["working directory"].Add(waqModel.ModelSettings.WorkDirectory);
+                modelPathsDictionary["output directory"].Add(waqModel.ModelSettings.OutputDirectory);
+                modelPathsDictionary["boundary data manager folder path"].Add(waqModel.BoundaryDataManager.FolderPath);
+                modelPathsDictionary["loads data manager folder path"].Add(waqModel.LoadsDataManager.FolderPath);
+            }
+        }
+
+        private static DeltaShellApplication GetConfiguredApplication()
+        {
+            var app = new DeltaShellApplication {IsProjectCreatedInTemporaryDirectory = true};
+            app.Plugins.Add(new NHibernateDaoApplicationPlugin());
+            app.Plugins.Add(new CommonToolsApplicationPlugin());
+            app.Plugins.Add(new SharpMapGisApplicationPlugin());
+            app.Plugins.Add(new WaterQualityModelApplicationPlugin());
+
+            return app;
         }
 
         private static void PerformActionOnWesternscheldWithRunningApplication(DeltaShellApplication app, WaterQualityModel waqModel, Action actionToPerform)

@@ -90,10 +90,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
         public static extern int dfm_init_computational_timestep([In] [Out] ref double targetTime,
                                                                  [In] [Out] ref double timeStep);
 
-        [DllImport(DFLOWFM_DLL_NAME, EntryPoint = "dfm_compute_1d2d_coefficients",
-            CallingConvention = CallingConvention.Cdecl)]
-        public static extern int dfm_compute_1d2d_coefficients();
-
         [DllImport(DFLOWFM_DLL_NAME, EntryPoint = "dfm_run_computational_timestep",
             CallingConvention = CallingConvention.Cdecl)]
         public static extern int dfm_run_computational_timestep([In] [Out] ref double actualTimeStep);

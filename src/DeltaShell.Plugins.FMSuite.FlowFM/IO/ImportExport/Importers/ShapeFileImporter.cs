@@ -12,7 +12,6 @@ using GeoAPI.Geometries;
 using log4net;
 using SharpMap.CoordinateSystems.Transformations;
 
-
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
 {
     /// <summary>

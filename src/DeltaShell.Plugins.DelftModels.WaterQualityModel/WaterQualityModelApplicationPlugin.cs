@@ -107,9 +107,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                 return;
             }
 
-            IEnumerable<WaterQualityModel> allWaqModels =
-                Application.GetAllModelsInProject().OfType<WaterQualityModel>();
-            allWaqModels.ForEach(m => m.SetEnableMarkOutputOutOfSync(true));
+            IEnumerable<WaterQualityModel> allWaqModels = Application
+                                                          .GetAllModelsInProject()
+                                                          .OfType<WaterQualityModel>();
+            allWaqModels.ForEach(m =>
+            {
+                m.SetupModelDataFolderStructure(Application.ProjectDataDirectory);
+                m.SetEnableMarkOutputOutOfSync(true);
+            });
         }
 
         private void Application_ProjectSaving(Project obj)

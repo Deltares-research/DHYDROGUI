@@ -300,9 +300,6 @@
   <data name="WaterFlowFMModel_UpdateBathymetryCoverage_Reapplying_existing_spatial_operations_to_new_BedLevel_Data" xml:space="preserve">
     <value>Reapplying existing spatial operations to new BedLevel Data</value>
   </data>
-  <data name="WaterFlowFMModel_ReadGridFromNetFile_Error_when_reading_grid_after_1d2d_initialisation_step_in_the_D_FLow_FM_kernel___0_" xml:space="preserve">
-    <value>Error when reading grid after 1d2d initialisation step in the D-FLow FM kernel: {0}</value>
-  </data>
   <data name="WaterFlowFMModel_GetGridSnapApi_Last_attempt_to_perform_snapping_operation_failed__please_verify_the_model_first_" xml:space="preserve">
     <value>Last attempt to perform snapping operation failed, please verify the model first.</value>
   </data>

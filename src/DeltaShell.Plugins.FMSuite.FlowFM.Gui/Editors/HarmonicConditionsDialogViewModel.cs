@@ -1,5 +1,4 @@
 ﻿using DelftTools.Utils.Aop;
-
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 {
     [Entity]

@@ -78,8 +78,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             }
 
             FireImportProgressChanged(this, "Reading grid", 4, TotalImportSteps);
-            var is1D2DModel = (bool) ModelDefinition.GetModelProperty(GuiProperties.PartOf1D2DModel).Value;
-            Grid = ReadGridFromNetFile(NetFilePath, is1D2DModel) ?? new UnstructuredGrid();
+            Grid = ReadGridFromNetFile(NetFilePath) ?? new UnstructuredGrid();
 
             UnstructuredGridFileHelper.DoIfUgrid(NetFilePath,
                                                  uGridAdaptor =>

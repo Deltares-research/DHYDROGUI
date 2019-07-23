@@ -8,8 +8,8 @@ using DelftTools.Utils;
 using GeoAPI.CoordinateSystems.Transformations;
 using GeoAPI.Extensions.Feature;
 using SharpMap.CoordinateSystems.Transformations;
-using SharpMap.Extensions.CoordinateSystems;
 using SharpMap.Data.Providers;
+using SharpMap.Extensions.CoordinateSystems;
 
 namespace DeltaShell.Plugins.NetworkEditor.Import
 {

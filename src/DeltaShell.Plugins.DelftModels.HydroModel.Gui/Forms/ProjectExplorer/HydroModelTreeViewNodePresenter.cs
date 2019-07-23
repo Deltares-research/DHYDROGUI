@@ -1,4 +1,11 @@
-﻿using DelftTools.Controls;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.ComponentModel;
+using System.Drawing;
+using System.Linq;
+using DelftTools.Controls;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
@@ -10,13 +17,6 @@ using DelftTools.Utils.Drawing;
 using DelftTools.Utils.IO;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Properties;
 using log4net;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.ComponentModel;
-using System.Drawing;
-using System.Linq;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.ProjectExplorer
 {

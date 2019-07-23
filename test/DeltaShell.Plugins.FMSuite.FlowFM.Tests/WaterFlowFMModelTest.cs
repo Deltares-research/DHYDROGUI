@@ -1,4 +1,11 @@
-﻿using DelftTools.Functions;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.ComponentModel;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
@@ -7,7 +14,6 @@ using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
-using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
@@ -15,9 +21,14 @@ using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DeltaShell.Plugins.FMSuite.FlowFM.Sediment;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
+using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
@@ -28,18 +39,6 @@ using Rhino.Mocks;
 using SharpMap;
 using SharpMap.Extensions.CoordinateSystems;
 using SharpMap.SpatialOperations;
-using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.ComponentModel;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
-using DeltaShell.Plugins.FMSuite.FlowFM.Model;
-using DeltaShell.Plugins.FMSuite.FlowFM.Sediment;
-using GeoAPI.Extensions.Feature;
-using ObservationCrossSection2D = DelftTools.Hydro.ObservationCrossSection2D;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 {
@@ -1042,27 +1041,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.IsTrue(grids[0].IsEmpty);
         }
 
-        [NUnit.Framework.Category(TestCategory.DataAccess)]
-        [NUnit.Framework.Category(TestCategory.Slow)]
         [Test]
         public void FmModelGetVarCellsToFeaturesNameShouldReturnEmptyTimeseries()
         {
-            var model = new WaterFlowFMModel(TestHelper.GetTestFilePath(@"flow1d2dLinks\input\FlowFM.mdu"));
+            var model = MockRepository.GeneratePartialMock<WaterFlowFMModel>();
+            model.Expect(m => m.OutputMapFileStore).Return(new FMMapFileFunctionStore(model)).Repeat.Any();
             var timeSeries = model.GetVar(WaterFlowFMModel.CellsToFeaturesName) as ITimeSeries[];
-            Assert.IsNotNull(timeSeries);
-            Assert.That(timeSeries.Length, Is.EqualTo(9)) ;
-        }
-        
-        [Test]
-        public void FmModelSetVarUseNetCDFMapFormat()
-        {
-            var model = new WaterFlowFMModel();
-            var isPartOf1D2DModelGuiProperty = model.ModelDefinition.GetModelProperty(GuiProperties.PartOf1D2DModel);
-            isPartOf1D2DModelGuiProperty.Value = false;
-
-            Assert.IsFalse((bool)isPartOf1D2DModelGuiProperty.Value);
-            model.SetVar(new[] {true}, WaterFlowFMModel.IsPartOf1D2DModelPropertyName);
-            Assert.IsTrue((bool)isPartOf1D2DModelGuiProperty.Value);
+            Assert.IsNotNull(timeSeries,
+                             "Time series was not expected to be null");
+            Assert.That(timeSeries.Length, Is.EqualTo(0),
+                        "Time series was expected to be empty.");
         }
 
         [Test]
@@ -1197,11 +1185,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        [NUnit.Framework.Category(TestCategory.Integration)]
-        [NUnit.Framework.Category(TestCategory.VerySlow)]
+        [NUnit.Framework.Category(TestCategory.DataAccess)]
         public void GivenValidFmModel_WhenModelHasRun_ThenProgressTextHasBeenReset()
         {
-            var originalDir = TestHelper.GetTestFilePath("flow1d2dLinks");
+            var originalDir = TestHelper.GetTestFilePath("small");
             var testDir = FileUtils.CreateTempDirectory();
             var mduFilePath = Path.Combine(testDir, "input", "FlowFM.mdu");
             FileUtils.CopyDirectory(originalDir, testDir);
@@ -1296,7 +1283,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 fmModel.ReferenceTime = fmModel.StartTime;
                 fmModel.ProgressChanged += (sender, args) =>
                 {
-                    Assert.AreEqual(fmModel.ProgressText, messageList[counter]);
+                    Assert.AreEqual(fmModel.ProgressText, messageList[counter],
+                                    "Progress text when running FM model is different than expected.");
                     counter++;
                 };
                 ActivityRunner.RunActivity(fmModel);

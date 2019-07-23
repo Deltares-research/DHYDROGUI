@@ -1,4 +1,9 @@
-﻿using DelftTools.TestUtils;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using DelftTools.Functions.Generic;
+using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.IO;
 using DeltaShell.Core;
@@ -9,11 +14,6 @@ using DeltaShell.Plugins.SharpMapGis;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using DelftTools.Functions.Generic;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
 {

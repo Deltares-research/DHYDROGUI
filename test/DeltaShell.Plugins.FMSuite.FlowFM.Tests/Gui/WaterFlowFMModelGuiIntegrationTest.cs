@@ -1,16 +1,25 @@
-﻿using DelftTools.Hydro;
+﻿using System;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Threading;
+using System.Windows.Forms;
+using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf;
 using DelftTools.TestUtils;
+using DelftTools.Utils.IO;
 using DeltaShell.Gui;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.NetworkEditor.Gui;
@@ -26,17 +35,7 @@ using NUnit.Framework;
 using SharpMap.Layers;
 using SharpMap.SpatialOperations;
 using SharpMap.UI.Tools;
-using System;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Threading;
-using System.Windows.Forms;
-using DelftTools.Utils.IO;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
-using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using Control = System.Windows.Controls.Control;
-using ObservationCrossSection2D = DelftTools.Hydro.ObservationCrossSection2D;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 {
@@ -658,7 +657,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     gui.Selection = area.DryAreas;
 
                     //switch back to drypoints layer and check speed of selection (<4000ms!) & selection count (== SelectTool.MaxSelectedFeatures)
-                    TestHelper.AssertIsFasterThan(4000, () => gui.Selection = area.DryPoints);
+                    TestHelper.AssertIsFasterThan(4400, () => gui.Selection = area.DryPoints);
                     Assert.AreEqual(SelectTool.MaxSelectedFeatures, projectItemMapView.MapView.MapControl.SelectedFeatures.Count());
                 });
             }

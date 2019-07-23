@@ -7,7 +7,6 @@ using DelftTools.Utils.UndoRedo;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
-using Point = NetTopologySuite.Geometries.Point;
 
 namespace DelftTools.Hydro.Tests
 {

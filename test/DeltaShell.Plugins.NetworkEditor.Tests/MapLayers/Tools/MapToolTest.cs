@@ -8,11 +8,9 @@ using DeltaShell.Plugins.NetworkEditor.Gui.Helpers;
 using DeltaShell.Plugins.NetworkEditor.MapLayers;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
-using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using SharpMap.Api.Layers;
 using SharpMap.Converters.WellKnownText;
-using SharpMap.Layers;
 using SharpMap.UI.Forms;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools

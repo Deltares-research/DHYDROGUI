@@ -1,5 +1,4 @@
-﻿using System;
-using DelftTools.Hydro;
+﻿using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.CrossSections.DataSets;
 using DelftTools.Hydro.CrossSections.StandardShapes;

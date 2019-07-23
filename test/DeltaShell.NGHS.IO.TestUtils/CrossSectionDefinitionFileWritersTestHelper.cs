@@ -348,9 +348,14 @@ namespace DeltaShell.NGHS.IO.TestUtils
                     }
                 }
             }
-            
-            if (File.Exists(FileWriterTestHelper.ModelFileNames.CrossSectionDefinitions)) File.Delete(FileWriterTestHelper.ModelFileNames.CrossSectionDefinitions);
-            new IniFileWriter().WriteIniFile(categories, FileWriterTestHelper.ModelFileNames.CrossSectionDefinitions);
+
+            var filePath = Path.Combine(FileWriterTestHelper.TargetPath, "CrossSectionDefinitions.ini");
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
+
+            new IniFileWriter().WriteIniFile(categories, filePath);
         }
     }
 }

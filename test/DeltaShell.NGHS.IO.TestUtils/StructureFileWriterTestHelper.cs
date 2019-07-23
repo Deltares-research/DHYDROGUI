@@ -604,9 +604,14 @@ namespace DeltaShell.NGHS.IO.TestUtils
                     compoundStructureId++;
                 }
             });
-            
-            if (File.Exists(FileWriterTestHelper.ModelFileNames.Structures)) File.Delete(FileWriterTestHelper.ModelFileNames.Structures);
-            new IniFileWriter().WriteIniFile(categories, FileWriterTestHelper.ModelFileNames.Structures);
+
+            var filePath = Path.Combine(FileWriterTestHelper.TargetPath, "Structures.ini");
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
+
+            new IniFileWriter().WriteIniFile(categories, filePath);
         }
 
         private static void AddFrictionData(DelftIniCategory category, Friction frictionType, double friction, double groundLayerRoughness)

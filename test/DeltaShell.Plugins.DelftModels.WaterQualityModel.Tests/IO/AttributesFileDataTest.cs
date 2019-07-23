@@ -1,7 +1,5 @@
 ﻿using System;
-
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
-
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO

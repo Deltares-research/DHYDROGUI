@@ -1,11 +1,11 @@
-﻿using DelftTools.Units;
+﻿using System;
+using System.Collections.Generic;
+using DelftTools.Units;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
 
 namespace DeltaShell.Plugins.FMSuite.Common.Tests.FeatureData
 {

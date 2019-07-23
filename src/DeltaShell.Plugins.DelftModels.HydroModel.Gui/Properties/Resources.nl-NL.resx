@@ -120,24 +120,6 @@
   <data name="HydroModelGuiPlugin_GetContextMenu_This_will_overwrite_the_existing_model__Are_you_sure_" xml:space="preserve">
     <value>#Dit zal het overschrijven van het bestaande model. Weet je het zeker?</value>
   </data>
-  <data name="Iterative1D2DCoupler_CreateDebugMessages" xml:space="preserve">
-    <value>#Foutopsporingsberichten maken</value>
-  </data>
-  <data name="Iterative1D2DCouplerProperties_DisplayName" xml:space="preserve">
-    <value>#Iterative1D2DCoupler</value>
-  </data>
-  <data name="Iterative1D2DCoupler_MaxError" xml:space="preserve">
-    <value>#Max. Fout</value>
-  </data>
-  <data name="Iterative1D2DCoupler_MaxIteration" xml:space="preserve">
-    <value>#Max. Iteraties</value>
-  </data>
-  <data name="Iterative1D2DCoupler_MaxError_Description" xml:space="preserve">
-    <value>#Maximale relatieve massa fout.</value>
-  </data>
-  <data name="Iterative1D2DCoupler_MaxIteration_Description" xml:space="preserve">
-    <value>#Maximum aantal iteraties per keer stap.</value>
-  </data>
   <data name="HydroModelGuiPlugin_GetContextMenu_Turn_into_Integrated_Model" xml:space="preserve">
     <value>#Omzetten in geïntegreerd Model</value>
   </data>
@@ -152,8 +134,5 @@
   </data>
   <data name="Common_Name_Description" xml:space="preserve">
     <value>#Voornaam van dit item.</value>
-  </data>
-  <data name="Iterative1D2DCoupler_CreateDebugMessages_Description" xml:space="preserve">
-    <value>#Wanneer geactiveerd, zal een extra logboekbestand worden gemaakt met alle de log-boodschappen van deze activiteit</value>
   </data>
 </root>

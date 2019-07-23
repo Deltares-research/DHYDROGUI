@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -360,7 +360,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Time lag (s).
+        ///   Looks up a localized string similar to Time lag [s].
         /// </summary>
         internal static string HydraulicRuleProperties_TimeLag_DisplayName {
             get {
@@ -434,7 +434,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Above output.
+        ///   Looks up a localized string similar to Output above deadband.
         /// </summary>
         internal static string IntervalRuleProperties_AboutOutput_DisplayName {
             get {
@@ -461,7 +461,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Below output.
+        ///   Looks up a localized string similar to Output below deadband.
         /// </summary>
         internal static string IntervalRuleProperties_Below_DisplayName {
             get {
@@ -925,7 +925,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Minimum period (s).
+        ///   Looks up a localized string similar to Minimum period [s].
         /// </summary>
         internal static string RelativeTimeRuleProperties_MinimumPeriod_DisplayName {
             get {

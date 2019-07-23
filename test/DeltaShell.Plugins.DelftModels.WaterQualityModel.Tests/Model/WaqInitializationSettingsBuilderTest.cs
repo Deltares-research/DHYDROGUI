@@ -1,9 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-
 using DelftTools.TestUtils;
-
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.SubstanceProcessLibrary;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;

@@ -31,7 +31,6 @@
   <?endif?>
   <?endif?>
   
-  <?define StartPage="Welcome.htm"?>
   <?define pluginicon="$(var.ProjectDir)\Resources\FM.ico"?>
   <?define licensefilepath="$(var.ProjectDir)\$(var.Delft3DPackageName)_Resources\"?>
   <?define windowlayoutpath="$(var.ProjectDir)\Resources\"?>

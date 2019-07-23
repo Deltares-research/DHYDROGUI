@@ -5,7 +5,6 @@ using DelftTools.Controls.Swf.Charting;
 using DelftTools.Controls.Swf.Charting.Tools;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapeEditors;
 using GeoAPI.Geometries;
-using SharpMap.Converters.Geometries;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors
 {

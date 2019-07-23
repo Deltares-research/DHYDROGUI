@@ -8,7 +8,7 @@ using DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChartShap
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Geometries;
 using SharpMap.Api.Editors;
-using GeometryFactory = SharpMap.Converters.Geometries.GeometryFactory;
+using SharpMap.Converters.Geometries;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChartShapeEditors
 {

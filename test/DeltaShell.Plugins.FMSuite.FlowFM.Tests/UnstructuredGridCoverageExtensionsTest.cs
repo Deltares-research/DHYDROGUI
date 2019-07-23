@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Functions.Generic;
-using GeoAPI.Extensions.Coverages;
-using GeoAPI.Geometries;
-using NUnit.Framework;
-using NetTopologySuite.Extensions.Coverages;
-using NetTopologySuite.Extensions.Grids;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
+using GeoAPI.Extensions.Coverages;
+using GeoAPI.Geometries;
+using NetTopologySuite.Extensions.Coverages;
+using NetTopologySuite.Extensions.Grids;
+using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 {

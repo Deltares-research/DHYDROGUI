@@ -8,7 +8,6 @@ using SharpMap.Api.Editors;
 using SharpMap.Api.Layers;
 using SharpMap.Editors.Interactors;
 using SharpMap.Styles;
-using Point = NetTopologySuite.Geometries.Point;
 
 namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
 {

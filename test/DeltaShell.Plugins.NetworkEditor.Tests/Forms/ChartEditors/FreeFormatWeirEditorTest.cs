@@ -7,7 +7,6 @@ using DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChartShap
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChartShapes;
 using GeoAPI.Geometries;
 using NUnit.Framework;
-using SharpMap.Converters.Geometries;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.ChartEditors
 {

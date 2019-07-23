@@ -323,16 +323,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to It was not possible to load from file: {0}. LogFilePath: {1}.
-        /// </summary>
-        public static string GridHelper_CreateUnstructuredGridFromNetCdfFor1D2DLinks_It_was_not_possible_to_load_from_file___0___LogFilePath___1_ {
-            get {
-                return ResourceManager.GetString("GridHelper_CreateUnstructuredGridFromNetCdfFor1D2DLinks_It_was_not_possible_to_lo" +
-                        "ad_from_file___0___LogFilePath___1_", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to The type value {0} on line {1} file {2}, could not be parsed. Please check it is correctly written..
         /// </summary>
         public static string GwswAttributeType_TryGetParsedValueType_The_type_value__0__on_line__1__file__2___could_not_be_parsed__Please_check_it_is_correctly_written_ {
@@ -544,13 +534,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Copying file at location &apos;{0}&apos; to location &apos;{1}&apos; did not succeed,
-        ///because the file already exists. File import of feature file &apos;{0}&apos; has failed..
+        ///   Looks up a localized string similar to Copying file from location &apos;{0}&apos; to location &apos;{1}&apos; will overwrite the existing file at the new location..
         /// </summary>
-        public static string MduFile_CopyFilesToProjectFolderIfNeeded_CopyingFileDidNotSucceedBecauseFileAlreadyExists {
+        public static string MduFile_CopyFilesToProjectFolderIfNeeded_CopyingFileOverwritesFileThatAtNewLocation {
             get {
-                return ResourceManager.GetString("MduFile_CopyFilesToProjectFolderIfNeeded_CopyingFileDidNotSucceedBecauseFileAlrea" +
-                        "dyExists", resourceCulture);
+                return ResourceManager.GetString("MduFile_CopyFilesToProjectFolderIfNeeded_CopyingFileOverwritesFileThatAtNewLocati" +
+                        "on", resourceCulture);
             }
         }
         
@@ -1252,16 +1241,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to FM Model {0} is part of a 1D2D model and can&apos;t have morphology properties and / or sediments. Removing these properties from the model.
-        /// </summary>
-        public static string WaterFlowFMModel_SetVar_FM_Model__0__is_part_of_a_1D2D_model_and_can_t_have_morphology_properties_and___or_sediments__Removing_these_properties_from_the_model {
-            get {
-                return ResourceManager.GetString("WaterFlowFMModel_SetVar_FM_Model__0__is_part_of_a_1D2D_model_and_can_t_have_morph" +
-                        "ology_properties_and___or_sediments__Removing_these_properties_from_the_model", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to No grid points defined between structure {0} and {1}.
         /// </summary>
         public static string WaterFlowFMModelComputationalGridValidator_CheckBranchStructureLocations_No_grid_points_defined_between_structure__0__and__1_ {
@@ -1318,17 +1297,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
             get {
                 return ResourceManager.GetString("WaterFlowFMModelDefinition_SelectSpatialOperations_Duplication_of_spatial_operati" +
                         "ons_for__0___Please_verify_the_model_after_saving_", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to MapFormat property value of FlowFM model {0} is changed to 1, because it is part of an 1D2D integrated model..
-        /// </summary>
-        public static string WaterFlowFMModelDefinition_SetMapFormatPropertyValue_MapFormat_property_value_of_FlowFM_model__0__is_changed_to_1__because_it_is_part_of_an_1D2D_integrated_model_ {
-            get {
-                return ResourceManager.GetString("WaterFlowFMModelDefinition_SetMapFormatPropertyValue_MapFormat_property_value_of_" +
-                        "FlowFM_model__0__is_changed_to_1__because_it_is_part_of_an_1D2D_integrated_model" +
-                        "_", resourceCulture);
             }
         }
         

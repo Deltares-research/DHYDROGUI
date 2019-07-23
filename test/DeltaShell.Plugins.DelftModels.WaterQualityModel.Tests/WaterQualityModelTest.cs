@@ -1656,7 +1656,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             using (var model = new WaterQualityModel())
             {
                 //Import hyd file
-                var hydPath = TestHelper.GetTestFilePath(@"Zwolle\sobek.hyd");
+                var hydPath = TestHelper.GetTestFilePath(@"ValidWaqModels\Flow1D\sobek.hyd");
                 Assert.IsTrue(File.Exists(hydPath));
                 var importer = new HydFileImporter();
                 importer.ImportItem(hydPath, model);
@@ -1670,7 +1670,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         [Category(TestCategory.Integration)]
         public void Import_Waq_Model_WithSegmentFiles_Creates_FunctionFromHydroDynamics()
         {
-            var testFilePath = TestHelper.GetTestFilePath(@"Zwolle\sobek.hyd");
+            var testFilePath = TestHelper.GetTestFilePath(@"ValidWaqModels\Flow1D\sobek.hyd");
             Assert.IsTrue(File.Exists(testFilePath));
 
             //Import the second model on top of waqmodel.
@@ -1686,7 +1686,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                 Assert.IsFalse(string.IsNullOrEmpty(waqModel.ChezyCoefficientsFilePath));
 
                 //Import the substances now.
-                var subsFilePath = TestHelper.GetTestFilePath(@"Zwolle\substances\02b_Oxygen_bod_sediment.sub");
+                var subsFilePath = TestHelper.GetTestFilePath(@"ValidWaqModels\\02b_Oxygen_bod_sediment.sub");
                 subsFilePath = TestHelper.CreateLocalCopy(subsFilePath);
 
                 Assert.IsNotNull(waqModel.SubstanceProcessLibrary);
@@ -1706,8 +1706,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         [Category(TestCategory.Integration)]
         public void Import_Waq_Model_WithSegmentFiles_OverExistingWaqModel_Update_SegmentFileFunctions()
         {
-            var zwolleFilePath = TestHelper.GetTestFilePath(@"Zwolle\sobek.hyd");
-            Assert.IsTrue(File.Exists(zwolleFilePath));
+            var filePath = TestHelper.GetTestFilePath(@"ValidWaqModels\\Flow1D\\sobek.hyd");
+            Assert.IsTrue(File.Exists(filePath));
 
             //Import hyd file
             var westernschedlt = TestHelper.GetTestFilePath(@"WaterQualityDataFiles\ImportHydFileForCoordSystem\DefaultCoordSystem\westernscheldt01.hyd");
@@ -1720,7 +1720,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                 Assert.IsTrue(string.IsNullOrEmpty(westernModel.ChezyCoefficientsFilePath));
 
                 //Import the substances now.
-                var subsFilePath = TestHelper.GetTestFilePath(@"Zwolle\substances\02b_Oxygen_bod_sediment.sub");
+                var subsFilePath = TestHelper.GetTestFilePath(@"ValidWaqModels\\02b_Oxygen_bod_sediment.sub");
                 Assert.IsTrue(File.Exists(subsFilePath));
                 Assert.IsNotNull(westernModel.SubstanceProcessLibrary);
                 new SubFileImporter().Import(westernModel.SubstanceProcessLibrary, subsFilePath);
@@ -1733,11 +1733,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                 Assert.IsFalse(chezyProcess is SegmentFileFunction);
                 Assert.IsFalse(chezyProcess is FunctionFromHydroDynamics);
 
-                using (var zwolleModel = importer.ImportItem(zwolleFilePath) as WaterQualityModel)
+                using (var differentModel = importer.ImportItem(filePath) as WaterQualityModel)
                 {
-                    Assert.IsNotNull(zwolleModel);
+                    Assert.IsNotNull(differentModel);
                     var expectedLogMessage = string.Format(Resources.WaterQualityModel_HandleNewHydroDynamicsFunctionDataSet_The_process_coefficient__0__has_been_updated_with_the_latest_Hydrodynamic_data_file_, "CHEZY");
-                    TestHelper.AssertAtLeastOneLogMessagesContains(() => westernModel.ImportHydroData(zwolleModel.HydroData), expectedLogMessage);
+                    TestHelper.AssertAtLeastOneLogMessagesContains(() => westernModel.ImportHydroData(differentModel.HydroData), expectedLogMessage);
 
                     //Check filepaths, it has been updated.
                     Assert.IsFalse(string.IsNullOrEmpty(westernModel.ChezyCoefficientsFilePath));

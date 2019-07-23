@@ -16,92 +16,32 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.PropertyGrid
         [ResourcesCategory(typeof(Resources), "Categories_General")]
         [ResourcesDisplayName(typeof(Resources), "Common_Name_DisplayName")]
         [ResourcesDescription(typeof(Resources), "Rule_Name_Description")]
+        [PropertyOrder(1)]
         public string Name
         {
-            get { return data.Name; }
-            set { data.Name = value; }
+            get => data.Name;
+            set => data.Name = value;
         }
 
         [ResourcesCategory(typeof(Resources), "Categories_General")]
         [ResourcesDisplayName(typeof(Resources), "Common_LongName_DisplayName")]
         [ResourcesDescription(typeof(Resources), "Rule_LongName_Description")]
+        [PropertyOrder(2)]
         public string LongName
         {
-            get { return data.LongName; }
-            set { data.LongName = value; }
-        }
-
-        [ResourcesCategory(typeof(Resources), "Categories_General")]
-        [ResourcesDisplayName(typeof(Resources), "IntervalRuleProperties_IntervalType_DisplayName")]
-        [ResourcesDescription(typeof(Resources), "IntervalRuleProperties_IntervalType_Descirption")]
-        public IntervalRule.IntervalRuleIntervalType IntervalType
-        {
-            get { return data.IntervalType; }
-            set { data.IntervalType = value; }
-        }
-
-        [ResourcesCategory(typeof(Resources), "Categories_General")]
-        [ResourcesDisplayName(typeof(Resources), "IntervalRuleProperties_MaxSpeed_DisplayName")]
-        [ResourcesDescription(typeof(Resources), "IntervalRuleProperties_MaxSpeed_Description")]
-        public double MaxSpeed
-        {
-            get { return data.Setting.MaxSpeed; }
-            set { data.Setting.MaxSpeed = value; }
-        }
-
-        [ResourcesCategory(typeof(Resources), "Categories_General")]
-        [ResourcesDisplayName(typeof(Resources), "IntervalRuleProperties_FixedInterval_DisplayName")]
-        [ResourcesDescription(typeof(Resources), "IntervalRuleProperties_FixedInterval_Description")]
-        public double FixedInterval
-        {
-            get { return data.FixedInterval; }
-            set { data.FixedInterval = value; }
-        }
-
-        [ResourcesCategory(typeof(Resources), "Category_Limits")]
-        [ResourcesDisplayName(typeof(Resources), "IntervalRuleProperties_AboutOutput_DisplayName")]
-        [ResourcesDescription(typeof(Resources), "IntervalRuleProperties_Above_Description")]
-        public double Above
-        {
-            get { return data.Setting.Above; }
-            set { data.Setting.Above = value; }
-        }
-
-        [ResourcesCategory(typeof(Resources), "Category_Limits")]
-        [ResourcesDisplayName(typeof(Resources), "IntervalRuleProperties_Below_DisplayName")]
-        [ResourcesDescription(typeof(Resources), "IntervalRuleProperties_Below_Description")]
-        public double Below
-        {
-            get { return data.Setting.Below; }
-            set { data.Setting.Below = value; }
-        }
-
-        [ResourcesCategory(typeof(Resources), "Category_Limits")]
-        [ResourcesDisplayName(typeof(Resources), "IntervalRuleProperties_DeadbankAroundSetpoint_DisplayName")]
-        [ResourcesDescription(typeof(Resources), "IntervalRuleProperties_DeadbankAroundSetpoint_Description")]
-        public double DeadbandAroundSetpoint
-        {
-            get { return data.DeadbandAroundSetpoint; }
-            set { data.DeadbandAroundSetpoint = value; }
-        }
-
-        [ResourcesCategory(typeof(Resources), "Category_Limits")]
-        [ResourcesDisplayName(typeof(Resources), "IntervalRuleProperties_DeadbandType_DisplayName")]
-        [ResourcesDescription(typeof(Resources), "IntervalRuleProperties_DeadbandType_Description")]
-        public IntervalRule.IntervalRuleDeadBandType DeadBandType
-        {
-            get { return data.DeadBandType; }
-            set { data.DeadBandType = value; }
+            get => data.LongName;
+            set => data.LongName = value;
         }
 
         [DynamicReadOnly]
         [ResourcesCategory(typeof(Resources), "Category_Data")]
         [ResourcesDisplayName(typeof(Resources), "ConstantSetpoint_DisplayName")]
         [ResourcesDescription(typeof(Resources), "ConstantSetpoint_Description")]
+        [PropertyOrder(3)]
         public double ConstantSetpoint
         {
-            get { return data.ConstantValue; }
-            set { data.ConstantValue = value; }
+            get => data.ConstantValue;
+            set => data.ConstantValue = value;
         }
 
         [Editor(typeof(ViewPropertyEditor), typeof(UITypeEditor))]
@@ -109,85 +49,128 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.PropertyGrid
         [ResourcesCategory(typeof(Resources), "Category_Data")]
         [ResourcesDisplayName(typeof(Resources), "RTC_Table_DisplayName")]
         [ResourcesDescription(typeof(Resources), "IntervalRuleProperties_TimeSeries_Description")]
+        [PropertyOrder(4)]
         public TimeSeries TimeSeries
         {
-            get { return data.TimeSeries; }
-            set { data.TimeSeries = value; }
+            get => data.TimeSeries;
+            set => data.TimeSeries = value;
         }
-
-        private TimeSeries cachedTimeSeries;
 
         [ResourcesCategory(typeof(Resources), "Category_Data")]
         [ResourcesDisplayName(typeof(Resources), "SetpointMode")]
         [ResourcesDescription(typeof(Resources), "SetpointMode_Description")]
-        public IntervalRule.IntervalRuleIntervalType IntervalMode
+        [PropertyOrder(5)]
+        public IntervalRule.IntervalRuleIntervalType IntervalType
         {
-            get { return data.IntervalType; }
-            set
-            {
-                if (data.IntervalType != value)
-                {
-                    if (value != IntervalRule.IntervalRuleIntervalType.Variable)
-                    {
-                        // set to constant save time series in cache
-                        cachedTimeSeries = (TimeSeries)data.TimeSeries.Clone();
-                    }
-
-                    data.IntervalType = value;
-
-                    if (value == IntervalRule.IntervalRuleIntervalType.Variable && cachedTimeSeries != null)
-                    {
-                        // Restore cached time series
-                        data.TimeSeries = (TimeSeries)cachedTimeSeries.Clone();
-                    }
-                }
-            }
+            get => data.IntervalType;
+            set => data.IntervalType = value;
         }
 
         [DynamicReadOnly]
         [ResourcesCategory(typeof(Resources), "RTC_Category_InterpolationExtrapolation")]
         [ResourcesDisplayName(typeof(Resources), "RTC_Interpolation_DisplayName")]
         [ResourcesDescription(typeof(Resources), "RTC_Interpolation_Description")]
+        [PropertyOrder(6)]
         public InterpolationHydraulicType Interpolation
         {
-            get { return (InterpolationHydraulicType) data.InterpolationOptionsTime; }
-            set { data.InterpolationOptionsTime = (InterpolationType) value; }
+            get => (InterpolationHydraulicType)data.InterpolationOptionsTime;
+            set => data.InterpolationOptionsTime = (InterpolationType)value;
         }
 
         [DynamicReadOnly]
         [ResourcesCategory(typeof(Resources), "RTC_Category_InterpolationExtrapolation")]
         [ResourcesDisplayName(typeof(Resources), "RTC_Extrapolation_DisplayName")]
         [ResourcesDescription(typeof(Resources), "RTC_Time_Extrapolation_Description")]
+        [PropertyOrder(7)]
         public ExtrapolationTimeSeriesType Extrapolation
         {
-            get { return (ExtrapolationTimeSeriesType)data.Extrapolation; }
-            set { data.Extrapolation = (ExtrapolationType) value; }
+            get => (ExtrapolationTimeSeriesType)data.Extrapolation;
+            set => data.Extrapolation = (ExtrapolationType)value;
+        }
+
+        [DynamicReadOnly]
+        [ResourcesCategory(typeof(Resources), "Category_Limits")]
+        [ResourcesDisplayName(typeof(Resources), "IntervalRuleProperties_MaxSpeed_DisplayName")]
+        [ResourcesDescription(typeof(Resources), "IntervalRuleProperties_MaxSpeed_Description")]
+        [PropertyOrder(8)]
+        public double MaxSpeed
+        {
+            get => data.Setting.MaxSpeed;
+            set => data.Setting.MaxSpeed = value;
+        }
+
+        [DynamicReadOnly]
+        [ResourcesCategory(typeof(Resources), "Category_Limits")]
+        [ResourcesDisplayName(typeof(Resources), "IntervalRuleProperties_FixedInterval_DisplayName")]
+        [ResourcesDescription(typeof(Resources), "IntervalRuleProperties_FixedInterval_Description")]
+        [PropertyOrder(9)]
+        public double FixedInterval
+        {
+            get => data.FixedInterval;
+            set => data.FixedInterval = value;
+        }
+
+        [ResourcesCategory(typeof(Resources), "Category_Limits")]
+        [ResourcesDisplayName(typeof(Resources), "IntervalRuleProperties_AboutOutput_DisplayName")]
+        [ResourcesDescription(typeof(Resources), "IntervalRuleProperties_Above_Description")]
+        [PropertyOrder(10)]
+        public double Above
+        {
+            get => data.Setting.Above;
+            set => data.Setting.Above = value;
+        }
+
+        [ResourcesCategory(typeof(Resources), "Category_Limits")]
+        [ResourcesDisplayName(typeof(Resources), "IntervalRuleProperties_Below_DisplayName")]
+        [ResourcesDescription(typeof(Resources), "IntervalRuleProperties_Below_Description")]
+        [PropertyOrder(11)]
+        public double Below
+        {
+            get => data.Setting.Below;
+            set => data.Setting.Below = value;
+        }
+
+        [ResourcesCategory(typeof(Resources), "Category_Limits")]
+        [ResourcesDisplayName(typeof(Resources), "IntervalRuleProperties_DeadbankAroundSetpoint_DisplayName")]
+        [ResourcesDescription(typeof(Resources), "IntervalRuleProperties_DeadbankAroundSetpoint_Description")]
+        [PropertyOrder(12)]
+        public double DeadbandAroundSetpoint
+        {
+            get => data.DeadbandAroundSetpoint;
+            set => data.DeadbandAroundSetpoint = value;
+        }
+
+        [ResourcesCategory(typeof(Resources), "Category_Limits")]
+        [ResourcesDisplayName(typeof(Resources), "IntervalRuleProperties_DeadbandType_DisplayName")]
+        [ResourcesDescription(typeof(Resources), "IntervalRuleProperties_DeadbandType_Description")]
+        [PropertyOrder(13)]
+        public IntervalRule.IntervalRuleDeadBandType DeadBandType
+        {
+            get => data.DeadBandType;
+            set => data.DeadBandType = value;
         }
 
         [DynamicReadOnlyValidationMethod]
         public bool DynamicReadOnlyValidationMethod(string propertyName)
         {
-            if (propertyName == "ConstantSetpoint")
+            switch (propertyName)
             {
-                return IntervalMode != IntervalRule.IntervalRuleIntervalType.Fixed;
+                case "ConstantSetpoint":
+                    return IntervalType != IntervalRule.IntervalRuleIntervalType.Fixed;
+                case "TimeSeries":
+                    return IntervalType != IntervalRule.IntervalRuleIntervalType.Variable;
+                case "Interpolation":
+                    return IntervalType != IntervalRule.IntervalRuleIntervalType.Variable;
+                case "Extrapolation":
+                    return IntervalType != IntervalRule.IntervalRuleIntervalType.Variable;
+                case "FixedInterval":
+                    return IntervalType != IntervalRule.IntervalRuleIntervalType.Fixed;
+                case "MaxSpeed":
+                    return IntervalType == IntervalRule.IntervalRuleIntervalType.Fixed;
+                default:
+                    return true;
             }
-
-            if (propertyName == "TimeSeries")
-            {
-                return IntervalMode != IntervalRule.IntervalRuleIntervalType.Variable;
-            }
-
-            if (propertyName == "Interpolation")
-            {
-                return IntervalMode != IntervalRule.IntervalRuleIntervalType.Variable;
-            }
-
-            if (propertyName == "Extrapolation")
-            {
-                return IntervalMode != IntervalRule.IntervalRuleIntervalType.Variable;
-            }
-
-            return true;
         }
+
     }
 }

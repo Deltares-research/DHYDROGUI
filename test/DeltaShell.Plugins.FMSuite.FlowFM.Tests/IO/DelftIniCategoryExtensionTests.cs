@@ -1,9 +1,9 @@
-﻿using DeltaShell.NGHS.IO.FileWriters.Location;
+﻿using System.Linq;
+using DeltaShell.NGHS.IO.FileWriters.Location;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using NUnit.Framework;
-using System.Linq;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 {

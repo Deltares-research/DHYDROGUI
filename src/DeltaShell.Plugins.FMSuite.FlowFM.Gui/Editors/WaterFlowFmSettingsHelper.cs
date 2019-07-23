@@ -13,7 +13,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 {
-    public class WaterFlowFmSettingsHelper
+    public static class WaterFlowFmSettingsHelper
     {
         /// <summary>
         /// Gets the WPF GUI categories <seealso cref="WpfGuiCategory"/>.
@@ -24,15 +24,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
         public static ObservableCollection<WpfGuiCategory> GetWpfGuiCategories(WaterFlowFMModel model, IGui gui)
         {
             var wpfGuiCategories = new List<WpfGuiCategory>();
+
             if (model != null)
             {
                 wpfGuiCategories = GetWaterFlowFmSettings(model)?.FieldDescriptions
                     .GroupBy(fd => fd.Category)
                     .Select(gp => new WpfGuiCategory(gp.Key, gp.ToList())).ToList();
-                wpfGuiCategories?.SelectMany(gp => gp.Properties).Distinct().ForEach(p => p.GetModel = () => model);
-                if (wpfGuiCategories == null) return null;
+
+                wpfGuiCategories?.SelectMany(gp => gp.Properties).Distinct()
+                                 .ForEach(p => p.GetModel = () => model);
+
+                if (wpfGuiCategories == null)
+                {
+                    return null;
+                }
+
                 SetFlowFmExtraSettings(model, gui, wpfGuiCategories);
             }
+
             return new ObservableCollection<WpfGuiCategory>(wpfGuiCategories);
         }
 

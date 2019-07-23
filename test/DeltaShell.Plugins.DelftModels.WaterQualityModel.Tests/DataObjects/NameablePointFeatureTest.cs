@@ -1,16 +1,10 @@
 ﻿using System;
-
 using DelftTools.Utils;
 using DelftTools.Utils.Reflection;
-
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects;
-
 using GeoAPI.Geometries;
-
 using NetTopologySuite.Extensions.Features;
-
 using NUnit.Framework;
-
 using Rhino.Mocks;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.DataObjects
