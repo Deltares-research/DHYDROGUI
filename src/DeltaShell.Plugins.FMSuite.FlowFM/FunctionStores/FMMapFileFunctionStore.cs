@@ -23,17 +23,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
 
         #region Map file constants
 
-        private const string FlowLinkName = "FlowLink";
-        private const string TimeVariableName = "time";
-
         private const string NSedSusName = "nSedSus";
         private const string NSedTotName = "nSedTot";
-
-        private const string UnitsName = "units";
         private const string VelocityCoverageName = "velocity (ucx + ucy)";
-        private const string FlowlinkXu = "FlowLink_xu";
-        private const string FlowlinkYu = "FlowLink_yu";
-
         private const string NFlowElemName = "nFlowElem";
         private const string NFlowLinkName = "nFlowLink";
         private const string NNetLinkName = "nNetLink";
@@ -62,7 +54,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             "u0"
         };
 
-        private DateTime[] ncDatetimes;
         private UnstructuredGrid grid;
         private readonly IList<ITimeSeries> boundaryCellValues = new List<ITimeSeries>();
 
