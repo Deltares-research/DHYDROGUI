@@ -8,7 +8,6 @@ using log4net;
 using NetTopologySuite.Geometries;
 using SharpMap.Data.Providers;
 
-
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
 {
     /// <summary>

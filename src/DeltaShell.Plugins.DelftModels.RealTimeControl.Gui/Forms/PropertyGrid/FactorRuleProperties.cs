@@ -11,28 +11,31 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.PropertyGrid
         [ResourcesCategory(typeof(Resources), "Categories_General")]
         [ResourcesDisplayName(typeof(Resources), "Common_Name_DisplayName")]
         [ResourcesDescription(typeof(Resources), "Rule_Name_Description")]
+        [PropertyOrder(1)]
         public string Name
         {
-            get { return data.Name; }
-            set { data.Name = value; }
+            get => data.Name;
+            set => data.Name = value;
         }
 
         [ResourcesCategory(typeof(Resources), "Categories_General")]
         [ResourcesDisplayName(typeof(Resources), "Common_LongName_DisplayName")]
         [ResourcesDescription(typeof(Resources), "Rule_LongName_Description")]
+        [PropertyOrder(2)]
         public string LongName
         {
-            get { return data.LongName; }
-            set { data.LongName = value; }
+            get => data.LongName;
+            set => data.LongName = value;
         }
 
-        [ResourcesCategory(typeof(Resources), "Categories_General")]
+        [ResourcesCategory(typeof(Resources), "Category_Data")]
         [ResourcesDisplayName(typeof(Resources), "Rule_Factor_DisplayName")]
         [ResourcesDescription(typeof(Resources), "Rule_Factor_Description")]
+        [PropertyOrder(3)]
         public double Factor
         {
-            get { return data.Factor; }
-            set { data.Factor = value; }
+            get => data.Factor;
+            set => data.Factor = value;
         }
     }
 }

@@ -1,4 +1,12 @@
-﻿using DelftTools.Hydro;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.ComponentModel;
+using System.IO;
+using System.Linq;
+using System.Threading;
+using DelftTools.Hydro;
+using DelftTools.Hydro.Helpers;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
@@ -11,21 +19,13 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Editing;
 using DelftTools.Utils.IO;
-using DeltaShell.Plugins.DelftModels.HydroModel.ValueConverters;
-using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.ComponentModel;
-using System.IO;
-using System.Linq;
-using System.Threading;
-using DelftTools.Hydro.Helpers;
 using DelftTools.Utils.Validation;
 using DeltaShell.Dimr;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.DelftModels.HydroModel.Import;
 using DeltaShell.Plugins.DelftModels.HydroModel.Properties;
 using DeltaShell.Plugins.DelftModels.HydroModel.Validation;
+using DeltaShell.Plugins.DelftModels.HydroModel.ValueConverters;
 using GeoAPI.Extensions.Feature;
 using log4net;
 
@@ -63,7 +63,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         public HydroModel()
         {
-            Sobek2CompareTest = false;
             Name = "Integrated Model";
 
             creating = true;
@@ -483,16 +482,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
                 if (currentWorkflow != null)
                 {
-                    var coupler = currentWorkflow as Iterative1D2DCoupler;
-                    if (coupler != null)
-                    {
-                        var dimrModel = coupler.Flow2DModel as IDimrModel;
-                        if (dimrModel != null)
-                        {
-                            dimrModel.SetVar(new[] {false}, Iterative1D2DCoupler.IsPartOf1D2DModelPropertyName);
-                            dimrModel.SetVar(new[] {false}, Iterative1D2DCoupler.DisableFlowNodeRenumberingPropertyName);
-                        }
-                    }
                     currentWorkflow.StatusChanged -= CurrentWorkflowOnStatusChanged;
                 }
 
@@ -501,17 +490,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                 if (currentWorkflow != null)
                 {
                     currentWorkflow.StatusChanged += CurrentWorkflowOnStatusChanged;
-                    
-                    var coupler = currentWorkflow as Iterative1D2DCoupler;
-                    if (coupler != null)
-                    {
-                        var dimrModel = coupler.Flow2DModel as IDimrModel;
-                        if (dimrModel != null)
-                        {
-                            dimrModel.SetVar(new[] {true}, Iterative1D2DCoupler.IsPartOf1D2DModelPropertyName);
-                            dimrModel.SetVar(new[] {true}, Iterative1D2DCoupler.DisableFlowNodeRenumberingPropertyName);
-                        }
-                    }
                 }
 
                 currentWorkFlowData = null;
@@ -762,7 +740,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                 ExplicitWorkingDirectory = workDirectory;
             }
 
-            FileUtils.CreateDirectoryIfNotExists(workDirectory, !Sobek2CompareTest);
+            FileUtils.CreateDirectoryIfNotExists(workDirectory);
         }
 
         public virtual ValidationReport Validate()
@@ -770,8 +748,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             return new HydroModelValidator().Validate(this);
         }
 
-        public virtual bool Sobek2CompareTest { get; set; }
-        
         protected override void OnProgressChanged()
         {
             if (dimrApi != null) dimrApi.ProcessMessages();

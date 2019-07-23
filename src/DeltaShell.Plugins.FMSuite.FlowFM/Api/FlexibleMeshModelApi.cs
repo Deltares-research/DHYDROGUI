@@ -138,11 +138,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             throw new Exception("Flow FM finalize computational time step failed with error " + result);
         }
 
-        public void Compute1d2dCoefficients()
-        {
-            FlexibleMeshModelDll.dfm_compute_1d2d_coefficients();
-        }
-
         public Type GetVariableType(string variable)
         {
             var sb = new StringBuilder(FlexibleMeshModelDll.MAXSTRLEN);

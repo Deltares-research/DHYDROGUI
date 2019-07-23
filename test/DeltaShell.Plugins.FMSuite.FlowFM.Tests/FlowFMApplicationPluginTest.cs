@@ -9,7 +9,6 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.ImportersExporters;
 using NUnit.Framework;
 using Rhino.Mocks;
 
-
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 {
     [TestFixture]

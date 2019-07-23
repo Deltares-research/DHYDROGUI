@@ -4,14 +4,11 @@ using DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.FeatureEditing;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.ObservationAreas;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
-
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
-
 using Rhino.Mocks;
-
 using SharpMap.Editors.Interactors;
 using SharpMap.Layers;
-using Point = NetTopologySuite.Geometries.Point;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.FeatureEditing
 {

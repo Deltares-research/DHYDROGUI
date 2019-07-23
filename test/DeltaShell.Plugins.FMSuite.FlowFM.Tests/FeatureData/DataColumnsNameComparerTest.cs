@@ -1,12 +1,5 @@
-﻿using System.ComponentModel;
-using System.Windows.Media;
-using DelftTools.Hydro.Structures;
-using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
-using GeoAPI.Extensions.Feature;
-using GeoAPI.Geometries;
-using NetTopologySuite.Geometries;
+﻿using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
 {

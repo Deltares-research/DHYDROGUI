@@ -1,10 +1,10 @@
-﻿using DelftTools.TestUtils;
+﻿using System.IO;
+using DelftTools.TestUtils;
 using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.Handlers;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd;
 using NUnit.Framework;
 using Rhino.Mocks;
-using System.IO;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Xsd
 {

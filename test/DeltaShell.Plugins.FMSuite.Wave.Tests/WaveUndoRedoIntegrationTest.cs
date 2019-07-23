@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Windows;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Editing;

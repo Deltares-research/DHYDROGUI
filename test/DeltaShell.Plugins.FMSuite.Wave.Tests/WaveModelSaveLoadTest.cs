@@ -10,8 +10,8 @@ using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.SharpMapGis;
 using GeoAPI.Geometries;
-using NetTopologySuite.Geometries;
 using NetTopologySuite.Extensions.Features;
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using SharpMap.Extensions.CoordinateSystems;
 

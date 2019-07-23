@@ -4,12 +4,11 @@ using DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
-using NetTopologySuite.Geometries;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Networks;
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using SharpMap.Converters.WellKnownText;
-using Point = NetTopologySuite.Geometries.Point;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
 {

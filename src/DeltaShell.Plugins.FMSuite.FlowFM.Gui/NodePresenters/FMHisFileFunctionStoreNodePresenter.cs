@@ -1,6 +1,6 @@
-﻿using DelftTools.Controls;
+﻿using System.IO;
+using DelftTools.Controls;
 using DelftTools.Controls.Swf.TreeViewControls;
-using System.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters

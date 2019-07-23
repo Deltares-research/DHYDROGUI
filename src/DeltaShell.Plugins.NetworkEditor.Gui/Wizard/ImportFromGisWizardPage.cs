@@ -3,7 +3,6 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Windows.Forms;
 using DelftTools.Controls.Swf;
-using DelftTools.Utils.Collections;
 using DeltaShell.Plugins.NetworkEditor.Import;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Wizard

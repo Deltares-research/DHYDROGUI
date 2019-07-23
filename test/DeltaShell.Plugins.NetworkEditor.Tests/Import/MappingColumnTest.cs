@@ -1,6 +1,5 @@
 ﻿using DeltaShell.Plugins.NetworkEditor.Import;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
 {

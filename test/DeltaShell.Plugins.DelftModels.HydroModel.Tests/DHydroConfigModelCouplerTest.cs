@@ -126,7 +126,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             ((IDimrModel)target).Expect(dm => dm.GetItemString(dataItemInput)).Return(targetDataitemText).Repeat.Any();
 
             var subWFActivities = new EventedList<IActivity>();
-            var subWF = mocks.StrictMultiMock<ICompositeActivity>(typeof(IDimrModel)); // similar to iterative1d2dCoupler
+            var subWF = mocks.StrictMultiMock<ICompositeActivity>(typeof(IDimrModel));
             subWF.Expect(wf => wf.Activities).Return(subWFActivities).Repeat.Any();
             subWF.Expect(m => m.StatusChanged += null).IgnoreArguments().Repeat.Any();
             subWF.Expect(m => m.ProgressChanged += null).IgnoreArguments().Repeat.Any();

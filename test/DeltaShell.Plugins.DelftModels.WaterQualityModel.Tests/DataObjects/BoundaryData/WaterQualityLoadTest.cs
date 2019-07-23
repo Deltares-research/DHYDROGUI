@@ -1,14 +1,11 @@
 ﻿using System;
-
 using DelftTools.Utils;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;
-
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
-
 using Rhino.Mocks;
-using Point = NetTopologySuite.Geometries.Point;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.DataObjects.BoundaryData
 {

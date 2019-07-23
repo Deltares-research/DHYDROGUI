@@ -8,7 +8,6 @@ using DelftTools.Utils.Collections;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 
-
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
 {
     /// <summary>

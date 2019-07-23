@@ -15,8 +15,6 @@ using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using Rhino.Mocks;
-using Point = NetTopologySuite.Geometries.Point;
-
 
 namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 {

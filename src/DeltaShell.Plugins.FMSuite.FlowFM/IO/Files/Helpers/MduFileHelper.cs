@@ -276,5 +276,55 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
 
             return property.Value is string && property.PropertyDefinition.MduPropertyName.ToLower().EndsWith("file");
         }
+
+        /// <summary>
+        /// This method copies feature files at the given <paramref name="featureGroupNames"/> to locations in the mdu folder if the file paths point
+        /// to a location outside of the mdu folder. In case a file path has '../' in its path, the path is replaced by its absolute path.
+        /// The corresponding ModelProperty is updated for every file path change.
+        /// If the target file already exists, the file is overwritten.
+        /// </summary>
+        /// <param name="featureGroupNames"> The group names of all features, retrieved from the mdu file of the FM Model. </param>
+        /// <param name="mduFilePath"> The file path of the mdu file. </param>
+        /// <param name="modelDefinition"> The model definition of the FM Model. </param>
+        /// <param name="propertyKey"> The key that corresponds to the type of file that is being read. </param>
+        public static void CopyFilesToMduFolderIfNeeded(IList<string> featureGroupNames,
+                                                        string mduFilePath,
+                                                        WaterFlowFMModelDefinition modelDefinition,
+                                                        string propertyKey)
+        {
+            string mduDirectory = Path.GetDirectoryName(Path.GetFullPath(mduFilePath));
+            for (var i = 0; i < featureGroupNames.Count; i++)
+            {
+                string filePath = Path.GetFullPath(Path.Combine(mduDirectory, featureGroupNames[i]));
+                Match isOutsideMduFolderMatch = new Regex(@"\.{2,}").Match(FileUtils.GetRelativePath(mduDirectory, filePath, true));
+
+                // File is situated inside mdu-folder or in a subfolder
+                if (!isOutsideMduFolderMatch.Success || propertyKey == KnownProperties.StructuresFile)
+                {
+                    featureGroupNames[i] = filePath;
+                }
+                else // File is situated outside of mdu-folder
+                {
+                    string newFilePath = Path.Combine(mduDirectory, Path.GetFileName(filePath));
+                    if (File.Exists(newFilePath))
+                    {
+                        Log.InfoFormat(Resources.MduFile_CopyFilesToProjectFolderIfNeeded_CopyingFileOverwritesFileThatAtNewLocation,
+                                       filePath, newFilePath);
+                    }
+                    else
+                    {
+                        Log.InfoFormat(Resources.MduFile_CopyFilesToProjectFolderIfNeeded_CopiedFileFrom_0_to_1_BecauseTheFileExistedOutsideOfTheProjectFolder,
+                                       filePath, newFilePath, modelDefinition.ModelName);
+                    }
+
+                    File.Copy(filePath, newFilePath, true);
+                    featureGroupNames[i] = newFilePath;
+                }
+            }
+
+            featureGroupNames.RemoveAllWhere(fp => fp == null);
+            IEnumerable<string> relativePaths = featureGroupNames.Select(fp => FileUtils.GetRelativePath(mduDirectory, fp, true));
+            modelDefinition.GetModelProperty(propertyKey).SetValueAsString(string.Join(" ", relativePaths));
+        }
     }
 }

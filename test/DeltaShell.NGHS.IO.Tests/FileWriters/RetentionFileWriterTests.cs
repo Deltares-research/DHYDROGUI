@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
@@ -52,8 +53,9 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
                 new Retention(){Name = "4", LongName = aRetentionArea, Branch = network.Branches.ElementAt(3), Chainage = network.Branches.ElementAt(3).Length/5, Type = RetentionType.Reservoir, UseTable = true, Data = data},
                 new Retention(){Name = "5", LongName = aRetentionArea, Branch = network.Branches.ElementAt(4), Chainage = network.Branches.ElementAt(4).Length/6, Type = RetentionType.Closed, UseTable = true, Data = data2},
             };
-            RetentionFileWriter.WriteFile(FileWriterTestHelper.ModelFileNames.Retention, retentions);
-            var categories = new DelftIniReader().ReadDelftIniFile(FileWriterTestHelper.ModelFileNames.Retention);
+            var retentionFilePath = Path.Combine(FileWriterTestHelper.TargetPath, "Retention.ini");
+            RetentionFileWriter.WriteFile(retentionFilePath, retentions);
+            var categories = new DelftIniReader().ReadDelftIniFile(retentionFilePath);
             Assert.AreEqual(1, categories.Count(g => g.Name == GeneralRegion.IniHeader));
             Assert.AreEqual(5, categories.Count(c => c.Name == RetentionRegion.Header));
             var retention = categories.Where(c => c.Name == RetentionRegion.Header).ElementAt(0);
@@ -250,7 +252,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
                     Data = data
                 },
             };
-            RetentionFileWriter.WriteFile(FileWriterTestHelper.ModelFileNames.Retention, retentions);
+            RetentionFileWriter.WriteFile(Path.Combine(FileWriterTestHelper.TargetPath, "Retention.ini"), retentions);
         }
 
         [Test]
@@ -278,7 +280,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
                     Data = data
                 },
             };
-            RetentionFileWriter.WriteFile(FileWriterTestHelper.ModelFileNames.Retention, retentions);
+            RetentionFileWriter.WriteFile(Path.Combine(FileWriterTestHelper.TargetPath, "Retention.ini"), retentions);
         }
 
         [Test]
@@ -306,7 +308,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
                     Data = data
                 },
             };
-            RetentionFileWriter.WriteFile(FileWriterTestHelper.ModelFileNames.Retention, retentions);
+            RetentionFileWriter.WriteFile(Path.Combine(FileWriterTestHelper.TargetPath, "Retention.ini"), retentions);
         }
 
 

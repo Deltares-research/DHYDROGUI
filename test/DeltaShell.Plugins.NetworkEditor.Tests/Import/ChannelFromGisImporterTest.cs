@@ -7,16 +7,15 @@ using DelftTools.TestUtils;
 using DeltaShell.Plugins.NetworkEditor.Import;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
-using NetTopologySuite.Geometries;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Networks;
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using Rhino.Mocks;
 using SharpMap.Api;
 using SharpMap.Converters.WellKnownText;
 using SharpMap.Data.Providers;
 using SharpMap.Extensions.Data.Providers;
-using Point = NetTopologySuite.Geometries.Point;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
 {

@@ -1,12 +1,13 @@
-﻿using DeltaShell.NGHS.IO.Handlers;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using DelftTools.Functions;
+using DeltaShell.NGHS.IO.Handlers;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
 {
@@ -15,8 +16,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
     {
         private RealTimeControlTimeSeriesSetter timeSeriesSetter;
         private ILogHandler logHandler;
-        private const string ControlGroupName = "control_group_name";
-        private const string ComponentName = "component_name";
+        private const string controlGroupName = "control_group_name";
+        private const string componentName = "component_name";
         private IControlGroup controlGroup;
 
         [SetUp]
@@ -92,9 +93,125 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
                 "When calling the method (RealTimeControlTimeSeriesSetter.SetTimeSeries()) with null parameters it threw an unexpected exception.");
         }
 
+        [Test]
+        public void GivenTimeSeriesXmlObjectForAnIntervalRuleWithAFixedSetpoint_WhenSetTimeSeriesIsCalled_ThenTheConstantValueOfTimeSeriesShouldBeSetAsDefaultValue()
+        {
+            // Given
+            var timeSeriesElements = CreateTimeSeriesElementList(RtcXmlTag.IntervalRule, 2, 2);
+            controlGroup = CreateControlGroupWithAnIntervalRule(IntervalRule.IntervalRuleIntervalType.Fixed);
+
+            // When
+            timeSeriesSetter.SetTimeSeries(timeSeriesElements, new[] { controlGroup });
+            
+            // Then
+            TimeSeries intervalRuleTimeSeries = ((IntervalRule)controlGroup.Rules[0]).TimeSeries;
+
+            Assert.AreEqual(2, intervalRuleTimeSeries.Components[0].DefaultValue,"Fixed setpoint value of the interval rule is not imported" );
+            Assert.AreEqual(0, intervalRuleTimeSeries.GetValues().Count,
+                "Expected was that the number of time series record would be zero after importing the time serie on the interval rule with a fixed setpoint.");
+        }
+
+        [Test]
+        public void GivenTimeSeriesXmlObjectWithoutValuesForAnIntervalRuleWithAFixedSetpoint_WhenSetTimeSeriesIsCalled_ThenAWarningShouldBeGiven()
+        {
+            // Given
+            var locationId = CreateLocationId(RtcXmlTag.IntervalRule);
+
+            var timeSeriesElements = new List<TimeSeriesComplexType>
+            {
+                new TimeSeriesComplexType
+                {
+                    header = new HeaderComplexType
+                    {
+                        locationId = locationId
+                    }
+                }
+            };
+
+            controlGroup = CreateControlGroupWithAnIntervalRule(IntervalRule.IntervalRuleIntervalType.Fixed);
+
+            // When
+            timeSeriesSetter.SetTimeSeries(timeSeriesElements, new[] {controlGroup});
+            
+            // Then
+            IntervalRule intervalRule = ((IntervalRule)controlGroup.Rules[0]);
+
+            Assert.AreEqual(0, intervalRule.TimeSeries.Components[0].DefaultValue, "Fixed setpoint value should not be set");
+            Assert.AreEqual(0, intervalRule.TimeSeries.GetValues().Count,
+                "Expected was that the number of time series record would be zero after importing the time serie on the interval rule with a fixed setpoint.");
+
+            var expectedMessage = string.Format(
+                Resources.RealTimeControlTimeSeriesSetter_For_interval_rule_with_id__0__there_is_no_time_data_found_in_file__1__for_setting_the_fixed_setpoint_value,
+                intervalRule.Name, RealTimeControlXMLFiles.XmlTimeSeries);
+
+          // Then
+            Assert.IsTrue(logHandler.LogMessagesTable.WarningMessages.Contains(expectedMessage),
+                "The collected log messages did not contain the expected message.");
+        }
+
+        [Test]
+        public void
+            GivenTimeSeriesXmlObjectForAnIntervalRuleWithASignalIntervalType_WhenSetTimeSeriesIsCalled_ThenAWarningShouldBeGiven()
+        {
+            // Given
+            string locationId = CreateLocationId(RtcXmlTag.IntervalRule);
+
+            var timeSeriesElements = new List<TimeSeriesComplexType>
+            {
+                new TimeSeriesComplexType {header = new HeaderComplexType {locationId = locationId}}
+            };
+
+            controlGroup = CreateControlGroupWithAnIntervalRule(IntervalRule.IntervalRuleIntervalType.Signal);
+
+            // When
+            timeSeriesSetter.SetTimeSeries(timeSeriesElements, new[]
+            {
+                controlGroup
+            });
+
+            // Then
+            string expectedMessage = string.Format(
+                Resources.RealTimeControlTimeSeriesConnector_ConnectTimeSeries_Rule__with_id___0___does_not_seem_to_use_a_time_serie_as_setpoint__See_file____1___Therefore_the_time_serie_is_not_imported,
+                locationId, RealTimeControlXMLFiles.XmlTimeSeries);
+
+            Assert.That(logHandler.LogMessagesTable.WarningMessages.Contains(expectedMessage),
+                        "The collected log messages did not contain the expected message.");
+        }
+
+        [TestCase(PIDRule.PIDRuleSetpointType.Signal)]
+        [TestCase(PIDRule.PIDRuleSetpointType.Constant)]
+        public void
+            GivenTimeSeriesXmlObjectForAnPIDRuleWithoutSetPointTypeNotTimeSeries_WhenSetTimeSeriesIsCalled_ThenAWarningShouldBeGiven(
+                PIDRule.PIDRuleSetpointType setPointType)
+        {
+            // Given
+            string locationId = CreateLocationId(RtcXmlTag.PIDRule);
+
+            var timeSeriesElements = new List<TimeSeriesComplexType>
+            {
+                new TimeSeriesComplexType {header = new HeaderComplexType {locationId = locationId}}
+            };
+
+            controlGroup = CreateControlGroupWithAPIDRule(setPointType);
+
+            // When
+            timeSeriesSetter.SetTimeSeries(timeSeriesElements, new[]
+            {
+                controlGroup
+            });
+
+            // Then
+            string expectedMessage = string.Format(
+                Resources.RealTimeControlTimeSeriesConnector_ConnectTimeSeries_Rule__with_id___0___does_not_seem_to_use_a_time_serie_as_setpoint__See_file____1___Therefore_the_time_serie_is_not_imported,
+                locationId, RealTimeControlXMLFiles.XmlTimeSeries);
+
+            Assert.That(logHandler.LogMessagesTable.WarningMessages.Contains(expectedMessage),
+                        "The collected log messages did not contain the expected message.");
+        }
+
         private static string CreateLocationId(string tag)
         {
-            return $"{tag}{ControlGroupName}/{ComponentName}";
+            return $"{tag}{controlGroupName}/{componentName}";
         }
 
         private static List<TimeSeriesComplexType> CreateTimeSeriesElementList(string tag, double value1, double value2)
@@ -156,8 +273,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
 
         private static ControlGroup CreateControlGroupWithAStandardCondition()
         {
-            var standardCondition = new StandardCondition {Name = ComponentName};
-            var controlGroup = new ControlGroup {Name = ControlGroupName};
+            var standardCondition = new StandardCondition {Name = componentName};
+            var controlGroup = new ControlGroup {Name = controlGroupName};
             controlGroup.Conditions.Add(standardCondition);
             Assert.IsFalse(standardCondition is ITimeDependentRtcObject,
                 "Expected was that this object was not an TimeDependentRtcObject. If it is, this test is not valid anymore.");
@@ -167,8 +284,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
 
         private static ControlGroup CreateControlGroupWithATimeCondition()
         {
-            var timeCondition = new TimeCondition {Name = ComponentName};
-            var controlGroup = new ControlGroup {Name = ControlGroupName};
+            var timeCondition = new TimeCondition {Name = componentName};
+            var controlGroup = new ControlGroup {Name = controlGroupName};
             controlGroup.Conditions.Add(timeCondition);
             Assert.AreEqual(0, timeCondition.TimeSeries.GetValues().Count, 
                 "Expected was that the number of time series record would be zero before setting the time series on the time condition.");
@@ -178,11 +295,34 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
 
         private static ControlGroup CreateControlGroupWithATimeRule()
         {
-            var timeRule = new TimeRule(ComponentName);
-            var controlGroup = new ControlGroup {Name = ControlGroupName};
+            var timeRule = new TimeRule(componentName);
+            var controlGroup = new ControlGroup {Name = controlGroupName};
             controlGroup.Rules.Add(timeRule);
             Assert.AreEqual(0, timeRule.TimeSeries.GetValues().Count,
                 "Expected was that the number of time series record would be zero before setting the time series on the time rule.");
+
+            return controlGroup;
+        }
+
+        private static ControlGroup CreateControlGroupWithAnIntervalRule(
+            IntervalRule.IntervalRuleIntervalType intervalType)
+        {
+            var intervalRule = new IntervalRule(componentName) {IntervalType = intervalType};
+            var controlGroup = new ControlGroup {Name = controlGroupName};
+            controlGroup.Rules.Add(intervalRule);
+            Assert.AreEqual(0, intervalRule.TimeSeries.GetValues().Count,
+                            "Expected was that the number of time series record would be zero before setting the time series on the interval rule.");
+
+            return controlGroup;
+        }
+
+        private static ControlGroup CreateControlGroupWithAPIDRule(PIDRule.PIDRuleSetpointType setPointType)
+        {
+            var pidRule = new PIDRule(componentName) { PidRuleSetpointType = setPointType };
+            var controlGroup = new ControlGroup { Name = controlGroupName };
+            controlGroup.Rules.Add(pidRule);
+            Assert.AreEqual(0, pidRule.TimeSeries.GetValues().Count,
+                            "Expected was that the number of time series record would be zero before setting the time series on the pid rule.");
 
             return controlGroup;
         }

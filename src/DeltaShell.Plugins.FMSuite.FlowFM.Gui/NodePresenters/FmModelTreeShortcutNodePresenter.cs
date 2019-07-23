@@ -1,17 +1,17 @@
-﻿using DeltaShell.NGHS.IO.Grid;
+﻿using System;
+using System.IO;
+using System.Linq;
+using System.Windows.Forms;
+using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.Common.Gui.NodePresenters;
 using DeltaShell.Plugins.FMSuite.Common.Gui.RgfGrid;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using NetTopologySuite.Extensions.Grids;
-using System;
-using System.IO;
-using System.Linq;
-using System.Windows.Forms;
-using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
 {
@@ -74,6 +74,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
             {
                 DelftTools.Controls.Swf.MessageBox.Show(exception.Message, "Grid was not saved in RGFGRID", MessageBoxButtons.OK);
                 model.Grid = NetFileImporter.ImportGrid(model.NetFilePath) ?? new UnstructuredGrid();
+            }
+            catch (Exception e) when (e.Message.Contains("NetCDF error code -51"))
+            {
+                log.InfoFormat("Could not read {0} due to the following exception: {1}", model.NetFilePath, e.Message);
             }
             catch (Exception exception)
             {

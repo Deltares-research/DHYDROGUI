@@ -11,12 +11,11 @@ using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
-using NetTopologySuite.Geometries;
 using NetTopologySuite.Extensions.Actions;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Networks;
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
-using Point = NetTopologySuite.Geometries.Point;
 
 namespace DelftTools.Hydro.Tests.Helpers
 {

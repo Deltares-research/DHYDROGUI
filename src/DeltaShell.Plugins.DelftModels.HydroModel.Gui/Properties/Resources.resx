@@ -142,33 +142,6 @@
   <data name="Common_Name_DisplayName" xml:space="preserve">
     <value>Name</value>
   </data>
-  <data name="Iterative1D2DCouplerProperties_DisplayName" xml:space="preserve">
-    <value>Iterative1D2DCoupler</value>
-  </data>
-  <data name="Iterative1D2DCoupler_MaxError" xml:space="preserve">
-    <value>Max. Error</value>
-  </data>
-  <data name="Iterative1D2DCoupler_MaxError_Description" xml:space="preserve">
-    <value>Maximum relative mass error.</value>
-  </data>
-  <data name="Iterative1D2DCoupler_MaxIteration" xml:space="preserve">
-    <value>Max. Iterations</value>
-  </data>
-  <data name="Iterative1D2DCoupler_MaxIteration_Description" xml:space="preserve">
-    <value>Maximum number of iterations per time step.</value>
-  </data>
-  <data name="Iterative1D2DCoupler_CreateDebugMessages" xml:space="preserve">
-    <value>Create debug messages</value>
-  </data>
-  <data name="Iterative1D2DCoupler_CreateDebugMessages_Description" xml:space="preserve">
-    <value>When activated, an extra log file will be created with all the log messages of this activity</value>
-  </data>
-  <data name="Iterative1D2DCoupler_Refresh1d2dLinks" xml:space="preserve">
-    <value>Generate 1d2d links</value>
-  </data>
-  <data name="Iterative1D2DCoupler_Refresh1d2dLinks_Description" xml:space="preserve">
-    <value>When activated, every change in either grid will result into a refresh of the mapping between the two models, which can be a time-consuming operation</value>
-  </data>
   <data name="HydroModelGuiPlugin_GetContextMenu_Turn_into_Integrated_Model" xml:space="preserve">
     <value>Turn into Integrated Model</value>
   </data>

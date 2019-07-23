@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Xml;
 using DelftTools.TestUtils;
 using DeltaShell.Dimr.xsd;
 using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.Handlers;
 using NUnit.Framework;
-using System.IO;
-using System.Linq;
-using System.Xml;
 using Rhino.Mocks;
 
 namespace DeltaShell.NGHS.IO.Tests.FileReaders

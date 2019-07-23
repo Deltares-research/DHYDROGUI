@@ -43,12 +43,9 @@ using DeltaShell.Plugins.SharpMapGis.Gui.Forms.CoverageViews;
 using Mono.Addins;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
-using SharpMap.Api;
 using SharpMap.Api.Layers;
 using SharpMap.Data.Providers;
 using SharpMap.Layers;
-using BridgePillar = DelftTools.Hydro.Structures.BridgePillar;
-using FeatureCollectionViewInfoHelper = DeltaShell.Plugins.FMSuite.Common.Gui.FeatureCollectionViewInfoHelper;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 {
@@ -600,6 +597,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                                   .GetViewContext(typeof(ProjectItemMapView), fmModel) as ProjectItemMapViewContext;
 
                 GeneratedMapLayerInfo bedLevelLayer = viewContext?.GeneratedMapLayerInfoList?
+                    .Where(l => l != null && l.Name != null)
                     .FirstOrDefault(l => l.Name.Equals("Bed Level"));
 
                 if (bathymetry?.Components?[0]?.MinValue is double minValue &&

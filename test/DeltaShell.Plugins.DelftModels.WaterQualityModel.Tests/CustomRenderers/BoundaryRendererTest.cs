@@ -1,18 +1,18 @@
-﻿using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects;
+﻿using System;
+using System.Drawing;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.CustomRenderers;
+using GeoAPI.CoordinateSystems.Transformations;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
-using SharpMap;
-using SharpMap.Layers;
-using System;
-using System.Drawing;
-using GeoAPI.CoordinateSystems.Transformations;
 using Rhino.Mocks;
+using SharpMap;
 using SharpMap.Api;
 using SharpMap.Api.Layers;
+using SharpMap.Layers;
 using Point = NetTopologySuite.Geometries.Point;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.CustomRenderers

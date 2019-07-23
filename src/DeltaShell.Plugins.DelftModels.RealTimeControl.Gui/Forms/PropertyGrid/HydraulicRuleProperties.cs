@@ -15,45 +15,58 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.PropertyGrid
         [ResourcesCategory(typeof(Resources), "Categories_General")]
         [ResourcesDisplayName(typeof(Resources), "Common_Name_DisplayName")]
         [ResourcesDescription(typeof(Resources), "Rule_Name_Description")]
+        [PropertyOrder(1)]
         public string Name
         {
-            get { return data.Name; }
-            set { data.Name = value; }
+            get => data.Name;
+            set => data.Name = value;
         }
 
         [ResourcesCategory(typeof(Resources), "Categories_General")]
         [ResourcesDisplayName(typeof(Resources), "Common_LongName_DisplayName")]
         [ResourcesDescription(typeof(Resources), "Rule_LongName_Description")]
+        [PropertyOrder(2)]
         public string LongName
         {
-            get { return data.LongName; }
-            set { data.LongName = value; }
+            get => data.LongName;
+            set => data.LongName = value;
         }
 
-        [ResourcesCategory(typeof(Resources), "Categories_General")]
+        [ResourcesCategory(typeof(Resources), "Category_Data")]
         [ResourcesDisplayName(typeof(Resources), "HydraulicRuleProperties_TimeLag_DisplayName")]
         [ResourcesDescription(typeof(Resources), "HydraulicRuleProperties_TimeLag_Description")]
+        [PropertyOrder(3)]
         public int TimeLag
         {
-            get { return data.TimeLag; }
-            set { data.TimeLag = value; }
+            get => data.TimeLag;
+            set => data.TimeLag = value;
         }
 
-        [ResourcesCategory(typeof(Resources), "Category_Table")]
+        [Editor(typeof(ViewPropertyEditor), typeof(UITypeEditor))]
+        [ResourcesCategory(typeof(Resources), "Category_Data")]
+        [ResourcesDisplayName(typeof(Resources), "Table_DisplayName")]
+        [ResourcesDescription(typeof(Resources), "RTC_Table_Description")]
+        [PropertyOrder(4)]
+        public Function Table
+        {
+            get
+            {
+                UpdateFunctionArgumentName(); //OMFG!!
+                UpdateFunctionComponentName();
+
+                return data.Function;
+            }
+            set => data.Function = value;
+        }
+
+        [ResourcesCategory(typeof(Resources), "RTC_Category_InterpolationExtrapolation")]
         [ResourcesDisplayName(typeof(Resources), "RTC_Interpolation_DisplayName")]
         [ResourcesDescription(typeof(Resources), "RTC_Interpolation_Description")]
+        [PropertyOrder(5)]
         public InterpolationHydraulicType Interpolation
         {
-            get { return (InterpolationHydraulicType) data.Interpolation; }
-            set { data.Interpolation = (InterpolationType) value; }
-        }
-
-        [ResourcesCategory(typeof(Resources), "Category_Table")]
-        [ResourcesDisplayName(typeof(Resources), "RTC_Extrapolation_DisplayName")]
-        [ResourcesDescription(typeof(Resources), "RTC_Extrapolation_Description")]
-        public ExtrapolationHydraulicType Extrapolation
-        {
-            get { return (ExtrapolationHydraulicType) data.Extrapolation; }
+            get => (InterpolationHydraulicType) data.Interpolation;
+            set => data.Interpolation = (InterpolationType) value;
         }
         
         /// <summary>
@@ -107,21 +120,5 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.PropertyGrid
             SetVariableName(data.Function.Components[0], "<output undefined>");
         }
 
-
-        [Editor(typeof(ViewPropertyEditor), typeof(UITypeEditor))]
-        [ResourcesCategory(typeof(Resources), "Category_Table")]
-        [ResourcesDisplayName(typeof(Resources), "Table_DisplayName")]
-        [ResourcesDescription(typeof(Resources), "RTC_Table_Description")]
-        public Function Table
-        {
-            get
-            {
-                UpdateFunctionArgumentName(); //OMFG!!
-                UpdateFunctionComponentName();
-
-                return data.Function;
-            }
-            set { data.Function = value; }
-        }
     }
 }

@@ -88,15 +88,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 TryRetreivingMessage(Resources.WaterFlowFMBoundaryConditionValidator_ValidateMorphologyBoundaryHaveHydroBoundaries_Morphology_boundary_condition_must_have_a_Hydro_boundary_condition_);
                 TryRetreivingMessage(Resources.WaterFlowFMBoundaryConditionValidator_ValidateSedimentConcentrationBoundaryHaveHydroBoundaries_Sediment_concentration_boundary_condition_must_have_a_Hydro_boundary_condition_);
                 TryRetreivingMessage(Resources.WaterFlowFMBoundaryConditionValidator_ValidateSupportPointNames_Custom_support_point_name__0__is_not_yet_supported_by_the_dflow_fm_kernel__please_change_it_to__1_);
-                TryRetreivingMessage(Resources.WaterFlowFMModel_SetVar_FM_Model__0__is_part_of_a_1D2D_model_and_can_t_have_morphology_properties_and___or_sediments__Removing_these_properties_from_the_model);
                 TryRetreivingMessage(Resources.WaterFlowFMModelDefinition_SelectSpatialOperations_Duplication_of_spatial_operations_for__0___Please_verify_the_model_after_saving_);
-                TryRetreivingMessage(Resources.WaterFlowFMModelDefinition_SetMapFormatPropertyValue_MapFormat_property_value_of_FlowFM_model__0__is_changed_to_1__because_it_is_part_of_an_1D2D_integrated_model_);
                 TryRetreivingMessage(Resources.WaterFlowFMModelDefinition_SetMapFormatPropertyValue_MapFormat_property_value_of_FlowFM_model__0__is_changed_to_4_due_to_activation_of_Morphology_);
                 TryRetreivingMessage(Resources.WaterFlowFMModelDefinitionValidator_Validate_);
                 TryRetreivingMessage(Resources.UnstructuredGridCoverageExtensions_ToPointCloud_Converting_time_dependent_spatial_data_to_samples_is_not_supported);
                 TryRetreivingMessage(Resources.UnstructuredGridCoverageExtensions_ToPointCloud_Converting_a_non_double_valued_coverage_component_to_a_point_cloud_is_not_supported);
                 TryRetreivingMessage(Resources.UnstructuredGridCoverageExtensions_ToPointCloud_Spatial_data_is_not_consistent__number_of_coordinate_does_not_match_number_of_values);
-                TryRetreivingMessage(Resources.GridHelper_CreateUnstructuredGridFromNetCdfFor1D2DLinks_It_was_not_possible_to_load_from_file___0___LogFilePath___1_);
             }
             catch (Exception e)
             {

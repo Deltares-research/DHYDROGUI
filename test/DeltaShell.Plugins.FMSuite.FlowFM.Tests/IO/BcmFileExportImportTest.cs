@@ -1,24 +1,22 @@
-﻿using DelftTools.TestUtils;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using DelftTools.TestUtils;
 using DelftTools.Units;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
-using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
-using GeoAPI.Geometries;
-using NetTopologySuite.Extensions.Features;
-using NetTopologySuite.Geometries;
-using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccess;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.Sediment;
+using GeoAPI.Geometries;
+using NetTopologySuite.Extensions.Features;
+using NetTopologySuite.Geometries;
+using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 {

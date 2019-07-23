@@ -3,7 +3,7 @@ using System.Globalization;
 using DelftTools.Hydro;
 using GeoAPI.Extensions.Coverages;
 using NetTopologySuite.Extensions.Coverages;
-using Point = NetTopologySuite.Geometries.Point;
+using NetTopologySuite.Geometries;
 
 namespace DeltaShell.NGHS.IO.TestUtils
 {

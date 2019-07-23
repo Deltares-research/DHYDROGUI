@@ -1,7 +1,7 @@
-﻿using log4net;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using log4net;
 
 namespace DeltaShell.NGHS.IO.Handlers
 {

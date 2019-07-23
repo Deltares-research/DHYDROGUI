@@ -996,7 +996,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             //Set up the model and the substances
 
             #region  Set up model
-            var modelFilePath = TestHelper.GetTestFilePath(@"Zwolle\sobek.hyd");
+            var modelFilePath = TestHelper.GetTestFilePath(@"ValidWaqModels\\Flow1D\\sobek.hyd");
             Assert.IsTrue(File.Exists(modelFilePath));
 
             var importer = new HydFileImporter();
@@ -1004,7 +1004,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             {
                 Assert.IsNotNull(waqModel);
 
-                var subsFilePath = TestHelper.GetTestFilePath(@"Zwolle\substances\02b_Oxygen_bod_sediment.sub");
+                var subsFilePath = TestHelper.GetTestFilePath(@"ValidWaqModels\\02b_Oxygen_bod_sediment.sub");
                 Assert.IsTrue(File.Exists(subsFilePath));
                 new SubFileImporter().Import(waqModel.SubstanceProcessLibrary, subsFilePath);
                 Assert.IsNotNull(waqModel.SubstanceProcessLibrary);
@@ -1036,7 +1036,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             //Set up the model and the substances
 
             #region  Set up model
-            var modelFilePath = TestHelper.GetTestFilePath(@"Zwolle\sobek.hyd");
+            var modelFilePath = TestHelper.GetTestFilePath(@"ValidWaqModels\\Flow1D\\sobek.hyd");
             Assert.IsTrue(File.Exists(modelFilePath));
 
             var importer = new HydFileImporter();
@@ -1044,7 +1044,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             {
                 Assert.IsNotNull(waqModel);
 
-                var subsFilePath = TestHelper.GetTestFilePath(@"Zwolle\substances\02b_Oxygen_bod_sediment.sub");
+                var subsFilePath = TestHelper.GetTestFilePath(@"ValidWaqModels\\02b_Oxygen_bod_sediment.sub");
                 Assert.IsTrue(File.Exists(subsFilePath));
                 new SubFileImporter().Import(waqModel.SubstanceProcessLibrary, subsFilePath);
                 Assert.IsNotNull(waqModel.SubstanceProcessLibrary);
@@ -1082,7 +1082,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             //Set up the model and the substances
 
             #region  Set up model
-            var modelFilePath = TestHelper.GetTestFilePath(@"Zwolle\sobek.hyd");
+            var modelFilePath = TestHelper.GetTestFilePath(@"ValidWaqModels\\Flow1D\\sobek.hyd");
             Assert.IsTrue(File.Exists(modelFilePath));
 
             var importer = new HydFileImporter();
@@ -1090,7 +1090,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             {
                 Assert.IsNotNull(waqModel);
 
-                var subsFilePath = TestHelper.GetTestFilePath(@"Zwolle\substances\02b_Oxygen_bod_sediment.sub");
+                var subsFilePath = TestHelper.GetTestFilePath(@"ValidWaqModels\\02b_Oxygen_bod_sediment.sub");
                 Assert.IsTrue(File.Exists(subsFilePath));
                 new SubFileImporter().Import(waqModel.SubstanceProcessLibrary, subsFilePath);
                 Assert.IsNotNull(waqModel.SubstanceProcessLibrary);

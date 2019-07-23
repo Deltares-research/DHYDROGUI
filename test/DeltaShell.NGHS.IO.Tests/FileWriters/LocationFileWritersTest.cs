@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
@@ -32,11 +33,11 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
             FileWriterTestHelper.AddCrossSection(branch, CrossSectionType.YZ, expectedChainage, 1.5, true);
             FileWriterTestHelper.AddCrossSection(branch, CrossSectionType.GeometryBased, 80.0);
             FileWriterTestHelper.AddCrossSection(branch, CrossSectionType.ZW, 30.0, 2.5, true);
-
-            LocationFileWriter.WriteFileCrossSectionLocations(FileWriterTestHelper.ModelFileNames.CrossSectionLocations, network.CrossSections);
+            string crossSectionLocationFilePath = Path.Combine(FileWriterTestHelper.TargetPath, "CrossSectionLocations.ini");
+        LocationFileWriter.WriteFileCrossSectionLocations(crossSectionLocationFilePath, network.CrossSections);
 
             var delftIniReader = new DelftIniReader();
-            var categories = delftIniReader.ReadDelftIniFile(FileWriterTestHelper.ModelFileNames.CrossSectionLocations);
+            var categories = delftIniReader.ReadDelftIniFile(crossSectionLocationFilePath);
 
             Assert.AreEqual(1, categories.Count(g => g.Name == GeneralRegion.IniHeader));
             Assert.AreEqual(3, categories.Count(op => op.Name == CrossSectionRegion.IniHeader));
@@ -66,11 +67,11 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
             FileWriterTestHelper.AddObservationPoint(branch, expectedId, expectedName, expectedChainage);
             FileWriterTestHelper.AddObservationPoint(branch, 2, "observationPoint2", 40.0);
             FileWriterTestHelper.AddObservationPoint(branch, 3, "observationPoint3", 60.0);
-
-            LocationFileWriter.WriteFileObservationPointLocations(FileWriterTestHelper.ModelFileNames.ObservationPoints, network.ObservationPoints);
+            string observationPointsFilePath = Path.Combine(FileWriterTestHelper.TargetPath, "ObservationPoints.ini");
+            LocationFileWriter.WriteFileObservationPointLocations(observationPointsFilePath, network.ObservationPoints);
 
             var delftIniReader = new DelftIniReader();
-            var categories = delftIniReader.ReadDelftIniFile(FileWriterTestHelper.ModelFileNames.ObservationPoints);
+            var categories = delftIniReader.ReadDelftIniFile(observationPointsFilePath);
 
             Assert.AreEqual(1, categories.Count(g => g.Name == GeneralRegion.IniHeader));
             Assert.AreEqual(3, categories.Count(op => op.Name == ObservationPointRegion.IniHeader));
@@ -112,11 +113,11 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
 
             branch.BranchFeatures.Add(new LateralSource());
             branch.BranchFeatures.Add(new LateralSource());
-
-            LocationFileWriter.WriteFileLateralDischargeLocations(FileWriterTestHelper.ModelFileNames.LateralDischarge, network.LateralSources);
+            string lateralDischargeFilePath = Path.Combine(FileWriterTestHelper.TargetPath, "LateralDischargeLocations.ini");
+            LocationFileWriter.WriteFileLateralDischargeLocations(lateralDischargeFilePath, network.LateralSources);
 
             var delftIniReader = new DelftIniReader();
-            var categories = delftIniReader.ReadDelftIniFile(FileWriterTestHelper.ModelFileNames.LateralDischarge);
+            var categories = delftIniReader.ReadDelftIniFile(lateralDischargeFilePath);
 
             Assert.AreEqual(1, categories.Count(g => g.Name == GeneralRegion.IniHeader));
             Assert.AreEqual(3, categories.Count(l => l.Name == BoundaryRegion.LateralDischargeHeader));

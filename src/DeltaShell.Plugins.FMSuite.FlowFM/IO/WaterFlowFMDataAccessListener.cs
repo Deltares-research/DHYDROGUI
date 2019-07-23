@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using DelftTools.Functions.Generic;
 using DelftTools.Shell.Core.Dao;
 using DelftTools.Shell.Core.Workflow;
@@ -12,9 +15,6 @@ using GeoAPI.Extensions.Coverages;
 using log4net;
 using NetTopologySuite.Extensions.Coverages;
 using SharpMap.SpatialOperations;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
@@ -42,10 +42,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 UpdateDataItemNames(model);
                 FixImportFilePaths(model);
                 LoadSpatialData(model);
-                if (ProjectRepository.IsLegacyProject(ProjectRepository.Path))
-                {
-                    model.ClearOutput();
-                }
 
                 // BedLevel dataitem value used to be exclusively UnstructuredGridVertexCoverages, now it needs to be more generic
                 IDataItem bedLevelDataItem =

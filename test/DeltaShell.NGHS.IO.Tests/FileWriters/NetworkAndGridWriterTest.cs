@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
@@ -68,8 +69,9 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
         [Test]
         public void TestNetworkAndGridWriter()
         {
-            NetworkAndGridWriter.WriteFile(FileWriterTestHelper.ModelFileNames.Network, network, discretization);
-            var categories = new DelftIniReader().ReadDelftIniFile(FileWriterTestHelper.ModelFileNames.Network);
+            var networkFilePath = Path.Combine(FileWriterTestHelper.TargetPath, "NetworkDefinition.ini");
+            NetworkAndGridWriter.WriteFile(networkFilePath, network, discretization);
+            var categories = new DelftIniReader().ReadDelftIniFile(networkFilePath);
             Assert.AreEqual(1, categories.Count(g => g.Name == GeneralRegion.IniHeader));           
             Assert.AreEqual(3, categories.Count(c => c.Name == NetworkDefinitionRegion.IniNodeHeader));
             Assert.AreEqual(2, categories.Count(c => c.Name == NetworkDefinitionRegion.IniBranchHeader));

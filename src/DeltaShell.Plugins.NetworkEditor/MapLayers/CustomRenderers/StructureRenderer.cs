@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using DelftTools.Hydro;
-using DelftTools.Hydro.Structures;
-using DelftTools.Utils.Drawing;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 using SharpMap.Api;

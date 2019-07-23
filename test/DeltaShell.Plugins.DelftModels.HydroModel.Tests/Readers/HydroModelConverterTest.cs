@@ -12,8 +12,6 @@ using DeltaShell.Plugins.DelftModels.HydroModel.Import;
 using DeltaShell.Plugins.DelftModels.HydroModel.Properties;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -71,27 +69,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void ConvertFlow1DModelAndAddToHydroModel()
-        {
-            var dimrPath = TestHelper.GetTestFilePath(Path.Combine("FileReader", "dimr.xml"));
-            var fileImporters = new List<IDimrModelFileImporter>
-            {
-                new WaterFlowModel1DFileImporter()
-            };
-
-            var delftConfigXmlParser = new DelftConfigXmlFileParser(logHandler);
-            var dimrObject = delftConfigXmlParser.Read<dimrXML>(dimrPath);
-            var result = hydroModelConverter.Convert(dimrObject, dimrPath, fileImporters);
-
-            Assert.IsNotNull(result);
-            Assert.That(result, Is.TypeOf<HydroModel>());
-            Assert.That(result.Activities.Count, Is.EqualTo(1));
-            Assert.That(result.Activities.ElementAt(0), Is.TypeOf<WaterFlowModel1D>());
-            Assert.That(result.Activities.Any(), Is.Not.TypeOf<RealTimeControlModel>());
-        }
-
-        [Test]
-        [Category(TestCategory.DataAccess)]
         public void ConvertRtcModelAndAddToHydroModel()
         {
             var dimrPath = TestHelper.GetTestFilePath(Path.Combine("FileReader", "dimr.xml"));
@@ -108,29 +85,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
             Assert.That(result, Is.TypeOf<HydroModel>());
             Assert.That(result.Activities.Count, Is.EqualTo(1));
             Assert.That(result.Activities.ElementAt(0), Is.TypeOf<RealTimeControlModel>());
-            Assert.That(result.Activities.Any(), Is.Not.TypeOf<WaterFlowModel1D>());
-        }
-
-        [Test]
-        [Category(TestCategory.DataAccess)]
-        [Category(TestCategory.Slow)]
-        public void ConvertFlow1DAndRtcModelAndAddToHydroModel()
-        {
-            var dimrPath = TestHelper.GetTestFilePath(Path.Combine("FileReader", "dimr.xml"));
-            var fileImporters = new List<IDimrModelFileImporter>
-            {
-                new RealTimeControlModelImporter(),
-                new WaterFlowModel1DFileImporter()
-            };
-
-            var delftConfigXmlParser = new DelftConfigXmlFileParser(logHandler);
-            var dimrObject = delftConfigXmlParser.Read<dimrXML>(dimrPath);
-            var result = hydroModelConverter.Convert(dimrObject, dimrPath, fileImporters);
-            Assert.IsNotNull(result);
-            Assert.That(result, Is.TypeOf<HydroModel>());
-            Assert.That(result.Activities.Count, Is.EqualTo(2));
-            Assert.That(result.Activities.ElementAt(0), Is.TypeOf<RealTimeControlModel>());
-            Assert.That(result.Activities.ElementAt(1), Is.TypeOf<WaterFlowModel1D>());
         }
 
         [Test]

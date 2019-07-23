@@ -31,7 +31,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Sediment
                         new SpatiallyVaryingSedimentProperty<double>("IniSedThick", 5, 0, false, double.MaxValue, true,
                                                                      "m", "Initial sediment layer thickness at bed",
                                                                      false, false),
-                        new SedimentProperty<double>("FacDss", 1, 0.6, false, 1, false, string.Empty,
+                        new SedimentProperty<double>("FacDss", 1, 0.6, false, 1, false, "-",
                                                      "Factor for suspended sediment diameter", true),
                         new SedimentProperty<double>("RhoSol", 2650, 0, true, 10000, true, "kg/m³", "Specific density",
                                                      false),
@@ -54,7 +54,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Sediment
                         new SpatiallyVaryingSedimentProperty<double>("IniSedThick", 5, 0, false, double.MaxValue, true,
                                                                      "m", "Initial sediment layer thickness at bed",
                                                                      false, false),
-                        new SedimentProperty<double>("FacDss", 1, 0.6, false, 1, false, string.Empty,
+                        new SedimentProperty<double>("FacDss", 1, 0.6, false, 1, false, "-",
                                                      "Factor for suspended sediment diameter", true),
                         new SedimentProperty<double>("RhoSol", 2650, 0, true, 10000, true, "kg/m³", "Specific density",
                                                      false),
@@ -142,13 +142,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Sediment
                                                   "Option for determining suspended sediment diameter", false),
                         new SedimentProperty<double>("Pangle", 0, 0, false, 360, false, "degrees", "Phase lead angle",
                                                      false),
-                        new SedimentProperty<double>("Fpco", 1, -1, false, 1, false, string.Empty,
+                        new SedimentProperty<double>("Fpco", 1, -1, false, 1, false, "-",
                                                      "Coefficient for phase lag effects", false),
                         new SedimentProperty<double>("Subiw", 51, 0, true, double.MaxValue, true, string.Empty,
                                                      "Wave period subdivision", false),
                         new SedimentProperty<bool>("EpsPar", false, false, false, true, false, string.Empty,
                                                    "Use Van Rijn's parabolic mixing coefficient", false),
-                        new SedimentProperty<double>("GamTcr", 1.5, 1, false, double.MaxValue, true, string.Empty,
+                        new SedimentProperty<double>("GamTcr", 1.5, 1, false, double.MaxValue, true, "-",
                                                      "Coefficient for grain size effect", false),
                         new SedimentProperty<double>("SalMax", 0, 0, false, double.MaxValue, true, "ppt",
                                                      "Salinity for saline settling velocity", false),
@@ -162,9 +162,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Sediment
                     {
                         new SedimentProperty<int>("IopSus", 0, 0, false, 1, false, string.Empty,
                                                   "Option for determining suspended sediment diameter", false),
-                        new SedimentProperty<double>("AksFac", 1, 0, true, double.MaxValue, true, string.Empty,
+                        new SedimentProperty<double>("AksFac", 1, 0, true, double.MaxValue, true, "-",
                                                      "Calibration factor for Van Rijn’s reference height", false),
-                        new SedimentProperty<double>("Rwave", 2, 0, true, double.MaxValue, true, string.Empty,
+                        new SedimentProperty<double>("Rwave", 2, 0, true, double.MaxValue, true, "-",
                                                      "Calibration factor wave roughness height", false),
                         new SedimentProperty<double>("RDC", 0.01, 0, true, double.MaxValue, true, "m",
                                                      "Current related roughness ks", false),
@@ -182,7 +182,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Sediment
                     TraFrm = 1,
                     Properties = new EventedList<ISedimentProperty>()
                     {
-                        new SedimentProperty<double>("ACal", 1, 0, true, double.MaxValue, true, string.Empty,
+                        new SedimentProperty<double>("ACal", 1, 0, true, double.MaxValue, true, "-",
                                                      "Calibration coefficient", false),
                         new SedimentProperty<double>("SusFac", 0, 0, false, 1, false, string.Empty,
                                                      "Fraction transported as suspended load (0 to 1)", false),
@@ -194,7 +194,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Sediment
                     TraFrm = 2,
                     Properties = new EventedList<ISedimentProperty>()
                     {
-                        new SedimentProperty<double>("ACal", 1, 0, true, double.MaxValue, true, string.Empty,
+                        new SedimentProperty<double>("ACal", 1, 0, true, double.MaxValue, true, "-",
                                                      "Calibration coefficient", false),
                     }
                 },
@@ -204,7 +204,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Sediment
                     TraFrm = 3,
                     Properties = new EventedList<ISedimentProperty>()
                     {
-                        new SedimentProperty<double>("ACal", 1, 0, true, double.MaxValue, true, string.Empty,
+                        new SedimentProperty<double>("ACal", 1, 0, true, double.MaxValue, true, "-",
                                                      "Calibration coefficient", false),
                     }
                 },
@@ -214,15 +214,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Sediment
                     TraFrm = 4,
                     Properties = new EventedList<ISedimentProperty>()
                     {
-                        new SedimentProperty<double>("ACal", 8, 0, true, double.MaxValue, true, string.Empty,
+                        new SedimentProperty<double>("ACal", 8, 0, true, double.MaxValue, true, "-",
                                                      "Calibration coefficient", false),
-                        new SedimentProperty<double>("PowerB", 0, 0, false, double.MaxValue, true, string.Empty,
+                        new SedimentProperty<double>("PowerB", 0, 0, false, double.MaxValue, true, "-",
                                                      "Power b", false),
-                        new SedimentProperty<double>("PowerC", 1.5, 0, false, double.MaxValue, true, string.Empty,
+                        new SedimentProperty<double>("PowerC", 1.5, 0, false, double.MaxValue, true, "-",
                                                      "power c", false),
-                        new SedimentProperty<double>("RipFac", 1, 0, true, double.MaxValue, true, string.Empty,
+                        new SedimentProperty<double>("RipFac", 1, 0, true, double.MaxValue, true, "-",
                                                      "Ripple factor or efficiency factor", false),
-                        new SedimentProperty<double>("ThetaC", 0.047, 0, true, double.MaxValue, true, string.Empty,
+                        new SedimentProperty<double>("ThetaC", 0.047, 0, true, double.MaxValue, true, "-",
                                                      "Critical mobility factor", false),
                     }
                 },
@@ -232,13 +232,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Sediment
                     TraFrm = 5,
                     Properties = new EventedList<ISedimentProperty>()
                     {
-                        new SedimentProperty<double>("CalBs", 5, 0, true, double.MaxValue, true, string.Empty,
+                        new SedimentProperty<double>("CalBs", 5, 0, true, double.MaxValue, true, "-",
                                                      "Calibration coefficient b for shallow water", false),
-                        new SedimentProperty<double>("CalBd", 2, 0, true, double.MaxValue, true, string.Empty,
+                        new SedimentProperty<double>("CalBd", 2, 0, true, double.MaxValue, true, "-",
                                                      "Calibration coefficient b for deep water", false),
-                        new SedimentProperty<double>("CritCs", 0.05, 0, true, 1, true, string.Empty,
+                        new SedimentProperty<double>("CritCs", 0.05, 0, true, 1, true, "-",
                                                      "Shallow water(hw/h) criterion", false),
-                        new SedimentProperty<double>("CritCd", 0.4, 0, true, 1, true, string.Empty,
+                        new SedimentProperty<double>("CritCd", 0.4, 0, true, 1, true, "-",
                                                      "Deep water(hw/h) criterion", false),
                         new SedimentProperty<double>("RouKs", 0.01, 0, true, double.MaxValue, true, "m",
                                                      "Bed roughness height", false),
@@ -256,7 +256,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Sediment
                     TraFrm = 7,
                     Properties = new EventedList<ISedimentProperty>()
                     {
-                        new SedimentProperty<double>("ACal", 1, 0, true, double.MaxValue, true, string.Empty,
+                        new SedimentProperty<double>("ACal", 1, 0, true, double.MaxValue, true, "-",
                                                      "Calibration coefficient", false),
                         new SedimentProperty<double>("Aks", 0.1, 0, true, double.MaxValue, true, "m",
                                                      "Reference height", false),
@@ -272,7 +272,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Sediment
                     TraFrm = 11,
                     Properties = new EventedList<ISedimentProperty>()
                     {
-                        new SedimentProperty<double>("ACal", 1, 0, true, double.MaxValue, true, string.Empty,
+                        new SedimentProperty<double>("ACal", 1, 0, true, double.MaxValue, true, "-",
                                                      "Calibration coefficient", false),
                         new SedimentProperty<double>("RatioD90D50", 1.5, 1, true, double.MaxValue, true, string.Empty,
                                                      "D90/D50 ratio", false),
@@ -286,7 +286,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Sediment
                     TraFrm = 12,
                     Properties = new EventedList<ISedimentProperty>()
                     {
-                        new SedimentProperty<double>("ACal", 1, 0, true, double.MaxValue, true, string.Empty,
+                        new SedimentProperty<double>("ACal", 1, 0, true, double.MaxValue, true, "-",
                                                      "Calibration coefficient", false),
                         new SedimentProperty<int>("ModInd", 1, 1, false, 8, false, string.Empty, "Model index", false),
                         new SedimentProperty<double>("RatioD50Z0", 0.2, 0, true, double.MaxValue, true, string.Empty,
@@ -299,15 +299,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Sediment
                     TraFrm = 14,
                     Properties = new EventedList<ISedimentProperty>()
                     {
-                        new SedimentProperty<double>("ACal", 1, 0, true, double.MaxValue, true, string.Empty,
+                        new SedimentProperty<double>("ACal", 1, 0, true, double.MaxValue, true, "-",
                                                      "Calibration coefficient", false),
-                        new SedimentProperty<double>("ThetaC", 0.05, 0, false, double.MaxValue, true, string.Empty,
+                        new SedimentProperty<double>("ThetaC", 0.05, 0, false, double.MaxValue, true, "-",
                                                      "Critical mobility factor", false),
-                        new SedimentProperty<double>("PowerM", 1.5, 0, false, double.MaxValue, true, string.Empty,
+                        new SedimentProperty<double>("PowerM", 1.5, 0, false, double.MaxValue, true, "-",
                                                      "Power m", false),
-                        new SedimentProperty<double>("PowerP", 1, 0, false, double.MaxValue, true, string.Empty,
+                        new SedimentProperty<double>("PowerP", 1, 0, false, double.MaxValue, true, "-",
                                                      "Power p", false),
-                        new SedimentProperty<double>("PowerQ", 1, 0, false, double.MaxValue, true, string.Empty,
+                        new SedimentProperty<double>("PowerQ", 1, 0, false, double.MaxValue, true, "-",
                                                      "Power q", false),
                     }
                 },
@@ -317,7 +317,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Sediment
                     TraFrm = 16,
                     Properties = new EventedList<ISedimentProperty>()
                     {
-                        new SedimentProperty<double>("ACal", 1, 0, true, double.MaxValue, true, string.Empty,
+                        new SedimentProperty<double>("ACal", 1, 0, true, double.MaxValue, true, "-",
                                                      "Calibration coefficient", false),
                     }
                 },
@@ -327,9 +327,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Sediment
                     TraFrm = 17,
                     Properties = new EventedList<ISedimentProperty>()
                     {
-                        new SedimentProperty<double>("ThetaC0", 0.021, 0, false, double.MaxValue, true, string.Empty,
+                        new SedimentProperty<double>("ThetaC0", 0.021, 0, false, double.MaxValue, true, "-",
                                                      "Calibration coefficient theta", false),
-                        new SedimentProperty<double>("Alpha0", 0.33, 0, false, 1, true, string.Empty,
+                        new SedimentProperty<double>("Alpha0", 0.33, 0, false, 1, true, "-",
                                                      "Calibration coefficient alpha", false),
                     }
                 },
@@ -339,9 +339,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Sediment
                     TraFrm = 18,
                     Properties = new EventedList<ISedimentProperty>()
                     {
-                        new SedimentProperty<double>("ThetaC0", 0.03, 0, false, double.MaxValue, true, string.Empty,
+                        new SedimentProperty<double>("ThetaC0", 0.03, 0, false, double.MaxValue, true, "-",
                                                      "Calibration coefficient theta", false),
-                        new SedimentProperty<double>("Alpha0", 0.3, 0, false, 1, true, string.Empty,
+                        new SedimentProperty<double>("Alpha0", 0.3, 0, false, 1, true, "-",
                                                      "Calibration coefficient alpha", false),
                     }
                 },

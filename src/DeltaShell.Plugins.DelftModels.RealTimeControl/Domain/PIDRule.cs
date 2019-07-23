@@ -83,9 +83,21 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             set { timeSeries = value; }
         }
 
+        /// <summary>
+        /// Gets the content of the time series that should be added to the timeseries_import.xml file.
+        /// </summary>
+        /// <param name="prefix">The control group name with a separator ('/')</param>
+        /// <param name="start">Start time of the model</param>
+        /// <param name="stop">Stop time of the model</param>
+        /// <param name="step">Time step of the model</param>
+        /// <returns>Objects with the values to write the time series element</returns>
+        /// <remarks>Will only return an element when the <see cref="PidRuleSetpointType"/> is <see cref="PIDRuleSetpointType.TimeSeries"/> /></remarks>
         public override IEnumerable<IXmlTimeSeries> XmlImportTimeSeries(string prefix, DateTime start, DateTime stop, TimeSpan step)
         {
-            yield return GetImportTimeSeries(prefix, start, stop, step);
+            if (PidRuleSetpointType == PIDRuleSetpointType.TimeSeries)
+            {
+                yield return GetImportTimeSeries(prefix, start, stop, step);
+            }
         }
 
         public override IEnumerable<IXmlTimeSeries> XmlExportTimeSeries(string prefix)

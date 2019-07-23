@@ -15,6 +15,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
     public class StructureFileWriterTest
     {
         private IHydroNetwork network;
+        private string structureFilePath = Path.Combine(FileWriterTestHelper.TargetPath, "Structures.ini");
 
         [SetUp]
         public void SetUp()
@@ -232,7 +233,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
             StructureFileWriterTestHelper.WriteCrossSectionsToIni(network.Structures);
 
             string errorMessage;
-            var relativePathActualFile = Path.Combine(FileWriterTestHelper.RelativeTargetDirectory, FileWriterTestHelper.ModelFileNames.Structures);
+            var relativePathActualFile = Path.Combine(FileWriterTestHelper.RelativeTargetDirectory, structureFilePath);
             Assert.IsTrue(FileComparer.Compare(relativePathStructuresExpectedFile, relativePathActualFile, out errorMessage, true),
                           string.Format("Generated Structures file does not match template!{0}{1}", Environment.NewLine, errorMessage));
         }
@@ -258,7 +259,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
 
             StructureFileWriterTestHelper.WriteCrossSectionsToIni(network.Structures);
 
-            var categories = new DelftIniReader().ReadDelftIniFile(FileWriterTestHelper.ModelFileNames.Structures);
+            var categories = new DelftIniReader().ReadDelftIniFile(structureFilePath);
 
             Assert.AreEqual(1, categories.Count(g => g.Name == GeneralRegion.IniHeader));
             Assert.AreEqual(1, categories.Count(op => op.Name == StructureRegion.Header));
@@ -330,7 +331,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
 
             StructureFileWriterTestHelper.WriteCrossSectionsToIni(network.Structures);
 
-            var categories = new DelftIniReader().ReadDelftIniFile(FileWriterTestHelper.ModelFileNames.Structures);
+            var categories = new DelftIniReader().ReadDelftIniFile(structureFilePath);
 
             Assert.AreEqual(1, categories.Count(g => g.Name == GeneralRegion.IniHeader));
             Assert.AreEqual(1, categories.Count(op => op.Name == StructureRegion.Header));
@@ -389,7 +390,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
             
             StructureFileWriterTestHelper.WriteCrossSectionsToIni(network.Structures);
 
-            var categories = new DelftIniReader().ReadDelftIniFile(FileWriterTestHelper.ModelFileNames.Structures);
+            var categories = new DelftIniReader().ReadDelftIniFile(structureFilePath);
 
             Assert.AreEqual(1, categories.Count(g => g.Name == GeneralRegion.IniHeader));
             Assert.AreEqual(1, categories.Count(op => op.Name == StructureRegion.Header));
@@ -460,7 +461,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
 
             StructureFileWriterTestHelper.WriteCrossSectionsToIni(network.Structures);
 
-            var categories = new DelftIniReader().ReadDelftIniFile(FileWriterTestHelper.ModelFileNames.Structures);
+            var categories = new DelftIniReader().ReadDelftIniFile(structureFilePath);
 
             Assert.AreEqual(1, categories.Count(g => g.Name == GeneralRegion.IniHeader));
             Assert.AreEqual(1, categories.Count(op => op.Name == StructureRegion.Header));
@@ -547,7 +548,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
 
             StructureFileWriterTestHelper.WriteCrossSectionsToIni(network.Structures);
 
-            var categories = new DelftIniReader().ReadDelftIniFile(FileWriterTestHelper.ModelFileNames.Structures);
+            var categories = new DelftIniReader().ReadDelftIniFile(structureFilePath);
 
             Assert.AreEqual(1, categories.Count(g => g.Name == GeneralRegion.IniHeader));
             Assert.AreEqual(1, categories.Count(op => op.Name == StructureRegion.Header));
@@ -630,7 +631,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
 
             StructureFileWriterTestHelper.WriteCrossSectionsToIni(network.Structures);
 
-            var categories = new DelftIniReader().ReadDelftIniFile(FileWriterTestHelper.ModelFileNames.Structures);
+            var categories = new DelftIniReader().ReadDelftIniFile(structureFilePath);
 
             Assert.AreEqual(1, categories.Count(g => g.Name == GeneralRegion.IniHeader));
             Assert.AreEqual(1, categories.Count(op => op.Name == StructureRegion.Header));
@@ -723,7 +724,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
 
             StructureFileWriterTestHelper.WriteCrossSectionsToIni(network.Structures);
 
-            var categories = new DelftIniReader().ReadDelftIniFile(FileWriterTestHelper.ModelFileNames.Structures);
+            var categories = new DelftIniReader().ReadDelftIniFile(structureFilePath);
 
             Assert.AreEqual(1, categories.Count(g => g.Name == GeneralRegion.IniHeader));
             Assert.AreEqual(1, categories.Count(op => op.Name == StructureRegion.Header));
@@ -853,7 +854,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
 
             StructureFileWriterTestHelper.WriteCrossSectionsToIni(network.Structures);
 
-            var categories = new DelftIniReader().ReadDelftIniFile(FileWriterTestHelper.ModelFileNames.Structures);
+            var categories = new DelftIniReader().ReadDelftIniFile(structureFilePath);
 
             Assert.AreEqual(1, categories.Count(g => g.Name == GeneralRegion.IniHeader));
             Assert.AreEqual(1, categories.Count(op => op.Name == StructureRegion.Header));
@@ -892,7 +893,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
             
             StructureFileWriterTestHelper.WriteCrossSectionsToIni(network.Structures);
 
-            var categories = new DelftIniReader().ReadDelftIniFile(FileWriterTestHelper.ModelFileNames.Structures);
+            var categories = new DelftIniReader().ReadDelftIniFile(structureFilePath);
 
             Assert.AreEqual(1, categories.Count(g => g.Name == GeneralRegion.IniHeader));
             Assert.AreEqual(1, categories.Count(op => op.Name == StructureRegion.Header));
@@ -994,7 +995,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
             
             StructureFileWriterTestHelper.WriteCrossSectionsToIni(network.Structures);
 
-            var categories = new DelftIniReader().ReadDelftIniFile(FileWriterTestHelper.ModelFileNames.Structures);
+            var categories = new DelftIniReader().ReadDelftIniFile(structureFilePath);
 
             Assert.AreEqual(1, categories.Count(g => g.Name == GeneralRegion.IniHeader));
             Assert.AreEqual(1, categories.Count(op => op.Name == StructureRegion.Header));
@@ -1056,7 +1057,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
 
             StructureFileWriterTestHelper.WriteCrossSectionsToIni(network.Structures);
 
-            var categories = new DelftIniReader().ReadDelftIniFile(FileWriterTestHelper.ModelFileNames.Structures);
+            var categories = new DelftIniReader().ReadDelftIniFile(structureFilePath);
 
             Assert.AreEqual(1, categories.Count(g => g.Name == GeneralRegion.IniHeader));
             Assert.AreEqual(1, categories.Count(op => op.Name == StructureRegion.Header));
@@ -1113,7 +1114,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
 
             StructureFileWriterTestHelper.WriteCrossSectionsToIni(network.Structures);
 
-            var categories = new DelftIniReader().ReadDelftIniFile(FileWriterTestHelper.ModelFileNames.Structures);
+            var categories = new DelftIniReader().ReadDelftIniFile(structureFilePath);
 
             Assert.AreEqual(1, categories.Count(g => g.Name == GeneralRegion.IniHeader));
             Assert.AreEqual(1, categories.Count(op => op.Name == StructureRegion.Header));
@@ -1188,7 +1189,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
 
             StructureFileWriterTestHelper.WriteCrossSectionsToIni(network.Structures);
 
-            var categories = new DelftIniReader().ReadDelftIniFile(FileWriterTestHelper.ModelFileNames.Structures);
+            var categories = new DelftIniReader().ReadDelftIniFile(structureFilePath);
 
             Assert.AreEqual(1, categories.Count(g => g.Name == GeneralRegion.IniHeader));
             Assert.AreEqual(1, categories.Count(op => op.Name == StructureRegion.Header));
@@ -1242,7 +1243,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
 
             StructureFileWriterTestHelper.WriteCrossSectionsToIni(network.Structures);
 
-            var categories = new DelftIniReader().ReadDelftIniFile(FileWriterTestHelper.ModelFileNames.Structures);
+            var categories = new DelftIniReader().ReadDelftIniFile(structureFilePath);
 
             Assert.AreEqual(1, categories.Count(g => g.Name == GeneralRegion.IniHeader));
             Assert.AreEqual(1, categories.Count(op => op.Name == StructureRegion.Header));

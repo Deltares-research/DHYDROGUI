@@ -107,7 +107,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
 
             foreach (var dimrModel in dimrModels)
             {
-                if (dimrModel is Iterative1D2DCoupler) continue;
                 var validationReport = dimrModel.Validate();
                 if (validationReport != null && validationReport.Severity() == ValidationSeverity.Error)
                 {

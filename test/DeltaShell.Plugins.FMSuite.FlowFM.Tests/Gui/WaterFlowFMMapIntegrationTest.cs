@@ -75,7 +75,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 }
 
                 stopwatch.Stop();
-                Assert.Less(stopwatch.ElapsedMilliseconds, 40000);
+                Assert.Less(stopwatch.ElapsedMilliseconds, 50000);
                 Assert.That(model.Status, Is.EqualTo(ActivityStatus.Cleaned), "The model run did not finish successfully.");
             }
         }

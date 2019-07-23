@@ -3,7 +3,6 @@
 
   <?define explicitX86desktopshortcut="false"?>
   <?define Description="SOBEK Suite"?>
-  <?define StartPage="Welcome.htm"?>
 
   <?define checkForRegistration="true"?>
   <?define Delft3DPackageName="D-HYDRO"?>

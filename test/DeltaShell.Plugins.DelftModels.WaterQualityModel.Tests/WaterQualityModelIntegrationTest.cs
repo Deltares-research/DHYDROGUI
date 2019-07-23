@@ -26,13 +26,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         public void ImportSobekHydFileAndRun()
         {
             var dataDir = TestHelper.GetTestDataDirectory();
-            var hydFile = Path.Combine(dataDir, "IntegrationTests", "Flow1D", "sobek.hyd");
+            var hydFile = Path.Combine(dataDir, "ValidWaqModels", "Flow1D", "sobek.hyd");
 
             using (var model = new WaterQualityModel())
             {
                 new HydFileImporter().ImportItem(hydFile, model);
 
-                var subFilePath = Path.Combine(dataDir, "IntegrationTests", "Eutrof_simple_sobek.sub");
+                var subFilePath = Path.Combine(dataDir, "ValidWaqModels", "Eutrof_simple_sobek.sub");
                 new SubFileImporter().Import(model.SubstanceProcessLibrary, subFilePath);
 
                 // Send the model to delwaq
@@ -58,13 +58,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         public void ImportFMHydFileAndRun()
         {
             var dataDir = TestHelper.GetTestDataDirectory();
-            var hydFile = Path.Combine(dataDir, "IntegrationTests", "FM", "FlowFM.hyd");
+            var hydFile = Path.Combine(dataDir, "ValidWaqModels", "FM", "FlowFM.hyd");
 
             using (var model = new WaterQualityModel())
             {
                 new HydFileImporter().ImportItem(hydFile, model);
 
-                var subFilePath = Path.Combine(dataDir, "IntegrationTests", "coli_04.sub");
+                var subFilePath = Path.Combine(dataDir, "ValidWaqModels", "coli_04.sub");
                 new SubFileImporter().Import(model.SubstanceProcessLibrary, subFilePath);
 
                 // Send the model to delwaq
@@ -92,13 +92,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         public void ImportUgridHydFileAndRun()
         {
             var dataDir = TestHelper.GetTestDataDirectory();
-            var hydFile = Path.Combine(dataDir, "IntegrationTests", "UGrid", "f34.hyd");
+            var hydFile = Path.Combine(dataDir, "ValidWaqModels", "UGrid", "f34.hyd");
 
             using (var model = new WaterQualityModel())
             {
                 new HydFileImporter().ImportItem(hydFile, model);
 
-                var subFilePath = Path.Combine(dataDir, "IntegrationTests", "Eutrof_simple_fm.sub");
+                var subFilePath = Path.Combine(dataDir, "ValidWaqModels", "Eutrof_simple_fm.sub");
                 new SubFileImporter().Import(model.SubstanceProcessLibrary, subFilePath);
 
                 // Send the model to delwaq
@@ -176,8 +176,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             var projectFolder = Path.Combine(testDir, "BasicWaqProject.dsproj_data");
 
             var dataDir = TestHelper.GetTestDataDirectory();
-            var hydFilePath = Path.Combine(dataDir, "IntegrationTests", "FM", "FlowFM.hyd");
-            var substanceFilePath = Path.Combine(dataDir, "IntegrationTests", "coli_04.sub");
+            var hydFilePath = Path.Combine(dataDir, "ValidWaqModels", "FM", "FlowFM.hyd");
+            var substanceFilePath = Path.Combine(dataDir, "ValidWaqModels", "coli_04.sub");
 
             string[] outputTextDocumentsTags = { "ListFileTag", "ProcessFileTag", "MonitoringFileTag", "lastRunLogFileDataItem" };
             string[] outputFeatureCoveragesTags = { "IM1", "Salinity", "EColi", "ExtUv", "MrtToEColi" };

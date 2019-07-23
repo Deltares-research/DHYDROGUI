@@ -4,7 +4,6 @@ using System.Linq;
 using System.Windows.Forms;
 using DelftTools.Controls.Swf.DataEditorGenerator.Metadata;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
-using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors;
 using NUnit.Framework;
 using Rhino.Mocks;
 

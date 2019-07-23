@@ -832,41 +832,44 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
-        [TestCase(@"MissingFeatureFilesProject.dsproj_data\FlowFM.mdu", false)]
-        [TestCase(@"DuplicateFilesProject.dsproj_data\FlowFM\FlowFM.mdu", true)]
-        public void GivenMduFileWithReferencesToNonExistentFilesOrFileNamesThatAlreadyExistInTheMduFolder_WhenReadingMdu_ThenTheseFeaturesAreNotReadExceptStructuresIfPresent(string mduProjectFilePath, bool structuresShouldBeRead)
+        [TestCase(@"MissingFeatureFilesProject.dsproj_data\FlowFM.mdu", 0)]
+        [TestCase(@"DuplicateFilesProject.dsproj_data\FlowFM\FlowFM.mdu", 1)]
+        public void GivenMduFileWithReferencesToNonExistentFilesOrFileNamesThatAlreadyExistInTheMduFolder_WhenReadingMdu_ThenTheseFeaturesAreNotReadExceptStructuresIfPresent(
+            string mduProjectFilePath,
+            int nExpectedFeatures)
         {
-            // Preparations
+            // Given
             var localPath = TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath(@"HydroAreaCollection\MduFileProjects"));
             var mduFilePath = Path.Combine(localPath, mduProjectFilePath);
-
             var modelName = Path.GetFileNameWithoutExtension(mduFilePath);
             var area = new HydroArea();
             var modelDefinition = new WaterFlowFMModelDefinition(mduFilePath, modelName);
             var mduFile = new MduFile();
             var allFixedWeirsAndCorrespondingProperties = new Dictionary<FixedWeir, ModelFeatureCoordinateData<FixedWeir>>();
 
+            // When
             mduFile.Read(mduFilePath, modelDefinition, area, allFixedWeirsAndCorrespondingProperties);
 
-            // Check if all features were read
-            Assert.That(area.DryPoints.Count, Is.EqualTo(0));
-            Assert.That(area.Enclosures.Count, Is.EqualTo(1));
-            Assert.That(area.FixedWeirs.Count, Is.EqualTo(0));
-            Assert.That(area.ObservationPoints.Count, Is.EqualTo(2));
-            if (structuresShouldBeRead)
-            {
-                Assert.That(area.Pumps.Count, Is.EqualTo(1));
-                Assert.That(area.Weirs.Count, Is.EqualTo(2));
-            }
-            else
-            {
-                Assert.That(area.Pumps.Count, Is.EqualTo(0));
-                Assert.That(area.Weirs.Count, Is.EqualTo(0));
-            }
-
-            Assert.That(area.ThinDams.Count, Is.EqualTo(0));
-            Assert.That(area.ObservationCrossSections.Count, Is.EqualTo(0));
-            Assert.That(area.LandBoundaries.Count, Is.EqualTo(0));
+            // Then
+            const string errorMessage = "Expected a different number of {0}:";
+            Assert.That(area.ObservationPoints, Has.Count.EqualTo(2),
+                        string.Format(errorMessage, "ObservationPoints"));
+            Assert.That(area.Enclosures, Has.Count.EqualTo(1),
+                        string.Format(errorMessage, "Enclosures"));
+            Assert.That(area.DryPoints, Has.Count.EqualTo(nExpectedFeatures),
+                        string.Format(errorMessage, "DryPoints"));
+            Assert.That(area.FixedWeirs, Has.Count.EqualTo(nExpectedFeatures),
+                        string.Format(errorMessage, "FixedWeirs"));
+            Assert.That(area.Pumps, Has.Count.EqualTo(nExpectedFeatures),
+                        string.Format(errorMessage, "Pumps"));
+            Assert.That(area.Weirs, Has.Count.EqualTo(nExpectedFeatures),
+                        string.Format(errorMessage, "Weirs"));
+            Assert.That(area.ThinDams, Has.Count.EqualTo(nExpectedFeatures),
+                        string.Format(errorMessage, "ThinDams"));
+            Assert.That(area.ObservationCrossSections, Has.Count.EqualTo(nExpectedFeatures),
+                        string.Format(errorMessage, "ObservationCrossSections"));
+            Assert.That(area.LandBoundaries, Has.Count.EqualTo(nExpectedFeatures),
+                        string.Format(errorMessage, "LandBoundaries"));
         }
 
         [Test]

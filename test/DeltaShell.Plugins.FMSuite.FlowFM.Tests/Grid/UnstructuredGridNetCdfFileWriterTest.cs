@@ -6,9 +6,8 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.NetCdf;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using GeoAPI.Geometries;
-using NetTopologySuite.Geometries;
-using NUnit.Framework;
 using NetTopologySuite.Extensions.Grids;
+using NUnit.Framework;
 using SharpMap.Extensions.CoordinateSystems;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Grid

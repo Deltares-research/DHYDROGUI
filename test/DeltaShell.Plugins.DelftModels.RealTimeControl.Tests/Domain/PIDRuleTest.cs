@@ -92,7 +92,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
                                   Kd = Kd,
                                   Setting = setting,
                                   Inputs = new EventedList<Input> {input},
-                                  Outputs = new EventedList<Output> {output}
+                                  Outputs = new EventedList<Output> {output},
+                                  PidRuleSetpointType = PIDRule.PIDRuleSetpointType.TimeSeries
                               };
 
             pidRule.TimeSeries.Components[0].DefaultValue = ConstantSetpointValue;
@@ -122,7 +123,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
                     "<kd>" + Kd.ToString(CultureInfo.InvariantCulture) + "</kd>" + 
                     "<input>"+
                     "<x>" + RtcXmlTag.Input + IffezheimHin1 + "/" + IffezheimHin2 + "</x>" +
-                    "<setpointValue>" + ConstantSetpointValue.ToString(CultureInfo.InvariantCulture) + "</setpointValue>" + 
+                    "<setpointSeries>[SetPoint]" + RuleName + "</setpointSeries>" + 
                     "</input>" + 
                     "<output>"+
                     "<y>" + RtcXmlTag.Output + IffezheimSout1 + "/" + IffezheimSout2 + "</y>" +
@@ -278,7 +279,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             var modelStartTime = startTime.AddDays(1);
             var modelStopTime = stopTime.AddDays(-1);
 
-            var pidrule = new PIDRule("pid") { TimeSeries = timeSeries };
+            var pidrule = new PIDRule("pid")
+            {
+                TimeSeries = timeSeries,
+                PidRuleSetpointType = PIDRule.PIDRuleSetpointType.TimeSeries
+            };
 
             var truncatedTimeSeries = pidrule.XmlImportTimeSeries("", modelStartTime, modelStopTime, timeStep).ToList();
 
@@ -286,6 +291,25 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             Assert.AreEqual(modelStartTime, truncatedTimeSeries[0].TimeSeries.Time.Values.First());
             Assert.AreEqual(modelStopTime, truncatedTimeSeries[0].TimeSeries.Time.Values.Last());
 
+        }
+
+        [TestCase(PIDRule.PIDRuleSetpointType.TimeSeries, 1)]
+        [TestCase(PIDRule.PIDRuleSetpointType.Constant, 0)]
+        [TestCase(PIDRule.PIDRuleSetpointType.Signal, 0)]
+        public void
+            GivenAPidRuleWithASetPointType_WhenXmlImportTimeSeriesIsCalled_ThenExpectedNumberOfXmlTimeSeriesIsReturned(PIDRule.PIDRuleSetpointType setPointType, int expectedNumber)
+        {
+            // Given
+            var pidRule = new PIDRule
+            {
+                PidRuleSetpointType = setPointType
+            };
+
+            // When
+            var timeSeries = pidRule.XmlImportTimeSeries("/", DateTime.Today, DateTime.Today.AddDays(1), new TimeSpan(0, 1, 0, 0));
+
+            // Then
+            Assert.AreEqual(expectedNumber, timeSeries.Count());
         }
     }
 }

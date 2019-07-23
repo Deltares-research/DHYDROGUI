@@ -10,7 +10,6 @@ using DeltaShell.Plugins.FMSuite.Common.Tests.IO;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
 
-
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 {
     [TestFixture]

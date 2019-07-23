@@ -5,7 +5,6 @@ using System.Drawing.Drawing2D;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf;
-using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Drawing;
 using DelftTools.Utils.Reflection;

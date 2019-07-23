@@ -1,11 +1,11 @@
-﻿using System.Windows.Forms;
+﻿using System.Drawing;
+using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Functions;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Charting;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
-using Image = System.Drawing.Image;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
 {

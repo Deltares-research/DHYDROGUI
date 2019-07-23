@@ -1,7 +1,7 @@
-﻿using DelftTools.Utils.Reflection;
+﻿using System;
+using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor;
 using NUnit.Framework;
-using System;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors
 {

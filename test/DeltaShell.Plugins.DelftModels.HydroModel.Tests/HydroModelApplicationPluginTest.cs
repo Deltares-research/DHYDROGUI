@@ -1,11 +1,11 @@
-﻿using DelftTools.Shell.Core;
+﻿using System.Linq;
+using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
+using DelftTools.TestUtils;
 using DeltaShell.Core;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
-using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.FMSuite.Wave;
@@ -15,8 +15,6 @@ using DeltaShell.Plugins.Scripting;
 using DeltaShell.Plugins.SharpMapGis;
 using DeltaShell.Plugins.Toolbox;
 using NUnit.Framework;
-using System.Linq;
-using DelftTools.TestUtils;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 {
@@ -56,24 +54,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         }
 
         [Test]
-        public void AdditionalOwnerCheckTest_RainfallRunoff()
-        {
-            using (var app = new DeltaShellApplication())
-            {
-                var appPlugin = new RainfallRunoffApplicationPlugin();
-                SetUpApplication(app, appPlugin);
-
-                var modelInfos = appPlugin.GetModelInfos().FirstOrDefault();
-                Assert.NotNull(modelInfos);
-
-                Assert.AreEqual(modelInfos.AdditionalOwnerCheck(app.Project.RootFolder), true);
-                Assert.AreEqual(modelInfos.AdditionalOwnerCheck(new HydroModel()), true);
-                Assert.AreEqual(modelInfos.AdditionalOwnerCheck(new ParallelActivity()), false);
-                Assert.AreEqual(modelInfos.AdditionalOwnerCheck(new SequentialActivity()), false);
-            }
-        }
-
-        [Test]
         public void AdditionalOwnerCheckTest_RealTimeControl()
         {
             using (var app = new DeltaShellApplication())
@@ -85,24 +65,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 Assert.NotNull(modelInfos);
 
                 Assert.AreEqual(modelInfos.AdditionalOwnerCheck(app.Project.RootFolder), false);
-                Assert.AreEqual(modelInfos.AdditionalOwnerCheck(new HydroModel()), true);
-                Assert.AreEqual(modelInfos.AdditionalOwnerCheck(new ParallelActivity()), false);
-                Assert.AreEqual(modelInfos.AdditionalOwnerCheck(new SequentialActivity()), false);
-            }
-        }
-
-        [Test]
-        public void AdditionalOwnerCheckTest_WaterFlow1D()
-        {
-            using (var app = new DeltaShellApplication())
-            {
-                var appPlugin = new WaterFlowModel1DApplicationPlugin();
-                SetUpApplication(app, appPlugin);
-
-                var modelInfos = appPlugin.GetModelInfos().FirstOrDefault();
-                Assert.NotNull(modelInfos);
-
-                Assert.AreEqual(modelInfos.AdditionalOwnerCheck(app.Project.RootFolder), true);
                 Assert.AreEqual(modelInfos.AdditionalOwnerCheck(new HydroModel()), true);
                 Assert.AreEqual(modelInfos.AdditionalOwnerCheck(new ParallelActivity()), false);
                 Assert.AreEqual(modelInfos.AdditionalOwnerCheck(new SequentialActivity()), false);

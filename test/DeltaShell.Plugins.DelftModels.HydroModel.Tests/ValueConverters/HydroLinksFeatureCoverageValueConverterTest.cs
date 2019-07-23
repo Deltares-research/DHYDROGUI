@@ -8,8 +8,8 @@ using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.DelftModels.HydroModel.ValueConverters;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
-using NetTopologySuite.IO;
 using NetTopologySuite.Extensions.Coverages;
+using NetTopologySuite.IO;
 using NUnit.Framework;
 using SharpTestsEx;
 

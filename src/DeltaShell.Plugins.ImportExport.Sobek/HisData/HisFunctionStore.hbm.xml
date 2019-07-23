@@ -1,6 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="DeltaShell.Plugins.ImportExport.Sobek.HisData" assembly="DeltaShell.Plugins.ImportExport.Sobek"  >
-  <subclass name="HisFunctionStore" discriminator-value="his_function_store" extends="DelftTools.Functions.IFunctionStore,DelftTools.Functions" lazy="false" >
-    <property name="Path" type="string"  />
-  </subclass>
-</hibernate-mapping>

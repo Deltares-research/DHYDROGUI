@@ -1,5 +1,4 @@
-﻿using System.IO;
-using System.Linq;
+﻿using System.Linq;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;

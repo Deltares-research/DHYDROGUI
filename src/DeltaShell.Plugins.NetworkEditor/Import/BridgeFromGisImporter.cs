@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Aop;
 using GeoAPI.Extensions.Feature;
