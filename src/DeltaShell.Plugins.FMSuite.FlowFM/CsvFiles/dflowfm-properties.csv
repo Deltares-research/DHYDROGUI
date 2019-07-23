@@ -116,7 +116,7 @@ physics,Dicoww,physics,Viscosity,Uniform vertical eddy diffusivity,Double,5.d-5,
 physics,Vicwminb,physics,Viscosity,Minimum buoyancy viscosity,Double,0,0,,TRUE,,,,,,Minimum viscosity in prod and buoyancy term, m2/s
 physics,Smagorinsky,physics,Viscosity,Smagorinsky factor,Double,0,0,,FALSE,,,,,,Smagorinsky factor in horizontal turbulence,-
 physics,Elder,advanced,Advanced,Elder factor,Double,0,0,,FALSE,,,,,,Elder factor in horizontal turbulence,-
-physics,Irov,physics,Roughness,Wall behaviour:Free slip|Partial slip|No slip,0|1|2,0,0,2,FALSE,,,,,,"Wall roughness type (0: free slip, 1: partial slip using wall_ks, 2: no slip)"
+physics,Irov,physics,Roughness,Wall behaviour:Free-slip|Partial-slip|No-slip,0|1|2,0,0,2,FALSE,,,,,,"Wall roughness type (0: free-slip, 1: partial-slip using wall_ks, 2: no-slip)"
 physics,wall_ks,physics,Roughness,Wall ks for partial slip,Double,0,0,,FALSE,Irov=1,,,,,"Nikuradse roughness for side walls",m
 physics,Rhomean,physics,Density,Default water density,Double,1000,,,FALSE,,,,,,"Average water density ", kg/m3
 physics,Idensform,physics,Density,Equation of state:Uniform|Eckart|UNESCO|Baroclinic,0|1|2|3,2,,,FALSE,,,,,,"Density calulation (0: uniform, 1: Eckart, 2: UNESCO, 3: baroclinic case)"
