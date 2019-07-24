@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing.Design;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
@@ -9,6 +10,7 @@ using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.PropertyGrid
 {
+    [ExcludeFromCodeCoverage]
     [ResourcesDisplayName(typeof(Resources), "TimeRuleProperties_DisplayName")]
     public class TimeRuleProperties : ObjectProperties<TimeRule>
     {

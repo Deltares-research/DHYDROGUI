@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing.Design;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
@@ -12,6 +13,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.PropertyGrid
     [ResourcesDisplayName(typeof(Resources), "HydraulicRuleProperties_DisplayName")]
     public class HydraulicRuleProperties : ObjectProperties<HydraulicRule>
     {
+        [ExcludeFromCodeCoverage]
         [ResourcesCategory(typeof(Resources), "Categories_General")]
         [ResourcesDisplayName(typeof(Resources), "Common_Name_DisplayName")]
         [ResourcesDescription(typeof(Resources), "Rule_Name_Description")]
@@ -22,6 +24,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.PropertyGrid
             set => data.Name = value;
         }
 
+        [ExcludeFromCodeCoverage]
         [ResourcesCategory(typeof(Resources), "Categories_General")]
         [ResourcesDisplayName(typeof(Resources), "Common_LongName_DisplayName")]
         [ResourcesDescription(typeof(Resources), "Rule_LongName_Description")]
@@ -32,6 +35,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.PropertyGrid
             set => data.LongName = value;
         }
 
+        [ExcludeFromCodeCoverage]
         [ResourcesCategory(typeof(Resources), "Category_Data")]
         [ResourcesDisplayName(typeof(Resources), "HydraulicRuleProperties_TimeLag_DisplayName")]
         [ResourcesDescription(typeof(Resources), "HydraulicRuleProperties_TimeLag_Description")]

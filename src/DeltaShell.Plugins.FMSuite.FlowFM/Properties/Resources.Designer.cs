@@ -188,12 +188,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to fixed weir &apos;{0}&apos; has unphysical sill depths, parts will be ignored by dflow-fm..
+        ///   Looks up a localized string similar to [{0}]: Fixed weir with type {1} contains {2} ground heights smaller than {3} m. A minimum of {3} m will be applied by the computational core..
         /// </summary>
-        public static string FixedWeirValidator_ValidateSillDepths_fixed_weir___0___has_unphysical_sill_depths__parts_will_be_ignored_by_dflow_fm_ {
+        public static string FixedWeirValidator_Fixed_weir_contains_ground_heights_smaller_than_minimum {
             get {
-                return ResourceManager.GetString("FixedWeirValidator_ValidateSillDepths_fixed_weir___0___has_unphysical_sill_depths" +
-                        "__parts_will_be_ignored_by_dflow_fm_", resourceCulture);
+                return ResourceManager.GetString("FixedWeirValidator_Fixed_weir_contains ground_heights_smaller_than_minimum", resourceCulture);
             }
         }
         

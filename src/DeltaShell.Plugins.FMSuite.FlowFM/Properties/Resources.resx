@@ -541,9 +541,6 @@ Manhole with unique id '{4}' is not imported.</value>
   <data name="FixedWeirValidator_ValidateSnapping_fixed_weir___0___not_within_grid_extent_" xml:space="preserve">
     <value>fixed weir '{0}' not within grid extent.</value>
   </data>
-  <data name="FixedWeirValidator_ValidateSillDepths_fixed_weir___0___has_unphysical_sill_depths__parts_will_be_ignored_by_dflow_fm_" xml:space="preserve">
-    <value>fixed weir '{0}' has unphysical sill depths, parts will be ignored by dflow-fm.</value>
-  </data>
   <data name="WaterFlowFMModel_ChangingWeirFormulaWhenAlsoUsedInRTC_Structure_component__0__has_been_removed_from_RTC_Control_Group__1__due_to_type_change" xml:space="preserve">
     <value> Structure component'{0}' has been removed from Control Group '{1}' due to type change.</value>
   </data>
@@ -582,5 +579,8 @@ Manhole with unique id '{4}' is not imported.</value>
   </data>
   <data name="WaterFlowFMModelDefinitionValidator_Validate_Bed_level_locations_should_be_set_to__faces__when_morphology_is_active_" xml:space="preserve">
     <value>Bed level locations should be set to 'faces' when morphology is active.</value>
+  </data>
+  <data name="FixedWeirValidator_Fixed_weir_contains ground_heights_smaller_than_minimum" xml:space="preserve">
+    <value>[{0}]: Fixed weir with type {1} contains {2} ground heights smaller than {3} m. A minimum of {3} m will be applied by the computational core.</value>
   </data>
 </root>

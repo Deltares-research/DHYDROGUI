@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using DelftTools.Hydro.Structures;
+using DelftTools.Utils.Reflection;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
@@ -14,9 +16,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
     [TestFixture]
     public class FixedWeirValidatorTest
     {
-        private const string MessageOneValidationIssueExpected = "Exactly one log message was expected when validating this weir.";
-        private const string MessageDifferentLogMessageExpected = "A different log message for this issue was expected.";
-        private const string MessageValidationSeverityWarningExpected = "The severity of this validation issue should have been of type Warning.";
+        private const string MessageDifferentNumberValidationIssues = "Number of validation issues was different than expected when validating this fixed weir.";
+        private const string MessageDifferentIssueMessage = "A different issue message for this issue was expected when validating this fixed weir.";
+        private const string MessageDifferentValidationSeverity = "The severity of this validation issue was different than expected when validating this issue.should have been of type Warning.";
 
         private IEnumerable<FixedWeir> fixedWeirs;
         private FixedWeir fixedWeir;
@@ -32,62 +34,79 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             fixedWeirs = new List<FixedWeir> {fixedWeir};
         }
 
-        [Test]
-        public void GivenAFixedWeirWithAGeometryThatDoesNotSnapToGrid_WhenValidateIsCalled_ThenExpectedValidationIssueIsReturned()
+        [TestCase(FixedWeirSchemes.None)]
+        [TestCase(FixedWeirSchemes.Scheme6)]
+        [TestCase(FixedWeirSchemes.Scheme8)]
+        [TestCase(FixedWeirSchemes.Scheme9)]
+        public void GivenAFixedWeirWithAGeometryThatDoesNotSnapToGrid_WhenValidateIsCalled_ThenExpectedValidationIssueIsReturned(FixedWeirSchemes scheme)
         {
             // Given
             var gridExtent = new Envelope();
 
             // When
-            var issues = fixedWeirs.Validate(gridExtent,
-                new List<ModelFeatureCoordinateData<FixedWeir>>()
-            ).ToList();
+            var issues = fixedWeirs.Validate(gridExtent, new List<ModelFeatureCoordinateData<FixedWeir>>(), scheme).ToList();
 
             // Then
-            Assert.AreEqual(1, issues.Count, MessageOneValidationIssueExpected);
+            Assert.AreEqual(1, issues.Count, MessageDifferentNumberValidationIssues);
             var issue = issues.Single();
-            Assert.AreEqual(ValidationSeverity.Warning, issue.Severity, MessageValidationSeverityWarningExpected);
+            Assert.AreEqual(ValidationSeverity.Warning, issue.Severity, MessageDifferentValidationSeverity);
             var expectedMessage = string.Format(Resources.FixedWeirValidator_ValidateSnapping_fixed_weir___0___not_within_grid_extent_, fixedWeir.Name);
-            Assert.AreEqual(expectedMessage, issue.Message, MessageDifferentLogMessageExpected);
+            Assert.AreEqual(expectedMessage, issue.Message, MessageDifferentIssueMessage);
         }
 
-        [Test]
-        public void GivenAFixedWeirAnWithInvalidSillDepth_WhenValidateIsCalled_ThenExpectedValidationIssueIsReturned()
+        [TestCase(FixedWeirSchemes.None, -50, 0)]
+        [TestCase(FixedWeirSchemes.None, 50, 0)]
+        [TestCase(FixedWeirSchemes.Scheme6, -1, 2)]
+        [TestCase(FixedWeirSchemes.Scheme6, 0, 0)]
+        [TestCase(FixedWeirSchemes.Scheme6, 1, 0)]
+        [TestCase(FixedWeirSchemes.Scheme8, 0, 2)]
+        [TestCase(FixedWeirSchemes.Scheme8, 0.1, 0)]
+        [TestCase(FixedWeirSchemes.Scheme8, 0.2, 0)]
+        [TestCase(FixedWeirSchemes.Scheme9, -1, 2)]
+        [TestCase(FixedWeirSchemes.Scheme9, 0, 0)]
+        [TestCase(FixedWeirSchemes.Scheme9, 1, 0)]
+        public void GivenAFixedWeirAnWithInvalidGroundHeights_WhenValidateIsCalled_ThenExpectedValidationIssueIsReturned(
+            FixedWeirSchemes scheme, double value, int nExpectedIssues)
         {
             // Given
             var gridExtent = new Envelope(new Coordinate(10, 10));
-            var fixedWeirsProperties = CreateModelFeatureCoordinateDataWithInvalidValues(fixedWeirs.First());
+            List<ModelFeatureCoordinateData<FixedWeir>> fixedWeirsProperties =
+                CreateModelFeatureCoordinateDataWithValues(fixedWeirs.First(), value);
+            double minimumValue = scheme.GetMinimalAllowedGroundHeight();
 
             // When
-            var issues = fixedWeirs.Validate(gridExtent,
-                fixedWeirsProperties
-            ).ToList();
+            List<ValidationIssue> issues = fixedWeirs.Validate(gridExtent, fixedWeirsProperties, scheme).ToList();
 
             // Then
-            Assert.AreEqual(1, issues.Count, MessageOneValidationIssueExpected);
-            var issue = issues.Single();
-            Assert.AreEqual(ValidationSeverity.Warning, issue.Severity, MessageValidationSeverityWarningExpected);
-            var expectedMessage = string.Format(Resources.FixedWeirValidator_ValidateSillDepths_fixed_weir___0___has_unphysical_sill_depths__parts_will_be_ignored_by_dflow_fm_,
-                fixedWeir.Name);
-            Assert.AreEqual(expectedMessage, issue.Message, MessageDifferentLogMessageExpected);
+            Assert.AreEqual(nExpectedIssues, issues.Count, MessageDifferentNumberValidationIssues);
+            for (var i = 0; i < nExpectedIssues; i++)
+            {
+                var issue = issues[i];
+                Assert.AreEqual(ValidationSeverity.Info, issue.Severity, MessageDifferentValidationSeverity);
+                string expectedMessage = string.Format(
+                    Resources.FixedWeirValidator_Fixed_weir_contains_ground_heights_smaller_than_minimum,
+                    fixedWeir.Name, scheme.GetDescription(), i == 0 ? "left" : "right", minimumValue.ToString("0.00", CultureInfo.InvariantCulture));
+                Assert.AreEqual(expectedMessage, issue.Message, MessageDifferentIssueMessage);
+            }
         }
 
-        private static List<ModelFeatureCoordinateData<FixedWeir>> CreateModelFeatureCoordinateDataWithInvalidValues(FixedWeir fixedWeir)
+        private static List<ModelFeatureCoordinateData<FixedWeir>> CreateModelFeatureCoordinateDataWithValues(FixedWeir fixedWeir, double value)
         {
             var fixedWeirsProperties = new List<ModelFeatureCoordinateData<FixedWeir>>();
 
             var fixedWeirProperty = new ModelFeatureCoordinateData<FixedWeir> {Feature = fixedWeir};
             fixedWeirProperty.DataColumns.Add(new DataColumn<double>());
-            fixedWeirProperty.DataColumns.Add(CreateDataColumnOneZeroValue());
-            fixedWeirProperty.DataColumns.Add(CreateDataColumnOneZeroValue());
+            fixedWeirProperty.DataColumns.Add(CreateDataColumnWithTwoValues(value));
+            fixedWeirProperty.DataColumns.Add(CreateDataColumnWithTwoValues(value));
             fixedWeirsProperties.Add(fixedWeirProperty);
             return fixedWeirsProperties;
         }
 
-        private static DataColumn<double> CreateDataColumnOneZeroValue()
+        private static DataColumn<double> CreateDataColumnWithTwoValues(double value)
         {
             var dataColumn = new DataColumn<double>();
-            dataColumn.ValueList.Add(0.0d);
+            dataColumn.ValueList.Add(value);
+            dataColumn.ValueList.Add(value);
             return dataColumn;
         }
     }

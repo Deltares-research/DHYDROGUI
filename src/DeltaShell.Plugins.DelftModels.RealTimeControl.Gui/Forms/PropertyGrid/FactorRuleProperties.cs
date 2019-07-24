@@ -1,10 +1,12 @@
-﻿using DelftTools.Shell.Gui;
+﻿using System.Diagnostics.CodeAnalysis;
+using DelftTools.Shell.Gui;
 using DelftTools.Utils;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.PropertyGrid
 {
+    [ExcludeFromCodeCoverage]
     [ResourcesDisplayName(typeof(Resources), "FactorRuleProperties_DisplayName")]
     public class FactorRuleProperties : ObjectProperties<FactorRule>
     {

@@ -3,13 +3,18 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using DelftTools.Controls.Swf.DataEditorGenerator.Metadata;
+using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
+using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.Buttons;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
+using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using NUnit.Framework;
+using Rhino.Mocks;
+
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Editors
 {
@@ -157,6 +162,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Editors
         private void SetUiProperties(WaterFlowFMModel model, WpfSettingsViewModel settings)
         {
             settings.SettingsCategories = WaterFlowFmSettingsHelper.GetWpfGuiCategories(model, null);
+        }
+
+        /// <summary>
+        /// WHEN GetWpfGuiCategories is called with a null model
+        /// THEN an empty collection is returned
+        /// </summary>
+        [Test]
+        public void WhenGetWpfGuiCategoriesIsCalledWithANullModel_ThenAnEmptyCollectionIsReturned()
+        {
+            // Given
+            var guiStub = MockRepository.GenerateStub<IGui>();
+
+            // When
+            ObservableCollection<WpfGuiCategory> result = WaterFlowFmSettingsHelper.GetWpfGuiCategories(null, guiStub);
+
+            // Then
+            Assert.That(result, Is.Not.Null, "Expected a non null result.");
+            Assert.That(result, Is.Empty, "Expected an empty collection.");
         }
     }
 }
