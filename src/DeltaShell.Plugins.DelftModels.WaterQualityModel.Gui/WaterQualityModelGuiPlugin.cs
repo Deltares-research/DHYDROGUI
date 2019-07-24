@@ -935,24 +935,36 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
         private static ClonableToolStripMenuItem CreateHydFileModelMenuItem(
             WaterQualityModel waqModel, IHydFileModel hydFileModel)
         {
-            bool hydFileExists = File.Exists(hydFileModel.HydFilePath);
-            string toolTipText = hydFileExists
-                                     ? "Use hyd file '{0}'"
-                                     : "hyd file is not present at '{0}'. Make sure that you have run the flow model and that the hyd file has been generated.";
+            string toolTipText;
+            string hydFilePath = hydFileModel.HydFilePath;
+            string flowModelName = hydFileModel.Name;
+            var hydFileExists = false;
+
+            if (string.IsNullOrEmpty(hydFilePath))
+            {
+                toolTipText = "No hyd file was produced. Make sure that you have run the flow model and that the hyd file has been generated.";
+            }
+            else
+            {
+                hydFileExists = File.Exists(hydFilePath);
+                toolTipText = hydFileExists
+                                  ? "Use hyd file '{0}'"
+                                  : "hyd file is not present at '{0}'.";
+            }
 
             var hydFileModelMenuItem = new ClonableToolStripMenuItem
             {
                 Enabled = hydFileExists,
-                ToolTipText = string.Format(toolTipText, hydFileModel.HydFilePath),
-                Text = hydFileModel.Name
+                ToolTipText = string.Format(toolTipText, hydFilePath),
+                Text = flowModelName
             };
             hydFileModelMenuItem.Click += (s, e) =>
             {
-                var dialog = new ImportHydFileDialog(waqModel, hydFileModel.HydFilePath)
+                var dialog = new ImportHydFileDialog(waqModel, hydFilePath)
                 {
                     Message = string.Format(
                         "Choose the options to use for importing the hyd file '{0}' from model '{1}'",
-                        Path.GetFileName(hydFileModel.HydFilePath), hydFileModel.Name)
+                        Path.GetFileName(hydFilePath), flowModelName)
                 };
                 dialog.ShowDialog();
             };
