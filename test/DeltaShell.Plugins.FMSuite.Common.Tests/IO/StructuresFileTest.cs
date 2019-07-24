@@ -11,10 +11,12 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
+using DeltaShell.NGHS.IO.Handlers;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
+using DeltaShell.Plugins.FMSuite.Common.Properties;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
@@ -94,101 +96,149 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void ReadStructuresWithUnsupportedCategories()
+        public void GivenAStructuresFileWithAStructureUsingAMissingPliFileValue_WhenReading_ThenAWarningShouldBeGivenAndTheStructureShouldNotBeCreated()
         {
-            // [test]
-            // dummy			= value		#I'm just a dumy value
-            // 
-            // [structure]
-            // type             = weir
-            // id               = w
-            // x                = 1
-            // y                = 2
-            // crest_level      = 3
-            // crest_width      = 4
-            // discharge_coeff  = 1
-            // lat_dis_coeff    = 1
-            // allowed_flow_dir = 0
-            var path = TestHelper.GetTestFilePath(@"structures\mixedFile.imp");
-            var schema =
-                new StructureSchemaCsvFile().ReadStructureSchema(
-                    StructureSchemaCsvFileTest.ApplicationStructuresSchemaCsvFilePath);
-
-            IList<Structure2D> structures = null;
-            var structuresFile = new StructuresFile
+            // Given
+            using (var temp = new TemporaryDirectory())
             {
-                StructureSchema = schema
-            };
-            TestHelper.AssertLogMessageIsGenerated(
-                () => structures = structuresFile.ReadStructures2D(path).ToList(),
-                "Category [test] not supported for structures and is skipped.");
-            Assert.AreEqual(1, structures.Count, "Only one structure category in file.");
+                var filesList = new[]
+                {
+                    @"structures\FlowFMPliFileValueMissing_structures.ini"
+                };
 
-            var w = structures[0];
-            Assert.AreEqual("w", w.GetProperty(KnownStructureProperties.Name).GetValueAsString());
-            Assert.IsNull(w.GetProperty("dummy"), "Should not accidentally take key from [test] category.");
+                List<string> copiesInTempFilePaths =
+                    temp.CopyAllTestDataToTempDirectory(filesList);
+
+                string path = copiesInTempFilePaths[0];
+
+                var structuresFile = new StructuresFile { StructureSchema = schema };
+                var logHandler = new LogHandler($"reading the structures file ({path}),");
+
+                // When
+                IList<Structure2D> structures = structuresFile.ReadStructures2D(path, logHandler).ToList();
+
+                // Then
+                Assert.AreEqual(1, logHandler.LogMessagesTable.AllMessages.Count(), "1 sub message should have been added to the loghandler");
+                Assert.AreEqual(1, logHandler.LogMessagesTable.ErrorMessages.Count(), "The sub message should have been a error");
+                Assert.AreEqual(0, structures.Count, "A valid structure has been read from the file, while an invalid structure was written in the file");
+
+                string msg = logHandler.LogMessagesTable.ErrorMessages.First();
+                string expectedMessage = string.Format(
+                    Resources.StructureFile_Failed_to_convert_ini_structure_definition_to_actual_structure_Line__0____1__, 1, "Structure 'structure02' does not have a filename specified for property 'polylinefile'.");
+                Assert.That(msg, Is.EqualTo(expectedMessage), "Expected the message of the warning to be different:");
+            }
         }
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void ReadStructuresWithKeysNotInSchema()
+        public void GivenAStructuresFileWithAnUnsupportedHeaderForAStructure_WhenReading_ThenAWarningShouldBeGivenAndTheStructureShouldNotBeCreated()
         {
-            // [structure]
-            // type             = weir
-            // id               = w
-            // x                = 1
-            // y                = 2
-            // crest_level      = 3
-            // crest_width      = 4
-            // Im_a_nonexistent_property = hax      # This property is not in the schema!
-            // discharge_coeff  = 1
-            // lat_dis_coeff    = 1
-            // allowed_flow_dir = 0
-            var path = TestHelper.GetTestFilePath(@"structures\keyNotInSchema.imp");
-            var schema =
-                new StructureSchemaCsvFile().ReadStructureSchema(
-                    StructureSchemaCsvFileTest.ApplicationStructuresSchemaCsvFilePath);
-
-            IList<Structure2D> structures = null;
-            var structuresFile = new StructuresFile
+            // Given
+            using (var temp = new TemporaryDirectory())
             {
-                StructureSchema = schema
-            };
-            TestHelper.AssertLogMessageIsGenerated(
-                () => structures = structuresFile.ReadStructures2D(path).ToList(),
-                String.Format(
-                    "Property 'Im_a_nonexistent_property' not supported for structures of type 'weir' and is skipped. (Line 8 of file {0})",
-                    path));
-            Assert.AreEqual(1, structures.Count, "Only one structure category in file.");
+                var filesList = new[]
+                {
+                    @"structures\FlowFMUnsupportedCategory_structures.ini",
+                    @"structures\structure01.pli",
+                };
 
-            var w = structures[0];
-            Assert.AreEqual("w", w.GetProperty(KnownStructureProperties.Name).GetValueAsString());
-            Assert.IsNull(w.GetProperty("Im_a_nonexistent_property"), "Should not add keys outside of schema.");
+                List<string> copiesInTempFilePaths =
+                    temp.CopyAllTestDataToTempDirectory(filesList);
+
+                string path = copiesInTempFilePaths[0];
+
+                var structuresFile = new StructuresFile {StructureSchema = schema};
+                var logHandler = new LogHandler($"reading the structures file ({path}),");
+
+                // When
+                IList<Structure2D> structures = structuresFile.ReadStructures2D(path, logHandler).ToList();
+
+                // Then
+                Assert.AreEqual(1, logHandler.LogMessagesTable.AllMessages.Count(), "1 sub message should have been added to the loghandler");
+                Assert.AreEqual(1, logHandler.LogMessagesTable.WarningMessages.Count(), "The sub message should have been a warning");
+                Assert.AreEqual(0, structures.Count,"A valid structure has been read from the file, while an invalid structure was written in the file");
+
+                string msg = logHandler.LogMessagesTable.WarningMessages.First();
+                string expectedMessage = string.Format(
+                    Resources.StructureFile_Category__0__not_supported_for_structures_and_is_skipped_Line__1__,"test", 1);
+                Assert.That(msg, Is.EqualTo(expectedMessage), "Expected the message of the warning to be different:");
+            }
         }
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void ReadStructuresWithMissingTypeProperty()
+        public void GivenAStructuresFileWithAStructureWithUnknownKeys_WhenReading_ThenAWarningShouldBeGivenAndTheStructureShouldBeCreated()
         {
-            // [structure]
-            // id               = w
-            // x                = 1
-            // y                = 2
-            // crest_level      = 3
-            // crest_width      = 4
-            // discharge_coeff  = 1
-            // lat_dis_coeff    = 1
-            // allowed_flow_dir = 0
-            var path = TestHelper.GetTestFilePath(@"structures\missingTypeProperty.imp");
-
-            IList<Structure2D> structures = null;
-            var structuresFile = new StructuresFile
+            // Given
+            using (var temp = new TemporaryDirectory())
             {
-                StructureSchema = schema
-            };
-            TestHelper.AssertLogMessageIsGenerated(() => structures = structuresFile.ReadStructures2D(path).ToList(),
-                                                   "Obligated property 'type' expected but is missing; Structure is skipped.");
-            Assert.AreEqual(0, structures.Count, "No valid structures in file.");
+                var filesList = new[]
+                {
+                    @"structures\FlowFM2KeysNotInScheme_structures.ini",
+                    @"structures\structure01.pli",
+                };
+
+                List<string> copiesInTempFilePaths = temp.CopyAllTestDataToTempDirectory(filesList);
+
+                string path = copiesInTempFilePaths[0];
+
+                var structuresFile = new StructuresFile {StructureSchema = schema};
+                var logHandler = new LogHandler($"reading the structures file ({path}),");
+
+                // When
+                IList<Structure2D> structures = structuresFile.ReadStructures2D(path, logHandler).ToList();
+
+                // Then
+                Assert.AreEqual(2, logHandler.LogMessagesTable.AllMessages.Count(),"2 sub messages should have been added to the loghandler");
+                Assert.AreEqual(2, logHandler.LogMessagesTable.WarningMessages.Count(),"Both messages should have been a warning");
+                Assert.AreEqual(1, structures.Count, "One structure should have been created");
+
+                string msg = logHandler.LogMessagesTable.WarningMessages.First();
+                string expectedMessage = string.Format(
+                    Resources.StructureFile_Property__0__not_supported_for_structures_of_type__1__and_is_skipped_Line__2__, "weir1", "weir", 8);
+                Assert.That(msg, Is.EqualTo(expectedMessage), "Expected the message of the first warning to be different:");
+
+                string msg2 = logHandler.LogMessagesTable.WarningMessages.Last();
+                string expectedMessage2 = string.Format(
+                    Resources.StructureFile_Property__0__not_supported_for_structures_of_type__1__and_is_skipped_Line__2__,"weir2", "weir", 9);
+                Assert.That(msg2, Is.EqualTo(expectedMessage2), "Expected the message of the second warning to be different:");
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void GivenAStructuresFileWithAStructureWithMissingType_WhenReading_ThenAWarningShouldBeGivenAndTheStructureShouldNotBeCreated()
+        {
+            // Given
+            using (var temp = new TemporaryDirectory())
+            {
+                var filesList = new[]
+                {
+                    @"structures\FlowFMMissingTypeProperty_structures.ini",
+                    @"structures\structure01.pli",
+                };
+
+                List<string> copiesInTempFilePaths = temp.CopyAllTestDataToTempDirectory(filesList);
+
+                string path = copiesInTempFilePaths[0];
+
+                var structuresFile = new StructuresFile {StructureSchema = schema};
+
+                var logHandler = new LogHandler($"reading the structures file ({path}),");
+
+                // When
+                IList<Structure2D> structures = structuresFile.ReadStructures2D(path, logHandler).ToList();
+
+                // Then
+                Assert.AreEqual(1, logHandler.LogMessagesTable.AllMessages.Count(), "1 sub message should have been added to the loghandler");
+                Assert.AreEqual(1, logHandler.LogMessagesTable.WarningMessages.Count(), "The sub message should have been a warning");
+                Assert.AreEqual(0, structures.Count, "A valid structure has been read from the file, while an invalid structure was written in the file");
+
+                string msg = logHandler.LogMessagesTable.WarningMessages.First();
+                string expectedMessage = string.Format(
+                    Resources.StructureFile_Obligated_property__0__expected_but_is_missing_Structure_is_skipped_Line__1__,"type", 1);
+                Assert.That(msg, Is.EqualTo(expectedMessage), "Expected the message of the warning to be different:");
+            }
         }
 
         [Test]
@@ -801,6 +851,58 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                                 "The tim file for the lower edge level is not correctly read");
 
                 Assert.AreEqual(2, generalStructure.Geometry.Coordinates.Length, "The pli file for the geometry is not correctly read"); 
+            }
+        }
+
+        [Test]
+        public void GivenAStructureFileWithTwoKeysNotInScheme_WhenReading_ThenOneGroupWarningShouldBeGiven()
+        {
+            // Given
+            using (var temp = new TemporaryDirectory())
+            {
+                var filesList = new[]
+                {
+                    @"structures\FlowFM2KeysNotInScheme_structures.ini",
+                    @"structures\structure01.pli",
+                };
+
+                List<string> copiesInTempFilePaths =
+                    temp.CopyAllTestDataToTempDirectory(filesList);
+
+                var structureFile = new StructuresFile
+                {
+                    StructureSchema = schema
+                };
+
+                string copyOfIniInTempFilePath = copiesInTempFilePaths[0];
+
+                // When
+                IList<IStructure> structures = null;
+
+                // Then
+                IEnumerable<string> messages = TestHelper.GetAllRenderedMessages(
+                    () => structures = structureFile.ReadStructuresFileRelativeToReferenceFile(copyOfIniInTempFilePath,
+                                                                                               copyOfIniInTempFilePath));
+
+                Assert.AreEqual(1, structures.Count, "The ini file for the structures is not correctly read");
+
+                Assert.That(messages, Has.Count.EqualTo(1), "Expected a single grouped warning message:");
+
+                string msg = messages.First();
+
+                string expectedMsgHeader = $"During reading the structures file ({copyOfIniInTempFilePath}), the following log messages were produced";
+                Assert.That(msg, Is.StringStarting(expectedMsgHeader), "Expected the header of the message to be different:");
+
+
+                List<string> subMsgs = msg.Split(new[] { "\n- " }, StringSplitOptions.None).ToList();
+                subMsgs.RemoveAt(0);                              // Remove header msg.
+                subMsgs = subMsgs.Select(s => s.Trim()).ToList(); // Remove excessive white characters.
+
+                Assert.That(subMsgs, Has.Count.EqualTo(2), "Expected 2 sub messages within the warning message.");
+                Assert.That(subMsgs[0], Is.EqualTo(string.Format(Resources.StructureFile_Property__0__not_supported_for_structures_of_type__1__and_is_skipped_Line__2__, "weir1", "weir", 8)),
+                            "Expected a different string as first sub message.");
+                Assert.That(subMsgs[1], Is.EqualTo(string.Format(Resources.StructureFile_Property__0__not_supported_for_structures_of_type__1__and_is_skipped_Line__2__, "weir2", "weir", 9)),
+                            "Expected a different string as second sub message.");
             }
         }
 
