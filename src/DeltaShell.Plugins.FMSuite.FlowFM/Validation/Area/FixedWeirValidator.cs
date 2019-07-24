@@ -18,16 +18,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area
         /// <param name="fixedWeirs"> The set of fixed weirs to be evaluated. </param>
         /// <param name="gridExtent"> The grid extent to which the fixed weir should be snapped. </param>
         /// <param name="fixedWeirsProperties"> The fixed weir properties </param>
+        /// <param name="scheme">The fixed weir scheme the model is using.</param>
         /// <returns> A set of validation issues encountered. </returns>
         public static IEnumerable<ValidationIssue> Validate(this IEnumerable<FixedWeir> fixedWeirs,
                                                             Envelope gridExtent,
                                                             IEnumerable<ModelFeatureCoordinateData<FixedWeir>> fixedWeirsProperties,
-                                                            string fixedWeirScheme)
+                                                            FixedWeirSchemes scheme)
         {
             var issues = new List<ValidationIssue>();
             List<ModelFeatureCoordinateData<FixedWeir>> fixedWeirsPropertyList = fixedWeirsProperties.ToList();
 
-            Enum.TryParse(fixedWeirScheme, true, out FixedWeirSchemes scheme);
             double minimalGroundHeight = GetMinimalGroundHeightForScheme(scheme);
             string schemeName = scheme.GetDescription();
 
@@ -103,7 +103,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area
                 case FixedWeirSchemes.Scheme9:
                     return 0.0d;
                 case FixedWeirSchemes.Scheme8:
-                    return 0.10d;
+                    return 0.1d;
                 default:
                     return 0.0d;
             }

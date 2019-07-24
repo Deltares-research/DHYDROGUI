@@ -33,14 +33,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             fixedWeirs = new List<FixedWeir> {fixedWeir};
         }
 
-        [Test]
-        public void GivenAFixedWeirWithAGeometryThatDoesNotSnapToGrid_WhenValidateIsCalled_ThenExpectedValidationIssueIsReturned()
+        [TestCase(FixedWeirSchemes.None)]
+        [TestCase(FixedWeirSchemes.Scheme6)]
+        [TestCase(FixedWeirSchemes.Scheme8)]
+        [TestCase(FixedWeirSchemes.Scheme9)]
+        public void GivenAFixedWeirWithAGeometryThatDoesNotSnapToGrid_WhenValidateIsCalled_ThenExpectedValidationIssueIsReturned(FixedWeirSchemes scheme)
         {
             // Given
             var gridExtent = new Envelope();
 
             // When
-            var issues = fixedWeirs.Validate(gridExtent, new List<ModelFeatureCoordinateData<FixedWeir>>(), "").ToList();
+            var issues = fixedWeirs.Validate(gridExtent, new List<ModelFeatureCoordinateData<FixedWeir>>(), scheme).ToList();
 
             // Then
             Assert.AreEqual(1, issues.Count, MessageDifferentNumberValidationIssues);
@@ -50,19 +53,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             Assert.AreEqual(expectedMessage, issue.Message, MessageDifferentIssueMessage);
         }
 
-        [TestCase(0, 0.0, -50, 0)]
-        [TestCase(0, 0.0, 50, 0)]
-        [TestCase(6, 0.0, -1, 2)]
-        [TestCase(6, 0.0, 0, 0)]
-        [TestCase(6, 0.0, 1, 0)]
-        [TestCase(8, 0.1, 0, 2)]
-        [TestCase(8, 0.1, 0.1, 0)]
-        [TestCase(8, 0.1, 0.2, 0)]
-        [TestCase(9, 0.0, -1, 2)]
-        [TestCase(9, 0.0, 0, 0)]
-        [TestCase(9, 0.0, 1, 0)]
+        [TestCase(FixedWeirSchemes.None, 0.0, -50, 0)]
+        [TestCase(FixedWeirSchemes.None, 0.0, 50, 0)]
+        [TestCase(FixedWeirSchemes.Scheme6, 0.0, -1, 2)]
+        [TestCase(FixedWeirSchemes.Scheme6, 0.0, 0, 0)]
+        [TestCase(FixedWeirSchemes.Scheme6, 0.0, 1, 0)]
+        [TestCase(FixedWeirSchemes.Scheme8, 0.1, 0, 2)]
+        [TestCase(FixedWeirSchemes.Scheme8, 0.1, 0.1, 0)]
+        [TestCase(FixedWeirSchemes.Scheme8, 0.1, 0.2, 0)]
+        [TestCase(FixedWeirSchemes.Scheme9, 0.0, -1, 2)]
+        [TestCase(FixedWeirSchemes.Scheme9, 0.0, 0, 0)]
+        [TestCase(FixedWeirSchemes.Scheme9, 0.0, 1, 0)]
         public void GivenAFixedWeirAnWithInvalidGroundHeights_WhenValidateIsCalled_ThenExpectedValidationIssueIsReturned(
-            int scheme, double minimumValue, double value, int nExpectedIssues)
+            FixedWeirSchemes scheme, double minimumValue, double value, int nExpectedIssues)
         {
             // Given
             var gridExtent = new Envelope(new Coordinate(10, 10));
@@ -70,7 +73,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
                 CreateModelFeatureCoordinateDataWithValues(fixedWeirs.First(), value);
 
             // When
-            List<ValidationIssue> issues = fixedWeirs.Validate(gridExtent, fixedWeirsProperties, scheme.ToString()).ToList();
+            List<ValidationIssue> issues = fixedWeirs.Validate(gridExtent, fixedWeirsProperties, scheme).ToList();
 
             // Then
             Assert.AreEqual(nExpectedIssues, issues.Count, MessageDifferentNumberValidationIssues);
@@ -80,7 +83,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
                 Assert.AreEqual(ValidationSeverity.Info, issue.Severity, MessageDifferentValidationSeverity);
                 string expectedMessage = string.Format(
                     Resources.FixedWeirValidator_Fixed_weir_contains_ground_heights_smaller_than_minimum,
-                    fixedWeir.Name, ((FixedWeirSchemes) scheme).GetDescription(), i == 0 ? "left" : "right", minimumValue);
+                    fixedWeir.Name, scheme.GetDescription(), i == 0 ? "left" : "right", minimumValue);
                 Assert.AreEqual(expectedMessage, issue.Message, MessageDifferentIssueMessage);
             }
         }

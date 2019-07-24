@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Utils.Validation;
+using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area;
@@ -20,9 +22,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
         {
             HydroArea area = model.Area;
             string fixedWeirScheme = model.ModelDefinition.GetModelProperty(KnownProperties.FixedWeirScheme).GetValueAsString();
+            Enum.TryParse(fixedWeirScheme, true, out FixedWeirSchemes schemeEnumType);
+
             IEnumerable<ValidationIssue> issues = area.ThinDams.Validate(model.GridExtent)
                                                       .Concat(model.SourcesAndSinks.Validate(model.GridExtent, model.StartTime,model.StopTime))
-                                                      .Concat(area.FixedWeirs.Validate(model.GridExtent, model.FixedWeirsProperties, fixedWeirScheme))
+                                                      .Concat(area.FixedWeirs.Validate(model.GridExtent, model.FixedWeirsProperties, schemeEnumType))
                                                       .Concat(area.Weirs.Validate(model.GridExtent, model.StartTime,model.StopTime))
                                                       .Concat(area.Pumps.Validate(model.GridExtent, model.StartTime,model.StopTime));
 
