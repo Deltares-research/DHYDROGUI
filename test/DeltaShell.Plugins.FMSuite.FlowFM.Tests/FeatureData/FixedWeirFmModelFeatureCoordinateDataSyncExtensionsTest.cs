@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using DelftTools.Hydro.Structures;
+using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
@@ -67,15 +68,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
         [Test]
         public void GivenModelFeatureCoordinateData_WhenFeatureIsAddedAndSchemeIsChanging_ThenAllDefaultValuesCouldBeFound()
         {
-            var lineGeomery = new LineString(new Coordinate[]
-            {
-                new Coordinate(0,0),
-                new Coordinate(10,10)
-            });
-
-            var fixedWeir = new FixedWeir { Geometry = lineGeomery };
-            
-            var data = new ModelFeatureCoordinateData<FixedWeir> { Feature = fixedWeir };
+            ModelFeatureCoordinateData<FixedWeir> data = CreateModelFeatureCoordinateDataWithGeometry();
             data.UpdateDataColumns("Scheme9");
             
             Assert.AreEqual(0,data.DataColumns[0].ValueList[0]);
@@ -100,6 +93,52 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
             Assert.AreEqual(0, data.DataColumns[6].ValueList[1]);
         }
 
-        
+        [TestCase(FixedWeirSchemes.None)]
+        [TestCase(FixedWeirSchemes.Scheme6)]
+        [TestCase(FixedWeirSchemes.Scheme8)]
+        [TestCase(FixedWeirSchemes.Scheme9)]
+        public void GivenANewModelFeatureCoordinateDataWithGeometry_WhenUpdateDataColumnsIsCalled_ThenColumnsHaveDefaultValues(FixedWeirSchemes scheme)
+        {
+            // Given
+            ModelFeatureCoordinateData<FixedWeir> data = CreateModelFeatureCoordinateDataWithGeometry();
+            string schemeName = scheme.GetDescription();
+            double expectedValue = scheme.GetMinimalAllowedGroundHeight();
+
+            // When
+            data.UpdateDataColumns(scheme.ToString());
+
+            // Then
+            IDataColumn groundHeightLeftColumn = data.DataColumns.FirstOrDefault(
+                c => c.Name == FixedWeirFmModelFeatureCoordinateDataSyncExtensions.SillUpColumnName);
+            ValidateColumnValues(groundHeightLeftColumn, expectedValue, schemeName);
+
+            IDataColumn groundHeightRightColumn = data.DataColumns.FirstOrDefault(
+                c => c.Name == FixedWeirFmModelFeatureCoordinateDataSyncExtensions.SillDownColumnName);
+            ValidateColumnValues(groundHeightRightColumn, expectedValue, schemeName);
+        }
+
+        private static ModelFeatureCoordinateData<FixedWeir> CreateModelFeatureCoordinateDataWithGeometry()
+        {
+            var geometry = new LineString(new[]
+            {
+                new Coordinate(0, 0),
+                new Coordinate(10, 10)
+            });
+            var fixedWeir = new FixedWeir {Geometry = geometry};
+            var data = new ModelFeatureCoordinateData<FixedWeir> {Feature = fixedWeir};
+            return data;
+        }
+
+        private static void ValidateColumnValues(IDataColumn groundHeightColumn, double expectedValue, string schemeName)
+        {
+            Assert.That(groundHeightColumn.DefaultValue, Is.EqualTo(expectedValue),
+                        $"For fixed weir scheme {schemeName} a different default value was expected for the ground height column.");
+
+            foreach (double value in groundHeightColumn.ValueList)
+            {
+                Assert.That(value, Is.EqualTo(expectedValue),
+                            $"For fixed weir scheme {schemeName} a different value was expected in the ground height column.");
+            }
+        }
     }
 }
