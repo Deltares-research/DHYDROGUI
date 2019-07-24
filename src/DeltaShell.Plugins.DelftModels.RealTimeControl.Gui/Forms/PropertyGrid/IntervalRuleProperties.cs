@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing.Design;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
@@ -13,6 +14,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.PropertyGrid
     [ResourcesDisplayName(typeof(Resources), "IntervalRuleProperties_DisplayName")]
     public class IntervalRuleProperties : ObjectProperties<IntervalRule>
     {
+        [ExcludeFromCodeCoverage]
         [ResourcesCategory(typeof(Resources), "Categories_General")]
         [ResourcesDisplayName(typeof(Resources), "Common_Name_DisplayName")]
         [ResourcesDescription(typeof(Resources), "Rule_Name_Description")]
@@ -23,6 +25,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.PropertyGrid
             set => data.Name = value;
         }
 
+        [ExcludeFromCodeCoverage]
         [ResourcesCategory(typeof(Resources), "Categories_General")]
         [ResourcesDisplayName(typeof(Resources), "Common_LongName_DisplayName")]
         [ResourcesDescription(typeof(Resources), "Rule_LongName_Description")]
@@ -33,6 +36,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.PropertyGrid
             set => data.LongName = value;
         }
 
+        [ExcludeFromCodeCoverage]
         [DynamicReadOnly]
         [ResourcesCategory(typeof(Resources), "Category_Data")]
         [ResourcesDisplayName(typeof(Resources), "ConstantSetpoint_DisplayName")]
@@ -44,6 +48,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.PropertyGrid
             set => data.ConstantValue = value;
         }
 
+        [ExcludeFromCodeCoverage]
         [Editor(typeof(ViewPropertyEditor), typeof(UITypeEditor))]
         [DynamicReadOnly]
         [ResourcesCategory(typeof(Resources), "Category_Data")]
@@ -56,6 +61,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.PropertyGrid
             set => data.TimeSeries = value;
         }
 
+        [ExcludeFromCodeCoverage]
         [ResourcesCategory(typeof(Resources), "Category_Data")]
         [ResourcesDisplayName(typeof(Resources), "SetpointMode")]
         [ResourcesDescription(typeof(Resources), "SetpointMode_Description")]
@@ -66,6 +72,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.PropertyGrid
             set => data.IntervalType = value;
         }
 
+        [ExcludeFromCodeCoverage]
         [DynamicReadOnly]
         [ResourcesCategory(typeof(Resources), "RTC_Category_InterpolationExtrapolation")]
         [ResourcesDisplayName(typeof(Resources), "RTC_Interpolation_DisplayName")]
@@ -77,6 +84,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.PropertyGrid
             set => data.InterpolationOptionsTime = (InterpolationType)value;
         }
 
+        [ExcludeFromCodeCoverage]
         [DynamicReadOnly]
         [ResourcesCategory(typeof(Resources), "RTC_Category_InterpolationExtrapolation")]
         [ResourcesDisplayName(typeof(Resources), "RTC_Extrapolation_DisplayName")]
@@ -88,6 +96,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.PropertyGrid
             set => data.Extrapolation = (ExtrapolationType)value;
         }
 
+        [ExcludeFromCodeCoverage]
         [DynamicReadOnly]
         [ResourcesCategory(typeof(Resources), "Category_Limits")]
         [ResourcesDisplayName(typeof(Resources), "IntervalRuleProperties_MaxSpeed_DisplayName")]
@@ -99,6 +108,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.PropertyGrid
             set => data.Setting.MaxSpeed = value;
         }
 
+        [ExcludeFromCodeCoverage]
         [DynamicReadOnly]
         [ResourcesCategory(typeof(Resources), "Category_Limits")]
         [ResourcesDisplayName(typeof(Resources), "IntervalRuleProperties_FixedInterval_DisplayName")]
@@ -110,6 +120,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.PropertyGrid
             set => data.FixedInterval = value;
         }
 
+        [ExcludeFromCodeCoverage]
         [ResourcesCategory(typeof(Resources), "Category_Limits")]
         [ResourcesDisplayName(typeof(Resources), "IntervalRuleProperties_AboutOutput_DisplayName")]
         [ResourcesDescription(typeof(Resources), "IntervalRuleProperties_Above_Description")]
@@ -120,6 +131,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.PropertyGrid
             set => data.Setting.Above = value;
         }
 
+        [ExcludeFromCodeCoverage]
         [ResourcesCategory(typeof(Resources), "Category_Limits")]
         [ResourcesDisplayName(typeof(Resources), "IntervalRuleProperties_Below_DisplayName")]
         [ResourcesDescription(typeof(Resources), "IntervalRuleProperties_Below_Description")]
@@ -130,6 +142,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.PropertyGrid
             set => data.Setting.Below = value;
         }
 
+        [ExcludeFromCodeCoverage]
         [ResourcesCategory(typeof(Resources), "Category_Limits")]
         [ResourcesDisplayName(typeof(Resources), "IntervalRuleProperties_DeadbankAroundSetpoint_DisplayName")]
         [ResourcesDescription(typeof(Resources), "IntervalRuleProperties_DeadbankAroundSetpoint_Description")]
@@ -140,6 +153,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.PropertyGrid
             set => data.DeadbandAroundSetpoint = value;
         }
 
+        [ExcludeFromCodeCoverage]
         [ResourcesCategory(typeof(Resources), "Category_Limits")]
         [ResourcesDisplayName(typeof(Resources), "IntervalRuleProperties_DeadbandType_DisplayName")]
         [ResourcesDescription(typeof(Resources), "IntervalRuleProperties_DeadbandType_Description")]

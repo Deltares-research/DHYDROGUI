@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing.Design;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
@@ -13,6 +14,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.PropertyGrid
     [ResourcesDisplayName(typeof(Resources), "PIDRuleProperties_DisplayName")]
     public class PIDRuleProperties : ObjectProperties<PIDRule>
     {
+        [ExcludeFromCodeCoverage]
         [ResourcesCategory(typeof(Resources), "Categories_General")]
         [ResourcesDisplayName(typeof(Resources), "Common_Name_DisplayName")]
         [ResourcesDescription(typeof(Resources), "Rule_Name_Description")]
@@ -23,6 +25,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.PropertyGrid
             set => data.Name = value;
         }
 
+        [ExcludeFromCodeCoverage]
         [ResourcesCategory(typeof(Resources), "Categories_General")]
         [ResourcesDisplayName(typeof(Resources), "Common_LongName_DisplayName")]
         [ResourcesDescription(typeof(Resources), "Rule_LongName_Description")]
@@ -33,7 +36,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.PropertyGrid
             set => data.LongName = value;
         }
 
-
+        [ExcludeFromCodeCoverage]
         [ResourcesCategory(typeof(Resources), "Category_Data")]
         [ResourcesDisplayName(typeof(Resources), "ConstantSetpoint_DisplayName")]
         [ResourcesDescription(typeof(Resources), "ConstantSetpoint_Description")]
@@ -45,6 +48,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.PropertyGrid
             set => data.ConstantValue = value;
         }
 
+        [ExcludeFromCodeCoverage]
         [DynamicReadOnly]
         [Editor(typeof(ViewPropertyEditor), typeof(UITypeEditor))]
         [ResourcesCategory(typeof(Resources), "Category_Data")]
@@ -57,6 +61,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.PropertyGrid
             set => data.TimeSeries = value;
         }
 
+        [ExcludeFromCodeCoverage]
         [ResourcesCategory(typeof(Resources), "Category_Data")]
         [ResourcesDisplayName(typeof(Resources), "SetpointMode")]
         [ResourcesDescription(typeof(Resources), "SetpointMode_Description")]
@@ -67,6 +72,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.PropertyGrid
             set => data.PidRuleSetpointType = value;
         }
 
+        [ExcludeFromCodeCoverage]
         [DynamicReadOnly]
         [ResourcesCategory(typeof(Resources), "RTC_Category_InterpolationExtrapolation")]
         [ResourcesDisplayName(typeof(Resources), "RTC_Interpolation_DisplayName")]
@@ -78,6 +84,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.PropertyGrid
             set => data.InterpolationOptionsTime = (InterpolationType) value;
         }
 
+        [ExcludeFromCodeCoverage]
         [DynamicReadOnly]
         [ResourcesCategory(typeof(Resources), "RTC_Category_InterpolationExtrapolation")]
         [ResourcesDisplayName(typeof(Resources), "RTC_Extrapolation_DisplayName")]
@@ -89,6 +96,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.PropertyGrid
             set => data.ExtrapolationOptionsTime = (ExtrapolationType) value;
         }
 
+        [ExcludeFromCodeCoverage]
         [ResourcesCategory(typeof(Resources), "PIDRuleProperties_Category_GainFactor")]
         [ResourcesDisplayName(typeof(Resources), "PIDRuleProperties_Kp_DisplayName")]
         [ResourcesDescription(typeof(Resources), "PIDRuleProperties_Kp_Description")]
@@ -99,6 +107,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.PropertyGrid
             set => data.Kp = value;
         }
 
+        [ExcludeFromCodeCoverage]
         [ResourcesCategory(typeof(Resources), "PIDRuleProperties_Category_GainFactor")]
         [ResourcesDisplayName(typeof(Resources), "PIDRuleProperties_Ki_DisplayName")]
         [ResourcesDescription(typeof(Resources), "PIDRuleProperties_Ki_Descirption")]
@@ -109,6 +118,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.PropertyGrid
             set => data.Ki = value;
         }
 
+        [ExcludeFromCodeCoverage]
         [ResourcesCategory(typeof(Resources), "PIDRuleProperties_Category_GainFactor")]
         [ResourcesDisplayName(typeof(Resources), "PIDRuleProperties_Kd_DisplayName")]
         [ResourcesDescription(typeof(Resources), "PIDRuleProperties_Kd_Description")]
@@ -119,6 +129,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.PropertyGrid
             set => data.Kd = value;
         }
 
+        [ExcludeFromCodeCoverage]
         [ResourcesCategory(typeof(Resources), "Category_Limits")]
         [ResourcesDisplayName(typeof(Resources), "PIDRuleProperties_Minimum_DisplayName")]
         [ResourcesDescription(typeof(Resources), "PIDRuleProperties_Minimum_Description")]
@@ -129,6 +140,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.PropertyGrid
             set => data.Setting.Min = value;
         }
 
+        [ExcludeFromCodeCoverage]
         [ResourcesCategory(typeof(Resources), "Category_Limits")]
         [ResourcesDisplayName(typeof(Resources), "PIDRuleProperties_Maximum_DisplayName")]
         [ResourcesDescription(typeof(Resources), "PIDRuleProperties_Maximum_Description")]
@@ -139,6 +151,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.PropertyGrid
             set => data.Setting.Max = value;
         }
 
+        [ExcludeFromCodeCoverage]
         [ResourcesCategory(typeof(Resources), "Category_Limits")]
         [ResourcesDisplayName(typeof(Resources), "PIDRuleProperties_MaxSpeed_DisplayName")]
         [ResourcesDescription(typeof(Resources), "PIDRuleProperties_MaxSpeed_Description")]
