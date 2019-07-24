@@ -246,6 +246,7 @@
     <Compile Include="FeatureData\BridgePillarFmModelFeatureCoordinateDataSyncExtensionsTest.cs" />
     <Compile Include="FeatureData\DataColumnsNameComparerTest.cs" />
     <Compile Include="FeatureData\FixedWeirFmModelFeatureCoordinateDataSyncExtensionsTest.cs" />
+    <Compile Include="FeatureData\FixedWeirSchemeExtensionsTest.cs" />
     <Compile Include="FeatureData\FlowBoundaryConditionTest.cs" />
     <Compile Include="FeatureData\ModelFeatureCoordinateDataTest.cs" />
     <Compile Include="FeatureData\SourceAndSinkTest.cs" />

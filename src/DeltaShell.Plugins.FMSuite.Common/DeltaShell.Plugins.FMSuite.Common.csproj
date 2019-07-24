@@ -150,6 +150,11 @@
     <Compile Include="IO\Files\HtcFile.cs" />
     <Compile Include="IO\Readers\HtcFileReader.cs" />
     <Compile Include="IO\Readers\ReaderHelper.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Wind\FileBasedWindDefinition.cs" />
     <Compile Include="IO\Readers\ApwxwyFileReader.cs" />
     <Compile Include="IO\ImportExport\Exporters\Delft3DDepthFileExporter.cs" />
@@ -216,7 +221,13 @@
       <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+	  <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>

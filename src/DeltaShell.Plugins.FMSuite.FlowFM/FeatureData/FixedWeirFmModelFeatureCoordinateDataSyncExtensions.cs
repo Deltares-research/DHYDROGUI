@@ -46,24 +46,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
 
         private static IEnumerable<IDataColumn> GetExpectedColumns(FixedWeirSchemes scheme)
         {
+            var defaultValueGroundHeight = scheme.GetMinimalAllowedGroundHeight();
+
             switch (scheme)
             {
                 case FixedWeirSchemes.None:
                 case FixedWeirSchemes.Scheme6:
                 case FixedWeirSchemes.Scheme8:
-                    return DataColumnsForScheme6And8And0();
+                    return DataColumnsForScheme6And8And0(defaultValueGroundHeight);
                 case FixedWeirSchemes.Scheme9:
-                    return DataColumnsForScheme6And8And0().Concat(DataColumnsScheme9());
+                    return DataColumnsForScheme6And8And0(defaultValueGroundHeight).Concat(DataColumnsScheme9());
                 default:
                     throw new ArgumentOutOfRangeException();
             }
         }
 
-        private static IEnumerable<IDataColumn> DataColumnsForScheme6And8And0()
+        private static IEnumerable<IDataColumn> DataColumnsForScheme6And8And0(double defaultValueGroundHeight)
         {
             yield return new DataColumn<double>(CrestLevelColumnName);
-            yield return new DataColumn<double>(SillUpColumnName);
-            yield return new DataColumn<double>(SillDownColumnName);
+            yield return new DataColumn<double>(SillUpColumnName) {DefaultValue = defaultValueGroundHeight};
+            yield return new DataColumn<double>(SillDownColumnName) {DefaultValue = defaultValueGroundHeight};
         }
 
         private static IEnumerable<IDataColumn> DataColumnsScheme9()

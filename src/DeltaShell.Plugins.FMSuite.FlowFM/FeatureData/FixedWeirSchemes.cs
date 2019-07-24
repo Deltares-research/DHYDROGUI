@@ -4,16 +4,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
 {
     public enum FixedWeirSchemes
     {
-        [Description("No scheme selected")]
+        [Description("None")]
         None = 0,
 
-        [Description("Fixed Weir Scheme 6")]
+        [Description("Numerical")]
         Scheme6 = 6,
 
-        [Description("Fixed Weir Scheme 8")]
+        [Description("Tabellenboek")]
         Scheme8 = 8,
 
-        [Description("Fixed Weir Scheme 9")]
+        [Description("Villemonte")]
         Scheme9 = 9,
     }
 }

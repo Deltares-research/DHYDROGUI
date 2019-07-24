@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing.Design;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
@@ -12,6 +13,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.PropertyGrid
     [ResourcesDisplayName(typeof(Resources), "RelativeTimeRuleProperties_DisplayName")]
     public class RelativeTimeRuleProperties : ObjectProperties<RelativeTimeRule>
     {
+        [ExcludeFromCodeCoverage]
         [ResourcesCategory(typeof(Resources), "Categories_General")]
         [ResourcesDisplayName(typeof(Resources), "Common_Name_DisplayName")]
         [ResourcesDescription(typeof(Resources), "Rule_Name_Description")]
@@ -22,6 +24,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.PropertyGrid
             set => data.Name = value;
         }
 
+        [ExcludeFromCodeCoverage]
         [ResourcesCategory(typeof(Resources), "Categories_General")]
         [ResourcesDisplayName(typeof(Resources), "Common_LongName_DisplayName")]
         [ResourcesDescription(typeof(Resources), "Rule_LongName_Description")]
@@ -32,6 +35,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.PropertyGrid
             set => data.LongName = value;
         }
 
+        [ExcludeFromCodeCoverage]
         [ResourcesCategory(typeof(Resources), "Category_Data")]
         [ResourcesDisplayName(typeof(Resources), "RelativeTimeRuleProperties_FromValue_DisplayName")]
         [ResourcesDescription(typeof(Resources), "RelativeTimeRuleProperties_FromValue_Description")]
@@ -42,6 +46,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.PropertyGrid
             set => data.FromValue = value;
         }
 
+        [ExcludeFromCodeCoverage]
         [ResourcesCategory(typeof(Resources), "Category_Data")]
         [ResourcesDisplayName(typeof(Resources), "RelativeTimeRuleProperties_MinimumPeriod_DisplayName")]
         [ResourcesDescription(typeof(Resources), "RelativeTimeRuleProperties_MinimumPeriod_Description")]
@@ -51,7 +56,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.PropertyGrid
             get => data.MinimumPeriod;
             set => data.MinimumPeriod = value;
         }
-
+        
         [Editor(typeof(ViewPropertyEditor), typeof(UITypeEditor))]
         [ResourcesCategory(typeof(Resources), "Category_Data")]
         [ResourcesDisplayName(typeof(Resources), "RTC_Timeseries_DisplayName")]
@@ -69,7 +74,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.PropertyGrid
             set => data.Function = value;
         }
 
-        // TODO: When Extrapolation is added, change the category reference to RTC_Category_InterpolationExtrapolation
+        [ExcludeFromCodeCoverage]
         [ResourcesCategory(typeof(Resources), "RelativeTimeRuleProperties_Category_Interpolation")]
         [ResourcesDisplayName(typeof(Resources), "RelativeTimeRuleProperties_Interpolation_DisplayName")]
         [ResourcesDescription(typeof(Resources), "RTC_Interpolation_Description")]
@@ -80,10 +85,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.PropertyGrid
             set => data.Interpolation = value;
         }
 
-        /// <summary>
-        /// todo refactor UpdateFunctionArgumentName and UpdateFunctionComponentName
-        /// </summary>
-        private void UpdateFunctionArgumentName()
+       private void UpdateFunctionArgumentName()
         {
             if (data.Inputs.Count == 1)
             {

@@ -11,8 +11,10 @@ using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
+using DeltaShell.NGHS.IO.Handlers;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
+using DeltaShell.Plugins.FMSuite.Common.Properties;
 using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Extensions.Features;
@@ -66,19 +68,26 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
         /// <returns>List with weirs with different weirformulas and pumps</returns>
         public IList<IStructure> ReadStructuresFileRelativeToReferenceFile(string structuresFilePath, string structuresSubFilesReferenceFilePath)
         {
-            return
-                ReadStructures2D(structuresFilePath)
+            var logHandler = new LogHandler($"reading the structures file ({structuresFilePath}),");
+
+            List<IStructure> structures = 
+                ReadStructures2D(structuresFilePath, logHandler)
                     .Select(s => ConvertStructure(s, structuresSubFilesReferenceFilePath))
                     .Where(s => s != null)
                     .ToList();
+
+            logHandler.LogReport();
+
+            return structures;
         }
 
         /// <summary>
         ///  Method reads ini file and creates temporary data access objects ("structures") 
         /// </summary>
         /// <param name="filePath"></param>
+        /// <param name="logHandler"></param>
         /// <returns>List with structures</returns>
-        public IEnumerable<Structure2D> ReadStructures2D(string filePath)
+        public IEnumerable<Structure2D> ReadStructures2D(string filePath, LogHandler logHandler = null)
         {
             IList<DelftIniCategory> categories = new DelftIniReader().ReadDelftIniFile(filePath);
 
@@ -88,7 +97,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
                 // Filter out unexpected .ini categories:
                 if (category.Name != StructureCategoryName)
                 {
-                    Log.WarnFormat("Category [{0}] not supported for structures and is skipped.", category.Name);
+                    logHandler?.ReportWarningFormat(Resources.StructureFile_Category__0__not_supported_for_structures_and_is_skipped_Line__1__, category.Name, category.LineNumber);
                     continue;
                 }
 
@@ -98,18 +107,18 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
                     category.Properties.FirstOrDefault(p => p.Name == KnownStructureProperties.Type);
                 if (structureTypeProperty == null)
                 {
-                    Log.WarnFormat("Obligated property '{0}' expected but is missing; Structure is skipped.",
-                                   KnownStructureProperties.Type);
+                    logHandler?.ReportWarningFormat(Resources.StructureFile_Obligated_property__0__expected_but_is_missing_Structure_is_skipped_Line__1__,
+                                   KnownStructureProperties.Type, category.LineNumber);
                     continue;
                 }
 
                 Structure2D structure2D =
-                    CreateStructure2D(StructureSchema, structureTypeProperty.Value, category, filePath);
+                    CreateStructure2D(StructureSchema, structureTypeProperty.Value, category, filePath, logHandler);
                 string errorMessage = StructureFactoryValidator.Validate(structure2D);
                 if (!string.IsNullOrEmpty(errorMessage))
                 {
-                    Log.ErrorFormat("Failed to convert .ini structure definition to actual structure: {0}.",
-                                    errorMessage);
+                    logHandler?.ReportErrorFormat(Resources.StructureFile_Failed_to_convert_ini_structure_definition_to_actual_structure_Line__0____1__,
+                                    category.LineNumber, errorMessage);
                     continue;
                 }
 
@@ -239,7 +248,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
         }
 
         private Structure2D CreateStructure2D(StructureSchema<ModelPropertyDefinition> schema, string structureType,
-                                              DelftIniCategory category, string filePath)
+                                              DelftIniCategory category, string filePath, ILogHandler logHandler)
         {
             var newStructure = new Structure2D(structureType);
 
@@ -248,9 +257,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
                 ModelPropertyDefinition modelPropertyDefinition = schema.GetDefinition(structureType, property.Name);
                 if (modelPropertyDefinition == null)
                 {
-                    Log.WarnFormat(
-                        "Property '{0}' not supported for structures of type '{1}' and is skipped. (Line {2} of file {3})",
-                        property.Name, structureType, property.LineNumber, filePath);
+                    logHandler?.ReportWarningFormat(
+                        Resources.StructureFile_Property__0__not_supported_for_structures_of_type__1__and_is_skipped_Line__2__,
+                        property.Name, structureType, property.LineNumber);
                     continue;
                 }
 
@@ -265,17 +274,17 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
                         {
                             if (string.IsNullOrEmpty(directory) && TimFolder != null)
                             {
-                                Log.WarnFormat(
-                                    "Structure time series {0} will be written to the time series folder {1}",
-                                    propertyValue.TimeSeriesFilename, TimFolder);
+                                logHandler?.ReportWarningFormat(
+                                    Resources.StructureFile_Structure_time_series__0__will_be_written_to_the_time_series_folder__1__Line__2__,
+                                    propertyValue.TimeSeriesFilename, TimFolder, property.LineNumber);
                             }
                             else
                             {
                                 if (TimFolder != null)
                                 {
-                                    Log.WarnFormat(
-                                        "Replacing structure time series folder {0} with {1}... all structure time series will be written to this folder",
-                                        TimFolder, directory);
+                                    logHandler?.ReportWarningFormat(
+                                        Resources.StructureFile_Replacing_structure_time_series_folder__0__with__1__all_structure_time_series_will_be_written_to_this_folder_Line__2__,
+                                        TimFolder, directory, property.LineNumber);
                                 }
 
                                 if (!string.IsNullOrEmpty(directory))
@@ -291,7 +300,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
                 catch (FormatException e)
                 {
                     throw new FormatException(string.Format(
-                                                  "An invalid value{0} was encountered (expected {1}) for property '{2}' on line {3} of file {4}",
+                                                  Resources.StructureFile_An_invalid_value__0__was_encountered_expected__1__for_property__2__on_line__3__,
                                                   e.InnerException is OverflowException ? " (too large/small)" : "",
                                                   GetValueTypeDescription(
                                                       modelPropertyDefinition.DataType, modelPropertyDefinition),

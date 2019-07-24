@@ -22,6 +22,7 @@ using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
@@ -45,20 +46,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
     [TestFixture]
     public class WaterFlowFMModelTest
     {
-        private MockRepository mocks;
-
-        [SetUp]
-        public void Setup()
-        {
-            mocks = new MockRepository();
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-            mocks.VerifyAll();
-        }
-
         [Test]
         public void CheckDefaultPropertiesOfFMModel()
         {
@@ -503,13 +490,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        public void HydFileNameShouldBeBasedOnMduFileName()
+        public void GivenAWaterFlowFMModel_WhenHydFilePathIsCalled_ThenHydFileNameShouldBeBasedOnMduFileName()
         {
-            var model = new WaterFlowFMModel {WorkingDirectoryPathFunc = () => "C:\\TestWorkDir"};
+            // Given
+            const string mduFileName = "mdu_file_name";
+            var model = new WaterFlowFMModel {DelwaqOutputDirectoryPath = "dir"};
+            TypeUtils.SetPrivatePropertyValue(model, nameof(model.MduFilePath), $"{mduFileName}.mdu");
 
-            TypeUtils.SetPrivatePropertyValue(model, TypeUtils.GetMemberName(() => model.MduFilePath), "Test.mdu");
+            // When
+            string hydFileName = Path.GetFileNameWithoutExtension(model.HydFilePath);
 
-            Assert.AreEqual("C:\\TestWorkDir\\FlowFM\\DFM_DELWAQ_FlowFM\\Test.hyd", model.HydFilePath);
+            // Then
+            Assert.AreEqual(hydFileName, mduFileName,
+                            "Name of the hyd file should be the same as the mdu file name.");
         }
 
         [Test]
@@ -2066,6 +2059,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             pathsRelativeToParent = model.ModelDefinition.GetModelProperty(KnownProperties.PathsRelativeToParent).GetValueAsString();
             // Then
             Assert.AreEqual("1", pathsRelativeToParent, "The property for PathsRelativeToParent is {0} instead of 1. This is incorrect, because it should change to 1 during an export", pathsRelativeToParent);
+        }
+
+        [TestCase("directory_path", "directory_path\\FlowFM.hyd")]
+        [TestCase(null, "")]
+        public void GivenAWaterFlowFMModel_WhenHydFilePathIsCalled_ThenCorrectPathIsReturned(string delwaqOutputDirectoryPath, string expectedPath)
+        {
+            // Given
+            var model = new WaterFlowFMModel("input\\FlowFM.mdu")
+            {
+                DelwaqOutputDirectoryPath = delwaqOutputDirectoryPath
+            };
+
+            // When
+            string result = model.HydFilePath;
+
+            // Then
+            Assert.AreEqual(expectedPath, result, "Hyd file path was not as expected");
         }
 
         private static WaterFlowFMModel CreateFMModelWithStructureLinkedToRTC(out DataItem rtcDataItem, out IDataItem dataItemWaterFlowFmModel)

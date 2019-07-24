@@ -16,31 +16,33 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
     public static class WaterFlowFmSettingsHelper
     {
         /// <summary>
-        /// Gets the WPF GUI categories <seealso cref="WpfGuiCategory"/>.
+        /// Get the WPF GUI categories <seealso cref="WpfGuiCategory"/>.
         /// </summary>
-        /// <param name="model">The model.</param>
-        /// <param name="gui">The GUI.</param>
-        /// <returns></returns>
+        /// <param name="model"> The model.</param>
+        /// <param name="gui"> The GUI.</param>
+        /// <returns>
+        /// IF model != null THEN
+        ///   An ObservableCollection containing all the relevant WpfGuiCategories
+        /// ELSE
+        ///   An empty ObservableCollection
+        /// </returns>
         public static ObservableCollection<WpfGuiCategory> GetWpfGuiCategories(WaterFlowFMModel model, IGui gui)
         {
-            var wpfGuiCategories = new List<WpfGuiCategory>();
-
-            if (model != null)
+            if (model == null)
             {
-                wpfGuiCategories = GetWaterFlowFmSettings(model)?.FieldDescriptions
-                    .GroupBy(fd => fd.Category)
-                    .Select(gp => new WpfGuiCategory(gp.Key, gp.ToList())).ToList();
-
-                wpfGuiCategories?.SelectMany(gp => gp.Properties).Distinct()
-                                 .ForEach(p => p.GetModel = () => model);
-
-                if (wpfGuiCategories == null)
-                {
-                    return null;
-                }
-
-                SetFlowFmExtraSettings(model, gui, wpfGuiCategories);
+                return new ObservableCollection<WpfGuiCategory>();
             }
+
+            List<WpfGuiCategory> wpfGuiCategories = 
+                GetWaterFlowFmSettings(model).FieldDescriptions
+                                             .GroupBy(fd => fd.Category)
+                                             .Select(gp => new WpfGuiCategory(gp.Key, gp.ToList()))
+                                             .ToList();
+
+            wpfGuiCategories.SelectMany(gp => gp.Properties).Distinct()
+                            .ForEach(p => p.GetModel = () => model);
+
+            SetFlowFmExtraSettings(model, gui, wpfGuiCategories);
 
             return new ObservableCollection<WpfGuiCategory>(wpfGuiCategories);
         }

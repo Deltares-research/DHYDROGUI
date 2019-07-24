@@ -65,14 +65,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         #region Implementation of IHydFileModel
 
-        public string HydFilePath
-        {
-            get
-            {
-                string modelName = Path.GetFileNameWithoutExtension(MduFilePath);
-                return Path.Combine(WorkingDirectoryPath, DelwaqOutputDirectoryName, $"{modelName}.hyd");
-            }
-        }
+        /// <summary>
+        /// Path to the produced hyd file.
+        /// </summary>
+        /// <returns>Returns the expected absolute path of the hyd file when the directory has been set, otherwise returns an empty string.</returns>
+        public string HydFilePath =>
+            DelwaqOutputDirectoryPath != null
+                ? Path.Combine(DelwaqOutputDirectoryPath, $"{Path.GetFileNameWithoutExtension(MduFilePath)}.hyd")
+                : string.Empty;
 
         #endregion
 
