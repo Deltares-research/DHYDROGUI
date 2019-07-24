@@ -143,7 +143,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.PropertyGrid
         [ResourcesDisplayName(typeof(Resources), "PIDRuleProperties_MaxSpeed_DisplayName")]
         [ResourcesDescription(typeof(Resources), "PIDRuleProperties_MaxSpeed_Description")]
         [PropertyOrder(13)]
-        // TODO: Unit!
         public double MaxSpeed
         {
             get => data.Setting.MaxSpeed;
