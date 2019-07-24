@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using DelftTools.Hydro.Structures;
@@ -29,7 +28,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area
             var issues = new List<ValidationIssue>();
             List<ModelFeatureCoordinateData<FixedWeir>> fixedWeirsPropertyList = fixedWeirsProperties.ToList();
 
-            double minimalGroundHeight = GetMinimalGroundHeightForScheme(scheme);
+            double minimalGroundHeight = scheme.GetMinimalAllowedGroundHeight();
             string schemeName = scheme.GetDescription();
 
             foreach (FixedWeir fixedWeir in fixedWeirs)
@@ -93,20 +92,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area
             if (ValidationFailedGroundHeightColumn(2, "right", out ValidationIssue issueRightColumn))
             {
                 yield return issueRightColumn;
-            }
-        }
-
-        private static double GetMinimalGroundHeightForScheme(FixedWeirSchemes scheme)
-        {
-            switch (scheme)
-            {
-                case FixedWeirSchemes.Scheme6:
-                case FixedWeirSchemes.Scheme9:
-                    return 0.0d;
-                case FixedWeirSchemes.Scheme8:
-                    return 0.1d;
-                default:
-                    return 0.0d;
             }
         }
     }

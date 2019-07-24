@@ -148,6 +148,7 @@
     <Compile Include="Coverages\FileBasedFeatureCoverage.cs" />
     <Compile Include="Coverages\UnstructuredGridCoverageExtensions.cs" />
     <Compile Include="FeatureData\BoundaryConditionQuantityTypeConverter.cs" />
+    <Compile Include="FeatureData\FixedWeirSchemeExtensions.cs" />
     <Compile Include="FeatureData\IModelFeatureCoordinateData.cs" />
     <Compile Include="FeatureData\FlowBoundaryCondition.cs" />
     <Compile Include="FeatureData\FlowBoundaryConditionFactory.cs" />

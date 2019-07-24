@@ -54,24 +54,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             Assert.AreEqual(expectedMessage, issue.Message, MessageDifferentIssueMessage);
         }
 
-        [TestCase(FixedWeirSchemes.None, 0.0, -50, 0)]
-        [TestCase(FixedWeirSchemes.None, 0.0, 50, 0)]
-        [TestCase(FixedWeirSchemes.Scheme6, 0.0, -1, 2)]
-        [TestCase(FixedWeirSchemes.Scheme6, 0.0, 0, 0)]
-        [TestCase(FixedWeirSchemes.Scheme6, 0.0, 1, 0)]
-        [TestCase(FixedWeirSchemes.Scheme8, 0.1, 0, 2)]
-        [TestCase(FixedWeirSchemes.Scheme8, 0.1, 0.1, 0)]
-        [TestCase(FixedWeirSchemes.Scheme8, 0.1, 0.2, 0)]
-        [TestCase(FixedWeirSchemes.Scheme9, 0.0, -1, 2)]
-        [TestCase(FixedWeirSchemes.Scheme9, 0.0, 0, 0)]
-        [TestCase(FixedWeirSchemes.Scheme9, 0.0, 1, 0)]
+        [TestCase(FixedWeirSchemes.None, -50, 0)]
+        [TestCase(FixedWeirSchemes.None, 50, 0)]
+        [TestCase(FixedWeirSchemes.Scheme6, -1, 2)]
+        [TestCase(FixedWeirSchemes.Scheme6, 0, 0)]
+        [TestCase(FixedWeirSchemes.Scheme6, 1, 0)]
+        [TestCase(FixedWeirSchemes.Scheme8, 0, 2)]
+        [TestCase(FixedWeirSchemes.Scheme8, 0.1, 0)]
+        [TestCase(FixedWeirSchemes.Scheme8, 0.2, 0)]
+        [TestCase(FixedWeirSchemes.Scheme9, -1, 2)]
+        [TestCase(FixedWeirSchemes.Scheme9, 0, 0)]
+        [TestCase(FixedWeirSchemes.Scheme9, 1, 0)]
         public void GivenAFixedWeirAnWithInvalidGroundHeights_WhenValidateIsCalled_ThenExpectedValidationIssueIsReturned(
-            FixedWeirSchemes scheme, double minimumValue, double value, int nExpectedIssues)
+            FixedWeirSchemes scheme, double value, int nExpectedIssues)
         {
             // Given
             var gridExtent = new Envelope(new Coordinate(10, 10));
             List<ModelFeatureCoordinateData<FixedWeir>> fixedWeirsProperties =
                 CreateModelFeatureCoordinateDataWithValues(fixedWeirs.First(), value);
+            double minimumValue = scheme.GetMinimalAllowedGroundHeight();
 
             // When
             List<ValidationIssue> issues = fixedWeirs.Validate(gridExtent, fixedWeirsProperties, scheme).ToList();
