@@ -61,7 +61,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
         [TestCase(9, 0.0, -1, 2)]
         [TestCase(9, 0.0, 0, 0)]
         [TestCase(9, 0.0, 1, 0)]
-        public void GivenAFixedWeirAnWithInvalidSillDepth_WhenValidateIsCalled_ThenExpectedValidationIssueIsReturned(
+        public void GivenAFixedWeirAnWithInvalidGroundHeights_WhenValidateIsCalled_ThenExpectedValidationIssueIsReturned(
             int scheme, double minimumValue, double value, int nExpectedIssues)
         {
             // Given
@@ -77,7 +77,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             for (var i = 0; i < nExpectedIssues; i++)
             {
                 var issue = issues[i];
-                Assert.AreEqual(ValidationSeverity.Warning, issue.Severity, MessageDifferentValidationSeverity);
+                Assert.AreEqual(ValidationSeverity.Info, issue.Severity, MessageDifferentValidationSeverity);
                 string expectedMessage = string.Format(
                     Resources.FixedWeirValidator_Fixed_weir_contains_ground_heights_smaller_than_minimum,
                     fixedWeir.Name, ((FixedWeirSchemes) scheme).GetDescription(), i == 0 ? "left" : "right", minimumValue);

@@ -74,7 +74,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area
             {
                 if (dataToCheck.DataColumns[columnIndex].ValueList.Cast<double>().Any(value => value < minimalGroundHeight))
                 {
-                    issue = new ValidationIssue(fixedWeir, ValidationSeverity.Warning,
+                    issue = new ValidationIssue(fixedWeir, ValidationSeverity.Info,
                                                 string.Format(Resources.FixedWeirValidator_Fixed_weir_contains_ground_heights_smaller_than_minimum,
                                                               fixedWeir.Name, schemeName, side, minimalGroundHeight));
                     return true;
