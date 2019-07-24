@@ -304,7 +304,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
                     else
                     {
                         // Data item is persistent, but the Tag is lost. Resetting validation tag item again.
-                        var validateItems = projectExplorerContextMenu.OfType<ClonableToolStripMenuItem>().Where(mi => mi.Text == HydroModelGuiProperties.Resources.HydroModelGuiPlugin_GetContextMenu_Validate___ && mi.Tag == null);
+                        var validateItems = projectExplorerContextMenu.OfType<ClonableToolStripMenuItem>().Where(mi => mi.Text == HydroModelGuiProperties.Resources.HydroModelGuiPlugin_GetContextMenu_Validate___ && mi.Tag != data);
                         foreach (var clonableToolStripMenuItem in validateItems)
                         {
                             clonableToolStripMenuItem.Tag = model;
