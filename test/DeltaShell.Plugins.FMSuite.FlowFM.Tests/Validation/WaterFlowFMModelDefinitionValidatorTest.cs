@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Validation;
@@ -215,6 +216,38 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             var report = model.Validate();
             var issues = string.Join(";", report.AllErrors.Where(e => e.Severity == ValidationSeverity.Error).Select(e => e.Message));
             Assert.That(issues.Contains(Resources.WaterFlowFMModelDefinitionValidator_Validate_), Is.EqualTo(validationErrorThrown));
+        }
+
+        [Test]
+        public void GivenFmModelWithUseSedFileButNoBedLevelThenAddsIssueAsExpected()
+        {
+            // 1. Set up initial test data
+            var fmModel = new WaterFlowFMModel();
+            string expectedErrMessage = Resources
+                .WaterFlowFMModelDefinitionValidator_Validate_Bed_level_locations_should_be_set_to__faces__when_morphology_is_active_;
+            string expectedTabName = "Processes";
+            object expectedSubject = fmModel;
+            // 2. Verify initial expectations
+            Assert.That(fmModel.ModelDefinition, Is.Not.Null);
+            fmModel.ModelDefinition.UseMorphologySediment = true;
+
+            // 3. Run test
+            ValidationReport testReport = WaterFlowFMModelDefinitionValidator.Validate(fmModel);
+
+            // 4. Verify final expectations
+            Assert.That(testReport, Is.Not.Null);
+
+            List<ValidationIssue> issues = testReport.AllErrors.ToList();
+            Assert.That(issues.Any(), Is.True);
+
+            ValidationIssue issueFound = issues.FirstOrDefault(iss => iss.Message.Equals(expectedErrMessage));
+            Assert.That(issueFound, Is.Not.Null);
+            Assert.That(issueFound.Subject, Is.EqualTo(expectedSubject));
+
+            var issueViewData = issueFound.ViewData as FmValidationShortcut;
+            Assert.That(issueViewData, Is.Not.Null);
+            Assert.That(issueViewData.FlowFmModel, Is.EqualTo(fmModel));
+            Assert.That(issueViewData.TabName, Is.EqualTo(expectedTabName));
         }
     }
 }

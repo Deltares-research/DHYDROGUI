@@ -580,4 +580,7 @@ Manhole with unique id '{4}' is not imported.</value>
   <data name="FMMapFileFunctionStore_GetVariableValuesCore_While_reading_variable__0__from_the_file__1__an_error_was_encountered___2_" xml:space="preserve">
     <value>While reading variable {0} from the file {1} an error was encountered: {2}</value>
   </data>
+  <data name="WaterFlowFMModelDefinitionValidator_Validate_Bed_level_locations_should_be_set_to__faces__when_morphology_is_active_" xml:space="preserve">
+    <value>Bed level locations should be set to 'faces' when morphology is active.</value>
+  </data>
 </root>

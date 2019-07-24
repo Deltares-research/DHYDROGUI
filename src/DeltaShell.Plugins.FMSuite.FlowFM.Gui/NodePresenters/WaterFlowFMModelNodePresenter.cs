@@ -99,9 +99,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
             yield return new FmModelTreeShortcut("Bed Level", Resources.unstrucWater, model, model.Bathymetry, ShortCutType.SpatialCoverage);
             yield return new FmModelTreeShortcut("Time Frame", TimeFrameIcon, model, "Time Frame");
             yield return new FmModelTreeShortcut("Processes", ProcessesIcon, model, "Processes");
-            yield return new FmModelTreeShortcut("Initial Conditions", InitialConditionsIcon, model, "Initial Conditions", ShortCutType.SettingsTab, GetInitialConditionsItems(model));
+            yield return new FmModelTreeShortcut("Initial Conditions", InitialConditionsIcon, model, "Initial Conditions", childObjects:GetInitialConditionsItems(model));
             yield return new FmModelTreeShortcut("Boundary Conditions", BoundaryConditionIcon, model, model.BoundaryConditionSets, ShortCutType.FeatureSet, model.BoundaryConditionSets);
-            yield return new FmModelTreeShortcut("Physical Parameters", PhysParamIcon, model, "Physical Parameters", ShortCutType.SettingsTab, GetPhysicalSubItems(model));
+            yield return new FmModelTreeShortcut("Physical Parameters", PhysParamIcon, model, "Physical Parameters", childObjects:GetPhysicalSubItems(model));
             yield return new FmModelTreeShortcut("Sources and Sinks", SourceSinkIcon, model, model.SourcesAndSinks, ShortCutType.FeatureSet, model.SourcesAndSinks);
             yield return new FmModelTreeShortcut("Numerical Parameters", NumParamIcon, model, "Numerical Parameters");
             yield return new FmModelTreeShortcut("Output Parameters", OutParamIcon, model, "Output Parameters");

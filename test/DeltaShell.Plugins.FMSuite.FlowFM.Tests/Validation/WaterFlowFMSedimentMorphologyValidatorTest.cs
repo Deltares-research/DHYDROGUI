@@ -208,6 +208,38 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             Assert.That(issues.Count(), Is.EqualTo(2));
         }
 
+        [Test]
+        public void GivenFmModelWithUseSedFileButNoSedimentsThenAddsIssueAsExpected()
+        {
+            // 1. Set up initial test data
+            var fmModel = new WaterFlowFMModel();
+            string expectedErrMessage = Resources
+                .WaterFlowFMSedimentMorphologyValidator_ValidateAtLeastOneSedimentFractionInModel_At_least_one_sediment_fraction_is_required_when_using_morphology;
+            string expectedTabName = "Sediment";
+            string expectedSubject = expectedTabName;
+            // 2. Verify initial expectations
+            Assert.That(fmModel.ModelDefinition, Is.Not.Null);
+            fmModel.ModelDefinition.UseMorphologySediment = true;
+
+            // 3. Run test
+            ValidationReport testReport = WaterFlowFMSedimentMorphologyValidator.ValidateMorphology(fmModel);
+
+            // 4. Verify final expectations
+            Assert.That(testReport, Is.Not.Null);
+
+            List<ValidationIssue> issues = testReport.AllErrors.ToList();
+            Assert.That(issues.Any(), Is.True);
+
+            ValidationIssue issueFound = issues.FirstOrDefault(iss => iss.Message.Equals(expectedErrMessage));
+            Assert.That(issueFound, Is.Not.Null);
+            Assert.That(issueFound.Subject, Is.EqualTo(expectedSubject));
+
+            var issueViewData = issueFound.ViewData as FmValidationShortcut;
+            Assert.That(issueViewData, Is.Not.Null);
+            Assert.That(issueViewData.FlowFmModel, Is.EqualTo(fmModel));
+            Assert.That(issueViewData.TabName, Is.EqualTo(expectedTabName));
+        }
+
         #region Test helper methods
         private static WaterFlowFMModel GetFMModelWithDefaultSandAndMudFractions()
         {
