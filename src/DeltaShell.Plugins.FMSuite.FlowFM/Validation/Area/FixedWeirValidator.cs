@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Reflection;
@@ -76,7 +77,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area
                 {
                     issue = new ValidationIssue(fixedWeir, ValidationSeverity.Info,
                                                 string.Format(Resources.FixedWeirValidator_Fixed_weir_contains_ground_heights_smaller_than_minimum,
-                                                              fixedWeir.Name, schemeName, side, minimalGroundHeight));
+                                                              fixedWeir.Name, schemeName, side, minimalGroundHeight.ToString("0.00", CultureInfo.InvariantCulture)));
                     return true;
                 }
 

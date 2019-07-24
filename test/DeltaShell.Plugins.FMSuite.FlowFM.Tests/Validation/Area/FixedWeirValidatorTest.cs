@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Reflection;
@@ -83,7 +84,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
                 Assert.AreEqual(ValidationSeverity.Info, issue.Severity, MessageDifferentValidationSeverity);
                 string expectedMessage = string.Format(
                     Resources.FixedWeirValidator_Fixed_weir_contains_ground_heights_smaller_than_minimum,
-                    fixedWeir.Name, scheme.GetDescription(), i == 0 ? "left" : "right", minimumValue);
+                    fixedWeir.Name, scheme.GetDescription(), i == 0 ? "left" : "right", minimumValue.ToString("0.00", CultureInfo.InvariantCulture));
                 Assert.AreEqual(expectedMessage, issue.Message, MessageDifferentIssueMessage);
             }
         }
