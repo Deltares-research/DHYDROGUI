@@ -14,6 +14,7 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf.Validation;
 using DelftTools.Utils.Aop;
+using DelftTools.Utils.Collections;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms;
@@ -183,43 +184,48 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
             yield return new HydroModelTreeViewNodePresenter(this);
         }
 
+        /// <summary>
+        /// Build and return a context menu given the <paramref name="sender"/> and
+        /// <paramref name="data"/>.
+        /// </summary>
+        /// <param name="sender"> The object responsible for triggering this action. </param>
+        /// <param name="data"> The data necessary for this action. </param>
+        /// <returns> A new <see cref="IMenuItem"/> for the specified parameters. </returns>
         public override IMenuItem GetContextMenu(object sender, object data)
         {
-            var mergeMenu = SetupMergeMenu(data);
+            IMenuItem mergeMenu = SetupMergeMenu(data);
             var model = data as HydroModel;
             if (model == null)
             {
-                var projectExplorerContextMenu = Gui.MainWindow.ProjectExplorer.GetContextMenu(null, data);
+                IMenuItem projectExplorerContextMenu = Gui.MainWindow.ProjectExplorer.GetContextMenu(null, data);
                 if (projectExplorerContextMenu != null)
                 {
-                    var projectExplorerContextMenuStrip =
+                    ContextMenuStrip projectExplorerContextMenuStrip =
                         ((MenuItemContextMenuStripAdapter)projectExplorerContextMenu).ContextMenuStrip;
 
-                    var contextMenuItems =
+                    List<ClonableToolStripMenuItem> contextMenuItems =
                         projectExplorerContextMenuStrip.Items.OfType<ClonableToolStripMenuItem>()
                             .Where(i => i.Text == HydroModelGuiProperties.Resources.HydroModelGuiPlugin_GetContextMenu_Validate___)
                             .ToList();
 
-                    foreach (var menuItem in contextMenuItems)
+                    foreach (ClonableToolStripMenuItem menuItem in contextMenuItems)
                     {
                         menuItem.Click -= OnValidateClicked;
                         projectExplorerContextMenuStrip.Items.Remove(menuItem);
                     }
                 }
-                var hydroModel = data as IHydroModel;
-                if (hydroModel != null)
+
+                if (data is IHydroModel hydroModel)
                 {
-                    var allCompositeHydroModels = Gui.Application.GetAllModelsInProject().OfType<HydroModel>().ToArray();
-                    var isChildModel = allCompositeHydroModels.Any(m => m.Activities.Contains(hydroModel));
+                    HydroModel[] allCompositeHydroModels = Gui.Application.GetAllModelsInProject().OfType<HydroModel>().ToArray();
+                    bool isChildModel = allCompositeHydroModels.Any(m => m.Activities.Contains(hydroModel));
                     
-                    var folder = GetFolderContaining(hydroModel);
+                    Folder folder = GetFolderContaining(hydroModel);
                     if (folder != null && !isChildModel)
                     {
                         var topItem = new ClonableToolStripMenuItem
                         {
-                            Text =
-                                Properties.Resources
-                                    .HydroModelGuiPlugin_GetContextMenu_Turn_into_or_Move_to_Integrated_Model,
+                            Text = Properties.Resources.HydroModelGuiPlugin_GetContextMenu_Turn_into_or_Move_to_Integrated_Model,
                         };
 
                         var upgradeItem = new ClonableToolStripMenuItem
@@ -234,7 +240,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
                             topItem.DropDownItems.Add(new ToolStripSeparator());
                         }
 
-                        foreach (var compositeHydroModel in allCompositeHydroModels)
+                        foreach (HydroModel compositeHydroModel in allCompositeHydroModels)
                         {
                             var moveItem = new ClonableToolStripMenuItem
                             {
@@ -285,7 +291,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
             }
             else
             {
-                var projectExplorerContextMenu = Gui.MainWindow.ProjectExplorer.GetContextMenu(null, data);
+                IMenuItem projectExplorerContextMenu = Gui.MainWindow.ProjectExplorer.GetContextMenu(null, data);
                 if (projectExplorerContextMenu != null)
                 {
                     if (projectExplorerContextMenu.OfType<ClonableToolStripMenuItem>().All(mi => mi.Text != HydroModelGuiProperties.Resources.HydroModelGuiPlugin_GetContextMenu_Validate___))
@@ -304,11 +310,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
                     else
                     {
                         // Data item is persistent, but the Tag is lost. Resetting validation tag item again.
-                        var validateItems = projectExplorerContextMenu.OfType<ClonableToolStripMenuItem>().Where(mi => mi.Text == HydroModelGuiProperties.Resources.HydroModelGuiPlugin_GetContextMenu_Validate___ && mi.Tag != data);
-                        foreach (var clonableToolStripMenuItem in validateItems)
-                        {
-                            clonableToolStripMenuItem.Tag = model;
-                        }
+                        IEnumerable<ClonableToolStripMenuItem> validateItems = 
+                            projectExplorerContextMenu.OfType<ClonableToolStripMenuItem>()
+                                                      .Where(mi => mi.Text == HydroModelGuiProperties.Resources.HydroModelGuiPlugin_GetContextMenu_Validate___ && 
+                                                                   mi.Tag != data);
+
+                        validateItems.ForEach(menuItem => menuItem.Tag = model);
                     }
                 }
             }
