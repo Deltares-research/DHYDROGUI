@@ -3,6 +3,7 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
+using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
@@ -18,17 +19,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
         public static ValidationReport Validate(WaterFlowFMModel model)
         {
             HydroArea area = model.Area;
-
+            string fixedWeirScheme = model.ModelDefinition.GetModelProperty(KnownProperties.FixedWeirScheme).GetValueAsString();
             IEnumerable<ValidationIssue> issues = area.ThinDams.Validate(model.GridExtent)
-                                                      .Concat(model.SourcesAndSinks.Validate(
-                                                                  model.GridExtent, model.StartTime,
-                                                                  model.StopTime))
-                                                      .Concat(area.FixedWeirs.Validate(model.GridExtent,
-                                                                                       model.FixedWeirsProperties))
-                                                      .Concat(area.Weirs.Validate(model.GridExtent, model.StartTime,
-                                                                                  model.StopTime))
-                                                      .Concat(area.Pumps.Validate(model.GridExtent, model.StartTime,
-                                                                                  model.StopTime));
+                                                      .Concat(model.SourcesAndSinks.Validate(model.GridExtent, model.StartTime,model.StopTime))
+                                                      .Concat(area.FixedWeirs.Validate(model.GridExtent, model.FixedWeirsProperties, fixedWeirScheme))
+                                                      .Concat(area.Weirs.Validate(model.GridExtent, model.StartTime,model.StopTime))
+                                                      .Concat(area.Pumps.Validate(model.GridExtent, model.StartTime,model.StopTime));
 
             return new ValidationReport("Structures", issues);
         }

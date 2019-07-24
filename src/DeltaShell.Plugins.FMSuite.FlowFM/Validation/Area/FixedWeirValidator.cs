@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro.Structures;
+using DelftTools.Utils.Reflection;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
@@ -17,17 +19,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area
         /// <param name="gridExtent"> The grid extent to which the fixed weir should be snapped. </param>
         /// <param name="fixedWeirsProperties"> The fixed weir properties </param>
         /// <returns> A set of validation issues encountered. </returns>
-        public static IEnumerable<ValidationIssue> Validate(this IEnumerable<FixedWeir> fixedWeirs, Envelope gridExtent,
-                                                            IEnumerable<ModelFeatureCoordinateData<FixedWeir>>
-                                                                fixedWeirsProperties)
+        public static IEnumerable<ValidationIssue> Validate(this IEnumerable<FixedWeir> fixedWeirs,
+                                                            Envelope gridExtent,
+                                                            IEnumerable<ModelFeatureCoordinateData<FixedWeir>> fixedWeirsProperties,
+                                                            string fixedWeirScheme)
         {
             var issues = new List<ValidationIssue>();
             List<ModelFeatureCoordinateData<FixedWeir>> fixedWeirsPropertyList = fixedWeirsProperties.ToList();
 
+            Enum.TryParse(fixedWeirScheme, true, out FixedWeirSchemes scheme);
+            double minimalGroundHeight = GetMinimalGroundHeightForScheme(scheme);
+            string schemeName = scheme.GetDescription();
+
             foreach (FixedWeir fixedWeir in fixedWeirs)
             {
                 issues.AddRange(fixedWeir.ValidateSnapping(gridExtent));
-                issues.AddRange(fixedWeir.ValidateSillDepths(fixedWeirsPropertyList));
+                if (scheme != FixedWeirSchemes.None)
+                {
+                    issues.AddRange(fixedWeir.ValidateGroundHeights(fixedWeirsPropertyList, minimalGroundHeight, schemeName));
+                }
             }
 
             return issues;
@@ -47,32 +57,55 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area
             }
         }
 
-        private static IEnumerable<ValidationIssue> ValidateSillDepths(this FixedWeir fixedWeir,
-                                                                       IEnumerable<ModelFeatureCoordinateData<FixedWeir>
-                                                                       > fixedWeirsProperties)
+        private static IEnumerable<ValidationIssue> ValidateGroundHeights(this FixedWeir fixedWeir,
+                                                                          IEnumerable<ModelFeatureCoordinateData<FixedWeir>> fixedWeirsProperties,
+                                                                          double minimalGroundHeight,
+                                                                          string schemeName)
         {
-            ModelFeatureCoordinateData<FixedWeir> dataToCheck =
-                fixedWeirsProperties.FirstOrDefault(d => d.Feature == fixedWeir);
+            ModelFeatureCoordinateData<FixedWeir> dataToCheck = fixedWeirsProperties
+                .FirstOrDefault(d => d.Feature == fixedWeir);
 
             if (dataToCheck == null)
             {
                 yield break;
             }
 
-            int counter = dataToCheck.DataColumns[1].ValueList.Count;
-            for (var i = 0; i < counter; i++)
+            bool ValidationFailedGroundHeightColumn(int columnIndex, string side, out ValidationIssue issue)
             {
-                if ((double) dataToCheck.DataColumns[1].ValueList[i] <= 0.0 ||
-                    (double) dataToCheck.DataColumns[2].ValueList[i] <= 0.0)
+                if (dataToCheck.DataColumns[columnIndex].ValueList.Cast<double>().Any(value => value < minimalGroundHeight))
                 {
-                    yield return new ValidationIssue(fixedWeir,
-                                                     ValidationSeverity.Warning,
-                                                     string.Format(
-                                                         Resources
-                                                             .FixedWeirValidator_ValidateSillDepths_fixed_weir___0___has_unphysical_sill_depths__parts_will_be_ignored_by_dflow_fm_,
-                                                         fixedWeir.Name),
-                                                     fixedWeir);
+                    issue = new ValidationIssue(fixedWeir, ValidationSeverity.Warning,
+                                                string.Format(Resources.FixedWeirValidator_Fixed_weir_contains_ground_heights_smaller_than_minimum,
+                                                              fixedWeir.Name, schemeName, side, minimalGroundHeight));
+                    return true;
                 }
+
+                issue = null;
+                return false;
+            }
+
+            if (ValidationFailedGroundHeightColumn(1, "left", out ValidationIssue issueLeftColumn))
+            {
+                yield return issueLeftColumn;
+            }
+
+            if (ValidationFailedGroundHeightColumn(2, "right", out ValidationIssue issueRightColumn))
+            {
+                yield return issueRightColumn;
+            }
+        }
+
+        private static double GetMinimalGroundHeightForScheme(FixedWeirSchemes scheme)
+        {
+            switch (scheme)
+            {
+                case FixedWeirSchemes.Scheme6:
+                case FixedWeirSchemes.Scheme9:
+                    return 0.0d;
+                case FixedWeirSchemes.Scheme8:
+                    return 0.10d;
+                default:
+                    return 0.0d;
             }
         }
     }
