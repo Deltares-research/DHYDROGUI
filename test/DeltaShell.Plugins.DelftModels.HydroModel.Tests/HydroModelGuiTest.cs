@@ -83,8 +83,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                            .IgnoreArguments()
                            .Return(contextMenuAdapter);
 
-            var plugin = new HydroModelGuiPlugin();
-            plugin.Gui = gui;
+            var plugin = new HydroModelGuiPlugin { Gui = gui };
             return plugin;
         }
     }
