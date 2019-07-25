@@ -223,12 +223,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         {
             // Given
             const string hydFileModelName = "hyd_file_model_name";
-            var mocks = new MockRepository();
             WaterQualityModelGuiPlugin guiPlugin =
-                CreateFullyConfiguredGuiPluginWithHydFileModel(mocks, hydFilePath, hydFileModelName);
+                CreateFullyConfiguredGuiPluginWithHydFileModel(hydFilePath, hydFileModelName);
 
             // When
-            IMenuItem menu = guiPlugin.GetContextMenu(null, mocks.Stub<WaterQualityModel>());
+            IMenuItem menu = guiPlugin.GetContextMenu(null, MockRepository.GenerateStub<WaterQualityModel>());
 
             // Then
             ContextMenuStrip contextMenu = ((MenuItemContextMenuStripAdapter) menu).ContextMenuStrip;
@@ -251,12 +250,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             // Given
             const string hydFileModelName = "hyd_file_model_name";
             const string hydFilePath = "does_not_exist";
-            var mocks = new MockRepository();
             WaterQualityModelGuiPlugin guiPlugin =
-                CreateFullyConfiguredGuiPluginWithHydFileModel(mocks, hydFilePath, hydFileModelName);
+                CreateFullyConfiguredGuiPluginWithHydFileModel(hydFilePath, hydFileModelName);
 
             // When
-            IMenuItem menu = guiPlugin.GetContextMenu(null, mocks.Stub<WaterQualityModel>());
+            IMenuItem menu = guiPlugin.GetContextMenu(null, MockRepository.GenerateStub<WaterQualityModel>());
 
             // Then
             ContextMenuStrip contextMenu = ((MenuItemContextMenuStripAdapter) menu).ContextMenuStrip;
@@ -280,18 +278,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             // Given
             const string hydFileModelName = "hyd_file_model_name";
             string hydFilePath;
-            var mocks = new MockRepository();
 
             IMenuItem menu;
             using (var tempDirectory = new TemporaryDirectory())
             {
                 hydFilePath = Path.Combine(tempDirectory.Path, "should_exist.hyd");
                 WaterQualityModelGuiPlugin guiPlugin =
-                    CreateFullyConfiguredGuiPluginWithHydFileModel(mocks, hydFilePath, hydFileModelName);
+                    CreateFullyConfiguredGuiPluginWithHydFileModel(hydFilePath, hydFileModelName);
                 using (File.Create(hydFilePath)) {}
 
                 // When
-                menu = guiPlugin.GetContextMenu(null, mocks.Stub<WaterQualityModel>());
+                menu = guiPlugin.GetContextMenu(null, MockRepository.GenerateStub<WaterQualityModel>());
             }
 
             // Then
@@ -310,24 +307,21 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         }
 
         private static WaterQualityModelGuiPlugin CreateFullyConfiguredGuiPluginWithHydFileModel(
-            MockRepository mocks,
             string hydFilePath,
             string hydFileModelName)
         {
-            var gui = mocks.Stub<IGui>();
-            var app = mocks.Stub<IApplication>();
-            var hydFileModel = mocks.Stub<IHydFileModel>();
+            var gui = MockRepository.GenerateStub<IGui>();
+            var app = MockRepository.GenerateStub<IApplication>();
+            var hydFileModel = MockRepository.GenerateStub<IHydFileModel>();
 
-            Expect.Call(app.ActivityRunner).Return(mocks.Stub<IActivityRunner>()).Repeat.Any();
-            Expect.Call(app.Plugins).Return(new List<ApplicationPlugin>()).Repeat.Any();
-            Expect.Call(app.GetAllModelsInProject()).Return(new List<IModel> {hydFileModel});
-            Expect.Call(gui.Plugins).Return(new List<GuiPlugin>()).Repeat.Any();
-            Expect.Call(gui.UndoRedoManager).Return(mocks.Stub<IUndoRedoManager>()).Repeat.Any();
+            app.Expect(a => a.ActivityRunner).Return(MockRepository.GenerateStub<IActivityRunner>());
+            app.Expect(a => a.Plugins).Return(new List<ApplicationPlugin>());
+            app.Expect(a => a.GetAllModelsInProject()).Return(new List<IModel> {hydFileModel});
+            gui.Expect(g => g.Plugins).Return(new List<GuiPlugin>());
+            gui.Expect(g => g.UndoRedoManager).Return(MockRepository.GenerateStub<IUndoRedoManager>());
             gui.Application = app;
 
-            mocks.ReplayAll();
-
-            hydFileModel.Expect(m => m.HydFilePath).Return(hydFilePath).Repeat.Any();
+            hydFileModel.Expect(m => m.HydFilePath).Return(hydFilePath);
             hydFileModel.Name = hydFileModelName;
 
             return new WaterQualityModelGuiPlugin {Gui = gui};
