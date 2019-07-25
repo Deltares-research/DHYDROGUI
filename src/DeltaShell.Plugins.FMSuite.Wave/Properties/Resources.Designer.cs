@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -244,6 +244,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         public static string WaveCouplingValidator_Validate_Stand_alone_wave_model_cannot_use_COM_file {
             get {
                 return ResourceManager.GetString("WaveCouplingValidator_Validate_Stand_alone_wave_model_cannot_use_COM_file", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Time step cannot be set to Zero..
+        /// </summary>
+        public static string WaveCouplingValidator_ValidateModelTimeSettings_Time_step_cannot_be_set_to_Zero_ {
+            get {
+                return ResourceManager.GetString("WaveCouplingValidator_ValidateModelTimeSettings_Time_step_cannot_be_set_to_Zero_", resourceCulture);
             }
         }
         

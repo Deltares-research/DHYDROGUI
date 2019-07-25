@@ -47,17 +47,25 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
 
         private static IEnumerable<ValidationIssue> ValidateModelTimeSettings(this WaveModel model)
         {
+            var waveValidationShortcut = new WaveValidationShortcut
+            {
+                WaveModel = model,
+                TabName = "General"
+            };
             if (model.StartTime < model.ModelDefinition.ModelReferenceDateTime)
             {
-                var waveValidationShortcut = new WaveValidationShortcut
-                {
-                    WaveModel = model,
-                    TabName = "General"
-                };
                 yield return new ValidationIssue("Coupling", ValidationSeverity.Error,
                                                  Resources
                                                      .WaveTimePointValidator_Validate_Model_start_time_precedes_reference_time,
                                                  waveValidationShortcut);
+            }
+
+            if (model.TimeStep.TotalSeconds.Equals(0))
+            {
+                yield return new ValidationIssue("Time Step", ValidationSeverity.Error,
+                                                 Resources.WaveCouplingValidator_ValidateModelTimeSettings_Time_step_cannot_be_set_to_Zero_,
+                                                 waveValidationShortcut
+                );
             }
         }
 

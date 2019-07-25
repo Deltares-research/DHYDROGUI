@@ -12,6 +12,32 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
     public class WaveCouplingValidatorTest
     {
         [Test]
+        public void Given_WaveModelCoupledToFlowAndTimeStep0_When_ValidatingCoupling_Then_ValidationErrorIsReturnedWithExpectedViewData()
+        {
+            // Given
+            var waveModel = new WaveModel
+            {
+                IsCoupledToFlow = true,
+                StartTime = DateTime.Now
+            };
+            waveModel.TimeStep = TimeSpan.Zero;
+            var expectedTabName = "General";
+            var expectedMessage = Resources.WaveCouplingValidator_ValidateModelTimeSettings_Time_step_cannot_be_set_to_Zero_;
+
+            // When
+            ValidationReport validationReport = WaveCouplingValidator.Validate(waveModel);
+
+            // Then
+            ValidationIssue validationError = validationReport.AllErrors.FirstOrDefault(issue => issue.Message == expectedMessage);
+            Assert.That(validationError, Is.Not.Null, "No validation error was generated.");
+
+            var waveValidationShortcut = validationError.ViewData as WaveValidationShortcut;
+            Assert.That(waveValidationShortcut, Is.Not.Null, "No WaveValidation Shortcut found.");
+            Assert.That(waveValidationShortcut.WaveModel, Is.EqualTo(waveModel), "Shortcut wave model not as expected.");
+            Assert.That(waveValidationShortcut.TabName, Is.EqualTo("General"), $"Expected shortcut tab name {expectedTabName}, but got {waveValidationShortcut.TabName}");
+        }
+
+        [Test]
         public void GivenWaveModelCoupledToFlowAndReferenceTimePrecedingStartTime_WhenValidatingCoupling_ThenValidationErrorIsReturnedWithExpectedViewData()
         {
             // Given

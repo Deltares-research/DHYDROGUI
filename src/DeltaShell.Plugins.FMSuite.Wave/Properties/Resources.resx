@@ -226,4 +226,7 @@
   <data name="WaveCouplingValidator_Validate_Stand_alone_wave_model_cannot_use__0_" xml:space="preserve">
     <value>Stand-alone wave model cannot use {0}</value>
   </data>
+  <data name="WaveCouplingValidator_ValidateModelTimeSettings_Time_step_cannot_be_set_to_Zero_" xml:space="preserve">
+    <value>Time step cannot be set to Zero.</value>
+  </data>
 </root>
