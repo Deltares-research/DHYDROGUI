@@ -310,19 +310,19 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             string hydFilePath,
             string hydFileModelName)
         {
-            var gui = MockRepository.GenerateStub<IGui>();
-            var app = MockRepository.GenerateStub<IApplication>();
             var hydFileModel = MockRepository.GenerateStub<IHydFileModel>();
-
-            app.Expect(a => a.ActivityRunner).Return(MockRepository.GenerateStub<IActivityRunner>());
-            app.Expect(a => a.Plugins).Return(new List<ApplicationPlugin>());
-            app.Expect(a => a.GetAllModelsInProject()).Return(new List<IModel> {hydFileModel});
-            gui.Expect(g => g.Plugins).Return(new List<GuiPlugin>());
-            gui.Expect(g => g.UndoRedoManager).Return(MockRepository.GenerateStub<IUndoRedoManager>());
-            gui.Application = app;
-
-            hydFileModel.Expect(m => m.HydFilePath).Return(hydFilePath);
+            hydFileModel.Stub(m => m.HydFilePath).Return(hydFilePath);
             hydFileModel.Name = hydFileModelName;
+
+            var app = MockRepository.GenerateStub<IApplication>();
+            app.Stub(a => a.ActivityRunner).Return(MockRepository.GenerateStub<IActivityRunner>());
+            app.Stub(a => a.Plugins).Return(new List<ApplicationPlugin>());
+            app.Stub(a => a.GetAllModelsInProject()).Return(new List<IModel> {hydFileModel});
+
+            var gui = MockRepository.GenerateStub<IGui>();
+            gui.Stub(g => g.Plugins).Return(new List<GuiPlugin>());
+            gui.Stub(g => g.UndoRedoManager).Return(MockRepository.GenerateStub<IUndoRedoManager>());
+            gui.Application = app;
 
             return new WaterQualityModelGuiPlugin {Gui = gui};
         }
