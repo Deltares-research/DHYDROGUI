@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -699,6 +699,33 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Properties {
         internal static string WaterQualityBoundaryDataListView_InitializeTableView_Lateral_source {
             get {
                 return ResourceManager.GetString("WaterQualityBoundaryDataListView_InitializeTableView_Lateral_source", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hyd file is not present at &apos;{0}&apos;..
+        /// </summary>
+        internal static string WaterQualityModelGuiPlugin_CreateHydFileModelMenuItem_Hyd_file_is_not_present {
+            get {
+                return ResourceManager.GetString("WaterQualityModelGuiPlugin_CreateHydFileModelMenuItem_Hyd_file_is_not_present", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No hyd file was produced. Make sure that you have run the flow model and that the hyd file has been generated..
+        /// </summary>
+        internal static string WaterQualityModelGuiPlugin_CreateHydFileModelMenuItem_No_hyd_file_was_produced {
+            get {
+                return ResourceManager.GetString("WaterQualityModelGuiPlugin_CreateHydFileModelMenuItem_No_hyd_file_was_produced", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use hyd file &apos;{0}&apos;.
+        /// </summary>
+        internal static string WaterQualityModelGuiPlugin_CreateHydFileModelMenuItem_Use_hyd_file {
+            get {
+                return ResourceManager.GetString("WaterQualityModelGuiPlugin_CreateHydFileModelMenuItem_Use_hyd_file", resourceCulture);
             }
         }
         
