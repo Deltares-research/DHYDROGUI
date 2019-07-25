@@ -34,11 +34,8 @@ namespace DeltaShell.NGHS.IO.Handlers
         /// </summary>
         /// <param name="activityName">Name of the activity for which log messages will be generated.</param>
         /// <param name="type">The type that will be used to create the logger.</param>
-        public LogHandler(string activityName, Type type)
+        public LogHandler(string activityName, Type type) : this(activityName, LogManager.GetLogger(type))
         {
-            this.activityName = activityName;
-            LogMessagesTable = new LogMessagesList();
-            log = LogManager.GetLogger(type);
         }
 
         /// <summary>
@@ -46,7 +43,7 @@ namespace DeltaShell.NGHS.IO.Handlers
         /// </summary>
         /// <param name="activityName">Name of the activity for which log messages will be generated.</param>
         /// <param name="log">The logger that will be used to log the messages.</param>
-        public LogHandler(string activityName, ILog log) : this(activityName)
+        public LogHandler(string activityName, ILog log)
         {
             this.activityName = activityName;
             LogMessagesTable = new LogMessagesList();
@@ -85,16 +82,28 @@ namespace DeltaShell.NGHS.IO.Handlers
 
         public void LogReport()
         {
-            if (!LogMessagesTable.Any()) return;
+            if (!LogMessagesTable.Any())
+            {
+                return;
+            }
 
-            var errorMessages = LogMessagesTable.ErrorMessages.ToList();
-            if (errorMessages.Any()) log.Error(CreateReport(errorMessages));
+            List<string> errorMessages = LogMessagesTable.ErrorMessages.ToList();
+            if (errorMessages.Any())
+            {
+                log.Error(CreateReport(errorMessages));
+            }
 
-            var warningMessages = LogMessagesTable.WarningMessages.ToList();
-            if (warningMessages.Any()) log.Warn(CreateReport(warningMessages));
+            List<string> warningMessages = LogMessagesTable.WarningMessages.ToList();
+            if (warningMessages.Any())
+            {
+                log.Warn(CreateReport(warningMessages));
+            }
 
-            var infoMessages = LogMessagesTable.InfoMessages.ToList();
-            if (infoMessages.Any()) log.Info(CreateReport(infoMessages));
+            List<string> infoMessages = LogMessagesTable.InfoMessages.ToList();
+            if (infoMessages.Any())
+            {
+                log.Info(CreateReport(infoMessages));
+            }
         }
 
         private string CreateReport(IEnumerable<string> messages)
