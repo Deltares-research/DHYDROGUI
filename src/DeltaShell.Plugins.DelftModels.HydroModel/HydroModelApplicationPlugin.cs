@@ -173,8 +173,15 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             yield return new DHydroConfigXmlImporter(() => Application.FileImporters.OfType<IDimrModelFileImporter>().ToList());
         }
 
+        /// <summary>
+        /// Initialize the model builder, and thus the IronPython scripting engine.
+        /// </summary>
         private void InitializeModelBuilder()
         {
+            // The HydroModelBuilder is constructed in order to trigger the
+            // initialization of the IronPython scripting engine. Otherwise it
+            // would need to start this once scripting is opened. It is more 
+            // acceptable to have this slowdown during the start of the program.
             new HydroModelBuilder();
         }
     }
