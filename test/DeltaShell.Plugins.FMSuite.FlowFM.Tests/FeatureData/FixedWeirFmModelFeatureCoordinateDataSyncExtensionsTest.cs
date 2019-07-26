@@ -134,11 +134,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
             Assert.That(groundHeightColumn.DefaultValue, Is.EqualTo(expectedValue),
                         $"For fixed weir scheme {schemeName} a different default value was expected for the ground height column.");
 
-            foreach (double value in groundHeightColumn.ValueList)
-            {
-                Assert.That(value, Is.EqualTo(expectedValue),
-                            $"For fixed weir scheme {schemeName} a different value was expected in the ground height column.");
-            }
+            Assert.That(groundHeightColumn.ValueList, Has.All.EqualTo(expectedValue),
+                        $"For fixed weir scheme {schemeName} a different value was expected in the ground height column.");
         }
     }
 }
