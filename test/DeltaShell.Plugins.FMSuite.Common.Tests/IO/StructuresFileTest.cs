@@ -925,20 +925,14 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             subMsgs = subMsgs.Select(s => s.Trim()).ToList(); // Remove excessive white characters.
 
             Assert.That(subMsgs, Has.Count.EqualTo(2), "Expected 2 sub messages within the warning message.");
-            Assert.That(
-                subMsgs[0],
-                Is.EqualTo(string.Format(
-                               Resources
-                                   .StructureFile_Property__0__not_supported_for_structures_of_type__1__and_is_skipped_Line__2__,
-                               "weir1", "weir", 8)),
-                "Expected a different string as first sub message.");
-            Assert.That(
-                subMsgs[1],
-                Is.EqualTo(string.Format(
-                               Resources
-                                   .StructureFile_Property__0__not_supported_for_structures_of_type__1__and_is_skipped_Line__2__,
-                               "weir2", "weir", 9)),
-                "Expected a different string as second sub message.");
+            Assert.That(subMsgs[0], Is.EqualTo(string.Format(
+                                                   Resources.StructureFile_Property__0__not_supported_for_structures_of_type__1__and_is_skipped_Line__2__,
+                                                   "weir1", "weir", 8)),
+                        "Expected a different string as first sub message.");
+            Assert.That(subMsgs[1], Is.EqualTo(string.Format(
+                                                   Resources.StructureFile_Property__0__not_supported_for_structures_of_type__1__and_is_skipped_Line__2__,
+                                                   "weir2", "weir", 9)),
+                        "Expected a different string as second sub message.");
         }
 
         private static Weir2D ValidatedWeir(IList<IStructure> structures)
