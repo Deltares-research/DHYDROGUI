@@ -66,15 +66,15 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
         /// <param name="structuresSubFilesReferenceFilePath"> Filepath of the reference file. This is structures file or Mdu
         /// dependent on the PathsRelativeToParent option in the Mdu. </param>
         /// <returns>List with weirs with different weirformulas and pumps</returns>
-        public IList<IStructure> ReadStructuresFileRelativeToReferenceFile(string structuresFilePath, string structuresSubFilesReferenceFilePath)
+        public IList<IStructure> ReadStructuresFileRelativeToReferenceFile(
+            string structuresFilePath, string structuresSubFilesReferenceFilePath)
         {
-            var logHandler = new LogHandler($"reading the structures file ({structuresFilePath}),");
+            var logHandler = new LogHandler($"reading the structures file ({structuresFilePath}),", Log);
 
-            List<IStructure> structures = 
-                ReadStructures2D(structuresFilePath, logHandler)
-                    .Select(s => ConvertStructure(s, structuresSubFilesReferenceFilePath))
-                    .Where(s => s != null)
-                    .ToList();
+            List<IStructure> structures = ReadStructures2D(structuresFilePath, logHandler)
+                                          .Select(s => ConvertStructure(s, structuresSubFilesReferenceFilePath))
+                                          .Where(s => s != null)
+                                          .ToList();
 
             logHandler.LogReport();
 
@@ -84,10 +84,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
         /// <summary>
         ///  Method reads ini file and creates temporary data access objects ("structures") 
         /// </summary>
-        /// <param name="filePath"></param>
-        /// <param name="logHandler"></param>
+        /// <param name="filePath">File path of the structures file</param>
+        /// <param name="logHandler"> Log messages collector and reporter. Not required if you are not interested in the log messages.</param>
         /// <returns>List with structures</returns>
-        public IEnumerable<Structure2D> ReadStructures2D(string filePath, LogHandler logHandler = null)
+        public IEnumerable<Structure2D> ReadStructures2D(string filePath, ILogHandler logHandler = null)
         {
             IList<DelftIniCategory> categories = new DelftIniReader().ReadDelftIniFile(filePath);
 
@@ -97,7 +97,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
                 // Filter out unexpected .ini categories:
                 if (category.Name != StructureCategoryName)
                 {
-                    logHandler?.ReportWarningFormat(Resources.StructureFile_Category__0__not_supported_for_structures_and_is_skipped_Line__1__, category.Name, category.LineNumber);
+                    logHandler?.ReportWarningFormat(Resources.StructureFile_Category__0__not_supported_for_structures_and_is_skipped_Line__1__, 
+                                                    category.Name, 
+                                                    category.LineNumber);
                     continue;
                 }
 
@@ -108,7 +110,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
                 if (structureTypeProperty == null)
                 {
                     logHandler?.ReportWarningFormat(Resources.StructureFile_Obligated_property__0__expected_but_is_missing_Structure_is_skipped_Line__1__,
-                                   KnownStructureProperties.Type, category.LineNumber);
+                                                    KnownStructureProperties.Type, 
+                                                    category.LineNumber);
                     continue;
                 }
 
@@ -118,7 +121,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
                 if (!string.IsNullOrEmpty(errorMessage))
                 {
                     logHandler?.ReportErrorFormat(Resources.StructureFile_Failed_to_convert_ini_structure_definition_to_actual_structure_Line__0____1__,
-                                    category.LineNumber, errorMessage);
+                                                  category.LineNumber, 
+                                                  errorMessage);
                     continue;
                 }
 
@@ -138,11 +142,16 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
 
         public IList<IStructure> Read(string filePath)
         {
-            return
-                ReadStructures2D(filePath)
-                    .Select(s => ConvertStructure(s, filePath))
-                    .Where(s => s != null)
-                    .ToList();
+            var logHandler = new LogHandler($"reading the structures file ({filePath}),", Log);
+
+            List<IStructure> structures = ReadStructures2D(filePath)
+                             .Select(s => ConvertStructure(s, filePath))
+                             .Where(s => s != null)
+                             .ToList();
+
+            logHandler.LogReport();
+
+            return structures;
         }
 
         public void Write(string filePath, IEnumerable<IStructure> structures)
@@ -247,8 +256,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             return delftIniCategory;
         }
 
-        private Structure2D CreateStructure2D(StructureSchema<ModelPropertyDefinition> schema, string structureType,
-                                              DelftIniCategory category, string filePath, ILogHandler logHandler)
+        private Structure2D CreateStructure2D(StructureSchema<ModelPropertyDefinition> schema, 
+                                              string structureType,
+                                              DelftIniCategory category, 
+                                              string filePath, 
+                                              ILogHandler logHandler)
         {
             var newStructure = new Structure2D(structureType);
 

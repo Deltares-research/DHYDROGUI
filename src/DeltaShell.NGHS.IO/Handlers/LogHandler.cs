@@ -9,7 +9,7 @@ namespace DeltaShell.NGHS.IO.Handlers
     /// <seealso cref="T:DeltaShell.NGHS.IO.Handlers.ILogHandler" />
     public class LogHandler : ILogHandler
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(LogHandler));
+        private readonly ILog log;
 
         public LogMessagesList LogMessagesTable { get; }
 
@@ -22,13 +22,32 @@ namespace DeltaShell.NGHS.IO.Handlers
         private readonly string joinSeparator = Environment.NewLine + BulletPointCharacter + " ";
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="LogHandler"/> class with a default logger.
+        /// </summary>
+        /// <param name="activityName">Name of the activity for which log messages will be generated.</param>
+        public LogHandler(string activityName) : this(activityName, typeof(LogHandler))
+        {
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="LogHandler"/> class.
         /// </summary>
         /// <param name="activityName">Name of the activity for which log messages will be generated.</param>
-        public LogHandler(string activityName)
+        /// <param name="type">The type that will be used to create the logger.</param>
+        public LogHandler(string activityName, Type type) : this(activityName, LogManager.GetLogger(type))
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LogHandler"/> class.
+        /// </summary>
+        /// <param name="activityName">Name of the activity for which log messages will be generated.</param>
+        /// <param name="log">The logger that will be used to log the messages.</param>
+        public LogHandler(string activityName, ILog log)
         {
             this.activityName = activityName;
             LogMessagesTable = new LogMessagesList();
+            this.log = log;
         }
 
         public void ReportInfo(string logMessage)
@@ -63,16 +82,28 @@ namespace DeltaShell.NGHS.IO.Handlers
 
         public void LogReport()
         {
-            if (!LogMessagesTable.Any()) return;
+            if (!LogMessagesTable.Any())
+            {
+                return;
+            }
 
-            var errorMessages = LogMessagesTable.ErrorMessages.ToList();
-            if (errorMessages.Any()) Log.Error(CreateReport(errorMessages));
+            List<string> errorMessages = LogMessagesTable.ErrorMessages.ToList();
+            if (errorMessages.Any())
+            {
+                log.Error(CreateReport(errorMessages));
+            }
 
-            var warningMessages = LogMessagesTable.WarningMessages.ToList();
-            if (warningMessages.Any()) Log.Warn(CreateReport(warningMessages));
+            List<string> warningMessages = LogMessagesTable.WarningMessages.ToList();
+            if (warningMessages.Any())
+            {
+                log.Warn(CreateReport(warningMessages));
+            }
 
-            var infoMessages = LogMessagesTable.InfoMessages.ToList();
-            if (infoMessages.Any()) Log.Info(CreateReport(infoMessages));
+            List<string> infoMessages = LogMessagesTable.InfoMessages.ToList();
+            if (infoMessages.Any())
+            {
+                log.Info(CreateReport(infoMessages));
+            }
         }
 
         private string CreateReport(IEnumerable<string> messages)
@@ -108,10 +139,10 @@ namespace DeltaShell.NGHS.IO.Handlers
         /// Adds a new pair of <see cref="System.String" /> and <see cref="LogSeverity" /> to the end of the <see cref="LogMessagesList" />.
         /// </summary>
         /// <param name="logMessage">The log message</param>
-        /// <param name="logLogSeverity">The severity of the log message</param>
-        public void Add(string logMessage, LogSeverity logLogSeverity)
+        /// <param name="logSeverity">The severity of the log message</param>
+        public void Add(string logMessage, LogSeverity logSeverity)
         {
-            Add(new Tuple<string, LogSeverity>(logMessage, logLogSeverity));
+            Add(new Tuple<string, LogSeverity>(logMessage, logSeverity));
         }
 
         /// <summary>

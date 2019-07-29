@@ -18,7 +18,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area
         /// <param name="fixedWeirs"> The set of fixed weirs to be evaluated. </param>
         /// <param name="gridExtent"> The grid extent to which the fixed weir should be snapped. </param>
         /// <param name="fixedWeirsProperties"> The fixed weir properties </param>
-        /// <param name="scheme">The fixed weir scheme the model is using.</param>
+        /// <param name="scheme"> The fixed weir scheme the model is using. </param>
         /// <returns> A set of validation issues encountered. </returns>
         public static IEnumerable<ValidationIssue> Validate(this IEnumerable<FixedWeir> fixedWeirs,
                                                             Envelope gridExtent,
@@ -26,73 +26,84 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area
                                                             FixedWeirSchemes scheme)
         {
             var issues = new List<ValidationIssue>();
-            List<ModelFeatureCoordinateData<FixedWeir>> fixedWeirsPropertyList = fixedWeirsProperties.ToList();
 
-            double minimalGroundHeight = scheme.GetMinimalAllowedGroundHeight();
-            string schemeName = scheme.GetDescription();
+            issues.AddRange(fixedWeirs.ValidateSnapping(gridExtent));
 
-            foreach (FixedWeir fixedWeir in fixedWeirs)
+            if (scheme != FixedWeirSchemes.None)
             {
-                issues.AddRange(fixedWeir.ValidateSnapping(gridExtent));
-                if (scheme != FixedWeirSchemes.None)
-                {
-                    issues.AddRange(fixedWeir.ValidateGroundHeights(fixedWeirsPropertyList, minimalGroundHeight, schemeName));
-                }
+                issues.AddRange(ValidateGroundHeights(fixedWeirsProperties, scheme));
             }
 
             return issues;
         }
 
-        private static IEnumerable<ValidationIssue> ValidateSnapping(this FixedWeir fixedWeir, Envelope gridExtent)
+        private static IEnumerable<ValidationIssue> ValidateSnapping(this IEnumerable<FixedWeir> fixedWeirs,
+                                                                     Envelope gridExtent)
         {
-            if (!fixedWeir.Geometry.SnapsToFlowFmGrid(gridExtent))
+            foreach (FixedWeir fixedWeir in fixedWeirs)
             {
-                yield return new ValidationIssue(fixedWeir,
-                                                 ValidationSeverity.Warning,
-                                                 string.Format(
-                                                     Resources
-                                                         .FixedWeirValidator_ValidateSnapping_fixed_weir___0___not_within_grid_extent_,
-                                                     fixedWeir.Name),
-                                                 fixedWeir);
+                if (!fixedWeir.Geometry.SnapsToFlowFmGrid(gridExtent))
+                {
+                    yield return new ValidationIssue(fixedWeir,
+                                                     ValidationSeverity.Warning,
+                                                     string.Format(Resources.FixedWeirValidator_ValidateSnapping_fixed_weir___0___not_within_grid_extent_,
+                                                                   fixedWeir.Name),
+                                                     fixedWeir);
+                }
             }
         }
 
-        private static IEnumerable<ValidationIssue> ValidateGroundHeights(this FixedWeir fixedWeir,
-                                                                          IEnumerable<ModelFeatureCoordinateData<FixedWeir>> fixedWeirsProperties,
-                                                                          double minimalGroundHeight,
-                                                                          string schemeName)
+        private static IEnumerable<ValidationIssue> ValidateGroundHeights(
+            IEnumerable<ModelFeatureCoordinateData<FixedWeir>> fixedWeirsProperties,
+            FixedWeirSchemes scheme)
         {
-            ModelFeatureCoordinateData<FixedWeir> dataToCheck = fixedWeirsProperties
-                .FirstOrDefault(d => d.Feature == fixedWeir);
+            string schemeName = scheme.GetDescription();
+            double minimalGroundHeight = scheme.GetMinimalAllowedGroundHeight();
 
-            if (dataToCheck == null)
+            foreach (ModelFeatureCoordinateData<FixedWeir> fixedWeirProperty in fixedWeirsProperties)
             {
-                yield break;
-            }
+                FixedWeir fixedWeir = fixedWeirProperty.Feature;
 
-            bool ValidationFailedGroundHeightColumn(int columnIndex, string side, out ValidationIssue issue)
-            {
-                if (dataToCheck.DataColumns[columnIndex].ValueList.Cast<double>().Any(value => value < minimalGroundHeight))
+                if (fixedWeir == null)
                 {
-                    issue = new ValidationIssue(fixedWeir, ValidationSeverity.Info,
-                                                string.Format(Resources.FixedWeirValidator_Fixed_weir_contains_ground_heights_smaller_than_minimum,
-                                                              fixedWeir.Name, schemeName, side, minimalGroundHeight.ToString("0.00", CultureInfo.InvariantCulture)));
-                    return true;
+                    break;
                 }
 
-                issue = null;
-                return false;
+                ValidationIssue issueLeftColumn = ValidateGroundHeightColumn(fixedWeirProperty, 1, "left", schemeName, minimalGroundHeight);
+                if (issueLeftColumn != null)
+                {
+                    yield return issueLeftColumn;
+                }
+
+                ValidationIssue issueRightColumn = ValidateGroundHeightColumn(fixedWeirProperty, 2, "right", schemeName, minimalGroundHeight);
+                if (issueRightColumn != null)
+                {
+                    yield return issueRightColumn;
+                }
+            }
+        }
+
+        private static ValidationIssue ValidateGroundHeightColumn(ModelFeatureCoordinateData<FixedWeir> fixedWeirProperty,
+                                                                  int columnIndex,
+                                                                  string side,
+                                                                  string schemeName,
+                                                                  double minimalGroundHeight)
+        {
+            FixedWeir fixedWeir = fixedWeirProperty.Feature;
+
+            if (fixedWeirProperty.DataColumns[columnIndex].ValueList.Cast<double>()
+                                 .Any(value => value < minimalGroundHeight))
+            {
+                return new ValidationIssue(fixedWeir,
+                                           ValidationSeverity.Info,
+                                           string.Format(Resources.FixedWeirValidator_Fixed_weir_contains_ground_heights_smaller_than_minimum,
+                                                         fixedWeir.Name,
+                                                         schemeName,
+                                                         side,
+                                                         minimalGroundHeight.ToString("0.00", CultureInfo.InvariantCulture)));
             }
 
-            if (ValidationFailedGroundHeightColumn(1, "left", out ValidationIssue issueLeftColumn))
-            {
-                yield return issueLeftColumn;
-            }
-
-            if (ValidationFailedGroundHeightColumn(2, "right", out ValidationIssue issueRightColumn))
-            {
-                yield return issueRightColumn;
-            }
+            return null;
         }
     }
 }

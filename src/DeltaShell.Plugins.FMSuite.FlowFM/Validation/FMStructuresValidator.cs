@@ -22,13 +22,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
         {
             HydroArea area = model.Area;
             string fixedWeirScheme = model.ModelDefinition.GetModelProperty(KnownProperties.FixedWeirScheme).GetValueAsString();
-            Enum.TryParse(fixedWeirScheme, true, out FixedWeirSchemes schemeEnumType);
+            var schemeEnumType = (FixedWeirSchemes) Enum.Parse(typeof(FixedWeirSchemes), fixedWeirScheme);
 
             IEnumerable<ValidationIssue> issues = area.ThinDams.Validate(model.GridExtent)
-                                                      .Concat(model.SourcesAndSinks.Validate(model.GridExtent, model.StartTime,model.StopTime))
+                                                      .Concat(model.SourcesAndSinks.Validate(model.GridExtent, model.StartTime, model.StopTime))
                                                       .Concat(area.FixedWeirs.Validate(model.GridExtent, model.FixedWeirsProperties, schemeEnumType))
-                                                      .Concat(area.Weirs.Validate(model.GridExtent, model.StartTime,model.StopTime))
-                                                      .Concat(area.Pumps.Validate(model.GridExtent, model.StartTime,model.StopTime));
+                                                      .Concat(area.Weirs.Validate(model.GridExtent, model.StartTime, model.StopTime))
+                                                      .Concat(area.Pumps.Validate(model.GridExtent, model.StartTime, model.StopTime));
 
             return new ValidationReport("Structures", issues);
         }

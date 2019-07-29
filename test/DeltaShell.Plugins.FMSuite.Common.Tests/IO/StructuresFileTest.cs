@@ -21,6 +21,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
+using Rhino.Mocks;
 using StructureType = DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures.StructureType;
 
 namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
@@ -101,31 +102,30 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             // Given
             using (var temp = new TemporaryDirectory())
             {
-                var filesList = new[]
-                {
-                    @"structures\FlowFMPliFileValueMissing_structures.ini"
-                };
-
                 List<string> copiesInTempFilePaths =
-                    temp.CopyAllTestDataToTempDirectory(filesList);
+                    temp.CopyAllTestDataToTempDirectory(@"structures\FlowFMPliFileValueMissing_structures.ini");
 
                 string path = copiesInTempFilePaths[0];
 
                 var structuresFile = new StructuresFile { StructureSchema = schema };
-                var logHandler = new LogHandler($"reading the structures file ({path}),");
+
+
+                var logHandlerMock = MockRepository.GenerateStrictMock<ILogHandler>();
+                logHandlerMock.Expect(l => l.ReportErrorFormat(
+                                          Arg<string>.Matches(fp => fp.Equals(Resources.StructureFile_Failed_to_convert_ini_structure_definition_to_actual_structure_Line__0____1__)),
+                                          Arg<object[]>.Matches(fs => fs.Length == 2 &&
+                                                                      fs[0].Equals(1) &&
+                                                                      fs[1].Equals("Structure 'structure02' does not have a filename specified for property 'polylinefile'."))))
+                              .Repeat.Once();
 
                 // When
-                IList<Structure2D> structures = structuresFile.ReadStructures2D(path, logHandler).ToList();
+                logHandlerMock.Replay();
+               
+                IList<Structure2D> structures = structuresFile.ReadStructures2D(path, logHandlerMock).ToList();
 
                 // Then
-                Assert.AreEqual(1, logHandler.LogMessagesTable.AllMessages.Count(), "1 sub message should have been added to the loghandler");
-                Assert.AreEqual(1, logHandler.LogMessagesTable.ErrorMessages.Count(), "The sub message should have been a error");
-                Assert.AreEqual(0, structures.Count, "A valid structure has been read from the file, while an invalid structure was written in the file");
-
-                string msg = logHandler.LogMessagesTable.ErrorMessages.First();
-                string expectedMessage = string.Format(
-                    Resources.StructureFile_Failed_to_convert_ini_structure_definition_to_actual_structure_Line__0____1__, 1, "Structure 'structure02' does not have a filename specified for property 'polylinefile'.");
-                Assert.That(msg, Is.EqualTo(expectedMessage), "Expected the message of the warning to be different:");
+               Assert.AreEqual(0, structures.Count, "A valid structure has been read from the file, while an invalid structure was written in the file");
+               logHandlerMock.VerifyAllExpectations();
             }
         }
 
@@ -136,32 +136,30 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             // Given
             using (var temp = new TemporaryDirectory())
             {
-                var filesList = new[]
-                {
-                    @"structures\FlowFMUnsupportedCategory_structures.ini",
-                    @"structures\structure01.pli",
-                };
-
                 List<string> copiesInTempFilePaths =
-                    temp.CopyAllTestDataToTempDirectory(filesList);
+                    temp.CopyAllTestDataToTempDirectory(@"structures\FlowFMUnsupportedCategory_structures.ini",
+                                                        @"structures\structure01.pli");
 
                 string path = copiesInTempFilePaths[0];
 
                 var structuresFile = new StructuresFile {StructureSchema = schema};
-                var logHandler = new LogHandler($"reading the structures file ({path}),");
+
+                var logHandlerMock = MockRepository.GenerateStrictMock<ILogHandler>();
+                logHandlerMock.Expect(l => l.ReportWarningFormat(
+                                          Arg<string>.Matches(fp => fp.Equals(Resources.StructureFile_Category__0__not_supported_for_structures_and_is_skipped_Line__1__)),
+                                          Arg<object[]>.Matches(fs => fs.Length == 2 &&
+                                                                      fs[0].Equals("test") &&
+                                                                      fs[1].Equals(1))))
+                              .Repeat.Once();
 
                 // When
-                IList<Structure2D> structures = structuresFile.ReadStructures2D(path, logHandler).ToList();
+                logHandlerMock.Replay();
+
+                IList<Structure2D> structures = structuresFile.ReadStructures2D(path, logHandlerMock).ToList();
 
                 // Then
-                Assert.AreEqual(1, logHandler.LogMessagesTable.AllMessages.Count(), "1 sub message should have been added to the loghandler");
-                Assert.AreEqual(1, logHandler.LogMessagesTable.WarningMessages.Count(), "The sub message should have been a warning");
                 Assert.AreEqual(0, structures.Count,"A valid structure has been read from the file, while an invalid structure was written in the file");
-
-                string msg = logHandler.LogMessagesTable.WarningMessages.First();
-                string expectedMessage = string.Format(
-                    Resources.StructureFile_Category__0__not_supported_for_structures_and_is_skipped_Line__1__,"test", 1);
-                Assert.That(msg, Is.EqualTo(expectedMessage), "Expected the message of the warning to be different:");
+                logHandlerMock.VerifyAllExpectations();
             }
         }
 
@@ -172,36 +170,37 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             // Given
             using (var temp = new TemporaryDirectory())
             {
-                var filesList = new[]
-                {
-                    @"structures\FlowFM2KeysNotInScheme_structures.ini",
-                    @"structures\structure01.pli",
-                };
-
-                List<string> copiesInTempFilePaths = temp.CopyAllTestDataToTempDirectory(filesList);
+                List<string> copiesInTempFilePaths = temp.CopyAllTestDataToTempDirectory(@"structures\FlowFM2KeysNotInScheme_structures.ini",
+                                                                                         @"structures\structure01.pli");
 
                 string path = copiesInTempFilePaths[0];
 
                 var structuresFile = new StructuresFile {StructureSchema = schema};
-                var logHandler = new LogHandler($"reading the structures file ({path}),");
+
+                var logHandlerMock = MockRepository.GenerateStrictMock<ILogHandler>();
+                logHandlerMock.Expect(l => l.ReportWarningFormat(
+                                          Arg<string>.Matches(fp => fp.Equals(Resources.StructureFile_Property__0__not_supported_for_structures_of_type__1__and_is_skipped_Line__2__)),
+                                          Arg<object[]>.Matches(fs => fs.Length == 3 &&
+                                                                      fs[0].Equals("weir1") &&
+                                                                      fs[1].Equals("weir") &&
+                                                                      fs[2].Equals(8))))
+                              .Repeat.Once();
+                logHandlerMock.Expect(l => l.ReportWarningFormat(
+                                          Arg<string>.Matches(fp => fp.Equals(Resources.StructureFile_Property__0__not_supported_for_structures_of_type__1__and_is_skipped_Line__2__)),
+                                          Arg<object[]>.Matches(fs => fs.Length == 3 &&
+                                                                      fs[0].Equals("weir2") &&
+                                                                      fs[1].Equals("weir") &&
+                                                                      fs[2].Equals(9))))
+                              .Repeat.Once();
 
                 // When
-                IList<Structure2D> structures = structuresFile.ReadStructures2D(path, logHandler).ToList();
+                logHandlerMock.Replay();
+
+                IList<Structure2D> structures = structuresFile.ReadStructures2D(path, logHandlerMock).ToList();
 
                 // Then
-                Assert.AreEqual(2, logHandler.LogMessagesTable.AllMessages.Count(),"2 sub messages should have been added to the loghandler");
-                Assert.AreEqual(2, logHandler.LogMessagesTable.WarningMessages.Count(),"Both messages should have been a warning");
                 Assert.AreEqual(1, structures.Count, "One structure should have been created");
-
-                string msg = logHandler.LogMessagesTable.WarningMessages.First();
-                string expectedMessage = string.Format(
-                    Resources.StructureFile_Property__0__not_supported_for_structures_of_type__1__and_is_skipped_Line__2__, "weir1", "weir", 8);
-                Assert.That(msg, Is.EqualTo(expectedMessage), "Expected the message of the first warning to be different:");
-
-                string msg2 = logHandler.LogMessagesTable.WarningMessages.Last();
-                string expectedMessage2 = string.Format(
-                    Resources.StructureFile_Property__0__not_supported_for_structures_of_type__1__and_is_skipped_Line__2__,"weir2", "weir", 9);
-                Assert.That(msg2, Is.EqualTo(expectedMessage2), "Expected the message of the second warning to be different:");
+                logHandlerMock.VerifyAllExpectations();
             }
         }
 
@@ -212,32 +211,29 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             // Given
             using (var temp = new TemporaryDirectory())
             {
-                var filesList = new[]
-                {
-                    @"structures\FlowFMMissingTypeProperty_structures.ini",
-                    @"structures\structure01.pli",
-                };
-
-                List<string> copiesInTempFilePaths = temp.CopyAllTestDataToTempDirectory(filesList);
+               List<string> copiesInTempFilePaths = temp.CopyAllTestDataToTempDirectory(@"structures\FlowFMMissingTypeProperty_structures.ini",
+                                                                                         @"structures\structure01.pli");
 
                 string path = copiesInTempFilePaths[0];
 
                 var structuresFile = new StructuresFile {StructureSchema = schema};
 
-                var logHandler = new LogHandler($"reading the structures file ({path}),");
+                var logHandlerMock = MockRepository.GenerateStrictMock<ILogHandler>();
+                logHandlerMock.Expect(l => l.ReportWarningFormat(
+                                          Arg<string>.Matches(fp => fp.Equals(Resources.StructureFile_Obligated_property__0__expected_but_is_missing_Structure_is_skipped_Line__1__)),
+                                          Arg<object[]>.Matches(fs => fs.Length == 2 &&
+                                                                      fs[0].Equals("type") &&
+                                                                      fs[1].Equals(1))))
+                              .Repeat.Once();
 
                 // When
-                IList<Structure2D> structures = structuresFile.ReadStructures2D(path, logHandler).ToList();
+                logHandlerMock.Replay();
+
+                IList<Structure2D> structures = structuresFile.ReadStructures2D(path, logHandlerMock).ToList();
 
                 // Then
-                Assert.AreEqual(1, logHandler.LogMessagesTable.AllMessages.Count(), "1 sub message should have been added to the loghandler");
-                Assert.AreEqual(1, logHandler.LogMessagesTable.WarningMessages.Count(), "The sub message should have been a warning");
                 Assert.AreEqual(0, structures.Count, "A valid structure has been read from the file, while an invalid structure was written in the file");
-
-                string msg = logHandler.LogMessagesTable.WarningMessages.First();
-                string expectedMessage = string.Format(
-                    Resources.StructureFile_Obligated_property__0__expected_but_is_missing_Structure_is_skipped_Line__1__,"type", 1);
-                Assert.That(msg, Is.EqualTo(expectedMessage), "Expected the message of the warning to be different:");
+                logHandlerMock.VerifyAllExpectations();
             }
         }
 
@@ -860,14 +856,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             // Given
             using (var temp = new TemporaryDirectory())
             {
-                var filesList = new[]
-                {
-                    @"structures\FlowFM2KeysNotInScheme_structures.ini",
-                    @"structures\structure01.pli",
-                };
-
-                List<string> copiesInTempFilePaths =
-                    temp.CopyAllTestDataToTempDirectory(filesList);
+               List<string> copiesInTempFilePaths =
+                    temp.CopyAllTestDataToTempDirectory(@"structures\FlowFM2KeysNotInScheme_structures.ini",
+                                                        @"structures\structure01.pli");
 
                 var structureFile = new StructuresFile
                 {
@@ -878,12 +869,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
                 // When
                 IList<IStructure> structures = null;
-
-                // Then
+                
                 IEnumerable<string> messages = TestHelper.GetAllRenderedMessages(
                     () => structures = structureFile.ReadStructuresFileRelativeToReferenceFile(copyOfIniInTempFilePath,
                                                                                                copyOfIniInTempFilePath));
-
+                // Then
                 Assert.AreEqual(1, structures.Count, "The ini file for the structures is not correctly read");
 
                 Assert.That(messages, Has.Count.EqualTo(1), "Expected a single grouped warning message:");

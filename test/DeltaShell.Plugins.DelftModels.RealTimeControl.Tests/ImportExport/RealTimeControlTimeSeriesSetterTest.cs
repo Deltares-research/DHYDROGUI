@@ -150,8 +150,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
         }
 
         [Test]
-        public void
-            GivenTimeSeriesXmlObjectForAnIntervalRuleWithASignalIntervalType_WhenSetTimeSeriesIsCalled_ThenAWarningShouldBeGiven()
+        public void GivenTimeSeriesXmlObjectForAnIntervalRuleWithASignalIntervalType_WhenSetTimeSeriesIsCalled_ThenAWarningShouldBeGiven()
         {
             // Given
             string locationId = CreateLocationId(RtcXmlTag.IntervalRule);
@@ -180,9 +179,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
 
         [TestCase(PIDRule.PIDRuleSetpointType.Signal)]
         [TestCase(PIDRule.PIDRuleSetpointType.Constant)]
-        public void
-            GivenTimeSeriesXmlObjectForAnPIDRuleWithoutSetPointTypeNotTimeSeries_WhenSetTimeSeriesIsCalled_ThenAWarningShouldBeGiven(
-                PIDRule.PIDRuleSetpointType setPointType)
+        public void GivenTimeSeriesXmlObjectForAPIDRuleWithoutSetPointTypeNotTimeSeries_WhenSetTimeSeriesIsCalled_ThenAWarningShouldBeGiven(
+            PIDRule.PIDRuleSetpointType setPointType)
         {
             // Given
             string locationId = CreateLocationId(RtcXmlTag.PIDRule);

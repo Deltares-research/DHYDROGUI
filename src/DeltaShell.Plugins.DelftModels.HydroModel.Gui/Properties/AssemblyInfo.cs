@@ -1,4 +1,5 @@
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following 
@@ -18,3 +19,5 @@ using System.Runtime.InteropServices;
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("dfb86213-fc30-4827-84ad-9475da8dc770")]
+
+[assembly: InternalsVisibleTo("DeltaShell.Plugins.DelftModels.HydroModel.Tests")]
