@@ -13,10 +13,12 @@ namespace DelftTools.ModelExchange
         // (no Capitals, to support case insensitivy, and for unification with the Fortran layer
         // (small caps to support case insensitivity when parsing)
         // ReSharper disable InconsistentNaming
+        // All should be the total of the integer values.
         [Flags]
         public enum ExchangeItemGroupType
         {
             nhi = 1,
+            // sobek = 2, was removed during clean-up of sobek, therefor All was lowered by 2 to 13.
             composer = 4,
             groundwater = 8,
             All = 13

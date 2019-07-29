@@ -942,14 +942,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
 
             if (string.IsNullOrEmpty(hydFilePath))
             {
-                toolTipText = "No hyd file was produced. Make sure that you have run the flow model and that the hyd file has been generated.";
+                toolTipText = Properties.Resources.WaterQualityModelGuiPlugin_CreateHydFileModelMenuItem_No_hyd_file_was_produced;
             }
             else
             {
                 hydFileExists = File.Exists(hydFilePath);
                 toolTipText = hydFileExists
-                                  ? "Use hyd file '{0}'"
-                                  : "hyd file is not present at '{0}'.";
+                                  ? Properties.Resources.WaterQualityModelGuiPlugin_CreateHydFileModelMenuItem_Use_hyd_file
+                                  : Properties.Resources.WaterQualityModelGuiPlugin_CreateHydFileModelMenuItem_Hyd_file_is_not_present;
             }
 
             var hydFileModelMenuItem = new ClonableToolStripMenuItem

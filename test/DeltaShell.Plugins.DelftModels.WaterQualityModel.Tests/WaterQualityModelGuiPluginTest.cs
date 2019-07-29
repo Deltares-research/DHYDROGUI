@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Windows.Controls;
+using System.Windows.Forms;
+using DelftTools.Controls;
 using DelftTools.Controls.Swf;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core;
@@ -11,9 +13,11 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.UndoRedo;
 using DeltaShell.Gui;
+using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.ProjectExplorer;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Properties;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Ribbon;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.ObservationAreas;
@@ -26,6 +30,7 @@ using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using NUnit.Framework;
 using Rhino.Mocks;
 using SharpMap.UI.Tools;
+using Control = System.Windows.Controls.Control;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 {
@@ -208,6 +213,118 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 
             mocks.VerifyAll();
 
+        }
+
+        [TestCase(null)]
+        [TestCase("")]
+        public void
+            GivenAHydFileModelWithANullOrEmptyHydFilePath_WhenGetContextMenuIsCalled_ThenCorrectToolStripMenuItemIsCreated(
+                string hydFilePath)
+        {
+            // Given
+            const string hydFileModelName = "hyd_file_model_name";
+            WaterQualityModelGuiPlugin guiPlugin =
+                CreateFullyConfiguredGuiPluginWithHydFileModel(hydFilePath, hydFileModelName);
+
+            // When
+            IMenuItem menu = guiPlugin.GetContextMenu(null, MockRepository.GenerateStub<WaterQualityModel>());
+
+            // Then
+            ContextMenuStrip contextMenu = ((MenuItemContextMenuStripAdapter) menu).ContextMenuStrip;
+            ToolStripItem toolStripItem = contextMenu.Items[0];
+            ToolStripItemCollection contextMenuItems = ((ClonableToolStripMenuItem) toolStripItem).DropDownItems;
+
+            string expectedToolTipText =
+                Resources.WaterQualityModelGuiPlugin_CreateHydFileModelMenuItem_No_hyd_file_was_produced;
+
+            ToolStripItem toolStripMenuItem = contextMenuItems[0];
+            Assert.That(toolStripMenuItem.Enabled, Is.False);
+            Assert.That(toolStripMenuItem.ToolTipText, Is.EqualTo(expectedToolTipText));
+            Assert.That(toolStripMenuItem.Text, Is.EqualTo(hydFileModelName));
+        }
+
+        [Test]
+        public void
+            GivenAHydFileModelWithAHydFilePathThatDoesNotExist_WhenGetContextMenuIsCalled_ThenCorrectToolStripMenuItemIsCreated()
+        {
+            // Given
+            const string hydFileModelName = "hyd_file_model_name";
+            const string hydFilePath = "does_not_exist";
+            WaterQualityModelGuiPlugin guiPlugin =
+                CreateFullyConfiguredGuiPluginWithHydFileModel(hydFilePath, hydFileModelName);
+
+            // When
+            IMenuItem menu = guiPlugin.GetContextMenu(null, MockRepository.GenerateStub<WaterQualityModel>());
+
+            // Then
+            ContextMenuStrip contextMenu = ((MenuItemContextMenuStripAdapter) menu).ContextMenuStrip;
+            ToolStripItem toolStripItem = contextMenu.Items[0];
+            ToolStripItemCollection contextMenuItems = ((ClonableToolStripMenuItem) toolStripItem).DropDownItems;
+
+            string expectedToolTipText =
+                string.Format(Resources.WaterQualityModelGuiPlugin_CreateHydFileModelMenuItem_Hyd_file_is_not_present,
+                              hydFilePath);
+
+            ToolStripItem toolStripMenuItem = contextMenuItems[0];
+            Assert.That(toolStripMenuItem.Enabled, Is.False);
+            Assert.That(toolStripMenuItem.ToolTipText, Is.EqualTo(expectedToolTipText));
+            Assert.That(toolStripMenuItem.Text, Is.EqualTo(hydFileModelName));
+        }
+
+        [Test]
+        public void
+            GivenAHydFileModelWithAHydFilePathThatExists_WhenGetContextMenuIsCalled_ThenCorrectToolStripMenuItemIsCreated()
+        {
+            // Given
+            const string hydFileModelName = "hyd_file_model_name";
+            string hydFilePath;
+
+            IMenuItem menu;
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                hydFilePath = Path.Combine(tempDirectory.Path, "should_exist.hyd");
+                WaterQualityModelGuiPlugin guiPlugin =
+                    CreateFullyConfiguredGuiPluginWithHydFileModel(hydFilePath, hydFileModelName);
+                using (File.Create(hydFilePath)) {}
+
+                // When
+                menu = guiPlugin.GetContextMenu(null, MockRepository.GenerateStub<WaterQualityModel>());
+            }
+
+            // Then
+            ContextMenuStrip contextMenu = ((MenuItemContextMenuStripAdapter) menu).ContextMenuStrip;
+            ToolStripItem toolStripItem = contextMenu.Items[0];
+            ToolStripItemCollection contextMenuItems = ((ClonableToolStripMenuItem) toolStripItem).DropDownItems;
+
+            string expectedToolTipText =
+                string.Format(Resources.WaterQualityModelGuiPlugin_CreateHydFileModelMenuItem_Use_hyd_file,
+                              hydFilePath);
+
+            ToolStripItem toolStripMenuItem = contextMenuItems[0];
+            Assert.That(toolStripMenuItem.Enabled, Is.True);
+            Assert.That(toolStripMenuItem.ToolTipText, Is.EqualTo(expectedToolTipText));
+            Assert.That(toolStripMenuItem.Text, Is.EqualTo(hydFileModelName));
+        }
+
+        private static WaterQualityModelGuiPlugin CreateFullyConfiguredGuiPluginWithHydFileModel(
+            string hydFilePath,
+            string hydFileModelName)
+        {
+            var hydFileModel = MockRepository.GenerateStub<IHydFileModel>();
+            hydFileModel.Stub(m => m.HydFilePath).Return(hydFilePath);
+            hydFileModel.Name = hydFileModelName;
+
+            var app = MockRepository.GenerateStub<IApplication>();
+            app.Stub(a => a.ActivityRunner).Return(MockRepository.GenerateStub<IActivityRunner>());
+            app.Stub(a => a.Plugins).Return(new List<ApplicationPlugin>());
+            app.Stub(a => a.GetAllModelsInProject()).Return(new List<IModel> {hydFileModel});
+
+            var gui = MockRepository.GenerateStub<IGui>();
+            gui.Stub(g => g.Plugins).Return(new List<GuiPlugin>());
+            gui.Stub(g => g.UndoRedoManager).Return(MockRepository.GenerateStub<IUndoRedoManager>());
+            gui.Application = app;
+
+            return new WaterQualityModelGuiPlugin {Gui = gui};
         }
 
         private static WaterQualityModel AddWaterQualityModelToProject(IApplication app)

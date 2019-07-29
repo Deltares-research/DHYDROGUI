@@ -252,12 +252,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
                             {
                                 if (
                                     compositeHydroModel.Activities.Any(a => a.GetType().Implements(hydroModel.GetType())) &&
-                                    MessageBox.Show(
-                                        Properties.Resources
-                                            .HydroModelGuiPlugin_GetContextMenu_This_will_overwrite_the_existing_model__Are_you_sure_,
-                                        Properties.Resources
-                                            .HydroModelGuiPlugin_GetContextMenu_Overwrite_existing_model_,
-                                        MessageBoxButtons.YesNo) != DialogResult.Yes)
+                                    MessageBox.Show(Properties.Resources.HydroModelGuiPlugin_GetContextMenu_This_will_overwrite_the_existing_model__Are_you_sure_, 
+                                                    Properties.Resources.HydroModelGuiPlugin_GetContextMenu_Overwrite_existing_model_, 
+                                                    MessageBoxButtons.YesNo) != DialogResult.Yes)
                                 {
                                     return;
                                 }
@@ -294,7 +291,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
                 IMenuItem projectExplorerContextMenu = Gui.MainWindow.ProjectExplorer.GetContextMenu(null, data);
                 if (projectExplorerContextMenu != null)
                 {
-                    if (projectExplorerContextMenu.OfType<ClonableToolStripMenuItem>().All(mi => mi.Text != HydroModelGuiProperties.Resources.HydroModelGuiPlugin_GetContextMenu_Validate___))
+                    if (projectExplorerContextMenu.OfType<ClonableToolStripMenuItem>()
+                                                  .All(mi => mi.Text != HydroModelGuiProperties.Resources.HydroModelGuiPlugin_GetContextMenu_Validate___))
                     {
                         var subMenu = new ContextMenuStrip();
                         var validateItem = new ClonableToolStripMenuItem
@@ -339,17 +337,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
             if (projectExplorerContextMenu == null) return;
             var projectExplorerContextMenuStrip =
                 ((MenuItemContextMenuStripAdapter) projectExplorerContextMenu).ContextMenuStrip;
-            foreach (
-                var menuItemName in
-                    modelMergeMenu.Items.OfType<ClonableToolStripMenuItem>()
-                        .Select(item => item.Text)
-                        .Where(name => !string.IsNullOrWhiteSpace(name)))
+            foreach (var menuItemName in modelMergeMenu.Items.OfType<ClonableToolStripMenuItem>()
+                                                       .Select(item => item.Text)
+                                                       .Where(name => !string.IsNullOrWhiteSpace(name)))
             {
                 var name = menuItemName;
-                var menuItems =
-                    projectExplorerContextMenuStrip.Items.OfType<ClonableToolStripMenuItem>()
-                        .Where(i => i.Text == name)
-                        .ToList();
+                var menuItems = projectExplorerContextMenuStrip.Items.OfType<ClonableToolStripMenuItem>()
+                                                               .Where(i => i.Text == name)
+                                                               .ToList();
 
                 foreach (var menuItem in menuItems)
                 {

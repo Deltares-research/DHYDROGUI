@@ -9,7 +9,7 @@
         /// Gets the minimal valid ground height for a fixed weir scheme.
         /// </summary>
         /// <param name="scheme">The fixed weir scheme.</param>
-        /// <returns></returns>
+        /// <returns>Returns the minimal allowed ground height for this fixed weir scheme.</returns>
         public static double GetMinimalAllowedGroundHeight(this FixedWeirSchemes scheme)
         {
             switch (scheme)
