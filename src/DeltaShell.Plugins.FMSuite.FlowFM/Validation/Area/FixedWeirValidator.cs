@@ -69,35 +69,41 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area
                     break;
                 }
 
-                bool ValidationFailedGroundHeightColumn(int columnIndex, string side, out ValidationIssue issue)
-                {
-                    if (fixedWeirProperty.DataColumns[columnIndex].ValueList.Cast<double>()
-                                         .Any(value => value < minimalGroundHeight))
-                    {
-                        issue = new ValidationIssue(fixedWeir,
-                                                    ValidationSeverity.Info,
-                                                    string.Format(Resources.FixedWeirValidator_Fixed_weir_contains_ground_heights_smaller_than_minimum,
-                                                                  fixedWeir.Name,
-                                                                  schemeName,
-                                                                  side,
-                                                                  minimalGroundHeight.ToString("0.00", CultureInfo.InvariantCulture)));
-                        return true;
-                    }
-
-                    issue = null;
-                    return false;
-                }
-
-                if (ValidationFailedGroundHeightColumn(1, "left", out ValidationIssue issueLeftColumn))
+                ValidationIssue issueLeftColumn = ValidateGroundHeightColumn(fixedWeirProperty, 1, "left", schemeName, minimalGroundHeight);
+                if (issueLeftColumn != null)
                 {
                     yield return issueLeftColumn;
                 }
 
-                if (ValidationFailedGroundHeightColumn(2, "right", out ValidationIssue issueRightColumn))
+                ValidationIssue issueRightColumn = ValidateGroundHeightColumn(fixedWeirProperty, 2, "right", schemeName, minimalGroundHeight);
+                if (issueRightColumn != null)
                 {
                     yield return issueRightColumn;
                 }
             }
+        }
+
+        private static ValidationIssue ValidateGroundHeightColumn(ModelFeatureCoordinateData<FixedWeir> fixedWeirProperty,
+                                                                  int columnIndex,
+                                                                  string side,
+                                                                  string schemeName,
+                                                                  double minimalGroundHeight)
+        {
+            FixedWeir fixedWeir = fixedWeirProperty.Feature;
+
+            if (fixedWeirProperty.DataColumns[columnIndex].ValueList.Cast<double>()
+                                 .Any(value => value < minimalGroundHeight))
+            {
+                return new ValidationIssue(fixedWeir,
+                                           ValidationSeverity.Info,
+                                           string.Format(Resources.FixedWeirValidator_Fixed_weir_contains_ground_heights_smaller_than_minimum,
+                                                         fixedWeir.Name,
+                                                         schemeName,
+                                                         side,
+                                                         minimalGroundHeight.ToString("0.00", CultureInfo.InvariantCulture)));
+            }
+
+            return null;
         }
     }
 }
