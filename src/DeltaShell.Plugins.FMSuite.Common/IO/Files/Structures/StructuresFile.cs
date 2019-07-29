@@ -144,7 +144,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
         {
             var logHandler = new LogHandler($"reading the structures file ({filePath}),", Log);
 
-            List<IStructure> structures = ReadStructures2D(filePath)
+            List<IStructure> structures = ReadStructures2D(filePath, logHandler)
                              .Select(s => ConvertStructure(s, filePath))
                              .Where(s => s != null)
                              .ToList();
