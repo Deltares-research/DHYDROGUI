@@ -278,33 +278,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
                 try
                 {
                     var structureProperty = new StructureProperty(modelPropertyDefinition, property.Value);
-                    var propertyValue = structureProperty.Value as Steerable;
+                    Steerable propertyValue = structureProperty.Value as Steerable;
                     if (propertyValue != null && propertyValue.Mode == SteerableMode.TimeSeries)
                     {
-                        string directory = Path.GetDirectoryName(propertyValue.TimeSeriesFilename);
-                        if (directory != TimFolder)
-                        {
-                            if (string.IsNullOrEmpty(directory) && TimFolder != null)
-                            {
-                                logHandler?.ReportWarningFormat(
-                                    Resources.StructureFile_Structure_time_series__0__will_be_written_to_the_time_series_folder__1__Line__2__,
-                                    propertyValue.TimeSeriesFilename, TimFolder, property.LineNumber);
-                            }
-                            else
-                            {
-                                if (TimFolder != null)
-                                {
-                                    logHandler?.ReportWarningFormat(
-                                        Resources.StructureFile_Replacing_structure_time_series_folder__0__with__1__all_structure_time_series_will_be_written_to_this_folder_Line__2__,
-                                        TimFolder, directory, property.LineNumber);
-                                }
-
-                                if (!string.IsNullOrEmpty(directory))
-                                {
-                                    TimFolder = directory;
-                                }
-                            }
-                        }
+                        SetOrUpdateTimFolder(propertyValue.TimeSeriesFilename, property.LineNumber, logHandler);
                     }
 
                     newStructure.Properties.Add(structureProperty);
@@ -321,6 +298,36 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             }
 
             return newStructure;
+        }
+
+        private void SetOrUpdateTimFolder(string timeSeriesFilename, int propertyLineNumber, ILogHandler logHandler)
+        {
+            string directory = Path.GetDirectoryName(timeSeriesFilename);
+            if (TimFolder == directory)
+            {
+                return;
+            }
+
+            if (string.IsNullOrEmpty(directory) && TimFolder != null)
+            {
+                logHandler?.ReportWarningFormat(
+                    Resources.StructureFile_Structure_time_series__0__will_be_written_to_the_time_series_folder__1__Line__2__,
+                    timeSeriesFilename, TimFolder, propertyLineNumber);
+            }
+            else
+            {
+                if (TimFolder != null)
+                {
+                    logHandler?.ReportWarningFormat(
+                        Resources.StructureFile_Replacing_structure_time_series_folder__0__with__1__all_structure_time_series_will_be_written_to_this_folder_Line__2__,
+                        TimFolder, directory, propertyLineNumber);
+                }
+
+                if (!string.IsNullOrEmpty(directory))
+                {
+                    TimFolder = directory;
+                }
+            }
         }
 
         private static object GetValueTypeDescription(Type dataType, ModelPropertyDefinition modelPropertyDefinition)
