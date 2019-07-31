@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Functions;
+using DelftTools.Functions.Filters;
 using DelftTools.Functions.Generic;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow.DataItems;
@@ -375,67 +376,176 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         }
 
         [Test]
-        public void CallingClearOutputOnWaterQualityModelShouldNotClearAllOutputDataItem()
+        public void ClearOutput_WithFeatureCoverageDataItem_ThenFeatureCoverageIsCleared()
         {
-            var model = new WaterQualityModel {ModelSettings = {MonitoringOutputLevel = MonitoringOutputLevel.None}};
-            var grid = UnstructuredGridTestHelper.GenerateRegularGrid(10, 10, 10, 10);
-            var unstructuredGridCellCoverage = CreateUnstructuredGridCellCoverage(grid, false);
-            var timeDependentCellCoverage = CreateUnstructuredGridCellCoverage(grid, true);
+            const string outputFeatureCoverageTag = "OutputFeatureCoverage";
+            var waqModel = new WaterQualityModel();
 
             var featureCoverage = new FeatureCoverage("Test coverage");
             featureCoverage.Arguments.Add(new Variable<IFeature>("Feature argument"));
             featureCoverage.Components.Add(new Variable<int>("Test component"));
             featureCoverage[new Feature()] = 2;
-
-            var document = new TextDocument();
-            var document2 = new TextDocument();
-
-            var outputItems = new List<IDataItem>
+            featureCoverage.Filters = new List<IVariableFilter>
             {
-                new DataItem(unstructuredGridCellCoverage, DataItemRole.Output),
-                new DataItem(timeDependentCellCoverage, DataItemRole.Output),
-                new DataItem(document, DataItemRole.Output),
-                new DataItem(document2, DataItemRole.Output),
-                new DataItem(featureCoverage, DataItemRole.Output)
+                new ComponentFilter(featureCoverage.Components[0])
             };
 
-            model.DataItems.AddRange(outputItems);
+            waqModel.DataItems.Add(new DataItem(featureCoverage, DataItemRole.Output, outputFeatureCoverageTag));
 
-            unstructuredGridCellCoverage.Components[0].DefaultValue = -999.0;
-            unstructuredGridCellCoverage.SetValues(Enumerable.Range(0, 100).Select(i => i * 1.0));
+            // Private field outputIsEmpty is set to false after a successful model run. This field should be false when clearing model output.
+            // As we do not focus on model run, we use reflection to set this field and omit the model run.
+            TypeUtils.SetField(waqModel, "outputIsEmpty", false);
 
-            timeDependentCellCoverage.Time.AddValues(new[] {DateTime.Now, DateTime.Now.AddDays(2)});
-            timeDependentCellCoverage.SetValues(Enumerable.Range(0, 200).Select(i => i * 1.0));
+            // Pre-condition
+            Assert.That(featureCoverage.GetValues().Count, Is.EqualTo(1));
+            Assert.That(featureCoverage.Filters.Count, Is.EqualTo(1));
 
-            Assert.AreEqual(100, unstructuredGridCellCoverage.GetValues().Count);
-            Assert.AreEqual(200, timeDependentCellCoverage.GetValues().Count);
+            // Call
+            waqModel.ClearOutput();
 
-            Assert.AreEqual(1, featureCoverage.GetValues().Count);
-            Assert.AreEqual(7, model.DataItems.Count(di => di.Role.HasFlag(DataItemRole.Output)));
+            // Assert
+            IDataItem featureCoverageDataItem = waqModel.GetDataItemByTag(outputFeatureCoverageTag);
+            Assert.That(featureCoverageDataItem, Is.Not.Null);
 
-            TypeUtils.SetPrivatePropertyValue(model, "OutputIsEmpty", false);
-            model.ClearOutput();
-
-            Assert.AreEqual(0, featureCoverage.GetValues().Count);
-            Assert.AreEqual(7, model.DataItems.Count(di => di.Role.HasFlag(DataItemRole.Output)));
-            Assert.IsNotNull(model.GetDataItemByValue(document2));
-
-            // Should be default values (cell argument is reset)
-            Assert.AreEqual(100, unstructuredGridCellCoverage.GetValues().Count);
-            Assert.IsTrue(unstructuredGridCellCoverage.GetValues<double>().Any(v => v == -999.0));
-
-            // Should be 0 (cell argument is reset but time argument is empty)
-            Assert.AreEqual(0, timeDependentCellCoverage.GetValues().Count);
-            Assert.AreEqual(0, timeDependentCellCoverage.Time.Values.Count);
-            Assert.AreEqual(100, timeDependentCellCoverage.Arguments[1].Values.Count);
+            var coverage = (FeatureCoverage) featureCoverageDataItem.Value;
+            Assert.That(coverage.GetValues().Count, Is.EqualTo(0));
+            Assert.That(coverage.Filters.Count, Is.EqualTo(0));
         }
 
-        private static UnstructuredGridCellCoverage CreateUnstructuredGridCellCoverage(UnstructuredGrid grid,
-            bool isTimeDependent)
+        [Test]
+        public void ClearOutput_WithTextDocumentOutputDataItem_ThenDataItemIsRemoved()
         {
-            var coverage = new UnstructuredGridCellCoverage(grid, isTimeDependent);
-            coverage.Components[0].NoDataValue = -999.0;
-            return coverage;
+            const string outputTextDocumentTag = "OutputTextDocument";
+            TestHelper.PerformActionInTemporaryDirectory(tempDir =>
+            {
+                // Setup
+                var textDocument = new TextDocument();
+
+                var waqModel = new WaterQualityModel();
+                waqModel.DataItems.Add(new DataItem(textDocument, DataItemRole.Output, outputTextDocumentTag));
+
+                // Private field outputIsEmpty is set to false after a successful model run. This field should be false when clearing model output.
+                // As we do not focus on model run, we use reflection to set this field and omit the model run.
+                TypeUtils.SetField(waqModel, "outputIsEmpty", false);
+
+                // Call
+                waqModel.ClearOutput();
+
+                // Assert
+                Assert.That(waqModel.GetDataItemByTag(outputTextDocumentTag), Is.Null);
+            });
+        }
+
+        [Test]
+        public void ClearOutput_WithTextDocumentFromFileOutputDataItem_ThenFileIsRemovedAndDataItemIsRemovedFromModel()
+        {
+            const string outputTextDocumentTag = "OutputTextDocument";
+            TestHelper.PerformActionInTemporaryDirectory(tempDir =>
+            {
+                // Setup
+                string filePath = Path.Combine(tempDir, "myTextFile.txt");
+                File.WriteAllText(filePath, @"This is a test file.");
+
+                var textDocumentFromFile = new TextDocumentFromFile
+                {
+                    Path = filePath
+                };
+
+                var waqModel = new WaterQualityModel();
+                waqModel.DataItems.Add(new DataItem(textDocumentFromFile, DataItemRole.Output, outputTextDocumentTag));
+
+                // Private field outputIsEmpty is set to false after a successful model run. This field should be false when clearing model output.
+                // As we do not focus on model run, we use reflection to set this field and omit the model run.
+                TypeUtils.SetField(waqModel, "outputIsEmpty", false);
+
+                // Call
+                waqModel.ClearOutput();
+
+                // Assert
+                Assert.That(File.Exists(filePath), Is.False);
+                Assert.That(waqModel.GetDataItemByTag(outputTextDocumentTag), Is.Null);
+            });
+        }
+
+        [Test]
+        public void ClearOutput_WithTextDocumentFromFileOutputDataItemAndCorrespondingFileLocked_ThenLogMessageIsReturned()
+        {
+            const string outputTextDocumentTag = "OutputTextDocument";
+            TestHelper.PerformActionInTemporaryDirectory(tempDir =>
+            {
+                // Setup
+                string filePath = Path.Combine(tempDir, "myTextFile.txt");
+                using (File.Create(filePath))
+                {
+                    var textDocumentFromFile = new TextDocumentFromFile
+                    {
+                        Name = "myTextDocument",
+                        Path = filePath
+                    };
+
+                    var waqModel = new WaterQualityModel();
+                    waqModel.DataItems.Add(new DataItem(textDocumentFromFile, DataItemRole.Output, outputTextDocumentTag));
+
+                    // Private field outputIsEmpty is set to false after a successful model run. This field should be false when clearing model output.
+                    // As we do not focus on model run, we use reflection to set this field and omit the model run.
+                    TypeUtils.SetField(waqModel, "outputIsEmpty", false);
+
+                    // Pre-condition
+                    Assert.That(FileUtils.IsFileLocked(filePath), Is.True);
+
+                    // Call
+                    void Call() => waqModel.ClearOutput();
+
+                    // Assert
+                    string expectedLogMessage = $@"Could not remove output item '{textDocumentFromFile.Name}', because of the following reason:" +
+                                             Environment.NewLine +
+                                             $@"The process cannot access the file '{filePath}' because it is being used by another process.";
+                    TestHelper.AssertLogMessageIsGenerated(Call, expectedLogMessage);
+
+                    Assert.That(File.Exists(filePath), Is.True);
+                    Assert.That(waqModel.GetDataItemByTag(outputTextDocumentTag), Is.Not.Null);
+                }
+            });
+        }
+
+        [Test]
+        public void ClearOutput_WithUnstructuredGridCellCoverageOutputDataItem_ThenCoverageIsCleared()
+        {
+            const int numberOfHorizontalCells = 2;
+            const int numberOfVerticalCells = 2;
+            const int numberOfCells = numberOfHorizontalCells * numberOfVerticalCells;
+            const double noDataValue = -999.0;
+            const string outputGridCellCoverageTag = "OutputGridCellCoverage";
+
+            // Setup
+            UnstructuredGrid grid = UnstructuredGridTestHelper.GenerateRegularGrid(numberOfHorizontalCells, numberOfVerticalCells, 10, 10);
+
+            var random = new Random();
+            var unstructuredGridCellCoverage = new UnstructuredGridCellCoverage(grid, false);
+            unstructuredGridCellCoverage.Components[0].NoDataValue = noDataValue;
+            unstructuredGridCellCoverage.SetValues(Enumerable.Range(0, numberOfCells).Select(i => random.NextDouble()));
+
+            var waqModel = new WaterQualityModel();
+            waqModel.DataItems.Add(new DataItem(unstructuredGridCellCoverage, DataItemRole.Output, outputGridCellCoverageTag));
+
+            // Private field outputIsEmpty is set to false after a successful model run. This field should be false when clearing model output.
+            // As we do not focus on model run, we use reflection to set this field and omit the model run.
+            TypeUtils.SetField(waqModel, "outputIsEmpty", false);
+
+            // Pre-condition
+            Assert.That(unstructuredGridCellCoverage.GetValues().Count, Is.EqualTo(numberOfCells));
+            Assert.That(unstructuredGridCellCoverage.GetValues<double>().All(v => Math.Abs(v - noDataValue) > 10e-6), Is.True);
+
+            // Call
+            waqModel.ClearOutput();
+
+            // Assert
+            IDataItem coverageDataItem = waqModel.GetDataItemByTag(outputGridCellCoverageTag);
+            Assert.That(coverageDataItem, Is.Not.Null);
+
+            var coverage = (UnstructuredGridCellCoverage) coverageDataItem.Value;
+            Assert.That(coverage.GetValues().Count, Is.EqualTo(numberOfCells));
+            Assert.That(coverage.GetValues<double>().All(v => Math.Abs(v - noDataValue) < 10e-6), Is.True);
         }
 
         [Test]

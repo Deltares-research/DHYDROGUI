@@ -1382,17 +1382,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         protected override void OnClearOutput()
         {
             MapFileFunctionStore.Path = null;
+            
+            List<IDataItem> outputDataItems = AllDataItems.Where(di => di.Role.HasFlag(DataItemRole.Output))
+                                                       .ToList();
 
-            List<object> outputDataItemsValues = AllDataItems
-                                                 .Where(di => di.Role.HasFlag(DataItemRole.Output))
-                                                 .Select(di => di.Value).ToList();
-            List<UnstructuredGridCellCoverage> outputCoverages =
-                outputDataItemsValues.OfType<UnstructuredGridCellCoverage>().ToList();
-            IEnumerable<IFeatureCoverage> outputFeatureCoverages = outputDataItemsValues.OfType<IFeatureCoverage>();
-            IEnumerable<TextDocumentFromFile> outputTextDocumentsFromFile =
-                outputDataItemsValues.OfType<TextDocumentFromFile>();
-            IEnumerable<WaterQualityObservationVariableOutput> waqObservationPointOutput =
-                outputDataItemsValues.OfType<WaterQualityObservationVariableOutput>();
+            List<UnstructuredGridCellCoverage> outputCoverages = outputDataItems.Select(di => di.Value)
+                                                                                .OfType<UnstructuredGridCellCoverage>().ToList();
+            IEnumerable<IFeatureCoverage> outputFeatureCoverages = outputDataItems.Select(di => di.Value)
+                                                                                  .OfType<IFeatureCoverage>();
+            IEnumerable<WaterQualityObservationVariableOutput> waqObservationPointOutput = outputDataItems.Select(di => di.Value)
+                                                                                                          .OfType<WaterQualityObservationVariableOutput>();
 
             // Clear all output coverages
             foreach (UnstructuredGridCellCoverage unstructuredGridCellCoverage in outputCoverages)
@@ -1407,10 +1406,32 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                 featureCoverage.Clear();
             }
 
-            // Remove all text documents based on files
-            foreach (TextDocumentFromFile textDocumentFromFile in outputTextDocumentsFromFile)
+
+            
+            IEnumerable<IDataItem> textDocumentFromFileDataItems = outputDataItems.Where(di => di.Value.GetType() == typeof(TextDocumentFromFile))
+                                                                                  .ToList();
+
+            foreach (IDataItem dataItem in textDocumentFromFileDataItems)
             {
-                FileUtils.DeleteIfExists(textDocumentFromFile.Path);
+                var textDocumentFromFile = (TextDocumentFromFile) dataItem.Value;
+                try
+                {
+                    textDocumentFromFile.Delete();
+                    dataItems.Remove(dataItem);
+                }
+                catch(IOException e)
+                {
+                    string logMessage = string.Format("Could not remove output item '{0}', because of the following reason:{1}{2}",
+                                                      textDocumentFromFile.Name, Environment.NewLine, e.Message);
+                    Log.Warn(logMessage);
+                }
+            }
+
+            IEnumerable<IDataItem> textDocumentDataItems = outputDataItems.Where(di => di.Value.GetType() == typeof(TextDocument))
+                                                                          .ToList();
+            foreach (IDataItem dataItem in textDocumentDataItems)
+            {
+                dataItems.Remove(dataItem);
             }
 
             // Clear all time series values for observation point output
@@ -1420,13 +1441,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             }
 
             DeleteOutputFiles();
-
-            // Todo : Enable when monitoring output is added
-            /*            // If relevant, clear the monitoring output data item time series
-                        foreach (var observationVariableOutputTimeSeries in ObservationVariableOutputs.SelectMany(ovo => ovo.TimeSeriesList))
-                        {
-                            observationVariableOutputTimeSeries.Clear();
-                        }*/
         }
 
         private void DeleteOutputFiles()
