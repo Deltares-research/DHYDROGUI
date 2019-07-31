@@ -47,7 +47,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(WaterQualityModel));
 
-        private readonly string[] filesToDeleteFromExplicitWorkingDirectoryAfterModelCleanup =
+        private readonly string[] filesToDeleteFromExplicitWorkingDirectoryAtClearOutput =
         {
             "bloominp.d09",
             "bloominp.frm",
@@ -1450,7 +1450,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             FileUtils.CreateDirectoryIfNotExists(outputDirectory);
             if (ExplicitWorkingDirectory != null)
             {
-                filesToDeleteFromExplicitWorkingDirectoryAfterModelCleanup.ForEach(
+                filesToDeleteFromExplicitWorkingDirectoryAtClearOutput.ForEach(
                     file => FileUtils.DeleteIfExists(Path.Combine(ExplicitWorkingDirectory, file)));
             }
         }
