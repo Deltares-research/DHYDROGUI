@@ -1421,7 +1421,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                 }
                 catch(IOException e)
                 {
-                    string logMessage = string.Format("Could not remove output item '{0}', because of the following reason:{1}{2}",
+                    string logMessage = string.Format(Resources.WaterQualityModel_OnClearOutput_Could_not_remove_output_item___0____because_of_the_following_reason__1__2,
                                                       textDocumentFromFile.Name, Environment.NewLine, e.Message);
                     Log.Warn(logMessage);
                 }
