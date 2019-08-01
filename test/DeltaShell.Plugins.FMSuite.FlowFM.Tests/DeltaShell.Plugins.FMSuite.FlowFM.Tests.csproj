@@ -216,7 +216,6 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
-    <Reference Include="System.Xml" />
     <Reference Include="WindowsBase" />
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
@@ -378,6 +377,7 @@
     <Compile Include="WaterFlowFMModelRestartTest.cs" />
     <Compile Include="WaterFlowFMModelSedimentFractionsIntegrationTest.cs" />
     <Compile Include="WaterFlowFMModelSedimentFractionsTest.cs" />
+    <Compile Include="Model\WaterFlowFMModelTest.Output.Data.cs" />
     <Compile Include="WaterFlowFMNHibernateIntegrationTest.cs" />
     <Compile Include="WaterFlowFMImportExportTest.cs" />
     <Compile Include="WaterFlowFMModelCoordinateConversionTest.cs" />
@@ -386,7 +386,7 @@
     <Compile Include="WaterFlowFMResourcesTest.cs" />
     <Compile Include="WaterFlowFMModelDefinitionTest.cs" />
     <Compile Include="WaterFlowFMSaveLoadTest.cs" />
-    <Compile Include="WaterFlowFMModelTest.cs" />
+    <Compile Include="Model\WaterFlowFMModelTest.cs" />
     <Compile Include="WeirFormula2DExtensionsTest.cs" />
   </ItemGroup>
   <ItemGroup>

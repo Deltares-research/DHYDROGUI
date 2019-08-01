@@ -22,7 +22,6 @@ using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
@@ -41,10 +40,10 @@ using SharpMap;
 using SharpMap.Extensions.CoordinateSystems;
 using SharpMap.SpatialOperations;
 
-namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
+namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 {
     [TestFixture]
-    public class WaterFlowFMModelTest
+    public partial class WaterFlowFMModelTest
     {
         [Test]
         public void CheckDefaultPropertiesOfFMModel()
