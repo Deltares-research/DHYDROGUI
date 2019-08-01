@@ -1,4 +1,4 @@
-# Generated on 2019-08-01 11:51:21
+# Generated on 2019-08-01 17:03:18
 # Deltares, Delft3D FM 2018 Suite Version 1.5.4.0, D-Flow FM Version 1.2.54.64173M
 
 [model]
@@ -213,7 +213,7 @@ EulerVelocities   = 0
 ClassMapFile      =
 WaterlevelClasses = 0.0
 WaterdepthClasses = 0.0
-ClassMapInterval  = 0
+ClassMapInterval  = 21600
 WaqInterval       = 0
 StatsInterval     =
 Writebalancefile  = 0
