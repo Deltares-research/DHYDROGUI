@@ -9,6 +9,7 @@ using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
+using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Forms;
@@ -565,9 +566,36 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             if (project != null)
             {
                 UnsubscribeToProjectPropertyChanged(project);
+                //Close all windows.
             }
 
             base.Gui.Application.ProjectOpened -= CleanFlowFmViewContextUponLoadingProjectHack;
+        }
+
+        private void CloseAllRelatedMultipleFunctionViews(Project project)
+        {
+            IList<MultipleFunctionView> fmViews = Gui.DocumentViews.OfType<MultipleFunctionView>().ToList();
+            if (Gui == null || !fmViews.Any())
+                return;
+
+            List<KeyValuePair<string, string>> dataItemCollection = FlowModels
+                .SelectMany(
+                    fm => fm.OutputHisFileStore.Functions.OfType<FileBasedFeatureCoverage>())
+                .Select(
+                    fc => new KeyValuePair<string, string>(fc.Name, fc.FeatureVariable.Name))
+                .ToList();
+
+            IEnumerable<string> fcNames = dataItemCollection.Select(dic => dic.Key).Distinct();
+            IEnumerable<string> fvNames = dataItemCollection.Select(dic => dic.Value).Distinct();
+
+            List<MultipleFunctionView> fmToClose = fmViews.Where(
+                fv => fv.Functions.Any(fvf => fcNames.Any(fcn => fvf.Name.Contains(fcn))) &&
+                      fv.Functions.Any( fvf => fvNames.Any( fvn => fvf.Name.Contains(fvn)))).ToList();
+
+            foreach (MultipleFunctionView fc in fmToClose)
+            {
+                Gui.CommandHandler.RemoveAllViewsForItem(fc.Data);
+            }
         }
 
         /// <summary>
@@ -618,6 +646,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             if (project == null) return;
             ((INotifyPropertyChange)project).PropertyChanging += ProjectPropertyChanging;
             ((INotifyPropertyChanged) project).PropertyChanged += ProjectPropertyChanged;
+            
         }
 
         private void UnsubscribeToProjectPropertyChanged(Project project)
@@ -625,6 +654,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             if (project == null) return;
             ((INotifyPropertyChange)project).PropertyChanging -= ProjectPropertyChanging;
             ((INotifyPropertyChanged)project).PropertyChanged -= ProjectPropertyChanged;
+
+            CloseAllRelatedMultipleFunctionViews(project);
         }
 
         private static readonly string CoordinateSystemMemberName =
