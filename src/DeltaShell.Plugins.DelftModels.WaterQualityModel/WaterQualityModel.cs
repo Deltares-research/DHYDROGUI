@@ -1382,34 +1382,56 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         protected override void OnClearOutput()
         {
             MapFileFunctionStore.Path = null;
-            
+
             List<IDataItem> outputDataItems = AllDataItems.Where(di => di.Role.HasFlag(DataItemRole.Output))
-                                                       .ToList();
+                                                          .ToList();
 
-            List<UnstructuredGridCellCoverage> outputCoverages = outputDataItems.Select(di => di.Value)
-                                                                                .OfType<UnstructuredGridCellCoverage>().ToList();
-            IEnumerable<IFeatureCoverage> outputFeatureCoverages = outputDataItems.Select(di => di.Value)
-                                                                                  .OfType<IFeatureCoverage>();
-            IEnumerable<WaterQualityObservationVariableOutput> waqObservationPointOutput = outputDataItems.Select(di => di.Value)
-                                                                                                          .OfType<WaterQualityObservationVariableOutput>();
+            ClearCoverageOutput(outputDataItems);
+            ClearTimeSeriesOutput(outputDataItems);
+            RemoveTextDocumentFromFileOutput(outputDataItems);
+            RemoveTextDocumentOutput(outputDataItems);
 
-            // Clear all output coverages
-            foreach (UnstructuredGridCellCoverage unstructuredGridCellCoverage in outputCoverages)
+            DeleteOutputFiles();
+        }
+
+        private static void ClearCoverageOutput(List<IDataItem> outputDataItems)
+        {
+            outputDataItems.Select(di => di.Value)
+                           .OfType<UnstructuredGridCellCoverage>()
+                           .ForEach(c => c.ClearCoverage());
+
+            outputDataItems.Select(di => di.Value)
+                           .OfType<IFeatureCoverage>()
+                           .ForEach(c =>
+                           {
+                               c.Filters.Clear();
+                               c.Clear();
+                           });
+        }
+
+        private static void ClearTimeSeriesOutput(List<IDataItem> outputDataItems)
+        {
+            outputDataItems.Select(di => di.Value)
+                           .OfType<WaterQualityObservationVariableOutput>()
+                           .ForEach(v => v.ClearAllTimeSeries());
+        }
+
+        private void RemoveTextDocumentOutput(IEnumerable<IDataItem> outputDataItems)
+        {
+            IEnumerable<IDataItem> textDocumentDataItems = outputDataItems.Where(di => di.Value.GetType() == typeof(TextDocument))
+                                                                          .ToList();
+
+            foreach (IDataItem dataItem in textDocumentDataItems)
             {
-                unstructuredGridCellCoverage.ClearCoverage();
+                dataItems.Remove(dataItem);
             }
+        }
 
-            // Clear all dynamic feature coverages
-            foreach (IFeatureCoverage featureCoverage in outputFeatureCoverages)
-            {
-                featureCoverage.Filters.Clear();
-                featureCoverage.Clear();
-            }
-
-
-            
-            IEnumerable<IDataItem> textDocumentFromFileDataItems = outputDataItems.Where(di => di.Value.GetType() == typeof(TextDocumentFromFile))
-                                                                                  .ToList();
+        private void RemoveTextDocumentFromFileOutput(IEnumerable<IDataItem> outputDataItems)
+        {
+            IEnumerable<IDataItem> textDocumentFromFileDataItems = outputDataItems
+                                                                   .Where(di => di.Value.GetType() == typeof(TextDocumentFromFile))
+                                                                   .ToList();
 
             foreach (IDataItem dataItem in textDocumentFromFileDataItems)
             {
@@ -1419,28 +1441,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                     textDocumentFromFile.Delete();
                     dataItems.Remove(dataItem);
                 }
-                catch(IOException e)
+                catch (IOException e)
                 {
                     string logMessage = string.Format(Resources.WaterQualityModel_OnClearOutput_Could_not_remove_output_item___0____because_of_the_following_reason__1__2,
                                                       textDocumentFromFile.Name, Environment.NewLine, e.Message);
                     Log.Warn(logMessage);
                 }
             }
-
-            IEnumerable<IDataItem> textDocumentDataItems = outputDataItems.Where(di => di.Value.GetType() == typeof(TextDocument))
-                                                                          .ToList();
-            foreach (IDataItem dataItem in textDocumentDataItems)
-            {
-                dataItems.Remove(dataItem);
-            }
-
-            // Clear all time series values for observation point output
-            foreach (WaterQualityObservationVariableOutput obsPointOutput in waqObservationPointOutput)
-            {
-                obsPointOutput.ClearAllTimeSeries();
-            }
-
-            DeleteOutputFiles();
         }
 
         private void DeleteOutputFiles()

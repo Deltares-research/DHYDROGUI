@@ -13,6 +13,7 @@ using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Core;
+using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects;
@@ -416,34 +417,32 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         public void ClearOutput_WithTextDocumentOutputDataItem_ThenDataItemIsRemoved()
         {
             const string outputTextDocumentTag = "OutputTextDocument";
-            TestHelper.PerformActionInTemporaryDirectory(tempDir =>
-            {
-                // Setup
-                var textDocument = new TextDocument();
+            
+            // Setup
+            var textDocument = new TextDocument();
 
-                var waqModel = new WaterQualityModel();
-                waqModel.DataItems.Add(new DataItem(textDocument, DataItemRole.Output, outputTextDocumentTag));
+            var waqModel = new WaterQualityModel();
+            waqModel.DataItems.Add(new DataItem(textDocument, DataItemRole.Output, outputTextDocumentTag));
 
-                // Private field outputIsEmpty is set to false after a successful model run. This field should be false when clearing model output.
-                // As we do not focus on model run, we use reflection to set this field and omit the model run.
-                TypeUtils.SetField(waqModel, "outputIsEmpty", false);
+            // Private field outputIsEmpty is set to false after a successful model run. This field should be false when clearing model output.
+            // As we do not focus on model run, we use reflection to set this field and omit the model run.
+            TypeUtils.SetField(waqModel, "outputIsEmpty", false);
 
-                // Call
-                waqModel.ClearOutput();
+            // Call
+            waqModel.ClearOutput();
 
-                // Assert
-                Assert.That(waqModel.GetDataItemByTag(outputTextDocumentTag), Is.Null);
-            });
+            // Assert
+            Assert.That(waqModel.GetDataItemByTag(outputTextDocumentTag), Is.Null);
         }
 
         [Test]
         public void ClearOutput_WithTextDocumentFromFileOutputDataItem_ThenFileIsRemovedAndDataItemIsRemovedFromModel()
         {
             const string outputTextDocumentTag = "OutputTextDocument";
-            TestHelper.PerformActionInTemporaryDirectory(tempDir =>
+            using (var tempDirectory = new TemporaryDirectory())
             {
                 // Setup
-                string filePath = Path.Combine(tempDir, "myTextFile.txt");
+                string filePath = Path.Combine(tempDirectory.Path, "myTextFile.txt");
                 File.WriteAllText(filePath, @"This is a test file.");
 
                 var textDocumentFromFile = new TextDocumentFromFile
@@ -464,17 +463,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                 // Assert
                 Assert.That(File.Exists(filePath), Is.False);
                 Assert.That(waqModel.GetDataItemByTag(outputTextDocumentTag), Is.Null);
-            });
+            }
         }
 
         [Test]
         public void ClearOutput_WithTextDocumentFromFileOutputDataItemAndCorrespondingFileLocked_ThenLogMessageIsReturned()
         {
             const string outputTextDocumentTag = "OutputTextDocument";
-            TestHelper.PerformActionInTemporaryDirectory(tempDir =>
+            using (var tempDirectory = new TemporaryDirectory())
             {
                 // Setup
-                string filePath = Path.Combine(tempDir, "myTextFile.txt");
+                string filePath = Path.Combine(tempDirectory.Path, "myTextFile.txt");
                 using (File.Create(filePath))
                 {
                     var textDocumentFromFile = new TextDocumentFromFile
@@ -498,14 +497,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 
                     // Assert
                     string expectedLogMessage = $@"Could not remove output item '{textDocumentFromFile.Name}', because of the following reason:" +
-                                             Environment.NewLine +
-                                             $@"The process cannot access the file '{filePath}' because it is being used by another process.";
+                                                Environment.NewLine +
+                                                $@"The process cannot access the file '{filePath}' because it is being used by another process.";
                     TestHelper.AssertLogMessageIsGenerated(Call, expectedLogMessage);
 
                     Assert.That(File.Exists(filePath), Is.True);
                     Assert.That(waqModel.GetDataItemByTag(outputTextDocumentTag), Is.Not.Null);
                 }
-            });
+            }
         }
 
         [Test]
