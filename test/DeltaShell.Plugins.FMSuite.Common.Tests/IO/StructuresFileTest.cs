@@ -875,25 +875,64 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                                                                                                copyOfIniInTempFilePath));
                 // Then
                 Assert.AreEqual(1, structures.Count, "The ini file for the structures is not correctly read");
-
-                Assert.That(messages, Has.Count.EqualTo(1), "Expected a single grouped warning message:");
-
-                string msg = messages.First();
-
-                string expectedMsgHeader = $"During reading the structures file ({copyOfIniInTempFilePath}), the following log messages were produced";
-                Assert.That(msg, Is.StringStarting(expectedMsgHeader), "Expected the header of the message to be different:");
-
-
-                List<string> subMsgs = msg.Split(new[] { "\n- " }, StringSplitOptions.None).ToList();
-                subMsgs.RemoveAt(0);                              // Remove header msg.
-                subMsgs = subMsgs.Select(s => s.Trim()).ToList(); // Remove excessive white characters.
-
-                Assert.That(subMsgs, Has.Count.EqualTo(2), "Expected 2 sub messages within the warning message.");
-                Assert.That(subMsgs[0], Is.EqualTo(string.Format(Resources.StructureFile_Property__0__not_supported_for_structures_of_type__1__and_is_skipped_Line__2__, "weir1", "weir", 8)),
-                            "Expected a different string as first sub message.");
-                Assert.That(subMsgs[1], Is.EqualTo(string.Format(Resources.StructureFile_Property__0__not_supported_for_structures_of_type__1__and_is_skipped_Line__2__, "weir2", "weir", 9)),
-                            "Expected a different string as second sub message.");
+                CheckMessages(messages, copyOfIniInTempFilePath);
             }
+        }
+
+        [Test]
+        public void GivenAStructureFileWithTwoKeysNotInScheme_WhenImportingTheseArea2DFeatures_ThenOneGroupWarningShouldBeGiven()
+        {
+            // Given
+            using (var temp = new TemporaryDirectory())
+            {
+                List<string> copiesInTempFilePaths =
+                     temp.CopyAllTestDataToTempDirectory(@"structures\FlowFM2KeysNotInScheme_structures.ini",
+                                                         @"structures\structure01.pli");
+
+                var structureFile = new StructuresFile
+                {
+                    StructureSchema = schema
+                };
+
+                string copyOfIniInTempFilePath = copiesInTempFilePaths[0];
+
+                // When
+                IList<IStructure> structures = null;
+
+                IEnumerable<string> messages = TestHelper.GetAllRenderedMessages(
+                    () => structures = structureFile.Read(copyOfIniInTempFilePath));
+                // Then
+                Assert.AreEqual(1, structures.Count, "The ini file for the structures is not correctly read");
+                CheckMessages(messages, copyOfIniInTempFilePath);
+            }
+        }
+
+        private static void CheckMessages(IEnumerable<string> messages, string copyOfIniInTempFilePath)
+        {
+            Assert.That(messages, Has.Count.EqualTo(1), "Expected a single grouped warning message:");
+
+            string msg = messages.First();
+
+            string expectedMsgHeader =
+                $"During reading the structures file ({copyOfIniInTempFilePath}), the following log messages were produced";
+            Assert.That(msg, Is.StringStarting(expectedMsgHeader), "Expected the header of the message to be different:");
+
+            List<string> subMsgs = msg.Split(new[]
+            {
+                "\n- "
+            }, StringSplitOptions.None).ToList();
+            subMsgs.RemoveAt(0);                              // Remove header msg.
+            subMsgs = subMsgs.Select(s => s.Trim()).ToList(); // Remove excessive white characters.
+
+            Assert.That(subMsgs, Has.Count.EqualTo(2), "Expected 2 sub messages within the warning message.");
+            Assert.That(subMsgs[0], Is.EqualTo(string.Format(
+                                                   Resources.StructureFile_Property__0__not_supported_for_structures_of_type__1__and_is_skipped_Line__2__,
+                                                   "weir1", "weir", 8)),
+                        "Expected a different string as first sub message.");
+            Assert.That(subMsgs[1], Is.EqualTo(string.Format(
+                                                   Resources.StructureFile_Property__0__not_supported_for_structures_of_type__1__and_is_skipped_Line__2__,
+                                                   "weir2", "weir", 9)),
+                        "Expected a different string as second sub message.");
         }
 
         private static Weir2D ValidatedWeir(IList<IStructure> structures)

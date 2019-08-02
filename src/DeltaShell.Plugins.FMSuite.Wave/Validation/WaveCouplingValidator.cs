@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
@@ -60,7 +61,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                                                  waveValidationShortcut);
             }
 
-            if (model.TimeStep.TotalSeconds.Equals(0))
+            if (model.TimeStep.TotalSeconds <= 0)
             {
                 yield return new ValidationIssue("Time Step", ValidationSeverity.Error,
                                                  Resources.WaveCouplingValidator_ValidateModelTimeSettings_Time_step_cannot_be_set_to_Zero_,

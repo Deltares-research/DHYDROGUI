@@ -1,6 +1,7 @@
 ﻿using DelftTools.TestUtils;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
+using DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO

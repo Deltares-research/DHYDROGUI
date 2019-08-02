@@ -70,7 +70,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 return issues;
             }
 
-            ModelPropertyGroup property = WaterFlowFMModelDefinition.GuiPropertyGroups.ToList()[2].Value;
             string tabName = WaterFlowFMModelDefinition.GetTabName(KnownProperties.SedFile, fmModel: model);
             var validationShortcut = new FmValidationShortcut{
                 FlowFmModel = model,

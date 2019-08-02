@@ -47,7 +47,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(WaterQualityModel));
 
-        private readonly string[] filesToDeleteFromExplicitWorkingDirectoryAfterModelCleanup =
+        private readonly string[] filesToDeleteFromExplicitWorkingDirectoryAtClearOutput =
         {
             "bloominp.d09",
             "bloominp.frm",
@@ -1383,50 +1383,71 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         {
             MapFileFunctionStore.Path = null;
 
-            List<object> outputDataItemsValues = AllDataItems
-                                                 .Where(di => di.Role.HasFlag(DataItemRole.Output))
-                                                 .Select(di => di.Value).ToList();
-            List<UnstructuredGridCellCoverage> outputCoverages =
-                outputDataItemsValues.OfType<UnstructuredGridCellCoverage>().ToList();
-            IEnumerable<IFeatureCoverage> outputFeatureCoverages = outputDataItemsValues.OfType<IFeatureCoverage>();
-            IEnumerable<TextDocumentFromFile> outputTextDocumentsFromFile =
-                outputDataItemsValues.OfType<TextDocumentFromFile>();
-            IEnumerable<WaterQualityObservationVariableOutput> waqObservationPointOutput =
-                outputDataItemsValues.OfType<WaterQualityObservationVariableOutput>();
+            List<IDataItem> outputDataItems = AllDataItems.Where(di => di.Role.HasFlag(DataItemRole.Output))
+                                                          .ToList();
 
-            // Clear all output coverages
-            foreach (UnstructuredGridCellCoverage unstructuredGridCellCoverage in outputCoverages)
-            {
-                unstructuredGridCellCoverage.ClearCoverage();
-            }
-
-            // Clear all dynamic feature coverages
-            foreach (IFeatureCoverage featureCoverage in outputFeatureCoverages)
-            {
-                featureCoverage.Filters.Clear();
-                featureCoverage.Clear();
-            }
-
-            // Remove all text documents based on files
-            foreach (TextDocumentFromFile textDocumentFromFile in outputTextDocumentsFromFile)
-            {
-                FileUtils.DeleteIfExists(textDocumentFromFile.Path);
-            }
-
-            // Clear all time series values for observation point output
-            foreach (WaterQualityObservationVariableOutput obsPointOutput in waqObservationPointOutput)
-            {
-                obsPointOutput.ClearAllTimeSeries();
-            }
+            ClearCoverageOutput(outputDataItems);
+            ClearTimeSeriesOutput(outputDataItems);
+            RemoveTextDocumentFromFileOutput(outputDataItems);
+            RemoveTextDocumentOutput(outputDataItems);
 
             DeleteOutputFiles();
+        }
 
-            // Todo : Enable when monitoring output is added
-            /*            // If relevant, clear the monitoring output data item time series
-                        foreach (var observationVariableOutputTimeSeries in ObservationVariableOutputs.SelectMany(ovo => ovo.TimeSeriesList))
-                        {
-                            observationVariableOutputTimeSeries.Clear();
-                        }*/
+        private static void ClearCoverageOutput(List<IDataItem> outputDataItems)
+        {
+            outputDataItems.Select(di => di.Value)
+                           .OfType<UnstructuredGridCellCoverage>()
+                           .ForEach(c => c.ClearCoverage());
+
+            outputDataItems.Select(di => di.Value)
+                           .OfType<IFeatureCoverage>()
+                           .ForEach(c =>
+                           {
+                               c.Filters.Clear();
+                               c.Clear();
+                           });
+        }
+
+        private static void ClearTimeSeriesOutput(List<IDataItem> outputDataItems)
+        {
+            outputDataItems.Select(di => di.Value)
+                           .OfType<WaterQualityObservationVariableOutput>()
+                           .ForEach(v => v.ClearAllTimeSeries());
+        }
+
+        private void RemoveTextDocumentOutput(IEnumerable<IDataItem> outputDataItems)
+        {
+            IEnumerable<IDataItem> textDocumentDataItems = outputDataItems.Where(di => di.Value.GetType() == typeof(TextDocument))
+                                                                          .ToList();
+
+            foreach (IDataItem dataItem in textDocumentDataItems)
+            {
+                dataItems.Remove(dataItem);
+            }
+        }
+
+        private void RemoveTextDocumentFromFileOutput(IEnumerable<IDataItem> outputDataItems)
+        {
+            IEnumerable<IDataItem> textDocumentFromFileDataItems = outputDataItems
+                                                                   .Where(di => di.Value.GetType() == typeof(TextDocumentFromFile))
+                                                                   .ToList();
+
+            foreach (IDataItem dataItem in textDocumentFromFileDataItems)
+            {
+                var textDocumentFromFile = (TextDocumentFromFile) dataItem.Value;
+                try
+                {
+                    textDocumentFromFile.Delete();
+                    dataItems.Remove(dataItem);
+                }
+                catch (IOException e)
+                {
+                    string logMessage = string.Format(Resources.WaterQualityModel_OnClearOutput_Could_not_remove_output_item___0____because_of_the_following_reason__1__2,
+                                                      textDocumentFromFile.Name, Environment.NewLine, e.Message);
+                    Log.Warn(logMessage);
+                }
+            }
         }
 
         private void DeleteOutputFiles()
@@ -1436,7 +1457,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             FileUtils.CreateDirectoryIfNotExists(outputDirectory);
             if (ExplicitWorkingDirectory != null)
             {
-                filesToDeleteFromExplicitWorkingDirectoryAfterModelCleanup.ForEach(
+                filesToDeleteFromExplicitWorkingDirectoryAtClearOutput.ForEach(
                     file => FileUtils.DeleteIfExists(Path.Combine(ExplicitWorkingDirectory, file)));
             }
         }

@@ -122,54 +122,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 
         [Test]
         [Category(TestCategory.Slow)]
-        public void GivenValidWaqModel_WhenRunningWithInvalidData_ThenOutputDataItemsAreNotRemovedFromModel()
-        {
-            var testDir = FileUtils.CreateTempDirectory();
-            var originalDir = TestHelper.GetTestFilePath("WaterQualityDataFiles");
-            FileUtils.CopyAll(new DirectoryInfo(originalDir), new DirectoryInfo(testDir), string.Empty);
-
-            var hydFilePath = Path.Combine(testDir, "flow-model", "westernscheldt01.hyd");
-            var subFilePath = Path.Combine(testDir, "waq", "sub-files", "bacteria.sub");
-            var boundaryConditionsFilePath = Path.Combine(testDir, "waq", "boundary-conditions", "bacteria.csv");
-
-            Func<IDataItem, bool> isWaqOutputFileDataItem = di => di.Role == DataItemRole.Output &&
-                                                                  di.ValueType == typeof(TextDocumentFromFile) &&
-                                                                  di.Tag != WaterQualityModel.ListFileDataItemMetaData.Tag;
-
-            try
-            {
-                // model setup
-                using (var model = new WaterQualityModel())
-                {
-                    new HydFileImporter().ImportItem(hydFilePath, model);
-                    new SubFileImporter().Import(model.SubstanceProcessLibrary, subFilePath);
-                    new DataTableImporter().ImportItem(boundaryConditionsFilePath, model.BoundaryDataManager);
-                    Assert.IsEmpty(model.DataItems.Where(di => isWaqOutputFileDataItem(di)));
-
-                    // Run the model successfully and check that the output data items connected to the .lsp & .mor-files
-                    // are added to the model.
-                    ActivityRunner.RunActivity(model);
-                    Assert.That(model.DataItems.Count(di => isWaqOutputFileDataItem(di)), Is.EqualTo(2));
-
-                    // Put incorrect data in the boundary conditions file
-                    var dataFile = model.BoundaryDataManager.DataTables.FirstOrDefault()?.DataFile;
-                    Assert.IsNotNull(dataFile);
-                    dataFile.Content = dataFile.Content.Replace("2014/01/01-00:00:00 0.1", "2014/01/01-00:00:00 wrongValue");
-
-                    // Run the model again (which will fail) and check that the output data items connected to the .lsp & .mor-files
-                    // are not removed from the model.
-                    ActivityRunner.RunActivity(model);
-                    Assert.That(model.DataItems.Count(di => isWaqOutputFileDataItem(di)), Is.EqualTo(2));
-                }
-            }
-            finally
-            {
-                FileUtils.DeleteIfExists(testDir); // cleanup of created files
-            }
-        }
-
-        [Test]
-        [Category(TestCategory.Slow)]
         public void GivenValidWaqModel_WhenClearingOutput_ThenOutputDataItemsAndFilesAreNotRemovedFromModel()
         {
             var testDir = FileUtils.CreateTempDirectory();
@@ -241,10 +193,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                     
                     waqModel.ClearOutput(); // Clearing output
 
-                    // Check if output file data items are still existent AND that feature coverage data items
-                    // are not connected to data
-                    foreach (var tag in outputTextDocumentsTags)
-                        Assert.IsTrue(outputDataItemValues.Any(di => di.Tag == tag));
+                    // Check that feature coverage data items are not connected to data
                     foreach (var tag in outputFeatureCoveragesTags)
                         CheckFeatureCoverageFunctionStore(outputDataItemValues, tag, false);
 

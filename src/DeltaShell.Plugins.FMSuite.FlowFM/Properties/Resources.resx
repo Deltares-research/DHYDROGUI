@@ -583,4 +583,7 @@ Manhole with unique id '{4}' is not imported.</value>
   <data name="FixedWeirValidator_Fixed_weir_contains ground_heights_smaller_than_minimum" xml:space="preserve">
     <value>[{0}]: Fixed weir with type {1} contains {2} ground heights smaller than {3} m. A minimum of {3} m will be applied by the computational core.</value>
   </data>
+  <data name="WaterFlowFMModelDefinitionValidator_Validate_Bed_level_locations_should_be_set_to__faces__when_morphology_is_active_" xml:space="preserve">
+    <value>Bed level locations should be set to 'faces' when morphology is active.</value>
+  </data>
 </root>
