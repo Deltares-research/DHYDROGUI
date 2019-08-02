@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -1315,6 +1315,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         public static string WaterFlowFMModelDefinitionValidator_Validate_ {
             get {
                 return ResourceManager.GetString("WaterFlowFMModelDefinitionValidator_Validate_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bed level locations should be set to &apos;faces&apos; when morphology is active..
+        /// </summary>
+        public static string WaterFlowFMModelDefinitionValidator_Validate_Bed_level_locations_should_be_set_to__faces__when_morphology_is_active_ {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModelDefinitionValidator_Validate_Bed_level_locations_should_be_set_to" +
+                        "__faces__when_morphology_is_active_", resourceCulture);
             }
         }
         
