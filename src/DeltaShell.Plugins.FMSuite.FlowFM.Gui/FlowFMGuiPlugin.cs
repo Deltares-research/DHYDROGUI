@@ -9,7 +9,6 @@ using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
-using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Forms;
@@ -562,11 +561,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             // DELFT3DFM-371: Disable Model Inspection
             //base.Gui.Application.ActivityRunner.Activities.CollectionChanged -= Activities_CollectionChanged;
 
-            var project = base.Gui.Application.Project;
+            Project project = base.Gui.Application.Project;
             if (project != null)
             {
                 UnsubscribeToProjectPropertyChanged(project);
-                //Close all windows.
             }
 
             base.Gui.Application.ProjectOpened -= CleanFlowFmViewContextUponLoadingProjectHack;
@@ -578,20 +576,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             if (Gui == null || !fmViews.Any())
                 return;
 
-            List<KeyValuePair<string, string>> dataItemCollection = FlowModels
-                .SelectMany(
-                    fm => fm.OutputHisFileStore.Functions.OfType<FileBasedFeatureCoverage>())
-                .Select(
-                    fc => new KeyValuePair<string, string>(fc.Name, fc.FeatureVariable.Name))
-                .ToList();
-
-            IEnumerable<string> fcNames = dataItemCollection.Select(dic => dic.Key).Distinct();
-            IEnumerable<string> fvNames = dataItemCollection.Select(dic => dic.Value).Distinct();
-
+            IEnumerable<List<string>> dataItemNames = FlowModels
+                                     .SelectMany(
+                                         fm => fm.OutputHisFileStore.Functions.OfType<FileBasedFeatureCoverage>()
+                                                 .Select(
+                                                     fc => new List<string>
+                                                     {
+                                                         fc.Name,
+                                                         fc.FeatureVariable.Name
+                                                     }));
+             
             List<MultipleFunctionView> fmToClose = fmViews.Where(
-                fv => fv.Functions.Any(fvf => fcNames.Any(fcn => fvf.Name.Contains(fcn))) &&
-                      fv.Functions.Any( fvf => fvNames.Any( fvn => fvf.Name.Contains(fvn)))).ToList();
+                fv => fv.Functions.Any(
+                    fvf => dataItemNames.Any(
+                        din => fvf.Name.Contains(din[0]) &&
+                               fvf.Name.Contains(din[1])))).ToList();
 
+            // Views need to be in an initialized list otherwise it could throw exception due to change of structure.
             foreach (MultipleFunctionView fc in fmToClose)
             {
                 Gui.CommandHandler.RemoveAllViewsForItem(fc.Data);
