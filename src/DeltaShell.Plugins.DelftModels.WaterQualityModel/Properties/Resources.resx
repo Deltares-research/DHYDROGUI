@@ -650,4 +650,7 @@ INCLUDE 'includes_deltashell/B8_initials.inc'       ; From UI: Initials
   <data name="LazyMapFileFunctionStore_GetArgumentValues_Filters_of_type___0___can_only_filter_on_functions_with_value_type___1___" xml:space="preserve">
     <value>Filters of type &lt;{0}&gt; can only filter on functions with value type &lt;{1}&gt;.</value>
   </data>
+  <data name="WaterQualityModel_OnClearOutput_Could_not_remove_output_item___0____because_of_the_following_reason__1__2" xml:space="preserve">
+    <value>Could not remove output item '{0}', because of the following reason:{1}{2}</value>
+  </data>
 </root>
