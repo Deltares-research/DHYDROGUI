@@ -1,8 +1,6 @@
 using System;
-using System.IO;
 using System.Linq;
 using DelftTools.Functions;
-using DelftTools.Utils.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using NetTopologySuite.Extensions.Coverages;
@@ -50,14 +48,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         {
             functionStore.Functions.Clear();
             functionStore.Close();
-            try
-            {
-                FileUtils.DeleteIfExists(functionStore.Path);
-            }
-            catch (IOException e)
-            {
-                Log.WarnFormat("Unable to remove output file '{0}':{1}{2}", functionStore.Path, Environment.NewLine, e.Message);
-            }
         }
     }
 }
