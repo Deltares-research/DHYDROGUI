@@ -292,6 +292,11 @@
       <Name>DeltaShell.Plugins.NetworkEditor</Name>
       <Private>False</Private>
     </ProjectReference>
+    <ProjectReference Include="..\DeltaShell.NGHS.IO.TestUtils\DeltaShell.NGHS.IO.TestUtils.csproj">
+      <Project>{002EB0B8-8D52-4794-A00E-A5D1FC465BFD}</Project>
+      <Name>DeltaShell.NGHS.IO.TestUtils</Name>
+      <Private>False</Private>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />

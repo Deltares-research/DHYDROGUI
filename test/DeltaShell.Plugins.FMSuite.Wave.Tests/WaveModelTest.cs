@@ -4,7 +4,10 @@ using System.Linq;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
+using DelftTools.Utils;
 using DelftTools.Utils.IO;
+using DelftTools.Utils.Reflection;
+using DeltaShell.Plugins.FMSuite.Wave.IO;
 using DeltaShell.Plugins.FMSuite.Wave.IO.Importers;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.Wave.Properties;
@@ -340,6 +343,21 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
 
             Assert.AreEqual(now.ToString("yyyy-MM-dd"), model.ModelDefinition.ModelReferenceDateTime.ToString("yyyy-MM-dd"));
         }
-    }
 
+        [Test]
+        public void ClearOutput_WithSwanRunLogDataItem_ThenSwanRunLogContentIsEmpty()
+        {
+            var waveModel = new WaveModel();
+            var swanTextDocument = (TextDocument) waveModel.GetDataItemByTag(WaveModel.SwanLogDataItemTag).Value;
+            swanTextDocument.Content = new Random().Next(100).ToString();
+
+            // Private field outputIsEmpty is set to false after a successful model run. This field should be false when clearing model output.
+            // As we do not focus on model run, we use reflection to set this field and omit the model run.
+            TypeUtils.SetField(waveModel, "outputIsEmpty", false);
+
+            waveModel.ClearOutput();
+
+            Assert.That(swanTextDocument.Content, Is.Empty, "Swan run log should be empty after clearing model output.");
+        }
+    }
 }

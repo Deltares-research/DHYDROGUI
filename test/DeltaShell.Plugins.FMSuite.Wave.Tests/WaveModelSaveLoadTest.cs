@@ -4,7 +4,10 @@ using System.Linq;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.TestUtils.TestReferenceHelper;
+using DelftTools.Utils.Collections;
+using DelftTools.Utils.IO;
 using DeltaShell.Core;
+using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.NetworkEditor;
@@ -405,6 +408,40 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                 var bathymetries = loadedModel.DataItems.Where(d => d.Name == loadedModel.OuterDomain.Bathymetry.Name);
                 Assert.AreEqual(1, bathymetries.Count()); // TOOLS-22877: with every save the bathymetry was added as a duplicate
                 Assert.AreEqual(loadedModel.OuterDomain.Bathymetry, loadedModel.DataItems.FirstOrDefault(d => d.Name == loadedModel.OuterDomain.Bathymetry.Name).Value);
+            }
+        }
+
+        [Test]
+        public void SaveWaveModel_AfterClearingExistingOutput_ThenWavmOutputFileIsRemoved()
+        {
+            // Setup
+            using (var app = new DeltaShellApplication())
+            {
+                LoadRequiredPlugins(app);
+                app.Run();
+
+                string testDataDirectory = TestHelper.GetTestFilePath("WaveModelSaveLoadTest");
+                using (var tempDirectory = new TemporaryDirectory())
+                {
+                    FileUtils.CopyDirectory(testDataDirectory, tempDirectory.Path);
+
+                    string projectFilePath = Path.Combine(tempDirectory.Path, "WaveModelWithOutput.dsproj");
+                    string wavmOutputFilePath = Path.Combine(tempDirectory.Path, "WaveModelWithOutput.dsproj_data", "Waves", "wavm-Waves.nc");
+
+                    app.OpenProject(projectFilePath);
+                    app.Project.RootFolder.Models.ForEach(m => m.ClearOutput());
+
+                    // Pre-condition
+                    Assert.That(File.Exists(wavmOutputFilePath), Is.True);
+
+                    // Call
+                    app.SaveProjectAs(projectFilePath);
+
+                    // Assert
+                    Assert.That(File.Exists(wavmOutputFilePath), Is.False);
+
+                    app.CloseProject();
+                }
             }
         }
 
