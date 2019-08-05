@@ -377,7 +377,7 @@
     <Compile Include="WaterFlowFMModelRestartTest.cs" />
     <Compile Include="WaterFlowFMModelSedimentFractionsIntegrationTest.cs" />
     <Compile Include="WaterFlowFMModelSedimentFractionsTest.cs" />
-    <Compile Include="Model\WaterFlowFMModelTest.Output.Data.cs" />
+    <Compile Include="Model\WaterFlowFMModelTest.Output.cs" />
     <Compile Include="WaterFlowFMNHibernateIntegrationTest.cs" />
     <Compile Include="WaterFlowFMImportExportTest.cs" />
     <Compile Include="WaterFlowFMModelCoordinateConversionTest.cs" />

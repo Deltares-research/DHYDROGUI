@@ -217,6 +217,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         #region Block 3
 
         /// <summary>
+        /// Creates the include file contents for the grid file.
+        /// </summary>
+        /// <param name="gridFile">The absolute grid file path.</param>
+        /// <returns></returns>
+        public static string CreateGridFileInclude(string gridFile)
+        {
+            return $"UGRID '{gridFile}'";
+        }
+
+        /// <summary>
         /// Create the include file contents that multiplies the segments per layer with the number of layers.
         /// </summary>
         public static string CreateNumberOfSegmentsInclude(int segmentsPerLayer, int numberOfLayers)

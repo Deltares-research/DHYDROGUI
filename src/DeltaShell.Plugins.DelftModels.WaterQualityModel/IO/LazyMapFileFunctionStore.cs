@@ -19,6 +19,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
     public class LazyMapFileFunctionStore : IFunctionStore, IFileBased
     {
         private IEventedList<IFunction> functions = new EventedList<IFunction>();
+        private bool isNetCdfFile;
         private MapFileMetaData metaData;
         private readonly IDictionary<string, double> minValues = new Dictionary<string, double>();
         private readonly IDictionary<string, double> maxValues = new Dictionary<string, double>();
@@ -40,7 +41,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             set
             {
                 path = value;
-
+                isNetCdfFile = path?.EndsWith("_map.nc") ?? false;
+                metaData = null;
                 minValues.Clear();
                 maxValues.Clear();
             }
@@ -206,12 +208,24 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             int timeIndex = timeFilter != null ? MetaData.Times.IndexOf(timeFilter.Values[0]) : -1;
 
             List<double> data = timeIndex != -1
-                                    ? DelwaqMapFileReader.GetTimeStepData(
-                                        path, MetaData, timeIndex, function.Name, locationIndex)
-                                    : DelwaqMapFileReader.GetTimeSeriesData(
-                                        path, MetaData, function.Name, locationIndex);
+                                    ? GetTimeStepData(function, timeIndex, locationIndex)
+                                    : GetTimeSeriesData(function, locationIndex);
 
             return data;
+        }
+
+        private List<double> GetTimeSeriesData(IVariable function, int locationIndex)
+        {
+            return isNetCdfFile
+                       ? DelwaqNcMapFileReader.GetTimeSeriesData(path, MetaData, function.Name, locationIndex)
+                       : DelwaqMapFileReader.GetTimeSeriesData(path, MetaData, function.Name, locationIndex);
+        }
+
+        private List<double> GetTimeStepData(IVariable function, int timeIndex, int locationIndex)
+        {
+            return isNetCdfFile
+                       ? DelwaqNcMapFileReader.GetTimeStepData(path, MetaData, timeIndex, function.Name, locationIndex)
+                       : DelwaqMapFileReader.GetTimeStepData(path, MetaData, timeIndex, function.Name, locationIndex);
         }
 
         public T GetMaxValue<T>(IVariable variable)
@@ -291,7 +305,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 
         private bool HasValidMapFile => !string.IsNullOrEmpty(path) && MetaData != null;
 
-        private MapFileMetaData MetaData => metaData ?? DelwaqMapFileReader.ReadMetaData(path);
+        private MapFileMetaData MetaData => metaData ?? (metaData = isNetCdfFile
+                                                                        ? DelwaqNcMapFileReader.ReadMetaData(path)
+                                                                        : DelwaqMapFileReader.ReadMetaData(path));
 
         private static IMultiDimensionalArray CreateEmptyArrayForType(Type type)
         {

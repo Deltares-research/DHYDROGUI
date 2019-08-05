@@ -58,14 +58,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 
         private static void ReadGrid(HydFileData hydFileData)
         {
-            if (string.IsNullOrEmpty(hydFileData.SchematizationRelativePath))
+            if (string.IsNullOrEmpty(hydFileData.GridRelativePath))
             {
                 throw new FormatException(
                     "Error parsing value for Hyd file element: waqgeom-file, value not specified");
             }
 
             string schematizationFilePath =
-                Path.Combine(hydFileData.Path.DirectoryName, hydFileData.SchematizationRelativePath);
+                Path.Combine(hydFileData.Path.DirectoryName, hydFileData.GridRelativePath);
 
             hydFileData.Grid = UnstructuredGridFileHelper.LoadFromFile(schematizationFilePath, true);
         }
@@ -145,7 +145,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                 },
                 {
                     "waqgeom-file",
-                    new KeyValueElement<string>((hydFileData, value) => hydFileData.SchematizationRelativePath = value)
+                    new KeyValueElement<string>((hydFileData, value) => hydFileData.GridRelativePath = value)
                 },
                 {
                     "volumes-file",

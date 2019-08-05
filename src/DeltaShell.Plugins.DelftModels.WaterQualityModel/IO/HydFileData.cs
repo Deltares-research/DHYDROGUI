@@ -57,6 +57,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             VerticalDiffusionRelativePath = string.Empty;
             SurfacesRelativePath = string.Empty;
             ShearStressesRelativePath = string.Empty;
+            GridRelativePath = string.Empty;
             AttributesRelativePath = string.Empty;
             VelocitiesRelativePath = string.Empty;
             WidthsRelativePath = string.Empty;
@@ -101,7 +102,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         /// The type of geometry used for the schematization.
         /// </summary>
         /// <seealso cref="BoundariesRelativePath" />
-        /// <seealso cref="SchematizationRelativePath" />
+        /// <seealso cref="GridRelativePath" />
         public HydroDynamicModelType HydroDynamicModelType { get; set; }
 
         public LayerType LayerType
@@ -168,10 +169,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         public string BoundariesRelativePath { get; set; }
 
         /// <summary>
-        /// Relative filepath from <see cref="Path" /> to the schematization (grid).
+        /// Relative filepath from <see cref="Path" /> to the grid file path.
         /// </summary>
-        /// <example> *_flowgeom.nc </example>
-        public string SchematizationRelativePath { get; set; }
+        /// <example> *_flowgeom.nc OR *_waqgeom.nc </example>
+        public string GridRelativePath { get; set; }
 
         public IDictionary<WaterQualityBoundary, int[]> BoundaryNodeIds { get; set; }
 
@@ -300,6 +301,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                 hfd => hfd.VerticalDiffusionRelativePath,
                 hfd => hfd.SurfacesRelativePath,
                 hfd => hfd.ShearStressesRelativePath,
+                hfd => hfd.GridRelativePath,
                 hfd => hfd.AttributesRelativePath,
                 hfd => hfd.VelocitiesRelativePath,
                 hfd => hfd.WidthsRelativePath,
