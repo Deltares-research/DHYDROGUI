@@ -94,6 +94,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         string ShearStressesRelativePath { get; }
 
         /// <summary>
+        /// The relative path (with respect to hydraulic data location) to the grid file.
+        /// This is a file that will be included as INCLUDE in the input file.
+        /// The extension is .nc
+        /// </summary>
+        string GridRelativePath { get; }
+
+        /// <summary>
         /// The relative path (with respect to hydraulic data location) to the attributes file.
         /// This is a file that will be included as INCLUDE in the input file.
         /// The extension is .atr

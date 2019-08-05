@@ -68,6 +68,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
 
         public int NumberOfLayers { get; set; }
 
+        /// <summary>
+        /// Gets or sets the grid file path.
+        /// </summary>
+        /// <value>
+        /// The absolute grid file path.
+        /// </value>
+        public string GridFile { get; set; }
+
         public string AttributesFile { get; set; }
 
         public string VolumesFile { get; set; }

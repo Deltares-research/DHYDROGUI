@@ -1,11 +1,17 @@
-﻿using System.IO;
+﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using DelftTools.Functions;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
+using DeltaShell.NGHS.IO.TestUtils;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.BoundaryData;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.SubstanceProcessLibrary;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Extensions;
@@ -112,6 +118,44 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
 
             Assert.AreEqual("Test mon file", textDocuments.First(d => d.Name == "Monitoring file").Content);
             Assert.AreEqual("Test prn file", textDocuments.First(d => d.Name == "Balance output").Content);
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void GivenAWaqFileBasedPreProcessorAndSettingsWithTheGridFilePath_WhenCallWriteIncludeFilesAndBinaryFiles_ThenGridIncludeFileIsWritten()
+        {
+            // Given
+            WaqInitializationSettings settings = CreateBasicWaqInitializationSettings();
+
+            using (var temp = new TemporaryDirectory())
+            {
+                string tempPath = temp.Path;
+                string expectedGridFilePath = Path.Combine(tempPath, "B3_ugrid.inc");
+                settings.GridFile = expectedGridFilePath;
+
+                // When
+                new WaqFileBasedPreProcessor().WriteIncludeFilesAndBinaryFiles(settings, tempPath);
+
+                // Then
+                Assert.That(File.Exists(expectedGridFilePath));
+            }
+        }
+
+        private static WaqInitializationSettings CreateBasicWaqInitializationSettings()
+        {
+            return new WaqInitializationSettings
+            {
+                SubstanceProcessLibrary = new SubstanceProcessLibrary(),
+                OutputLocations = new Dictionary<string, IList<int>>(),
+                Dispersion = new List<IFunction> {new Function()},
+                BoundaryNodeIds = new Dictionary<WaterQualityBoundary, int[]>(),
+                BoundaryAliases = new Dictionary<string, IList<string>>(),
+                BoundaryDataManager = new DataTableManager(),
+                LoadAndIds = new ConcurrentDictionary<WaterQualityLoad, int>(),
+                LoadsAliases = new Dictionary<string, IList<string>>(),
+                LoadsDataManager = new DataTableManager(),
+                ProcessCoefficients = new List<IFunction>()
+            };
         }
     }
 }

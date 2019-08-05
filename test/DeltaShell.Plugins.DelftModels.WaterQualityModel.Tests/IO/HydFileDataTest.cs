@@ -37,11 +37,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             Assert.AreEqual(0, data.NumberOfHydrodynamicLayers);
 
             Assert.IsNull(data.BoundariesRelativePath);
-            Assert.IsNull(data.SchematizationRelativePath);
 
             Assert.IsEmpty(data.HydrodynamicLayerThicknesses);
             Assert.IsEmpty(data.NumberOfHydrodynamicLayersPerWaqSegmentLayer);
 
+            Assert.AreEqual(string.Empty, data.GridRelativePath);
             Assert.AreEqual(string.Empty, data.VolumesRelativePath);
             Assert.AreEqual(string.Empty, data.AreasRelativePath);
             Assert.AreEqual(string.Empty, data.FlowsRelativePath);
@@ -55,6 +55,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             Assert.AreEqual(string.Empty, data.VelocitiesRelativePath);
             Assert.AreEqual(string.Empty, data.WidthsRelativePath);
             Assert.AreEqual(string.Empty, data.ChezyCoefficientsRelativePath);
+            Assert.AreEqual(string.Empty, data.GridRelativePath);
         }
 
         [Test]
@@ -92,6 +93,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                 (hfd, val) => hfd.VelocitiesRelativePath = val,
                 (hfd, val) => hfd.WidthsRelativePath = val,
                 (hfd, val) => hfd.ChezyCoefficientsRelativePath = val,
+                (hfd, val) => hfd.GridRelativePath = val
             };
 
             foreach (var func in funcsArray)

@@ -1,0 +1,197 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using DelftTools.Utils.NetCdf;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties;
+using log4net;
+
+namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
+{
+    /// <summary>
+    /// A map file reader designed for NetCdf files (_map.nc) created by D-Water Quality.
+    /// </summary>
+    public static class DelwaqNcMapFileReader
+    {
+        private static readonly ILog log = LogManager.GetLogger(typeof(DelwaqNcMapFileReader));
+        private const string timeVariableName = "nmesh2d_dlwq_time";
+        private const string timeDimensionName = "nmesh2d_dlwq_time";
+        private const string facesDimensionName = "nmesh2d_face";
+        private const string timeReferenceAttributeName = "units";
+        private const string substanceAttributeName = "delwaq_name";
+        private const string dateTimeFormat = "yyyy-MM-dd hh:mm:ss";
+
+        /// <summary>
+        /// Reads the meta data of the provided <paramref name="path"/>
+        /// </summary>
+        /// <param name="path"> Path to the *_map.nc file </param>
+        public static MapFileMetaData ReadMetaData(string path)
+        {
+            return DoWithNetCdfFile(path, file =>
+            {
+                IEnumerable<DateTime> times = GetDateTimes(file);
+                int nFaces = file.GetDimensionLength(facesDimensionName);
+                Dictionary<string, string> substanceToVariableMapping = SubstanceToVariableMapping(file);
+                int nTimeSteps = file.GetDimensionLength(timeDimensionName);
+
+                return new MapFileMetaData
+                {
+                    Times = times.ToList(),
+                    SubstancesMapping = substanceToVariableMapping,
+                    Substances = substanceToVariableMapping.Keys.ToList(),
+                    NumberOfTimeSteps = nTimeSteps,
+                    NumberOfSegments = nFaces,
+                    NumberOfSubstances = substanceToVariableMapping.Count
+                };
+            });
+        }
+
+        /// <summary>
+        /// Gets the values for <paramref name="substanceName" /> at specified segment and time indices.
+        /// </summary>
+        /// <param name="path"> Path of the *_map.nc file. </param>
+        /// <param name="mapFileMeta"> Metadata for the map file (use <see cref="ReadMetaData" /> to get it initially) </param>
+        /// <param name="timeStepIndex"> Time index (zero based) at which to get the values </param>
+        /// <param name="substanceName"> Substance name </param>
+        /// <param name="segmentIndex"> Segment index (zero based) at which to get the values (default -1: no filtering) </param>
+        /// <returns>
+        /// A list of double values at the specified <paramref name="timeStepIndex" /> and
+        /// <paramref name="segmentIndex" />
+        /// </returns>
+        public static List<double> GetTimeStepData(string path, MapFileMetaData mapFileMeta, int timeStepIndex, string substanceName, int segmentIndex = -1)
+        {
+            return DoWithNetCdfFile(path, file => GetDataAtIndices(substanceName, timeStepIndex, segmentIndex, mapFileMeta, file));
+        }
+
+        /// <summary>
+        /// Gets the values for <paramref name="substanceName" /> at the specified segment index for all time steps.
+        /// </summary>
+        /// <param name="path"> Path of the *_map.nc file. </param>
+        /// <param name="mapFileMeta"> Metadata for the map file (use <see cref="ReadMetaData" /> to get it initially) </param>
+        /// <param name="substanceName"> Substance name </param>
+        /// <param name="segmentIndex"> Segment index (zero based) at which to get the values (default -1: no filtering) </param>
+        /// <returns> A list of double values at the specified  <paramref name="segmentIndex" /> for all time steps. </returns>
+        public static List<double> GetTimeSeriesData(string path, MapFileMetaData mapFileMeta, string substanceName, int segmentIndex)
+        {
+            return DoWithNetCdfFile(path, file => GetDataAtIndices(substanceName, -1, segmentIndex, mapFileMeta, file));
+        }
+
+        private static T DoWithNetCdfFile<T>(string path, Func<NetCdfFile, T> netCdfFunction)
+        {
+            NetCdfFile netCdfFile = null;
+            try
+            {
+                netCdfFile = NetCdfFile.OpenExisting(path);
+                return netCdfFunction(netCdfFile);
+            }
+            finally
+            {
+                netCdfFile?.Close();
+            }
+        }
+
+        private static List<double> GetDataAtIndices(string substanceName, int timeStepIndex, int segmentIndex,
+                                                     MapFileMetaData mapFileMeta, NetCdfFile file)
+        {
+            if (!mapFileMeta.SubstancesMapping.TryGetValue(substanceName, out string netCdfVariableName))
+            {
+                return new List<double>();
+            }
+
+            NetCdfVariable variable = file.GetVariableByName(netCdfVariableName);
+            List<NetCdfDimension> dimensions = file.GetDimensions(variable).ToList();
+
+            int nDimensions = dimensions.Count;
+            var shapes = new int[nDimensions];
+            var origins = new int[nDimensions];
+
+            for (var i = 0; i < nDimensions; i++)
+            {
+                string dimensionName = file.GetDimensionName(dimensions[i]);
+
+                var shape = 1;
+                var origin = 0;
+
+                if (dimensionName == timeDimensionName)
+                {
+                    if (timeStepIndex == -1)
+                    {
+                        shape = mapFileMeta.NumberOfTimeSteps;
+                    }
+                    else
+                    {
+                        origin = timeStepIndex;
+                    }
+                }
+                else if (dimensionName == facesDimensionName)
+                {
+                    if (segmentIndex == -1)
+                    {
+                        shape = mapFileMeta.NumberOfSegments;
+                    }
+                    else
+                    {
+                        origin = segmentIndex;
+                    }
+                }
+
+                shapes[i] = shape;
+                origins[i] = origin;
+            }
+
+            return ReadFromFile(file, variable, origins, shapes);
+        }
+
+        private static Dictionary<string, string> SubstanceToVariableMapping(NetCdfFile file)
+        {
+            IEnumerable<NetCdfVariable> substanceVariables = file.GetVariables()
+                                                                 .Where(v => file.GetAttributes(v)
+                                                                                 .ContainsKey(substanceAttributeName));
+            Dictionary<string, string> mapping = substanceVariables
+                .ToDictionary(v => file.GetAttributeValue(v, substanceAttributeName), file.GetVariableName);
+
+            return mapping;
+        }
+
+        private static IEnumerable<DateTime> GetDateTimes(NetCdfFile file)
+        {
+            NetCdfVariable timeVariable = file.GetVariableByName(timeVariableName);
+            string timeReferenceAttributeValue = file.GetAttributeValue(timeVariable, timeReferenceAttributeName);
+            const string secondsSinceStr = "seconds since ";
+
+            DateTime dateTime = DateTime.Today;
+            if (!timeReferenceAttributeValue.StartsWith(secondsSinceStr, StringComparison.Ordinal))
+            {
+                return GetTimes(file.Read(timeVariable).Cast<int>(), dateTime);
+            }
+
+            string referenceDateString = timeReferenceAttributeValue
+                                         .Substring(secondsSinceStr.Length)
+                                         .Substring(0, dateTimeFormat.Length);
+
+            if (!DateTime.TryParseExact(referenceDateString, dateTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None,
+                                        out dateTime))
+            {
+                log.Warn(string.Format(Resources.DelwaqNcMapFileReader_Reference_date_could_not_be_parsed,
+                                       dateTime.ToString(dateTimeFormat), file.Path));
+            }
+
+            return GetTimes(file.Read(timeVariable).Cast<int>(), dateTime);
+        }
+
+        private static IEnumerable<DateTime> GetTimes(IEnumerable<int> timeValues, DateTime referenceDate)
+        {
+            return timeValues.Select(v => v > 1E34
+                                              ? DateTime.MaxValue
+                                              : referenceDate.AddSeconds(v));
+        }
+
+        private static List<double> ReadFromFile(NetCdfFile file, NetCdfVariable variable, int[] origins, int[] shapes)
+        {
+            var floatArray = (float[,,]) file.Read(variable, origins, shapes);
+            List<double> doubleValues = (from float floatValue in floatArray
+                                         select (double) floatValue).ToList();
+            return doubleValues;
+        }
+    }
+}

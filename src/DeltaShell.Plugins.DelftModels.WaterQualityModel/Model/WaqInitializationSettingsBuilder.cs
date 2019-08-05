@@ -56,6 +56,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
                 UseRestart = waterQualityModel.UseRestart,
                 SegmentsPerLayer = waterQualityModel.NumberOfDelwaqSegmentsPerHydrodynamicLayer,
                 NumberOfLayers = waterQualityModel.NumberOfWaqSegmentLayers,
+                GridFile = Path.Combine(hydFileRoot, waterQualityModel.GridRelativeFilePath),
                 AttributesFile = Path.Combine(hydFileRoot, waterQualityModel.AttributesRelativeFilePath),
                 VolumesFile = Path.Combine(hydFileRoot, waterQualityModel.VolumesRelativeFilePath),
                 SurfacesFile = Path.Combine(hydFileRoot, waterQualityModel.SurfacesRelativeFilePath),

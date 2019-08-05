@@ -7,6 +7,7 @@ using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core.Workflow.DataItems;
+using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Editing;
@@ -934,6 +935,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             {
                 ClearFunctionStore(OutputClassMapFileStore);
                 OutputClassMapFileStore = null;
+            }
+
+            RemoveTextDocumentOutput();
+        }
+
+        private void RemoveTextDocumentOutput()
+        {
+            IEnumerable<IDataItem> textDocumentDataItems = AllDataItems.Where(di => di.Role.HasFlag(DataItemRole.Output) 
+                                                                                    && di.ValueType == typeof(TextDocument))
+                                                                       .ToList();
+
+            foreach (IDataItem dataItem in textDocumentDataItems)
+            {
+                dataItems.Remove(dataItem);
             }
         }
 

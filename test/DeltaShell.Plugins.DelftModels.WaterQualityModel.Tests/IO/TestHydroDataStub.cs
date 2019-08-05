@@ -31,6 +31,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         private string verticalDiffusionPath;
         private string surfacesPath;
         private string shearStressesPath;
+        private string gridFilePath;
         private string attributesPath;
         private string velocitiesRelativePath;
         private string widthsRelativePath;
@@ -109,6 +110,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             timeStep = hydFileData.ConversionTimeStep;
             referenceTime = hydFileData.ConversionReferenceTime;
 
+            gridFilePath = hydFileData.GridRelativePath;
             attributesPath = hydFileData.AttributesRelativePath;
             areasPath = hydFileData.AreasRelativePath;
             volumesPath = hydFileData.VolumesRelativePath;
@@ -180,6 +182,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         public DateTime ConversionReferenceTime
         {
             get { return referenceTime; }
+        }
+
+        public string GridRelativePath
+        {
+            get { return gridFilePath; }
         }
 
         public string AreasRelativePath

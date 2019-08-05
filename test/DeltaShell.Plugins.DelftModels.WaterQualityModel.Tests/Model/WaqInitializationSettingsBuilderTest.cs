@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using DelftTools.TestUtils;
+﻿using DelftTools.TestUtils;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.SubstanceProcessLibrary;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
@@ -9,6 +6,9 @@ using DeltaShell.Plugins.DelftModels.WaterQualityModel.Model;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.ObservationAreas;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO;
 using NUnit.Framework;
+using System;
+using System.IO;
+using System.Linq;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
 {
@@ -39,7 +39,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
                     LengthsRelativePath = "LengthsRelativePath",
                     SurfacesRelativePath = "SurfacesRelativePath",
                     VerticalDiffusionRelativePath = "VerticalDiffusionRelativePath",
-                    SchematizationRelativePath = "",
+                    GridRelativePath = "GridFilePath",
                     BoundariesRelativePath = "",
                     NumberOfHydrodynamicLayers = 4,
                     HydrodynamicLayerThicknesses = new []{0.25, 0.25, 0.25, 0.25 },
@@ -139,6 +139,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
             Assert.AreEqual(Path.Combine(commonPath, hydFileData.LengthsRelativePath), settings.LengthsFile);
             Assert.AreEqual(Path.Combine(commonPath, hydFileData.SurfacesRelativePath), settings.SurfacesFile);
             Assert.AreEqual(Path.Combine(commonPath, hydFileData.VerticalDiffusionRelativePath), settings.VerticalDiffusionFile);
+            Assert.AreEqual(Path.Combine(commonPath, hydFileData.GridRelativePath), settings.GridFile);
             
             Assert.AreEqual(hydroData.NumberOfWaqSegmentLayers, settings.NumberOfLayers);
             Assert.AreEqual(hydroData.NumberOfDelwaqSegmentsPerHydrodynamicLayer, settings.SegmentsPerLayer);
@@ -228,7 +229,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
                 FlowsRelativePath = "FlowsRelativePath",
                 LengthsRelativePath = "LengthsRelativePath",
                 SurfacesRelativePath = "SurfacesRelativePath",
-                SchematizationRelativePath = "",
+                GridRelativePath = "GridRelativePath",
                 BoundariesRelativePath = "",
                 NumberOfHydrodynamicLayers = 4,
                 HydrodynamicLayerThicknesses = new[] { 0.25, 0.25, 0.25, 0.25 },
