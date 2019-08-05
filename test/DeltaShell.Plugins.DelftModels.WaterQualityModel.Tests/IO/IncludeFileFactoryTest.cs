@@ -197,6 +197,21 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         #region Block 3
 
         [Test]
+        public void GivenAnIncludeFileFactory_WhenCallCreateGridFileInclude_ThenExpectedStringIsReturned()
+        {
+            // Given
+            const string inputString = "file_path";
+            string expectedString = $"UGRID '{inputString}'";
+
+            // When
+            var result = IncludeFileFactory.CreateGridFileInclude(inputString);
+
+            // Then
+            Assert.That(result, Is.EqualTo(expectedString),
+                        "Different string was expected when creating the content for the grid include file.");
+        }
+
+        [Test]
         public void TestCreateNumberOfSegmentsInclude()
         {
             const string ExpectedString = "446698 ; number of segments";

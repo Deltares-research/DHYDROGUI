@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -87,6 +87,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties {
                 return ResourceManager.GetString("DataTableManager_WriteTableContentsToNewTextDocumentFromFile_File___0___already_e" +
                         "xists_within_the_database__The_file_that_is_being_imported_will_be_renamed_to___" +
                         "1____Note_that_your_results_may_be_affected_by_the_new_import", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reference date is set to {0} because format could not be parsed from file {1}..
+        /// </summary>
+        public static string DelwaqNcMapFileReader_Reference_date_could_not_be_parsed {
+            get {
+                return ResourceManager.GetString("DelwaqNcMapFileReader_Reference_date_could_not_be_parsed", resourceCulture);
             }
         }
         

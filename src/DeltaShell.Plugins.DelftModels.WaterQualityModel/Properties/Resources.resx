@@ -180,6 +180,7 @@ INCLUDE 'includes_deltashell/B2_outputtimers.inc'   ; From UI: Simulation timers
 #2;
 ;###############################################################################
 ; Third input block
+INCLUDE 'includes_deltashell/B3_ugrid.inc'          ; Reference to the waqgeom file for UGRID NetCDF output
 INCLUDE '{0}B3_nrofseg.inc'        ; From UI: Nr of segments
  2                                                  ; Structure matrix not used
  0                                                  ; Features of the computational elements
@@ -288,10 +289,10 @@ INCLUDE 'includes_deltashell/B8_initials.inc'       ; From UI: Initials
  INCLUDE 'includes_deltashell/B9_Hisvar.inc'        ; History-file
  INCLUDE 'includes_deltashell/B9_Mapvar.inc'        ; Map-file
                                                     ; Binary/Nefis and History/Map
- 1                                                  ; Switch on binary History file
- 1                                                  ; Switch on binary Map file
- 0                                                  ; Switch off Nefis History file
- 0                                                  ; Switch off Nefis Map file
+ 0                                                  ; Switch on binary History file
+ 0                                                  ; Switch on binary Map file
+ 1                                                  ; Switch off Nefis History file
+ 1                                                  ; Switch off Nefis Map file
 #9
 ;###############################################################################
 ; Tenth input block
@@ -324,6 +325,7 @@ INCLUDE 'includes_deltashell/B2_outputtimers.inc'   ; From UI: Simulation timers
 #2;
 ;###############################################################################
 ; Third input block
+INCLUDE 'includes_deltashell/B3_ugrid.inc'          ; Reference to the waqgeom file for UGRID NetCDF output
 INCLUDE '{0}B3_nrofseg.inc'        ; From UI: Nr of segments
  2                                                  ; Structure matrix not used
  0                                                  ; Features of the computational elements
@@ -430,10 +432,10 @@ INCLUDE 'includes_deltashell/B8_initials.inc'       ; From UI: Initials
  INCLUDE 'includes_deltashell/B9_Hisvar.inc'        ; History-file
  INCLUDE 'includes_deltashell/B9_Mapvar.inc'        ; Map-file
                                                     ; Binary/Nefis and History/Map
- 1                                                  ; Switch on binary History file
- 1                                                  ; Switch on binary Map file
- 0                                                  ; Switch off Nefis History file
- 0                                                  ; Switch off Nefis Map file
+ 0                                                  ; Switch on binary History file
+ 0                                                  ; Switch on binary Map file
+ 1                                                  ; Switch off Nefis History file
+ 1                                                  ; Switch off Nefis Map file
 #9
 ;###############################################################################
 ; Tenth input block
@@ -515,6 +517,7 @@ INCLUDE 'includes_deltashell/B2_outputtimers.inc'   ; From UI: Simulation timers
 #2;
 ;###############################################################################
 ; Third input block
+INCLUDE 'includes_deltashell/B3_ugrid.inc'          ; Reference to the waqgeom file for UGRID NetCDF output
 INCLUDE 'includes_deltashell/B3_nrofseg.inc'        ; From UI: Nr of segments (multiply number-water-quality-segments-per-layer and number-water-quality-layers from HYD)
  2                                                  ; Structure matrix not used
 
@@ -593,10 +596,10 @@ INCLUDE 'includes_deltashell/B8_initials.inc'       ; From UI: Initials
  INCLUDE 'includes_deltashell/B9_Hisvar.inc'        ; From UI: History-file
  INCLUDE 'includes_deltashell/B9_Mapvar.inc'        ; From UI: Map-file
                                                     ; Binary/Nefis and History/Map
- 1                                                  ; Switch on binary History file
- 1                                                  ; Switch on binary Map file
- 0                                                  ; Switch off Nefis History file
- 0                                                  ; Switch off Nefis Map file
+ 0                                                  ; Switch on binary History file
+ 0                                                  ; Switch on binary Map file
+ 1                                                  ; Switch off Nefis History file
+ 1                                                  ; Switch off Nefis Map file
 #9
 ;###############################################################################
 ; Tenth input block
@@ -649,6 +652,9 @@ INCLUDE 'includes_deltashell/B8_initials.inc'       ; From UI: Initials
   </data>
   <data name="LazyMapFileFunctionStore_GetArgumentValues_Filters_of_type___0___can_only_filter_on_functions_with_value_type___1___" xml:space="preserve">
     <value>Filters of type &lt;{0}&gt; can only filter on functions with value type &lt;{1}&gt;.</value>
+  </data>
+  <data name="DelwaqNcMapFileReader_Reference_date_could_not_be_parsed" xml:space="preserve">
+    <value>Reference date is set to {0} because format could not be parsed from file {1}.</value>
   </data>
   <data name="WaterQualityModel_OnClearOutput_Could_not_remove_output_item___0____because_of_the_following_reason__1__2" xml:space="preserve">
     <value>Could not remove output item '{0}', because of the following reason:{1}{2}</value>

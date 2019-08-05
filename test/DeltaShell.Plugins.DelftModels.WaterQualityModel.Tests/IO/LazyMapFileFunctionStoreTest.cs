@@ -1,20 +1,25 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using DelftTools.Functions;
+﻿using DelftTools.Functions;
 using DelftTools.Functions.Filters;
 using DelftTools.Functions.Generic;
 using DelftTools.TestUtils;
+using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
 using NUnit.Framework;
+using Rhino.Mocks;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using Is = NUnit.Framework.Is;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
 {
     [TestFixture]
+    [Category(TestCategory.DataAccess)]
     public class LazyMapFileFunctionStoreTest
     {
         private readonly DateTime firstTimeStep = new DateTime(2010, 1, 1, 0, 0, 0);
@@ -264,6 +269,66 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             // Then
             Assert.That(values, Is.Empty,
                         "When values are queried from the LazyMapFileFunctionStore without filters an empty list should be returned.");
+        }
+
+        [TestCase("CBOD5", "EColi")]
+        [TestCase("DO", "EColi")]
+        [TestCase("NH4", "EColi")]
+        [TestCase("OXY", "EColi")]
+        [TestCase("SOD", "EColi")]
+        [TestCase("CBOD5", "Salinity")]
+        [TestCase("DO", "Salinity")]
+        [TestCase("NH4", "Salinity")]
+        [TestCase("OXY", "Salinity")]
+        [TestCase("SOD", "Salinity")]
+        public void GivenALazyMapFileFunctionStore_WhenNewPathIsSet_ThenValuesCanBeRetrieved(
+            string functionNameFirstFile, string functionNameSecondFile)
+        {
+            string tesDataDirectory = Path.Combine(TestHelper.GetTestDataDirectory(), "IO");
+
+            // Given
+            var store = new LazyMapFileFunctionStore();
+            var filter = new VariableValueFilter<int> {Values = new List<int> {0}};
+            IVariable function = CreateDependentFunction();
+
+            store.Path = Path.Combine(tesDataDirectory, "oxygen_map.nc");
+            function.Name = functionNameFirstFile;
+
+            IMultiDimensionalArray firstValues = store.GetVariableValues(function, filter);
+            Assert.That(firstValues, Is.Not.Empty,
+                        "Retrieved values from file should not be empty.");
+
+            // When
+            store.Path = Path.Combine(tesDataDirectory, "bacteria_map.nc");
+            function.Name = functionNameSecondFile;
+
+            // Then
+            IMultiDimensionalArray secondValues = store.GetVariableValues(function, filter);
+            Assert.That(secondValues, Is.Not.Empty,
+                        "Retrieved values from file should not be empty after setting the path of the function store to a new file with other substances.");
+
+            Assert.That(firstValues, Is.Not.EqualTo(secondValues),
+                        "Values should not be the same.");
+        }
+
+        private static IVariable CreateDependentFunction()
+        {
+            var function = MockRepository.GenerateStub<IVariable>();
+            function.ValueType = typeof(double);
+            function.Stub(f => f.IsIndependent).Return(false);
+            function.Arguments = new EventedList<IVariable>(CreateFunctionArguments());
+            return function;
+        }
+
+        private static IEnumerable<IVariable> CreateFunctionArguments()
+        {
+            var timeArgument = MockRepository.GenerateStub<IVariable>();
+            timeArgument.ValueType = typeof(DateTime);
+            yield return timeArgument;
+
+            var segmentArgument = MockRepository.GenerateStub<IVariable>();
+            segmentArgument.ValueType = typeof(int);
+            yield return segmentArgument;
         }
     }
 }

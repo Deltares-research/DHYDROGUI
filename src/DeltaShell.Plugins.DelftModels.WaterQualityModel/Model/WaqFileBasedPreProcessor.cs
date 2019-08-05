@@ -118,6 +118,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
             FileUtils.DeleteIfExists(Path.Combine(workDirectory, "deltashell-initials.map"));
         }
 
+        /// <summary>
+        /// Writes the include files and binary files.
+        /// </summary>
+        /// <param name="initSettings">The waq initialization settings.</param>
+        /// <param name="includeDirectory">The directory where the include files are written to.</param>
         public void WriteIncludeFilesAndBinaryFiles(WaqInitializationSettings initSettings, string includeDirectory)
         {
             if (!Directory.Exists(includeDirectory))
@@ -132,6 +137,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
             string areasFile = FileUtils.ReplaceDirectorySeparator(initSettings.AreasFile);
             string flowsFile = FileUtils.ReplaceDirectorySeparator(initSettings.FlowsFile);
             string lengthsFile = FileUtils.ReplaceDirectorySeparator(initSettings.LengthsFile);
+            string gridFile = FileUtils.ReplaceDirectorySeparator(initSettings.GridFile);
 
             var filesDictionary = new Dictionary<string, Func<WaqInitializationSettings, string>>
             {
@@ -144,6 +150,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
                 {"B2_simtimers.inc", set => IncludeFileFactory.CreateSimTimersInclude(set)},
                 {"B2_outlocs.inc", set => IncludeFileFactory.CreateOutputLocationsInclude(set.OutputLocations)},
                 {"B2_outputtimers.inc", set => IncludeFileFactory.CreateOutputTimersInclude(set.Settings)},
+                {"B3_ugrid.inc", set => IncludeFileFactory.CreateGridFileInclude(gridFile)},
                 {
                     "B3_nrofseg.inc",
                     set => IncludeFileFactory.CreateNumberOfSegmentsInclude(

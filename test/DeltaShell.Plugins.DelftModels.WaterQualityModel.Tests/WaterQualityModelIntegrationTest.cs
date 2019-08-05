@@ -30,6 +30,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 
             using (var model = new WaterQualityModel())
             {
+                EditInputFileToCreateBinaryFiles(model);
                 new HydFileImporter().ImportItem(hydFile, model);
 
                 var subFilePath = Path.Combine(dataDir, "ValidWaqModels", "Eutrof_simple_sobek.sub");
@@ -62,6 +63,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 
             using (var model = new WaterQualityModel())
             {
+                EditInputFileToCreateBinaryFiles(model);
                 new HydFileImporter().ImportItem(hydFile, model);
 
                 var subFilePath = Path.Combine(dataDir, "ValidWaqModels", "coli_04.sub");
@@ -85,6 +87,26 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                 var firstComponent = firstFeature.Components.FirstOrDefault();
                 Assert.AreEqual(181, firstComponent.Values.Count);
             }
+        }
+
+        private static void EditInputFileToCreateBinaryFiles(WaterQualityModel model)
+        {
+            var inputFile = model.InputFile.Content;
+
+            var editedInputFile = inputFile.Replace(
+                                               "0                                                  ; Switch on binary Map file",
+                                               "1                                                  ; Switch on binary Map file")
+                                           .Replace(
+                                               "0                                                  ; Switch on binary History file",
+                                               "1                                                  ; Switch on binary History file")
+                                           .Replace(
+                                               "1                                                  ; Switch off Nefis History file",
+                                               "0                                                  ; Switch off Nefis History file")
+                                           .Replace(
+                                               "1                                                  ; Switch off Nefis Map file",
+                                               "0                                                  ; Switch off Nefis Map file");
+
+            model.InputFile.Content = editedInputFile;
         }
 
         [Test]
@@ -220,7 +242,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             @"Water_Quality\output",
             @"Water_Quality\output\deltashell.lsp",
             @"Water_Quality\output\deltashell.lst",
-            @"Water_Quality\output\deltashell.map",
+            @"Water_Quality\output\deltashell_map.nc",
             @"Water_Quality\output\deltashell.mon",
             @"Water_Quality\output\deltashell_res.map",
             @"Water_Quality_output\deltashell-timers.out",
@@ -233,6 +255,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             @"Water_Quality_output\includes_deltashell\B2_outlocs.inc",
             @"Water_Quality_output\includes_deltashell\B2_outputtimers.inc",
             @"Water_Quality_output\includes_deltashell\B2_simtimers.inc",
+            @"Water_Quality_output\includes_deltashell\B3_ugrid.inc",
             @"Water_Quality_output\includes_deltashell\B3_attributes.inc",
             @"Water_Quality_output\includes_deltashell\B3_nrofseg.inc",
             @"Water_Quality_output\includes_deltashell\B3_volumes.inc",
@@ -274,6 +297,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             @"Water_Quality_output\includes_deltashell\B2_outlocs.inc",
             @"Water_Quality_output\includes_deltashell\B2_outputtimers.inc",
             @"Water_Quality_output\includes_deltashell\B2_simtimers.inc",
+            @"Water_Quality_output\includes_deltashell\B3_ugrid.inc",
             @"Water_Quality_output\includes_deltashell\B3_attributes.inc",
             @"Water_Quality_output\includes_deltashell\B3_nrofseg.inc",
             @"Water_Quality_output\includes_deltashell\B3_volumes.inc",

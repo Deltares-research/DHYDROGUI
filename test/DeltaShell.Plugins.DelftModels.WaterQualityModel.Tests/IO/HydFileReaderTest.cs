@@ -258,7 +258,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                 data.NumberOfHydrodynamicLayersPerWaqSegmentLayer);
 
             Assert.AreEqual("uni3d.bnd", data.BoundariesRelativePath);
-            Assert.AreEqual("uni3d_flowgeom.nc", data.SchematizationRelativePath);
+            Assert.AreEqual("uni3d_flowgeom.nc", data.GridRelativePath);
 
             Assert.AreEqual("uni3d.vol", data.VolumesRelativePath);
             Assert.AreEqual("uni3d.are", data.AreasRelativePath);
@@ -302,6 +302,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             Assert.AreEqual(string.Empty, data.VerticalDiffusionRelativePath);
             Assert.AreEqual("square.srf", data.SurfacesRelativePath);
             Assert.AreEqual("square.tau", data.ShearStressesRelativePath);
+            Assert.AreEqual("square_flowgeom.nc", data.GridRelativePath);
         }
 
         [Test]

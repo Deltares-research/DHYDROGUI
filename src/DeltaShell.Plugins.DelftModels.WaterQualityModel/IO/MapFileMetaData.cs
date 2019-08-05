@@ -11,10 +11,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         public MapFileMetaData()
         {
             Substances = new List<string>();
+            SubstancesMapping = new Dictionary<string, string>();
             Times = new List<DateTime>();
         }
 
         public IList<string> Substances { get; set; }
+
+        public IDictionary<string, string> SubstancesMapping { get; set; }
 
         public IList<DateTime> Times { get; set; }
 

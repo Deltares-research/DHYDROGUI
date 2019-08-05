@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
-using System.Text;
-using DelftTools.Functions;
+﻿using DelftTools.Functions;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
@@ -18,6 +12,12 @@ using DeltaShell.Plugins.DelftModels.WaterQualityModel.Model;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Properties;
 using NUnit.Framework;
 using Rhino.Mocks;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
+using System.Linq;
+using System.Text;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
 {
@@ -227,6 +227,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
                     "B2_simtimers.inc",
                     "B2_outlocs.inc", 
                     "B2_outputtimers.inc",
+                    "B3_ugrid.inc",
                     "B3_nrofseg.inc", 
                     "B3_attributes.inc",
                     "B3_volumes.inc", 

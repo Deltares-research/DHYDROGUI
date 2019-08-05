@@ -714,6 +714,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         }
 
         /// <summary>
+        /// Gets or sets the relative path from the .hyd file to the grid file path.
+        /// </summary>
+        /// <value>
+        /// The relative grid file path.
+        /// </value>
+        public virtual string GridRelativeFilePath { get; protected set; }
+
+        /// <summary>
         /// The attributes file that will be included as INCLUDE in the input file.
         /// <see cref="IHydroData.GetAttributesRelativeFilePath" />
         /// </summary>
@@ -936,6 +944,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                 PointersRelativeFilePath = HydroData.PointersRelativePath;
                 LengthsRelativeFilePath = HydroData.LengthsRelativePath;
                 VerticalDiffusionRelativeFilePath = HydroData.VerticalDiffusionRelativePath;
+                GridRelativeFilePath = HydroData.GridRelativePath;
                 AttributesRelativeFilePath = HydroData.AttributesRelativePath;
                 OverWriteSegmentFunctions(HydroData);
 
@@ -1365,7 +1374,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                 return;
             }
 
-            MapFileFunctionStore.Path = Path.Combine(ModelSettings.OutputDirectory, "deltashell.map");
+            string mapFilePath = Path.Combine(ModelSettings.OutputDirectory, "deltashell.map");
+            if (File.Exists(mapFilePath))
+            {
+                MapFileFunctionStore.Path = mapFilePath;
+            }
+
+            string mapNetCdfFilePath = Path.Combine(ModelSettings.OutputDirectory, "deltashell_map.nc");
+            if (File.Exists(mapNetCdfFilePath))
+            {
+                MapFileFunctionStore.Path = mapNetCdfFilePath;
+            }
 
             waqProcessor.AddOutput(ModelSettings.OutputDirectory, ObservationVariableOutputs,
                                    (displayName, filePath) => this.AddTextDocument(displayName, filePath),
