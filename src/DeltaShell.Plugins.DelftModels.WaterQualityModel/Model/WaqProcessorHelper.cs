@@ -70,7 +70,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
             string filePath;
             if (File.Exists(filePath = Path.Combine(directoryPath, "deltashell_his.nc")))
             {
-                hisFileVariableDataList = DelwaqNcHisFileReader.Read(filePath);
+                hisFileVariableDataList = DelwaqNetCdfHistoryFileReader.Read(filePath);
             }
             else if (File.Exists(filePath = Path.Combine(directoryPath, "deltashell.his")))
             {

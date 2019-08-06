@@ -77,7 +77,7 @@
     <Compile Include="DataObjects\Model\MonitoringOutputLevel.cs" />
     <Compile Include="DataObjects\NameablePointFeature.cs" />
     <Compile Include="DataObjects\SubstanceProcessLibrary\WaterQualityParameter.cs" />
-    <Compile Include="IO\DelwaqNcHisFileReader.cs" />
+    <Compile Include="IO\DelwaqNetCdfHistoryFileReader.cs" />
     <Compile Include="IO\DelwaqNcMapFileReader.cs" />
     <Compile Include="IO\InputFileExporter.cs" />
     <Compile Include="IO\BloomSpeFileReader.cs" />

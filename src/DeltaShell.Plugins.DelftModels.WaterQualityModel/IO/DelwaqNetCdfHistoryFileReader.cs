@@ -8,7 +8,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
     /// <summary>
     /// A map file reader designed for NetCdf files (_his.nc) created by D-Water Quality.
     /// </summary>
-    public static class DelwaqNcHisFileReader
+    public static class DelwaqNetCdfHistoryFileReader
     {
         private const string timeVariableName = "nhistory_dlwq_time";
         private const string nStationsDimensionName = "nStations";
