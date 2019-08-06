@@ -8,10 +8,10 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
 {
     [TestFixture]
-    public class DelwaqNetCdfHistoryFileReaderTest
+    public class DelwaqNcHisFileReaderTest
     {
         [Test]
-        public void GivenADelwaqNetCdfHisFileReader_WhenReadIsCalled__ThenCorrectHisFileDataIsReturned_()
+        public void GivenADelwaqNcHisFileReader_WhenReadIsCalled__ThenCorrectHisFileDataIsReturned_()
         {
             const string observationPointName = "Observation Point01";
             const string salinityVariable = "Salinity";
@@ -21,7 +21,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             string filePath = TestHelper.GetTestFilePath(@"IO\deltashell_his.nc");
 
             // When
-            List<DelwaqHisFileData> hisFileData = DelwaqNetCdfHistoryFileReader.Read(filePath);
+            List<DelwaqHisFileData> hisFileData = DelwaqNcHisFileReader.Read(filePath);
 
             // Then
             Assert.That(hisFileData, Has.Count.EqualTo(1),

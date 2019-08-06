@@ -83,7 +83,7 @@
     <Compile Include="Forms\FunctionListViewTest\BloomFunctionsTableViewTest.cs" />
     <Compile Include="Forms\UnstructuredGridLayerTest.cs" />
     <Compile Include="IO\BloomSpeFileReaderTest.cs" />
-    <Compile Include="IO\DelwaqNetCdfHistoryFileReaderTest.cs" />
+    <Compile Include="IO\DelwaqNcHisFileReaderTest.cs" />
     <Compile Include="IO\DelwaqNcMapFileReaderTest.cs" />
     <Compile Include="IO\InputFileExporterTest.cs" />
     <Compile Include="IO\LazyMapFileFunctionStoreTest.cs" />
