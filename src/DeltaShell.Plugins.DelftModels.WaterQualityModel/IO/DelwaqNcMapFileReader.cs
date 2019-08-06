@@ -1,10 +1,7 @@
-﻿using System;
+﻿using DelftTools.Utils.NetCdf;
+using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using DelftTools.Utils.NetCdf;
-using DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties;
-using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 {
@@ -13,13 +10,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
     /// </summary>
     public static class DelwaqNcMapFileReader
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(DelwaqNcMapFileReader));
         private const string timeVariableName = "nmesh2d_dlwq_time";
         private const string timeDimensionName = "nmesh2d_dlwq_time";
         private const string facesDimensionName = "nmesh2d_face";
-        private const string timeReferenceAttributeName = "units";
         private const string substanceAttributeName = "delwaq_name";
-        private const string dateTimeFormat = "yyyy-MM-dd hh:mm:ss";
 
         /// <summary>
         /// Reads the meta data of the provided <paramref name="path"/>
@@ -29,7 +23,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         {
             return DoWithNetCdfFile(path, file =>
             {
-                IEnumerable<DateTime> times = GetDateTimes(file);
+                IEnumerable<DateTime> times = NcFileReaderHelper.GetDateTimes(file, timeVariableName);
                 int nFaces = file.GetDimensionLength(facesDimensionName);
                 Dictionary<string, string> substanceToVariableMapping = SubstanceToVariableMapping(file);
                 int nTimeSteps = file.GetDimensionLength(timeDimensionName);
@@ -151,39 +145,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                 .ToDictionary(v => file.GetAttributeValue(v, substanceAttributeName), file.GetVariableName);
 
             return mapping;
-        }
-
-        private static IEnumerable<DateTime> GetDateTimes(NetCdfFile file)
-        {
-            NetCdfVariable timeVariable = file.GetVariableByName(timeVariableName);
-            string timeReferenceAttributeValue = file.GetAttributeValue(timeVariable, timeReferenceAttributeName);
-            const string secondsSinceStr = "seconds since ";
-
-            DateTime dateTime = DateTime.Today;
-            if (!timeReferenceAttributeValue.StartsWith(secondsSinceStr, StringComparison.Ordinal))
-            {
-                return GetTimes(file.Read(timeVariable).Cast<int>(), dateTime);
-            }
-
-            string referenceDateString = timeReferenceAttributeValue
-                                         .Substring(secondsSinceStr.Length)
-                                         .Substring(0, dateTimeFormat.Length);
-
-            if (!DateTime.TryParseExact(referenceDateString, dateTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None,
-                                        out dateTime))
-            {
-                log.Warn(string.Format(Resources.DelwaqNcMapFileReader_Reference_date_could_not_be_parsed,
-                                       dateTime.ToString(dateTimeFormat), file.Path));
-            }
-
-            return GetTimes(file.Read(timeVariable).Cast<int>(), dateTime);
-        }
-
-        private static IEnumerable<DateTime> GetTimes(IEnumerable<int> timeValues, DateTime referenceDate)
-        {
-            return timeValues.Select(v => v > 1E34
-                                              ? DateTime.MaxValue
-                                              : referenceDate.AddSeconds(v));
         }
 
         private static List<double> ReadFromFile(NetCdfFile file, NetCdfVariable variable, int[] origins, int[] shapes)

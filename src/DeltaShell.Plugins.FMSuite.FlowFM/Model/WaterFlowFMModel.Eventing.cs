@@ -937,14 +937,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 OutputClassMapFileStore = null;
             }
 
-            RemoveTextDocumentOutput();
+            RemoveOutputTextDocumentDataItem();
         }
 
-        private void RemoveTextDocumentOutput()
+        private void RemoveOutputTextDocumentDataItem()
         {
-            IEnumerable<IDataItem> textDocumentDataItems = AllDataItems.Where(di => di.Role.HasFlag(DataItemRole.Output) 
-                                                                                    && di.ValueType == typeof(TextDocument))
-                                                                       .ToList();
+            IList<IDataItem> textDocumentDataItems = dataItems.Where(di => di.Role.HasFlag(DataItemRole.Output) 
+                                                                           && di.ValueType == typeof(TextDocument))
+                                                              .ToList();
 
             foreach (IDataItem dataItem in textDocumentDataItems)
             {

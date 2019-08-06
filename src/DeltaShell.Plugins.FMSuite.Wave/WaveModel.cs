@@ -976,11 +976,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             }
         }
 
-        private void ModelSave()
-        {
-            ModelSaveTo(mdwFile.MdwFilePath, true);
-        }
-
         // all saving should go through here, but beware, NHibernate will disable
         // event bubbling when saving...
         public void ModelSaveTo(string targetMdwFilePath, bool switchTo)
@@ -1365,8 +1360,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         protected override void OnClearOutput()
         {
             BeginEdit(new DefaultEditAction("Clearing all wave output"));
-            WavmFunctionStores.ForEach(
-                fs => fs.Close());
+            WavmFunctionStores.ForEach(fs => fs.Close());
+            GetDataItemValueByTag<TextDocument>(SwanLogDataItemTag).Content = string.Empty;
             EndEdit();
         }
 
@@ -1493,7 +1488,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         private void OnSave()
         {
-            ModelSave();
+            ModelSaveTo(mdwFile.MdwFilePath, true);
+
+            foreach (WavmFileFunctionStore store in WavmFunctionStores)
+            {
+                if (store.Functions.Count > 0 || string.IsNullOrEmpty(store.Path) || FileUtils.IsDirectory(store.Path))
+                {
+                    continue;
+                }
+                
+                FileUtils.DeleteIfExists(store.Path);
+                store.Path = string.Empty;
+            }
         }
 
         private void OnCopyTo(string targetMdwFilePath)

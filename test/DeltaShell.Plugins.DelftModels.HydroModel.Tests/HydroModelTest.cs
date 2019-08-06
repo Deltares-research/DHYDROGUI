@@ -5,6 +5,7 @@ using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
+using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -129,6 +130,34 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             hydroModel.ClearOutput();
             Assert.IsTrue(hydroModel.OutputIsEmpty);
             Assert.IsTrue(simpleModel.OutputIsEmpty);
+        }
+
+        [Test]
+        public void ClearOutput_WithTextDocumentDataItem_ThenDataItemIsRemovedFromModel()
+        {
+            const string textDocumentTag = "TextDocumentTag";
+
+            // Setup
+            var simpleModel = new SimpleModel();
+            using (var hydroModel = new HydroModel())
+            {
+                hydroModel.Activities.Add(simpleModel);
+                simpleModel.Initialize();
+                simpleModel.Execute();
+                simpleModel.Finish();
+
+                hydroModel.DataItems.Add(new DataItem(new TextDocument(), DataItemRole.Output, textDocumentTag));
+
+                // Pre-condition
+                Assert.That(hydroModel.OutputIsEmpty, Is.False);
+
+                // Call
+                hydroModel.ClearOutput();
+
+                // Assert
+                Assert.That(hydroModel.GetDataItemByTag(textDocumentTag), Is.Null,
+                            "Text Document data item should have been removed at model output clearance.");
+            }
         }
 
         [Test]

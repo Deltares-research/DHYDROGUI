@@ -1055,15 +1055,22 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         protected override void OnClearOutput()
         {
-            base.OnClearOutput();
+            Activities.OfType<IModel>().Plus(currentWorkflow as IModel)
+                      .Where(m => m != null)
+                      .ForEach(m => m.ClearOutput());
 
-            var models = Activities.OfType<IModel>()
-                .Plus(currentWorkflow as IModel)
-                .Where(m => m != null);
+            RemoveOutputTextDocumentDataItem();
+        }
 
-            foreach (var model in models)
+        private void RemoveOutputTextDocumentDataItem()
+        {
+            IList<IDataItem> textDocumentDataItems = dataItems.Where(di => di.Role.HasFlag(DataItemRole.Output)
+                                                                           && di.ValueType == typeof(TextDocument))
+                                                              .ToList();
+
+            foreach (IDataItem dataItem in textDocumentDataItems)
             {
-                model.ClearOutput();
+                dataItems.Remove(dataItem);
             }
         }
 
