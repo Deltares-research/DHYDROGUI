@@ -47,7 +47,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                     }
 
                     // Whenever morphology is active, give an error in the validation report in case the bed level locations is not set to 'cells' (BedlevType.val0)
-                    //if (waterFlowFmProperty.PropertyDefinition.MduPropertyName.Equals(KnownPropertyMduNames.BedlevType))
                     if (bedLevelTypeProperty != null && waterFlowFmProperty == bedLevelTypeProperty)
                     {
                         int bedLevelTypeNumber;
@@ -56,8 +55,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                             && int.TryParse(waterFlowFmProperty.GetValueAsString(), out bedLevelTypeNumber) &&
                             !bedLevelTypeNumber.Equals((int) UnstructuredGridFileHelper.BedLevelLocation.Faces))
                         {
-                            issues.Add(new ValidationIssue(model, ValidationSeverity.Error,
-                                                           "Bed level locations should be set to 'cells' when morphology is active."));
+                            var validationShortcut = new FmValidationShortcut{
+                                FlowFmModel = model,
+                                TabName = "Processes"
+                            };
+                            issues.Add(new ValidationIssue(
+                                           model, 
+                                           ValidationSeverity.Error,
+                                           Resources.WaterFlowFMModelDefinitionValidator_Validate_Bed_level_locations_should_be_set_to__faces__when_morphology_is_active_,
+                                           validationShortcut)
+                            );
                         }
                     }
 

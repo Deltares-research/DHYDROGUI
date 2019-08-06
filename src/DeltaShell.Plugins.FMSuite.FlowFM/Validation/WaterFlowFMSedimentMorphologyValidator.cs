@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Validation;
+using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
@@ -69,12 +70,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 return issues;
             }
 
+            string tabName = WaterFlowFMModelDefinition.GetTabName(KnownProperties.SedFile, fmModel: model);
+            var validationShortcut = new FmValidationShortcut{
+                FlowFmModel = model,
+                TabName = tabName,
+            };
             issues.Add(new ValidationIssue(
-                           WaterFlowFMModelDefinition.GetTabName(KnownProperties.SedFile, fmModel: model),
+                           tabName,
                            ValidationSeverity.Error,
                            Resources
                                .WaterFlowFMSedimentMorphologyValidator_ValidateAtLeastOneSedimentFractionInModel_At_least_one_sediment_fraction_is_required_when_using_morphology,
-                           model));
+                           validationShortcut));
 
             return issues;
         }
@@ -144,5 +150,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 
             return issues;
         }
+
     }
 }
