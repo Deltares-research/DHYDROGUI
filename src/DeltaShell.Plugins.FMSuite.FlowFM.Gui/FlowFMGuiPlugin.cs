@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -535,10 +536,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             base.Gui.Application.ProjectSaving += ApplicationOnProjectSaving;
             base.Gui.Application.ProjectSaved += ApplicationOnProjectSaved;
 
-            // DELFT3DFM-371: Disable Model Inspection
-            // base.Gui.Application.ActivityRunner.Activities.CollectionChanged += Activities_CollectionChanged;
-
-            var project = base.Gui.Application.Project;
+            Project project = base.Gui.Application.Project;
             if (project != null)
             {
                 SubscribeToProjectPropertyChanged(project);
@@ -558,9 +556,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             base.Gui.Application.ProjectOpened -= SubscribeToProjectPropertyChanged;
             base.Gui.Application.ProjectClosing -= UnsubscribeToProjectPropertyChanged;
 
-            // DELFT3DFM-371: Disable Model Inspection
-            //base.Gui.Application.ActivityRunner.Activities.CollectionChanged -= Activities_CollectionChanged;
-
             Project project = base.Gui.Application.Project;
             if (project != null)
             {
@@ -568,35 +563,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             }
 
             base.Gui.Application.ProjectOpened -= CleanFlowFmViewContextUponLoadingProjectHack;
-        }
-
-        private void CloseAllRelatedMultipleFunctionViews(Project project)
-        {
-            IList<MultipleFunctionView> fmViews = Gui.DocumentViews.OfType<MultipleFunctionView>().ToList();
-            if (Gui == null || !fmViews.Any())
-                return;
-
-            IEnumerable<List<string>> dataItemNames = FlowModels
-                                     .SelectMany(
-                                         fm => fm.OutputHisFileStore.Functions.OfType<FileBasedFeatureCoverage>()
-                                                 .Select(
-                                                     fc => new List<string>
-                                                     {
-                                                         fc.Name,
-                                                         fc.FeatureVariable.Name
-                                                     }));
-             
-            List<MultipleFunctionView> fmToClose = fmViews.Where(
-                fv => fv.Functions.Any(
-                    fvf => dataItemNames.Any(
-                        din => fvf.Name.Contains(din[0]) &&
-                               fvf.Name.Contains(din[1])))).ToList();
-
-            // Views need to be in an initialized list otherwise it could throw exception due to change of structure.
-            foreach (MultipleFunctionView fc in fmToClose)
-            {
-                Gui.CommandHandler.RemoveAllViewsForItem(fc.Data);
-            }
         }
 
         /// <summary>
@@ -613,7 +579,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         private static void CleanFlowFmViewContextUponLoadingProjectHack(Project project)
         {
             IEnumerable<IModel> models = project?.RootFolder?.Models?.Where(m => m is WaterFlowFMModel);
-
             if (models == null) return;
 
             foreach (IModel model in models)
@@ -647,7 +612,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             if (project == null) return;
             ((INotifyPropertyChange)project).PropertyChanging += ProjectPropertyChanging;
             ((INotifyPropertyChanged) project).PropertyChanged += ProjectPropertyChanged;
-            
+            ((INotifyCollectionChanged)project).CollectionChanged += ProjectOnCollectionChanged;
         }
 
         private void UnsubscribeToProjectPropertyChanged(Project project)
@@ -655,8 +620,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             if (project == null) return;
             ((INotifyPropertyChange)project).PropertyChanging -= ProjectPropertyChanging;
             ((INotifyPropertyChanged)project).PropertyChanged -= ProjectPropertyChanged;
+            ((INotifyCollectionChanged) project).CollectionChanged -= ProjectOnCollectionChanged;
 
-            CloseAllRelatedMultipleFunctionViews(project);
+            CloseAllRelatedMultipleFunctionViews(FlowModels);
         }
 
         private static readonly string CoordinateSystemMemberName =
@@ -668,13 +634,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         private static readonly string HeatFluxModelTypeMemberName =
             TypeUtils.GetMemberName<WaterFlowFMModel>(m => m.HeatFluxModelType);
 
+        private void ProjectOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action == NotifyCollectionChangedAction.Remove)
+            {
+                CloseAllRelatedMultipleFunctionViews(e.OldItems.OfType<WaterFlowFMModel>());
+            }
+        }
+
         void ProjectPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             var waterFlowFmModel = sender as WaterFlowFMModel;
             if (waterFlowFmModel == null)
                 return;
 
-            var propertyName = e.PropertyName;
+            string propertyName = e.PropertyName;
 
             if (propertyName.Equals(TypeUtils.GetMemberName(() => waterFlowFmModel.OutputSnappedFeaturesPath)))
             {
@@ -686,10 +660,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 return;
 
             // Set coordinate system to OutputSnappedFeatures
-            var mapViews = Gui.DocumentViews.OfType<ProjectItemMapView>().Where(m => (m.Data as WaterFlowFMModel) == waterFlowFmModel);
-            foreach (var mapView in mapViews)
+            IEnumerable<ProjectItemMapView> mapViews = Gui.DocumentViews.OfType<ProjectItemMapView>().Where(m => (m.Data as WaterFlowFMModel) == waterFlowFmModel);
+            foreach (ProjectItemMapView mapView in mapViews)
             {
-                var modelLayer = mapView.MapView.GetLayerForData(waterFlowFmModel);
+                ILayer modelLayer = mapView.MapView.GetLayerForData(waterFlowFmModel);
                 var groupModelLayer = modelLayer as GroupLayer;
 
                 if (groupModelLayer == null)
@@ -830,6 +804,40 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             var fmModel = sender as WaterFlowFMModel;
             if (fmModel != null && fmModel.ValidateBeforeRun && activityStatusChangedEventArgs.NewStatus == ActivityStatus.Failed)
                 Gui.CommandHandler.OpenView(sender, typeof(ValidationView));
+        }
+
+        private void CloseAllRelatedMultipleFunctionViews(IEnumerable<WaterFlowFMModel> fmModels)
+        {
+            if (fmModels == null)
+                return;
+
+            IList<MultipleFunctionView> fmViews = Gui?.DocumentViews?.OfType<MultipleFunctionView>().ToArray();
+            if (fmViews == null || !fmViews.Any())
+                return;
+
+            string[][] dataItemNames = fmModels
+                                       .SelectMany(
+                                           fm => fm.OutputHisFileStore.Functions.OfType<FileBasedFeatureCoverage>()
+                                                   .Select(
+                                                       fc => new []
+                                                       {
+                                                           fc.Name,
+                                                           fc.Features.OfType<INameable>().FirstOrDefault()?.Name
+                                                       })).ToArray();
+
+            // Collection needs to be cached to prevent CollectionModifiedException
+            foreach (MultipleFunctionView multipleFunctionView in fmViews)
+            {
+                IEnumerable<string> functionNames = multipleFunctionView.Functions.Select(f => f.Name);
+                if (dataItemNames.Any(din =>
+                                          functionNames.Any(
+                                              fn =>
+                                                  fn.Contains(din[0]) &&
+                                                  fn.Contains(din[1]))))
+                {
+                    Gui.CommandHandler.RemoveAllViewsForItem(multipleFunctionView.Data);
+                }
+            }
         }
 
         [InvokeRequired]

@@ -13,6 +13,7 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf;
 using DelftTools.TestUtils;
+using DelftTools.Utils;
 using DelftTools.Utils.IO;
 using DeltaShell.Gui;
 using DeltaShell.NGHS.IO.TestUtils;
@@ -674,12 +675,51 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Category(TestCategory.WindowsForms)]
         public void Given_WaterFlowFmModel_With_MultipleFunctionView_When_CloseProject_Then_MultipleFunctionView_Is_Closed()
         {
+            // 1. Prepare test data
+            string fileLocation = TestHelper.GetTestFilePath(@"DELFT3DFM-1178\Project1.dsproj");
+
+            // 2. Set up test action
+            Action<IApplication> testAction = app => app.CloseProject();
+
+            // 3. Run and verify test
+            Verify_MultipleFunctionView_Created_And_Closed_As_Expected(fileLocation, testAction);
+        }
+
+        [Test]
+        [Category(TestCategory.WindowsForms)]
+        public void Given_WaterFlowFmModel_With_MultipleFunctionView_When_DeleteModel_Then_MultipleFunctionView_Is_Closed()
+        {
+            // 1. Prepare test data
+            string fileLocation = TestHelper.GetTestFilePath(@"DELFT3DFM-1178\Project1.dsproj");
+
+            // 2. Set up test action
+            Action<IApplication> testAction = (app) =>
+            {
+                if (app?.Project == null)
+                {
+                    return;
+                }
+
+                WaterFlowFMModel[] models = app.Project.RootFolder.Models.OfType<WaterFlowFMModel>().ToArray();
+                Assert.That(models.Any(), Is.True, "No WaterFlowFMModels were added to the project.");
+                foreach (WaterFlowFMModel waterFlowFmModel in models)
+                {
+                    app.Project.RootFolder.Items.Remove(waterFlowFmModel);
+                }
+            };
+
+            // 3. Run and verify test
+            Verify_MultipleFunctionView_Created_And_Closed_As_Expected(fileLocation, testAction);
+        }
+
+        private static void Verify_MultipleFunctionView_Created_And_Closed_As_Expected(string filePath, Action<IApplication> applicationAction)
+        {
             using (var dsProjLocation = new TemporaryDirectory())
             {
                 // 1. Load test data
-                string fileLocation = TestHelper.GetTestFilePath(@"DELFT3DFM-1178\Project1.dsproj");
+                string fileLocation = TestHelper.GetTestFilePath(filePath);
                 string tempFileLocation = dsProjLocation.CopyTestDataFileAndDirectoryToTempDirectory(fileLocation);
-                
+
                 // 2. Prepare Test Project
                 using (var gui = new DeltaShellGui())
                 {
@@ -702,40 +742,43 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     
                     // 3. Verify initial expectations
                     Assert.That(projectOpened, Is.True, "It was not possible to open the project");
-                    Action mainWindowShown = delegate
+                    Project project = app.Project;
+                    Assert.That(project, Is.Not.Null);
+                    
+                    // 3.1. Verify data loaded correctly.
+                    WaterFlowFMModel fmModel = project.RootFolder.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
+                    Assert.That(fmModel, Is.Not.Null, "Not found FM Model");
+
+                    FileBasedFeatureCoverage dataItem = fmModel.OutputHisFileStore.Functions
+                                                               .OfType<FileBasedFeatureCoverage>()
+                                                               .FirstOrDefault();
+                    Assert.That(dataItem, Is.Not.Null, "No output coverage was found.");
+                    // 3.1. We need the function to also include the feature name as it would be done if DS would create the
+                    // MultipleFunctionView.
+                    string dataItemName = dataItem.Name + ' ' + dataItem.Features.OfType<INameable>().FirstOrDefault()?.Name;
+                    dataItem.Name = dataItemName;
+                    
+                    // 4. Do test action
+                    Action mainWindowShown = () =>
                     {
-                        Project project = app.Project;
-                        WaterFlowFMModel fmModel = project.RootFolder.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
-                        Assert.That(fmModel, Is.Not.Null, "Not found FM Model");
-
-                        FileBasedFeatureCoverage dataItem = fmModel.OutputHisFileStore.Functions
-                                                     .OfType<FileBasedFeatureCoverage>()
-                                                     .FirstOrDefault();
-
-                        Assert.That(dataItem, Is.Not.Null, "No output coverage was found.");
-                        string dataItemName = dataItem.Name + ' ' + dataItem.FeatureVariable.Name;
-                        dataItem.Name = dataItemName;
-
-                        // 4. Add new MultipleFunctionView
-                        var functionView = new MultipleFunctionView() {Functions = new List<IFunction>()
-                        {
-                            dataItem
-                        }};
-
+                        Assert.That(gui.DocumentViews.Any(), Is.False);
+                        
+                        // 4.1. Create and add new MultipleFunctionView
+                        var functionView = new MultipleFunctionView { Functions = new List<IFunction> { dataItem } };
                         gui.DocumentViews.Add(functionView);
-                        List<MultipleFunctionView> openedViews = gui.DocumentViews.OfType<MultipleFunctionView>().ToList();
-                        Assert.That(openedViews.Any(), Is.True, "No MultipleFunction view was generated.");
+                        Assert.That(gui.DocumentViews.OfType<MultipleFunctionView>().Count(), Is.EqualTo(1), "No MultipleFunction view was generated.");
 
-                        //5. Close Project and verify final expectations
-                        app.CloseProject();
-                        Assert.That(gui.DocumentViews.Any(), Is.False, "Not all views were closed correctly.");
+                        // 5. Do action
+                        applicationAction?.Invoke(app);
+
+                        // 6. Verify final expectations
+                        Assert.That(gui.DocumentViews.OfType<MultipleFunctionView>().Any(), Is.False, "Not all views were closed correctly.");
 
                     };
-                    WpfTestHelper.ShowModal((Control)gui.MainWindow, mainWindowShown);
-                    
+                    WpfTestHelper.ShowModal(gui.MainWindow as Control, mainWindowShown);
+                    gui.Dispose();
                 }
             }
-            
         }
 
 
