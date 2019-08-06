@@ -12,6 +12,54 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
     public class WaveCouplingValidatorTest
     {
         [Test]
+        [TestCase(0)]
+        [TestCase(-1)]
+        public void Given_WaveModelCoupledToFlowAnd_Invalid_TimeStep_When_ValidatingCoupling_Then_ValidationErrorIsReturnedWithExpectedViewData(int timeStep)
+        {
+            // Given
+            var waveModel = new WaveModel
+            {
+                IsCoupledToFlow = true,
+                StartTime = DateTime.Now
+            };
+            waveModel.TimeStep = new TimeSpan(0,0,timeStep);
+            var expectedTabName = "General";
+            string expectedMessage = Resources.WaveCouplingValidator_ValidateModelTimeSettings_Time_step_cannot_be_set_to_Zero_;
+
+            // When
+            ValidationReport validationReport = WaveCouplingValidator.Validate(waveModel);
+
+            // Then
+            ValidationIssue validationError = validationReport.AllErrors.FirstOrDefault(issue => issue.Message == expectedMessage);
+            Assert.That(validationError, Is.Not.Null, "No validation error was generated.");
+
+            var waveValidationShortcut = validationError.ViewData as WaveValidationShortcut;
+            Assert.That(waveValidationShortcut, Is.Not.Null, "No WaveValidation Shortcut found.");
+            Assert.That(waveValidationShortcut.WaveModel, Is.EqualTo(waveModel), "Shortcut wave model not as expected.");
+            Assert.That(waveValidationShortcut.TabName, Is.EqualTo("General"), $"Expected shortcut tab name {expectedTabName}, but got {waveValidationShortcut.TabName}");
+        }
+
+        [Test]
+        public void Given_WaveModelCoupledToFlowAnd_Valid_TimeStep_When_ValidatingCoupling_Then_ValidationErrorIsReturnedWithExpectedViewData()
+        {
+            // Given
+            var waveModel = new WaveModel
+            {
+                IsCoupledToFlow = true,
+                StartTime = DateTime.Now
+            };
+            waveModel.TimeStep = new TimeSpan(0, 0, 1);
+            string expectedMessage = Resources.WaveCouplingValidator_ValidateModelTimeSettings_Time_step_cannot_be_set_to_Zero_;
+
+            // When
+            ValidationReport validationReport = WaveCouplingValidator.Validate(waveModel);
+
+            // Then
+            ValidationIssue validationError = validationReport.AllErrors.FirstOrDefault(issue => issue.Message == expectedMessage);
+            Assert.That(validationError, Is.Null, "Validation error was generated but it was not expected.");
+        }
+
+        [Test]
         public void GivenWaveModelCoupledToFlowAndReferenceTimePrecedingStartTime_WhenValidatingCoupling_ThenValidationErrorIsReturnedWithExpectedViewData()
         {
             // Given
