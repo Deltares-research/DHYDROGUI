@@ -682,7 +682,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             Action<IApplication> testAction = app => app.CloseProject();
 
             // 3. Run and verify test
-            Verify_MultipleFunctionView_Created_And_Closed_As_Expected(fileLocation, testAction);
+            AssertMultiplFunctionViewClosedAsExpected(fileLocation, testAction);
         }
 
         [Test]
@@ -695,11 +695,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             // 2. Set up test action
             Action<IApplication> testAction = (app) =>
             {
-                if (app?.Project == null)
-                {
-                    return;
-                }
-
                 WaterFlowFMModel[] models = app.Project.RootFolder.Models.OfType<WaterFlowFMModel>().ToArray();
                 Assert.That(models.Any(), Is.True, "No WaterFlowFMModels were added to the project.");
                 foreach (WaterFlowFMModel waterFlowFmModel in models)
@@ -709,10 +704,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             };
 
             // 3. Run and verify test
-            Verify_MultipleFunctionView_Created_And_Closed_As_Expected(fileLocation, testAction);
+            AssertMultiplFunctionViewClosedAsExpected(fileLocation, testAction);
         }
 
-        private static void Verify_MultipleFunctionView_Created_And_Closed_As_Expected(string filePath, Action<IApplication> applicationAction)
+        private static void AssertMultiplFunctionViewClosedAsExpected(string filePath, Action<IApplication> applicationAction)
         {
             using (var dsProjLocation = new TemporaryDirectory())
             {
@@ -769,7 +764,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                         Assert.That(gui.DocumentViews.OfType<MultipleFunctionView>().Count(), Is.EqualTo(1), "No MultipleFunction view was generated.");
 
                         // 5. Do action
-                        applicationAction?.Invoke(app);
+                        applicationAction(app);
 
                         // 6. Verify final expectations
                         Assert.That(gui.DocumentViews.OfType<MultipleFunctionView>().Any(), Is.False, "Not all views were closed correctly.");

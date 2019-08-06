@@ -811,7 +811,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             if (fmModels == null)
                 return;
 
-            IList<MultipleFunctionView> fmViews = Gui?.DocumentViews?.OfType<MultipleFunctionView>().ToArray();
+            MultipleFunctionView[] fmViews = Gui?.DocumentViews?.OfType<MultipleFunctionView>().ToArray();
             if (fmViews == null || !fmViews.Any())
                 return;
 
