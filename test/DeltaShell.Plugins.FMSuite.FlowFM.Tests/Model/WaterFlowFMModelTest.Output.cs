@@ -17,9 +17,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         public void ClearOutput_WithTextDocumentOutput_ThenOutputIsRemovedFromModel()
         {
             // Setup
+            const string textDocumentTag = "myTextDocument";
             var waterFlowFmModel = new WaterFlowFMModel();
-            waterFlowFmModel.DataItems.Add(new DataItem(new TextDocument(), DataItemRole.Output, "myTextDocument"));
-
+            waterFlowFmModel.DataItems.Add(new DataItem(new TextDocument(), DataItemRole.Output, textDocumentTag));
 
             // Private field outputIsEmpty is set to false after a successful model run. This field should be false when clearing model output.
             // As we do not focus on model run, we use reflection to set this field and omit the model run.
@@ -29,7 +29,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             waterFlowFmModel.ClearOutput();
 
             // Assert
-            Assert.That(waterFlowFmModel.GetDataItemByTag("myTextDocument"), Is.Null);
+            Assert.That(waterFlowFmModel.GetDataItemByTag(textDocumentTag), Is.Null,
+                        "Text Document data item should have been removed at model output clearance.");
         }
 
         [Test]
@@ -49,23 +50,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 string classMapFilePath = waterFlowFmModel.OutputClassMapFileStore.Path;
 
                 // Pre-condition
-                Assert.That(waterFlowFmModel.OutputHisFileStore, Is.Not.Null);
-                Assert.That(File.Exists(hisFilePath), Is.True);
-                Assert.That(waterFlowFmModel.OutputMapFileStore, Is.Not.Null);
-                Assert.That(File.Exists(mapFilePath), Is.True);
-                Assert.That(waterFlowFmModel.OutputClassMapFileStore, Is.Not.Null);
-                Assert.That(File.Exists(classMapFilePath), Is.True);
+                Assert.That(waterFlowFmModel.OutputHisFileStore, Is.Not.Null, "Test pre-condition failure.");
+                Assert.That(File.Exists(hisFilePath), Is.True, "Test pre-condition failure.");
+                Assert.That(waterFlowFmModel.OutputMapFileStore, Is.Not.Null, "Test pre-condition failure.");
+                Assert.That(File.Exists(mapFilePath), Is.True, "Test pre-condition failure.");
+                Assert.That(waterFlowFmModel.OutputClassMapFileStore, Is.Not.Null, "Test pre-condition failure.");
+                Assert.That(File.Exists(classMapFilePath), Is.True, "Test pre-condition failure.");
 
                 // Call
                 waterFlowFmModel.ClearOutput();
 
                 // Assert
-                Assert.That(waterFlowFmModel.OutputHisFileStore, Is.Null);
-                Assert.That(File.Exists(hisFilePath), Is.True);
-                Assert.That(waterFlowFmModel.OutputMapFileStore, Is.Null);
-                Assert.That(File.Exists(mapFilePath), Is.True);
-                Assert.That(waterFlowFmModel.OutputClassMapFileStore, Is.Null);
-                Assert.That(File.Exists(classMapFilePath), Is.True);
+                Assert.That(waterFlowFmModel.OutputHisFileStore, Is.Null, "His file store should be set to null at model output clearance.");
+                Assert.That(File.Exists(hisFilePath), Is.True, "Model output files should not be removed at model output clearance.");
+                Assert.That(waterFlowFmModel.OutputMapFileStore, Is.Null, "Output map file store should be set to null at model output clearance.");
+                Assert.That(File.Exists(mapFilePath), Is.True, "Model output files should not be removed at model output clearance.");
+                Assert.That(waterFlowFmModel.OutputClassMapFileStore, Is.Null, "Class map file store should be set to null at model output clearance.");
+                Assert.That(File.Exists(classMapFilePath), Is.True, "Model output files should not be removed at model output clearance.");
             }
         }
     }

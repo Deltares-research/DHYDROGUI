@@ -1,0 +1,93 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using DelftTools.TestUtils;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
+using NUnit.Framework;
+
+namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
+{
+    [TestFixture]
+    public class DelwaqNcHisFileReaderTest
+    {
+        [Test]
+        public void GivenADelwaqNcHisFileReader_WhenReadIsCalled__ThenCorrectHisFileDataIsReturned_()
+        {
+            const string observationPointName = "Observation Point01";
+            const string salinityVariable = "Salinity";
+            const string eColiVariable = "EColi";
+
+            // Given
+            string filePath = TestHelper.GetTestFilePath(@"IO\deltashell_his.nc");
+
+            // When
+            List<DelwaqHisFileData> hisFileData = DelwaqNcHisFileReader.Read(filePath);
+
+            // Then
+            Assert.That(hisFileData, Has.Count.EqualTo(1),
+                        "One HisFileData was expected to be created, because there was one observation point in the file.");
+            DelwaqHisFileData data = hisFileData.Single();
+            Assert.That(data.ObservationVariable, Is.EqualTo(observationPointName),
+                        "Observation variable was different than expected.");
+            Assert.That(data.TimeSteps, Is.EqualTo(GetExpectedDateTimes()),
+                        "Date times were different than expected.");
+            IEnumerable<List<double>> valuesPerTimeStep = data.TimeSteps.Select(t => data.GetValuesForTimeStep(t));
+            Assert.That(valuesPerTimeStep.All(v => v.Count == 2), Is.True,
+                        "2 values per time step were expected (one per output variable).");
+            Assert.That(valuesPerTimeStep, Is.EqualTo(GetExpectedValues()),
+                        "Time series values were different than expected.");
+            Assert.That(data.OutputVariables.First(), Is.EqualTo(salinityVariable),
+                        "Output variable was different than expected.");
+            Assert.That(data.OutputVariables.Last(), Is.EqualTo(eColiVariable),
+                        "Output variable was different than expected.");
+        }
+
+        private static IEnumerable<DateTime> GetExpectedDateTimes()
+        {
+            var referenceDate = new DateTime(2001, 1, 1);
+            for (var i = 0; i < 7; i++)
+            {
+                yield return referenceDate.AddHours(4 * i);
+            }
+        }
+
+        private static IEnumerable<IEnumerable<double>> GetExpectedValues()
+        {
+            yield return new[]
+            {
+                5.0,
+                5.0
+            };
+            yield return new[]
+            {
+                3.7563545703887939,
+                3.3857002258300781
+            };
+            yield return new[]
+            {
+                2.8748416900634766,
+                2.3378903865814209
+            };
+            yield return new[]
+            {
+                2.5587210655212402,
+                1.8783777952194214
+            };
+            yield return new[]
+            {
+                2.1056840419769287,
+                1.395979642868042
+            };
+            yield return new[]
+            {
+                1.6477864980697632,
+                0.98714113235473633
+            };
+            yield return new[]
+            {
+                1.2499129772186279,
+                0.67690962553024292
+            };
+        }
+    }
+}
