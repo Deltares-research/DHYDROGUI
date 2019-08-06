@@ -83,10 +83,12 @@
     <Compile Include="Forms\FunctionListViewTest\BloomFunctionsTableViewTest.cs" />
     <Compile Include="Forms\UnstructuredGridLayerTest.cs" />
     <Compile Include="IO\BloomSpeFileReaderTest.cs" />
+    <Compile Include="IO\DelwaqNcHisFileReaderTest.cs" />
     <Compile Include="IO\DelwaqNcMapFileReaderTest.cs" />
     <Compile Include="IO\InputFileExporterTest.cs" />
     <Compile Include="IO\LazyMapFileFunctionStoreTest.cs" />
     <Compile Include="IO\MultiDimentionalArrayAdapterTest.cs" />
+    <Compile Include="IO\NcFileReaderHelperTest.cs" />
     <Compile Include="IO\WaqProcessValidationRuleTest.cs" />
     <Compile Include="IO\WaqValidationRulesExtensionTest.cs" />
     <Compile Include="IO\WaterQualityObservationAreaImporterTest.cs" />

@@ -93,15 +93,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
                 return;
             }
 
-            Log.Debug("Started parsing deltashell.his file.");
+            Log.Debug("Started parsing history file.");
 
             var stopWatch = new Stopwatch();
             stopWatch.Start();
-            WaqProcessorHelper.ParseHisFileData(Path.Combine(workDirectory, "deltashell.his"),
-                                                observationVariableOutputs, monitoringOutputLevel);
+
+            WaqProcessorHelper.ParseHisFileData(workDirectory, observationVariableOutputs, monitoringOutputLevel);
+
             stopWatch.Stop();
 
-            Log.DebugFormat("Done parsing deltashell.his file. (Took {0})", stopWatch.Elapsed);
+            Log.DebugFormat("Done parsing history file. (Took {0})", stopWatch.Elapsed);
 
             if (addTextDocument == null)
             {

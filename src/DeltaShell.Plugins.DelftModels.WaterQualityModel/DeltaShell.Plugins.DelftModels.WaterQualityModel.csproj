@@ -77,10 +77,12 @@
     <Compile Include="DataObjects\Model\MonitoringOutputLevel.cs" />
     <Compile Include="DataObjects\NameablePointFeature.cs" />
     <Compile Include="DataObjects\SubstanceProcessLibrary\WaterQualityParameter.cs" />
+    <Compile Include="IO\DelwaqNcHisFileReader.cs" />
     <Compile Include="IO\DelwaqNcMapFileReader.cs" />
     <Compile Include="IO\InputFileExporter.cs" />
     <Compile Include="IO\BloomSpeFileReader.cs" />
     <Compile Include="IO\MapFileMetaData.cs" />
+    <Compile Include="IO\NcFileReaderHelper.cs" />
     <Compile Include="IO\WaqProcessesRules.cs" />
     <Compile Include="IO\WaqProcessValidationRule.cs" />
     <Compile Include="IO\WaqValidationRulesExtension.cs" />
