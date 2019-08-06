@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
+using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
@@ -11,11 +13,15 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf;
 using DelftTools.TestUtils;
+using DelftTools.Utils;
 using DelftTools.Utils.IO;
 using DeltaShell.Gui;
+using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
+using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
 using DeltaShell.Plugins.Data.NHibernate;
+using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
@@ -663,6 +669,113 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 });
             }
         }
+
+
+        [Test]
+        [Category(TestCategory.WindowsForms)]
+        public void Given_WaterFlowFmModel_With_MultipleFunctionView_When_CloseProject_Then_MultipleFunctionView_Is_Closed()
+        {
+            // 1. Prepare test data
+            string fileLocation = TestHelper.GetTestFilePath(@"DELFT3DFM-1178\Project1.dsproj");
+
+            // 2. Set up test action
+            Action<IApplication> testAction = app => app.CloseProject();
+
+            // 3. Run and verify test
+            AssertMultiplFunctionViewClosedAsExpected(fileLocation, testAction);
+        }
+
+        [Test]
+        [Category(TestCategory.WindowsForms)]
+        public void Given_WaterFlowFmModel_With_MultipleFunctionView_When_DeleteModel_Then_MultipleFunctionView_Is_Closed()
+        {
+            // 1. Prepare test data
+            string fileLocation = TestHelper.GetTestFilePath(@"DELFT3DFM-1178\Project1.dsproj");
+
+            // 2. Set up test action
+            Action<IApplication> testAction = (app) =>
+            {
+                WaterFlowFMModel[] models = app.Project.RootFolder.Models.OfType<WaterFlowFMModel>().ToArray();
+                Assert.That(models.Any(), Is.True, "No WaterFlowFMModels were added to the project.");
+                foreach (WaterFlowFMModel waterFlowFmModel in models)
+                {
+                    app.Project.RootFolder.Items.Remove(waterFlowFmModel);
+                }
+            };
+
+            // 3. Run and verify test
+            AssertMultiplFunctionViewClosedAsExpected(fileLocation, testAction);
+        }
+
+        private static void AssertMultiplFunctionViewClosedAsExpected(string filePath, Action<IApplication> applicationAction)
+        {
+            using (var dsProjLocation = new TemporaryDirectory())
+            {
+                // 1. Load test data
+                string fileLocation = TestHelper.GetTestFilePath(filePath);
+                string tempFileLocation = dsProjLocation.CopyTestDataFileAndDirectoryToTempDirectory(fileLocation);
+
+                // 2. Prepare Test Project
+                using (var gui = new DeltaShellGui())
+                {
+                    IApplication app = gui.Application;
+                    // Load app plugins
+                    app.Plugins.Add(new NHibernateDaoApplicationPlugin());
+                    app.Plugins.Add(new CommonToolsApplicationPlugin());
+                    app.Plugins.Add(new SharpMapGisApplicationPlugin());
+                    app.Plugins.Add(new NetworkEditorApplicationPlugin());
+                    app.Plugins.Add(new FlowFMApplicationPlugin());
+                    // Load gui plugins
+                    gui.Plugins.Add(new CommonToolsGuiPlugin());
+                    gui.Plugins.Add(new ProjectExplorerGuiPlugin());
+                    gui.Plugins.Add(new NetworkEditorGuiPlugin());
+                    gui.Plugins.Add(new SharpMapGisGuiPlugin());
+                    gui.Plugins.Add(new FlowFMGuiPlugin());
+
+                    gui.Run();
+                    bool projectOpened = app.OpenProject(tempFileLocation);
+                    
+                    // 3. Verify initial expectations
+                    Assert.That(projectOpened, Is.True, "It was not possible to open the project");
+                    Project project = app.Project;
+                    Assert.That(project, Is.Not.Null);
+                    
+                    // 3.1. Verify data loaded correctly.
+                    WaterFlowFMModel fmModel = project.RootFolder.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
+                    Assert.That(fmModel, Is.Not.Null, "Not found FM Model");
+
+                    FileBasedFeatureCoverage dataItem = fmModel.OutputHisFileStore.Functions
+                                                               .OfType<FileBasedFeatureCoverage>()
+                                                               .FirstOrDefault();
+                    Assert.That(dataItem, Is.Not.Null, "No output coverage was found.");
+                    // 3.1. We need the function to also include the feature name as it would be done if DS would create the
+                    // MultipleFunctionView.
+                    string dataItemName = dataItem.Name + ' ' + dataItem.Features.OfType<INameable>().FirstOrDefault()?.Name;
+                    dataItem.Name = dataItemName;
+                    
+                    // 4. Do test action
+                    Action mainWindowShown = () =>
+                    {
+                        Assert.That(gui.DocumentViews.Any(), Is.False);
+                        
+                        // 4.1. Create and add new MultipleFunctionView
+                        var functionView = new MultipleFunctionView { Functions = new List<IFunction> { dataItem } };
+                        gui.DocumentViews.Add(functionView);
+                        Assert.That(gui.DocumentViews.OfType<MultipleFunctionView>().Count(), Is.EqualTo(1), "No MultipleFunction view was generated.");
+
+                        // 5. Do action
+                        applicationAction(app);
+
+                        // 6. Verify final expectations
+                        Assert.That(gui.DocumentViews.OfType<MultipleFunctionView>().Any(), Is.False, "Not all views were closed correctly.");
+
+                    };
+                    WpfTestHelper.ShowModal(gui.MainWindow as Control, mainWindowShown);
+                    gui.Dispose();
+                }
+            }
+        }
+
 
         #region Helper methods
         private static Stopwatch StartTimer()
