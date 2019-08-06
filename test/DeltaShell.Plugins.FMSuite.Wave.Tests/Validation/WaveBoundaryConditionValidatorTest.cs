@@ -508,6 +508,33 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             Assert.That(errors[0].Message.Contains("Time points are not synchronized on boundary"));
         }
 
+        [Test]
+        public void GivenWaveBoundaryConditionWithSpatiallyVaryingDefinitionAndPointDataOutOfOrderAndInvalidData_WhenValidating_ThenExpectedValidationMessagesGenerated()
+        {
+            // Given
+            var boundaryCondition = new WaveBoundaryCondition(BoundaryConditionDataType.ParameterizedSpectrumTimeseries)
+            {
+                Feature = featureWithTwoPoints,
+                SpatialDefinitionType = WaveBoundaryConditionSpatialDefinitionType.SpatiallyVarying
+            };
+            boundaryCondition.AddPoint(1);
+            boundaryCondition.AddPoint(0);
+
+            var waveBoundaryConditions = new List<WaveBoundaryCondition> { boundaryCondition };
+
+            // When
+            ValidationReport validationReport = WaveBoundaryConditionValidator.Validate(waveBoundaryConditions);
+
+            // Then
+            IEnumerable<ValidationIssue> errors = validationReport.AllErrors;
+            Assert.That(errors.Count(), Is.EqualTo(2), "Validation report should contain two errors.");
+            Assert.That(errors.All(e => e.Severity == ValidationSeverity.Error), Is.True, "All errors must be of severity \"Error\"");
+
+            string expectedMessage = Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition_Boundary_does_not_contain_a_boundary_condition;
+            Assert.That(errors.ElementAt(0).Message, Is.EqualTo($"Point 1: {expectedMessage}"), "First error message does not correspond with expected message.");
+            Assert.That(errors.ElementAt(1).Message, Is.EqualTo($"Point 2: {expectedMessage}"), "Second error message does not correspond with expected message.");
+        }
+
         private static void AddWaveEnergyFunction(WaveBoundaryCondition boundaryCondition, double heightValue, double periodValue, double directionValue, double spreadingValue)
         {
             boundaryCondition.AddPoint(0);
