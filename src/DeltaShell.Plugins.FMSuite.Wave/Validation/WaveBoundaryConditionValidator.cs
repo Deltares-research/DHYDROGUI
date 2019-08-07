@@ -158,20 +158,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                 yield break;
             }
 
-            for (var i = 0; i < boundaryCondition.PointData.Count; i++)
+            IEnumerable<PointDataFunctionMapping> functionMapping = CreateSortedPointDataFunctionMapping(boundaryCondition);
+            var precedingText = string.Empty;
+            foreach (PointDataFunctionMapping mapping in functionMapping)
             {
-                IFunction function = boundaryCondition.PointData[i];
-
-                string precedingText = string.Empty;
-                if (boundaryCondition.SpatialDefinitionType ==
-                    WaveBoundaryConditionSpatialDefinitionType.SpatiallyVarying)
+                IFunction function = mapping.PointDataFunction;
+                if (boundaryCondition.SpatialDefinitionType == WaveBoundaryConditionSpatialDefinitionType.SpatiallyVarying)
                 {
-                    int pointIndex = boundaryCondition.DataPointIndices[i] + 1;
-                    precedingText = $"Point {pointIndex}: ";
+                    precedingText = $"Point {mapping.PointDataIndex + 1}: ";
                 }
 
-                IVariable timeArgument =
-                    function.Arguments.FirstOrDefault(a => a.Name == WaveBoundaryCondition.TimeVariableName);
+                IVariable timeArgument = function.Arguments.FirstOrDefault(a => a.Name == WaveBoundaryCondition.TimeVariableName);
                 if (timeArgument?.Values.Count == 0)
                 {
                     yield return new ValidationIssue(null, ValidationSeverity.Error,
@@ -270,6 +267,49 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
         private static bool IsOutsideOfRange(this double value, double lowerLimit, double upperLimit)
         {
             return value - lowerLimit <= -double.Epsilon || value - upperLimit >= double.Epsilon;
+        }
+
+        /// <summary>
+        /// Create a mapping between the point data index and the point data function.
+        /// </summary>
+        /// <param name="boundaryCondition">The <see cref="WaveBoundaryCondition"/> to create the mapping for.</param>
+        /// <returns>A mapping between the index and point data functions in an ascending order by the index.</returns>
+        private static IEnumerable<PointDataFunctionMapping> CreateSortedPointDataFunctionMapping(WaveBoundaryCondition boundaryCondition)
+        {
+            var mapping = new PointDataFunctionMapping[boundaryCondition.PointData.Count];
+            for (var i = 0; i < mapping.Length; i++)
+            {
+                mapping[i] = new PointDataFunctionMapping(boundaryCondition.DataPointIndices[i], boundaryCondition.PointData[i]);
+            }
+
+            return mapping.OrderBy(map => map.PointDataIndex);
+        }
+
+        /// <summary>
+        /// Class to hold the mapping between PointData and its corresponding point index.
+        /// </summary>
+        private class PointDataFunctionMapping
+        {
+            /// <summary>
+            /// Gets the index of the point data.
+            /// </summary>
+            public int PointDataIndex { get; }
+
+            /// <summary>
+            /// Gets the point data function.
+            /// </summary>
+            public IFunction PointDataFunction { get; }
+
+            /// <summary>
+            /// Creates a new instance of <see cref="PointDataFunctionMapping"/>.
+            /// </summary>
+            /// <param name="pointDataIndex">The index of the <paramref name="pointDataFunction"/>.</param>
+            /// <param name="pointDataFunction">The <see cref="IFunction"/> associated with a point data.</param>
+            public PointDataFunctionMapping(int pointDataIndex, IFunction pointDataFunction)
+            {
+                PointDataIndex = pointDataIndex;
+                PointDataFunction = pointDataFunction;
+            }
         }
     }
 }
