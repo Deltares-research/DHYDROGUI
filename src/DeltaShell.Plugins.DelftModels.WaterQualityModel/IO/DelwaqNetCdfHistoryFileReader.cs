@@ -57,7 +57,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             var origins = new int[2];
             var shapes = new int[2];
 
-            DateTime[] timeSteps = NcFileReaderHelper.GetDateTimes(file, timeVariableName).ToArray();
+            DateTime[] timeSteps = NetCdfFileReaderHelper.GetDateTimes(file, timeVariableName).ToArray();
             string[] outputVariableNames = outputVariables.Select(file.GetVariableName).ToArray();
             string[] locationNames = GetLocationNames(file).ToArray();
             int timeStepCount = timeSteps.Length;

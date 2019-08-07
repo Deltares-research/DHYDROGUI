@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using DelftTools.Utils.NetCdf;
-using DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties;
 using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
@@ -11,9 +10,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
     /// <summary>
     /// Helper class for reading WAQ NetCDF files.
     /// </summary>
-    public static class NcFileReaderHelper
+    public static class NetCdfFileReaderHelper
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(NcFileReaderHelper));
+        private static readonly ILog log = LogManager.GetLogger(typeof(NetCdfFileReaderHelper));
 
         /// <summary>
         /// Parses the values of the time variable to <see cref="IEnumerable{DateTime}" />.

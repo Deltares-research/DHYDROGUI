@@ -23,7 +23,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         {
             return DoWithNetCdfFile(path, file =>
             {
-                IEnumerable<DateTime> times = NcFileReaderHelper.GetDateTimes(file, timeVariableName);
+                IEnumerable<DateTime> times = NetCdfFileReaderHelper.GetDateTimes(file, timeVariableName);
                 int nFaces = file.GetDimensionLength(facesDimensionName);
                 Dictionary<string, string> substanceToVariableMapping = SubstanceToVariableMapping(file);
                 int nTimeSteps = file.GetDimensionLength(timeDimensionName);

@@ -8,7 +8,7 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
 {
     [TestFixture]
-    public class NcFileReaderHelperTest
+    public class NetCdfFileReaderHelperTest
     {
         private NetCdfFile netCdfFile;
         private const string timeVariableName = "nhistory_dlwq_time";
@@ -24,7 +24,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         public void GetDateTimes_WithFileNull_ThenThrowsArgumentNullException()
         {
             // Call
-            void Call() => NcFileReaderHelper.GetDateTimes(null, timeVariableName);
+            void Call() => NetCdfFileReaderHelper.GetDateTimes(null, timeVariableName);
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
@@ -36,7 +36,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         public void GetDateTimes_WithTimeVariableNullOrEmpty_ThenThrowsArgumentException(string timeVariableNameArgument)
         {
             // Call
-            void Call() => NcFileReaderHelper.GetDateTimes(netCdfFile, timeVariableNameArgument);
+            void Call() => NetCdfFileReaderHelper.GetDateTimes(netCdfFile, timeVariableNameArgument);
 
             // Assert
             var exception = Assert.Throws<ArgumentException>(Call);
@@ -48,7 +48,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         public void GetDateTimes_FromValidHistoryFile_ThenCorrectDateTimesAreReturned()
         {
             // Call
-            IEnumerable<DateTime> times = NcFileReaderHelper.GetDateTimes(netCdfFile, timeVariableName);
+            IEnumerable<DateTime> times = NetCdfFileReaderHelper.GetDateTimes(netCdfFile, timeVariableName);
 
             // Assert
             Assert.That(times, Is.EqualTo(GetExpectedDateTimes()),
