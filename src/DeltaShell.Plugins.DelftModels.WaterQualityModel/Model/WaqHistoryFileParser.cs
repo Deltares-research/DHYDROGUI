@@ -74,42 +74,49 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
 
             foreach (WaterQualityObservationVariableOutput observationVariableOutput in observationVariableOutputs)
             {
-                int outputVariableCount = observationVariableOutput.TimeSeriesList.Count();
-                DelwaqHisFileData hisFileVariableData = hisFileVariableDataList.FirstOrDefault(
-                    data => data.ObservationVariable == observationVariableOutput.Name
-                            && data.OutputVariables.Length == outputVariableCount);
+                SetDataOnObservationVariableOutput(observationVariableOutput, hisFileVariableDataList);
+            }
+        }
 
-                if (hisFileVariableData == null)
+        private static void SetDataOnObservationVariableOutput(WaterQualityObservationVariableOutput observationVariableOutput,
+                                                               DelwaqHisFileData[] hisFileVariableDataList)
+        {
+            int outputVariableCount = observationVariableOutput.TimeSeriesList.Count();
+
+            DelwaqHisFileData hisFileVariableData = hisFileVariableDataList
+                .FirstOrDefault(data => data.ObservationVariable == observationVariableOutput.Name
+                                        && data.OutputVariables.Length == outputVariableCount);
+
+            if (hisFileVariableData == null)
+            {
+                return;
+            }
+
+            IEnumerable<DateTime> timeSteps = hisFileVariableData.TimeSteps.ToArray();
+            List<List<double>> allValues = observationVariableOutput.TimeSeriesList
+                                                                    .Select(ov => new List<double>())
+                                                                    .ToList();
+
+            // Parse all values on per output variable basis (TODO: Improve performance by parsing the values for the relevant output variables only)
+            foreach (DateTime timeStep in timeSteps)
+            {
+                List<double> timeStepValues = hisFileVariableData.GetValuesForTimeStep(timeStep);
+
+                for (var j = 0; j < outputVariableCount; j++)
                 {
-                    continue;
+                    allValues[j].Add(timeStepValues[j]);
                 }
+            }
 
-                IEnumerable<DateTime> outputTimes = hisFileVariableData.TimeSteps.ToArray();
-                List<List<double>> allValues = observationVariableOutput.TimeSeriesList
-                                                                        .Select(ov => new List<double>())
-                                                                        .ToList();
+            for (var i = 0; i < outputVariableCount; i++)
+            {
+                TimeSeries timeSeries = observationVariableOutput.TimeSeriesList.ElementAt(i);
 
-                // Parse all values on per output variable basis (TODO: Improve performance by parsing the values for the relevant output variables only)
-                foreach (DateTime timeStep in outputTimes)
-                {
-                    List<double> timeStepValues = hisFileVariableData.GetValuesForTimeStep(timeStep);
+                // Add all output times to the output variable time series
+                timeSeries.Time.AddValues(timeSteps);
 
-                    for (var j = 0; j < outputVariableCount; j++)
-                    {
-                        allValues[j].Add(timeStepValues[j]);
-                    }
-                }
-
-                for (var i = 0; i < outputVariableCount; i++)
-                {
-                    TimeSeries timeSeries = observationVariableOutput.TimeSeriesList.ElementAt(i);
-
-                    // Add all output times to the output variable time series
-                    timeSeries.Time.AddValues(outputTimes);
-
-                    // Add the parsed values to the to the output variable time series
-                    observationVariableOutput.TimeSeriesList.ElementAt(i).SetValues(allValues[i]);
-                }
+                // Add the parsed values to the to the output variable time series
+                observationVariableOutput.TimeSeriesList.ElementAt(i).SetValues(allValues[i]);
             }
         }
     }
