@@ -11,14 +11,17 @@ MduGroup,MduName,GUIGroup,Subcategory,Caption,Type,Default,Min,Max,MduOnly,Enabl
 sediment,MorFile,,,,FileName,,,,TRUE,,,,,,Morphology file *mor.nc,
 sediment,SedFile,,,,FileName,,,,TRUE,,,,,,Sediment descriptions file *sed.nc,
 sediment,Sedimentmodelnr,,,,Integer,4,4,4,TRUE,,,,,,#for morpho,
+
 morphology,MorFac,morphology,General,Morphological scale factor,Double,1,1e-36,,FALSE,,,,,,Morphological scale factor,-
 morphology,MorStt,morphology,General,Spin-up before morphological changes,Double,720,0,,FALSE,,,,,,Spin-up interval from TStart till start of morphological changes,s
 morphology,Thresh,morphology,Sediment transport parameters,Threshold sediment thickness,Double,0.05,1e-36,10000,FALSE,,,,,,Threshold sediment thickness for transport and erosion reduction,m
+morphology,SedThr,morphology,General,Minimum depth for sediment computations,Double,0.1,0.0,,FALSE,,,,,,Minimum water depth for sediment computations,m
+morphology,DensIn,morphology,General,Include sediment concentration on density,1|0,0,,,FALSE,,,,,,Include effect of sediment concentration on fluid density,
 morphology,BedUpd,morphology,General,Update bed levels during simulation,0|1,1,,,FALSE,,,,,,Update bed levels during simulation,
 morphology,CmpUpd,morphology,General,Update bed composition during simulation,0|1,1,,,FALSE,,,,,,Update bed composition during simulation,
 morphology,NeuBcMud,morphology,General,Neumann boundaries for mud influx,0|1,0,,,FALSE,,,,,,Use Neumann boundary condition for the concentration of mud fractions at inflow boundaries,
 morphology,NeuBcSand,morphology,General,Neumann boundaries for sand influx,0|1,1,,,FALSE,,,,,,Use Neumann boundary condition for the concentration of sand fractions at inflow boundaries: "equilibrium profile",
-morphology,DensIn,morphology,General,Include sediment concentration on density,1|0,0,,,FALSE,,,,,,Include effect of sediment concentration on fluid density,
+morphology,BcFil,morphology,General,Morphology boundary condition file,String,,,,FALSE,FALSE,,,,,Morphology boundary conditions file,
 
 morphology,ISlope,morphology,Bed load transport,Bed slope formulation: No bed slope|Bagnold formulation|Koch & Flokstra formulation|Parker & Andrews formulation,1|2|3|4,2,1,4,FALSE,,,,,,"Bed slope formulation (1:no bed slope, 2:Bagnold formulation, 3:Koch & Flokstra formulation, 4:Parker & Andrews formulation)",
 morphology,AlfaBs,morphology,Bed load transport,Streamwise bed gradient factor,Double,1,0.0,,FALSE,,ISlope=2|3|4,,,,"Streamwise bed gradient factor for bed load transport (if ISlope>=2)",-
@@ -35,16 +38,10 @@ morphology,IHidExp,morphology,Hiding and exposure formulation,Hiding and exposur
 morphology,ASKLHE,morphology,Hiding and exposure formulation,ASKLHE,Double,1,0.0,,FALSE,,IHidExp=4,,,,"parameter for Parker et al. hiding & exposure formulation (if IHidExp=4)",-
 morphology,MWWJHE,morphology,Hiding and exposure formulation,MWWJHE,Double,1,0.0,,FALSE,,IHidExp=5,,,,"parameter for Wu Wang & Jia hiding & exposure formulation (if IHidExp=5)",-
 
-#morphology,MorUpd,morphology,General,Update bathymetry during FLOW simulation,1|0,0,,,FALSE,,,,,,Update bathymetry during FLOW simulation,
-#morphology,EqmBc,morphology,General,Equilibrium sand concentration profile at inflow boundaries,1|0,0,,,FALSE,,,,,,,
-#morphology,MorFac,morphology,General,Morphological scale factor,Double,0,,,FALSE,,,,,,Morphological scale factor,-
-
 morphology,Espir,morphology,Multiplication (calibration) factors,Effect of secondary flow on bed load direction,Double,0.5,0.0,,FALSE,,,,,,Effect of secondary flow on bed load direction,-
 morphology,Sus,morphology,Multiplication (calibration) factors,Current related reference concentration factor,Double,1,0.0,,FALSE,,,,,,Multiplication factor for suspended sediment reference concentration,-
 morphology,Bed,morphology,Multiplication (calibration) factors,Current related transport vector factor,Double,1,0.0,,FALSE,,,,,,Multiplication factor for bed-load transport vector magnitude,-
 morphology,SusW,morphology,Multiplication (calibration) factors,SusW,Double,1,0.0,,TRUE,,,,,,Wave-related suspended sed. transport factor,-
 morphology,BedW,morphology,Multiplication (calibration) factors,BedW,Double,1,0.0,,TRUE,,,,,,Wave-related bed-load sed. transport factor,-
-morphology,SedThr,morphology,General,Minimum depth for sediment computations,Double,0.1,0.0,,FALSE,,,,,,Minimum water depth for sediment computations,m
-morphology,BcFil,morphology,General,Morphology boundary condition file,String,,,,FALSE,FALSE,,,,,Morphology boundary conditions file,
 morphology,ThetSD,morphology,Multiplication (calibration) factors,Factor for erosion of adjacent dry cells,Double,0.0,0.0,,FALSE,,,,,,Factor for erosion of adjacent dry cells,-
 morphology,HMaxTH,morphology,Multiplication (calibration) factors,HMaxTH,Double,1.5,0.0,,FALSE,,,,,,Max depth for variable THETSD. Set < SEDTHR to use global value only,m
