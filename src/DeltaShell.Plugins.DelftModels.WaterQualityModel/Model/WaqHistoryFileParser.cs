@@ -39,9 +39,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
                                  IList<WaterQualityObservationVariableOutput> observationVariableOutputs,
                                  MonitoringOutputLevel monitoringOutputLevel)
         {
-            if (filePath == null)
+            if (string.IsNullOrEmpty(filePath))
             {
-                throw new ArgumentNullException(nameof(filePath));
+                throw new ArgumentException($"Argument '{nameof(filePath)}' cannot be null or empty.");
             }
 
             if (monitoringOutputLevel == MonitoringOutputLevel.None || observationVariableOutputs == null ||
@@ -50,23 +50,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
                 return; // No HIS file data will be present
             }
 
-            DelwaqHisFileData[] hisFileVariableDataList;
+            DelwaqHisFileData[] hisFileData = ReadHisFileData(filePath);
 
-            string fileExtension = Path.GetExtension(filePath);
-            switch (fileExtension)
-            {
-                case ".nc":
-                    hisFileVariableDataList = DelwaqNetCdfHistoryFileReader.Read(filePath);
-                    break;
-                case ".his":
-                    hisFileVariableDataList = DelwaqHistoryFileReader.Read(filePath);
-                    break;
-                default:
-                    Log.ErrorFormat(Resources.WaqProcessorHelper_ParseHisFileData_Invalid_file_format, filePath);
-                    return;
-            }
-
-            if (!hisFileVariableDataList.Any())
+            if (!hisFileData.Any())
             {
                 Log.ErrorFormat(Resources.WaqProcessorHelper_ParseHisFileData_An_error_occurred_while_reading_file, filePath);
                 return;
@@ -74,7 +60,22 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
 
             foreach (WaterQualityObservationVariableOutput observationVariableOutput in observationVariableOutputs)
             {
-                SetDataOnObservationVariableOutput(observationVariableOutput, hisFileVariableDataList);
+                SetDataOnObservationVariableOutput(observationVariableOutput, hisFileData);
+            }
+        }
+
+        private static DelwaqHisFileData[] ReadHisFileData(string filePath)
+        {
+            string fileExtension = Path.GetExtension(filePath);
+            switch (fileExtension)
+            {
+                case ".nc":
+                    return DelwaqNetCdfHistoryFileReader.Read(filePath);
+                case ".his":
+                    return DelwaqHistoryFileReader.Read(filePath);
+                default:
+                    Log.ErrorFormat(Resources.WaqProcessorHelper_ParseHisFileData_Invalid_file_format, filePath);
+                    return null;
             }
         }
 

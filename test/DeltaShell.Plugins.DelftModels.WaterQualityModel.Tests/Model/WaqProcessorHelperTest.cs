@@ -13,14 +13,20 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
     [TestFixture]
     public class WaqProcessorHelperTest
     {
-        [Test]
-        [ExpectedException(typeof(ArgumentNullException), ExpectedMessage = "Value cannot be null.\r\nParameter name: filePath")]
-        public void ParseHisFileDataThrowsOnNullFilePathParameter()
+        [TestCase(null)]
+        [TestCase("")]
+        public void Parse_WithFilePathNullOrEmpty_ThenThrowsArgumentException(string filePathArgument)
         {
             var waterQualityModel1D = new WaterQualityModel();
-            WaqHistoryFileParser.Parse(null, waterQualityModel1D.ObservationVariableOutputs,waterQualityModel1D.ModelSettings.MonitoringOutputLevel);
+
+            void Call() => WaqHistoryFileParser.Parse(filePathArgument,
+                                                      waterQualityModel1D.ObservationVariableOutputs,
+                                                      waterQualityModel1D.ModelSettings.MonitoringOutputLevel);
+
+            var exception = Assert.Throws<ArgumentException>(Call);
+            Assert.That(exception.Message, Is.EqualTo("Argument 'filePath' cannot be null or empty."));
         }
-        
+
         [Test]
         [Category(TestCategory.DataAccess)]
         public void ParseHisFileDataWithoutSkippingSpecificOutput()

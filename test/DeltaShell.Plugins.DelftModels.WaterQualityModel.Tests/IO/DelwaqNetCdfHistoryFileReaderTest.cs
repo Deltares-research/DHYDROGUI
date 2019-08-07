@@ -10,6 +10,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
     [TestFixture]
     public class DelwaqNetCdfHistoryFileReaderTest
     {
+        [TestCase("")]
+        [TestCase(null)]
+        public void Read_WithFilePathNullOrEmpty_ThenThrowsArgumentException(string filePathArgument)
+        {
+            // Call
+            void Call() => DelwaqNetCdfHistoryFileReader.Read(filePathArgument);
+
+            // Assert
+            var exception = Assert.Throws<ArgumentException>(Call);
+            Assert.That(exception.Message, Is.EqualTo("Argument 'filePath' cannot be null or empty."));
+        }
+
         [Test]
         [Category(TestCategory.DataAccess)]
         public void Read_FromValidNetCdfFile_ThenExpectedHisFileDataIsReturned()

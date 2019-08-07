@@ -30,7 +30,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         {
             if (string.IsNullOrEmpty(filePath))
             {
-                throw new ArgumentException(nameof(filePath));
+                throw new ArgumentException($"Argument '{nameof(filePath)}' cannot be null or empty.");
             }
 
             NetCdfFile netCdfFile = null;
