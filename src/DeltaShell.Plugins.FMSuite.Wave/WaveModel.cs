@@ -998,14 +998,22 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         {
             foreach (WavmFileFunctionStore wavmFileFunctionStore in WavmFunctionStores)
             {
-                string oldPath = wavmFileFunctionStore.Path;
+                string newPath = Path.Combine(targetDirectory, Path.GetFileName(wavmFileFunctionStore.Path));
+                if (wavmFileFunctionStore.Functions.Count == 0)
+                {
+                    if (File.Exists(newPath) && !FileUtils.IsDirectory(newPath))
+                    {
+                        FileUtils.DeleteIfExists(newPath);
+                        wavmFileFunctionStore.Path = string.Empty;
+                    }
+                    continue;
+                }
 
+                string oldPath = wavmFileFunctionStore.Path;
                 if (string.IsNullOrEmpty(oldPath))
                 {
                     continue;
                 }
-
-                string newPath = Path.Combine(targetDirectory, Path.GetFileName(wavmFileFunctionStore.Path));
 
                 if (string.Equals(Path.GetFullPath(oldPath), Path.GetFullPath(newPath),
                                   StringComparison.CurrentCultureIgnoreCase))
@@ -1489,17 +1497,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         private void OnSave()
         {
             ModelSaveTo(mdwFile.MdwFilePath, true);
-
-            foreach (WavmFileFunctionStore store in WavmFunctionStores)
-            {
-                if (store.Functions.Count > 0 || string.IsNullOrEmpty(store.Path) || FileUtils.IsDirectory(store.Path))
-                {
-                    continue;
-                }
-                
-                FileUtils.DeleteIfExists(store.Path);
-                store.Path = string.Empty;
-            }
         }
 
         private void OnCopyTo(string targetMdwFilePath)
