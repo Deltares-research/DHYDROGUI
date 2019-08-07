@@ -527,12 +527,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
 
             // Then
             IEnumerable<ValidationIssue> errors = validationReport.AllErrors;
-            Assert.That(errors.Count(), Is.EqualTo(2), "Validation report should contain two errors.");
+            Assert.That(errors.Count(), Is.AtLeast(2), "Validation report should contain two errors.");
             Assert.That(errors.All(e => e.Severity == ValidationSeverity.Error), Is.True, "All errors must be of severity \"Error\"");
 
-            string expectedMessage = Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition_Boundary_does_not_contain_a_boundary_condition;
-            Assert.That(errors.ElementAt(0).Message, Is.EqualTo($"Point 1: {expectedMessage}"), "First error message does not correspond with expected message.");
-            Assert.That(errors.ElementAt(1).Message, Is.EqualTo($"Point 2: {expectedMessage}"), "Second error message does not correspond with expected message.");
+            // It is assumed that the error messages are located at the start of the errors.
+            Assert.That(errors.ElementAt(0).Message, Is.StringStarting("Point 1: "), "First error message does not start with expected prefix.");
+            Assert.That(errors.ElementAt(1).Message, Is.StringStarting("Point 2: "), "Second error message does not start with expected prefix.");
         }
 
         private static void AddWaveEnergyFunction(WaveBoundaryCondition boundaryCondition, double heightValue, double periodValue, double directionValue, double spreadingValue)
