@@ -10,7 +10,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
     /// <summary>
     /// Reader for reading WAQ history file data from NetCDF files."
     /// </summary>
-    public static class DelwaqNcHisFileReader
+    public static class DelwaqNetCdfHistoryFileReader
     {
         private const string timeVariableName = "nhistory_dlwq_time";
         private const string numberOfStationsDimensionName = "nStations";
@@ -18,7 +18,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         private const string stationNameVariableName = "station_name";
         private const string nameLengthDimensionName = "name_len";
 
-        private static readonly ILog log = LogManager.GetLogger(typeof(DelwaqNcHisFileReader));
+        private static readonly ILog log = LogManager.GetLogger(typeof(DelwaqNetCdfHistoryFileReader));
 
         /// <summary>
         /// Reads <see cref="DelwaqHisFileData" /> objects from a file at the specified <paramref name="filePath"/>.

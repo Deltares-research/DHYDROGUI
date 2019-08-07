@@ -217,14 +217,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         private List<double> GetTimeSeriesData(IVariable function, int locationIndex)
         {
             return isNetCdfFile
-                       ? DelwaqNcMapFileReader.GetTimeSeriesData(path, MetaData, function.Name, locationIndex)
+                       ? DelwaqNetCdfMapFileReader.GetTimeSeriesData(path, MetaData, function.Name, locationIndex)
                        : DelwaqMapFileReader.GetTimeSeriesData(path, MetaData, function.Name, locationIndex);
         }
 
         private List<double> GetTimeStepData(IVariable function, int timeIndex, int locationIndex)
         {
             return isNetCdfFile
-                       ? DelwaqNcMapFileReader.GetTimeStepData(path, MetaData, timeIndex, function.Name, locationIndex)
+                       ? DelwaqNetCdfMapFileReader.GetTimeStepData(path, MetaData, timeIndex, function.Name, locationIndex)
                        : DelwaqMapFileReader.GetTimeStepData(path, MetaData, timeIndex, function.Name, locationIndex);
         }
 
@@ -306,7 +306,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         private bool HasValidMapFile => !string.IsNullOrEmpty(path) && MetaData != null;
 
         private MapFileMetaData MetaData => metaData ?? (metaData = isNetCdfFile
-                                                                        ? DelwaqNcMapFileReader.ReadMetaData(path)
+                                                                        ? DelwaqNetCdfMapFileReader.ReadMetaData(path)
                                                                         : DelwaqMapFileReader.ReadMetaData(path));
 
         private static IMultiDimensionalArray CreateEmptyArrayForType(Type type)

@@ -9,14 +9,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
 {
     // TODO: Move this class to another namespace so that it can be shared by WFDExplorer and WaterQualityModel1D
     [TestFixture]
-    public class DelwaqHisFileReaderTest
+    public class DelwaqHistoryFileReaderTest
     {
         [Test]
         [Category(TestCategory.DataAccess)]
         public void TestHisFileReaderRead()
         {
             var hisFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "IO", "deltashell.his");
-            var delwaqBinaryFileVariableDataList = DelwaqHisFileReader.Read(hisFilePath);
+            var delwaqBinaryFileVariableDataList = DelwaqHistoryFileReader.Read(hisFilePath);
 
             Assert.AreEqual(4, delwaqBinaryFileVariableDataList.Count);
             Assert.AreEqual("O1", delwaqBinaryFileVariableDataList[0].ObservationVariable);
@@ -94,7 +94,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         [Category(TestCategory.DataAccess)]
         public void TestHisFileReaderReadWithNonExistingFile()
         {
-            var delwaqBinaryFileVariableDataList = DelwaqHisFileReader.Read("NonExisting.his");
+            var delwaqBinaryFileVariableDataList = DelwaqHistoryFileReader.Read("NonExisting.his");
 
             Assert.AreEqual(0, delwaqBinaryFileVariableDataList.Count);
         }
@@ -108,7 +108,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             var fileStream = new FileStream(hisFilePath, FileMode.OpenOrCreate);
             fileStream.Close();
 
-            var delwaqBinaryFileVariableDataList = DelwaqHisFileReader.Read(hisFilePath);
+            var delwaqBinaryFileVariableDataList = DelwaqHistoryFileReader.Read(hisFilePath);
 
             Assert.AreEqual(0, delwaqBinaryFileVariableDataList.Count);
 

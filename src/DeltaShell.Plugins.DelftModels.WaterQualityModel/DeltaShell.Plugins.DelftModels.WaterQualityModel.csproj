@@ -77,8 +77,8 @@
     <Compile Include="DataObjects\Model\MonitoringOutputLevel.cs" />
     <Compile Include="DataObjects\NameablePointFeature.cs" />
     <Compile Include="DataObjects\SubstanceProcessLibrary\WaterQualityParameter.cs" />
-    <Compile Include="IO\DelwaqNcHisFileReader.cs" />
-    <Compile Include="IO\DelwaqNcMapFileReader.cs" />
+    <Compile Include="IO\DelwaqNetCdfHistoryFileReader.cs" />
+    <Compile Include="IO\DelwaqNetCdfMapFileReader.cs" />
     <Compile Include="IO\InputFileExporter.cs" />
     <Compile Include="IO\BloomSpeFileReader.cs" />
     <Compile Include="IO\MapFileMetaData.cs" />
@@ -118,7 +118,7 @@
     <Compile Include="IO\ObservationPointImporter.cs" />
     <Compile Include="DataObjects\Model\WaterQualityObservationVariableOutput.cs" />
     <Compile Include="IO\DelwaqHisFileData.cs" />
-    <Compile Include="IO\DelwaqHisFileReader.cs" />
+    <Compile Include="IO\DelwaqHistoryFileReader.cs" />
     <Compile Include="IO\DelwaqMapFileReader.cs" />
     <Compile Include="DataObjects\Model\BalanceUnit.cs" />
     <Compile Include="Model\ConsoleRedirector.cs" />

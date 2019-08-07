@@ -6,7 +6,7 @@ using System.IO;
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 {
     // TODO: Move this class to another namespace so that it can be shared by WFDExplorer and WaterQualityModel1D
-    public static class DelwaqHisFileReader
+    public static class DelwaqHistoryFileReader
     {
         /// <summary>
         /// Reads from <paramref name="delwaqOutputFile" /> and returns a List of <see cref="DelwaqHisFileData" />.

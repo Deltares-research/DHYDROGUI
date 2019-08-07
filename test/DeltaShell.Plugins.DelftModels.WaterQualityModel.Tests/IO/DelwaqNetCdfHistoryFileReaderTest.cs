@@ -8,7 +8,7 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
 {
     [TestFixture]
-    public class DelwaqNcHisFileReaderTest
+    public class DelwaqNetCdfHistoryFileReaderTest
     {
         [Test]
         [Category(TestCategory.DataAccess)]
@@ -18,7 +18,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             string filePath = TestHelper.GetTestFilePath(@"IO\deltashell_his.nc");
 
             // When
-            List<DelwaqHisFileData> hisFileData = DelwaqNcHisFileReader.Read(filePath);
+            List<DelwaqHisFileData> hisFileData = DelwaqNetCdfHistoryFileReader.Read(filePath);
 
             // Then
             Assert.That(hisFileData, Has.Count.EqualTo(1),

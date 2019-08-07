@@ -56,10 +56,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
             switch (fileExtension)
             {
                 case ".nc":
-                    hisFileVariableDataList = DelwaqNcHisFileReader.Read(filePath);
+                    hisFileVariableDataList = DelwaqNetCdfHistoryFileReader.Read(filePath);
                     break;
                 case ".his":
-                    hisFileVariableDataList = DelwaqHisFileReader.Read(filePath);
+                    hisFileVariableDataList = DelwaqHistoryFileReader.Read(filePath);
                     break;
                 default:
                     Log.ErrorFormat(Resources.WaqProcessorHelper_ParseHisFileData_Invalid_file_format, filePath);
