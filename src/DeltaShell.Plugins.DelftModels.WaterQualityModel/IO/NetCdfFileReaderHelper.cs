@@ -12,8 +12,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
     /// </summary>
     public static class NetCdfFileReaderHelper
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(NetCdfFileReaderHelper));
-
         /// <summary>
         /// Parses the values of the time variable to <see cref="IEnumerable{DateTime}" />.
         /// </summary>
