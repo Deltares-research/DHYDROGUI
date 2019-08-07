@@ -9,7 +9,7 @@ using log4net;
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 {
     /// <summary>
-    /// Contains helper methods to read netCDF files from D-Water Quality
+    /// Helper class for reading WAQ NetCDF files.
     /// </summary>
     public static class NcFileReaderHelper
     {
@@ -20,43 +20,43 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         /// </summary>
         /// <param name="file"> The <see cref="NetCdfFile" /> object that is used to read from the file. </param>
         /// <param name="timeVariableName"> Name of the time variable in the file. </param>
-        /// <returns> </returns>
+        /// <returns>The parsed <see cref="DateTime"/> objects.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="file"/> is <c>null</c>.</exception>
         public static IEnumerable<DateTime> GetDateTimes(NetCdfFile file, string timeVariableName)
         {
+            if (file == null)
+            {
+                throw new ArgumentNullException(nameof(file));
+            }
+
+            if (string.IsNullOrEmpty(timeVariableName))
+            {
+                throw new ArgumentException($"Argument '{nameof(timeVariableName)}' cannot be null or empty.");
+            }
+
             NetCdfVariable timeVariable = file.GetVariableByName(timeVariableName);
 
-            DateTime dateTime = ParseReferenceDate(file, timeVariable);
+            DateTime referenceDate = ParseReferenceDate(file, timeVariable);
 
-            return GetTimes(file.Read(timeVariable).Cast<int>(), dateTime);
+            IEnumerable<int> timeVariableValues = file.Read(timeVariable).Cast<int>();
+
+            return GetTimes(timeVariableValues, referenceDate);
         }
 
         private static DateTime ParseReferenceDate(NetCdfFile file, NetCdfVariable timeVariable)
         {
             const string dateTimeFormat = "yyyy-MM-dd hh:mm:ss";
             const string timeReferenceAttributeName = "units";
-            const string secondsSinceStr = "seconds since ";
+            const string secondsSinceString = "seconds since ";
 
             string timeReferenceAttributeValue = file.GetAttributeValue(timeVariable, timeReferenceAttributeName);
 
-            DateTime referenceDate = DateTime.Today;
-            if (!timeReferenceAttributeValue.StartsWith(secondsSinceStr, StringComparison.Ordinal))
-            {
-                return referenceDate;
-            }
-
             string referenceDateString = timeReferenceAttributeValue
-                                         .Substring(secondsSinceStr.Length)
+                                         .Substring(secondsSinceString.Length)
                                          .Substring(0, dateTimeFormat.Length);
 
-            if (!DateTime.TryParseExact(referenceDateString, dateTimeFormat, CultureInfo.InvariantCulture,
-                                        DateTimeStyles.None,
-                                        out referenceDate))
-            {
-                log.Warn(string.Format(Resources.DelwaqNcMapFileReader_Reference_date_could_not_be_parsed,
-                                       referenceDate.ToString(dateTimeFormat), file.Path));
-            }
-
-            return referenceDate;
+            return DateTime.ParseExact(referenceDateString, dateTimeFormat, CultureInfo.InvariantCulture,
+                                       DateTimeStyles.None);
         }
 
         private static IEnumerable<DateTime> GetTimes(IEnumerable<int> timeValues, DateTime referenceDate)

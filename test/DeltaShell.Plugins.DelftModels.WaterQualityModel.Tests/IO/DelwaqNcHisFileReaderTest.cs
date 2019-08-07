@@ -11,12 +11,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
     public class DelwaqNcHisFileReaderTest
     {
         [Test]
-        public void GivenADelwaqNcHisFileReader_WhenReadIsCalled__ThenCorrectHisFileDataIsReturned_()
+        [Category(TestCategory.DataAccess)]
+        public void Read_FromValidNetCdfFile_ThenExpectedHisFileDataIsReturned()
         {
-            const string observationPointName = "Observation Point01";
-            const string salinityVariable = "Salinity";
-            const string eColiVariable = "EColi";
-
             // Given
             string filePath = TestHelper.GetTestFilePath(@"IO\deltashell_his.nc");
 
@@ -27,7 +24,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             Assert.That(hisFileData, Has.Count.EqualTo(1),
                         "One HisFileData was expected to be created, because there was one observation point in the file.");
             DelwaqHisFileData data = hisFileData.Single();
-            Assert.That(data.ObservationVariable, Is.EqualTo(observationPointName),
+            Assert.That(data.ObservationVariable, Is.EqualTo("Observation Point01"),
                         "Observation variable was different than expected.");
             Assert.That(data.TimeSteps, Is.EqualTo(GetExpectedDateTimes()),
                         "Date times were different than expected.");
@@ -36,9 +33,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                         "2 values per time step were expected (one per output variable).");
             Assert.That(valuesPerTimeStep, Is.EqualTo(GetExpectedValues()),
                         "Time series values were different than expected.");
-            Assert.That(data.OutputVariables.First(), Is.EqualTo(salinityVariable),
+            Assert.That(data.OutputVariables.First(), Is.EqualTo("Salinity"),
                         "Output variable was different than expected.");
-            Assert.That(data.OutputVariables.Last(), Is.EqualTo(eColiVariable),
+            Assert.That(data.OutputVariables.Last(), Is.EqualTo("EColi"),
                         "Output variable was different than expected.");
         }
 

@@ -10,17 +10,47 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
     [TestFixture]
     public class NcFileReaderHelperTest
     {
-        [Test]
-        public void GivenANcFileReaderHelper_WhenGetDateTimesIsCalled__ThenCorrectDateTimesAreReturned()
+        private NetCdfFile netCdfFile;
+        private const string timeVariableName = "nhistory_dlwq_time";
+
+        [TestFixtureSetUp]
+        public void SetUp()
         {
-            // Given
-            string filePath = TestHelper.GetTestFilePath(@"IO\deltashell_his.nc");
-            NetCdfFile netCdfFile = NetCdfFile.OpenExisting(filePath);
+            string testFilePath = TestHelper.GetTestFilePath(@"IO\deltashell_his.nc");
+            netCdfFile = NetCdfFile.OpenExisting(testFilePath);
+        }
 
-            // When
-            IEnumerable<DateTime> times = NcFileReaderHelper.GetDateTimes(netCdfFile, "nhistory_dlwq_time");
+        [Test]
+        public void GetDateTimes_WithFileNull_ThenThrowsArgumentNullException()
+        {
+            // Call
+            void Call() => NcFileReaderHelper.GetDateTimes(null, timeVariableName);
 
-            // Then
+            // Assert
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("file"));
+        }
+
+        [TestCase(null)]
+        [TestCase("")]
+        public void GetDateTimes_WithTimeVariableNullOrEmpty_ThenThrowsArgumentException(string timeVariableNameArgument)
+        {
+            // Call
+            void Call() => NcFileReaderHelper.GetDateTimes(netCdfFile, timeVariableNameArgument);
+
+            // Assert
+            var exception = Assert.Throws<ArgumentException>(Call);
+            Assert.That(exception.Message, Is.EqualTo("Argument 'timeVariableName' cannot be null or empty."));
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void GetDateTimes_FromValidHistoryFile_ThenCorrectDateTimesAreReturned()
+        {
+            // Call
+            IEnumerable<DateTime> times = NcFileReaderHelper.GetDateTimes(netCdfFile, timeVariableName);
+
+            // Assert
             Assert.That(times, Is.EqualTo(GetExpectedDateTimes()),
                         "Parsed date times from file were not as expected.");
         }

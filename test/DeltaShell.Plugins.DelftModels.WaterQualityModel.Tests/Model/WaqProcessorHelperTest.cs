@@ -18,7 +18,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
         public void ParseHisFileDataThrowsOnNullFilePathParameter()
         {
             var waterQualityModel1D = new WaterQualityModel();
-            WaqProcessorHelper.ParseHisFileData(null, waterQualityModel1D.ObservationVariableOutputs,waterQualityModel1D.ModelSettings.MonitoringOutputLevel);
+            WaqHistoryFileParser.Parse(null, waterQualityModel1D.ObservationVariableOutputs,waterQualityModel1D.ModelSettings.MonitoringOutputLevel);
         }
         
         [Test]
@@ -32,7 +32,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
 
             string historyFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "IO", "deltashell.his");
 
-            WaqProcessorHelper.ParseHisFileData(historyFilePath, waterQualityModel1D.ObservationVariableOutputs, waterQualityModel1D.ModelSettings.MonitoringOutputLevel);
+            WaqHistoryFileParser.Parse(historyFilePath, waterQualityModel1D.ObservationVariableOutputs, waterQualityModel1D.ModelSettings.MonitoringOutputLevel);
 
             // Output data should be added to "O2" for all output variables
             AssertObservationVariableOutput(waterQualityModel1D, 0, 865, 865, 865, 865, 865);
@@ -45,38 +45,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void ParseHisFileDataWithSkippingSpecificOutput()
-        {
-            var mocks = new MockRepository();
-            var waterQualityModel1D = CreateWaterQualityModel1DStub(mocks);
-
-            mocks.ReplayAll();
-
-            var historyFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "IO", "deltashell.his");
-
-            WaqProcessorHelper.ParseHisFileData(historyFilePath, waterQualityModel1D.ObservationVariableOutputs, waterQualityModel1D.ModelSettings.MonitoringOutputLevel, new List<string> { "ALL SEGMENTS" }, new List<string> { "cTR2", "Continuity" });
-
-            // Output data should be added to "O2" for the output variables "cTR1", "cTR3" and "cTR4"
-            AssertObservationVariableOutput(waterQualityModel1D, 0, 865, 865, 865, 865, 865);
-
-            // No output data should be added to "ALL SEGMENTS"
-            AssertObservationVariableOutput(waterQualityModel1D, 1, 865, 0, 865, 865, 0);
-        }
-
-        [Test]
-        [Category(TestCategory.DataAccess)]
         public void ParseHisFileDataWithIrrelevantObservationPointOutputConfiguration()
         {
             var mocks = new MockRepository();
             var waterQualityModel1D = CreateWaterQualityModel1DStub(mocks);
-
 
             mocks.ReplayAll();
 
             var historyFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "IO", "deltashell.his");
 
             // Monitoring output level "None" => no data should be parsed from the his file
-            WaqProcessorHelper.ParseHisFileData(historyFilePath, waterQualityModel1D.ObservationVariableOutputs, MonitoringOutputLevel.None);
+            WaqHistoryFileParser.Parse(historyFilePath, waterQualityModel1D.ObservationVariableOutputs, MonitoringOutputLevel.None);
 
             // No output data should be added to "O2"
             AssertObservationVariableOutput(waterQualityModel1D, 0, 0, 0, 0, 0, 0);
@@ -85,8 +64,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
             AssertObservationVariableOutput(waterQualityModel1D, 1, 0, 0, 0, 0, 0);
 
             // Monitoring output level "Points" + no observation points => no data should be parsed from the his file
-            WaqProcessorHelper.ParseHisFileData(historyFilePath, waterQualityModel1D.ObservationVariableOutputs.Where(v => v.ObservationVariable != null).ToList(), MonitoringOutputLevel.Points);
-            
+            WaqHistoryFileParser.Parse(historyFilePath, waterQualityModel1D.ObservationVariableOutputs.Where(v => v.ObservationVariable != null).ToList(), MonitoringOutputLevel.Points);
+
             // No output data should be added to "O2"
             AssertObservationVariableOutput(waterQualityModel1D, 0, 0, 0, 0, 0, 0);
 

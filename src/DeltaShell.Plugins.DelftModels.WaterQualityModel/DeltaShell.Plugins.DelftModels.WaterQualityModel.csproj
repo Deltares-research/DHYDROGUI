@@ -127,7 +127,7 @@
     <Compile Include="Model\WaqFileBasedPreProcessor.cs" />
     <Compile Include="Model\WaqFileBasedProcessor.cs" />
     <Compile Include="Model\WaqInitializationSettingsBuilder.cs" />
-    <Compile Include="Model\WaqProcessorHelper.cs" />
+    <Compile Include="Model\WaqHistoryFileParser.cs" />
     <Compile Include="NHibernate\WaterQualityModelDataAccessListener.cs" />
     <Compile Include="ObservationAreas\SetLabelOperation.cs" />
     <Compile Include="ObservationAreas\WaterQualityObservationPoint.cs" />

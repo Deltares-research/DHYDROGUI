@@ -8,11 +8,16 @@ using DelftTools.Utils.IO;
 using DelftTools.Utils.RegularExpressions;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataItemMetaData;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils;
 using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
 {
+    /// <summary>
+    /// Initializes the file paths and prepares the directories before and after running the model.
+    /// </summary>
+    /// <seealso cref="DeltaShell.Plugins.DelftModels.WaterQualityModel.Model.IWaqProcessor" />
     public class WaqFileBasedProcessor : IWaqProcessor
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(WaqFileBasedProcessor));
@@ -28,6 +33,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
 
         public bool TryToCancel { get; set; }
 
+        /// <summary>
+        /// Prepares the working directory before initializing.
+        /// </summary>
+        /// <param name="initializationSettings">Settings used for initialization.</param>
         public void Initialize(WaqInitializationSettings initializationSettings)
         {
             string outputDirectory = initializationSettings.Settings.OutputDirectory;
@@ -41,6 +50,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
             }
         }
 
+        /// <summary>
+        /// Run waq calculation process.
+        /// </summary>
+        /// <param name="initializationSettings">Settings needed to make the run.</param>
+        /// <param name="setProgress">Method to set the progress.</param>
         public void Process(WaqInitializationSettings initializationSettings, Action<double> setProgress)
         {
             var errorMessages = "";
@@ -82,18 +96,25 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
             }
         }
 
-        public void AddOutput(string workDirectory,
+        /// <summary>
+        /// Adds the output generated in <see cref="Process" /> function to the output of the waterQualityModel.
+        /// </summary>
+        /// <param name="outputDirectory">The directory in which the output is generated.</param>
+        /// <param name="observationVariableOutputs">The observation variable outputs of the model. </param>
+        /// <param name="addTextDocument">Action to add the output text document to the model. </param>
+        /// <param name="monitoringOutputLevel">The monitoring output level.</param>
+        public void AddOutput(string outputDirectory,
                               IList<WaterQualityObservationVariableOutput> observationVariableOutputs,
                               Action<ADataItemMetaData, string> addTextDocument,
                               MonitoringOutputLevel monitoringOutputLevel)
         {
-            if (workDirectory == null)
+            if (outputDirectory == null)
             {
-                Log.Error("Could not add output because work directory is empty.");
+                Log.Error(Resources.WaqFileBasedProcessor_AddOutput_work_directory_is_empty);
                 return;
             }
 
-            string filePath = GetExistingHistoryFilePath(workDirectory);
+            string filePath = GetExistingHistoryFilePath(outputDirectory);
             if (filePath == null)
             {
                 return;
@@ -104,7 +125,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
             var stopWatch = new Stopwatch();
             stopWatch.Start();
 
-            WaqProcessorHelper.ParseHisFileData(filePath, observationVariableOutputs, monitoringOutputLevel);
+            WaqHistoryFileParser.Parse(filePath, observationVariableOutputs, monitoringOutputLevel);
 
             stopWatch.Stop();
 
@@ -112,7 +133,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
 
             if (addTextDocument == null)
             {
-                Log.ErrorFormat("Could not read output files : {0}",
+                Log.ErrorFormat(Resources.WaqFileBasedProcessor_AddOutput_Could_not_read_output_files,
                                 string.Join(", ", OutputFiles.Keys.Select(key => key.Name)));
                 return;
             }
@@ -120,21 +141,20 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
             // Read the output files
             foreach (KeyValuePair<ADataItemMetaData, string> outputFile in OutputFiles)
             {
-                addTextDocument(outputFile.Key, Path.Combine(workDirectory, outputFile.Value));
+                addTextDocument(outputFile.Key, Path.Combine(outputDirectory, outputFile.Value));
             }
         }
 
         private static string GetExistingHistoryFilePath(string workDirectory)
         {
-            string filePath;
-            if (File.Exists(filePath = Path.Combine(workDirectory, "deltashell_his.nc")))
+            if (File.Exists(Path.Combine(workDirectory, "deltashell_his.nc")))
             {
-                return filePath;
+                return Path.Combine(workDirectory, "deltashell_his.nc");
             }
 
-            if (File.Exists(filePath = Path.Combine(workDirectory, "deltashell.his")))
+            if (File.Exists(Path.Combine(workDirectory, "deltashell.his")))
             {
-                return filePath;
+                return Path.Combine(workDirectory, "deltashell.his");
             }
 
             return null;
