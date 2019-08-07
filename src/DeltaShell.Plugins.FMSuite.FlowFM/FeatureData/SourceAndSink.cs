@@ -251,7 +251,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
         {
             var function = new Function();
             function.Arguments.Add(
-                new Variable<DateTime>(TimeVariableName) {DefaultValue = DateTime.Now});
+                new Variable<DateTime>(TimeVariableName) {DefaultValue = DateTime.Today});
             function.Components.Add(new Variable<double>(DischargeVariableName)
             {
                 Unit = new Unit(SourceSinkVariableInfo.DischargeUnitDescription,
