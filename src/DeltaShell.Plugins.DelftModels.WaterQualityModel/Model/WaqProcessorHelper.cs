@@ -16,7 +16,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
         /// <summary>
         /// Parses his file data and adds it to WaterQualityModel
         /// </summary>
-        /// <param name="directoryPath"> The directory path of the his file to parse the data from </param>
+        /// <param name="filePath"> The history file path to parse the data from </param>
         /// <param name="monitoringOutputLevel"> The monitoring output level </param>
         /// <param name="observationPointsToSkipOutputVariablesFor">
         /// The observation point outputs to skip the
@@ -38,15 +38,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
         /// <param name="observationVariableOutputs" />
         /// is empty
         /// </remarks>
-        public static void ParseHisFileData(string directoryPath,
+        public static void ParseHisFileData(string filePath,
                                             IList<WaterQualityObservationVariableOutput> observationVariableOutputs,
                                             MonitoringOutputLevel monitoringOutputLevel,
                                             IEnumerable<string> observationPointsToSkipOutputVariablesFor = null,
                                             IEnumerable<string> outputVariablesToSkip = null)
         {
-            if (directoryPath == null)
+            if (filePath == null)
             {
-                throw new ArgumentNullException("directoryPath");
+                throw new ArgumentNullException(nameof(filePath));
             }
 
             if (observationPointsToSkipOutputVariablesFor == null)
@@ -67,12 +67,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
 
             var hisFileVariableDataList = new List<DelwaqHisFileData>();
 
-            string filePath;
-            if (File.Exists(filePath = Path.Combine(directoryPath, "deltashell_his.nc")))
+            string fileExtension = Path.GetExtension(filePath);
+
+            if (fileExtension.Equals(".nc"))
             {
                 hisFileVariableDataList = DelwaqNcHisFileReader.Read(filePath);
             }
-            else if (File.Exists(filePath = Path.Combine(directoryPath, "deltashell.his")))
+            else if (fileExtension.Equals(".his"))
             {
                 hisFileVariableDataList = DelwaqHisFileReader.Read(filePath);
             }
