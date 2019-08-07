@@ -14,13 +14,13 @@ sediment,Sedimentmodelnr,,,,Integer,4,4,4,TRUE,,,,,,#for morpho,
 morphology,MorFac,morphology,General,Morphological scale factor,Double,1,1e-36,,FALSE,,,,,,Morphological scale factor,-
 morphology,MorStt,morphology,General,Spin-up before morphological changes,Double,720,0,,FALSE,,,,,,Spin-up interval from TStart till start of morphological changes,s
 morphology,Thresh,morphology,Sediment transport parameters,Threshold sediment thickness,Double,0.05,1e-36,10000,FALSE,,,,,,Threshold sediment thickness for transport and erosion reduction,m
-morphology,BedUpd,morphology,,Update bathymetry during simulation,0|1,1,,,FALSE,,,,,,Update bed levels during simulation,
-morphology,CmpUpd,morphology,,Update bed composition during simulation,0|1,1,,,FALSE,,,,,,Update bed composition during simulation,
-morphology,NeuBcMud,morphology,,Neumann boundaries for mud influx,0|1,0,,,FALSE,,,,,,Use Neumann boundary condition for the concentration of mud fractions at inflow boundaries,
-morphology,NeuBcSand,morphology,,Neumann boundaries for sand influx,0|1,1,,,FALSE,,,,,,Use Neumann boundary condition for the concentration of sand fractions at inflow boundaries: "equilibrium profile",
+morphology,BedUpd,morphology,General,Update bed levels during simulation,0|1,1,,,FALSE,,,,,,Update bed levels during simulation,
+morphology,CmpUpd,morphology,General,Update bed composition during simulation,0|1,1,,,FALSE,,,,,,Update bed composition during simulation,
+morphology,NeuBcMud,morphology,General,Neumann boundaries for mud influx,0|1,0,,,FALSE,,,,,,Use Neumann boundary condition for the concentration of mud fractions at inflow boundaries,
+morphology,NeuBcSand,morphology,General,Neumann boundaries for sand influx,0|1,1,,,FALSE,,,,,,Use Neumann boundary condition for the concentration of sand fractions at inflow boundaries: "equilibrium profile",
 morphology,DensIn,morphology,General,Include sediment concentration on density,1|0,0,,,FALSE,,,,,,Include effect of sediment concentration on fluid density,
 
-morphology,ISlope,morphology,,Bed slope formulation: No bed slope|Bagnold formulation|Koch & Flokstra formulation|Parker & Andrews formulation,1|2|3|4,2,1,4,FALSE,,,,,,"Bed slope formulation (1:no bed slope, 2:Bagnold formulation, 3:Koch & Flokstra formulation, 4:Parker & Andrews formulation)",
+morphology,ISlope,morphology,Bed load transport,Bed slope formulation: No bed slope|Bagnold formulation|Koch & Flokstra formulation|Parker & Andrews formulation,1|2|3|4,2,1,4,FALSE,,,,,,"Bed slope formulation (1:no bed slope, 2:Bagnold formulation, 3:Koch & Flokstra formulation, 4:Parker & Andrews formulation)",
 morphology,AlfaBs,morphology,Bed load transport,Streamwise bed gradient factor,Double,1,0.0,,FALSE,,ISlope=2|3|4,,,,"Streamwise bed gradient factor for bed load transport (if ISlope>=2)",-
 morphology,AlfaBn,morphology,Bed load transport,Transverse bed gradient factor,Double,1.5,0.0,,FALSE,,ISlope=2,,,,"Transverse bed gradient factor for bed load transport (if ISlope=2)",-
 morphology,Ashld,morphology,Bed load transport,Ashld,Double,0.85,0.0,,FALSE,,ISlope=3,,,,"Bed load transport direction calibration coefficient (if ISlope=3)",-
