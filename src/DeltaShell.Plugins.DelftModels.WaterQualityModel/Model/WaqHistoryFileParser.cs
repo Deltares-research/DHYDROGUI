@@ -50,7 +50,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
                 return; // No HIS file data will be present
             }
 
-            List<DelwaqHisFileData> hisFileVariableDataList;
+            DelwaqHisFileData[] hisFileVariableDataList;
 
             string fileExtension = Path.GetExtension(filePath);
             switch (fileExtension)

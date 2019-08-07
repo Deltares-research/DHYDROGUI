@@ -18,10 +18,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             string filePath = TestHelper.GetTestFilePath(@"IO\deltashell_his.nc");
 
             // When
-            List<DelwaqHisFileData> hisFileData = DelwaqNetCdfHistoryFileReader.Read(filePath);
+            DelwaqHisFileData[] hisFileData = DelwaqNetCdfHistoryFileReader.Read(filePath);
 
             // Then
-            Assert.That(hisFileData, Has.Count.EqualTo(1),
+            Assert.That(hisFileData, Has.Length.EqualTo(1),
                         "One HisFileData was expected to be created, because there was one observation point in the file.");
             DelwaqHisFileData data = hisFileData.Single();
             Assert.That(data.ObservationVariable, Is.EqualTo("Observation Point01"),

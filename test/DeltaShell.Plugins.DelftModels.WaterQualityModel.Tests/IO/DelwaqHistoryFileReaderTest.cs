@@ -18,7 +18,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             var hisFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "IO", "deltashell.his");
             var delwaqBinaryFileVariableDataList = DelwaqHistoryFileReader.Read(hisFilePath);
 
-            Assert.AreEqual(4, delwaqBinaryFileVariableDataList.Count);
+            Assert.AreEqual(4, delwaqBinaryFileVariableDataList.Length);
             Assert.AreEqual("O1", delwaqBinaryFileVariableDataList[0].ObservationVariable);
             Assert.AreEqual("O2", delwaqBinaryFileVariableDataList[1].ObservationVariable);
             Assert.AreEqual("O3", delwaqBinaryFileVariableDataList[2].ObservationVariable);
@@ -96,7 +96,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         {
             var delwaqBinaryFileVariableDataList = DelwaqHistoryFileReader.Read("NonExisting.his");
 
-            Assert.AreEqual(0, delwaqBinaryFileVariableDataList.Count);
+            Assert.AreEqual(0, delwaqBinaryFileVariableDataList.Length);
         }
 
         [Test]
@@ -110,7 +110,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
 
             var delwaqBinaryFileVariableDataList = DelwaqHistoryFileReader.Read(hisFilePath);
 
-            Assert.AreEqual(0, delwaqBinaryFileVariableDataList.Count);
+            Assert.AreEqual(0, delwaqBinaryFileVariableDataList.Length);
 
             File.Delete(hisFilePath);
         }

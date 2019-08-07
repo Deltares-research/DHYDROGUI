@@ -26,7 +26,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         /// <param name="filePath"> The file path. </param>
         /// <returns>The read <see cref="DelwaqHisFileData" /> objects.</returns>
         /// <exception cref="ArgumentException"> Thrown when <paramref name="filePath"/> is <c>null</c> or empty.</exception>
-        public static List<DelwaqHisFileData> Read(string filePath)
+        public static DelwaqHisFileData[] Read(string filePath)
         {
             if (string.IsNullOrEmpty(filePath))
             {
@@ -37,12 +37,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             try
             {
                 netCdfFile = NetCdfFile.OpenExisting(filePath);
-                return Read(netCdfFile).ToList();
+                return Read(netCdfFile).ToArray();
             }
             catch (FileNotFoundException)
             {
                 log.Error($"File was not found: {filePath}.");
-                return new List<DelwaqHisFileData>();
+                return new DelwaqHisFileData[0];
             }
             finally
             {

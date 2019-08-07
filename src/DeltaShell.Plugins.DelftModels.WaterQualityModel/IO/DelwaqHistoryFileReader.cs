@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 
@@ -16,21 +15,22 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         /// Returns an empty List if file does not exist or is emtpy.
         /// Otherwise returns a list of <see cref="DelwaqHisFileData" />.
         /// </returns>
-        public static List<DelwaqHisFileData> Read(string delwaqOutputFile)
+        public static DelwaqHisFileData[] Read(string delwaqOutputFile)
         {
             BinaryReader reader = null;
-            var result = new List<DelwaqHisFileData>();
+
+            DelwaqHisFileData[] result;
 
             // Check whether the output file exits or not
             if (!File.Exists(delwaqOutputFile))
             {
-                return result;
+                return new DelwaqHisFileData[0];
             }
 
             // Check whether the output file is empty or not
             if (new FileInfo(delwaqOutputFile).Length == 0)
             {
-                return result;
+                return new DelwaqHisFileData[0];
             }
 
             try
@@ -46,7 +46,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                 // Read the number of output variables (substances and output parameters) and observation variables
                 int numberOfOutputVariables = reader.ReadInt32();
                 int numberOfObservationVariables = reader.ReadInt32();
-
+                result = new DelwaqHisFileData[numberOfObservationVariables];
                 // Read all output parameter names
                 var outputVariables = new string[numberOfOutputVariables];
                 for (var i = 0; i < numberOfOutputVariables; i++)
@@ -61,7 +61,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                     {
                         reader.ReadInt32(); // Skip the variable number
                         string observationVariable = new string(reader.ReadChars(20)).Trim(' ');
-                        result.Add(new DelwaqHisFileData(observationVariable) {OutputVariables = outputVariables});
+                        result[i] = new DelwaqHisFileData(observationVariable) {OutputVariables = outputVariables};
                     }
                 }
 
