@@ -93,12 +93,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
                 return;
             }
 
+            string filePath = GetExistingHistoryFilePath(workDirectory);
+            if (filePath == null)
+            {
+                return;
+            }
+
             Log.Debug("Started parsing history file.");
 
             var stopWatch = new Stopwatch();
             stopWatch.Start();
 
-            WaqProcessorHelper.ParseHisFileData(workDirectory, observationVariableOutputs, monitoringOutputLevel);
+            WaqProcessorHelper.ParseHisFileData(filePath, observationVariableOutputs, monitoringOutputLevel);
 
             stopWatch.Stop();
 
@@ -116,6 +122,22 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
             {
                 addTextDocument(outputFile.Key, Path.Combine(workDirectory, outputFile.Value));
             }
+        }
+
+        private static string GetExistingHistoryFilePath(string workDirectory)
+        {
+            string filePath;
+            if (File.Exists(filePath = Path.Combine(workDirectory, "deltashell_his.nc")))
+            {
+                return filePath;
+            }
+
+            if (File.Exists(filePath = Path.Combine(workDirectory, "deltashell.his")))
+            {
+                return filePath;
+            }
+
+            return null;
         }
 
         private static double ParseProgressText(string progressString)
