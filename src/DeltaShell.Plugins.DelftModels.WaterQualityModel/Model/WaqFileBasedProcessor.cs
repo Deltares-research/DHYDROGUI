@@ -114,22 +114,20 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
                 return;
             }
 
-            string filePath = GetExistingHistoryFilePath(outputDirectory);
-            if (filePath == null)
+            string hisFilePath = GetExistingHistoryFilePath(outputDirectory);
+            if (hisFilePath != null)
             {
-                return;
+                Log.Debug("Started parsing history file.");
+
+                var stopWatch = new Stopwatch();
+                stopWatch.Start();
+
+                WaqHistoryFileParser.Parse(hisFilePath, observationVariableOutputs, monitoringOutputLevel);
+
+                stopWatch.Stop();
+
+                Log.DebugFormat("Done parsing history file. (Took {0})", stopWatch.Elapsed);
             }
-
-            Log.Debug("Started parsing history file.");
-
-            var stopWatch = new Stopwatch();
-            stopWatch.Start();
-
-            WaqHistoryFileParser.Parse(filePath, observationVariableOutputs, monitoringOutputLevel);
-
-            stopWatch.Stop();
-
-            Log.DebugFormat("Done parsing history file. (Took {0})", stopWatch.Elapsed);
 
             if (addTextDocument == null)
             {
