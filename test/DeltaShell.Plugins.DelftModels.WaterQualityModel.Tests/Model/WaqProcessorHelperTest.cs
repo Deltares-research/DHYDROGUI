@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
         }
         
         [Test]
-        [Category(TestCategory.Integration)]
+        [Category(TestCategory.DataAccess)]
         public void ParseHisFileDataWithoutSkippingSpecificOutput()
         {
             var mocks = new MockRepository();
@@ -30,10 +30,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
 
             mocks.ReplayAll();
 
-            var directoryPath = Path.Combine(TestHelper.GetTestDataDirectory(), "IO");
+            string historyFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "IO", "deltashell.his");
 
-            WaqProcessorHelper.ParseHisFileData(directoryPath, waterQualityModel1D.ObservationVariableOutputs, waterQualityModel1D.ModelSettings.MonitoringOutputLevel);
-            
+            WaqProcessorHelper.ParseHisFileData(historyFilePath, waterQualityModel1D.ObservationVariableOutputs, waterQualityModel1D.ModelSettings.MonitoringOutputLevel);
+
             // Output data should be added to "O2" for all output variables
             AssertObservationVariableOutput(waterQualityModel1D, 0, 865, 865, 865, 865, 865);
 
@@ -44,7 +44,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
         }
 
         [Test]
-        [Category(TestCategory.Integration)]
+        [Category(TestCategory.DataAccess)]
         public void ParseHisFileDataWithSkippingSpecificOutput()
         {
             var mocks = new MockRepository();
@@ -52,9 +52,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
 
             mocks.ReplayAll();
 
-            var directoryPath = Path.Combine(TestHelper.GetTestDataDirectory(), "IO");
+            var historyFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "IO", "deltashell.his");
 
-            WaqProcessorHelper.ParseHisFileData(directoryPath, waterQualityModel1D.ObservationVariableOutputs, waterQualityModel1D.ModelSettings.MonitoringOutputLevel, new List<string> { "ALL SEGMENTS" }, new List<string> { "cTR2", "Continuity" });
+            WaqProcessorHelper.ParseHisFileData(historyFilePath, waterQualityModel1D.ObservationVariableOutputs, waterQualityModel1D.ModelSettings.MonitoringOutputLevel, new List<string> { "ALL SEGMENTS" }, new List<string> { "cTR2", "Continuity" });
 
             // Output data should be added to "O2" for the output variables "cTR1", "cTR3" and "cTR4"
             AssertObservationVariableOutput(waterQualityModel1D, 0, 865, 865, 865, 865, 865);
@@ -64,7 +64,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
         }
 
         [Test]
-        [Category(TestCategory.Integration)]
+        [Category(TestCategory.DataAccess)]
         public void ParseHisFileDataWithIrrelevantObservationPointOutputConfiguration()
         {
             var mocks = new MockRepository();
@@ -73,10 +73,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
 
             mocks.ReplayAll();
 
-            var directoryPath = Path.Combine(TestHelper.GetTestDataDirectory(), "IO");
+            var historyFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "IO", "deltashell.his");
 
             // Monitoring output level "None" => no data should be parsed from the his file
-            WaqProcessorHelper.ParseHisFileData(directoryPath, waterQualityModel1D.ObservationVariableOutputs, MonitoringOutputLevel.None);
+            WaqProcessorHelper.ParseHisFileData(historyFilePath, waterQualityModel1D.ObservationVariableOutputs, MonitoringOutputLevel.None);
 
             // No output data should be added to "O2"
             AssertObservationVariableOutput(waterQualityModel1D, 0, 0, 0, 0, 0, 0);
@@ -85,7 +85,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
             AssertObservationVariableOutput(waterQualityModel1D, 1, 0, 0, 0, 0, 0);
 
             // Monitoring output level "Points" + no observation points => no data should be parsed from the his file
-            WaqProcessorHelper.ParseHisFileData(directoryPath, waterQualityModel1D.ObservationVariableOutputs.Where(v => v.ObservationVariable != null).ToList(), MonitoringOutputLevel.Points);
+            WaqProcessorHelper.ParseHisFileData(historyFilePath, waterQualityModel1D.ObservationVariableOutputs.Where(v => v.ObservationVariable != null).ToList(), MonitoringOutputLevel.Points);
             
             // No output data should be added to "O2"
             AssertObservationVariableOutput(waterQualityModel1D, 0, 0, 0, 0, 0, 0);
