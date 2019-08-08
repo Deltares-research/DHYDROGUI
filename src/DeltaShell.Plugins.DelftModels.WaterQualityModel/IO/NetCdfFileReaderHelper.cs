@@ -19,6 +19,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         /// <param name="timeVariableName"> Name of the time variable in the file. </param>
         /// <returns>The parsed <see cref="DateTime"/> objects.</returns>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="file"/> is <c>null</c>.</exception>
+        /// <exception cref="ArgumentException">Thrown when <paramref name="timeVariableName"/> is <c>null</c> or empty.</exception>
+        /// <exception cref="PropertyNotFoundInFileException">Thrown when <paramref name="timeVariableName"/> cannot be found in file.</exception>
         public static IEnumerable<DateTime> GetDateTimes(NetCdfFile file, string timeVariableName)
         {
             if (file == null)

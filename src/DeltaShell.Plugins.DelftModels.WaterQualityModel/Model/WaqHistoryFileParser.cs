@@ -51,7 +51,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
             }
 
             DelwaqHisFileData[] hisFileData = ReadHisFileData(filePath);
-
             if (!hisFileData.Any())
             {
                 Log.ErrorFormat(Resources.WaqProcessorHelper_ParseHisFileData_An_error_occurred_while_reading_file, filePath);
@@ -75,7 +74,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
                     return DelwaqHistoryFileReader.Read(filePath);
                 default:
                     Log.ErrorFormat(Resources.WaqProcessorHelper_ParseHisFileData_Invalid_file_format, filePath);
-                    return null;
+                    return new DelwaqHisFileData[0];
             }
         }
 

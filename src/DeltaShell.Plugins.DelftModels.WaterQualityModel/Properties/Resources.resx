@@ -668,4 +668,10 @@ INCLUDE 'includes_deltashell/B8_initials.inc'       ; From UI: Initials
   <data name="WaqProcessorHelper_ParseHisFileData_An_error_occurred_while_reading_file" xml:space="preserve">
     <value>An error occurred while reading file {0}: check the textual output files for more information.</value>
   </data>
+  <data name="DelwaqNetCdfHistoryFileReader_Read_Time_variable_not_found" xml:space="preserve">
+    <value>Time series data could not be read because variable '{0}' was not found in file {1}.</value>
+  </data>
+  <data name="DelwaqNetCdfHistoryFileReader_Read_History_file_not_found" xml:space="preserve">
+    <value>History file was not found at {0}.</value>
+  </data>
 </root>

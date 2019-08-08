@@ -91,6 +91,24 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to History file was not found at {0}..
+        /// </summary>
+        public static string DelwaqNetCdfHistoryFileReader_Read_History_file_not_found {
+            get {
+                return ResourceManager.GetString("DelwaqNetCdfHistoryFileReader_Read_History_file_not_found", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Time series data could not be read because variable &apos;{0}&apos; was not found in file {1}..
+        /// </summary>
+        public static string DelwaqNetCdfHistoryFileReader_Read_Time_variable_not_found {
+            get {
+                return ResourceManager.GetString("DelwaqNetCdfHistoryFileReader_Read_Time_variable_not_found", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap hydFile {

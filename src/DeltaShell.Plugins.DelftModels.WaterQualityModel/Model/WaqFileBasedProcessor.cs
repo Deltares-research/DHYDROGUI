@@ -115,7 +115,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
             }
 
             string hisFilePath = GetExistingHistoryFilePath(outputDirectory);
-            if (hisFilePath != null)
+            if (!string.IsNullOrEmpty(hisFilePath))
             {
                 Log.Debug("Started parsing history file.");
 
