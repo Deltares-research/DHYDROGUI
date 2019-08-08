@@ -4,30 +4,59 @@ using System.Linq;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
 using NUnit.Framework;
+using log4net.Core;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
 {
     [TestFixture]
-    public class DelwaqNcHisFileReaderTest
+    public class DelwaqNetCdfHistoryFileReaderTest
     {
-        [Test]
-        public void GivenADelwaqNcHisFileReader_WhenReadIsCalled__ThenCorrectHisFileDataIsReturned_()
+        [TestCase("")]
+        [TestCase(null)]
+        public void Read_WithFilePathNullOrEmpty_ThenThrowsArgumentException(string filePathArgument)
         {
-            const string observationPointName = "Observation Point01";
-            const string salinityVariable = "Salinity";
-            const string eColiVariable = "EColi";
+            // Call
+            void Call() => DelwaqNetCdfHistoryFileReader.Read(filePathArgument);
 
+            // Assert
+            var exception = Assert.Throws<ArgumentException>(Call);
+            Assert.That(exception.Message, Is.EqualTo("Argument 'filePath' cannot be null or empty."));
+        }
+
+        [Test]
+        public void Read_WithFilePathNotExisting_ThenThrowsArgumentException()
+        {
+            const string invalidPath = "no_exist";
+
+            // Call
+            DelwaqHisFileData[] Call() => DelwaqNetCdfHistoryFileReader.Read(invalidPath);
+
+            // Assert
+            DelwaqHisFileData[] data = {};
+            IEnumerable<string> errorsMessages = TestHelper.GetAllRenderedMessages(
+                () => data = Call(),
+                Level.Error);
+
+            Assert.That(data, Is.Empty);
+            Assert.That(errorsMessages, Has.Count.EqualTo(1));
+            Assert.That(errorsMessages.Single(), Is.EqualTo($"History file was not found at {invalidPath}."));
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void Read_FromValidNetCdfFile_ThenExpectedHisFileDataIsReturned()
+        {
             // Given
             string filePath = TestHelper.GetTestFilePath(@"IO\deltashell_his.nc");
 
             // When
-            List<DelwaqHisFileData> hisFileData = DelwaqNcHisFileReader.Read(filePath);
+            DelwaqHisFileData[] hisFileData = DelwaqNetCdfHistoryFileReader.Read(filePath);
 
             // Then
-            Assert.That(hisFileData, Has.Count.EqualTo(1),
+            Assert.That(hisFileData, Has.Length.EqualTo(1),
                         "One HisFileData was expected to be created, because there was one observation point in the file.");
             DelwaqHisFileData data = hisFileData.Single();
-            Assert.That(data.ObservationVariable, Is.EqualTo(observationPointName),
+            Assert.That(data.ObservationVariable, Is.EqualTo("Observation Point01"),
                         "Observation variable was different than expected.");
             Assert.That(data.TimeSteps, Is.EqualTo(GetExpectedDateTimes()),
                         "Date times were different than expected.");
@@ -36,9 +65,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                         "2 values per time step were expected (one per output variable).");
             Assert.That(valuesPerTimeStep, Is.EqualTo(GetExpectedValues()),
                         "Time series values were different than expected.");
-            Assert.That(data.OutputVariables.First(), Is.EqualTo(salinityVariable),
+            Assert.That(data.OutputVariables.First(), Is.EqualTo("Salinity"),
                         "Output variable was different than expected.");
-            Assert.That(data.OutputVariables.Last(), Is.EqualTo(eColiVariable),
+            Assert.That(data.OutputVariables.Last(), Is.EqualTo("EColi"),
                         "Output variable was different than expected.");
         }
 

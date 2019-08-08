@@ -311,14 +311,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 
                 Assert.AreEqual(2, snappedGeometries.Count, ErrorMessageMissingSnappedGeometriesPointSource);
 
-                Assert.AreEqual(1, snappedGeometries[0].Coordinates.Length, ErrorMessageAmountOfCoordinatesPointSource);
+                Assert.AreEqual(0, snappedGeometries[0].Coordinates.Length, ErrorMessageAmountOfCoordinatesPointSource);
                 // The geometries should be not the same, since the original geometries will be returned in case of errors.
-                Assert.AreNotEqual(geometries[0].Coordinates[0].X, snappedGeometries[0].Coordinates[0].X, ErrorMessageEqualGeometriesPointSource);
-                Assert.AreNotEqual(geometries[0].Coordinates[0].Y, snappedGeometries[0].Coordinates[0].Y, ErrorMessageEqualGeometriesPointSource);
-
-                Assert.AreEqual(2450, snappedGeometries[0].Coordinates[0].X, ErrorMessageDifferentGeometryValuesPointSource);
-                Assert.AreEqual(2450, snappedGeometries[0].Coordinates[0].Y, ErrorMessageDifferentGeometryValuesPointSource);
-
+               
                 Assert.AreEqual(1, snappedGeometries[1].Coordinates.Length, ErrorMessageAmountOfCoordinatesPointSource);
                 Assert.AreNotEqual(geometries[1].Coordinates[0].X, snappedGeometries[1].Coordinates[0].X, ErrorMessageEqualGeometriesPointSource);
                 Assert.AreNotEqual(geometries[1].Coordinates[0].Y, snappedGeometries[1].Coordinates[0].Y, ErrorMessageEqualGeometriesPointSource);
@@ -430,6 +425,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
 
                 var api = new UnstrucGridOperationApi(model, false);
                 
+                // Source and sink with source and sink outside grid
+                var sourceAndSink0Geometry = new LineString(new[]
+                {
+                    new Coordinate(-500, -500, 0),
+                    new Coordinate(-600, -600, 0)
+                });
+
                 // Source and sink with source outside grid
                 var sourceAndSink1Geometry = new LineString(new[]
                 {
@@ -446,6 +448,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
 
                 var geometries = new List<IGeometry>
                 {
+                    sourceAndSink0Geometry,
                     sourceAndSink1Geometry,
                     sourceAndSink2Geometry
                 };
@@ -454,22 +457,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
 
                 var snappedGeometries = api.GetGridSnappedGeometry(featureType, geometries).ToList();
 
-                Assert.AreEqual(2, snappedGeometries.Count, ErrorMessageMissingSnappedGeometriesSourceAndSink);
-                                
+                Assert.AreEqual(3, snappedGeometries.Count, ErrorMessageMissingSnappedGeometriesSourceAndSink);
+
                 // The geometries should be not the same, since the original geometries will be returned in case of errors.
-                Assert.AreEqual(1, snappedGeometries[0].Coordinates.Length, ErrorMessageAmountOfCoordinatesSourceAndSink);
-                Assert.AreNotEqual(geometries[0].Coordinates[1].X, snappedGeometries[0].Coordinates[0].X, ErrorMessageEqualGeometriesSourceAndSink);
-                Assert.AreNotEqual(geometries[0].Coordinates[1].Y, snappedGeometries[0].Coordinates[0].Y, ErrorMessageEqualGeometriesSourceAndSink);
-                
-                Assert.AreEqual(2050, snappedGeometries[0].Coordinates[0].X, ErrorMessageDifferentGeometryValuesSourceAndSink);
-                Assert.AreEqual(2050, snappedGeometries[0].Coordinates[0].Y, ErrorMessageDifferentGeometryValuesSourceAndSink);
+                Assert.AreEqual(0, snappedGeometries[0].Coordinates.Length, ErrorMessageAmountOfCoordinatesSourceAndSink);
 
                 Assert.AreEqual(1, snappedGeometries[1].Coordinates.Length, ErrorMessageAmountOfCoordinatesSourceAndSink);
-                Assert.AreNotEqual(geometries[1].Coordinates[0].X, snappedGeometries[1].Coordinates[0].X, ErrorMessageEqualGeometriesSourceAndSink);
-                Assert.AreNotEqual(geometries[1].Coordinates[0].Y, snappedGeometries[1].Coordinates[0].Y, ErrorMessageEqualGeometriesSourceAndSink);
+                Assert.AreNotEqual(geometries[1].Coordinates[1].X, snappedGeometries[1].Coordinates[0].X, ErrorMessageEqualGeometriesSourceAndSink);
+                Assert.AreNotEqual(geometries[1].Coordinates[1].Y, snappedGeometries[1].Coordinates[0].Y, ErrorMessageEqualGeometriesSourceAndSink);
+                
+                Assert.AreEqual(2050, snappedGeometries[1].Coordinates[0].X, ErrorMessageDifferentGeometryValuesSourceAndSink);
+                Assert.AreEqual(2050, snappedGeometries[1].Coordinates[0].Y, ErrorMessageDifferentGeometryValuesSourceAndSink);
+
+                Assert.AreEqual(1, snappedGeometries[1].Coordinates.Length, ErrorMessageAmountOfCoordinatesSourceAndSink);
+                Assert.AreNotEqual(geometries[2].Coordinates[0].X, snappedGeometries[2].Coordinates[0].X, ErrorMessageEqualGeometriesSourceAndSink);
+                Assert.AreNotEqual(geometries[2].Coordinates[0].Y, snappedGeometries[2].Coordinates[0].Y, ErrorMessageEqualGeometriesSourceAndSink);
                
-                Assert.AreEqual(1950, snappedGeometries[1].Coordinates[0].X, ErrorMessageDifferentGeometryValuesSourceAndSink);
-                Assert.AreEqual(1950, snappedGeometries[1].Coordinates[0].Y, ErrorMessageDifferentGeometryValuesSourceAndSink);
+                Assert.AreEqual(1950, snappedGeometries[2].Coordinates[0].X, ErrorMessageDifferentGeometryValuesSourceAndSink);
+                Assert.AreEqual(1950, snappedGeometries[2].Coordinates[0].Y, ErrorMessageDifferentGeometryValuesSourceAndSink);
             }
             finally
             {

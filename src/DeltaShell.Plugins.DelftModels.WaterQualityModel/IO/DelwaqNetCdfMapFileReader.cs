@@ -8,7 +8,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
     /// <summary>
     /// A map file reader designed for NetCdf files (_map.nc) created by D-Water Quality.
     /// </summary>
-    public static class DelwaqNcMapFileReader
+    public static class DelwaqNetCdfMapFileReader
     {
         private const string timeVariableName = "nmesh2d_dlwq_time";
         private const string timeDimensionName = "nmesh2d_dlwq_time";
@@ -23,7 +23,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         {
             return DoWithNetCdfFile(path, file =>
             {
-                IEnumerable<DateTime> times = NcFileReaderHelper.GetDateTimes(file, timeVariableName);
+                IEnumerable<DateTime> times = NetCdfFileReaderHelper.GetDateTimes(file, timeVariableName);
                 int nFaces = file.GetDimensionLength(facesDimensionName);
                 Dictionary<string, string> substanceToVariableMapping = SubstanceToVariableMapping(file);
                 int nTimeSteps = file.GetDimensionLength(timeDimensionName);

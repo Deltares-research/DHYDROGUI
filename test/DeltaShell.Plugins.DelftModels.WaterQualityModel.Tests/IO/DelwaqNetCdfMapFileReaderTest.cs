@@ -9,7 +9,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
 {
     [TestFixture]
     [Category(TestCategory.DataAccess)]
-    public class DelwaqNcMapFileReaderTest
+    public class DelwaqNetCdfMapFileReaderTest
     {
         private string path;
         private const string salinityName = "Salinity";
@@ -26,7 +26,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         public void GivenADelwaqNcMapFileReader_WhenReadMetaDataIsCalled_ThenCorrectMetaDataIsCreated()
         {
             // When
-            MapFileMetaData metaData = DelwaqNcMapFileReader.ReadMetaData(path);
+            MapFileMetaData metaData = DelwaqNetCdfMapFileReader.ReadMetaData(path);
 
             // Then
             ValidateCounts(metaData);
@@ -46,7 +46,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             MapFileMetaData metaData = CreateMapFileMetaData();
 
             // When
-            List<double> timeStepData = DelwaqNcMapFileReader.GetTimeStepData(path,
+            List<double> timeStepData = DelwaqNetCdfMapFileReader.GetTimeStepData(path,
                                                                               metaData,
                                                                               timeStepIndex,
                                                                               salinityName);
@@ -88,7 +88,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             MapFileMetaData metaData = CreateMapFileMetaData();
 
             // When
-            List<double> timeStepData = DelwaqNcMapFileReader.GetTimeStepData(path,
+            List<double> timeStepData = DelwaqNetCdfMapFileReader.GetTimeStepData(path,
                                                                               metaData,
                                                                               timeStepIndex,
                                                                               salinityName,
@@ -106,7 +106,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             MapFileMetaData metaData = CreateMapFileMetaData();
 
             // When
-            List<double> timeSeriesData = DelwaqNcMapFileReader.GetTimeSeriesData(path,
+            List<double> timeSeriesData = DelwaqNetCdfMapFileReader.GetTimeSeriesData(path,
                                                                                   metaData,
                                                                                   salinityName,
                                                                                   6);
@@ -135,7 +135,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             metaData.SubstancesMapping.Clear();
 
             // When
-            List<double> data = DelwaqNcMapFileReader.GetTimeSeriesData(path,
+            List<double> data = DelwaqNetCdfMapFileReader.GetTimeSeriesData(path,
                                                                         metaData,
                                                                         salinityName,
                                                                         metaData.NumberOfTimeSteps - 1);
@@ -153,7 +153,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             metaData.SubstancesMapping.Clear();
 
             // When
-            List<double> data = DelwaqNcMapFileReader.GetTimeStepData(path,
+            List<double> data = DelwaqNetCdfMapFileReader.GetTimeStepData(path,
                                                                       metaData,
                                                                       metaData.NumberOfTimeSteps - 1,
                                                                       salinityName);

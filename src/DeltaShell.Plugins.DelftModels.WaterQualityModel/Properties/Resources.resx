@@ -653,10 +653,25 @@ INCLUDE 'includes_deltashell/B8_initials.inc'       ; From UI: Initials
   <data name="LazyMapFileFunctionStore_GetArgumentValues_Filters_of_type___0___can_only_filter_on_functions_with_value_type___1___" xml:space="preserve">
     <value>Filters of type &lt;{0}&gt; can only filter on functions with value type &lt;{1}&gt;.</value>
   </data>
-  <data name="DelwaqNcMapFileReader_Reference_date_could_not_be_parsed" xml:space="preserve">
-    <value>Reference date is set to {0} because format could not be parsed from file {1}.</value>
-  </data>
   <data name="WaterQualityModel_OnClearOutput_Could_not_remove_output_item___0____because_of_the_following_reason__1__2" xml:space="preserve">
     <value>Could not remove output item '{0}', because of the following reason:{1}{2}</value>
+  </data>
+  <data name="WaqFileBasedProcessor_AddOutput_work_directory_is_empty" xml:space="preserve">
+    <value>Could not add output because work directory is empty.</value>
+  </data>
+  <data name="WaqFileBasedProcessor_AddOutput_Could_not_read_output_files" xml:space="preserve">
+    <value>Could not read output files : {0}</value>
+  </data>
+  <data name="WaqProcessorHelper_ParseHisFileData_Invalid_file_format" xml:space="preserve">
+    <value>File is not recognized as a valid format for history files: {0}</value>
+  </data>
+  <data name="WaqProcessorHelper_ParseHisFileData_An_error_occurred_while_reading_file" xml:space="preserve">
+    <value>An error occurred while reading file {0}: check the textual output files for more information.</value>
+  </data>
+  <data name="DelwaqNetCdfHistoryFileReader_Read_Time_variable_not_found" xml:space="preserve">
+    <value>Time series data could not be read because variable '{0}' was not found in file {1}.</value>
+  </data>
+  <data name="DelwaqNetCdfHistoryFileReader_Read_History_file_not_found" xml:space="preserve">
+    <value>History file was not found at {0}.</value>
   </data>
 </root>
