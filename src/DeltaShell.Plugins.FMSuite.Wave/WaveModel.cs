@@ -998,37 +998,28 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         {
             foreach (WavmFileFunctionStore wavmFileFunctionStore in WavmFunctionStores)
             {
-                string newPath = Path.Combine(targetDirectory, Path.GetFileName(wavmFileFunctionStore.Path));
+                string newOutputFilePath = Path.Combine(targetDirectory, Path.GetFileName(wavmFileFunctionStore.Path));
                 if (wavmFileFunctionStore.Functions.Count == 0)
                 {
-                    if (File.Exists(newPath) && !FileUtils.IsDirectory(newPath))
+                    if (File.Exists(newOutputFilePath) && !FileUtils.IsDirectory(newOutputFilePath))
                     {
-                        FileUtils.DeleteIfExists(newPath);
+                        FileUtils.DeleteIfExists(newOutputFilePath);
                         wavmFileFunctionStore.Path = string.Empty;
                     }
                     continue;
                 }
 
-                string oldPath = wavmFileFunctionStore.Path;
-                if (string.IsNullOrEmpty(oldPath))
+                string oldOutputFilePath = wavmFileFunctionStore.Path;
+                bool savingToTheSameOutputFile = string.Equals(Path.GetFullPath(oldOutputFilePath), Path.GetFullPath(newOutputFilePath), StringComparison.CurrentCultureIgnoreCase);
+                if (string.IsNullOrEmpty(oldOutputFilePath) || savingToTheSameOutputFile || !File.Exists(oldOutputFilePath))
                 {
                     continue;
                 }
 
-                if (string.Equals(Path.GetFullPath(oldPath), Path.GetFullPath(newPath),
-                                  StringComparison.CurrentCultureIgnoreCase))
+                File.Copy(oldOutputFilePath, newOutputFilePath, true);
+                if (switchTo)
                 {
-                    continue;
-                }
-
-                if (File.Exists(oldPath))
-                {
-                    File.Copy(oldPath, newPath, true);
-
-                    if (switchTo)
-                    {
-                        wavmFileFunctionStore.Path = newPath;
-                    }
+                    wavmFileFunctionStore.Path = newOutputFilePath;
                 }
             }
         }
