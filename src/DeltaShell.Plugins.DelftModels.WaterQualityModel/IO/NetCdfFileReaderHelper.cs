@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using DelftTools.Utils.NetCdf;
+using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 {
@@ -31,6 +32,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             }
 
             NetCdfVariable timeVariable = file.GetVariableByName(timeVariableName);
+            if (timeVariable == null)
+            {
+                throw new PropertyNotFoundInFileException($"Variable '{timeVariableName}' not found in file {file.Path}.");
+            }
 
             DateTime referenceDate = ParseReferenceDate(file, timeVariable);
 

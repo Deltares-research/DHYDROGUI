@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using DelftTools.TestUtils;
 using DelftTools.Utils.NetCdf;
+using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
 using NUnit.Framework;
 
@@ -29,6 +30,19 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("file"));
+        }
+
+        [Test]
+        public void GetDateTimes_WithInvalidTimeVariableName_ThenThrowsArgumentNullException()
+        {
+            const string invalidTImeVariableName = "invalid";
+
+            // Call
+            void Call() => NetCdfFileReaderHelper.GetDateTimes(netCdfFile, invalidTImeVariableName);
+
+            // Assert
+            var exception = Assert.Throws<PropertyNotFoundInFileException>(Call);
+            Assert.That(exception.Message, Is.EqualTo($"Variable '{invalidTImeVariableName}' not found in file {netCdfFile.Path}."));
         }
 
         [TestCase(null)]
