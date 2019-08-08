@@ -4,6 +4,7 @@ using System.Linq;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
 using NUnit.Framework;
+using log4net.Core;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
 {
@@ -20,6 +21,25 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             // Assert
             var exception = Assert.Throws<ArgumentException>(Call);
             Assert.That(exception.Message, Is.EqualTo("Argument 'filePath' cannot be null or empty."));
+        }
+
+        [Test]
+        public void Read_WithFilePathNotExisting_ThenThrowsArgumentException()
+        {
+            const string invalidPath = "no_exist";
+
+            // Call
+            DelwaqHisFileData[] Call() => DelwaqNetCdfHistoryFileReader.Read(invalidPath);
+
+            // Assert
+            DelwaqHisFileData[] data = {};
+            IEnumerable<string> errorsMessages = TestHelper.GetAllRenderedMessages(
+                () => data = Call(),
+                Level.Error);
+
+            Assert.That(data, Is.Empty);
+            Assert.That(errorsMessages, Has.Count.EqualTo(1));
+            Assert.That(errorsMessages.Single(), Is.EqualTo($"History file was not found at {invalidPath}."));
         }
 
         [Test]
