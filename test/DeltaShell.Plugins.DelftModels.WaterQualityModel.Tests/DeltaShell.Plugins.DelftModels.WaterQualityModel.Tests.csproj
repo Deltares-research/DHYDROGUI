@@ -136,7 +136,7 @@
     <Compile Include="IO\DelwaqMapFileReaderTest.cs" />
     <Compile Include="DataObjects\SubstanceProcessLibrary\WaterQualitySubstanceTest.cs" />
     <Compile Include="Model\WaqModelApiTest.cs" />
-    <Compile Include="Model\WaqProcessorHelperTest.cs" />
+    <Compile Include="Model\WaqHistoryFileParserTest.cs" />
     <Compile Include="NHibernate\WaterQualityModel1DNHibernateTest.cs" />
     <Compile Include="IO\SubFileImporterTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

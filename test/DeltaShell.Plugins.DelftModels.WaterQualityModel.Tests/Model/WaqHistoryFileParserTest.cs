@@ -11,7 +11,7 @@ using Rhino.Mocks;
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
 {
     [TestFixture]
-    public class WaqProcessorHelperTest
+    public class WaqHistoryFileParserTest
     {
         [TestCase(null)]
         [TestCase("")]
