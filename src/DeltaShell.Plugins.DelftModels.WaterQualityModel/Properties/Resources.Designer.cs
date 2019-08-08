@@ -91,11 +91,20 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Reference date is set to {0} because format could not be parsed from file {1}..
+        ///   Looks up a localized string similar to History file was not found at {0}..
         /// </summary>
-        public static string DelwaqNcMapFileReader_Reference_date_could_not_be_parsed {
+        public static string DelwaqNetCdfHistoryFileReader_Read_History_file_not_found {
             get {
-                return ResourceManager.GetString("DelwaqNcMapFileReader_Reference_date_could_not_be_parsed", resourceCulture);
+                return ResourceManager.GetString("DelwaqNetCdfHistoryFileReader_Read_History_file_not_found", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Time series data could not be read because variable &apos;{0}&apos; was not found in file {1}..
+        /// </summary>
+        public static string DelwaqNetCdfHistoryFileReader_Read_Time_variable_not_found {
+            get {
+                return ResourceManager.GetString("DelwaqNetCdfHistoryFileReader_Read_Time_variable_not_found", resourceCulture);
             }
         }
         
@@ -325,12 +334,48 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not read output files : {0}.
+        /// </summary>
+        public static string WaqFileBasedProcessor_AddOutput_Could_not_read_output_files {
+            get {
+                return ResourceManager.GetString("WaqFileBasedProcessor_AddOutput_Could_not_read_output_files", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not add output because work directory is empty..
+        /// </summary>
+        public static string WaqFileBasedProcessor_AddOutput_work_directory_is_empty {
+            get {
+                return ResourceManager.GetString("WaqFileBasedProcessor_AddOutput_work_directory_is_empty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to File {0} not found in the path {1}. No validations will be done for the coefficients..
         /// </summary>
         public static string WaqProcessesRules_ReadValidationCsv_File__0__not_found_in_the_path__1___No_validations_will_be_done_for_the_coefficients_ {
             get {
                 return ResourceManager.GetString("WaqProcessesRules_ReadValidationCsv_File__0__not_found_in_the_path__1___No_valida" +
                         "tions_will_be_done_for_the_coefficients_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An error occurred while reading file {0}: check the textual output files for more information..
+        /// </summary>
+        public static string WaqProcessorHelper_ParseHisFileData_An_error_occurred_while_reading_file {
+            get {
+                return ResourceManager.GetString("WaqProcessorHelper_ParseHisFileData_An_error_occurred_while_reading_file", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File is not recognized as a valid format for history files: {0}.
+        /// </summary>
+        public static string WaqProcessorHelper_ParseHisFileData_Invalid_file_format {
+            get {
+                return ResourceManager.GetString("WaqProcessorHelper_ParseHisFileData_Invalid_file_format", resourceCulture);
             }
         }
         

@@ -1,41 +1,60 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using DelftTools.Utils.NetCdf;
+using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties;
+using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 {
     /// <summary>
-    /// A map file reader designed for NetCdf files (_his.nc) created by D-Water Quality.
+    /// Reader for reading WAQ history file data from NetCDF files."
     /// </summary>
-    public static class DelwaqNcHisFileReader
+    public static class DelwaqNetCdfHistoryFileReader
     {
         private const string timeVariableName = "nhistory_dlwq_time";
-        private const string nStationsDimensionName = "nStations";
+        private const string numberOfStationsDimensionName = "nStations";
         private const string fillValueAttributeName = "_FillValue";
         private const string stationNameVariableName = "station_name";
-        private const string nameLengthDimension = "name_len";
+        private const string nameLengthDimensionName = "name_len";
+
+        private static readonly ILog log = LogManager.GetLogger(typeof(DelwaqNetCdfHistoryFileReader));
 
         /// <summary>
-        /// Reads the specified path and creates a <see cref="DelwaqHisFileData" /> for each monitoring point.
+        /// Reads <see cref="DelwaqHisFileData" /> objects from a file at the specified <paramref name="filePath"/>.
         /// </summary>
-        /// <param name="path"> The file path. </param>
-        /// <returns> </returns>
-        public static List<DelwaqHisFileData> Read(string path)
+        /// <param name="filePath"> The file path. </param>
+        /// <returns>The read <see cref="DelwaqHisFileData" /> objects.</returns>
+        /// <exception cref="ArgumentException"> Thrown when <paramref name="filePath"/> is <c>null</c> or empty.</exception>
+        public static DelwaqHisFileData[] Read(string filePath)
         {
-            List<DelwaqHisFileData> data;
+            if (string.IsNullOrEmpty(filePath))
+            {
+                throw new ArgumentException($"Argument '{nameof(filePath)}' cannot be null or empty.");
+            }
+
             NetCdfFile netCdfFile = null;
             try
             {
-                netCdfFile = NetCdfFile.OpenExisting(path);
-                data = Read(netCdfFile).ToList();
+                netCdfFile = NetCdfFile.OpenExisting(filePath);
+                return Read(netCdfFile).ToArray();
+            }
+            catch (FileNotFoundException)
+            {
+                log.Error(string.Format(Resources.DelwaqNetCdfHistoryFileReader_Read_History_file_not_found, filePath));
+                return new DelwaqHisFileData[0];
+            }
+            catch (PropertyNotFoundInFileException)
+            {
+                log.ErrorFormat(Resources.DelwaqNetCdfHistoryFileReader_Read_Time_variable_not_found, timeVariableName, filePath);
+                return new DelwaqHisFileData[0];
             }
             finally
             {
                 netCdfFile?.Close();
             }
-
-            return data;
         }
 
         private static IEnumerable<DelwaqHisFileData> Read(NetCdfFile file)
@@ -45,9 +64,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             var origins = new int[2];
             var shapes = new int[2];
 
-            IEnumerable<DateTime> timeSteps = NcFileReaderHelper.GetDateTimes(file, timeVariableName).ToList();
+            DateTime[] timeSteps = NetCdfFileReaderHelper.GetDateTimes(file, timeVariableName).ToArray();
             string[] outputVariableNames = outputVariables.Select(file.GetVariableName).ToArray();
             string[] locationNames = GetLocationNames(file).ToArray();
+            int timeStepCount = timeSteps.Length;
 
             for (var locationIndex = 0; locationIndex < locationNames.Length; locationIndex++)
             {
@@ -57,7 +77,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                 origins[1] = locationIndex;
                 shapes[1] = 1;
 
-                for (var timeIndex = 0; timeIndex < timeSteps.Count(); timeIndex++)
+                for (var timeIndex = 0; timeIndex < timeStepCount; timeIndex++)
                 {
                     DateTime timeStep = timeSteps.ElementAt(timeIndex);
 
@@ -78,10 +98,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         private static double GetValueAtIndices(NetCdfFile file, NetCdfVariable outputVariable, int[] origins,
                                                 int[] shapes)
         {
-            float value = file.Read(outputVariable, origins, shapes)
-                              .OfType<float>()
-                              .First();
-            return value;
+            return file.Read(outputVariable, origins, shapes)
+                       .OfType<float>()
+                       .First();
         }
 
         private static IEnumerable<NetCdfVariable> GetOutputVariables(NetCdfFile file)
@@ -92,8 +111,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 
         private static IEnumerable<string> GetLocationNames(NetCdfFile file)
         {
-            int nLocations = file.GetDimensionLength(nStationsDimensionName);
-            int locationNameLength = file.GetDimensionLength(nameLengthDimension);
+            int numberOfStations = file.GetDimensionLength(numberOfStationsDimensionName);
+            int locationNameLength = file.GetDimensionLength(nameLengthDimensionName);
 
             var origins = new int[2];
             var shapes = new int[2];
@@ -101,7 +120,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             shapes[0] = 1;
             shapes[1] = locationNameLength;
 
-            for (var i = 0; i < nLocations; i++)
+            for (var i = 0; i < numberOfStations; i++)
             {
                 origins[0] = i;
 
