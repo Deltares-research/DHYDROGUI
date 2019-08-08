@@ -177,7 +177,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
             // 1. Set up test model
             var sourceAndSink = new SourceAndSink();
             var acceptedDifference = new TimeSpan(0,0,5);
-            DateTime defaultDateTime = DateTime.Now;
+            DateTime defaultDateTime = DateTime.Today;
 
             // 2. Verify expectations
             Assert.That(sourceAndSink.Function, Is.Not.Null);
