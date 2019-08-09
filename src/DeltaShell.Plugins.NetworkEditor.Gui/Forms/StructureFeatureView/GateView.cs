@@ -244,9 +244,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             var editFunctionDialog = new EditFunctionDialog
             {
                 Text = "Opening width time series for " + data.Name,
-                ColumnNames = new[] {"Date time", String.Format("Opening width [m]")},
+                ColumnNames = new[]
+                {
+                    "Date time",
+                    "Opening width [m]"
+                },
                 ChartViewOption = ChartViewOptions.AllSeries,
                 Data = dialogData,
+                ShowOnlyFirstWordInColumnHeadersOnLoad = false
             };
 
             if (DialogResult.OK == editFunctionDialog.ShowDialog())
@@ -265,9 +270,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             var editFunctionDialog = new EditFunctionDialog
             {
                 Text = "Sill level time series for " + data.Name,
-                ColumnNames = new[] { "Date time", String.Format("Lower edge level [m]") },
+                ColumnNames = new[]
+                {
+                    "Date time",
+                    "Lower edge level [m]"
+                },
                 ChartViewOption = ChartViewOptions.AllSeries,
                 Data = dialogData,
+                ShowOnlyFirstWordInColumnHeadersOnLoad = false
             };
 
             if (DialogResult.OK == editFunctionDialog.ShowDialog())
@@ -286,9 +296,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             var editFunctionDialog = new EditFunctionDialog
             {
                 Text = "Lower edge level time series for " + data.Name,
-                ColumnNames = new[] {"Date time", String.Format("Lower edge level [m]")},
+                ColumnNames = new[]
+                {
+                    "Date time",
+                    "Lower edge level [m]"
+                },
                 ChartViewOption = ChartViewOptions.AllSeries,
                 Data = dialogData,
+                ShowOnlyFirstWordInColumnHeadersOnLoad = false
             };
 
             if (DialogResult.OK == editFunctionDialog.ShowDialog())

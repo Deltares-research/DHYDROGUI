@@ -41,15 +41,20 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
 
         private TimeSeries CrestLevelTimeSeriesEditor(IWeir weirData)
         {
-            var weirName = weirData.Name;
+            string weirName = weirData.Name;
             var dialogData = (TimeSeries)weirData.CrestLevelTimeSeries.Clone(true);
 
             var editFunctionDialog = new EditFunctionDialog
             {
                 Text = $@"{GuiParameterNames.CrestLevel} time series for {weirName}",
-                ColumnNames = new[] { "Date time", $"{GuiParameterNames.CrestLevel} [m]" },
+                ColumnNames = new[]
+                {
+                    "Date time",
+                    $"{GuiParameterNames.CrestLevel} [m]"
+                },
                 ChartViewOption = ChartViewOptions.AllSeries,
-                Data = dialogData
+                Data = dialogData,
+                ShowOnlyFirstWordInColumnHeadersOnLoad = false
             };
 
             if (DialogResult.OK == editFunctionDialog.ShowDialog())
@@ -58,17 +63,23 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             }
             return null;
         }
+
         private TimeSeries LowerEdgeLevelTimeSeriesEditor(IGatedWeirFormula gatedWeirData)
         {
-            var weirName = gatedWeirData.Name;
+            string weirName = gatedWeirData.Name;
             var dialogData = (TimeSeries)gatedWeirData.LowerEdgeLevelTimeSeries.Clone(true);
 
             var editFunctionDialog = new EditFunctionDialog
             {
                 Text = $@"{GuiParameterNames.GateLowerEdgeLevel} time series for {weirName}",
-                ColumnNames = new[] { "Date time", $"{GuiParameterNames.GateLowerEdgeLevel} [m]" },
+                ColumnNames = new[]
+                {
+                    "Date time",
+                    $"{GuiParameterNames.GateLowerEdgeLevel} [m]"
+                },
                 ChartViewOption = ChartViewOptions.AllSeries,
-                Data = dialogData
+                Data = dialogData,
+                ShowOnlyFirstWordInColumnHeadersOnLoad = false
             };
 
             if (DialogResult.OK == editFunctionDialog.ShowDialog())
@@ -77,17 +88,23 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             }
             return null;
         }
+
         private TimeSeries HorizontalDoorOpeningWidthTimeSeriesEditor(IGatedWeirFormula gatedWeirData)
         {
-            var weirName = gatedWeirData.Name;
+            string weirName = gatedWeirData.Name;
             var dialogData = (TimeSeries)gatedWeirData.HorizontalDoorOpeningWidthTimeSeries.Clone(true);
 
             var editFunctionDialog = new EditFunctionDialog
             {
                 Text = $@"{GuiParameterNames.HorizontalOpeningWidth} time series for {weirName}",
-                ColumnNames = new[] { "Date time", GuiParameterNames.HorizontalOpeningWidth},
+                ColumnNames = new[]
+                {
+                    "Date time",
+                    GuiParameterNames.HorizontalOpeningWidth
+                },
                 ChartViewOption = ChartViewOptions.AllSeries,
-                Data = dialogData
+                Data = dialogData,
+                ShowOnlyFirstWordInColumnHeadersOnLoad = false
             };
 
             if (DialogResult.OK == editFunctionDialog.ShowDialog())
