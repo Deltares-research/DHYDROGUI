@@ -213,10 +213,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
 
         private void buttonReduction_Click(object sender, EventArgs e)
         {
-            var editFunctionDialog = new EditFunctionDialog {Text = "Reduction curve for " + pump.Name};
             var dialogData = (IFunction)pump.ReductionTable.Clone();
-            editFunctionDialog.ColumnNames = new[] { "Pump Head", "Reduction" };
-            editFunctionDialog.Data = dialogData;
+            var editFunctionDialog = new EditFunctionDialog
+            {
+                Text = "Reduction curve for " + pump.Name,
+                ColumnNames = new[]
+                {
+                    "Pump Head",
+                    "Reduction"
+                },
+                Data = dialogData,
+                ShowOnlyFirstWordInColumnHeadersOnLoad = false
+            };
+
             if (DialogResult.OK == editFunctionDialog.ShowDialog())
             {
                 pump.ReductionTable = dialogData;
@@ -243,10 +252,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             var editFunctionDialog = new EditFunctionDialog
             {
                 Text = "Capacity time series for " + pump.Name,
-                ColumnNames = new[] {"Date time", String.Format("Capacity [{0}]", capacityUnitLabel.Text)},
+                ColumnNames = new[] 
+                {
+                    "Date time",
+                    $"Capacity [{capacityUnitLabel.Text}]"
+                },
                 ChartViewOption = ChartViewOptions.AllSeries,
-                Data = dialogData
+                Data = dialogData,
+                ShowOnlyFirstWordInColumnHeadersOnLoad = false
             };
+
             if (DialogResult.OK == editFunctionDialog.ShowDialog())
             {
                 pump.CapacityTimeSeries.Time.Clear();

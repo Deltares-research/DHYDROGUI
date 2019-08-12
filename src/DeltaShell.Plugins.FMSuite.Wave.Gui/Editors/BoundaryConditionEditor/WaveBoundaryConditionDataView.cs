@@ -31,6 +31,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor
 
             functionView.Dock = DockStyle.Fill;
             functionView.ChartView.Chart.Legend.ShowCheckBoxes = true;
+            functionView.TableView.BestFitColumns(false);
         }
 
         private WaveBoundaryCondition boundaryCondition;
@@ -119,6 +120,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor
                         0
                     }) {SkipRowsWithMissingArgumentValues = true};
                 functionViewPanel.Controls.Add(functionView);
+                functionView.TableView.BestFitColumns(false);
                 buttonPanel.Visible = true;
             }
         }
@@ -178,6 +180,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor
                         0
                     }) {SkipRowsWithMissingArgumentValues = true};
                 functionView.ChartView.Chart.LeftAxis.Automatic = true;
+                functionView.TableView.BestFitColumns(false);
             }
         }
 

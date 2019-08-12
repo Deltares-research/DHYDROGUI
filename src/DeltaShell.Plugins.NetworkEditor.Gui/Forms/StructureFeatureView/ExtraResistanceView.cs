@@ -37,13 +37,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
 
         private void buttonTable_Click(object sender, System.EventArgs e)
         {
-            var editFunctionDialog = new EditFunctionDialog { Text = "Extra resistance table" };
             var dialogData = (IFunction)extraResistance.FrictionTable.Clone();
-            editFunctionDialog.ColumnNames = new[]
-                 {
-                     "Water Level [m above datum]", "KSI [s2/m5]"
-                 };
-            editFunctionDialog.Data = dialogData;
+            var editFunctionDialog = new EditFunctionDialog
+            {
+                Text = "Extra resistance table",
+                Data = dialogData,
+                ColumnNames = new[]
+                {
+                    "Water Level [m above datum]",
+                    "KSI [s2/m5]"
+                },
+                ShowOnlyFirstWordInColumnHeadersOnLoad = false
+            };
+
             if (DialogResult.OK == editFunctionDialog.ShowDialog())
             {
                 extraResistance.FrictionTable = dialogData;
