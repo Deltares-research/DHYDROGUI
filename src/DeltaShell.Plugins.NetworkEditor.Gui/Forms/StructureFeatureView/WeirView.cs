@@ -480,10 +480,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
 
         private void OpenCrestLevelTimeSeriesButton_Click(object sender, EventArgs e)
         {
-            var editFunctionDialog = new EditFunctionDialog { Text = "Time dependent crest level for Weir" };
             var dialogData = (TimeSeries)data.CrestLevelTimeSeries.Clone();
-            editFunctionDialog.ColumnNames = new[] { "Date time", String.Format($"{GuiParameterNames.CrestLevel} [{0}]", CrestLevelUnitLabel.Text) };
-            editFunctionDialog.Data = dialogData;
+            var editFunctionDialog = new EditFunctionDialog
+            {
+                Text = "Time dependent crest level for Weir",
+                ColumnNames = new[]
+                {
+                    "Date time",
+                    $"{GuiParameterNames.CrestLevel} [{CrestLevelUnitLabel.Text}]"
+                },
+                Data = dialogData,
+                ShowOnlyFirstWordInColumnHeadersOnLoad = false
+            };
+
             if (DialogResult.OK == editFunctionDialog.ShowDialog())
             {
                 data.CrestLevelTimeSeries.Time.Clear();
@@ -549,14 +558,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
 
         private void OpenLowerEdgeLevelTimeSeriesButton_Click(object sender, EventArgs e)
         {
-            var lowerEdgeLevelTimeSeries = ((GatedWeirFormula) (data.WeirFormula)).LowerEdgeLevelTimeSeries;
+            TimeSeries lowerEdgeLevelTimeSeries = ((GatedWeirFormula) data.WeirFormula).LowerEdgeLevelTimeSeries;
             var dialogData = (TimeSeries)lowerEdgeLevelTimeSeries.Clone(true);
             var editFunctionDialog = new EditFunctionDialog
+            {
+                Text = "Time dependent lower edge level for Weir",
+                ColumnNames = new[]
                 {
-                    Text = "Time dependent lower edge level for Weir",
-                    ColumnNames = new[] {"Date time", String.Format("Lower edge level [{0}]", LowerEdgeLevelLabel.Text)},
-                    Data = dialogData
-                };
+                    "Date time",
+                    $"Lower edge level [{LowerEdgeLevelLabel.Text}]"
+                },
+                Data = dialogData,
+                ShowOnlyFirstWordInColumnHeadersOnLoad = false
+            };
 
             if (DialogResult.OK == editFunctionDialog.ShowDialog())
             {
@@ -575,17 +589,21 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
                 throw new InvalidOperationException("Do not allow time varying gate opening when crest level is used in a time variant way.");
             }
 
-
-            var lowerEdgeLevelTimeSeries = ((GatedWeirFormula) (data.WeirFormula)).LowerEdgeLevelTimeSeries;
+            TimeSeries lowerEdgeLevelTimeSeries = ((GatedWeirFormula) data.WeirFormula).LowerEdgeLevelTimeSeries;
             var dialogData = (TimeSeries)lowerEdgeLevelTimeSeries.Clone(true);
             dialogData.Components[0].SetValues(dialogData.Components[0].Values.Cast<double>().Select(v => v - data.CrestLevel));
 
             var editFunctionDialog = new EditFunctionDialog
+            {
+                Text = "Time dependent gate opening for Weir",
+                ColumnNames = new[] 
                 {
-                    Text = "Time dependent gate opening for Weir",
-                    ColumnNames = new[] {"Date time", String.Format("Gate opening [{0}]", GateOpeningUnitLabel.Text)},
-                    Data = dialogData
-                };
+                    "Date time",
+                    $"Gate opening [{GateOpeningUnitLabel.Text}]"
+                },
+                Data = dialogData,
+                ShowOnlyFirstWordInColumnHeadersOnLoad = false
+            };
 
             if (DialogResult.OK == editFunctionDialog.ShowDialog())
             {

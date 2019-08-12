@@ -64,7 +64,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
         public FMWeirView()
         {
             InitializeComponent();
-            crestLevelButton = CreateTimeseriesButton(crestLevelButton_Click);
+            crestLevelButton = CreateTimeseriesButton(CrestLevelButton_Click);
         }
 
         private void ConfigureTimeDependentControls()
@@ -136,16 +136,21 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
 
         #region Eventing
 
-        private void crestLevelButton_Click(object sender, EventArgs e)
+        private void CrestLevelButton_Click(object sender, EventArgs e)
         {
             var dialogData = (TimeSeries)data.CrestLevelTimeSeries.Clone(true);
 
             var editFunctionDialog = new EditFunctionDialog
             {
                 Text = $"{GuiParameterNames.CrestLevel} time series for " + data.Name,
-                ColumnNames = new[] {"Date time", String.Format($"{GuiParameterNames.CrestLevel} [m]")},
+                ColumnNames = new[]
+                {
+                    "Date time",
+                    $"{GuiParameterNames.CrestLevel} [m]"
+                },
                 ChartViewOption = ChartViewOptions.AllSeries,
-                Data = dialogData
+                Data = dialogData,
+                ShowOnlyFirstWordInColumnHeadersOnLoad = false
             };
 
             if (DialogResult.OK == editFunctionDialog.ShowDialog())

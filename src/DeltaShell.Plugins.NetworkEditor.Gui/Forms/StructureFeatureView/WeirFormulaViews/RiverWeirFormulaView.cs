@@ -39,10 +39,18 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView.WeirFo
 
         private static IFunction EditReductionTable(IFunction source, string title)
         {
-            EditFunctionDialog editFunctionDialog = new EditFunctionDialog {Text = title};
-            IFunction dialogData = (IFunction) source.Clone();
-            editFunctionDialog.ColumnNames = new[] { "H2-Zs / H1-Zs", "Reduction" };
-            editFunctionDialog.Data = dialogData;
+            var dialogData = (IFunction) source.Clone();
+            var editFunctionDialog = new EditFunctionDialog
+            {
+                Text = title,
+                Data = dialogData,
+                ColumnNames = new[]
+                {
+                    "H2-Zs / H1-Zs",
+                    "Reduction"
+                },
+                ShowOnlyFirstWordInColumnHeadersOnLoad = false
+            };
             return DialogResult.OK == editFunctionDialog.ShowDialog() ? dialogData : source;
         }
 

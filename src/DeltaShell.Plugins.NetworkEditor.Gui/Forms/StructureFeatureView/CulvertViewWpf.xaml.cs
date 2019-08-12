@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms;
 using DelftTools.Controls;
+using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
@@ -31,10 +32,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
 
         private void GateDialog_OnClick(object sender, RoutedEventArgs e)
         {
-            var editFunctionDialog = new EditFunctionDialog {Text = "Gate-opening loss coefficient table for Culvert"};
-            var dialogData = data.GateOpeningLossCoefficientFunction;
-            editFunctionDialog.ColumnNames = new[] {"Gate height opening factor", "Loss coefficient"};
-            editFunctionDialog.Data = dialogData;
+            IFunction dialogData = data.GateOpeningLossCoefficientFunction;
+            var editFunctionDialog = new EditFunctionDialog
+            {
+                Text = "Gate-opening loss coefficient table for Culvert",
+                Data = dialogData,
+                ColumnNames = new[]
+                {
+                    "Gate height opening factor",
+                    "Loss coefficient"
+                },
+                ShowOnlyFirstWordInColumnHeadersOnLoad = false
+            };
+
             if (DialogResult.OK == editFunctionDialog.ShowDialog())
             {
                 data.GateOpeningLossCoefficientFunction = dialogData;
