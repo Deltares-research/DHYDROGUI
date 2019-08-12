@@ -4,7 +4,6 @@ using System.Linq;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.TestUtils.TestReferenceHelper;
-using DelftTools.Utils.Collections;
 using DelftTools.Utils.IO;
 using DeltaShell.Core;
 using DeltaShell.NGHS.IO.TestUtils;
@@ -412,36 +411,33 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         }
 
         [Test]
-        public void SaveWaveModel_AfterClearingExistingOutput_ThenWavmOutputFileIsRemoved()
+        public void SaveWaveModel_AfterClearingExistingOutput_ThenWaveOutputFileIsRemoved()
         {
             // Setup
-            using (var app = new DeltaShellApplication())
+            string testDataDirectory = TestHelper.GetTestFilePath("WaveModelSaveLoadTest");
+            using (var tempDirectory = new TemporaryDirectory())
             {
-                LoadRequiredPlugins(app);
-                app.Run();
+                FileUtils.CopyDirectory(testDataDirectory, tempDirectory.Path);
 
-                string testDataDirectory = TestHelper.GetTestFilePath("WaveModelSaveLoadTest");
-                using (var tempDirectory = new TemporaryDirectory())
-                {
-                    FileUtils.CopyDirectory(testDataDirectory, tempDirectory.Path);
+                string waveModelDataDirectory = Path.Combine(tempDirectory.Path, "WaveModelWithOutput.dsproj_data", "Waves");
+                string waveOutputFilePath = Path.Combine(waveModelDataDirectory, "wavm-Waves.nc");
+                string mdwFilePath = Path.Combine(waveModelDataDirectory, "Waves.mdw");
 
-                    string projectFilePath = Path.Combine(tempDirectory.Path, "WaveModelWithOutput.dsproj");
-                    string wavmOutputFilePath = Path.Combine(tempDirectory.Path, "WaveModelWithOutput.dsproj_data", "Waves", "wavm-Waves.nc");
+                var waveModel = new WaveModel(mdwFilePath);
 
-                    app.OpenProject(projectFilePath);
-                    app.Project.RootFolder.Models.ForEach(m => m.ClearOutput());
+                // Simulate the result of clearing model output
+                waveModel.WavmFunctionStores.Single().Path = waveOutputFilePath;
+                waveModel.WavmFunctionStores.Single().Close();
 
-                    // Pre-condition
-                    Assert.That(File.Exists(wavmOutputFilePath), Is.True);
+                // Pre-condition
+                Assert.That(File.Exists(waveOutputFilePath), Is.True);
+                Assert.That(waveModel.WavmFunctionStores.Single().Functions, Is.Empty);
 
-                    // Call
-                    app.SaveProjectAs(projectFilePath);
+                // Call
+                waveModel.ModelSaveTo(mdwFilePath, true);
 
-                    // Assert
-                    Assert.That(File.Exists(wavmOutputFilePath), Is.False);
-
-                    app.CloseProject();
-                }
+                // Assert
+                Assert.That(File.Exists(waveOutputFilePath), Is.False);
             }
         }
 
