@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using DelftTools.Utils.NetCdf;
-using DeltaShell.NGHS.IO.Helpers;
+using log4net;
+using Resources = DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties.Resources;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 {
@@ -12,6 +13,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
     /// </summary>
     public static class NetCdfFileReaderHelper
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(NetCdfFileReaderHelper));
+
         /// <summary>
         /// Parses the values of the time variable to <see cref="IEnumerable{DateTime}" />.
         /// </summary>
@@ -20,7 +23,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         /// <returns>The parsed <see cref="DateTime"/> objects.</returns>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="file"/> is <c>null</c>.</exception>
         /// <exception cref="ArgumentException">Thrown when <paramref name="timeVariableName"/> is <c>null</c> or empty.</exception>
-        /// <exception cref="PropertyNotFoundInFileException">Thrown when <paramref name="timeVariableName"/> cannot be found in file.</exception>
         public static IEnumerable<DateTime> GetDateTimes(NetCdfFile file, string timeVariableName)
         {
             if (file == null)
@@ -36,7 +38,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             NetCdfVariable timeVariable = file.GetVariableByName(timeVariableName);
             if (timeVariable == null)
             {
-                throw new PropertyNotFoundInFileException($"Variable '{timeVariableName}' not found in file {file.Path}.");
+                log.ErrorFormat(Resources.NetCdfFileReaderHelper_GetDateTimes_Time_variable_not_found, timeVariableName, file.Path);
+                return Enumerable.Empty<DateTime>();
             }
 
             DateTime referenceDate = ParseReferenceDate(file, timeVariable);

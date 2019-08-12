@@ -18,7 +18,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
         private static readonly ILog Log = LogManager.GetLogger(typeof(WaqHistoryFileParser));
 
         /// <summary>
-        /// Parses his file data and adds it to WaterQualityModel.
+        /// Parses his file data and sets the data on the <paramref name="observationVariableOutputs"/>.
         /// </summary>
         /// <param name="filePath"> The history file path to parse the data from. </param>
         /// <param name="monitoringOutputLevel"> The monitoring output level. </param>

@@ -15,9 +15,8 @@ using log4net;
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
 {
     /// <summary>
-    /// Initializes the file paths and prepares the directories before and after running the model.
+    /// Process helper class for running D-Water Quality models.
     /// </summary>
-    /// <seealso cref="DeltaShell.Plugins.DelftModels.WaterQualityModel.Model.IWaqProcessor" />
     public class WaqFileBasedProcessor : IWaqProcessor
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(WaqFileBasedProcessor));
@@ -33,10 +32,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
 
         public bool TryToCancel { get; set; }
 
-        /// <summary>
-        /// Prepares the working directory before initializing.
-        /// </summary>
-        /// <param name="initializationSettings">Settings used for initialization.</param>
         public void Initialize(WaqInitializationSettings initializationSettings)
         {
             string outputDirectory = initializationSettings.Settings.OutputDirectory;
@@ -97,7 +92,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
         }
 
         /// <summary>
-        /// Adds the output generated in <see cref="Process" /> function to the output of the waterQualityModel.
+        /// Adds the output generated in <see cref="Process" /> function to the output of the D-Water Quality Model.
         /// </summary>
         /// <param name="outputDirectory">The directory in which the output is generated.</param>
         /// <param name="observationVariableOutputs">The observation variable outputs of the model. </param>

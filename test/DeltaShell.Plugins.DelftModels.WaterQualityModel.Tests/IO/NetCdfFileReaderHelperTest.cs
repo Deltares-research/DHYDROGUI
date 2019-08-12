@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using DelftTools.TestUtils;
 using DelftTools.Utils.NetCdf;
-using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
 using NUnit.Framework;
 
@@ -33,16 +32,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         }
 
         [Test]
-        public void GetDateTimes_WithInvalidTimeVariableName_ThenThrowsArgumentNullException()
+        public void GetDateTimes_WithInvalidTimeVariableName_ThenEmptyEnumerableIsReturned()
         {
             const string invalidTImeVariableName = "invalid";
 
             // Call
-            void Call() => NetCdfFileReaderHelper.GetDateTimes(netCdfFile, invalidTImeVariableName);
+            IEnumerable<DateTime> times = NetCdfFileReaderHelper.GetDateTimes(netCdfFile, invalidTImeVariableName);
 
             // Assert
-            var exception = Assert.Throws<PropertyNotFoundInFileException>(Call);
-            Assert.That(exception.Message, Is.EqualTo($"Variable '{invalidTImeVariableName}' not found in file {netCdfFile.Path}."));
+            Assert.That(times, Is.Not.Null, "Returned Date Times should not be null.");
+            Assert.That(times, Is.Empty, "Empty enumerable of Date Times should be returned.");
         }
 
         [TestCase(null)]
