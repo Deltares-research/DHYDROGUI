@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Linq;
 using DelftTools.Utils.NetCdf;
 using log4net;
-using Resources = DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties.Resources;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 {
