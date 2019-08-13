@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Utils.NetCdf;
-using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties;
 using log4net;
 
@@ -43,12 +42,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             }
             catch (FileNotFoundException)
             {
-                log.Error(string.Format(Resources.DelwaqNetCdfHistoryFileReader_Read_History_file_not_found, filePath));
-                return new DelwaqHisFileData[0];
-            }
-            catch (PropertyNotFoundInFileException)
-            {
-                log.ErrorFormat(Resources.DelwaqNetCdfHistoryFileReader_Read_Time_variable_not_found, timeVariableName, filePath);
+                log.ErrorFormat(Resources.DelwaqNetCdfHistoryFileReader_Read_History_file_not_found, filePath);
                 return new DelwaqHisFileData[0];
             }
             finally

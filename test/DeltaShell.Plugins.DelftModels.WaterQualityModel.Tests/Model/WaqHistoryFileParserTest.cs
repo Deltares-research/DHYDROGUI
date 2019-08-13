@@ -5,6 +5,8 @@ using System.Linq;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Model;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties;
+using log4net.Core;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -13,6 +15,81 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
     [TestFixture]
     public class WaqHistoryFileParserTest
     {
+        [Test]
+        public void Parse_WithNonExistentFile_ThenCorrectErrorIsGiven()
+        {
+            const string fileName = "no_exist.his";
+            WaterQualityObservationVariableOutput observationVariableOutput = CreateObservationVariableOutput();
+
+            // Call
+            void Call()
+            {
+                WaqHistoryFileParser.Parse(fileName,
+                                           new List<WaterQualityObservationVariableOutput> {observationVariableOutput},
+                                           MonitoringOutputLevel.Points);
+            }
+
+            // Assert
+            IEnumerable<string> renderedErrorMessages = TestHelper.GetAllRenderedMessages(() => Call(), Level.Error);
+
+            string expectedMessage = string.Format(Resources.WaqProcessorHelper_ParseHisFileData_An_error_occurred_while_reading_file,
+                                                   fileName);
+            Assert.That(renderedErrorMessages.Contains(expectedMessage));
+        }
+
+        [Test]
+        public void Parse_WithInvalidFileFormat_ThenCorrectErrorIsGiven()
+        {
+            const string fileName = "file.invalid";
+            WaterQualityObservationVariableOutput observationVariableOutput = CreateObservationVariableOutput();
+
+            // Call
+            void Call()
+            {
+                WaqHistoryFileParser.Parse(fileName,
+                                           new List<WaterQualityObservationVariableOutput> {observationVariableOutput},
+                                           MonitoringOutputLevel.Points);
+            }
+
+            // Assert
+            IEnumerable<string> renderedErrorMessages = TestHelper.GetAllRenderedMessages(() => Call(), Level.Error);
+
+            string expectedMessage = string.Format(Resources.WaqProcessorHelper_ParseHisFileData_Invalid_file_format,
+                                                   fileName);
+            Assert.That(renderedErrorMessages.Contains(expectedMessage));
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void Parse_WithValidNetCdfHisFile_ThenTimeSeriesDataIsSetOnObservationVariableOutputs()
+        {
+            // Setup
+            string historyFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "IO", "deltashell_his.nc");
+            WaterQualityObservationVariableOutput observationVariableOutput = CreateObservationVariableOutput();
+
+            // Pre-condition
+            Assert.That(observationVariableOutput.TimeSeriesList.All(ts => ts.Time.Values.Count == 0));
+
+            // Call
+            WaqHistoryFileParser.Parse(historyFilePath,
+                                       new List<WaterQualityObservationVariableOutput> {observationVariableOutput},
+                                       MonitoringOutputLevel.Points);
+
+            // Assert
+            Assert.That(observationVariableOutput.TimeSeriesList.All(ts => ts.Time.Values.Count == 7),
+                        "Time series for all output variables should have data.");
+        }
+
+        private static WaterQualityObservationVariableOutput CreateObservationVariableOutput()
+        {
+            var outputVariableTuples = new List<DelftTools.Utils.Tuple<string, string>>
+            {
+                new DelftTools.Utils.Tuple<string, string>("EColi", ""),
+                new DelftTools.Utils.Tuple<string, string>("Salinity", "")
+            };
+            return new WaterQualityObservationVariableOutput(outputVariableTuples) {Name = "Observation Point01"};
+        }
+
         [TestCase(null)]
         [TestCase("")]
         public void Parse_WithFilePathNullOrEmpty_ThenThrowsArgumentException(string filePathArgument)
