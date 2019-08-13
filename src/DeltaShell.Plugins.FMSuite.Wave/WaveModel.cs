@@ -998,7 +998,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         {
             foreach (WavmFileFunctionStore wavmFileFunctionStore in WavmFunctionStores)
             {
-                string newOutputFilePath = Path.Combine(targetDirectory, Path.GetFileName(wavmFileFunctionStore.Path));
+                string oldOutputFilePath = wavmFileFunctionStore.Path;
+                string wavmOutputFileName = Path.GetFileName(oldOutputFilePath);
+                if (wavmOutputFileName == null)
+                {
+                    continue;
+                }
+
+                string newOutputFilePath = Path.Combine(targetDirectory, wavmOutputFileName);
                 if (wavmFileFunctionStore.Functions.Count == 0)
                 {
                     if (File.Exists(newOutputFilePath) && !FileUtils.IsDirectory(newOutputFilePath))
@@ -1009,7 +1016,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                     continue;
                 }
 
-                string oldOutputFilePath = wavmFileFunctionStore.Path;
                 bool savingToTheSameOutputFile = string.Equals(Path.GetFullPath(oldOutputFilePath), Path.GetFullPath(newOutputFilePath), StringComparison.CurrentCultureIgnoreCase);
                 if (string.IsNullOrEmpty(oldOutputFilePath) || savingToTheSameOutputFile || !File.Exists(oldOutputFilePath))
                 {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using DelftTools.Functions;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
@@ -12,6 +13,7 @@ using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.Wave.Properties;
 using NetTopologySuite.Extensions.Grids;
 using NUnit.Framework;
+using Rhino.Mocks;
 using SharpMap.Extensions.CoordinateSystems;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests
@@ -346,6 +348,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         [Test]
         public void ClearOutput_WithSwanRunLogDataItem_ThenSwanRunLogContentIsEmpty()
         {
+            // Setup
             var waveModel = new WaveModel();
             var swanTextDocument = (TextDocument) waveModel.GetDataItemByTag(WaveModel.SwanLogDataItemTag).Value;
             swanTextDocument.Content = new Random().Next(100).ToString();
@@ -353,10 +356,36 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
             // Private field outputIsEmpty is set to false after a successful model run. This field should be false when clearing model output.
             // As we do not focus on model run, we use reflection to set this field and omit the model run.
             TypeUtils.SetField(waveModel, "outputIsEmpty", false);
-
+            
+            // Call
             waveModel.ClearOutput();
 
+            // Assert
             Assert.That(swanTextDocument.Content, Is.Empty, "Swan run log should be empty after clearing model output.");
+        }
+
+        [Test]
+        public void ClearOutput_WithOutputFunctions_ThenFunctionsAreRemovedFromModel()
+        {
+            // Setup
+            var waveModel = new WaveModel();
+
+            var mocks = new MockRepository();
+            var function = mocks.Stub<IFunction>();
+            mocks.ReplayAll();
+
+            waveModel.WavmFunctionStores.Single().Functions.Add(function);
+
+            // Private field outputIsEmpty is set to false after a successful model run. This field should be false when clearing model output.
+            // As we do not focus on model run, we use reflection to set this field and omit the model run.
+            TypeUtils.SetField(waveModel, "outputIsEmpty", false);
+            
+            // Call
+            waveModel.ClearOutput();
+
+            // Assert
+            Assert.That(waveModel.WavmFunctionStores.Single().Functions, Is.Empty, "All output functions should be removed at clearing model output.");
+            mocks.VerifyAll();
         }
     }
 }
