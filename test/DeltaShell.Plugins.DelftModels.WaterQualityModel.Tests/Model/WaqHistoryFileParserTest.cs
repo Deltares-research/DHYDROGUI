@@ -19,16 +19,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
         public void Parse_WithNonExistentFile_ThenCorrectErrorIsGiven()
         {
             const string fileName = "no_exist.his";
-            var observationVariableOutputs = new List<WaterQualityObservationVariableOutput>
-            {
-                new WaterQualityObservationVariableOutput()
-            };
+            WaterQualityObservationVariableOutput observationVariableOutput = CreateObservationVariableOutput();
 
             // Call
             void Call()
             {
                 WaqHistoryFileParser.Parse(fileName,
-                                           observationVariableOutputs,
+                                           new List<WaterQualityObservationVariableOutput> {observationVariableOutput},
                                            MonitoringOutputLevel.Points);
             }
 
@@ -44,16 +41,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
         public void Parse_WithInvalidFileFormat_ThenCorrectErrorIsGiven()
         {
             const string fileName = "file.invalid";
-            var observationVariableOutputs = new List<WaterQualityObservationVariableOutput>
-            {
-                new WaterQualityObservationVariableOutput()
-            };
+            WaterQualityObservationVariableOutput observationVariableOutput = CreateObservationVariableOutput();
 
             // Call
             void Call()
             {
                 WaqHistoryFileParser.Parse(fileName,
-                                           observationVariableOutputs,
+                                           new List<WaterQualityObservationVariableOutput> {observationVariableOutput},
                                            MonitoringOutputLevel.Points);
             }
 
