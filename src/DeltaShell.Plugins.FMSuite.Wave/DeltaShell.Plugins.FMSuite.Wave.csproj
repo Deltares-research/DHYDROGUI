@@ -137,6 +137,7 @@
     <Compile Include="IO\Sp2File.cs" />
     <Compile Include="IO\WaveBoundaryImportHelper.cs" />
     <Compile Include="IO\WavmFileFunctionStore.cs" />
+    <Compile Include="IWaveModel.cs" />
     <Compile Include="Layers\WaveModelLayerStyles.cs" />
     <Compile Include="Layers\WaveSnappedFeaturesGroupLayerData.cs" />
     <Compile Include="Properties\PluginInfo.cs" />

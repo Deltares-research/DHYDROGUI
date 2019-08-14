@@ -9,9 +9,13 @@ using DeltaShell.Core;
 using DeltaShell.Gui;
 using DeltaShell.Plugins.FMSuite.Wave.Gui;
 using DeltaShell.Plugins.SharpMapGis.Gui;
+using GeoAPI.Extensions.CoordinateSystems;
+using NetTopologySuite.Extensions.Coverages;
 using NUnit.Framework;
+using Rhino.Mocks;
 using SharpMap;
 using SharpMap.Api.Layers;
+using SharpMap.Layers;
 using SharpMap.UI.Forms;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
@@ -55,6 +59,37 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
                 Assert.IsTrue(models.Contains(modelOne));
                 Assert.IsTrue(models.Contains(modelTwo));
             }
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public void CreateLayer_WithDiscreteGridPointCoverage_ThenCurvilinearVertexCoverageLayerWithExpectedValuesIsReturned(bool isEditable)
+        {
+            // Setup
+            var mapLayerProvider = new WaveModelMapLayerProvider();
+
+            var outputCoverage = new DiscreteGridPointCoverage
+            {
+                Name = "Name",
+                IsEditable = isEditable
+            };
+
+            var waveModel = MockRepository.GenerateStub<IWaveModel>();
+            var coordinateSystem = MockRepository.GenerateStub<ICoordinateSystem>();
+            waveModel.CoordinateSystem = coordinateSystem;
+
+            // Call
+            var layer = (CurvilinearVertexCoverageLayer) mapLayerProvider.CreateLayer(outputCoverage, waveModel);
+
+            // Assert
+            Assert.AreEqual("Name", layer.Name, "The name of the coverage is not correctly set in the layer");
+            Assert.AreSame(outputCoverage, layer.Coverage, "The coverage is not correctly set in the layer");
+            Assert.IsFalse(layer.Visible, "The visibility of the layer should be false");
+            Assert.IsFalse(layer.OptimizeRendering, "The optimize rendering setting of the layer should be false");
+            Assert.AreEqual(!isEditable, layer.ReadOnly, "The read only setting is not correctly set in the layer");
+
+            var dataSource = (WaveGridBasedDataSource) layer.DataSource;
+            Assert.AreSame(waveModel.CoordinateSystem, dataSource.CoordinateSystem, "The coordinate system in the data source of the layer is not the same as the coordinate system of the coverage");
         }
 
         private static void ShowModelLayers(WaveModel model)
