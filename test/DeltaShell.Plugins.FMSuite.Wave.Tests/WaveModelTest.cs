@@ -369,11 +369,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         {
             // Setup
             var waveModel = new WaveModel();
-
-            var mocks = new MockRepository();
-            var function = mocks.Stub<IFunction>();
-            mocks.ReplayAll();
-
+            var function = MockRepository.GenerateStub<IFunction>();
             waveModel.WavmFunctionStores.Single().Functions.Add(function);
 
             // Private field outputIsEmpty is set to false after a successful model run. This field should be false when clearing model output.
@@ -385,7 +381,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
 
             // Assert
             Assert.That(waveModel.WavmFunctionStores.Single().Functions, Is.Empty, "All output functions should be removed at clearing model output.");
-            mocks.VerifyAll();
         }
     }
 }
