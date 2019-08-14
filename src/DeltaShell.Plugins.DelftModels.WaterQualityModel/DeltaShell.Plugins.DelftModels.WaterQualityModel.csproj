@@ -355,10 +355,9 @@
       <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.45471\lib\net461\DeltaShell\DelftTools.Functions.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="DelftTools.Shell.Core, Version=1.4.0.45471, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.45471\lib\net461\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
-      <SpecificVersion>False</SpecificVersion>
-      <Private>False</Private>
+    <Reference Include="DelftTools.Shell.Core, Version=1.4.0.45480, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.45480\lib\net461\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="DelftTools.Units">
       <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.45471\lib\net461\DeltaShell\DelftTools.Units.dll</HintPath>
@@ -542,6 +541,7 @@
     <Error Condition="!Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\PostSharp.5.0.55\build\PostSharp.targets'))" />
     <Error Condition="!Exists('..\..\packages\DIDO.5.3.0.61849\build\net40\DIDO.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DIDO.5.3.0.61849\build\net40\DIDO.targets'))" />
     <Error Condition="!Exists('..\..\packages\DeltaShell.Framework.1.4.0.45471\build\net461\DeltaShell.Framework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DeltaShell.Framework.1.4.0.45471\build\net461\DeltaShell.Framework.targets'))" />
+    <Error Condition="!Exists('..\..\packages\DeltaShell.Framework.1.4.0.45480\build\net461\DeltaShell.Framework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DeltaShell.Framework.1.4.0.45480\build\net461\DeltaShell.Framework.targets'))" />
   </Target>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <PropertyGroup>
@@ -551,5 +551,5 @@
   <Import Project="..\..\packages\Substances.Libs.1.0.0.57497\build\net40\Substances.Libs.targets" Condition="Exists('..\..\packages\Substances.Libs.1.0.0.57497\build\net40\Substances.Libs.targets')" />
   <Import Project="..\..\packages\PostSharp.5.0.55\build\PostSharp.targets" Condition="Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.targets')" />
   <Import Project="..\..\packages\DIDO.5.3.0.61849\build\net40\DIDO.targets" Condition="Exists('..\..\packages\DIDO.5.3.0.61849\build\net40\DIDO.targets')" />
-  <Import Project="..\..\packages\DeltaShell.Framework.1.4.0.45471\build\net461\DeltaShell.Framework.targets" Condition="Exists('..\..\packages\DeltaShell.Framework.1.4.0.45471\build\net461\DeltaShell.Framework.targets')" />
+  <Import Project="..\..\packages\DeltaShell.Framework.1.4.0.45480\build\net461\DeltaShell.Framework.targets" Condition="Exists('..\..\packages\DeltaShell.Framework.1.4.0.45480\build\net461\DeltaShell.Framework.targets')" />
 </Project>
