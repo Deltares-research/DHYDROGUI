@@ -418,10 +418,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
             using (var tempDirectory = new TemporaryDirectory())
             {
                 FileUtils.CopyDirectory(testDataDirectory, tempDirectory.Path);
-
-                string waveModelDataDirectory = Path.Combine(tempDirectory.Path, "WaveModelWithOutput.dsproj_data", "Waves");
-                string waveOutputFilePath = Path.Combine(waveModelDataDirectory, "wavm-Waves.nc");
-                string mdwFilePath = Path.Combine(waveModelDataDirectory, "Waves.mdw");
+                string waveOutputFilePath = Path.Combine(tempDirectory.Path, "wavm-Waves.nc");
+                string mdwFilePath = Path.Combine(tempDirectory.Path, "Waves.mdw");
 
                 var waveModel = new WaveModel(mdwFilePath);
 
