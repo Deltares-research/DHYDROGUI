@@ -781,18 +781,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
                 return Visibility.Collapsed;
             }
         }
-        public Visibility GatedVisibility
-        {
-            get
-            {
-                if (!TimeSeriesEnabled)
-                {
-                    return Visibility.Visible;
-                }
-
-                return Visibility.Collapsed;
-            }
-        }
 
         public Visibility GeneralStructurePropertiesVisibility
         {
@@ -967,7 +955,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
                 }
 
                 OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.EnableCrestLevelTimeSeries));
-                OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.GatedVisibility));
                 OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.GateOpeningHeight));
             }
         }
@@ -1013,7 +1000,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
                 }
 
                 OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.EnableLowerEdgeLevelTimeSeries));
-                OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.GatedVisibility));
                 OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.GateOpeningHeight));
 
             }
