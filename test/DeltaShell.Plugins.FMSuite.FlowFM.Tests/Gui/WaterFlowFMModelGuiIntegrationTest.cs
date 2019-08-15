@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
+using DelftTools.Controls;
 using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core;
@@ -21,10 +22,13 @@ using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
 using DeltaShell.Plugins.Data.NHibernate;
+using DeltaShell.Plugins.FMSuite.Common.IO.ImportExport;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
+using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.ImportersExporters;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model;
@@ -37,6 +41,7 @@ using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms.CoverageViews;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using GeoAPI.Geometries;
+using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using SharpMap.Layers;
@@ -682,7 +687,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             Action<IApplication> testAction = app => app.CloseProject();
 
             // 3. Run and verify test
-            AssertMultiplFunctionViewClosedAsExpected(fileLocation, testAction);
+            AssertMultipleFunctionViewClosedAsExpected(fileLocation, testAction);
         }
 
         [Test]
@@ -704,10 +709,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             };
 
             // 3. Run and verify test
-            AssertMultiplFunctionViewClosedAsExpected(fileLocation, testAction);
+            AssertMultipleFunctionViewClosedAsExpected(fileLocation, testAction);
         }
 
-        private static void AssertMultiplFunctionViewClosedAsExpected(string filePath, Action<IApplication> applicationAction)
+        private static void AssertMultipleFunctionViewClosedAsExpected(string filePath, Action<IApplication> applicationAction)
         {
             using (var dsProjLocation = new TemporaryDirectory())
             {
@@ -720,19 +725,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 {
                     IApplication app = gui.Application;
                     // Load app plugins
-                    app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                    app.Plugins.Add(new CommonToolsApplicationPlugin());
-                    app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                    app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                    app.Plugins.Add(new FlowFMApplicationPlugin());
-                    // Load gui plugins
-                    gui.Plugins.Add(new CommonToolsGuiPlugin());
-                    gui.Plugins.Add(new ProjectExplorerGuiPlugin());
-                    gui.Plugins.Add(new NetworkEditorGuiPlugin());
-                    gui.Plugins.Add(new SharpMapGisGuiPlugin());
-                    gui.Plugins.Add(new FlowFMGuiPlugin());
+                    RunConfiguredFmSuiteGui(gui);
 
-                    gui.Run();
                     bool projectOpened = app.OpenProject(tempFileLocation);
                     
                     // 3. Verify initial expectations
@@ -776,8 +770,100 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             }
         }
 
+        [Test]
+        [Category(TestCategory.WindowsForms)]
+        public void Given_FlowFmModel_When_Importing_Pli_Files_Then_UpdatesTreeView()
+        {
+            // 1. Define test data
+            var testFmModel = new WaterFlowFMModel();
+            var testParentNodeName = "Sources and Sinks";
+            string testFileLocation = TestHelper.GetTestFilePath(@"pli_files\waal_test_134_laterals.pli");
+
+            Action<Project> prepareTestProject = (project) => project.RootFolder.Add(testFmModel);
+            Func<DeltaShellGui, ITreeNode> getSourceAndSinksNode = (gui) =>
+                gui.MainWindow.ProjectExplorer.TreeView.AllLoadedNodes.FirstOrDefault(
+                    ln => ln.Text.Equals(testParentNodeName));
+            Func<DeltaShellGui, PliFileImporterExporter<SourceAndSink, Feature2D>> getImporter = (gui) =>
+                gui.Application.FileImporters.OfType<PliFileImporterExporter<SourceAndSink, Feature2D>>()
+                   .SingleOrDefault();
+
+            // 2. Define initial expectations
+            Action<DeltaShellGui> verifyInitialExpectations = (gui) =>
+            {
+                Assert.That(gui, Is.Not.Null, "Gui not initialized correctly.");
+
+                Project project = gui.Application?.Project;
+                Assert.That(project, Is.Not.Null, "Project was not initialized");
+                Assert.That(project.GetAllItemsRecursive().Contains(testFmModel), Is.True,
+                            "Fm Model was not loaded correctly");
+
+                // Verify test elements.
+                ITreeNode sourceAndSinksNode = getSourceAndSinksNode(gui);
+                Assert.That(sourceAndSinksNode, Is.Not.Null, "Parent node for Sources And Sinks not found.");
+                Assert.That(sourceAndSinksNode.Nodes.Any(), Is.False,
+                            "Nodes already present under the parent node.");
+                Assert.That(testFmModel.SourcesAndSinks.Any(), Is.False, "There are already sources and sinks, the test cannot proceed.");
+                Assert.That(getImporter(gui), Is.Not.Null, "No Importer was found, the test cannot proceed.");
+            };
+
+            // 3. Define final expectations
+            Action<DeltaShellGui> verifyFinalExpectations = (gui) =>
+            {
+                Assert.That(testFmModel.SourcesAndSinks.Any(), Is.True, "No sources and sinks were imported.");
+                Assert.That(getSourceAndSinksNode(gui).Nodes.Any(), Is.True,
+                            "No nodes were added to the project tree folder.");
+            };
+
+            // 4. Run test
+            using (var dsProjLocation = new TemporaryDirectory())
+            {
+                string tempFileLocation = dsProjLocation.CopyTestDataFileToTempDirectory(testFileLocation);
+                using (var gui = new DeltaShellGui())
+                {
+                    RunConfiguredFmSuiteGui(gui);
+                    Action mainWindowShown = () =>
+                    {
+                        prepareTestProject(gui.Application.Project);
+                        verifyInitialExpectations(gui);
+                        PliFileImporterExporter<SourceAndSink, Feature2D> importer = getImporter(gui);
+                        var fileImportActivity = new FileImportActivity(importer, testFmModel.SourcesAndSinks)
+                        {
+                            Files = new[]
+                            {
+                                tempFileLocation
+                            }
+                        };
+                        gui.Application.RunActivity(fileImportActivity);
+                        verifyFinalExpectations(gui);
+                    };
+                    WpfTestHelper.ShowModal(gui.MainWindow as Control, mainWindowShown);
+                    gui.Dispose();
+                }
+            }
+        }
+        
 
         #region Helper methods
+
+        private static void RunConfiguredFmSuiteGui(DeltaShellGui gui)
+        {
+            IApplication app = gui.Application;
+            // Load app plugins
+            app.Plugins.Add(new NHibernateDaoApplicationPlugin());
+            app.Plugins.Add(new CommonToolsApplicationPlugin());
+            app.Plugins.Add(new SharpMapGisApplicationPlugin());
+            app.Plugins.Add(new NetworkEditorApplicationPlugin());
+            app.Plugins.Add(new FlowFMApplicationPlugin());
+            // Load gui plugins
+            gui.Plugins.Add(new CommonToolsGuiPlugin());
+            gui.Plugins.Add(new ProjectExplorerGuiPlugin());
+            gui.Plugins.Add(new NetworkEditorGuiPlugin());
+            gui.Plugins.Add(new SharpMapGisGuiPlugin());
+            gui.Plugins.Add(new FlowFMGuiPlugin());
+            // Run gui
+            gui.Run();
+        }
+
         private static Stopwatch StartTimer()
         {
             var timer = new Stopwatch();
