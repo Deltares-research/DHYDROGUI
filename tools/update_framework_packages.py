@@ -13,12 +13,11 @@ def searchfiles(extension, folder):
     for r, d, f in os.walk(folder):
         for file in f:
             if file.endswith(extension):
-                file_path = Path(r) / Path(file)
-                yield file_path
+                yield Path(r) / Path(file)
 
 if __name__ == "__main__":
     args = get_args()
-    root_path = Path(args.svn_root_path)
+    root_path = args.svn_root_path
     version_number = args.version_number
 
     config_file_paths = list(searchfiles('packages.config', root_path))
