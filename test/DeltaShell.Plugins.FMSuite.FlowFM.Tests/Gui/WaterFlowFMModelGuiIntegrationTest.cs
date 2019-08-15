@@ -725,7 +725,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 {
                     IApplication app = gui.Application;
                     // Load app plugins
-                    InitializeAndRunFmSuiteGuiAppPlugins(gui);
+                    RunConfiguredFmSuiteGui(gui);
 
                     bool projectOpened = app.OpenProject(tempFileLocation);
                     
@@ -783,9 +783,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             Func<DeltaShellGui, ITreeNode> getSourceAndSinksNode = (gui) =>
                 gui.MainWindow.ProjectExplorer.TreeView.AllLoadedNodes.FirstOrDefault(
                     ln => ln.Text.Equals(testParentNodeName));
-            Func<DeltaShellGui, IFeature2DImporterExporter> getImporter = (gui) =>
+            Func<DeltaShellGui, PliFileImporterExporter<SourceAndSink, Feature2D>> getImporter = (gui) =>
                 gui.Application.FileImporters.OfType<PliFileImporterExporter<SourceAndSink, Feature2D>>()
-                   .FirstOrDefault();
+                   .SingleOrDefault();
 
             // 2. Define initial expectations
             Action<DeltaShellGui> verifyInitialExpectations = (gui) =>
@@ -814,17 +814,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                             "No nodes were added to the project tree folder.");
             };
 
-            // 4. Define test action
-            Action<string> testAction = (tempFileLocation) =>
+            // 4. Run test
+            using (var dsProjLocation = new TemporaryDirectory())
             {
+                string tempFileLocation = dsProjLocation.CopyTestDataFileToTempDirectory(testFileLocation);
                 using (var gui = new DeltaShellGui())
                 {
-                    InitializeAndRunFmSuiteGuiAppPlugins(gui);
+                    RunConfiguredFmSuiteGui(gui);
                     Action mainWindowShown = () =>
                     {
                         prepareTestProject(gui.Application.Project);
                         verifyInitialExpectations(gui);
-                        var importer = getImporter(gui) as PliFileImporterExporter<SourceAndSink, Feature2D>;
+                        PliFileImporterExporter<SourceAndSink, Feature2D> importer = getImporter(gui);
                         var fileImportActivity = new FileImportActivity(importer, testFmModel.SourcesAndSinks)
                         {
                             Files = new[]
@@ -838,20 +839,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     WpfTestHelper.ShowModal(gui.MainWindow as Control, mainWindowShown);
                     gui.Dispose();
                 }
-            };
-
-            // 5. Run test
-            using (var dsProjLocation = new TemporaryDirectory())
-            {
-                string tempFileLocation = dsProjLocation.CopyTestDataFileToTempDirectory(testFileLocation);
-                testAction(tempFileLocation);
             }
         }
         
 
         #region Helper methods
 
-        private static void InitializeAndRunFmSuiteGuiAppPlugins(DeltaShellGui gui)
+        private static void RunConfiguredFmSuiteGui(DeltaShellGui gui)
         {
             IApplication app = gui.Application;
             // Load app plugins
