@@ -43,7 +43,7 @@ using SharpMap.Extensions.CoordinateSystems;
 namespace DeltaShell.Plugins.FMSuite.Wave
 {
     [Entity]
-    public class WaveModel : TimeDependentModelBase, IDisposable, IGridOperationApi, IHasCoordinateSystem, IFileBased,
+    public class WaveModel : TimeDependentModelBase, IDisposable, IGridOperationApi, IWaveModel, IFileBased,
                              IHydroModel, IDimrModel
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(WaveModel));
@@ -216,8 +216,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         private readonly MdwFile mdwFile = new MdwFile();
         private IWaveModelApi waveApi;
 
-        public readonly IEventedList<Feature2D> Boundaries = new EventedList<Feature2D>();
-        public readonly IEventedList<Feature2D> Sp2Boundaries = new EventedList<Feature2D>();
+        public IEventedList<Feature2D> Boundaries { get; }
+        public IEventedList<Feature2D> Sp2Boundaries { get; }
 
         private WaveDomainData outerDomain;
 
@@ -393,7 +393,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         }
 
         public IEventedList<Feature2DPoint> ObservationPoints { get; set; }
-        public IEventedList<Feature2D> ObservationCrossSections;
+        public IEventedList<Feature2D> ObservationCrossSections { get; set; }
         public IEventedList<WaveObstacle> Obstacles { get; set; }
         public IEventedList<WaveBoundaryCondition> BoundaryConditions { get; set; }
 
@@ -425,7 +425,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         private WaveModel(Action<WaveModel> creationCode) : base("Waves")
         {
+            Boundaries = new EventedList<Feature2D>();
+            Sp2Boundaries = new EventedList<Feature2D>();
             BuildModel(creationCode, false);
+            
 
             ShowModelRunConsole = false;
             ValidateBeforeRun = true;
