@@ -6,6 +6,7 @@
              xmlns:sturctures="clr-namespace:DelftTools.Hydro.Structures;assembly=DelftTools.Hydro"
              xmlns:system="clr-namespace:System;assembly=mscorlib"
              xmlns:converters="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui.Converters"
+             xmlns:valueConverters="clr-namespace:DelftTools.Controls.Wpf.ValueConverters;assembly=DelftTools.Controls.Wpf"
              xmlns:structureFeatureView="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView"
              xmlns:weirFormula="clr-namespace:DelftTools.Hydro.Structures.WeirFormula;assembly=DelftTools.Hydro"
              xmlns:weirFormulaViews="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView.WeirFormulaViews"
@@ -46,6 +47,10 @@
         <converters:EnumToDescriptionConverter x:Key="EnumToDescriptionConverter"/>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         <structureFeatureView:EmptyDoubleValueConverter x:Key="NullableValueConverter" />
+        <valueConverters:ValueConverterGroup x:Key="InverseBoolToVisibility">
+            <valueConverters:InverseBooleanConverter/>
+            <BooleanToVisibilityConverter/>
+        </valueConverters:ValueConverterGroup>
     </UserControl.Resources>
 
     <!--DATACONTEXT RESOURCE-->
@@ -130,37 +135,22 @@
                     <Label Grid.Row="0" Grid.Column="6" Content="Downstream 2" Visibility="{Binding  GeneralStructurePropertiesVisibility}"/>
                     
                     <Label Grid.Row="1" Grid.Column="0" Content="Crest level" />
-                    <ContentControl Grid.Row="1" Grid.Column="1">
-                        <ContentControl.Style>
-                            <Style TargetType="ContentControl">
-                                <Setter Property="Content">
-                                    <Setter.Value>
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition />
-                                                <ColumnDefinition Width="Auto"/>
-                                            </Grid.ColumnDefinitions>
-                                            <TextBox Grid.Column="0">
-                                                <TextBox.Text>
-                                                    <Binding Path="BedLevelStructureCentre" Mode="TwoWay"/>
-                                                </TextBox.Text>
-                                            </TextBox>
-                                            <TextBlock Grid.Column="1" Text="m AD" Style="{StaticResource UnitLabelStyle}" />
-                                        </Grid>
-                                    </Setter.Value>
-                                </Setter>
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding EnableCrestLevelTimeSeries}" Value="True">
-                                        <Setter Property="Content">
-                                            <Setter.Value>
-                                                <Button Margin="5" Content=" Time series" VerticalAlignment="Center" Command="{Binding Path=OnEditCrestLevelTimeSeries}"/>
-                                            </Setter.Value>
-                                        </Setter>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </ContentControl.Style>
-                    </ContentControl>
+                    <Grid Grid.Row="1" Grid.Column="1"
+                          Visibility="{Binding EnableCrestLevelTimeSeries, Converter={StaticResource InverseBoolToVisibility}}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Grid.Column="0">
+                            <TextBox.Text>
+                                <Binding Path="BedLevelStructureCentre" Mode="TwoWay"/>
+                            </TextBox.Text>
+                        </TextBox>
+                        <TextBlock Grid.Column="1" Text="m AD" Style="{StaticResource UnitLabelStyle}" />
+                    </Grid>
+                    <Button Grid.Row="1" Grid.Column="1"
+                            Visibility="{Binding EnableCrestLevelTimeSeries, Converter={StaticResource BooleanToVisibilityConverter}}"
+                            Margin="5" Content=" Time series" VerticalAlignment="Center" Command="{Binding Path=OnEditCrestLevelTimeSeries}"/>
                     <CheckBox  Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding EnableCrestLevelTimeSeries}"/>
                     <TextBox Grid.Row="1" Grid.Column="3" Visibility="{Binding GeneralStructurePropertiesVisibility}">
                         <TextBox.Text>
@@ -259,44 +249,36 @@
                     <Label Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center" Content="Time Series" />
 
                     <Label Grid.Row="1" Grid.Column="0" Content="Gate lower edge level"/>
-                    <ContentControl Grid.Row="1" Grid.Column="1">
-                        <ContentControl.Style>
-                            <Style TargetType="ContentControl">
-                                <Setter Property="Content">
-                                    <Setter.Value>
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition />
-                                                <ColumnDefinition Width="Auto"/>
-                                            </Grid.ColumnDefinitions>
-                                            <TextBox Grid.Column="0" Text="{Binding LowerEdgeLevel}"/>
-                                            <TextBlock Grid.Column="1" Text="m AD" Style="{StaticResource UnitLabelStyle}" />
-                                        </Grid>
-                                 </Setter.Value>
-                                </Setter>
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding EnableLowerEdgeLevelTimeSeries}" Value="True">
-                                        <Setter Property="Content">
-                                            <Setter.Value>
-                                                <Button Margin="5" Content=" Time series" VerticalAlignment="Center" Command="{Binding Path=OnEditLowerEdgeLevelTimeSeries}"/>
-                                            </Setter.Value>
-                                        </Setter>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </ContentControl.Style>
-                    </ContentControl>
-
-                    <CheckBox Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding EnableLowerEdgeLevelTimeSeries}"/>
-                    <Label Grid.Row="2" Grid.Column="0" Content="Gate opening height" Visibility="{Binding GatedVisibility}" IsEnabled="False"/>
-
-                    <Grid Grid.Row="2" Grid.Column="1" ToolTip="Calculated value from: Gate Lower edge level - Sill Crest level" >
+                    <Grid Grid.Row="1"
+                          Grid.Column="1"
+                          Visibility="{Binding EnableLowerEdgeLevelTimeSeries, Converter={StaticResource InverseBoolToVisibility}}">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition />
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <Label Content="{Binding GateOpeningHeight, Mode=OneWay}" Visibility="{Binding GatedVisibility}" VerticalAlignment="Center" Foreground="Gray"/>
-                        <TextBlock Grid.Column="1" Text="m"  Visibility="{Binding GatedVisibility}" Width="{StaticResource UnitWidth}" Margin="3" Foreground="Gray"/>
+                        <TextBox Grid.Column="0" Text="{Binding LowerEdgeLevel}"/>
+                        <TextBlock Grid.Column="1" Text="m AD" Style="{StaticResource UnitLabelStyle}" />
+                    </Grid>
+                    <Button 
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Margin="5" Content=" Time series" 
+                        VerticalAlignment="Center" Command="{Binding Path=OnEditLowerEdgeLevelTimeSeries}"
+                        Visibility="{Binding EnableLowerEdgeLevelTimeSeries, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                    <CheckBox Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding EnableLowerEdgeLevelTimeSeries}"/>
+                    <Label Grid.Row="2" Grid.Column="0" Content="Gate opening height"
+                           Visibility="{Binding EnableLowerEdgeLevelTimeSeries, Converter={StaticResource InverseBoolToVisibility}}"
+                           IsEnabled="False"/>
+                    <Grid Grid.Row="2" Grid.Column="1" ToolTip="Calculated value from: Gate Lower edge level - Sill Crest level"
+                          Visibility="{Binding EnableLowerEdgeLevelTimeSeries, Converter={StaticResource InverseBoolToVisibility}}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Content="{Binding GateOpeningHeight, Mode=OneWay}"
+                               VerticalAlignment="Center" Foreground="Gray"/>
+                        <TextBlock Grid.Column="1" Text="m" 
+                                   Width="{StaticResource UnitWidth}" Margin="3" Foreground="Gray"/>
                     </Grid>
                     <Label Grid.Row="3" Grid.Column="0" Content="Gate height"/>
 
@@ -311,35 +293,20 @@
 
                     <Label Grid.Row="4" Grid.Column="0" Content="Horizontal opening width"/>
                     <CheckBox Grid.Row="4" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding EnableHorizontalDoorOpeningWidthTimeSeries}"/>
-                    <ContentControl Grid.Row="4" Grid.Column="1">
-                        <ContentControl.Style>
-                            <Style TargetType="ContentControl">
-                                <Setter Property="Content">
-                                    <Setter.Value>
-                                        <Grid Grid.Row="2" Grid.Column="1">
-                                        
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition />
-                                                <ColumnDefinition Width="Auto"/>
-                                            </Grid.ColumnDefinitions>
-                                            <TextBox Text="{Binding HorizontalDoorOpeningWidth }"/>
-                                            <TextBlock Text="m" Grid.Column="1"  Style="{StaticResource UnitLabelStyle}"/>
-                                      
-                                        </Grid>
-                                    </Setter.Value>
-                                </Setter>
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding EnableHorizontalDoorOpeningWidthTimeSeries}" Value="True">
-                                        <Setter Property="Content">
-                                            <Setter.Value>
-                                                <Button Margin="5" Content=" Time series" VerticalAlignment="Center" Command="{Binding Path=OnEditHorizontalDoorOpeningWidthTimeSeries}"/>
-                                            </Setter.Value>
-                                        </Setter>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </ContentControl.Style>
-                    </ContentControl>
+                    <Grid Grid.Row="4"
+                          Grid.Column="1"
+                          Visibility="{Binding EnableHorizontalDoorOpeningWidthTimeSeries, Converter={StaticResource InverseBoolToVisibility}}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Text="{Binding HorizontalDoorOpeningWidth }"/>
+                        <TextBlock Text="m" Grid.Column="1"  Style="{StaticResource UnitLabelStyle}"/>
+                    </Grid>
+                    <Button Grid.Row="4"
+                            Grid.Column="1"
+                            Visibility="{Binding EnableHorizontalDoorOpeningWidthTimeSeries, Converter={StaticResource BooleanToVisibilityConverter}}"
+                            Margin="5" Content=" Time series" VerticalAlignment="Center" Command="{Binding Path=OnEditHorizontalDoorOpeningWidthTimeSeries}"/>
 
                     <Label Grid.Row="5" Grid.Column="0" Content="Horizontal opening direction"/>
                     <ComboBox Grid.Row="5" Grid.Column="1"  ItemsSource="{Binding Source={StaticResource HorizontalOpeningDirections}}" SelectedItem="{Binding SelectedDoorOpeningHeightDirectionType}" IsEnabled="{Binding GatedWeirPropertiesEnabled}"/>
