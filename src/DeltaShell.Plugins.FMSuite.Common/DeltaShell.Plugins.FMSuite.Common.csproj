@@ -133,6 +133,7 @@
     <Compile Include="Dependency\ValueEqualsDependencyExpression.cs" />
     <Compile Include="Dependency\ValueGreaterOrLesserThanDependencyExpression.cs" />
     <Compile Include="DepthLayers\DepthLayerType.cs" />
+    <Compile Include="FeatureData\BoundaryConditionsPointsSyncedList.cs" />
     <Compile Include="FeatureData\FeatureDataSyncer.cs" />
     <Compile Include="FeatureData\BoundaryCondition.cs" />
     <Compile Include="FeatureData\BoundaryConditionFactory.cs" />

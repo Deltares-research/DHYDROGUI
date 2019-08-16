@@ -106,11 +106,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
 
             if (!Feature.Attributes.ContainsKey(Feature2D.LocationKey))
             {
-                Feature.Attributes.Add(Feature2D.LocationKey, CreateGeometryPointsSyncedList());
+                Feature.Attributes.Add(Feature2D.LocationKey, CreateSyncedList());
             }
-            else if (!(Feature.Attributes[Feature2D.LocationKey] is GeometryPointsSyncedList<string>))
+            else if (!(Feature.Attributes[Feature2D.LocationKey] is BoundaryConditionsPointsSyncedList))
             {
-                GeometryPointsSyncedList<string> geometryPointsSyncedList = CreateGeometryPointsSyncedList();
+                BoundaryConditionsPointsSyncedList geometryPointsSyncedList = CreateSyncedList();
 
                 var locations = Feature.Attributes[Feature2D.LocationKey] as IList<string>;
 
@@ -129,9 +129,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
             }
         }
 
-        private GeometryPointsSyncedList<string> CreateGeometryPointsSyncedList()
+        private BoundaryConditionsPointsSyncedList CreateSyncedList()
         {
-            return new GeometryPointsSyncedList<string>
+            return new BoundaryConditionsPointsSyncedList
             {
                 CreationMethod = DefaultLocationName,
                 RecreateAllItems = false,
