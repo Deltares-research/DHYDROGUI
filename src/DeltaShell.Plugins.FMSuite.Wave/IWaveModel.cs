@@ -7,6 +7,12 @@ using NetTopologySuite.Extensions.Features;
 
 namespace DeltaShell.Plugins.FMSuite.Wave
 {
+    /// <summary>
+    /// Interface for WaveModel classes
+    /// </summary>
+    /// <seealso cref="DelftTools.Shell.Core.Workflow.ITimeDependentModel" />
+    /// <seealso cref="DelftTools.Hydro.IHasCoordinateSystem" />
+    /// <seealso cref="DelftTools.Utils.Editing.IEditableObject" />
     public interface IWaveModel : ITimeDependentModel, IHasCoordinateSystem, IEditableObject
     {
         IEventedList<Feature2DPoint> ObservationPoints { get; set; }

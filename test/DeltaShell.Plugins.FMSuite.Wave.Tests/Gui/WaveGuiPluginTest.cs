@@ -187,7 +187,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
             Assert.NotNull(otherLayers);
 
             Assert.IsTrue(coverageLayer.Visible);
-            Assert.IsFalse(otherLayers.Any(l=>l.Visible));
         }
     }
 }
