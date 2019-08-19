@@ -12,8 +12,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
     {
         private const string timeVariableName = "nmesh2d_dlwq_time";
         private const string timeDimensionName = "nmesh2d_dlwq_time";
-        private const string facesDimensionName = "nmesh2d_face";
         private const string substanceAttributeName = "delwaq_name";
+        private const string mesh2dVariableName = "mesh2d";
+        private const string faceDimensionAttributeName = "face_dimension";
 
         /// <summary>
         /// Reads the meta data of the provided <paramref name="path"/>
@@ -24,7 +25,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             return DoWithNetCdfFile(path, file =>
             {
                 IEnumerable<DateTime> times = NetCdfFileReaderHelper.GetDateTimes(file, timeVariableName);
-                int nFaces = file.GetDimensionLength(facesDimensionName);
+                int nFaces = file.GetDimensionLength(GetFaceDimensionName(file));
                 Dictionary<string, string> substanceToVariableMapping = SubstanceToVariableMapping(file);
                 int nTimeSteps = file.GetDimensionLength(timeDimensionName);
 
@@ -117,7 +118,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                         origin = timeStepIndex;
                     }
                 }
-                else if (dimensionName == facesDimensionName)
+                else if (dimensionName == GetFaceDimensionName(file))
                 {
                     if (segmentIndex == -1)
                     {
@@ -153,6 +154,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             List<double> doubleValues = (from float floatValue in floatArray
                                          select (double) floatValue).ToList();
             return doubleValues;
+        }
+
+        private static string GetFaceDimensionName(NetCdfFile file)
+        {
+            NetCdfVariable mesh2dVariable = file.GetVariableByName(mesh2dVariableName);
+            return file.GetAttributeValue(mesh2dVariable, faceDimensionAttributeName);
         }
     }
 }
