@@ -1374,24 +1374,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                 return;
             }
 
-            string mapFilePath = Path.Combine(ModelSettings.OutputDirectory, "deltashell.map");
-            if (File.Exists(mapFilePath))
-            {
-                MapFileFunctionStore.Path = mapFilePath;
-            }
-
-            string mapNetCdfFilePath = Path.Combine(ModelSettings.OutputDirectory, "deltashell_map.nc");
-            if (File.Exists(mapNetCdfFilePath))
-            {
-                if (!NetCdfFileConventionChecker.HasSupportedConvention(mapNetCdfFilePath))
-                {
-                    Log.Warn($"Unsupported convention in file. Make sure CF is 1.6 or higher and UGRID is 1.0 or higher. Please see {mapNetCdfFilePath}.");
-                }
-                else
-                {
-                    MapFileFunctionStore.Path = mapNetCdfFilePath;
-                }
-            }
+            this.ConnectMapOutput();
 
             waqProcessor.AddOutput(ModelSettings.OutputDirectory, ObservationVariableOutputs,
                                    (displayName, filePath) => this.AddTextDocument(displayName, filePath),

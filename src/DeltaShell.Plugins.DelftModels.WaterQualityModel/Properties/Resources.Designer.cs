@@ -445,6 +445,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to File &lt;{0}&gt; does not meet supported UGRID 1.0 or newer standard..
+        /// </summary>
+        public static string WaterQualityModel_File_does_not_meet_supported_UGRID_1_0_or_newer_standard {
+            get {
+                return ResourceManager.GetString("WaterQualityModel_File_does_not_meet_supported_UGRID_1_0_or_newer_standard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The process coefficient {0} has been updated with the latest Hydrodynamic data file..
         /// </summary>
         public static string WaterQualityModel_HandleNewHydroDynamicsFunctionDataSet_The_process_coefficient__0__has_been_updated_with_the_latest_Hydrodynamic_data_file_ {

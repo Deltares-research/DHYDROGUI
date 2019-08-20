@@ -677,4 +677,7 @@ INCLUDE 'includes_deltashell/B8_initials.inc'       ; From UI: Initials
   <data name="DelwaqNetCdfMapFileReader_Map_file_not_found" xml:space="preserve">
     <value>Map file was not found at {0}.</value>
   </data>
+  <data name="WaterQualityModel_File_does_not_meet_supported_UGRID_1_0_or_newer_standard" xml:space="preserve">
+    <value>File &lt;{0}&gt; does not meet supported UGRID 1.0 or newer standard.</value>
+  </data>
 </root>
