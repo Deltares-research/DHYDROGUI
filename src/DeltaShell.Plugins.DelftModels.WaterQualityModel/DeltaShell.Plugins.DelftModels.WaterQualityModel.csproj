@@ -79,6 +79,7 @@
     <Compile Include="DataObjects\SubstanceProcessLibrary\WaterQualityParameter.cs" />
     <Compile Include="IO\DelwaqNetCdfHistoryFileReader.cs" />
     <Compile Include="IO\DelwaqNetCdfMapFileReader.cs" />
+    <Compile Include="IO\NetCdfFileConventionChecker.cs" />
     <Compile Include="IO\InputFileExporter.cs" />
     <Compile Include="IO\BloomSpeFileReader.cs" />
     <Compile Include="IO\MapFileMetaData.cs" />

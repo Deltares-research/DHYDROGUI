@@ -100,6 +100,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Map file was not found at {0}..
+        /// </summary>
+        public static string DelwaqNetCdfMapFileReader_Map_file_not_found {
+            get {
+                return ResourceManager.GetString("DelwaqNetCdfMapFileReader_Map_file_not_found", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap hydFile {

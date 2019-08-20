@@ -1383,7 +1383,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             string mapNetCdfFilePath = Path.Combine(ModelSettings.OutputDirectory, "deltashell_map.nc");
             if (File.Exists(mapNetCdfFilePath))
             {
-                MapFileFunctionStore.Path = mapNetCdfFilePath;
+                if (!NetCdfFileConventionChecker.HasSupportedConvention(mapNetCdfFilePath))
+                {
+                    Log.Warn($"Unsupported convention in file. Make sure CF is 1.6 or higher and UGRID is 1.0 or higher. Please see {mapNetCdfFilePath}.");
+                }
+                else
+                {
+                    MapFileFunctionStore.Path = mapNetCdfFilePath;
+                }
             }
 
             waqProcessor.AddOutput(ModelSettings.OutputDirectory, ObservationVariableOutputs,

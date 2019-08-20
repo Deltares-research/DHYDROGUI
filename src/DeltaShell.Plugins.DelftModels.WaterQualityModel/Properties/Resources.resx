@@ -674,4 +674,7 @@ INCLUDE 'includes_deltashell/B8_initials.inc'       ; From UI: Initials
   <data name="DelwaqNetCdfHistoryFileReader_Read_History_file_not_found" xml:space="preserve">
     <value>History file was not found at {0}.</value>
   </data>
+  <data name="DelwaqNetCdfMapFileReader_Map_file_not_found" xml:space="preserve">
+    <value>Map file was not found at {0}.</value>
+  </data>
 </root>

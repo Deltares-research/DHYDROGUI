@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using DelftTools.Utils.NetCdf;
 using log4net;
@@ -47,6 +48,33 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             IEnumerable<int> timeVariableValues = file.Read(timeVariable).Cast<int>();
 
             return GetTimes(timeVariableValues, referenceDate);
+        }
+
+        /// <summary>
+        /// Performs an action with a <see cref="NetCdfFile" />.
+        /// </summary>
+        /// <typeparam name="T"> Return type of <paramref name="netCdfFunction" />. </typeparam>
+        /// <param name="path"> The path of the NetCdf file. </param>
+        /// <param name="netCdfFunction"> The function that performs an action with a <see cref="NetCdfFile" />. </param>
+        /// <returns> Returns the result of the <paramref name="netCdfFunction" />. </returns>
+        /// <exception cref="FileNotFoundException"> Thrown when <paramref name="path" /> does not exist. </exception>
+        public static T DoWithNetCdfFile<T>(string path, Func<NetCdfFile, T> netCdfFunction)
+        {
+            if (!File.Exists(path))
+            {
+                throw new FileNotFoundException(path);
+            }
+
+            NetCdfFile netCdfFile = null;
+            try
+            {
+                netCdfFile = NetCdfFile.OpenExisting(path);
+                return netCdfFunction(netCdfFile);
+            }
+            finally
+            {
+                netCdfFile?.Close();
+            }
         }
 
         private static DateTime ParseReferenceDate(NetCdfFile file, NetCdfVariable timeVariable)
