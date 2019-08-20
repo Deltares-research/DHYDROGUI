@@ -164,7 +164,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         }
 
         [Test]
-        public void ReadMetaData_FromFileContainingOtherFaceDimensionName_ThenCorrectMetaDataCanBeRead()
+        public void ReadMetaData_FromFileContainingOtherFaceDimensionName_ThenMetaDataCanBeRead()
         {
             path = TestHelper.GetTestFilePath(@"IO\deltashell_map_other_name.nc");
 
