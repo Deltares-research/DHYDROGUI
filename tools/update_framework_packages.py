@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 import re
 import argparse
+import glob
 
 
 def get_args():
@@ -11,17 +12,15 @@ def get_args():
     parser.add_argument("version_number", help="Version number of the Framework NuGet package")
     return parser.parse_args()
 
-def search_files(extension: str, folder):
+def search_files(folder: str, extension: str, file_name = '*'):
     """Returns full file paths with the specified extension in the folder."""
-    for r, d, f in os.walk(folder):
-        for file in f:
-            if file.endswith(extension):
-                yield Path(r) / Path(file)
+    return glob.glob("{}/**/{}.{}".format(folder, file_name, extension), recursive=True)
 
 
 def update_files(file_paths: list, find_and_replace_list: list, encoding=None):
     """Finds and replaces the content for each specified file."""
-    for p in file_paths:
+    for file_path in file_paths:
+        p = Path(file_path)
         with p.open(encoding=encoding) as f:
             lines = f.readlines()
 
@@ -37,7 +36,7 @@ if __name__ == "__main__":
     root_path = args.svn_root_path
     version_number = args.version_number
 
-    project_file_paths = search_files('.csproj', root_path)
+    project_file_paths = search_files(root_path, 'csproj')
     find_and_replace_csproj = [
         (r'DeltaShell\.Framework\.1\.4\.0\.\d{5}',      "DeltaShell.Framework.1.4.0." + version_number),
         (r'DeltaShell\.TestProject\.1\.4\.0\.\d{5}',    "DeltaShell.TestProject.1.4.0." + version_number),
@@ -46,7 +45,7 @@ if __name__ == "__main__":
 
     update_files(project_file_paths, find_and_replace_csproj, "utf-8-sig")
 
-    config_file_paths = search_files('packages.config', root_path)
+    config_file_paths = search_files(root_path, 'config', 'packages')
     find_and_replace_config = [
         (r'"DeltaShell\.ApplicationPlugin" version="1\.4\.0\.\d{5}"',   '"DeltaShell.ApplicationPlugin" version="1.4.0.' + version_number + '"'),
         (r'"DeltaShell\.Framework" version="1\.4\.0\.\d{5}"',           '"DeltaShell.Framework" version="1.4.0.' + version_number + '"'),
