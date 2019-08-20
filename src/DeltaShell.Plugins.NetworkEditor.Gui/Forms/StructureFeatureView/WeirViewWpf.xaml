@@ -5,8 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:sturctures="clr-namespace:DelftTools.Hydro.Structures;assembly=DelftTools.Hydro"
              xmlns:system="clr-namespace:System;assembly=mscorlib"
-             xmlns:converters="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui.Converters"
-             xmlns:valueConverters="clr-namespace:DelftTools.Controls.Wpf.ValueConverters;assembly=DelftTools.Controls.Wpf"
+             xmlns:valueConverteres="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui.Converters"
+             xmlns:frameworkValueConverters="clr-namespace:DelftTools.Controls.Wpf.ValueConverters;assembly=DelftTools.Controls.Wpf"
              xmlns:structureFeatureView="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView"
              xmlns:weirFormula="clr-namespace:DelftTools.Hydro.Structures.WeirFormula;assembly=DelftTools.Hydro"
              xmlns:weirFormulaViews="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView.WeirFormulaViews"
@@ -44,13 +44,37 @@
                 <x:Type TypeName="sturctures:GateOpeningDirection"/>
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
-        <converters:EnumToDescriptionConverter x:Key="EnumToDescriptionConverter"/>
+        <valueConverteres:EnumToDescriptionConverter x:Key="EnumToDescriptionConverter"/>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         <structureFeatureView:EmptyDoubleValueConverter x:Key="NullableValueConverter" />
-        <valueConverters:ValueConverterGroup x:Key="InverseBoolToVisibility">
-            <valueConverters:InverseBooleanConverter/>
+        <frameworkValueConverters:ValueConverterGroup x:Key="InverseBoolToVisibility">
+            <frameworkValueConverters:InverseBooleanConverter/>
             <BooleanToVisibilityConverter/>
-        </valueConverters:ValueConverterGroup>
+        </frameworkValueConverters:ValueConverterGroup>
+        <Style x:Key="GridGatedVisibility" TargetType="Grid">
+            <Setter Property="Visibility" Value="Collapsed" />
+            <Style.Triggers>
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding EnableLowerEdgeLevelTimeSeries}" Value="False" />
+                        <Condition Binding="{Binding EnableCrestLevelTimeSeries}" Value="False" />
+                    </MultiDataTrigger.Conditions>
+                    <Setter Property="Visibility" Value="Visible" />
+                </MultiDataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="LabelGatedVisibility" TargetType="Label">
+            <Setter Property="Visibility" Value="Collapsed" />
+            <Style.Triggers>
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding EnableLowerEdgeLevelTimeSeries}" Value="False" />
+                        <Condition Binding="{Binding EnableCrestLevelTimeSeries}" Value="False" />
+                    </MultiDataTrigger.Conditions>
+                    <Setter Property="Visibility" Value="Visible" />
+                </MultiDataTrigger>
+            </Style.Triggers>
+        </Style>
     </UserControl.Resources>
 
     <!--DATACONTEXT RESOURCE-->
@@ -266,11 +290,12 @@
                         VerticalAlignment="Center" Command="{Binding Path=OnEditLowerEdgeLevelTimeSeries}"
                         Visibility="{Binding EnableLowerEdgeLevelTimeSeries, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                     <CheckBox Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding EnableLowerEdgeLevelTimeSeries}"/>
+                    <!-- Gate lower edge level  -->
                     <Label Grid.Row="2" Grid.Column="0" Content="Gate opening height"
-                           Visibility="{Binding EnableLowerEdgeLevelTimeSeries, Converter={StaticResource InverseBoolToVisibility}}"
-                           IsEnabled="False"/>
-                    <Grid Grid.Row="2" Grid.Column="1" ToolTip="Calculated value from: Gate Lower edge level - Sill Crest level"
-                          Visibility="{Binding EnableLowerEdgeLevelTimeSeries, Converter={StaticResource InverseBoolToVisibility}}">
+                           IsEnabled="False" Style="{StaticResource LabelGatedVisibility}"/>
+                    <Grid Grid.Row="2" Grid.Column="1" 
+                          ToolTip="Calculated value from: Gate Lower edge level - Sill Crest level"
+                          Style="{StaticResource GridGatedVisibility}">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition />
                             <ColumnDefinition Width="Auto"/>
@@ -280,6 +305,7 @@
                         <TextBlock Grid.Column="1" Text="m" 
                                    Width="{StaticResource UnitWidth}" Margin="3" Foreground="Gray"/>
                     </Grid>
+                    <!-- Gate height -->
                     <Label Grid.Row="3" Grid.Column="0" Content="Gate height"/>
 
                     <Grid Grid.Row="3" Grid.Column="1">
