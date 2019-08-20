@@ -163,6 +163,20 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                         "An empty collection was expected to be returned when substance is not found in the metadata.");
         }
 
+        [Test]
+        public void ReadMetaData_FromFileContainingOtherFaceDimensionName_ThenCorrectMetaDataCanBeRead()
+        {
+            path = TestHelper.GetTestFilePath(@"IO\deltashell_map_other_name.nc");
+
+            // When
+            MapFileMetaData metaData = DelwaqNetCdfMapFileReader.ReadMetaData(path);
+
+            // Then
+            ValidateCounts(metaData);
+            ValidateSubstances(metaData);
+            ValidateTimes(metaData);
+        }
+
         private static void ValidateCounts(MapFileMetaData metaData)
         {
             Assert.AreEqual(7, metaData.NumberOfTimeSteps,
