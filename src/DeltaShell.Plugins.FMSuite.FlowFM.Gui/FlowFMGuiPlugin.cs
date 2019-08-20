@@ -201,16 +201,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             };
 
             // Validation
-                yield return new ViewInfo<WaterFlowFMModel, ValidationView>
+            yield return new ViewInfo<WaterFlowFMModel, ValidationView>
+            {
+                Description = "Validation Report",
+                Image = Common.Gui.Properties.Resources.validation,
+                AfterCreate = (v, o) =>
                 {
-                    Description = "Validation Report",
-                    Image = Common.Gui.Properties.Resources.validation,
-                    AfterCreate = (v, o) =>
-                    {
-                      v.Gui = Gui;
-                      v.OnValidate = d => (d as WaterFlowFMModel)?.Validate();
-                    }
-                };
+                  v.Gui = Gui;
+                  v.OnValidate = d => (d as WaterFlowFMModel)?.Validate();
+                }
+            };
 
             // Boundary conditions
             var boundaryConditionSetViewInfo = new ViewInfo<BoundaryConditionSet, BoundaryConditionEditor>
@@ -787,7 +787,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     ActiveMapView?.Map?.ZoomToExtents();
                 }
 
-                if (importer is WaterFlowFMFileImporter)
+                if (importer is WaterFlowFMFileImporter ||
+                    importer is IFeature2DImporterExporter)
                 {
                     Gui?.MainWindow?.ProjectExplorer?.TreeView?.Refresh();
                 }
