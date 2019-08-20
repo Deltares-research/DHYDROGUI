@@ -51,6 +51,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
 
         private IEventedList<string> sedimentFractionNames;
         private IEventedList<string> tracerNames;
+   
 
         public SourceAndSink()
         {
@@ -249,7 +250,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
         private static IFunction CreateData()
         {
             var function = new Function();
-            function.Arguments.Add(new Variable<DateTime>(TimeVariableName));
+            function.Arguments.Add(
+                new Variable<DateTime>(TimeVariableName) {DefaultValue = DateTime.Today});
             function.Components.Add(new Variable<double>(DischargeVariableName)
             {
                 Unit = new Unit(SourceSinkVariableInfo.DischargeUnitDescription,

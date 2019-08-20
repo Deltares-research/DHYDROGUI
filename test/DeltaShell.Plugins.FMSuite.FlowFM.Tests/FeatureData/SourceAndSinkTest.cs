@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using DelftTools.Functions.Generic;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
@@ -167,6 +169,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
             Assert.AreEqual(
                 componentsFirst.Select(c => c.Name), 
                 componentsNew.Select(c => c.Name));
+        }
+
+        [Test]
+        public void Given_DefaultSourceAndSink_When_Created_Then_DefaultVariableTime_Is_Now()
+        {
+            // 1. Set up test model
+            var sourceAndSink = new SourceAndSink();
+            var acceptedDifference = new TimeSpan(0,0,5);
+            DateTime defaultDateTime = DateTime.Today;
+
+            // 2. Verify expectations
+            Assert.That(sourceAndSink.Function, Is.Not.Null);
+            Assert.That(sourceAndSink.Function.Arguments, Is.Not.Null);
+            IVariable<DateTime> defaultArgument = sourceAndSink.Function.Arguments.OfType<IVariable<DateTime>>().FirstOrDefault();
+            Assert.That(defaultArgument, Is.Not.Null);
+            Assert.That(defaultArgument.DefaultValue, Is.Not.Null);
+
+            TimeSpan defValue = defaultArgument.DefaultValue.ToUniversalTime() - defaultDateTime.ToUniversalTime();
+            Assert.That(
+                defValue,
+                Is.LessThan(acceptedDifference), 
+                $"The default time for source and sink ({defaultArgument.DefaultValue}) does not match the expectations ({defaultDateTime}).");
         }
 
         private List<FlowBoundaryCondition> CreateBoundaryConditionList()
