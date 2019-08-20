@@ -172,9 +172,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             MapFileMetaData metaData = DelwaqNetCdfMapFileReader.ReadMetaData(path);
 
             // Then
-            ValidateCounts(metaData);
-            ValidateSubstances(metaData);
-            ValidateTimes(metaData);
+            Assert.That(metaData.NumberOfSegments, Is.EqualTo(16),
+                        "Number of segments was different than expected.");
         }
 
         private static void ValidateCounts(MapFileMetaData metaData)

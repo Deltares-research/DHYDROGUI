@@ -25,7 +25,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             return DoWithNetCdfFile(path, file =>
             {
                 IEnumerable<DateTime> times = NetCdfFileReaderHelper.GetDateTimes(file, timeVariableName);
-                int nFaces = file.GetDimensionLength(GetFaceDimensionName(file));
+                int nFaces = file.GetDimensionLength(GetFaceDimensionNameForMesh2D(file));
                 Dictionary<string, string> substanceToVariableMapping = SubstanceToVariableMapping(file);
                 int nTimeSteps = file.GetDimensionLength(timeDimensionName);
 
@@ -118,7 +118,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                         origin = timeStepIndex;
                     }
                 }
-                else if (dimensionName == GetFaceDimensionName(file))
+                else if (dimensionName == GetFaceDimensionNameForMesh2D(file))
                 {
                     if (segmentIndex == -1)
                     {
@@ -156,7 +156,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             return doubleValues;
         }
 
-        private static string GetFaceDimensionName(NetCdfFile file)
+        private static string GetFaceDimensionNameForMesh2D(NetCdfFile file)
         {
             NetCdfVariable mesh2dVariable = file.GetVariableByName(mesh2dVariableName);
             return file.GetAttributeValue(mesh2dVariable, faceDimensionAttributeName);
