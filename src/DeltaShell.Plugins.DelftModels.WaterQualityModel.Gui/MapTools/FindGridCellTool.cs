@@ -69,7 +69,27 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.MapTools
         /// </summary>
         public Func<UnstructuredGrid, WaterQualityModel> GetWaqModelForGrid { get; set; }
 
-        public override bool Enabled => base.Enabled && Layers.Any();
+        public override bool Enabled
+        {
+            get
+            {
+                if (!Layers.Any())
+                {
+                    return false;
+                }
+
+                var gridLayer = Layers.FirstOrDefault() as UnstructuredGridLayer;
+                if (gridLayer != null)
+                {
+                    UnstructuredGrid grid = gridLayer?.Grid;
+                    WaterQualityModel model = GetWaqModelForGrid(grid);
+
+                    return base.Enabled && model?.PointToGridCellMapper != null;
+                }
+
+                return base.Enabled;
+            }
+        }
 
         public override bool IsActive
         {
