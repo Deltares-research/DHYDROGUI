@@ -12,12 +12,12 @@ def get_args():
     parser.add_argument("version_number", help="Version number of the Framework NuGet package")
     return parser.parse_args()
 
-def search_files(folder: str, extension: str, file_name = '*'):
+def search_files(folder, extension, file_name = '*'):
     """Returns full file paths with the specified extension in the folder."""
     return glob.glob("{}/**/{}.{}".format(folder, file_name, extension), recursive=True)
 
 
-def update_files(file_paths: list, find_and_replace_list: list, encoding=None):
+def update_files(file_paths, find_and_replace_list, encoding=None):
     """Finds and replaces the content for each specified file."""
     for file_path in file_paths:
         p = Path(file_path)
