@@ -27,7 +27,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
 
             // Assert
             IEnumerable<string> messages = TestHelper.GetAllRenderedMessages(TestAction, Level.Warn);
-            string expectedWarning = string.Format(
+            var expectedWarning = string.Format(
                 Resources.WaqInitializationDataVerifier_GridFile_does_not_meet_supported_UGRID_1_0,
                 Path.GetFileName(filePath));
             Assert.That(messages, Contains.Item(expectedWarning));
@@ -68,7 +68,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
 
             // Assert
             IEnumerable<string> messages = TestHelper.GetAllRenderedMessages(TestAction, Level.Warn);
-            string expectedWarning =
+            var expectedWarning =
                 string.Format(Resources.WaqInitializationDataVerifier_Grid_file_was_not_found, filePath);
             Assert.That(messages, Contains.Item(expectedWarning));
         }
