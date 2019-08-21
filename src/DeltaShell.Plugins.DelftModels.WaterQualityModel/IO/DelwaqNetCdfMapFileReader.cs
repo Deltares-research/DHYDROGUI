@@ -1,7 +1,10 @@
 ﻿using DelftTools.Utils.NetCdf;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties;
+using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 {
@@ -10,6 +13,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
     /// </summary>
     public static class DelwaqNetCdfMapFileReader
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(DelwaqNetCdfMapFileReader));
+
         private const string timeVariableName = "nmesh2d_dlwq_time";
         private const string timeDimensionName = "nmesh2d_dlwq_time";
         private const string substanceAttributeName = "delwaq_name";
@@ -22,23 +27,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         /// <param name="path"> Path to the *_map.nc file </param>
         public static MapFileMetaData ReadMetaData(string path)
         {
-            return DoWithNetCdfFile(path, file =>
+            try
             {
-                IEnumerable<DateTime> times = NetCdfFileReaderHelper.GetDateTimes(file, timeVariableName);
-                int nFaces = file.GetDimensionLength(GetFaceDimensionName(file));
-                Dictionary<string, string> substanceToVariableMapping = SubstanceToVariableMapping(file);
-                int nTimeSteps = file.GetDimensionLength(timeDimensionName);
-
-                return new MapFileMetaData
-                {
-                    Times = times.ToList(),
-                    SubstancesMapping = substanceToVariableMapping,
-                    Substances = substanceToVariableMapping.Keys.ToList(),
-                    NumberOfTimeSteps = nTimeSteps,
-                    NumberOfSegments = nFaces,
-                    NumberOfSubstances = substanceToVariableMapping.Count
-                };
-            });
+                return NetCdfFileReaderHelper.DoWithNetCdfFile(path, ReadMetaData);
+            }
+            catch (FileNotFoundException)
+            {
+                log.Error(string.Format(Resources.DelwaqNetCdfMapFileReader_Map_file_not_found, path));
+                return new MapFileMetaData();
+            }
         }
 
         /// <summary>
@@ -55,7 +52,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         /// </returns>
         public static List<double> GetTimeStepData(string path, MapFileMetaData mapFileMeta, int timeStepIndex, string substanceName, int segmentIndex = -1)
         {
-            return DoWithNetCdfFile(path, file => GetDataAtIndices(substanceName, timeStepIndex, segmentIndex, mapFileMeta, file));
+            try
+            {
+                return NetCdfFileReaderHelper.DoWithNetCdfFile(
+                    path, file => GetDataAtIndices(substanceName, timeStepIndex, segmentIndex, mapFileMeta, file));
+            }
+            catch (FileNotFoundException)
+            {
+                log.Error(string.Format(Resources.DelwaqNetCdfMapFileReader_Map_file_not_found, path));
+                return new List<double>();
+            }
         }
 
         /// <summary>
@@ -68,21 +74,33 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         /// <returns> A list of double values at the specified  <paramref name="segmentIndex" /> for all time steps. </returns>
         public static List<double> GetTimeSeriesData(string path, MapFileMetaData mapFileMeta, string substanceName, int segmentIndex)
         {
-            return DoWithNetCdfFile(path, file => GetDataAtIndices(substanceName, -1, segmentIndex, mapFileMeta, file));
-        }
-
-        private static T DoWithNetCdfFile<T>(string path, Func<NetCdfFile, T> netCdfFunction)
-        {
-            NetCdfFile netCdfFile = null;
             try
             {
-                netCdfFile = NetCdfFile.OpenExisting(path);
-                return netCdfFunction(netCdfFile);
+                return NetCdfFileReaderHelper.DoWithNetCdfFile(path, file => GetDataAtIndices(substanceName, -1, segmentIndex, mapFileMeta, file));
             }
-            finally
+            catch (FileNotFoundException)
             {
-                netCdfFile?.Close();
+                log.Error(string.Format(Resources.DelwaqNetCdfMapFileReader_Map_file_not_found, path));
+                return new List<double>();
             }
+        }
+
+        private static MapFileMetaData ReadMetaData(NetCdfFile file)
+        {
+            IEnumerable<DateTime> times = NetCdfFileReaderHelper.GetDateTimes(file, timeVariableName);
+            int nFaces = file.GetDimensionLength(GetFaceDimensionNameForMesh2D(file));
+            Dictionary<string, string> substanceToVariableMapping = SubstanceToVariableMapping(file);
+            int nTimeSteps = file.GetDimensionLength(timeDimensionName);
+
+            return new MapFileMetaData
+            {
+                Times = times.ToList(),
+                SubstancesMapping = substanceToVariableMapping,
+                Substances = substanceToVariableMapping.Keys.ToList(),
+                NumberOfTimeSteps = nTimeSteps,
+                NumberOfSegments = nFaces,
+                NumberOfSubstances = substanceToVariableMapping.Count
+            };
         }
 
         private static List<double> GetDataAtIndices(string substanceName, int timeStepIndex, int segmentIndex,
@@ -118,7 +136,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                         origin = timeStepIndex;
                     }
                 }
-                else if (dimensionName == GetFaceDimensionName(file))
+                else if (dimensionName == GetFaceDimensionNameForMesh2D(file))
                 {
                     if (segmentIndex == -1)
                     {
@@ -156,7 +174,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             return doubleValues;
         }
 
-        private static string GetFaceDimensionName(NetCdfFile file)
+        private static string GetFaceDimensionNameForMesh2D(NetCdfFile file)
         {
             NetCdfVariable mesh2dVariable = file.GetVariableByName(mesh2dVariableName);
             return file.GetAttributeValue(mesh2dVariable, faceDimensionAttributeName);
