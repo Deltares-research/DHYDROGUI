@@ -1374,11 +1374,45 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                 return;
             }
 
-            this.ConnectMapOutput();
+            ConnectMapOutput();
 
             waqProcessor.AddOutput(ModelSettings.OutputDirectory, ObservationVariableOutputs,
                                    (displayName, filePath) => this.AddTextDocument(displayName, filePath),
                                    ModelSettings.MonitoringOutputLevel);
+        }
+
+        /// <summary>
+        /// Connects the output map files to the model.
+        /// </summary>
+        /// <remarks>
+        /// If both the binary and NetCDF file exist in the output directory,
+        /// then the NetCDF file is connected to the model, except when the
+        /// convention is not supported.
+        /// </remarks>
+        private void ConnectMapOutput()
+        {
+            string outputDirectory = ModelSettings.OutputDirectory;
+
+            string mapFilePath = Path.Combine(outputDirectory, FileConstants.BinaryMapFileName);
+            if (File.Exists(mapFilePath))
+            {
+                MapFileFunctionStore.Path = mapFilePath;
+            }
+
+            string mapNetCdfFilePath = Path.Combine(outputDirectory, FileConstants.NetCdfMapFileName);
+            if (!File.Exists(mapNetCdfFilePath))
+            {
+                return;
+            }
+
+            if (!NetCdfFileConventionChecker.HasSupportedConvention(mapNetCdfFilePath))
+            {
+                Log.WarnFormat(Resources.WaterQualityModel_File_does_not_meet_supported_UGRID_1_0_or_newer_standard, Path.GetFileName(mapNetCdfFilePath));
+            }
+            else
+            {
+                MapFileFunctionStore.Path = mapNetCdfFilePath;
+            }
         }
 
         protected override void OnCleanup()
