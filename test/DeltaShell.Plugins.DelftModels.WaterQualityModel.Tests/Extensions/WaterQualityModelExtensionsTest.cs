@@ -136,12 +136,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Extensions
 
                     // Assert
                     Assert.That(model.MapFileFunctionStore.Path, Is.EqualTo(filePath));
-
-                    model.Finish();
                 }
-
-                
-
             }
         }
 
