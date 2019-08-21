@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:sturctures="clr-namespace:DelftTools.Hydro.Structures;assembly=DelftTools.Hydro"
              xmlns:system="clr-namespace:System;assembly=mscorlib"
-             xmlns:valueConverteres="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui.Converters"
+             xmlns:valueConverters="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui.Converters"
              xmlns:frameworkValueConverters="clr-namespace:DelftTools.Controls.Wpf.ValueConverters;assembly=DelftTools.Controls.Wpf"
              xmlns:structureFeatureView="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView"
              xmlns:weirFormula="clr-namespace:DelftTools.Hydro.Structures.WeirFormula;assembly=DelftTools.Hydro"
@@ -44,7 +44,7 @@
                 <x:Type TypeName="sturctures:GateOpeningDirection"/>
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
-        <valueConverteres:EnumToDescriptionConverter x:Key="EnumToDescriptionConverter"/>
+        <valueConverters:EnumToDescriptionConverter x:Key="EnumToDescriptionConverter"/>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         <structureFeatureView:EmptyDoubleValueConverter x:Key="NullableValueConverter" />
         <frameworkValueConverters:ValueConverterGroup x:Key="InverseBoolToVisibility">
