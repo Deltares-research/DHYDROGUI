@@ -34,20 +34,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                 throw new ArgumentException($"Argument '{nameof(filePath)}' cannot be null or empty.");
             }
 
-            NetCdfFile netCdfFile = null;
             try
             {
-                netCdfFile = NetCdfFile.OpenExisting(filePath);
-                return Read(netCdfFile).ToArray();
+                return NetCdfFileReaderHelper.DoWithNetCdfFile(filePath, file => Read(file).ToArray());
             }
             catch (FileNotFoundException)
             {
                 log.ErrorFormat(Resources.DelwaqNetCdfHistoryFileReader_Read_History_file_not_found, filePath);
                 return new DelwaqHisFileData[0];
-            }
-            finally
-            {
-                netCdfFile?.Close();
             }
         }
 

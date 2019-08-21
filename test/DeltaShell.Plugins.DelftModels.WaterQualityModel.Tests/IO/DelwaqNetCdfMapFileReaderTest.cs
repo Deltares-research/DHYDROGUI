@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties;
+using log4net.Core;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
@@ -161,6 +163,86 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             // Then
             Assert.That(data, Is.Empty,
                         "An empty collection was expected to be returned when substance is not found in the metadata.");
+        }
+
+        [Test]
+        public void ReadMetaData_FromFileContainingOtherFaceDimensionName_ThenMetaDataCanBeRead()
+        {
+            path = TestHelper.GetTestFilePath(@"IO\deltashell_map_other_name.nc");
+
+            // When
+            MapFileMetaData metaData = DelwaqNetCdfMapFileReader.ReadMetaData(path);
+
+            // Then
+            Assert.That(metaData.NumberOfSegments, Is.EqualTo(16),
+                        "Number of segments was different than expected.");
+        }
+
+        [Test]
+        public void ReadMetaData_WhenFileDoesNotExist_ThenCorrectErrorIsGiven()
+        {
+            // Set-up
+            path = "no_exist";
+            MapFileMetaData metaData = null;
+
+            // Action
+            void TestAction()
+            {
+                metaData = DelwaqNetCdfMapFileReader.ReadMetaData(path);
+            }
+
+            // Assert
+            IEnumerable<string> renderedErrorMessages = TestHelper.GetAllRenderedMessages(TestAction, Level.Error);
+            string expectedMessage = string.Format(Resources.DelwaqNetCdfMapFileReader_Map_file_not_found, path);
+            Assert.That(renderedErrorMessages, Contains.Item(expectedMessage));
+            Assert.That(metaData, Is.Not.Null,
+                        "Meta data should not have been null.");
+        }
+
+        [Test]
+        public void GetTimeStepData_WhenFileDoesNotExist_ThenCorrectErrorIsGiven()
+        {
+            // Set-up
+            path = "no_exist";
+            List<double> data = null;
+
+            // Action
+            void TestAction()
+            {
+                data = DelwaqNetCdfMapFileReader.GetTimeStepData(path, null, 0, "");
+            }
+
+            // Assert
+            IEnumerable<string> renderedErrorMessages = TestHelper.GetAllRenderedMessages(TestAction, Level.Error);
+            string expectedMessage = string.Format(Resources.DelwaqNetCdfMapFileReader_Map_file_not_found, path);
+            Assert.That(renderedErrorMessages, Contains.Item(expectedMessage));
+            Assert.That(data, Is.Not.Null,
+                        "Empty list should have been returned.");
+            Assert.That(data, Is.Empty,
+                        "Empty list should have been returned.");
+        }
+
+        [Test]
+        public void GetTimeSeriesData_WhenFileDoesNotExist_ThenCorrectErrorIsGiven()
+        {
+            // Set-up
+            path = "no_exist";
+            List<double> data = null;
+
+            // Action
+            void TestAction()
+            {
+                data = DelwaqNetCdfMapFileReader.GetTimeSeriesData(path, null, "", 0);
+            }
+
+            // Assert
+            IEnumerable<string> renderedErrorMessages = TestHelper.GetAllRenderedMessages(TestAction, Level.Error);
+            string expectedMessage = string.Format(Resources.DelwaqNetCdfMapFileReader_Map_file_not_found, path);
+            Assert.That(renderedErrorMessages, Contains.Item(expectedMessage));
+            Assert.That(data, Is.Not.Null,
+                        "Empty list should have been returned.");
+            Assert.That(data, Is.Empty,
+                        "Empty list should have been returned.");
         }
 
         private static void ValidateCounts(MapFileMetaData metaData)

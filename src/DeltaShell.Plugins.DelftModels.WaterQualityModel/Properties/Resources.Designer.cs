@@ -100,6 +100,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Map file was not found at {0}..
+        /// </summary>
+        public static string DelwaqNetCdfMapFileReader_Map_file_not_found {
+            get {
+                return ResourceManager.GetString("DelwaqNetCdfMapFileReader_Map_file_not_found", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap hydFile {
@@ -432,6 +441,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties {
         public static string WaterQualityBoundaryData_Time_series_post_fix {
             get {
                 return ResourceManager.GetString("WaterQualityBoundaryData_Time_series_post_fix", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File &lt;{0}&gt; does not meet supported UGRID 1.0 or newer standard..
+        /// </summary>
+        public static string WaterQualityModel_File_does_not_meet_supported_UGRID_1_0_or_newer_standard {
+            get {
+                return ResourceManager.GetString("WaterQualityModel_File_does_not_meet_supported_UGRID_1_0_or_newer_standard", resourceCulture);
             }
         }
         

@@ -1374,17 +1374,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                 return;
             }
 
-            string mapFilePath = Path.Combine(ModelSettings.OutputDirectory, "deltashell.map");
-            if (File.Exists(mapFilePath))
-            {
-                MapFileFunctionStore.Path = mapFilePath;
-            }
-
-            string mapNetCdfFilePath = Path.Combine(ModelSettings.OutputDirectory, "deltashell_map.nc");
-            if (File.Exists(mapNetCdfFilePath))
-            {
-                MapFileFunctionStore.Path = mapNetCdfFilePath;
-            }
+            this.ConnectMapOutput();
 
             waqProcessor.AddOutput(ModelSettings.OutputDirectory, ObservationVariableOutputs,
                                    (displayName, filePath) => this.AddTextDocument(displayName, filePath),
