@@ -314,7 +314,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             this.labelUnitMaxNeg.Name = "labelUnitMaxNeg";
             this.labelUnitMaxNeg.Size = new System.Drawing.Size(28, 13);
             this.labelUnitMaxNeg.TabIndex = 7;
-            this.labelUnitMaxNeg.Text = "m³/s";
+            this.labelUnitMaxNeg.Text = "m3/s";
             // 
             // textBoxMaxPos
             // 
@@ -407,7 +407,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             this.labelCrestLevel.Name = "labelCrestLevel";
             this.labelCrestLevel.Size = new System.Drawing.Size(156, 13);
             this.labelCrestLevel.TabIndex = 0;
-            this.labelCrestLevel.Text = GuiParameterNames.CrestLevel;
+            this.labelCrestLevel.Text = "Crest level";
             // 
             // textBoxCrestLevel
             // 
@@ -441,7 +441,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             this.labelCrestWidth.Name = "labelCrestWidth";
             this.labelCrestWidth.Size = new System.Drawing.Size(156, 13);
             this.labelCrestWidth.TabIndex = 0;
-            this.labelCrestWidth.Text = GuiParameterNames.CrestWidth;
+            this.labelCrestWidth.Text = "Crest width";
             // 
             // textBoxOffsetY
             // 
@@ -533,7 +533,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             this.labelUnitMaxPos.Name = "labelUnitMaxPos";
             this.labelUnitMaxPos.Size = new System.Drawing.Size(28, 13);
             this.labelUnitMaxPos.TabIndex = 0;
-            this.labelUnitMaxPos.Text = "m³/s";
+            this.labelUnitMaxPos.Text = "m3/s";
             // 
             // comboBoxCrestShape
             // 
