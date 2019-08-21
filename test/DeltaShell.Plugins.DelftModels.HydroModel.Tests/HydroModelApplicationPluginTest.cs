@@ -1,19 +1,14 @@
 ﻿using System.Linq;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
+using DelftTools.Shell.Gui.Swf;
 using DelftTools.TestUtils;
 using DeltaShell.Core;
-using DeltaShell.Plugins.CommonTools;
-using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel;
 using DeltaShell.Plugins.FMSuite.FlowFM;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.Wave;
-using DeltaShell.Plugins.NetCDF;
-using DeltaShell.Plugins.NetworkEditor;
-using DeltaShell.Plugins.Scripting;
-using DeltaShell.Plugins.SharpMapGis;
-using DeltaShell.Plugins.Toolbox;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
@@ -24,15 +19,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
     {
         private void SetUpApplication(DeltaShellApplication app, ApplicationPlugin appPlugin)
         {
-            app.Plugins.Add(new CommonToolsApplicationPlugin());
-            app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-            app.Plugins.Add(new NetCdfApplicationPlugin());
-            app.Plugins.Add(new NetworkEditorApplicationPlugin());
-            app.Plugins.Add(new ScriptingApplicationPlugin());
-            app.Plugins.Add(new SharpMapGisApplicationPlugin());
-            app.Plugins.Add(new ToolboxApplicationPlugin());
             app.Plugins.Add(appPlugin);
             app.Project = new Project();
+            appPlugin.Application = app;
         }
 
         [Test]
@@ -124,6 +113,105 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 Assert.AreEqual(modelInfos.AdditionalOwnerCheck(new ParallelActivity()), false);
                 Assert.AreEqual(modelInfos.AdditionalOwnerCheck(new SequentialActivity()), false);
             }
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void GetParentProjectItemTest_HydroModel()
+        {
+            using (var app = new DeltaShellApplication())
+            {
+                var appPlugin = new HydroModelApplicationPlugin();
+
+                SetUpApplication(app, appPlugin);
+                SetupIntegratedModelWithFmModelInsideProjectTree(app, out HydroModel integratedModel, out WaterFlowFMModel fmModel, out TreeFolder modelsFolder);
+
+                CheckParentOfDifferentProjectTreeItems(appPlugin, app, integratedModel, modelsFolder, fmModel);
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void GetParentProjectItemTest_RealTimeControl()
+        {
+            using (var app = new DeltaShellApplication())
+            {
+                var appPlugin = new RealTimeControlApplicationPlugin();
+
+                SetUpApplication(app, appPlugin);
+                SetupIntegratedModelWithFmModelInsideProjectTree(app, out HydroModel integratedModel, out WaterFlowFMModel fmModel, out TreeFolder modelsFolder);
+
+                CheckParentOfDifferentProjectTreeItems(appPlugin, app, integratedModel, modelsFolder, fmModel);
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void GetParentProjectItemTest_WaterQuality()
+        {
+            using (var app = new DeltaShellApplication())
+            {
+                var appPlugin = new WaterQualityModelApplicationPlugin();
+
+                SetUpApplication(app, appPlugin);
+                SetupIntegratedModelWithFmModelInsideProjectTree(app, out HydroModel integratedModel, out WaterFlowFMModel fmModel, out TreeFolder modelsFolder);
+                
+                CheckParentOfDifferentProjectTreeItems(appPlugin, app, integratedModel, modelsFolder, fmModel);
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void GetParentProjectItemTest_FlowFM()
+        {
+            using (var app = new DeltaShellApplication())
+            {
+                var appPlugin = new FlowFMApplicationPlugin();
+
+                SetUpApplication(app, appPlugin);
+                SetupIntegratedModelWithFmModelInsideProjectTree(app, out HydroModel integratedModel, out WaterFlowFMModel fmModel, out TreeFolder modelsFolder);
+                
+                CheckParentOfDifferentProjectTreeItems(appPlugin, app, integratedModel, modelsFolder, fmModel);
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void GetParentProjectItemTest_Wave()
+        {
+            using (var app = new DeltaShellApplication())
+            {
+                var appPlugin = new WaveApplicationPlugin();
+
+                SetUpApplication(app, appPlugin);
+                SetupIntegratedModelWithFmModelInsideProjectTree(app, out HydroModel integratedModel, out WaterFlowFMModel fmModel, out TreeFolder modelsFolder);
+
+                CheckParentOfDifferentProjectTreeItems(appPlugin, app, integratedModel, modelsFolder, fmModel);
+            }
+        }
+
+        private static void CheckParentOfDifferentProjectTreeItems(ApplicationPlugin appPlugin, IApplication app,
+                                                                   HydroModel integratedModel, TreeFolder modelsFolder,
+                                                                   WaterFlowFMModel fmModel)
+        {
+            ModelInfo modelInfos = appPlugin.GetModelInfos().FirstOrDefault();
+            Assert.NotNull(modelInfos);
+            Assert.IsNull(modelInfos.GetParentProjectItem(app.Project.RootFolder));
+            Assert.AreSame(modelInfos.GetParentProjectItem(integratedModel), integratedModel);
+            Assert.AreSame(integratedModel, modelInfos.GetParentProjectItem(modelsFolder));
+            Assert.AreSame(integratedModel, modelInfos.GetParentProjectItem(fmModel));
+        }
+
+        private static void SetupIntegratedModelWithFmModelInsideProjectTree(IApplication app,
+                                                                             out HydroModel integratedModel,
+                                                                             out WaterFlowFMModel fmModel,
+                                                                             out TreeFolder modelsFolder)
+        {
+            integratedModel = new HydroModel();
+            app.Project.RootFolder.Add(integratedModel);
+            fmModel = new WaterFlowFMModel();
+            integratedModel.Activities.Add(fmModel);
+            modelsFolder = new TreeFolder(integratedModel, null, "models", FolderImageType.Input);
         }
     }
 }

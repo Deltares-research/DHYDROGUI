@@ -86,6 +86,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 Name = "Flow Flexible Mesh Model",
                 Category = "1D / 2D / 3D Standalone Models",
                 Image = Properties.Resources.unstrucModel,
+                GetParentProjectItem = 
+                    delegate(object owner)
+                {
+                    if (owner is ICompositeActivity compositeActivity && !compositeActivity.ReadOnly)
+                    {
+                        return compositeActivity;
+                    }
+                    
+                    var compositeActivities = Application?.Project?.RootFolder.GetAllModelsRecursive().OfType<ICompositeActivity>().ToList();
+                    var treeFolderParentActivity = owner?.GetType().GetProperty("Parent")?.GetMethod.Invoke(owner, new object[] { }) as ICompositeActivity;
+
+                    return compositeActivities.FirstOrDefault(a =>
+                    {
+                        if (owner is IActivity activity)
+                        {
+                            return a.Activities.Contains(activity);
+                        }
+                        return a == treeFolderParentActivity;
+                    });
+                },
                 AdditionalOwnerCheck = owner =>
                     !(owner is ICompositeActivity) // Allow "standalone" flow models
                     || !((ICompositeActivity) owner).Activities.OfType<WaterFlowFMModel>().Any() &&
