@@ -814,7 +814,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
                     case FlowBoundaryQuantityType.VelocityVector:
                         return new Unit("meters per second", "m/s");
                     case FlowBoundaryQuantityType.Discharge:
-                        return new Unit("cubic meters per second", "m³/s");
+                        return new Unit("cubic meters per second", "m3/s");
                     case FlowBoundaryQuantityType.Neumann:
                     case FlowBoundaryQuantityType.Outflow:
                     case FlowBoundaryQuantityType.Tracer:
@@ -828,7 +828,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
                     case FlowBoundaryQuantityType.SedimentConcentration:
                         return new Unit("kilograms per cubic meter", "kg/m³");
                     case FlowBoundaryQuantityType.MorphologyBedLoadTransport:
-                        return new Unit("cubic meters per second per meter", "m³/s/m");
+                        return new Unit("cubic meters per second per meter", "m3/s/m");
                     default:
                         throw new ArgumentOutOfRangeException(string.Format("VariableName type {0} not supported",
                                                                             FlowQuantity));
@@ -896,7 +896,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
             if (DataType == BoundaryConditionDataType.Qh)
             {
                 var function = new Function(VariableName);
-                function.Arguments.Add(new Variable<double>("Q", new Unit("cubic meters", "m³/s")));
+                function.Arguments.Add(new Variable<double>("Q", new Unit("cubic meters", "m3/s")));
                 function.Components.Add(new Variable<double>("h", new Unit("meters", "m")) {NoDataValue = double.NaN});
 
                 return function;

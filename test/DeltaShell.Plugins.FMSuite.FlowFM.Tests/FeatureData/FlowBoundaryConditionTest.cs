@@ -410,7 +410,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
         [TestCase(FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed, "meters", "m")]
         [TestCase(FlowBoundaryQuantityType.MorphologyNoBedLevelConstraint, "", "-")]
         [TestCase(FlowBoundaryQuantityType.MorphologyBedLevelFixed, "", "-")]
-        [TestCase(FlowBoundaryQuantityType.MorphologyBedLoadTransport, "cubic meters per second per meter", "m³/s/m")]
+        [TestCase(FlowBoundaryQuantityType.MorphologyBedLoadTransport, "cubic meters per second per meter", "m3/s/m")]
         public void MorphologyVariableUnitTest(FlowBoundaryQuantityType type, string name_expectation, string symbol_expectation)
         {
             var unit = new FlowBoundaryCondition(type, BoundaryConditionDataType.TimeSeries).VariableUnit;

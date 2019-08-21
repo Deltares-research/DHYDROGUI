@@ -40,7 +40,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
         [Test]
         public void TestSpatialDataFileWriterInitialWaterLevelConstantInterPolType()
         {
-            var initialFlow = new NetworkCoverage("Initial Water Flow", false, "Water Flow", "m³/s") { Network = network };
+            var initialFlow = new NetworkCoverage("Initial Water Flow", false, "Water Flow", "m3/s") { Network = network };
             initialFlow.Locations.InterpolationType = InterpolationType.Constant;
             initialFlow.Locations.SetValues(locations.OrderBy(l => l));
             initialFlow.SetValues(Enumerable.Range(0, 50).Select(i => i * 10.0));

@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
     public class SourceSinkVariableInfo
     {
         public const string DischargeUnitDescription = "cubic meters per second";
-        public const string DischargeUnitSymbol = "m³/s";
+        public const string DischargeUnitSymbol = "m3/s";
 
         public const string SalinityUnitDescription = "parts per trillion";
         public const string SalinityUnitSymbol = "ppt";
