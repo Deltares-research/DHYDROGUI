@@ -55,7 +55,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                 WaqInitializationSettingsBuilder.BuildWaqInitializationSettings(model);
             File.WriteAllText(path, waqInitializationSettings.InputFile.Content);
 
-            string includeDirectory = Path.Combine(directoryName, "includes_deltashell");
+            string includeDirectory = Path.Combine(directoryName, FileConstants.IncludesDirectoryName);
             new WaqFileBasedPreProcessor().WriteIncludeFilesAndBinaryFiles(waqInitializationSettings, includeDirectory);
 
             return true;

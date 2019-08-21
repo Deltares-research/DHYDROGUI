@@ -8,6 +8,7 @@ using DelftTools.Utils.IO;
 using DelftTools.Utils.RegularExpressions;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataItemMetaData;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils;
 using log4net;
@@ -24,8 +25,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
         private static readonly IDictionary<ADataItemMetaData, string> OutputFiles =
             new Dictionary<ADataItemMetaData, string>
             {
-                {WaterQualityModel.BalanceOutputDataItemMetaData, "deltashell-bal.prn"},
-                {WaterQualityModel.MonitoringFileDataItemMetaData, "deltashell.mon"}
+                {WaterQualityModel.BalanceOutputDataItemMetaData, FileConstants.BalanceOutputFileName},
+                {WaterQualityModel.MonitoringFileDataItemMetaData, FileConstants.MonitoringFileName}
             };
 
         private const int NoDataValue = -999;
@@ -36,8 +37,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
         {
             string outputDirectory = initializationSettings.Settings.OutputDirectory;
 
-            FileUtils.DeleteIfExists(Path.Combine(outputDirectory, "deltashell.map"));
-            FileUtils.DeleteIfExists(Path.Combine(outputDirectory, "deltashell.his"));
+            FileUtils.DeleteIfExists(Path.Combine(outputDirectory, FileConstants.BinaryMapFileName));
+            FileUtils.DeleteIfExists(Path.Combine(outputDirectory, FileConstants.BinaryHisFileName));
 
             foreach (KeyValuePair<ADataItemMetaData, string> outputFile in OutputFiles)
             {
@@ -62,7 +63,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
 
             Log.Debug("Started delwaq2.exe.");
             WaterQualityUtils.RunProcess(DelwaqFileStructureHelper.GetDelwaq2ExePath(),
-                                         string.Format("deltashell.inp " + optionalDuflowSwitch),
+                                         string.Format(FileConstants.InputFileName + optionalDuflowSwitch),
                                          initializationSettings.Settings.WorkDirectory, () => TryToCancel, false, 3000,
                                          (s, e) =>
                                          {
@@ -140,14 +141,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
 
         private static string GetExistingHistoryFilePath(string workDirectory)
         {
-            if (File.Exists(Path.Combine(workDirectory, "deltashell_his.nc")))
+            if (File.Exists(Path.Combine(workDirectory, FileConstants.NetCdfHisFileName)))
             {
-                return Path.Combine(workDirectory, "deltashell_his.nc");
+                return Path.Combine(workDirectory, FileConstants.NetCdfHisFileName);
             }
 
-            if (File.Exists(Path.Combine(workDirectory, "deltashell.his")))
+            if (File.Exists(Path.Combine(workDirectory, FileConstants.BinaryHisFileName)))
             {
-                return Path.Combine(workDirectory, "deltashell.his");
+                return Path.Combine(workDirectory, FileConstants.BinaryHisFileName);
             }
 
             return null;

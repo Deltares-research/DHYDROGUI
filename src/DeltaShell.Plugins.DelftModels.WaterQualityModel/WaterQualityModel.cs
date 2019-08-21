@@ -167,8 +167,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                                                                new List<DelftTools.Utils.Tuple<string, string>>
                                                                {
                                                                    new DelftTools.Utils.Tuple<string, string>(
-                                                                       "deltashell_res.map",
-                                                                       "deltashell_res_in.map")
+                                                                       FileConstants.RestartFileName,
+                                                                       FileConstants.RestartInFileName)
                                                                });
 
             InitializeInputDataItems();
@@ -1330,7 +1330,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                                         Resources
                                             .WaterQualityModel_OnInitializeCore_Failed_to_initialize_pre_processor__0_Please_look_at_the_List_file_for_more_information__0_List_file_found_in__Project_view____Output____List_file__0___1_,
                                         Environment.NewLine,
-                                        Path.GetDirectoryName(Path.Combine(ExplicitOutputDirectory, "output"))));
+                                        Path.GetDirectoryName(Path.Combine(ExplicitOutputDirectory, FileConstants.OutputDirectoryName))));
             }
 
             //initialize and fill initial values in output coverages (needs to be available after initialize for rtc to pick up, for example)
@@ -1785,12 +1785,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             else if (ModelDataDirectory != null)
             {
                 ModelSettings.WorkDirectory =
-                    Path.Combine(Path.GetDirectoryName(ModelDataDirectory), GetWaqDataFolderName() + "_output");
+                    Path.Combine(Path.GetDirectoryName(ModelDataDirectory), GetWaqDataFolderName() + FileConstants.WorkDirectoryPostfix);
             }
             else
             {
                 // use a folder that was created
-                ModelSettings.WorkDirectory = Path.Combine(tempWorkDirectory, GetWaqDataFolderName() + "_output");
+                ModelSettings.WorkDirectory = Path.Combine(tempWorkDirectory, GetWaqDataFolderName() + FileConstants.WorkDirectoryPostfix);
             }
         }
 

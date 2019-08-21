@@ -79,13 +79,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Extensions
         {
             string outputDirectory = model.ModelSettings.OutputDirectory;
 
-            string mapFilePath = Path.Combine(outputDirectory, "deltashell.map");
+            string mapFilePath = Path.Combine(outputDirectory, FileConstants.BinaryMapFileName);
             if (File.Exists(mapFilePath))
             {
                 model.MapFileFunctionStore.Path = mapFilePath;
             }
 
-            string mapNetCdfFilePath = Path.Combine(outputDirectory, "deltashell_map.nc");
+            string mapNetCdfFilePath = Path.Combine(outputDirectory, FileConstants.NetCdfMapFileName);
             if (File.Exists(mapNetCdfFilePath))
             {
                 if (!NetCdfFileConventionChecker.HasSupportedConvention(mapNetCdfFilePath))
@@ -168,21 +168,21 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Extensions
 
             string name = string.IsNullOrWhiteSpace(model.Name) ? Path.GetTempFileName() : model.Name;
             model.ModelDataDirectory = Path.Combine(projectDataDir, name.Replace(" ", "_"));
-            string modelWorkFolder = model.ModelDataDirectory + "_output";
+            string modelWorkFolder = model.ModelDataDirectory + FileConstants.WorkDirectoryPostfix;
             if (model.ModelSettings != null)
             {
                 model.ModelSettings.WorkDirectory = modelWorkFolder;
-                model.ModelSettings.OutputDirectory = Path.Combine(model.ModelDataDirectory, "output");
+                model.ModelSettings.OutputDirectory = Path.Combine(model.ModelDataDirectory, FileConstants.OutputDirectoryName);
             }
 
             if (model.BoundaryDataManager != null)
             {
-                model.BoundaryDataManager.FolderPath = Path.Combine(model.ModelDataDirectory, "boundary_data_tables");
+                model.BoundaryDataManager.FolderPath = Path.Combine(model.ModelDataDirectory, FileConstants.BoundaryDataDirectoryName);
             }
 
             if (model.LoadsDataManager != null)
             {
-                model.LoadsDataManager.FolderPath = Path.Combine(model.ModelDataDirectory, "load_data_tables");
+                model.LoadsDataManager.FolderPath = Path.Combine(model.ModelDataDirectory, FileConstants.LoadsDataDirectoryName);
             }
         }
     }
