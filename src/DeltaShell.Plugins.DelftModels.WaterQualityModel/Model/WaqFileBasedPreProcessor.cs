@@ -41,7 +41,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
                 Directory.CreateDirectory(includeDirectory);
             }
 
-            WaqInitializationSettingsValidator.Validate(initSettings);
+            WaqInitializationDataVerifier.Verify(initSettings);
 
             WriteIncludeFilesAndBinaryFiles(initSettings, includeDirectory);
 

@@ -6,35 +6,35 @@ using log4net;
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
 {
     /// <summary>
-    /// Validates the WaqInitializationSettings
+    /// Verifies the data specified in the <see cref="WaqInitializationSettings"/>.
     /// </summary>
-    public static class WaqInitializationSettingsValidator
+    public static class WaqInitializationDataVerifier
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(WaqInitializationSettingsValidator));
+        private static readonly ILog log = LogManager.GetLogger(typeof(WaqInitializationDataVerifier));
 
         /// <summary>
-        /// Validates the specified <paramref name="settings"/>.
+        /// Verifies the data specified in the <paramref name="settings"/>.
         /// </summary>
         /// <param name="settings">The waq initialization settings.</param>
-        public static void Validate(WaqInitializationSettings settings)
+        public static void Verify(WaqInitializationSettings settings)
         {
-            ValidateGridFile(settings.GridFile);
+            VerifyGridFile(settings.GridFile);
         }
 
-        private static void ValidateGridFile(string gridFilePath)
+        private static void VerifyGridFile(string gridFilePath)
         {
             try
             {
                 if (!NetCdfFileConventionChecker.HasSupportedConvention(gridFilePath))
                 {
                     log.Warn(string.Format(
-                                 Resources.WaqInitializationSettingsValidator_GridFile_does_not_meet_supported_UGRID_1_0,
+                                 Resources.WaqInitializationDataVerifier_GridFile_does_not_meet_supported_UGRID_1_0,
                                  Path.GetFileName(gridFilePath)));
                 }
             }
             catch (FileNotFoundException)
             {
-                log.Error(string.Format(Resources.WaqInitializationSettingsValidator_Grid_file_was_not_found,
+                log.Error(string.Format(Resources.WaqInitializationDataVerifier_Grid_file_was_not_found,
                                         gridFilePath));
             }
         }

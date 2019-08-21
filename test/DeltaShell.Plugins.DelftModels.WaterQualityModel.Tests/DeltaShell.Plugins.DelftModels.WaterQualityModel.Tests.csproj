@@ -93,7 +93,7 @@
     <Compile Include="IO\WaqProcessValidationRuleTest.cs" />
     <Compile Include="IO\WaqValidationRulesExtensionTest.cs" />
     <Compile Include="IO\WaterQualityObservationAreaImporterTest.cs" />
-    <Compile Include="Model\WaqInitializationSettingsValidatorTest.cs" />
+    <Compile Include="Model\WaqInitializationDataVerifierTest.cs" />
     <Compile Include="NHibernate\WaterQualityModelNHibernateIntegrationTest.cs" />
     <Compile Include="ObservationAreas\OverwriteLabelOperationTest.cs" />
     <Compile Include="ObservationAreas\WaterQualityObservationAreaCoverageTest.cs" />

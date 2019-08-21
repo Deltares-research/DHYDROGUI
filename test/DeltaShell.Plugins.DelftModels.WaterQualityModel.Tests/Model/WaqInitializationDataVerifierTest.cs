@@ -9,11 +9,11 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
 {
     [TestFixture]
-    public class WaqInitializationSettingsValidatorTest
+    public class WaqInitializationDataVerifierTest
     {
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void Validate_WithInvalidGridFile_ThenCorrectWarningIsGiven()
+        public void Verify_WithGridFileWithUnsupportedConvention_ThenCorrectWarningIsGiven()
         {
             // Set-up
             string filePath = TestHelper.GetTestFilePath(Path.Combine("IO", "NetCDFConventions", "CF1.5_UGRID0.9.nc"));
@@ -22,20 +22,20 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
             // Action
             void TestAction()
             {
-                WaqInitializationSettingsValidator.Validate(settings);
+                WaqInitializationDataVerifier.Verify(settings);
             }
 
             // Assert
             IEnumerable<string> messages = TestHelper.GetAllRenderedMessages(TestAction, Level.Warn);
             string expectedWarning = string.Format(
-                Resources.WaqInitializationSettingsValidator_GridFile_does_not_meet_supported_UGRID_1_0,
+                Resources.WaqInitializationDataVerifier_GridFile_does_not_meet_supported_UGRID_1_0,
                 Path.GetFileName(filePath));
             Assert.That(messages, Contains.Item(expectedWarning));
         }
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void Validate_WithValidGridFile_ThenNoMessagesAreGiven()
+        public void Verify_WithGridFileWithSupportedConvention_ThenNoMessagesAreGiven()
         {
             // Set-up
             string filePath = TestHelper.GetTestFilePath(Path.Combine("IO", "NetCDFConventions", "CF1.6_UGRID1.0.nc"));
@@ -44,7 +44,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
             // Action
             void TestAction()
             {
-                WaqInitializationSettingsValidator.Validate(settings);
+                WaqInitializationDataVerifier.Verify(settings);
             }
 
             // Assert
@@ -54,7 +54,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
         }
 
         [Test]
-        public void Validate_WhenGridFileDoesNotExist_ThenCorrectWarningIsGiven()
+        public void Verify_WhenGridFileDoesNotExist_ThenCorrectWarningIsGiven()
         {
             // Set-up
             const string filePath = "no_exist";
@@ -63,13 +63,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
             // Action
             void TestAction()
             {
-                WaqInitializationSettingsValidator.Validate(settings);
+                WaqInitializationDataVerifier.Verify(settings);
             }
 
             // Assert
             IEnumerable<string> messages = TestHelper.GetAllRenderedMessages(TestAction, Level.Warn);
             string expectedWarning =
-                string.Format(Resources.WaqInitializationSettingsValidator_Grid_file_was_not_found, filePath);
+                string.Format(Resources.WaqInitializationDataVerifier_Grid_file_was_not_found, filePath);
             Assert.That(messages, Contains.Item(expectedWarning));
         }
     }
