@@ -25,7 +25,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             string fileName, bool expectedResult)
         {
             // Set-up
-            string filePath = TestHelper.GetTestFilePath($"IO\\NetCDFConventions\\{fileName}");
+            string filePath = TestHelper.GetTestFilePath($@"IO\NetCDFConventions\{fileName}");
 
             // Pre-condition
             Assert.That(File.Exists(filePath));

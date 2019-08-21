@@ -25,6 +25,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         /// Reads the meta data of the provided <paramref name="path"/>
         /// </summary>
         /// <param name="path"> Path to the *_map.nc file </param>
+        /// <remarks>If <paramref name="path"/> does not exist, an 'empty' <see cref="MapFileMetaData"/> is returned.</remarks>
         public static MapFileMetaData ReadMetaData(string path)
         {
             try
@@ -50,6 +51,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         /// A list of double values at the specified <paramref name="timeStepIndex" /> and
         /// <paramref name="segmentIndex" />
         /// </returns>
+        /// <remarks>If <paramref name="path"/> does not exist, an empty list is returned.</remarks>
         public static List<double> GetTimeStepData(string path, MapFileMetaData mapFileMeta, int timeStepIndex, string substanceName, int segmentIndex = -1)
         {
             try
@@ -72,6 +74,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         /// <param name="substanceName"> Substance name </param>
         /// <param name="segmentIndex"> Segment index (zero based) at which to get the values (default -1: no filtering) </param>
         /// <returns> A list of double values at the specified  <paramref name="segmentIndex" /> for all time steps. </returns>
+        /// <remarks>If <paramref name="path"/> does not exist, an empty list is returned.</remarks>
         public static List<double> GetTimeSeriesData(string path, MapFileMetaData mapFileMeta, string substanceName, int segmentIndex)
         {
             try

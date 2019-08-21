@@ -119,7 +119,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Extensions
 
         [TestCase("deltashell.map")]
         [TestCase("deltashell_map.nc")]
-        public void ConnectMapOutput_(string fileName)
+        public void ConnectMapOutput_WithExistingFile_ThenModelIsConnectedToThisFile(string fileName)
         {
             // Set-up
             string testFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "IO", fileName);
@@ -127,13 +127,21 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Extensions
             using (var tempDir = new TemporaryDirectory())
             {
                 string filePath = tempDir.CopyTestDataFileToTempDirectory(testFilePath);
-                var model = new WaterQualityModel {ModelSettings = {OutputDirectory = Path.GetDirectoryName(filePath)}};
+                var outputDirectory = Path.GetDirectoryName(filePath);
 
-                // Act
-                model.ConnectMapOutput();
+                using (var model = new WaterQualityModel {ModelSettings = {OutputDirectory = outputDirectory}})
+                {
+                    // Act
+                    model.ConnectMapOutput();
 
-                // Assert
-                Assert.That(model.MapFileFunctionStore.Path, Is.EqualTo(filePath));
+                    // Assert
+                    Assert.That(model.MapFileFunctionStore.Path, Is.EqualTo(filePath));
+
+                    model.Finish();
+                }
+
+                
+
             }
         }
 
@@ -148,13 +156,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Extensions
             using (var tempDir = new TemporaryDirectory())
             {
                 mapNetCdfFilePath = tempDir.CopyAllTestDataToTempDirectory(mapNetCdfFilePath, mapFilePath)[0];
-                var model = new WaterQualityModel {ModelSettings = {OutputDirectory = tempDir.Path}};
 
-                // Act
-                model.ConnectMapOutput();
+                using (var model = new WaterQualityModel {ModelSettings = {OutputDirectory = tempDir.Path}})
+                {
+                    // Act
+                    model.ConnectMapOutput();
 
-                // Assert
-                Assert.That(model.MapFileFunctionStore.Path, Is.EqualTo(mapNetCdfFilePath));
+                    // Assert
+                    Assert.That(model.MapFileFunctionStore.Path, Is.EqualTo(mapNetCdfFilePath));
+                }
             }
         }
 
@@ -169,21 +179,24 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Extensions
             {
                 string filePath = Path.Combine(tempDir.Path, "deltashell_map.nc");
                 File.Copy(testFilePath, filePath);
-                var model = new WaterQualityModel {ModelSettings = {OutputDirectory = Path.GetDirectoryName(filePath)}};
+                string outputDirectory = Path.GetDirectoryName(filePath);
 
-                // Action
-                void TestAction()
+                using (var model = new WaterQualityModel {ModelSettings = {OutputDirectory = outputDirectory}})
                 {
-                    model.ConnectMapOutput();
-                }
+                    // Action
+                    void TestAction()
+                    {
+                        model.ConnectMapOutput();
+                    }
 
-                // Assert
-                IEnumerable<string> warningMessages = TestHelper.GetAllRenderedMessages(TestAction, Level.Warn);
-                string expectedWarning = string.Format(
-                    Resources.WaterQualityModel_File_does_not_meet_supported_UGRID_1_0_or_newer_standard,
-                    Path.GetFileName(filePath));
-                Assert.That(warningMessages, Contains.Item(expectedWarning));
-                Assert.That(model.MapFileFunctionStore.Path, Is.EqualTo(null));
+                    // Assert
+                    IEnumerable<string> warningMessages = TestHelper.GetAllRenderedMessages(TestAction, Level.Warn);
+                    string expectedWarning = string.Format(
+                        Resources.WaterQualityModel_File_does_not_meet_supported_UGRID_1_0_or_newer_standard,
+                        Path.GetFileName(filePath));
+                    Assert.That(warningMessages, Contains.Item(expectedWarning));
+                    Assert.That(model.MapFileFunctionStore.Path, Is.EqualTo(null));
+                }
             }
         }
     }
