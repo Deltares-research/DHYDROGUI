@@ -90,6 +90,7 @@
     <Compile Include="IO\WaterQualityObservationAreaImporter.cs" />
     <Compile Include="IO\LazyMapFileFunctionStore.cs" />
     <Compile Include="IO\MultiDimentionalArrayAdapter.cs" />
+    <Compile Include="Model\WaqInitializationSettingsValidator.cs" />
     <Compile Include="NHibernate\WaterQualityModel350LegacyLoader.cs" />
     <Compile Include="ObservationAreas\ObservationPointType.cs" />
     <Compile Include="ObservationAreas\OverwriteLabelOperation.cs" />

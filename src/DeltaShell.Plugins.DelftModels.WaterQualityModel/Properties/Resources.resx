@@ -680,4 +680,10 @@ INCLUDE 'includes_deltashell/B8_initials.inc'       ; From UI: Initials
   <data name="WaterQualityModel_File_does_not_meet_supported_UGRID_1_0_or_newer_standard" xml:space="preserve">
     <value>File &lt;{0}&gt; does not meet supported UGRID 1.0 or newer standard.</value>
   </data>
+  <data name="WaqInitializationSettingsValidator_GridFile does_not_meet_supported_UGRID_1_0" xml:space="preserve">
+    <value>File &lt;{0}&gt; does not meet supported UGRID 1.0 or newer standard. Your NetCDF output file may not be properly viewed in the User Interface.</value>
+  </data>
+  <data name="WaqInitializationSettingsValidator_Grid_file_was_not_found" xml:space="preserve">
+    <value>Grid file was not found at {0}.</value>
+  </data>
 </root>

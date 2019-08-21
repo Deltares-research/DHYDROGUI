@@ -361,6 +361,24 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Grid file was not found at {0}..
+        /// </summary>
+        public static string WaqInitializationSettingsValidator_Grid_file_was_not_found {
+            get {
+                return ResourceManager.GetString("WaqInitializationSettingsValidator_Grid_file_was_not_found", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File &lt;{0}&gt; does not meet supported UGRID 1.0 or newer standard. Your NetCDF output file may not be properly viewed in the User Interface..
+        /// </summary>
+        public static string WaqInitializationSettingsValidator_GridFile_does_not_meet_supported_UGRID_1_0 {
+            get {
+                return ResourceManager.GetString("WaqInitializationSettingsValidator_GridFile does_not_meet_supported_UGRID_1_0", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to File {0} not found in the path {1}. No validations will be done for the coefficients..
         /// </summary>
         public static string WaqProcessesRules_ReadValidationCsv_File__0__not_found_in_the_path__1___No_validations_will_be_done_for_the_coefficients_ {
