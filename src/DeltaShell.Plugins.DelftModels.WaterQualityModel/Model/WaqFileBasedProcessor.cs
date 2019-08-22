@@ -63,7 +63,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
 
             Log.Debug("Started delwaq2.exe.");
             WaterQualityUtils.RunProcess(DelwaqFileStructureHelper.GetDelwaq2ExePath(),
-                                         string.Format(FileConstants.InputFileName + optionalDuflowSwitch),
+                                         string.Format(FileConstants.InputFileName + " " + optionalDuflowSwitch),
                                          initializationSettings.Settings.WorkDirectory, () => TryToCancel, false, 3000,
                                          (s, e) =>
                                          {
