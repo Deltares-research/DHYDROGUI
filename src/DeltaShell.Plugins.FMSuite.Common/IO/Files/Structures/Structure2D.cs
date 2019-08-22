@@ -63,8 +63,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
 
         public ModelProperty GetProperty(KnownGeneralStructureProperties property)
         {
-            return Properties.FirstOrDefault(p => p.PropertyDefinition.FilePropertyName.ToLower() ==
-                                                  property.GetDescription().ToLower());
+            return GetProperty(property.GetDescription());
         }
     }
 }
