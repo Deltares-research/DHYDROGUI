@@ -199,7 +199,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 IList<Structure2D> structures = structuresFile.ReadStructures2D(path, logHandlerMock).ToList();
 
                 // Then
-                Assert.AreEqual(0, structures.Count, "One structure should have been created");
+                Assert.AreEqual(1, structures.Count, "One structure should have been created");
                 logHandlerMock.VerifyAllExpectations();
             }
         }
@@ -874,7 +874,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                     () => structures = structureFile.ReadStructuresFileRelativeToReferenceFile(copyOfIniInTempFilePath,
                                                                                                copyOfIniInTempFilePath));
                 // Then
-                Assert.AreEqual(0, structures.Count, "The ini file for the structures is not correctly read");
+                Assert.AreEqual(1, structures.Count, "The ini file for the structures is not correctly read");
                 CheckMessages(messages, copyOfIniInTempFilePath);
             }
         }
@@ -902,7 +902,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 IEnumerable<string> messages = TestHelper.GetAllRenderedMessages(
                     () => structures = structureFile.Read(copyOfIniInTempFilePath));
                 // Then
-                Assert.AreEqual(0, structures.Count, "The ini file for the structures is not correctly read");
+                Assert.AreEqual(1, structures.Count, "The ini file for the structures is not correctly read");
                 CheckMessages(messages, copyOfIniInTempFilePath);
             }
         }
@@ -1167,6 +1167,71 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         }
 
         #region Sobek Structures
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void ReadAsSobekStructuresTest()
+        {
+            var path = TestHelper.GetTestFilePath(@"structures\example-structures-sobek.imp");
+
+            var structureFile = new StructuresFile
+            {
+                StructureSchema = schema, ReferenceDate = new DateTime()
+            };
+
+            var structures = structureFile.Read(path).ToList();
+
+            Assert.AreEqual(3, structures.Count); // There are 4 pumps in the file
+            Assert.AreEqual(0, structures.OfType<IWeir>().Count());
+            Assert.AreEqual(3, structures.OfType<IPump>().Count());
+
+            var pump = structures.OfType<IPump>().First();
+            Assert.AreEqual("pump01", pump.Name);
+            Assert.IsNull(pump.LongName);
+            Assert.IsNull(pump.Branch);
+            Assert.IsNaN(pump.Chainage);
+            Assert.AreEqual(new Point(500, 360), pump.Geometry);
+            Assert.AreEqual(3.0, pump.Capacity);
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void ReadTimeDependentSobekStructuresTest()
+        {
+            var path = TestHelper.GetTestFilePath(@"structures\time_dependent_structures.ini");
+
+            var structureFile = new StructuresFile
+            {
+                StructureSchema = schema, ReferenceDate = new DateTime(2013, 1, 1)
+            };
+
+            var structures = structureFile.Read(path).ToList();
+
+            Assert.AreEqual(3, structures.Count);
+            Assert.AreEqual(2, structures.OfType<IWeir>().Count());
+            Assert.AreEqual(1, structures.OfType<IPump>().Count());
+
+            var pump = structures.OfType<IPump>().First();
+            Assert.AreEqual(2, pump.CapacityTimeSeries.Time.Values.Count);
+            Assert.AreEqual(5.6, pump.CapacityTimeSeries[new DateTime(2013, 1, 1, 0, 0, 0)]);
+            Assert.AreEqual(11.12, pump.CapacityTimeSeries[new DateTime(2013, 1, 1, 1, 2, 0)]);
+
+            var weir = structures.OfType<IWeir>().First(w => w.WeirFormula is SimpleWeirFormula);
+            Assert.AreEqual(2, weir.CrestLevelTimeSeries.Time.Values.Count);
+            Assert.AreEqual(1.2, weir.CrestLevelTimeSeries[new DateTime(2013, 1, 1, 0, 0, 0)]);
+            Assert.AreEqual(3.4, weir.CrestLevelTimeSeries[new DateTime(2013, 1, 1, 1, 1, 0)]);
+
+            var gate = structures.OfType<IWeir>().First(w => w.WeirFormula is GatedWeirFormula);
+            var gateFormula = gate.WeirFormula as GatedWeirFormula;
+            Assert.NotNull(gateFormula);
+
+            Assert.AreEqual(2, gateFormula.LowerEdgeLevelTimeSeries.Time.Values.Count);
+            Assert.AreEqual(1.2, gateFormula.LowerEdgeLevelTimeSeries[new DateTime(2013, 1, 1, 0, 0, 0)]);
+            Assert.AreEqual(3.4, gateFormula.LowerEdgeLevelTimeSeries[new DateTime(2013, 1, 1, 1, 1, 0)]);
+            Assert.AreEqual(2, gateFormula.HorizontalDoorOpeningWidthTimeSeries.Time.Values.Count);
+            Assert.AreEqual(5.6, gateFormula.HorizontalDoorOpeningWidthTimeSeries[new DateTime(2013, 1, 1, 0, 0, 0)]);
+            Assert.AreEqual(7.8, gateFormula.HorizontalDoorOpeningWidthTimeSeries[new DateTime(2013, 1, 1, 2, 3, 0)]);
+        }
 
         [Test]
         [Category(TestCategory.DataAccess)]

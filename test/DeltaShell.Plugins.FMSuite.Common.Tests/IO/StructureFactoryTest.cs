@@ -508,33 +508,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             VerifyGatedWeir(result, isConstCrestLevel, isConstLowerEdgeLevel, isConstHorizontalOpeningWidth);
         }
 
-        [TestCase(KnownStructureProperties.Name)]
-        [TestCase(KnownStructureProperties.GateOpeningHorizontalDirection)]
-        [TestCase(KnownStructureProperties.CrestLevel)]
-        [TestCase(KnownStructureProperties.GateHeight)]
-        [TestCase(KnownStructureProperties.CrestWidth)]
-        [TestCase(KnownStructureProperties.GateLowerEdgeLevel)]
-        [TestCase(KnownStructureProperties.GateOpeningWidth)]
-        [TestCase(KnownStructureProperties.LateralContractionCoefficient)]
-        [TestCase(KnownStructureProperties.Type)]
-        public void CreateStructure_WhenAGatePropertyIsMissing_ThenNoExceptionIsThrown(string propertyName)
-        {
-            // Set-up
-            Structure2D gatedWeirPrecursor = ComposeGatedWeir(true, true, true);
-            ModelProperty property = gatedWeirPrecursor.GetProperty(propertyName);
-            gatedWeirPrecursor.Properties.Remove(property);
-
-            // Action
-            void TestAction()
-            {
-                StructureFactory.CreateStructure(gatedWeirPrecursor, structuresPath, refDate);
-            }
-
-            // Assert
-            Assert.DoesNotThrow(TestAction,
-                                $"When property {propertyName} is missing, no exception should be thrown.");
-        }
-
         /// <summary>
         /// GIVEN a general structure Structure2D
         /// WHEN CreateStructure is called

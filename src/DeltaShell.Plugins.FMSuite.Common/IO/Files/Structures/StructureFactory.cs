@@ -422,34 +422,30 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
         {
             var gateWeirFormula = new GatedWeirFormula(true);
 
-            ModelProperty gateHeightProperty = structure2D.GetProperty(KnownStructureProperties.GateHeight);
-            if (gateHeightProperty != null)
-            {
-                gateWeirFormula.DoorHeight = FMParser.FromString<double>(gateHeightProperty.GetValueAsString());
-            }
+            gateWeirFormula.DoorHeight =
+                FMParser.FromString<double>(
+                    structure2D.GetProperty(KnownStructureProperties.GateHeight).GetValueAsString());
 
-            ModelProperty openingDirectionProperty = structure2D.GetProperty(KnownStructureProperties.GateOpeningHorizontalDirection);
-            if (openingDirectionProperty != null)
+            ModelProperty openingDirectionProperty =
+                structure2D.GetProperty(KnownStructureProperties.GateOpeningHorizontalDirection);
+            var openingDirectionValue =
+                (Enum)
+                FMParser.FromString(openingDirectionProperty.GetValueAsString(),
+                                    openingDirectionProperty.PropertyDefinition.DataType);
+            string displayName = openingDirectionValue.GetDisplayName();
+            switch (displayName)
             {
-                var openingDirectionValue =
-                    (Enum)
-                    FMParser.FromString(openingDirectionProperty.GetValueAsString(),
-                                        openingDirectionProperty.PropertyDefinition.DataType);
-                string displayName = openingDirectionValue.GetDisplayName();
-                switch (displayName)
-                {
-                    case "symmetric":
-                        gateWeirFormula.HorizontalDoorOpeningDirection = GateOpeningDirection.Symmetric;
-                        break;
-                    case "from_left":
-                        gateWeirFormula.HorizontalDoorOpeningDirection = GateOpeningDirection.FromLeft;
-                        break;
-                    case "from_right":
-                        gateWeirFormula.HorizontalDoorOpeningDirection = GateOpeningDirection.FromRight;
-                        break;
-                    default:
-                        throw new ArgumentException("Could not parse horizontal_opening_direction of type: " + displayName);
-                }
+                case "symmetric":
+                    gateWeirFormula.HorizontalDoorOpeningDirection = GateOpeningDirection.Symmetric;
+                    break;
+                case "from_left":
+                    gateWeirFormula.HorizontalDoorOpeningDirection = GateOpeningDirection.FromLeft;
+                    break;
+                case "from_right":
+                    gateWeirFormula.HorizontalDoorOpeningDirection = GateOpeningDirection.FromRight;
+                    break;
+                default:
+                    throw new ArgumentException("Could not parse horizontal_opening_direction of type: " + displayName);
             }
 
             SetTimeSeriesPropertyInsideWeirFormula(structure2D,
