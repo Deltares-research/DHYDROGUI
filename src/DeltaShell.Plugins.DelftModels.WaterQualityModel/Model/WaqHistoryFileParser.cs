@@ -81,42 +81,28 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
         private static void SetDataOnObservationVariableOutput(WaterQualityObservationVariableOutput observationVariableOutput,
                                                                DelwaqHisFileData[] hisFileVariableDataList)
         {
-            int outputVariableCount = observationVariableOutput.TimeSeriesList.Count();
+            if (!observationVariableOutput.TimeSeriesList.Any())
+                return;
 
             DelwaqHisFileData hisFileVariableData = hisFileVariableDataList
-                .FirstOrDefault(data => data.ObservationVariable == observationVariableOutput.Name
-                                        && data.OutputVariables.Length == outputVariableCount);
+                .FirstOrDefault(data => string.Equals(data.ObservationVariable, observationVariableOutput.Name, StringComparison.OrdinalIgnoreCase));
 
             if (hisFileVariableData == null)
-            {
                 return;
-            }
 
-            IEnumerable<DateTime> timeSteps = hisFileVariableData.TimeSteps.ToArray();
-            List<List<double>> allValues = observationVariableOutput.TimeSeriesList
-                                                                    .Select(ov => new List<double>())
-                                                                    .ToList();
-
-            // Parse all values on per output variable basis (TODO: Improve performance by parsing the values for the relevant output variables only)
-            foreach (DateTime timeStep in timeSteps)
+            foreach (TimeSeries timeSeries in observationVariableOutput.TimeSeriesList)
             {
-                List<double> timeStepValues = hisFileVariableData.GetValuesForTimeStep(timeStep);
-
-                for (var j = 0; j < outputVariableCount; j++)
+                string timeSeriesName = timeSeries.Name;
+                double[] variableTimeSeriesValues = hisFileVariableData.GetValuesForKey(timeSeriesName).ToArray();
+                if (!variableTimeSeriesValues.Any()
+                    || hisFileVariableData.TimeSteps.Count() != variableTimeSeriesValues.Length)
                 {
-                    allValues[j].Add(timeStepValues[j]);
+                    Log.Error($"Time steps are inconsistent for the data related to variable {timeSeriesName}.");
+                    continue;
                 }
-            }
 
-            for (var i = 0; i < outputVariableCount; i++)
-            {
-                TimeSeries timeSeries = observationVariableOutput.TimeSeriesList.ElementAt(i);
-
-                // Add all output times to the output variable time series
-                timeSeries.Time.AddValues(timeSteps);
-
-                // Add the parsed values to the to the output variable time series
-                observationVariableOutput.TimeSeriesList.ElementAt(i).SetValues(allValues[i]);
+                timeSeries.Time.AddValues(hisFileVariableData.TimeSteps);
+                timeSeries.SetValues(variableTimeSeriesValues);
             }
         }
     }

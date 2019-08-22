@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
 using NUnit.Framework;
@@ -36,6 +37,77 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             Assert.AreEqual(10.5, timeStep1Values[1]);
             Assert.AreEqual(1, timeStep2Values.Count);
             Assert.AreEqual(5.5, timeStep2Values[0]);
+        }
+
+        [Test]
+        public void When_GetValuesForKey_No_OutputVariables_Then_Returns_EmptyEnumerable()
+        {
+            // 1. Set up test data.
+            var hisFileData = new DelwaqHisFileData("Observation point");
+            var outputKey = "dummyKey";
+            IEnumerable<double> resultValues = Enumerable.Empty<double>();
+
+            // 2. Verify initial conditions
+            Assert.That(hisFileData.OutputVariables, Is.Null);
+
+            // 3. Run test
+            resultValues = hisFileData.GetValuesForKey(outputKey);
+
+            // 4. Verify final expectations
+            Assert.That(resultValues, Is.EqualTo(Enumerable.Empty<double>()));
+        }
+
+        [Test]
+        public void When_GetValuesForKey_Key_DoesNot_Exist_Then_Returns_EmptyEnumerable()
+        {
+            // 1. Set up test data.
+            var hisFileData = new DelwaqHisFileData("Observation point")
+            {
+                OutputVariables = new []{"dummyValue"}
+            };
+            var outputKey = "dummyKey";
+            IEnumerable<double> resultValues = Enumerable.Empty<double>();
+
+            // 2. Verify initial conditions
+            Assert.That(hisFileData.OutputVariables, Is.Not.Null);
+            
+            // 3. Run test
+            resultValues = hisFileData.GetValuesForKey(outputKey);
+
+            // 4. Verify final expectations
+            Assert.That(resultValues, Is.EqualTo(Enumerable.Empty<double>()));
+        }
+
+        [Test]
+        public void When_GetValuesForKey_Key_Exists_Then_Returns_ListOfValues()
+        {
+            // 1. Set up test data.
+            var hisFileData = new DelwaqHisFileData("Observation point");
+
+            IEnumerable<double> resultValues = Enumerable.Empty<double>();
+            var timeStep1 = new DateTime(2010, 12, 1, 1, 0, 0);
+            var timeStep2 = new DateTime(2010, 12, 1, 2, 0, 0);
+
+            var outputKey = "dummyKey";
+            var outputValues = new[]
+            {
+                10.0,
+                5.5
+            };
+            hisFileData.OutputVariables = new[] { outputKey, "Output parameter 1" };
+            hisFileData.AddValueForTimeStep(timeStep1, outputValues[0]);
+            hisFileData.AddValueForTimeStep(timeStep1, 10.5);
+            hisFileData.AddValueForTimeStep(timeStep2, outputValues[1]);
+
+            // 2. Verify initial conditions
+            Assert.That(hisFileData.OutputVariables, Is.Not.Null);
+            Assert.That(hisFileData.TimeSteps.Any(), Is.True);
+
+            // 3. Run test
+            resultValues = hisFileData.GetValuesForKey(outputKey);
+
+            // 4. Verify final expectations
+            Assert.That(resultValues, Is.EqualTo(outputValues));
         }
     }
 }

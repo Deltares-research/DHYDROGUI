@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DelftTools.Functions;
 using DelftTools.TestUtils;
+using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Model;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties;
@@ -193,5 +195,162 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
             Assert.AreEqual(cTR4ValueCount, waterQualityModel1D.ObservationVariableOutputs[observationVariableOutputIndex].TimeSeriesList.ElementAt(3).GetValues().Count);
             Assert.AreEqual(continuityValueCount, waterQualityModel1D.ObservationVariableOutputs[observationVariableOutputIndex].TimeSeriesList.ElementAt(4).GetValues().Count);
         }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void When_ParseHisFileData_WithSinglePoint_Then_TimeSeriesValues_Are_Added()
+        {
+            // 1. Set up test data
+            string hisFile = TestHelper.GetTestFilePath(@"BloomCase\bloom.his");
+            int expectedTimeSeriesSize = 365;
+            string obsPointName = "ObsPoint 1";
+            string timeSeriesName = "Continuity";
+            WaterQualityModel waqModel = CreateBloomMockWaqModel(timeSeriesName, obsPointName);
+            WaterQualityObservationVariableOutput variableOutput = waqModel.ObservationVariableOutputs.SingleOrDefault(ovo => ovo.Name.Equals(obsPointName));
+            TimeSeries targetTimeSeries =
+                variableOutput?.TimeSeriesList.SingleOrDefault(tsl => tsl.Name.Equals(timeSeriesName));
+            
+            // 2. Set up initial expectations
+            Assert.That(File.Exists(hisFile), Is.True, "Test file was not found.");
+            Assert.That(variableOutput, Is.Not.Null, "Variable output was not found.");
+            Assert.That(targetTimeSeries, Is.Not.Null, "Target time series was not found.");
+            Assert.That(targetTimeSeries.GetValues().Count > 0, Is.False);
+
+            // 3. Run test
+            using (var tempDir = new TemporaryDirectory())
+            {
+                string tempHisFile = tempDir.CopyTestDataFileToTempDirectory(hisFile);
+                Assert.That(File.Exists(tempHisFile), Is.True, "Test file was not found in temporary folder.");
+                WaqHistoryFileParser.Parse(tempHisFile, waqModel.ObservationVariableOutputs, MonitoringOutputLevel.Points);
+            }
+
+
+            // 4. Verify final expectations.
+            Assert.That(targetTimeSeries.GetValues().Count == expectedTimeSeriesSize, Is.True);
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void When_ParseHisFileData_WithSinglePoint_And_NoOutputVariableTuples_Then_TimeSeriesValues_IsEmpty()
+        {
+            // 1. Set up test data
+            string hisFile = TestHelper.GetTestFilePath(@"BloomCase\bloom.his");
+            WaterQualityModel waqModel = CreateBloomMockWaqModel();
+
+            // 2. Set up initial expectations
+            Assert.That(File.Exists(hisFile), Is.True, "Test file was not found.");
+            Assert.That(waqModel.ObservationVariableOutputs.Any(), Is.False, "Not expected output variables at this point");
+
+            // 3. Run test
+            using (var tempDir = new TemporaryDirectory())
+            {
+                string tempHisFile = tempDir.CopyTestDataFileToTempDirectory(hisFile);
+                Assert.That(File.Exists(tempHisFile), Is.True, "Test file was not found in temporary folder.");
+                WaqHistoryFileParser.Parse(tempHisFile, waqModel.ObservationVariableOutputs, MonitoringOutputLevel.Points);
+            }
+
+            // 4. Verify final expectations.
+            Assert.That(waqModel.ObservationVariableOutputs.Any(), Is.False, "Not expected output variables at this point");
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void When_ParseHisFileData_WithSinglePoint_And_NoMatchingHisFileVariableData_Then_TimeSeriesValues_IsEmpty()
+        {
+            // 1. Set up test data
+            string hisFile = TestHelper.GetTestFilePath(@"BloomCase\bloom.his");
+            int expectedTimeSeriesSize = 0;
+            string obsPointName = "FakePoint";
+            string timeSeriesName = "Continuity";
+            WaterQualityModel waqModel = CreateBloomMockWaqModel(timeSeriesName, obsPointName);
+            WaterQualityObservationVariableOutput variableOutput = waqModel.ObservationVariableOutputs.SingleOrDefault(ovo => ovo.Name.Equals(obsPointName));
+            TimeSeries targetTimeSeries =
+                variableOutput?.TimeSeriesList.SingleOrDefault(tsl => tsl.Name.Equals(timeSeriesName));
+
+            // 2. Set up initial expectations
+            Assert.That(File.Exists(hisFile), Is.True, "Test file was not found.");
+            Assert.That(variableOutput, Is.Not.Null, "Variable output was not found.");
+            Assert.That(targetTimeSeries, Is.Not.Null, "Target time series was not found.");
+            Assert.That(targetTimeSeries.GetValues().Count > 0, Is.False);
+
+            // 3. Run test
+            using (var tempDir = new TemporaryDirectory())
+            {
+                string tempHisFile = tempDir.CopyTestDataFileToTempDirectory(hisFile);
+                Assert.That(File.Exists(tempHisFile), Is.True, "Test file was not found in temporary folder.");
+                WaqHistoryFileParser.Parse(tempHisFile, waqModel.ObservationVariableOutputs, MonitoringOutputLevel.Points);
+            }
+
+
+            // 4. Verify final expectations.
+            Assert.That(targetTimeSeries.GetValues().Count == expectedTimeSeriesSize, Is.True);
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void When_ParseHisFileData_WithSinglePoint_Variable_Not_In_TimeSeries_Then_LogMessageIsGiven()
+        {
+            // 1. Set up test data
+            string hisFile = TestHelper.GetTestFilePath(@"BloomCase\bloom.his");
+            int expectedTimeSeriesSize = 0;
+            string outputVariableName = "ObsPoint 1";
+            string timeSeriesName = "Fake time series";
+            string expectedLogMssg =
+                $"Time steps are inconsistent for the data related to variable {timeSeriesName}.";
+            WaterQualityModel waqModel = CreateBloomMockWaqModel(timeSeriesName, outputVariableName);
+            WaterQualityObservationVariableOutput variableOutput = waqModel.ObservationVariableOutputs.SingleOrDefault(ovo => ovo.Name.Equals(outputVariableName));
+            TimeSeries targetTimeSeries =
+                variableOutput?.TimeSeriesList.SingleOrDefault(tsl => tsl.Name.Equals(timeSeriesName));
+
+            // 2. Set up initial expectations
+            Assert.That(File.Exists(hisFile), Is.True, "Test file was not found.");
+            Assert.That(variableOutput, Is.Not.Null, "Variable output was not found.");
+            Assert.That(targetTimeSeries, Is.Not.Null, "Target time series was not found.");
+            Assert.That(targetTimeSeries.GetValues().Count > 0, Is.False);
+
+            Action<Action> testAction = (action) =>
+                TestHelper.AssertAtLeastOneLogMessagesContains(action, expectedLogMssg);
+
+            // 3. Run test
+            using (var tempDir = new TemporaryDirectory())
+            {
+                string tempHisFile = tempDir.CopyTestDataFileToTempDirectory(hisFile);
+                Assert.That(File.Exists(tempHisFile), Is.True, "Test file was not found in temporary folder.");
+                testAction(() => WaqHistoryFileParser.Parse(tempHisFile, waqModel.ObservationVariableOutputs, MonitoringOutputLevel.Points));
+            }
+
+
+            // 4. Verify final expectations.
+            Assert.That(targetTimeSeries.GetValues().Count == expectedTimeSeriesSize, Is.True);
+        }
+
+        private static WaterQualityModel CreateBloomMockWaqModel(string timeSeriesName = null, string variableName = null)
+        {
+            MockRepository mocks = new MockRepository();
+            var waterQualityModel1D = mocks.Stub<WaterQualityModel>();
+            var modelSettings = new WaterQualityModelSettings
+            {
+                MonitoringOutputLevel = MonitoringOutputLevel.PointsAndAreas
+            };
+
+            var observationVariableOutputs = new List<WaterQualityObservationVariableOutput>();
+            var outputVariableTuples = new List<DelftTools.Utils.Tuple<string, string>>();
+            if (timeSeriesName != null)
+            {
+                outputVariableTuples.Add(new DelftTools.Utils.Tuple<string, string>(timeSeriesName, ""));
+            }
+            if (variableName != null)
+            {
+                observationVariableOutputs.Add(
+                    new WaterQualityObservationVariableOutput(outputVariableTuples) {Name = variableName});
+            }
+
+            waterQualityModel1D.Stub(m => m.ObservationVariableOutputs).Return(observationVariableOutputs);
+            waterQualityModel1D.Stub(m => m.ModelSettings).Return(modelSettings);
+            mocks.ReplayAll();
+
+            return waterQualityModel1D;
+        }
+
     }
 }

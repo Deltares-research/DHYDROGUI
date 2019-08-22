@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 {
@@ -67,6 +68,20 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         public List<double> GetValuesForTimeStep(DateTime timeStep)
         {
             return valuesPerTimeStep.ContainsKey(timeStep) ? valuesPerTimeStep[timeStep] : null;
+        }
+
+        /// <summary>
+        /// Returns the time series values of a given output variable.
+        /// </summary>
+        /// <param name="outputVariableName"></param>
+        /// <returns>Enumerable with values for the given key.</returns>
+        public IEnumerable<double> GetValuesForKey(string outputVariableName)
+        {
+            IEnumerable<double> defaultValue = Enumerable.Empty<double>();
+            if (OutputVariables == null || !OutputVariables.Any())
+                return defaultValue;
+            int variableIndex = Array.IndexOf(OutputVariables, outputVariableName);
+            return variableIndex == -1 ? defaultValue : valuesPerTimeStep.Values.Select(v => v[variableIndex]);
         }
     }
 }
