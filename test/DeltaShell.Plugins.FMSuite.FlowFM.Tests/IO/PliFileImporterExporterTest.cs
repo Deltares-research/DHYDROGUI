@@ -39,7 +39,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             IList<FixedWeir> resultList = new List<FixedWeir>();
             
-            TestHelper.AssertIsFasterThan(8500, () => importer.ImportItem(path, resultList));
+            TestHelper.AssertIsFasterThan(8500, () => importer.ImportItem(path, resultList), rankHddAccess: false, warmUp: true);
             Assert.AreEqual(19459, resultList.Count);
         }
 
@@ -78,7 +78,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 importer.GetEditableObject = parent => model.Area;
 
                 // import the same set twice to include duplicate checking for all items
-                TestHelper.AssertIsFasterThan(13000, () => importer.ImportItem(TestHelper.GetTestFilePath("structures\\testBas2FM_fxw.pliz"), model.Area.FixedWeirs));
+                TestHelper.AssertIsFasterThan(
+                    13000,
+                    () => importer.ImportItem(TestHelper.GetTestFilePath("structures\\testBas2FM_fxw.pliz"),
+                                              model.Area.FixedWeirs), rankHddAccess: false, warmUp: true);
                 Assert.AreEqual(19459, model.Area.FixedWeirs.Count);
             }
         }

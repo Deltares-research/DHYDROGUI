@@ -193,10 +193,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
 
             // Assert
             IEnumerable<string> renderedErrorMessages = TestHelper.GetAllRenderedMessages(TestAction, Level.Error);
-            string expectedMessage = string.Format(Resources.DelwaqNetCdfMapFileReader_Map_file_not_found, path);
+            var expectedMessage = string.Format(Resources.DelwaqNetCdfMapFileReader_Map_file_not_found, path);
             Assert.That(renderedErrorMessages, Contains.Item(expectedMessage));
-            Assert.That(metaData, Is.Not.Null,
-                        "Meta data should not have been null.");
+            Assert.That(metaData, Is.Not.Null, "Meta data should not have been null.");
         }
 
         [Test]
@@ -214,12 +213,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
 
             // Assert
             IEnumerable<string> renderedErrorMessages = TestHelper.GetAllRenderedMessages(TestAction, Level.Error);
-            string expectedMessage = string.Format(Resources.DelwaqNetCdfMapFileReader_Map_file_not_found, path);
+            var expectedMessage = string.Format(Resources.DelwaqNetCdfMapFileReader_Map_file_not_found, path);
             Assert.That(renderedErrorMessages, Contains.Item(expectedMessage));
-            Assert.That(data, Is.Not.Null,
-                        "Empty list should have been returned.");
-            Assert.That(data, Is.Empty,
-                        "Empty list should have been returned.");
+            Assert.That(data, Is.Not.Null, "Empty list should have been returned.");
+            Assert.That(data, Is.Empty, "Empty list should have been returned.");
         }
 
         [Test]
@@ -237,12 +234,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
 
             // Assert
             IEnumerable<string> renderedErrorMessages = TestHelper.GetAllRenderedMessages(TestAction, Level.Error);
-            string expectedMessage = string.Format(Resources.DelwaqNetCdfMapFileReader_Map_file_not_found, path);
+            var expectedMessage = string.Format(Resources.DelwaqNetCdfMapFileReader_Map_file_not_found, path);
             Assert.That(renderedErrorMessages, Contains.Item(expectedMessage));
-            Assert.That(data, Is.Not.Null,
-                        "Empty list should have been returned.");
-            Assert.That(data, Is.Empty,
-                        "Empty list should have been returned.");
+            Assert.That(data, Is.Not.Null, "Empty list should have been returned.");
+            Assert.That(data, Is.Empty, "Empty list should have been returned.");
         }
 
         private static void ValidateCounts(MapFileMetaData metaData)
