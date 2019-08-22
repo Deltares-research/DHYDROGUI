@@ -91,39 +91,39 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 // compare
                 Assert.AreEqual(
                 "[structure]" + Environment.NewLine +
-                "    type                  = generalstructure    # Type of structure" + Environment.NewLine +
-                "    id                    = weir01              # Name of the structure" + Environment.NewLine +
-                "    Upstream2Width        = 1                   # Width left side of structure (m)" + Environment.NewLine +
-                "    Upstream1Width        = 2                   # Width structure left side (m)" + Environment.NewLine +
-                "    CrestWidth            = 3                   # Width structure centre (m)" + Environment.NewLine +
-                "    Downstream1Width      = 4                   # Width structure right side (m)" + Environment.NewLine +
-                "    Downstream2Width      = 5                   # Width right side of structure (m)" + Environment.NewLine +
-                "    Upstream2Level        = 6                   # Bed level left side of structure (m AD)" + Environment.NewLine +
-                "    Upstream1Level        = 7                   # Bed level left side structure (m AD)" + Environment.NewLine +
-                "    CrestLevel            = 8                   # Bed level at centre of structure (m AD)" + Environment.NewLine +
-                "    Downstream1Level      = 9                   # Bed level right side structure (m AD)" + Environment.NewLine +
-                "    Downstream2Level      = 10                  # Bed level right side of structure (m AD)" + Environment.NewLine +
-                "    GateLowerEdgeLevel    = 31                  # Gate lower edge level (m AD)" + Environment.NewLine +
-                "    pos_freegateflowcoeff = 12                  # Positive free gate flow (-)" + Environment.NewLine +
-                "    pos_drowngateflowcoeff= 13                  # Positive drowned gate flow (-)" + Environment.NewLine +
-                "    pos_freeweirflowcoeff = 14                  # Positive free weir flow (-)" + Environment.NewLine +
-                "    pos_drownweirflowcoeff= 15                  # Positive drowned weir flow (-)" + Environment.NewLine +
-                "    pos_contrcoeffreegate = 16                  # Positive flow contraction coefficient (-)" + Environment.NewLine +
-                "    neg_freegateflowcoeff = 17                  # Negative free gate flow (-)" + Environment.NewLine +
-                "    neg_drowngateflowcoeff= 18                  # Negative drowned gate flow (-)" + Environment.NewLine +
-                "    neg_freeweirflowcoeff = 19                  # Negative free weir flow (-)" + Environment.NewLine +
-                "    neg_drownweirflowcoeff= 20                  # Negative drowned weir flow (-)" + Environment.NewLine +
-                "    neg_contrcoeffreegate = 21                  # Negative flow contraction coefficient (-)" + Environment.NewLine +
-                "    extraresistance       = 22                  # Extra resistance (-)" + Environment.NewLine +
-                "    GateHeight            = 11                  # Vertical gate door height (m)" + Environment.NewLine +
-                "    GateOpeningWidth      = 30                  # Horizontal opening width between the doors (m)" + Environment.NewLine +
-                "    GateOpeningHorizontalDirection= symmetric           # Horizontal direction of the opening doors" + Environment.NewLine +
+                "    type                  = generalstructure    \t# Type of structure" + Environment.NewLine +
+                "    id                    = weir01              \t# Name of the structure" + Environment.NewLine +
+                "    Upstream2Width        = 1                   \t# Width left side of structure (m)" + Environment.NewLine +
+                "    Upstream1Width        = 2                   \t# Width structure left side (m)" + Environment.NewLine +
+                "    CrestWidth            = 3                   \t# Width structure centre (m)" + Environment.NewLine +
+                "    Downstream1Width      = 4                   \t# Width structure right side (m)" + Environment.NewLine +
+                "    Downstream2Width      = 5                   \t# Width right side of structure (m)" + Environment.NewLine +
+                "    Upstream2Level        = 6                   \t# Bed level left side of structure (m AD)" + Environment.NewLine +
+                "    Upstream1Level        = 7                   \t# Bed level left side structure (m AD)" + Environment.NewLine +
+                "    CrestLevel            = 8                   \t# Bed level at centre of structure (m AD)" + Environment.NewLine +
+                "    Downstream1Level      = 9                   \t# Bed level right side structure (m AD)" + Environment.NewLine +
+                "    Downstream2Level      = 10                  \t# Bed level right side of structure (m AD)" + Environment.NewLine +
+                "    GateLowerEdgeLevel    = 31                  \t# Gate lower edge level (m AD)" + Environment.NewLine +
+                "    pos_freegateflowcoeff = 12                  \t# Positive free gate flow (-)" + Environment.NewLine +
+                "    pos_drowngateflowcoeff= 13                  \t# Positive drowned gate flow (-)" + Environment.NewLine +
+                "    pos_freeweirflowcoeff = 14                  \t# Positive free weir flow (-)" + Environment.NewLine +
+                "    pos_drownweirflowcoeff= 15                  \t# Positive drowned weir flow (-)" + Environment.NewLine +
+                "    pos_contrcoeffreegate = 16                  \t# Positive flow contraction coefficient (-)" + Environment.NewLine +
+                "    neg_freegateflowcoeff = 17                  \t# Negative free gate flow (-)" + Environment.NewLine +
+                "    neg_drowngateflowcoeff= 18                  \t# Negative drowned gate flow (-)" + Environment.NewLine +
+                "    neg_freeweirflowcoeff = 19                  \t# Negative free weir flow (-)" + Environment.NewLine +
+                "    neg_drownweirflowcoeff= 20                  \t# Negative drowned weir flow (-)" + Environment.NewLine +
+                "    neg_contrcoeffreegate = 21                  \t# Negative flow contraction coefficient (-)" + Environment.NewLine +
+                "    extraresistance       = 22                  \t# Extra resistance (-)" + Environment.NewLine +
+                "    GateHeight            = 11                  \t# Vertical gate door height (m)" + Environment.NewLine +
+                "    GateOpeningWidth      = 30                  \t# Horizontal opening width between the doors (m)" + Environment.NewLine +
+                "    GateOpeningHorizontalDirection= symmetric           \t# Horizontal direction of the opening doors" + Environment.NewLine +
                 "[structure]" + Environment.NewLine +
-                "    type                  = weir                # Type of structure" + Environment.NewLine +
-                "    id                    = weir02              # Name of the structure" + Environment.NewLine +
-                "    CrestLevel            = 0                   # Weir crest height (in [m])" + Environment.NewLine +
-                "    CrestWidth            = 5                   # Weir crest width (in [m])" + Environment.NewLine +
-                "    lat_contr_coeff       = 1                   # Lateral contraction coefficient" + Environment.NewLine, fileContents);
+                "    type                  = weir                \t# Type of structure" + Environment.NewLine +
+                "    id                    = weir02              \t# Name of the structure" + Environment.NewLine +
+                "    CrestLevel            = 0                   \t# Weir crest height (in [m])" + Environment.NewLine +
+                "    CrestWidth            = 5                   \t# Weir crest width (in [m])" + Environment.NewLine +
+                "    lat_contr_coeff       = 1                   \t# Lateral contraction coefficient" + Environment.NewLine, fileContents);
             }
             finally
             {

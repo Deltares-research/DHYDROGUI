@@ -29,20 +29,20 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
     [TestFixture]
     public class StructuresFileTest
     {
-        private const string ExpectedCrestLevelValue = "    CrestLevel            = 10                  # Weir crest height (in [m])";
-        private const string ExpectedCrestLevelTimeSeries = "    CrestLevel            = TestStructure_CrestLevel.tim# Weir crest height (in [m])";
-        private const string ExpectedSillLevelValue = "    CrestLevel            = 10                  # Gate sill level (in [m])";
-        private const string ExpectedSillLevelTimeSeries = "    CrestLevel            = TestStructure_CrestLevel.tim# Gate sill level (in [m])";
-        private const string ExpectedLowerEdgeLevelValueGatedFormula = "    GateLowerEdgeLevel    = 40                  # Gate lower edge level (in [m])";
-        private const string ExpectedLowerEdgeLevelTimeSeriesGatedFormula = "    GateLowerEdgeLevel    = TestStructure_GateLowerEdgeLevel.tim# Gate lower edge level (in [m])";
-        private const string ExpectedDoorOpeningValueGatedFormula = "    GateOpeningWidth      = 30                  # Gate opening width (in [m])";
-        private const string ExpectedDoorOpeningTimeSeriesGatedFormula = "    GateOpeningWidth      = TestStructure_GateOpeningWidth.tim# Gate opening width (in [m])";
-        private const string ExpectedGSCrestLevelValue = "    CrestLevel            = 10                  # Bed level at centre of structure (m AD)";
-        private const string ExpectedGSCrestLevelTimeSeries = "    CrestLevel            = TestStructure_CrestLevel.tim# Bed level at centre of structure (m AD)";
-        private const string ExpectedLowerEdgeLevelValueGeneralStructureFormula = "    GateLowerEdgeLevel    = 40                  # Gate lower edge level (m AD)";
-        private const string ExpectedLowerEdgeLevelTimeSeriesGeneralStructureFormula = "    GateLowerEdgeLevel    = TestStructure_GateLowerEdgeLevel.tim# Gate lower edge level (m AD)";
-        private const string ExpectedDoorOpeningValueGeneralStructureFormula = "    GateOpeningWidth      = 30                  # Horizontal opening width between the doors (m)";
-        private const string ExpectedDoorOpeningTimeSeriesGeneralStructureFormula = "    GateOpeningWidth      = TestStructure_GateOpeningWidth.tim# Horizontal opening width between the doors (m)";
+        private const string ExpectedCrestLevelValue = "    CrestLevel            = 10                  \t# Weir crest height (in [m])";
+        private const string ExpectedCrestLevelTimeSeries = "    CrestLevel            = TestStructure_CrestLevel.tim\t# Weir crest height (in [m])";
+        private const string ExpectedSillLevelValue = "    CrestLevel            = 10                  \t# Gate sill level (in [m])";
+        private const string ExpectedSillLevelTimeSeries = "    CrestLevel            = TestStructure_CrestLevel.tim\t# Gate sill level (in [m])";
+        private const string ExpectedLowerEdgeLevelValueGatedFormula = "    GateLowerEdgeLevel    = 40                  \t# Gate lower edge level (in [m])";
+        private const string ExpectedLowerEdgeLevelTimeSeriesGatedFormula = "    GateLowerEdgeLevel    = TestStructure_GateLowerEdgeLevel.tim\t# Gate lower edge level (in [m])";
+        private const string ExpectedDoorOpeningValueGatedFormula = "    GateOpeningWidth      = 30                  \t# Gate opening width (in [m])";
+        private const string ExpectedDoorOpeningTimeSeriesGatedFormula = "    GateOpeningWidth      = TestStructure_GateOpeningWidth.tim\t# Gate opening width (in [m])";
+        private const string ExpectedGSCrestLevelValue = "    CrestLevel            = 10                  \t# Bed level at centre of structure (m AD)";
+        private const string ExpectedGSCrestLevelTimeSeries = "    CrestLevel            = TestStructure_CrestLevel.tim\t# Bed level at centre of structure (m AD)";
+        private const string ExpectedLowerEdgeLevelValueGeneralStructureFormula = "    GateLowerEdgeLevel    = 40                  \t# Gate lower edge level (m AD)";
+        private const string ExpectedLowerEdgeLevelTimeSeriesGeneralStructureFormula = "    GateLowerEdgeLevel    = TestStructure_GateLowerEdgeLevel.tim\t# Gate lower edge level (m AD)";
+        private const string ExpectedDoorOpeningValueGeneralStructureFormula = "    GateOpeningWidth      = 30                  \t# Horizontal opening width between the doors (m)";
+        private const string ExpectedDoorOpeningTimeSeriesGeneralStructureFormula = "    GateOpeningWidth      = TestStructure_GateOpeningWidth.tim\t# Horizontal opening width between the doors (m)";
         private StructureSchema<ModelPropertyDefinition> schema;
 
         [SetUp]
@@ -449,9 +449,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 // Then
                 var expectedFileContents =
                     "[structure]" + Environment.NewLine +
-                    "    type                  = pump                # Type of structure" + Environment.NewLine +
-                    "    id                    = TestStructure       # Name of the structure" + Environment.NewLine +
-                    "    capacity              = 20                  # Pump capacity (in [m3/s])" + Environment.NewLine;
+                    "    type                  = pump                \t# Type of structure" + Environment.NewLine +
+                    "    id                    = TestStructure       \t# Name of the structure" + Environment.NewLine +
+                    "    capacity              = 20                  \t# Pump capacity (in [m3/s])" + Environment.NewLine;
                 var fileContents = File.ReadAllText(writePath);
 
                 Assert.That(fileContents, Is.EqualTo(expectedFileContents));
@@ -587,11 +587,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 // Then
                 var expectedFileContents =
                     "[structure]" + Environment.NewLine +
-                    "    type                  = weir                # Type of structure" + Environment.NewLine +
-                    "    id                    = TestStructure       # Name of the structure" + Environment.NewLine +
+                    "    type                  = weir                \t# Type of structure" + Environment.NewLine +
+                    "    id                    = TestStructure       \t# Name of the structure" + Environment.NewLine +
                     expectedCrestLevelVal + Environment.NewLine +
-                    "    CrestWidth            = 20                  # Weir crest width (in [m])" + Environment.NewLine +
-                    "    lat_contr_coeff       = 1                   # Lateral contraction coefficient" + Environment.NewLine;
+                    "    CrestWidth            = 20                  \t# Weir crest width (in [m])" + Environment.NewLine +
+                    "    lat_contr_coeff       = 1                   \t# Lateral contraction coefficient" + Environment.NewLine;
 
                 var fileContents = File.ReadAllText(writePath);
 
@@ -666,14 +666,14 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 // Then
                 var expectedFileContents =
                     "[structure]" + Environment.NewLine +
-                    "    type                  = gate                # Type of structure" + Environment.NewLine +
-                    "    id                    = TestStructure       # Name of the structure" + Environment.NewLine +
+                    "    type                  = gate                \t# Type of structure" + Environment.NewLine +
+                    "    id                    = TestStructure       \t# Name of the structure" + Environment.NewLine +
                     expectedSillLevelVal + Environment.NewLine +
                     expectedLowerEdgeLevelVal + Environment.NewLine +
                     expectedHorizontalDoorOpeningWidthVal + Environment.NewLine +
-                    "    GateHeight            = 50                  # Gate door height (in [m])" + Environment.NewLine +
-                    "    GateOpeningHorizontalDirection= symmetric           # Horizontal direction of the opening doors" + Environment.NewLine +
-                    "    CrestWidth            = 20                  # Gate sill width (in [m])" + Environment.NewLine;
+                    "    GateHeight            = 50                  \t# Gate door height (in [m])" + Environment.NewLine +
+                    "    GateOpeningHorizontalDirection= symmetric           \t# Horizontal direction of the opening doors" + Environment.NewLine +
+                    "    CrestWidth            = 20                  \t# Gate sill width (in [m])" + Environment.NewLine;
 
                 var fileContents = File.ReadAllText(writePath);
 
@@ -768,33 +768,33 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 // Then
                 var expectedFileContents =
                     "[structure]" + Environment.NewLine +
-                    "    type                  = generalstructure    # Type of structure" + Environment.NewLine +
-                    "    id                    = TestStructure       # Name of the structure" + Environment.NewLine +
-                    "    Upstream2Width        = 1                   # Width left side of structure (m)" + Environment.NewLine +
-                    "    Upstream1Width        = 2                   # Width structure left side (m)" + Environment.NewLine +
-                    "    CrestWidth            = 20                  # Width structure centre (m)" + Environment.NewLine +
-                    "    Downstream1Width      = 3                   # Width structure right side (m)" + Environment.NewLine +
-                    "    Downstream2Width      = 4                   # Width right side of structure (m)" + Environment.NewLine +
-                    "    Upstream2Level        = 5                   # Bed level left side of structure (m AD)" + Environment.NewLine +
-                    "    Upstream1Level        = 6                   # Bed level left side structure (m AD)" + Environment.NewLine +
+                    "    type                  = generalstructure    \t# Type of structure" + Environment.NewLine +
+                    "    id                    = TestStructure       \t# Name of the structure" + Environment.NewLine +
+                    "    Upstream2Width        = 1                   \t# Width left side of structure (m)" + Environment.NewLine +
+                    "    Upstream1Width        = 2                   \t# Width structure left side (m)" + Environment.NewLine +
+                    "    CrestWidth            = 20                  \t# Width structure centre (m)" + Environment.NewLine +
+                    "    Downstream1Width      = 3                   \t# Width structure right side (m)" + Environment.NewLine +
+                    "    Downstream2Width      = 4                   \t# Width right side of structure (m)" + Environment.NewLine +
+                    "    Upstream2Level        = 5                   \t# Bed level left side of structure (m AD)" + Environment.NewLine +
+                    "    Upstream1Level        = 6                   \t# Bed level left side structure (m AD)" + Environment.NewLine +
                     expectedCrestLevelVal + Environment.NewLine +
-                    "    Downstream1Level      = 7                   # Bed level right side structure (m AD)" + Environment.NewLine +
-                    "    Downstream2Level      = 8                   # Bed level right side of structure (m AD)" + Environment.NewLine +
+                    "    Downstream1Level      = 7                   \t# Bed level right side structure (m AD)" + Environment.NewLine +
+                    "    Downstream2Level      = 8                   \t# Bed level right side of structure (m AD)" + Environment.NewLine +
                     expectedLowerEdgeLevelVal + Environment.NewLine +
-                    "    pos_freegateflowcoeff = 9                   # Positive free gate flow (-)" + Environment.NewLine +
-                    "    pos_drowngateflowcoeff= 11                  # Positive drowned gate flow (-)" + Environment.NewLine +
-                    "    pos_freeweirflowcoeff = 12                  # Positive free weir flow (-)" + Environment.NewLine +
-                    "    pos_drownweirflowcoeff= 13                  # Positive drowned weir flow (-)" + Environment.NewLine +
-                    "    pos_contrcoeffreegate = 14                  # Positive flow contraction coefficient (-)" + Environment.NewLine +
-                    "    neg_freegateflowcoeff = 15                  # Negative free gate flow (-)" + Environment.NewLine +
-                    "    neg_drowngateflowcoeff= 16                  # Negative drowned gate flow (-)" + Environment.NewLine +
-                    "    neg_freeweirflowcoeff = 17                  # Negative free weir flow (-)" + Environment.NewLine +
-                    "    neg_drownweirflowcoeff= 18                  # Negative drowned weir flow (-)" + Environment.NewLine +
-                    "    neg_contrcoeffreegate = 19                  # Negative flow contraction coefficient (-)" + Environment.NewLine +
-                    "    extraresistance       = 21                  # Extra resistance (-)" + Environment.NewLine +
-                    "    GateHeight            = 50                  # Vertical gate door height (m)" + Environment.NewLine +
+                    "    pos_freegateflowcoeff = 9                   \t# Positive free gate flow (-)" + Environment.NewLine +
+                    "    pos_drowngateflowcoeff= 11                  \t# Positive drowned gate flow (-)" + Environment.NewLine +
+                    "    pos_freeweirflowcoeff = 12                  \t# Positive free weir flow (-)" + Environment.NewLine +
+                    "    pos_drownweirflowcoeff= 13                  \t# Positive drowned weir flow (-)" + Environment.NewLine +
+                    "    pos_contrcoeffreegate = 14                  \t# Positive flow contraction coefficient (-)" + Environment.NewLine +
+                    "    neg_freegateflowcoeff = 15                  \t# Negative free gate flow (-)" + Environment.NewLine +
+                    "    neg_drowngateflowcoeff= 16                  \t# Negative drowned gate flow (-)" + Environment.NewLine +
+                    "    neg_freeweirflowcoeff = 17                  \t# Negative free weir flow (-)" + Environment.NewLine +
+                    "    neg_drownweirflowcoeff= 18                  \t# Negative drowned weir flow (-)" + Environment.NewLine +
+                    "    neg_contrcoeffreegate = 19                  \t# Negative flow contraction coefficient (-)" + Environment.NewLine +
+                    "    extraresistance       = 21                  \t# Extra resistance (-)" + Environment.NewLine +
+                    "    GateHeight            = 50                  \t# Vertical gate door height (m)" + Environment.NewLine +
                     expectedHorizontalDoorOpeningWidthVal + Environment.NewLine +
-                    "    GateOpeningHorizontalDirection= symmetric           # Horizontal direction of the opening doors" + Environment.NewLine;
+                    "    GateOpeningHorizontalDirection= symmetric           \t# Horizontal direction of the opening doors" + Environment.NewLine;
                 var fileContents = File.ReadAllText(writePath);
 
                 Assert.That(fileContents, Is.EqualTo(expectedFileContents));
@@ -1329,26 +1329,26 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             var fileContents = File.ReadAllText(exportFilePath);
             Assert.AreEqual(
                 "[structure]" + Environment.NewLine +
-                "    type                  = pump                # Type of structure" + Environment.NewLine +
-                "    id                    = pump1               # Name of the structure" + Environment.NewLine +
-                "    polylinefile          = pump1.pli           # *.pli; Polyline geometry definition for 2D structure" + Environment.NewLine +
-                "    capacity              = 3                   # Pump capacity (in [m3/s])" + Environment.NewLine +
+                "    type                  = pump                \t# Type of structure" + Environment.NewLine +
+                "    id                    = pump1               \t# Name of the structure" + Environment.NewLine +
+                "    polylinefile          = pump1.pli           \t# *.pli; Polyline geometry definition for 2D structure" + Environment.NewLine +
+                "    capacity              = 3                   \t# Pump capacity (in [m3/s])" + Environment.NewLine +
                 "[structure]" + Environment.NewLine +
-                "    type                  = weir                # Type of structure" + Environment.NewLine +
-                "    id                    = weir1               # Name of the structure" + Environment.NewLine +
-                "    polylinefile          = weir1.pli           # *.pli; Polyline geometry definition for 2D structure" + Environment.NewLine +
-                "    CrestLevel            = 2                   # Weir crest height (in [m])" + Environment.NewLine +
-                "    CrestWidth            = 25                  # Weir crest width (in [m])" + Environment.NewLine +
-                "    lat_contr_coeff       = 0.7                 # Lateral contraction coefficient" + Environment.NewLine +
+                "    type                  = weir                \t# Type of structure" + Environment.NewLine +
+                "    id                    = weir1               \t# Name of the structure" + Environment.NewLine +
+                "    polylinefile          = weir1.pli           \t# *.pli; Polyline geometry definition for 2D structure" + Environment.NewLine +
+                "    CrestLevel            = 2                   \t# Weir crest height (in [m])" + Environment.NewLine +
+                "    CrestWidth            = 25                  \t# Weir crest width (in [m])" + Environment.NewLine +
+                "    lat_contr_coeff       = 0.7                 \t# Lateral contraction coefficient" + Environment.NewLine +
                 "[structure]" + Environment.NewLine +
-                "    type                  = gate                # Type of structure" + Environment.NewLine +
-                "    id                    = gate1               # Name of the structure" + Environment.NewLine +
-                "    polylinefile          = gate1.pli           # *.pli; Polyline geometry definition for 2D structure" + Environment.NewLine +
-                "    CrestLevel            = 1                   # Gate sill level (in [m])" + Environment.NewLine +
-                "    GateLowerEdgeLevel    = 4                   # Gate lower edge level (in [m])" + Environment.NewLine +
-                "    GateOpeningWidth      = 12                  # Gate opening width (in [m])" + Environment.NewLine +
-                "    GateHeight            = 3                   # Gate door height (in [m])" + Environment.NewLine +
-                "    GateOpeningHorizontalDirection= from_left           # Horizontal direction of the opening doors" + Environment.NewLine, fileContents);
+                "    type                  = gate                \t# Type of structure" + Environment.NewLine +
+                "    id                    = gate1               \t# Name of the structure" + Environment.NewLine +
+                "    polylinefile          = gate1.pli           \t# *.pli; Polyline geometry definition for 2D structure" + Environment.NewLine +
+                "    CrestLevel            = 1                   \t# Gate sill level (in [m])" + Environment.NewLine +
+                "    GateLowerEdgeLevel    = 4                   \t# Gate lower edge level (in [m])" + Environment.NewLine +
+                "    GateOpeningWidth      = 12                  \t# Gate opening width (in [m])" + Environment.NewLine +
+                "    GateHeight            = 3                   \t# Gate door height (in [m])" + Environment.NewLine +
+                "    GateOpeningHorizontalDirection= from_left           \t# Horizontal direction of the opening doors" + Environment.NewLine, fileContents);
 
             foreach (var expectedFileName in expectedFileNames)
             {
@@ -1476,33 +1476,33 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             var fileContents = File.ReadAllText(exportFilePath);
             Assert.AreEqual(
                 "[structure]" + Environment.NewLine +
-                "    type                  = pump                # Type of structure" + Environment.NewLine +
-                "    id                    = pump1               # Name of the structure" + Environment.NewLine +
-                "    polylinefile          = pump1.pli           # *.pli; Polyline geometry definition for 2D structure" +
+                "    type                  = pump                \t# Type of structure" + Environment.NewLine +
+                "    id                    = pump1               \t# Name of the structure" + Environment.NewLine +
+                "    polylinefile          = pump1.pli           \t# *.pli; Polyline geometry definition for 2D structure" +
                 Environment.NewLine +
-                "    capacity              = pump1_capacity.tim  # Pump capacity (in [m3/s])" + Environment.NewLine +
+                "    capacity              = pump1_capacity.tim  \t# Pump capacity (in [m3/s])" + Environment.NewLine +
                 "[structure]" + Environment.NewLine +
-                "    type                  = weir                # Type of structure" + Environment.NewLine +
-                "    id                    = weir1               # Name of the structure" + Environment.NewLine +
-                "    polylinefile          = weir1.pli           # *.pli; Polyline geometry definition for 2D structure" +
+                "    type                  = weir                \t# Type of structure" + Environment.NewLine +
+                "    id                    = weir1               \t# Name of the structure" + Environment.NewLine +
+                "    polylinefile          = weir1.pli           \t# *.pli; Polyline geometry definition for 2D structure" +
                 Environment.NewLine +
-                "    CrestLevel            = weir1_CrestLevel.tim# Weir crest height (in [m])" + Environment.NewLine +
-                "    lat_contr_coeff       = 0.7                 # Lateral contraction coefficient" +
+                "    CrestLevel            = weir1_CrestLevel.tim\t# Weir crest height (in [m])" + Environment.NewLine +
+                "    lat_contr_coeff       = 0.7                 \t# Lateral contraction coefficient" +
                 Environment.NewLine +
                 "[structure]" + Environment.NewLine +
-                "    type                  = gate                # Type of structure" + Environment.NewLine +
-                "    id                    = gate1               # Name of the structure" + Environment.NewLine +
-                "    polylinefile          = gate1.pli           # *.pli; Polyline geometry definition for 2D structure" +
+                "    type                  = gate                \t# Type of structure" + Environment.NewLine +
+                "    id                    = gate1               \t# Name of the structure" + Environment.NewLine +
+                "    polylinefile          = gate1.pli           \t# *.pli; Polyline geometry definition for 2D structure" +
                 Environment.NewLine +
-                "    CrestLevel            = gate1_CrestLevel.tim# Gate sill level (in [m])" +
+                "    CrestLevel            = gate1_CrestLevel.tim\t# Gate sill level (in [m])" +
                 Environment.NewLine +
-                "    GateLowerEdgeLevel    = gate1_GateLowerEdgeLevel.tim# Gate lower edge level (in [m])" +
+                "    GateLowerEdgeLevel    = gate1_GateLowerEdgeLevel.tim\t# Gate lower edge level (in [m])" +
                 Environment.NewLine +
-                "    GateOpeningWidth      = gate1_GateOpeningWidth.tim# Gate opening width (in [m])" + Environment.NewLine +
-                "    GateHeight            = 3                   # Gate door height (in [m])" + Environment.NewLine +
-                "    GateOpeningHorizontalDirection= symmetric           # Horizontal direction of the opening doors" +
+                "    GateOpeningWidth      = gate1_GateOpeningWidth.tim\t# Gate opening width (in [m])" + Environment.NewLine +
+                "    GateHeight            = 3                   \t# Gate door height (in [m])" + Environment.NewLine +
+                "    GateOpeningHorizontalDirection= symmetric           \t# Horizontal direction of the opening doors" +
                 Environment.NewLine +
-                "    CrestWidth            = 15.5                # Gate sill width (in [m])" + Environment.NewLine, fileContents);
+                "    CrestWidth            = 15.5                \t# Gate sill width (in [m])" + Environment.NewLine, fileContents);
 
             foreach (var expectedFileName in expectedFileNames)
             {
