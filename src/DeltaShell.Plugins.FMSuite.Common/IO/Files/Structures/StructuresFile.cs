@@ -115,8 +115,12 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
                     continue;
                 }
 
-                Structure2D structure2D =
-                    CreateStructure2D(StructureSchema, structureTypeProperty.Value, category, filePath, logHandler);
+                if (!TryCreateStructure2D(structureTypeProperty.Value, category, filePath, logHandler,
+                                          out Structure2D structure2D))
+                {
+                    continue;
+                }
+
                 string errorMessage = StructureFactoryValidator.Validate(structure2D);
                 if (!string.IsNullOrEmpty(errorMessage))
                 {
@@ -256,22 +260,24 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             return delftIniCategory;
         }
 
-        private Structure2D CreateStructure2D(StructureSchema<ModelPropertyDefinition> schema, 
-                                              string structureType,
-                                              DelftIniCategory category, 
-                                              string filePath, 
-                                              ILogHandler logHandler)
+        private bool TryCreateStructure2D(string structureType,
+                                          IDelftIniCategory category,
+                                          string filePath,
+                                          ILogHandler logHandler,
+                                          out Structure2D structure2D)
         {
-            var newStructure = new Structure2D(structureType);
+            structure2D = new Structure2D(structureType);
+            var success = true;
 
             foreach (DelftIniProperty property in category.Properties)
             {
-                ModelPropertyDefinition modelPropertyDefinition = schema.GetDefinition(structureType, property.Name);
+                ModelPropertyDefinition modelPropertyDefinition = StructureSchema.GetDefinition(structureType, property.Name);
                 if (modelPropertyDefinition == null)
                 {
                     logHandler?.ReportWarningFormat(
                         Resources.StructureFile_Property__0__not_supported_for_structures_of_type__1__and_is_skipped_Line__2__,
                         property.Name, structureType, property.LineNumber);
+                    success = false;
                     continue;
                 }
 
@@ -284,20 +290,21 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
                         SetOrUpdateTimFolder(propertyValue.TimeSeriesFilename, property.LineNumber, logHandler);
                     }
 
-                    newStructure.Properties.Add(structureProperty);
+                    structure2D.Properties.Add(structureProperty);
                 }
                 catch (FormatException e)
                 {
-                    throw new FormatException(string.Format(
-                                                  Resources.StructureFile_An_invalid_value__0__was_encountered_expected__1__for_property__2__on_line__3__,
-                                                  e.InnerException is OverflowException ? " (too large/small)" : "",
-                                                  GetValueTypeDescription(
-                                                      modelPropertyDefinition.DataType, modelPropertyDefinition),
-                                                  property.Name, property.LineNumber, filePath), e);
+                    logHandler?.ReportWarningFormat(
+                        Resources.StructureFile_An_invalid_value__0__was_encountered_expected__1__for_property__2__on_line__3__,
+                        e.InnerException is OverflowException ? " (too large/small)" : "",
+                        GetValueTypeDescription(modelPropertyDefinition.DataType, modelPropertyDefinition),
+                        property.Name, property.LineNumber, filePath);
+
+                    success = false;
                 }
             }
 
-            return newStructure;
+            return success;
         }
 
         private void SetOrUpdateTimFolder(string timeSeriesFilename, int propertyLineNumber, ILogHandler logHandler)
