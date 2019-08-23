@@ -34,7 +34,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
         public const string SecondaryFlowUnitSymbol = "m/s";
 
         public const string TracersUnitDescription = "kilograms per cubic meter";
-        public const string TracerUnitSymbol = "kg/m³";
+        public const string TracerUnitSymbol = "kg/m3";
     }
 
     /// <summary>
