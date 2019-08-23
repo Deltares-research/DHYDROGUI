@@ -167,8 +167,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                                                                new List<DelftTools.Utils.Tuple<string, string>>
                                                                {
                                                                    new DelftTools.Utils.Tuple<string, string>(
-                                                                       "deltashell_res.map",
-                                                                       "deltashell_res_in.map")
+                                                                       FileConstants.RestartFileName,
+                                                                       FileConstants.RestartInFileName)
                                                                });
 
             InitializeInputDataItems();
@@ -1330,7 +1330,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                                         Resources
                                             .WaterQualityModel_OnInitializeCore_Failed_to_initialize_pre_processor__0_Please_look_at_the_List_file_for_more_information__0_List_file_found_in__Project_view____Output____List_file__0___1_,
                                         Environment.NewLine,
-                                        Path.GetDirectoryName(Path.Combine(ExplicitOutputDirectory, "output"))));
+                                        Path.GetDirectoryName(Path.Combine(ExplicitOutputDirectory, FileConstants.OutputDirectoryName))));
             }
 
             //initialize and fill initial values in output coverages (needs to be available after initialize for rtc to pick up, for example)
@@ -1374,11 +1374,45 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                 return;
             }
 
-            this.ConnectMapOutput();
+            ConnectMapOutput();
 
             waqProcessor.AddOutput(ModelSettings.OutputDirectory, ObservationVariableOutputs,
                                    (displayName, filePath) => this.AddTextDocument(displayName, filePath),
                                    ModelSettings.MonitoringOutputLevel);
+        }
+
+        /// <summary>
+        /// Connects the output map files to the model.
+        /// </summary>
+        /// <remarks>
+        /// If both the binary and NetCDF file exist in the output directory,
+        /// then the NetCDF file is connected to the model, except when the
+        /// convention is not supported.
+        /// </remarks>
+        private void ConnectMapOutput()
+        {
+            string outputDirectory = ModelSettings.OutputDirectory;
+
+            string mapFilePath = Path.Combine(outputDirectory, FileConstants.BinaryMapFileName);
+            if (File.Exists(mapFilePath))
+            {
+                MapFileFunctionStore.Path = mapFilePath;
+            }
+
+            string mapNetCdfFilePath = Path.Combine(outputDirectory, FileConstants.NetCdfMapFileName);
+            if (!File.Exists(mapNetCdfFilePath))
+            {
+                return;
+            }
+
+            if (!NetCdfFileConventionChecker.HasSupportedConvention(mapNetCdfFilePath))
+            {
+                Log.WarnFormat(Resources.WaterQualityModel_File_does_not_meet_supported_UGRID_1_0_or_newer_standard, Path.GetFileName(mapNetCdfFilePath));
+            }
+            else
+            {
+                MapFileFunctionStore.Path = mapNetCdfFilePath;
+            }
         }
 
         protected override void OnCleanup()
@@ -1785,12 +1819,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             else if (ModelDataDirectory != null)
             {
                 ModelSettings.WorkDirectory =
-                    Path.Combine(Path.GetDirectoryName(ModelDataDirectory), GetWaqDataFolderName() + "_output");
+                    Path.Combine(Path.GetDirectoryName(ModelDataDirectory), GetWaqDataFolderName() + FileConstants.WorkDirectoryPostfix);
             }
             else
             {
                 // use a folder that was created
-                ModelSettings.WorkDirectory = Path.Combine(tempWorkDirectory, GetWaqDataFolderName() + "_output");
+                ModelSettings.WorkDirectory = Path.Combine(tempWorkDirectory, GetWaqDataFolderName() + FileConstants.WorkDirectoryPostfix);
             }
         }
 

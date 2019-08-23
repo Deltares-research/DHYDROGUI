@@ -246,7 +246,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                 TestHelper.AssertIsFasterThan(5000, () =>
                 {
                     new HydFileImporter().ImportItem(hydPath, model);
-                });
+                }, rankHddAccess: false, warmUp: true);
             }
         }
 

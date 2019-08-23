@@ -37,6 +37,7 @@ using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
+using log4net.Core;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Grids;
@@ -1866,6 +1867,84 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             var waqModel = new WaterQualityModel();
             Assert.IsNotNull(waqModel.WaqProcessesRules);
             Assert.IsTrue(waqModel.WaqProcessesRules.Any());
+        }
+
+        [TestCase("deltashell.map")]
+        [TestCase("deltashell_map.nc")]
+        public void OnFinish_WithExistingMapFile_ThenModelIsConnectedToThisFile(string fileName)
+        {
+            // Set-up
+            string testFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "IO", fileName);
+
+            using (var tempDir = new TemporaryDirectory())
+            {
+                string filePath = tempDir.CopyTestDataFileToTempDirectory(testFilePath);
+                var outputDirectory = Path.GetDirectoryName(filePath);
+
+                using (var model = new WaterQualityModel { ModelSettings = { OutputDirectory = outputDirectory } })
+                {
+                    // Act
+                    model.Finish();
+
+                    // Assert
+                    Assert.That(model.MapFileFunctionStore.Path, Is.EqualTo(filePath));
+                }
+            }
+        }
+
+        [Test]
+        public void OnFinish_WhenBothMapFilesExist_ThenModelIsConnectedToTheNetCdfFile()
+        {
+            // Set-up
+            string testDirectory = Path.Combine(TestHelper.GetTestDataDirectory(), "IO");
+            string mapFilePath = Path.Combine(testDirectory, "deltashell.map");
+            string mapNetCdfFilePath = Path.Combine(testDirectory, "deltashell_map.nc");
+
+            using (var tempDir = new TemporaryDirectory())
+            {
+                mapNetCdfFilePath = tempDir.CopyAllTestDataToTempDirectory(mapNetCdfFilePath, mapFilePath)[0];
+
+                using (var model = new WaterQualityModel { ModelSettings = { OutputDirectory = tempDir.Path } })
+                {
+                    // Act
+                    model.Finish();
+
+                    // Assert
+                    Assert.That(model.MapFileFunctionStore.Path, Is.EqualTo(mapNetCdfFilePath));
+                }
+            }
+        }
+
+        [Test]
+        public void OnFinish_WithNetCdfFileWithUnsupportedConvention_ThenFileIsNotConnectedAndWarningIsGiven()
+        {
+            // Set-up
+            string testFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "IO", "NetCDFConventions",
+                                               "CF1.5_UGRID0.9.nc");
+
+            using (var tempDir = new TemporaryDirectory())
+            {
+                string filePath = Path.Combine(tempDir.Path, "deltashell_map.nc");
+                File.Copy(testFilePath, filePath);
+                string outputDirectory = Path.GetDirectoryName(filePath);
+
+                using (var model = new WaterQualityModel { ModelSettings = { OutputDirectory = outputDirectory } })
+                {
+                    // Action
+                    void TestAction()
+                    {
+                        model.Finish();
+                    }
+
+                    // Assert
+                    IEnumerable<string> warningMessages = TestHelper.GetAllRenderedMessages(TestAction, Level.Warn);
+                    string expectedWarning = string.Format(
+                        Resources.WaterQualityModel_File_does_not_meet_supported_UGRID_1_0_or_newer_standard,
+                        Path.GetFileName(filePath));
+                    Assert.That(warningMessages, Contains.Item(expectedWarning));
+                    Assert.That(model.MapFileFunctionStore.Path, Is.EqualTo(null));
+                }
+            }
         }
     }
 }
