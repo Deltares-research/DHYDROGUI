@@ -44,7 +44,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         {
             // 1. Set up test data.
             var hisFileData = new DelwaqHisFileData("Observation point");
-            var outputKey = "dummyKey";
+            const string outputKey = "dummyKey";
             IEnumerable<double> resultValues = Enumerable.Empty<double>();
 
             // 2. Verify initial conditions
@@ -65,7 +65,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             {
                 OutputVariables = new []{"dummyValue"}
             };
-            var outputKey = "dummyKey";
+            const string outputKey = "dummyKey";
             IEnumerable<double> resultValues = Enumerable.Empty<double>();
 
             // 2. Verify initial conditions
@@ -75,29 +75,29 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             resultValues = hisFileData.GetValuesForKey(outputKey);
 
             // 4. Verify final expectations
-            Assert.That(resultValues, Is.EqualTo(Enumerable.Empty<double>()));
+            Assert.That(resultValues, Is.Empty);
         }
 
         [Test]
         public void When_GetValuesForKey_Key_Exists_Then_Returns_ListOfValues()
         {
             // 1. Set up test data.
-            var hisFileData = new DelwaqHisFileData("Observation point");
-
-            IEnumerable<double> resultValues = Enumerable.Empty<double>();
-            var timeStep1 = new DateTime(2010, 12, 1, 1, 0, 0);
-            var timeStep2 = new DateTime(2010, 12, 1, 2, 0, 0);
-
-            var outputKey = "dummyKey";
+            const string outputKey = "dummyKey";
             var outputValues = new[]
             {
                 10.0,
                 5.5
             };
+            var firstTimeStep = new DateTime(2010, 12, 1, 1, 0, 0);
+            var lastTimeStep = new DateTime(2010, 12, 1, 2, 0, 0);
+
+            var hisFileData = new DelwaqHisFileData("Observation point");
             hisFileData.OutputVariables = new[] { outputKey, "Output parameter 1" };
-            hisFileData.AddValueForTimeStep(timeStep1, outputValues[0]);
-            hisFileData.AddValueForTimeStep(timeStep1, 10.5);
-            hisFileData.AddValueForTimeStep(timeStep2, outputValues[1]);
+            hisFileData.AddValueForTimeStep(firstTimeStep, outputValues[0]);
+            hisFileData.AddValueForTimeStep(firstTimeStep, 10.5);
+            hisFileData.AddValueForTimeStep(lastTimeStep, outputValues[1]);
+
+            IEnumerable<double> resultValues = Enumerable.Empty<double>();
 
             // 2. Verify initial conditions
             Assert.That(hisFileData.OutputVariables, Is.Not.Null);

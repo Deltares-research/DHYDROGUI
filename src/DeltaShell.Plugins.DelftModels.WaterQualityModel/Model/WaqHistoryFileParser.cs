@@ -94,8 +94,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
             {
                 string timeSeriesName = timeSeries.Name;
                 double[] variableTimeSeriesValues = hisFileVariableData.GetValuesForKey(timeSeriesName).ToArray();
-                if (!variableTimeSeriesValues.Any()
-                    || hisFileVariableData.TimeSteps.Count() != variableTimeSeriesValues.Length)
+                if (!variableTimeSeriesValues.Any() ||
+                        hisFileVariableData.TimeSteps.Count() != variableTimeSeriesValues.Length)
                 {
                     Log.Error($"Time steps are inconsistent for the data related to variable {timeSeriesName}.");
                     continue;

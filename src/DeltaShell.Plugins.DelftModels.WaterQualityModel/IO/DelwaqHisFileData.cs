@@ -73,8 +73,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         /// <summary>
         /// Returns the time series values of a given output variable.
         /// </summary>
-        /// <param name="outputVariableName"></param>
-        /// <returns>Enumerable with values for the given key.</returns>
+        /// <param name="outputVariableName">Name of the Output Variable to be found.</param>
+        /// <returns>Collection of double values related to the given key.</returns>
         public IEnumerable<double> GetValuesForKey(string outputVariableName)
         {
             IEnumerable<double> defaultValue = Enumerable.Empty<double>();

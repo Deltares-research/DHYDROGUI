@@ -202,9 +202,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
         {
             // 1. Set up test data
             string hisFile = TestHelper.GetTestFilePath(@"BloomCase\bloom.his");
-            int expectedTimeSeriesSize = 365;
-            string obsPointName = "ObsPoint 1";
-            string timeSeriesName = "Continuity";
+            const int expectedTimeSeriesSize = 365;
+            const string obsPointName = "ObsPoint 1";
+            const string timeSeriesName = "Continuity";
             WaterQualityModel waqModel = CreateBloomMockWaqModel(timeSeriesName, obsPointName);
             WaterQualityObservationVariableOutput variableOutput = waqModel.ObservationVariableOutputs.SingleOrDefault(ovo => ovo.Name.Equals(obsPointName));
             TimeSeries targetTimeSeries =
@@ -224,9 +224,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
                 WaqHistoryFileParser.Parse(tempHisFile, waqModel.ObservationVariableOutputs, MonitoringOutputLevel.Points);
             }
 
-
             // 4. Verify final expectations.
-            Assert.That(targetTimeSeries.GetValues().Count == expectedTimeSeriesSize, Is.True);
+            Assert.That(targetTimeSeries.GetValues().Count, Is.EqualTo(expectedTimeSeriesSize), "Number of retrieved values does not match expectations.");
         }
 
         [Test]
@@ -239,7 +238,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
 
             // 2. Set up initial expectations
             Assert.That(File.Exists(hisFile), Is.True, "Test file was not found.");
-            Assert.That(waqModel.ObservationVariableOutputs.Any(), Is.False, "Not expected output variables at this point");
+            Assert.That(waqModel.ObservationVariableOutputs, Is.Empty, "Not expected output variables at this point");
 
             // 3. Run test
             using (var tempDir = new TemporaryDirectory())
@@ -250,7 +249,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
             }
 
             // 4. Verify final expectations.
-            Assert.That(waqModel.ObservationVariableOutputs.Any(), Is.False, "Not expected output variables at this point");
+            Assert.That(waqModel.ObservationVariableOutputs, Is.Empty, "Not expected output variables at this point");
         }
 
         [Test]
@@ -259,9 +258,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
         {
             // 1. Set up test data
             string hisFile = TestHelper.GetTestFilePath(@"BloomCase\bloom.his");
-            int expectedTimeSeriesSize = 0;
-            string obsPointName = "FakePoint";
-            string timeSeriesName = "Continuity";
+            const int expectedTimeSeriesSize = 0;
+            const string obsPointName = "FakePoint";
+            const string timeSeriesName = "Continuity";
             WaterQualityModel waqModel = CreateBloomMockWaqModel(timeSeriesName, obsPointName);
             WaterQualityObservationVariableOutput variableOutput = waqModel.ObservationVariableOutputs.SingleOrDefault(ovo => ovo.Name.Equals(obsPointName));
             TimeSeries targetTimeSeries =
@@ -281,9 +280,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
                 WaqHistoryFileParser.Parse(tempHisFile, waqModel.ObservationVariableOutputs, MonitoringOutputLevel.Points);
             }
 
-
             // 4. Verify final expectations.
-            Assert.That(targetTimeSeries.GetValues().Count == expectedTimeSeriesSize, Is.True);
+            Assert.That(targetTimeSeries.GetValues().Count, Is.EqualTo(expectedTimeSeriesSize), "Number of retrieved values does not match expectations.");
         }
 
         [Test]
@@ -292,10 +290,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
         {
             // 1. Set up test data
             string hisFile = TestHelper.GetTestFilePath(@"BloomCase\bloom.his");
-            int expectedTimeSeriesSize = 0;
-            string outputVariableName = "ObsPoint 1";
-            string timeSeriesName = "Fake time series";
-            string expectedLogMssg =
+            const string outputVariableName = "ObsPoint 1";
+            const string timeSeriesName = "Fake time series";
+            string expectedLogMsg =
                 $"Time steps are inconsistent for the data related to variable {timeSeriesName}.";
             WaterQualityModel waqModel = CreateBloomMockWaqModel(timeSeriesName, outputVariableName);
             WaterQualityObservationVariableOutput variableOutput = waqModel.ObservationVariableOutputs.SingleOrDefault(ovo => ovo.Name.Equals(outputVariableName));
@@ -308,20 +305,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
             Assert.That(targetTimeSeries, Is.Not.Null, "Target time series was not found.");
             Assert.That(targetTimeSeries.GetValues().Count > 0, Is.False);
 
-            Action<Action> testAction = (action) =>
-                TestHelper.AssertAtLeastOneLogMessagesContains(action, expectedLogMssg);
-
             // 3. Run test
             using (var tempDir = new TemporaryDirectory())
             {
                 string tempHisFile = tempDir.CopyTestDataFileToTempDirectory(hisFile);
                 Assert.That(File.Exists(tempHisFile), Is.True, "Test file was not found in temporary folder.");
-                testAction(() => WaqHistoryFileParser.Parse(tempHisFile, waqModel.ObservationVariableOutputs, MonitoringOutputLevel.Points));
+                Action call = () => WaqHistoryFileParser.Parse(tempHisFile, waqModel.ObservationVariableOutputs, MonitoringOutputLevel.Points);
+
+                // 4. Verify final expectations.
+                TestHelper.AssertAtLeastOneLogMessagesContains(call, expectedLogMsg);
+                Assert.That(targetTimeSeries.GetValues(), Is.Empty, "Number of retrieved values does not match expectations.");
             }
-
-
-            // 4. Verify final expectations.
-            Assert.That(targetTimeSeries.GetValues().Count == expectedTimeSeriesSize, Is.True);
         }
 
         private static WaterQualityModel CreateBloomMockWaqModel(string timeSeriesName = null, string variableName = null)
