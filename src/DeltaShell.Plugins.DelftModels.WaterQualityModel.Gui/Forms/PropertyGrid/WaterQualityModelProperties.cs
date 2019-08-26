@@ -166,7 +166,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
         [PropertyOrder(3)]
         [Category("\t\t\t\t\tSimulation timers")]
         [DisplayName("Time step")]
-        [Description("Timestep interval for model run")]
+        [Description("Time step interval for model run")]
         [TypeConverter(typeof(DeltaShellTimeSpanConverter))]
         public TimeSpan TimeStep
         {

@@ -248,7 +248,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Time step cannot be set to or less than Zero..
+        ///   Looks up a localized string similar to The coupling time step must be positive..
         /// </summary>
         public static string WaveCouplingValidator_ValidateModelTimeSettings_Time_step_cannot_be_set_to_Zero_ {
             get {
