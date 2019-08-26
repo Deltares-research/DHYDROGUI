@@ -81,6 +81,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeltaShell.Dimr.Tests", "te
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeltaShell.NGHS.TestUtils", "test\DeltaShell.NGHS.TestUtils\DeltaShell.NGHS.TestUtils.csproj", "{4A0F7700-AA64-463F-A602-8C15E3886EC5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeltaShell.NGHS.Common", "src\DeltaShell.NGHS.Common\DeltaShell.NGHS.Common.csproj", "{AE78982B-8798-4B5A-9DB4-FCA8F5C8428B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeltaShell.NGHS.Common.Tests", "test\DeltaShell.NGHS.Common.Tests\DeltaShell.NGHS.Common.Tests.csproj", "{DDE486F6-FE47-450D-B337-B6F688BF47BE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -235,6 +239,14 @@ Global
 		{4A0F7700-AA64-463F-A602-8C15E3886EC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4A0F7700-AA64-463F-A602-8C15E3886EC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4A0F7700-AA64-463F-A602-8C15E3886EC5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AE78982B-8798-4B5A-9DB4-FCA8F5C8428B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE78982B-8798-4B5A-9DB4-FCA8F5C8428B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE78982B-8798-4B5A-9DB4-FCA8F5C8428B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE78982B-8798-4B5A-9DB4-FCA8F5C8428B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DDE486F6-FE47-450D-B337-B6F688BF47BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DDE486F6-FE47-450D-B337-B6F688BF47BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DDE486F6-FE47-450D-B337-B6F688BF47BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DDE486F6-FE47-450D-B337-B6F688BF47BE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -277,6 +289,8 @@ Global
 		{52847CB2-6A62-4B5A-8302-67198745D073} = {CE217C53-5027-48E1-BE6E-2978691F6BCE}
 		{F5E4F533-E9BB-4656-AB51-CCDE96EA57A5} = {09A651A9-1AA6-4534-860E-35C1302737FA}
 		{4A0F7700-AA64-463F-A602-8C15E3886EC5} = {09A651A9-1AA6-4534-860E-35C1302737FA}
+		{AE78982B-8798-4B5A-9DB4-FCA8F5C8428B} = {CE217C53-5027-48E1-BE6E-2978691F6BCE}
+		{DDE486F6-FE47-450D-B337-B6F688BF47BE} = {09A651A9-1AA6-4534-860E-35C1302737FA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {08DB0000-7081-4B90-A760-F1705EB6D46A}

@@ -10,6 +10,7 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using DeltaShell.Dimr;
+using DeltaShell.NGHS.Common;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.DelftModels.HydroModel.Import;
 using log4net;
@@ -140,26 +141,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                 {
                     Name = modelGroupNameLookUp[modelGroup],
                     Category = DelftTools.Shell.Core.Properties.Resources.HydroModelApplicationPlugin_GetModelInfos__1D___2D___3D_Integrated_Models,
-                    GetParentProjectItem =
-                        delegate (object owner)
-                        {
-                            if (owner is ICompositeActivity compositeActivity && !compositeActivity.ReadOnly)
-                            {
-                                return compositeActivity;
-                            }
-
-                            var compositeActivities = Application?.Project?.RootFolder.GetAllModelsRecursive().OfType<ICompositeActivity>().ToList();
-                            var treeFolderParentActivity = owner?.GetType().GetProperty("Parent")?.GetMethod.Invoke(owner, new object[] { }) as ICompositeActivity;
-
-                            return compositeActivities.FirstOrDefault(a =>
-                            {
-                                if (owner is IActivity activity)
-                                {
-                                    return a.Activities.Contains(activity);
-                                }
-                                return a == treeFolderParentActivity;
-                            });
-                        },
+                    GetParentProjectItem = owner =>
+                    {
+                        Folder rootFolder = Application?.Project?.RootFolder;
+                        return ApplicationHelper.FindParentProjectItemInsideProject(rootFolder, owner) ?? rootFolder;
+                    },
                     AdditionalOwnerCheck = owner => !(owner is ICompositeActivity), // Don't allow creation of sub-hydro models
                     CreateModel = owner => HydroModel.BuildModel(modelGroup)
                 };

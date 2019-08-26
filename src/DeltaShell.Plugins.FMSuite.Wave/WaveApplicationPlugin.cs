@@ -7,6 +7,7 @@ using DelftTools.Shell.Core.Dao;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils;
+using DeltaShell.NGHS.Common;
 using DeltaShell.Plugins.FMSuite.Common.IO.ImportExport.Exporters;
 using DeltaShell.Plugins.FMSuite.Wave.IO.Exporters;
 using DeltaShell.Plugins.FMSuite.Wave.IO.Importers;
@@ -34,26 +35,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                 Name = "Waves Model",
                 Category = "1D / 2D / 3D Standalone Models",
                 Image = Properties.Resources.wave,
-                GetParentProjectItem =
-                    delegate (object owner)
-                    {
-                        if (owner is ICompositeActivity compositeActivity && !compositeActivity.ReadOnly)
-                        {
-                            return compositeActivity;
-                        }
-
-                        var compositeActivities = Application?.Project?.RootFolder.GetAllModelsRecursive().OfType<ICompositeActivity>().ToList();
-                        var treeFolderParentActivity = owner?.GetType().GetProperty("Parent")?.GetMethod.Invoke(owner, new object[] { }) as ICompositeActivity;
-
-                        return compositeActivities.FirstOrDefault(a =>
-                        {
-                            if (owner is IActivity activity)
-                            {
-                                return a.Activities.Contains(activity);
-                            }
-                            return a == treeFolderParentActivity;
-                        });
-                    },
+                GetParentProjectItem = owner =>
+                {
+                    Folder rootFolder = Application?.Project?.RootFolder;
+                    return ApplicationHelper.FindParentProjectItemInsideProject(rootFolder, owner) ?? rootFolder;
+                },
                 AdditionalOwnerCheck = owner =>
                     !(owner is ICompositeActivity) // Allow "standalone" wave models
                     || !((ICompositeActivity) owner).Activities.OfType<WaveModel>().Any() &&

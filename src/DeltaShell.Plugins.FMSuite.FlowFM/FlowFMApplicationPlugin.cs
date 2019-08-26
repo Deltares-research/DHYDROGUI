@@ -13,6 +13,7 @@ using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
+using DeltaShell.NGHS.Common;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files;
 using DeltaShell.Plugins.FMSuite.Common.IO.ImportExport;
@@ -86,25 +87,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 Name = "Flow Flexible Mesh Model",
                 Category = "1D / 2D / 3D Standalone Models",
                 Image = Properties.Resources.unstrucModel,
-                GetParentProjectItem = 
-                    delegate(object owner)
+                GetParentProjectItem = owner =>
                 {
-                    if (owner is ICompositeActivity compositeActivity && !compositeActivity.ReadOnly)
-                    {
-                        return compositeActivity;
-                    }
-                    
-                    var compositeActivities = Application?.Project?.RootFolder.GetAllModelsRecursive().OfType<ICompositeActivity>().ToList();
-                    var treeFolderParentActivity = owner?.GetType().GetProperty("Parent")?.GetMethod.Invoke(owner, new object[] { }) as ICompositeActivity;
-
-                    return compositeActivities.FirstOrDefault(a =>
-                    {
-                        if (owner is IActivity activity)
-                        {
-                            return a.Activities.Contains(activity);
-                        }
-                        return a == treeFolderParentActivity;
-                    });
+                    Folder rootFolder = Application?.Project?.RootFolder;
+                    return ApplicationHelper.FindParentProjectItemInsideProject(rootFolder, owner) ?? rootFolder;
                 },
                 AdditionalOwnerCheck = owner =>
                     !(owner is ICompositeActivity) // Allow "standalone" flow models
