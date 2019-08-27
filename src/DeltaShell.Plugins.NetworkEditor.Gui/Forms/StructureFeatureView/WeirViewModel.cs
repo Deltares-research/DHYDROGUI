@@ -159,7 +159,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             get
             {
                 gateOpeningHeight = LowerEdgeLevel - BedLevelStructureCentre;
-                return gateOpeningHeight;
+                return Math.Round(gateOpeningHeight, 2);
             }
 
             set
