@@ -4,7 +4,6 @@ using System.Reflection;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
-using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils;
 using DeltaShell.NGHS.Common;
@@ -38,7 +37,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                 GetParentProjectItem = owner =>
                 {
                     Folder rootFolder = Application?.Project?.RootFolder;
-                    return ApplicationHelper.FindParentProjectItemInsideProject(rootFolder, owner) ?? rootFolder;
+                    return ApplicationPluginHelper.FindParentProjectItemInsideProject(rootFolder, owner) ?? rootFolder;
                 },
                 AdditionalOwnerCheck = owner =>
                     !(owner is ICompositeActivity) // Allow "standalone" wave models

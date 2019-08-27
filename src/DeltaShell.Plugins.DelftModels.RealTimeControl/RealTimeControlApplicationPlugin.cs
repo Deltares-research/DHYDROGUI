@@ -3,7 +3,6 @@ using System.Linq;
 using System.Reflection;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
-using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DeltaShell.NGHS.Common;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport;
@@ -73,7 +72,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                     GetParentProjectItem = owner =>
                     {
                         Folder rootFolder = Application?.Project?.RootFolder;
-                        return ApplicationHelper.FindParentProjectItemInsideProject(rootFolder, owner) ?? rootFolder;
+                        return ApplicationPluginHelper.FindParentProjectItemInsideProject(rootFolder, owner) ?? rootFolder;
                     },
                     AdditionalOwnerCheck = owner =>
                         (owner is ICompositeActivity) // Only allow composite activities as target

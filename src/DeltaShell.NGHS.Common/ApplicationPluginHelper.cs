@@ -6,14 +6,14 @@ using DelftTools.Shell.Core.Workflow;
 
 namespace DeltaShell.NGHS.Common
 {
-    public static class ApplicationHelper
+    public static class ApplicationPluginHelper
     {
         /// <summary>
         /// Finds the parent project item.
         /// </summary>
         /// <param name="rootFolder"> The rootfolder containing all models</param>
         /// <param name="owner"> Gui selection </param>
-        /// <returns></returns>
+        /// <returns> Parent IProjectItem </returns>
         public static IProjectItem FindParentProjectItemInsideProject(Folder rootFolder, object owner)
         {
             if (rootFolder == null || owner == null)
@@ -24,13 +24,13 @@ namespace DeltaShell.NGHS.Common
             switch (owner)
             {
                 case Folder folder when folder == rootFolder:
-                    return (IProjectItem) owner;
+                    return folder;
                 case ICompositeActivity compositeActivity when !compositeActivity.ReadOnly:
                     return compositeActivity;
             }
 
             List<ICompositeActivity> compositeActivities = rootFolder.GetAllModelsRecursive().OfType<ICompositeActivity>().ToList();
-            var treeFolderParentActivity = owner?.GetType().GetProperty("Parent")?.GetMethod.
+            var treeFolderParentActivity = owner.GetType().GetProperty("Parent")?.GetMethod.
                                                   Invoke(owner, new object[] {}) as ICompositeActivity;
 
             return compositeActivities.FirstOrDefault(a =>

@@ -7,7 +7,6 @@ using System.Linq;
 using System.Reflection;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
-using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils;
@@ -48,7 +47,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                 GetParentProjectItem = owner =>
                 {
                     Folder rootFolder = Application?.Project?.RootFolder;
-                    return ApplicationHelper.FindParentProjectItemInsideProject(rootFolder, owner) ?? rootFolder;
+                    return ApplicationPluginHelper.FindParentProjectItemInsideProject(rootFolder, owner) ?? rootFolder;
                 },
                 AdditionalOwnerCheck =
                     owner =>

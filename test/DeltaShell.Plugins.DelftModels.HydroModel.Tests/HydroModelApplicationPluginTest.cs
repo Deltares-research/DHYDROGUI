@@ -1,13 +1,12 @@
 ﻿using System.Linq;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
-using DelftTools.Shell.Gui.Swf;
 using DelftTools.TestUtils;
 using DeltaShell.Core;
+using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel;
 using DeltaShell.Plugins.FMSuite.FlowFM;
-using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.Wave;
 using NUnit.Framework;
 
@@ -17,9 +16,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
     [Category(TestCategory.Integration)]
     public class HydroModelApplicationPluginTest
     {
-        private void SetUpApplication(DeltaShellApplication app, ApplicationPlugin appPlugin)
+        private static void SetUpApplication(DeltaShellApplication app, ApplicationPlugin appPlugin)
         {
-            app.Plugins.Add(appPlugin);
             app.Project = new Project();
             appPlugin.Application = app;
         }
@@ -113,6 +111,23 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 Assert.AreEqual(modelInfos.AdditionalOwnerCheck(new ParallelActivity()), false);
                 Assert.AreEqual(modelInfos.AdditionalOwnerCheck(new SequentialActivity()), false);
             }
+        }
+
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void GetParentProjectItem_WhenSelectionIsCompositeActivity_ThenHelperMethodReturnsCompositeActivityAndThisWillBeUsed()
+        {
+            var hydroModelApplicationPlugin = new HydroModelApplicationPlugin();
+            ApplicationPluginTestHelper.TestForGetParentProjectItemDelegateSetByApplicationPlugins_WhenApplicationPluginHelperReturnsNotNull(hydroModelApplicationPlugin);
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void GetParentProjectItem_WhenSelectionIsNull_ThenHelperMethodReturnsNullAndRootFolderWillBeUsed()
+        {
+            var hydroModelApplicationPlugin = new HydroModelApplicationPlugin();
+            ApplicationPluginTestHelper.TestForGetParentProjectItemDelegateSetByApplicationPlugins_WhenApplicationPluginHelperReturnsNull(hydroModelApplicationPlugin);
         }
     }
 }

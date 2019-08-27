@@ -2,7 +2,6 @@
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui.Swf;
-using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -10,37 +9,32 @@ using Rhino.Mocks;
 namespace DeltaShell.NGHS.Common.Tests
 {
     [TestFixture]
-    public class ApplicationHelperTest
+    public class ApplicationPluginHelperTest
     {
         [Test]
-        [Category(TestCategory.Integration)]
         public void FindParentProjectItem_WhenOwnerIsNull_ThenNullShouldBeReturned()
         {
             var rootFolder = MockRepository.GenerateStub<Folder>();
-            Assert.IsNull(ApplicationHelper.FindParentProjectItemInsideProject(rootFolder, null));
+            Assert.IsNull(ApplicationPluginHelper.FindParentProjectItemInsideProject(rootFolder, null));
         }
 
         [Test]
-        [Category(TestCategory.Integration)]
         public void FindParentProjectItem_WhenRootFolderIsNull_ThenNullShouldBeReturned()
         {
             var owner = MockRepository.GenerateStub<Folder>();
-            Assert.IsNull(ApplicationHelper.FindParentProjectItemInsideProject(null, owner));
+            Assert.IsNull(ApplicationPluginHelper.FindParentProjectItemInsideProject(null, owner));
         }
-
-
+        
         [Test]
-        [Category(TestCategory.Integration)]
         public void FindParentProjectItem_WhenAProjectFolderIsSelected_ThenThisRootFolderShouldBeReturned()
         {
             var rootFolder = MockRepository.GenerateStub<Folder>();
             Folder owner = rootFolder;
 
-            Assert.AreSame(rootFolder, ApplicationHelper.FindParentProjectItemInsideProject(rootFolder, owner));
+            Assert.AreSame(rootFolder, ApplicationPluginHelper.FindParentProjectItemInsideProject(rootFolder, owner));
         }
 
         [Test]
-        [Category(TestCategory.Integration)]
         public void FindParentProjectItem_WhenACompositeModelIsSelected_ThenThisCompositeModelShouldBeReturned()
         {
             var rootFolder = MockRepository.GenerateStub<Folder>();
@@ -48,11 +42,10 @@ namespace DeltaShell.NGHS.Common.Tests
             var integratedModel = MockRepository.GenerateStub<ICompositeActivity>();
             ICompositeActivity owner = integratedModel;
 
-            Assert.AreSame(integratedModel, ApplicationHelper.FindParentProjectItemInsideProject(rootFolder, owner));
+            Assert.AreSame(integratedModel, ApplicationPluginHelper.FindParentProjectItemInsideProject(rootFolder, owner));
         }
 
         [Test]
-        [Category(TestCategory.Integration)]
         public void FindParentProjectItem_WhenAModelsFolderIsSelected_ThenTheCorrespondingCompositeModelShouldBeReturned()
         {
             var rootFolder = MockRepository.GenerateStub<Folder>();
@@ -70,18 +63,21 @@ namespace DeltaShell.NGHS.Common.Tests
 
             var owner = new TreeFolder(compositeActivity, null, "models", FolderImageType.Input);
 
-            Assert.AreSame(compositeActivity, ApplicationHelper.FindParentProjectItemInsideProject(rootFolder, owner));
+            compositeActivity.Replay();
+
+            Assert.AreSame(compositeActivity, ApplicationPluginHelper.FindParentProjectItemInsideProject(rootFolder, owner));
+
+            compositeActivity.VerifyAllExpectations();
         }
 
         [Test]
-        [Category(TestCategory.Integration)]
         public void FindParentProjectItem_WhenAModelIsSelected_ThenTheCorrespondingCompositeModelShouldBeReturned()
         {
             var rootFolder = MockRepository.GenerateStub<Folder>();
             
             ICompositeActivity compositeActivity = MockRepository.GenerateMock<ICompositeActivity, IModel>();
 
-            var activity = MockRepository.GenerateMock<IActivity, IModel>();
+            IActivity activity = MockRepository.GenerateMock<IActivity, IModel>();
             var listActivities = new EventedList<IActivity>
             {
                 activity
@@ -99,7 +95,11 @@ namespace DeltaShell.NGHS.Common.Tests
 
             IActivity owner = activity;
 
-            Assert.AreSame(compositeActivity, ApplicationHelper.FindParentProjectItemInsideProject(rootFolder, owner));
+            compositeActivity.Replay();
+
+            Assert.AreSame(compositeActivity, ApplicationPluginHelper.FindParentProjectItemInsideProject(rootFolder, owner));
+
+            compositeActivity.VerifyAllExpectations();
         }
     }
 }

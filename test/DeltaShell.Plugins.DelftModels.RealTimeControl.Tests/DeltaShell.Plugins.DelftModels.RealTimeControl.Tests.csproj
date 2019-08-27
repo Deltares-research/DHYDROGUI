@@ -96,6 +96,10 @@
       <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.45612\lib\net461\DeltaShell\DelftTools.Utils.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="DeltaShell.Core">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.45612\lib\net461\DeltaShell\DeltaShell.Core.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="DeltaShell.Gui">
       <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.45612\lib\net461\DeltaShell\DeltaShell.Gui.exe</HintPath>
       <Private>False</Private>
@@ -255,6 +259,7 @@
     <Compile Include="NHibernateRealTimeControlIntegrationTests.cs" />
     <Compile Include="NodePresenters\RealTimeControlModelNodePresenterTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RealTimeControlApplicationPluginTest.cs" />
     <Compile Include="RealTimeControlModelANDandORTest.cs" />
     <Compile Include="RealTimeControlModelCopyPasteHelperTest.cs" />
     <Compile Include="RealTimeControlModelExtensionsTest.cs" />
@@ -310,6 +315,11 @@
     <ProjectReference Include="..\..\src\DeltaShell.Plugins.NetworkEditor\DeltaShell.Plugins.NetworkEditor.csproj">
       <Project>{11330F89-2B3D-449D-9211-EA3E0D7F6CDC}</Project>
       <Name>DeltaShell.Plugins.NetworkEditor</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\DeltaShell.NGHS.TestUtils\DeltaShell.NGHS.TestUtils.csproj">
+      <Project>{4A0F7700-AA64-463F-A602-8C15E3886EC5}</Project>
+      <Name>DeltaShell.NGHS.TestUtils</Name>
       <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils\DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils.csproj">

@@ -2,16 +2,15 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
-using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.IO;
 using DeltaShell.Core;
 using DeltaShell.NGHS.IO.TestUtils;
+using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
@@ -264,6 +263,23 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                 modelPathsDictionary["boundary data manager folder path"].Add(waqModel.BoundaryDataManager.FolderPath);
                 modelPathsDictionary["loads data manager folder path"].Add(waqModel.LoadsDataManager.FolderPath);
             }
+        }
+
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void GetParentProjectItem_WhenSelectionIsCompositeActivity_ThenHelperMethodReturnsCompositeActivityAndThisWillBeUsed()
+        {
+            var waterQualityModelApplicationPlugin = new WaterQualityModelApplicationPlugin();
+            ApplicationPluginTestHelper.TestForGetParentProjectItemDelegateSetByApplicationPlugins_WhenApplicationPluginHelperReturnsNotNull(waterQualityModelApplicationPlugin);
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void GetParentProjectItem_WhenSelectionIsNull_ThenHelperMethodReturnsNullAndRootFolderWillBeUsed()
+        {
+            var waterQualityModelApplicationPlugin = new WaterQualityModelApplicationPlugin();
+            ApplicationPluginTestHelper.TestForGetParentProjectItemDelegateSetByApplicationPlugins_WhenApplicationPluginHelperReturnsNull(waterQualityModelApplicationPlugin);
         }
 
         private static DeltaShellApplication GetConfiguredApplication()

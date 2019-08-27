@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
+using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Gui;
+using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.ImportersExporters;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -58,7 +60,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                         "Expected a PliFileImporterExporter within the list of exporters, but found none.");
         }
 
-        /// <summary>
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void GetParentProjectItem_WhenSelectionIsCompositeActivity_ThenHelperMethodReturnsCompositeActivityAndThisWillBeUsed()
+        {
+            var flowFmApplicationPlugin = new FlowFMApplicationPlugin();
+            ApplicationPluginTestHelper.TestForGetParentProjectItemDelegateSetByApplicationPlugins_WhenApplicationPluginHelperReturnsNotNull(flowFmApplicationPlugin);
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void GetParentProjectItem_WhenSelectionIsNull_ThenHelperMethodReturnsNullAndRootFolderWillBeUsed()
+        {
+            var flowFmApplicationPlugin = new FlowFMApplicationPlugin();
+            ApplicationPluginTestHelper.TestForGetParentProjectItemDelegateSetByApplicationPlugins_WhenApplicationPluginHelperReturnsNull(flowFmApplicationPlugin);
+        }
+
+       /// <summary>
         /// Determines whether [Obj] is of the specified [GenericType].
         /// </summary>
         /// <param name="obj">The object.</param>

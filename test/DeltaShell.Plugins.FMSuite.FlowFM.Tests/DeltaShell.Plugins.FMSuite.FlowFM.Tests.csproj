@@ -463,6 +463,7 @@
     <ProjectReference Include="..\DeltaShell.NGHS.IO.TestUtils\DeltaShell.NGHS.IO.TestUtils.csproj">
       <Project>{002EB0B8-8D52-4794-A00E-A5D1FC465BFD}</Project>
       <Name>DeltaShell.NGHS.IO.TestUtils</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\DeltaShell.Plugins.FMSuite.Common.Tests\DeltaShell.Plugins.FMSuite.Common.Tests.csproj">
       <Project>{7EC5B8E8-E326-4C4C-9D9B-E70388F0E4CA}</Project>

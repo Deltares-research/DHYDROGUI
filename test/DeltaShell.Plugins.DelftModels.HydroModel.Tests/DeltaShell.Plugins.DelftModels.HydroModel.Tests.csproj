@@ -61,6 +61,7 @@
     </Reference>
     <Reference Include="DelftTools.Shell.Gui.Swf">
       <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.45612\lib\net461\DeltaShell\DelftTools.Shell.Gui.Swf.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.TestUtils, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\DeltaShell.TestProject.1.4.0.45612\lib\net40\DelftTools.TestUtils.dll</HintPath>
@@ -373,6 +374,7 @@
     <ProjectReference Include="..\DeltaShell.NGHS.TestUtils\DeltaShell.NGHS.TestUtils.csproj">
       <Project>{4A0F7700-AA64-463F-A602-8C15E3886EC5}</Project>
       <Name>DeltaShell.NGHS.TestUtils</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

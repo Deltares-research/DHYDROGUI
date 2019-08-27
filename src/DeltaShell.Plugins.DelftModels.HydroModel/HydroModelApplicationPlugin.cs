@@ -5,7 +5,6 @@ using System.Reflection;
 using System.Threading;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
-using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
@@ -144,7 +143,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                     GetParentProjectItem = owner =>
                     {
                         Folder rootFolder = Application?.Project?.RootFolder;
-                        return ApplicationHelper.FindParentProjectItemInsideProject(rootFolder, owner) ?? rootFolder;
+                        return ApplicationPluginHelper.FindParentProjectItemInsideProject(rootFolder, owner) ?? rootFolder;
                     },
                     AdditionalOwnerCheck = owner => !(owner is ICompositeActivity), // Don't allow creation of sub-hydro models
                     CreateModel = owner => HydroModel.BuildModel(modelGroup)

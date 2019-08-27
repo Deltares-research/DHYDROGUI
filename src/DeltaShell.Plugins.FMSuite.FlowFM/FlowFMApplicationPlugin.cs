@@ -90,7 +90,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 GetParentProjectItem = owner =>
                 {
                     Folder rootFolder = Application?.Project?.RootFolder;
-                    return ApplicationHelper.FindParentProjectItemInsideProject(rootFolder, owner) ?? rootFolder;
+                    return ApplicationPluginHelper.FindParentProjectItemInsideProject(rootFolder, owner) ?? rootFolder;
                 },
                 AdditionalOwnerCheck = owner =>
                     !(owner is ICompositeActivity) // Allow "standalone" flow models
