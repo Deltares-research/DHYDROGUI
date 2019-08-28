@@ -7,7 +7,7 @@ using Rhino.Mocks;
 
 namespace DeltaShell.NGHS.TestUtils
 {
-    public class ApplicationPluginTestHelper
+    public static class ApplicationPluginTestHelper
     {
         public static void TestForGetParentProjectItemDelegateSetByApplicationPlugins_WhenApplicationPluginHelperReturnsNotNull(ApplicationPlugin applicationPlugin)
         {
