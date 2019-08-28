@@ -142,7 +142,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.ImportersExporters
         {
             if (typeof(TParent).IsAssignableFrom(typeof(TFeat)))
             {
-                return base.OnImportItem(path, target);
+                object importedItem = base.OnImportItem(path, target);
+                AfterImportAction?.Invoke(target as IList<TFeat>);
+                return importedItem;
             }
 
             if (target is IList<TParent>)
