@@ -93,7 +93,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.ImportersExporters
 
         public Func<TParent, TFeat> GetFeature { get; set; }
 
-        public Func<List<Coordinate>, string, TFeat> CreateDelegate { private get; set; }
+        public Func<List<Coordinate>, string, TFeat> CreateDelegate { protected get; set; }
 
         public Action<IList<TFeat>> AfterImportAction { get; set; }
 

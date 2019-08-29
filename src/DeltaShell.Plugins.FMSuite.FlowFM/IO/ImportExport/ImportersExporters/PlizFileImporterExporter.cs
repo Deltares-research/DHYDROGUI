@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Utils;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files;
 using DeltaShell.Plugins.FMSuite.Common.IO.ImportExport;
-using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Extensions.Feature;
-using GeoAPI.Geometries;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.ImportersExporters
 {
@@ -18,7 +14,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.ImportersExporters
     /// <typeparam name="TParent"> The type of the parent. </typeparam>
     /// <typeparam name="TFeat"> The type of the feat. </typeparam>
     /// <seealso cref="Feature2DImportExportBase{TFeat}" />
-    public class PlizFileImporterExporter<TParent, TFeat> : Feature2DImportExportBase<TFeat>
+    public class PlizFileImporterExporter<TParent, TFeat> : PliFileImporterExporter<TParent, TFeat>
         where TFeat : class, IFeature, INameable, new() where TParent : INameable
     {
         /// <summary>
@@ -38,16 +34,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.ImportersExporters
         protected override string ExporterName => "Features to .pliz file";
 
         /// <summary>
-        /// Gets the category.
-        /// </summary>
-        /// <value>
-        /// The category.
-        /// </value>
-        public override string Category => "Feature geometries";
-
-        public override string Description => string.Empty;
-
-        /// <summary>
         /// Gets the file filter.
         /// </summary>
         /// <value>
@@ -56,37 +42,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.ImportersExporters
         public override string FileFilter => "Feature polyline-z files (*.pliz)|*.pliz";
 
         /// <summary>
-        /// Gets the image.
+        /// Imports the file at the specified path.
         /// </summary>
-        /// <value>
-        /// The image.
-        /// </value>
-        public override Bitmap Image => Resources.TextDocument;
-
-        /// <summary>
-        /// Sources the types.
-        /// </summary>
-        /// <returns> </returns>
-        public override IEnumerable<Type> SourceTypes()
-        {
-            yield return typeof(TParent);
-            yield return typeof(IList<TParent>);
-        }
-
-        /// <summary>
-        /// Gets the supported item types.
-        /// </summary>
-        /// <value>
-        /// The supported item types.
-        /// </value>
-        public override IEnumerable<Type> SupportedItemTypes
-        {
-            get
-            {
-                yield return typeof(IList<TParent>);
-            }
-        }
-
+        /// <param name="path">The path.</param>
+        /// <returns></returns>
         protected override IEnumerable<TFeat> Import(string path)
         {
             if (Path.GetExtension(path) == ".pliz")
@@ -101,6 +60,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.ImportersExporters
             return Enumerable.Empty<TFeat>();
         }
 
+        /// <summary>
+        /// Exports the specified features.
+        /// </summary>
+        /// <param name="features">The features.</param>
+        /// <param name="path">The path.</param>
         protected override void Export(IEnumerable<TFeat> features, string path)
         {
             BeforeExportActionDelegate?.Invoke(features);
@@ -115,138 +79,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.ImportersExporters
             }
 
             AfterExportActionDelegate?.Invoke(features);
-        }
-
-        /// <summary>
-        /// Gets or sets the create from feature.
-        /// </summary>
-        /// <value>
-        /// The create from feature.
-        /// </value>
-        public Func<TFeat, TParent> CreateFromFeature { get; set; }
-
-        /// <summary>
-        /// Gets or sets the get feature.
-        /// </summary>
-        /// <value>
-        /// The get feature.
-        /// </value>
-        public Func<TParent, TFeat> GetFeature { get; set; }
-
-        /// <summary>
-        /// Gets or sets the create delegate.
-        /// </summary>
-        /// <value>
-        /// The create delegate.
-        /// </value>
-        public Func<List<Coordinate>, string, TFeat> CreateDelegate { private get; set; }
-
-        private TParent CreateParentFromFeature(TFeat feature)
-        {
-            if (CreateFromFeature != null)
-            {
-                return CreateFromFeature(feature);
-            }
-
-            if (feature is TParent)
-            {
-                //prevent compiler from whining
-                object o = feature;
-                return (TParent) o;
-            }
-
-            throw new InvalidCastException(
-                string.Format("Cannot create object of type {0} from feature of type {1}",
-                              typeof(TParent), typeof(TFeat)));
-        }
-
-        private TFeat GetFeatureFromParent(TParent parent)
-        {
-            if (GetFeature != null)
-            {
-                return GetFeature(parent);
-            }
-
-            if (typeof(TFeat).IsAssignableFrom(typeof(TParent)))
-            {
-                return parent as TFeat;
-            }
-
-            throw new InvalidCastException(string.Format("Cannot get feature of type {0} from object of type {1}",
-                                                         typeof(TFeat), typeof(TParent)));
-        }
-
-        protected override object OnImportItem(string path, object target = null)
-        {
-            if (typeof(TParent).IsAssignableFrom(typeof(TFeat)))
-            {
-                return base.OnImportItem(path, target);
-            }
-
-            if (target is IList<TParent>)
-            {
-                var featureList = new List<TFeat>();
-                base.OnImportItem(path, featureList);
-                AddOrReplace((IList<TParent>) target, featureList.Select(CreateParentFromFeature),
-                             EqualityComparer);
-            }
-
-            return target;
-        }
-
-        /// <summary>
-        /// Exports the specified item.
-        /// </summary>
-        /// <param name="item"> The item. </param>
-        /// <param name="path"> The path. </param>
-        /// <returns> </returns>
-        public override bool Export(object item, string path)
-        {
-            string file = path;
-
-            if (file == null && Files != null && Files.Any())
-            {
-                file = Files[0];
-            }
-
-            if (file == null)
-            {
-                return false;
-            }
-
-            IEnumerable<TFeat> itemsToExport = Enumerable.Empty<TFeat>();
-
-            if (typeof(TFeat).IsAssignableFrom(typeof(TParent)))
-            {
-                if (item is IList<TParent>)
-                {
-                    itemsToExport = ((IList<TParent>) item).Cast<TFeat>();
-                }
-                else if (item is TParent)
-                {
-                    itemsToExport = new List<TFeat>(new[]
-                    {
-                        (TFeat) item
-                    });
-                }
-            }
-            else
-            {
-                if (item is IList<TParent>)
-                {
-                    itemsToExport = ((IList<TParent>) item).Select(GetFeatureFromParent);
-                }
-                else if (item is TParent)
-                {
-                    itemsToExport = new List<TFeat>(new[]
-                    {
-                        GetFeatureFromParent((TParent) item)
-                    });
-                }
-            }
-
-            Export(itemsToExport, file);
-            return true;
         }
     }
 }
