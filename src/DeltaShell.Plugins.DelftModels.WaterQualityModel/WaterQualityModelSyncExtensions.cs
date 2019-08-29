@@ -221,7 +221,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                 case NotifyCollectionChangedAction.Remove:
                 {
                     // Remove the existing output parameter output coverage data item
-                    RemoveOutputCoverageDataItem(waterQualityModel, outputParameter.Name,
+                    RemoveOutputCoverageDataItem(outputParameter.Name,
                                                  waterQualityModel.OutputParametersDataItemSet.DataItems);
                     break;
                 }
@@ -248,7 +248,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             else if (!outputParameter.ShowInMap && existingOutputCoverageDataItem != null)
             {
                 // Remove the existing output parameter output coverage data item
-                RemoveOutputCoverageDataItem(waterQualityModel, outputParameter.Name,
+                RemoveOutputCoverageDataItem(outputParameter.Name,
                                              waterQualityModel.OutputParametersDataItemSet.DataItems);
             }
         }
@@ -763,7 +763,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                 case NotifyCollectionChangedAction.Remove:
                 {
                     // Remove the existing substance output coverage data item
-                    RemoveOutputCoverageDataItem(waterQualityModel, substance.Name,
+                    RemoveOutputCoverageDataItem(substance.Name,
                                                  waterQualityModel.OutputSubstancesDataItemSet.DataItems);
                     break;
                 }
@@ -803,8 +803,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             });
         }
 
-        private static void RemoveOutputCoverageDataItem(WaterQualityModel waterQualityModel,
-                                                         string outputCoverageToRemoveName,
+        private static void RemoveOutputCoverageDataItem(string outputCoverageToRemoveName,
                                                          IEventedList<IDataItem> dataItems)
         {
             IDataItem outputCoverageDataItem = dataItems.First(di => di.Role.HasFlag(DataItemRole.Output)
@@ -813,13 +812,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
 
             // Release the network from the output coverage
             var coverage = (UnstructuredGridCellCoverage) outputCoverageDataItem.Value;
-            coverage.Grid = null;
-
-            foreach (IFunction function in GetAllFunctions(coverage))
-            {
-                waterQualityModel.MapFileFunctionStore.Functions.Remove(function);
-            }
-
+            coverage.ClearCoverage();
             dataItems.Remove(outputCoverageDataItem);
         }
 
