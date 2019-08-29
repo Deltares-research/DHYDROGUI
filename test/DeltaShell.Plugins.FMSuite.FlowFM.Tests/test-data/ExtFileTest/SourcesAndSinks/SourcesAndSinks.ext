@@ -1,0 +1,5 @@
+QUANTITY     = discharge_salinity_temperature_sorsin
+FILENAME     = SourceAndSink.pli
+FILETYPE     = 9
+METHOD       = 3
+OPERAND      = O
