@@ -140,7 +140,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 },
             };
 
-            yield return new PliFileImporterExporter<FixedWeir, FixedWeir>
+            yield return new PlizFileImporterExporter<FixedWeir, FixedWeir>
             {
                 Mode = Feature2DImportExportMode.Import,
                 CreateDelegate = delegate(List<Coordinate> points1, string name1)
@@ -431,7 +431,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             yield return new BcFileExporter {GetRefDateForBoundaryCondition = GetRefDateForBoundaryCondition};
             yield return new BcmFileExporter {GetRefDateForBoundaryCondition = GetRefDateForBoundaryCondition};
             yield return new PliFileImporterExporter<Embankment, Embankment> {Mode = Feature2DImportExportMode.Export};
-            yield return new PliFileImporterExporter<FixedWeir, FixedWeir>
+            yield return new PlizFileImporterExporter<FixedWeir, FixedWeir>
             {
                 Mode = Feature2DImportExportMode.Export,
                 BeforeExportActionDelegate = delegate(object featureList)
