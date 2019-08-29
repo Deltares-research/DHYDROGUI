@@ -77,7 +77,37 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             ApplicationPluginTestHelper.TestForGetParentProjectItemDelegateSetByApplicationPlugins_WhenApplicationPluginHelperReturnsNull(flowFmApplicationPlugin);
         }
 
-       /// <summary>
+        [Test]
+        public void GetFileExporters_ContainsExpectedExporterForFixedWeirs()
+        {
+            // Set-up
+            var application = new FlowFMApplicationPlugin();
+
+            // Call
+            IEnumerable<IFileExporter> exporters = application.GetFileExporters();
+
+            // Assert
+            Type expectedType = typeof(PlizFileImporterExporter<FixedWeir, FixedWeir>);
+            Assert.NotNull(exporters.SingleOrDefault(e => e.GetType() == expectedType),
+                           $"An exporter of type {expectedType} was expected to be returned.");
+        }
+
+        [Test]
+        public void GetFileImporters_ContainsExpectedImporterForFixedWeirs()
+        {
+            // Set-up
+            var application = new FlowFMApplicationPlugin();
+
+            // Call
+            IEnumerable<IFileImporter> importer = application.GetFileImporters();
+
+            // Assert
+            Type expectedType = typeof(PlizFileImporterExporter<FixedWeir, FixedWeir>);
+            Assert.NotNull(importer.SingleOrDefault(e => e.GetType() == expectedType),
+                           $"An importer of type {expectedType} was expected to be returned.");
+        }
+
+        /// <summary>
         /// Determines whether [Obj] is of the specified [GenericType].
         /// </summary>
         /// <param name="obj">The object.</param>

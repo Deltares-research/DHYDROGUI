@@ -15,8 +15,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.ImportersExporters
     /// <summary>
     /// Imports and exports features of type <see cref="TFeat"/> from and to a .pli file.
     /// </summary>
-    /// <typeparam name="TParent">The type of the parent.</typeparam>
-    /// <typeparam name="TFeat">The type of the feature.</typeparam>
+    /// <typeparam name="TParent">The type of the feature that should be created.</typeparam>
+    /// <typeparam name="TFeat">The type of the feature that should be imported.</typeparam>
     /// <seealso cref="DeltaShell.Plugins.FMSuite.Common.IO.ImportExport.Feature2DImportExportBase{TFeat}" />
     public class PliFileImporterExporter<TParent, TFeat> : Feature2DImportExportBase<TFeat>
         where TFeat : class, IFeature, INameable, new() where TParent : INameable
@@ -182,19 +182,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.ImportersExporters
         /// The action to perform after an import.
         /// </value>
         public Action<IList<TFeat>> AfterImportAction { get; set; }
-
-        /// <summary>
-        /// Imports the item.
-        /// </summary>
-        /// <param name="path">The file path.</param>
-        /// <param name="target">The target to import on.</param>
-        /// <returns></returns>
-        public new object ImportItem(string path, object target = null)
-        {
-            object importedItem = base.ImportItem(path, target);
-            AfterImportAction?.Invoke(target as IList<TFeat>);
-            return importedItem;
-        }
 
         /// <summary>
         /// Creates the parent from feature.
