@@ -9,10 +9,10 @@ using GeoAPI.Extensions.Feature;
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.ImportersExporters
 {
     /// <summary>
-    /// Allows to do an import / export of a PLIZ file, which extends the PliImporterExporter.
+    /// Imports and exports features of type <see cref="TFeat"/> from and to a .pliz file.
     /// </summary>
     /// <typeparam name="TParent"> The type of the parent. </typeparam>
-    /// <typeparam name="TFeat"> The type of the feat. </typeparam>
+    /// <typeparam name="TFeat"> The type of the feature. </typeparam>
     /// <seealso cref="Feature2DImportExportBase{TFeat}" />
     public class PlizFileImporterExporter<TParent, TFeat> : PliFileImporterExporter<TParent, TFeat>
         where TFeat : class, IFeature, INameable, new() where TParent : INameable
