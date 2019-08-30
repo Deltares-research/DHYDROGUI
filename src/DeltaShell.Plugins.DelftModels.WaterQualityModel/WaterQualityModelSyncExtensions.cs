@@ -12,6 +12,7 @@ using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.SubstanceProcessLibrary;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Extentions;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.ObservationAreas;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using GeoAPI.Geometries;
@@ -810,9 +811,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                                                                      && di.Name == outputCoverageToRemoveName
                                                                      && !(di.Value is FeatureCoverage));
 
-            // Release the network from the output coverage
             var coverage = (UnstructuredGridCellCoverage) outputCoverageDataItem.Value;
-            coverage.ClearCoverage();
+            if (coverage.Store is LazyMapFileFunctionStore functionStore)
+            {
+                foreach (IFunction function in GetAllFunctions(coverage))
+                {
+                    functionStore.Functions.Remove(function);
+                }
+            }
+
             dataItems.Remove(outputCoverageDataItem);
         }
 
