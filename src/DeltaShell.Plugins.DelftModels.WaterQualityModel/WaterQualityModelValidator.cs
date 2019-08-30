@@ -378,13 +378,22 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
 
         private IEnumerable<ValidationIssue> ValidateHydroData(WaterQualityModel model)
         {
-            if (model.HydroData != null)
+            if (model.HydroData == null)
             {
+                yield return new ValidationIssue(model, ValidationSeverity.Error,
+                                                 "No flow data available. Import a hyd file.",
+                                                 new HydFileImporter());
+
                 yield break;
             }
 
-            yield return new ValidationIssue(model, ValidationSeverity.Error,
-                                             "No flow data available. Import a hyd file.", new HydFileImporter {});
+            string hydFilePath = model.HydroData.FilePath;
+            if (!File.Exists(hydFilePath))
+            {
+                yield return new ValidationIssue(model, ValidationSeverity.Error,
+                                                 string.Format(Resources.WaterQualityModelValidator_hyd_file_doesnt_exist, hydFilePath),
+                                                 new HydFileImporter());
+            }
         }
 
         private IEnumerable<ValidationIssue> ValidateObservationPointsAndAreas(WaterQualityModel model)

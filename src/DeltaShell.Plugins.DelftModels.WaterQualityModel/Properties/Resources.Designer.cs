@@ -618,6 +618,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The hyd file with location {0} doesn&apos;t exist..
+        /// </summary>
+        public static string WaterQualityModelValidator_hyd_file_doesnt_exist {
+            get {
+                return ResourceManager.GetString("WaterQualityModelValidator_hyd_file_doesnt_exist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No process coefficient rules have been loaded. Therefore they cannot be validated..
         /// </summary>
         public static string WaterQualityModelValidator_ValidateProcessCoefficients_No_process_coefficient_rules_have_been_loaded__Therefore_they_cannot_be_validated_ {

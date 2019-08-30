@@ -686,4 +686,7 @@ INCLUDE 'includes_deltashell/B8_initials.inc'       ; From UI: Initials
   <data name="WaqInitializationDataVerifier_Grid_file_was_not_found" xml:space="preserve">
     <value>Grid file was not found at {0}.</value>
   </data>
+  <data name="WaterQualityModelValidator_hyd_file_doesnt_exist" xml:space="preserve">
+    <value>The hyd file with location {0} doesn't exist.</value>
+  </data>
 </root>
