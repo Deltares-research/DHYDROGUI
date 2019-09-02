@@ -2077,6 +2077,30 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             Assert.AreEqual(expectedPath, result, "Hyd file path was not as expected");
         }
 
+        [Test]
+        [NUnit.Framework.Category(TestCategory.Integration)]
+        public void GivenAModelWithADataItem_WhenAddingNewTracerWithSameName_ThenValueOfThisDataItemIsSetAndNoExtraDataItemIsCreated()
+        {
+            // Given
+            const string tracerName = "tracer";
+            var model = new WaterFlowFMModel();
+            var dataItem = new DataItem(null, tracerName, typeof(UnstructuredGridCellCoverage), DataItemRole.Input, "");
+            model.DataItems.Add(dataItem);
+            int dataItemCountBefore = model.DataItems.Count;
+
+            // Pre-condition
+            Assert.That(dataItem.Value, Is.Null);
+
+            // When
+            model.TracerDefinitions.Add(tracerName);
+
+            // Then
+            Assert.That(dataItem.Value, Is.SameAs(model.InitialTracers.Single()),
+                        "Value of data item was not as expected.");
+            Assert.That(model.DataItems.Count, Is.EqualTo(dataItemCountBefore),
+                        "No data items should have been added.");
+        }
+
         private static WaterFlowFMModel CreateFMModelWithStructureLinkedToRTC(out DataItem rtcDataItem, out IDataItem dataItemWaterFlowFmModel)
         {
             var feature = new Weir2D()

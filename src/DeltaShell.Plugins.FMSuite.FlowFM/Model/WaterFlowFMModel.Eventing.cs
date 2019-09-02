@@ -96,8 +96,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             switch (e.Action)
             {
                 case NotifyCollectionChangedAction.Add:
-                    // sync the initial tracers
-                    InitialTracers.Add(CreateUnstructuredGridCellCoverage(name, Grid));
+                    AddToInitialTracers(name);
                     break;
                 case NotifyCollectionChangedAction.Remove:
                     // sync the initial tracers
@@ -173,7 +172,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
                     foreach (string layerName in activeSpatiallyVarying)
                     {
-                        AddToIntialFractions(layerName);
+                        AddToInitialFractions(layerName);
                     }
 
                     sedimentFraction.CompileAndSetVisibilityAndIfEnabled();
@@ -197,7 +196,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             {
                 if (prop.IsSpatiallyVarying)
                 {
-                    AddToIntialFractions(prop.SpatiallyVaryingName);
+                    AddToInitialFractions(prop.SpatiallyVaryingName);
                 }
                 else
                 {
@@ -496,7 +495,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             {
                 if (InitialFractions.FirstOrDefault(fr => fr.Name.Equals(layerName)) == null)
                 {
-                    AddToIntialFractions(layerName);
+                    AddToInitialFractions(layerName);
                 }
             }
         }
