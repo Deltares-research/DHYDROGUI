@@ -114,7 +114,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             // timepoints
             CreateTimePointCategories(modelDefinition, ref mdwCategories);
 
-            mdwCategories.AddRange(CreateBoundaryCategories(modelDefinition.BoundaryConditions));
+            IEnumerable<DelftIniCategory> boundaryConditionCategories = modelDefinition.BoundaryConditions
+                                                                        .Select(MdwFileDelftIniCategoryCreator.CreateBoundaryConditionCategory);
+            mdwCategories.AddRange(boundaryConditionCategories);
             SaveBoundaryConditions(modelDefinition, Path.Combine(targetDir, tSeriesFile),
                                    modelDefinition.ModelReferenceDateTime);
 
@@ -519,96 +521,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             DelftIniCategory generalCategory = mdwCategories.First(c => c.Name == KnownWaveCategories.GeneralCategory);
             int afterGeneralIndex = mdwCategories.IndexOf(generalCategory);
             mdwCategories.InsertRange(afterGeneralIndex + 1, categories);
-        }
-
-        private static IEnumerable<DelftIniCategory> CreateBoundaryCategories(
-            IEnumerable<WaveBoundaryCondition> boundaryConditions)
-        {
-            foreach (WaveBoundaryCondition bc in boundaryConditions)
-            {
-                var boundaryCategory = new DelftIniCategory(KnownWaveCategories.BoundaryCategory);
-                boundaryCategory.AddProperty(KnownWaveProperties.Name, bc.Name);
-                boundaryCategory.AddProperty(KnownWaveProperties.Definition, "xy-coordinates");
-                boundaryCategory.AddProperty(KnownWaveProperties.StartCoordinateX, bc.StartCoordinate.X);
-                boundaryCategory.AddProperty(KnownWaveProperties.EndCoordinateX, bc.EndCoordinate.X);
-                boundaryCategory.AddProperty(KnownWaveProperties.StartCoordinateY, bc.StartCoordinate.Y);
-                boundaryCategory.AddProperty(KnownWaveProperties.EndCoordinateY, bc.EndCoordinate.Y);
-                boundaryCategory.AddProperty(KnownWaveProperties.SpectrumSpec,
-                                             bc.DataType == BoundaryConditionDataType.SpectrumFromFile
-                                                 ? "from file"
-                                                 : "parametric");
-
-                // write spectral data:
-                if (bc.DataType != BoundaryConditionDataType.SpectrumFromFile)
-                {
-                    boundaryCategory.AddProperty(KnownWaveProperties.ShapeType,
-                                                 bc.ShapeType.GetDescription().ToLower());
-                    boundaryCategory.AddProperty(KnownWaveProperties.PeriodType,
-                                                 bc.PeriodType.GetDescription().ToLower());
-                    boundaryCategory.AddProperty(KnownWaveProperties.DirectionalSpreadingType,
-                                                 bc.DirectionalSpreadingType.GetDescription().ToLower());
-                    boundaryCategory.AddProperty(KnownWaveProperties.PeakEnhancementFactor, bc.PeakEnhancementFactor);
-                    boundaryCategory.AddProperty(KnownWaveProperties.GaussianSpreading, bc.GaussianSpreadingValue);
-                }
-
-                if (bc.SpatialDefinitionType == WaveBoundaryConditionSpatialDefinitionType.Uniform)
-                {
-                    switch (bc.DataType)
-                    {
-                        case BoundaryConditionDataType.SpectrumFromFile:
-                            boundaryCategory.AddProperty(KnownWaveProperties.Spectrum, bc.SpectrumFiles[0]);
-                            break;
-                        case BoundaryConditionDataType.ParameterizedSpectrumConstant:
-                        {
-                            WaveBoundaryParameters parameters = bc.SpectrumParameters[0];
-                            boundaryCategory.AddProperty(KnownWaveProperties.WaveHeight, parameters.Height);
-                            boundaryCategory.AddProperty(KnownWaveProperties.Period, parameters.Period);
-                            boundaryCategory.AddProperty(KnownWaveProperties.Direction, parameters.Direction);
-                            boundaryCategory.AddProperty(KnownWaveProperties.DirectionalSpreadingValue,
-                                                         parameters.Spreading);
-                            break;
-                        }
-                    }
-                }
-                else if (bc.DataPointIndices.Count == 0) // spatially varying, no data points
-                {
-                    Log.WarnFormat(
-                        "No data points found for boundary \'{0}\', saved boundary will default to Uniform spatial definition type",
-                        bc.Name);
-                    const double defaultValue = 0.0;
-                    boundaryCategory.AddProperty(KnownWaveProperties.WaveHeight, defaultValue);
-                    boundaryCategory.AddProperty(KnownWaveProperties.Period, defaultValue);
-                    boundaryCategory.AddProperty(KnownWaveProperties.Direction, defaultValue);
-                    boundaryCategory.AddProperty(KnownWaveProperties.DirectionalSpreadingValue, defaultValue);
-                }
-                else // spatially varying, with data points
-                {
-                    // order the DataPointIndices or it will give an error in the computational core.
-                    foreach (int dataPointIdx in bc.DataPointIndices.OrderBy(di => di))
-                    {
-                        boundaryCategory.AddProperty(KnownWaveProperties.CondSpecAtDist,
-                                                     bc.GetDistanceFromFirstDataPointOverWaveBoundary(dataPointIdx));
-
-                        if (bc.DataType == BoundaryConditionDataType.SpectrumFromFile)
-                        {
-                            boundaryCategory.AddProperty(KnownWaveProperties.Spectrum, bc.SpectrumFiles[dataPointIdx]);
-                            continue;
-                        }
-
-                        if (bc.DataType == BoundaryConditionDataType.ParameterizedSpectrumConstant)
-                        {
-                            WaveBoundaryParameters parameters = bc.SpectrumParameters[dataPointIdx];
-                            boundaryCategory.AddProperty(KnownWaveProperties.WaveHeight, parameters.Height);
-                            boundaryCategory.AddProperty(KnownWaveProperties.Period, parameters.Period);
-                            boundaryCategory.AddProperty(KnownWaveProperties.Direction, parameters.Direction);
-                            boundaryCategory.AddProperty(KnownWaveProperties.DirectionalSpreadingValue,
-                                                         parameters.Spreading);
-                        }
-                    }
-                }
-
-                yield return boundaryCategory;
-            }
         }
 
         public WaveModelDefinition Load(string filePath)
