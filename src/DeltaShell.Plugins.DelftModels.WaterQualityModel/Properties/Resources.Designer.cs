@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -498,16 +498,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties {
             get {
                 return ResourceManager.GetString("WaterQualityModel_LogSynchronizedTimer_Output_timers___0___have_been_synchronized" +
                         "_to_match_the_Simulation__0____1___", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Could not remove output item &apos;{0}&apos;, because of the following reason:{1}{2}.
-        /// </summary>
-        public static string WaterQualityModel_OnClearOutput_Could_not_remove_output_item___0____because_of_the_following_reason__1__2 {
-            get {
-                return ResourceManager.GetString("WaterQualityModel_OnClearOutput_Could_not_remove_output_item___0____because_of_th" +
-                        "e_following_reason__1__2", resourceCulture);
             }
         }
         
