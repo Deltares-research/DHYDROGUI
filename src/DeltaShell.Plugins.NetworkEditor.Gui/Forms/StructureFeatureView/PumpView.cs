@@ -237,7 +237,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             double capacity;
             if (double.TryParse(textBoxCapacity.Text, out capacity))
             {
-                lblConvertedCapacaties.Text = String.Format("(= {0:0.###} m³/min, {1:0.##} m³/h)", capacity * 60.0,
+                lblConvertedCapacaties.Text = String.Format("(= {0:0.###} m3/min, {1:0.##} m3/h)", capacity * 60.0,
                                                             capacity * 3600.0);
             }
             else
