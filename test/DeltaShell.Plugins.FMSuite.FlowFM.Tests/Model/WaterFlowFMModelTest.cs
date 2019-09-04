@@ -2083,22 +2083,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         {
             // Given
             const string tracerName = "tracer";
-            var model = new WaterFlowFMModel();
             var dataItem = new DataItem(null, tracerName, typeof(UnstructuredGridCellCoverage), DataItemRole.Input, "");
-            model.DataItems.Add(dataItem);
-            int dataItemCountBefore = model.DataItems.Count;
+            using (var model = new WaterFlowFMModel())
+            {
+                model.DataItems.Add(dataItem);
+                int dataItemCountBefore = model.DataItems.Count;
 
-            // Pre-condition
-            Assert.That(dataItem.Value, Is.Null);
+                // Pre-condition
+                Assert.That(dataItem.Value, Is.Null);
 
-            // When
-            model.TracerDefinitions.Add(tracerName);
+                // When
+                model.TracerDefinitions.Add(tracerName);
 
-            // Then
-            Assert.That(dataItem.Value, Is.SameAs(model.InitialTracers.Single()),
-                        "Value of data item was not as expected.");
-            Assert.That(model.DataItems.Count, Is.EqualTo(dataItemCountBefore),
-                        "No data items should have been added.");
+                // Then
+                Assert.That(dataItem.Value, Is.SameAs(model.InitialTracers.Single()),
+                            "Value of data item was not as expected.");
+                Assert.That(model.DataItems.Count, Is.EqualTo(dataItemCountBefore),
+                            "No data items should have been added.");
+            }
         }
 
         private static WaterFlowFMModel CreateFMModelWithStructureLinkedToRTC(out DataItem rtcDataItem, out IDataItem dataItemWaterFlowFmModel)
