@@ -57,7 +57,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             AttributesFileData data = null;
 
             // call & assert
-            TestHelper.AssertIsFasterThan(250, () =>
+            TestHelper.AssertIsFasterThan(350, () =>
             {
                 data = AttributesFileReader.ReadAll(63814, 7, atrFile);
             });

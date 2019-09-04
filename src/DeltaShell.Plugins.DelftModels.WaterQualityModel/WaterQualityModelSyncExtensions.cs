@@ -12,6 +12,7 @@ using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.SubstanceProcessLibrary;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Extentions;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.ObservationAreas;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using GeoAPI.Geometries;
@@ -221,7 +222,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                 case NotifyCollectionChangedAction.Remove:
                 {
                     // Remove the existing output parameter output coverage data item
-                    RemoveOutputCoverageDataItem(waterQualityModel, outputParameter.Name,
+                    RemoveOutputCoverageDataItem(outputParameter.Name,
                                                  waterQualityModel.OutputParametersDataItemSet.DataItems);
                     break;
                 }
@@ -248,7 +249,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             else if (!outputParameter.ShowInMap && existingOutputCoverageDataItem != null)
             {
                 // Remove the existing output parameter output coverage data item
-                RemoveOutputCoverageDataItem(waterQualityModel, outputParameter.Name,
+                RemoveOutputCoverageDataItem(outputParameter.Name,
                                              waterQualityModel.OutputParametersDataItemSet.DataItems);
             }
         }
@@ -763,7 +764,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                 case NotifyCollectionChangedAction.Remove:
                 {
                     // Remove the existing substance output coverage data item
-                    RemoveOutputCoverageDataItem(waterQualityModel, substance.Name,
+                    RemoveOutputCoverageDataItem(substance.Name,
                                                  waterQualityModel.OutputSubstancesDataItemSet.DataItems);
                     break;
                 }
@@ -803,21 +804,20 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             });
         }
 
-        private static void RemoveOutputCoverageDataItem(WaterQualityModel waterQualityModel,
-                                                         string outputCoverageToRemoveName,
+        private static void RemoveOutputCoverageDataItem(string outputCoverageToRemoveName,
                                                          IEventedList<IDataItem> dataItems)
         {
             IDataItem outputCoverageDataItem = dataItems.First(di => di.Role.HasFlag(DataItemRole.Output)
                                                                      && di.Name == outputCoverageToRemoveName
                                                                      && !(di.Value is FeatureCoverage));
 
-            // Release the network from the output coverage
             var coverage = (UnstructuredGridCellCoverage) outputCoverageDataItem.Value;
-            coverage.Grid = null;
-
-            foreach (IFunction function in GetAllFunctions(coverage))
+            if (coverage.Store is LazyMapFileFunctionStore functionStore)
             {
-                waterQualityModel.MapFileFunctionStore.Functions.Remove(function);
+                foreach (IFunction function in GetAllFunctions(coverage))
+                {
+                    functionStore.Functions.Remove(function);
+                }
             }
 
             dataItems.Remove(outputCoverageDataItem);

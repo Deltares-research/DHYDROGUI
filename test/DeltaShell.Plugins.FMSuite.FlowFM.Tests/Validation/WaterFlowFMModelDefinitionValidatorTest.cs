@@ -225,7 +225,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             var fmModel = new WaterFlowFMModel();
             string expectedErrMessage = Resources
                 .WaterFlowFMModelDefinitionValidator_Validate_Bed_level_locations_should_be_set_to__faces__when_morphology_is_active_;
-            string expectedTabName = "Processes";
+            string expectedTabName = "Physical Parameters";
             object expectedSubject = fmModel;
             // 2. Verify initial expectations
             Assert.That(fmModel.ModelDefinition, Is.Not.Null);

@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
+using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Gui;
+using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.ImportersExporters;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -56,6 +58,53 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             Assert.That(relevantExporter, Is.Not.Null, 
                         "Expected a PliFileImporterExporter within the list of exporters, but found none.");
+        }
+
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void GetParentProjectItem_WhenSelectionIsCompositeActivity_ThenHelperMethodReturnsCompositeActivityAndThisWillBeUsed()
+        {
+            var flowFmApplicationPlugin = new FlowFMApplicationPlugin();
+            ApplicationPluginTestHelper.TestForGetParentProjectItemDelegateSetByApplicationPlugins_WhenApplicationPluginHelperReturnsNotNull(flowFmApplicationPlugin);
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void GetParentProjectItem_WhenSelectionIsNull_ThenHelperMethodReturnsNullAndRootFolderWillBeUsed()
+        {
+            var flowFmApplicationPlugin = new FlowFMApplicationPlugin();
+            ApplicationPluginTestHelper.TestForGetParentProjectItemDelegateSetByApplicationPlugins_WhenApplicationPluginHelperReturnsNull(flowFmApplicationPlugin);
+        }
+
+        [Test]
+        public void GetFileExporters_ContainsExpectedExporterForFixedWeirs()
+        {
+            // Set-up
+            var application = new FlowFMApplicationPlugin();
+
+            // Call
+            IEnumerable<IFileExporter> exporters = application.GetFileExporters();
+
+            // Assert
+            Type expectedType = typeof(PlizFileImporterExporter<FixedWeir, FixedWeir>);
+            Assert.NotNull(exporters.SingleOrDefault(e => e.GetType() == expectedType),
+                           $"An exporter of type {expectedType} was expected to be returned.");
+        }
+
+        [Test]
+        public void GetFileImporters_ContainsExpectedImporterForFixedWeirs()
+        {
+            // Set-up
+            var application = new FlowFMApplicationPlugin();
+
+            // Call
+            IEnumerable<IFileImporter> importer = application.GetFileImporters();
+
+            // Assert
+            Type expectedType = typeof(PlizFileImporterExporter<FixedWeir, FixedWeir>);
+            Assert.NotNull(importer.SingleOrDefault(e => e.GetType() == expectedType),
+                           $"An importer of type {expectedType} was expected to be returned.");
         }
 
         /// <summary>

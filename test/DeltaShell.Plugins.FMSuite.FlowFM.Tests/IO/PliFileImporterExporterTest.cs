@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
@@ -22,6 +23,7 @@ using DeltaShell.Plugins.ProjectExplorer;
 using DeltaShell.Plugins.SharpMapGis;
 using DeltaShell.Plugins.SharpMapGis.Gui;
 using NUnit.Framework;
+using Rhino.Mocks;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 {
@@ -163,6 +165,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             {
                 FileUtils.DeleteIfExists(testDir);
             }
+        }
+
+        [Test]
+        public void ImportItem_ThenAfterImportActionShouldBeInvoked()
+        {
+            // Set-up
+            var target = new List<FixedWeir>();
+
+            var importer = new PliFileImporterExporter<FixedWeir, FixedWeir>();
+            var afterImportAction = MockRepository.GenerateMock<Action<IList<FixedWeir>>>();
+            importer.AfterImportAction = afterImportAction;
+
+            afterImportAction.Expect(a => a.Invoke(target)).Repeat.Once();
+            afterImportAction.Replay();
+
+            // Call
+            importer.ImportItem("file_path", target);
+
+            // Assert
+            afterImportAction.VerifyAllExpectations();
         }
 
         private static void CheckImportedFixedWeirs(WaterFlowFMModel fmModel)

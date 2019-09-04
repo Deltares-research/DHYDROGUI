@@ -690,7 +690,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             try
             {
                 // Strip "key=" part away, if present:
-                valuePart = line.Substring(line.IndexOf("=", StringComparison.Ordinal) + 1);
+                valuePart = line.Substring(line.IndexOf("=", StringComparison.Ordinal) + 1).Trim();
             }
             catch (ArgumentOutOfRangeException)
             {

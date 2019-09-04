@@ -574,9 +574,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             });
         }
 
-        private void AddToIntialFractions(string spatiallyVaryingName)
+        private void AddToInitialCoverages(IList<UnstructuredGridCellCoverage> initialCoverages, string spatiallyVaryingName)
         {
-            if (InitialFractions == null)
+            if (initialCoverages == null)
             {
                 return;
             }
@@ -586,7 +586,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             {
                 UnstructuredGridCellCoverage unstructuredGridCellCoverage =
                     CreateUnstructuredGridCellCoverage(spatiallyVaryingName, Grid);
-                InitialFractions.Add(unstructuredGridCellCoverage);
+                initialCoverages.Add(unstructuredGridCellCoverage);
             }
             else
             {
@@ -594,7 +594,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 if (unstrGridCellCoverage == null)
                 {
                     t.Value = CreateUnstructuredGridCellCoverage(spatiallyVaryingName, Grid);
-                    InitialFractions.Add((UnstructuredGridCellCoverage) t.Value);
+                    initialCoverages.Add((UnstructuredGridCellCoverage)t.Value);
                     /* DELFT3DFM-1077 
                      * Apparently the spatial operation is not being executed after being added (which should be)
                      * We can force it here.
@@ -607,12 +607,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 }
                 else
                 {
-                    if (!InitialFractions.Contains(unstrGridCellCoverage))
+                    if (!initialCoverages.Contains(unstrGridCellCoverage))
                     {
-                        InitialFractions.Add(unstrGridCellCoverage);
+                        initialCoverages.Add(unstrGridCellCoverage);
                     }
                 }
             }
+        }
+
+        private void AddToInitialFractions(string spatiallyVaryingName)
+        {
+            AddToInitialCoverages(InitialFractions, spatiallyVaryingName);
+        }
+
+        private void AddToInitialTracers(string spatiallyVaryingName)
+        {
+            AddToInitialCoverages(InitialTracers, spatiallyVaryingName);
         }
 
         private void AddSpatialDataItems()

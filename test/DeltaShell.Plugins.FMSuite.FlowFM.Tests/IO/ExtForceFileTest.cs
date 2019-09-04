@@ -978,6 +978,29 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             }
         }
 
+        [Test]
+        public void GivenExtForceFileReferencingPliFileForSourceSink_WhenReading_ThenSourceAndSinkIsImported()
+        {
+            // Given
+            var modelDefinition = new WaterFlowFMModelDefinition();
+            var extForceFile = new ExtForceFile();
+
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                string originalTestDirectory = TestHelper.GetTestFilePath(Path.Combine("ExtFileTest", "SourcesAndSinks"));
+                FileUtils.CopyDirectory(originalTestDirectory, tempDirectory.Path);
+
+                string extForceFilePath = Path.Combine(tempDirectory.Path, "SourcesAndSinks.ext");
+                string dummyMduFilePath = Path.Combine(tempDirectory.Path, "nonExisting.mdu");
+
+                // When
+                extForceFile.Read(extForceFilePath, modelDefinition, dummyMduFilePath);
+
+                // Then
+                Assert.IsNotEmpty(modelDefinition.SourcesAndSinks, "Reading source and sink was unsuccessful.");
+            }
+        }
+
         private static void ValidateUnknownQuantities(WaterFlowFMModelDefinition def)
         {
             Assert.AreEqual(2, def.UnsupportedFileBasedExtForceFileItems.Count,

@@ -774,6 +774,34 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             Assert.AreEqual("surface water type 3", waterQualityModel.ObservationVariableOutputs[1].Name);
         }
 
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void GivenAWaterQualityModel_WhenASubstanceIsRemoved_ThenCoverageIsRemovedFromFunctionStoreAndGridIsNotSetToNull()
+        {
+            // Given
+            var model = new WaterQualityModel();
+            LazyMapFileFunctionStore functionStore = model.MapFileFunctionStore;
+            var substance = new WaterQualitySubstance {Name = "Substance"};
+            functionStore.Path = "not_empty";
+
+            model.SubstanceProcessLibrary.Substances.Add(substance);
+
+            // Pre-conditions
+            IEventedList<IFunction> functions = functionStore.Functions;
+            UnstructuredGridCellCoverage coverage = functions.OfType<UnstructuredGridCellCoverage>()
+                                                             .Single();
+            Assert.That(functions, Is.Not.Empty);
+
+            // When
+            model.SubstanceProcessLibrary.Substances.Remove(substance);
+
+            // Then
+            Assert.That(functionStore.Functions, Is.Empty,
+                        "Function store should be empty after removing substance.");
+            Assert.That(coverage.Grid, Is.Not.Null,
+                        "Grid of the coverage should not be set null");
+        }
+
         # endregion
 
 

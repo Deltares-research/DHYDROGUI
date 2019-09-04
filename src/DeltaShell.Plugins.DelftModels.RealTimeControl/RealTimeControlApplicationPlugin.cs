@@ -3,8 +3,8 @@ using System.Linq;
 using System.Reflection;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
-using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
+using DeltaShell.NGHS.Common;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport;
 using Mono.Addins;
 
@@ -69,26 +69,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 {
                     Name = "Real-Time Control Model",
                     Category = "1D / 2D / 3D Standalone Models",
-                    GetParentProjectItem =
-                        delegate (object owner)
-                        {
-                            if (owner is ICompositeActivity compositeActivity && !compositeActivity.ReadOnly)
-                            {
-                                return compositeActivity;
-                            }
-
-                            var compositeActivities = Application?.Project?.RootFolder.GetAllModelsRecursive().OfType<ICompositeActivity>().ToList();
-                            var treeFolderParentActivity = owner?.GetType().GetProperty("Parent")?.GetMethod.Invoke(owner, new object[] { }) as ICompositeActivity;
-
-                            return compositeActivities.FirstOrDefault(a =>
-                            {
-                                if (owner is IActivity activity)
-                                {
-                                    return a.Activities.Contains(activity);
-                                }
-                                return a == treeFolderParentActivity;
-                            });
-                        },
+                    GetParentProjectItem = owner =>
+                    {
+                        Folder rootFolder = Application?.Project?.RootFolder;
+                        return ApplicationPluginHelper.FindParentProjectItemInsideProject(rootFolder, owner) ?? rootFolder;
+                    },
                     AdditionalOwnerCheck = owner =>
                         (owner is ICompositeActivity) // Only allow composite activities as target
                         && (!(owner is ParallelActivity))
