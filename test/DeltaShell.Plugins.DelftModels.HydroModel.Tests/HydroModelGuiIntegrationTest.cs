@@ -136,6 +136,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         }
 
         [Test]
+        [Category(TestCategory.WindowsForms)]
         public void Add2D3DIntegratedModelAddFMModelRemoveIntegratedModel()
         {
             var mainWindow = (MainWindow) gui.MainWindow;
@@ -165,6 +166,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         }
 
         [Test]
+        [Category(TestCategory.WindowsForms)]
         public void GivenAnIntegratedModelWithFMModelInItWhenOpeningGridInRGFGridAndClosingItThenItShouldNotThowAnException()
         {
             var mainWindow = (MainWindow)gui.MainWindow;
