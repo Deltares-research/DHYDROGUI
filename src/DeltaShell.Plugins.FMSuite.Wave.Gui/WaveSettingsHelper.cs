@@ -95,7 +95,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             {
                 Category = KnownWaveCategories.GeneralCategory,
                 SubCategory = "Coupling time frame",
-                Label = "Timestep",
+                Label = "Time step",
                 Name = "TimeStep",
                 ValueType = typeof(TimeSpan),
                 ToolTip = "Coupling time step"

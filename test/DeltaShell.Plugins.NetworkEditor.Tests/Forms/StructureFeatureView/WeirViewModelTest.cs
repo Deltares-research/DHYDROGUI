@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
@@ -122,6 +123,23 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
 
             Assert.That(viewModel.Weir.CrestLevel, Is.EqualTo(3.5d));
         }
+
+        [Test]
+        public void GivenWeirSimpleGateParameters_GateOpeningHeightResult_ShouldBeRoundedToTwoDecimals()
+        {
+            var viewModel = new WeirViewModel
+            {
+                Weir = new Weir { WeirFormula = new GeneralStructureWeirFormula() }
+            };
+
+            viewModel.Weir.CrestLevel = 3.5;
+            viewModel.LowerEdgeLevel = 5.6;
+          
+            // Checking that it returns a rounded value to two decimals
+
+            Assert.That(viewModel.GateOpeningHeight, Is.EqualTo(Math.Round(2.1, 2)));
+        }
+
 
         #endregion
 
