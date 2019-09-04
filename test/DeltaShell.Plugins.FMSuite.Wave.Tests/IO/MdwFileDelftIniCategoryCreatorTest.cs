@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using DelftTools.TestUtils;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Wave.IO;
@@ -121,13 +122,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         }
 
         [Test]
-        public void GivenBoundaryCondition_WhenCreatingDelftIniCategory_ThenCategoryWithExpectedPropertyValuesIsReturned()
+        [TestCaseSource(nameof(NonFileBasedDataTypes))]
+        public void GivenBoundaryCondition_WhenCreatingDelftIniCategory_ThenCategoryWithExpectedPropertyValuesIsReturned(BoundaryConditionDataType dataType)
         {
             // Given
             double peakEnhancementFactor = randomNumberGenerator.NextDouble();
             double gaussianSpreadingValue = randomNumberGenerator.NextDouble();
 
-            WaveBoundaryCondition waveBoundaryCondition = GetWaveBoundaryCondition(BoundaryConditionDataType.Constant);
+            WaveBoundaryCondition waveBoundaryCondition = GetWaveBoundaryCondition(dataType);
             waveBoundaryCondition.PeakEnhancementFactor = peakEnhancementFactor;
             waveBoundaryCondition.GaussianSpreadingValue = gaussianSpreadingValue;
 
@@ -144,7 +146,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         }
 
         [Test]
-        public void GivenBoundaryConditionWithSpectralDataFromFile_WhenCreatingDelftIniCategory_ThenCategoryWithExpectedSpectrumSpecIsReturned()
+        public void GivenSpectrumFromFileBoundaryCondition_WhenCreatingDelftIniCategory_ThenCategoryWithExpectedSpectrumSpecIsReturned()
         {
             // Given
             WaveBoundaryCondition waveBoundaryCondition = GetWaveBoundaryCondition(BoundaryConditionDataType.SpectrumFromFile);
@@ -157,7 +159,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         }
 
         [Test]
-        public void GivenBoundaryConditionWithSpectralDataFromFile_WhenCreatingDelftIniCategory_ThenCategoryWithExpectedSpectrumFileNameIsReturned()
+        public void GivenSpectrumFromFileBoundaryCondition_WhenCreatingDelftIniCategory_ThenCategoryWithExpectedSpectrumFileNameIsReturned()
         {
             // Given
             WaveBoundaryCondition waveBoundaryCondition = GetWaveBoundaryCondition(BoundaryConditionDataType.SpectrumFromFile);
@@ -195,6 +197,29 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             Assert.That(category.GetPropertyValue(KnownWaveProperties.Period), Is.EqualTo(GetStringValue(period)));
             Assert.That(category.GetPropertyValue(KnownWaveProperties.Direction), Is.EqualTo(GetStringValue(direction)));
             Assert.That(category.GetPropertyValue(KnownWaveProperties.DirectionalSpreadingValue), Is.EqualTo(GetStringValue(spreading)));
+        }
+
+        [Test]
+        [TestCaseSource(nameof(NonFileBasedDataTypes))]
+        [TestCaseSource(nameof(FileBasedDataTypes))]
+        public void GivenSpatiallyVaryingBoundaryConditionWithoutDataPointIndices_WhenCreatingDelftIniCategory_ThenMessageIsLoggedAndSpectrumParametersHaveDefaultValues(BoundaryConditionDataType dataType)
+        {
+            // Given
+            WaveBoundaryCondition waveBoundaryCondition = GetWaveBoundaryCondition(dataType);
+            waveBoundaryCondition.SpatialDefinitionType = WaveBoundaryConditionSpatialDefinitionType.SpatiallyVarying;
+            DelftIniCategory category = null;
+
+            // When
+            void Call() => category = MdwFileDelftIniCategoryCreator.CreateBoundaryConditionCategory(waveBoundaryCondition);
+
+            // Then
+            string expectedMessage = $@"No data points found for boundary '{boundaryName}', saved boundary will default to Uniform spatial definition type";
+            TestHelper.AssertLogMessageIsGenerated(Call, expectedMessage, 1);
+
+            Assert.That(category.GetPropertyValue(KnownWaveProperties.WaveHeight), Is.EqualTo(GetStringValue(0.0)));
+            Assert.That(category.GetPropertyValue(KnownWaveProperties.Period), Is.EqualTo(GetStringValue(0.0)));
+            Assert.That(category.GetPropertyValue(KnownWaveProperties.Direction), Is.EqualTo(GetStringValue(0.0)));
+            Assert.That(category.GetPropertyValue(KnownWaveProperties.DirectionalSpreadingValue), Is.EqualTo(GetStringValue(0.0)));
         }
 
         private WaveBoundaryCondition GetWaveBoundaryCondition(BoundaryConditionDataType dataType)
@@ -239,6 +264,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             yield return BoundaryConditionDataType.ParameterizedSpectrumTimeseries;
             yield return BoundaryConditionDataType.Qh;
             yield return BoundaryConditionDataType.TimeSeries;
+        }
+
+        private static IEnumerable<BoundaryConditionDataType> FileBasedDataTypes()
+        {
+            yield return BoundaryConditionDataType.SpectrumFromFile;
         }
     }
 }

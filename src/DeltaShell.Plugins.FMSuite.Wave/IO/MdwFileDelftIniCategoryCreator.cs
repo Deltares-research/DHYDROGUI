@@ -62,7 +62,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             {
                 log.WarnFormat(
                     "No data points found for boundary \'{0}\', saved boundary will default to Uniform spatial definition type",
-                    boundaryCondition.Name);
+                    boundaryCondition.FeatureName);
                 const double defaultValue = 0.0;
                 boundaryCategory.AddProperty(KnownWaveProperties.WaveHeight, defaultValue);
                 boundaryCategory.AddProperty(KnownWaveProperties.Period, defaultValue);
