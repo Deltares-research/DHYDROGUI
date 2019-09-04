@@ -14,26 +14,36 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
     [TestFixture]
     public class MdwFileDelftIniCategoryCreatorTest
     {
-        private readonly IGeometry boundaryGeometry = new LineString(new[]
-        {
-            new Coordinate(0.0, 1.0),
-            new Coordinate(2.0, 3.0)
-        });
-
+        private WaveBoundaryCondition waveBoundaryCondition;
+        private const string boundaryName = "myBoundary";
+        private IGeometry boundaryGeometry;
+        private double startX;
+        private double endX;
+        private double startY;
+        private double endY;
+        
         private Random randomNumberGenerator;
 
-        [SetUp]
-        public void Setup()
+        [TestFixtureSetUp]
+        public void TestFixtureSetup()
         {
             randomNumberGenerator = new Random();
+
+            startX = randomNumberGenerator.NextDouble();
+            endX = randomNumberGenerator.NextDouble();
+            startY = randomNumberGenerator.NextDouble();
+            endY = randomNumberGenerator.NextDouble();
+            boundaryGeometry = new LineString(new[]
+            {
+                new Coordinate(startX, startY),
+                new Coordinate(endX, endY),
+            });
         }
 
-        [Test]
-        public void GivenBoundaryCondition_WhenCreatingDelftIniCategory_ThenCategoryWithExpectedStandardPropertyValuesIsReturned()
+        [SetUp]
+        public void TestSetup()
         {
-            // Given
-            const string boundaryName = "myBoundary";
-            var boundaryCondition = new WaveBoundaryCondition(BoundaryConditionDataType.Constant)
+            waveBoundaryCondition = new WaveBoundaryCondition(BoundaryConditionDataType.Constant)
             {
                 Name = "myBoundaryCondition",
                 Feature = new Feature2D
@@ -42,17 +52,21 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
                     Geometry = boundaryGeometry
                 }
             };
+        }
 
+        [Test]
+        public void GivenBoundaryCondition_WhenCreatingDelftIniCategory_ThenCategoryWithExpectedStandardPropertyValuesIsReturned()
+        {
             // When
-            DelftIniCategory category = MdwFileDelftIniCategoryCreator.CreateBoundaryConditionCategory(boundaryCondition);
+            DelftIniCategory category = MdwFileDelftIniCategoryCreator.CreateBoundaryConditionCategory(waveBoundaryCondition);
 
             // Then
             Assert.That(category.Name, Is.EqualTo("Boundary"));
             Assert.That(category.GetPropertyValue(KnownWaveProperties.Name), Is.EqualTo(boundaryName));
-            Assert.That(category.GetPropertyValue(KnownWaveProperties.StartCoordinateX), Is.EqualTo(GetStringValue(0.0)));
-            Assert.That(category.GetPropertyValue(KnownWaveProperties.EndCoordinateX), Is.EqualTo(GetStringValue(2.0)));
-            Assert.That(category.GetPropertyValue(KnownWaveProperties.StartCoordinateY), Is.EqualTo(GetStringValue(1.0)));
-            Assert.That(category.GetPropertyValue(KnownWaveProperties.EndCoordinateY), Is.EqualTo(GetStringValue(3.0)));
+            Assert.That(category.GetPropertyValue(KnownWaveProperties.StartCoordinateX), Is.EqualTo(GetStringValue(startX)));
+            Assert.That(category.GetPropertyValue(KnownWaveProperties.EndCoordinateX), Is.EqualTo(GetStringValue(endX)));
+            Assert.That(category.GetPropertyValue(KnownWaveProperties.StartCoordinateY), Is.EqualTo(GetStringValue(startY)));
+            Assert.That(category.GetPropertyValue(KnownWaveProperties.EndCoordinateY), Is.EqualTo(GetStringValue(endY)));
         }
 
         [Test]
@@ -62,18 +76,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         public void GivenBoundaryConditionWithShapeType_WhenCreatingDelftIniCategory_ThenCategoryWithExpectedShapeTypeIsReturned(WaveSpectrumShapeType shapeType, string expectedValue)
         {
             // Given
-            var boundaryCondition = new WaveBoundaryCondition(BoundaryConditionDataType.Constant)
-            {
-                Name = "myBoundaryCondition",
-                Feature = new Feature2D
-                {
-                    Geometry = boundaryGeometry
-                },
-                ShapeType = shapeType
-            };
+            waveBoundaryCondition.ShapeType = shapeType;
 
             // When
-            DelftIniCategory category = MdwFileDelftIniCategoryCreator.CreateBoundaryConditionCategory(boundaryCondition);
+            DelftIniCategory category = MdwFileDelftIniCategoryCreator.CreateBoundaryConditionCategory(waveBoundaryCondition);
 
             // Then
             Assert.That(category.GetPropertyValue(KnownWaveProperties.ShapeType), Is.EqualTo(expectedValue));
@@ -85,18 +91,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         public void GivenBoundaryConditionWithPeriodType_WhenCreatingDelftIniCategory_ThenCategoryWithExpectedPeriodTypeIsReturned(WavePeriodType periodType, string expectedValue)
         {
             // Given
-            var boundaryCondition = new WaveBoundaryCondition(BoundaryConditionDataType.Constant)
-            {
-                Name = "myBoundaryCondition",
-                Feature = new Feature2D
-                {
-                    Geometry = boundaryGeometry
-                },
-                PeriodType = periodType
-            };
+            waveBoundaryCondition.PeriodType = periodType;
 
             // When
-            DelftIniCategory category = MdwFileDelftIniCategoryCreator.CreateBoundaryConditionCategory(boundaryCondition);
+            DelftIniCategory category = MdwFileDelftIniCategoryCreator.CreateBoundaryConditionCategory(waveBoundaryCondition);
 
             // Then
             Assert.That(category.GetPropertyValue(KnownWaveProperties.PeriodType), Is.EqualTo(expectedValue));
@@ -108,18 +106,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         public void GivenBoundaryConditionWithDirectionalSpreadingType_WhenCreatingDelftIniCategory_ThenCategoryWithExpectedDirectionalSpreadingTypeIsReturned(WaveDirectionalSpreadingType directionalSpreadingType, string expectedValue)
         {
             // Given
-            var boundaryCondition = new WaveBoundaryCondition(BoundaryConditionDataType.Constant)
-            {
-                Name = "myBoundaryCondition",
-                Feature = new Feature2D
-                {
-                    Geometry = boundaryGeometry
-                },
-                DirectionalSpreadingType = directionalSpreadingType
-            };
+            waveBoundaryCondition.DirectionalSpreadingType = directionalSpreadingType;
 
             // When
-            DelftIniCategory category = MdwFileDelftIniCategoryCreator.CreateBoundaryConditionCategory(boundaryCondition);
+            DelftIniCategory category = MdwFileDelftIniCategoryCreator.CreateBoundaryConditionCategory(waveBoundaryCondition);
 
             // Then
             Assert.That(category.GetPropertyValue(KnownWaveProperties.DirectionalSpreadingType), Is.EqualTo(expectedValue));
@@ -132,19 +122,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             double peakEnhancementFactor = randomNumberGenerator.NextDouble();
             double gaussianSpreadingValue = randomNumberGenerator.NextDouble();
 
-            var boundaryCondition = new WaveBoundaryCondition(BoundaryConditionDataType.Constant)
-            {
-                Name = "myBoundaryCondition",
-                Feature = new Feature2D
-                {
-                    Geometry = boundaryGeometry
-                },
-                PeakEnhancementFactor = peakEnhancementFactor,
-                GaussianSpreadingValue = gaussianSpreadingValue
-            };
+            waveBoundaryCondition.PeakEnhancementFactor = peakEnhancementFactor;
+            waveBoundaryCondition.GaussianSpreadingValue = gaussianSpreadingValue;
 
             // When
-            DelftIniCategory category = MdwFileDelftIniCategoryCreator.CreateBoundaryConditionCategory(boundaryCondition);
+            DelftIniCategory category = MdwFileDelftIniCategoryCreator.CreateBoundaryConditionCategory(waveBoundaryCondition);
 
             // Then
             Assert.That(category.GetPropertyValue(KnownWaveProperties.PeakEnhancementFactor), Is.EqualTo(GetStringValue(peakEnhancementFactor)));
