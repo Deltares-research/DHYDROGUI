@@ -115,7 +115,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             CreateTimePointCategories(modelDefinition, ref mdwCategories);
 
             IEnumerable<DelftIniCategory> boundaryConditionCategories = modelDefinition.BoundaryConditions
-                                                                        .Select(MdwFileDelftIniCategoryCreator.CreateBoundaryConditionCategory);
+                                                                        .Select(WaveDelftIniCategoryCreator.CreateBoundaryConditionCategory);
             mdwCategories.AddRange(boundaryConditionCategories);
             SaveBoundaryConditions(modelDefinition, Path.Combine(targetDir, tSeriesFile),
                                    modelDefinition.ModelReferenceDateTime);

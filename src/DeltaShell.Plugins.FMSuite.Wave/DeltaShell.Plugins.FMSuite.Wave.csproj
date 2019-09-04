@@ -134,7 +134,7 @@
     <Compile Include="IO\Importers\WaveSpectralFileImporter.cs" />
     <Compile Include="IO\Importers\WavmFileImporter.cs" />
     <Compile Include="IO\MdwFile.cs" />
-    <Compile Include="IO\MdwFileDelftIniCategoryCreator.cs" />
+    <Compile Include="IO\WaveDelftIniCategoryCreator.cs" />
     <Compile Include="IO\Sp2File.cs" />
     <Compile Include="IO\WaveBoundaryImportHelper.cs" />
     <Compile Include="IO\WavmFileFunctionStore.cs" />

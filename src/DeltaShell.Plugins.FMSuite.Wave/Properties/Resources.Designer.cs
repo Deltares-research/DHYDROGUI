@@ -257,6 +257,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No data points found for boundary &apos;{0}&apos;, saved boundary will default to Uniform spatial definition type.
+        /// </summary>
+        public static string WaveDelftIniCategoryConverter_CreateBoundaryConditionCategory_No_data_points_found_for_boundary___0____ {
+            get {
+                return ResourceManager.GetString("WaveDelftIniCategoryConverter_CreateBoundaryConditionCategory_No_data_points_foun" +
+                        "d_for_boundary___0____", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to All the grids Coordinate System should be the same, either Spherical or Cartesian.
         /// </summary>
         public static string WaveDomainValidator_ValidateAllDomainsShareCoordinateSystem_All_the_grids_Coordinate_System_should_be_the_same__either_Spherical_or_Cardesian {

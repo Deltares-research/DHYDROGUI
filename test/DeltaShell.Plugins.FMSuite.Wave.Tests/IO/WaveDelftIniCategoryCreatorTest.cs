@@ -15,7 +15,7 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
 {
     [TestFixture]
-    public class MdwFileDelftIniCategoryCreatorTest
+    public class WaveDelftIniCategoryCreatorTest
     {
         private const string boundaryName = "myBoundary";
         private const string spectrumFileName1 = "mySpectrumFile1.sp1";
@@ -53,7 +53,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             WaveBoundaryCondition waveBoundaryCondition = GetWaveBoundaryCondition(dataType);
             
             // When
-            DelftIniCategory category = MdwFileDelftIniCategoryCreator.CreateBoundaryConditionCategory(waveBoundaryCondition);
+            DelftIniCategory category = WaveDelftIniCategoryCreator.CreateBoundaryConditionCategory(waveBoundaryCondition);
 
             // Then
             Assert.That(category.Name, Is.EqualTo("Boundary"));
@@ -81,7 +81,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
 
             // When
             DelftIniCategory category =
-                MdwFileDelftIniCategoryCreator.CreateBoundaryConditionCategory(waveBoundaryCondition);
+                WaveDelftIniCategoryCreator.CreateBoundaryConditionCategory(waveBoundaryCondition);
 
             // Then
             Assert.That(category.GetPropertyValue(KnownWaveProperties.ShapeType), Is.EqualTo(expectedValue));
@@ -99,7 +99,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
 
             // When
             DelftIniCategory category =
-                MdwFileDelftIniCategoryCreator.CreateBoundaryConditionCategory(waveBoundaryCondition);
+                WaveDelftIniCategoryCreator.CreateBoundaryConditionCategory(waveBoundaryCondition);
 
             // Then
             Assert.That(category.GetPropertyValue(KnownWaveProperties.PeriodType), Is.EqualTo(expectedValue));
@@ -117,7 +117,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
 
             // When
             DelftIniCategory category =
-                MdwFileDelftIniCategoryCreator.CreateBoundaryConditionCategory(waveBoundaryCondition);
+                WaveDelftIniCategoryCreator.CreateBoundaryConditionCategory(waveBoundaryCondition);
 
             // Then
             Assert.That(category.GetPropertyValue(KnownWaveProperties.DirectionalSpreadingType),
@@ -139,7 +139,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
 
             // When
             DelftIniCategory category =
-                MdwFileDelftIniCategoryCreator.CreateBoundaryConditionCategory(waveBoundaryCondition);
+                WaveDelftIniCategoryCreator.CreateBoundaryConditionCategory(waveBoundaryCondition);
 
             // Then
             Assert.That(category.GetPropertyValue(KnownWaveProperties.SpectrumSpec), Is.EqualTo("parametric"));
@@ -156,7 +156,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             WaveBoundaryCondition waveBoundaryCondition = GetWaveBoundaryCondition(BoundaryConditionDataType.SpectrumFromFile);
 
             // When
-            DelftIniCategory category = MdwFileDelftIniCategoryCreator.CreateBoundaryConditionCategory(waveBoundaryCondition);
+            DelftIniCategory category = WaveDelftIniCategoryCreator.CreateBoundaryConditionCategory(waveBoundaryCondition);
 
             // Then
             Assert.That(category.GetPropertyValue(KnownWaveProperties.SpectrumSpec), Is.EqualTo("from file"));
@@ -171,7 +171,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             waveBoundaryCondition.SpectrumFiles[1] = "mySpectrumFile2.sp2";
 
             // When
-            DelftIniCategory category = MdwFileDelftIniCategoryCreator.CreateBoundaryConditionCategory(waveBoundaryCondition);
+            DelftIniCategory category = WaveDelftIniCategoryCreator.CreateBoundaryConditionCategory(waveBoundaryCondition);
 
             // Then
             Assert.That(category.GetPropertyValue(KnownWaveProperties.Spectrum), Is.EqualTo(spectrumFileName1));
@@ -194,7 +194,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             waveBoundaryCondition.SpectrumParameters[0].Spreading = spreading;
 
             // When
-            DelftIniCategory category = MdwFileDelftIniCategoryCreator.CreateBoundaryConditionCategory(waveBoundaryCondition);
+            DelftIniCategory category = WaveDelftIniCategoryCreator.CreateBoundaryConditionCategory(waveBoundaryCondition);
 
             // Then
             Assert.That(category.GetPropertyValue(KnownWaveProperties.WaveHeight), Is.EqualTo(GetStringValue(height)));
@@ -215,7 +215,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             DelftIniCategory category = null;
 
             // When
-            void Call() => category = MdwFileDelftIniCategoryCreator.CreateBoundaryConditionCategory(waveBoundaryCondition);
+            void Call() => category = WaveDelftIniCategoryCreator.CreateBoundaryConditionCategory(waveBoundaryCondition);
 
             // Then
             string expectedMessage = $@"No data points found for boundary '{boundaryName}', saved boundary will default to Uniform spatial definition type";
@@ -239,7 +239,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             waveBoundaryCondition.AddPoint(1);
 
             // When
-            DelftIniCategory category = MdwFileDelftIniCategoryCreator.CreateBoundaryConditionCategory(waveBoundaryCondition);
+            DelftIniCategory category = WaveDelftIniCategoryCreator.CreateBoundaryConditionCategory(waveBoundaryCondition);
 
             // Then
             DelftIniProperty[] properties = category.Properties.Where(p => p.Name == KnownWaveProperties.CondSpecAtDist).ToArray();
@@ -262,7 +262,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             waveBoundaryCondition.SpectrumFiles[1] = spectrumFileName2;
 
             // When
-            DelftIniCategory category = MdwFileDelftIniCategoryCreator.CreateBoundaryConditionCategory(waveBoundaryCondition);
+            DelftIniCategory category = WaveDelftIniCategoryCreator.CreateBoundaryConditionCategory(waveBoundaryCondition);
 
             // Then
             DelftIniProperty[] properties = category.Properties.Where(p => p.Name == KnownWaveProperties.Spectrum).ToArray();
@@ -305,7 +305,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             };
 
             // When
-            DelftIniCategory category = MdwFileDelftIniCategoryCreator.CreateBoundaryConditionCategory(waveBoundaryCondition);
+            DelftIniCategory category = WaveDelftIniCategoryCreator.CreateBoundaryConditionCategory(waveBoundaryCondition);
 
             // Then
             DelftIniProperty[] heightProperties = category.Properties.Where(p => p.Name == KnownWaveProperties.WaveHeight).ToArray();
