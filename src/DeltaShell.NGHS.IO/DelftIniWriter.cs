@@ -55,8 +55,8 @@ namespace DeltaShell.NGHS.IO
         {
             if (string.IsNullOrEmpty(property.Value)) return;
 
-            var comment = writeComment && !string.IsNullOrEmpty(property.Comment) ? string.Format("# {0}", property.Comment) : "";
-            var line = string.Format("    {0,-22}= {1,-20}{2}", property.Name, property.Value, comment);
+            string comment = writeComment && !string.IsNullOrEmpty(property.Comment) ? string.Format("\t# {0}", property.Comment) : string.Empty;
+            string line = string.Format("    {0,-22}= {1,-20}{2}", property.Name, property.Value, comment);
             WriteLine(line);
         }
     }

@@ -678,7 +678,6 @@
     <Compile Include="Wizard\SelectDataWizardPageRelatedTablesPopUp.Designer.cs">
       <DependentUpon>SelectDataWizardPageRelatedTablesPopUp.cs</DependentUpon>
     </Compile>
-    <Compile Include="Converters\BooleanToVisibleHiddenConverter.cs" />
     <Compile Include="Converters\EnumToDescriptionConverter.cs" />
     <Compile Include="Forms\StructureFeatureView\WeirFormulaViews\GeneralStructureWeirFormulaViewWpf.xaml.cs">
       <DependentUpon>GeneralStructureWeirFormulaViewWpf.xaml</DependentUpon>

@@ -19,7 +19,7 @@ namespace DelftTools.Hydro.Helpers
                 {
                     new Variable<double>("conveyance")
                     {
-                        Unit = new Unit("m³/s", "m³/s"),
+                        Unit = new Unit("m3/s", "m3/s"),
                         IsEditable = false
                     },
                     new Variable<double>("flow area")
@@ -49,7 +49,7 @@ namespace DelftTools.Hydro.Helpers
                     },
                     new Variable<double>("conveyance negative")
                     {
-                        Unit = new Unit("m³/s", "m³/s"),
+                        Unit = new Unit("m3/s", "m3/s"),
                         IsEditable = false
                     }
                 });
