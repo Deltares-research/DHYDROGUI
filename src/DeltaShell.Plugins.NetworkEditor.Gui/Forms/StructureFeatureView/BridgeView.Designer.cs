@@ -521,7 +521,7 @@
             this.labelGroundLayerFrictionUnit.Name = "labelGroundLayerFrictionUnit";
             this.labelGroundLayerFrictionUnit.Size = new System.Drawing.Size(28, 13);
             this.labelGroundLayerFrictionUnit.TabIndex = 24;
-            this.labelGroundLayerFrictionUnit.Text = "m3/s";
+            this.labelGroundLayerFrictionUnit.Text = "m³/s";
             // 
             // label58
             // 
@@ -579,7 +579,7 @@
             this.labelFrictionUnit.Name = "labelFrictionUnit";
             this.labelFrictionUnit.Size = new System.Drawing.Size(28, 13);
             this.labelFrictionUnit.TabIndex = 7;
-            this.labelFrictionUnit.Text = "m3/s";
+            this.labelFrictionUnit.Text = "m³/s";
             // 
             // textBoxRoughnessValue
             // 

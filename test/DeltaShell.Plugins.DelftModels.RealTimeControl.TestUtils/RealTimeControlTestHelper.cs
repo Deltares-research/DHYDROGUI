@@ -71,7 +71,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils
             var timeSeries = new TimeSeries();
             var t = new DateTime(2000, 3, 3);
             timeSeries.Arguments[0].DefaultValue = new DateTime(2000, 1, 1);
-            timeSeries.Components.Add(new Variable<double>("flow", new Unit("m3/s", "m3/s")));
+            timeSeries.Components.Add(new Variable<double>("flow", new Unit("m³/s", "m³/s")));
             timeSeries.Time.ExtrapolationType = ExtrapolationType.Constant;
             timeSeries[t] = 0.0;
             timeSeries[t.AddMinutes(5)] = 20.0;

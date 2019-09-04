@@ -357,7 +357,7 @@
             this.capacityUnitLabel.Name = "capacityUnitLabel";
             this.capacityUnitLabel.Size = new System.Drawing.Size(28, 13);
             this.capacityUnitLabel.TabIndex = 1;
-            this.capacityUnitLabel.Text = "m3/s";
+            this.capacityUnitLabel.Text = "m³/s";
             // 
             // labelCapacity
             // 

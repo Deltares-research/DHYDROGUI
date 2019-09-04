@@ -11,7 +11,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Sediment
         {
             return new EventedList<ISedimentProperty>()
             {
-                new SedimentProperty<double>("Cref", 1600, 0, true, 9999.9999, false, "kg/m3",
+                new SedimentProperty<double>("Cref", 1600, 0, true, 9999.9999, false, "kg/m³",
                                              "Reference density for hindered settling calculations", true)
             };
         }
@@ -27,17 +27,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Sediment
                     Properties = new EventedList<ISedimentProperty>()
                     {
                         new SpatiallyVaryingSedimentProperty<double>("SedConc", 0, 0, false, double.MaxValue, true,
-                                                                     "kg/m3", "Initial Concentration", true, false),
+                                                                     "kg/m³", "Initial Concentration", true, false),
                         new SpatiallyVaryingSedimentProperty<double>("IniSedThick", 5, 0, false, double.MaxValue, true,
                                                                      "m", "Initial sediment layer thickness at bed",
                                                                      false, false),
                         new SedimentProperty<double>("FacDss", 1, 0.6, false, 1, false, "-",
                                                      "Factor for suspended sediment diameter", true),
-                        new SedimentProperty<double>("RhoSol", 2650, 0, true, 10000, true, "kg/m3", "Specific density",
+                        new SedimentProperty<double>("RhoSol", 2650, 0, true, 10000, true, "kg/m³", "Specific density",
                                                      false),
                         new SedimentProperty<int>("TraFrm", -1, -2, false, 18, false, string.Empty,
                                                   "Integer selecting the transport formula", true),
-                        new SedimentProperty<double>("CDryB", 1600, 0, true, 10000, true, "kg/m3", "Dry bed density",
+                        new SedimentProperty<double>("CDryB", 1600, 0, true, 10000, true, "kg/m³", "Dry bed density",
                                                      false),
                         new SedimentProperty<double>("SedDia", 0.0002, 0.000063, false, 0.002, false, "m",
                                                      "Median sediment diameter (D50)", false),
@@ -50,17 +50,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Sediment
                     Properties = new EventedList<ISedimentProperty>()
                     {
                         new SpatiallyVaryingSedimentProperty<double>("SedConc", 0, 0, false, double.MaxValue, true,
-                                                                     "kg/m3", "Initial Concentration", true, false),
+                                                                     "kg/m³", "Initial Concentration", true, false),
                         new SpatiallyVaryingSedimentProperty<double>("IniSedThick", 5, 0, false, double.MaxValue, true,
                                                                      "m", "Initial sediment layer thickness at bed",
                                                                      false, false),
                         new SedimentProperty<double>("FacDss", 1, 0.6, false, 1, false, "-",
                                                      "Factor for suspended sediment diameter", true),
-                        new SedimentProperty<double>("RhoSol", 2650, 0, true, 10000, true, "kg/m3", "Specific density",
+                        new SedimentProperty<double>("RhoSol", 2650, 0, true, 10000, true, "kg/m³", "Specific density",
                                                      false),
                         new SedimentProperty<int>("TraFrm", -3, -3, false, -3, false, string.Empty,
                                                   "Integer selecting the transport formula", true),
-                        new SedimentProperty<double>("CDryB", 500, 0, true, 10000, true, "kg/m3", "Dry bed density",
+                        new SedimentProperty<double>("CDryB", 500, 0, true, 10000, true, "kg/m³", "Dry bed density",
                                                      false),
 
                         // Should these be in TransportFormula? (-3)
@@ -81,11 +81,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Sediment
                         new SpatiallyVaryingSedimentProperty<double>("IniSedThick", 5, 0, false, double.MaxValue, true,
                                                                      "m", "Initial sediment layer thickness at bed",
                                                                      false, false),
-                        new SedimentProperty<double>("RhoSol", 2650, 0, true, 10000, true, "kg/m3", "Specific density",
+                        new SedimentProperty<double>("RhoSol", 2650, 0, true, 10000, true, "kg/m³", "Specific density",
                                                      false),
                         new SedimentProperty<int>("TraFrm", -1, -2, false, 18, false, string.Empty,
                                                   "Integer selecting the transport formula", true),
-                        new SedimentProperty<double>("CDryB", 1600, 0, true, 10000, true, "kg/m3", "Dry bed density",
+                        new SedimentProperty<double>("CDryB", 1600, 0, true, 10000, true, "kg/m³", "Dry bed density",
                                                      false),
                         new SedimentProperty<double>("SedDia", 0.0002, 0.000063, false, 0.002, false, "m",
                                                      "Median sediment diameter (D50)", false),

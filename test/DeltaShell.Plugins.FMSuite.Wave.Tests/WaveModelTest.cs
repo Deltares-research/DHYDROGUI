@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Configuration;
 using System.IO;
 using System.Linq;
 using DelftTools.Functions;
@@ -382,20 +381,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
 
             // Assert
             Assert.That(waveModel.WavmFunctionStores.Single().Functions, Is.Empty, "All output functions should be removed at clearing model output.");
-        }
-
-        [Test]
-        public void CheckDefaultTimeDateWhenCreatingWaveTimePointData()
-        {
-            var waveInputFieldData = new WaveInputFieldData();
-
-            // get the today datetime
-
-            DateTime datetime = DateTime.Today;
-
-            // Assert
-
-            Assert.AreEqual(datetime, waveInputFieldData.InputFields.Arguments[0].DefaultValue);
         }
     }
 }

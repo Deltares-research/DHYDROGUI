@@ -35,7 +35,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Boundary
 
         public static class UnitStrings
         {
-            public const string WaterDischarge = "m3/s";
+            public const string WaterDischarge = "m³/s";
             public const string WaterLevel = "m";
             public const string TimeSeconds = "seconds since";
             public const string TimeMinutes = "minutes since";

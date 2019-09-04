@@ -46,7 +46,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             MeteoData = new WaveMeteoData();
 
             InputFields = new Function("wave_input_fields");
-            InputFields.Arguments.Add(new Variable<DateTime>("Time") { DefaultValue = DateTime.Today });
+            InputFields.Arguments.Add(new Variable<DateTime>("Time"));
             InputFields.Components.Add(new Variable<double>("Water Level", new Unit("meter", "m")));
             InputFields.Components.Add(new Variable<double>("Velocity X", new Unit("meter per second", "m/s")));
             InputFields.Components.Add(new Variable<double>("Velocity Y", new Unit("meter per second", "m/s")));
