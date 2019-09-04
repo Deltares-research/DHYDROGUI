@@ -5,7 +5,6 @@ using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Filters;
 using DelftTools.Functions.Generic;
-using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
@@ -1151,6 +1150,93 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         }
 
         [Test]
+        public void CoordinateSystem_SettingCoordinateSystemWithoutPROJ4Transformation_CoordinateSystemUnchanged()
+        {
+            // Setup
+            var mocks = new MockRepository();
+            var coordinateSystem = mocks.Stub<ICoordinateSystem>();
+
+            // Note that the DotSpatial reference will throw an ApplicationException during runtime. 
+            // However, the documentation is unclear whether this will always be the case and therefore
+            // this test assumes that a generic exception will be thrown.
+            coordinateSystem.Stub(cs => cs.PROJ4).Throw(new Exception()); 
+            mocks.ReplayAll();
+
+            var hydroData = new TestHydroDataStub();
+            using (var model = new WaterQualityModel())
+            {
+                model.ImportHydroData(hydroData);
+
+                UnstructuredGrid modelGrid = model.Grid;
+                ICoordinateSystem originalGridCoordinateSystem = modelGrid.CoordinateSystem;
+
+                // Call
+                model.CoordinateSystem = coordinateSystem;
+
+                // Assert
+                Assert.That(modelGrid.CoordinateSystem, Is.SameAs(originalGridCoordinateSystem), 
+                            "CoordinateSystem should not change when there's no transformation to PROJ4 possible.");
+                mocks.VerifyAll();
+            }
+        }
+
+        [Test]
+        public void CoordinateSystem_SettingCoordinateSystemToNull_CoordinateSystemUnchanged()
+        {
+            // Setup
+            var hydroData = new TestHydroDataStub();
+            using (var model = new WaterQualityModel())
+            {
+                model.ImportHydroData(hydroData);
+
+                UnstructuredGrid modelGrid = model.Grid;
+                ICoordinateSystem originalGridCoordinateSystem = modelGrid.CoordinateSystem;
+
+                // Call
+                model.CoordinateSystem = null;
+
+                // Assert
+                Assert.That(modelGrid.CoordinateSystem, Is.SameAs(originalGridCoordinateSystem),
+                            "CoordinateSystem should not change when it is set to NULL.");
+            }
+        }
+
+        [Test]
+        public void GivenWaterQualityModelWithGridCoordinateSystemWithoutPROJ4Transformation_WhenSettingValidCoordinateSystem_ThenCoordinateSystemSet()
+        {
+            // Given
+            var mocks = new MockRepository();
+
+            // Note that the DotSpatial reference will throw an ApplicationException during runtime. 
+            // However, the documentation is unclear whether this will always be the case and therefore
+            // this test assumes that a generic exception will be thrown.
+            var oldCoordinateSystem = mocks.Stub<ICoordinateSystem>();
+            oldCoordinateSystem.Stub(cs => cs.PROJ4).Throw(new Exception());
+
+            var newCoordinateSystem = mocks.Stub<ICoordinateSystem>();
+            newCoordinateSystem.Stub(cs => cs.PROJ4).Return("StringRepresentation");
+            mocks.ReplayAll();
+
+            var hydroData = new TestHydroDataStub();
+            using (var model = new WaterQualityModel())
+            {
+                model.ImportHydroData(hydroData);
+
+                UnstructuredGrid modelGrid = model.Grid;
+                modelGrid.CoordinateSystem = oldCoordinateSystem;
+
+                // When
+                model.CoordinateSystem = newCoordinateSystem;
+
+                // Then
+                Assert.That(modelGrid.CoordinateSystem, Is.SameAs(newCoordinateSystem),
+                            "CoordinateSystem should change when there's a transformation to PROJ4 possible from the new value.");
+                mocks.VerifyAll();
+            }
+
+        }
+
+        [Test]
         public void GetDefaultZ()
         {
             var model = new WaterQualityModel();
@@ -1415,18 +1501,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             Assert.AreNotEqual(model.StartTime, settings.HisStartTime);
             Assert.AreNotEqual(model.StopTime, settings.HisStopTime);
             Assert.AreNotEqual(model.TimeStep, settings.HisTimeStep);
-        }
-
-        private static WaterQualityModel AddWaterQualityModelToProject(IApplication app)
-        {
-            // Add WaterQualityModel to project
-            var project = app.Project;
-            project.RootFolder.Add(new WaterQualityModel());
-
-            //Check model name
-            var targetmodel = project.RootFolder.Models.OfType<WaterQualityModel>().FirstOrDefault();
-            Assert.IsNotNull(targetmodel);
-            return targetmodel;
         }
 
         [Test]
