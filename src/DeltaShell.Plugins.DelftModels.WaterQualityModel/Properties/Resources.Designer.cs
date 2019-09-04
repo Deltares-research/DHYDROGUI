@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -502,16 +502,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Could not remove output item &apos;{0}&apos;, because of the following reason:{1}{2}.
-        /// </summary>
-        public static string WaterQualityModel_OnClearOutput_Could_not_remove_output_item___0____because_of_the_following_reason__1__2 {
-            get {
-                return ResourceManager.GetString("WaterQualityModel_OnClearOutput_Could_not_remove_output_item___0____because_of_th" +
-                        "e_following_reason__1__2", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Failed to initialize pre-processor.{0}Please look at the List file for more information.{0}List file found in: Project view -&gt; Output -&gt; List file.{0} {1}.
         /// </summary>
         public static string WaterQualityModel_OnInitializeCore_Failed_to_initialize_pre_processor__0_Please_look_at_the_List_file_for_more_information__0_List_file_found_in__Project_view____Output____List_file__0___1_ {
@@ -614,6 +604,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties {
                 return ResourceManager.GetString("WaterQualityModelValidator_CheckTimers_Timers_for__0__are_not_equal_to_the_simula" +
                         "tion_period_of_the_model___1____2____Please_verify_that_they_overlap_with_the_si" +
                         "mulation_period_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The hyd file with location {0} doesn&apos;t exist..
+        /// </summary>
+        public static string WaterQualityModelValidator_hyd_file_doesnt_exist {
+            get {
+                return ResourceManager.GetString("WaterQualityModelValidator_hyd_file_doesnt_exist", resourceCulture);
             }
         }
         

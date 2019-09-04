@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using DelftTools.Functions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
+using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects;
@@ -14,6 +16,7 @@ using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.ObservationAreas;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO;
+using NetTopologySuite.Extensions.Grids;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -30,6 +33,40 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 
             Assert.AreEqual(0, report.Issues.Count());
             Assert.AreEqual(2, report.AllErrors.Count()); // no substances and Hyd file
+        }
+
+        [Test]
+        public void Validate_WhenHydFileDoesNotExist_ThenReportContainsExpectedValidationIssue()
+        {
+            // Set-up
+            const string filePath = "path";
+            var hydroData = MockRepository.GenerateStub<IHydroData>();
+            hydroData.Stub(d => d.FilePath).Return(filePath);
+            WaterQualityModel model = GetStubbedWaterQualityModel(hydroData);
+
+            // Act
+            ValidationReport report = new WaterQualityModelValidator().Validate(model);
+
+            // Assert
+            ValidationIssue issue = report.AllErrors.SingleOrDefault(
+                e => e.Message.Equals($"The hyd file with location {filePath} doesn't exist."));
+            Assert.That(issue, Is.Not.Null, "Validation issue was not found");
+            Assert.That(issue.Severity, Is.EqualTo(ValidationSeverity.Error),
+                        "Validation issue should have error severity.");
+            Assert.That(issue.ViewData.GetType(), Is.EqualTo(typeof(HydFileImporter)),
+                        $"View data of validation issue should be {typeof(HydFileImporter)}.");
+        }
+
+        private static WaterQualityModel GetStubbedWaterQualityModel(IHydroData hydroData)
+        {
+            var model = MockRepository.GenerateStub<WaterQualityModel>();
+            model.Stub(m => m.HydroData).Return(hydroData);
+            model.Stub(m => m.ModelSettings).Return(new WaterQualityModelSettings());
+            model.Stub(m => m.ObservationPoints).Return(new EventedList<WaterQualityObservationPoint>());
+            model.Stub(m => m.ObservationAreas).Return(new WaterQualityObservationAreaCoverage(new UnstructuredGrid()));
+            model.Stub(m => m.Loads).Return(new EventedList<WaterQualityLoad>());
+            model.Stub(m => m.ProcessCoefficients).Return(new EventedList<IFunction>());
+            return model;
         }
 
         [Test]
@@ -1151,10 +1188,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         private static WaterQualityModel CreateValidFractionsWaterQualityModel()
         {
             var waterQualityModel = new WaterQualityModel();
-            var mocks = new MockRepository();
-            var hydroData = mocks.Stub<IHydroData>();
+            var hydroData = MockRepository.GenerateStub<IHydroData>();
 
-            mocks.ReplayAll();
+            hydroData.Stub(d => d.FilePath).Return(TestHelper.GetTestFilePath(@"ValidWaqModels\\Flow1D\\sobek.hyd")).Repeat.Any();
 
             TypeUtils.SetPrivatePropertyValue(waterQualityModel, TypeUtils.GetMemberName(() => waterQualityModel.HydroData), hydroData);
 

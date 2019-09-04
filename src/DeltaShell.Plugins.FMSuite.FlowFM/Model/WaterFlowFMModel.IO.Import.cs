@@ -348,7 +348,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             foreach (ISpatiallyVaryingSedimentProperty spatiallyVaryingSedimentProperty in
                 spatiallyVaryingSedimentProperties)
             {
-                AddToIntialFractions(spatiallyVaryingSedimentProperty.SpatiallyVaryingName);
+                AddToInitialFractions(spatiallyVaryingSedimentProperty.SpatiallyVaryingName);
             }
         }
 

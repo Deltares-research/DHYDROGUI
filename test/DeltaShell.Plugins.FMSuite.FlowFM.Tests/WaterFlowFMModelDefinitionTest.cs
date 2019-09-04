@@ -6,8 +6,10 @@ using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
+using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
+using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.NetCdf;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
@@ -27,8 +29,11 @@ using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Geometries;
+using NetTopologySuite.Extensions.Grids;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
+using Rhino.Mocks;
+using SharpMap.Api.SpatialOperations;
 using SharpMap.Data.Providers;
 using SharpMap.Extensions.CoordinateSystems;
 using SharpMap.SpatialOperations;
@@ -1677,6 +1682,67 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             // Then
             Assert.AreEqual(expectedString, resultedString,
                 $"When the model definition does not contain the 'OutputDir' property, then the expected OutputDirectoryName is \"{expectedString}\", but it was \"{resultedString}\".");
+        }
+
+        [Test]
+        public void
+            SelectSpatialOperations_WithTwoDataItemsWithSameName_OneWithASpatialOperation_ThenOnlyThisOneIsTakenIntoAccountAndNoWarningIsGiven()
+        {
+            // Set-up
+            const string name = "tracer";
+            IDataItem dataItemWithoutConverter = CreateCoverageDataItem(name, false);
+            IDataItem dataItemWithConverter = CreateCoverageDataItem(name, true);
+
+            var modelDefinition = new WaterFlowFMModelDefinition();
+
+            // Pre-condition
+            Assert.That(modelDefinition.SpatialOperations, Is.Empty);
+
+            // Action
+            void TestAction()
+            {
+                modelDefinition.SelectSpatialOperations(
+                    new[] {dataItemWithConverter, dataItemWithoutConverter},
+                    new[] {name}
+                );
+            }
+
+            IEnumerable<string> renderedMessages = TestHelper.GetAllRenderedMessages(TestAction);
+            Assert.That(renderedMessages, Is.Empty);
+            Assert.That(modelDefinition.SpatialOperations, Has.Count.EqualTo(1));
+        }
+
+        private static IDataItem CreateCoverageDataItem(string name, bool withValueConverter)
+        {
+            var grid = new UnstructuredGrid
+            {
+                Cells = new List<Cell>
+                {
+                    new Cell(new int[] {})
+                }
+            };
+
+            var coverage = new UnstructuredGridCellCoverage(grid, false) {Name = name};
+            var dataItem = MockRepository.GenerateStub<IDataItem>();
+            dataItem.Value = coverage;
+            dataItem.Name = name;
+
+            if (withValueConverter)
+            {
+                dataItem.ValueConverter = GetStubbedValueConverter();
+            }
+
+            return dataItem;
+        }
+
+        private static SpatialOperationSetValueConverter GetStubbedValueConverter()
+        {
+            var operation = new SetValueOperation {OperationType = PointwiseOperationType.Overwrite};
+            var converter = MockRepository.GenerateStub<SpatialOperationSetValueConverter>();
+            var operationSet = MockRepository.GenerateStub<ISpatialOperationSet>();
+            operationSet.Operations = new EventedList<ISpatialOperation> {operation};
+            converter.Stub(c => c.SpatialOperationSet).Return(operationSet);
+            return converter;
         }
     }
 }

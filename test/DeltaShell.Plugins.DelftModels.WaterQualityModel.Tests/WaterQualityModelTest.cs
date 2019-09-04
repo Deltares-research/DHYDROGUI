@@ -437,7 +437,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         }
 
         [Test]
-        public void ClearOutput_WithTextDocumentFromFileOutputDataItem_ThenFileIsRemovedAndDataItemIsRemovedFromModel()
+        public void ClearOutput_WithTextDocumentFromFileOutputDataItem_ThenDataItemIsRemovedFromModel()
         {
             const string outputTextDocumentTag = "OutputTextDocument";
             using (var tempDirectory = new TemporaryDirectory())
@@ -462,52 +462,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                 waqModel.ClearOutput();
 
                 // Assert
-                Assert.That(File.Exists(filePath), Is.False);
+                Assert.That(File.Exists(filePath), Is.True);
                 Assert.That(waqModel.GetDataItemByTag(outputTextDocumentTag), Is.Null);
             }
         }
-
-        [Test]
-        public void ClearOutput_WithTextDocumentFromFileOutputDataItemAndCorrespondingFileLocked_ThenLogMessageIsReturned()
-        {
-            const string outputTextDocumentTag = "OutputTextDocument";
-            using (var tempDirectory = new TemporaryDirectory())
-            {
-                // Setup
-                string filePath = Path.Combine(tempDirectory.Path, "myTextFile.txt");
-                using (File.Create(filePath))
-                {
-                    var textDocumentFromFile = new TextDocumentFromFile
-                    {
-                        Name = "myTextDocument",
-                        Path = filePath
-                    };
-
-                    var waqModel = new WaterQualityModel();
-                    waqModel.DataItems.Add(new DataItem(textDocumentFromFile, DataItemRole.Output, outputTextDocumentTag));
-
-                    // Private field outputIsEmpty is set to false after a successful model run. This field should be false when clearing model output.
-                    // As we do not focus on model run, we use reflection to set this field and omit the model run.
-                    TypeUtils.SetField(waqModel, "outputIsEmpty", false);
-
-                    // Pre-condition
-                    Assert.That(FileUtils.IsFileLocked(filePath), Is.True);
-
-                    // Call
-                    void Call() => waqModel.ClearOutput();
-
-                    // Assert
-                    string expectedLogMessage = $@"Could not remove output item '{textDocumentFromFile.Name}', because of the following reason:" +
-                                                Environment.NewLine +
-                                                $@"The process cannot access the file '{filePath}' because it is being used by another process.";
-                    TestHelper.AssertLogMessageIsGenerated(Call, expectedLogMessage);
-
-                    Assert.That(File.Exists(filePath), Is.True);
-                    Assert.That(waqModel.GetDataItemByTag(outputTextDocumentTag), Is.Not.Null);
-                }
-            }
-        }
-
+        
         [Test]
         public void ClearOutput_WithUnstructuredGridCellCoverageOutputDataItem_ThenCoverageIsCleared()
         {

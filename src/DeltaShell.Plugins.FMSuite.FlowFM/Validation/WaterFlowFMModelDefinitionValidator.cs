@@ -11,6 +11,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 {
     public static class WaterFlowFMModelDefinitionValidator
     {
+        private const string PhysicalParametersTabName = "Physical Parameters";
+
         public static ValidationReport Validate(WaterFlowFMModel model)
         {
             WaterFlowFMModelDefinition modelDefinition = model.ModelDefinition;
@@ -57,7 +59,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                         {
                             var validationShortcut = new FmValidationShortcut{
                                 FlowFmModel = model,
-                                TabName = "Processes"
+                                TabName = PhysicalParametersTabName
                             };
                             issues.Add(new ValidationIssue(
                                            model, 

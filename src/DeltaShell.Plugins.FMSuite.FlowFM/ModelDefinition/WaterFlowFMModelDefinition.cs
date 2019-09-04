@@ -714,7 +714,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             HeatFluxModel.Type = (HeatFluxModelType) (int) GetModelProperty(KnownProperties.Temperature).Value;
         }
 
-        public void SelectSpatialOperations(IEventedList<IDataItem> dataItems, IEnumerable<string> tracerDefinitions,
+        public void SelectSpatialOperations(IEnumerable<IDataItem> dataItems, IEnumerable<string> tracerDefinitions,
                                             IEnumerable<string> spatiallyVaryingSedimentDefinitions = null)
         {
             InitialTracerNames.Clear();
@@ -732,13 +732,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             IEnumerable<string> combinedSpatialDataItemNames = SpatialDataItemNames
                                                                .Concat(InitialTracerNames)
                                                                .Concat(InitialSpatiallyVaryingSedimentPropertyNames);
+
             IDataItem[] dataItemsFound = combinedSpatialDataItemNames
-                                         .SelectMany(n => dataItems.Where(di => di.Name.StartsWith(n))).ToArray();
-            List<IDataItem> dataItemsWithConverter = dataItemsFound
-                                                     .Where(d => d.ValueConverter is SpatialOperationSetValueConverter)
-                                                     .Distinct().ToList();
-            List<IDataItem> dataItemsWithOutConverter =
-                dataItemsFound.Except(dataItemsWithConverter).Distinct().ToList();
+                                         .SelectMany(n => dataItems.Where(di => di.Name.StartsWith(n)))
+                                         .Distinct().ToArray();
+
+            IDataItem[] dataItemsWithConverter = dataItemsFound
+                                                 .Where(d => d.ValueConverter is SpatialOperationSetValueConverter)
+                                                 .ToArray();
+
+            IEnumerable<string> dataItemWithConverterNames = dataItemsWithConverter.Select(di => di.Name);
+            IDataItem[] dataItemsWithOutConverter = dataItemsFound.Except(dataItemsWithConverter)
+                                                                  .Where(di => !dataItemWithConverterNames.Contains(di.Name))
+                                                                  .ToArray();
 
             foreach (IDataItem dataItem in dataItemsWithConverter)
             {
