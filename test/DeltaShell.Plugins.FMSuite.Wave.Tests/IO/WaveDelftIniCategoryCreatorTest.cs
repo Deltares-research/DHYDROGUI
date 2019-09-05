@@ -308,25 +308,21 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             DelftIniCategory category = WaveDelftIniCategoryCreator.CreateBoundaryConditionCategory(waveBoundaryCondition);
 
             // Then
-            DelftIniProperty[] heightProperties = category.Properties.Where(p => p.Name == KnownWaveProperties.WaveHeight).ToArray();
-            Assert.That(heightProperties.Length, Is.EqualTo(2));
-            Assert.That(heightProperties.First().Value, Is.EqualTo(GetStringValue(height0)));
-            Assert.That(heightProperties.Last().Value, Is.EqualTo(GetStringValue(height1)));
+            AssertPropertyValues(category, KnownWaveProperties.WaveHeight, height0, height1);
+            AssertPropertyValues(category, KnownWaveProperties.Period, period0, period1);
+            AssertPropertyValues(category, KnownWaveProperties.Direction, direction0, direction1);
+            AssertPropertyValues(category, KnownWaveProperties.DirectionalSpreadingValue, spreading0, spreading1);
+        }
 
-            DelftIniProperty[] periodProperties = category.Properties.Where(p => p.Name == KnownWaveProperties.Period).ToArray();
-            Assert.That(periodProperties.Length, Is.EqualTo(2));
-            Assert.That(periodProperties.First().Value, Is.EqualTo(GetStringValue(period0)));
-            Assert.That(periodProperties.Last().Value, Is.EqualTo(GetStringValue(period1)));
+        private static void AssertPropertyValues(IDelftIniCategory category, string propertyName, double firstValue, double secondValue)
+        {
+            DelftIniProperty[] properties = category.Properties
+                                                    .Where(p => p.Name == propertyName)
+                                                    .ToArray();
 
-            DelftIniProperty[] directionProperties = category.Properties.Where(p => p.Name == KnownWaveProperties.Direction).ToArray();
-            Assert.That(directionProperties.Length, Is.EqualTo(2));
-            Assert.That(directionProperties.First().Value, Is.EqualTo(GetStringValue(direction0)));
-            Assert.That(directionProperties.Last().Value, Is.EqualTo(GetStringValue(direction1)));
-
-            DelftIniProperty[] spreadingProperties = category.Properties.Where(p => p.Name == KnownWaveProperties.DirectionalSpreadingValue).ToArray();
-            Assert.That(spreadingProperties.Length, Is.EqualTo(2));
-            Assert.That(spreadingProperties.First().Value, Is.EqualTo(GetStringValue(spreading0)));
-            Assert.That(spreadingProperties.Last().Value, Is.EqualTo(GetStringValue(spreading1)));
+            Assert.That(properties.Length, Is.EqualTo(2));
+            Assert.That(properties.First().Value, Is.EqualTo(GetStringValue(firstValue)));
+            Assert.That(properties.Last().Value, Is.EqualTo(GetStringValue(secondValue)));
         }
 
         private WaveBoundaryCondition GetWaveBoundaryCondition(BoundaryConditionDataType dataType)
