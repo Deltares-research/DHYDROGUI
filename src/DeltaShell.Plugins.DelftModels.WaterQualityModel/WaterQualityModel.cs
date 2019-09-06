@@ -828,14 +828,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                     return;
                 }
 
-                string existingGridCoordinateSystemString = Grid.CoordinateSystem == null
-                                                                ? string.Empty
-                                                                : Grid.CoordinateSystem.PROJ4;
-
-                string newCoordinateSystemString = value == null
-                                                       ? string.Empty
-                                                       : value.PROJ4;
-
+                string existingGridCoordinateSystemString = GetProj4CoordinateSystemString(Grid.CoordinateSystem);
+                string newCoordinateSystemString = GetProj4CoordinateSystemString(value);
                 if (existingGridCoordinateSystemString == newCoordinateSystemString)
                 {
                     return;
@@ -1065,6 +1059,34 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             }
 
             return mapper;
+        }
+
+        /// <summary>
+        /// Gets the PROJ4 string representation of the coordinate system.
+        /// </summary>
+        /// <param name="coordinateSystem">The <see cref="ICoordinateSystem"/> to retrieve the string
+        /// representation for.</param>
+        /// <returns>A PROJ4 string representation, or an empty string when:
+        /// <list type="bullet">
+        /// <item><paramref name="coordinateSystem"/> is <c>null</c>.</item>
+        /// <item>No PROJ4 transformation is available.</item>
+        /// </list>
+        /// </returns>
+        private static string GetProj4CoordinateSystemString(ICoordinateSystem coordinateSystem)
+        {
+            if (coordinateSystem == null)
+            {
+                return string.Empty;
+            }
+
+            try
+            {
+                return coordinateSystem.PROJ4;
+            }
+            catch (Exception)
+            {
+                return string.Empty;
+            }
         }
 
         /// <summary>
