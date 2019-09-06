@@ -286,7 +286,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 AfterCreate = (v, o) =>
                 {
                     v.Model = FlowModels.FirstOrDefault(m => m.SourcesAndSinks.Contains(o));
-                    tableViewTimeSeriesGeneratorTool.ConfigureTableView(v.FunctionView.TableView);
+                    var tableViewGenerator = new TableViewTimeSeriesGeneratorTool
+                    {
+                        GetStartTime = GetModelStartTime,
+                        GetStopTime = GetModelStopTime,
+                        GetTimeStep = () => new TimeSpan(0, 12, 0, 0)
+                    };
+                    tableViewGenerator.ConfigureTableView(v.FunctionView.TableView);
                 }
             };
             yield return sourceAndSinkViewInfo;
