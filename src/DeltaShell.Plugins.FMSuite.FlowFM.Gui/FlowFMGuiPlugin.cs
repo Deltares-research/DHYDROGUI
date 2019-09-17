@@ -221,7 +221,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     var model = FlowModels.FirstOrDefault(m => m.BoundaryConditionSets.Contains(o));
                     if (model == null) return;
 
-                    v.BoundaryConditionFactory = new FlowBoundaryConditionFactory()
+                    // Retrieve the current selected boundary condition. As soon as the controller is set, 
+                    // the selected category from the previous screen defaults back to the first entry of 
+                    // the FlowBoundaryQuantityType.
+                    string currentSelectedCategory = v.SelectedCategory;
+                    
+                    v.BoundaryConditionFactory = new FlowBoundaryConditionFactory
                     {
                         Model = model
                     };
@@ -235,10 +240,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                         Controller = controller
                     };
                     v.ShowSupportPointNames = true;
-                    var condition = o.BoundaryConditions.FirstOrDefault();
-                    if(condition == null) return;
-                    v.SelectedCategory = condition.ProcessName;
-                    v.SelectedBoundaryCondition = condition;
+
+                    IBoundaryCondition boundaryConditionToSelect;
+                    if (!string.IsNullOrEmpty(currentSelectedCategory))
+                    {
+                        boundaryConditionToSelect = o.BoundaryConditions.FirstOrDefault(
+                            bc => string.Equals(bc.ProcessName, currentSelectedCategory));
+                    }
+                    else
+                    {
+                        boundaryConditionToSelect = o.BoundaryConditions.FirstOrDefault();
+                    }
+                    
+                    // This can occur when the BoundaryConditionSet does not contain a 
+                    // boundary condition with an earlier selected name. Setting the 
+                    // selected category to the initial selected category will force the 
+                    // old window to retain the current selection. 
+                    v.SelectedCategory = boundaryConditionToSelect == null
+                        ? currentSelectedCategory
+                        :boundaryConditionToSelect.ProcessName;
+                    v.SelectedBoundaryCondition = boundaryConditionToSelect;
                 },
                 CloseForData = (v, bcs) => Equals(v.Data, bcs)
             };
