@@ -7,11 +7,12 @@ using DeltaShell.Plugins.DelftModels.WaterQualityModel.Model;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 {
-    public class DataTableImporter :  IFileImporter
+    public class DataTableBoundaryImporter : DataTableImporter, IFileImporter
     {
-        public string Name => "Data table importer";
+        public string FilePath { get; set; }
+        public virtual string Name => "Data table boundary importer";
 
-        public string Category => "WAQ data tables";
+        public virtual string Category => "WAQ data tables";
 
         public string Description => string.Empty;
 
@@ -25,11 +26,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             }
         }
 
-        public bool CanImportOn(object targetObject)
-        {
-            return true;
-        }
-
         public bool CanImportOnRootLevel => false;
 
         public string FileFilter => "WAQ data table (*.csv)|*.csv";
@@ -38,13 +34,23 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 
         public bool ShouldCancel { get; set; }
 
-        public string FilePath { get; set; }
-
         public ImportProgressChangedDelegate ProgressChanged { get; set; }
 
         public bool OpenViewAfterImport => false;
 
-        public object ImportItem(string path, object target = null)
+        public virtual bool CanImportOn(object targetObject)
+        {
+            var dataTableManager = targetObject as DataTableManager;
+
+            if (dataTableManager != null)
+            {
+                return dataTableManager.Name == "Boundary Data";
+            }
+
+            return false;
+        }
+
+        public virtual object ImportItem(string path, object target = null)
         {
             var targetManager = target as DataTableManager;
 

@@ -77,6 +77,8 @@
     <Compile Include="DataObjects\Model\MonitoringOutputLevel.cs" />
     <Compile Include="DataObjects\NameablePointFeature.cs" />
     <Compile Include="DataObjects\SubstanceProcessLibrary\WaterQualityParameter.cs" />
+    <Compile Include="IO\DataTableImporter.cs" />
+    <Compile Include="IO\DataTableLoadsImporter.cs" />
     <Compile Include="IO\DelwaqNetCdfHistoryFileReader.cs" />
     <Compile Include="IO\DelwaqNetCdfMapFileReader.cs" />
     <Compile Include="IO\FileConstants.cs" />
@@ -102,7 +104,7 @@
     <Compile Include="IO\AttributesFileReader.cs" />
     <Compile Include="IO\DataTableCsvFileReader.cs" />
     <Compile Include="IO\DataTableCsvContents.cs" />
-    <Compile Include="IO\DataTableImporter.cs" />
+    <Compile Include="IO\DataTableBoundaryImporter.cs" />
     <Compile Include="IO\DataTableInterpolationType.cs" />
     <Compile Include="IO\HydFileElement\SchematizationElement.cs" />
     <Compile Include="IO\HydFileImporter.cs" />

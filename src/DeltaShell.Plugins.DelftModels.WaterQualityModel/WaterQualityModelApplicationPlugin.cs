@@ -62,7 +62,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             yield return new HydFileImporter();
             yield return new LoadsImporter();
             yield return new ObservationPointImporter();
-            yield return new DataTableImporter();
+            yield return new DataTableBoundaryImporter();
+            yield return new DataTableLoadsImporter();
             yield return new WaterQualityObservationAreaImporter();
         }
 
