@@ -230,9 +230,7 @@
                 <TextBlock 
                     Text="{Binding Label}" 
                     Style="{StaticResource LabelTextBlockStyle}"/>
-                <controls:TimeSpanView 
-                    Grid.Column="1" 
-                    CurrentTimeSpan="{Binding Value}"/>
+                <controls:TimeSpanView Grid.Column="1" CurrentTimeSpan="{Binding Value}"/>
             </Grid>
         </DataTemplate>
 
