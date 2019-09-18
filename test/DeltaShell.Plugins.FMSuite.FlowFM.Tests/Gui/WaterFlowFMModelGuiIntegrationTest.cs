@@ -876,7 +876,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     Assert.That(activeView, Is.TypeOf<BoundaryConditionEditor>(), $"Associated view with a {typeof(BoundaryConditionSet)} must be of type {typeof(BoundaryConditionEditor)}");
 
                     var editor = (BoundaryConditionEditor) activeView;
-
                     Assert.That(editor.SelectedCategory, Is.Null, "First initialization with an empty set must be NULL");
                     Assert.That(editor.Data, Is.SameAs(boundaryConditionSet), "Data on the editor must have the same reference for which it was opened for");
 
@@ -933,7 +932,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     Assert.That(activeView, Is.TypeOf<BoundaryConditionEditor>(), $"Associated view with a {typeof(BoundaryConditionSet)} must be of type {typeof(BoundaryConditionEditor)}");
 
                     var editor = (BoundaryConditionEditor)activeView;
-
                     Assert.That(editor.SelectedCategory, Is.EqualTo("Salinity"), "First initialization with a non-empty set must select the first boundary condition in the set");
                     Assert.That(editor.Data, Is.SameAs(boundaryConditionSet), "Data on the editor must have the same reference for which it was opened for");
 
@@ -976,7 +974,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     Assert.That(activeView, Is.TypeOf<BoundaryConditionEditor>(), $"Associated view with a {typeof(BoundaryConditionSet)} must be of type {typeof(BoundaryConditionEditor)}");
 
                     var editor = (BoundaryConditionEditor)activeView;
-
                     Assert.That(editor.SelectedCategory, Is.EqualTo("Salinity"), "Second initialization of the editor with a non-empty set must select the same category as was selected by the first initialization");
                     Assert.That(editor.Data, Is.SameAs(boundaryConditionSetTwo), "Data on the editor must have the same reference for which it was opened for");
                 };

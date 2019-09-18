@@ -218,8 +218,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 Description = "Boundary Data Editor",
                 AfterCreate = (v, o) =>
                 {
-                    var model = FlowModels.FirstOrDefault(m => m.BoundaryConditionSets.Contains(o));
-                    if (model == null) return;
+                    WaterFlowFMModel model = FlowModels.FirstOrDefault(m => m.BoundaryConditionSets.Contains(o));
+                    if (model == null)
+                    {
+                        return;
+                    }
 
                     // Retrieve the current selected boundary condition. As soon as the controller is set, 
                     // the selected category from the previous screen defaults back to the first entry of 
@@ -230,6 +233,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     {
                         Model = model
                     };
+
                     var controller = new FlowBoundaryConditionEditorController
                     {
                         Model = model
@@ -239,6 +243,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     {
                         Controller = controller
                     };
+
                     v.ShowSupportPointNames = true;
 
                     IBoundaryCondition boundaryConditionToSelect;
