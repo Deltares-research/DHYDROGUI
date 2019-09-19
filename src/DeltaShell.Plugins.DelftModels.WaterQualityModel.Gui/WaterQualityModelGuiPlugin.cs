@@ -400,30 +400,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
                 },
             };
             
-            yield return new ViewInfo<DataTableBoundaryImporter, BoundaryDataWizard> 
+            yield return new ViewInfo<BoundaryDataTableImporter, BoundaryDataWizard> 
             {
                 Description = "Boundary Data Wizard Dialog",
-                AdditionalDataCheck = importer => importer != null,
-                AfterCreate = (v, o) =>
-                {
-                    if (Gui.SelectedModel is WaterQualityModel)
-                    {
-                        v.WaterQualityModel = Gui.SelectedModel as WaterQualityModel;
-                    }
-                },
+                AdditionalDataCheck = importer => importer != null
             };
            
-            yield return new ViewInfo<DataTableLoadsImporter, LoadsDataWizard>
+            yield return new ViewInfo<LoadsDataTableImporter, LoadsDataWizard>
             {
                 Description = "Loads Data Wizard Dialog",
-                AdditionalDataCheck = importer => importer != null,
-                AfterCreate = (v, o) =>
-                {
-                    if (Gui.SelectedModel is WaterQualityModel)
-                    {
-                        v.WaterQualityModel = Gui.SelectedModel as WaterQualityModel;
-                    }
-                },
+                AdditionalDataCheck = importer => importer != null
             };
             
             yield return new ViewInfo<WaterQualityModel, ValidationView>

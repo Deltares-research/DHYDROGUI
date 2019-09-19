@@ -131,7 +131,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Press Finish to import your boundaries and processes configuration file..
+        ///   Looks up a localized string similar to Press Finish to import your boundary data file..
         /// </summary>
         internal static string BoundaryDataWizard_Finished_message {
             get {
@@ -357,7 +357,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Press Finish to import your loads and processes configuration file..
+        ///   Looks up a localized string similar to Press Finish to import your loads data file..
         /// </summary>
         internal static string LoadsDataWizard_Finished_message {
             get {
@@ -366,7 +366,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Import a laods data file (in CSV format).
+        ///   Looks up a localized string similar to Import a loads data file (in CSV format).
         /// </summary>
         internal static string LoadsDataWizard_Title {
             get {

@@ -25,7 +25,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             }
         }
 
-        public bool CanImportOn(object targetObject)
+        public virtual bool CanImportOn(object targetObject)
         {
             return true;
         }

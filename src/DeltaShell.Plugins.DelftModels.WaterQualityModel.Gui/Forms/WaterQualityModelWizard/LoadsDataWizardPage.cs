@@ -17,14 +17,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.WaterQualit
 {
     public partial class LoadsDataWizardPage : UserControl, IWizardPage
     {
-        public LoadsDataWizardPage(string dataDirectory = null)
+        public LoadsDataWizardPage()
         {
             InitializeComponent();
-      
-            if (dataDirectory == null)
-            {
-                dataDirectory = DelwaqFileStructureHelper.GetDelwaqDataFolderPath();
-            }
         }
 
         public bool CanDoNext()
@@ -44,23 +39,25 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.WaterQualit
 
         private void SetText(string text)
         {
-            textBox1.Text = text;
+            previewTextBox.Text = text;
         }
 
-        private void Button1_Click(object sender, EventArgs e)
+        private void OpenCsvButton_Click(object sender, EventArgs e)
         {
             if (openCsvFileDialog.ShowDialog() == DialogResult.OK)
             {
                 try
                 {
-                    var sr = new StreamReader(openCsvFileDialog.FileName);
-                    SetText(sr.ReadToEnd());
+                    using (var reader = new StreamReader(openCsvFileDialog.FileName))
+                    {
+                        SetText(reader.ReadToEnd());
 
-                    csvLoadsPath = openCsvFileDialog.FileName;
+                        CsvLoadsPath = openCsvFileDialog.FileName;
+                    }
                 }
-                catch (SecurityException ex)
+                catch (IOException ex)
                 {
-                    MessageBox.Show($"Security error.\n\nError message: {ex.Message}\n\n" +
+                    MessageBox.Show($"IO exception.\n\nError message: {ex.Message}\n\n" +
                                     $"Details:\n\n{ex.StackTrace}");
                 }
             }
@@ -68,12 +65,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.WaterQualit
 
         /// <summary>
         /// Gets the selected file path to read from.
-        /// </summary>
-        public string csvLoadsPath { get; private set; }
-        
-        private void Label1_Click(object sender, EventArgs e)
-        {
-
-        }
+        /// </summary>W
+        public string CsvLoadsPath { get; private set; }
     }
 }

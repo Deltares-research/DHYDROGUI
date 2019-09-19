@@ -32,7 +32,7 @@
             this.importBoundaryDataFile = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.previewTextBox = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -52,7 +52,7 @@
             this.importBoundaryDataFile.TabIndex = 0;
             this.importBoundaryDataFile.Text = "Open File";
             this.importBoundaryDataFile.UseVisualStyleBackColor = true;
-            this.importBoundaryDataFile.Click += new System.EventHandler(this.Button1_Click);
+            this.importBoundaryDataFile.Click += new System.EventHandler(this.OpenCsvButton_Click);
             // 
             // label1
             // 
@@ -73,24 +73,22 @@
             // 
             this.splitContainer1.Panel1.Controls.Add(this.label1);
             this.splitContainer1.Panel1.Controls.Add(this.importBoundaryDataFile);
-            this.splitContainer1.Panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.SplitContainer1_Panel1_Paint);
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.textBox1);
+            this.splitContainer1.Panel2.Controls.Add(this.previewTextBox);
             this.splitContainer1.Size = new System.Drawing.Size(759, 384);
             this.splitContainer1.SplitterDistance = 253;
             this.splitContainer1.TabIndex = 3;
             // 
-            // textBox1
+            // previewTextBox
             // 
-            this.textBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBox1.Location = new System.Drawing.Point(0, 0);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(502, 384);
-            this.textBox1.TabIndex = 0;
-            this.textBox1.TextChanged += new System.EventHandler(this.TextBox1_TextChanged);
+            this.previewTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.previewTextBox.Location = new System.Drawing.Point(0, 0);
+            this.previewTextBox.Multiline = true;
+            this.previewTextBox.Name = "previewTextBox";
+            this.previewTextBox.Size = new System.Drawing.Size(502, 384);
+            this.previewTextBox.TabIndex = 0;
             // 
             // BoundaryDataWizardPage
             // 
@@ -115,6 +113,6 @@
         private System.Windows.Forms.Button importBoundaryDataFile;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.SplitContainer splitContainer1;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox previewTextBox;
     }
 }

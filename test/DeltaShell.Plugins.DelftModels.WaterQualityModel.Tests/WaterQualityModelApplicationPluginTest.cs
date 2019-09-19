@@ -74,8 +74,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             Assert.IsTrue(importers.Any(i => i is HydFileImporter));
             Assert.IsTrue(importers.Any(i => i is LoadsImporter));
             Assert.IsTrue(importers.Any(i => i is ObservationPointImporter));
-            Assert.IsTrue(importers.Any(i => i is DataTableBoundaryImporter));
-            Assert.IsTrue(importers.Any(i => i is DataTableLoadsImporter));
+            Assert.IsTrue(importers.Any(i => i is BoundaryDataTableImporter));
+            Assert.IsTrue(importers.Any(i => i is LoadsDataTableImporter));
             Assert.IsTrue(importers.Any(i => i is WaterQualityObservationAreaImporter));
         }
 

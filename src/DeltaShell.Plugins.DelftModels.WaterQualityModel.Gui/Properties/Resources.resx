@@ -377,7 +377,7 @@
     <value>Hyd file is not present at '{0}'.</value>
   </data>
   <data name="BoundaryDataWizard_Finished_message" xml:space="preserve">
-    <value>Press Finish to import your boundaries and processes configuration file.</value>
+    <value>Press Finish to import your boundary data file.</value>
   </data>
   <data name="BoundaryDataWizard_Title" xml:space="preserve">
     <value>Import a boundary data file (in CSV format)</value>
@@ -392,10 +392,10 @@
     <value>Select csv file with laods data</value>
   </data>
   <data name="LoadsDataWizard_Finished_message" xml:space="preserve">
-    <value>Press Finish to import your loads and processes configuration file.</value>
+    <value>Press Finish to import your loads data file.</value>
   </data>
   <data name="LoadsDataWizard_Title" xml:space="preserve">
-    <value>Import a laods data file (in CSV format)</value>
+    <value>Import a loads data file (in CSV format)</value>
   </data>
   <data name="LoadsDataWizard_Welcome_message" xml:space="preserve">
     <value>This wizard will import a Loads File.</value>

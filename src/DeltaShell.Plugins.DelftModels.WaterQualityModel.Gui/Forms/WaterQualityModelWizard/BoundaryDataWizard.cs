@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DelftTools.Controls.Swf;
+﻿using DelftTools.Controls.Swf;
 using DelftTools.Shell.Gui;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Properties;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
@@ -12,7 +7,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.WaterQualit
 {
     class BoundaryDataWizard: WizardDialog, IConfigureDialog
     {
-        private DataTableBoundaryImporter boundaryDataItemFileImporter;
+        private BoundaryDataTableImporter boundaryDataItemFileImporter;
         private readonly BoundaryDataWizardPage boundaryDataWizardPage;
 
         public BoundaryDataWizard()
@@ -29,12 +24,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.WaterQualit
 
         public void Configure(object targetItemFileImporter)
         {
-            boundaryDataItemFileImporter = (DataTableBoundaryImporter)targetItemFileImporter;
-            boundaryDataItemFileImporter.FilePath = boundaryDataWizardPage.csvBoundaryPath;
-            boundaryDataItemFileImporter.ImportItem(boundaryDataWizardPage.csvBoundaryPath,
-                                                    WaterQualityModel.BoundaryDataManager);
+            boundaryDataItemFileImporter = (BoundaryDataTableImporter)targetItemFileImporter;
+            boundaryDataItemFileImporter.FilePath = boundaryDataWizardPage.CsvBoundaryPath;
         }
-
-        public WaterQualityModel WaterQualityModel { get; set; }
     }
 }
