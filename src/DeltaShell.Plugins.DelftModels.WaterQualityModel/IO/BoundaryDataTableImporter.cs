@@ -4,7 +4,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 {
     public class BoundaryDataTableImporter : DataTableImporter
     {
-        public string Name => "Data table boundary importer";
+        public override string Name => "Data table boundary importer";
 
         public override bool CanImportOn(object targetObject)
         {

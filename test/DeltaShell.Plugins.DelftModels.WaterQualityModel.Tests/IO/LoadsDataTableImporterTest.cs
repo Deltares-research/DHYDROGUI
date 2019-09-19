@@ -1,10 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using DelftTools.Shell.Core;
-using DelftTools.TestUtils;
-using DelftTools.Utils.IO;
-using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.BoundaryData;
+﻿using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.BoundaryData;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
 using NUnit.Framework;
 
@@ -22,8 +16,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             Assert.AreEqual("Data table loads importer", importer.Name);
             Assert.AreEqual("WAQ data tables", importer.Category);
             Assert.IsNull(importer.Image);
-            var supportedTypes = importer.SupportedItemTypes;
-            Assert.AreEqual(1, supportedTypes.Count());
             CollectionAssert.AreEqual(new[]
             {
                 typeof(DataTableManager)
@@ -34,6 +26,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             Assert.IsFalse(importer.ShouldCancel);
             Assert.IsNull(importer.ProgressChanged);
             Assert.IsFalse(importer.OpenViewAfterImport);
+            Assert.IsNull(importer.FilePath);
         }
 
         [Test]
@@ -79,16 +72,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
 
             // Assert
             Assert.That(result, Is.True);
-        }
-        
-        [Test]
-        public void FilePathNullWhenInstantiatingDataTableBoundaryImporter()
-        {
-            // setup
-            var importer = new LoadsDataTableImporter();
-
-            // assert
-            Assert.IsNull(importer.FilePath);
         }
     }
 }

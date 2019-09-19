@@ -25,23 +25,25 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             Assert.AreEqual("Data table importer", importer.Name);
             Assert.AreEqual("WAQ data tables", importer.Category);
             Assert.IsNull(importer.Image);
-            var supportedTypes = importer.SupportedItemTypes.ToArray();
-            Assert.AreEqual(1, supportedTypes.Length);
-            CollectionAssert.Contains(supportedTypes, typeof(DataTableManager));
+            
+            CollectionAssert.AreEqual(new[]
+            {
+                typeof(DataTableManager)
+            }, importer.SupportedItemTypes);
             Assert.IsFalse(importer.CanImportOnRootLevel);
             Assert.AreEqual("WAQ data table (*.csv)|*.csv", importer.FileFilter);
             Assert.IsNull(importer.TargetDataDirectory);
             Assert.IsFalse(importer.ShouldCancel);
             Assert.IsNull(importer.ProgressChanged);
             Assert.IsFalse(importer.OpenViewAfterImport);
+            Assert.IsNull(importer.FilePath);
         }
 
         [Test]
         public void ImportItem_TargetNotDataTableInstance_ThrowNotSupportedException()
         {
             // setup
-            var path =
-                TestHelper.GetTestFilePath(Path.Combine("IO", "DataTables", "timeBlock.csv"));
+            string path = TestHelper.GetTestFilePath(Path.Combine("IO", "DataTables", "timeBlock.csv"));
             var importer = new DataTableImporter();
 
             // call
@@ -158,16 +160,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             {
                 FileUtils.DeleteIfExists(folderPath);
             }
-        }
-
-        [Test]
-        public void FilePathNullWhenInstantiatingDataTableImporter()
-        {
-            // setup
-            var importer = new DataTableImporter();
-
-            // assert
-            Assert.IsNull(importer.FilePath); // TODO check the test to perform
         }
     }
 }
