@@ -6,14 +6,19 @@ from Libraries.Conversions import ConvertToDotNetTimeSpan
 from Libraries.WaterQualityModel2D3DFunctions import *
 from Libraries.SpatialOperations import *
 from datetime import time
+import os.path
 from DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model import *
 
 """ moving observation point example
     this example assumes that there is a waq model (SF) present with an observation point (MOVING_Boat)
     the example shows how you can transform a shape file into a function by changing coordinates into waq cell indices."""
 
+__hyd_file_path = "P:\\dflowfmgui\\WAQ\\Examples hyd-file and doc\\FM_SFBay_Small\\uni3d.hyd"
+__boat_shape_file_path = "D:\\waq_moving_boat\\movement.shp"
+__boat_shape_file_exists = os.path.isfile(__boat_shape_file_path)
+
 # create a model from a hyd file
-waqModel = CreateWaterQualityModelFromHydFile("P:\\dflowfmgui\\WAQ\\Examples hyd-file and doc\\FM_SFBay_Small\\uni3d.hyd")
+waqModel = CreateWaterQualityModelFromHydFile(__hyd_file_path)
 waqModel.Name = "SF"
 Application.Project.RootFolder.Add(waqModel)
 
@@ -38,15 +43,16 @@ view.MapView.Map.CoordinateSystem = CreateCoordinateSystem(3857) # EPSG code => 
 backgroundLayer = CreateSatelliteImageLayer()
 view.MapView.Map.Layers.Add(backgroundLayer)
 
-# create a layer for the shape file and add it to the map as well
-# import a shape file with the trajectory of the boat
-# the shape file contains a polyline in the San Fransisco bay
-coordinateSystem = GetShapeFileCoordinateSystem("D:\\waq_moving_boat\\movement.shp")
-features = GetShapeFileFeatures("D:\\waq_moving_boat\\movement.shp")
-lineLayer = CreateLayerForFeatures("movement", features, coordinateSystem)
-lineLayer.Style.Line.Color = Color.Yellow
-view.MapView.Map.Layers.Add(lineLayer)
-view.MapView.Map.BringToFront(lineLayer)
+if __boat_shape_file_exists:
+    # create a layer for the shape file and add it to the map as well
+    # import a shape file with the trajectory of the boat
+    # the shape file contains a polyline in the San Fransisco bay
+    coordinateSystem = GetShapeFileCoordinateSystem(__boat_shape_file_path)
+    features = GetShapeFileFeatures(__boat_shape_file_path)
+    lineLayer = CreateLayerForFeatures("movement", features, coordinateSystem)
+    lineLayer.Style.Line.Color = Color.Yellow
+    view.MapView.Map.Layers.Add(lineLayer)
+    view.MapView.Map.BringToFront(lineLayer)
 
 # Set up initial conditions for CBOD5 and OXY
 # 1. change initial conditions type of CBOD5 to a coverage
@@ -62,22 +68,24 @@ SetDefaultValue(waqModel, InputType.InitialConditions, "OXY", VariableType.Const
 # save the project so there is an explicit working directory
 Application.SaveProjectAs("D:\\waq_moving_boat\\project\\theproject.dsproj")
 
-# transform the geometry to work with
-movementLine = features[0].Geometry # get that one polyline in the feature
-transformedLine = TransformGeometryByCoordinateSystems(movementLine, coordinateSystem, waqModel.CoordinateSystem)
-
-# make a list of cell indices that correspond to the shape file
-cellIndices = []
-for coordinate in transformedLine.Coordinates:
-    cellIndices.append(GetWaqCellIndex(waqModel, coordinate, boat.Z))
-
 # make a list of time steps
 timesteps = []
-refTime = waqModel.StartTime
-# add a timestep for each coordinate through time
-for i in range(0, transformedLine.Coordinates.Count):
-    timesteps.append(refTime)
-    refTime = refTime.Add(waqModel.TimeStep)
+# make a list of cell indices that correspond to the shape file
+cellIndices = []
+
+if __boat_shape_file_exists:
+    # transform the geometry to work with
+    movementLine = features[0].Geometry # get that one polyline in the feature
+    transformedLine = TransformGeometryByCoordinateSystems(movementLine, coordinateSystem, waqModel.CoordinateSystem)
+
+    for coordinate in transformedLine.Coordinates:
+        cellIndices.append(GetWaqCellIndex(waqModel, coordinate, boat.Z))
+
+    refTime = waqModel.StartTime
+    # add a timestep for each coordinate through time
+    for i in range(0, transformedLine.Coordinates.Count):
+        timesteps.append(refTime)
+        refTime = refTime.Add(waqModel.TimeStep)
     
 # create a file and write the delwaq time steps
 dir = waqModel.ExplicitWorkingDirectory + "\\scripting\\"
@@ -120,8 +128,9 @@ waqModel.ModelSettings.MonitoringOutputLevel = MonitoringOutputLevel.Points
 # Increase RcBOD, decay rate BOD (first pool) at 20 oC
 SetDefaultValue(waqModel, InputType.ProcessCoefficient, "RcBOD", VariableType.Constant,  5.0)
 
-# now run the model!
-RunModel(waqModel, True)
+if __boat_shape_file_exists:
+	# now run the model!
+	RunModel(waqModel, True)
 
 # Show results in moving observation point
 movingObsPointOutput = GetItemByName(waqModel.ObservationVariableOutputs, "MOVING_Boat")

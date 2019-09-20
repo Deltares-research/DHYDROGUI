@@ -286,7 +286,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 AfterCreate = (v, o) =>
                 {
                     v.Model = FlowModels.FirstOrDefault(m => m.SourcesAndSinks.Contains(o));
-                    tableViewTimeSeriesGeneratorTool.ConfigureTableView(v.FunctionView.TableView);
+                    var tableViewGenerator = new TableViewTimeSeriesGeneratorTool
+                    {
+                        GetStartTime = GetModelStartTime,
+                        GetStopTime = GetModelStopTime,
+                        GetTimeStep = () => new TimeSpan(0, 12, 0, 0)
+                    };
+                    tableViewGenerator.ConfigureTableView(v.FunctionView.TableView);
                 }
             };
             yield return sourceAndSinkViewInfo;
@@ -810,21 +816,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         private void CloseAllRelatedMultipleFunctionViews(IEnumerable<WaterFlowFMModel> fmModels)
         {
             if (fmModels == null)
+            {
                 return;
+            }
 
             MultipleFunctionView[] fmViews = Gui?.DocumentViews?.OfType<MultipleFunctionView>().ToArray();
             if (fmViews == null || !fmViews.Any())
+            {
                 return;
+            }
 
-            string[][] dataItemNames = fmModels
-                                       .SelectMany(
-                                           fm => fm.OutputHisFileStore.Functions.OfType<FileBasedFeatureCoverage>()
-                                                   .Select(
-                                                       fc => new []
-                                                       {
-                                                           fc.Name,
-                                                           fc.Features.OfType<INameable>().FirstOrDefault()?.Name
-                                                       })).ToArray();
+            string[][] dataItemNames = GetDataItemNames(fmModels);
+            if (!dataItemNames.Any())
+            {
+                return;
+            }
 
             // Collection needs to be cached to prevent CollectionModifiedException
             foreach (MultipleFunctionView multipleFunctionView in fmViews)
@@ -839,6 +845,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     Gui.CommandHandler.RemoveAllViewsForItem(multipleFunctionView.Data);
                 }
             }
+        }
+
+        private static string[][] GetDataItemNames(IEnumerable<WaterFlowFMModel> fmModels)
+        {
+            FileBasedFeatureCoverage[] coverages = fmModels.Where(m => m.OutputHisFileStore != null)
+                                                           .SelectMany(fm => fm.OutputHisFileStore.Functions.OfType<FileBasedFeatureCoverage>())
+                                                           .Where(c => c != null)
+                                                           .ToArray();
+            if (!coverages.Any())
+            {
+                return new string[0][];
+            }
+
+            string[][] dataItemNames = coverages.Select(fc =>
+                                                            new[]
+                                                            {
+                                                                fc.Name,
+                                                                fc.Features.OfType<INameable>().FirstOrDefault()?.Name
+                                                            }).ToArray();
+            return dataItemNames;
         }
 
         [InvokeRequired]

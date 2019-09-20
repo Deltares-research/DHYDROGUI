@@ -63,7 +63,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.PropertyGrid
             set => data.Function = value;
         }
 
-        [ResourcesCategory(typeof(Resources), "RTC_Category_InterpolationExtrapolation")]
+        [ResourcesCategory(typeof(Resources), "RTC_Category_Interpolation")]
         [ResourcesDisplayName(typeof(Resources), "RTC_Interpolation_DisplayName")]
         [ResourcesDescription(typeof(Resources), "RTC_Interpolation_Description")]
         [PropertyOrder(5)]
