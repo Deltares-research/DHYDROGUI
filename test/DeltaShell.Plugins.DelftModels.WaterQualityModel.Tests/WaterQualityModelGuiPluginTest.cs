@@ -407,7 +407,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                                           .First(vi => vi.DataType == typeof(LoadsDataTableImporter));
 
                 // Assert
-                Assert.That(viewInfo.ViewType, Is.EqualTo(typeof(BoundaryDataWizard)));
+                Assert.That(viewInfo.ViewType, Is.EqualTo(typeof(LoadsDataWizard)));
                 Assert.That(viewInfo.Description, Is.EqualTo("Loads Data Wizard Dialog"));
                 Assert.That(viewInfo.AdditionalDataCheck, Is.Not.Null);
             }
