@@ -130,7 +130,6 @@
     <Compile Include="FileReaders\DelftConfigXmlFileParserTest.cs" />
     <Compile Include="FileReaders\DelftIniFileParserTest.cs" />
     <Compile Include="FileReaders\NetworkDefinitionFileReaderTest.cs" />
-    <Compile Include="FileReaders\SalinityConverterTest.cs" />
     <Compile Include="FileReaders\SpatialDataConverterTest.cs" />
     <Compile Include="FileReaders\NetworkCoverageFileReaderTest.cs" />
     <Compile Include="FileWriters\CrossSectionDefinitionFileWritersTest.cs" />
