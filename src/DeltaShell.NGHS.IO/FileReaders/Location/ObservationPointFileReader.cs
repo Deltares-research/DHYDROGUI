@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Utils.Collections.Extensions;
 using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.NGHS.IO.FileReaders.Location
@@ -20,18 +22,20 @@ namespace DeltaShell.NGHS.IO.FileReaders.Location
             IList<DelftIniCategory> categories = new List<DelftIniCategory>();
             try
             {
-                categories = DelftIniFileParser.ReadFile(filePath);
+                categories.AddRange(DelftIniFileParser.ReadFile(filePath));
             }
             catch (Exception e)
             {
                 errorMessages.Add(e.Message);
             }
 
-            var observationPoints = ObservationPointConverter.Convert(categories, channelsList, errorMessages);
+            IList<IObservationPoint> observationPoints = ObservationPointConverter.Convert(categories, channelsList, errorMessages);
 
-            if (errorMessages.Count > 0)
+            if (errorMessages.Any())
+            {
                 createAndAddErrorReport?.Invoke("While reading the observation points from file, an error occured", errorMessages);
-            
+            }
+
             return observationPoints;
         }
     }

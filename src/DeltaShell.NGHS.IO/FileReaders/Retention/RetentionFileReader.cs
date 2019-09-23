@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Utils.Collections.Extensions;
 using DeltaShell.NGHS.IO.FileWriters.Location;
 using DeltaShell.NGHS.IO.FileWriters.Retention;
 using DeltaShell.NGHS.IO.Helpers;
@@ -19,7 +20,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Retention
         {
             this.createAndAddErrorReport = createAndAddErrorReport;
         }
-        
+
         /// <summary>
         /// Reads the retention from file.
         /// </summary>
@@ -32,20 +33,22 @@ namespace DeltaShell.NGHS.IO.FileReaders.Retention
             IList<DelftIniCategory> categories = new List<DelftIniCategory>();
             try
             {
-                categories = DelftIniFileParser.ReadFile(filePath);
+                categories.AddRange(DelftIniFileParser.ReadFile(filePath));
             }
             catch (Exception e)
             {
                 errorMessages.Add(e.Message);
             }
 
-            var retentionProperties = ReadAndAddPropertiesToCategory(channelsList, categories, errorMessages);
+            List<RetentionPropertiesDTO> retentionProperties = ReadAndAddPropertiesToCategory(channelsList, categories, errorMessages);
+            IList<IRetention> retentions = RetentionConverter.Convert(retentionProperties, errorMessages);
 
-            var retention = RetentionConverter.Convert(retentionProperties, errorMessages);
-            if (errorMessages.Count > 0)
+            if (errorMessages.Any())
+            {
                 createAndAddErrorReport?.Invoke(Resources.RetentionFileReader_ReadRetention_While_reading_the_retention_from_file__an_error_occured, errorMessages);
+            }
 
-            return retention;
+            return retentions;
         }
 
         private static List<RetentionPropertiesDTO> ReadAndAddPropertiesToCategory(IList<IChannel> channelsList, IList<DelftIniCategory> categories, List<string> errorMessages)

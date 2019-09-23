@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using DelftTools.Utils.Collections.Extensions;
 using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.NGHS.IO.FileReaders.SpatialData
@@ -28,7 +30,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.SpatialData
             IList<DelftIniCategory> categories = new List<DelftIniCategory>();
             try
             {
-                categories = DelftIniFileParser.ReadFile(filePath);
+                categories.AddRange(DelftIniFileParser.ReadFile(filePath));
             }
             catch (Exception e)
             {
@@ -40,8 +42,10 @@ namespace DeltaShell.NGHS.IO.FileReaders.SpatialData
 
         private void CreateErrorReport(string objectName, string filePath, IList<string> errorMessages)
         {
-            if (errorMessages.Count > 0)
+            if (errorMessages.Any())
+            {
                 createAndAddErrorReport?.Invoke($"While reading the {objectName} from file '{filePath}', the following errors occured", errorMessages);
+            }
         }
     }
 }
