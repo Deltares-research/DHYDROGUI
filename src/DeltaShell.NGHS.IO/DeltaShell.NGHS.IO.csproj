@@ -129,8 +129,6 @@
     <Compile Include="FileReaders\DelftBcFileParser.cs" />
     <Compile Include="FileReaders\DelftConfigXmlFileParser.cs" />
     <Compile Include="FileReaders\FileReadingException.cs" />
-    <Compile Include="FileReaders\Location\LateralSourceFileReader.cs" />
-    <Compile Include="FileReaders\Location\LateralSourceConverter.cs" />
     <Compile Include="FileReaders\Network\BranchConverter.cs" />
     <Compile Include="FileReaders\Network\HydroNodeConverter.cs" />
     <Compile Include="FileReaders\DelftIniFileParser.cs" />
