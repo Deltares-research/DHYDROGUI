@@ -121,15 +121,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Adaptors\UGridToUnstructuredGridAdaptorTest.cs" />
-    <Compile Include="Converters\BranchConverterTest.cs" />
     <Compile Include="FileConverters\DelftXmlFileConverterTest.cs" />
-    <Compile Include="Converters\HydroNodeConverterTest.cs" />
-    <Compile Include="Converters\NetworkDiscretizationConverterTest.cs" />
     <Compile Include="FileBasedUtilsTest.cs" />
     <Compile Include="FileReaders\DelftBcFileParserTest.cs" />
     <Compile Include="FileReaders\DelftConfigXmlFileParserTest.cs" />
     <Compile Include="FileReaders\DelftIniFileParserTest.cs" />
-    <Compile Include="FileReaders\NetworkDefinitionFileReaderTest.cs" />
     <Compile Include="FileWriters\CrossSectionDefinitionFileWritersTest.cs" />
     <Compile Include="FileWriters\LocationFileWritersTest.cs" />
     <Compile Include="FileWriters\NetworkAndGridWriterTest.cs" />
@@ -180,9 +176,7 @@
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Factories\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

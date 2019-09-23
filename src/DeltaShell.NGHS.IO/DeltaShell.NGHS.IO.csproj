@@ -129,11 +129,7 @@
     <Compile Include="FileReaders\DelftBcFileParser.cs" />
     <Compile Include="FileReaders\DelftConfigXmlFileParser.cs" />
     <Compile Include="FileReaders\FileReadingException.cs" />
-    <Compile Include="FileReaders\Network\BranchConverter.cs" />
-    <Compile Include="FileReaders\Network\HydroNodeConverter.cs" />
     <Compile Include="FileReaders\DelftIniFileParser.cs" />
-    <Compile Include="FileReaders\Network\NetworkDefinitionFileReader.cs" />
-    <Compile Include="FileReaders\Network\NetworkDiscretizationConverter.cs" />
     <Compile Include="FileWriters\Boundary\BoundaryFileWriter.cs" />
     <Compile Include="FileWriters\Boundary\BoundaryRegion.cs" />
     <Compile Include="FileWriters\Boundary\DefinitionGeneratorBoundary.cs" />
@@ -243,7 +239,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Factories\" />
     <Folder Include="FileReaders\ConfigXml\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
