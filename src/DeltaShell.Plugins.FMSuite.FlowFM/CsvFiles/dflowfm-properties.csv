@@ -76,36 +76,27 @@ numerics,TimeStepType,,,Time step type:Transport|Transport+vel.update|full impl.
 numerics,Limtyphu,advanced,Advanced,Water depth limiter type:None|MinMod|Van Leer|Koren|Monotone Central,0|1|2|3|4,0,0,4,FALSE,,,,,,"Limiter type for waterdepth in continuity eqn. (0: none, 1: minmod, 2: van Leer, 3: Koren, 4: monotone central)"
 numerics,Limtypmom,advanced,Advanced,Advection velocity limiter type:None|MinMod|Van Leer|Koren|Monotone Central,0|1|2|3|4,4,0,4,FALSE,,,,,,"Limiter type for cell center advection velocity (0: none, 1: minmod, 2: van Leer, 3: Koren, 4: monotone central)"
 numerics,Limtypsa,advanced,Advanced,Salinity transport limiter type:None|MinMod|Van Leer|Koren|Monotone Central,0|1|2|3|4,4,0,4,FALSE,Salinity,,,,,"Limiter type for salinity transport (0: none, 1: minmod, 2: van Leer, 3: Koren, 4: monotone central)"
-numerics,TransportMethod,,,,0|1,1,,,TRUE,,,,,,"Transport method (0: Herman's method, 1: Sander's method)"
-numerics,Vertadvtypsal,advanced,Advanced,Vertical salinity advection:None|UpwexpL|Centralexpl|UpwimpL|CentraLimpL|CentraLimpL/UpwimpL-neg.|higher order expl,0|1|2|3|4|5|6,5,0,6,FALSE,Salinity,,,,,"Vertical advection type for salinity (0: none, 1: upwind explicit, 2: central explicit, 3: upwind implicit, 4: central implicit, 5: central implicit but upwind for neg. stratif., 6: higher order explicit, no Forester)"
 numerics,Icgsolver,advanced,Advanced,Solver type:sobekGS_OMP|sobekGS_OMPthreadsafe|sobekGS|sobekGS + Saadilud|parallel/Uniform Saad|parallel/Petsc|parallel/GS,1|2|3|4|5|6|7,4,1,7,FALSE,,,,,,"Solver type (1: sobekGS_OMP, 2: sobekGS_OMPthreadsafe, 3: sobekGS, 4: sobekGS + Saadilud, 5: parallel/global Saad, 6: parallel/Petsc, 7: parallel/GS)"
 numerics,Maxdegree,advanced,Advanced,Max degree in Gauss elimination,Integer,6,0,,FALSE,,,,,,Maximum degree in Gauss elimination
-numerics,FixedWeirScheme,numerics,Fixed weir parameters,Fixed weir scheme :None|Numerical|Tabellenboek|Villemonte,0|6|8|9,6,0,9,FALSE,,,,,,"Fixed weir scheme (0: None, 6: Numerical, 8: Tabellenboek, 9: Villemonte)"
+numerics,FixedWeirScheme,numerics,Fixed weir parameters,Fixed weir scheme :None|Numerical|Tabellenboek|Villemonte,0|6|8|9,9,0,9,FALSE,,,,,,"Fixed weir scheme (0: None, 6: Numerical, 8: Tabellenboek, 9: Villemonte)"
 numerics,FixedWeirContraction,numerics,Fixed weir parameters,Fixed weir contraction,Double,1,0,,FALSE,,,,,,Fixed weir flow width contraction factor,-
-numerics,FixedWeirfrictscheme,numerics,Fixed weir parameters,Fixed weir friction scheme:hu|Subgrid Weir,0|1,1,0,1,FALSE,,,,,,"Fixed weir friction scheme (0: friction based on hu, 1: friction based on subgrid weir friction scheme)"
-numerics,Fixedweirtopwidth,numerics,Fixed weir parameters,Fixed weir top width,Double,3,,,FALSE,,,,,,Uniform width of the groyne part of fixed weirs,m
-numerics,Fixedweirtopfrictcoef,numerics,Fixed weir parameters,Fixed weir top friction,Double,-999,,,FALSE,,,,,,Uniform friction coefficient of the groyne part of fixed weirs,-
-numerics,Fixedweirtalud,numerics,Fixed weir parameters,Fixed weir talud,Double,4,,,FALSE,,,,,,Uniform talud slope of fixed weirs,-
-numerics,Izbndpos,numerics,Numerical Parameters,Position of z boundary:Delft3D-FLOW|On net boundary|On specified polyline,0|1|2,0,0,2,FALSE,,,,,,"Position of z boundary (0: D3Dflow, 1: on net boundary, 2: on specifiend polyline)"
+numerics,Izbndpos,numerics,Numerical Parameters,Position of z boundary:Delft3D-FLOW|On net boundary|On specified polyline,0|1|2,0,0,2,TRUE,,,,,,"Position of z boundary (0: Delft3D-FLOW, 1: on net boundary, 2: on specifiend polyline)"
 numerics,Tlfsmo,numerics,Numerical Parameters,Boundary smoothing time,Double,3600,0,,FALSE,,,,,,Fourier smoothing time on water level boundaries, s
 numerics,Slopedrop2D,advanced,Advanced,Drop losses threshold,Double,0,0,,FALSE,,,,,,"Apply drop losses only if local bed slope > Slopedrop2D, (<=0: no drop losses)",-
 numerics,Chkadvd,advanced,Advanced,Advection checks depth,Double,0.1,0,,FALSE,,,,,,"Check advection terms if depth < chkadvdp, => less setbacks",-
 numerics,Teta0,advanced,Advanced,Time integration theta,Double,0.55,0.5,1,FALSE,,,,,,Theta of time integration (0.5 < theta < 1),-
 numerics,Qhrelax,advanced,Advanced,Relaxation on h(Q) boundaries,Double,1.d-2,0,1,FALSE,,,,,,Relaxation on Q-h open boundaries, -
-numerics,Jbasqbnddownwindhs,advanced,Advanced,Downwind cell h on Q-boundaries?,0|1,0,0,1,TRUE,,,,,,"Water depth scheme at discharge boundaries (0: original hu, 1: downwind hs)"
 numerics,cstbnd,advanced,Advanced,Use Delft3D velocity handling,0|1,0,,,FALSE,,,,,,"Delft3D type velocity treatment near boundaries for small coastal models (1: yes, 0: no)"
 numerics,Maxitverticalforestersal,advanced,Advanced,Max vertical Forester iterations for salinity,Integer,0,0,,TRUE,,,,,,"Forester iterations for salinity (0: no vertical filter for salinity, > 0: max nr of iterations)"
 numerics,Maxitverticalforestertem,advanced,Advanced,Max vertical Forester iterations for temperature,Integer,0,,,TRUE,,,,,,"Forester iterations for temperature (0: no vertical filter for temperature, > 0: max nr of iterations)"
-numerics,Jaorgsethu,,,Velocity reconstruction order,0|1,1,,,TRUE,,,,,,"Velocity reconstruction scheme (0 : setumod, sethu, setau sequence, 1 : sethu, setau, setumod sequence (standard))"
 numerics,Turbulencemodel,,,Turbulence model:None|Constant|Algebraic|k-eps|k-tau,0|1|2|3|4,3,,,FALSE,,kmx>0,,,,"Turbulence model (0: none, 1: constant, 2: algebraic, 3: k-epsilon, 4: k-tau)"
 numerics,Turbulenceadvection,,,Turbulence advection:None|horizontally explicit and vertically implicit,0|3,3,,,FALSE,,,,,,"Turbulence advection (0: none, 3: horizontally explicit and vertically implicit)"
 numerics,AntiCreep,numerics,Numerical Parameters,Use anti-creep,0|1,0,,,FALSE,,kmx>0,,,,"Include anti-creep calculation (0: no, 1: yes)"
 numerics,Maxwaterleveldiff,,,Water level threshold,Double,0,,,FALSE,,,,,,Upper bound on water level changes (<=0: no bounds),m
 numerics,Maxvelocitydiff,,,Velocity threshold,Double,0,,,FALSE,,,,,,Upper bound on velocity changes (<=0: no bounds), m/s
 numerics,Epshu,,,Dry cell threshold,Double,1.d-4,,,FALSE,,,,,,Threshold water depth for wet and dry cells,m
-numerics,SobekDFM_umin,,,D-Flow 1D - D-Flow FM umin,Double,0,,,FALSE,,,,,,Minimal velocity treshold for weir losses in D-Flow 1D - D-Flow FM  coupling.,m/s
 physics,UnifFrictCoef,physics,Roughness,Uniform friction coefficient,Double,2.3d-2,0,,FALSE,,,,,,Uniform friction coefficient (0: no friction),
-physics,UnifFrictType,physics,Roughness,Uniform friction type:Chezy|Manning|White-Colebrook|Z0,0|1|2|3,1,0,3,FALSE,,,,,,"Uniform friction type (0: Chezy, 1: Manning, 2: White-Colebrook, 3: idem, WAQUA style)"
+physics,UnifFrictType,physics,Roughness,Uniform friction type:Chezy|Manning|White-Colebrook,0|1|2,1,0,2,FALSE,,,,,,"Uniform friction type (0: Chezy, 1: Manning, 2: White-Colebrook)"
 physics,UnifFrictCoef1D,physics,Roughness,Uniform 1D friction coefficient,Double,2.3d-2,0,,TRUE,,,,,,Uniform friction coefficient in 1D links (0: no friction),
 physics,UnifFrictCoefLin,physics,Roughness,Uniform linear friction coefficient,Double,0,0,,FALSE,,,,,,Uniform linear friction coefficient for ocean models (0: no friction),  
 physics,Umodlin,physics,Roughness,Linear friction Umod,Double,0,0,1,FALSE,,,,,,"Linear friction umod, for ifrctyp=4,5,6",-
@@ -151,7 +142,7 @@ waves,Gammax,physics,Wave,Max. wave/depth ratio,Double,1,,,FALSE,,,,,,Maximum wa
 time,RefDate,timeframe,Time Frame,Reference date,DateTime,20010101,,,FALSE,,,,,,Reference date [YYYY-MM-DD HH:MM:SS]
 time,Tzone,timeframe,Time Frame,Time zone,Double,0,,,FALSE,,,,,,Time zone assigned to input time series, -
 time,DtUser,timeframe,Time Frame,User time step,Interval,300,0,,FALSE,,,,,,Time interval for external forcing update [Dd HH:MM:SS.ZZZ]
-time,DtNodal,timeframe,Time Frame,Nodal update interval,Interval,0,0,,FALSE,,,,,,Time interval (s) for updating nodal factors in astronomical boundary conditions [Dd HH:MM:SS.ZZZ]
+time,DtNodal,timeframe,Time Frame,Nodal update interval,Interval,21600,0,,FALSE,,,,,,Time interval (s) for updating nodal factors in astronomical boundary conditions [Dd HH:MM:SS.ZZZ]
 time,DtMax,timeframe,Time Frame,Max. time step,Double,30,,,FALSE,,,,,,Maximal computation timestep, s
 time,DtInit,timeframe,Time Frame,Initial time step,Double,1,,,FALSE,,,,,,Initial computation timestep, s
 time,Tunit,,,Time unit:hours|minutes|seconds,H|M|S,S,,,TRUE,,,,,,"Time unit for start/stop times (H, M or S)"

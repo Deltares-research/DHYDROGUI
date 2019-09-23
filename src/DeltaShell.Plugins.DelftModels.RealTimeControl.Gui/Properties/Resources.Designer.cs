@@ -934,6 +934,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Interpolation.
+        /// </summary>
+        internal static string RTC_Category_Interpolation {
+            get {
+                return ResourceManager.GetString("RTC_Category_Interpolation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Interpolation / Extrapolation.
         /// </summary>
         internal static string RTC_Category_InterpolationExtrapolation {
