@@ -134,8 +134,6 @@
     <Compile Include="FileReaders\DelftIniFileParser.cs" />
     <Compile Include="FileReaders\Network\NetworkDefinitionFileReader.cs" />
     <Compile Include="FileReaders\Network\NetworkDiscretizationConverter.cs" />
-    <Compile Include="FileReaders\SpatialData\SpatialDataConverter.cs" />
-    <Compile Include="FileReaders\SpatialData\NetworkCoverageFileReader.cs" />
     <Compile Include="FileWriters\Boundary\BoundaryFileWriter.cs" />
     <Compile Include="FileWriters\Boundary\BoundaryRegion.cs" />
     <Compile Include="FileWriters\Boundary\DefinitionGeneratorBoundary.cs" />
