@@ -134,9 +134,6 @@
     <Compile Include="FileReaders\DelftIniFileParser.cs" />
     <Compile Include="FileReaders\Network\NetworkDefinitionFileReader.cs" />
     <Compile Include="FileReaders\Network\NetworkDiscretizationConverter.cs" />
-    <Compile Include="FileReaders\Retention\RetentionConverter.cs" />
-    <Compile Include="FileReaders\Retention\RetentionFileReader.cs" />
-    <Compile Include="FileReaders\Retention\RetentionPropertiesDTO.cs" />
     <Compile Include="FileReaders\SpatialData\SalinityConverter.cs" />
     <Compile Include="FileReaders\SpatialData\SalinityFileReader.cs" />
     <Compile Include="FileReaders\SpatialData\SpatialDataConverter.cs" />

@@ -126,12 +126,10 @@
     <Compile Include="Converters\HydroNodeConverterTest.cs" />
     <Compile Include="Converters\NetworkDiscretizationConverterTest.cs" />
     <Compile Include="FileBasedUtilsTest.cs" />
-    <Compile Include="FileConverters\RetentionConverterTest.cs" />
     <Compile Include="FileReaders\DelftBcFileParserTest.cs" />
     <Compile Include="FileReaders\DelftConfigXmlFileParserTest.cs" />
     <Compile Include="FileReaders\DelftIniFileParserTest.cs" />
     <Compile Include="FileReaders\NetworkDefinitionFileReaderTest.cs" />
-    <Compile Include="FileReaders\RetentionFileReaderTest.cs" />
     <Compile Include="FileReaders\SalinityConverterTest.cs" />
     <Compile Include="FileReaders\SpatialDataConverterTest.cs" />
     <Compile Include="FileReaders\NetworkCoverageFileReaderTest.cs" />
