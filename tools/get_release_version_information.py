@@ -9,7 +9,7 @@ https://publicwiki.deltares.nl/display/TOOLS/Release+Overview
 __author__ = "Maarten Tegelaers"
 __copyright__ = "Copyright (C) Stichting Deltares, 2019"
 __version__ = "0.1.0"
-__maintainer__ = "Maarten Tegelaers"
+__maintainer__ = "Maarten Tegelaers, Prisca van der Sluis"
 __email__ = "Maarten.Tegelaers@deltares.nl"
 __status__ = "Development"
 
@@ -92,18 +92,19 @@ def obtain_version_numbers(svn_repo_path: Path):
         with package_config_file_path.open() as file:
             lines = file.readlines()
 
-        for target_package in PKG_FOLDER_MAPPING[folder]:
-
-            for line in lines:
-
-                package_name = PKG_NAME_MAPPING[target_package]
-                if line.__contains__(package_name):
+        packages = list(PKG_FOLDER_MAPPING[folder])
+        for line in lines:
+            for package in packages:
+                if PKG_NAME_MAPPING[package] in line:
                     search_result = re.search(search_pattern, line)
-
+                    
                     if search_result:
                         version_number = search_result.group(1)
-                        pkg_version_numbers[target_package] = version_number
-
+                        pkg_version_numbers[package] = version_number
+                        packages.remove(package)
+                        break
+                        
+                if not packages:
                     break
 
     return pkg_version_numbers
