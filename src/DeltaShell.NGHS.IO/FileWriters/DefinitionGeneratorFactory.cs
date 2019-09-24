@@ -1,8 +1,6 @@
 using System;
-using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
-using DeltaShell.NGHS.IO.FileWriters.Structure;
 
 namespace DeltaShell.NGHS.IO.FileWriters
 {
@@ -61,41 +59,6 @@ namespace DeltaShell.NGHS.IO.FileWriters
                     return new DefinitionGeneratorCrossSectionDefinitionTrapezium();
                 default:
                     return null;//new DefinitionGeneratorCrossSectionDefinitionStandard();
-            }
-        }
-
-        public static IDefinitionGeneratorStructure GetDefinitionGeneratorStructure(StructureType structureType, CompoundStructureInfo compoundStructureInfo)
-        {
-            switch (structureType)
-            {
-                case StructureType.Pump:
-                    return new DefinitionGeneratorStructurePump(compoundStructureInfo);
-                case StructureType.Weir:
-                    return new DefinitionGeneratorStructureWeir(compoundStructureInfo);
-                case StructureType.UniversalWeir:
-                    return new DefinitionGeneratorStructureUniversalWeir(compoundStructureInfo);
-                case StructureType.RiverWeir:
-                    return new DefinitionGeneratorStructureRiverWeir(compoundStructureInfo);
-                case StructureType.AdvancedWeir:
-                    return new DefinitionGeneratorStructureAdvancedWeir(compoundStructureInfo);
-                case StructureType.Orifice:
-                    return new DefinitionGeneratorStructureOrifice(compoundStructureInfo);
-                case StructureType.GeneralStructure:
-                    return new DefinitionGeneratorStructureGeneralStructure(compoundStructureInfo);
-                case StructureType.Culvert:
-                    return new DefinitionGeneratorStructureCulvert(compoundStructureInfo);
-                case StructureType.InvertedSiphon:
-                    return new DefinitionGeneratorStructureInvertedSiphon(compoundStructureInfo);
-                case StructureType.Siphon:
-                    return new DefinitionGeneratorStructureSiphon(compoundStructureInfo);
-                case StructureType.Bridge:
-                    return new DefinitionGeneratorStructureBridgeStandard(compoundStructureInfo);
-                case StructureType.BridgePillar:
-                    return new DefinitionGeneratorStructureBridgePillar(compoundStructureInfo);
-                case StructureType.ExtraResistance:
-                    return new DefinitionGeneratorStructureExtraResistance(compoundStructureInfo);
-                default:
-                    return null;
             }
         }
     }
