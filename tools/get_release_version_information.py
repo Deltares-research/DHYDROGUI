@@ -104,8 +104,8 @@ def obtain_version_numbers(svn_repo_path: Path):
                         packages.remove(package)
                         break
                         
-                if not packages:
-                    break
+            if not packages:
+                break
 
     return pkg_version_numbers
 
