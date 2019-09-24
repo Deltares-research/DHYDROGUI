@@ -5,7 +5,6 @@ using DeltaShell.NGHS.IO.FileReaders.Definition;
 using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
 using DeltaShell.NGHS.IO.FileWriters.Location;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
-using GeoAPI.Extensions.Networks;
 
 namespace DeltaShell.NGHS.IO.FileWriters
 {
@@ -96,24 +95,6 @@ namespace DeltaShell.NGHS.IO.FileWriters
                 default:
                     return null;//new DefinitionGeneratorCrossSectionDefinitionStandard();
             }
-        }
-        
-        public static IDefinitionGeneratorLocation GetDefinitionGeneratorLocation(IBranchFeature branchFeature)
-        {
-            if (branchFeature is ICrossSection)
-            {
-                return new DefinitionGeneratorCrossSectionLocation(CrossSectionRegion.IniHeader);
-            }
-            if (branchFeature is IObservationPoint)
-            {
-                return new DefinitionGeneratorLocation(ObservationPointRegion.IniHeader);
-            }
-            if (branchFeature is ILateralSource)
-            {
-                return new DefinitionGeneratorLateralSourceLocation(BoundaryRegion.LateralDischargeHeader);
-            }
-            return null;
-
         }
 
         public static IDefinitionGeneratorStructure GetDefinitionGeneratorStructure(StructureType structureType, CompoundStructureInfo compoundStructureInfo)

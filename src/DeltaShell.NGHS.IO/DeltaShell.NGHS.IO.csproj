@@ -112,7 +112,6 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml" />
-    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\AssemblyInfo.Version.FM.cs">
@@ -129,7 +128,6 @@
     <Compile Include="FileReaders\DelftBcFileParser.cs" />
     <Compile Include="FileReaders\DelftConfigXmlFileParser.cs" />
     <Compile Include="FileReaders\FileReadingException.cs" />
-    <Compile Include="FileReaders\DelftIniFileParser.cs" />
     <Compile Include="FileWriters\Boundary\BoundaryFileWriter.cs" />
     <Compile Include="FileWriters\Boundary\BoundaryRegion.cs" />
     <Compile Include="FileWriters\Boundary\DefinitionGeneratorBoundary.cs" />
@@ -152,10 +150,6 @@
     <Compile Include="FileWriters\General\GeneralRegion.cs" />
     <Compile Include="FileWriters\General\GeneralRegionGenerator.cs" />
     <Compile Include="FileWriters\IniFileWriter.cs" />
-    <Compile Include="FileWriters\Location\DefinitionGeneratorCrossSectionLocation.cs" />
-    <Compile Include="FileWriters\Location\DefinitionGeneratorLateralSourceLocation.cs" />
-    <Compile Include="FileWriters\Location\DefinitionGeneratorLocation.cs" />
-    <Compile Include="FileWriters\Location\LocationFileWriter.cs" />
     <Compile Include="FileWriters\Location\LocationRegion.cs" />
     <Compile Include="FileWriters\Network\NetworkAndGridWriter.cs" />
     <Compile Include="FileWriters\Network\NetworkDefinitionRegion.cs" />
