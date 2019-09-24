@@ -124,7 +124,6 @@
     <Compile Include="DelftIniWriter.cs" />
     <Compile Include="FileConverters\DelftXmlFileConverter.cs" />
     <Compile Include="FileBasedUtils.cs" />
-    <Compile Include="FileReaders\DelftBcFileParser.cs" />
     <Compile Include="FileReaders\DelftConfigXmlFileParser.cs" />
     <Compile Include="FileReaders\FileReadingException.cs" />
     <Compile Include="FileWriters\Boundary\BoundaryFileWriter.cs" />
