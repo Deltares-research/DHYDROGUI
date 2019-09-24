@@ -40,6 +40,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         protected Action onMainWindowShown;
         protected ProjectItemMapView regionEditor;
         private MouseEventArgs args = new MouseEventArgs(MouseButtons.Left, 1, 0, 0, 0);
+        private Action mainWindowShown;
 
         [SetUp]
         public void SetUp()
@@ -71,7 +72,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             mainWindow = (Window)gui.MainWindow;
 
             // wait until gui starts
-            mainWindow.Loaded += delegate
+            mainWindowShown = delegate
             {
                 var regionDataItem = project.RootFolder.DataItems.First();
                 gui.CommandHandler.OpenView(regionDataItem, typeof(ProjectItemMapView));
@@ -113,7 +114,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
                     Assert.AreEqual(b1.Source, link.Target);
                 };
 
-            WpfTestHelper.ShowModal(mainWindow);
+            WpfTestHelper.ShowModal(mainWindow, mainWindowShown);
         }
 
         [Test]
@@ -128,7 +129,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
                 Assert.IsTrue(link.Geometry.Coordinates.All(c => c.Z == 0.0));
             };
 
-            WpfTestHelper.ShowModal(mainWindow);
+            WpfTestHelper.ShowModal(mainWindow, mainWindowShown);
         }
 
         /// <summary>
@@ -174,7 +175,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
                 Assert.AreEqual("route_1", selected.Name);
             };
             
-            WpfTestHelper.ShowModal(mainWindow);
+            WpfTestHelper.ShowModal(mainWindow, mainWindowShown);
         }
 
 

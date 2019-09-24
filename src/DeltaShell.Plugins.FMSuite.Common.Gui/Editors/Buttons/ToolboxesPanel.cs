@@ -84,7 +84,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors.Buttons
                     log.Info(info);
                 foreach (var error in logger.Errors)
                     log.Error(error);
-                errors = logger.Errors.ToList();
+                errors.AddRange(logger.Errors.ToList());
             }
             catch (Exception e)
             {
@@ -92,7 +92,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors.Buttons
             }
 
             // if any errors / exceptions occurred, show a message box with those errors
-            if (errors.Count > 0)
+            if (errors.Any())
             {
                 MessageBox.Show(string.Join(Environment.NewLine, errors), "Errors while running command",
                                 MessageBoxButtons.OK, MessageBoxIcon.Error);
