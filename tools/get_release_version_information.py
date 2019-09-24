@@ -447,7 +447,7 @@ def parse_arguments():
     parser = argparse.ArgumentParser()
 
     parser.add_argument("svn_root_path", help="Path to the root of the SVN directory.")
-    parser.add_argument("--distributions", nargs="*", help="The distributions to be added to the table.")
+    parser.add_argument("--distributions", nargs="*", default=[""], help="The distributions to be added to the table.")
     parser.add_argument("--additional_remarks", default="", help="Additional remarks that will be added to the table.")
     parser.add_argument("--output_html", action="store_true", help="Output a html table row, otherwise human readable output will be generated.")
 
