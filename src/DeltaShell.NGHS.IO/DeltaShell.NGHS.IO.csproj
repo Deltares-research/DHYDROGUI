@@ -124,7 +124,6 @@
     <Compile Include="DelftIniWriter.cs" />
     <Compile Include="FileConverters\DelftXmlFileConverter.cs" />
     <Compile Include="FileBasedUtils.cs" />
-    <Compile Include="FileReaders\Definition\DefinitionReader.cs" />
     <Compile Include="FileReaders\DelftBcFileParser.cs" />
     <Compile Include="FileReaders\DelftConfigXmlFileParser.cs" />
     <Compile Include="FileReaders\FileReadingException.cs" />
@@ -232,9 +231,7 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="FileReaders\ConfigXml\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>

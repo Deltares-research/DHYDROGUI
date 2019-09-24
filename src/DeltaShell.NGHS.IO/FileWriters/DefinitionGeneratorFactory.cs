@@ -1,46 +1,13 @@
 using System;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
-using DeltaShell.NGHS.IO.FileReaders.Definition;
 using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
-using DeltaShell.NGHS.IO.FileWriters.Location;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 
 namespace DeltaShell.NGHS.IO.FileWriters
 {
     public static class DefinitionGeneratorFactory
     {
-        public static IDefinitionReader GetDefinitionReaderCrossSection(string type)
-        {
-            switch (type)
-            {
-                case CrossSectionRegion.CrossSectionDefinitionType.Yz:
-                    return new CSDYZDefinitionReader();
-                case CrossSectionRegion.CrossSectionDefinitionType.Xyz:
-                    return new CSDXYZDefinitionReader();
-                case CrossSectionRegion.CrossSectionDefinitionType.Zw:
-                    return new CSDZWDefinitionReader();
-                case CrossSectionRegion.CrossSectionDefinitionType.Rectangle:
-                    return new CSDRectangleDefinitionReader();
-                case CrossSectionRegion.CrossSectionDefinitionType.Elliptical:
-                    return new CSDEllipseDefinitionReader();
-                case CrossSectionRegion.CrossSectionDefinitionType.Circle:
-                    return new CSDCircleDefinitionReader();
-                case CrossSectionRegion.CrossSectionDefinitionType.Egg:
-                    return new CSDEggDefinitionReader();
-                case CrossSectionRegion.CrossSectionDefinitionType.Arch:
-                    return new CSDArchDefinitionReader();
-                case CrossSectionRegion.CrossSectionDefinitionType.Cunette:
-                    return new CSDCunetteDefinitionReader();
-                case CrossSectionRegion.CrossSectionDefinitionType.SteelCunette:
-                    return new CSDSteelCunetteDefinitionReader();
-                case CrossSectionRegion.CrossSectionDefinitionType.Trapezium:
-                    return new CSDTrapeziumDefinitionReader();
-                default :
-                    return null;
-            }
-        }
-
         public static DefinitionGeneratorCrossSectionDefinition GetDefinitionGeneratorCrossSection(ICrossSectionDefinition crossSectionDefinition,
                                                                                                    CrossSectionType crossSectionType)
         {
@@ -130,49 +97,6 @@ namespace DeltaShell.NGHS.IO.FileWriters
                 default:
                     return null;
             }
-        }
-
-        public static IDefinitionReader GetDefinitionReaderStructure(StructureType structureType)
-        {
-            switch (structureType)
-            {
-                case StructureType.Unknown:
-                    break;
-                case StructureType.Bridge:
-                    break;
-                case StructureType.BridgePillar:
-                    break;
-                case StructureType.CompositeBranchStructure:
-                    break;
-                case StructureType.Culvert:
-                    break;
-                case StructureType.InvertedSiphon:
-                    break;
-                case StructureType.Siphon:
-                    break;
-                case StructureType.ExtraResistance:
-                    break;
-                case StructureType.Gate:
-                    break;
-                case StructureType.Pump:
-                    break;
-                case StructureType.Weir:
-                    return new WeirDefinitionReader();
-                case StructureType.UniversalWeir:
-                    break;
-                case StructureType.RiverWeir:
-                    break;
-                case StructureType.AdvancedWeir:
-                    break;
-                case StructureType.Orifice:
-                    break;
-                case StructureType.GeneralStructure:
-                    break;
-                default:
-                    return null;
-            }
-            return null;
-
         }
     }
 }
