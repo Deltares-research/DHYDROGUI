@@ -154,10 +154,6 @@
     <Compile Include="FileWriters\Network\NetworkDefinitionRegion.cs" />
     <Compile Include="FileWriters\Retention\RetentionFileWriter.cs" />
     <Compile Include="FileWriters\Retention\RetentionRegion.cs" />
-    <Compile Include="FileWriters\SpatialData\SpatialDataFileNames.cs" />
-    <Compile Include="FileWriters\SpatialData\SpatialDataFileWriter.cs" />
-    <Compile Include="FileWriters\SpatialData\SpatialDataQuantity.cs" />
-    <Compile Include="FileWriters\SpatialData\SpatialDataRegion.cs" />
     <Compile Include="FileWriters\Structure\StructureRegion.cs" />
     <Compile Include="FunctionStores\MapHisFileMetaData.cs" />
     <Compile Include="FunctionStores\MapHisFileReader.cs" />
