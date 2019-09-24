@@ -57,7 +57,7 @@ def ImportSubstanceProcessLibrary(wqModel, subFilePath):
 
 def GetWaqCellIndex(waqModel, coordinate, zValue):
     """Get the waq cell index for a certain coordinate and the z value for the depth"""
-    return waqModel.PointToGridCellMapper.GetCellIndex(coordinate.X, coordinate.Y, zValue)
+    return waqModel.PointToGridCellMapper.GetWaqSegmentIndex(coordinate.X, coordinate.Y, zValue)
 
 def SetDefaultValue(wqModel, inputType, variableName, variableType, value):
     functionList = _GetFunctionList(wqModel,inputType)
