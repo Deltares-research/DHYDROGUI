@@ -7,7 +7,7 @@
   
   <?define checkForRegistration="true"?>
 
-  <?define splashScreenCopyright="© Deltares 2018"?>
+  <?define splashScreenCopyright="© Deltares 2019"?>
 
   <?ifdef var.RWS?>
   <?define Delft3DPackageName="D-HYDRO"?>

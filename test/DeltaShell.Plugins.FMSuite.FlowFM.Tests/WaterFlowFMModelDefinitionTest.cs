@@ -8,7 +8,6 @@ using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
-using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.NetCdf;
@@ -584,8 +583,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Category(TestCategory.DataAccess)]
         public void ReadAndWriteModelDefinitionHarlingenModel()
         {
-            var mduDir =
-                Path.Combine(TestHelper.GetTestDataDirectory(), "harlingen");
+            string mduDir = Path.Combine(TestHelper.GetTestDataDirectory(), "harlingen");
 
             var area = new HydroArea();
             var modelDefinition = new WaterFlowFMModelDefinition(mduDir, "har");
@@ -597,39 +595,34 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             const string saveToDir = "readWriteHarlingen";
             Directory.CreateDirectory(saveToDir);
 
-            var mduFileSaveToPath = Path.Combine(saveToDir, "har.mdu");
+            string mduFileSaveToPath = Path.Combine(saveToDir, "har.mdu");
             mduFile.Write(mduFileSaveToPath, modelDefinition, area, allFixedWeirsAndCorrespondingProperties.Values);
 
-            var expectedResultsDir = Path.Combine(mduDir, "expectedResults");
-            foreach (var expectedResultsFilePath in Directory.GetFiles(expectedResultsDir))
+            string expectedResultsDir = Path.Combine(mduDir, "expectedResults");
+            foreach (string expectedResultsFilePath in Directory.GetFiles(expectedResultsDir))
             {
-                var generatedResultsFilePath = Path.Combine(saveToDir, Path.GetFileName(expectedResultsFilePath));
-                var skipNLines = generatedResultsFilePath.EndsWith(".mdu") ? 8 : 0; // skip date/program/version lines
-                var expectedResultsContent = File.ReadAllLines(expectedResultsFilePath).Skip(skipNLines);
-                var generatedResultsContent = File.ReadAllLines(generatedResultsFilePath).Skip(skipNLines);
+                string generatedResultsFilePath = Path.Combine(saveToDir, Path.GetFileName(expectedResultsFilePath));
+                int skipNLines = generatedResultsFilePath.EndsWith(".mdu") ? 8 : 0; // skip date/program/version lines
+                List<string> expectedResultsContent = File.ReadAllLines(expectedResultsFilePath).Skip(skipNLines).ToList();
+                List<string> generatedResultsContent = File.ReadAllLines(generatedResultsFilePath).Skip(skipNLines).ToList();
                 
                 Assert.IsNotNull(generatedResultsContent);
                 Assert.IsNotNull(expectedResultsContent);
-                
-                var expected = expectedResultsContent.ToList();
-                var generated = generatedResultsContent.ToList();
 
                 // Added first check if the strings are the same at the same index, because the contain method is not efficient for big files with a lot of lines.  
-                if (expected.Count == generated.Count)
+                if (expectedResultsContent.Count == generatedResultsContent.Count)
                 {
-                    for (int i = 0; i < expected.Count; i++)
+                    for (var i = 0; i < expectedResultsContent.Count; i++)
                     {
-                        if (expected[i] == generated[i])
+                        if (expectedResultsContent[i] == generatedResultsContent[i])
                         {
                             continue;
                         }
-                        else
-                        {
-                            expectedResultsContent.ForEach(er =>
-                                Assert.IsTrue(generatedResultsContent.Contains(er),
-                                    $"Expected {er} in File {Path.GetFileName(expectedResultsFilePath)} but not found."));
-                            break;
-                        }
+
+                        expectedResultsContent.ForEach(er =>
+                                                           Assert.IsTrue(generatedResultsContent.Contains(er),
+                                                                         $"Expected {er} in File {Path.GetFileName(expectedResultsFilePath)} but not found."));
+                        break;
                     }
                 }
                 else

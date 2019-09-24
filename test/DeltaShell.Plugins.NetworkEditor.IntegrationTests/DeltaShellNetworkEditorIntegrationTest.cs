@@ -92,8 +92,8 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
                 var mainWindow = (Window)gui.MainWindow;
 
                 // wait until gui starts
-                mainWindow.Loaded += delegate
-                    {
+                Action mainWindowShown = delegate
+                {
                         LogHelper.SetLoggingLevel(Level.Debug);
 
                         var networkDataItem = project.RootFolder.DataItems.First();
@@ -121,7 +121,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
 
                     };
 
-                WpfTestHelper.ShowModal(mainWindow);
+                WpfTestHelper.ShowModal(mainWindow, mainWindowShown);
             }
         }
 

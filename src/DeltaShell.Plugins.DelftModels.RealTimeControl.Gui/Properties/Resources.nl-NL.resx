@@ -408,4 +408,7 @@
   <data name="PIDRuleProperties_Category_GainFactor" xml:space="preserve">
     <value>#Winst factor</value>
   </data>
+  <data name="RTC_Category_Interpolation" xml:space="preserve">
+    <value>Interpolatie</value>
+  </data>
 </root>

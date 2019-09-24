@@ -42,21 +42,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
 
         private void UpdateFlow(bool positive, bool negative)
         {
-            if (positive && negative)
+            if (positive)
             {
-                culvert.FlowDirection = FlowDirection.Both;
-            }
-            else if (positive && !negative)
-            {
-                culvert.FlowDirection = FlowDirection.Positive;
-            }
-            else if (negative)
-            {
-                culvert.FlowDirection = FlowDirection.Negative;
+                culvert.FlowDirection = negative ? FlowDirection.Both : FlowDirection.Positive;
             }
             else
             {
-                culvert.FlowDirection = FlowDirection.None;
+                culvert.FlowDirection = negative ? FlowDirection.Negative : FlowDirection.None;
             }
         }
 

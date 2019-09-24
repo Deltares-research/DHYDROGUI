@@ -1167,6 +1167,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
         {
             OnPropertyChanged(nameof(SelectedWeirType));
             OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.EnableCrestLevelTimeSeries));
+            OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.BedLevelStructureCentre));
             OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.SimpleWeirPropertiesVisibility));
             OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.GeneralStructurePropertiesVisibility));
             OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.GeneralStructureVisibility));

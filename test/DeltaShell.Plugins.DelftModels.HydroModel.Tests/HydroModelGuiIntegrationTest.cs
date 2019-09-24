@@ -320,7 +320,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 var mainWindow = (MainWindow)gui.MainWindow;
 
                 // wait until gui starts
-                mainWindow.Loaded += delegate
+                Action mainWindowShown = delegate
                 {
                     /* get the water flow fm model */
                     var waterFlowFmModel = hydroModel.Activities.OfType<WaterFlowFMModel>().FirstOrDefault();
@@ -335,7 +335,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                     Assert.IsNotNull(targetFmModel);
                     Assert.That(targetFmModel.Name, Is.StringContaining(modelName));
                 };
-                WpfTestHelper.ShowModal(mainWindow);
+                WpfTestHelper.ShowModal(mainWindow, mainWindowShown);
             });
         }
 

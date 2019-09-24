@@ -21,6 +21,7 @@ from pathlib import Path
 import shutil
 import subprocess
 from win32api import GetFileVersionInfo, LOWORD, HIWORD
+import re
 
 
 # Confluence
@@ -60,49 +61,53 @@ ORDERED_PKGS = [ framework
 
 
 # Mapping to determine the version numbers from the package folder
-PKG_TO_FOLDER_MAPPING = { framework : "DeltaShell.Framework"
-                        , dido      : "DIDO"
-                        , dimr      : "Dimr.Libs"
-                        , plct      : "PLCT.Libs"
-                        , rgfgrid   : "RGFGRID"
-                        , substances: "Substances.Libs"
-                        }
+PKG_NAME_MAPPING = { framework : "DeltaShell.Framework"
+                   , dido      : "DIDO"
+                   , dimr      : "Dimr.Libs"
+                   , plct      : "PLCT.Libs"
+                   , rgfgrid   : "RGFGRID"
+                   , substances: "Substances.Libs"
+                   }
 
 
 def obtain_version_numbers(svn_repo_path: Path):
     """
-    Obtain the version numbers from the package folder of the specified svn_repo_path.
+    Obtain the version numbers from the packages.config files from the specified svn_repo_path.
 
     :param svn_root_path: The root path of the svn directory
     
-    :returns: The package version numbers (as specified by PKG_TO_FOLDER_MAPPING)
+    :returns: The package version numbers (as specified by PKG_NAME_MAPPING)
     """
-    # A nuget restore should have been done in the calling step
-    pkg_folder = svn_repo_path / Path("packages")
 
-    pkg_folder_mapping = dict(PKG_TO_FOLDER_MAPPING)
+    src_folder = svn_repo_path / Path("src")
+
     pkg_version_numbers = {}
 
-    for p in pkg_folder.glob("*"):
-        for pkg in pkg_folder_mapping:
-            if not p.name.startswith(pkg_folder_mapping[pkg]):
-                continue
+    search_pattern = 'version=\"(.*)\" targetFramework'
 
-            pkg_version_numbers[pkg] =  p.name[(len(pkg_folder_mapping[pkg]) + 1):] # +1 to remove additional dot at the beginning of the 
-            del pkg_folder_mapping[pkg]
-            break
+    for folder in PKG_FOLDER_MAPPING:
+
+        package_config_file_path = src_folder / Path(folder) / Path("packages.config")
+
+        with package_config_file_path.open() as file:
+            lines = file.readlines()
+
+        for target_package in PKG_FOLDER_MAPPING[folder]:
+
+            for line in lines:
+
+                package_name = PKG_NAME_MAPPING[target_package]
+                if line.__contains__(package_name):
+                    search_result = re.search(search_pattern, line)
+
+                    if search_result:
+                        version_number = search_result.group(1)
+                        pkg_version_numbers[target_package] = version_number
+
+                    break
 
     return pkg_version_numbers
 
-
-# Mapping to find the svn commit number
-CSPROJ_MAPPING = { framework  : "DeltaShell.Dimr" # Every project uses framework so we'll get the information from one that we will analyze anyway
-                 , dimr       : "DeltaShell.Dimr"
-                 , rgfgrid    : "DeltaShell.Plugins.FMSuite.Common.Gui"
-                 , dido       : "DeltaShell.Plugins.DelftModels.WaterQualityModel"
-                 , plct       : "DeltaShell.Plugins.DelftModels.WaterQualityModel"
-                 , substances : "DeltaShell.Plugins.DelftModels.WaterQualityModel"
-                 }                         
 
 def get_revision_numbers(file_path: Path) -> list:
     """
@@ -165,7 +170,7 @@ def verify_rev(rev, expected_pkgs):
 
 
         for i in range(len(expected_pkgs)):
-            if not line_relevant_part.startswith(PKG_TO_FOLDER_MAPPING[pkg]):
+            if not line_relevant_part.startswith(PKG_NAME_MAPPING[pkg]):
                 continue
 
             result[pkg] = True
@@ -178,10 +183,10 @@ def verify_rev(rev, expected_pkgs):
     return result
 
 
-PKG_NAME_MAPPING = { "DeltaShell.Dimr" : [ framework, dimr ]
-                   , "DeltaShell.Plugins.FMSuite.Common.Gui" : [ rgfgrid ]
-                   , "DeltaShell.Plugins.DelftModels.WaterQualityModel" : [ dido , plct, substances ]
-                   } 
+PKG_FOLDER_MAPPING = { "DeltaShell.Dimr" : [ framework, dimr ]
+                     , "DeltaShell.Plugins.FMSuite.Common.Gui" : [ rgfgrid ]
+                     , "DeltaShell.Plugins.DelftModels.WaterQualityModel" : [ dido , plct, substances ]
+                     }
                    
 
 def obtain_svn_commit_number(svn_root_path):
@@ -196,13 +201,13 @@ def obtain_svn_commit_number(svn_root_path):
     
     result = {}
 
-    for p in PKG_NAME_MAPPING:
+    for p in PKG_FOLDER_MAPPING:
 
         package_path = src_folder / Path(p) / Path("packages.config")
 
         revisions = get_revision_numbers(package_path)
 
-        relevant_pkgs = list(PKG_NAME_MAPPING[p])
+        relevant_pkgs = list(PKG_FOLDER_MAPPING[p])
 
         for pkg in relevant_pkgs:
             result[pkg] = ""
@@ -387,7 +392,7 @@ def generate_simple_table( ordered_pkgs        : list
     column_widths = []
 
     for pkg in ordered_pkgs:
-        col_elems = [len(PKG_TO_FOLDER_MAPPING[pkg])]
+        col_elems = [len(PKG_NAME_MAPPING[pkg])]
 
         if pkg in pkg_versions:
             col_elems.append(len(pkg_versions[pkg]))
@@ -414,7 +419,7 @@ def generate_simple_table( ordered_pkgs        : list
         return elem + (" " * (column_widths[i] - len(elem)))
 
     row_1 = ("{} | ".format(" " * first_column_len) +
-             " | ".join(get_formatted_elem(PKG_TO_FOLDER_MAPPING, i) for i in range(len(ordered_pkgs))) +
+             " | ".join(get_formatted_elem(PKG_NAME_MAPPING, i) for i in range(len(ordered_pkgs))) +
              " |")
     row_2 = ("{}-+-".format("-" * first_column_len) +
              "-+-".join("-" * column_widths[i] for i in range(len(ordered_pkgs))) +
@@ -433,31 +438,6 @@ def generate_simple_table( ordered_pkgs        : list
     return "\n".join([row_1, row_2, row_3, row_4, row_5])
 
 
-def clean_pkg_folder(svn_root_path : Path) -> None:
-    """
-    Clean the specified 'packages' folder of the given svn_root_path
-    if it exists.
-
-    :param svn_root_path: The root path of the svn directory
-    """
-    pkgs_folder = svn_root_path / Path("packages")
-
-    if pkgs_folder.exists and pkgs_folder.is_dir():
-        shutil.rmtree(str(pkgs_folder))
-
-
-def restore_nuget_packages(svn_root_path : Path) -> None:
-    """
-    Restore the nuget packgase of the 'NGHS.sln' solution in the 
-    given svn_root_path.
-
-    :param svn_root_path: The root path of the svn directory
-    """
-    solution_path = svn_root_path / Path("NGHS.sln")
-    p_cmd = "nuget.exe restore {}".format(solution_path)
-    p = subprocess.run(p_cmd, shell=True, text=True)
-
-
 def parse_arguments():
     """
     Parse the arguments with which this script was called through
@@ -469,7 +449,6 @@ def parse_arguments():
     parser.add_argument("--distributions", nargs="*", help="The distributions to be added to the table.")
     parser.add_argument("--additional_remarks", default="", help="Additional remarks that will be added to the table.")
     parser.add_argument("--output_html", action="store_true", help="Output a html table row, otherwise human readable output will be generated.")
-    parser.add_argument("--clean", action="store_true", help="Clean the provided svn_root_path first by deleting the packages and restoring them.")
 
     return parser.parse_args()
 
@@ -481,10 +460,6 @@ def run() -> None:
     """
     args = parse_arguments()
     svn_root_path = Path(args.svn_root_path)
-    
-    if args.clean:
-        clean_pkg_folder(svn_root_path)
-        restore_nuget_packages(svn_root_path)
 
     pkg_version_numbers = obtain_version_numbers(svn_root_path)
     svn_pkg_version_numbers = obtain_dll_version_numbers(svn_root_path)

@@ -91,7 +91,7 @@ SobekDFM_umin     = 0
 
 [physics]
 UnifFrictCoef     = 0.18                # Uniform friction coefficient (0: no friction)
-UnifFrictType     = 3                   # Uniform friction type (0: Chezy, 1: Manning, 2: White-Colebrook, 3: idem, WAQUA style)
+UnifFrictType     = 2                   # Uniform friction type (0: Chezy, 1: Manning, 2: White-Colebrook, 3: idem, WAQUA style)
 UnifFrictCoef1D   = 0                   # Uniform friction coefficient in 1D links (0: no friction)
 UnifFrictCoefLin  = 0                   # Uniform linear friction coefficient for ocean models (m/s) (0: no friction)
 Umodlin           = 0

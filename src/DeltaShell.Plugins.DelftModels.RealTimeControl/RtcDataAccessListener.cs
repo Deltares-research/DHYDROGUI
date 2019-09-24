@@ -44,16 +44,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         private static void RemovingInterpolationNoneForTimeRulesIfSetInDatabase(object entity, object[] loadedState)
         {
-            if (entity is TimeRule)
+            if (entity is TimeRule || entity is RelativeTimeRule)
             {
-                var timeSeries = loadedState.OfType<TimeSeries>().FirstOrDefault();
+                var timeSeries = loadedState.OfType<Function>().FirstOrDefault();
 
-                if (timeSeries != null)
+                if (timeSeries != null && timeSeries.Arguments.First().InterpolationType == InterpolationType.None)
                 {
-                    if (timeSeries.Time.InterpolationType == InterpolationType.None)
-                    {
-                        timeSeries.Time.InterpolationType = InterpolationType.Linear;
-                    }
+                    timeSeries.Arguments.First().InterpolationType = InterpolationType.Linear;
                 }
             }
         }

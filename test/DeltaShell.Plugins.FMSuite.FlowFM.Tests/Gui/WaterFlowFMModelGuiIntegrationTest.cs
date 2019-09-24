@@ -773,6 +773,35 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
 
         [Test]
+        [Category(TestCategory.Integration)]
+        [Category(TestCategory.Slow)]
+        public void GivenAWaterFlowFmModelWithoutOutputHisFileStore_WithMultipleFunctionViewInGui_WhenDeleteModel_ThenDoesNotThrowException()
+        {
+            using (var gui = new DeltaShellGui())
+            {
+                // Given
+                IApplication app = gui.Application;
+                RunConfiguredFmSuiteGui(gui);
+
+                using (var model = new WaterFlowFMModel())
+                {
+                    app.Project.RootFolder.Add(model);
+                    gui.DocumentViews.Add(new MultipleFunctionView());
+                    Assert.That(model.OutputHisFileStore, Is.Null);
+
+                    // When
+                    void TextAction()
+                    {
+                        app.Project.RootFolder.Items.Remove(model);
+                    }
+
+                    // Then
+                    Assert.DoesNotThrow(TextAction);
+                }
+            }
+        }
+
+        [Test]
         [Category(TestCategory.WindowsForms)]
         public void Given_FlowFmModel_When_Importing_Pli_Files_Then_UpdatesTreeView()
         {

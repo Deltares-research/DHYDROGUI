@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
@@ -824,6 +823,43 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
 
             Assert.AreEqual(3, count,
                 $"Expected 3 INotifyPropertyChanged.PropertyChanged events instead of {count} when setting the selected weir");
+        }
+
+        [Test]
+        [TestCaseSource(nameof(GetPropertyChangedInvokedTestCases))]
+        public void SetWeir_ThenPropertyChangedIsInvokedCorrectNumberOfTimesForProperty(string propertyName, int expectedInvokeCount)
+        {
+            // Given
+            var weir = new Weir();
+
+            var propertyChangedRaisedCount = 0;
+            using (var weirViewModel = new WeirViewModel())
+            {
+                weirViewModel.PropertyChanged += (s, e) =>
+                {
+                    if (e.PropertyName == propertyName)
+                    {
+                        propertyChangedRaisedCount++;
+                    }
+                };
+
+                // When
+                weirViewModel.Weir = weir;
+
+                // Then
+                Assert.That(propertyChangedRaisedCount, Is.EqualTo(expectedInvokeCount),
+                            $"Expected {expectedInvokeCount} invoked PropertyChanged event for {propertyName} when setting a weir.");
+            }
+        }
+
+        private static IEnumerable<TestCaseData> GetPropertyChangedInvokedTestCases()
+        {
+            yield return new TestCaseData(nameof(WeirViewModel.SelectedWeirType), 1);
+            yield return new TestCaseData(nameof(WeirViewModel.EnableCrestLevelTimeSeries), 1);
+            yield return new TestCaseData(nameof(WeirViewModel.BedLevelStructureCentre), 1);
+            yield return new TestCaseData(nameof(WeirViewModel.SimpleWeirPropertiesVisibility), 4);
+            yield return new TestCaseData(nameof(WeirViewModel.GeneralStructurePropertiesVisibility), 1);
+            yield return new TestCaseData(nameof(WeirViewModel.GeneralStructureVisibility), 1);
         }
     }
 }

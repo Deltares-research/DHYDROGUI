@@ -79,10 +79,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.PropertyGrid
         [ResourcesDisplayName(typeof(Resources), "RelativeTimeRuleProperties_Interpolation_DisplayName")]
         [ResourcesDescription(typeof(Resources), "RTC_Interpolation_Description")]
         [PropertyOrder(6)]
-        public InterpolationType Interpolation
+        public InterpolationHydraulicType Interpolation
         {
-            get => data.Interpolation;
-            set => data.Interpolation = value;
+            get => (InterpolationHydraulicType)data.Interpolation;
+            set => data.Interpolation = (InterpolationType)value;
         }
 
        private void UpdateFunctionArgumentName()

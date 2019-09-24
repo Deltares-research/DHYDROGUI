@@ -85,37 +85,50 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.IsTrue(lines.Any(l => l.Contains("ModelWithMorphology.sed")));
         }
 
-        [Category(TestCategory.Integration)]
         [Test]
+        [Category(TestCategory.Integration)]
         public void Test_MduFile_Read_Loads_BridgePillars()
         {
-            var testPath = TestHelper.GetTestFilePath(@"ImportMDUFile\bridge-1.mdu");
-            testPath = TestHelper.CreateLocalCopy(testPath);
-            Assert.IsNotNull(testPath);
-            Assert.IsTrue(File.Exists(testPath));
+            string testDataFilePath = TestHelper.GetTestFilePath(@"ImportMDUFile\bridge-1.mdu");
+            string testFilePath = TestHelper.CreateLocalCopy(testDataFilePath);
 
-            var mduFile = new MduFile();
-            var area = new HydroArea();
+            try
+            {
+                var mduFile = new MduFile();
+                var area = new HydroArea();
 
-            mduFile.Read(testPath,new WaterFlowFMModelDefinition(), area,null);
-            Assert.IsTrue(area.BridgePillars.Any());
+                mduFile.Read(testFilePath, new WaterFlowFMModelDefinition(), area, null);
 
-            var pillar = area.BridgePillars.First();
-            Assert.IsNotNull(pillar);
+                BridgePillar pillar = area.BridgePillars.Single();
+                Assert.That(pillar.Name, Is.EqualTo("BridgePillar01"));
 
+                //Check if now they are present.
+                Assert.That(pillar.Attributes.Count, Is.EqualTo(2));
+                var attributes = pillar.Attributes as DictionaryFeatureAttributeCollection;
+                Assert.IsNotNull(attributes);
 
-            var expectedName = "BridgePillar01";
-            var expectedDiameters = new List<double>(){-599,-599,-999,-999};
-            var expectedCoeff = new List<double>(){-999,-999,-499,-499};
-            Assert.AreEqual(expectedName, pillar.Name);
+                var expectedDiameters = new List<double>
+                {
+                    -599,
+                    -599,
+                    -999,
+                    -999
+                };
+                var expectedCoeff = new List<double>
+                {
+                    -999,
+                    -999,
+                    -499,
+                    -499
+                };
 
-            //Check if now they are present.
-            Assert.AreEqual(pillar.Attributes.Count, 2);
-            var attributes = pillar.Attributes as DictionaryFeatureAttributeCollection;
-            Assert.IsNotNull(attributes);
-
-            CheckAttributeCollection(attributes, "Column3", expectedDiameters);
-            CheckAttributeCollection(attributes, "Column4", expectedCoeff);
+                CheckAttributeCollection(attributes, "Column3", expectedDiameters);
+                CheckAttributeCollection(attributes, "Column4", expectedCoeff);
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(testFilePath);
+            }
         }
 
         [Test]
@@ -326,7 +339,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var area = new HydroArea();
 
             Assert.DoesNotThrow(() => mduFile.Read(testPath, new WaterFlowFMModelDefinition(), area, null, allBridgePillarsAndCorrespondingProperties: new List<ModelFeatureCoordinateData<BridgePillar>>()), "It Crashed");
-            
         }
 
         [Test]
