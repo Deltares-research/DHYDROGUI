@@ -124,7 +124,6 @@
     <Compile Include="FileBasedUtils.cs" />
     <Compile Include="FileReaders\DelftConfigXmlFileParser.cs" />
     <Compile Include="FileReaders\FileReadingException.cs" />
-    <Compile Include="StructureRegion.cs" />
     <Compile Include="FunctionStores\MapHisFileMetaData.cs" />
     <Compile Include="FunctionStores\MapHisFileReader.cs" />
     <Compile Include="FunctionStores\ReadOnlyMapHisFileFunctionStore.cs" />
