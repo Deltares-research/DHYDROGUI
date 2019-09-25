@@ -2,7 +2,7 @@
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO.Helpers;
 
-namespace DeltaShell.NGHS.IO.FileWriters.Structure
+namespace DeltaShell.NGHS.IO
 {
     public static class StructureRegion
     {

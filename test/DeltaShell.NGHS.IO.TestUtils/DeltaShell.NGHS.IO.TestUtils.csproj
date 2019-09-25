@@ -99,11 +99,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CrossSectionDefinitionFileWritersTestHelper.cs" />
-    <Compile Include="FileComparer.cs" />
-    <Compile Include="FileWriterTestHelper.cs" />
-    <Compile Include="LocationFileReaderTestHelper.cs" />
-    <Compile Include="NetworkAndGridReaderTestHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TemporaryDirectory.cs" />
   </ItemGroup>

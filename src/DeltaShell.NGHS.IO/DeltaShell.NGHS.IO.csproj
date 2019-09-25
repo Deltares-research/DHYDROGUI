@@ -118,35 +118,13 @@
       <Link>Properties\AssemblyInfo.Version.FM.cs</Link>
     </Compile>
     <Compile Include="Adaptors\UGridToUnstructuredGridAdaptor.cs" />
-    <Compile Include="DelftBcReader.cs" />
-    <Compile Include="DelftBcWriter.cs" />
     <Compile Include="DelftIniReader.cs" />
     <Compile Include="DelftIniWriter.cs" />
     <Compile Include="FileConverters\DelftXmlFileConverter.cs" />
     <Compile Include="FileBasedUtils.cs" />
     <Compile Include="FileReaders\DelftConfigXmlFileParser.cs" />
     <Compile Include="FileReaders\FileReadingException.cs" />
-    <Compile Include="FileWriters\CrossSectionDefinition\DefinitionGeneratorCrossSectionDefinition.cs" />
-    <Compile Include="FileWriters\CrossSectionDefinition\DefinitionGeneratorCrossSectionDefinitionArch.cs" />
-    <Compile Include="FileWriters\CrossSectionDefinition\DefinitionGeneratorCrossSectionDefinitionCircle.cs" />
-    <Compile Include="FileWriters\CrossSectionDefinition\DefinitionGeneratorCrossSectionDefinitionCunette.cs" />
-    <Compile Include="FileWriters\CrossSectionDefinition\DefinitionGeneratorCrossSectionDefinitionEgg.cs" />
-    <Compile Include="FileWriters\CrossSectionDefinition\DefinitionGeneratorCrossSectionDefinitionElliptical.cs" />
-    <Compile Include="FileWriters\CrossSectionDefinition\DefinitionGeneratorCrossSectionDefinitionRectangle.cs" />
-    <Compile Include="FileWriters\CrossSectionDefinition\DefinitionGeneratorCrossSectionDefinitionStandard.cs" />
-    <Compile Include="FileWriters\CrossSectionDefinition\DefinitionGeneratorCrossSectionDefinitionSteelCunette.cs" />
-    <Compile Include="FileWriters\CrossSectionDefinition\DefinitionGeneratorCrossSectionDefinitionTrapezium.cs" />
-    <Compile Include="FileWriters\CrossSectionDefinition\DefinitionGeneratorCrossSectionDefinitionXyz.cs" />
-    <Compile Include="FileWriters\CrossSectionDefinition\DefinitionGeneratorCrossSectionDefinitionYz.cs" />
-    <Compile Include="FileWriters\CrossSectionDefinition\DefinitionGeneratorCrossSectionDefinitionZw.cs" />
-    <Compile Include="FileWriters\CrossSectionDefinition\DefinitionRegion.cs" />
-    <Compile Include="FileWriters\DefinitionGeneratorFactory.cs" />
-    <Compile Include="FileWriters\FileWritingException.cs" />
-    <Compile Include="FileWriters\General\GeneralRegion.cs" />
-    <Compile Include="FileWriters\General\GeneralRegionGenerator.cs" />
-    <Compile Include="FileWriters\IniFileWriter.cs" />
-    <Compile Include="FileWriters\Location\LocationRegion.cs" />
-    <Compile Include="FileWriters\Structure\StructureRegion.cs" />
+    <Compile Include="StructureRegion.cs" />
     <Compile Include="FunctionStores\MapHisFileMetaData.cs" />
     <Compile Include="FunctionStores\MapHisFileReader.cs" />
     <Compile Include="FunctionStores\ReadOnlyMapHisFileFunctionStore.cs" />
@@ -175,7 +153,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="SalinityRegion.cs" />
     <Compile Include="UgridGlobalMetaDataToProtoConverter.cs" />
   </ItemGroup>
   <ItemGroup>
