@@ -17,10 +17,12 @@ using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.FMSuite.FlowFM.Sediment;
 using GeoAPI.Geometries;
+using log4net.Core;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Geometries;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
+using Rhino.Mocks;
 using SharpMap.Extensions.CoordinateSystems;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
@@ -50,6 +52,212 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 Assert.AreEqual(point, valueList[idx]);
                 idx++;
             }
+        }
+
+        [TestCase('=', 34)]
+        [TestCase('#', 52)]
+        [Category(TestCategory.DataAccess)]
+        public void Write_ThenAllPropertiesAreCorrectlyAligned(char separator, int expectedIndex)
+        {
+            // Setup
+            var mduFile = new MduFile();
+            var modelDefinition = new WaterFlowFMModelDefinition();
+            var config = MockRepository.GenerateStub<IMduFileWriteConfig>();
+
+            foreach (WaterFlowFMProperty property in modelDefinition.Properties)
+            {
+                property.PropertyDefinition.Description = "comment";
+            }
+
+            string[] lines;
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                string writeFilePath = Path.Combine(tempDirectory.Path, "FlowFM.mdu");
+
+                // Call
+                mduFile.Write(writeFilePath, modelDefinition, null, null, config);
+
+                lines = File.ReadAllLines(writeFilePath);
+            }
+
+            // Assert
+            string[] relevantLines = lines.Where(l => l.Contains(separator) && l.IndexOf(separator) != 0).ToArray();
+
+            int index = relevantLines.First().IndexOf(separator);
+            Assert.That(index, Is.EqualTo(expectedIndex), $"Index of {separator} was not as expected.");
+
+            bool areAligned = relevantLines.Select(l => l.IndexOf('=')).Distinct().Count() == 1;
+            Assert.That(areAligned, $"All {separator}'s in the file should be aligned.");
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void Write_ThenAllPropertiesWithACommentAreWrittenWithAComment()
+        {
+            // Setup
+            var mduFile = new MduFile();
+            var modelDefinition = new WaterFlowFMModelDefinition();
+            var config = MockRepository.GenerateStub<IMduFileWriteConfig>();
+
+            const string propertyName = "custom_property_name";
+            const string comment = "custom_comment";
+
+            WaterFlowFMProperty property = CreateProperty(propertyName, comment);
+            modelDefinition.Properties.Add(property);
+
+            string[] lines;
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                string writeFilePath = Path.Combine(tempDirectory.Path, "FlowFM.mdu");
+
+                // Call
+                mduFile.Write(writeFilePath, modelDefinition, null, null, config);
+
+                lines = File.ReadAllLines(writeFilePath);
+            }
+
+            // Assert
+            string propertyLine = lines.Single(l => l.Contains(propertyName));
+
+            Assert.That(propertyLine.Contains($"# {comment}"),
+                        $"Line '{propertyLine}' does not contain the expected comment '{comment}'.");
+        }
+
+        private static WaterFlowFMProperty CreateProperty(string name, string comment)
+        {
+            var propertyDefinition = new WaterFlowFMPropertyDefinition
+            {
+                MduPropertyName = name,
+                Description = comment,
+                DataType = typeof(string),
+                FileCategoryName = "custom_category"
+            };
+
+            return new WaterFlowFMProperty(propertyDefinition, "custom_value");
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void Read_FromFileWithKnownPropertyWithCustomComment_ThenOriginalCommentWillBeKept()
+        {
+            // Setup
+            var mduFile = new MduFile();
+            var modelDefinition = new WaterFlowFMModelDefinition();
+            const string propertyName = KnownProperties.Temperature;
+            const string originalComment = "original_comment";
+
+            WaterFlowFMProperty property = modelDefinition.GetModelProperty(propertyName);
+            property.PropertyDefinition.Description = originalComment;
+
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                string filePath = Path.Combine(tempDirectory.Path, "FlowFM.mdu");
+                File.WriteAllLines(filePath, new[]
+                {
+                    "[physics]",
+                    $"{propertyName} = 1 # custom_comment"
+                });
+
+                // Call
+                mduFile.Read(filePath, modelDefinition, new HydroArea(), null);
+            }
+
+            // Assert
+            string comment = property.PropertyDefinition.Description;
+            Assert.That(comment, Is.EqualTo(originalComment),
+                        "Comments should not be altered after reading the mdu file for known properties.");
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void Read_FromFileWithUnknownPropertyWithAComment_ThenCommentFromFileIsSetProperty(string propertyName)
+        {
+            // Setup
+            var mduFile = new MduFile();
+            var modelDefinition = new WaterFlowFMModelDefinition();
+            const string expectedComment = "COMMENT";
+
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                string filePath = Path.Combine(tempDirectory.Path, "FlowFM.mdu");
+                File.WriteAllLines(filePath, new[]
+                {
+                    "[physics]",
+                    $"unknown_property = 1 # {expectedComment}"
+                });
+
+                // Call
+                mduFile.Read(filePath, modelDefinition, new HydroArea(), null);
+            }
+
+            // Assert
+            WaterFlowFMProperty property = modelDefinition.GetModelProperty(propertyName);
+            string comment = property.PropertyDefinition.Description;
+
+            Assert.That(comment, Is.EqualTo(expectedComment));
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void Read_WhenFileHasOldCategoryNameThenCategoryIsRenamed()
+        {
+            // Setup
+            var mduFile = new MduFile();
+            var modelDefinition = new WaterFlowFMModelDefinition();
+
+            const string propertyName = "property";
+            const string oldCategoryName = "model";
+            const string newCategoryName = "General";
+
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                string filePath = Path.Combine(tempDirectory.Path, "FlowFM.mdu");
+                File.WriteAllLines(filePath, new[]
+                {
+                    $"[{oldCategoryName}]",
+                    $"{propertyName} = D-Flow FM # Program name"
+                });
+
+                // Call
+                mduFile.Read(filePath, modelDefinition, new HydroArea(), null);
+            }
+
+            // Assert
+            WaterFlowFMProperty property = modelDefinition.GetModelProperty(propertyName);
+            Assert.That(property.PropertyDefinition.FileCategoryName, Is.EqualTo(newCategoryName),
+                        $"Category [{oldCategoryName}] should be renamed to [{newCategoryName}].");
+        }
+
+        [TestCase("enclosurefile", "GridEnclosureFile")]
+        [TestCase("trtdt", "DtTrt")]
+        [TestCase("botlevuni", "BedLevUni")]
+        [TestCase("botlevtype", "BedLevType")]
+        [TestCase("mduformatversion", "FileVersion")]
+        [Category(TestCategory.DataAccess)]
+        public void Read_WhenFileHasOldPropertyNameThenPropertyIsRenamed(string oldPropertyName, string newPropertyName)
+        {
+            // Setup
+            var mduFile = new MduFile();
+            var modelDefinition = new WaterFlowFMModelDefinition();
+
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                string filePath = Path.Combine(tempDirectory.Path, "FlowFM.mdu");
+                File.WriteAllLines(filePath, new[]
+                {
+                    "[category]",
+                    $"{oldPropertyName} = 0"
+                });
+
+                // Call
+                mduFile.Read(filePath, modelDefinition, new HydroArea(), null);
+            }
+
+            // Assert
+            Assert.That(modelDefinition.ContainsProperty(oldPropertyName), Is.False,
+                        $"Model definition should not contain property with name '{oldPropertyName}'");
+            Assert.That(modelDefinition.ContainsProperty(newPropertyName), Is.True,
+                        $"Model definition should contain property with name '{newPropertyName}'");
         }
 
         [Test]
@@ -185,9 +393,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             }
 
             Assert.IsTrue(File.Exists(testFile));
-            var lines = File.ReadLines(testFile);
-            var expectedLine = $"PillarFile        = {Path.GetFileName(tempFileName)}.pliz";
-            Assert.IsTrue(lines.Any(l => l.Contains(expectedLine)));
+            string allText = File.ReadAllText(testFile);
+            WaterFlowFMMduFileTestHelper.AssertContainsMduLine(allText, "PillarFile", $"{Path.GetFileName(tempFileName)}.pliz");
 
             //The contents of th efile are checked at the PliZ Exporter and WaterFlowFM export level.
             Assert.IsTrue(File.Exists(tempFileName.Replace(".mdu", ".pliz")));
@@ -679,7 +886,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 // Then
                 Assert.That(msgs, Is.Not.Null, "Expected the rendered messages not to be null.");
 
-                const string unexpectedMsgHeader = "During reading the Fixed Weirs the following log messages were produced:";
+                const string unexpectedMsgHeader = "During reading the Fixed Weirs the following";
                 Assert.That(msgs.Any(m => m.StartsWith(unexpectedMsgHeader)), Is.False,
                             "Expected no messages concerning reading of Fixed Weirs, but some exist.");
             }
@@ -742,7 +949,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 string msg = msgs.First();
 
-                const string expectedMsgHeader = "During reading the Fixed Weirs the following log messages were produced:";
+                const string expectedMsgHeader = "During reading the Fixed Weirs the following warnings were reported:";
                 Assert.That(msg, Is.StringStarting(expectedMsgHeader), "Expected the header of the message to be different:");
 
 
@@ -915,6 +1122,68 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 // 4. Verify final expectations
                 int importedDryAreas = originalArea.DryAreas.Count;
                 Assert.That(importedDryAreas, Is.EqualTo(expectedAreas), $"Imported number of areas {importedDryAreas} does not match the expected amount ({expectedAreas}");
+            }
+        }
+
+        [Test]
+        public void GivenMduFileWithPropertyValueNotWithinAcceptableRange_WhenReading_ThenGiveWarningMessage()
+        {
+            // Given
+            const string mduFileName = "UnsupportedUnifFrictTypeValue.mdu";
+            string testFilePath = TestHelper.GetTestFilePath(Path.Combine("mdu_examples", mduFileName));
+
+            using (var temporaryDirectory = new TemporaryDirectory())
+            {
+                string mduFilePath = Path.Combine(temporaryDirectory.Path, mduFileName);
+                FileUtils.CopyFile(testFilePath, mduFilePath);
+
+                var mduFile = new MduFile();
+                var waterFlowFmModelDefinition = new WaterFlowFMModelDefinition(Path.GetDirectoryName(mduFilePath), "myModel");
+
+                // When
+                void Call()
+                {
+                    mduFile.Read(mduFilePath, waterFlowFmModelDefinition, new HydroArea(), null);
+                }
+
+                // Then
+                string expectedMessage = "During reading the mdu file the following warnings were reported:" 
+                                         + Environment.NewLine 
+                                         + "- An unsupported option for *Uniform friction type* has been detected and the default value will be used.";
+                IEnumerable<string> renderedWarningMessages = TestHelper.GetAllRenderedMessages(Call, Level.Warn);
+                Assert.That(renderedWarningMessages.Count(message => message == expectedMessage), Is.EqualTo(1));
+            }
+        }
+
+        [Test]
+        public void GivenMduFileWithMultiplePropertyValuesNotWithinAcceptableRange_WhenReading_ThenGiveLogMessage()
+        {
+            // Given
+            const string mduFileName = "MultipleUnsupportedPropertyValues.mdu";
+            string testFilePath = TestHelper.GetTestFilePath(Path.Combine("mdu_examples", mduFileName));
+
+            using (var temporaryDirectory = new TemporaryDirectory())
+            {
+                string mduFilePath = Path.Combine(temporaryDirectory.Path, mduFileName);
+                FileUtils.CopyFile(testFilePath, mduFilePath);
+
+                var mduFile = new MduFile();
+                var waterFlowFmModelDefinition = new WaterFlowFMModelDefinition(Path.GetDirectoryName(mduFilePath), "myModel");
+
+                // When
+                void Call()
+                {
+                    mduFile.Read(mduFilePath, waterFlowFmModelDefinition, new HydroArea(), null);
+                }
+
+                // Then
+                string expectedMessage = "During reading the mdu file the following warnings were reported:"
+                                         + Environment.NewLine 
+                                         + "- An unsupported option for *Turbulence model* has been detected and the default value will be used."
+                                         + Environment.NewLine
+                                         + "- An unsupported option for *Uniform friction type* has been detected and the default value will be used.";
+                IEnumerable<string> renderedWarningMessages = TestHelper.GetAllRenderedMessages(Call, Level.Warn);
+                Assert.That(renderedWarningMessages.Count(message => message == expectedMessage), Is.EqualTo(1));
             }
         }
     }

@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
@@ -1668,16 +1669,16 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 return;
 
             var mduData = File.ReadAllLines(mduPath);
-            const string outputDir = "OutputDir         =";
+            var regex = new Regex(@"OutputDir\s*=\s*");
 
             for (var i = 0; i < mduData.Length; i++)
             {
                 var line = mduData[i];
 
-                if (!line.StartsWith(outputDir))
+                if (!regex.IsMatch(line))
                     continue;
 
-                mduData[i] = $"{line.TrimEnd()} {newOutputDirPath}";
+                mduData[i] = regex.Replace(line, $"OutputDir = {newOutputDirPath}");
                 break;
             }
 

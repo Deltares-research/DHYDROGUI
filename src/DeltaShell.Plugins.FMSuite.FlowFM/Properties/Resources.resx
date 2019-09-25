@@ -583,4 +583,7 @@ Manhole with unique id '{4}' is not imported.</value>
   <data name="WaterFlowFMModelDefinitionValidator_Validate_Bed_level_locations_should_be_set_to__faces__when_morphology_is_active_" xml:space="preserve">
     <value>Bed level locations should be set to 'faces' when morphology is active.</value>
   </data>
+  <data name="MduFile_ReadProperties_An_unsupported_option_for_0_has_been_detected" xml:space="preserve">
+    <value>An unsupported option for *{0}* has been detected and the default value will be used.</value>
+  </data>
 </root>
