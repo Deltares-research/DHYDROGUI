@@ -117,7 +117,7 @@
     <Compile Include="..\..\AssemblyInfo.Version.FM.cs">
       <Link>Properties\AssemblyInfo.Version.FM.cs</Link>
     </Compile>
-    <Compile Include="Adaptors\UGridToUnstructuredGridAdaptor.cs" />
+    <Compile Include="Adapters\UGridToUnstructuredGridAdapter.cs" />
     <Compile Include="DelftIniReader.cs" />
     <Compile Include="DelftIniWriter.cs" />
     <Compile Include="FileConverters\DelftXmlFileConverter.cs" />

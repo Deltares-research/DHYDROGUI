@@ -3,13 +3,13 @@ using System.Linq;
 using DeltaShell.NGHS.IO.Grid;
 using NetTopologySuite.Extensions.Grids;
 
-namespace DeltaShell.NGHS.IO.Adaptors
+namespace DeltaShell.NGHS.IO.Adapters
 {
-    public class UGridToUnstructuredGridAdaptor : IDisposable
+    public class UGridToUnstructuredGridAdapter : IDisposable
     {
         public UGrid uGrid { get; set; }
 
-        public UGridToUnstructuredGridAdaptor(string filename)
+        public UGridToUnstructuredGridAdapter(string filename)
         {
            uGrid = new UGrid(filename);
         }
