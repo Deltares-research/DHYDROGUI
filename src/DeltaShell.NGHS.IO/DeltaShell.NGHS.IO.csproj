@@ -146,10 +146,6 @@
     <Compile Include="FileWriters\General\GeneralRegionGenerator.cs" />
     <Compile Include="FileWriters\IniFileWriter.cs" />
     <Compile Include="FileWriters\Location\LocationRegion.cs" />
-    <Compile Include="FileWriters\Network\NetworkAndGridWriter.cs" />
-    <Compile Include="FileWriters\Network\NetworkDefinitionRegion.cs" />
-    <Compile Include="FileWriters\Retention\RetentionFileWriter.cs" />
-    <Compile Include="FileWriters\Retention\RetentionRegion.cs" />
     <Compile Include="FileWriters\Structure\StructureRegion.cs" />
     <Compile Include="FunctionStores\MapHisFileMetaData.cs" />
     <Compile Include="FunctionStores\MapHisFileReader.cs" />
