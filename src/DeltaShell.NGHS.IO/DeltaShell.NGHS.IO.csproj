@@ -112,7 +112,6 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml" />
-    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\AssemblyInfo.Version.FM.cs">
@@ -125,14 +124,8 @@
     <Compile Include="DelftIniWriter.cs" />
     <Compile Include="FileConverters\DelftXmlFileConverter.cs" />
     <Compile Include="FileBasedUtils.cs" />
-    <Compile Include="FileReaders\Definition\DefinitionReader.cs" />
-    <Compile Include="FileReaders\DelftBcFileParser.cs" />
     <Compile Include="FileReaders\DelftConfigXmlFileParser.cs" />
     <Compile Include="FileReaders\FileReadingException.cs" />
-    <Compile Include="FileReaders\DelftIniFileParser.cs" />
-    <Compile Include="FileWriters\Boundary\BoundaryFileWriter.cs" />
-    <Compile Include="FileWriters\Boundary\BoundaryRegion.cs" />
-    <Compile Include="FileWriters\Boundary\DefinitionGeneratorBoundary.cs" />
     <Compile Include="FileWriters\CrossSectionDefinition\DefinitionGeneratorCrossSectionDefinition.cs" />
     <Compile Include="FileWriters\CrossSectionDefinition\DefinitionGeneratorCrossSectionDefinitionArch.cs" />
     <Compile Include="FileWriters\CrossSectionDefinition\DefinitionGeneratorCrossSectionDefinitionCircle.cs" />
@@ -152,35 +145,11 @@
     <Compile Include="FileWriters\General\GeneralRegion.cs" />
     <Compile Include="FileWriters\General\GeneralRegionGenerator.cs" />
     <Compile Include="FileWriters\IniFileWriter.cs" />
-    <Compile Include="FileWriters\Location\DefinitionGeneratorCrossSectionLocation.cs" />
-    <Compile Include="FileWriters\Location\DefinitionGeneratorLateralSourceLocation.cs" />
-    <Compile Include="FileWriters\Location\DefinitionGeneratorLocation.cs" />
-    <Compile Include="FileWriters\Location\LocationFileWriter.cs" />
     <Compile Include="FileWriters\Location\LocationRegion.cs" />
     <Compile Include="FileWriters\Network\NetworkAndGridWriter.cs" />
     <Compile Include="FileWriters\Network\NetworkDefinitionRegion.cs" />
     <Compile Include="FileWriters\Retention\RetentionFileWriter.cs" />
     <Compile Include="FileWriters\Retention\RetentionRegion.cs" />
-    <Compile Include="FileWriters\SpatialData\SpatialDataFileNames.cs" />
-    <Compile Include="FileWriters\SpatialData\SpatialDataFileWriter.cs" />
-    <Compile Include="FileWriters\SpatialData\SpatialDataQuantity.cs" />
-    <Compile Include="FileWriters\SpatialData\SpatialDataRegion.cs" />
-    <Compile Include="FileWriters\Structure\CompoundStructureInfo.cs" />
-    <Compile Include="FileWriters\Structure\DefinitionGeneratorStructure.cs" />
-    <Compile Include="FileWriters\Structure\DefinitionGeneratorStructureAdvancedWeir.cs" />
-    <Compile Include="FileWriters\Structure\DefinitionGeneratorStructureBridge.cs" />
-    <Compile Include="FileWriters\Structure\DefinitionGeneratorStructureBridgePillar.cs" />
-    <Compile Include="FileWriters\Structure\DefinitionGeneratorStructureBridgeStandard.cs" />
-    <Compile Include="FileWriters\Structure\DefinitionGeneratorStructureCulvert.cs" />
-    <Compile Include="FileWriters\Structure\DefinitionGeneratorStructureExtraResistance.cs" />
-    <Compile Include="FileWriters\Structure\DefinitionGeneratorStructureGeneralStructure.cs" />
-    <Compile Include="FileWriters\Structure\DefinitionGeneratorStructureInvertedSiphon.cs" />
-    <Compile Include="FileWriters\Structure\DefinitionGeneratorStructureOrifice.cs" />
-    <Compile Include="FileWriters\Structure\DefinitionGeneratorStructurePump.cs" />
-    <Compile Include="FileWriters\Structure\DefinitionGeneratorStructureRiverWeir.cs" />
-    <Compile Include="FileWriters\Structure\DefinitionGeneratorStructureSiphon.cs" />
-    <Compile Include="FileWriters\Structure\DefinitionGeneratorStructureUniversalWeir.cs" />
-    <Compile Include="FileWriters\Structure\DefinitionGeneratorStructureWeir.cs" />
     <Compile Include="FileWriters\Structure\StructureRegion.cs" />
     <Compile Include="FunctionStores\MapHisFileMetaData.cs" />
     <Compile Include="FunctionStores\MapHisFileReader.cs" />
@@ -238,9 +207,7 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="FileReaders\ConfigXml\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>

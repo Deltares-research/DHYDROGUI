@@ -117,21 +117,15 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml" />
-    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Adaptors\UGridToUnstructuredGridAdaptorTest.cs" />
     <Compile Include="FileConverters\DelftXmlFileConverterTest.cs" />
     <Compile Include="FileBasedUtilsTest.cs" />
-    <Compile Include="FileReaders\DelftBcFileParserTest.cs" />
     <Compile Include="FileReaders\DelftConfigXmlFileParserTest.cs" />
-    <Compile Include="FileReaders\DelftIniFileParserTest.cs" />
     <Compile Include="FileWriters\CrossSectionDefinitionFileWritersTest.cs" />
-    <Compile Include="FileWriters\LocationFileWritersTest.cs" />
     <Compile Include="FileWriters\NetworkAndGridWriterTest.cs" />
     <Compile Include="FileWriters\RetentionFileWriterTests.cs" />
-    <Compile Include="FileWriters\SpatialDataFileWriterTests.cs" />
-    <Compile Include="FileWriters\StructureFileWriterTest.cs" />
     <Compile Include="FunctionStores\MapHisFileReaderTest.cs" />
     <Compile Include="FunctionStores\ReadOnlyMapHisFileFunctionStoreTest.cs" />
     <Compile Include="Grid\AGridTests.cs" />

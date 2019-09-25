@@ -2,41 +2,8 @@
 
 namespace DeltaShell.NGHS.IO.FileWriters.Location
 {
-    public static class LocationRegion
-    {
-        // Common Location Properties
-        public static readonly ConfigurationSetting Id = new ConfigurationSetting(key: "id", description: "Unique branch feature id");
-        public static readonly ConfigurationSetting BranchId = new ConfigurationSetting(key: "branchid", description: "Branch on which the branch feature is located");
-        public static readonly ConfigurationSetting Chainage = new ConfigurationSetting(key: "chainage", description: "Location on the branch (m)");
-        public static readonly ConfigurationSetting Name = new ConfigurationSetting(key: "name", description: "Long name in the user interface");
-    }
-
-    public static class LateralSourceLocationRegion
-    {
-        public static readonly ConfigurationSetting Length = new ConfigurationSetting(key: "length", description: "(Optional, default=0) If greater than 0 : Length of the diffuse lateral source (m)");
-    }
-
-    public static class ObservationPointRegion
-    {
-        public const string IniHeader = "ObservationPoint";
-        public const string ObservationPointType = "observationpoint";
-    }
-
-    public static class BoundaryRegion
-    {
-        public const string BoundaryHeader = "Boundary";
-        public const string LateralDischargeHeader = "LateralDischarge";
-
-        public static readonly ConfigurationSetting NodeId = new ConfigurationSetting(key: "nodeId", description: "Node on which the boundary is located");
-        public static readonly ConfigurationSetting Type = new ConfigurationSetting(key: "type", description: "Boundary type");
-        public static readonly ConfigurationSetting ThatcherHarlemanCoeff = new ConfigurationSetting(key: "thatcher-harlemancoeff",
-            description: "for salt boundaries: thatcher-harlemancoeff time lag in seconds");
-    }
-
     public static class CrossSectionRegion
     {
-        public const string IniHeader = "CrossSection";
-
         public static class CrossSectionDefinitionType
         {
             public const string Yz = "yz";
