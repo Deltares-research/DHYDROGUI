@@ -28,7 +28,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
     {
         private const string StructureCategoryName = "structure";
         private static readonly ILog Log = LogManager.GetLogger(typeof(StructuresFile));
-        public List<string> propertyTypesFromIni = new List<string>();
 
         private readonly Dictionary<string, string> backwardsCompatibilityMapping = new Dictionary<string, string>
         {
@@ -71,7 +70,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             string structuresFilePath, string structuresSubFilesReferenceFilePath)
         {
             var logHandler = new LogHandler($"reading the structures file ({structuresFilePath}),", Log);
-            int weirs = 0, gates = 0, generalStructure = 0, pumps = 0; 
 
             List<IStructure> structures = ReadStructures2D(structuresFilePath, logHandler)
                                           .Select(s => ConvertStructure(s, structuresSubFilesReferenceFilePath))
@@ -127,9 +125,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
                                                   errorMessage);
                     continue;
                 }
-                
-                propertyTypesFromIni.Add(structureTypeProperty.Value); // saves the structure types in a list 
-                
+
                 yield return structure2D;
             }
         }

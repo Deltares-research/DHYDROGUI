@@ -130,11 +130,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         private Dictionary<FixedWeir, ModelFeatureCoordinateData<FixedWeir>> fixedWeirProperties =
             new Dictionary<FixedWeir, ModelFeatureCoordinateData<FixedWeir>>();
 
-        public Dictionary<IFeature, List<IDataItem>> GetAreaDataItems()
-        {
-            return areaDataItems;
-        }
-
         public IEventedList<ISedimentFraction> SedimentFractions
         {
             get => sedimentFractions;

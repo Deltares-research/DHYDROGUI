@@ -2,13 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Windows.Forms;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
 using DelftTools.Utils.Aop;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.ImportersExporters;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
@@ -111,21 +109,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
                 throw;
             }
 
-            InsertStructures(structures, targetHydroArea, structuresFile);
+            InsertStructures(structures, targetHydroArea);
             return target;
         }
 
         [InvokeRequired]
-        private static void InsertStructures(IEnumerable<IStructure> structures, HydroArea targetHydroArea,
-                                             StructuresFile structuresFile)
+        private static void InsertStructures(IEnumerable<IStructure> structures, HydroArea targetHydroArea)
         {
-            int pumpCount = 0,
-                weirCount = 0,
-                simpleWeirIni = 0,
-                gatedWeirIni = 0,
-                generalFormulaIni = 0,
-                pumpsIni = 0;
-
+            int pumpCount = 0, weirCount = 0;
             foreach (IStructure structure in structures)
             {
                 if (structure is Pump2D)
@@ -142,43 +133,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
                 {
                     throw new NotImplementedException();
                 }
-
             }
 
-            foreach (string propertyType in structuresFile.propertyTypesFromIni)
-            {
-                if (propertyType.Equals(IniFileImporterExporterTypes.WeirImportTypeDescription))
-                {
-                    simpleWeirIni++;
-                }
-                else if (propertyType.Equals(IniFileImporterExporterTypes.GateImportTypeDescription))
-                {
-                    gatedWeirIni++;
-                }
-                else if (propertyType.Equals(IniFileImporterExporterTypes.GeneralStructureImportTypeDescription))
-                {
-                    generalFormulaIni++;
-                }
-                else if (propertyType.Equals(IniFileImporterExporterTypes.PumpImportTypeDescription))
-                {
-                    pumpsIni++;
-                }
-                else
-                {
-                    throw new NotImplementedException();
-                }
-            }
-
-            Log.InfoFormat("Read {0} structures (Pumps: {1}; Weirs: {2}; Gates: {3}; General Structures {4}).",
-                           simpleWeirIni + gatedWeirIni + generalFormulaIni + pumpsIni,
-                           pumpsIni,
-                           simpleWeirIni,
-                           gatedWeirIni,
-                           generalFormulaIni);
-
-            string message =
-                $"Read {pumpsIni + simpleWeirIni + generalFormulaIni + gatedWeirIni} structures (Pumps: {pumpsIni}; Weirs: {simpleWeirIni}; Gates {gatedWeirIni}; General Structures: {generalFormulaIni}).";
-            MessageBox.Show(message);
+            //TODO
+            Log.InfoFormat("Read {0} structures (Pumps: {1}; Weirs: {2};).",
+                           pumpCount + weirCount,
+                           pumpCount,
+                           weirCount);
         }
 
         #endregion
@@ -186,8 +147,5 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
         public bool OpenViewAfterImport => false;
 
         public Func<HydroArea, WaterFlowFMModel> GetModelForArea { get; set; }
-    
     }
-
-   
 }
