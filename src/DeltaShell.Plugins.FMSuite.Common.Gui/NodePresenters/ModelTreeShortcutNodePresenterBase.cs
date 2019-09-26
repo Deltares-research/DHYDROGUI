@@ -50,6 +50,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.NodePresenters
                     return false;
                 case ShortCutType.SpatialCoverage:
                     ConfigureSpatialEditor(shortcut);
+                    return false;
+                case ShortCutType.SpatialCoverageWithView:
+                    ConfigureSpatialEditor(shortcut);
                     return true;
                 case ShortCutType.FeatureSet:
                     return true;
