@@ -2,7 +2,7 @@
 using System.IO;
 using System.Linq;
 using DelftTools.Utils.NetCdf;
-using DeltaShell.NGHS.IO.Adaptors;
+using DeltaShell.NGHS.IO.Adapters;
 using DeltaShell.NGHS.IO.Properties;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using GeoAPI.Extensions.CoordinateSystems;
@@ -36,7 +36,7 @@ namespace DeltaShell.NGHS.IO.Grid
             switch (GetConvention(path))
             {
                 case GridApiDataSet.DataSetConventions.CONV_UGRID:
-                    using (var fmUGridAdaptor = new UGridToUnstructuredGridAdaptor(path))
+                    using (var fmUGridAdaptor = new UGridToUnstructuredGridAdapter(path))
                     {
                         return fmUGridAdaptor.GetUnstructuredGridFromUGridMeshId(1);
                     }
@@ -395,13 +395,13 @@ namespace DeltaShell.NGHS.IO.Grid
             }
         }
 
-        public static void DoIfUgrid(string path, Action<UGridToUnstructuredGridAdaptor> ugridAction)
+        public static void DoIfUgrid(string path, Action<UGridToUnstructuredGridAdapter> ugridAction)
         {
             var convention = GetConvention(path);
             if (convention != GridApiDataSet.DataSetConventions.CONV_UGRID)
                 return;
 
-            using (var uGridAdaptor = new UGridToUnstructuredGridAdaptor(path))
+            using (var uGridAdaptor = new UGridToUnstructuredGridAdapter(path))
             {
                 ugridAction(uGridAdaptor);
             }

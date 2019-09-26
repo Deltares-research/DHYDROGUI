@@ -10,7 +10,6 @@ using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO;
-using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Handlers;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.NGHS.IO.TestUtils;
@@ -914,7 +913,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             string msg = messages.First();
 
             string expectedMsgHeader =
-                $"During reading the structures file ({copyOfIniInTempFilePath}), the following log messages were produced";
+                $"During reading the structures file ({copyOfIniInTempFilePath}), the following warnings were reported";
             Assert.That(msg, Is.StringStarting(expectedMsgHeader), "Expected the header of the message to be different:");
 
             List<string> subMsgs = msg.Split(new[]

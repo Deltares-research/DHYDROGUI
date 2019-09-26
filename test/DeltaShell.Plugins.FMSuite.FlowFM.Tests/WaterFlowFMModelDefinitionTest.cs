@@ -21,6 +21,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
+using DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using GeoAPI.Extensions.Coverages;
@@ -251,8 +252,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 "* This comment line will not be removed, eventhough shiptxy is not yet supported."));
             Assert.IsTrue(mduContent.Contains(
                 "! comment line on initial water level"));
-            Assert.IsTrue(mduContent.Contains(
-                "SomeNewFactor     = 3.7                 # new factor that should be read and written, but is not known"));
+            WaterFlowFMMduFileTestHelper.AssertContainsMduLine(mduContent, "SomeNewFactor", "3.7", "# new factor that should be read and written, but is not known");
         }
 
         [Test]
@@ -281,7 +281,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             mduFileInB.Read(mduFilePathB, modelDefinitionB, new HydroArea(), new Dictionary<FixedWeir, ModelFeatureCoordinateData<FixedWeir>>());
             Assert.AreEqual("B", modelDefinitionB.GetModelProperty("parameterb").Value);
 
-
             // write and confirm output model A
             var mduFilePathOutA = Path.Combine(modelNameA + "_out" + ".mdu");
             var mduFileOutA = new MduFile();
@@ -298,12 +297,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                               new List<ModelFeatureCoordinateData<FixedWeir>>(), 
                               mduFileWriteConfig, 
                               switchTo: false);
-            var originalLinesA = File.ReadAllLines(mduFilePathA).Where(l => !l.StartsWith("#")).ToList();
+
             var linesOutA = File.ReadAllLines(mduFilePathOutA).ToList();
-            foreach (var line in originalLinesA.Where(l => !l.Contains("Version")))
-            {
-                Assert.IsTrue(linesOutA.Contains(line));
-            }
             Assert.IsFalse(linesOutA.Any(l => l.Contains("parameterB"))); // models shouldn't mix their custom props!
 
 
@@ -316,12 +311,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                               new List<ModelFeatureCoordinateData<FixedWeir>>(),
                               mduFileWriteConfig, 
                               switchTo: false);
-            var originalLinesB = File.ReadAllLines(mduFilePathB).Where(l => !l.StartsWith("#")).ToList();
+
             var linesOutB = File.ReadAllLines(mduFilePathOutB).ToList();
-            foreach (var line in originalLinesB.Where(l => !l.Contains("Version")))
-            {
-                Assert.IsTrue(linesOutB.Contains(line));
-            }
             Assert.IsFalse(linesOutB.Any(l => l.Contains("parameterA")));
             Assert.IsFalse(linesOutB.Any(l => l.Contains("[group_A]")));
         }
@@ -544,12 +535,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             mduFile.Write(mduFileSaveToPath, modelDefinition, area, allFixedWeirsAndCorrespondingProperties.Values);
 
             var mduContent = File.ReadAllText(mduFileSaveToPath);
-            Assert.IsTrue(mduContent.Contains(
-                "TStart            = 504                 # Start time w.r.t. RefDate (in TUnit)"));
-            Assert.IsTrue(mduContent.Contains(
-                "HisInterval       = 600                 # Interval (s) between history outputs"));
-            Assert.IsTrue(mduContent.Contains(
-                "! for now, no Smag."));
+            WaterFlowFMMduFileTestHelper.AssertContainsMduLine(mduContent, "TStart", "504");
+            WaterFlowFMMduFileTestHelper.AssertContainsMduLine(mduContent, "HisInterval", "600");
+            Assert.IsTrue(mduContent.Contains("! for now, no Smag."));
 
             var pliFileSaveToPath = FMSuiteFileBase.GetOtherFilePathInSameDirectory(mduFileSaveToPath, "versie2_01.pli");
             var pliFileContent = File.ReadAllText(pliFileSaveToPath);
@@ -602,36 +590,70 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             foreach (string expectedResultsFilePath in Directory.GetFiles(expectedResultsDir))
             {
                 string generatedResultsFilePath = Path.Combine(saveToDir, Path.GetFileName(expectedResultsFilePath));
-                int skipNLines = generatedResultsFilePath.EndsWith(".mdu") ? 8 : 0; // skip date/program/version lines
+                bool isMduFile = generatedResultsFilePath.EndsWith(".mdu", StringComparison.Ordinal);
+                int skipNLines = isMduFile ? 8 : 0; // skip date/program/version lines
                 List<string> expectedResultsContent = File.ReadAllLines(expectedResultsFilePath).Skip(skipNLines).ToList();
                 List<string> generatedResultsContent = File.ReadAllLines(generatedResultsFilePath).Skip(skipNLines).ToList();
-                
+
                 Assert.IsNotNull(generatedResultsContent);
                 Assert.IsNotNull(expectedResultsContent);
 
-                // Added first check if the strings are the same at the same index, because the contain method is not efficient for big files with a lot of lines.  
-                if (expectedResultsContent.Count == generatedResultsContent.Count)
+                if (isMduFile)
                 {
-                    for (var i = 0; i < expectedResultsContent.Count; i++)
-                    {
-                        if (expectedResultsContent[i] == generatedResultsContent[i])
-                        {
-                            continue;
-                        }
+                    string generatedContent = File.ReadAllText(generatedResultsFilePath);
+                    IEnumerable<KeyValuePair<string, string>> expectedContent =
+                        GetExpectedKeyValuePairs(expectedResultsContent);
 
-                        expectedResultsContent.ForEach(er =>
-                                                           Assert.IsTrue(generatedResultsContent.Contains(er),
-                                                                         $"Expected {er} in File {Path.GetFileName(expectedResultsFilePath)} but not found."));
-                        break;
+                    foreach (KeyValuePair<string, string> expectedContentItem in expectedContent)
+                    {
+                        WaterFlowFMMduFileTestHelper.AssertContainsMduLine(
+                            generatedContent, expectedContentItem.Key, expectedContentItem.Value);
                     }
                 }
                 else
                 {
-                    expectedResultsContent.ForEach(er =>
-                        Assert.IsTrue(generatedResultsContent.Contains(er),
-                            $"Expected {er} in File {Path.GetFileName(expectedResultsFilePath)} but not found."));
+                    // Added first check if the strings are the same at the same index, because the contain method is not efficient for big files with a lot of lines.  
+                    if (expectedResultsContent.Count == generatedResultsContent.Count)
+                    {
+                        for (var i = 0; i < expectedResultsContent.Count; i++)
+                        {
+                            if (expectedResultsContent[i] == generatedResultsContent[i])
+                            {
+                                continue;
+                            }
 
+                            expectedResultsContent.ForEach(er => Assert.IsTrue(generatedResultsContent.Contains(er),
+                                                                               $"Expected {er} in File {Path.GetFileName(expectedResultsFilePath)} but not found."));
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        expectedResultsContent.ForEach(er => Assert.IsTrue(generatedResultsContent.Contains(er),
+                                                                           $"Expected {er} in File {Path.GetFileName(expectedResultsFilePath)} but not found."));
+                    }
                 }
+            }
+        }
+
+        private static IEnumerable<KeyValuePair<string, string>> GetExpectedKeyValuePairs(IEnumerable<string> lines)
+        {
+            foreach (string line in lines)
+            {
+                string trimmedLine = line.Trim();
+                if (trimmedLine == string.Empty ||
+                    trimmedLine.StartsWith("[") ||
+                    trimmedLine.StartsWith("#"))
+                {
+                    continue;
+                }
+
+                string[] segments = trimmedLine.Split('=', '#');
+
+                string key = segments[0].Trim();
+                string value = segments[1].Trim();
+
+                yield return new KeyValuePair<string, string>(key, value);
             }
         }
 
@@ -670,10 +692,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             mduFile.Write(mduFileSaveToPath, modelDefinition, area, allFixedWeirsAndCorrespondingProperties.Values);
 
             var mduContent = File.ReadAllText(mduFileSaveToPath);
-            Assert.IsTrue(mduContent.Contains(
-                "NetFile           = boundcond_test_net.nc# *_net.nc"));
-            Assert.IsTrue(mduContent.Contains(
-                "CFLWaveFrac       = 0.1                 # Wave velocity fraction, total courant vel = u + cflw*wavevelocity"));
+            WaterFlowFMMduFileTestHelper.AssertContainsMduLine(mduContent, "NetFile", "boundcond_test_net.nc");
+            WaterFlowFMMduFileTestHelper.AssertContainsMduLine(mduContent, "CFLWaveFrac", "0.1");
 
             var pliFileSaveToPath = FMSuiteFileBase.GetOtherFilePathInSameDirectory(mduFileSaveToPath, "north.pli");
             var pliFileContent = File.ReadAllText(pliFileSaveToPath);

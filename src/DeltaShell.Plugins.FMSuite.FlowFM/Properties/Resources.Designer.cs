@@ -616,6 +616,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to An unsupported option for *{0}* has been detected and the default value will be used..
+        /// </summary>
+        public static string MduFile_ReadProperties_An_unsupported_option_for_0_has_been_detected {
+            get {
+                return ResourceManager.GetString("MduFile_ReadProperties_An_unsupported_option_for_0_has_been_detected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to File at location &apos;{0}&apos; is referenced in structures file &apos;{1}&apos;, but does not exist.
         ///File import of structures file &apos;{1}&apos; has failed..
         /// </summary>

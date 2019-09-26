@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
-using DeltaShell.NGHS.IO.Adaptors;
+using DeltaShell.NGHS.IO.Adapters;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
@@ -68,7 +68,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
 
             // get original grid
             UnstructuredGrid grid;
-            using (var uGridAdaptor = new UGridToUnstructuredGridAdaptor(netFilePath))
+            using (var uGridAdaptor = new UGridToUnstructuredGridAdapter(netFilePath))
             {
                 grid = uGridAdaptor.GetUnstructuredGridFromUGridMeshId(1);
             }
@@ -86,7 +86,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
 
             // read new grid
             UnstructuredGrid adjustedGrid;
-            using (var uGridAdaptor = new UGridToUnstructuredGridAdaptor(netFilePath))
+            using (var uGridAdaptor = new UGridToUnstructuredGridAdapter(netFilePath))
             {
                 adjustedGrid = uGridAdaptor.GetUnstructuredGridFromUGridMeshId(1);
             }
@@ -112,7 +112,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
 
             // get original grid
             UnstructuredGrid grid;
-            using (var uGridAdaptor = new UGridToUnstructuredGridAdaptor(netFilePath))
+            using (var uGridAdaptor = new UGridToUnstructuredGridAdapter(netFilePath))
             {
                 grid = uGridAdaptor.GetUnstructuredGridFromUGridMeshId(1);
             }

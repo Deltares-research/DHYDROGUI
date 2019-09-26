@@ -1,8 +1,10 @@
-﻿using DelftTools.Hydro;
+﻿using System.Text.RegularExpressions;
+using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
+using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 {
@@ -57,6 +59,37 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(0, 100), new Coordinate(50, 50) }),
                 WeirFormula = new GatedWeirFormula()
             };
+        }
+
+        /// <summary>
+        /// Asserts that the <paramref name="inputText"/> contains an mdu line with the
+        /// <paramref name="propertyName"/>, the <paramref name="propertyValue"/>
+        /// and the <paramref name="propertyComment"/>, regardless of the number of white characters./>.
+        /// </summary>
+        /// <param name="inputText">The input text.</param>
+        /// <param name="propertyName">Name of the property.</param>
+        /// <param name="propertyValue">The property value.</param>
+        /// <param name="propertyComment">The property comment.</param>
+        /// <example>
+        /// A typical mdu line looks like this:
+        /// 'PropertyName       = Value     # Comment'
+        /// </example>
+        public static void AssertContainsMduLine(string inputText, string propertyName, string propertyValue, string propertyComment = null)
+        {
+            propertyName = Regex.Escape(propertyName);
+            propertyValue = Regex.Escape(propertyValue);
+
+            string searchPattern = $@"{propertyName}\s*=\s*{propertyValue}";
+            if (propertyComment != null)
+            {
+                propertyComment = Regex.Escape(propertyComment);
+                searchPattern += $@"\s*{propertyComment}";
+            }
+
+            var regex = new Regex(searchPattern);
+
+            Assert.IsTrue(regex.IsMatch(inputText),
+                          $"File did not contain expected text: '{propertyName} = {propertyValue} {propertyComment}'");
         }
     }
 }
