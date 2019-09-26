@@ -170,11 +170,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void Read_FromFileWithUnknownPropertyWithAComment_ThenCommentFromFileIsSetProperty(string propertyName)
+        public void Read_FromFileWithUnknownPropertyWithAComment_ThenCommentFromFileIsSetProperty()
         {
             // Setup
             var mduFile = new MduFile();
             var modelDefinition = new WaterFlowFMModelDefinition();
+            const string propertyName = "unknown_property";
             const string expectedComment = "COMMENT";
 
             using (var tempDirectory = new TemporaryDirectory())
@@ -183,7 +184,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 File.WriteAllLines(filePath, new[]
                 {
                     "[physics]",
-                    $"unknown_property = 1 # {expectedComment}"
+                    $"{propertyName} = 1 # {expectedComment}"
                 });
 
                 // Call

@@ -656,22 +656,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 yield return new KeyValuePair<string, string>(key, value);
             }
         }
-
-        [Test]
-        [Ignore("Run this test to generate expected model definition files")]
-        public void GenerateExpectedResultsFolder()
-        {
-            var mduDir = Path.Combine(TestHelper.GetTestDataDirectory(), "harlingen");
-            var expectedResultsDir = Path.Combine(mduDir, "expectedResults");
-            
-            var area = new HydroArea();
-            var modelDefinition = new WaterFlowFMModelDefinition(mduDir, "har");
-            var allFixedWeirsAndCorrespondingProperties = new Dictionary<FixedWeir, ModelFeatureCoordinateData<FixedWeir>>();
-            var mduFile = new MduFile();
-            mduFile.Read(Path.Combine(mduDir, "har.mdu"), modelDefinition, area, allFixedWeirsAndCorrespondingProperties);
-            mduFile.Write(Path.Combine(expectedResultsDir, "har.mdu"), modelDefinition, area, allFixedWeirsAndCorrespondingProperties.Values);
-        } 
-
+        
         [Test]
         [Category(TestCategory.DataAccess)]
         public void ReadAndWriteModelDefinitionC010TimeSeries()
@@ -1089,12 +1074,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
         
         [Test]
-        [TestCase(MapFormatType.NetCdf, true, false, MapFormatType.Ugrid)]
-        [TestCase(MapFormatType.NetCdf, false, false, MapFormatType.NetCdf)]
-        [TestCase(MapFormatType.Tecplot, false, false, MapFormatType.Tecplot)]
-        [TestCase(MapFormatType.Both, true, false, MapFormatType.Ugrid)]
-        [TestCase(MapFormatType.Ugrid, false, false, MapFormatType.Ugrid)]
-        [TestCase(MapFormatType.Ugrid, true, false, MapFormatType.Ugrid)]
+        [TestCase(MapFormatType.NetCdf, true, MapFormatType.Ugrid)]
+        [TestCase(MapFormatType.NetCdf, false, MapFormatType.NetCdf)]
+        [TestCase(MapFormatType.Tecplot, false, MapFormatType.Tecplot)]
+        [TestCase(MapFormatType.Both, true, MapFormatType.Ugrid)]
+        [TestCase(MapFormatType.Ugrid, false, MapFormatType.Ugrid)]
+        [TestCase(MapFormatType.Ugrid, true, MapFormatType.Ugrid)]
         public void SetMapFormatPropertyValueTest(MapFormatType mapFormatType, bool useMorSed, MapFormatType expectedMapFormatType)
         {
             Assert.NotNull(mapFormatType);
@@ -1113,10 +1098,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        [TestCase(MapFormatType.NetCdf, true, false, MapFormatType.Ugrid)]
-        [TestCase(MapFormatType.NetCdf, false, false, MapFormatType.NetCdf)]
-        [TestCase(MapFormatType.Ugrid, true, false, MapFormatType.Ugrid)]
-        [TestCase(MapFormatType.Ugrid, false, false, MapFormatType.Ugrid)]
+        [TestCase(MapFormatType.NetCdf, true, MapFormatType.Ugrid)]
+        [TestCase(MapFormatType.NetCdf, false, MapFormatType.NetCdf)]
+        [TestCase(MapFormatType.Ugrid, true, MapFormatType.Ugrid)]
+        [TestCase(MapFormatType.Ugrid, false, MapFormatType.Ugrid)]
 
         public void GivenModelDefinitionWhenSettingUseMorSedValueThenMapFormatHasExpectedValue(MapFormatType mapFormatType, bool useMorSed, MapFormatType expectedMapFormatType)
         {
@@ -1723,6 +1708,41 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             IEnumerable<string> renderedMessages = TestHelper.GetAllRenderedMessages(TestAction);
             Assert.That(renderedMessages, Is.Empty);
             Assert.That(modelDefinition.SpatialOperations, Has.Count.EqualTo(1));
+        }
+
+        [Test]
+        public void SetUseMorphologySediment_True_ThenSedimentModelNumberIsEqualTo4()
+        {
+            // Setup
+            var modelDefinition = new WaterFlowFMModelDefinition();
+
+            // Precondition
+            Assert.That(modelDefinition.GetModelProperty(KnownProperties.SedimentModelNumber).GetValueAsString(), Is.EqualTo("0"));
+
+            // Call
+            modelDefinition.UseMorphologySediment = true;
+
+            // Assert
+            Assert.That(modelDefinition.GetModelProperty(KnownProperties.SedimentModelNumber).GetValueAsString(), Is.EqualTo("4"));
+        }
+
+        [Test]
+        public void SetUseMorphologySediment_False_ThenSedimentModelNumberIsEqualTo0()
+        {
+            // Setup
+            var modelDefinition = new WaterFlowFMModelDefinition
+            {
+                UseMorphologySediment = true
+            };
+
+            // Precondition
+            Assert.That(modelDefinition.GetModelProperty(KnownProperties.SedimentModelNumber).GetValueAsString(), Is.EqualTo("4"));
+
+            // Call
+            modelDefinition.UseMorphologySediment = false;
+
+            // Assert
+            Assert.That(modelDefinition.GetModelProperty(KnownProperties.SedimentModelNumber).GetValueAsString(), Is.EqualTo("0"));
         }
 
         private static IDataItem CreateCoverageDataItem(string name, bool withValueConverter)

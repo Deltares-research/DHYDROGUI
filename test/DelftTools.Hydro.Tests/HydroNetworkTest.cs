@@ -64,22 +64,6 @@ namespace DelftTools.Hydro.Tests
         }
 
         [Test]
-        [Ignore("TODO: not working anymore due to refactoring; re-enable later")]
-        public void AddCrossSectionToBranchUsingCollections()
-        {
-            var crossSection = new CrossSection(null);
-            var branch = new Channel(new HydroNode("from"), new HydroNode("To"));
-
-            //NetworkHelper.AddBranchFeatureToBranch(branch, crossSection, crossSection.Offset);
-            branch.BranchFeatures.Add(crossSection);
-
-            Assert.AreEqual(branch, crossSection.Branch);
-
-            branch.BranchFeatures.Clear();
-            Assert.IsNull(crossSection.Branch);
-        }
-
-        [Test]
         [Category(TestCategory.Performance)]
         public void AddManyBranchesWithCrossSections()
         {
