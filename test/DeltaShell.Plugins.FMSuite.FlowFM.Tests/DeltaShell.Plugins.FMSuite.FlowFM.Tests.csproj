@@ -222,7 +222,8 @@
   <ItemGroup>
     <Compile Include="Api\FlexibleMeshModelDllTest.cs" />
     <Compile Include="Api\GridOperationApiTest.cs" />
-    <Compile Include="Api\UnstrucGridOperationApiTests.cs" />
+    <Compile Include="Api\UnstrucGridOperationApiIntegrationTest.cs" />
+    <Compile Include="Api\UnstrucGridOperationApiTest.cs" />
     <Compile Include="Editors\ModelFeatureCoordinateDataEditor\BoundaryGeometryPreviewWindowsFormsHostMapTest.cs" />
     <Compile Include="Editors\ModelFeatureCoordinateDataEditor\CoordinateDataRowTest.cs" />
     <Compile Include="Editors\ModelFeatureCoordinateDataEditor\ModelFeatureCoordinateDataViewTest.cs" />

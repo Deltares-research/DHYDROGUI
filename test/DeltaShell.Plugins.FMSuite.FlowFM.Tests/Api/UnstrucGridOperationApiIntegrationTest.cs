@@ -16,13 +16,12 @@ using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
 {
     [TestFixture]
     [Category(TestCategory.DataAccess)]
-    public class UnstrucGridOperationApiTests
+    public class UnstrucGridOperationApiIntegrationTest
     {
         private const string ErrorMessageMissingSnappedGeometriesPointSource =
             "Due to an error during grid snapping of point sources, not every point source is snapped";
@@ -63,7 +62,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 var tempMduPath = (string)TypeUtils.GetField<UnstrucGridOperationApi, string>(api, "mduFilePath");
 
                 var mduFileDir = Path.GetDirectoryName(tempMduPath);
-                var fmModelUsedByApi = new WaterFlowFMModel(Path.Combine(mduFileDir,tempMduPath));
+                var fmModelUsedByApi = new WaterFlowFMModel(Path.Combine(mduFileDir, tempMduPath));
 
                 var trtRouUsedInOriginalFMModel = model.ModelDefinition.GetModelProperty(KnownProperties.TrtRou).GetValueAsString();
                 Assert.That(trtRouUsedInOriginalFMModel, Is.EqualTo("Y"));
@@ -96,7 +95,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                     // Given
                     model.ExportTo(mduPath, true, false, false);
                     File.Copy(srcNetFile, model.NetFilePath, true);
-                    
+
                     EnableMorphology(model);
                     AddMorphologyBoundary(model);
 
@@ -184,7 +183,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             model.BoundaryConditionSets.Add(set);
         }
 
-        [TestCase("bla_bnd.ext" , KnownProperties.ExtForceFile, TestName = "ExtForceFile")]
+        [TestCase("bla_bnd.ext", KnownProperties.ExtForceFile, TestName = "ExtForceFile")]
         [TestCase("bla_thd.pli", KnownProperties.ThinDamFile, TestName = "ThinDamFile")]
         [TestCase("bla_structures.ini", KnownProperties.StructuresFile, TestName = "StructuresFile")]
         [Category(TestCategory.Slow)]
@@ -244,20 +243,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
 
                 var sourceGeometry = new Point(new Coordinate(2499, 2499, 0));
                 var sourceGeometry2 = new Point(new Coordinate(2599, 2599, 0));
-                
+
                 var geometries = new List<IGeometry>();
                 geometries.Add(sourceGeometry);
                 geometries.Add(sourceGeometry2);
-                
+
                 const string featureType = UnstrucGridOperationApi.SourceSink;
-                
+
                 var snappedGeometries = api.GetGridSnappedGeometry(featureType, geometries).ToList();
 
-                Assert.AreEqual(2,snappedGeometries.Count, ErrorMessageMissingSnappedGeometriesPointSource);
+                Assert.AreEqual(2, snappedGeometries.Count, ErrorMessageMissingSnappedGeometriesPointSource);
 
-                Assert.AreEqual(1,snappedGeometries[0].Coordinates.Length, ErrorMessageAmountOfCoordinatesPointSource);
+                Assert.AreEqual(1, snappedGeometries[0].Coordinates.Length, ErrorMessageAmountOfCoordinatesPointSource);
                 // The geometries should be not the same, since the original geometries will be returned in case of errors.
-                Assert.AreNotEqual(geometries[0].Coordinates[0].X,snappedGeometries[0].Coordinates[0].X, ErrorMessageEqualGeometriesPointSource);
+                Assert.AreNotEqual(geometries[0].Coordinates[0].X, snappedGeometries[0].Coordinates[0].X, ErrorMessageEqualGeometriesPointSource);
                 Assert.AreNotEqual(geometries[0].Coordinates[0].Y, snappedGeometries[0].Coordinates[0].Y, ErrorMessageEqualGeometriesPointSource);
 
                 Assert.AreEqual(2450, snappedGeometries[0].Coordinates[0].X, ErrorMessageDifferentGeometryValuesPointSource);
@@ -299,7 +298,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
 
                 var sourceGeometry = new Point(new Coordinate(-2499, -2499, 0));
                 var sourceGeometry2 = new Point(new Coordinate(2599, 2599, 0));
-                
+
                 var geometries = new List<IGeometry>
                 {
                     sourceGeometry,
@@ -309,12 +308,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 const string featureType = UnstrucGridOperationApi.SourceSink;
 
                 var snappedGeometries = api.GetGridSnappedGeometry(featureType, geometries).ToList();
-                
+
                 Assert.AreEqual(2, snappedGeometries.Count, ErrorMessageMissingSnappedGeometriesPointSource);
 
                 Assert.AreEqual(0, snappedGeometries[0].Coordinates.Length, ErrorMessageAmountOfCoordinatesPointSource);
                 // The geometries should be not the same, since the original geometries will be returned in case of errors.
-               
+
                 Assert.AreEqual(1, snappedGeometries[1].Coordinates.Length, ErrorMessageAmountOfCoordinatesPointSource);
                 Assert.AreNotEqual(geometries[1].Coordinates[0].X, snappedGeometries[1].Coordinates[0].X, ErrorMessageEqualGeometriesPointSource);
                 Assert.AreNotEqual(geometries[1].Coordinates[0].Y, snappedGeometries[1].Coordinates[0].Y, ErrorMessageEqualGeometriesPointSource);
@@ -349,7 +348,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                     .SetValueAsString(Path.GetFileName(model.NetFilePath));
 
                 var api = new UnstrucGridOperationApi(model, false);
-                
+
                 //add geometry with three coordinates, so that you can test if only the first and last coordinate is used for grid snapping.
                 var sourceAndSink1Geometry = new LineString(new[]
                 {
@@ -363,13 +362,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 {
                     new Coordinate(1999, 1999, 0),
                     new Coordinate(2099, 2099, 0)
-                    
+
                 });
-                
+
                 var geometries = new List<IGeometry>();
                 geometries.Add(sourceAndSink1Geometry);
                 geometries.Add(sourceAndSink2Geometry);
-                
+
                 const string featureType = UnstrucGridOperationApi.SourceSink;
 
                 var snappedGeometries = api.GetGridSnappedGeometry(featureType, geometries).ToList();
@@ -425,7 +424,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                     .SetValueAsString(Path.GetFileName(model.NetFilePath));
 
                 var api = new UnstrucGridOperationApi(model, false);
-                
+
                 // Source and sink with source and sink outside grid
                 var sourceAndSink0Geometry = new LineString(new[]
                 {
@@ -466,14 +465,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 Assert.AreEqual(1, snappedGeometries[1].Coordinates.Length, ErrorMessageAmountOfCoordinatesSourceAndSink);
                 Assert.AreNotEqual(geometries[1].Coordinates[1].X, snappedGeometries[1].Coordinates[0].X, ErrorMessageEqualGeometriesSourceAndSink);
                 Assert.AreNotEqual(geometries[1].Coordinates[1].Y, snappedGeometries[1].Coordinates[0].Y, ErrorMessageEqualGeometriesSourceAndSink);
-                
+
                 Assert.AreEqual(2050, snappedGeometries[1].Coordinates[0].X, ErrorMessageDifferentGeometryValuesSourceAndSink);
                 Assert.AreEqual(2050, snappedGeometries[1].Coordinates[0].Y, ErrorMessageDifferentGeometryValuesSourceAndSink);
 
                 Assert.AreEqual(1, snappedGeometries[1].Coordinates.Length, ErrorMessageAmountOfCoordinatesSourceAndSink);
                 Assert.AreNotEqual(geometries[2].Coordinates[0].X, snappedGeometries[2].Coordinates[0].X, ErrorMessageEqualGeometriesSourceAndSink);
                 Assert.AreNotEqual(geometries[2].Coordinates[0].Y, snappedGeometries[2].Coordinates[0].Y, ErrorMessageEqualGeometriesSourceAndSink);
-               
+
                 Assert.AreEqual(1950, snappedGeometries[2].Coordinates[0].X, ErrorMessageDifferentGeometryValuesSourceAndSink);
                 Assert.AreEqual(1950, snappedGeometries[2].Coordinates[0].Y, ErrorMessageDifferentGeometryValuesSourceAndSink);
             }
@@ -484,99 +483,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             }
         }
         #endregion
-
-        [Test]
-        public void SnapsToGrid_WithGeometryNull_ThenReturnFalse()
-        {
-            // Setup
-            using (var fmModel = new WaterFlowFMModel())
-            {
-                var api = new UnstrucGridOperationApi(fmModel);
-
-                // Call
-                bool snapsToGrid = api.SnapsToGrid(null);
-
-                // Assert
-                Assert.That(snapsToGrid, Is.False);
-            }
-        }
-
-        [Test]
-        public void SnapsToGrid_WithFlexibleMeshModelApiReturningGeometryValues_ThenReturnTrue()
-        {
-            // Setup
-            var doubleValues = new double[0];
-            var intValues = new int[0];
-            var meshApi = MockRepository.GenerateMock<IFlexibleMeshModelApi>();
-            meshApi.Expect(a => a.GetSnappedFeature(string.Empty, null, null, ref doubleValues, ref doubleValues, ref intValues))
-                   .IgnoreArguments()
-                   .OutRef(
-                       new[] { 0.0, 1.0, 1.0, -999.0 },
-                       new[] { 0.0, 0.0, 1.0, -999.0 },
-                       new[] { 1, 1, 1, 0 }
-                       )
-                   .Return(true);
-
-            var coordinates = new[]
-            {
-                new Coordinate(0.0, 0.0),
-                new Coordinate(1.0, 1.0)
-            };
-            var geometry = MockRepository.GenerateMock<IGeometry>();
-            geometry.Expect(g => g.Coordinates).Return(coordinates).Repeat.Times(2);
-
-            var api = new UnstrucGridOperationApi(meshApi);
-
-            // Call
-            bool snapsToGrid = api.SnapsToGrid(geometry);
-
-            // Assert
-            Assert.That(snapsToGrid, Is.True);
-        }
-
-        [Test]
-        public void GetGridSnappedGeometry_WithFlexibleMeshModelApiNull_ThenReturnGeometries()
-        {
-            // Setup
-            var geometry = MockRepository.GenerateMock<IGeometry>();
-            var api = new UnstrucGridOperationApi(null);
-
-            // Call
-            IGeometry returnedGeometry = api.GetGridSnappedGeometry(string.Empty, geometry);
-
-            // Assert
-            Assert.That(returnedGeometry, Is.SameAs(geometry));
-        }
-
-        [Test]
-        public void GetGridSnappedGeometry_WithFeatureTypeEqualToNoSnapping_ThenReturnGeometries()
-        {
-            // Setup
-            var meshApi = MockRepository.GenerateMock<IFlexibleMeshModelApi>();
-            var geometry = MockRepository.GenerateMock<IGeometry>();
-            var api = new UnstrucGridOperationApi(meshApi);
-
-            // Call
-            IGeometry returnedGeometry = api.GetGridSnappedGeometry("no_snap", geometry);
-
-            // Assert
-            Assert.That(returnedGeometry, Is.SameAs(geometry));
-        }
-
-        [Test]
-        public void GetGridSnappedGeometry_WithEmptyGeometryCollection_ThenReturnGeometries()
-        {
-            // Setup
-            var meshApi = MockRepository.GenerateMock<IFlexibleMeshModelApi>();
-            var geometry = new List<IGeometry>();
-            var api = new UnstrucGridOperationApi(meshApi);
-
-            // Call
-            IEnumerable<IGeometry> returnedGeometry = api.GetGridSnappedGeometry(string.Empty, geometry);
-
-            // Assert
-            Assert.That(returnedGeometry, Is.SameAs(geometry));
-        }
     }
 }
 
