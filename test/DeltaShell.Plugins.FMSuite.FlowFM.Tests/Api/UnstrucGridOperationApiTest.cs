@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using DeltaShell.Plugins.FMSuite.FlowFM.Api;
 using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -83,6 +85,92 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
 
             // Assert
             Assert.That(gridSnappedGeometry, Is.SameAs(geometry));
+        }
+
+        [Test]
+        public void GetGridSnappedGeometry_WithFlexibleMeshApiReturningPointValues_ThenReturnMultiplePoints()
+        {
+            // Setup
+            var doubleValues = new double[0];
+            var intValues = new int[0];
+            var meshApi = MockRepository.GenerateMock<IFlexibleMeshModelApi>();
+            meshApi.Expect(a => a.GetSnappedFeature(string.Empty, null, null, ref doubleValues, ref doubleValues, ref intValues))
+                   .IgnoreArguments()
+                   .OutRef(
+                       new[] { 0.0, -999.0, 2.0, -999.0 },
+                       new[] { 0.0, -999.0, 1.0, -999.0 },
+                       new[] { 1, 0, 2, 0 }
+                   )
+                   .Return(true);
+
+            var geometry1 = new LineString(new[]
+            {
+                new Coordinate(0.0, 0.0),
+                new Coordinate(1.0, 1.0)
+            });
+
+            var geometry2 = new LineString(new[]
+            {
+                new Coordinate(0.0, 0.0),
+                new Coordinate(1.0, 1.0)
+            });
+            var geometries = new List<IGeometry>
+            {
+                geometry1,
+                geometry2
+            };
+
+            var api = new UnstrucGridOperationApi(meshApi);
+
+            // Call
+            IGeometry[] gridSnappedGeometries = api.GetGridSnappedGeometry("featureType", geometries).ToArray();
+
+            // Assert
+            Assert.That(gridSnappedGeometries[0], Is.EqualTo(new Point(0.0, 0.0)));
+            Assert.That(gridSnappedGeometries[1], Is.EqualTo(new Point(2.0, 1.0)));
+        }
+
+        [Test]
+        public void GetGridSnappedGeometry_WithFlexibleMeshApiReturningLineString_ThenReturnMultipleLineStrings()
+        {
+            // Setup
+            var doubleValues = new double[0];
+            var intValues = new int[0];
+            var meshApi = MockRepository.GenerateMock<IFlexibleMeshModelApi>();
+            meshApi.Expect(a => a.GetSnappedFeature(string.Empty, null, null, ref doubleValues, ref doubleValues, ref intValues))
+                   .IgnoreArguments()
+                   .OutRef(
+                       new[] { 0.0, 1.0, -999.0, 2.0, 3.0, -999.0 },
+                       new[] { 0.0, 1.0, -999.0, 1.0, 3.0, -999.0 },
+                       new[] { 1, 1, 0, 2, 2, 0 }
+                   )
+                   .Return(true);
+
+            var geometry1 = new LineString(new[]
+            {
+                new Coordinate(0.0, 0.0),
+                new Coordinate(1.0, 1.0)
+            });
+
+            var geometry2 = new LineString(new[]
+            {
+                new Coordinate(2.0, 1.0),
+                new Coordinate(3.0, 3.0)
+            });
+            var geometries = new List<IGeometry>
+            {
+                geometry1,
+                geometry2
+            };
+
+            var api = new UnstrucGridOperationApi(meshApi);
+
+            // Call
+            IGeometry[] gridSnappedGeometries = api.GetGridSnappedGeometry("featureType", geometries).ToArray();
+
+            // Assert
+            Assert.That(gridSnappedGeometries[0], Is.EqualTo(geometry1));
+            Assert.That(gridSnappedGeometries[1], Is.EqualTo(geometry2));
         }
 
         [Test]
