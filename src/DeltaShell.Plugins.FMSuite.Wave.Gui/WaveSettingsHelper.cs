@@ -87,7 +87,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                 Label = "Stop time",
                 Name = "StopTime",
                 ValueType = typeof(DateTime),
-                ToolTip = "Stop time within the coupled model run"
+                ToolTip = "Stop time within the coupled model run",
+                ValidationMethod = (m, t) => ((WaveModel) m).StartTime < (DateTime) t ? string.Empty : "Coupling start time must be smaller than coupling stop time."
             };
 
             var timeStep = new FieldUIDescription(o => data.TimeStep, (d, v) => data.TimeStep = (TimeSpan) v,
