@@ -27,15 +27,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             Assert.AreEqual(OriginXml(), record.ToXml(Fns).ToString(SaveOptions.DisableFormatting));
         }
 
-        [Test]
-        [Ignore("Waste of time to keep this up to date")]
-        public void RuleFromXml()
-        {
-            var resultRecord = new Record();
-            var originXmlAsXElement = XElement.Parse(OriginXml());
-            Assert.AreEqual(record, resultRecord);
-        }
-
         private string OriginXml()
         {
             return "<record x=\"" + record.X.ToString(CultureInfo.InvariantCulture) + "\" y=\"" +

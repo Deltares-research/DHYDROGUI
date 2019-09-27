@@ -40,16 +40,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Utils
         }
 
         [Test]
-        [Combinatorial]
-        public void GetCellIndexForLocationOutsideGridThrowsArgumentException(
-            [Values(-2.6, 0.0 - 1e-6, 5.0, 20.0 + 1e-6, 55.5)]double x, 
-            [Values(-2.6, 0.0 - 1e-6, 5.0, 20.0 + 1e-6, 55.5)]double y)
+        public void GetCellIndexForLocationOutsideGridThrowsArgumentException([Values(0.0 - double.Epsilon, 20.0 + double.Epsilon)] double x,
+                                                                              [Values(0.0 - double.Epsilon, 20.0 + double.Epsilon)] double y)
         {
-            if (0.0 <= x && x <= 20.0 && 0.0 <= y && y <= 20.0)
-            {
-                Assert.Ignore("Do not test for valid X,Y combination.");
-            }
-
             // setup
             var grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 10, 10);
             var relativeThicknesses = new[] { 1.0 };

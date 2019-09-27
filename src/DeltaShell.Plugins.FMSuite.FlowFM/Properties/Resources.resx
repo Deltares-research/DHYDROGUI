@@ -586,4 +586,7 @@ Manhole with unique id '{4}' is not imported.</value>
   <data name="MduFile_ReadProperties_An_unsupported_option_for_0_has_been_detected" xml:space="preserve">
     <value>An unsupported option for *{0}* has been detected and the default value will be used.</value>
   </data>
+  <data name="MorphologyFile_Read_Sediment_model_numbers_1_2_3_are_not_supported_" xml:space="preserve">
+    <value>Sediment model numbers 1, 2 &amp; 3 are not supported.</value>
+  </data>
 </root>

@@ -666,6 +666,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Sediment model numbers 1, 2 &amp; 3 are not supported..
+        /// </summary>
+        public static string MorphologyFile_Read_Sediment_model_numbers_1_2_3_are_not_supported_ {
+            get {
+                return ResourceManager.GetString("MorphologyFile_Read_Sediment_model_numbers_1_2_3_are_not_supported_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Backwards Compatibility: &apos;{0}&apos; has been updated to &apos;{1}&apos;.
         /// </summary>
         public static string MorphologyFileBackwardsCompatibilityHelper_GetUpdatedPropertyName_Backwards_Compatibility____0___has_been_updated_to___1__ {
