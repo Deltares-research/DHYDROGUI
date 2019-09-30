@@ -100,7 +100,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.ImportersExporters
         /// <returns></returns>
         protected override IEnumerable<TFeat> Import(string path)
         {
-            if (Path.GetExtension(path) == ".pli")
+            if (IsPliFilePath(path))
             {
                 var reader = new PliFile<TFeat>
                 {
@@ -109,7 +109,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.ImportersExporters
                 return reader.Read(path, (s, c, t) => ProgressChanged?.Invoke(s, c, t));
             }
 
-            if (Path.GetExtension(path) == ".pliz")
+            if (IsPlizFilePath(path))
             {
                 var reader = new PlizFile<TFeat>
                 {
@@ -130,7 +130,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.ImportersExporters
         {
             BeforeExportActionDelegate?.Invoke(features);
 
-            if (Path.GetExtension(path) == ".pli")
+            if (IsPliFilePath(path))
             {
                 var writer = new PliFile<TFeat>
                 {
@@ -139,7 +139,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.ImportersExporters
                 writer.Write(path, features);
             }
 
-            if (Path.GetExtension(path) == ".pliz")
+            if (IsPlizFilePath(path))
             {
                 var writer = new PlizFile<TFeat>
                 {
@@ -149,6 +149,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.ImportersExporters
             }
 
             AfterExportActionDelegate?.Invoke(features);
+        }
+
+        private static bool IsPliFilePath(string filePath)
+        {
+            return Path.GetExtension(filePath) == ".pli";
+        }
+
+        private static bool IsPlizFilePath(string filePath)
+        {
+            return Path.GetExtension(filePath) == ".pliz";
         }
 
         /// <summary>
