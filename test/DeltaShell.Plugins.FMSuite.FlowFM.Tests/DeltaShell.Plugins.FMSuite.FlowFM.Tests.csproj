@@ -317,6 +317,7 @@
     <Compile Include="IO\Importers\BcFileImporterTest.cs" />
     <Compile Include="IO\Importers\BcmFileImporterTest.cs" />
     <Compile Include="IO\Importers\CmpFileImporterTest.cs" />
+    <Compile Include="IO\Importers\IniImporterTest.cs" />
     <Compile Include="IO\Importers\QhFileImporterTest.cs" />
     <Compile Include="IO\Importers\ShapeFileImporterFactoryTest.cs" />
     <Compile Include="IO\Importers\ShapeFileImporterHelperTest.cs" />
