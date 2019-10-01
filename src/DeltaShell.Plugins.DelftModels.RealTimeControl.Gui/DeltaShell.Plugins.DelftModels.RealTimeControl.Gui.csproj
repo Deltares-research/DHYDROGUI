@@ -84,6 +84,7 @@
     <Compile Include="Forms\PropertyGrid\OutputProperties.cs" />
     <Compile Include="Forms\PropertyGrid\PIDRuleProperties.cs" />
     <Compile Include="Forms\PropertyGrid\RelativeTimeRuleProperties.cs" />
+    <Compile Include="Forms\PropertyGrid\RuleProperties.cs" />
     <Compile Include="Forms\PropertyGrid\StandardConditionProperties.cs" />
     <Compile Include="Forms\PropertyGrid\TimeConditionProperties.cs" />
     <Compile Include="Forms\PropertyGrid\TimeRuleProperties.cs" />
