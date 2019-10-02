@@ -4,7 +4,7 @@ using DeltaShell.NGHS.IO.FileWriters.Location;
 
 namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
 {
-    public class DefinitionGeneratorCrossSectionDefinitionElliptical : DefinitionGeneratorCrossSectionDefinitionStandard
+    public class DefinitionGeneratorCrossSectionDefinitionElliptical : DefinitionGeneratorCrossSectionDefinitionStandardTemplate
     {
         public DefinitionGeneratorCrossSectionDefinitionElliptical() : base(CrossSectionRegion.CrossSectionDefinitionType.Elliptical)
         {

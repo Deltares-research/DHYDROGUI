@@ -7,11 +7,11 @@ namespace DeltaShell.NGHS.IO.FileWriters.General
         /* section general */
         public const string Header = "[General]";
         public const string IniHeader = "General";
-        public const int CrossSectionDefinitionsMajorVersion = 1;
+        public const int CrossSectionDefinitionsMajorVersion = 3;
         public const int CrossSectionDefinitionsMinorVersion = 0;
 
         public const int CrossSectionLocationsMajorVersion = 1;
-        public const int CrossSectionLocationsMinorVersion = 0;
+        public const int CrossSectionLocationsMinorVersion = 1;
         
         public const int StructureDefinitionsMajorVersion = 1;
         public const int StructureDefinitionsMinorVersion = 0;
@@ -68,6 +68,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.General
             public const string Retention = "retentions";
         }
 
+        public static readonly ConfigurationSetting FileVersion = new ConfigurationSetting(key:"fileVersion", description: "#File version. Do not edit this.");
         public static readonly ConfigurationSetting FileMajorVersion = new ConfigurationSetting(key:"majorVersion", description: "#Major file version. Do not edit this.");
         public static readonly ConfigurationSetting FileMinorVersion = new ConfigurationSetting(key: "minorVersion", description: "#Minor file version. Do not edit this.");
         public static readonly ConfigurationSetting FileType = new ConfigurationSetting(key: "fileType", description: "#File type. Do not edit this.");

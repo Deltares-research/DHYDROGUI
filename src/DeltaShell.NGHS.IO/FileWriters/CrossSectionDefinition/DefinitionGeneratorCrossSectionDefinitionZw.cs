@@ -33,10 +33,10 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
             IniCategory.AddProperty(DefinitionPropertySettings.TotalWidths, totalWidths);
 
             var summerDike = crossSectionDefinitionZw.SummerDike;
-            IniCategory.AddProperty(DefinitionPropertySettings.CrestSummerdike, summerDike.CrestLevel);
-            IniCategory.AddProperty(DefinitionPropertySettings.FlowAreaSummerdike, summerDike.FloodSurface);
-            IniCategory.AddProperty(DefinitionPropertySettings.TotalAreaSummerdike, summerDike.TotalSurface);
-            IniCategory.AddProperty(DefinitionPropertySettings.BaseLevelSummerdike, summerDike.FloodPlainLevel);
+            IniCategory.AddProperty(DefinitionPropertySettings.CrestLevee, summerDike.CrestLevel);
+            IniCategory.AddProperty(DefinitionPropertySettings.FlowAreaLevee, summerDike.FloodSurface);
+            IniCategory.AddProperty(DefinitionPropertySettings.TotalAreaLevee, summerDike.TotalSurface);
+            IniCategory.AddProperty(DefinitionPropertySettings.BaseLevelLevee, summerDike.FloodPlainLevel);
 
             if (crossSectionDefinitionZw.Sections.Count > 0)
             {

@@ -46,7 +46,9 @@ namespace DeltaShell.NGHS.IO.FileWriters.Location
         {
             public const string Yz = "yz";
             public const string Xyz = "xyz";
-            public const string Zw = "tabulated";
+            //public const string Zw = "tabulated";
+            public const string Zw = "zwRiver"; 
+            public const string Zw_Template = "zw"; 
             public const string Standard = "standard";
             public const string Elliptical = "ellipse";
             public const string Circle = "circle";
@@ -55,6 +57,10 @@ namespace DeltaShell.NGHS.IO.FileWriters.Location
             public const string Arch = "arch";
             public const string Cunette = "cunette";
             public const string SteelCunette = "steelcunette";
+
+            public const string Mouth = "mouth";
+            public const string SteelMouth = "steelMouth";
+
             public const string Trapezium = "trapezium";
         }
 

@@ -338,16 +338,16 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             var totalWidthsValue = content.GetPropertyValue(DefinitionPropertySettings.TotalWidths.Key);
             Assert.AreEqual("33.33333 100.00000", totalWidthsValue);
 
-            var sdCrestValue = content.GetPropertyValue(DefinitionPropertySettings.CrestSummerdike.Key);
+            var sdCrestValue = content.GetPropertyValue(DefinitionPropertySettings.CrestLevee.Key);
             Assert.AreEqual("-2.000", sdCrestValue);
 
-            var sdFlowAreaValue = content.GetPropertyValue(DefinitionPropertySettings.FlowAreaSummerdike.Key);
+            var sdFlowAreaValue = content.GetPropertyValue(DefinitionPropertySettings.FlowAreaLevee.Key);
             Assert.AreEqual("100.000", sdFlowAreaValue);
 
-            var sdTotalAreaValue = content.GetPropertyValue(DefinitionPropertySettings.TotalAreaSummerdike.Key);
+            var sdTotalAreaValue = content.GetPropertyValue(DefinitionPropertySettings.TotalAreaLevee.Key);
             Assert.AreEqual("200.000", sdTotalAreaValue);
 
-            var sdBaseLevelValue = content.GetPropertyValue(DefinitionPropertySettings.BaseLevelSummerdike.Key);
+            var sdBaseLevelValue = content.GetPropertyValue(DefinitionPropertySettings.BaseLevelLevee.Key);
             Assert.AreEqual("0.500", sdBaseLevelValue);
 
             var mainValue = content.GetPropertyValue(DefinitionPropertySettings.Main.Key);
@@ -382,16 +382,16 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             totalWidthsValue = content.GetPropertyValue(DefinitionPropertySettings.TotalWidths.Key);
             Assert.AreEqual("33.33333 100.00000", totalWidthsValue);
 
-            sdCrestValue = content.GetPropertyValue(DefinitionPropertySettings.CrestSummerdike.Key);
+            sdCrestValue = content.GetPropertyValue(DefinitionPropertySettings.CrestLevee.Key);
             Assert.AreEqual("-3.000", sdCrestValue);
 
-            sdFlowAreaValue = content.GetPropertyValue(DefinitionPropertySettings.FlowAreaSummerdike.Key);
+            sdFlowAreaValue = content.GetPropertyValue(DefinitionPropertySettings.FlowAreaLevee.Key);
             Assert.AreEqual("200.000", sdFlowAreaValue);
 
-            sdTotalAreaValue = content.GetPropertyValue(DefinitionPropertySettings.TotalAreaSummerdike.Key);
+            sdTotalAreaValue = content.GetPropertyValue(DefinitionPropertySettings.TotalAreaLevee.Key);
             Assert.AreEqual("300.000", sdTotalAreaValue);
 
-            sdBaseLevelValue = content.GetPropertyValue(DefinitionPropertySettings.BaseLevelSummerdike.Key);
+            sdBaseLevelValue = content.GetPropertyValue(DefinitionPropertySettings.BaseLevelLevee.Key);
             Assert.AreEqual("1.500", sdBaseLevelValue);
 
             mainValue = content.GetPropertyValue(DefinitionPropertySettings.Main.Key);

@@ -4,7 +4,7 @@ using DeltaShell.NGHS.IO.FileWriters.Location;
 
 namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
 {
-    public class DefinitionGeneratorCrossSectionDefinitionEgg : DefinitionGeneratorCrossSectionDefinitionStandard
+    public class DefinitionGeneratorCrossSectionDefinitionEgg : DefinitionGeneratorCrossSectionDefinitionStandardTemplate
     {
         public DefinitionGeneratorCrossSectionDefinitionEgg() : base(CrossSectionRegion.CrossSectionDefinitionType.Egg)
         {
@@ -21,7 +21,8 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
             var eggShape = shape as CrossSectionStandardShapeEgg;
             if (eggShape == null) return;
 
-            IniCategory.AddProperty(DefinitionPropertySettings.Diameter, eggShape.Width);
+            IniCategory.AddProperty(DefinitionPropertySettings.EggWidth, eggShape.Width);
+            IniCategory.AddProperty(DefinitionPropertySettings.EggHeight, eggShape.Height);
         }
     }
 }

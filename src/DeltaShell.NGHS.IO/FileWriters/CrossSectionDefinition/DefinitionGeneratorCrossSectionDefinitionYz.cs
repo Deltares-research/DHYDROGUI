@@ -21,27 +21,37 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
         {
             AddCommonProperties(crossSectionDefinition);
 
+            IniCategory.AddProperty(DefinitionPropertySettings.SingleValuedZ, DefinitionPropertySettings.SingleValuedZ.DefaultValue);
             IniCategory.AddProperty(DefinitionPropertySettings.YZCount, crossSectionDefinition.Profile.ToList().Count);
-            AddValuesYz(crossSectionDefinition);
-
-            var yzCrossSectionDefinition = crossSectionDefinition.IsProxy ? ((CrossSectionDefinitionProxy)crossSectionDefinition).InnerDefinition as CrossSectionDefinitionYZ : crossSectionDefinition as CrossSectionDefinitionYZ;
-            if (yzCrossSectionDefinition == null) return IniCategory;
-            var deltaZStorage = yzCrossSectionDefinition.YZDataTable.Select(row => row.DeltaZStorage);
-            IniCategory.AddProperty(DefinitionPropertySettings.DeltaZStorage, deltaZStorage);
+            AddCoordinates(crossSectionDefinition);
+            AddFrictionData(crossSectionDefinition);
 
             return IniCategory;
         }
 
-        protected void AddValuesYz(ICrossSectionDefinition crossSectionDefinition)
+        protected void AddFrictionData(ICrossSectionDefinition crossSectionDefinition)
         {
-            var zValues = crossSectionDefinition.IsProxy
+            var crossSectionSections = crossSectionDefinition.Sections;
+            if (crossSectionSections != null)
+            {
+                IniCategory.AddProperty(DefinitionPropertySettings.SectionCount, crossSectionSections.Count);
+                IniCategory.AddProperty(DefinitionPropertySettings.FrictionPositions,
+                    string.Join(";", crossSectionSections.Select(css => css.MinY)) + ";" +
+                    crossSectionSections.Max(css => css.MaxY));
+                IniCategory.AddProperty(DefinitionPropertySettings.FrictionIds,
+                    string.Join(";", crossSectionSections.Select(css => css.SectionType.Name)));
+            }
+        }
+        private void AddCoordinates(ICrossSectionDefinition crossSectionDefinition)
+        {
+            var zCoordinates = crossSectionDefinition.IsProxy
                 ? ((CrossSectionDefinitionProxy)crossSectionDefinition).InnerDefinition.Profile.Select(p => p.Y)
                 : crossSectionDefinition.Profile.Select(p => p.Y);
 
-            var yValues = crossSectionDefinition.Profile.Select(p => p.X);
+            var yCoordinates = crossSectionDefinition.Profile.Select(p => p.X);
 
-            IniCategory.AddProperty(DefinitionPropertySettings.YValues, yValues);
-            IniCategory.AddProperty(DefinitionPropertySettings.ZValues, zValues);
+            IniCategory.AddProperty(DefinitionPropertySettings.YCoors, yCoordinates);
+            IniCategory.AddProperty(DefinitionPropertySettings.ZCoors, zCoordinates);
         }
     }
 }

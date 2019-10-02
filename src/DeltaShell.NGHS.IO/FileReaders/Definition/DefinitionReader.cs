@@ -137,10 +137,10 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition
                 throw new FileReadingException(errorMessage);
             }
             // summer dike
-            var crestLevel = category.ReadProperty<double>(DefinitionPropertySettings.CrestSummerdike.Key);
-            var flowArea = category.ReadProperty<double>(DefinitionPropertySettings.FlowAreaSummerdike.Key);
-            var totalArea = category.ReadProperty<double>(DefinitionPropertySettings.TotalAreaSummerdike.Key);
-            var baseLevel = category.ReadProperty<double>(DefinitionPropertySettings.BaseLevelSummerdike.Key);
+            var crestLevel = category.ReadProperty<double>(DefinitionPropertySettings.CrestLevee.Key);
+            var flowArea = category.ReadProperty<double>(DefinitionPropertySettings.FlowAreaLevee.Key);
+            var totalArea = category.ReadProperty<double>(DefinitionPropertySettings.TotalAreaLevee.Key);
+            var baseLevel = category.ReadProperty<double>(DefinitionPropertySettings.BaseLevelLevee.Key);
             
             if (Math.Abs(flowArea) > double.Epsilon && Math.Abs(totalArea) > double.Epsilon)//(flowArea and totalArea are larger than 0, so you can do something with this
             {

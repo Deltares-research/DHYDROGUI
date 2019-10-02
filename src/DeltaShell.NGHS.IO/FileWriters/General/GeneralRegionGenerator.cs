@@ -8,8 +8,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.General
         public static DelftIniCategory GenerateGeneralRegion(int majorVersionNr, int minorVersionNr, string fileType)
         {
             var general = new DelftIniCategory(GeneralRegion.IniHeader);
-            general.AddProperty(GeneralRegion.FileMajorVersion.Key, majorVersionNr, GeneralRegion.FileMajorVersion.Description.Substring(1));
-            general.AddProperty(GeneralRegion.FileMinorVersion.Key, minorVersionNr, GeneralRegion.FileMinorVersion.Description.Substring(1));
+            general.AddProperty(GeneralRegion.FileVersion.Key, string.Format("{0}.{1:D2}", majorVersionNr, minorVersionNr), GeneralRegion.FileVersion.Description.Substring(1));
             general.AddProperty(GeneralRegion.FileType.Key, fileType, GeneralRegion.FileType.Description.Substring(1));
             return general;
         }

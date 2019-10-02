@@ -15,17 +15,12 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
         public override DelftIniCategory CreateDefinitionRegion(ICrossSectionDefinition crossSectionDefinition)
         {
             AddCommonProperties(crossSectionDefinition);
-            
             AddCoordinates(crossSectionDefinition);
 
-            AddValuesYz(crossSectionDefinition);
+            IniCategory.AddProperty(DefinitionPropertySettings.Conveyance, DefinitionPropertySettings.Conveyance.DefaultValue);
 
-            // can't create a protected base function! (because CrossSectionDefinitionXYZ != CrossSectionDefinitionYZ)
-            var xyzCrossSectionDefinition = crossSectionDefinition.IsProxy ? ((CrossSectionDefinitionProxy)crossSectionDefinition).InnerDefinition as CrossSectionDefinitionXYZ : crossSectionDefinition as CrossSectionDefinitionXYZ;
-            if (xyzCrossSectionDefinition == null) return IniCategory;
+            AddFrictionData(crossSectionDefinition);
 
-            var deltaZStorage = xyzCrossSectionDefinition.XYZDataTable.Select(row => row.DeltaZStorage);
-            IniCategory.AddProperty(DefinitionPropertySettings.DeltaZStorage, deltaZStorage);
 
             return IniCategory;
         }

@@ -4,7 +4,7 @@ using DeltaShell.NGHS.IO.FileWriters.Location;
 
 namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
 {
-    public class DefinitionGeneratorCrossSectionDefinitionArch : DefinitionGeneratorCrossSectionDefinitionStandard
+    public class DefinitionGeneratorCrossSectionDefinitionArch : DefinitionGeneratorCrossSectionDefinitionStandardTemplate
     {
         public DefinitionGeneratorCrossSectionDefinitionArch() : base(CrossSectionRegion.CrossSectionDefinitionType.Arch)
         {

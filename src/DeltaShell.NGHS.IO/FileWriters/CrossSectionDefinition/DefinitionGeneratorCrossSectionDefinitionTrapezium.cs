@@ -4,10 +4,14 @@ using DeltaShell.NGHS.IO.FileWriters.Location;
 
 namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
 {
-    public class DefinitionGeneratorCrossSectionDefinitionTrapezium : DefinitionGeneratorCrossSectionDefinitionStandard
+    public class DefinitionGeneratorCrossSectionDefinitionTrapezium : DefinitionGeneratorCrossSectionDefinitionStandardTemplate
     {
         public DefinitionGeneratorCrossSectionDefinitionTrapezium() : base(CrossSectionRegion.CrossSectionDefinitionType.Trapezium)
         {
+        }
+        protected override void AddCrossSectionStandardProperties()
+        {
+            IniCategory.AddProperty(DefinitionPropertySettings.Closed, 0);
         }
 
         protected override bool HasCorrectCrossSectionShape(CrossSectionDefinitionStandard standardDefinition)
