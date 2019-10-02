@@ -14,7 +14,7 @@ advanced,Advanced,,,,,,,,,,,,,,
 misc,Miscellaneous,,,,,,,,,,,,,,
 ,,,,,,,,,,,,,,,
 MduGroups,(order determines order in written mdu file),,,,,,,,,,,,,,
-model,,,,,,,,,,,,,,,
+General,,,,,,,,,,,,,,,
 geometry,,,,,,,,,,,,,,,
 numerics,,,,,,,,,,,,,,,
 physics,,,,,,,,,,,,,,,
@@ -27,12 +27,12 @@ equatorial,,,,,,,,,,,,,,,
 output,,,,,,,,,,,,,,,
 trachytopes,,,,,,,,,,,,,,,
 MduGroup,MduName,GUIGroup,Subcategory,Caption,Type,Default,Min,Max,MduOnly,Enabled,Visible,DocSection,FromRev,ToRev,Description,Unit
-model,Program,,,,String,D-Flow FM,,,TRUE,,,,,,Program name
-model,Version,,,,String,,,,TRUE,,,,,,FM kernel Version
-model,MDUFormatVersion,,,,String,1.02,,,TRUE,,,,,,File format version (do not edit this)
-model,GuiVersion,,,,String,,,,TRUE,,,,,,DeltaShell FM suite version
-model,AutoStart,,,AutoStart:0|1|2,0|1|2,0,0,2,TRUE,,,,,,"Autostart simulation after loading MDU (0: no, 1: autostart, 2: autostartstop)"
-model,PathsRelativeToParent,,,,0|1,0,,,TRUE,,,,,,"Default: 0. Whether or not (1/0) to resolve file names (e.g. inside the *.ext file) relative to their direct parent, instead of to the toplevel MDU working dir."
+General,Program,,,,String,D-Flow FM,,,TRUE,,,,,,Program name
+General,Version,,,,String,,,,TRUE,,,,,,FM kernel Version
+General,FileVersion,,,,String,1.02,,,TRUE,,,,,,File format version (do not edit this)
+General,GuiVersion,,,,String,,,,TRUE,,,,,,DeltaShell FM suite version
+General,AutoStart,,,AutoStart:0|1|2,0|1|2,0,0,2,TRUE,,,,,,"Autostart simulation after loading MDU (0: no, 1: autostart, 2: autostartstop)"
+General,PathsRelativeToParent,,,,0|1,0,,,TRUE,,,,,,"Default: 0. Whether or not (1/0) to resolve file names (e.g. inside the *.ext file) relative to their direct parent, instead of to the toplevel MDU working dir."
 geometry,NetFile,,,,FileName,,,,TRUE,,,,,,Unstructured grid file *_net.nc
 geometry,BathymetryFile,,,,FileName,,,,TRUE,,,,,,Bathymetry points file *.xyb
 geometry,DryPointsFile,,,,MultipleEntriesFileName,,,,TRUE,,,,,,"Dry points file *.xyz (third column dummy z values), or dry areas polygon file *.pol (third column 1/-1: inside/outside)"
@@ -68,7 +68,7 @@ geometry,OpenBoundaryTolerance,,,,Double,3,,,TRUE,,,,,,"Search tolerance factor 
 geometry,RenumberFlowNodes,,,Renumber Flow Nodes?,0|1,1,0,1,TRUE,,,,,,"Renumber the flow nodes (1: yes, 0: no)"
 geometry,Kmx,general,,Max nr of vertical layers,Integer,0,0,,TRUE,,,,,,Maximum number of vertical layers
 geometry,Layertype,general,,Layer type:Sigma|Z|Mixed,1|2|3,1,1,3,TRUE,,,,,,"Vertical layer type (1: all sigma, 2: all z, 3: use VertplizFile)"
-geometry,Numtopsig,general,,Nr of sigma layers in Z top layer,Integer,0,,,TRUE,,,,,,Number of sigma layers in top of z-layer model
+geometry,Numtopsig,general,,Nr of sigma layers in Z top layer,Integer,0,,,TRUE,,,,,,Number of sigma layers in top of z-layer General
 geometry,SigmaGrowthFactor,,,Layer thickness growth factor,Double,1,,,FALSE,,kmx>0,,,,Layer thickness growth factor from bed up
 numerics,CFLMax,timeframe,Time Frame,Max Courant nr,Double,0.7,0,,FALSE,,,,,,Maximum Courant number, -
 numerics,AdvecType,numerics,Numerical Parameters,Advection type:None|Wenneker|Wenneker/q(uio-u)|Perot q(uio-u)|Perot q(ui-u)|Perot/q(ui-u)-without itself|Perot q(uio-u) fast,0|1|2|3|4|5|33,33,0,33,FALSE,,,,,,"Advection type (0: none, 1: Wenneker, 2: Wenneker q(uio-u), 3: Perot q(uio-u), 4: Perot q(ui-u), 5: Perot q(ui-u) without itself"
