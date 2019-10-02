@@ -184,7 +184,7 @@
     <Compile Include="IO\ImportExport\Importers\ShapeFileImporterHelper.cs" />
     <Compile Include="IO\ImportExport\Importers\SourceAndSinkImportExtensions.cs" />
     <Compile Include="IO\DataAccessObjects\IUnsupportedFileBasedExtForceFileItem.cs" />
-    <Compile Include="IO\ImportExport\ImportersExporters\IniFIleImporterExporterTypes.cs" />
+    <Compile Include="IO\ImportExport\ImportersExporters\IniFileImporterExporterTypes.cs" />
     <Compile Include="IO\MduFileWriteConfig.cs" />
     <Compile Include="IO\MorphologyBoundaryConditionQuantityType.cs" />
     <Compile Include="IO\Files\Helpers\MorphologySedimentIniFileHelper.cs" />
