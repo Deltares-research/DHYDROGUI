@@ -90,7 +90,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.NodePresenters
 
             if (layer != null)
             {
-                projectItemMapView.SetSpatialOperationLayer(layer, true);
+                projectItemMapView.SetSpatialOperationLayer(layer, false);
                 SharpMapGisGuiPlugin.Instance.FocusSpatialOperationView();
             }
         }
