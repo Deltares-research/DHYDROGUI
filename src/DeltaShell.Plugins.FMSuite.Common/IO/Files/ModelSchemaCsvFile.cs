@@ -161,7 +161,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
                         FileCategoryName = mduGroupName,
                         FilePropertyName = mduPropertyName,
                         SubCategory = subCategoryField,
-                        Caption = captionField,
+                        Caption = captionField.Trim('"'),
                         DataType = dataType,
                         DefaultValueAsString = defaultField,
                         MultipleDefaultValuesAvailable = false,

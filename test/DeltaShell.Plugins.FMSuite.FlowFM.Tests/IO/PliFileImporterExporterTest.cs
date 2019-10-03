@@ -117,7 +117,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 gui.Application.Project.RootFolder.Add(model);
 
-                var importer = (PliFileImporterExporter<FixedWeir, FixedWeir>) gui.Application.FileImporters.First(fi => fi is PliFileImporterExporter<FixedWeir, FixedWeir>);
+                var importer = (PlizFileImporterExporter<FixedWeir, FixedWeir>) gui.Application.FileImporters.First(fi => fi is PlizFileImporterExporter<FixedWeir, FixedWeir>);
 
                 importer.ImportItem(TestHelper.GetTestFilePath("structures\\testBas2FM_fxw.pliz"), model.Area.FixedWeirs);
 
