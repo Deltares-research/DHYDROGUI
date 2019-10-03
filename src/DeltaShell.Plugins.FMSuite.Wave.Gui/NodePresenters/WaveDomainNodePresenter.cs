@@ -60,7 +60,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
             yield return new WaveModelTreeShortcut(parentNodeData.Grid.Name, GridImage, model, parentNodeData.Grid,
                                                    ShortCutType.Grid);
             yield return new WaveModelTreeShortcut(parentNodeData.Bathymetry.Name, BathymetryImage, model,
-                                                   parentNodeData.Bathymetry, ShortCutType.SpatialCoverage);
+                                                   parentNodeData.Bathymetry, ShortCutType.SpatialCoverageWithView);
 
             foreach (WaveDomainData domain in parentNodeData.SubDomains)
             {
