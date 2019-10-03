@@ -15,11 +15,6 @@
         /// </summary>
         SpatialCoverage,
         /// <summary>
-        /// Spatial coverage with view -> used for setting the spatial editor to the coverage and
-        /// opens a view associated with it.
-        /// </summary>
-        SpatialCoverageWithView,
-        /// <summary>
         /// A set of features -> used for opening attribute table
         /// </summary>
         FeatureSet,
