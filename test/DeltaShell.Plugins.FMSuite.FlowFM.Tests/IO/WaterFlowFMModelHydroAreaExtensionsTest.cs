@@ -1,11 +1,16 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
+using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
+using GeoAPI.Extensions.Feature;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -128,6 +133,108 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             CheckUpdatingNamesForHydroAreaFeatures(fileName, expectedGroupName, parentDir);
         }
 
+        [Test]
+        public void GetFeaturesFromCategory_Pumps_ThenReturnOnlyPumpsOfTheArea()
+        {
+
+            var area = new HydroArea();
+
+            var pump = new Pump2D();
+            var observationPoint = new GroupableFeature2DPoint();
+
+            area.Pumps.Add(pump);
+            area.ObservationPoints.Add(observationPoint);
+            
+            List<IFeature> features = area.GetFeaturesFromCategory(KnownFeatureCategories.Pumps).ToList();
+
+            Assert.AreEqual(1, features.Count);
+            Assert.AreSame(features.First(),pump);
+        }
+
+        [Test]
+        public void GetFeaturesFromCategory_SimpleWeirs_ThenReturnOnlyWeirsWithSimpleWeirFormulaOfTheArea()
+        {
+            var area = new HydroArea();
+
+            var simpleWeir = new Weir2D {WeirFormula = new SimpleWeirFormula()};
+            var observationPoint = new GroupableFeature2DPoint();
+
+            area.Weirs.Add(simpleWeir);
+            area.ObservationPoints.Add(observationPoint);
+
+            List<IFeature> features = area.GetFeaturesFromCategory(KnownFeatureCategories.Weirs).ToList();
+
+            Assert.AreEqual(1, features.Count);
+            Assert.AreSame(features.First(), simpleWeir);
+        }
+
+        [Test]
+        public void GetFeaturesFromCategoryGates_Gates_ThenReturnOnlyWeirsWithGatedWeirFormulaOfTheArea()
+        {
+            var area = new HydroArea();
+
+            var gate = new Weir2D { WeirFormula = new GatedWeirFormula() };
+            var observationPoint = new GroupableFeature2DPoint();
+
+            area.Weirs.Add(gate);
+            area.ObservationPoints.Add(observationPoint);
+
+            List<IFeature> features = area.GetFeaturesFromCategory(KnownFeatureCategories.Gates).ToList();
+
+            Assert.AreEqual(1, features.Count);
+            Assert.AreSame(features.First(), gate);
+        }
+
+        [Test]
+        public void GetFeaturesFromCategory_GeneralStructures_ThenReturnOnlyWeirsWithGeneralStructureWeirFormulaOfTheArea()
+        {
+            var area = new HydroArea();
+
+            var generalStructure = new Weir2D { WeirFormula = new GeneralStructureWeirFormula() };
+            var observationPoint = new GroupableFeature2DPoint();
+
+            area.Weirs.Add(generalStructure);
+            area.ObservationPoints.Add(observationPoint);
+
+            List<IFeature> features = area.GetFeaturesFromCategory(KnownFeatureCategories.GeneralStructures).ToList();
+
+            Assert.AreEqual(1, features.Count);
+            Assert.AreSame(features.First(), generalStructure);
+        }
+
+        [Test]
+        public void GetFeaturesFromCategory_ObservationPoints_ThenReturnOnlyObservationPointsOfTheArea()
+        {
+            var area = new HydroArea();
+
+            var observationPoint = new GroupableFeature2DPoint();
+            var pump = new Pump2D();
+
+            area.ObservationPoints.Add(observationPoint);
+            area.Pumps.Add(pump);
+
+            List<IFeature> features = area.GetFeaturesFromCategory(KnownFeatureCategories.Observations).ToList();
+
+            Assert.AreEqual(1, features.Count);
+            Assert.AreSame(features.First(), observationPoint);
+        }
+
+        [Test]
+        public void GetFeaturesFromCategory_ObservationCrossSections_ThenReturnOnlyObservationCrossSectionsOfTheArea()
+        {
+            var area = new HydroArea();
+
+            var observationCrossSection = new ObservationCrossSection2D();
+            var observationPoint = new GroupableFeature2DPoint();
+
+            area.ObservationCrossSections.Add(observationCrossSection);
+            area.ObservationPoints.Add(observationPoint);
+
+            List<IFeature> features = area.GetFeaturesFromCategory(KnownFeatureCategories.CrossSections).ToList();
+
+            Assert.AreEqual(1, features.Count);
+            Assert.AreSame(features.First(), observationCrossSection);
+        }
         #region Helper methods
 
         private void CheckUpdatingNamesForStructures(string fileName, string expectedGroupName, string parentDir)
