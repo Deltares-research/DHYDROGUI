@@ -159,7 +159,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
                     {
                         Category = propertyGroup.Name,
                         FileCategoryName = mduGroupName,
-                        FilePropertyName = mduPropertyName,
+                        FilePropertyName = mduPropertyName.Trim('"'),
                         SubCategory = subCategoryField,
                         Caption = captionField.Trim('"'),
                         DataType = dataType,

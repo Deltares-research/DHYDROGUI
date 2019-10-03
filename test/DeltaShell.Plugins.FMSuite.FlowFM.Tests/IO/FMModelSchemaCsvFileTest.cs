@@ -5,8 +5,10 @@ using System.Linq;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
+using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.FMSuite.Common;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files;
+using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using NUnit.Framework;
 
@@ -63,6 +65,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             //Remove test data
             FileUtils.DeleteIfExists(csvTestFile);
+        }
+
+        [Test]
+        public void Read_FMModelSchema_DoesNotSplitMduNameWithCommas()
+        {
+            // Setup
+            string propertiesFilePath = TestHelper.GetTestFilePath(@"CsvFile\dflowfm-properties_CommasInMduName.csv");
+            using (var temporaryDirectory = new TemporaryDirectory())
+            {
+                string testFilePath = temporaryDirectory.CopyTestDataFileToTempDirectory(propertiesFilePath);
+                var schemaReader = new ModelSchemaCsvFile();
+
+                // Call
+                ModelSchema<WaterFlowFMPropertyDefinition> schema = schemaReader.ReadModelSchema<WaterFlowFMPropertyDefinition>(testFilePath, "MduGroup");
+
+                // Assert
+                WaterFlowFMPropertyDefinition readPropertyDefinition = schema.PropertyDefinitions.Single().Value;
+                Assert.That(readPropertyDefinition.Caption, Is.EqualTo("This, that, here, there"));
+                Assert.That(readPropertyDefinition.FilePropertyName, Is.EqualTo("This, that, here, there"));
+            }
         }
 
         [Test]
