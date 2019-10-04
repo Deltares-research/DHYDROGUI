@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
-using DeltaShell.NGHS.IO.Adaptors;
+using DeltaShell.NGHS.IO.Adapters;
 using DeltaShell.NGHS.IO.Grid;
 using NUnit.Framework;
 
@@ -21,7 +21,7 @@ namespace DeltaShell.NGHS.IO.Tests.Adaptors
 
             try
             {
-                using (var fmUGridAdaptor = new UGridToUnstructuredGridAdaptor(localCopyOfTestFile))
+                using (var fmUGridAdaptor = new UGridToUnstructuredGridAdapter(localCopyOfTestFile))
                 {
                     var unstructuredGrid = fmUGridAdaptor.GetUnstructuredGridFromUGridMeshId(1);
                     Assert.That(unstructuredGrid, Is.Not.Null);
@@ -46,7 +46,7 @@ namespace DeltaShell.NGHS.IO.Tests.Adaptors
             
             try
             {
-                using (var fmUGridAdaptor = new UGridToUnstructuredGridAdaptor(localCopyOfTestFile))
+                using (var fmUGridAdaptor = new UGridToUnstructuredGridAdapter(localCopyOfTestFile))
                 {
                     var unstructuredGrid = fmUGridAdaptor.GetUnstructuredGridFromUGridMeshId(1, true);
                     Assert.That(unstructuredGrid, Is.Not.Null);

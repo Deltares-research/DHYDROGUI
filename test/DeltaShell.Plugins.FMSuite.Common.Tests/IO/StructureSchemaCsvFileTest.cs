@@ -1,6 +1,6 @@
 ﻿using System.IO;
 using DelftTools.TestUtils;
-using DeltaShell.NGHS.IO.FileWriters.Structure;
+using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures;
 using NUnit.Framework;
 

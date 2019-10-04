@@ -1,5 +1,4 @@
-﻿using DeltaShell.Plugins.FMSuite.Common.IO.Files;
-using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
+﻿using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 {
@@ -20,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                 MduPropertyName = mduPropertyName,
                 FileCategoryName = mduGroupName,
                 FilePropertyName = mduPropertyName,
-                Category = ModelSchemaCsvFile.DefaultGUIGroupCaption,
+                Category = "Miscellaneous",
                 SubCategory = null,
                 DataType = typeof(string),
                 DefaultValueAsString = "",

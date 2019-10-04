@@ -117,7 +117,9 @@ namespace DeltaShell.NGHS.IO.Tests.Handlers
         public void GivenALogHandlerWithLogMessagesOfAllSeverities_WhenLogReportIsCalled_ThenAlwaysOneReportForEachSeverityIsCreated()
         {
             // Given
-            const string header = "During some_activity the following log messages were produced:";
+            const string errorHeader = "During some_activity the following errors were reported:";
+            const string warningHeader = "During some_activity the following warnings were reported:";
+            const string infoHeader = "During some_activity the following infos were reported:";
             const string infoMessage1 = "info_message1";
             const string infoMessage2 = "info_message2";
             const string warningMessage1 = "warning_message1";
@@ -139,9 +141,9 @@ namespace DeltaShell.NGHS.IO.Tests.Handlers
 
             // When, Then
             TestHelper.AssertLogMessagesCount(LogReportAction, 3);
-            TestHelper.AssertLogMessageIsGenerated(LogReportAction, CreateExpectedLogMessage(header, errorMessage1, errorMessage2));
-            TestHelper.AssertLogMessageIsGenerated(LogReportAction, CreateExpectedLogMessage(header, warningMessage1, warningMessage2));
-            TestHelper.AssertLogMessageIsGenerated(LogReportAction, CreateExpectedLogMessage(header, infoMessage1, infoMessage2));
+            TestHelper.AssertLogMessageIsGenerated(LogReportAction, CreateExpectedLogMessage(errorHeader, errorMessage1, errorMessage2));
+            TestHelper.AssertLogMessageIsGenerated(LogReportAction, CreateExpectedLogMessage(warningHeader, warningMessage1, warningMessage2));
+            TestHelper.AssertLogMessageIsGenerated(LogReportAction, CreateExpectedLogMessage(infoHeader, infoMessage1, infoMessage2));
         }
 
         public void AssertMessageWithCorrectSeverity(string message, LogSeverity logSeverity)

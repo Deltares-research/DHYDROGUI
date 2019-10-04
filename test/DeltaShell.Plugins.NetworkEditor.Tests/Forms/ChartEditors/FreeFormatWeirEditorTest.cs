@@ -72,35 +72,5 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.ChartEditors
             tracker = freeFormatWeirEditor.GetTrackerAt(25 + offset, 5, 0, 0);
             Assert.IsNotNull(tracker);
         }
-
-        [Ignore("not implemented yet")]
-        [Test]
-        public void DeleteAt()
-        {
-            double offset = weir.OffsetY;
-            freeFormatWeirEditor.Start();
-            var tracker = freeFormatWeirEditor.GetTrackerAt(20 + offset, 12, 0, 0);
-            freeFormatWeirEditor.DeleteTracker(tracker);
-            Assert.AreEqual(7, freeFormatWeirEditor.ShapeFeature.Geometry.Coordinates.Length);
-
-            // the leftmost tracker can not be deleted
-            tracker = freeFormatWeirEditor.GetTrackerAt(0 + offset, 10, 0, 0);
-            Assert.IsNotNull(tracker);
-            freeFormatWeirEditor.DeleteTracker(tracker);
-            Assert.AreEqual(7, freeFormatWeirEditor.ShapeFeature.Geometry.Coordinates.Length);
-
-            // the rightmost tracker can not be deleted
-            tracker = freeFormatWeirEditor.GetTrackerAt(100 + offset, 14, 0, 0);
-            Assert.IsNotNull(tracker);
-            freeFormatWeirEditor.DeleteTracker(tracker);
-            Assert.AreEqual(7, freeFormatWeirEditor.ShapeFeature.Geometry.Coordinates.Length);
-
-            // the center tracker can not be deleted
-            tracker = freeFormatWeirEditor.GetTrackerAt(50 + offset, 0, 0, 0);
-            Assert.IsNotNull(tracker);
-            freeFormatWeirEditor.DeleteTracker(tracker);
-            Assert.AreEqual(7, freeFormatWeirEditor.ShapeFeature.Geometry.Coordinates.Length);
-            freeFormatWeirEditor.Stop();
-        }
     }
 }

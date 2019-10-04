@@ -14,7 +14,7 @@ advanced,Advanced,,,,,,,,,,,,,,
 misc,Miscellaneous,,,,,,,,,,,,,,
 ,,,,,,,,,,,,,,,
 MduGroups,(order determines order in written mdu file),,,,,,,,,,,,,,
-model,,,,,,,,,,,,,,,
+General,,,,,,,,,,,,,,,
 geometry,,,,,,,,,,,,,,,
 numerics,,,,,,,,,,,,,,,
 physics,,,,,,,,,,,,,,,
@@ -27,12 +27,12 @@ equatorial,,,,,,,,,,,,,,,
 output,,,,,,,,,,,,,,,
 trachytopes,,,,,,,,,,,,,,,
 MduGroup,MduName,GUIGroup,Subcategory,Caption,Type,Default,Min,Max,MduOnly,Enabled,Visible,DocSection,FromRev,ToRev,Description,Unit
-model,Program,,,,String,D-Flow FM,,,TRUE,,,,,,Program name
-model,Version,,,,String,,,,TRUE,,,,,,FM kernel Version
-model,MDUFormatVersion,,,,String,1.02,,,TRUE,,,,,,File format version (do not edit this)
-model,GuiVersion,,,,String,,,,TRUE,,,,,,DeltaShell FM suite version
-model,AutoStart,,,AutoStart:0|1|2,0|1|2,0,0,2,TRUE,,,,,,"Autostart simulation after loading MDU (0: no, 1: autostart, 2: autostartstop)"
-model,PathsRelativeToParent,,,,0|1,0,,,TRUE,,,,,,"Default: 0. Whether or not (1/0) to resolve file names (e.g. inside the *.ext file) relative to their direct parent, instead of to the toplevel MDU working dir."
+General,Program,,,,String,D-Flow FM,,,TRUE,,,,,,Program name
+General,Version,,,,String,,,,TRUE,,,,,,FM kernel Version
+General,FileVersion,,,,String,1.02,,,TRUE,,,,,,File format version (do not edit this)
+General,GuiVersion,,,,String,,,,TRUE,,,,,,DeltaShell FM suite version
+General,AutoStart,,,AutoStart:0|1|2,0|1|2,0,0,2,TRUE,,,,,,"Autostart simulation after loading MDU (0: no, 1: autostart, 2: autostartstop)"
+General,PathsRelativeToParent,,,,0|1,0,,,TRUE,,,,,,"Default: 0. Whether or not (1/0) to resolve file names (e.g. inside the *.ext file) relative to their direct parent, instead of to the toplevel MDU working dir."
 geometry,NetFile,,,,FileName,,,,TRUE,,,,,,Unstructured grid file *_net.nc
 geometry,BathymetryFile,,,,FileName,,,,TRUE,,,,,,Bathymetry points file *.xyb
 geometry,DryPointsFile,,,,MultipleEntriesFileName,,,,TRUE,,,,,,"Dry points file *.xyz (third column dummy z values), or dry areas polygon file *.pol (third column 1/-1: inside/outside)"
@@ -162,17 +162,6 @@ GUIOnly,StartTime,timeframe,Time Frame,Start Time,DateTime,,,,FALSE,,,,,,Begin o
 GUIOnly,StopTime,timeframe,Time Frame,Stop Time,DateTime,,,,FALSE,,,,,,End of simulation period [YYYY-MM-DD HH:MM:SS]
 physics,Temperature,processes,Processes,Temperature:None|Transport only|Excess temperature|Composite model,0|1|3|5,0,0,5,FALSE,,,,,,"Include temperature (0: no, 1: only transport, 3: excess model of D3D, 5: composite (ocean) model)"
 GUIOnly,UseMorSed,processes,Processes,Sediment/Morphology,0|1,0,0,1,FALSE,,,,,,Include Sediment/Morphology
-output,Wrishp_crs,,,Write shape file for cross section,0|1,0,,,FALSE,,,,,,Write shape file for cross section
-output,Wrishp_weir,,,Write shape file for weirs,0|1,0,,,FALSE,,,,,,Write shape file for weirs
-output,Wrishp_gate,,,Write shape file for gates,0|1,0,,,FALSE,,,,,,Write shape file for gates
-output,Wrishp_fxw,,,Write shape file for fixed weirs,0|1,0,,,FALSE,,,,,,Write shape file for fixed weirs
-output,Wrishp_thd,,,Write shape file for thin dams,0|1,0,,,FALSE,,,,,,Write shape file for thin dams
-output,Wrishp_obs,,,Write shape file for observation stations,0|1,0,,,FALSE,,,,,,Write shape file for observation stations
-output,Wrishp_emb,,,Write shape file for embankments,0|1,0,,,FALSE,,,,,,Write shape file for embankments
-output,Wrishp_dryarea,,,Write shape file for dry area,0|1,0,,,FALSE,,,,,,Write shape file for dry area
-output,Wrishp_enc,,,Write shape file for enclosure,0|1,0,,,FALSE,,,,,,Write shape file for enclosure
-output,Wrishp_src,,,Write shape file for sources,0|1,0,,,FALSE,,,,,,Write shape file for sources
-output,Wrishp_pump,,,Write shape file for pump,0|1,0,,,FALSE,,,,,,Write shape file for pump
 *,,,,,,,,,,,,,,,
 GUIOnly,WriteHisFile,output,History,Write His File,0|1,1,,,FALSE,,,,,,Write a history file
 GUIOnly,HisOutputDeltaT,output,History,His output Interval,Interval,,,,FALSE,,WriteHisFile,,,,Interval for writing His Output [Dd HH:MM:SS.ZZZ]
@@ -198,6 +187,27 @@ GUIOnly,RstOutputStartTime,output,Restart,Rst output start time,DateTime,,,,FALS
 GUIOnly,SpecifyRstStop,output,Restart,Specify Rst output stop time,0|1,0,,,FALSE,WriteRstFile && SpecifyRstStart,WriteRstFile,,,,Stop writing restart files before of simulation
 GUIOnly,RstOutputStopTime,output,Restart,Rst output stop time,DateTime,,,,FALSE,WriteRstFile && SpecifyRstStart && SpecifyRstStop,WriteRstFile,,,,No restart files will be written after this time stamp [YYYY-MM-DD HH:MM:SS]
 *,,,,,,,,,,,,,,,
+GUIOnly,SpecifyWaqOutputInterval, output, Water Quality,Specify WAQ interval output,0|1,0,,,FALSE,,,,,,"Specify WAQ interval output"
+GUIOnly,WaqOutputDeltaT,output,Water Quality,WAQ output interval,Interval,0,,,FALSE,SpecifyWaqOutputInterval,,,,,Interval (in s) between DELWAQ file outputs [Dd HH:MM:SS.ZZZ]
+output,WaqInterval,,,WAQ output interval,DoubleArray,0,0,,TRUE,,,,,,"Interval (in s) between DELWAQ file outputs"
+GUIOnly,SpecifyWaqOutputStartTime, output, Water Quality,Specify WAQ start time output,0|1,0,,,FALSE,SpecifyWaqOutputInterval,,,,,"Specify WAQ start time output"
+GUIOnly,WaqOutputStartTime, output, Water Quality,WAQ output-start-time,Datetime,,,,FALSE,SpecifyWaqOutputInterval && SpecifyWaqOutputStartTime,,,,,WAQ Start time output [YYYY-MM-DD HH:MM:SS]
+GUIOnly,SpecifyWaqOutputStopTime, output, Water Quality,Specify WAQ stop time output,0|1,0,,,FALSE,SpecifyWaqOutputInterval && SpecifyWaqOutputStartTime,,,,,"Specify WAQ stop time output"
+GUIOnly,WaqOutputStopTime, output, Water Quality,Water Quality output-end-time,Datetime,,,,FALSE,SpecifyWaqOutputInterval && SpecifyWaqOutputStartTime && SpecifyWaqOutputStopTime,,,,,WAQ End time output [YYYY-MM-DD HH:MM:SS]
+*,,,,,,,,,,,,,,,
+GUIOnly,WriteSnappedFeatures,output,Shape files,Write Snapped Features,0|1,0,,,FALSE,,,,,,Write generated output snapped features
+output,Wrishp_crs,output,Shape files,Write shape file for cross section,0|1,0,,,FALSE,WriteSnappedFeatures,,,,,Write shape file for cross section
+output,Wrishp_weir,output,Shape files,Write shape file for weirs,0|1,0,,,FALSE,WriteSnappedFeatures,,,,,Write shape file for weirs
+output,Wrishp_gate,output,Shape files,Write shape file for gates,0|1,0,,,FALSE,WriteSnappedFeatures,,,,,Write shape file for gates
+output,Wrishp_fxw,output,Shape files,Write shape file for fixed weirs,0|1,0,,,FALSE,WriteSnappedFeatures,,,,,Write shape file for fixed weirs
+output,Wrishp_thd,output,Shape files,Write shape file for thin dams,0|1,0,,,FALSE,WriteSnappedFeatures,,,,,Write shape file for thin dams
+output,Wrishp_obs,output,Shape files,Write shape file for observation stations,0|1,0,,,FALSE,WriteSnappedFeatures,,,,,Write shape file for observation stations
+output,Wrishp_emb,output,Shape files,Write shape file for embankments,0|1,0,,,FALSE,WriteSnappedFeatures,,,,,Write shape file for embankments
+output,Wrishp_dryarea,output,Shape files,Write shape file for dry area,0|1,0,,,FALSE,WriteSnappedFeatures,,,,,Write shape file for dry area
+output,Wrishp_enc,output,Shape files,Write shape file for enclosure,0|1,0,,,FALSE,WriteSnappedFeatures,,,,,Write shape file for enclosure
+output,Wrishp_src,output,Shape files,Write shape file for sources,0|1,0,,,FALSE,WriteSnappedFeatures,,,,,Write shape file for sources
+output,Wrishp_pump,output,Shape files,Write shape file for pump,0|1,0,,,FALSE,WriteSnappedFeatures,,,,,Write shape file for pump
+*,,,,,,,,,,,,,,,
 output,OutputDir,output,Others,Output directory,String,,,,TRUE,,,,,,"Output directory of map-, his-, rst-, dat- and timings-files, default: DFM_OUTPUT_<modelname>. Set to . for current dir."
 output,WAQOutputDir,output,Others,WAQ output directory,String,,,,TRUE,,,,,,"Output directory of WAQ files, default: DFM_DELWAQ_<modelname>. Set to . for current dir."
 output,FlowGeomFile,,,,FileName,,,,TRUE,,,,,,Flow geometry NetCDF *_flowgeom.nc 
@@ -213,10 +223,25 @@ output,S1incinterval,,,,Interval,0,,,TRUE,,,,,,Interval (m) in incremental file 
 *output,TimeSplitInterval,,Output,Time splitting interval,Interval,0X,,,TRUE,,,,,,"Time splitting interval, after which a new output file is started. value+unit, e.g. '1 M', valid units: Y,M,D,h,m,s."
 output,MapFormat,output,Others,Map file output format:NetCDF|Tecplot|Both|UGRID(beta),1|2|3|4,4,1,4,TRUE,,,,,,"Map file format (1: NetCDF, 2: Tecplot, 3: NetCFD and Tecplot)"
 output,Wrihis_balance,output,History,Write mass balance totals,0|1,1,,,FALSE,,WriteHisFile,,,,"Write mass balance totals to his file (1: yes, 0: no)"
+output,Wrihis_sourcesink,output,History,Write sources-sinks statistics,0|1,1,,,FALSE,,WriteHisFile,,,,"Write sources-sinks statistics to his file (1: yes, 0: no)"
 output,Wrihis_structure_gen,output,History,Write general structure parameters,0|1,1,,,FALSE,,WriteHisFile,,,,"Write general structure parameters to his file (1: yes, 0: no)"
 output,Wrihis_structure_dam,output,History,Write dam parameters,0|1,1,,,FALSE,,WriteHisFile,,,,"Write dam parameters to his file (1: yes, 0: no)"
 output,Wrihis_structure_pump,output,History,Write pump parameters,0|1,1,,,FALSE,,WriteHisFile,,,,"Write pump parameters to his file (1: yes, 0: no)"
 output,Wrihis_structure_gate,output,History,Write gate parameters,0|1,1,,,FALSE,,WriteHisFile,,,,"Write gate parameters to his file (1: yes, 0: no)"
+output,Wrihis_structure_weir,output,History,Write weir parameters,0|1,1,,,FALSE,,WriteHisFile,,,,"Write weir parameters to his file (1: yes, 0: no)"
+output,Wrihis_turbulence,output,History,"Write k, eps and vicww",0|1,1,,,FALSE,,WriteHisFile,,,,"Write k, eps and vicww to his file (1: yes, 0: no)"
+output,Wrihis_wind,output,History,Write wind velocities,0|1,1,,,FALSE,,WriteHisFile,,,,"Write wind velocities to his file (1: yes, 0: no)"
+output,Wrihis_rain,output,History,Write precipitation,0|1,1,,,FALSE,,WriteHisFile,,,,"Write precipitation to his file (1: yes, 0: no)"
+output,Wrihis_temperature,output,History,Write temperature,0|1,1,,,FALSE,,WriteHisFile,,,,"Write temperature to his file (1: yes, 0: no)"
+output,Wrihis_heat_fluxes,output,History,Write heat fluxes,0|1,1,,,FALSE,,WriteHisFile,,,,"Write heat fluxes to his file (1: yes, 0: no)"
+output,Wrihis_salinity,output,History,Write salinity,0|1,1,,,FALSE,,WriteHisFile,,,,"Write salinity to his file (1: yes, 0: no)"
+output,Wrihis_density,output,History,Write density,0|1,1,,,FALSE,,WriteHisFile,,,,"Write density to his file (1: yes, 0: no)"
+output,Wrihis_waterlevel_s1,output,History,Write water level,0|1,1,,,FALSE,,WriteHisFile,,,,"Write water level to his file (1: yes, 0: no)"
+output,Wrihis_waterdepth,output,History,Write water depth,0|1,0,,,FALSE,,WriteHisFile,,,,"Write water depth to his file (1: yes, 0: no)"
+output,Wrihis_velocity_vector,output,History,Write velocity vectors,0|1,1,,,FALSE,,WriteHisFile,,,,"Write velocity vectors to his file (1: yes, 0: no)"
+output,Wrihis_upward_velocity_component,output,History,Write upward velocity,0|1,0,,,FALSE,,WriteHisFile,,,,"Write upward velocity to his file (1: yes, 0: no)"
+output,Wrihis_sediment,output,History,Write sediment transport,0|1,1,,,FALSE,,WriteHisFile,,,,"Write sediment transport to his file (1: yes, 0: no)"
+output,Wrihis_constituents,output,History,Write tracers,0|1,1,,,FALSE,,WriteHisFile,,,,"Write tracers to his file (1: yes, 0: no)"
 output,Wrimap_waterlevel_s0,output,Map,Write water levels of previous time step,0|1,1,,,FALSE,,WriteMapFile,,,,"Write water levels for previous time step to map file (1: yes, 0: no)"
 output,Wrimap_waterlevel_s1,output,Map,Write water levels,0|1,1,,,FALSE,,WriteMapFile,,,,"Write water levels to map file (1: yes, 0: no)"
 output,Wrimap_velocity_component_u0,output,Map,Write velocity component for previous time step,0|1,1,,,FALSE,,WriteMapFile,,,,"Write velocity component for previous time step to map file (1: yes, 0: no)"
@@ -241,14 +266,6 @@ output,ClassMapFile,,,,FileName,,,,TRUE,,,,,,"Class map file *_clm.nc"
 output,WaterlevelClasses,output,Class,Water level classes,String,0.0,,,,,WriteClassMapFile,,,,"Water level classes", m
 output,WaterdepthClasses,output,Class,Water depth classes,String,0.0,,,,,WriteClassMapFile,,,,"Water depth classes", m
 output,ClassMapInterval,,,Class map interval,DoubleArray,300,0,,TRUE,,WriteClassMapFile,,,,"Class output interval [Dd HH:MM:SS.ZZZ]"
-GUIOnly,WriteSnappedFeatures,output,Others,Write Snapped Features,0|1,0,,,FALSE,,,,,,Write generated output snapped features
-GUIOnly,SpecifyWaqOutputInterval, output, Others,Specify WAQ interval output,0|1,0,,,FALSE,,,,,,"Specify WAQ interval output"
-GUIOnly,WaqOutputDeltaT,output,Others,WAQ output interval,Interval,0,,,FALSE,SpecifyWaqOutputInterval,,,,,Interval (in s) between DELWAQ file outputs [Dd HH:MM:SS.ZZZ]
-output,WaqInterval,,,WAQ output interval,DoubleArray,0,0,,TRUE,,,,,,"Interval (in s) between DELWAQ file outputs"
-GUIOnly,SpecifyWaqOutputStartTime, output, Others,Specify WAQ start time output,0|1,0,,,FALSE,SpecifyWaqOutputInterval,,,,,"Specify WAQ start time output"
-GUIOnly,WaqOutputStartTime, output, Others,WAQ output-start-time,Datetime,,,,FALSE,SpecifyWaqOutputInterval && SpecifyWaqOutputStartTime,,,,,WAQ Start time output [YYYY-MM-DD HH:MM:SS]
-GUIOnly,SpecifyWaqOutputStopTime, output, Others,Specify WAQ stop time output,0|1,0,,,FALSE,SpecifyWaqOutputInterval && SpecifyWaqOutputStartTime,,,,,"Specify WAQ stop time output"
-GUIOnly,WaqOutputStopTime, output, Others,WAQ output-end-time,Datetime,,,,FALSE,SpecifyWaqOutputInterval && SpecifyWaqOutputStartTime && SpecifyWaqOutputStopTime,,,,,WAQ End time output [YYYY-MM-DD HH:MM:SS]
 output,StatsInterval,output,Others,Statistics output interval,Interval,0,,,FALSE,,,,,,Interval (in s) between simulation statistics output [Dd HH:MM:SS.ZZZ]
 output,Writebalancefile,output,Others,Write water balance file,0|1,0,0,1,FALSE,,,,,,"Write balance file (1: yes, 0: no)"
 output,TimingsInterval,output,Others,Timing statistics output interval,Interval,0,,,FALSE,,,,,,Timings statistics output interval [Dd HH:MM:SS.ZZZ]

@@ -17,45 +17,29 @@ namespace DelftTools.Hydro.Helpers
 
                 conveyanceData.Components.AddRange(new[]
                 {
-                    new Variable<double>("conveyance")
-                    {
-                        Unit = new Unit("m3/s", "m3/s"),
-                        IsEditable = false
-                    },
-                    new Variable<double>("flow area")
-                    {
-                        Unit = new Unit("m²", "m²"),
-                        IsEditable = false
-                    },
-                    new Variable<double>("flow width")
-                    {
-                        Unit = new Unit("m", "m"),
-                        IsEditable = false
-                    },
-                    new Variable<double>("wetted perimeter")
-                    {
-                        Unit = new Unit("m", "m"),
-                        IsEditable = false
-                    },
-                    new Variable<double>("hydraulic radius")
-                    {
-                        Unit = new Unit("m", "m"),
-                        IsEditable = false
-                    },
-                    new Variable<double>("total width")
-                    {
-                        Unit = new Unit("m", "m"),
-                        IsEditable = false
-                    },
-                    new Variable<double>("conveyance negative")
-                    {
-                        Unit = new Unit("m3/s", "m3/s"),
-                        IsEditable = false
-                    }
+                    GetDoubleVariable("conveyance", "m3/s"),
+                    GetDoubleVariable("flow area", "m²"),
+                    GetDoubleVariable("flow width", "m"),
+                    GetDoubleVariable("wetted perimeter", "m"),
+                    GetDoubleVariable("hydraulic radius", "m"),
+                    GetDoubleVariable("total width", "m"),
+                    GetDoubleVariable("conveyance negative", "m3/s")
                 });
-                conveyanceData.Arguments.Add(new Variable<double>("depth") {Unit = new Unit("m", "m")});
+                conveyanceData.Arguments.Add(new Variable<double>("depth")
+                {
+                    Unit = new Unit("m", "m")
+                });
                 return conveyanceData;
             }
+        }
+
+        private static Variable<double> GetDoubleVariable(string variableName, string unitName)
+        {
+            return new Variable<double>(variableName)
+            {
+                Unit = new Unit(unitName, unitName),
+                IsEditable = false
+            };
         }
 
         public abstract IFunction GetConveyance(ICrossSection crossSection);
