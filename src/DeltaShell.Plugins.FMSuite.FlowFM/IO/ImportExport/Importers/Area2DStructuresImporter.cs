@@ -121,27 +121,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
             string simpleWeirString = "";
             string gatedWeirString = "";
             string generalFormulaString = "";
-           
-            int totalStructures = simpleWeirIni + gatedWeirIni + generalFormulaIni + pumpsIni;
 
             if (pumpsIni > 0)
             {
-                logPumpsIniString = " Pumps : " + " " + pumpsIni.ToString() + " ";
+                logPumpsIniString = "Pumps : " + pumpsIni.ToString() + " ";
             }
             if (simpleWeirIni > 0)
             {
-                simpleWeirString = " Weirs: " + " " + simpleWeirIni.ToString() + " ";
+                simpleWeirString = "Weirs: " + simpleWeirIni.ToString() + " ";
             }
             if (gatedWeirIni > 0)
             {
-                gatedWeirString = " Gates :" + " " + gatedWeirIni.ToString() + " ";
+                gatedWeirString = "Gates : " + gatedWeirIni.ToString() + " ";
             }
             if (generalFormulaIni > 0)
             {
-                generalFormulaString = " General structures: " + " " + generalFormulaIni.ToString() + " ";
+                generalFormulaString = "General structures: " + generalFormulaIni.ToString();
             }
 
-            return totalStructures + logPumpsIniString + simpleWeirString + gatedWeirString + generalFormulaString;
+            return logPumpsIniString + simpleWeirString + gatedWeirString + generalFormulaString;
         }
 
         [InvokeRequired]
@@ -196,7 +194,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
                 }
             }
 
-            Log.InfoFormat("Read: " + ComposeLogStringsForStructures(simpleWeirIni, gatedWeirIni, generalFormulaIni, pumpsIni));
+            int totalStructures = simpleWeirIni + gatedWeirIni + generalFormulaIni + pumpsIni;
+
+            Log.InfoFormat("Read: " + totalStructures + " structures (" + ComposeLogStringsForStructures(simpleWeirIni, gatedWeirIni, generalFormulaIni, pumpsIni) + ")");
         }
 
         #endregion
