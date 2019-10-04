@@ -102,7 +102,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Test]
         public void GetFeaturesFromCategory_Pumps_ThenReturnOnlyPumpsOfTheArea()
         {
-
+            // Given
             var area = new HydroArea();
 
             var pump = new Pump2D();
@@ -111,15 +111,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             area.Pumps.Add(pump);
             area.ObservationPoints.Add(observationPoint);
             
+            // When
             List<IFeature> features = area.GetFeaturesFromCategory(KnownFeatureCategories.Pumps).ToList();
 
-            Assert.AreEqual(1, features.Count);
-            Assert.AreSame(features.First(),pump);
+            // Then
+            Assert.AreEqual(1, features.Count, "Only one feature should have been returned");
+            Assert.AreSame(pump, features.First(), "The pump of the area should have been returned");
         }
 
         [Test]
         public void GetFeaturesFromCategory_SimpleWeirs_ThenReturnOnlyWeirsWithSimpleWeirFormulaOfTheArea()
         {
+            // Given
             var area = new HydroArea();
 
             var simpleWeir = new Weir2D {WeirFormula = new SimpleWeirFormula()};
@@ -128,15 +131,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             area.Weirs.Add(simpleWeir);
             area.ObservationPoints.Add(observationPoint);
 
+            // When
             List<IFeature> features = area.GetFeaturesFromCategory(KnownFeatureCategories.Weirs).ToList();
 
-            Assert.AreEqual(1, features.Count);
-            Assert.AreSame(features.First(), simpleWeir);
+            // Then
+            Assert.AreEqual(1, features.Count, "Only one feature should have been returned");
+            Assert.AreSame(simpleWeir, features.First(), "The simple weir of the area should have been returned");
         }
 
         [Test]
         public void GetFeaturesFromCategoryGates_Gates_ThenReturnOnlyWeirsWithGatedWeirFormulaOfTheArea()
         {
+            // Given
             var area = new HydroArea();
 
             var gate = new Weir2D { WeirFormula = new GatedWeirFormula() };
@@ -145,15 +151,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             area.Weirs.Add(gate);
             area.ObservationPoints.Add(observationPoint);
 
+            // When
             List<IFeature> features = area.GetFeaturesFromCategory(KnownFeatureCategories.Gates).ToList();
 
-            Assert.AreEqual(1, features.Count);
-            Assert.AreSame(features.First(), gate);
+            // Then
+            Assert.AreEqual(1, features.Count, "Only one feature should have been returned");
+            Assert.AreSame(gate, features.First(), "The gate of the area should have been returned");
         }
 
         [Test]
         public void GetFeaturesFromCategory_GeneralStructures_ThenReturnOnlyWeirsWithGeneralStructureWeirFormulaOfTheArea()
         {
+            // Given
             var area = new HydroArea();
 
             var generalStructure = new Weir2D { WeirFormula = new GeneralStructureWeirFormula() };
@@ -162,15 +171,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             area.Weirs.Add(generalStructure);
             area.ObservationPoints.Add(observationPoint);
 
+            // When
             List<IFeature> features = area.GetFeaturesFromCategory(KnownFeatureCategories.GeneralStructures).ToList();
 
-            Assert.AreEqual(1, features.Count);
-            Assert.AreSame(features.First(), generalStructure);
+            // Then
+            Assert.AreEqual(1, features.Count, "Only one feature should have been returned");
+            Assert.AreSame(generalStructure, features.First(), "The general structure of the area should have been returned");
         }
 
         [Test]
         public void GetFeaturesFromCategory_ObservationPoints_ThenReturnOnlyObservationPointsOfTheArea()
         {
+            // Given
             var area = new HydroArea();
 
             var observationPoint = new GroupableFeature2DPoint();
@@ -179,15 +191,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             area.ObservationPoints.Add(observationPoint);
             area.Pumps.Add(pump);
 
+            // When
             List<IFeature> features = area.GetFeaturesFromCategory(KnownFeatureCategories.Observations).ToList();
-
-            Assert.AreEqual(1, features.Count);
-            Assert.AreSame(features.First(), observationPoint);
+            
+            // Then
+            Assert.AreEqual(1, features.Count, "Only one feature should have been returned");
+            Assert.AreSame(observationPoint, features.First(), "The observation point of the area should have been returned");
         }
 
         [Test]
         public void GetFeaturesFromCategory_ObservationCrossSections_ThenReturnOnlyObservationCrossSectionsOfTheArea()
         {
+            // Given
             var area = new HydroArea();
 
             var observationCrossSection = new ObservationCrossSection2D();
@@ -196,10 +211,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             area.ObservationCrossSections.Add(observationCrossSection);
             area.ObservationPoints.Add(observationPoint);
 
+            // When
             List<IFeature> features = area.GetFeaturesFromCategory(KnownFeatureCategories.CrossSections).ToList();
 
-            Assert.AreEqual(1, features.Count);
-            Assert.AreSame(features.First(), observationCrossSection);
+            // Then
+            Assert.AreEqual(1, features.Count, "Only one feature should have been returned");
+            Assert.AreSame(observationCrossSection, features.First(), "The observation cross section of the area should have been returned");
         }
         #region Helper methods
 
