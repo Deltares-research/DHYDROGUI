@@ -10,6 +10,9 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
         {
         }
 
+        protected DefinitionGeneratorCrossSectionDefinitionEgg(string subEggType) : base(subEggType)
+        {
+        }
         protected override bool HasCorrectCrossSectionShape(CrossSectionDefinitionStandard standardDefinition)
         {
             var eggShape = standardDefinition.Shape as CrossSectionStandardShapeEgg;

@@ -14,6 +14,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             {
                 //these four shapes all have width+height and a common base class..use the same view
                 case CrossSectionStandardShapeType.Cunette:
+                case CrossSectionStandardShapeType.InvertedEgg: //wait for implemnetation closed branches
                 case CrossSectionStandardShapeType.Egg: //wait for implemnetation closed branches
                 case CrossSectionStandardShapeType.Elliptical:
                 case CrossSectionStandardShapeType.Rectangle:
@@ -35,6 +36,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
                         Data = (CrossSectionStandardShapeTrapezium)standardShape
                     };
                 case CrossSectionStandardShapeType.Arch:
+                case CrossSectionStandardShapeType.UShape:
                     return new CrossSectionStandardShapeArchView
                                {
                                    Data = (CrossSectionStandardShapeArch) standardShape

@@ -159,7 +159,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             var filePath = WriterData.FilePaths.NodeFilePath;
             if (!string.IsNullOrEmpty(filePath))
-                NodeFile.Write(filePath, model.Network.Manholes.SelectMany(m => m.Compartments));
+                NodeFile.Write(filePath, model.Network.Manholes.SelectMany(m => m.Compartments), model.Network.Retentions);
         }
 
         private static void WriteBranchesGuiFile(WaterFlowFMModel model)

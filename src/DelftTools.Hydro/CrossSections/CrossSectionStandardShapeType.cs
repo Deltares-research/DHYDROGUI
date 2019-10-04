@@ -23,6 +23,8 @@
         
         Egg,// not in use -> only closed branches
         Circle, //not in use -> only closed branches
+        InvertedEgg,// not in use -> only closed branches
+        UShape,// not in use -> only closed branches
 
     }
 }

@@ -12,11 +12,13 @@ namespace DelftTools.Hydro
         Tabulated,
         Round, // not yet in modelapi
         Egg, // not yet in model api
+        InvertedEgg, // not yet in model api
         Rectangle,
         Ellipse, 
         Arch,
         Cunette,
-        SteelCunette
+        SteelCunette,
+        UShape
     }
 
     ///<summary>

@@ -40,7 +40,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.General
         public const int RoughnessDataMajorVersion = 1;
         public const int RoughnessDataMinorVersion = 0;
 
-        public const int RetentionMajorVersion = 1;
+        public const int RetentionMajorVersion = 2;
         public const int RetentionMinorVersion = 0;
 
         public const int Iterative1D2DCouplerMajorVersion = 1;
@@ -66,6 +66,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.General
             public const string BoundaryConditions = "boundConds";
             public const string RoughnessData = "roughness";
             public const string Retention = "retentions";
+            public const string StorageNodes = "storageNodes";
         }
 
         public static readonly ConfigurationSetting FileVersion = new ConfigurationSetting(key:"fileVersion", description: "#File version. Do not edit this.");

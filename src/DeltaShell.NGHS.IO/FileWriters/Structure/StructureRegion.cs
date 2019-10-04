@@ -25,6 +25,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
             public const string Bridge = "bridge";
             public const string BridgePillar = "bridgePillar";
             public const string ExtraResistanceStructure = "extraresistance";
+            public const string CompoundStructure = "compound";
         }
         
         #region Common Structure Elements
@@ -32,7 +33,8 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
         public static readonly ConfigurationSetting Name = new ConfigurationSetting(key: "name", description: "Given name in the user interface (optional)");
         public static readonly ConfigurationSetting BranchId = new ConfigurationSetting(key: "branchId", description: "Branch id");
         public static readonly ConfigurationSetting Chainage = new ConfigurationSetting(key: "chainage", description: "Chainage on the branch (m)");
-        public static readonly ConfigurationSetting Compound = new ConfigurationSetting(key: "compound", description: 
+        
+        public static readonly ConfigurationSetting Compound = new ConfigurationSetting(key: "compound", description:
             "When compound is equal or less than to 0 the structure is a single structure. " +
             "In case a value greater than 0 is given, the structure is a part of a compound structure. " +
             "All structures with the same compound id are considered to be elements of the same compound structure.");
@@ -45,6 +47,15 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
         public static readonly ConfigurationSetting Length = new ConfigurationSetting(key: "length", description: "Length (m)");
         public static readonly ConfigurationSetting InletLossCoeff = new ConfigurationSetting(key: "inletlosscoeff", description: "Inlet loss coefficient (-)");
         public static readonly ConfigurationSetting OutletLossCoeff = new ConfigurationSetting(key: "outletlosscoeff", description: "Outlet loss coefficient (-)");
+        public static readonly ConfigurationSetting FrictionType = new ConfigurationSetting(key: "FrictionType", description:
+            "Friction type, possible values are: " +
+            "Chezy = 1, " +
+            "Manning = 4, " +
+            "Nikuradse = 5, " +
+            "Strickler = 6, " +
+            "WhiteColebrook = 7, " +
+            "BosBijkerk = 9");
+        public static readonly ConfigurationSetting Friction = new ConfigurationSetting(key: "Friction", description: "Friction Value");
         public static readonly ConfigurationSetting BedFrictionType = new ConfigurationSetting(key: "bedFrictionType", description:
             "Friction type, possible values are: " +
             "Chezy = 1, " +
@@ -59,19 +70,19 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
         #endregion
 
         #region Pump Elements
-        public static readonly ConfigurationSetting Direction = new ConfigurationSetting(key: "direction", description:
-            "Pump direction (>0 = positive, <0 = negative) " +
+        public static readonly ConfigurationSetting Orientation = new ConfigurationSetting(key: "orientation", description: "Pump orientation.");
+        public static readonly ConfigurationSetting Direction = new ConfigurationSetting(key: "controlSide", description:
             "ABS(direction): " +
             "1: Suction side control " +
             "2: Delivery side control " +
             "3: Suction and Delivery side control");
-        public static readonly ConfigurationSetting NrStages = new ConfigurationSetting(key: "nrstages", description: "Number of stages in pump");
+        public static readonly ConfigurationSetting NrStages = new ConfigurationSetting(key: "numStages", description: "Number of stages in pump");
         public static readonly ConfigurationSetting Capacity = new ConfigurationSetting(key: "capacity", description: "Pump capacity (m3/s)");
         public static readonly ConfigurationSetting StartLevelSuctionSide = new ConfigurationSetting(key: "startlevelsuctionside", description: "Start level suction side (m AD)");
         public static readonly ConfigurationSetting StopLevelSuctionSide = new ConfigurationSetting(key: "stoplevelsuctionside", description: "Stop level suction side (m AD)");
         public static readonly ConfigurationSetting StartLevelDeliverySide = new ConfigurationSetting(key: "startleveldeliveryside", description: "Start level at delivery side (m AD)");
         public static readonly ConfigurationSetting StopLevelDeliverySide = new ConfigurationSetting(key: "stopleveldeliveryside", description: "Stop level at delivery side (m AD)");
-        public static readonly ConfigurationSetting ReductionFactorLevels = new ConfigurationSetting(key: "reductionfactorlevels", description: "Number of levels in reduction table");
+        public static readonly ConfigurationSetting ReductionFactorLevels = new ConfigurationSetting(key: "numReductionLevels", description: "Number of levels in reduction table");
         public static readonly ConfigurationSetting Head = new ConfigurationSetting(key: "head", description: "Head");
         public static readonly ConfigurationSetting ReductionFactor = new ConfigurationSetting(key: "reductionfactor", description: "Reduction factor (-)");
         public static readonly ConfigurationSetting PolylineFile = new ConfigurationSetting(key: "polylinefile", description: "*.pli; Polyline geometry definition for 2D structure");
@@ -79,11 +90,12 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
 
         #region Common Weir Elements
         // [Simple Weir & Universal Weir & Orifice]
+        public static readonly ConfigurationSetting CorrectionCoeff = new ConfigurationSetting(key: "corrCoeff", description: "Correction coefficient (-)", defaultValue:"1");
         public static readonly ConfigurationSetting DischargeCoeff = new ConfigurationSetting(key: "dischargecoeff", description: "Discharge coefficient (-)");
         // [Simple Weir & River Weir & Advanced Weir & Orifice]
-        public static readonly ConfigurationSetting CrestWidth = new ConfigurationSetting(key: "crestwidth", description: "Width of weir (m)");
+        public static readonly ConfigurationSetting CrestWidth = new ConfigurationSetting(key: "crestWidth", description: "Width of weir (m)");
         // [Simple Weir & Universal Weir & River Weir & Advanced Weir & Orifice]
-        public static readonly ConfigurationSetting CrestLevel = new ConfigurationSetting(key: "crestlevel", description: "Crest level of weir (m AD)");
+        public static readonly ConfigurationSetting CrestLevel = new ConfigurationSetting(key: "crestLevel", description: "Crest level of weir (m AD)");
         #endregion
 
         #region Simple Weir Elements
@@ -101,7 +113,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
         #endregion
 
         #region Universal Weir Elements
-        public static readonly ConfigurationSetting LevelsCount = new ConfigurationSetting(key: "levelsCount", description:"Number of YZ-Values");
+        public static readonly ConfigurationSetting LevelsCount = new ConfigurationSetting(key: "numLevels", description:"Number of YZ-Values");
         public static readonly ConfigurationSetting YValues = new ConfigurationSetting(key: "yValues", description: "y-values as used in the computational core (m)");
         public static readonly ConfigurationSetting ZValues = new ConfigurationSetting(key: "zValues", description: "z-values as used in the computational core (m)");
         public static readonly ConfigurationSetting FreeSubmergedFactor = new ConfigurationSetting(key: "freesubmergedfactor", description: "Normally 0.667 (2/3) (-)");
@@ -172,10 +184,10 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
         public static readonly ConfigurationSetting LeftLevel = new ConfigurationSetting(key: "leftLevel", description: "Left bed level (m AD)");
         public static readonly ConfigurationSetting RightLevel = new ConfigurationSetting(key: "rightLevel", description: "Right bed level (m AD)");
         public static readonly ConfigurationSetting ValveOnOff = new ConfigurationSetting(key: "valveOnOff", description: "Flag for having valve or not (0=no valve, 1=valve)");
-        public static readonly ConfigurationSetting IniValveOpen = new ConfigurationSetting(key: "iniValveOpen", description: "Initial valve opening height (m)");
-        public static readonly ConfigurationSetting LossCoeffCount = new ConfigurationSetting(key: "lossCoeffCount", description: "Number of rows in table");
-        public static readonly ConfigurationSetting RelativeOpening = new ConfigurationSetting(key: "relativeOpening", description: "Relative valve opening (0.0 — 1.0)");
-        public static readonly ConfigurationSetting LossCoefficient = new ConfigurationSetting(key: "lossCoefficient", description: "Loss coefficients (-)");
+        public static readonly ConfigurationSetting IniValveOpen = new ConfigurationSetting(key: "valveOpeningHeight", description: "Initial valve opening height (m)");
+        public static readonly ConfigurationSetting LossCoeffCount = new ConfigurationSetting(key: "numLossCoeff", description: "Number of rows in table");
+        public static readonly ConfigurationSetting RelativeOpening = new ConfigurationSetting(key: "relOpening", description: "Relative valve opening (0.0 — 1.0)");
+        public static readonly ConfigurationSetting LossCoefficient = new ConfigurationSetting(key: "lossCoeff", description: "Loss coefficients (-)");
         #endregion
 
         #region Siphon & Inverted Siphon Elements
@@ -217,6 +229,12 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
         public static readonly ConfigurationSetting Factor2 = new ConfigurationSetting(key: "F2");
         public static readonly ConfigurationSetting CriticalFlowVelocity = new ConfigurationSetting(key: "Ucrit");
         public static readonly ConfigurationSetting TimeFileName = new ConfigurationSetting(key: "DambreakLevelsAndWidths");
+
+        #endregion
+        #region compound
+        public static readonly ConfigurationSetting NumberOfCompoundStructures = new ConfigurationSetting(key: "numStructures", description: "Number of individual structures in compound structure");
+        public static readonly ConfigurationSetting StructureIds = new ConfigurationSetting(key: "structureIds", description: "Semicolon separated list of structure ids.");
+        
 
         #endregion
     }

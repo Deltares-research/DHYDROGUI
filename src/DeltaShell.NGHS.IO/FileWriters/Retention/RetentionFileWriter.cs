@@ -25,7 +25,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Retention
             new IniFileWriter().WriteIniFile(categories, filename);
         }
 
-        private static DelftIniCategory GenerateSpatialDataDefinition(IRetention retention)
+        public static DelftIniCategory GenerateSpatialDataDefinition(IRetention retention)
         {
             if (retention.Branch == null) throw new FileWritingException("Retention does not have a valid Branch property");
             var definition = new DelftIniCategory(RetentionRegion.Header);

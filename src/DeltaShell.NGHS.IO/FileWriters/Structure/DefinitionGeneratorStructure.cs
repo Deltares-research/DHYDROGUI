@@ -34,9 +34,10 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
             IniCategory.AddProperty(StructureRegion.BranchId.Key, branchFeature.Branch.Name, StructureRegion.BranchId.Description);
             IniCategory.AddProperty(StructureRegion.Chainage.Key, branchFeature.Chainage, StructureRegion.Chainage.Description, StructureRegion.Chainage.Format);
 
-            var compoundStructureId = compoundStructureInfo.Id;
+            /*var compoundStructureId = compoundStructureInfo.Id;
             IniCategory.AddProperty(StructureRegion.Compound.Key, compoundStructureId, StructureRegion.Compound.Description);
-            if (compoundStructureId > 0) IniCategory.AddProperty(StructureRegion.CompoundName.Key, compoundStructureInfo.Name, StructureRegion.CompoundName.Description);
+            if (compoundStructureId > 0) IniCategory.AddProperty(StructureRegion.CompoundName.Key, compoundStructureInfo.Name, StructureRegion.CompoundName.Description);*/
+
             AddDefinitionTypePropertyToIniCategory(definitionType);
         }
 

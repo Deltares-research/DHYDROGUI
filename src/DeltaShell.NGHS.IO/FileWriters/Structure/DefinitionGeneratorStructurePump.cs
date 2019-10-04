@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DeltaShell.NGHS.IO.Helpers;
@@ -24,7 +25,24 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
             var pump = hydroObject as Pump;
             if (pump == null) return IniCategory;
 
-            var direction = (pump.DirectionIsPositive ? (int)pump.ControlDirection : -1 * (int)pump.ControlDirection);
+            //var direction = (pump.DirectionIsPositive ? (int)pump.ControlDirection : -1 * (int)pump.ControlDirection);
+            IniCategory.AddProperty(StructureRegion.Orientation.Key, pump.DirectionIsPositive ? "positive" : "negative", StructureRegion.Orientation.Description);
+            string direction = string.Empty;
+
+            switch (pump.ControlDirection)
+            {
+                case PumpControlDirection.SuctionSideControl:
+                    direction = "suctionSide";
+                    break;
+                case PumpControlDirection.DeliverySideControl:
+                    direction = "deliverySide";
+                    break;
+                case PumpControlDirection.SuctionAndDeliverySideControl:
+                    direction = "both";
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
             IniCategory.AddProperty(StructureRegion.Direction.Key, direction, StructureRegion.Direction.Description);
 
             // Note: The core is expecting an array of doubles but there is only ever 1 value, see WFM1D.SetPump(...)

@@ -34,10 +34,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             FileUtils.DeleteIfExists(nodeFilePath);
 
             var compartments = network.Manholes.SelectMany(m => m.Compartments).ToList();
-            if (compartments.Any())
+            if (compartments.Any() || network.Retentions.Any())
             {
                 modelDefinition.SetModelProperty(KnownProperties.NodeFile, NODE_FILE_NAME);
-                NodeFile.Write(nodeFilePath, compartments);
+                NodeFile.Write(nodeFilePath, compartments, network.Retentions);
             }
             else
             {

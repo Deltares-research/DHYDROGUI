@@ -320,9 +320,25 @@ namespace DelftTools.Hydro.Structures
                             Width = Width
                         }) { Name = Name };
                     break;
+                case CulvertGeometryType.InvertedEgg:
+                    crossSectionDefinition =
+                        new CrossSectionDefinitionStandard(new CrossSectionStandardShapeInvertedEgg()
+                        {
+                            Width = Width
+                        }) { Name = Name };
+                    break;
                 case CulvertGeometryType.Arch:
                     crossSectionDefinition =
                         new CrossSectionDefinitionStandard(new CrossSectionStandardShapeArch()
+                        {
+                            Width = Width,
+                            Height = Height,
+                            ArcHeight = ArcHeight
+                        }) { Name = Name };
+                    break;
+                case CulvertGeometryType.UShape:
+                    crossSectionDefinition =
+                        new CrossSectionDefinitionStandard(new CrossSectionStandardShapeUShape()
                         {
                             Width = Width,
                             Height = Height,

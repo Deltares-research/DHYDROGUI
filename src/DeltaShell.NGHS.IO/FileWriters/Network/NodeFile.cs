@@ -1,22 +1,52 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
+using DelftTools.Utils.Reflection;
+using DeltaShell.NGHS.IO.FileWriters.General;
+using DeltaShell.NGHS.IO.FileWriters.Retention;
 using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.NGHS.IO.FileWriters.Network
 {
     public static class NodeFile
     {
-        public static void Write(string filePath, IEnumerable<Compartment> compartments)
+        public static void Write(string filePath, IEnumerable<Compartment> compartments, IEnumerable<IRetention> retentions)
         {
-            var categories = compartments.Select(CreateCompartmentIniCategory).ToList();
-            new DelftIniWriter().WriteDelftIniFile(categories, filePath, false);
+
+            var categories = new List<DelftIniCategory>();
+            if (compartments != null && compartments.Any())
+            {
+                categories.AddRange(compartments.Select(CreateCompartmentIniCategory).ToList());
+            }
+
+            if (retentions != null && retentions.Any())
+            {
+                categories.AddRange(retentions.Select(GenerateRetentionStorageNode).ToList());
+            }
+
+            if (categories.Any())
+            {
+                var generalRegion = GeneralRegionGenerator.GenerateGeneralRegion(GeneralRegion.RetentionMajorVersion,
+                    GeneralRegion.RetentionMinorVersion,
+                    GeneralRegion.FileTypeName.StorageNodes);
+                generalRegion.AddProperty("useStreetStorage", "1");
+                categories.Insert(0,generalRegion);
+                new DelftIniWriter().WriteDelftIniFile(categories, filePath, false);
+            }
+        }
+
+        private static DelftIniCategory GenerateRetentionStorageNode(IRetention retention)
+        {
+            var category = RetentionFileWriter.GenerateSpatialDataDefinition(retention);
+            TypeUtils.SetPrivatePropertyValue(category, "Name","StorageNode");
+            return category;
         }
 
         private static DelftIniCategory CreateCompartmentIniCategory(Compartment compartment)
         {
-            var iniCategory = new DelftIniCategory("Retention");
+            var iniCategory = new DelftIniCategory("StorageNode");
             iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.Id, compartment.Name, string.Empty));
             iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.Name, compartment.ParentManhole.Name, string.Empty));
             iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.NodeId, compartment.Name, string.Empty));

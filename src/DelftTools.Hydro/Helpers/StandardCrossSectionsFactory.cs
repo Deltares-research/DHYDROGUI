@@ -71,6 +71,48 @@ namespace DelftTools.Hydro.Helpers
 
             return new CrossSectionDefinitionZW().SetWithHfswData(hfsw);
         }
+        /// <summary>
+        /// Creates a profile from width, height and archHeight
+        /// based on ProfileArch from ProfileFormules from Sobek UI
+        /// </summary>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        /// <param name="archHeight"></param>
+        /// <returns></returns>
+        public static CrossSectionDefinitionZW GetTabulatedCrossSectionFromUShape(double width, double height, double archHeight)
+        {
+            if ((width < 1.0e-6) || (height < 1.0e-6) || (archHeight < 1.0e-6))
+            {
+                return GetTabulatedCrossSectionFromRectangle(width, height);
+            }
+            if (archHeight >= height)
+            {
+                //round archHeight down
+                archHeight = height - 1.0e-6;
+            }
+            double step = (archHeight / 2 - Math.Sin(((90 - 36) * 3.141593 / 180)) * archHeight / 2);
+            int nbSteps = (int)((archHeight / step) + 1);
+            nbSteps = nbSteps + 2;
+
+
+            var hfsw = new List<HeightFlowStorageWidth>();
+            hfsw.Add(new HeightFlowStorageWidth(height, width, width));
+            
+            for (int i = 0; i < nbSteps - 2; i++)
+            {
+                double currentHeight = height - archHeight + i * step;
+                double widthAtHeight = 2 * Math.Sqrt((((((-1 *
+                                                          ((currentHeight - (height - archHeight)) *
+                                                           (currentHeight - (height - archHeight)))) / (archHeight * archHeight)) + 1) * width * width) / 4));
+                hfsw.Add(new HeightFlowStorageWidth(-1*currentHeight + height, widthAtHeight, widthAtHeight));
+            }
+
+            double widthAtTop = 2 *
+                                Math.Sqrt(((((-1 * (archHeight * archHeight)) / (archHeight * archHeight)) + 1) * width * width) / 4);
+            hfsw.Add(new HeightFlowStorageWidth(0, widthAtTop, widthAtTop));
+
+            return new CrossSectionDefinitionZW().SetWithHfswData(hfsw,true);
+        }
 
         /// <summary>
         /// Fills 2 arrays with z(height) and y(width) of right top ellipse: top -> down
@@ -612,6 +654,56 @@ namespace DelftTools.Hydro.Helpers
             for (int i = steps - 1; i >= 0; i--)
             {
                 hfswData.Add(new HeightFlowStorageWidth(2 * z[0] + z[i], y[i] * 2, y[i] * 2));
+            }
+
+            return new CrossSectionDefinitionZW().SetWithHfswData(hfswData);
+        }
+
+        /// <summary>
+        /// Creates a profile from width and height
+        /// based on ProfileEllipse from ProfileFormules from Sobek UI
+        /// if width = 0.50
+        /// <-------------0.50------------->^
+        ///                                 |
+        ///                                 | 0.50 -+
+        ///                                 |       |
+        ///                                 |       | 0.75
+        ///                                 |       |
+        ///                                 |       |
+        ///  --------------------------------       |
+        ///                                 | 0.25 -+
+        ///                                 | 
+        ///                                 |
+        ///  --------------------------------
+        /// 
+        /// </summary>
+        /// <param name="width"></param>
+        /// <returns></returns>
+        public static CrossSectionDefinitionZW GetTabulatedCrossSectionFromInvertedEgg(double width)
+        {
+            double height = 1.5 * width;
+            if ((width < 1.0e-6) || (height < 1.0e-6))
+            {
+                return GetTabulatedCrossSectionFromRectangle(width, height);
+            }
+
+            const int steps = 10;
+            List<double> y = new List<double>();
+            List<double> z = new List<double>();
+
+            CalculateEllipseCoord(width, width, y, z, steps);
+
+            var hfswData = new List<HeightFlowStorageWidth>();
+            // lower part
+            for (int i = 0; i < steps; i++)
+            {
+                hfswData.Add(new HeightFlowStorageWidth(2 * z[0] - z[i], y[i] * 2, y[i] * 2));
+            }
+            hfswData.Add(new HeightFlowStorageWidth(2 * z[0], width, width));
+            // upper part
+            for (int i = steps - 1; i >= 0; i--)
+            {
+                hfswData.Add(new HeightFlowStorageWidth(2 * z[0] + 2 * z[i], y[i] * 2, y[i] * 2));
             }
 
             return new CrossSectionDefinitionZW().SetWithHfswData(hfswData);

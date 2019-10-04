@@ -10,6 +10,10 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
         {
         }
 
+        protected DefinitionGeneratorCrossSectionDefinitionArch(string subArchType) : base(subArchType)
+        {
+        }
+
         protected override bool HasCorrectCrossSectionShape(CrossSectionDefinitionStandard standardDefinition)
         {
             var shapeCircle = standardDefinition.Shape as CrossSectionStandardShapeArch;

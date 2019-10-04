@@ -175,6 +175,7 @@
     <Compile Include="CrossSections\StandardShapes\CrossSectionStandardShapeCunette.cs" />
     <Compile Include="CrossSections\StandardShapes\CrossSectionStandardShapeEgg.cs" />
     <Compile Include="CrossSections\StandardShapes\CrossSectionStandardShapeElliptical.cs" />
+    <Compile Include="CrossSections\StandardShapes\CrossSectionStandardShapeInvertedEgg.cs" />
     <Compile Include="CrossSections\StandardShapes\CrossSectionStandardShapeRectangle.cs" />
     <Compile Include="CrossSections\StandardShapes\CrossSectionStandardShapeCircle.cs" />
     <Compile Include="CrossSections\CrossSectionStandardShapeType.cs" />
@@ -186,6 +187,7 @@
     <Compile Include="CrossSections\DataSets\FastYZDataTable.cs" />
     <Compile Include="CrossSections\DataSets\FastZWDataTable.cs" />
     <Compile Include="CrossSections\ICrossSection.cs" />
+    <Compile Include="CrossSections\StandardShapes\CrossSectionStandardShapeUShape.cs" />
     <Compile Include="CrossSections\StandardShapes\CrossSectionStandardShapeWidthHeightBase.cs" />
     <Compile Include="CrossSections\StandardShapes\ICrossSectionStandardShape.cs" />
     <Compile Include="CrossSections\ISummerDikeEnabledDefinition.cs" />

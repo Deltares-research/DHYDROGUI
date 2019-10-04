@@ -24,10 +24,9 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
             
             IniCategory.AddProperty(StructureRegion.CrestLevel.Key, weir.CrestLevel, StructureRegion.CrestLevel.Description, StructureRegion.CrestLevel.Format);
             IniCategory.AddProperty(StructureRegion.CrestWidth.Key, weir.CrestWidth, StructureRegion.CrestWidth.Description, StructureRegion.CrestWidth.Format);
-            IniCategory.AddProperty(StructureRegion.DischargeCoeff.Key, formula.DischargeCoefficient, StructureRegion.DischargeCoeff.Description, StructureRegion.DischargeCoeff.Format);
-            IniCategory.AddProperty(StructureRegion.LatDisCoeff.Key, formula.LateralContraction, StructureRegion.LatDisCoeff.Description, StructureRegion.LatDisCoeff.Format);
-            IniCategory.AddProperty(StructureRegion.AllowedFlowDir.Key, (int)weir.FlowDirection, StructureRegion.AllowedFlowDir.Description);
-
+            //Jan Noort : weir.DischargeCoof gebruiken?
+            IniCategory.AddProperty(StructureRegion.CorrectionCoeff.Key, double.Parse(StructureRegion.CorrectionCoeff.DefaultValue), StructureRegion.CorrectionCoeff.Description, StructureRegion.CorrectionCoeff.Format);
+            
             return IniCategory;
         }
     }

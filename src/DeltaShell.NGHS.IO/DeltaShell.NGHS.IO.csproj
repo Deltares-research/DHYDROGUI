@@ -124,7 +124,9 @@
     <Compile Include="FileWriters\Boundary\BoundaryRegion.cs" />
     <Compile Include="FileWriters\Boundary\DefinitionGeneratorBoundary.cs" />
     <Compile Include="FileWriters\CrossSectionDefinition\CrossSectionDefinitionFileWriter.cs" />
+    <Compile Include="FileWriters\CrossSectionDefinition\DefinitionGeneratorCrossSectionDefinitionInvertedEgg.cs" />
     <Compile Include="FileWriters\CrossSectionDefinition\DefinitionGeneratorCrossSectionDefinitionStandardTemplate.cs" />
+    <Compile Include="FileWriters\CrossSectionDefinition\DefinitionGeneratorCrossSectionDefinitionUShape.cs" />
     <Compile Include="FileWriters\CrossSectionDefinition\DefinitionIniCategoryGeneratorFactory.cs" />
     <Compile Include="FileWriters\CrossSectionDefinition\DefinitionGeneratorCrossSectionDefinition.cs" />
     <Compile Include="FileWriters\CrossSectionDefinition\DefinitionGeneratorCrossSectionDefinitionArch.cs" />
@@ -165,6 +167,7 @@
     <Compile Include="FileWriters\SpatialData\SpatialDataQuantity.cs" />
     <Compile Include="FileWriters\SpatialData\SpatialDataRegion.cs" />
     <Compile Include="FileWriters\Structure\CompoundStructureInfo.cs" />
+    <Compile Include="FileWriters\Structure\DefinitionGeneratorCompound.cs" />
     <Compile Include="FileWriters\Structure\DefinitionGeneratorStructure.cs" />
     <Compile Include="FileWriters\Structure\DefinitionGeneratorStructure2D.cs" />
     <Compile Include="FileWriters\Structure\DefinitionGeneratorStructureAdvancedWeir.cs" />

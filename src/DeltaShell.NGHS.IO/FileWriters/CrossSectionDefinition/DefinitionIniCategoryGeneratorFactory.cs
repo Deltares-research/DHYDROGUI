@@ -21,10 +21,14 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
                     return new DefinitionGeneratorCrossSectionDefinitionElliptical();
                 case CrossSectionStandardShapeType.Rectangle:
                     return new DefinitionGeneratorCrossSectionDefinitionRectangle();
+                case CrossSectionStandardShapeType.InvertedEgg:
+                    return new DefinitionGeneratorCrossSectionDefinitionInvertedEgg();
                 case CrossSectionStandardShapeType.Egg:
                     return new DefinitionGeneratorCrossSectionDefinitionEgg();
                 case CrossSectionStandardShapeType.Arch:
                     return new DefinitionGeneratorCrossSectionDefinitionArch();
+                case CrossSectionStandardShapeType.UShape:
+                    return new DefinitionGeneratorCrossSectionDefinitionUShape();
                 case CrossSectionStandardShapeType.Cunette:
                     return new DefinitionGeneratorCrossSectionDefinitionCunette();
                 case CrossSectionStandardShapeType.SteelCunette:

@@ -54,7 +54,9 @@ namespace DeltaShell.NGHS.IO.FileWriters.Location
             public const string Circle = "circle";
             public const string Rectangle = "rectangle";
             public const string Egg = "egg";
+            public const string InvertedEgg = "InvEgg";
             public const string Arch = "arch";
+            public const string UShape = "uShape";
             public const string Cunette = "cunette";
             public const string SteelCunette = "steelcunette";
 

@@ -8,8 +8,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
 {
     public class DefinitionGeneratorStructureUniversalWeir : DefinitionGeneratorStructure
     {
-        private const double DEFAULT_FREE_SUBMERGED_FACTOR = 0.667F;
-
+        
         public DefinitionGeneratorStructureUniversalWeir(CompoundStructureInfo compoundStructureInfo)
             : base(compoundStructureInfo)
         {
@@ -31,8 +30,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
             IniCategory.AddProperty(StructureRegion.ZValues.Key, formula.Z, StructureRegion.ZValues.Description, StructureRegion.ZValues.Format);
             IniCategory.AddProperty(StructureRegion.CrestLevel.Key, weir.CrestLevel, StructureRegion.CrestLevel.Description, StructureRegion.CrestLevel.Format);
             IniCategory.AddProperty(StructureRegion.DischargeCoeff.Key, formula.DischargeCoefficient, StructureRegion.DischargeCoeff.Description, StructureRegion.DischargeCoeff.Format);
-            IniCategory.AddProperty(StructureRegion.FreeSubmergedFactor.Key, DEFAULT_FREE_SUBMERGED_FACTOR, StructureRegion.FreeSubmergedFactor.Description, StructureRegion.FreeSubmergedFactor.Format);
-
+            
             return IniCategory;
         }
     }

@@ -23,17 +23,14 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
             var formula = weir.WeirFormula as GatedWeirFormula;
             if (formula == null) return IniCategory;
 
-            IniCategory.AddProperty(StructureRegion.AllowedFlowDir.Key, (int)weir.FlowDirection, StructureRegion.AllowedFlowDir.Description);
             IniCategory.AddProperty(StructureRegion.CrestLevel.Key, weir.CrestLevel, StructureRegion.CrestLevel.Description, StructureRegion.CrestLevel.Format);
             IniCategory.AddProperty(StructureRegion.CrestWidth.Key, weir.CrestWidth, StructureRegion.CrestWidth.Description, StructureRegion.CrestWidth.Format);
-            IniCategory.AddProperty(StructureRegion.OpenLevel.Key, (weir.CrestLevel + formula.GateOpening), StructureRegion.OpenLevel.Description, StructureRegion.OpenLevel.Format);
-            IniCategory.AddProperty(StructureRegion.ContractionCoeff.Key, formula.ContractionCoefficient, StructureRegion.ContractionCoeff.Description, StructureRegion.ContractionCoeff.Format);
-            IniCategory.AddProperty(StructureRegion.LatContrCoeff.Key, formula.LateralContraction, StructureRegion.LatContrCoeff.Description, StructureRegion.LatContrCoeff.Format);
 
-            IniCategory.AddProperty(StructureRegion.UseLimitFlowPos.Key, Convert.ToInt32(formula.UseMaxFlowPos), StructureRegion.UseLimitFlowPos.Description);
-            IniCategory.AddProperty(StructureRegion.LimitFlowPos.Key, formula.MaxFlowPos, StructureRegion.LimitFlowPos.Description, StructureRegion.LimitFlowPos.Format);
-            IniCategory.AddProperty(StructureRegion.UseLimitFlowNeg.Key, Convert.ToInt32(formula.UseMaxFlowNeg), StructureRegion.UseLimitFlowNeg.Description);
-            IniCategory.AddProperty(StructureRegion.LimitFlowNeg.Key, formula.MaxFlowNeg, StructureRegion.LimitFlowNeg.Description, StructureRegion.LimitFlowNeg.Format);
+            IniCategory.AddProperty(StructureRegion.GateLowerEdgeLevel.Key, (weir.CrestLevel + formula.GateOpening), StructureRegion.GateLowerEdgeLevel.Description, StructureRegion.GateLowerEdgeLevel.Format);
+            
+            //Jan Noort : welke Coof gebruiken?
+            IniCategory.AddProperty(StructureRegion.CorrectionCoeff.Key, double.Parse(StructureRegion.CorrectionCoeff.DefaultValue), StructureRegion.CorrectionCoeff.Description, StructureRegion.CorrectionCoeff.Format);
+
 
             return IniCategory;
         }

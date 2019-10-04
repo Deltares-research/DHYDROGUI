@@ -14,10 +14,11 @@ namespace DeltaShell.Plugins.NetworkEditor.IO
         {
             var lastCompositeStructureId = 0;
             var compositeStructures = network.Structures.Where(s => s.GetStructureType() == StructureType.CompositeBranchStructure).Cast<ICompositeBranchStructure>();
+            var compoundDefinitionGenerator = new DefinitionGeneratorCompound();
             foreach (var composite in compositeStructures) // Note: In DeltaShell all Structures belong to a CompositeBranchStructure, even if they are alone
             {
                 var currentCompositeStructureId = composite.Structures.Count > 1 ? ++lastCompositeStructureId : 0;
-
+                yield return compoundDefinitionGenerator.CreateStructureRegion(composite);
                 foreach (var structure in composite.Structures)
                 {
                     var structureType = structure.GetStructureType();
@@ -26,27 +27,70 @@ namespace DeltaShell.Plugins.NetworkEditor.IO
 
                     var structureCategory = definitionGeneratorStructure.CreateStructureRegion(structure);
                     var structurefrictionData = structure as IFrictionData;
-                    var structureGroundLayerData = structure as IGroundLayer;
+                    if (structurefrictionData != null)
+                    {
+                        if (structure is IBridge)
+                        {
+                            //key is bedfriction
+                            AddFrictionData(
+                                structureCategory,
+                                structurefrictionData.FrictionDataType,
+                                structurefrictionData.Friction);
+                        }
+                        else
+                        {
+                            //key is friction
+                            AddBedFrictionData(
+                                structureCategory,
+                                structurefrictionData.FrictionDataType,
+                                structurefrictionData.Friction);
+                        }
+                    }/*var structureGroundLayerData = structure as IGroundLayer;
                     if (structurefrictionData != null && structureGroundLayerData != null)
                     {
-                        AddFrictionData(
-                            structureCategory,
-                            structurefrictionData.FrictionDataType,
-                            structurefrictionData.Friction,
-                            structureGroundLayerData.GroundLayerEnabled ? structureGroundLayerData.GroundLayerRoughness : structurefrictionData.Friction);
-                    }
+                        if(structure is IBridge)
+                        {
+                            //key is bedfriction
+                            AddBedFrictionData(
+                                structureCategory,
+                                structurefrictionData.FrictionDataType,
+                                structurefrictionData.Friction,
+                                structureGroundLayerData.GroundLayerEnabled ? structureGroundLayerData.GroundLayerRoughness : structurefrictionData.Friction);
+                        }
+                        else
+                        {
+                            //key is friction
+                            AddBedFrictionData(
+                                structureCategory,
+                                structurefrictionData.FrictionDataType,
+                                structurefrictionData.Friction,
+                                structureGroundLayerData.GroundLayerEnabled ? structureGroundLayerData.GroundLayerRoughness : structurefrictionData.Friction);
+                        }
+                    }*/
 
                     yield return structureCategory;
                 }
+
+
             }
         }
 
-        private static void AddFrictionData(DelftIniCategory category, Friction frictionType, double friction, double groundLayerRoughness)
+        private static void AddFrictionAndGroundLayerData(DelftIniCategory category, Friction frictionType, double friction, double groundLayerRoughness)
         {
             category.AddProperty(StructureRegion.BedFrictionType.Key, (int)frictionType, StructureRegion.BedFrictionType.Description);
             category.AddProperty(StructureRegion.BedFriction.Key, friction, StructureRegion.BedFriction.Description, StructureRegion.BedFriction.Format);
             category.AddProperty(StructureRegion.GroundFrictionType.Key, (int)frictionType, StructureRegion.GroundFrictionType.Description); // This may be removed, but for now just duplicate
             category.AddProperty(StructureRegion.GroundFriction.Key, groundLayerRoughness, StructureRegion.GroundFriction.Description, StructureRegion.GroundFriction.Format);
+        }
+        private static void AddBedFrictionData(DelftIniCategory category, Friction frictionType, double friction)
+        {
+            category.AddProperty(StructureRegion.BedFrictionType.Key, (int)frictionType, StructureRegion.BedFrictionType.Description);
+            category.AddProperty(StructureRegion.BedFriction.Key, friction, StructureRegion.BedFriction.Description, StructureRegion.BedFriction.Format);
+        }
+        private static void AddFrictionData(DelftIniCategory category, Friction frictionType, double friction)
+        {
+            category.AddProperty(StructureRegion.FrictionType.Key, (int)frictionType, StructureRegion.FrictionType.Description);
+            category.AddProperty(StructureRegion.Friction.Key, friction, StructureRegion.Friction.Description, StructureRegion.Friction.Format);
         }
     }
 }
