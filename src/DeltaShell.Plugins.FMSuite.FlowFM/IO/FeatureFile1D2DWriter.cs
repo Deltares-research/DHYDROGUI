@@ -36,7 +36,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             var compartments = network.Manholes.SelectMany(m => m.Compartments).ToList();
             if (compartments.Any() || network.Retentions.Any())
             {
-                modelDefinition.SetModelProperty(KnownProperties.NodeFile, NODE_FILE_NAME);
+                modelDefinition.SetModelProperty(KnownProperties.StorageNodeFile, NODE_FILE_NAME);
                 NodeFile.Write(nodeFilePath, compartments, network.Retentions);
             }
             else
@@ -119,7 +119,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             if (directoryName == null) return;
 
             var roughnessFileNames = fmModel.RoughnessSections.Select(GetRoughnessFilename);
-            fmModel.ModelDefinition.SetModelProperty(KnownProperties.RoughnessFile, string.Join(";", roughnessFileNames));
+            fmModel.ModelDefinition.SetModelProperty(KnownProperties.FrictFile, string.Join(";", roughnessFileNames));
 
             foreach (var roughnessSection in fmModel.RoughnessSections)
             {
