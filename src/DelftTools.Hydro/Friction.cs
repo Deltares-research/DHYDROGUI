@@ -9,6 +9,7 @@ namespace DelftTools.Hydro
         Nikuradse = 5,
         Strickler = 6,
         WhiteColebrook = 7,
-        BosBijkerk = 9
+        BosBijkerk = 9,
+        WallLawNikuradse = 10
     }
 }

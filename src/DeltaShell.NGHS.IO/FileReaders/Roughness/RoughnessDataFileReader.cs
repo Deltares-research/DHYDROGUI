@@ -24,7 +24,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Roughness
             if (!File.Exists(filename)) throw new FileReadingException(string.Format((string) Resources.RoughnessDataFileReader_ReadFile_Could_not_read_file__0__properly__it_doesn_t_exist_, filename));
             var categories = new DelftIniReader().ReadDelftIniFile(filename);
             if (categories.Count == 0) throw new FileReadingException(string.Format((string) Resources.RoughnessDataFileReader_ReadFile_Could_not_read_file__0__properly__it_seems_empty, filename));
-            var contentSections = categories.Where(category => category.Name == RoughnessDataRegion.ContentIniHeader).ToList();
+            var contentSections = categories.Where(category => category.Name == RoughnessDataRegion.GlobalIniHeader).ToList();
             if (contentSections.Count() > 1 && contentSections.Any()) throw new FileReadingException(string.Format((string) Resources.RoughnessDataFileReader_ReadFile_Could_not_read_content_section__0__properly, filename));
             
             var roughnessSection = ReadRoughnessSection(network, RoughnessSections, contentSections[0], isCalibratedRoughness);

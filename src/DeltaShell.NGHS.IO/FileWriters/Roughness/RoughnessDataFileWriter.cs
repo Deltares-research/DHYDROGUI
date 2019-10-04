@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Functions.Filters;
@@ -24,7 +25,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Roughness
                 GeneralRegionGenerator.GenerateGeneralRegion(GeneralRegion.RoughnessDataMajorVersion, 
                                                              GeneralRegion.RoughnessDataMinorVersion, 
                                                              GeneralRegion.FileTypeName.RoughnessData),
-                GenerateContent(roughnessSection, networkCoverage)
+                GenerateGlobal(roughnessSection, networkCoverage)
             };
 
             var branches = roughnessSection.Network.Branches.Where(branch => HasSpatialRoughnessDefinedOnBranch(roughnessSection, branch)).ToList();
@@ -93,29 +94,52 @@ namespace DeltaShell.NGHS.IO.FileWriters.Roughness
             return locations.Any(networkLocation => networkLocation.Branch == branch);
         }
 
-        private static DelftIniCategory GenerateContent(RoughnessSection roughnessSection, INetworkCoverage networkCoverage)
+        private static DelftIniCategory GenerateGlobal(RoughnessSection roughnessSection, INetworkCoverage networkCoverage)
         {
             var reversedRoughnessSection = roughnessSection as ReverseRoughnessSection;
 
-            var content = new DelftIniCategory(RoughnessDataRegion.ContentIniHeader);
+            var content = new DelftIniCategory(RoughnessDataRegion.GlobalIniHeader);
 
             var roughnessSectionId = reversedRoughnessSection?.NormalSection.Name ?? roughnessSection.Name;
 
             content.AddProperty(RoughnessDataRegion.SectionId.Key, roughnessSectionId);
-            content.AddProperty(RoughnessDataRegion.FlowDirection.Key, roughnessSection.Reversed.ToString(), RoughnessDataRegion.FlowDirection.Description);
-            var interpolationIsLinear = networkCoverage != null && (networkCoverage.Arguments.FirstOrDefault() != null && networkCoverage.Arguments.First().InterpolationType == InterpolationType.Linear) ? 1 : 0;
-            content.AddProperty(RoughnessDataRegion.Interpolate.Key, interpolationIsLinear, RoughnessDataRegion.Interpolate.Description);
+            //content.AddProperty(RoughnessDataRegion.FlowDirection.Key, roughnessSection.Reversed.ToString(), RoughnessDataRegion.FlowDirection.Description);
+            //var interpolationIsLinear = networkCoverage != null && (networkCoverage.Arguments.FirstOrDefault() != null && networkCoverage.Arguments.First().InterpolationType == InterpolationType.Linear) ? 1 : 0;
+            //content.AddProperty(RoughnessDataRegion.Interpolate.Key, interpolationIsLinear, RoughnessDataRegion.Interpolate.Description);
 
-            var globalType = (int)FrictionTypeConverter.ConvertFrictionType(roughnessSection.GetDefaultRoughnessType());
-            var globalValue = roughnessSection.GetDefaultRoughnessValue();
+            var frictionType = ConvertFrictionTypeToTextForFM(roughnessSection);
+            var frictionValue = roughnessSection.GetDefaultRoughnessValue();
 
             if (reversedRoughnessSection == null || !reversedRoughnessSection.UseNormalRoughness)
             {
-                content.AddProperty(RoughnessDataRegion.GlobalType.Key, globalType, RoughnessDataRegion.GlobalType.Description);
-                content.AddProperty(RoughnessDataRegion.GlobalValue.Key, globalValue, RoughnessDataRegion.GlobalValue.Description, RoughnessDataRegion.GlobalValue.Format);
+                content.AddProperty(RoughnessDataRegion.FrictionType.Key, frictionType, RoughnessDataRegion.FrictionType.Description);
+                content.AddProperty(RoughnessDataRegion.FrictionValue.Key, frictionValue, RoughnessDataRegion.FrictionValue.Description, RoughnessDataRegion.GlobalValue.Format);
             }
 
             return content;
+        }
+
+        private static string ConvertFrictionTypeToTextForFM(RoughnessSection roughnessSection)
+        {
+            switch (FrictionTypeConverter.ConvertFrictionType(roughnessSection.GetDefaultRoughnessType()))
+            {
+                case Friction.Chezy:
+                    return "Chezy";
+                case Friction.Mannings:
+                    return "Manning";
+                case Friction.Nikuradse:
+                    return "StricklerNikuradse";
+                case Friction.Strickler:
+                    return "Strickler";
+                case Friction.WhiteColebrook:
+                    return "WhiteColebrook";
+                case Friction.BosBijkerk:
+                    return "deBosBijkerk";
+                case Friction.WallLawNikuradse:
+                    return "wallLawNikuradse";
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         private static DelftIniCategory GenerateBranchProperties(RoughnessSection roughnessSection, IBranch branch, RoughnessFunction roughnessFunctionType)

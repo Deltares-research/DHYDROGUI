@@ -24,6 +24,8 @@ namespace DelftTools.Hydro
                     return Friction.WhiteColebrook;
                 case RoughnessType.DeBosAndBijkerk:
                     return Friction.BosBijkerk;
+                case RoughnessType.WallLawNikuradse:
+                    return Friction.WallLawNikuradse;
                 default:
                     throw new InvalidOperationException();
             }

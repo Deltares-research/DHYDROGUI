@@ -37,7 +37,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.General
         public const int BoundaryConditionsMajorVersion = 1;
         public const int BoundaryConditionsMinorVersion = 0;
 
-        public const int RoughnessDataMajorVersion = 1;
+        public const int RoughnessDataMajorVersion = 3;
         public const int RoughnessDataMinorVersion = 0;
 
         public const int RetentionMajorVersion = 2;

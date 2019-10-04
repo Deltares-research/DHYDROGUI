@@ -18,6 +18,8 @@ namespace DelftTools.Hydro
         [Description("White & Colebrook")]
         WhiteColebrook = 4,
         [Description("Bos & Bijkerk")]
-        DeBosAndBijkerk = 7
+        DeBosAndBijkerk = 7,
+        [Description("Wall Law Nikuradse")]
+        WallLawNikuradse = 8 
     }
 }
