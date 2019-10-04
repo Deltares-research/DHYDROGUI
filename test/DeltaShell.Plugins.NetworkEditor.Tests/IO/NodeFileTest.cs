@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.FileWriters.Network;
@@ -27,7 +28,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.IO
         [Test]
         public void WhenWritingRetentionFile_ThenRetentionFileIsExisting()
         {
-            NodeFile.Write(filePath, new List<Compartment>());
+            NodeFile.Write(filePath, new List<Compartment>(),null);
             Assert.IsTrue(File.Exists(filePath));
         }
 
@@ -44,7 +45,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.IO
             };
             var compartments = new List<Compartment>{ compartment };
 
-            NodeFile.Write(filePath, compartments);
+            NodeFile.Write(filePath, compartments, null);
             var propertiesPerCompartment = NodeFile.Read(filePath);
 
             Assert.That(propertiesPerCompartment.Count, Is.EqualTo(1));
