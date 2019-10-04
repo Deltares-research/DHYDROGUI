@@ -39,40 +39,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
-        public void GivenNullValue_WhenRemovingDuplicateFeatures_ThenNoExceptionIsThrown()
-        {
-            WaterFlowFMModelHydroAreaExtensions.RemoveDuplicateFeatures(Arg<object>.Is.Anything, null, Arg<string>.Is.Anything);
-        }
-
-        [Test]
-        public void GivenAddedFeatureThatIsADuplicateOfAFeatureInAList_WhenRemovingDuplicateFeatures_ThenAddedFeatureIsRemovedAgainAndUserReceivesWarning()
-        {
-            CheckIfRemoveDuplicateFeaturesWorks<LandBoundary2D>();
-            CheckIfRemoveDuplicateFeaturesWorks<GroupableFeature2DPolygon>();
-            CheckIfRemoveDuplicateFeaturesWorks<ThinDam2D>();
-            CheckIfRemoveDuplicateFeaturesWorks<FixedWeir>();
-            CheckIfRemoveDuplicateFeaturesWorks<GroupableFeature2DPoint>();
-            CheckIfRemoveDuplicateFeaturesWorks<ObservationCrossSection2D>();
-            CheckIfRemoveDuplicateFeaturesWorks<Pump2D>();
-            CheckIfRemoveDuplicateFeaturesWorks<Weir2D>();
-            CheckIfRemoveDuplicateFeaturesWorks<BridgePillar>();
-        }
-
-        [Test]
-        public void GivenUniqueFeatures_WhenRemovingDuplicateFeatures_ThenNoFeaturesAreRemoved()
-        {
-            RemoveDuplicateFeaturesDoesNotRemoveUniqueFeatures<LandBoundary2D>();
-            RemoveDuplicateFeaturesDoesNotRemoveUniqueFeatures<GroupableFeature2DPolygon>();
-            RemoveDuplicateFeaturesDoesNotRemoveUniqueFeatures<ThinDam2D>();
-            RemoveDuplicateFeaturesDoesNotRemoveUniqueFeatures<FixedWeir>();
-            RemoveDuplicateFeaturesDoesNotRemoveUniqueFeatures<GroupableFeature2DPoint>();
-            RemoveDuplicateFeaturesDoesNotRemoveUniqueFeatures<ObservationCrossSection2D>();
-            RemoveDuplicateFeaturesDoesNotRemoveUniqueFeatures<Pump2D>();
-            RemoveDuplicateFeaturesDoesNotRemoveUniqueFeatures<Weir2D>();
-            RemoveDuplicateFeaturesDoesNotRemoveUniqueFeatures<BridgePillar>();
-        }
-
-        [Test]
         [TestCase(null, null)]
         [TestCase("", "")]
         [TestCase("myName", "myName")]
@@ -265,61 +231,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             Assert.That(gate.GroupName, Is.EqualTo(expectedGroupName));
         }
-
-        private static void CheckIfRemoveDuplicateFeaturesWorks<T>() where T : IGroupableFeature, INameable, new()
-        {
-            var features = new EventedList<T>();
-            var feature1 = new T
-            {
-                GroupName = "MyGroup",
-                Name = "MyName"
-            };
-            var feature2 = new T
-            {
-                GroupName = "MyGroup",
-                Name = "MyName"
-            };
-            features.Add(feature1);
-            features.Add(feature2);
-            Assert.That(features.Count, Is.EqualTo(2));
-
-            TestHelper.AssertAtLeastOneLogMessagesContains(
-                () => WaterFlowFMModelHydroAreaExtensions.RemoveDuplicateFeatures(features, feature2, "MyModelName"),
-                "', because a feature with the same properties already exists.");
-            Assert.That(features.Count, Is.EqualTo(1));
-        }
-
-        private static void RemoveDuplicateFeaturesDoesNotRemoveUniqueFeatures<T>() where T : IGroupableFeature, INameable, new()
-        {
-            var features = new EventedList<T>();
-            var feature1 = new T
-            {
-                GroupName = "MyGroup1",
-                Name = "MyName"
-            };
-            var feature2 = new T
-            {
-                GroupName = "MyGroup2",
-                Name = "MyName"
-            };
-            var feature3 = new T
-            {
-                GroupName = "MyGroup1",
-                Name = "MyName1"
-            };
-            features.Add(feature1);
-            features.Add(feature2);
-            features.Add(feature3);
-            Assert.That(features.Count, Is.EqualTo(3));
-
-            WaterFlowFMModelHydroAreaExtensions.RemoveDuplicateFeatures(features, feature1, "MyModelName");
-            Assert.That(features.Count, Is.EqualTo(3));
-            WaterFlowFMModelHydroAreaExtensions.RemoveDuplicateFeatures(features, feature2, "MyModelName");
-            Assert.That(features.Count, Is.EqualTo(3));
-            WaterFlowFMModelHydroAreaExtensions.RemoveDuplicateFeatures(features, feature3, "MyModelName");
-            Assert.That(features.Count, Is.EqualTo(3));
-        }
-
+        
         #endregion
     }
 }
