@@ -351,6 +351,7 @@
     <Compile Include="Gui\FlowFMMapLayerProviderTest.cs" />
     <Compile Include="ModelDefinition\HeatFluxModelTest.cs" />
     <Compile Include="ModelDefinition\ISedimentFractionExtensionsTests.cs" />
+    <Compile Include="Model\WaterFlowFMModelTest.DimrModel.cs" />
     <Compile Include="QuantityGeneratorTest.cs" />
     <Compile Include="ScriptingTest\FlowFlexibleMeshFunctionsScriptTest.cs" />
     <Compile Include="IO\MorphologyFileTest.cs" />
