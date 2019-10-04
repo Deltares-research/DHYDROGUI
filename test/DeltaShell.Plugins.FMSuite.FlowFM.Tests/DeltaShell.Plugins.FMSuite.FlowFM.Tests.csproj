@@ -324,6 +324,7 @@
     <Compile Include="IO\Importers\ShapeFileImporterTest.cs" />
     <Compile Include="IO\Importers\SourceAndSinkImportExtensionsTest.cs" />
     <Compile Include="IO\Importers\TimFileImporterTest.cs" />
+    <Compile Include="IO\Importers\WaterFlowFMFileImporterTest.cs" />
     <Compile Include="IO\MduFileHelperTest.cs" />
     <Compile Include="IO\MduFileTest.cs" />
     <Compile Include="IO\PlizFileImporterExporterTest.cs" />

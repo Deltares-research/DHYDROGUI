@@ -4,6 +4,7 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DeltaShell.Core;
 using DeltaShell.NGHS.TestUtils;
+using DeltaShell.Plugins.DelftModels.HydroModel.Import;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel;
 using DeltaShell.Plugins.FMSuite.FlowFM;
@@ -128,6 +129,27 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         {
             var hydroModelApplicationPlugin = new HydroModelApplicationPlugin();
             ApplicationPluginTestHelper.TestForGetParentProjectItemDelegateSetByApplicationPlugins_WhenApplicationPluginHelperReturnsNull(hydroModelApplicationPlugin);
+        }
+
+        [Test]
+        public void GivenAnApplicationWithOnlyHydroModelAndFlowFmPlugins_WhenCallingCanImportOnRootLevelForDIMRImporter_TrueShouldBeReturnedSinceFmIsAdded()
+        {
+            using (var app = new DeltaShellApplication())
+            {
+                // Given
+                var hydroModelAppPlugin = new HydroModelApplicationPlugin();
+                var fmModelAppPlugin = new FlowFMApplicationPlugin();
+                
+                app.Plugins.Add(hydroModelAppPlugin);
+                app.Plugins.Add(fmModelAppPlugin);
+
+                app.Run();
+
+                // When Then
+                var dimrImporter = (DHydroConfigXmlImporter)hydroModelAppPlugin.GetFileImporters().ToList().FirstOrDefault();
+                Assert.IsNotNull(dimrImporter);
+                Assert.IsTrue(dimrImporter.CanImportOnRootLevel);
+            }
         }
     }
 }
