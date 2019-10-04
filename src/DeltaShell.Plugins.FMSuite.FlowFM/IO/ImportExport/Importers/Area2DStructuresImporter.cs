@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
@@ -114,6 +115,35 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
             return target;
         }
 
+        private static string ComposeLogStringsForStructures(int simpleWeirIni, int gatedWeirIni, int generalFormulaIni, int pumpsIni)
+        {
+            string logPumpsIniString = "";
+            string simpleWeirString = "";
+            string gatedWeirString = "";
+            string generalFormulaString = "";
+           
+            int totalStructures = simpleWeirIni + gatedWeirIni + generalFormulaIni + pumpsIni;
+
+            if (pumpsIni > 0)
+            {
+                logPumpsIniString = " Pumps : " + " " + pumpsIni.ToString() + " ";
+            }
+            if (simpleWeirIni > 0)
+            {
+                simpleWeirString = " Weirs: " + " " + simpleWeirIni.ToString() + " ";
+            }
+            if (gatedWeirIni > 0)
+            {
+                gatedWeirString = " Gates :" + " " + gatedWeirIni.ToString() + " ";
+            }
+            if (generalFormulaIni > 0)
+            {
+                generalFormulaString = " General structures: " + " " + generalFormulaIni.ToString() + " ";
+            }
+
+            return totalStructures + logPumpsIniString + simpleWeirString + gatedWeirString + generalFormulaString;
+        }
+
         [InvokeRequired]
         private static void InsertStructures(IEnumerable<IStructure> structures, HydroArea targetHydroArea, StructuresFile structuresFile)
         {
@@ -166,12 +196,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
                 }
             }
 
-            Log.InfoFormat("Read {0} structures (Pumps: {1}; Weirs: {2}; Gates: {3}; General Structures {4}).",
-                           simpleWeirIni + gatedWeirIni + generalFormulaIni + pumpsIni,
-                           pumpsIni,
-                           simpleWeirIni,
-                           gatedWeirIni,
-                           generalFormulaIni);
+            Log.InfoFormat("Read: " + ComposeLogStringsForStructures(simpleWeirIni, gatedWeirIni, generalFormulaIni, pumpsIni));
         }
 
         #endregion
