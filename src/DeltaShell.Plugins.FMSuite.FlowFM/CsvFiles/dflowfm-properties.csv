@@ -68,7 +68,7 @@ geometry,OpenBoundaryTolerance,,,,Double,3,,,TRUE,,,,,,"Search tolerance factor 
 geometry,RenumberFlowNodes,,,Renumber Flow Nodes?,0|1,1,0,1,TRUE,,,,,,"Renumber the flow nodes (1: yes, 0: no)"
 geometry,Kmx,general,,Max nr of vertical layers,Integer,0,0,,TRUE,,,,,,Maximum number of vertical layers
 geometry,Layertype,general,,Layer type:Sigma|Z|Mixed,1|2|3,1,1,3,TRUE,,,,,,"Vertical layer type (1: all sigma, 2: all z, 3: use VertplizFile)"
-geometry,Numtopsig,general,,Nr of sigma layers in Z top layer,Integer,0,,,TRUE,,,,,,Number of sigma layers in top of z-layer General
+geometry,Numtopsig,general,,Nr of sigma layers in Z top layer,Integer,0,,,TRUE,,,,,,Number of sigma layers in top of z-layer model
 geometry,SigmaGrowthFactor,,,Layer thickness growth factor,Double,1,,,FALSE,,kmx>0,,,,Layer thickness growth factor from bed up
 numerics,CFLMax,timeframe,Time Frame,Max Courant nr,Double,0.7,0,,FALSE,,,,,,Maximum Courant number, -
 numerics,AdvecType,numerics,Numerical Parameters,Advection type:None|Wenneker|Wenneker/q(uio-u)|Perot q(uio-u)|Perot q(ui-u)|Perot/q(ui-u)-without itself|Perot q(uio-u) fast,0|1|2|3|4|5|33,33,0,33,FALSE,,,,,,"Advection type (0: none, 1: Wenneker, 2: Wenneker q(uio-u), 3: Perot q(uio-u), 4: Perot q(ui-u), 5: Perot q(ui-u) without itself"
@@ -237,7 +237,7 @@ output,Wrihis_heat_fluxes,output,History,Write heat fluxes,0|1,1,,,FALSE,,WriteH
 output,Wrihis_salinity,output,History,Write salinity,0|1,1,,,FALSE,,WriteHisFile,,,,"Write salinity to his file (1: yes, 0: no)"
 output,Wrihis_density,output,History,Write density,0|1,1,,,FALSE,,WriteHisFile,,,,"Write density to his file (1: yes, 0: no)"
 output,Wrihis_waterlevel_s1,output,History,Write water level,0|1,1,,,FALSE,,WriteHisFile,,,,"Write water level to his file (1: yes, 0: no)"
-output,Wrihis_waterdepth,output,History,Write water depth,0|1,0,,,FALSE,,WriteHisFile,,,,"Write waterdepth to his file (1: yes, 0: no)"
+output,Wrihis_waterdepth,output,History,Write water depth,0|1,0,,,FALSE,,WriteHisFile,,,,"Write water depth to his file (1: yes, 0: no)"
 output,Wrihis_velocity_vector,output,History,Write velocity vectors,0|1,1,,,FALSE,,WriteHisFile,,,,"Write velocity vectors to his file (1: yes, 0: no)"
 output,Wrihis_upward_velocity_component,output,History,Write upward velocity,0|1,0,,,FALSE,,WriteHisFile,,,,"Write upward velocity to his file (1: yes, 0: no)"
 output,Wrihis_sediment,output,History,Write sediment transport,0|1,1,,,FALSE,,WriteHisFile,,,,"Write sediment transport to his file (1: yes, 0: no)"
