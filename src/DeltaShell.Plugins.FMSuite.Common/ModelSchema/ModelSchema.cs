@@ -11,7 +11,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
             ModelDefinitionCategory = new Dictionary<string, ModelPropertyGroup>();
         }
 
-        public Dictionary<string, ModelPropertyGroup> GuiPropertyGroups { get; set; }
+        public IDictionary<string, ModelPropertyGroup> GuiPropertyGroups { get; set; }
         public IDictionary<string, ModelPropertyGroup> ModelDefinitionCategory { get; set; }
         public IDictionary<string, TDefinition> PropertyDefinitions { get; set; }
     }
