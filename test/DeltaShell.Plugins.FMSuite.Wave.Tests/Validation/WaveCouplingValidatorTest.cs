@@ -60,6 +60,56 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
         }
 
         [Test]
+        [TestCase(0)]
+        [TestCase(-1)]
+        public void GivenWaveModelCoupledToFlowAndInvalidCouplingPeriod_WhenValidatingCoupling_ThenValidationErrorIsReturnedWithExpectedViewData(int couplingPeriod)
+        {
+            using (var waveModel = new WaveModel())
+            {
+                // Given
+                waveModel.IsCoupledToFlow = true;
+                waveModel.StartTime = DateTime.Now;
+                waveModel.StopTime = waveModel.StartTime.AddDays(couplingPeriod);
+
+                string expectedMessage = Resources.WaveCouplingValidator_ValidateModelTimeSettings_start_time_must_be_smaller_than_stop_time_;
+                string expectedTabName = "General";
+
+                // When
+                ValidationReport validationReport = WaveCouplingValidator.Validate(waveModel);
+
+                // Then
+                ValidationIssue validationError = validationReport.AllErrors.FirstOrDefault(issue => issue.Message == expectedMessage);
+                Assert.IsNotNull(validationError);
+
+                var waveValidationShortcut = validationError.ViewData as WaveValidationShortcut;
+                Assert.IsNotNull(waveValidationShortcut);
+                Assert.That(waveValidationShortcut.WaveModel, Is.EqualTo(waveModel));
+                Assert.That(waveValidationShortcut.TabName, Is.EqualTo(expectedTabName));
+            }
+        }
+
+        [Test]
+        public void GivenWaveModelCoupledToFlowAndValidCouplingPeriod_WhenValidatingCoupling_ThenValidationErrorIsReturnedWithExpectedViewData()
+        {
+            using (var waveModel = new WaveModel())
+            {
+                // Given
+                waveModel.IsCoupledToFlow = true;
+                waveModel.StartTime = DateTime.Now;
+                waveModel.StopTime = DateTime.Now.AddDays(1);
+
+                string expectedMessage = Resources.WaveCouplingValidator_ValidateModelTimeSettings_start_time_must_be_smaller_than_stop_time_;
+
+                // When
+                ValidationReport validationReport = WaveCouplingValidator.Validate(waveModel);
+
+                // Then
+                ValidationIssue validationError = validationReport.AllErrors.FirstOrDefault(issue => issue.Message == expectedMessage);
+                Assert.That(validationError, Is.Null, "Validation error was generated but it was not expected.");
+            }
+        }
+
+        [Test]
         public void GivenWaveModelCoupledToFlowAndReferenceTimePrecedingStartTime_WhenValidatingCoupling_ThenValidationErrorIsReturnedWithExpectedViewData()
         {
             // Given

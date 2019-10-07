@@ -50,6 +50,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.NodePresenters
                     return false;
                 case ShortCutType.SpatialCoverage:
                     ConfigureSpatialEditor(shortcut);
+                    return false;
+                case ShortCutType.SpatialCoverageWithView:
+                    ConfigureSpatialEditor(shortcut);
                     return true;
                 case ShortCutType.FeatureSet:
                     return true;
@@ -87,7 +90,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.NodePresenters
 
             if (layer != null)
             {
-                projectItemMapView.SetSpatialOperationLayer(layer, true);
+                projectItemMapView.SetSpatialOperationLayer(layer, false);
                 SharpMapGisGuiPlugin.Instance.FocusSpatialOperationView();
             }
         }

@@ -25,23 +25,25 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             Assert.AreEqual("Data table importer", importer.Name);
             Assert.AreEqual("WAQ data tables", importer.Category);
             Assert.IsNull(importer.Image);
-            var supportedTypes = importer.SupportedItemTypes.ToArray();
-            Assert.AreEqual(1, supportedTypes.Length);
-            CollectionAssert.Contains(supportedTypes, typeof(DataTableManager));
+            
+            CollectionAssert.AreEqual(new[]
+            {
+                typeof(DataTableManager)
+            }, importer.SupportedItemTypes);
             Assert.IsFalse(importer.CanImportOnRootLevel);
             Assert.AreEqual("WAQ data table (*.csv)|*.csv", importer.FileFilter);
             Assert.IsNull(importer.TargetDataDirectory);
             Assert.IsFalse(importer.ShouldCancel);
             Assert.IsNull(importer.ProgressChanged);
             Assert.IsFalse(importer.OpenViewAfterImport);
+            Assert.IsNull(importer.FilePath);
         }
 
         [Test]
         public void ImportItem_TargetNotDataTableInstance_ThrowNotSupportedException()
         {
             // setup
-            var path =
-                TestHelper.GetTestFilePath(Path.Combine("IO", "DataTables", "timeBlock.csv"));
+            string path = TestHelper.GetTestFilePath(Path.Combine("IO", "DataTables", "timeBlock.csv"));
             var importer = new DataTableImporter();
 
             // call
@@ -81,11 +83,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
 
             // assert
             var exception = Assert.Throws<ArgumentException>(call);
-            var expectedMessage = "Not a valid file-path (Clearly not a valid file path) specified." + Environment.NewLine +
+            var expectedMessage = "Not a valid file-path (Clearly not a valid file path) specified." +
+                                  Environment.NewLine +
                                   "Parameter name: path";
             Assert.AreEqual(expectedMessage, exception.Message);
         }
-        
+
         [Test]
         public void ImportItem_TargetIsEmptyDataTableManager_ImportDataTablesFromSourceFile()
         {
@@ -96,15 +99,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             FileUtils.DeleteIfExists(folderPath);
             try
             {
-                var target = new DataTableManager { FolderPath = folderPath };
+                var target = new DataTableManager {FolderPath = folderPath};
                 var importer = new DataTableImporter();
 
                 // call
-                var importedItem = (DataTableManager)importer.ImportItem(path, target);
+                var importedItem = (DataTableManager) importer.ImportItem(path, target);
 
                 // assert
                 Assert.IsTrue(Directory.Exists(target.FolderPath),
-                    "Should create required container folder as it wasn't created yet.");
+                              "Should create required container folder as it wasn't created yet.");
 
                 Assert.AreSame(target, importedItem);
                 var dataTables = importedItem.DataTables.ToArray();
@@ -116,13 +119,21 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                 Assert.AreEqual("timeBlock", dataTable.DataFile.Name);
                 Assert.IsTrue(dataTable.DataFile.IsOpen);
                 Assert.IsTrue(File.Exists(dataTable.DataFile.Path));
-                foreach (var locationName in new []{"locA", "locB", "locC", "locD", "locE"})
+                foreach (var locationName in new[]
+                {
+                    "locA",
+                    "locB",
+                    "locC",
+                    "locD",
+                    "locE"
+                })
                 {
                     var pattern = string.Format("ITEM{0}'{1}'{0}CONCENTRATIONS{0}", Environment.NewLine, locationName);
                     Assert.IsTrue(new Regex(pattern).IsMatch(dataTable.DataFile.Content),
-                        "Should have an item definition for location: " + locationName);
+                                  "Should have an item definition for location: " + locationName);
                 }
-                var itemRegexPattern = 
+
+                var itemRegexPattern =
                     "DATA_ITEM" + Environment.NewLine +
                     "\\S+" + Environment.NewLine +
                     "CONCENTRATIONS" + Environment.NewLine +
@@ -134,13 +145,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                 Assert.IsTrue(dataTable.SubstanceUseforFile.IsOpen);
                 Assert.IsTrue(File.Exists(dataTable.SubstanceUseforFile.Path));
                 Assert.AreEqual(2, new Regex("USEFOR").Matches(dataTable.SubstanceUseforFile.Content).Count);
-                foreach (var substanceName in new[] { "SubA", "SubB" })
+                foreach (var substanceName in new[]
+                {
+                    "SubA",
+                    "SubB"
+                })
                 {
                     var pattern = string.Format("USEFOR '{0}' '{0}'", substanceName);
                     Assert.IsTrue(new Regex(pattern).IsMatch(dataTable.SubstanceUseforFile.Content),
-                        "Should have an item definition for location: " + substanceName);
+                                  "Should have an item definition for location: " + substanceName);
                 }
-                
             }
             finally
             {

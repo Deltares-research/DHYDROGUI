@@ -84,7 +84,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
 
         public string SelectedCategory
         {
-            private get
+            get
             {
                 return selectedCategory;
             }

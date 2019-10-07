@@ -17,6 +17,7 @@ using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.ProjectExplorer;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.WaterQualityModelWizard;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Properties;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Ribbon;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
@@ -393,6 +394,40 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 
             //Clean directory
             FileUtils.DeleteIfExists(hydFile);
+        }
+
+        [Test]
+        public void GetViewInfoForLoadsDataTableBoundaryImporter_ReturnsExpectedViewInfoConfiguration()
+        {
+            // Setup
+            using (var plugin = new WaterQualityModelGuiPlugin())
+            {
+                // Call
+                ViewInfo viewInfo = plugin.GetViewInfoObjects()
+                                          .First(vi => vi.DataType == typeof(LoadsDataTableImporter));
+
+                // Assert
+                Assert.That(viewInfo.ViewType, Is.EqualTo(typeof(LoadsDataWizard)));
+                Assert.That(viewInfo.Description, Is.EqualTo("Loads Data Wizard Dialog"));
+                Assert.That(viewInfo.AdditionalDataCheck, Is.Not.Null);
+            }
+        }
+
+        [Test]
+        public void GetViewInfoForBoundaryDataTableImporter_ReturnsExpectedViewInfoConfiguration()
+        {
+            // Setup
+            using (var plugin = new WaterQualityModelGuiPlugin())
+            {
+                // Call
+                ViewInfo viewInfo = plugin.GetViewInfoObjects()
+                                          .First(vi => vi.DataType == typeof(BoundaryDataTableImporter));
+
+                // Assert
+                Assert.That(viewInfo.ViewType, Is.EqualTo(typeof(BoundaryDataWizard)));
+                Assert.That(viewInfo.Description, Is.EqualTo("Boundary Data Wizard Dialog"));
+                Assert.That(viewInfo.AdditionalDataCheck, Is.Not.Null);
+            }
         }
     }
 }

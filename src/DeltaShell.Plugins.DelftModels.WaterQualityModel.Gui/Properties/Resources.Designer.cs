@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -127,6 +127,42 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Properties {
             get {
                 object obj = ResourceManager.GetObject("boundary", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Press Finish to import your boundary data file..
+        /// </summary>
+        internal static string BoundaryDataWizard_Finished_message {
+            get {
+                return ResourceManager.GetString("BoundaryDataWizard_Finished_message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Import a boundary data file (in CSV format).
+        /// </summary>
+        internal static string BoundaryDataWizard_Title {
+            get {
+                return ResourceManager.GetString("BoundaryDataWizard_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This wizard will import a Boundary File..
+        /// </summary>
+        internal static string BoundaryDataWizard_Welcome_message {
+            get {
+                return ResourceManager.GetString("BoundaryDataWizard_Welcome_message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select csv file with boundary data.
+        /// </summary>
+        internal static string BoundaryDataWizardPage_Description {
+            get {
+                return ResourceManager.GetString("BoundaryDataWizardPage_Description", resourceCulture);
             }
         }
         
@@ -317,6 +353,42 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Properties {
             get {
                 object obj = ResourceManager.GetObject("LinesVisible", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Press Finish to import your loads data file..
+        /// </summary>
+        internal static string LoadsDataWizard_Finished_message {
+            get {
+                return ResourceManager.GetString("LoadsDataWizard_Finished_message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Import a loads data file (in CSV format).
+        /// </summary>
+        internal static string LoadsDataWizard_Title {
+            get {
+                return ResourceManager.GetString("LoadsDataWizard_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This wizard will import a Loads File..
+        /// </summary>
+        internal static string LoadsDataWizard_Welcome_message {
+            get {
+                return ResourceManager.GetString("LoadsDataWizard_Welcome_message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select csv file with laods data.
+        /// </summary>
+        internal static string LoadsDataWizardPage_Description {
+            get {
+                return ResourceManager.GetString("LoadsDataWizardPage_Description", resourceCulture);
             }
         }
         
