@@ -10,6 +10,7 @@ def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("svn_root_path", help="Path to the root of the SVN directory")
     parser.add_argument("version_number", help="Version number of the Framework NuGet package")
+    parser.add_argument("--with_signed", action="store_true", help="Add the signed value to the revision number.")
     return parser.parse_args()
 
 
@@ -38,21 +39,22 @@ if __name__ == "__main__":
     args = get_args()
     root_path = args.svn_root_path
     version_number = args.version_number
+    revision_number = "{}{}".format(version_number, "-SIGNED" if args.with_signed else "")
 
     project_file_paths = search_files(root_path, '.csproj')
     find_and_replace_csproj = [
-        (r'DeltaShell\.Framework\.1\.4\.0\.\d{5}',      "DeltaShell.Framework.1.4.0." + version_number),
-        (r'DeltaShell\.TestProject\.1\.4\.0\.\d{5}',    "DeltaShell.TestProject.1.4.0." + version_number),
-        (r'Version=1\.4\.0\.\d{5}',                     "Version=1.4.0." + version_number)
+        (r'DeltaShell\.Framework\.1\.4\.0\.\d{5}(?:-SIGNED)?',      "DeltaShell.Framework.1.4.0.{}".format(revision_number)),
+        (r'DeltaShell\.TestProject\.1\.4\.0\.\d{5}(?:-SIGNED)?',    "DeltaShell.TestProject.1.4.0.{}".format(revision_number)),
+        (r'Version=1\.4\.0\.\d{5}(?:-SIGNED)?',                     "Version=1.4.0.{}".format(revision_number))
     ]
 
     update_files(project_file_paths, find_and_replace_csproj, "utf-8-sig")
 
     config_file_paths = search_files(root_path, 'packages.config')
     find_and_replace_config = [
-        (r'"DeltaShell\.ApplicationPlugin" version="1\.4\.0\.\d{5}"',   '"DeltaShell.ApplicationPlugin" version="1.4.0.' + version_number + '"'),
-        (r'"DeltaShell\.Framework" version="1\.4\.0\.\d{5}"',           '"DeltaShell.Framework" version="1.4.0.' + version_number + '"'),
-        (r'"DeltaShell\.TestProject" version="1\.4\.0\.\d{5}"',         '"DeltaShell.TestProject" version="1.4.0.' + version_number + '"'),
+        (r'"DeltaShell\.ApplicationPlugin" version="1\.4\.0\.\d{5}(?:-SIGNED)?"',   '"DeltaShell.ApplicationPlugin" version="1.4.0.{}"'.format(revision_number)),
+        (r'"DeltaShell\.Framework" version="1\.4\.0\.\d{5}(?:-SIGNED)?"',           '"DeltaShell.Framework" version="1.4.0.{}"'.format(revision_number)),
+        (r'"DeltaShell\.TestProject" version="1\.4\.0\.\d{5}(?:-SIGNED)?"',         '"DeltaShell.TestProject" version="1.4.0.{}"'.format(revision_number)),
     ]
 
     update_files(config_file_paths, find_and_replace_config)
