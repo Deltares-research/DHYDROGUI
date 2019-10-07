@@ -2,9 +2,9 @@
 
 namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
 {
-    public class ModelSchema<TDefinition> where TDefinition : ModelPropertyDefinition
+    public class ModelPropertySchema<TDefinition> where TDefinition : ModelPropertyDefinition
     {
-        public ModelSchema()
+        public ModelPropertySchema()
         {
             PropertyDefinitions = new Dictionary<string, TDefinition>();
             GuiPropertyGroups = new Dictionary<string, ModelPropertyGroup>();

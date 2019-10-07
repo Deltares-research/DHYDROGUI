@@ -15,14 +15,14 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
         private string FileGroupName { get; set; }
 
         /// <summary>
-        /// Reads <see cref="ModelPropertyDefinition"/> objects from csv and returns them in <see cref="ModelSchema{TDef}"/> object.
+        /// Reads <see cref="ModelPropertyDefinition"/> objects from csv and returns them in <see cref="ModelPropertySchema{TDefinition}"/> object.
         /// </summary>
         /// <typeparam name="TDef">The type of <see cref="ModelPropertyDefinition"/>.</typeparam>
         /// <param name="filePath">The absolute path to the file.</param>
         /// <param name="fileGroupName">Name of the file group.</param>
-        /// <returns>A <see cref="ModelSchema{TDef}"/> containing data read from the file.</returns>
+        /// <returns>A <see cref="ModelPropertySchema{TDefinition}"/> containing data read from the file.</returns>
         /// <exception cref="FormatException">Thrown when the file format does not comply with the expected file format.</exception>
-        public ModelSchema<TDef> ReadModelSchema<TDef>(string filePath, string fileGroupName)
+        public ModelPropertySchema<TDef> ReadModelSchema<TDef>(string filePath, string fileGroupName)
             where TDef : ModelPropertyDefinition, new()
         {
             FileGroupName = fileGroupName;
@@ -30,7 +30,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
             OpenInputFile(filePath);
             try
             {
-                return ParseFileContent<TDef>();
+                return ParseFileToModelPropertySchema<TDef>();
             }
             finally
             {
@@ -38,9 +38,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
             }
         }
 
-        private ModelSchema<TDef> ParseFileContent<TDef>() where TDef : ModelPropertyDefinition, new()
+        private ModelPropertySchema<TDef> ParseFileToModelPropertySchema<TDef>() 
+            where TDef : ModelPropertyDefinition, new()
         {
-            var schema = new ModelSchema<TDef>();
+            var schema = new ModelPropertySchema<TDef>();
 
             string line = GetNextLine();
             if (line == null || !line.StartsWith("GUIGroups"))
@@ -101,7 +102,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
             }
         }
 
-        private void ReadMduProperties<TDef>(ModelSchema<TDef> schema) where TDef : ModelPropertyDefinition, new()
+        private void ReadMduProperties<TDef>(ModelPropertySchema<TDef> schema) where TDef : ModelPropertyDefinition, new()
         {
             string line;
             while ((line = GetNextLine()) != null)

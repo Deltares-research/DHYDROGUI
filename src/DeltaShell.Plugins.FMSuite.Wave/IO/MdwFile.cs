@@ -600,7 +600,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
         {
             foreach (DelftIniCategory category in mdwCategories)
             {
-                ModelSchema<WaveModelPropertyDefinition> modelSchema = modelDefinition.ModelSchema;
+                ModelPropertySchema<WaveModelPropertyDefinition> modelSchema = modelDefinition.ModelSchema;
                 if (!modelSchema.ModelDefinitionCategory.ContainsKey(category.Name))
                 {
                     continue;

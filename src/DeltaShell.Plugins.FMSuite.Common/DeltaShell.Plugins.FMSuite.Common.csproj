@@ -199,7 +199,7 @@
     <Compile Include="ModelSchema\ModelPropertyDefinition.cs" />
     <Compile Include="ModelSchema\ModelPropertyValueParsingExtensions.cs" />
     <Compile Include="ModelSchema\ModelPropertyGroup.cs" />
-    <Compile Include="ModelSchema\ModelSchema.cs" />
+    <Compile Include="ModelSchema\ModelPropertySchema.cs" />
     <Compile Include="IO\Files\ModelSchemaCsvFile.cs" />
     <Compile Include="ModelSchema\Steerable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

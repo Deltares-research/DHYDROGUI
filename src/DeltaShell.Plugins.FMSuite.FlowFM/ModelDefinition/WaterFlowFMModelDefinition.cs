@@ -69,8 +69,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         public List<string> InitialSpatiallyVaryingSedimentPropertyNames { get; private set; }
 
         private static StructureSchema<ModelPropertyDefinition> StructureSchemaInstance { get; set; }
-        private static ModelSchema<WaterFlowFMPropertyDefinition> MorphologyModelPropertySchema { get; set; }
-        private static ModelSchema<WaterFlowFMPropertyDefinition> ModelPropertySchema { get; set; }
+        private static ModelPropertySchema<WaterFlowFMPropertyDefinition> MorphologyModelPropertySchema { get; set; }
+        private static ModelPropertySchema<WaterFlowFMPropertyDefinition> ModelPropertySchema { get; set; }
         public IEventedList<WaterFlowFMProperty> Properties { get; private set; }
 
         /// <summary>
