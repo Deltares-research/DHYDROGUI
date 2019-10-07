@@ -6,15 +6,11 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
 {
     public class DefinitionGeneratorCrossSectionDefinitionCircle : DefinitionGeneratorCrossSectionDefinitionStandard
     {
-        public DefinitionGeneratorCrossSectionDefinitionCircle() : base(CrossSectionRegion.CrossSectionDefinitionType.Circle)
+        public DefinitionGeneratorCrossSectionDefinitionCircle() : base(CrossSectionRegion.CrossSectionDefinitionType.Circle, useTabulatedProfile:false)
         {
         }
 
-        protected override bool UseTabulatedProfile
-        {
-            get { return false; }
-        }
-
+        
         protected override bool HasCorrectCrossSectionShape(CrossSectionDefinitionStandard standardDefinition)
         {
             var shapeCircle = standardDefinition.Shape as CrossSectionStandardShapeCircle;

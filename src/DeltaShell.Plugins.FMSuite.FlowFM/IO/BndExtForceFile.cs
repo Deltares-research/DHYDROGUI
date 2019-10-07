@@ -7,6 +7,8 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO;
+using DeltaShell.NGHS.IO.FileWriters;
+using DeltaShell.NGHS.IO.FileWriters.General;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
@@ -206,7 +208,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private void WriteBndExtForceFile(IEnumerable<DelftIniCategory> bndExtForceFileItems)
         {
-            OpenOutputFile(FilePath);
+            var generalRegion = GeneralRegionGenerator.GenerateGeneralRegion(
+                GeneralRegion.BoundaryConditionsExternalForcingMajorVersion, GeneralRegion.BoundaryConditionsExternalForcingMinorVersion,
+                GeneralRegion.FileTypeName.BoundaryConditionExternalForcing);
+            new IniFileWriter().WriteIniFile(new [] { generalRegion } , FilePath);
+            OpenOutputFile(FilePath,true);
             try
             {
                 foreach (var bndExtForceFileItem in bndExtForceFileItems)

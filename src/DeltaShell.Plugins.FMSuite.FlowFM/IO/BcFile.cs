@@ -4,6 +4,8 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using DeltaShell.NGHS.IO;
+using DeltaShell.NGHS.IO.FileWriters;
+using DeltaShell.NGHS.IO.FileWriters.General;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using log4net;
@@ -22,7 +24,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private const string SeriesIndexKey = "FunctionIndex";
         public const string QuantityKey = "Quantity";
         private const string UnitKey = "Unit";
-        private const string TimeInterpolationKey = "Time-interpolation";
+        //private const string TimeInterpolationKey = "Time-interpolation";
+        private const string TimeInterpolationKey = "timeInterpolation";
         private const string VerticalIntepolationKey = "Vertical interpolation";
         private const string VerticalPositionTypeKey = "Vertical position type";
         private const string VerticalPositionSpecKey = "Vertical position specification";
@@ -147,7 +150,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public virtual void Write(IEnumerable<KeyValuePair<IBoundaryCondition, BoundaryConditionSet>> boundaryConditions,
             string filePath, BcFileFlowBoundaryDataBuilder boundaryDataBuilder, DateTime? refDate = null)
         {
-            OpenOutputFile(filePath);
+            var generalRegion = GeneralRegionGenerator.GenerateGeneralRegion(
+                GeneralRegion.BoundaryConditionsMajorVersion, GeneralRegion.BoundaryConditionsMinorVersion,
+                GeneralRegion.FileTypeName.BoundaryConditions);
+            new IniFileWriter().WriteIniFile(new[] { generalRegion }, filePath);
+            OpenOutputFile(filePath, true);
             try
             {
                 foreach (var boundaryConditionKeyValuePair in boundaryConditions)

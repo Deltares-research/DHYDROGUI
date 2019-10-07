@@ -35,7 +35,10 @@ namespace DeltaShell.NGHS.IO.FileWriters.General
         public const int LateralDischargeLocationsMinorVersion = 0;
 
         public const int BoundaryConditionsMajorVersion = 1;
-        public const int BoundaryConditionsMinorVersion = 0;
+        public const int BoundaryConditionsMinorVersion = 1;
+
+        public const int BoundaryConditionsExternalForcingMajorVersion = 2;
+        public const int BoundaryConditionsExternalForcingMinorVersion = 0;
 
         public const int RoughnessDataMajorVersion = 3;
         public const int RoughnessDataMinorVersion = 0;
@@ -64,6 +67,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.General
             public const string BoundaryLocation = "boundLocs";
             public const string LateralDischargeLocation = "latLocs";
             public const string BoundaryConditions = "boundConds";
+            public const string BoundaryConditionExternalForcing = "extForce";
             public const string RoughnessData = "roughness";
             public const string Retention = "retentions";
             public const string StorageNodes = "storageNodes";

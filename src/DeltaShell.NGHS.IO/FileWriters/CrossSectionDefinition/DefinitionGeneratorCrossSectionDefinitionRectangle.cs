@@ -6,18 +6,20 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
 {
     public class DefinitionGeneratorCrossSectionDefinitionRectangle : DefinitionGeneratorCrossSectionDefinitionStandard
     {
-        public DefinitionGeneratorCrossSectionDefinitionRectangle() : base(CrossSectionRegion.CrossSectionDefinitionType.Rectangle)
+        public DefinitionGeneratorCrossSectionDefinitionRectangle() : base(CrossSectionRegion.CrossSectionDefinitionType.Rectangle, useTabulatedProfile:false)
         {
-        }
-        protected override bool UseTabulatedProfile
-        {
-            get { return false; }
         }
 
         protected override bool HasCorrectCrossSectionShape(CrossSectionDefinitionStandard standardDefinition)
         {
             var rectangleShape = standardDefinition.Shape as CrossSectionStandardShapeRectangle;
             return rectangleShape != null;
+        }
+
+        protected override void AddCommonProperties(ICrossSectionDefinition crossSectionDefinition)
+        {
+            base.AddCommonProperties(crossSectionDefinition);
+            IniCategory.AddProperty(DefinitionPropertySettings.Closed, 1);
         }
 
         protected override void AddShapeMeasurementProperties(ICrossSectionStandardShape shape)

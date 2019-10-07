@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro.CrossSections;
+using DelftTools.Hydro.CrossSections.DataSets;
 using DelftTools.Hydro.Roughness;
 using DeltaShell.NGHS.IO.FileWriters.Location;
 using DeltaShell.NGHS.IO.Helpers;
@@ -28,10 +30,6 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
 
             GenerateTabulatedProfile(crossSectionDefinitionZw);
 
-            var sortedData = crossSectionDefinitionZw.ZWDataTable.OrderBy(hfsw => hfsw.Z);
-            var totalWidths = sortedData.Select(r => r.Width).ToList();
-            IniCategory.AddProperty(DefinitionPropertySettings.TotalWidths, totalWidths);
-
             var summerDike = crossSectionDefinitionZw.SummerDike;
             IniCategory.AddProperty(DefinitionPropertySettings.CrestLevee, summerDike.CrestLevel);
             IniCategory.AddProperty(DefinitionPropertySettings.FlowAreaLevee, summerDike.FloodSurface);
@@ -46,7 +44,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
             }
             else // crossSectionDefinition came from a Culvert or Bridge
             {
-                var largestTotalWidth = totalWidths.Max();
+                var largestTotalWidth = crossSectionDefinitionZw.ZWDataTable.OrderBy(hfsw => hfsw.Z).Select(r => r.Width).Max();
                 IniCategory.AddProperty(DefinitionPropertySettings.Main, largestTotalWidth);
             }
             
@@ -77,6 +75,9 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
 
             var flowWidth = sortedData.Select(r => r.Width - r.StorageWidth);
             IniCategory.AddProperty(DefinitionPropertySettings.FlowWidths, flowWidth);
+
+            var totalWidths = sortedData.Select(r => r.Width).ToList();
+            IniCategory.AddProperty(DefinitionPropertySettings.TotalWidths, totalWidths);
         }
 
         private static byte[] DoublesToBytes(double[] valuesAsDoubles)

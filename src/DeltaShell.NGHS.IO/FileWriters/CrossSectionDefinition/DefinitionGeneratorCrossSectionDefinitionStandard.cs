@@ -7,12 +7,11 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
 {
     public abstract class DefinitionGeneratorCrossSectionDefinitionStandard : DefinitionGeneratorCrossSectionDefinitionZw
     {
-        protected virtual bool UseTabulatedProfile
+        private bool UseTabulatedProfile { get; }
+        
+        protected DefinitionGeneratorCrossSectionDefinitionStandard(string definitionType, bool useTabulatedProfile = true) : base(definitionType)
         {
-            get { return true; }
-        }
-        protected DefinitionGeneratorCrossSectionDefinitionStandard(string definitionType) : base(definitionType)
-        {
+            UseTabulatedProfile = useTabulatedProfile;
         }
 
         public override DelftIniCategory CreateDefinitionRegion(ICrossSectionDefinition crossSectionDefinition)
@@ -36,14 +35,8 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
             AddShapeMeasurementProperties(standardDefinition.Shape);
             if (UseTabulatedProfile)
                 GenerateTabulatedProfile(standardDefinition.Shape.GetTabulatedDefinition());
-            AddCrossSectionStandardProperties();
         }
-
-        protected virtual void AddCrossSectionStandardProperties()
-        {
-            IniCategory.AddProperty(DefinitionPropertySettings.Closed, 1);
-        }
-
+        
         protected override void AddCommonProperties(ICrossSectionDefinition crossSectionDefinition)
         {
             base.AddCommonProperties(crossSectionDefinition);

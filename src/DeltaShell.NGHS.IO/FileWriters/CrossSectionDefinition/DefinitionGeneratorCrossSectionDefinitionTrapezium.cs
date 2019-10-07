@@ -9,11 +9,12 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
         public DefinitionGeneratorCrossSectionDefinitionTrapezium() : base(CrossSectionRegion.CrossSectionDefinitionType.Trapezium)
         {
         }
-        protected override void AddCrossSectionStandardProperties()
+        protected override void AddCommonProperties(ICrossSectionDefinition crossSectionDefinition)
         {
+            base.AddCommonProperties(crossSectionDefinition);
             IniCategory.AddProperty(DefinitionPropertySettings.Closed, 0);
         }
-
+        
         protected override bool HasCorrectCrossSectionShape(CrossSectionDefinitionStandard standardDefinition)
         {
             var trapeziumShape = standardDefinition.Shape as CrossSectionStandardShapeTrapezium;

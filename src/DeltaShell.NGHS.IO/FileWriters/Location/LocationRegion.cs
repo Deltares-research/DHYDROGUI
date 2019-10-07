@@ -67,6 +67,6 @@ namespace DeltaShell.NGHS.IO.FileWriters.Location
         }
 
         public static readonly ConfigurationSetting Shift = new ConfigurationSetting(key: "shift", description: "Level shift of the cross section definition(m)");
-        public static readonly ConfigurationSetting Definition = new ConfigurationSetting(key: "definition", description: "Id of cross section definition");
+        public static readonly ConfigurationSetting Definition = new ConfigurationSetting(key: "definitionid", description: "Id of cross section definition");
     }
 }
