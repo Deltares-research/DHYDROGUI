@@ -1,16 +1,11 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
-using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
-using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
-using GeoAPI.Extensions.Feature;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -36,6 +31,40 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         public void TearDown()
         {
             mocks.VerifyAll();
+        }
+
+        [Test]
+        public void GivenNullValue_WhenRemovingDuplicateFeatures_ThenNoExceptionIsThrown()
+        {
+            WaterFlowFMModelHydroAreaExtensions.RemoveDuplicateFeatures(Arg<object>.Is.Anything, null, Arg<string>.Is.Anything);
+        }
+
+        [Test]
+        public void GivenAddedFeatureThatIsADuplicateOfAFeatureInAList_WhenRemovingDuplicateFeatures_ThenAddedFeatureIsRemovedAgainAndUserReceivesWarning()
+        {
+            CheckIfRemoveDuplicateFeaturesWorks<LandBoundary2D>();
+            CheckIfRemoveDuplicateFeaturesWorks<GroupableFeature2DPolygon>();
+            CheckIfRemoveDuplicateFeaturesWorks<ThinDam2D>();
+            CheckIfRemoveDuplicateFeaturesWorks<FixedWeir>();
+            CheckIfRemoveDuplicateFeaturesWorks<GroupableFeature2DPoint>();
+            CheckIfRemoveDuplicateFeaturesWorks<ObservationCrossSection2D>();
+            CheckIfRemoveDuplicateFeaturesWorks<Pump2D>();
+            CheckIfRemoveDuplicateFeaturesWorks<Weir2D>();
+            CheckIfRemoveDuplicateFeaturesWorks<BridgePillar>();
+        }
+
+        [Test]
+        public void GivenUniqueFeatures_WhenRemovingDuplicateFeatures_ThenNoFeaturesAreRemoved()
+        {
+            RemoveDuplicateFeaturesDoesNotRemoveUniqueFeatures<LandBoundary2D>();
+            RemoveDuplicateFeaturesDoesNotRemoveUniqueFeatures<GroupableFeature2DPolygon>();
+            RemoveDuplicateFeaturesDoesNotRemoveUniqueFeatures<ThinDam2D>();
+            RemoveDuplicateFeaturesDoesNotRemoveUniqueFeatures<FixedWeir>();
+            RemoveDuplicateFeaturesDoesNotRemoveUniqueFeatures<GroupableFeature2DPoint>();
+            RemoveDuplicateFeaturesDoesNotRemoveUniqueFeatures<ObservationCrossSection2D>();
+            RemoveDuplicateFeaturesDoesNotRemoveUniqueFeatures<Pump2D>();
+            RemoveDuplicateFeaturesDoesNotRemoveUniqueFeatures<Weir2D>();
+            RemoveDuplicateFeaturesDoesNotRemoveUniqueFeatures<BridgePillar>();
         }
 
         [Test]
@@ -99,125 +128,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             CheckUpdatingNamesForHydroAreaFeatures(fileName, expectedGroupName, parentDir);
         }
 
-        [Test]
-        public void GetFeaturesFromCategory_Pumps_ThenReturnOnlyPumpsOfTheArea()
-        {
-            // Given
-            var area = new HydroArea();
-
-            var pump = new Pump2D();
-            var observationPoint = new GroupableFeature2DPoint();
-
-            area.Pumps.Add(pump);
-            area.ObservationPoints.Add(observationPoint);
-            
-            // When
-            List<IFeature> features = area.GetFeaturesFromCategory(KnownFeatureCategories.Pumps).ToList();
-
-            // Then
-            Assert.AreEqual(1, features.Count, "Only one feature should have been returned");
-            Assert.AreSame(pump, features.First(), "The pump of the area should have been returned");
-        }
-
-        [Test]
-        public void GetFeaturesFromCategory_SimpleWeirs_ThenReturnOnlyWeirsWithSimpleWeirFormulaOfTheArea()
-        {
-            // Given
-            var area = new HydroArea();
-
-            var simpleWeir = new Weir2D {WeirFormula = new SimpleWeirFormula()};
-            var observationPoint = new GroupableFeature2DPoint();
-
-            area.Weirs.Add(simpleWeir);
-            area.ObservationPoints.Add(observationPoint);
-
-            // When
-            List<IFeature> features = area.GetFeaturesFromCategory(KnownFeatureCategories.Weirs).ToList();
-
-            // Then
-            Assert.AreEqual(1, features.Count, "Only one feature should have been returned");
-            Assert.AreSame(simpleWeir, features.First(), "The simple weir of the area should have been returned");
-        }
-
-        [Test]
-        public void GetFeaturesFromCategoryGates_Gates_ThenReturnOnlyWeirsWithGatedWeirFormulaOfTheArea()
-        {
-            // Given
-            var area = new HydroArea();
-
-            var gate = new Weir2D { WeirFormula = new GatedWeirFormula() };
-            var observationPoint = new GroupableFeature2DPoint();
-
-            area.Weirs.Add(gate);
-            area.ObservationPoints.Add(observationPoint);
-
-            // When
-            List<IFeature> features = area.GetFeaturesFromCategory(KnownFeatureCategories.Gates).ToList();
-
-            // Then
-            Assert.AreEqual(1, features.Count, "Only one feature should have been returned");
-            Assert.AreSame(gate, features.First(), "The gate of the area should have been returned");
-        }
-
-        [Test]
-        public void GetFeaturesFromCategory_GeneralStructures_ThenReturnOnlyWeirsWithGeneralStructureWeirFormulaOfTheArea()
-        {
-            // Given
-            var area = new HydroArea();
-
-            var generalStructure = new Weir2D { WeirFormula = new GeneralStructureWeirFormula() };
-            var observationPoint = new GroupableFeature2DPoint();
-
-            area.Weirs.Add(generalStructure);
-            area.ObservationPoints.Add(observationPoint);
-
-            // When
-            List<IFeature> features = area.GetFeaturesFromCategory(KnownFeatureCategories.GeneralStructures).ToList();
-
-            // Then
-            Assert.AreEqual(1, features.Count, "Only one feature should have been returned");
-            Assert.AreSame(generalStructure, features.First(), "The general structure of the area should have been returned");
-        }
-
-        [Test]
-        public void GetFeaturesFromCategory_ObservationPoints_ThenReturnOnlyObservationPointsOfTheArea()
-        {
-            // Given
-            var area = new HydroArea();
-
-            var observationPoint = new GroupableFeature2DPoint();
-            var pump = new Pump2D();
-
-            area.ObservationPoints.Add(observationPoint);
-            area.Pumps.Add(pump);
-
-            // When
-            List<IFeature> features = area.GetFeaturesFromCategory(KnownFeatureCategories.Observations).ToList();
-            
-            // Then
-            Assert.AreEqual(1, features.Count, "Only one feature should have been returned");
-            Assert.AreSame(observationPoint, features.First(), "The observation point of the area should have been returned");
-        }
-
-        [Test]
-        public void GetFeaturesFromCategory_ObservationCrossSections_ThenReturnOnlyObservationCrossSectionsOfTheArea()
-        {
-            // Given
-            var area = new HydroArea();
-
-            var observationCrossSection = new ObservationCrossSection2D();
-            var observationPoint = new GroupableFeature2DPoint();
-
-            area.ObservationCrossSections.Add(observationCrossSection);
-            area.ObservationPoints.Add(observationPoint);
-
-            // When
-            List<IFeature> features = area.GetFeaturesFromCategory(KnownFeatureCategories.CrossSections).ToList();
-
-            // Then
-            Assert.AreEqual(1, features.Count, "Only one feature should have been returned");
-            Assert.AreSame(observationCrossSection, features.First(), "The observation cross section of the area should have been returned");
-        }
         #region Helper methods
 
         private void CheckUpdatingNamesForStructures(string fileName, string expectedGroupName, string parentDir)
@@ -248,7 +158,61 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             Assert.That(gate.GroupName, Is.EqualTo(expectedGroupName));
         }
-        
+
+        private static void CheckIfRemoveDuplicateFeaturesWorks<T>() where T : IGroupableFeature, INameable, new()
+        {
+            var features = new EventedList<T>();
+            var feature1 = new T
+            {
+                GroupName = "MyGroup",
+                Name = "MyName"
+            };
+            var feature2 = new T
+            {
+                GroupName = "MyGroup",
+                Name = "MyName"
+            };
+            features.Add(feature1);
+            features.Add(feature2);
+            Assert.That(features.Count, Is.EqualTo(2));
+
+            TestHelper.AssertAtLeastOneLogMessagesContains(
+                () => WaterFlowFMModelHydroAreaExtensions.RemoveDuplicateFeatures(features, feature2, "MyModelName"),
+                "', because a feature with the same properties already exists.");
+            Assert.That(features.Count, Is.EqualTo(1));
+        }
+
+        private static void RemoveDuplicateFeaturesDoesNotRemoveUniqueFeatures<T>() where T : IGroupableFeature, INameable, new()
+        {
+            var features = new EventedList<T>();
+            var feature1 = new T
+            {
+                GroupName = "MyGroup1",
+                Name = "MyName"
+            };
+            var feature2 = new T
+            {
+                GroupName = "MyGroup2",
+                Name = "MyName"
+            };
+            var feature3 = new T
+            {
+                GroupName = "MyGroup1",
+                Name = "MyName1"
+            };
+            features.Add(feature1);
+            features.Add(feature2);
+            features.Add(feature3);
+            Assert.That(features.Count, Is.EqualTo(3));
+
+            WaterFlowFMModelHydroAreaExtensions.RemoveDuplicateFeatures(features, feature1, "MyModelName");
+            Assert.That(features.Count, Is.EqualTo(3));
+            WaterFlowFMModelHydroAreaExtensions.RemoveDuplicateFeatures(features, feature2, "MyModelName");
+            Assert.That(features.Count, Is.EqualTo(3));
+            WaterFlowFMModelHydroAreaExtensions.RemoveDuplicateFeatures(features, feature3, "MyModelName");
+            Assert.That(features.Count, Is.EqualTo(3));
+        }
+
         #endregion
     }
 }

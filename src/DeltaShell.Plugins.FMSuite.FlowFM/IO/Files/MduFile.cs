@@ -44,9 +44,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         private static string FMSuiteFlowModelVersion;
         private static string FMDllVersion;
 
-        private int propertyKeyAlignmentLength;
-        private int propertyValueAlignmentLength;
-
         public const string MduExtension = ".mdu";
         public const string LandBoundariesExtension = ".ldb";
         public const string ThinDamExtension = "_thd.pli";
@@ -113,16 +110,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 {KnownProperties.StructuresFile, "StructureFile"},
                 {KnownProperties.ObsFile, "ObsFile"},
                 {KnownProperties.ObsCrsFile, "CrsFile"},
-            };
-
-        private static readonly Dictionary<string, string> backwardsCompatiblePropertyMapping =
-            new Dictionary<string, string>
-            {
-                {"enclosurefile", "GridEnclosureFile"},
-                {"trtdt", "DtTrt"},
-                {"botlevuni", "BedLevUni"},
-                {"botlevtype", "BedLevType"},
-                {"mduformatversion", "FileVersion"}
             };
 
         public MduFile()
@@ -270,43 +257,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             OpenOutputFile(filePath);
             try
             {
-                propertyKeyAlignmentLength = GetLengthOfLongestPropertyName(waterFlowFmProperties);
-                propertyValueAlignmentLength = GetLengthOfLongestPropertyValue(waterFlowFmProperties);
-
                 IEnumerable<IGrouping<string, WaterFlowFMProperty>> propertiesByGroup = GetPropertiesByGroup(
                     waterFlowFmProperties,
                     config);
 
                 foreach (IGrouping<string, WaterFlowFMProperty> propertyGroup in propertiesByGroup)
                 {
-                    WriteMduGroup(config,
-                                  writePartionFile,
-                                  useNetCDFMapFormat,
-                                  propertyGroup);
+                    WriteMduLine(config,
+                                 writePartionFile,
+                                 useNetCDFMapFormat,
+                                 propertyGroup);
                 }
             }
             finally
             {
                 CloseOutputFile();
             }
-        }
-
-        private static int GetLengthOfLongestPropertyName(IEnumerable<WaterFlowFMProperty> waterFlowFmProperties)
-        {
-            IEnumerable<string> names = waterFlowFmProperties.Select(p => p.PropertyDefinition.MduPropertyName);
-            return GetLengthOfLongestString(names);
-        }
-
-        private static int GetLengthOfLongestPropertyValue(IEnumerable<WaterFlowFMProperty> waterFlowFmProperties)
-        {
-            IEnumerable<string> values = waterFlowFmProperties.Select(p => p.GetValueAsString());
-            return GetLengthOfLongestString(values);
-        }
-
-        private static int GetLengthOfLongestString(IEnumerable<string> strings)
-        {
-            return strings.Aggregate((max, current) => max.Length > current.Length ? max : current)
-                          .Length;
         }
 
         public void WriteBathymetry(WaterFlowFMModelDefinition modelDefinition, string path)
@@ -555,53 +521,39 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             return nameProjectedCS;
         }
 
-        private void WriteMduGroup(IMduFileWriteConfig config,
+        private void WriteMduLine(IMduFileWriteConfig config,
                                   bool writePartionFile,
                                   bool useNetCDFMapFormat,
                                   IGrouping<string, WaterFlowFMProperty> propertyGroup)
         {
             WriteLine("");
             WriteLine("[" + propertyGroup.Key + "]");
-
             foreach (WaterFlowFMProperty prop in propertyGroup)
             {
-                string mduPropertyName = prop.PropertyDefinition.MduPropertyName;
-
-                if (!writePartionFile && mduPropertyName.Equals("PartitionFile"))
+                if (!writePartionFile && prop.PropertyDefinition.MduPropertyName.Equals("PartitionFile"))
                 {
                     continue;
                 }
 
-                if (useNetCDFMapFormat && mduPropertyName.Equals(KnownProperties.MapFormat))
+                if (useNetCDFMapFormat && prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.MapFormat))
                 {
-                    WriteMduLine(mduPropertyName, "1", "# For 1d2d coupling we should always write mapformat output in NetCDF format");
+                    string line = string.Format("{0,-18}= {1,-20}{2}", prop.PropertyDefinition.MduPropertyName, 1,
+                                                "# For 1d2d coupling we should always write mapformat output in NetCDF format");
+                    WriteLine(line.Trim());
                 }
-                else if (config.DisableFlowNodeRenumbering && mduPropertyName.Equals("RenumberFlowNodes"))
+                else if (config.DisableFlowNodeRenumbering &&
+                         prop.PropertyDefinition.MduPropertyName.Equals("RenumberFlowNodes"))
                 {
-                    WriteMduLine(mduPropertyName, "0", "# For 1d2d coupling we should never renumber the flownodes");
+                    string line = string.Format("{0,-18}= {1,-20}{2}", prop.PropertyDefinition.MduPropertyName, 0,
+                                                "# For 1d2d coupling we should never renumber the flownodes");
+                    WriteLine(line.Trim());
                 }
                 else
                 {
                     string mduPropertyValue = GetPropertyValue(prop, config);
-                    string mduPropertyComment = prop.PropertyDefinition.Description;
-                    WriteMduLine(mduPropertyName, mduPropertyValue, mduPropertyComment);
+                    WriteMduLine(prop, mduPropertyValue);
                 }
             }
-        }
-
-        private void WriteMduLine(string propertyName, string propertyValue, string propertyComment)
-        {
-            string formatString = "{0,-" + (propertyKeyAlignmentLength + 1) + "}= " +
-                                  "{1,-" + (propertyValueAlignmentLength + 1) + "}";
-
-            string line = string.Format(formatString, propertyName, propertyValue);
-
-            if (!string.IsNullOrEmpty(propertyComment))
-            {
-                line += $"# {propertyComment}";
-            }
-
-            WriteLine(line.Trim());
         }
 
         private IEnumerable<IGrouping<string, WaterFlowFMProperty>> GetPropertiesByGroup(
@@ -627,6 +579,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                    // remove unknown properties that should be located on the sed/mor files
                    && property.PropertyDefinition.UnknownPropertySource != PropertySource.MorphologyFile
                    && property.PropertyDefinition.UnknownPropertySource != PropertySource.SedimentFile;
+        }
+
+        private void WriteMduLine(WaterFlowFMProperty prop, string pathValue)
+        {
+            string mduLine = string.Format("{0,-18}= {1,-20}{2}", prop.PropertyDefinition.MduPropertyName,
+                                           pathValue,
+                                           mduComments.ContainsKey(prop.PropertyDefinition.MduPropertyName)
+                                               ? mduComments[prop.PropertyDefinition.MduPropertyName]
+                                               : string.Empty);
+            WriteLine(mduLine.Trim());
         }
 
         private static IEnumerable<IGrouping<string, WaterFlowFMProperty>> RemoveMorAndSedPropertiesIfNeeded(
@@ -1269,7 +1231,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
         private void ReadProperties(string filePath, WaterFlowFMModelDefinition definition)
         {
-            var logHandler = new LogHandler("reading the mdu file", Log);
             Path = filePath;
             OpenInputFile(filePath);
             IgnoreCommentLines(new[]
@@ -1278,11 +1239,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 "# Generated by",
                 "# Deltares,"
             });
-
             try
             {
                 string currentGroupName = null;
-
                 string line = GetNextLine();
                 var readNextLine = true;
                 while (line != null)
@@ -1300,16 +1259,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                         }
 
                         currentGroupName = line.Substring(1, endIndex - 1).Trim();
-                        string currentGroupNameLowerCase = currentGroupName.ToLower();
-
-                        if (currentGroupNameLowerCase.Equals("model"))
-                        {
-                            currentGroupName = "General";
-                        }
-
-                        if (currentGroupNameLowerCase.Equals("structure"))
+                        if (currentGroupName.ToLower().Equals("structure"))
                         {
                             // put structure block
+                            // 
                             StructuresFile.ParseStructure(this);
                             continue;
                         }
@@ -1321,9 +1274,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                         string mduPropertyLowerCase;
                         string[] fields = GetPropertyLine(line, out mduPropertyName, out mduPropertyLowerCase);
 
-                        if (backwardsCompatiblePropertyMapping.ContainsKey(mduPropertyLowerCase))
+                        // some backwards compatibility issues (properties have been renamed
+                        if (mduPropertyLowerCase.Equals("enclosurefile"))
                         {
-                            mduPropertyName = backwardsCompatiblePropertyMapping[mduPropertyLowerCase];
+                            mduPropertyName = "GridEnclosureFile";
+                        }
+
+                        if (mduPropertyLowerCase.Equals("trtdt"))
+                        {
+                            mduPropertyName = "DtTrt";
+                        }
+
+                        if (mduPropertyLowerCase.Equals("botlevuni"))
+                        {
+                            mduPropertyName = "BedLevUni";
+                        }
+
+                        if (mduPropertyLowerCase.Equals("botlevtype"))
+                        {
+                            mduPropertyName = "BedLevType";
                         }
 
                         if (mduPropertyLowerCase.Equals("hdam"))
@@ -1347,56 +1316,34 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
                         GetPropertyComment(line, mduPropertyName, fields.Length > 2, false);
 
-                        string mduComment = null;
-                        if (mduComments.ContainsKey(mduPropertyName))
+                        if (!definition.ContainsProperty(mduPropertyLowerCase))
                         {
-                            mduComment = mduComments[mduPropertyName];
-                        }
+                            string mduComment = null;
+                            if (mduComments.ContainsKey(mduPropertyName))
+                            {
+                                mduComment = mduComments[mduPropertyName];
+                            }
 
-                        bool isKnownProperty = definition.ContainsProperty(mduPropertyName);
-
-                        WaterFlowFMProperty currentProperty;
-                        if (isKnownProperty)
-                        {
-                            currentProperty = definition.GetModelProperty(mduPropertyName);
-                        }
-                        else
-                        {
                             // create definition for unknown property:
-                            WaterFlowFMPropertyDefinition propDef = WaterFlowFMProperty.CreatePropertyDefinitionForUnknownProperty(
-                                currentGroupName,
-                                mduPropertyName,
-                                mduComment);
+                            WaterFlowFMPropertyDefinition propDef =
+                                WaterFlowFMProperty.CreatePropertyDefinitionForUnknownProperty(currentGroupName,
+                                                                                               mduPropertyName,
+                                                                                               mduComment);
 
-                            currentProperty = new WaterFlowFMProperty(propDef, mduPropertyValue);
-
-                            definition.AddProperty(currentProperty);
+                            definition.AddProperty(new WaterFlowFMProperty(propDef, mduPropertyValue));
                         }
 
                         if (!string.IsNullOrEmpty(mduPropertyValue))
                         {
+                            WaterFlowFMProperty property = definition.GetModelProperty(mduPropertyLowerCase);
                             if (mduPropertyValue.EndsWith(@"\"))
                             {
-                                mduPropertyValue = GetMduPropertyMultipleLineValueRecursive(mduPropertyName,
-                                                                                            mduPropertyValue,
-                                                                                            ref line,
-                                                                                            ref readNextLine);
+                                mduPropertyValue =
+                                    GetMduPropertyMultipleLineValueRecursive(
+                                        mduPropertyName, mduPropertyValue, ref line, ref readNextLine);
                             }
 
-                            try
-                            {
-                                currentProperty.SetValueAsString(mduPropertyValue);
-                            }
-                            catch (FormatException e) when (e.InnerException is ArgumentNullException || e.InnerException is FormatException)
-                            {
-                                logHandler.ReportWarningFormat(Resources.MduFile_ReadProperties_An_unsupported_option_for_0_has_been_detected,
-                                                               currentProperty.PropertyDefinition.Caption);
-                            }
-
-                            if (mduComments.ContainsKey(mduPropertyName) && !isKnownProperty)
-                            {
-                                currentProperty.PropertyDefinition.Description = mduComments[mduPropertyName];
-                            }
+                            property.SetValueAsString(mduPropertyValue);
                         }
                     }
 
@@ -1410,7 +1357,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
             finally
             {
-                logHandler.LogReport();
                 CloseInputFile();
             }
 
@@ -1430,17 +1376,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         {
             if (condition)
             {
-                int commentStart = line.IndexOf('#') + 1;
+                int commentStart = line.IndexOf('#');
                 if (commentStart > 0)
                 {
-                    string comment = isMultipleLine
-                                         ? (mduComments.ContainsKey(mduPropertyName)
-                                                ? mduComments[mduPropertyName]
-                                                : "#")
-                                           + line.Substring(commentStart)
-                                         : line.Substring(commentStart);
-
-                    mduComments[mduPropertyName] = comment.Trim();
+                    mduComments[mduPropertyName] = isMultipleLine
+                                                       ? (mduComments.ContainsKey(mduPropertyName)
+                                                              ? mduComments[mduPropertyName]
+                                                              : "#")
+                                                         + line.Substring(commentStart + 1)
+                                                       : line.Substring(commentStart);
                 }
             }
         }
@@ -1469,7 +1413,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 return mduPropertyValue;
             }
 
-            mduPropertyValue = mduPropertyValue.Replace("\\", string.Empty).Trim();
+            mduPropertyValue = mduPropertyValue.Replace('\\', ' ');
 
             /* Check if it's a new property or a new line value */
             string[] lineValueWithComment = line.Split('#');
@@ -1486,11 +1430,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
             if (!string.IsNullOrEmpty(lineValue))
             {
-                string multipleLineValues = GetMduPropertyMultipleLineValueRecursive(mduPropertyName,
-                                                                                     lineValue.Trim(),
-                                                                                     ref line,
-                                                                                     ref readNextLine);
-                mduPropertyValue += $" {multipleLineValues}";
+                string multipleLineValues =
+                    GetMduPropertyMultipleLineValueRecursive(mduPropertyName, lineValue.Trim(), ref line,
+                                                             ref readNextLine);
+                mduPropertyValue += multipleLineValues;
             }
 
             return mduPropertyValue;

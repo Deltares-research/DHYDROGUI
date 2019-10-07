@@ -616,15 +616,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to An unsupported option for *{0}* has been detected and the default value will be used..
-        /// </summary>
-        public static string MduFile_ReadProperties_An_unsupported_option_for_0_has_been_detected {
-            get {
-                return ResourceManager.GetString("MduFile_ReadProperties_An_unsupported_option_for_0_has_been_detected", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to File at location &apos;{0}&apos; is referenced in structures file &apos;{1}&apos;, but does not exist.
         ///File import of structures file &apos;{1}&apos; has failed..
         /// </summary>
@@ -662,15 +653,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         public static string MduFileHelper_GetUniqueFilePathsForWindows_File_Already_Exists {
             get {
                 return ResourceManager.GetString("MduFileHelper_GetUniqueFilePathsForWindows_File_Already_Exists", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Sediment model numbers 1, 2 &amp; 3 are not supported..
-        /// </summary>
-        public static string MorphologyFile_Read_Sediment_model_numbers_1_2_3_are_not_supported_ {
-            get {
-                return ResourceManager.GetString("MorphologyFile_Read_Sediment_model_numbers_1_2_3_are_not_supported_", resourceCulture);
             }
         }
         

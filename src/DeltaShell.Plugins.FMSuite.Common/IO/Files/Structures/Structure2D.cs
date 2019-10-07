@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Utils.Reflection;
-using DeltaShell.NGHS.IO;
+using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 
 namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures

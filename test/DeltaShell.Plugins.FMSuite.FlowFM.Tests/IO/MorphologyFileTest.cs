@@ -20,7 +20,6 @@ using log4net.Core;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 {
@@ -28,43 +27,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
     [Category(TestCategory.DataAccess)]
     public class MorphologyFileTest
     {
-        [Test]
-        [TestCase("1")]
-        [TestCase("2")]
-        [TestCase("3")]
-        public void Read_WithSedimentModelNumberBetween0And4_ThenThrowFormatException(string sedimentModelNumber)
-        {
-            // Setup
-            var modelDefinition = new WaterFlowFMModelDefinition();
-            modelDefinition.GetModelProperty(KnownProperties.SedimentModelNumber).SetValueAsString(sedimentModelNumber);
-
-            // Call
-            void Call() => MorphologyFile.Read(Arg<string>.Is.Anything, modelDefinition);
-
-            // Assert
-            Assert.Throws<FormatException>(
-                Call, "Sediment model numbers 1, 2 & 3 are not supported.");
-        }
-
-        [Test]
-        [TestCase("0", "C:/myFile.mor", false)]
-        [TestCase("0", "", false)]
-        [TestCase("4", "C:/myFile.mor", true)]
-        [TestCase("4", "", false)]
-        public void Read_WithSedimentModelNumberAndMorFile_ThenUseMorphologySedimentHasExpectedValue(string sedimentModelNumber, string morFilePath, bool expectedUseMorSed)
-        {
-            // Setup
-            var modelDefinition = new WaterFlowFMModelDefinition();
-            modelDefinition.GetModelProperty(KnownProperties.MorFile).SetValueAsString(morFilePath);
-            modelDefinition.GetModelProperty(KnownProperties.SedimentModelNumber).SetValueAsString(sedimentModelNumber);
-
-            // Call
-            MorphologyFile.Read(Arg<string>.Is.Anything, modelDefinition);
-
-            // Assert
-            Assert.That(modelDefinition.UseMorphologySediment, Is.EqualTo(expectedUseMorSed));
-        }
-
         [Test]
         public void GivenAnMduWithMorphologyFileWithUnknownProperties_WhenReadingAndWriting_ThenTheCorrectPropertiesAreCreatedAndCorrectlyWrittenToTheFile()
         {
@@ -136,6 +98,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.AreEqual(0, propertiesMorphologyCategory.Count);
         }
 
+
+        // 
         [Test]
         [Category(TestCategory.DataAccess)]
         public void GivenAMorphologyFileWithUnknownProperties_WhenReading_ThenTheCorrectWarningsAreGiven()
@@ -145,7 +109,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 TestHelper.GetTestFilePath(@"sedmor\FlowFMCustomProperties\FlowFMCustomPropertiesSedMor.mdu");
             var modelDefinition = new WaterFlowFMModelDefinition();
             modelDefinition.GetModelProperty(KnownProperties.MorFile).Value = "MorCustomProperties.mor";
-            modelDefinition.GetModelProperty(KnownProperties.SedimentModelNumber).SetValueAsString("4");
 
             // When
             List<string> logMessages = TestHelper.GetAllRenderedMessages(
@@ -368,7 +331,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 var newDefinition = new WaterFlowFMModelDefinition();
                 newDefinition.GetModelProperty(KnownProperties.MorFile).Value = morFile;
-                newDefinition.GetModelProperty(KnownProperties.SedimentModelNumber).SetValueAsString("4");
                 MorphologyFile.Read(morFile, newDefinition);
                 var readBoundaryConditionSet = newDefinition.BoundaryConditionSets.FirstOrDefault();
                 Assert.IsNotNull(readBoundaryConditionSet);

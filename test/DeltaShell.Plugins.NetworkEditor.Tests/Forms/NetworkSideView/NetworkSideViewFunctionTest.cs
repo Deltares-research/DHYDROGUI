@@ -51,6 +51,25 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
         }
 
         [Test]
+        [Ignore]
+        public void SideViewFunctionCanGoAndComeBack()
+        {
+            //NOT implemented might cause lot's of other troubles (structures in sideview for example) 
+            //needles complex since use case is very limited.
+            //we create a route on brach1 from 0..80 and back to 0
+            var route = RouteHelper.CreateRoute(new[]
+                                        {
+                                            new NetworkLocation(firstBranch, 0), new NetworkLocation(firstBranch, 80),
+                                            new NetworkLocation(firstBranch, 10)
+                                        });
+            
+            //now we expect
+            var offsets = new[] { 0, 20, 80, 140, 150 };
+            var values = new[] { 10, 30, 90, 30, 20 };
+            NetworkSideViewFunctionTestHelper.AssertRouteIsCorrect(coverage, route,offsets,values);
+
+        }
+        [Test]
         public void PositiveRoute()
         {
             Network network = NetworkSideViewFunctionTestHelper.GetNetwork();
@@ -151,7 +170,21 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
 
             NetworkSideViewFunctionTestHelper.AssertMinMax(source, route,400,300);
         }
-        
+
+        [Test]
+        [Ignore("Not implemented. Because veeery slow evaluate :(")]
+        public void MinMaxOnATimeDependentCoverageCanUseInterpolation()
+        {
+            IHydroNetwork network = NetworkSideViewFunctionTestHelper.CreateNetwork();
+            var coverage = NetworkSideViewTestHelper.CreateTimeDependendWaterLevelCoverage(network, 3);
+            //just like in the application add a filter and then get min / max
+            coverage = coverage.AddTimeFilter(coverage.Time.Values[1]);
+            var route = RouteHelper.CreateRoute(new NetworkLocation(network.Branches[0], 5),
+                                                new NetworkLocation(network.Branches[0], 15));
+            
+            NetworkSideViewFunctionTestHelper.AssertMinMax(coverage,route,19.5,16.5);
+        }
+
         [Test]
         public void GetMinMaxForReversedRoute()
         {

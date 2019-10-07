@@ -37,40 +37,40 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="BasicModelInterface">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.45880-SIGNED\lib\net461\DeltaShell\BasicModelInterface.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.45880\lib\net461\DeltaShell\BasicModelInterface.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Functions">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.45880-SIGNED\lib\net461\DeltaShell\DelftTools.Functions.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.45880\lib\net461\DeltaShell\DelftTools.Functions.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Shell.Core, Version=1.4.0.45880, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.45880-SIGNED\lib\net461\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.45880\lib\net461\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Units">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.45880-SIGNED\lib\net461\DeltaShell\DelftTools.Units.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.45880\lib\net461\DeltaShell\DelftTools.Units.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Utils">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.45880-SIGNED\lib\net461\DeltaShell\DelftTools.Utils.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.45880\lib\net461\DeltaShell\DelftTools.Utils.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DeltaShell.Plugins.SharpMapGis">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.45880-SIGNED\lib\net461\plugins\DeltaShell.Plugins.SharpMapGis\DeltaShell.Plugins.SharpMapGis.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.45880\lib\net461\plugins\DeltaShell.Plugins.SharpMapGis\DeltaShell.Plugins.SharpMapGis.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="GeoAPI">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.45880-SIGNED\lib\net461\DeltaShell\GeoAPI.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.45880\lib\net461\DeltaShell\GeoAPI.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="GeoAPI.CoordinateSystems">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.45880-SIGNED\lib\net461\DeltaShell\GeoAPI.CoordinateSystems.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.45880\lib\net461\DeltaShell\GeoAPI.CoordinateSystems.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="GeoAPI.Extensions">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.45880-SIGNED\lib\net461\DeltaShell\GeoAPI.Extensions.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.45880\lib\net461\DeltaShell\GeoAPI.Extensions.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
@@ -82,11 +82,11 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="NetTopologySuite">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.45880-SIGNED\lib\net461\DeltaShell\NetTopologySuite.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.45880\lib\net461\DeltaShell\NetTopologySuite.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="NetTopologySuite.Extensions">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.45880-SIGNED\lib\net461\DeltaShell\NetTopologySuite.Extensions.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.45880\lib\net461\DeltaShell\NetTopologySuite.Extensions.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="PostSharp, Version=5.0.55.0, Culture=neutral, PublicKeyToken=b13fd38b8f9c99d7, processorArchitecture=MSIL">
@@ -94,36 +94,94 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="ProtoBufRemote">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.45880-SIGNED\lib\net461\DeltaShell\ProtoBufRemote.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.45880\lib\net461\DeltaShell\ProtoBufRemote.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="QuickGraph">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.45880-SIGNED\lib\net461\DeltaShell\QuickGraph.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.45880\lib\net461\DeltaShell\QuickGraph.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="SharpMap">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.45880-SIGNED\lib\net461\DeltaShell\SharpMap.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.45880\lib\net461\DeltaShell\SharpMap.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="SharpMap.Extensions">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.45880-SIGNED\lib\net461\DeltaShell\SharpMap.Extensions.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.45880\lib\net461\DeltaShell\SharpMap.Extensions.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\AssemblyInfo.Version.FM.cs">
       <Link>Properties\AssemblyInfo.Version.FM.cs</Link>
     </Compile>
-    <Compile Include="Adapters\UGridToUnstructuredGridAdapter.cs" />
+    <Compile Include="Adaptors\UGridToUnstructuredGridAdaptor.cs" />
+    <Compile Include="DelftBcReader.cs" />
+    <Compile Include="DelftBcWriter.cs" />
     <Compile Include="DelftIniReader.cs" />
     <Compile Include="DelftIniWriter.cs" />
     <Compile Include="FileConverters\DelftXmlFileConverter.cs" />
     <Compile Include="FileBasedUtils.cs" />
+    <Compile Include="FileReaders\Definition\DefinitionReader.cs" />
+    <Compile Include="FileReaders\DelftBcFileParser.cs" />
     <Compile Include="FileReaders\DelftConfigXmlFileParser.cs" />
     <Compile Include="FileReaders\FileReadingException.cs" />
+    <Compile Include="FileReaders\DelftIniFileParser.cs" />
+    <Compile Include="FileWriters\Boundary\BoundaryFileWriter.cs" />
+    <Compile Include="FileWriters\Boundary\BoundaryRegion.cs" />
+    <Compile Include="FileWriters\Boundary\DefinitionGeneratorBoundary.cs" />
+    <Compile Include="FileWriters\CrossSectionDefinition\DefinitionGeneratorCrossSectionDefinition.cs" />
+    <Compile Include="FileWriters\CrossSectionDefinition\DefinitionGeneratorCrossSectionDefinitionArch.cs" />
+    <Compile Include="FileWriters\CrossSectionDefinition\DefinitionGeneratorCrossSectionDefinitionCircle.cs" />
+    <Compile Include="FileWriters\CrossSectionDefinition\DefinitionGeneratorCrossSectionDefinitionCunette.cs" />
+    <Compile Include="FileWriters\CrossSectionDefinition\DefinitionGeneratorCrossSectionDefinitionEgg.cs" />
+    <Compile Include="FileWriters\CrossSectionDefinition\DefinitionGeneratorCrossSectionDefinitionElliptical.cs" />
+    <Compile Include="FileWriters\CrossSectionDefinition\DefinitionGeneratorCrossSectionDefinitionRectangle.cs" />
+    <Compile Include="FileWriters\CrossSectionDefinition\DefinitionGeneratorCrossSectionDefinitionStandard.cs" />
+    <Compile Include="FileWriters\CrossSectionDefinition\DefinitionGeneratorCrossSectionDefinitionSteelCunette.cs" />
+    <Compile Include="FileWriters\CrossSectionDefinition\DefinitionGeneratorCrossSectionDefinitionTrapezium.cs" />
+    <Compile Include="FileWriters\CrossSectionDefinition\DefinitionGeneratorCrossSectionDefinitionXyz.cs" />
+    <Compile Include="FileWriters\CrossSectionDefinition\DefinitionGeneratorCrossSectionDefinitionYz.cs" />
+    <Compile Include="FileWriters\CrossSectionDefinition\DefinitionGeneratorCrossSectionDefinitionZw.cs" />
+    <Compile Include="FileWriters\CrossSectionDefinition\DefinitionRegion.cs" />
+    <Compile Include="FileWriters\DefinitionGeneratorFactory.cs" />
+    <Compile Include="FileWriters\FileWritingException.cs" />
+    <Compile Include="FileWriters\General\GeneralRegion.cs" />
+    <Compile Include="FileWriters\General\GeneralRegionGenerator.cs" />
+    <Compile Include="FileWriters\IniFileWriter.cs" />
+    <Compile Include="FileWriters\Location\DefinitionGeneratorCrossSectionLocation.cs" />
+    <Compile Include="FileWriters\Location\DefinitionGeneratorLateralSourceLocation.cs" />
+    <Compile Include="FileWriters\Location\DefinitionGeneratorLocation.cs" />
+    <Compile Include="FileWriters\Location\LocationFileWriter.cs" />
+    <Compile Include="FileWriters\Location\LocationRegion.cs" />
+    <Compile Include="FileWriters\Network\NetworkAndGridWriter.cs" />
+    <Compile Include="FileWriters\Network\NetworkDefinitionRegion.cs" />
+    <Compile Include="FileWriters\Retention\RetentionFileWriter.cs" />
+    <Compile Include="FileWriters\Retention\RetentionRegion.cs" />
+    <Compile Include="FileWriters\SpatialData\SpatialDataFileNames.cs" />
+    <Compile Include="FileWriters\SpatialData\SpatialDataFileWriter.cs" />
+    <Compile Include="FileWriters\SpatialData\SpatialDataQuantity.cs" />
+    <Compile Include="FileWriters\SpatialData\SpatialDataRegion.cs" />
+    <Compile Include="FileWriters\Structure\CompoundStructureInfo.cs" />
+    <Compile Include="FileWriters\Structure\DefinitionGeneratorStructure.cs" />
+    <Compile Include="FileWriters\Structure\DefinitionGeneratorStructureAdvancedWeir.cs" />
+    <Compile Include="FileWriters\Structure\DefinitionGeneratorStructureBridge.cs" />
+    <Compile Include="FileWriters\Structure\DefinitionGeneratorStructureBridgePillar.cs" />
+    <Compile Include="FileWriters\Structure\DefinitionGeneratorStructureBridgeStandard.cs" />
+    <Compile Include="FileWriters\Structure\DefinitionGeneratorStructureCulvert.cs" />
+    <Compile Include="FileWriters\Structure\DefinitionGeneratorStructureExtraResistance.cs" />
+    <Compile Include="FileWriters\Structure\DefinitionGeneratorStructureGeneralStructure.cs" />
+    <Compile Include="FileWriters\Structure\DefinitionGeneratorStructureInvertedSiphon.cs" />
+    <Compile Include="FileWriters\Structure\DefinitionGeneratorStructureOrifice.cs" />
+    <Compile Include="FileWriters\Structure\DefinitionGeneratorStructurePump.cs" />
+    <Compile Include="FileWriters\Structure\DefinitionGeneratorStructureRiverWeir.cs" />
+    <Compile Include="FileWriters\Structure\DefinitionGeneratorStructureSiphon.cs" />
+    <Compile Include="FileWriters\Structure\DefinitionGeneratorStructureUniversalWeir.cs" />
+    <Compile Include="FileWriters\Structure\DefinitionGeneratorStructureWeir.cs" />
+    <Compile Include="FileWriters\Structure\StructureRegion.cs" />
     <Compile Include="FunctionStores\MapHisFileMetaData.cs" />
     <Compile Include="FunctionStores\MapHisFileReader.cs" />
     <Compile Include="FunctionStores\ReadOnlyMapHisFileFunctionStore.cs" />
@@ -152,6 +210,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="SalinityRegion.cs" />
     <Compile Include="UgridGlobalMetaDataToProtoConverter.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -179,7 +238,9 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="FileReaders\ConfigXml\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>
@@ -192,8 +253,8 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\PostSharp.5.0.55\build\PostSharp.props'))" />
     <Error Condition="!Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\PostSharp.5.0.55\build\PostSharp.targets'))" />
-    <Error Condition="!Exists('..\..\packages\DeltaShell.Framework.1.4.0.45880-SIGNED\build\net461\DeltaShell.Framework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DeltaShell.Framework.1.4.0.45880-SIGNED\build\net461\DeltaShell.Framework.targets'))" />
+    <Error Condition="!Exists('..\..\packages\DeltaShell.Framework.1.4.0.45880\build\net461\DeltaShell.Framework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DeltaShell.Framework.1.4.0.45880\build\net461\DeltaShell.Framework.targets'))" />
   </Target>
   <Import Project="..\..\packages\PostSharp.5.0.55\build\PostSharp.targets" Condition="Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.targets')" />
-  <Import Project="..\..\packages\DeltaShell.Framework.1.4.0.45880-SIGNED\build\net461\DeltaShell.Framework.targets" Condition="Exists('..\..\packages\DeltaShell.Framework.1.4.0.45880-SIGNED\build\net461\DeltaShell.Framework.targets')" />
+  <Import Project="..\..\packages\DeltaShell.Framework.1.4.0.45880\build\net461\DeltaShell.Framework.targets" Condition="Exists('..\..\packages\DeltaShell.Framework.1.4.0.45880\build\net461\DeltaShell.Framework.targets')" />
 </Project>

@@ -81,7 +81,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         public const string MorFile = "MorFile";
         public const string BcmFile = "BcFil";
         public const string SedFile = "SedFile";
-        public const string SedimentModelNumber = "Sedimentmodelnr";
         public const string BedlevType = "bedlevtype";
         public const string MapFormat = "MapFormat";
         public const string RenumberFlowNodes = "RenumberFlowNodes";

@@ -8,30 +8,33 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
 {
     public class ModelSchemaCsvFile : FMSuiteFileBase
     {
-        private const int descriptionIndex = 15;
-        private const int unitIndex = 16;
+        public const string DefaultGUIGroupID = "misc";
+        public const string DefaultGUIGroupCaption = "Miscellaneous";
+        private const int DescriptionIndex = 15;
+        private const int UnitIndex = 16;
 
         /// <summary>
-        /// Reads <see cref="ModelPropertyDefinition"/> objects from csv and returns them in <see cref="ModelSchema{TDef}"/> object.
+        /// Method for reading the csv's and creating the corresponding model schema with the property definitions.
         /// </summary>
-        /// <typeparam name="TDef">The type of <see cref="ModelPropertyDefinition"/>.</typeparam>
-        /// <param name="filePath">The absolute path to the file.</param>
-        /// <param name="fileGroupName">Name of the file group.</param>
-        /// <returns>A <see cref="ModelSchema{TDef}"/> containing data read from the file.</returns>
-        /// <exception cref="FormatException">Thrown when the file format does not comply with the expected file format.</exception>
-        public ModelSchema<TDef> ReadModelSchema<TDef>(string filePath, string fileGroupName)
+        /// <typeparam name="TDef"> The type of the definition. </typeparam>
+        /// <param name="propertiesDefinitionFile"> The properties definition file. </param>
+        /// <param name="fileGroupName"> Name of the file group. </param>
+        /// <returns> </returns>
+        /// <exception cref="System.FormatException">
+        /// </exception>
+        public ModelSchema<TDef> ReadModelSchema<TDef>(string propertiesDefinitionFile, string fileGroupName)
             where TDef : ModelPropertyDefinition, new()
         {
             var schema = new ModelSchema<TDef>();
 
-            OpenInputFile(filePath);
+            OpenInputFile(propertiesDefinitionFile);
             try
             {
                 string line = GetNextLine();
                 if (line == null || !line.StartsWith("GUIGroups"))
                 {
                     throw new FormatException(string.Format("Expectation GUIGroups on line {0} of file {1}", LineNumber,
-                                                            filePath));
+                                                            propertiesDefinitionFile));
                 }
 
                 // GUI Groups
@@ -53,7 +56,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
                 if (line == null || !line.StartsWith(fileGroupName))
                 {
                     throw new FormatException(string.Format("Expectation GUIGroups on line {0} of file {1}", LineNumber,
-                                                            filePath));
+                                                            propertiesDefinitionFile));
                 }
 
                 // Mdu Groups
@@ -91,7 +94,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
                     then that expression will not be split.
                      */
                     List<string> lineFields = regexRule.Split(line).Select(lf => lf.Trim()).ToList();
-                    if (lineFields.Count < descriptionIndex
+                    if (lineFields.Count < DescriptionIndex
                         || lineFields.All(string.IsNullOrEmpty))
                     {
                         // todo: report
@@ -113,11 +116,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
                     string docSection = lineFields[12];
                     string fromRevString = lineFields[13];
                     string toRevString = lineFields[14];
-                    string description = lineFields.ElementAtOrDefault(descriptionIndex) != null
-                                             ? lineFields[descriptionIndex].Trim('"')
+                    string description = lineFields.ElementAtOrDefault(DescriptionIndex) != null
+                                             ? lineFields[DescriptionIndex].Trim('"')
                                              : string.Empty;
-                    string unit = lineFields.ElementAtOrDefault(unitIndex) != null
-                                      ? lineFields[unitIndex]
+                    string unit = lineFields.ElementAtOrDefault(UnitIndex) != null
+                                      ? lineFields[UnitIndex]
                                       : string.Empty;
 
                     string defaultValueDependentOn = null;
@@ -136,13 +139,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
                     ParseRevisions(fromRevString, toRevString, out fromRev, out toRev);
 
                     Type dataType = FMParser.GetClrType(mduPropertyName, typeField, ref captionField,
-                                                        filePath, LineNumber);
+                                                        propertiesDefinitionFile, LineNumber);
 
-                    string guiGroupId = string.IsNullOrEmpty(guiGroupName) ? "misc" : guiGroupName;
+                    string guiGroupId = string.IsNullOrEmpty(guiGroupName) ? DefaultGUIGroupID : guiGroupName;
                     if (!schema.GuiPropertyGroups.ContainsKey(guiGroupId))
                     {
                         throw new FormatException(string.Format("Invalid group id \"{0}\" on line {1} of file {2}",
-                                                                guiGroupId, LineNumber, filePath));
+                                                                guiGroupId, LineNumber, propertiesDefinitionFile));
                     }
 
                     if (string.IsNullOrEmpty(captionField))
@@ -156,9 +159,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
                     {
                         Category = propertyGroup.Name,
                         FileCategoryName = mduGroupName,
-                        FilePropertyName = mduPropertyName.Trim('"'),
+                        FilePropertyName = mduPropertyName,
                         SubCategory = subCategoryField,
-                        Caption = captionField.Trim('"'),
+                        Caption = captionField,
                         DataType = dataType,
                         DefaultValueAsString = defaultField,
                         MultipleDefaultValuesAvailable = false,

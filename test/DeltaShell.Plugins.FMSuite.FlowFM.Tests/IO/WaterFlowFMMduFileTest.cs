@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
@@ -65,7 +64,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 foreach (var prop in modelDefinition.KnownWriteOutputSnappedFeatures)
                 {
-                    WaterFlowFMMduFileTestHelper.AssertContainsMduLine(readAllText, prop, "1");
+                    var expectedText = String.Format("{0,-18}= {1,-20}", prop, 1).Trim();
+                    Assert.IsTrue(readAllText.Contains(expectedText), "Expected: {0} not found in: {1}", expectedText, readAllText);
                 }
             }
             finally
@@ -107,8 +107,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 var mduFile = new MduFile();
                 var modelDefinition = new WaterFlowFMModelDefinition();
                 var allFixedWeirsAndCorrespondingProperties = new Dictionary<FixedWeir, ModelFeatureCoordinateData<FixedWeir>>();
-
+                var property = AddCustomMultipleFilePropertyToModelDefinition(modelDefinition, propertyName, fileCategoryName);
+               
+                //Read
                 mduFile.Read(mduFilePath, modelDefinition, new HydroArea(), allFixedWeirsAndCorrespondingProperties);
+                Assert.AreEqual(expectedValues, property.GetValueAsString());
 
                 //Write
                 var mduFileWriteConfig = new MduFileWriteConfig
@@ -118,12 +121,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 };
 
                 mduFile.WriteProperties(mduFilePath, 
-                                        modelDefinition.Properties,
+                                        modelDefinition.Properties, 
                                         mduFileWriteConfig);
-
                 var readAllText = File.ReadAllText(mduFilePath);
 
-                WaterFlowFMMduFileTestHelper.AssertContainsMduLine(readAllText, propertyName, expectedValues, expectedOutputComments);
+                var expectedText = String.Format("{0,-18}= {1,-20}{2}", propertyName, expectedValues, expectedOutputComments).Trim();
+                Assert.IsTrue( readAllText.Contains(expectedText), "Expected: {0} not found in: {1}", expectedText, readAllText );
             }
             finally 
             {
@@ -202,7 +205,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 Assert.AreEqual(group1NameWE, defaultFeature.GroupName);
                 Assert.IsTrue(File.Exists(mduFilePath));
                 var readAllText = File.ReadAllText(mduFilePath);
-                WaterFlowFMMduFileTestHelper.AssertContainsMduLine(readAllText, "ObsFile", string.Join(" ", group1NameWE));
+                var expectedText = String.Format("{0,-18}= {1,-20}", "ObsFile", string.Join(" ", group1NameWE)).Trim();
+                Assert.IsTrue(readAllText.Contains(expectedText), "Expected {0} \n Generated: {1}", expectedText, readAllText);
                 Assert.IsTrue(File.Exists(fileObsPointsDefault));
                 Assert.IsTrue(File.Exists(fileObsPointsGroup1));
             }
@@ -338,7 +342,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             Assert.IsTrue(File.Exists(mduFilePath));
             var readAllText = File.ReadAllText(mduFilePath);
-            WaterFlowFMMduFileTestHelper.AssertContainsMduLine(readAllText, property.PropertyDefinition.MduPropertyName, "Test1 Test2");
+            var expectedTest = String.Format("{0,-18}= {1,-20}{2}", property.PropertyDefinition.MduPropertyName, "Test1 Test2", "").Trim();
+            Assert.IsTrue(readAllText.Contains(expectedTest));
 
             FileUtils.DeleteIfExists(mduFilePath);
         }
@@ -382,7 +387,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 Assert.IsTrue(File.Exists(mduFilePath));
                 var readAllText = File.ReadAllText(mduFilePath);
-                WaterFlowFMMduFileTestHelper.AssertContainsMduLine(readAllText, "ObsFile", string.Join(" ", defaultNameWE, group1NameWE, group2NameWE));
+                var expectedText = String.Format("{0,-18}= {1,-20}", "ObsFile", string.Join(" ", defaultNameWE, group1NameWE, group2NameWE)).Trim();
+                Assert.IsTrue(readAllText.Contains(expectedText), "Expected {0} \n Generated: {1}", expectedText, readAllText);
                 Assert.IsTrue(File.Exists(fileObsPointsDefault));
                 Assert.IsTrue(File.Exists(fileObsPointsGroup1));
                 Assert.IsTrue(File.Exists(fileObsPointsGroup2));
@@ -979,7 +985,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var dryPointsFileNameWithExtension = dryPointsGroupName + MduFile.DryPointExtension;
             var dryAreasFileNameWithExtension = dryAreasGroupName + MduFile.DryAreaExtension;
 
-            WaterFlowFMMduFileTestHelper.AssertContainsMduLine(readAllText, "DryPointsFile", dryPointsFileNameWithExtension + " " + dryAreasFileNameWithExtension);
+            var expectedDryPointsFileText = GetExpectedFileText("DryPointsFile", dryPointsFileNameWithExtension + " " + dryAreasFileNameWithExtension);
+
+            Assert.IsTrue(readAllText.Contains(expectedDryPointsFileText), "Expected {0} \n Generated: {1}", expectedDryPointsFileText, readAllText);
 
             Assert.IsTrue(File.Exists(Path.Combine(mduDir, dryPointsFileNameWithExtension)));
             Assert.IsTrue(File.Exists(Path.Combine(mduDir, dryAreasFileNameWithExtension)));
@@ -1053,11 +1061,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var landBoundariesFileNameWithExtension = landBoundariesGroupName + MduFile.LandBoundariesExtension;
             var structuresFileNameWithExtension = structureGroupName + MduFile.StructuresExtension;
 
-            WaterFlowFMMduFileTestHelper.AssertContainsMduLine(readAllText, modelDefinition.GetModelProperty(KnownProperties.ObsFile).PropertyDefinition.Caption, obsFileNameWithExtension);
-            WaterFlowFMMduFileTestHelper.AssertContainsMduLine(readAllText, modelDefinition.GetModelProperty(KnownProperties.EnclosureFile).PropertyDefinition.Caption, enclosureFileNameWithExtension);
-            WaterFlowFMMduFileTestHelper.AssertContainsMduLine(readAllText, modelDefinition.GetModelProperty(KnownProperties.DryPointsFile).PropertyDefinition.Caption, dryPointsFileNameWithExtension);
-            WaterFlowFMMduFileTestHelper.AssertContainsMduLine(readAllText, modelDefinition.GetModelProperty(KnownProperties.LandBoundaryFile).PropertyDefinition.Caption, landBoundariesFileNameWithExtension);
-            WaterFlowFMMduFileTestHelper.AssertContainsMduLine(readAllText, modelDefinition.GetModelProperty(KnownProperties.StructuresFile).PropertyDefinition.Caption, structuresFileNameWithExtension);
+            var expectedObsFileText = GetExpectedFileText(modelDefinition.GetModelProperty(KnownProperties.ObsFile).PropertyDefinition.Caption, obsFileNameWithExtension);
+            var expectedEnclosureFileText = GetExpectedFileText(modelDefinition.GetModelProperty(KnownProperties.EnclosureFile).PropertyDefinition.Caption, enclosureFileNameWithExtension);
+            var expectedDryPointsFileText = GetExpectedFileText(modelDefinition.GetModelProperty(KnownProperties.DryPointsFile).PropertyDefinition.Caption, dryPointsFileNameWithExtension);
+            var expectedLandBoundariesFileText = GetExpectedFileText(modelDefinition.GetModelProperty(KnownProperties.LandBoundaryFile).PropertyDefinition.Caption, landBoundariesFileNameWithExtension);
+            var expectedStructureFileText = GetExpectedFileText(modelDefinition.GetModelProperty(KnownProperties.StructuresFile).PropertyDefinition.Caption, structuresFileNameWithExtension);
+            
+            Assert.IsTrue(readAllText.Contains(expectedObsFileText), "Expected {0} \n Generated: {1}", expectedObsFileText, readAllText);
+            Assert.IsTrue(readAllText.Contains(expectedEnclosureFileText), "Expected {0} \n Generated: {1}", expectedEnclosureFileText, readAllText);
+            Assert.IsTrue(readAllText.Contains(expectedDryPointsFileText), "Expected {0} \n Generated: {1}", expectedDryPointsFileText, readAllText);
+            Assert.IsTrue(readAllText.Contains(expectedLandBoundariesFileText), "Expected {0} \n Generated: {1}", expectedLandBoundariesFileText, readAllText);
+            Assert.IsTrue(readAllText.Contains(expectedStructureFileText), "Expected {0} \n Generated: {1}", expectedStructureFileText, readAllText);
 
             Assert.IsTrue(File.Exists(Path.Combine(mduDir, obsFileNameWithExtension)));
             Assert.IsTrue(File.Exists(Path.Combine(mduDir, enclosureFileNameWithExtension)));
@@ -1106,10 +1120,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             var readAllText = File.ReadAllText(mduFilePath);
 
-            var expectedObsFileRegex = GetRegularExpressionForTextWithEmptyValue("ObsFile");
-            Assert.IsTrue(expectedObsFileRegex.IsMatch(readAllText), "File did not contain expected text.");
+            var expectedObsFileText = GetExpectedFileTextWithEmptyValue("ObsFile");
+            var expectedDryPointsFileText = GetExpectedFileText("DryPointsFile", dryPointsFileNameWithExtension);
 
-            WaterFlowFMMduFileTestHelper.AssertContainsMduLine(readAllText, "DryPointsFile", dryPointsFileNameWithExtension);
+            Assert.IsTrue(readAllText.Contains(expectedObsFileText), "Expected {0} \n Generated: {1}", expectedObsFileText, readAllText);
+            Assert.IsTrue(readAllText.Contains(expectedDryPointsFileText), "Expected {0} \n Generated: {1}", expectedDryPointsFileText, readAllText);
+
             Assert.IsFalse(File.Exists(Path.Combine(mduDir, obsFileNameWithExtension)));
             Assert.IsTrue(File.Exists(Path.Combine(mduDir, dryPointsFileNameWithExtension)));
 
@@ -1146,8 +1162,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             mduFile.Write(mduFilePath, modelDefinition, area, allFixedWeirsAndCorrespondingProperties.Values);
 
             var readAllText = File.ReadAllText(mduFilePath);
-            Regex expectedThinDamFileRegex = GetRegularExpressionForTextWithEmptyValue("ThinDamFile");
-            Assert.IsTrue(expectedThinDamFileRegex.IsMatch(readAllText), "File did not contain expected text.");
+            var expectedThinDamFileText = GetExpectedFileTextWithEmptyValue("ThinDamFile");
+            Assert.IsTrue(readAllText.Contains(expectedThinDamFileText), "Expected {0} \n Generated: {1}", expectedThinDamFileText, readAllText);
 
             DeleteAllFilesAndFoldersInSubDirectory(new DirectoryInfo(Path.GetDirectoryName(Path.Combine(mduDir, initialGroupName))));
         }
@@ -1581,9 +1597,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             }
         }
 
-        private static Regex GetRegularExpressionForTextWithEmptyValue(string mduPropertyName)
+        private static string GetExpectedFileText(string mduPropertyName, string fileNameWithExtension)
         {
-            return new Regex($@"{mduPropertyName}\s*=\s*\#");
+            return string.Format("{0,-18}= {1,-20}", mduPropertyName, string.Join(" ", fileNameWithExtension)).Trim();
+        }
+
+        private static string GetExpectedFileTextWithEmptyValue(string mduPropertyName)
+        {
+            return string.Format("{0,-18}=\r\n", mduPropertyName);
         }
 
         #endregion

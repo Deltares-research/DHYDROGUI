@@ -4,14 +4,11 @@ using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
-using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures;
-using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
-using GeoAPI.Extensions.Feature;
 using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
@@ -20,26 +17,102 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(WaterFlowFMModelHydroAreaExtensions));
 
-        public static IEnumerable<IFeature> GetFeaturesFromCategory(this HydroArea area, string category)
+        #region RemoveDuplicateFeatures
+
+        public static void RemoveDuplicateFeatures(object features, IGroupableFeature addedFeature, string modelName)
         {
-            switch (category)
+            if (addedFeature == null)
             {
-                case KnownFeatureCategories.Pumps:
-                    return area.Pumps;
-                case KnownFeatureCategories.GeneralStructures:
-                    return area.Weirs.Where(w => w.WeirFormula is GeneralStructureWeirFormula);
-                case KnownFeatureCategories.Gates:
-                    return area.Weirs.Where(w => w.WeirFormula is GatedWeirFormula);
-                case KnownFeatureCategories.Weirs:
-                    return area.Weirs.Where(w => w.WeirFormula is SimpleWeirFormula);
-                case KnownFeatureCategories.Observations:
-                    return area.ObservationPoints;
-                case KnownFeatureCategories.CrossSections:
-                    return area.ObservationCrossSections;
-                default:
-                    return Enumerable.Empty<IFeature>();
+                return;
+            }
+
+            var landBoundary = addedFeature as LandBoundary2D;
+            if (landBoundary != null)
+            {
+                RemoveAddedFeatureIfDuplicate(features, landBoundary, modelName);
+                return;
+            }
+
+            var polygon = addedFeature as GroupableFeature2DPolygon;
+            if (polygon != null)
+            {
+                RemoveAddedFeatureIfDuplicate(features, polygon, modelName);
+                return;
+            }
+
+            var thinDam = addedFeature as ThinDam2D;
+            if (thinDam != null)
+            {
+                RemoveAddedFeatureIfDuplicate(features, thinDam, modelName);
+                return;
+            }
+
+            var fixedWeir = addedFeature as FixedWeir;
+            if (fixedWeir != null)
+            {
+                RemoveAddedFeatureIfDuplicate(features, fixedWeir, modelName);
+                return;
+            }
+
+            var point = addedFeature as GroupableFeature2DPoint;
+            if (point != null)
+            {
+                RemoveAddedFeatureIfDuplicate(features, point, modelName);
+                return;
+            }
+
+            var crossSection = addedFeature as ObservationCrossSection2D;
+            if (crossSection != null)
+            {
+                RemoveAddedFeatureIfDuplicate(features, crossSection, modelName);
+                return;
+            }
+
+            var pump = addedFeature as Pump2D;
+            if (pump != null)
+            {
+                RemoveAddedFeatureIfDuplicate(features, pump, modelName);
+                return;
+            }
+
+            var weir = addedFeature as Weir2D;
+            if (weir != null)
+            {
+                RemoveAddedFeatureIfDuplicate(features, weir, modelName);
+                return;
+            }
+
+            var bridgePillar = addedFeature as BridgePillar;
+            if (bridgePillar != null)
+            {
+                RemoveAddedFeatureIfDuplicate(features, bridgePillar, modelName);
             }
         }
+
+        private static void RemoveAddedFeatureIfDuplicate<T>(object features, T addedFeature, string modelName)
+            where T : IGroupableFeature, INameable
+        {
+            var featureList = features as EventedList<T>;
+            if (featureList != null)
+            {
+                RemoveNewObjectFromListIfDuplicate(featureList, addedFeature, modelName);
+            }
+        }
+
+        private static void RemoveNewObjectFromListIfDuplicate<T>(EventedList<T> features, T addedFeature,
+                                                                  string modelName)
+            where T : IGroupableFeature, INameable
+        {
+            if (features.Count(f => f.Name == addedFeature.Name && f.GroupName == addedFeature.GroupName) > 1)
+            {
+                features.RemoveAt(features.Count - 1);
+                Log.WarnFormat(
+                    "Feature with group name '{0}'and name '{1}' has not been added to model '{2}', because a feature with the same properties already exists."
+                    , addedFeature.GroupName, addedFeature.Name, modelName);
+            }
+        }
+
+        #endregion
 
         public static void UpdateGroupName(this IGroupableFeature groupableFeature, WaterFlowFMModel model)
         {

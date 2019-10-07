@@ -4,13 +4,9 @@ using System.Linq;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
-using DelftTools.Shell.Core.Workflow.DataItems.ValueConverters;
-using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Validation;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Validation;
-using GeoAPI.Extensions.Feature;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 {
@@ -47,24 +43,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         public virtual IDataItem GetDataItemByItemString(string itemString)
         {
-            string[] stringParts = itemString.Split('/');
-            string featureCategory = stringParts[0];
-            string featureName = stringParts[1];
-            string parameterName = stringParts[2];
-
-            IEnumerable<INameable> featuresFromCategory = Area.GetFeaturesFromCategory(featureCategory).OfType<INameable>();
-
-            var feature = (IFeature) featuresFromCategory.FirstOrDefault(f => f.Name.Equals(featureName));
-
-            IEnumerable<IDataItem> childDataItems = GetChildDataItems(feature);
-
-            IDataItem dataItem = childDataItems.FirstOrDefault(di => (di.ValueConverter as ParameterValueConverter)?
-                                                                     .ParameterName == parameterName);
-
-            return dataItem;
+            throw new NotImplementedException();
         }
-
-        
 
         public virtual string MpiCommunicatorString => "DFM_COMM_DFMWORLD";
 

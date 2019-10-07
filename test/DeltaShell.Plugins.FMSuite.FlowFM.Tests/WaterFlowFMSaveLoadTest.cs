@@ -1090,5 +1090,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             }
         }
+
+        [Test]
+        [TestCase(@"MorAndSedFile.mdu", true)]
+        [TestCase(@"MorFileAndNoSedFile.mdu", true)] 
+        [TestCase(@"NoMorFileAndSedFile.mdu", false)]
+        [TestCase(@"NoMorFileAndNoSedFile.mdu", false)]
+        public void LoadMduDeterminesIfUseMorSed(string mduTestPath, bool morSedEnabled)
+        {
+            /*
+             * We only set to True UseMorSed if the *.mor (morphology) file is present 
+             * In any other case we do not care.             
+             */
+            var testModelPath = Path.Combine(@"MorphologySediment_Models\SimpleModels\", mduTestPath);
+            var mduPath = TestHelper.GetTestFilePath(testModelPath);
+            mduPath = TestHelper.CreateLocalCopy(mduPath);
+
+            using (var model = new WaterFlowFMModel(mduPath))
+            {
+                Assert.AreEqual(morSedEnabled, model.UseMorSed);
+            }
+        }
     }
 }

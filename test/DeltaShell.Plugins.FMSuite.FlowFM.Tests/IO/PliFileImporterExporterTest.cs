@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
@@ -25,58 +24,12 @@ using DeltaShell.Plugins.SharpMapGis;
 using DeltaShell.Plugins.SharpMapGis.Gui;
 using NUnit.Framework;
 using Rhino.Mocks;
-using FmResources = DeltaShell.Plugins.FMSuite.FlowFM.Properties.Resources;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 {
     [TestFixture]
     public class PliFileImporterExporterTest 
     {
-        [Test]
-        public void Constructor_ExpectedValues()
-        {
-            var importer = new PliFileImporterExporter<FixedWeir, FixedWeir>();
-
-            Assert.That(importer.Category, Is.EqualTo("Feature geometries"));
-            Assert.IsEmpty(importer.Description);
-            Assert.That(importer.FileFilter, Is.EqualTo("Feature polyline files (*.pli)|*.pli|polyline-z files (*.pliz)|*.pliz"));
-            Assert.That(BitmapsAreEqual(importer.Image, FmResources.TextDocument));
-
-            Type[] expectedSourceTypes = 
-            {
-                typeof(FixedWeir),
-                typeof(IList<FixedWeir>)
-            };
-            Assert.That(importer.SourceTypes(), Is.EqualTo(expectedSourceTypes));
-
-            Type[] expectedSupportedItemTypes = 
-            {
-                typeof(IList<FixedWeir>)
-            };
-            Assert.That(importer.SupportedItemTypes, Is.EqualTo(expectedSupportedItemTypes));
-        }
-
-        private static bool BitmapsAreEqual(Bitmap bitmap1, Bitmap bitmap2)
-        {
-            if (bitmap1 == null || bitmap2 == null)
-                return false;
-            if (Equals(bitmap1, bitmap2))
-                return true;
-            if (!bitmap1.Size.Equals(bitmap2.Size) || !bitmap1.PixelFormat.Equals(bitmap2.PixelFormat))
-                return false;
-
-            for (var x = 0; x < bitmap1.Width; x++)
-            {
-                for (var y = 0; y < bitmap1.Height; y++)
-                {
-                    if (!bitmap1.GetPixel(x, y).Equals(bitmap2.GetPixel(x, y)))
-                        return false;
-                }
-            }
-
-            return true;
-        }
-
         [Test]
         [Category(TestCategory.Performance)]
         [Category(TestCategory.Slow)]
@@ -117,7 +70,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 gui.Application.Project.RootFolder.Add(model);
 
-                var importer = (PlizFileImporterExporter<FixedWeir, FixedWeir>) gui.Application.FileImporters.First(fi => fi is PlizFileImporterExporter<FixedWeir, FixedWeir>);
+                var importer = (PliFileImporterExporter<FixedWeir, FixedWeir>) gui.Application.FileImporters.First(fi => fi is PliFileImporterExporter<FixedWeir, FixedWeir>);
 
                 importer.ImportItem(TestHelper.GetTestFilePath("structures\\testBas2FM_fxw.pliz"), model.Area.FixedWeirs);
 

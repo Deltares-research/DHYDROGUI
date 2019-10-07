@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using DeltaShell.NGHS.IO.FileWriters.Location;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
@@ -24,7 +25,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         public void GivenADelftIniCategoryWithPropertiesInWrongCase_WhenReadingProperties_ThenCorrectPropertiesAreReturned()
         {
             // Given
-            var category = new DelftIniCategory("name");
+            var category = new DelftIniCategory(LocationRegion.Name.Key);
             category.AddProperty("PROPERTY1", "VALUE1");
             category.AddProperty("property2", "value2");
 

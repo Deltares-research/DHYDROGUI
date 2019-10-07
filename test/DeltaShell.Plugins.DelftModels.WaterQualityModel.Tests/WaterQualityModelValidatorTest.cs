@@ -469,10 +469,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         }
 
         [Test]
-        public void ModelWithObservationPointOutsideGridIsInvalid([Values(0.0 - double.Epsilon, 20.0 + double.Epsilon)] double x,
-                                                                  [Values(0.0 - double.Epsilon, 20.0 + double.Epsilon)] double y,
-                                                                  [Values(ObservationPointType.SinglePoint, ObservationPointType.Average, ObservationPointType.OneOnEachLayer)] ObservationPointType type)
+        [Combinatorial]
+        public void ModelWithObservationPointOutsideGridIsInvalid(
+            [Values(-12.34, 0.0 - 1e-6, 5.5, 20 + 1e-6, 56.78)] double x,
+            [Values(-12.34, 0.0 - 1e-6, 19.5, 20 + 1e-6, 56.78)] double y,
+            [Values(ObservationPointType.SinglePoint,
+                ObservationPointType.Average,
+                ObservationPointType.OneOnEachLayer)] ObservationPointType type)
         {
+            if (0.0 < x && x < 20.0 && 0.0 < y && y < 20.0)
+            {
+                Assert.Ignore("Test precondition: only perform test for points outside square grid.");
+            }
             // setup
             var hydroData = new TestHydroDataStub
             {
@@ -765,9 +773,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         }
 
         [Test]
-        public void ModelWithLoadOutsideGridIsInvalid([Values(0.0 - double.Epsilon, 20.0 + double.Epsilon)] double x,
-                                                      [Values(0.0 - double.Epsilon, 20.0 + double.Epsilon)] double y)
+        [Combinatorial]
+        public void ModelWithLoadOutsideGridIsInvalid(
+            [Values(-12.34, 0.0 - 1e-6, 5.5, 20 + 1e-6, 56.78)] double x,
+            [Values(-12.34, 0.0 - 1e-6, 19.5, 20 + 1e-6, 56.78)] double y)
         {
+            if (0.0 < x && x < 20.0 && 0.0 < y && y < 20.0)
+            {
+                Assert.Ignore("Test precondition: only perform test for points outside square grid.");
+            }
             // setup
             var hydroData = new TestHydroDataStub
             {
@@ -790,32 +804,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             AssertExpectedValidationIssue(report,
                 "Load 'A' is not within grid or has ambiguous location (on a grid edge or grid vertex).",
                 i => Equals(i.Subject, model.Loads[0]) && i.Severity == ValidationSeverity.Error);
-        }
-
-        [TestCase(19, 19)]
-        [TestCase(1, 1)]
-        public void ModelWithLoadInsideGridValid(double x, double y)
-        {
-            // setup
-            var hydroData = new TestHydroDataStub
-            {
-                LayerType = LayerType.ZLayer,
-                Ztop = 3.0,
-                Zbot = -3.0
-            };
-
-            var model = new WaterQualityModel();
-            model.ImportHydroData(hydroData);
-
-            Assert.IsTrue(model.HasHydroDataImported);
-
-            model.Loads.Add(new WaterQualityLoad { Name = "A", X = x, Y = y, Z = 0.5 });
-
-            // call
-            var report = new WaterQualityModelValidator().Validate(model);
-
-            // assert
-            Assert.That(report.Issues.Count(), Is.EqualTo(0));
         }
 
         [Test]

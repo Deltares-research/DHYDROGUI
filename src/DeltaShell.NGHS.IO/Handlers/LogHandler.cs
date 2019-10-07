@@ -12,7 +12,9 @@ namespace DeltaShell.NGHS.IO.Handlers
         private readonly ILog log;
 
         public LogMessagesList LogMessagesTable { get; }
-        
+
+        private string ReportHeader => $"During {activityName} the following log messages were produced:";
+
         private readonly string activityName;
 
         private const char BulletPointCharacter = '-';
@@ -88,36 +90,31 @@ namespace DeltaShell.NGHS.IO.Handlers
             List<string> errorMessages = LogMessagesTable.ErrorMessages.ToList();
             if (errorMessages.Any())
             {
-                log.Error(CreateReport(errorMessages, "errors"));
+                log.Error(CreateReport(errorMessages));
             }
 
             List<string> warningMessages = LogMessagesTable.WarningMessages.ToList();
             if (warningMessages.Any())
             {
-                log.Warn(CreateReport(warningMessages, "warnings"));
+                log.Warn(CreateReport(warningMessages));
             }
 
             List<string> infoMessages = LogMessagesTable.InfoMessages.ToList();
             if (infoMessages.Any())
             {
-                log.Info(CreateReport(infoMessages, "infos"));
+                log.Info(CreateReport(infoMessages));
             }
         }
 
-        private string CreateReport(IEnumerable<string> messages, string logSeverity)
+        private string CreateReport(IEnumerable<string> messages)
         {
-            string formattedMessages = GetFormattedMessages(messages);
-            return GetReportHeader(logSeverity) + formattedMessages;
+            var formattedMessages = GetFormattedMessages(messages);
+            return ReportHeader + formattedMessages;
         }
 
         private string GetFormattedMessages(IEnumerable<string> logMessages)
         {
             return joinSeparator + string.Join(joinSeparator, logMessages);
-        }
-
-        private string GetReportHeader(string logSeverity)
-        {
-            return $"During {activityName} the following {logSeverity} were reported:";
         }
     }
 

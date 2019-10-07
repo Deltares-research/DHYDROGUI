@@ -76,6 +76,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
 
             Assert.AreEqual(OriginXmlIntervalTypeVariableDeadbandTypeRelative(), intervalRule.ToXml(Fns, "").ToString(SaveOptions.DisableFormatting));
         }
+        [Test]
+        [Ignore("Waste of time to keep this up to date")]
+        public void RuleFromXml()
+        {
+            var intervalRule = new IntervalRule {Name = RuleName};
+            var origXmlAsElement = XElement.Parse(OriginXmlIntervalTypeFixedDeadbandTypeAbsolute());
+
+            Assert.AreEqual(RuleName, intervalRule.Name);
+            Assert.IsTrue(RealTimeControlTestHelper.CompareEqualityOfInput(input, intervalRule.Inputs.FirstOrDefault()));
+        }
 
         private static string OriginXmlIntervalTypeFixedDeadbandTypeAbsolute()
         {

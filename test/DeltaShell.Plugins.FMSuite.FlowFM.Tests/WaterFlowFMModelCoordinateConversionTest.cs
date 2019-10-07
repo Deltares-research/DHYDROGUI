@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using DelftTools.TestUtils;
-using DeltaShell.NGHS.IO.Adapters;
+using DeltaShell.NGHS.IO.Adaptors;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using NetTopologySuite.Extensions.Grids;
@@ -61,7 +61,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             // get original grid
             UnstructuredGrid grid;
-            using (var uGridAdaptor = new UGridToUnstructuredGridAdapter(netFilePath))
+            using (var uGridAdaptor = new UGridToUnstructuredGridAdaptor(netFilePath))
             {
                 grid = uGridAdaptor.GetUnstructuredGridFromUGridMeshId(1);
             }
@@ -89,7 +89,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             // read new grid
             UnstructuredGrid adjustedGrid;
-            using (var uGridAdaptor = new UGridToUnstructuredGridAdapter(netFilePath))
+            using (var uGridAdaptor = new UGridToUnstructuredGridAdaptor(netFilePath))
             {
                 adjustedGrid = uGridAdaptor.GetUnstructuredGridFromUGridMeshId(1);
             }

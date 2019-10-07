@@ -147,28 +147,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
         #region Read
 
-        /// <summary>
-        /// Reads the morphology properties from files of which the location is stored in the
-        /// mdu file with file path <param name="mduFilePath"/>. Read data will be stored in
-        /// the <param name="modelDefinition"/> as a <see cref="WaterFlowFMProperty"/>.
-        /// </summary>
-        /// <param name="mduFilePath">The file path to the mdu file.</param>
-        /// <param name="modelDefinition">The model definition of the FM model that is being read.</param>
-        /// <exception cref="FormatException">Whenever the Sediment Model Number is equal to 1, 2 or 3. Our GUI
-        /// does not support FM models with these values.</exception>
-        /// <remarks>The Sediment Model Number currently can have values 0, 1, 2, 3 & 4.</remarks>
         public static void Read(string mduFilePath, WaterFlowFMModelDefinition modelDefinition)
         {
             var logHandler = new LogHandler("reading the morphology file");
 
-            var sedimentModelNumber = (int)modelDefinition.GetModelProperty(KnownProperties.SedimentModelNumber).Value;
-            if (sedimentModelNumber >= 1 && sedimentModelNumber <= 3)
-            {
-                throw new FormatException(Resources.MorphologyFile_Read_Sediment_model_numbers_1_2_3_are_not_supported_);
-            }
-
-            var morFileName = (string)modelDefinition.GetModelProperty(KnownProperties.MorFile).Value;
-            if (sedimentModelNumber == 4 && !string.IsNullOrEmpty(morFileName))
+            if (!modelDefinition.GetModelProperty(KnownProperties.MorFile).Value.Equals(string.Empty))
             {
                 ReadMorphologyProperties(mduFilePath, 
                                          KnownProperties.MorFile, 
@@ -184,10 +167,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 }
 
                 modelDefinition.UseMorphologySediment = true;
-            }
-            else
-            {
-                modelDefinition.UseMorphologySediment = false;
             }
 
             // TODO: Remove this please!

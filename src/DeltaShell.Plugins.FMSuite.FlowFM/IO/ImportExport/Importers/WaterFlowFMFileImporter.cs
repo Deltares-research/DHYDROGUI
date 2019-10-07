@@ -6,14 +6,13 @@ using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
-using DeltaShell.Dimr;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
 {
-    public class WaterFlowFMFileImporter : IDimrModelFileImporter
+    public class WaterFlowFMFileImporter : IFileImporter
     {
         /// <summary>
         /// Constructor needed for connecting the Application.WorkingDirectory to the WaterFlowFMModel Working Directory.
@@ -128,16 +127,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
             }
 
             ProgressChanged(currentStepName, currentStep, totalSteps);
-        }
-
-        public string MasterFileExtension => "mdu";
-
-        public IEnumerable<string> SubFolders
-        {
-            get
-            {
-                yield return "dflowfm";
-            }
         }
     }
 }
