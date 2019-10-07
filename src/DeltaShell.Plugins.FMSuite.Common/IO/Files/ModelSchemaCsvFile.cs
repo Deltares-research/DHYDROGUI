@@ -126,31 +126,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
                     continue;
                 }
 
-                string mduGroupName = lineFields[0];
-                string mduPropertyName = lineFields[1];
-                string guiGroupName = lineFields[2];
-                string subCategoryField = lineFields[3];
-                string captionField = lineFields[4];
-                string typeField = lineFields[5];
-                string defaultField = lineFields[6];
-                string minField = lineFields[7];
-                string maxField = lineFields[8];
-                string isReadOnly = lineFields[9];
-                string enabledDeps = lineFields[10];
-                string visibleDeps = lineFields[11];
-                string docSection = lineFields[12];
-                string fromRevString = lineFields[13];
-                string toRevString = lineFields[14];
-                string description = lineFields.ElementAtOrDefault(descriptionIndex) != null
-                                         ? lineFields[descriptionIndex].Trim('"')
-                                         : string.Empty;
-                string unit = lineFields.ElementAtOrDefault(unitIndex) != null
-                                  ? lineFields[unitIndex]
-                                  : string.Empty;
-
                 string defaultValueDependentOn = null;
                 string defaultValues = null;
 
+                string defaultField = lineFields[6];
                 string[] defaultArray = defaultField.Split(':');
 
                 if (defaultArray.Length > 1)
@@ -159,13 +138,17 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
                     defaultValues = defaultArray[1];
                 }
 
-                int fromRev;
-                int toRev;
-                ParseRevisions(fromRevString, toRevString, out fromRev, out toRev);
+                string fromRevString = lineFields[13];
+                string toRevString = lineFields[14];
+                ParseRevisions(fromRevString, toRevString, out int fromRev, out int toRev);
 
+                string mduPropertyName = lineFields[1];
+                string captionField = lineFields[4];
+                string typeField = lineFields[5];
                 Type dataType = FMParser.GetClrType(mduPropertyName, typeField, ref captionField,
                                                     InputFilePath, LineNumber);
 
+                string guiGroupName = lineFields[2];
                 string guiGroupId = string.IsNullOrEmpty(guiGroupName) ? "misc" : guiGroupName;
                 if (!schema.GuiPropertyGroups.ContainsKey(guiGroupId))
                 {
@@ -179,6 +162,23 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
                 }
 
                 ModelPropertyGroup propertyGroup = schema.GuiPropertyGroups[guiGroupId];
+
+                string mduGroupName = lineFields[0];
+                string subCategoryField = lineFields[3];
+                string minField = lineFields[7];
+                string maxField = lineFields[8];
+                string isReadOnly = lineFields[9];
+                string enabledDeps = lineFields[10];
+                string docSection = lineFields[12];
+                string visibleDeps = lineFields[11];
+
+                string description = lineFields.ElementAtOrDefault(descriptionIndex) != null
+                                         ? lineFields[descriptionIndex].Trim('"')
+                                         : string.Empty;
+
+                string unit = lineFields.ElementAtOrDefault(unitIndex) != null
+                                  ? lineFields[unitIndex]
+                                  : string.Empty;
 
                 var propertyDefinition = new TDef
                 {
@@ -203,7 +203,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
                     VisibleDependencies = visibleDeps.ToLower(),
                     FromRevision = fromRev,
                     UntilRevision = toRev,
-                    IsDefinedInSchema = true,
+                    IsDefinedInSchema = true
                 };
 
                 if (defaultValueDependentOn != null)
