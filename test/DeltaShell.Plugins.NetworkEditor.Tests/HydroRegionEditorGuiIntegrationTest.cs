@@ -100,6 +100,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         }
         
         [Test]
+        [Category(TestCategory.WindowsForms)]
         public void LinkCatchmentToBoundaryNode()
         {
             onMainWindowShown = () =>
@@ -118,6 +119,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         }
 
         [Test]
+        [Category(TestCategory.WindowsForms)]
         public void LinkCatchmentToBoundaryNodeCreatesValidGeometry()
         {
             onMainWindowShown = () =>
@@ -137,6 +139,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         /// this test will verify that the combo box could get updated when a branch is drawn and a route layer is added.
         /// </summary>
         [Test]
+        [Category(TestCategory.WindowsForms)]
         public void EmptyCoverageDropdownBoxGetsUpdatedAfterRouteAdd()
         {
             onMainWindowShown = () =>

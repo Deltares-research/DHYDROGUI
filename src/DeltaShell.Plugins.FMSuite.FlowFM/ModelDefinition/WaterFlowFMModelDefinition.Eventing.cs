@@ -86,12 +86,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 
         private void OnMorphologySedimentPropertyChanged(WaterFlowFMProperty prop)
         {
-            if (prop.PropertyDefinition.MduPropertyName != GuiProperties.UseMorSed)
+            if (prop.PropertyDefinition.MduPropertyName == GuiProperties.UseMorSed)
             {
-                return;
-            }
+                WaterFlowFMProperty sedimentModelNumberProperty = GetModelProperty(KnownProperties.SedimentModelNumber);
+                string newValueAsString = UseMorphologySediment ? "4" : "0";
+                sedimentModelNumberProperty.SetValueAsString(newValueAsString);
 
-            SetMapFormatPropertyValue();
+                SetMapFormatPropertyValue();
+            }
         }
 
         private void UpdateOutputTimes()

@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Windows.Forms;
 using DelftTools.TestUtils;
-using DeltaShell.NGHS.IO.Adaptors;
+using DeltaShell.NGHS.IO.Adapters;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
@@ -150,7 +150,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Layers
             netFilePath = TestHelper.CreateLocalCopySingleFile(netFilePath);
 
             UnstructuredGrid grid;
-            using (var uGridAdaptor = new UGridToUnstructuredGridAdaptor(netFilePath))
+            using (var uGridAdaptor = new UGridToUnstructuredGridAdapter(netFilePath))
             {
                 grid = uGridAdaptor.GetUnstructuredGridFromUGridMeshId(1);
             }
@@ -183,7 +183,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Layers
             netFilePath = TestHelper.CreateLocalCopySingleFile(netFilePath);
 
             UnstructuredGrid grid;
-            using (var uGridAdaptor = new UGridToUnstructuredGridAdaptor(netFilePath))
+            using (var uGridAdaptor = new UGridToUnstructuredGridAdapter(netFilePath))
             {
                 grid = uGridAdaptor.GetUnstructuredGridFromUGridMeshId(1);
             }

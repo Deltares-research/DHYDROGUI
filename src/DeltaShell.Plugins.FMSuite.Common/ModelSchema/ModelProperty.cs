@@ -137,8 +137,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
 
                 if (e is OverflowException)
                 {
-                    throw new FormatException(string.Format(
-                                                  "Value string \"{0}\" is too large/small for property \"{1}\"",
+                    throw new FormatException(string.Format("Value string \"{0}\" is too large/small for property \"{1}\"",
                                                   valueAsString, PropertyDefinition.FilePropertyName),
                                               e);
                 }
