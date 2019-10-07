@@ -12,6 +12,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
         private const int descriptionIndex = 15;
         private const int unitIndex = 16;
 
+        private string FileGroupName { get; set; }
+
         /// <summary>
         /// Reads <see cref="ModelPropertyDefinition"/> objects from csv and returns them in <see cref="ModelSchema{TDef}"/> object.
         /// </summary>
@@ -23,44 +25,45 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
         public ModelSchema<TDef> ReadModelSchema<TDef>(string filePath, string fileGroupName)
             where TDef : ModelPropertyDefinition, new()
         {
-            var schema = new ModelSchema<TDef>();
+            FileGroupName = fileGroupName;
 
             OpenInputFile(filePath);
             try
             {
-                ParseFileContent(filePath, fileGroupName, schema);
+                return ParseFileContent<TDef>();
             }
             finally
             {
                 CloseInputFile();
             }
-
-            return schema;
         }
 
-        private void ParseFileContent<TDef>(string filePath, string fileGroupName, ModelSchema<TDef> schema)
-            where TDef : ModelPropertyDefinition, new()
+        private ModelSchema<TDef> ParseFileContent<TDef>() where TDef : ModelPropertyDefinition, new()
         {
+            var schema = new ModelSchema<TDef>();
+
             string line = GetNextLine();
             if (line == null || !line.StartsWith("GUIGroups"))
             {
                 throw new FormatException(string.Format("Expectation GUIGroups on line {0} of file {1}", LineNumber,
-                                                        filePath));
+                                                        InputFilePath));
             }
 
-            IEnumerable<KeyValuePair<string, ModelPropertyGroup>> guiPropertyGroups = ReadGuiPropertyGroups(filePath, fileGroupName);
+            IEnumerable<KeyValuePair<string, ModelPropertyGroup>> guiPropertyGroups = ReadGuiPropertyGroups();
             guiPropertyGroups.ForEach(kvp => schema.GuiPropertyGroups.Add(kvp));
 
-            IEnumerable<KeyValuePair<string, ModelPropertyGroup>> modelDefinitionCategories = ReadModelDefinitionCategories(fileGroupName);
+            IEnumerable<KeyValuePair<string, ModelPropertyGroup>> modelDefinitionCategories = ReadModelDefinitionCategories();
             modelDefinitionCategories.ForEach(kvp => schema.ModelDefinitionCategory.Add(kvp));
 
-            ReadMduProperties(filePath, schema);
+            ReadMduProperties(schema);
+
+            return schema;
         }
 
-        private IEnumerable<KeyValuePair<string, ModelPropertyGroup>> ReadGuiPropertyGroups(string filePath, string fileGroupName)
+        private IEnumerable<KeyValuePair<string, ModelPropertyGroup>> ReadGuiPropertyGroups()
         {
             string line = GetNextLine();
-            while (line != null && !line.StartsWith(fileGroupName))
+            while (line != null && !line.StartsWith(FileGroupName))
             {
                 line = line.Trim();
                 string[] lineFields = line.Split(',');
@@ -74,17 +77,17 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
                 line = GetNextLine();
             }
 
-            if (line == null || !line.StartsWith(fileGroupName))
+            if (line == null || !line.StartsWith(FileGroupName))
             {
                 throw new FormatException(string.Format("Expectation GUIGroups on line {0} of file {1}", LineNumber,
-                                                        filePath));
+                                                        InputFilePath));
             }
         }
 
-        private IEnumerable<KeyValuePair<string, ModelPropertyGroup>> ReadModelDefinitionCategories(string fileGroupName)
+        private IEnumerable<KeyValuePair<string, ModelPropertyGroup>> ReadModelDefinitionCategories()
         {
             string line = GetNextLine();
-            while (line != null && !line.StartsWith(fileGroupName))
+            while (line != null && !line.StartsWith(FileGroupName))
             {
                 line = line.Trim();
                 string[] lineFields = line.Split(',');
@@ -98,8 +101,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
             }
         }
 
-        private void ReadMduProperties<TDef>(string filePath, ModelSchema<TDef> schema) 
-            where TDef : ModelPropertyDefinition, new()
+        private void ReadMduProperties<TDef>(ModelSchema<TDef> schema) where TDef : ModelPropertyDefinition, new()
         {
             string line;
             while ((line = GetNextLine()) != null)
@@ -162,13 +164,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
                 ParseRevisions(fromRevString, toRevString, out fromRev, out toRev);
 
                 Type dataType = FMParser.GetClrType(mduPropertyName, typeField, ref captionField,
-                                                    filePath, LineNumber);
+                                                    InputFilePath, LineNumber);
 
                 string guiGroupId = string.IsNullOrEmpty(guiGroupName) ? "misc" : guiGroupName;
                 if (!schema.GuiPropertyGroups.ContainsKey(guiGroupId))
                 {
                     throw new FormatException(string.Format("Invalid group id \"{0}\" on line {1} of file {2}",
-                                                            guiGroupId, LineNumber, filePath));
+                                                            guiGroupId, LineNumber, InputFilePath));
                 }
 
                 if (string.IsNullOrEmpty(captionField))
@@ -225,7 +227,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
             }
         }
 
-        private void ParseRevisions(string fromRevString, string toRevString, out int fromRev, out int toRev)
+        private static void ParseRevisions(string fromRevString, string toRevString, out int fromRev, out int toRev)
         {
             int.TryParse(fromRevString, out fromRev);
             int.TryParse(toRevString, out toRev);
