@@ -107,8 +107,14 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
             string line;
             while ((line = GetNextLine()) != null)
             {
-                var regexRule = new Regex(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
-                /*
+                ParseLine(schema, line);
+            }
+        }
+
+        private void ParseLine<TDef>(ModelPropertySchema<TDef> schema, string line) where TDef : ModelPropertyDefinition, new()
+        {
+            var regexRule = new Regex(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
+            /*
                      About the RegEx:
                     
                     , the separator to be found
@@ -119,113 +125,112 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
                     So, if an expression is found, where a comma is present BUT between double commas ("),
                     then that expression will not be split.
                      */
-                List<string> lineFields = regexRule.Split(line).Select(lf => lf.Trim()).ToList();
-                if (lineFields.Count < descriptionIndex
-                    || lineFields.All(string.IsNullOrEmpty))
-                {
-                    // todo: report
-                    continue;
-                }
-
-                string defaultValueDependentOn = null;
-                string defaultValues = null;
-
-                string defaultField = lineFields[6];
-                string[] defaultArray = defaultField.Split(':');
-
-                if (defaultArray.Length > 1)
-                {
-                    defaultValueDependentOn = defaultArray[0];
-                    defaultValues = defaultArray[1];
-                }
-
-                string fromRevString = lineFields[13];
-                string toRevString = lineFields[14];
-                ParseRevisions(fromRevString, toRevString, out int fromRev, out int toRev);
-
-                string mduPropertyName = lineFields[1];
-                string captionField = lineFields[4];
-                string typeField = lineFields[5];
-                Type dataType = FMParser.GetClrType(mduPropertyName, typeField, ref captionField,
-                                                    InputFilePath, LineNumber);
-
-                string guiGroupName = lineFields[2];
-                string guiGroupId = string.IsNullOrEmpty(guiGroupName) ? "misc" : guiGroupName;
-                if (!schema.GuiPropertyGroups.ContainsKey(guiGroupId))
-                {
-                    throw new FormatException(string.Format("Invalid group id \"{0}\" on line {1} of file {2}",
-                                                            guiGroupId, LineNumber, InputFilePath));
-                }
-
-                if (string.IsNullOrEmpty(captionField))
-                {
-                    captionField = mduPropertyName;
-                }
-
-                ModelPropertyGroup propertyGroup = schema.GuiPropertyGroups[guiGroupId];
-
-                string mduGroupName = lineFields[0];
-                string subCategoryField = lineFields[3];
-                string minField = lineFields[7];
-                string maxField = lineFields[8];
-                string isReadOnly = lineFields[9];
-                string enabledDeps = lineFields[10];
-                string docSection = lineFields[12];
-                string visibleDeps = lineFields[11];
-
-                string description = lineFields.ElementAtOrDefault(descriptionIndex) != null
-                                         ? lineFields[descriptionIndex].Trim('"')
-                                         : string.Empty;
-
-                string unit = lineFields.ElementAtOrDefault(unitIndex) != null
-                                  ? lineFields[unitIndex]
-                                  : string.Empty;
-
-                var propertyDefinition = new TDef
-                {
-                    Category = propertyGroup.Name,
-                    FileCategoryName = mduGroupName,
-                    FilePropertyName = mduPropertyName.Trim('"'),
-                    SubCategory = subCategoryField,
-                    Caption = captionField.Trim('"'),
-                    DataType = dataType,
-                    DefaultValueAsString = defaultField,
-                    MultipleDefaultValuesAvailable = false,
-                    MinValueAsString = minField,
-                    MaxValueAsString = maxField,
-                    IsMultipleFile = typeField.ToLower().Equals("multipleentriesfilename"),
-                    IsFile = typeField.ToLower().Equals("filename") ||
-                             typeField.ToLower().Equals("multipleentriesfilename"),
-                    ModelFileOnly = isReadOnly.ToLower().Equals("true"),
-                    Description = description,
-                    Unit = unit,
-                    DocumentationSection = docSection,
-                    EnabledDependencies = enabledDeps.ToLower(),
-                    VisibleDependencies = visibleDeps.ToLower(),
-                    FromRevision = fromRev,
-                    UntilRevision = toRev,
-                    IsDefinedInSchema = true
-                };
-
-                if (defaultValueDependentOn != null)
-                {
-                    propertyDefinition.MultipleDefaultValues = defaultValues.Split('|');
-                    propertyDefinition.DefaultValueDependentOn = defaultValueDependentOn;
-                    propertyDefinition.MultipleDefaultValuesAvailable = true;
-                }
-
-                propertyGroup.PropertyDefinitions.Add(propertyDefinition);
-
-                schema.PropertyDefinitions.Add(mduPropertyName.ToLower(), propertyDefinition);
-
-                // register the propertyDe to the group and to the lookup tables
-                if (!schema.ModelDefinitionCategory.ContainsKey(mduGroupName))
-                {
-                    schema.ModelDefinitionCategory.Add(mduGroupName, new ModelPropertyGroup(mduGroupName));
-                }
-
-                schema.ModelDefinitionCategory[mduGroupName].AddPropertyDefinition(propertyDefinition);
+            List<string> lineFields = regexRule.Split(line).Select(lf => lf.Trim()).ToList();
+            if (lineFields.Count < descriptionIndex
+                || lineFields.All(string.IsNullOrEmpty))
+            {
+                // todo: report
+                return;
             }
+
+            string defaultValueDependentOn = null;
+            string defaultValues = null;
+
+            string defaultField = lineFields[6];
+            string[] defaultArray = defaultField.Split(':');
+
+            if (defaultArray.Length > 1)
+            {
+                defaultValueDependentOn = defaultArray[0];
+                defaultValues = defaultArray[1];
+            }
+
+            string fromRevString = lineFields[13];
+            string toRevString = lineFields[14];
+            ParseRevisions(fromRevString, toRevString, out int fromRev, out int toRev);
+
+            string mduPropertyName = lineFields[1];
+            string captionField = lineFields[4];
+            string typeField = lineFields[5];
+            Type dataType = FMParser.GetClrType(mduPropertyName, typeField, ref captionField,
+                                                InputFilePath, LineNumber);
+
+            string guiGroupName = lineFields[2];
+            string guiGroupId = string.IsNullOrEmpty(guiGroupName) ? "misc" : guiGroupName;
+            if (!schema.GuiPropertyGroups.ContainsKey(guiGroupId))
+            {
+                throw new FormatException(string.Format("Invalid group id \"{0}\" on line {1} of file {2}",
+                                                        guiGroupId, LineNumber, InputFilePath));
+            }
+
+            if (string.IsNullOrEmpty(captionField))
+            {
+                captionField = mduPropertyName;
+            }
+
+            ModelPropertyGroup propertyGroup = schema.GuiPropertyGroups[guiGroupId];
+
+            string mduGroupName = lineFields[0];
+            string subCategoryField = lineFields[3];
+            string minField = lineFields[7];
+            string maxField = lineFields[8];
+            string isReadOnly = lineFields[9];
+            string enabledDeps = lineFields[10];
+            string docSection = lineFields[12];
+            string visibleDeps = lineFields[11];
+
+            string description = lineFields.ElementAtOrDefault(descriptionIndex) != null
+                                     ? lineFields[descriptionIndex].Trim('"')
+                                     : string.Empty;
+
+            string unit = lineFields.ElementAtOrDefault(unitIndex) != null
+                              ? lineFields[unitIndex]
+                              : string.Empty;
+
+            var propertyDefinition = new TDef
+            {
+                Category = propertyGroup.Name,
+                FileCategoryName = mduGroupName,
+                FilePropertyName = mduPropertyName.Trim('"'),
+                SubCategory = subCategoryField,
+                Caption = captionField.Trim('"'),
+                DataType = dataType,
+                DefaultValueAsString = defaultField,
+                MultipleDefaultValuesAvailable = false,
+                MinValueAsString = minField,
+                MaxValueAsString = maxField,
+                IsMultipleFile = typeField.ToLower().Equals("multipleentriesfilename"),
+                IsFile = typeField.ToLower().Equals("filename") ||
+                         typeField.ToLower().Equals("multipleentriesfilename"),
+                ModelFileOnly = isReadOnly.ToLower().Equals("true"),
+                Description = description,
+                Unit = unit,
+                DocumentationSection = docSection,
+                EnabledDependencies = enabledDeps.ToLower(),
+                VisibleDependencies = visibleDeps.ToLower(),
+                FromRevision = fromRev,
+                UntilRevision = toRev,
+                IsDefinedInSchema = true
+            };
+
+            if (defaultValueDependentOn != null)
+            {
+                propertyDefinition.MultipleDefaultValues = defaultValues.Split('|');
+                propertyDefinition.DefaultValueDependentOn = defaultValueDependentOn;
+                propertyDefinition.MultipleDefaultValuesAvailable = true;
+            }
+
+            propertyGroup.PropertyDefinitions.Add(propertyDefinition);
+
+            schema.PropertyDefinitions.Add(mduPropertyName.ToLower(), propertyDefinition);
+
+            // register the propertyDe to the group and to the lookup tables
+            if (!schema.ModelDefinitionCategory.ContainsKey(mduGroupName))
+            {
+                schema.ModelDefinitionCategory.Add(mduGroupName, new ModelPropertyGroup(mduGroupName));
+            }
+
+            schema.ModelDefinitionCategory[mduGroupName].AddPropertyDefinition(propertyDefinition);
         }
 
         private static void ParseRevisions(string fromRevString, string toRevString, out int fromRev, out int toRev)
