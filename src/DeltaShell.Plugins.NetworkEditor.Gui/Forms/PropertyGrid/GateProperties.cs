@@ -169,19 +169,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DynamicReadOnlyValidationMethod]
         public bool IsReadOnly(string propertyName)
         {
-            if (propertyName == "SillLevel")
+            if (propertyName == nameof(SillLevel))
             {
                 return data.UseSillLevelTimeSeries;
             }
-            if (propertyName == "LowerEdgeLevel")
+            if (propertyName == nameof(LowerEdgeLevel))
             {
                 return data.UseLowerEdgeLevelTimeSeries;
             }
-            if (propertyName == "GateOpeningWidth")
+            if (propertyName == nameof(GateOpeningWidth))
             {
                 return data.UseOpeningWidthTimeSeries;
             }
-            if(propertyName == "SillWidth")
+            if(propertyName == nameof(SillWidth))
             {
                 return data.SillWidth <= 0;
             }

@@ -1,5 +1,6 @@
 using System.Linq;
 using DelftTools.Hydro.CrossSections;
+using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.IO.FileWriters.Location;
 using DeltaShell.NGHS.IO.Helpers;
 
@@ -35,11 +36,12 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
             if (crossSectionSections != null)
             {
                 IniCategory.AddProperty(DefinitionPropertySettings.SectionCount, crossSectionSections.Count);
-                IniCategory.AddProperty(DefinitionPropertySettings.FrictionPositions,
-                    string.Join(";", crossSectionSections.Select(css => css.MinY)) + ";" +
-                    crossSectionSections.Max(css => css.MaxY));
-                IniCategory.AddProperty(DefinitionPropertySettings.FrictionIds,
-                    string.Join(";", crossSectionSections.Select(css => css.SectionType.Name)));
+                /*IniCategory.AddProperty(DefinitionPropertySettings.FrictionPositions,
+                    string.Join(";", crossSectionSections.Select(css => css.MinY.ToString("F3"))) + ";" +
+                    crossSectionSections.Max(css => css.MaxY.ToString("F3")));*/
+                IniCategory.AddProperty(DefinitionPropertySettings.FrictionIds, string.Join(";", crossSectionSections.Select(css => css.SectionType.Name)));
+                IniCategory.AddProperty(DefinitionPropertySettings.FrictionPositions, crossSectionSections.Select(css => css.MinY).Plus(crossSectionSections.Max(css => css.MaxY)));
+                
             }
         }
         private void AddCoordinates(ICrossSectionDefinition crossSectionDefinition)

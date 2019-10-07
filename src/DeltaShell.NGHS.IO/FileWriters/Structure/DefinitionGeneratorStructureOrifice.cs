@@ -28,8 +28,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
 
             IniCategory.AddProperty(StructureRegion.GateLowerEdgeLevel.Key, (weir.CrestLevel + formula.GateOpening), StructureRegion.GateLowerEdgeLevel.Description, StructureRegion.GateLowerEdgeLevel.Format);
             
-            //Jan Noort : welke Coof gebruiken?
-            IniCategory.AddProperty(StructureRegion.CorrectionCoeff.Key, double.Parse(StructureRegion.CorrectionCoeff.DefaultValue), StructureRegion.CorrectionCoeff.Description, StructureRegion.CorrectionCoeff.Format);
+            IniCategory.AddProperty(StructureRegion.CorrectionCoeff.Key, formula.ContractionCoefficient*formula.LateralContraction, StructureRegion.CorrectionCoeff.Description, StructureRegion.CorrectionCoeff.Format);
 
 
             return IniCategory;

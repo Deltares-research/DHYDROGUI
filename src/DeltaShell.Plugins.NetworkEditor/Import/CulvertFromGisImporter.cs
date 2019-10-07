@@ -214,15 +214,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Import
                     }
                     else if (value.Contains("bijkerk"))
                     {
-                        culvert.FrictionDataType = Friction.BosBijkerk; 
+                        culvert.FrictionDataType = Friction.DeBosBijkerk; 
                     }
                     else if (value.Contains("nikuradse"))
                     {
-                        culvert.FrictionDataType = Friction.Nikuradse;
+                        culvert.FrictionDataType = Friction.StricklerNikuradse;
                     }
                     else if (value.Contains("manning"))
                     {
-                        culvert.FrictionDataType = Friction.Mannings;
+                        culvert.FrictionDataType = Friction.Manning;
                     }
                     else if (value.Contains("strickler"))
                     {

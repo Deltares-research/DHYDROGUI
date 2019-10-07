@@ -100,9 +100,9 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
                 frictionNames.Add(roughnessSection.Name);
             }
 
-            iniCategory.AddProperty(DefinitionPropertySettings.SectionCount, sectionCount);
-            iniCategory.AddProperty(DefinitionPropertySettings.RoughnessNames, String.Join(";", frictionNames));
-            iniCategory.AddProperty(DefinitionPropertySettings.RoughnessPositions, roughnessPositions);
+            //iniCategory.AddProperty(DefinitionPropertySettings.SectionCount, sectionCount);
+            //iniCategory.AddProperty(DefinitionPropertySettings.RoughnessNames, String.Join(";", frictionNames));
+            //iniCategory.AddProperty(DefinitionPropertySettings.RoughnessPositions, roughnessPositions);
             return iniCategory;
         }
 
@@ -130,8 +130,8 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
                 groundlayer = groundLayer.GroundLayerThickness;
             }
             
-            iniCategory.AddProperty(DefinitionPropertySettings.GroundlayerUsed, groundlayerUsed);
-            iniCategory.AddProperty(DefinitionPropertySettings.Groundlayer, groundlayer);
+            //iniCategory.AddProperty(DefinitionPropertySettings.GroundlayerUsed, groundlayerUsed);
+            //iniCategory.AddProperty(DefinitionPropertySettings.Groundlayer, groundlayer);
             return iniCategory;
         }
 

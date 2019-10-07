@@ -9,6 +9,10 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
         public DefinitionGeneratorCrossSectionDefinitionRectangle() : base(CrossSectionRegion.CrossSectionDefinitionType.Rectangle)
         {
         }
+        protected override bool UseTabulatedProfile
+        {
+            get { return false; }
+        }
 
         protected override bool HasCorrectCrossSectionShape(CrossSectionDefinitionStandard standardDefinition)
         {

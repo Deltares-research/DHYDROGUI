@@ -13,12 +13,11 @@ namespace DeltaShell.Plugins.NetworkEditor.IO
         public static IEnumerable<DelftIniCategory> ExtractFunctionStructuresOfNetworkGenerator(IHydroNetwork network)
         {
             var lastCompositeStructureId = 0;
-            var compositeStructures = network.Structures.Where(s => s.GetStructureType() == StructureType.CompositeBranchStructure).Cast<ICompositeBranchStructure>();
-            var compoundDefinitionGenerator = new DefinitionGeneratorCompound();
+            var compositeStructures = network.Structures.Where(s => s.GetStructureType() == StructureType.CompositeBranchStructure).Cast<ICompositeBranchStructure>().ToList();
+            
             foreach (var composite in compositeStructures) // Note: In DeltaShell all Structures belong to a CompositeBranchStructure, even if they are alone
             {
                 var currentCompositeStructureId = composite.Structures.Count > 1 ? ++lastCompositeStructureId : 0;
-                yield return compoundDefinitionGenerator.CreateStructureRegion(composite);
                 foreach (var structure in composite.Structures)
                 {
                     var structureType = structure.GetStructureType();
@@ -70,8 +69,11 @@ namespace DeltaShell.Plugins.NetworkEditor.IO
 
                     yield return structureCategory;
                 }
+            }
 
-
+            foreach (var compositeStructure in compositeStructures.Where(cs => cs.Structures.Count > 1))
+            {
+                yield return new DefinitionGeneratorCompound().CreateStructureRegion(compositeStructure);
             }
         }
 
@@ -84,12 +86,12 @@ namespace DeltaShell.Plugins.NetworkEditor.IO
         }
         private static void AddBedFrictionData(DelftIniCategory category, Friction frictionType, double friction)
         {
-            category.AddProperty(StructureRegion.BedFrictionType.Key, (int)frictionType, StructureRegion.BedFrictionType.Description);
+            category.AddProperty(StructureRegion.BedFrictionType.Key, frictionType.ToString().ToLower(), StructureRegion.BedFrictionType.Description);
             category.AddProperty(StructureRegion.BedFriction.Key, friction, StructureRegion.BedFriction.Description, StructureRegion.BedFriction.Format);
         }
         private static void AddFrictionData(DelftIniCategory category, Friction frictionType, double friction)
         {
-            category.AddProperty(StructureRegion.FrictionType.Key, (int)frictionType, StructureRegion.FrictionType.Description);
+            category.AddProperty(StructureRegion.FrictionType.Key, frictionType.ToString().ToLower(), StructureRegion.FrictionType.Description);
             category.AddProperty(StructureRegion.Friction.Key, friction, StructureRegion.Friction.Description, StructureRegion.Friction.Format);
         }
     }

@@ -33,7 +33,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 {
                     subReports.AddRange(new[]
                     {
-                        HydroNetworkValidator.Validate(target),
+                        //HydroNetworkValidator.Validate(target),
                         StructuresValidator.Validate(target),
                         ExtraResistanceValidator.Validate(target.Structures.Where(s => s is IExtraResistance)),
                     });
@@ -206,8 +206,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
         private static IEnumerable<ValidationIssue> GetCorrectCrossSectionIssue(ICrossSection crossSection, IHydroNetwork network)
         {
             string errorMessage;
+            yield break;
 
-            if (!CrossSectionValidator.IsCrossSectionAllowedOnBranch((CrossSection)crossSection, out errorMessage))
+            /*if (!CrossSectionValidator.IsCrossSectionAllowedOnBranch((CrossSection)crossSection, out errorMessage))
             {
                 yield return new ValidationIssue(crossSection, ValidationSeverity.Error, errorMessage, network);
             }
@@ -228,7 +229,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 {
                     yield return new ValidationIssue(crossSection, ValidationSeverity.Error, "Invalid flow profile", network);
                 }
-            }
+            }*/
         }
 
         private static IEnumerable<IChannel> GetChainOfChannelsWithSameOrderNumber(IChannel channel, IHydroNetwork network, IChannel previousLink = null)

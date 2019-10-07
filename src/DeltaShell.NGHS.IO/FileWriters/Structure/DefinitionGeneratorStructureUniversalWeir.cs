@@ -24,7 +24,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
             var formula = weir.WeirFormula as FreeFormWeirFormula;
             if (formula == null) return IniCategory;
       
-            IniCategory.AddProperty(StructureRegion.AllowedFlowDir.Key, (int) weir.FlowDirection, StructureRegion.AllowedFlowDir.Description);
+            IniCategory.AddProperty(StructureRegion.AllowedFlowDir.Key, weir.FlowDirection.ToString().ToLower(), StructureRegion.AllowedFlowDir.Description);
             IniCategory.AddProperty(StructureRegion.LevelsCount.Key, formula.Y.ToList().Count, StructureRegion.LevelsCount.Description);
             IniCategory.AddProperty(StructureRegion.YValues.Key, formula.Y, StructureRegion.YValues.Description, StructureRegion.YValues.Format);
             IniCategory.AddProperty(StructureRegion.ZValues.Key, formula.Z, StructureRegion.ZValues.Description, StructureRegion.ZValues.Format);

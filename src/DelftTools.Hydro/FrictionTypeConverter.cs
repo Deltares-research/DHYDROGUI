@@ -15,15 +15,15 @@ namespace DelftTools.Hydro
                 case RoughnessType.Chezy:
                     return Friction.Chezy;
                 case RoughnessType.Manning:
-                    return Friction.Mannings;
+                    return Friction.Manning;
                 case RoughnessType.StricklerKn:
-                    return Friction.Nikuradse;
+                    return Friction.StricklerNikuradse;
                 case RoughnessType.StricklerKs:
                     return Friction.Strickler;
                 case RoughnessType.WhiteColebrook:
                     return Friction.WhiteColebrook;
                 case RoughnessType.DeBosAndBijkerk:
-                    return Friction.BosBijkerk;
+                    return Friction.DeBosBijkerk;
                 case RoughnessType.WallLawNikuradse:
                     return Friction.WallLawNikuradse;
                 default:
@@ -36,15 +36,15 @@ namespace DelftTools.Hydro
             {
                 case Friction.Chezy:
                     return RoughnessType.Chezy;
-                case Friction.Mannings:
+                case Friction.Manning:
                     return RoughnessType.Manning;
-                case Friction.Nikuradse:
+                case Friction.StricklerNikuradse:
                     return RoughnessType.StricklerKn;
                 case Friction.Strickler:
                     return RoughnessType.StricklerKs;
                 case Friction.WhiteColebrook:
                     return RoughnessType.WhiteColebrook;
-                case Friction.BosBijkerk:
+                case Friction.DeBosBijkerk:
                     return RoughnessType.DeBosAndBijkerk;
                 default:
                     return RoughnessType.Chezy;//throw new InvalidOperationException();
@@ -58,9 +58,9 @@ namespace DelftTools.Hydro
                 case BridgeFrictionType.Chezy:
                     return Friction.Chezy;
                 case BridgeFrictionType.Manning:
-                    return Friction.Mannings;
+                    return Friction.Manning;
                 case BridgeFrictionType.StricklerKn:
-                    return Friction.Nikuradse;
+                    return Friction.StricklerNikuradse;
                 case BridgeFrictionType.StricklerKs:
                     return Friction.Strickler;
                 case BridgeFrictionType.WhiteColebrook:
@@ -76,9 +76,9 @@ namespace DelftTools.Hydro
             {
                 case Friction.Chezy:
                     return BridgeFrictionType.Chezy;
-                case Friction.Mannings:
+                case Friction.Manning:
                     return BridgeFrictionType.Manning;
-                case Friction.Nikuradse:
+                case Friction.StricklerNikuradse:
                     return BridgeFrictionType.StricklerKn;
                 case Friction.Strickler:
                     return BridgeFrictionType.StricklerKs;
@@ -96,9 +96,9 @@ namespace DelftTools.Hydro
                 case CulvertFrictionType.Chezy:
                     return Friction.Chezy;
                 case CulvertFrictionType.Manning:
-                    return Friction.Mannings;
+                    return Friction.Manning;
                 case CulvertFrictionType.StricklerKn:
-                    return Friction.Nikuradse;
+                    return Friction.StricklerNikuradse;
                 case CulvertFrictionType.StricklerKs:
                     return Friction.Strickler;
                 case CulvertFrictionType.WhiteColebrook:
@@ -113,9 +113,9 @@ namespace DelftTools.Hydro
             {
                 case Friction.Chezy:
                     return CulvertFrictionType.Chezy;
-                case Friction.Mannings:
+                case Friction.Manning:
                     return CulvertFrictionType.Manning;
-                case Friction.Nikuradse:
+                case Friction.StricklerNikuradse:
                     return CulvertFrictionType.StricklerKn;
                 case Friction.Strickler:
                     return CulvertFrictionType.StricklerKs;

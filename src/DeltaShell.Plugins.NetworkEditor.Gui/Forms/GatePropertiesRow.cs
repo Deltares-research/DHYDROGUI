@@ -203,13 +203,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
             if (gate == null) return false;
             switch (propertyName)
             {
-                case "SillLevel":
+                case nameof(SillLevel):
                     return gate.UseSillLevelTimeSeries;
-                case "OpeningWidth":
+                case nameof(OpeningWidth):
                     return gate.UseOpeningWidthTimeSeries;
-                case "LowerEdgeLevel":
+                case nameof(LowerEdgeLevel):
                     return gate.UseLowerEdgeLevelTimeSeries;
-                case "SillWidth":
+                case nameof(SillWidth):
                     return gate.SillWidth <= 0.0;
                 default:
                     return false;

@@ -2032,8 +2032,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 InitializeAreaDataColumns();
             ReloadGrid(); 
 
-            FeatureFile1D2DWriter.Write1D2DFeatures(mduPath, this);
+            
             mduFile.Write(mduPath, ModelDefinition, Area, allFixedWeirsAndCorrespondingProperties, switchTo: switchTo, writeExtForcings: writeExtForcings, writeFeatures: writeFeatures, disableFlowNodeRenumbering: DisableFlowNodeRenumbering, sedimentModelData: UseMorSed ? this : null);
+            FeatureFile1D2DWriter.Write1D2DFeatures(mduPath, this);
             if (!IsEditing)
                 RestoreAreaDataColumns();
 

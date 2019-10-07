@@ -125,15 +125,15 @@ namespace DeltaShell.NGHS.IO.FileWriters.Roughness
             {
                 case Friction.Chezy:
                     return "Chezy";
-                case Friction.Mannings:
+                case Friction.Manning:
                     return "Manning";
-                case Friction.Nikuradse:
+                case Friction.StricklerNikuradse:
                     return "StricklerNikuradse";
                 case Friction.Strickler:
                     return "Strickler";
                 case Friction.WhiteColebrook:
                     return "WhiteColebrook";
-                case Friction.BosBijkerk:
+                case Friction.DeBosBijkerk:
                     return "deBosBijkerk";
                 case Friction.WallLawNikuradse:
                     return "wallLawNikuradse";

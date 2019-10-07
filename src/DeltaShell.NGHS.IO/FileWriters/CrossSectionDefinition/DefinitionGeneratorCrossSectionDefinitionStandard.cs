@@ -7,6 +7,10 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
 {
     public abstract class DefinitionGeneratorCrossSectionDefinitionStandard : DefinitionGeneratorCrossSectionDefinitionZw
     {
+        protected virtual bool UseTabulatedProfile
+        {
+            get { return true; }
+        }
         protected DefinitionGeneratorCrossSectionDefinitionStandard(string definitionType) : base(definitionType)
         {
         }
@@ -30,6 +34,8 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
         {
             AddCommonProperties(standardDefinition);
             AddShapeMeasurementProperties(standardDefinition.Shape);
+            if (UseTabulatedProfile)
+                GenerateTabulatedProfile(standardDefinition.Shape.GetTabulatedDefinition());
             AddCrossSectionStandardProperties();
         }
 
