@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
@@ -8,6 +9,7 @@ using DeltaShell.Plugins.DelftModels.HydroModel.Import;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel;
 using DeltaShell.Plugins.FMSuite.FlowFM;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.Wave;
 using NUnit.Framework;
 
@@ -132,23 +134,28 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         }
 
         [Test]
-        public void GivenAnApplicationWithOnlyHydroModelAndFlowFmPlugins_WhenCallingCanImportOnRootLevelForDIMRImporter_TrueShouldBeReturnedSinceFmIsAdded()
+        public void GivenAnApplicationWithHydroModelAndFlowFmPluginLoaded_WhenGettingFileImporters_ThenADimrImporterShouldBeReturnedThatCanImportOnWaterFlowFMModel()
         {
-            using (var app = new DeltaShellApplication())
+            using (var application = new DeltaShellApplication())
             {
                 // Given
                 var hydroModelAppPlugin = new HydroModelApplicationPlugin();
-                var fmModelAppPlugin = new FlowFMApplicationPlugin();
                 
-                app.Plugins.Add(hydroModelAppPlugin);
-                app.Plugins.Add(fmModelAppPlugin);
+                application.Plugins.Add(hydroModelAppPlugin);
+                application.Plugins.Add(new FlowFMApplicationPlugin());
 
-                app.Run();
+                application.Run();
 
-                // When Then
-                var dimrImporter = (DHydroConfigXmlImporter)hydroModelAppPlugin.GetFileImporters().ToList().FirstOrDefault();
-                Assert.IsNotNull(dimrImporter);
-                Assert.IsTrue(dimrImporter.CanImportOnRootLevel);
+                // When 
+                IEnumerable<IFileImporter> applicationFileImporters = hydroModelAppPlugin.GetFileImporters().ToArray();
+                int fileImportersCounter = applicationFileImporters.Count();
+                
+                // Then
+                Assert.AreEqual(1, fileImportersCounter,
+                                $"Expected only 1 Dimr Importer, but {fileImportersCounter} importers were found");
+                var dimrImporter = applicationFileImporters.First() as DHydroConfigXmlImporter;
+                Assert.IsNotNull(dimrImporter, "The retrieved importer is not a Dimr Importer");
+                Assert.IsTrue(dimrImporter.CanImportOn(new WaterFlowFMModel()), "The Dimr importer is missing the WaterFlowFMFileImporter");
             }
         }
     }

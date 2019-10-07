@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using DelftTools.Utils.IO;
+﻿using System.Linq;
 using DeltaShell.Dimr;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
 using NUnit.Framework;
@@ -10,34 +8,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
     [TestFixture]
     public class WaterFlowFMFileImporterTest
     {
-        private WaterFlowFMFileImporter importer;
-
-        [SetUp]
-        public void SetUp()
-        {
-            string temp = FileUtils.CreateTempDirectory();
-            importer = new WaterFlowFMFileImporter(() => temp);
-        }
-
         [Test]
-        public void CheckIfWaterFlowFMFileImporterImplementsIDimrModelFileImporterInterface()
+        public void Constructor_ExpectedValues()
         {
-            Assert.IsTrue(importer is IDimrModelFileImporter);
-        }
+            var importer = new WaterFlowFMFileImporter(() => null);
 
-        [Test]
-        public void CallingMasterFileExtensionShouldReturnTheCorrectExtensionOfFM()
-        {
-            Assert.AreEqual("mdu", importer.MasterFileExtension);
-        }
+            Assert.IsTrue(importer is IDimrModelFileImporter, "The IDimrModelFileImporter interface is not implemented by WaterFlowFMFileImporter");
+            Assert.AreEqual("mdu", importer.MasterFileExtension, $"Expected mdu for master file extension, but was {importer.MasterFileExtension}");
 
-        [Test]
-        public void CallingSubFoldersShouldReturnTheCorrectSubFolderNameForADimrConfigurationOfFM()
-        {
-            List<string> subFolder = importer.SubFolders.ToList();
+            string[] subFolders = importer.SubFolders.ToArray();
+            Assert.AreEqual(1, subFolders.Length, "There should have been only 1 subfolder name");
+            Assert.AreEqual("dflowfm", subFolders.First(), $"Expected dflowfm for subfolder name, but was {subFolders.First()}");
 
-            Assert.AreEqual(1, subFolder.Count);
-            Assert.AreEqual("dflowfm", subFolder.FirstOrDefault());
+            Assert.AreEqual("Flow Flexible Mesh Model", importer.Name, $"Expected Flow Flexible Mesh Model for importer name, but was {importer.Name}");
+            Assert.AreEqual("D-Flow FM 2D/3D", importer.Category, $"Expected D-Flow FM 2D/3D for importer category, but was {importer.Category}");
+            Assert.AreEqual(string.Empty, importer.Description, $"Expected empty string for importer description, but was {importer.Description}");
+            Assert.IsTrue(importer.OpenViewAfterImport, "The view should be opened after import");
+            Assert.IsTrue(importer.CanImportOnRootLevel, "The importer should be able to import on Root level");
         }
     }
 }
