@@ -18,5 +18,6 @@
         /// A set of features -> used for opening attribute table
         /// </summary>
         FeatureSet,
+        Default
     }
 }
