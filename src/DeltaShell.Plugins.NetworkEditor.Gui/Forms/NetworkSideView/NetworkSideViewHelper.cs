@@ -111,7 +111,23 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             return areaSeries;
         }
 
-        public static void ThrowWhenFunctionIsInvalid(IFunction function)
+        public static void ValidateFunction(IFunction function)
+        {
+            ThrowWhenFunctionIsInvalid(function);
+
+            IVariable xArgument = function.GetFirstArgumentVariableOfType<double>();
+            if (xArgument == null)
+            {
+                throw new ArgumentException(
+                    string.Format("Couldn't create view because function {0} does not have a argument of type double.", function.Name));
+            }
+            
+            IVariable yComponent = function.GetFirstComponentVariableOfType<double>();
+
+            ThrowWhenFunctionVariableNamesAreInvalid(xArgument.Name, yComponent.Name);
+        }
+
+        private static void ThrowWhenFunctionIsInvalid(IFunction function)
         {
             if (function == null)
                 throw new ArgumentException("Couldnt create the view because one of the functions is null / empty");
@@ -123,48 +139,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
                 throw new ArgumentException("Couldnt create view because one of the functions doesnt contain components");
         }
 
-        public static void ThrowWhenValueTypeIsNull(IVariable xArgument)
+        private static void ThrowWhenFunctionVariableNamesAreInvalid(string argName, string compName)
         {
-            if (xArgument == null)
-                throw new ArgumentException(
-                    "Couldn't create view because argument is null.");
-        }
-
-        public static void ThrowWhenFunctionVariableNamesAreInvalid(string argName, string compName)
-        {
-            if (String.IsNullOrEmpty(argName) || argName.Trim() == "")
+            if (string.IsNullOrEmpty(argName) || argName.Trim() == "")
                 throw new ArgumentException(
                     "Couldn't create view because one of the functions doesnt contain a valid argument name");
 
-            if (String.IsNullOrEmpty(compName) || compName.Trim() == "")
+            if (string.IsNullOrEmpty(compName) || compName.Trim() == "")
                 throw new ArgumentException(
                     "Couldn't create view because one of the functions doesnt contain a valid component name");
 
             if (argName == compName)
                 throw new ArgumentException(
                     "Couldn't create view because one of the functions component name is the same as the argument name which is not allowed");
-        }
-
-        public static void ValidateFunction(IFunction function)
-        {
-            ThrowWhenFunctionIsInvalid(function);
-
-            var xArgument = function.GetFirstArgumentVariableOfType<double>();
-            if (xArgument == null)
-            {
-                throw new ArgumentException(
-                    String.Format("Couldn't create view because function {0} does not have a argument of type double.",function.Name));
-            }
-
-            
-            var yComponent = function.GetFirstComponentVariableOfType<double>();
-            if (xArgument == null)
-            {
-                throw new ArgumentException(
-                    String.Format("Couldn't create view because function {0} does not have a component of type double.",function.Name));
-            }
-
-            ThrowWhenFunctionVariableNamesAreInvalid(xArgument.Name, yComponent.Name);
         }
     }
 }
