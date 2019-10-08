@@ -129,6 +129,7 @@
     <Content Include="..\Wave\WavePlugin.wxi">
       <Link>WavePlugin.wxi</Link>
     </Content>
+    <Content Include="ImportSobek2NetworkPlugin.wxi" />
     <Content Include="SobekDimrKernels.xsl" />
     <Content Include="SobekPlugin.wxi" />
     <Content Include="Extras.wxi" />

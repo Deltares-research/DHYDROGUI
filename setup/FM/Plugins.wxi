@@ -6,8 +6,10 @@
   <?include ..\Dimr\Dimr.wxi?>
   
   <?include FMSuiteCommonPlugin.wxi?>
+  <?include ..\Sobek\ImportSobek2NetworkPlugin.wxi?>
   <?include FMPlugin.wxi?>
-  
+
+
   <?include ..\Wave\WavePlugin.wxi?>
 
   <?include ..\RealTimeControl\RealTimeControlPlugin.wxi?>

@@ -68,6 +68,9 @@
     <Content Include="..\Scripts\WaterQualityScripts.wxi">
       <Link>Scripts\WaterQualityScripts.wxi</Link>
     </Content>
+    <Content Include="..\Sobek\ImportSobek2NetworkPlugin.wxi">
+      <Link>ImportSobek2NetworkPlugin.wxi</Link>
+    </Content>
     <Content Include="..\Waq\WaqDefines.wxi">
       <Link>WaqDefines.wxi</Link>
     </Content>
