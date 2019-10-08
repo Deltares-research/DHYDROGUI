@@ -124,7 +124,6 @@
     <Compile Include="IO\DelwaqHistoryFileReader.cs" />
     <Compile Include="IO\DelwaqMapFileReader.cs" />
     <Compile Include="DataObjects\Model\BalanceUnit.cs" />
-    <Compile Include="Model\ConsoleRedirector.cs" />
     <Compile Include="DataObjects\Model\WaterQualityModelSettings.cs" />
     <Compile Include="Model\IWaqProcessor.cs" />
     <Compile Include="Model\WaqFileBasedPreProcessor.cs" />
