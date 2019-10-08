@@ -16,6 +16,7 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.Editing;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties;
 using DeltaShell.Plugins.DelftModels.RTCShapes.Shapes;
 using GeoAPI.Extensions.Feature;
 using log4net;
@@ -382,19 +383,21 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 
         private void SaveAsImageAction(object sender, EventArgs e)
         {
-            var tempImagePath = Path.GetTempFileName();
+            string tempImagePath = Path.GetTempFileName();
             graphControl.NetronGraph.SaveImage(tempImagePath, true);
-            var image = Image.FromFile(tempImagePath);
-
-            var fs = new SaveFileDialog
+            using (Image image = Image.FromFile(tempImagePath))
             {
-                Title = "Save image", Filter = "PNG image|*.png"
-            };
-            fs.ShowDialog();
+                var fs = new SaveFileDialog
+                {
+                    Title = Resources.ControlGroupEditor_SaveAsImageAction_Save_image,
+                    Filter = Resources.ControlGroupEditor_SaveAsImageAction_PNG_image___png
+                };
+                fs.ShowDialog();
 
-            if (fs.FileName != String.Empty)
-            {
-                image.Save(fs.FileName, ImageFormat.Png);
+                if (fs.FileName != string.Empty)
+                {
+                    image.Save(fs.FileName, ImageFormat.Png);
+                }
             }
         }
 
