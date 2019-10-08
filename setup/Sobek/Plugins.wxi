@@ -10,6 +10,7 @@
   
   <?include WaterFlowModelPlugin.wxi?>
 
+  <?include ImportSobek2NetworkPlugin.wxi?>
   <?include ImportExportSobekPlugin.wxi?>
 
   <?include ..\RealTimeControl\RealTimeControlPlugin.wxi?>
