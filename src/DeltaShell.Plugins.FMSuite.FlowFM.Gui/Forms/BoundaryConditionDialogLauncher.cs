@@ -180,12 +180,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
                     break;
 
                 case FileType.Other:
-                    dataExporter.SelectedIndex = selectedPointIndex;
-                    dataExporter.ModelReferenceDate = modelRefDate;
-
-                    ((IFileExporter)dataExporter).Export(boundaryCondition, saveFileDialog.FileName);
-                    break;
-                default:
                     if (dataExporter != null)
                     {
                         dataExporter.SelectedIndex = selectedPointIndex;
@@ -193,8 +187,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
 
                         ((IFileExporter)dataExporter).Export(boundaryCondition, saveFileDialog.FileName);
                     }
-
                     break;
+
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
     }
