@@ -1325,7 +1325,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 case "gauss":
                     return WaveSpectrumShapeType.Gauss;
                 default:
-                    throw new ArgumentException(string.Format("Invalid spectral shape definition: {0}"), value);
+                    throw new ArgumentException($"Invalid spectral shape definition: {value}");
             }
         }
 
