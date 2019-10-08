@@ -13,11 +13,12 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
             AddIdPropertyToIniCategory(hydroObject);
             AddDefinitionTypePropertyToIniCategory(definitionType);
 
-            var validNameCharacters = hydroObject.Name.Where(c => !Path.GetInvalidFileNameChars().Contains(c)).ToArray();
-            if (!validNameCharacters.Any()) return;
-
-            var pliFileName = $"{new string(validNameCharacters)}.pli";
-            IniCategory.AddProperty(StructureRegion.PolylineFile.Key, pliFileName, StructureRegion.PolylineFile.Description);
+            if (hydroObject.Geometry.Coordinates.Length >= 2)
+            {
+                IniCategory.AddProperty(StructureRegion.NumberOfCoordinates.Key, hydroObject.Geometry.Coordinates.Length, StructureRegion.NumberOfCoordinates.Description);
+                IniCategory.AddProperty(StructureRegion.XCoordinates.Key, hydroObject.Geometry.Coordinates.Select(c => c.X), StructureRegion.XCoordinates.Description,"F4");
+                IniCategory.AddProperty(StructureRegion.YCoordinates.Key, hydroObject.Geometry.Coordinates.Select(c => c.Y), StructureRegion.YCoordinates.Description,"F4");
+            }
         }
     }
 }

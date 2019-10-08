@@ -33,6 +33,9 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
         public static readonly ConfigurationSetting Name = new ConfigurationSetting(key: "name", description: "Given name in the user interface (optional)");
         public static readonly ConfigurationSetting BranchId = new ConfigurationSetting(key: "branchId", description: "Branch id");
         public static readonly ConfigurationSetting Chainage = new ConfigurationSetting(key: "chainage", description: "Chainage on the branch (m)");
+        public static readonly ConfigurationSetting NumberOfCoordinates = new ConfigurationSetting(key: "numCoordinates", description: "Number of values in xCoordinates and yCoordinates. This value should be greater or equal 2");
+        public static readonly ConfigurationSetting XCoordinates = new ConfigurationSetting(key: "xCoordinates", description: "x-coordinates of the location of the structure.");
+        public static readonly ConfigurationSetting YCoordinates = new ConfigurationSetting(key: "yCoordinates", description: "y-coordinates of the location of the structure.");
         
         public static readonly ConfigurationSetting Compound = new ConfigurationSetting(key: "compound", description:
             "When compound is equal or less than to 0 the structure is a single structure. " +
@@ -106,6 +109,8 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
 
         public static readonly ConfigurationSetting GateSillLevel = new ConfigurationSetting(key: "SillWidth", description: "");
         public static readonly ConfigurationSetting GateSillWidth = new ConfigurationSetting(key: "GateSillLevel", description: "");
+        public static readonly ConfigurationSetting GateCrestLevel = new ConfigurationSetting(key: "crestLevel", description: "");
+        public static readonly ConfigurationSetting GateCrestWidth = new ConfigurationSetting(key: "crestWidth", description: "");
         public static readonly ConfigurationSetting GateLowerEdgeLevel = new ConfigurationSetting(key: "gateLowerEdgeLevel", description: "");
         public static readonly ConfigurationSetting GateOpeningWidth = new ConfigurationSetting(key: "OpeningWidth", description: "");
         public static readonly ConfigurationSetting GateHorizontalOpeningDirection = new ConfigurationSetting(key: "HorizontalOpeningDirection", description: "");

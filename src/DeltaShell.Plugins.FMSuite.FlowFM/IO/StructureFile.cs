@@ -21,10 +21,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private static readonly Dictionary<string, Action<string, WaterFlowFMModel, IStructure2D>> StructureWriteActions = new Dictionary<string, Action<string, WaterFlowFMModel, IStructure2D>>
         {
-            {StructureRegion.PolylineFile.Key, WritePolylineFile},
+            //{StructureRegion.PolylineFile.Key, WritePolylineFile},
             {StructureRegion.Capacity.Key, WriteTimeSeriesFile},
             {StructureRegion.CrestLevel.Key, WriteTimeSeriesFile },
-            {StructureRegion.GateSillLevel.Key, WriteTimeSeriesFile },
+            //{StructureRegion.GateCrestLevel.Key, WriteTimeSeriesFile },//is same keyname as CrestLevel
             {StructureRegion.GateLowerEdgeLevel.Key, WriteTimeSeriesFile },
             {StructureRegion.GateOpeningWidth.Key, WriteTimeSeriesFile },
             {StructureRegion.TimeFileName.Key, WriteTimeSeriesFile }

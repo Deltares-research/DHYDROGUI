@@ -13,7 +13,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
             AddCommonRegionElements(hydroObject, StructureRegion.StructureTypeName.Gate);
 
             var gate = (IGate) hydroObject;
-            AddSillLevelProperty(gate);
+            AddCrestLevelProperty(gate);
             AddLowerEdgeLevelProperty(gate);
             AddOpeningWidthProperty(gate);
             AddHorizontalDirectionProperty(gate);
@@ -22,16 +22,16 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
             return IniCategory;
         }
 
-        private void AddSillLevelProperty(IGate gate)
+        private void AddCrestLevelProperty(IGate gate)
         {
             if (gate.UseSillLevelTimeSeries)
             {
-                var timeSeriesFileName = $"{gate.Name}_{KnownStructureProperties.GateSillLevel}.tim";
-                IniCategory.AddProperty(StructureRegion.GateSillLevel.Key, timeSeriesFileName, StructureRegion.GateSillLevel.Description);
+                var timeSeriesFileName = $"{gate.Name}_{StructureRegion.GateCrestLevel.Key}.tim";
+                IniCategory.AddProperty(StructureRegion.GateCrestLevel.Key, timeSeriesFileName, StructureRegion.GateSillLevel.Description);
             }
             else
             {
-                IniCategory.AddProperty(StructureRegion.GateSillLevel.Key, gate.SillLevel, StructureRegion.GateSillLevel.Description, StructureRegion.GateSillLevel.Format);
+                IniCategory.AddProperty(StructureRegion.GateCrestLevel.Key, gate.SillLevel, StructureRegion.GateSillLevel.Description, StructureRegion.GateSillLevel.Format);
             }
         }
 
@@ -39,7 +39,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
         {
             if (gate.UseLowerEdgeLevelTimeSeries)
             {
-                var timeSeriesFileName = $"{gate.Name}_{KnownStructureProperties.GateLowerEdgeLevel}.tim";
+                var timeSeriesFileName = $"{gate.Name}_{StructureRegion.GateLowerEdgeLevel.Key}.tim";
                 IniCategory.AddProperty(StructureRegion.GateLowerEdgeLevel.Key, timeSeriesFileName, StructureRegion.GateLowerEdgeLevel.Description);
             }
             else
@@ -50,15 +50,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
 
         private void AddOpeningWidthProperty(IGate gate)
         {
-            if (gate.UseOpeningWidthTimeSeries)
-            {
-                var timeSeriesFileName = $"{gate.Name}_{KnownStructureProperties.GateOpeningWidth}.tim";
-                IniCategory.AddProperty(StructureRegion.GateOpeningWidth.Key, timeSeriesFileName, StructureRegion.GateOpeningWidth.Description);
-            }
-            else
-            {
-                IniCategory.AddProperty(StructureRegion.GateOpeningWidth.Key, gate.OpeningWidth, StructureRegion.GateOpeningWidth.Description, StructureRegion.GateOpeningWidth.Format);
-            }
+            IniCategory.AddProperty(StructureRegion.GateOpeningWidth.Key, gate.OpeningWidth, StructureRegion.GateOpeningWidth.Description, StructureRegion.GateOpeningWidth.Format);
         }
 
         private void AddHorizontalDirectionProperty(IGate gate)
@@ -70,10 +62,10 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
                     horizontalDirection = "symmetric";
                     break;
                 case GateOpeningDirection.FromLeft:
-                    horizontalDirection = "from_left";
+                    horizontalDirection = "fromLeft";
                     break;
                 case GateOpeningDirection.FromRight:
-                    horizontalDirection = "from_right";
+                    horizontalDirection = "fromRight";
                     break;
                 default:
                     throw new ArgumentException("We can't write " + gate.HorizontalOpeningDirection);
