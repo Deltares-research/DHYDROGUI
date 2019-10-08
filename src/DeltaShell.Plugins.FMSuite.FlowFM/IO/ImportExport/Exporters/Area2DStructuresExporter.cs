@@ -60,6 +60,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters
                     Log.ErrorFormat("Cannot export structures from an integrated model (yet).");
                     return false;
                 }
+
+                if (model == null)
+                {
+                    return false;
+                }
             }
 
             var structuresFile = new StructuresFile
