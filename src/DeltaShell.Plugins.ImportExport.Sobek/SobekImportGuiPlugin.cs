@@ -37,10 +37,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
 
         public override IEnumerable<ViewInfo> GetViewInfoObjects()
         {
-            yield return new ViewInfo<SobekNetworkImporter, ImportPartialSobekWizardDialog>
-                {
-                    GetViewName = (v, o) => v.Title
-                };
             yield return new ViewInfo<SobekHydroModelImporter, ImportSobekHydroModelWizardDialog>
                 {
                     GetViewName = (v, o) => v.Title
