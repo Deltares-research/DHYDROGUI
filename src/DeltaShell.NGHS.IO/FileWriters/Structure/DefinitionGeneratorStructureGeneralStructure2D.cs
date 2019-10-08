@@ -1,5 +1,6 @@
 ﻿using System;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.IO.Helpers;
 
@@ -16,10 +17,6 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
             generalStructureCategory.Properties.ForEach(p => IniCategory.Properties.Add(p));
 
             return IniCategory;
-        }
-
-        public DefinitionGeneratorStructureGeneralStructure2D(DateTime? referenceDateTime) : base(referenceDateTime)
-        {
         }
     }
 }

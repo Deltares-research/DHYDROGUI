@@ -99,13 +99,13 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
             switch (structureType)
             {
                 case Structure2DType.Pump:
-                    return new DefinitionGeneratorStructurePump2D(null);
+                    return new DefinitionGeneratorStructurePump2D();
                 case Structure2DType.Weir:
-                    return new DefinitionGeneratorStructureWeir2D(null);
+                    return new DefinitionGeneratorStructureWeir2D();
                 case Structure2DType.GeneralStructure:
-                    return new DefinitionGeneratorStructureGeneralStructure2D(null);
+                    return new DefinitionGeneratorStructureGeneralStructure2D();
                 case Structure2DType.Gate:
-                    return new DefinitionGeneratorStructureGate2D(null);
+                    return new DefinitionGeneratorStructureGate2D();
                 case Structure2DType.LeveeBreach:
                     return new DefinitionGeneratorStructureLeveeBreach2D(referenceDateTime);
                 default:

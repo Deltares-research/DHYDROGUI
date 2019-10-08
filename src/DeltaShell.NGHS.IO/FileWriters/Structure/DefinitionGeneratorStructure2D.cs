@@ -7,12 +7,6 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
 {
     public abstract class DefinitionGeneratorStructure2D : DefinitionGeneratorStructure
     {
-        protected DateTime? ReferenceDateTime { get; set; }
-
-        public DefinitionGeneratorStructure2D(DateTime? referenceDateTime)
-        {
-            ReferenceDateTime = referenceDateTime;
-        }
 
         protected override void AddCommonRegionElements(IHydroObject hydroObject, string definitionType)
         {

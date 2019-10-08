@@ -47,9 +47,5 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
             var weirFormula = (SimpleWeirFormula) weir.WeirFormula;
             IniCategory.AddProperty(StructureRegion.LatContrCoeff.Key, weirFormula.LateralContraction, StructureRegion.LatContrCoeff.Description, StructureRegion.LatContrCoeff.Format);
         }
-
-        public DefinitionGeneratorStructureWeir2D(DateTime? referenceDateTime) : base(referenceDateTime)
-        {
-        }
     }
 }

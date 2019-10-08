@@ -19,21 +19,16 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
 
         private void AddCapacityProperty(IPump pump)
         {
-            var capacityKey = StructureRegion.Capacity.Key;
             var capacityDescription = StructureRegion.Capacity.Description;
             if (pump.CanBeTimedependent && pump.UseCapacityTimeSeries)
             {
-                var timeSeriesFileName = $"{pump.Name}_{capacityKey}.tim";
-                IniCategory.AddProperty(capacityKey, timeSeriesFileName, capacityDescription);
+                var timeSeriesFileName = $"{pump.Name}_{StructureRegion.Capacity.Key}.tim";
+                IniCategory.AddProperty(StructureRegion.Capacity.Key, timeSeriesFileName, capacityDescription);
             }
             else
             {
-                IniCategory.AddProperty(capacityKey, pump.Capacity, capacityDescription, StructureRegion.Capacity.Format);
+                IniCategory.AddProperty(StructureRegion.Capacity.Key, pump.Capacity, capacityDescription, StructureRegion.Capacity.Format);
             }
-        }
-
-        public DefinitionGeneratorStructurePump2D(DateTime? referenceDateTime) : base(referenceDateTime)
-        {
         }
     }
 }

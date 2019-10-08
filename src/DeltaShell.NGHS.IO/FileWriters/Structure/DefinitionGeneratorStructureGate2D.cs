@@ -89,9 +89,5 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
                 IniCategory.AddProperty(StructureRegion.GateSillWidth.Key, gate.SillWidth, StructureRegion.GateSillWidth.Description);
             }
         }
-
-        public DefinitionGeneratorStructureGate2D(DateTime? referenceDateTime) : base(referenceDateTime)
-        {
-        }
     }
 }

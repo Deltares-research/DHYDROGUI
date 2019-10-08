@@ -9,17 +9,20 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
 {
     public class DefinitionGeneratorStructureLeveeBreach2D : DefinitionGeneratorStructure2D
     {
-        public DefinitionGeneratorStructureLeveeBreach2D(DateTime? referenceDateTime) : base(referenceDateTime)
+        private DateTime? ReferenceDateTime { get; }
+        public DefinitionGeneratorStructureLeveeBreach2D(DateTime? referenceDateTime)
         {
+            ReferenceDateTime = referenceDateTime;
         }
-
+        
         public override DelftIniCategory CreateStructureRegion(IHydroObject hydroObject)
         {
-            AddCommonRegionElements(hydroObject, StructureRegion.StructureTypeName.LeveeBreach);
-
             var leveeBreach = hydroObject as ILeveeBreach;
             if (leveeBreach == null) return IniCategory;
 
+            AddCommonRegionElements(hydroObject, StructureRegion.StructureTypeName.LeveeBreach);
+
+            
             AddPropertyToIniCategory(leveeBreach.BreachLocationX, StructureRegion.BreachLocationX);
             AddPropertyToIniCategory(leveeBreach.BreachLocationY, StructureRegion.BreachLocationY);
 
