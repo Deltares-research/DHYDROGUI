@@ -68,6 +68,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void Read_FMModelSchema_DoesNotSplitMduNameWithCommas()
         {
             // Setup
