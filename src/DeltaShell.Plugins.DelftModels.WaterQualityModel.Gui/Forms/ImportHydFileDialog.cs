@@ -10,7 +10,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms
     {
         private readonly WaterQualityModel waterQualityModel;
         private readonly string path;
-        private string message;
         private bool showCancelButton;
         private Point buttonOkOrgLocation;
 
@@ -28,7 +27,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms
 
         public string Message
         {
-            get => labelMessage.Text;
             set => labelMessage.Text = value;
         }
 
