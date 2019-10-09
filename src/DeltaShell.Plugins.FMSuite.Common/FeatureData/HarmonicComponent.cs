@@ -1,11 +1,12 @@
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
 {
     public class HarmonicComponent
     {
         // frequency in rad/h
-        public static readonly IDictionary<string, double> DefaultAstroComponentsRadPerHour =
+        private static readonly IDictionary<string, double> defaultAstroComponentsRadPerHour =
             new Dictionary<string, double>
             {
                 {"A0", 0},
@@ -250,6 +251,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
         private readonly double frequency;
         private readonly double amplitude;
         private readonly double phase;
+
+        public static readonly ReadOnlyDictionary<string, double> DefaultAstroComponentsRadPerHour = new ReadOnlyDictionary<string, double>(dictionary: defaultAstroComponentsRadPerHour);
 
         public HarmonicComponent(string name, double amplitude, double phase)
         {
