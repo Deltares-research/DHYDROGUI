@@ -158,7 +158,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
             return propertyGroup;
         }
 
-        private TDef ConvertToPropertyDefinition<TDef>(IList<string> lineFields, string categoryName) 
+        private TDef ConvertToPropertyDefinition<TDef>(IList<string> lineFields, string categoryName)
             where TDef : ModelPropertyDefinition, new()
         {
             string defaultValueDependentOn = null;
@@ -187,7 +187,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
             {
                 captionField = mduPropertyName;
             }
-
 
             string mduGroupName = lineFields[0];
             string subCategoryField = lineFields[3];
@@ -238,6 +237,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
                 propertyDefinition.DefaultValueDependentOn = defaultValueDependentOn;
                 propertyDefinition.MultipleDefaultValuesAvailable = true;
             }
+
             return propertyDefinition;
         }
 
