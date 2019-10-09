@@ -104,35 +104,63 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
 
         private void ReadMduProperties<TDef>(ModelPropertySchema<TDef> schema) where TDef : ModelPropertyDefinition, new()
         {
+            var regexRule = new Regex(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
+            /* About the RegEx:
+
+            , the separator to be found
+            ?= Asserts that the following will be matched
+            [^\"]* matches any number of characters not present on the list (the double comma)
+            \" matches a double comma
+
+            So, if an expression is found, where a comma is present BUT between double commas ("),
+            then that expression will not be split.
+             */
+
             string line;
             while ((line = GetNextLine()) != null)
             {
-                ParseLine(schema, line);
+                List<string> lineFields = regexRule.Split(line).Select(lf => lf.Trim()).ToList();
+                if (lineFields.Count < descriptionIndex || lineFields.All(string.IsNullOrEmpty))
+                {
+                    continue;
+                }
+
+                string guiGroupName = lineFields[2];
+                ModelPropertyGroup guiPropertyGroup = GetGuiPropertyGroupFromSchema(schema, guiGroupName);
+                var propertyDefinition = ConvertToPropertyDefinition<TDef>(lineFields, guiPropertyGroup.Name);
+                guiPropertyGroup.PropertyDefinitions.Add(propertyDefinition);
+
+                AddPropertyDefinitionToSchema(schema, propertyDefinition);
             }
         }
 
-        private void ParseLine<TDef>(ModelPropertySchema<TDef> schema, string line) where TDef : ModelPropertyDefinition, new()
+        private static void AddPropertyDefinitionToSchema<TDef>(ModelPropertySchema<TDef> schema, TDef propertyDefinition)
+            where TDef : ModelPropertyDefinition, new()
         {
-            var regexRule = new Regex(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
-            /*
-                     About the RegEx:
-                    
-                    , the separator to be found
-                    ?= Asserts that the following will be matched
-                    [^\"]* matches any number of characters not present on the list (the double comma)
-                    \" matches a double comma
-                     
-                    So, if an expression is found, where a comma is present BUT between double commas ("),
-                    then that expression will not be split.
-                     */
-            List<string> lineFields = regexRule.Split(line).Select(lf => lf.Trim()).ToList();
-            if (lineFields.Count < descriptionIndex
-                || lineFields.All(string.IsNullOrEmpty))
+            schema.PropertyDefinitions.Add(propertyDefinition.FilePropertyName.ToLower(), propertyDefinition);
+
+            string fileCategoryName = propertyDefinition.FileCategoryName;
+            schema.AddNewModelDefinitionCategoryIfNotExisting(fileCategoryName);
+            schema.ModelDefinitionCategory[fileCategoryName].Add(propertyDefinition);
+        }
+
+        private ModelPropertyGroup GetGuiPropertyGroupFromSchema<TDef>(ModelPropertySchema<TDef> schema, string guiGroupName)
+            where TDef : ModelPropertyDefinition, new()
+        {
+            string guiGroupId = string.IsNullOrEmpty(guiGroupName) ? "misc" : guiGroupName;
+            if (!schema.GuiPropertyGroups.ContainsKey(guiGroupId))
             {
-                // todo: report
-                return;
+                throw new FormatException(string.Format("Invalid group id \"{0}\" on line {1} of file {2}",
+                                                        guiGroupId, LineNumber, InputFilePath));
             }
 
+            ModelPropertyGroup propertyGroup = schema.GuiPropertyGroups[guiGroupId];
+            return propertyGroup;
+        }
+
+        private TDef ConvertToPropertyDefinition<TDef>(IList<string> lineFields, string categoryName) 
+            where TDef : ModelPropertyDefinition, new()
+        {
             string defaultValueDependentOn = null;
             string defaultValues = null;
 
@@ -155,20 +183,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
             Type dataType = FMParser.GetClrType(mduPropertyName, typeField, ref captionField,
                                                 InputFilePath, LineNumber);
 
-            string guiGroupName = lineFields[2];
-            string guiGroupId = string.IsNullOrEmpty(guiGroupName) ? "misc" : guiGroupName;
-            if (!schema.GuiPropertyGroups.ContainsKey(guiGroupId))
-            {
-                throw new FormatException(string.Format("Invalid group id \"{0}\" on line {1} of file {2}",
-                                                        guiGroupId, LineNumber, InputFilePath));
-            }
-
             if (string.IsNullOrEmpty(captionField))
             {
                 captionField = mduPropertyName;
             }
 
-            ModelPropertyGroup propertyGroup = schema.GuiPropertyGroups[guiGroupId];
 
             string mduGroupName = lineFields[0];
             string subCategoryField = lineFields[3];
@@ -189,7 +208,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
 
             var propertyDefinition = new TDef
             {
-                Category = propertyGroup.Name,
+                Category = categoryName,
                 FileCategoryName = mduGroupName,
                 FilePropertyName = mduPropertyName.Trim('"'),
                 SubCategory = subCategoryField,
@@ -219,18 +238,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
                 propertyDefinition.DefaultValueDependentOn = defaultValueDependentOn;
                 propertyDefinition.MultipleDefaultValuesAvailable = true;
             }
-
-            propertyGroup.PropertyDefinitions.Add(propertyDefinition);
-
-            schema.PropertyDefinitions.Add(mduPropertyName.ToLower(), propertyDefinition);
-
-            // register the propertyDe to the group and to the lookup tables
-            if (!schema.ModelDefinitionCategory.ContainsKey(mduGroupName))
-            {
-                schema.ModelDefinitionCategory.Add(mduGroupName, new ModelPropertyGroup(mduGroupName));
-            }
-
-            schema.ModelDefinitionCategory[mduGroupName].AddPropertyDefinition(propertyDefinition);
+            return propertyDefinition;
         }
 
         private static void ParseRevisions(string fromRevString, string toRevString, out int fromRev, out int toRev)
