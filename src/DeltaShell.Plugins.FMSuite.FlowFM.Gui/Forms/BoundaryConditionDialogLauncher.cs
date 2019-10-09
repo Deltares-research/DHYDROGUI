@@ -7,6 +7,7 @@ using DelftTools.Shell.Core;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO.ImportExport;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Properties;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
@@ -190,7 +191,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
                     break;
 
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException(nameof(chosenFilter), 
+                                                          Resources.BoundaryConditionDialogLauncher_LaunchExporterDialog_An_unsupported_file_type_was_used_for_exporting_boundary_conditions_);
             }
         }
     }
