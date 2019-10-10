@@ -31,9 +31,19 @@ namespace DeltaShell.NGHS.IO.FileWriters.Retention
             var definition = new DelftIniCategory(RetentionRegion.Header);
 
             definition.AddProperty(RetentionRegion.Id.Key, retention.Name, RetentionRegion.Id.Description);
-            definition.AddProperty(RetentionRegion.Name.Key, retention.LongName, RetentionRegion.Name.Description);
+            definition.AddProperty(RetentionRegion.Name.Key, retention.LongName ?? retention.Name, RetentionRegion.Name.Description);
 
             definition.AddProperty(RetentionRegion.BranchId.Key, retention.Branch.Name, RetentionRegion.BranchId.Description);
+            if (retention.Chainage > 0)
+            {
+                definition.AddProperty(RetentionRegion.X.Key, retention.Geometry.Coordinate.X, RetentionRegion.BranchId.Description);
+                definition.AddProperty(RetentionRegion.Y.Key, retention.Geometry.Coordinate.Y, RetentionRegion.BranchId.Description);
+            }
+            else
+            {
+                definition.AddProperty(RetentionRegion.NodeId.Key, retention.Branch.Source.Name, RetentionRegion.BranchId.Description);
+            }
+
             definition.AddProperty(RetentionRegion.Chainage.Key, retention.Chainage, RetentionRegion.Chainage.Description, RetentionRegion.Chainage.Format);
             
             definition.AddProperty(RetentionRegion.StorageType.Key, retention.Type.ToString(), RetentionRegion.StorageType.Description);
@@ -70,7 +80,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Retention
                 definition.AddProperty(RetentionRegion.NumLevels.Key, levels.Count, RetentionRegion.NumLevels.Description);
                 definition.AddProperty(RetentionRegion.Levels.Key, levels, RetentionRegion.Levels.Description, RetentionRegion.Levels.Format);
                 definition.AddProperty(RetentionRegion.StorageArea.Key, storageAreas, RetentionRegion.StorageArea.Description, RetentionRegion.StorageArea.Format);
-                definition.AddProperty(RetentionRegion.Interpolate.Key, interpolateType == InterpolationType.Linear ? 0:1, RetentionRegion.Interpolate.Description);
+                definition.AddProperty(RetentionRegion.Interpolate.Key, interpolateType == InterpolationType.Linear ? "linear" : "block", RetentionRegion.Interpolate.Description);
             }
             else
             {
