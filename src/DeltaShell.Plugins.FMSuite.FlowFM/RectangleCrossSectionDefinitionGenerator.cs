@@ -6,6 +6,45 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM
 {
+    public class EllipticalCrossSectionShapeGenerator : ASewerCrossSectionShapeGenerator
+    {
+        public override ISewerFeature Generate(GwswElement gwswElement)
+        {
+            var ellipticalShape = CreateEllipticalShapeFromGwsw(gwswElement);
+            return ellipticalShape;
+        }
+
+        private ISewerFeature CreateEllipticalShapeFromGwsw(GwswElement gwswElement)
+        {
+            var shapeName = GetCrossSectionShapeName(gwswElement);
+
+            double height;
+            double width;
+            var widthAttribute = gwswElement.GetAttributeFromList(SewerProfileMapping.PropertyKeys.SewerProfileWidth);
+            var heightAttribute = gwswElement.GetAttributeFromList(SewerProfileMapping.PropertyKeys.SewerProfileHeight);
+            if (widthAttribute.TryGetValueAsDouble(out width) && heightAttribute.TryGetValueAsDouble(out height))
+            {
+                return new CrossSectionStandardShapeElliptical
+                {
+                    Name = shapeName,
+                    Width = width / 1000, /*Conversion from millimeters to meters*/
+                    Height = height / 1000, /*Conversion from millimeters to meters*/
+                    MaterialName = GetMaterialValue(gwswElement)
+                };
+            }
+
+            MessageForMissingValues(gwswElement, "width and/or height");
+            return GetDefaultEllipticalShape(shapeName);
+        }
+
+        private static ISewerFeature GetDefaultEllipticalShape(string name)
+        {
+            var defaultElliptical = CrossSectionStandardShapeElliptical.CreateDefault();
+            defaultElliptical.Name = name;
+            defaultElliptical.MaterialName = EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerProfileMapping.SewerProfileMaterial.Unknown);
+            return defaultElliptical;
+        }
+    }
     public class RectangleCrossSectionShapeGenerator : ASewerCrossSectionShapeGenerator
     {
         public override ISewerFeature Generate(GwswElement gwswElement)

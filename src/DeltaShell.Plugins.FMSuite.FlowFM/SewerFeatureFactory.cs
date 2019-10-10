@@ -127,14 +127,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             var structureType = profileShapeAttribute.GetValueFromDescription<SewerProfileMapping.SewerProfileType>();
             switch (structureType)
             {
+                case SewerProfileMapping.SewerProfileType.InvertedEgg:
+                    return new InvertedEggCrossSectionShapeGenerator();
                 case SewerProfileMapping.SewerProfileType.Egg:
                     return new EggCrossSectionShapeGenerator();
+                case SewerProfileMapping.SewerProfileType.UShape:
+                    return new UShapeCrossSectionShapeGenerator();
                 case SewerProfileMapping.SewerProfileType.Arch:
                     return new ArchCrossSectionShapeGenerator();
                 case SewerProfileMapping.SewerProfileType.Cunette:
                     return new CunetteCrossSectionShapeGenerator();
                 case SewerProfileMapping.SewerProfileType.Rectangle:
                     return new RectangleCrossSectionShapeGenerator();
+                case SewerProfileMapping.SewerProfileType.Elliptical:
+                    return new EllipticalCrossSectionShapeGenerator();
                 case SewerProfileMapping.SewerProfileType.Circle:
                     return new CircleCrossSectionShapeGenerator();
                 case SewerProfileMapping.SewerProfileType.Trapezoid:

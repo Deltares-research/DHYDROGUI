@@ -1,0 +1,47 @@
+using DelftTools.Hydro.CrossSections.StandardShapes;
+using DelftTools.Hydro.SewerFeatures;
+using DelftTools.Hydro.Structures;
+using DelftTools.Utils;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
+
+namespace DeltaShell.Plugins.FMSuite.FlowFM
+{
+    class InvertedEggCrossSectionShapeGenerator : ASewerCrossSectionShapeGenerator
+    {
+        public override ISewerFeature Generate(GwswElement gwswElement)
+        {
+            var invertedEggShape = CreateInvertedEggShapeFromGwsw(gwswElement);
+            return invertedEggShape;
+        }
+
+        private ISewerFeature CreateInvertedEggShapeFromGwsw(GwswElement gwswElement)
+        {
+            var shapeName = GetCrossSectionShapeName(gwswElement);
+
+            double width;
+            var widthAttribute = gwswElement.GetAttributeFromList(SewerProfileMapping.PropertyKeys.SewerProfileWidth);
+            if (widthAttribute.TryGetValueAsDouble(out width))
+            {
+                var csInvertedEggShape = new CrossSectionStandardShapeInvertedEgg
+                {
+                    Name = shapeName,
+                    Width = width / 1000, /*Conversion from millimeters to meters*/
+                    MaterialName = GetMaterialValue(gwswElement)
+                };
+                LogMessageInCaseSewerShapeWidthHeightAreNotInCorrectProportion(gwswElement, width, 1.5, "(2:3)", csInvertedEggShape);
+                return csInvertedEggShape;
+            }
+
+            MessageForMissingValues(gwswElement, "width");
+            return GetDefaultInvertedEggShape(shapeName);
+        }
+
+        private static ISewerFeature GetDefaultInvertedEggShape(string name)
+        {
+            var defaultInvertedEgg = CrossSectionStandardShapeInvertedEgg.CreateDefault();
+            defaultInvertedEgg.Name = name;
+            defaultInvertedEgg.MaterialName = EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerProfileMapping.SewerProfileMaterial.Unknown);
+            return defaultInvertedEgg;
+        }
+    }
+}

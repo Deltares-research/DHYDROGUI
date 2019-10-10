@@ -8,11 +8,16 @@ namespace DelftTools.Hydro.Structures
         {
             [Description("Unknown")] Unknown,
             [Description("EIV")] Egg,
+            [Description("EIG")] InvertedEgg,
             [Description("HEU")] Arch,
             [Description("MVR")] Cunette,
+            [Description("OVA")] Elliptical,
             [Description("RHK")] Rectangle,
+            [Description("TAB")] Tabulated,
             [Description("RND")] Circle,
-            [Description("TPZ")] Trapezoid
+            [Description("TPZ")] Trapezoid,
+            [Description("UVR")] UShape,
+            [Description("YZP")] YZ_Profile,
         }
 
         public enum SewerProfileMaterial

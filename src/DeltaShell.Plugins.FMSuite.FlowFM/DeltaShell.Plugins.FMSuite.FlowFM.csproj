@@ -150,6 +150,7 @@
     <Compile Include="CunetteCrossSectionShapeGenerator.cs" />
     <Compile Include="DefaultCrossSectionDefinitionGenerator.cs" />
     <Compile Include="EggCrossSectionDefinitionGenerator.cs" />
+    <Compile Include="InvertedEggCrossSectionShapeGenerator.cs" />
     <Compile Include="IO\BathymetryFileWriter.cs" />
     <Compile Include="IO\BcMeteoFileDataBuilder.cs" />
     <Compile Include="IO\Exporters\WaterFlowFMAndF1dFileExporter.cs" />
@@ -300,6 +301,7 @@
     <Compile Include="SewerStructureMapping.cs" />
     <Compile Include="SewerWeirGenerator.cs" />
     <Compile Include="TrapezoidCrossSectionDefinitionGenerator.cs" />
+    <Compile Include="UShapeCrossSectionShapeGenerator.cs" />
     <Compile Include="Validation\VerticalProfileValidator.cs" />
     <Compile Include="Validation\WaterFlowFMArea2DValidator.cs" />
     <Compile Include="Validation\WaterFlowFMBoundaryConditionValidator.cs" />

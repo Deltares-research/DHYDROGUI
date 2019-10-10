@@ -33,7 +33,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 {
                     subReports.AddRange(new[]
                     {
-                        //HydroNetworkValidator.Validate(target),
+                        HydroNetworkValidator.Validate(target),
                         StructuresValidator.Validate(target),
                         ExtraResistanceValidator.Validate(target.Structures.Where(s => s is IExtraResistance)),
                     });
