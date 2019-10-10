@@ -20,70 +20,32 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.ImportersExporters
     public class PlizFileImporterExporter<TParent, TFeat> : Feature2DImportExportBase<TFeat>
         where TFeat : class, IFeature, INameable, new() where TParent : INameable
     {
-        /// <summary>
-        /// Gets the name of the importer.
-        /// </summary>
-        /// <value>
-        /// The name of the importer.
-        /// </value>
+        /// <inheritdoc />
         protected override string ImporterName => "Features from .pliz file";
 
-        /// <summary>
-        /// Gets the name of the exporter.
-        /// </summary>
-        /// <value>
-        /// The name of the exporter.
-        /// </value>
+        /// <inheritdoc />
         protected override string ExporterName => "Features to .pliz file";
 
-        /// <summary>
-        /// Gets the file filter.
-        /// </summary>
-        /// <value>
-        /// The file filter.
-        /// </value>
+        /// <inheritdoc />
         public override string FileFilter => "Feature polyline-z files (*.pliz)|*.pliz";
 
-        /// <summary>
-        /// Gets the category.
-        /// </summary>
-        /// <value>
-        /// The category.
-        /// </value>
+        /// <inheritdoc />
         public override string Category => "Feature geometries";
 
-        /// <summary>
-        /// Gets the description.
-        /// </summary>
-        /// <value>
-        /// The description.
-        /// </value>
+        /// <inheritdoc />
         public override string Description => string.Empty;
 
-        /// <summary>
-        /// Gets the image.
-        /// </summary>
-        /// <value>
-        /// The image.
-        /// </value>
+        /// <inheritdoc />
         public override Bitmap Image => Resources.TextDocument;
 
-        /// <summary>
-        /// Get the source types
-        /// </summary>
-        /// <returns>The source types</returns>
+        /// <inheritdoc />
         public override IEnumerable<Type> SourceTypes()
         {
             yield return typeof(TParent);
             yield return typeof(IList<TParent>);
         }
 
-        /// <summary>
-        /// Gets the types of supported items.
-        /// </summary>
-        /// <value>
-        /// The types of supported items.
-        /// </value>
+        /// <inheritdoc />
         public override IEnumerable<Type> SupportedItemTypes
         {
             get
@@ -124,11 +86,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.ImportersExporters
         /// </value>
         public Action<IList<TFeat>> AfterImportAction { get; set; }
 
-        /// <summary>
-        /// Imports the file at the specified path.
-        /// </summary>
-        /// <param name="path">The path.</param>
-        /// <returns></returns>
+        /// <inheritdoc />
         protected override IEnumerable<TFeat> Import(string path)
         {
             if (Path.GetExtension(path) == ".pliz")
@@ -195,11 +153,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.ImportersExporters
         }
 
 
-        /// <summary>
-        /// Exports the specified features.
-        /// </summary>
-        /// <param name="features">The features.</param>
-        /// <param name="path">The path.</param>
+        /// <inheritdoc />
         protected override void Export(IEnumerable<TFeat> features, string path)
         {
             if (Path.GetExtension(path) == ".pliz")
@@ -212,12 +166,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.ImportersExporters
             }
         }
 
-        /// <summary>
-        /// Exports the specified item.
-        /// </summary>
-        /// <param name="item">The item.</param>
-        /// <param name="path">The file path.</param>
-        /// <returns></returns>
+        /// <inheritdoc />
         public override bool Export(object item, string path)
         {
             string file = path;
