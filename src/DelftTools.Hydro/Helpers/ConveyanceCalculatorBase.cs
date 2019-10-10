@@ -14,31 +14,28 @@ namespace DelftTools.Hydro.Helpers
         {
             {
                 var conveyanceData = new Function("cross_section_processed_data");
-
                 conveyanceData.Components.AddRange(new[]
                 {
-                    GetDoubleVariable("conveyance", "m3/s"),
-                    GetDoubleVariable("flow area", "m²"),
-                    GetDoubleVariable("flow width", "m"),
-                    GetDoubleVariable("wetted perimeter", "m"),
-                    GetDoubleVariable("hydraulic radius", "m"),
-                    GetDoubleVariable("total width", "m"),
-                    GetDoubleVariable("conveyance negative", "m3/s")
+                    CreateDoubleVariable("conveyance", "m3/s"),
+                    CreateDoubleVariable("flow area", "m²"),
+                    CreateDoubleVariable("flow width", "m"),
+                    CreateDoubleVariable("wetted perimeter", "m"),
+                    CreateDoubleVariable("hydraulic radius", "m"),
+                    CreateDoubleVariable("total width", "m"),
+                    CreateDoubleVariable("conveyance negative", "m3/s")
                 });
-                conveyanceData.Arguments.Add(new Variable<double>("depth")
-                {
-                    Unit = new Unit("m", "m")
-                });
+                conveyanceData.Arguments.Add(CreateDoubleVariable("depth", "m", true));
+
                 return conveyanceData;
             }
         }
 
-        private static Variable<double> GetDoubleVariable(string variableName, string unitName)
+        private static Variable<double> CreateDoubleVariable(string variableName, string unitName, bool isEditable = false)
         {
             return new Variable<double>(variableName)
             {
                 Unit = new Unit(unitName, unitName),
-                IsEditable = false
+                IsEditable = isEditable
             };
         }
 
