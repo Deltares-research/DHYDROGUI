@@ -1976,7 +1976,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             var returnedString = model.GetFeatureCategory(feature);
 
             // Then
-            Assert.That(returnedString, Is.EqualTo(KnownFeatureCategories.Observations));
+            Assert.That(returnedString, Is.EqualTo(KnownFeatureCategories.ObservationPoints));
         }
 
         [Test]
@@ -1991,7 +1991,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             var returnedString = model.GetFeatureCategory(feature);
 
             // Then
-            Assert.That(returnedString, Is.EqualTo(KnownFeatureCategories.CrossSections));
+            Assert.That(returnedString, Is.EqualTo(KnownFeatureCategories.ObservationCrossSections));
         }
 
         [Test, NUnit.Framework.Category(TestCategory.Integration)]

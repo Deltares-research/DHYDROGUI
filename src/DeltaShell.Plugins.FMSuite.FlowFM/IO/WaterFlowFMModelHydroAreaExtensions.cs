@@ -10,14 +10,19 @@ using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using GeoAPI.Extensions.Feature;
-using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
     public static class WaterFlowFMModelHydroAreaExtensions
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(WaterFlowFMModelHydroAreaExtensions));
-
+        /// <summary>
+        /// Gets the features from a category mentioned in the dimr xml. 
+        /// </summary>
+        /// <param name="area">The hydro area of a model.</param>
+        /// <param name="category">The category.</param>
+        /// <returns>Features of the hydro area of a model from a specific category </returns>
+        ///  /// <exception cref="ArgumentException">
+        /// ArgumentException will be  returned if category is unknown </exception>
         public static IEnumerable<IFeature> GetFeaturesFromCategory(this HydroArea area, string category)
         {
             switch (category)
@@ -30,13 +35,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     return area.Weirs.Where(w => w.WeirFormula is GatedWeirFormula);
                 case KnownFeatureCategories.Weirs:
                     return area.Weirs.Where(w => w.WeirFormula is SimpleWeirFormula);
-                case KnownFeatureCategories.Observations:
+                case KnownFeatureCategories.ObservationPoints:
                     return area.ObservationPoints;
-                case KnownFeatureCategories.CrossSections:
+                case KnownFeatureCategories.ObservationCrossSections:
                     return area.ObservationCrossSections;
                 default:
-                    return Enumerable.Empty<IFeature>();
-            }
+                    throw new ArgumentException($"unknown category {category} used"); 
+            } 
         }
 
         public static void UpdateGroupName(this IGroupableFeature groupableFeature, WaterFlowFMModel model)

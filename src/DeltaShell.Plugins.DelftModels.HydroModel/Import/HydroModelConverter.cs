@@ -197,6 +197,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
             {
                 try
                 {
+                    if (string.IsNullOrEmpty(couplerXml.sourceName) || string.IsNullOrEmpty(couplerXml.targetName))
+                    {
+                        logHandler.ReportError($"Could not link an item from {sourceModel.Name} to {targetModel.Name}");
+                        continue;
+                    }
+                    
                     var sourceDataItem = sourceModel.GetDataItemByItemString(couplerXml.sourceName);
                     var targetDataItem = targetModel.GetDataItemByItemString(couplerXml.targetName);
 
@@ -208,9 +214,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
 
                     targetDataItem.LinkTo(sourceDataItem);
                 }
-                catch (NotImplementedException exception)
+                catch (Exception e) when (e is NotImplementedException ||
+                                          e is ArgumentException)
                 {
-                    logHandler.ReportError($"Could not link {couplerXml.sourceName} to {couplerXml.targetName} : {exception.Message}");
+                    logHandler.ReportError(
+                        $"Could not link {couplerXml.sourceName} to {couplerXml.targetName} : {e.Message}");
                 }
             }
         }

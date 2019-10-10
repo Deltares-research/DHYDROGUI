@@ -45,26 +45,58 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             return string.Join("/", concatNames);
         }
 
+        /// <summary>
+        /// Gets the data item by item string.
+        /// </summary>
+        /// <param name="itemString">The item string.</param>
+        /// <returns>The correct data item</returns>
+         /// <remarks> Argument "itemString" cannot be null </remarks>
+         /// <exception cref="ArgumentException">
+         /// ArgumentExceptions will be  returned if,
+         /// - item string contains not 3 elements
+         /// - category in item string is unknown
+         /// - feature in item string is unknown
+         /// - parameter name in item string is unknown</exception>
         public virtual IDataItem GetDataItemByItemString(string itemString)
         {
             string[] stringParts = itemString.Split('/');
-            string featureCategory = stringParts[0];
-            string featureName = stringParts[1];
-            string parameterName = stringParts[2];
 
-            IEnumerable<INameable> featuresFromCategory = Area.GetFeaturesFromCategory(featureCategory).OfType<INameable>();
+            if (stringParts.Length != 3)
+            {
+                throw new ArgumentException(
+                    $"{itemString} should contain a category, feature name and a parameter name");
+            }
 
-            var feature = (IFeature) featuresFromCategory.FirstOrDefault(f => f.Name.Equals(featureName));
+            IFeature feature = GetAreaFeature(stringParts[0], stringParts[1]);
 
-            IEnumerable<IDataItem> childDataItems = GetChildDataItems(feature);
+            if (feature == null)
+            {
+                throw new ArgumentException(
+                    $"feature {stringParts[1]} in {itemString} cannot be found in the FM model");
+            }
 
-            IDataItem dataItem = childDataItems.FirstOrDefault(di => (di.ValueConverter as ParameterValueConverter)?
-                                                                     .ParameterName == parameterName);
+            IDataItem dataItem = GetChildDataItems(feature).FirstOrDefault(di =>
+            {
+                var parameterValueConverter = di.ValueConverter as ParameterValueConverter;
+                return parameterValueConverter?.ParameterName == stringParts[2];
+            });
+
+            if (dataItem == null)
+            {
+                throw new ArgumentException(
+                    $"parameter name {stringParts[2]} in {itemString} cannot be found in the FM model");
+            }
 
             return dataItem;
         }
 
-        
+        private IFeature GetAreaFeature(string featureCategory, string featureName)
+        {
+            IEnumerable<INameable> featuresFromCategory =
+                Area.GetFeaturesFromCategory(featureCategory).OfType<INameable>();
+
+            return (IFeature) featuresFromCategory.FirstOrDefault(f => f.Name.Equals(featureName));
+        }
 
         public virtual string MpiCommunicatorString => "DFM_COMM_DFMWORLD";
 

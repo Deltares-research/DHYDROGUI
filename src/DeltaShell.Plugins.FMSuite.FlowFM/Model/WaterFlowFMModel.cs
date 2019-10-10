@@ -965,12 +965,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
             if (Area.ObservationPoints.Contains(feature))
             {
-                return KnownFeatureCategories.Observations;
+                return KnownFeatureCategories.ObservationPoints;
             }
 
             if (Area.ObservationCrossSections.Contains(feature))
             {
-                return KnownFeatureCategories.CrossSections;
+                return KnownFeatureCategories.ObservationCrossSections;
             }
 
             return null;
