@@ -18,11 +18,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         /// <summary>
         /// Gets the features from a category mentioned in the dimr xml. 
         /// </summary>
-        /// <param name="area">The hydro area of a model.</param>
-        /// <param name="category">The category.</param>
-        /// <returns>Features of the hydro area of a model from a specific category </returns>
-        ///  /// <exception cref="ArgumentException">
-        /// ArgumentException will be  returned if category is unknown </exception>
+        /// <param name="area"> The hydro area of a model. </param>
+        /// <param name="category"> The category. </param>
+        /// <returns> Features of the hydro area of a model from a specific category. </returns>
+        /// <exception cref="ArgumentException"> ArgumentException will be  returned if category is unknown. </exception>
         public static IEnumerable<IFeature> GetFeaturesFromCategory(this HydroArea area, string category)
         {
             switch (category)
@@ -40,7 +39,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 case KnownFeatureCategories.ObservationCrossSections:
                     return area.ObservationCrossSections;
                 default:
-                    throw new ArgumentException($"unknown category {category} used"); 
+                    throw new ArgumentException($"unknown category {category} used."); 
             } 
         }
 

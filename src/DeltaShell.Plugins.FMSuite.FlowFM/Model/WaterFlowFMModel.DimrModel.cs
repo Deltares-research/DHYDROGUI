@@ -48,15 +48,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         /// <summary>
         /// Gets the data item by item string.
         /// </summary>
-        /// <param name="itemString">The item string.</param>
-        /// <returns>The correct data item</returns>
-         /// <remarks> Argument "itemString" cannot be null </remarks>
-         /// <exception cref="ArgumentException">
-         /// ArgumentExceptions will be  returned if,
-         /// - item string contains not 3 elements
-         /// - category in item string is unknown
-         /// - feature in item string is unknown
-         /// - parameter name in item string is unknown</exception>
+        /// <param name="itemString"> The item string. </param>
+        /// <returns> The matching data item. </returns>
+        /// <remarks> <param name="itemString"/> cannot be null. </remarks>
+        /// <exception cref="ArgumentException">
+        /// Thrown in case,
+        /// - <param name="itemString"/> does not contain 3 elements
+        /// - category in <param name="itemString"/> is unknown
+        /// - feature in <param name="itemString"/> is unknown
+        /// - parameter name in <param name="itemString"/> is unknown. </exception>
         public virtual IDataItem GetDataItemByItemString(string itemString)
         {
             string[] stringParts = itemString.Split('/');
