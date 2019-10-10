@@ -119,7 +119,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             // When Then
             ArgumentException ex =
                 Assert.Throws<ArgumentException>(() => area.GetFeaturesFromCategory(category));
-            Assert.AreEqual($"unknown category {category} used", ex.Message,
+            Assert.AreEqual($"unknown category {category} used.", ex.Message,
                             "The exception message is different than expected");
         }
 
