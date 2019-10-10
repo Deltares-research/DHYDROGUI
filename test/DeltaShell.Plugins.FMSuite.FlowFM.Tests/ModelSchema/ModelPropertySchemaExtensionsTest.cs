@@ -8,39 +8,55 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.ModelSchema
     public class ModelPropertySchemaExtensionsTest
     {
         [Test]
-        public void AddNewModelDefinitionCategoryIfNotExisting_WithNonExistingCategory_ThenCategoryIsAddedToModelPropertySchema()
+        public void AddPropertyDefinition_WithNonExistingCategory_ThenPropertyDefinitionIsAddedToModelPropertySchemaAndNewModelPropertyGroupIsAdded()
         {
             // Setup
             const string categoryName = "myCategory";
+            const string filePropertyName = "myPropertyName";
+
             var schema = new ModelPropertySchema<WaterFlowFMPropertyDefinition>();
+            var propertyDefinition = new WaterFlowFMPropertyDefinition
+            {
+                FileCategoryName = categoryName,
+                FilePropertyName = filePropertyName
+            };
 
             // Call
-            schema.AddNewModelDefinitionCategoryIfNotExisting(categoryName);
+            schema.AddPropertyDefinition(propertyDefinition);
 
             // Assert
-            schema.ModelDefinitionCategory.TryGetValue(categoryName, out ModelPropertyGroup resultingPropertyGroup);
-            Assert.That(resultingPropertyGroup, Is.Not.Null);
-            Assert.That(resultingPropertyGroup.Name, Is.EqualTo(categoryName));
+            schema.PropertyDefinitions.TryGetValue(filePropertyName.ToLower(), out WaterFlowFMPropertyDefinition resultingPropertyDefinition);
+            Assert.That(resultingPropertyDefinition, Is.Not.Null);
+            Assert.That(resultingPropertyDefinition, Is.SameAs(propertyDefinition));
+
+            schema.ModelDefinitionCategory.TryGetValue(categoryName, out ModelPropertyGroup resultingModelPropertyGroup);
+            Assert.That(resultingModelPropertyGroup, Is.Not.Null);
+            Assert.That(resultingModelPropertyGroup.Name, Is.EqualTo(categoryName));
         }
 
         [Test]
-        public void AddNewModelDefinitionCategoryIfNotExisting_WithExistingCategory_ThenModelDefinitionCategoryRemainsUnchanged()
+        public void AddPropertyDefinition_WithExistingCategory_ThenModelDefinitionCategoryRemainsUnchanged()
         {
             // Setup
             const string categoryName = "myCategory";
-            const string groupName = "myGroupName";
 
             var schema = new ModelPropertySchema<WaterFlowFMPropertyDefinition>();
-            var initialPropertyGroup = new ModelPropertyGroup(groupName);
-            schema.ModelDefinitionCategory.Add(categoryName, initialPropertyGroup);
+            var initialModelPropertyGroup = new ModelPropertyGroup("myModelPropertyGroupName");
+            schema.ModelDefinitionCategory.Add(categoryName, initialModelPropertyGroup);
+
+            var propertyDefinition = new WaterFlowFMPropertyDefinition
+            {
+                FileCategoryName = categoryName,
+                FilePropertyName = "myPropertyName"
+            };
 
             // Call
-            schema.AddNewModelDefinitionCategoryIfNotExisting(categoryName);
+            schema.AddPropertyDefinition(propertyDefinition);
 
             // Assert
-            schema.ModelDefinitionCategory.TryGetValue(categoryName, out ModelPropertyGroup resultingPropertyGroup);
-            Assert.That(resultingPropertyGroup, Is.Not.Null);
-            Assert.That(resultingPropertyGroup, Is.SameAs(initialPropertyGroup));
+            schema.ModelDefinitionCategory.TryGetValue(categoryName, out ModelPropertyGroup resultingModelPropertyGroup);
+            Assert.That(resultingModelPropertyGroup, Is.Not.Null);
+            Assert.That(resultingModelPropertyGroup, Is.SameAs(initialModelPropertyGroup));
         }
     }
 }

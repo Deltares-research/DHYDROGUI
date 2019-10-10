@@ -30,7 +30,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
             OpenInputFile(filePath);
             try
             {
-                return ParseFileToModelPropertySchema<TDef>();
+                return ReadModelPropertySchema<TDef>();
             }
             finally
             {
@@ -38,8 +38,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
             }
         }
 
-        private ModelPropertySchema<TDef> ParseFileToModelPropertySchema<TDef>() 
-            where TDef : ModelPropertyDefinition, new()
+        private ModelPropertySchema<TDef> ReadModelPropertySchema<TDef>() where TDef : ModelPropertyDefinition, new()
         {
             var schema = new ModelPropertySchema<TDef>();
 
@@ -50,15 +49,28 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
                                                         InputFilePath));
             }
 
-            IEnumerable<KeyValuePair<string, ModelPropertyGroup>> guiPropertyGroups = ReadGuiPropertyGroups();
-            guiPropertyGroups.ForEach(kvp => schema.GuiPropertyGroups.Add(kvp));
+            ReadAndAddPredefinedGroups(schema);
+            IEnumerable<KeyValuePair<string, TDef>> propertyDefinitionsByGuiGroup = ReadMduProperties<TDef>();
 
-            IEnumerable<KeyValuePair<string, ModelPropertyGroup>> modelDefinitionCategories = ReadModelDefinitionCategories();
-            modelDefinitionCategories.ForEach(kvp => schema.ModelDefinitionCategory.Add(kvp));
+            propertyDefinitionsByGuiGroup.ForEach(kvp =>
+            {
+                TDef propertyDefinition = kvp.Value;
+                string guiGroupName = kvp.Key;
 
-            ReadMduProperties(schema);
+                AddPropertyDefinitionToGuiGroup(schema, guiGroupName, propertyDefinition);
+                schema.AddPropertyDefinition(propertyDefinition);
+            });
 
             return schema;
+        }
+
+        private void ReadAndAddPredefinedGroups<TDef>(ModelPropertySchema<TDef> schema) where TDef : ModelPropertyDefinition, new()
+        {
+            IEnumerable<KeyValuePair<string, ModelPropertyGroup>> guiPropertyGroups = ReadGuiPropertyGroups();
+            guiPropertyGroups.ForEach(kvp => { schema.GuiPropertyGroups.Add(kvp); });
+
+            IEnumerable<KeyValuePair<string, ModelPropertyGroup>> modelDefinitionCategories = ReadModelDefinitionCategories();
+            modelDefinitionCategories.ForEach(action: kvp => { schema.ModelDefinitionCategory.Add(kvp); });
         }
 
         private IEnumerable<KeyValuePair<string, ModelPropertyGroup>> ReadGuiPropertyGroups()
@@ -102,7 +114,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
             }
         }
 
-        private void ReadMduProperties<TDef>(ModelPropertySchema<TDef> schema) where TDef : ModelPropertyDefinition, new()
+        private IEnumerable<KeyValuePair<string, TDef>> ReadMduProperties<TDef>() where TDef : ModelPropertyDefinition, new()
         {
             var regexRule = new Regex(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
             /* About the RegEx:
@@ -126,22 +138,16 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
                 }
 
                 string guiGroupName = lineFields[2];
-                ModelPropertyGroup guiPropertyGroup = GetGuiPropertyGroupFromSchema(schema, guiGroupName);
-                var propertyDefinition = ConvertToPropertyDefinition<TDef>(lineFields, guiPropertyGroup.Name);
-                guiPropertyGroup.PropertyDefinitions.Add(propertyDefinition);
-
-                AddPropertyDefinitionToSchema(schema, propertyDefinition);
+                yield return new KeyValuePair<string, TDef>(guiGroupName, ConvertToPropertyDefinition<TDef>(lineFields));
             }
         }
 
-        private static void AddPropertyDefinitionToSchema<TDef>(ModelPropertySchema<TDef> schema, TDef propertyDefinition)
-            where TDef : ModelPropertyDefinition, new()
+        private void AddPropertyDefinitionToGuiGroup<TDef>(ModelPropertySchema<TDef> schema, string guiGroupName,
+                                                           TDef propertyDefinition) where TDef : ModelPropertyDefinition, new()
         {
-            schema.PropertyDefinitions.Add(propertyDefinition.FilePropertyName.ToLower(), propertyDefinition);
-
-            string fileCategoryName = propertyDefinition.FileCategoryName;
-            schema.AddNewModelDefinitionCategoryIfNotExisting(fileCategoryName);
-            schema.ModelDefinitionCategory[fileCategoryName].Add(propertyDefinition);
+            ModelPropertyGroup guiPropertyGroup = GetGuiPropertyGroupFromSchema(schema, guiGroupName);
+            propertyDefinition.Category = guiPropertyGroup.Name;
+            guiPropertyGroup.PropertyDefinitions.Add(propertyDefinition);
         }
 
         private ModelPropertyGroup GetGuiPropertyGroupFromSchema<TDef>(ModelPropertySchema<TDef> schema, string guiGroupName)
@@ -158,7 +164,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
             return propertyGroup;
         }
 
-        private TDef ConvertToPropertyDefinition<TDef>(IList<string> lineFields, string categoryName)
+        private TDef ConvertToPropertyDefinition<TDef>(IList<string> lineFields)
             where TDef : ModelPropertyDefinition, new()
         {
             string defaultValueDependentOn = null;
@@ -207,7 +213,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
 
             var propertyDefinition = new TDef
             {
-                Category = categoryName,
                 FileCategoryName = mduGroupName,
                 FilePropertyName = mduPropertyName.Trim('"'),
                 SubCategory = subCategoryField,
