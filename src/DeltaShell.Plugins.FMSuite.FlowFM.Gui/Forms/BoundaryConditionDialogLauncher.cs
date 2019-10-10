@@ -191,7 +191,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
                     break;
 
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(chosenFilter), 
+                    throw new ArgumentOutOfRangeException(nameof(saveFileDialog.FilterIndex), 
                                                           Resources.BoundaryConditionDialogLauncher_LaunchExporterDialog_An_unsupported_file_type_was_used_for_exporting_boundary_conditions_);
             }
         }

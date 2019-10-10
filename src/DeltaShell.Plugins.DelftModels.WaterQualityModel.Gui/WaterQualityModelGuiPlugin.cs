@@ -586,11 +586,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
             {
                 var dialog = new ImportHydFileDialog(model, model.HydroData.FilePath)
                 {
-                    Message = string.Format(
-                        "Hydro data of '{0}' has changed ('{1}', or related files).\nPress Ok to reload the hydro data.",
-                        model.Name, Path.GetFileName(model.HydroData.FilePath)),
                     ShowCancelButton = false
                 };
+                dialog.SetLabelMessage($"Hydro data of '{model.Name}' has changed ('{Path.GetFileName(model.HydroData.FilePath)}', or related files).\nPress Ok to reload the hydro data.");
 
                 dialog.ShowDialog((IWin32Window) Gui.MainWindow);
                 showingSyncMessage = false;
@@ -960,12 +958,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
             };
             hydFileModelMenuItem.Click += (s, e) =>
             {
-                var dialog = new ImportHydFileDialog(waqModel, hydFilePath)
-                {
-                    Message = string.Format(
-                        "Choose the options to use for importing the hyd file '{0}' from model '{1}'",
-                        Path.GetFileName(hydFilePath), flowModelName)
-                };
+                var dialog = new ImportHydFileDialog(waqModel, hydFilePath);
+                dialog.SetLabelMessage($"Choose the options to use for importing the hyd file '{Path.GetFileName(hydFilePath)}' from model '{flowModelName}'");
+
                 dialog.ShowDialog();
             };
 
