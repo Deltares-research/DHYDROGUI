@@ -171,6 +171,7 @@ namespace DeltaShell.NGHS.IO.Grid
 
             if (network.Nodes != null)
             {
+                
                 var compartments = new List<Compartment>();
                 network.Manholes.ForEach(m =>
                 {
@@ -204,6 +205,14 @@ namespace DeltaShell.NGHS.IO.Grid
                 NodesY = nonManholeNetworkNodes.Select(n => n.Geometry.Coordinates.Any() ? n.Geometry.Coordinates[0].Y : 0).Concat(compartmentsY).ToArray();
                 NodesNames = nonManholeNetworkNodes.Select(n => n.Name).Concat(compartments.Select(c => c.Name)).ToArray();
                 NodesDescriptions = nonManholeNetworkNodes.OfType<IHydroNode>().Select(n => n.LongName).Concat(compartments.Select(c => string.Empty)).ToArray();
+                
+                /*var networkNodes = network.Nodes.OfType<IHydroNode>().ToArray();
+                NumberOfNodes = networkNodes.Length;
+                NodesX = networkNodes.Select(n => n.Geometry.Coordinates.Any() ? n.Geometry.Coordinates[0].X : 0).ToArray();
+                NodesY = networkNodes.Select(n => n.Geometry.Coordinates.Any() ? n.Geometry.Coordinates[0].Y : 0).ToArray();
+                NodesNames = networkNodes.Select(n => n.Name).ToArray();
+                NodesDescriptions = networkNodes.Select(n => n.LongName).ToArray();
+                */
             }
 
             if (network.Branches != null)
@@ -232,7 +241,7 @@ namespace DeltaShell.NGHS.IO.Grid
                 BranchDescriptions = network.Branches.Select(b => b.Description).ToArray();
                 BranchOrderNumbers = network.Branches.Select(b => b.OrderNumber).ToArray();
                 
-                var nonSewerConnections = network.Branches.Where(b => !(b is SewerConnection)).ToArray();
+                /*var nonSewerConnections = network.Branches.Where(b => !(b is SewerConnection)).ToArray();
 
                 // Determine the end points of the sewer connections,
                 // because the compartment coordinates are adjusted slightly
@@ -247,7 +256,10 @@ namespace DeltaShell.NGHS.IO.Grid
                 var compartmentYCoordinates = sourceAndTargetCompartments.Select(name => compartmentCoordinateDictionary[name].Y);
 
                 GeopointsX = nonSewerConnections.SelectMany(b => b.Geometry.Coordinates.Select(c => c.X)).Concat(compartmentXCoordinates).ToArray();
-                GeopointsY = nonSewerConnections.SelectMany(b => b.Geometry.Coordinates.Select(c => c.Y)).Concat(compartmentYCoordinates).ToArray();
+                GeopointsY = nonSewerConnections.SelectMany(b => b.Geometry.Coordinates.Select(c => c.Y)).Concat(compartmentYCoordinates).ToArray();*/
+                var networkBranches = network.Branches.ToArray();
+                GeopointsX = networkBranches.SelectMany(branch => branch.Geometry.Coordinates.Select(c => c.X)).ToArray();
+                GeopointsY = networkBranches.SelectMany(branch => branch.Geometry.Coordinates.Select(c => c.Y)).ToArray();
             }
         }
     }
