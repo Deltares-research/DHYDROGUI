@@ -202,8 +202,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.ImportersExporters
         /// <param name="path">The path.</param>
         protected override void Export(IEnumerable<TFeat> features, string path)
         {
-            BeforeExportActionDelegate?.Invoke(features);
-
             if (Path.GetExtension(path) == ".pliz")
             {
                 var writer = new PlizFile<TFeat>
@@ -212,8 +210,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.ImportersExporters
                 };
                 writer.Write(path, features);
             }
-
-            AfterExportActionDelegate?.Invoke(features);
         }
 
         /// <summary>
@@ -267,7 +263,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.ImportersExporters
                 }
             }
 
+            BeforeExportActionDelegate?.Invoke(itemsToExport);
+
             Export(itemsToExport, file);
+
+            AfterExportActionDelegate?.Invoke(itemsToExport);
             return true;
         }
 

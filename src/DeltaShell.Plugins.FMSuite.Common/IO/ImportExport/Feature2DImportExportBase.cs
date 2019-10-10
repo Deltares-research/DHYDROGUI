@@ -209,7 +209,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.ImportExport
 
             if (featureList != null)
             {
+                BeforeExportActionDelegate?.Invoke(featureList);
                 Export(featureList, file);
+                AfterExportActionDelegate?.Invoke(featureList);
                 return true;
             }
 
