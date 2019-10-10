@@ -91,14 +91,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.ImportersExporters
         {
             if (Path.GetExtension(path) == ".pliz")
             {
-                var reader = new PlizFile<TFeat>
-                {
-                    CreateDelegate = CreateDelegate,
-                };
-                return reader.Read(path, (s, c, t) => ProgressChanged?.Invoke(s, c, t));
+                return ReadFeaturesFromFile<PlizFile<TFeat>>(path);
             }
 
             return Enumerable.Empty<TFeat>();
+        }
+
+        protected IEnumerable<TFeat> ReadFeaturesFromFile<TFileType>(string path)
+            where TFileType: PliFile<TFeat>, new()
+        {
+            var reader = new TFileType
+            {
+                CreateDelegate = CreateDelegate,
+            };
+            return reader.Read(path, (s, c, t) => ProgressChanged?.Invoke(s, c, t));
         }
 
         /// <summary>
@@ -158,12 +164,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.ImportersExporters
         {
             if (Path.GetExtension(path) == ".pliz")
             {
-                var writer = new PlizFile<TFeat>
-                {
-                    CreateDelegate = CreateDelegate,
-                };
-                writer.Write(path, features);
+                WriteFeaturesToFile<PlizFile<TFeat>>(path, features);
             }
+        }
+
+        protected void WriteFeaturesToFile<TFileType>(string path, IEnumerable<TFeat> features)
+            where TFileType : PliFile<TFeat>, new()
+        {
+            var writer = new TFileType
+            {
+                CreateDelegate = CreateDelegate,
+            };
+            writer.Write(path, features);
         }
 
         /// <inheritdoc />

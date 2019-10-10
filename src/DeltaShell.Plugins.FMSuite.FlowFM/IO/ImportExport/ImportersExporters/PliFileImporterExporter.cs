@@ -28,11 +28,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.ImportersExporters
         {
             if (Path.GetExtension(path) == ".pli")
             {
-                var reader = new PliFile<TFeat>
-                {
-                    CreateDelegate = CreateDelegate,
-                };
-                return reader.Read(path, (s, c, t) => ProgressChanged?.Invoke(s, c, t));
+                return ReadFeaturesFromFile<PliFile<TFeat>>(path);
             }
 
             return base.Import(path);
@@ -43,11 +39,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.ImportersExporters
         {
             if (Path.GetExtension(path) == ".pli")
             {
-                var writer = new PliFile<TFeat>
-                {
-                    CreateDelegate = CreateDelegate,
-                };
-                writer.Write(path, features);
+                WriteFeaturesToFile<PliFile<TFeat>>(path, features);
             }
 
             base.Export(features, path);
