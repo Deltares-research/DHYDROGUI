@@ -347,6 +347,25 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         }
 
         [Test]
+        public void NewlyCreatedWaveModelHasDefaultCouplingStartTimeSetToModelReferenceDate()
+        {
+            using (var model = new WaveModel())
+            {
+                Assert.That(model.StartTime, Is.EqualTo(model.ModelDefinition.ModelReferenceDateTime));
+            }
+        }
+
+        [Test]
+        public void NewlyCreatedWaveModelHasDefaultCouplingStopTimeSetToModelReferenceDatePlusOneDay()
+        {
+            using (var model = new WaveModel())
+            {
+                Assert.That(model.StopTime, Is.EqualTo(model.ModelDefinition.ModelReferenceDateTime.AddDays(1)));
+            }
+                
+        }
+
+        [Test]
         public void ClearOutput_WithSwanRunLogDataItem_ThenSwanRunLogContentIsEmpty()
         {
             // Setup
