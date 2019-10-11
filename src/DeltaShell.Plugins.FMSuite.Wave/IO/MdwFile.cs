@@ -1310,7 +1310,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 case "fromWWfile":
                     return WaveBoundaryImportDefinitionType.FromWaveWatchFile;
                 default:
-                    throw new ArgumentException(string.Format("Invalid boundary definition: {0}", value));
+                    throw new ArgumentException($"Invalid boundary definition: {value}");
             }
         }
 
