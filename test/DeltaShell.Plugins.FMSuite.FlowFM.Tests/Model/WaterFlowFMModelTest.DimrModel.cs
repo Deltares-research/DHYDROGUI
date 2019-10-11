@@ -69,10 +69,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             });
             string itemString = string.Join("/", itemStringComponents);
 
+            void Call() => fmModel.GetDataItemByItemString(itemString);
+
             // Then
             ArgumentException ex =
-                Assert.Throws<ArgumentException>(() => fmModel.GetDataItemByItemString(itemString));
-            Assert.AreEqual($"{itemString} should contain a category, feature name and a parameter name", ex.Message,
+                Assert.Throws<ArgumentException>(Call);
+            Assert.AreEqual($"{itemString} should contain a category, feature name and a parameter name.", ex.Message,
                             "The exception message is different than expected");
         }
 
@@ -94,10 +96,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             });
             string itemString = string.Join("/", itemStringComponents);
 
+            void Call() => fmModel.GetDataItemByItemString(itemString);
+
             // Then
             ArgumentException ex =
-                Assert.Throws<ArgumentException>(() => fmModel.GetDataItemByItemString(itemString));
-            Assert.AreEqual($"feature {featureName} in {itemString} cannot be found in the FM model", ex.Message,
+                Assert.Throws<ArgumentException>(Call);
+            Assert.AreEqual($"feature {featureName} in {itemString} cannot be found in the FM model.", ex.Message,
                             "The exception message is different than expected");
         }
 
@@ -124,10 +128,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             });
             string itemString = string.Join("/", itemStringComponents);
 
+            void Call() => fmModel.GetDataItemByItemString(itemString);
+
             // Then
             ArgumentException ex =
-                Assert.Throws<ArgumentException>(() => fmModel.GetDataItemByItemString(itemString));
-            Assert.AreEqual($"parameter name {parameterName} in {KnownFeatureCategories.Gates}/{gate.Name}/{parameterName} cannot be found in the FM model",
+                Assert.Throws<ArgumentException>(Call);
+            Assert.AreEqual($"parameter name {parameterName} in {KnownFeatureCategories.Gates}/{gate.Name}/{parameterName} cannot be found in the FM model.",
                 ex.Message, "The exception message is different than expected");
         }
     }

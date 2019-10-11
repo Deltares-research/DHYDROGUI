@@ -142,7 +142,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
         private static HydroArea CreateHydroArea()
         {
-            Random rand = new Random();
+            var rand = new Random();
             int k = rand.Next(0, 5);
 
             var area = new HydroArea();

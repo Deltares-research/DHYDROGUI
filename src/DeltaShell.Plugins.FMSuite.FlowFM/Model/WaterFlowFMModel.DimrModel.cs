@@ -9,6 +9,7 @@ using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.FMSuite.FlowFM.Validation;
 using GeoAPI.Extensions.Feature;
 
@@ -63,28 +64,35 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
             if (stringParts.Length != 3)
             {
-                throw new ArgumentException(
-                    $"{itemString} should contain a category, feature name and a parameter name");
+                throw new ArgumentException(string.Format(
+                                                Resources.WaterFlowFMModel_DimrModel_GetDataItemByItemString__0__should_contain_a_category_feature_name_and_a_parameter_name,
+                                                itemString));
             }
 
-            IFeature feature = GetAreaFeature(stringParts[0], stringParts[1]);
+            string category = stringParts[0];
+            string featureName = stringParts[1];
+            string parameterName = stringParts[2];
+
+            IFeature feature = GetAreaFeature(category, featureName);
 
             if (feature == null)
             {
-                throw new ArgumentException(
-                    $"feature {stringParts[1]} in {itemString} cannot be found in the FM model");
+                throw new ArgumentException(string.Format(
+                                                Resources.WaterFlowFMModel_DimrModel_GetDataItemByItemString_feature__0__in__1__cannot_be_found_in_the_FM_model,
+                                                featureName, itemString));
             }
 
             IDataItem dataItem = GetChildDataItems(feature).FirstOrDefault(di =>
             {
                 var parameterValueConverter = di.ValueConverter as ParameterValueConverter;
-                return parameterValueConverter?.ParameterName == stringParts[2];
+                return parameterValueConverter?.ParameterName == parameterName;
             });
 
             if (dataItem == null)
             {
-                throw new ArgumentException(
-                    $"parameter name {stringParts[2]} in {itemString} cannot be found in the FM model");
+                throw new ArgumentException(string.Format(
+                                                Resources.WaterFlowFMModel_DimrModel_GetDataItemByItemString_parameter_name__0__in__1__cannot_be_found_in_the_FM_model,
+                                                parameterName, itemString));
             }
 
             return dataItem;

@@ -166,6 +166,25 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not link {0} to {1}.
+        /// </summary>
+        public static string HydroModelConverter_CoupleModelsByDimrCouplerXml_Could_not_link__0__to__1__ {
+            get {
+                return ResourceManager.GetString("HydroModelConverter_CoupleModelsByDimrCouplerXml_Could_not_link__0__to__1__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not link an item from {0} to {1}.
+        /// </summary>
+        public static string HydroModelConverter_CoupleModelsByDimrCouplerXml_Could_not_link_an_item_from__0__to__1__ {
+            get {
+                return ResourceManager.GetString("HydroModelConverter_CoupleModelsByDimrCouplerXml_Could_not_link_an_item_from__0__" +
+                        "to__1__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Could not couple models: &apos;{0}&apos; to &apos;{1}&apos;..
         /// </summary>
         public static string HydroModelConverter_CoupleSubModels_Could_not_couple_models____0___to___1___ {

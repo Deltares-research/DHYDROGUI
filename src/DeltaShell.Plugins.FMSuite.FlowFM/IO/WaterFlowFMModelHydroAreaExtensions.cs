@@ -6,6 +6,7 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
@@ -13,6 +14,9 @@ using GeoAPI.Extensions.Feature;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
+    /// <summary>
+    /// This class contains extension methods for hydro area and IGroupableFeature, which are specific for a FM model.
+    /// </summary>
     public static class WaterFlowFMModelHydroAreaExtensions
     {
         /// <summary>
@@ -39,7 +43,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 case KnownFeatureCategories.ObservationCrossSections:
                     return area.ObservationCrossSections;
                 default:
-                    throw new ArgumentException($"unknown category {category} used."); 
+                    throw new ArgumentException(string.Format(Resources.WaterFlowFMModelHydroAreaExtensions_GetFeaturesFromCategory_unknown_category__0__used, category)); 
             } 
         }
 

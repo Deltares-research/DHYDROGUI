@@ -199,16 +199,18 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
                 {
                     if (string.IsNullOrEmpty(couplerXml.sourceName) || string.IsNullOrEmpty(couplerXml.targetName))
                     {
-                        logHandler.ReportError($"Could not link an item from {sourceModel.Name} to {targetModel.Name}");
+                        logHandler.ReportErrorFormat(Resources.HydroModelConverter_CoupleModelsByDimrCouplerXml_Could_not_link_an_item_from__0__to__1__,
+                            sourceModel.Name, targetModel.Name);
                         continue;
                     }
-                    
+
                     var sourceDataItem = sourceModel.GetDataItemByItemString(couplerXml.sourceName);
                     var targetDataItem = targetModel.GetDataItemByItemString(couplerXml.targetName);
 
                     if (sourceDataItem == null || targetDataItem == null)
                     {
-                        logHandler.ReportError($"Could not link {couplerXml.sourceName} to {couplerXml.targetName}");
+                        logHandler.ReportErrorFormat(Resources.HydroModelConverter_CoupleModelsByDimrCouplerXml_Could_not_link__0__to__1__, 
+                                                     couplerXml.sourceName, couplerXml.targetName);
                         continue;
                     }
 
@@ -217,8 +219,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
                 catch (Exception e) when (e is NotImplementedException ||
                                           e is ArgumentException)
                 {
-                    logHandler.ReportError(
-                        $"Could not link {couplerXml.sourceName} to {couplerXml.targetName} : {e.Message}");
+                    var mainMessage = string.Format(
+                        Resources.HydroModelConverter_CoupleModelsByDimrCouplerXml_Could_not_link__0__to__1__,
+                        couplerXml.sourceName, couplerXml.targetName);
+
+                    logHandler.ReportError(string.Concat(mainMessage, $": {e.Message}"));
                 }
             }
         }

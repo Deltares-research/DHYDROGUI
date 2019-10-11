@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -1240,6 +1240,36 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} should contain a category, feature name and a parameter name..
+        /// </summary>
+        public static string WaterFlowFMModel_DimrModel_GetDataItemByItemString__0__should_contain_a_category_feature_name_and_a_parameter_name {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModel_DimrModel_GetDataItemByItemString__0__should_contain_a_category_" +
+                        "feature_name_and_a_parameter_name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to feature {0} in {1} cannot be found in the FM model..
+        /// </summary>
+        public static string WaterFlowFMModel_DimrModel_GetDataItemByItemString_feature__0__in__1__cannot_be_found_in_the_FM_model {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModel_DimrModel_GetDataItemByItemString_feature__0__in__1__cannot_be_f" +
+                        "ound_in_the_FM_model", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to parameter name {0} in {1} cannot be found in the FM model..
+        /// </summary>
+        public static string WaterFlowFMModel_DimrModel_GetDataItemByItemString_parameter_name__0__in__1__cannot_be_found_in_the_FM_model {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModel_DimrModel_GetDataItemByItemString_parameter_name__0__in__1__cann" +
+                        "ot_be_found_in_the_FM_model", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Could not find log file: {0} at expected path: {1}.
         /// </summary>
         public static string WaterFlowFMModel_ReadDiaFile_Could_not_find_log_file___0__at_expected_path___1_ {
@@ -1343,6 +1373,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
             get {
                 return ResourceManager.GetString("WaterFlowFMModelDefinitionValidator_Validate_Bed_level_locations_should_be_set_to" +
                         "__faces__when_morphology_is_active_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to unknown category {0} used..
+        /// </summary>
+        public static string WaterFlowFMModelHydroAreaExtensions_GetFeaturesFromCategory_unknown_category__0__used {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModelHydroAreaExtensions_GetFeaturesFromCategory_unknown_category__0__" +
+                        "used", resourceCulture);
             }
         }
         
