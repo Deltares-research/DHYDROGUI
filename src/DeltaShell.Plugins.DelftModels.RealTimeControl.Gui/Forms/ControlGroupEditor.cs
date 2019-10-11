@@ -385,18 +385,19 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
         {
             string tempImagePath = Path.GetTempFileName();
             graphControl.NetronGraph.SaveImage(tempImagePath, true);
-            using (Image image = Image.FromFile(tempImagePath))
-            {
-                var fs = new SaveFileDialog
-                {
-                    Title = Resources.ControlGroupEditor_SaveAsImageAction_Save_image,
-                    Filter = Resources.ControlGroupEditor_SaveAsImageAction_PNG_image___png
-                };
-                fs.ShowDialog();
 
-                if (fs.FileName != string.Empty)
+            using (Image image = Image.FromFile(tempImagePath))
+            using (var dialog = new SaveFileDialog
+            {
+                Title = Resources.ControlGroupEditor_SaveAsImageAction_Save_image,
+                Filter = Resources.ControlGroupEditor_SaveAsImageAction_PNG_image___png
+            })
+            {
+                dialog.ShowDialog();
+
+                if (dialog.FileName != string.Empty)
                 {
-                    image.Save(fs.FileName, ImageFormat.Png);
+                    image.Save(dialog.FileName, ImageFormat.Png);
                 }
             }
         }
