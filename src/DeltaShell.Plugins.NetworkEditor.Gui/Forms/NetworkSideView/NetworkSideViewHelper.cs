@@ -110,48 +110,5 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             areaSeries.CheckDataSource();
             return areaSeries;
         }
-
-        public static void ValidateFunction(IFunction function)
-        {
-            ThrowWhenFunctionIsInvalid(function);
-
-            IVariable xArgument = function.GetFirstArgumentVariableOfType<double>();
-            if (xArgument == null)
-            {
-                throw new ArgumentException(
-                    string.Format("Couldn't create view because function {0} does not have a argument of type double.", function.Name));
-            }
-            
-            IVariable yComponent = function.GetFirstComponentVariableOfType<double>();
-
-            ThrowWhenFunctionVariableNamesAreInvalid(xArgument.Name, yComponent.Name);
-        }
-
-        private static void ThrowWhenFunctionIsInvalid(IFunction function)
-        {
-            if (function == null)
-                throw new ArgumentException("Couldnt create the view because one of the functions is null / empty");
-
-            if (function.Arguments.Count == 0)
-                throw new ArgumentException("Couldnt create view because one of the functions doesnt contain arguments");
-
-            if (function.Components.Count == 0)
-                throw new ArgumentException("Couldnt create view because one of the functions doesnt contain components");
-        }
-
-        private static void ThrowWhenFunctionVariableNamesAreInvalid(string argName, string compName)
-        {
-            if (string.IsNullOrEmpty(argName) || argName.Trim() == "")
-                throw new ArgumentException(
-                    "Couldn't create view because one of the functions doesnt contain a valid argument name");
-
-            if (string.IsNullOrEmpty(compName) || compName.Trim() == "")
-                throw new ArgumentException(
-                    "Couldn't create view because one of the functions doesnt contain a valid component name");
-
-            if (argName == compName)
-                throw new ArgumentException(
-                    "Couldn't create view because one of the functions component name is the same as the argument name which is not allowed");
-        }
     }
 }
