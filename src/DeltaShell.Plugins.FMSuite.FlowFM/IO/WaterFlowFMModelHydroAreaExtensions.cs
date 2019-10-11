@@ -15,7 +15,7 @@ using GeoAPI.Extensions.Feature;
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
     /// <summary>
-    /// This class contains extension methods for hydro area and IGroupableFeature, which are specific for a FM model.
+    /// This class contains extension methods for <see cref="HydroArea"/> and <see cref="IGroupableFeature"/>, which are specific for an FM model.
     /// </summary>
     public static class WaterFlowFMModelHydroAreaExtensions
     {
