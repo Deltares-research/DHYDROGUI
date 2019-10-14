@@ -50,7 +50,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
 
         /// <inheritdoc />
         [ExcludeFromCodeCoverage]
-        public string Category => "DIMR Configuration File";
+        public string Category => "Integrated Model";
 
         public string Description
         {
