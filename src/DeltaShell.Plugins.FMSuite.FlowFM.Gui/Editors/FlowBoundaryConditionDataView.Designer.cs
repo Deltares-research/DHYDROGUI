@@ -16,11 +16,10 @@
             if (disposing && (components != null))
             {
                 components.Dispose();
+                FileDialog.Dispose();
+                SaveFileDialog.Dispose();
             }
-
-            FileDialog.Dispose();
-            SaveFileDialog.Dispose();
-
+            
             base.Dispose(disposing);
         }
 
