@@ -376,4 +376,7 @@
   <data name="WaterQualityModelGuiPlugin_CreateHydFileModelMenuItem_Hyd_file_is_not_present" xml:space="preserve">
     <value>Hyd file is not present at '{0}'.</value>
   </data>
+  <data name="WaterQualityModelGuiPlugin_CreateHydFileModelMenuItem_Choose_the_options_to_use_for_importing_the_hyd_file___0___from_model___1__" xml:space="preserve">
+    <value>Choose the options to use for importing the hyd file '{0}' from model '{1}'</value>
+  </data>
 </root>

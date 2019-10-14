@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -699,6 +699,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Properties {
         internal static string WaterQualityBoundaryDataListView_InitializeTableView_Lateral_source {
             get {
                 return ResourceManager.GetString("WaterQualityBoundaryDataListView_InitializeTableView_Lateral_source", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Choose the options to use for importing the hyd file &apos;{0}&apos; from model &apos;{1}&apos;.
+        /// </summary>
+        internal static string WaterQualityModelGuiPlugin_CreateHydFileModelMenuItem_Choose_the_options_to_use_for_importing_the_hyd_file___0___from_model___1__ {
+            get {
+                return ResourceManager.GetString("WaterQualityModelGuiPlugin_CreateHydFileModelMenuItem_Choose_the_options_to_use_f" +
+                        "or_importing_the_hyd_file___0___from_model___1__", resourceCulture);
             }
         }
         

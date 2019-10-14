@@ -959,7 +959,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
             hydFileModelMenuItem.Click += (s, e) =>
             {
                 var dialog = new ImportHydFileDialog(waqModel, hydFilePath);
-                dialog.SetLabelMessage($"Choose the options to use for importing the hyd file '{Path.GetFileName(hydFilePath)}' from model '{flowModelName}'");
+                dialog.SetLabelMessage(string.Format(Properties.Resources.WaterQualityModelGuiPlugin_CreateHydFileModelMenuItem_Choose_the_options_to_use_for_importing_the_hyd_file___0___from_model___1__,
+                                           Path.GetFileName(hydFilePath), flowModelName));
 
                 dialog.ShowDialog();
             };
