@@ -91,6 +91,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Exporting to file type &apos;{0}&apos; is not supported..
+        /// </summary>
+        public static string BoundaryConditionDialogLauncher_Exporting_to_file_type_0_is_not_supported {
+            get {
+                return ResourceManager.GetString("BoundaryConditionDialogLauncher_Exporting_to_file_type_0_is_not_supported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap BoundaryType_AstroComponent {
