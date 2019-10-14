@@ -91,16 +91,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to An unsupported file type was used for exporting boundary conditions..
-        /// </summary>
-        public static string BoundaryConditionDialogLauncher_LaunchExporterDialog_An_unsupported_file_type_was_used_for_exporting_boundary_conditions_ {
-            get {
-                return ResourceManager.GetString("BoundaryConditionDialogLauncher_LaunchExporterDialog_An_unsupported_file_type_was" +
-                        "_used_for_exporting_boundary_conditions_", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap BoundaryType_AstroComponent {
