@@ -181,13 +181,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 var sewerConnection = e.Item as SewerConnection;
                 if (sewerConnection?.Length > 0)
                 {
-                    var calculationLocations = new List<NetworkLocation>();
                     switch (e.Action)
                     {
                         case NotifyCollectionChangeAction.Add:
-                            calculationLocations.Add(new NetworkLocation(sewerConnection, 0.0));
-                            calculationLocations.Add(new NetworkLocation(sewerConnection, sewerConnection.Length));
-                            NetworkDiscretization.Locations.AddValues(calculationLocations);
+                            AddNetworkDiscretizationCalculationLocationIfNotAlreadyCreated(new NetworkLocation(sewerConnection, 0.0));
+                            AddNetworkDiscretizationCalculationLocationIfNotAlreadyCreated(new NetworkLocation(sewerConnection, sewerConnection.Length));
                             break;
                     }
                 }
@@ -223,6 +221,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     // remove item from parent
                     childDataItem.Parent.Children.Remove(childDataItem);
                 }
+            }
+        }
+
+        private void AddNetworkDiscretizationCalculationLocationIfNotAlreadyCreated(NetworkLocation toLocation)
+        {
+            if (!NetworkDiscretization.Locations.Values.Any(l =>
+                l.Geometry.Coordinate.Equals(toLocation.Geometry.Coordinate)))
+            {
+                NetworkDiscretization.Locations.AddValues(new[] {toLocation});
             }
         }
 
