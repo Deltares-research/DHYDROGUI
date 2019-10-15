@@ -51,12 +51,7 @@ namespace DeltaShell.NGHS.IO.Helpers
 
         public void AddProperty(string name, string value, string comment = null)
         {
-            Properties.Add(new DelftIniProperty { Name = name, Value = value, Comment = comment ?? "" });
-        }
-
-        public void AddProperty(DelftIniProperty property)
-        {
-            Properties.Add(new DelftIniProperty { Name = property.Name, Value = property.Value, Comment = property.Comment, LineNumber = property.LineNumber});
+            Properties.Add(new DelftIniProperty(name, value, comment ?? "" ));
         }
 
         /// <summary>
@@ -112,12 +107,6 @@ namespace DeltaShell.NGHS.IO.Helpers
         public void AddProperty(string name, int value, string comment = null)
         {
             AddProperty(name, value.ToString(CultureInfo.InvariantCulture), comment);
-        }
-
-        public void AddProperty(string name, Coordinate coordinate, string comment = null, string format = "F4")
-        {
-            var coordinateAsIniValue = coordinate.X.ToString(format, CultureInfo.InvariantCulture) + " " + coordinate.Y.ToString(format, CultureInfo.InvariantCulture);
-            Properties.Add(new DelftIniProperty { Name = name, Value = coordinateAsIniValue, Comment = comment ?? "" });
         }
 
         public void SetProperty(string name, string value, string comment = null)

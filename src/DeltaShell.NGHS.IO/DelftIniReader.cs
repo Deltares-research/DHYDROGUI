@@ -50,8 +50,12 @@ namespace DeltaShell.NGHS.IO
                     }
                     if (currentCategory == null) continue;
 
-                    var fields = GetKeyValueComment(line);
-                    currentCategory.Properties.Add(new DelftIniProperty {Name = fields[0], Value = fields[1], Comment = fields[2], LineNumber = LineNumber});
+                    string[] fields = GetKeyValueComment(line);
+                    var delftIniProperty = new DelftIniProperty(fields[0], fields[1], fields[2])
+                    {
+                        LineNumber = LineNumber
+                    };
+                    currentCategory.Properties.Add(delftIniProperty);
                 }
             }
             finally

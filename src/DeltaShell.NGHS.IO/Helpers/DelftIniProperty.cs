@@ -17,11 +17,6 @@
         /// <inheritdoc />
         public int LineNumber { get; set; }
 
-        public DelftIniProperty()
-        {
-            
-        }
-
         /// <summary>
         /// Creates a new instance of <see cref="DelftIniProperty"/>.
         /// </summary>
