@@ -1,5 +1,9 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using DelftTools.Utils.Collections;
 using GeoAPI.Extensions.Coverages;
+using NetTopologySuite.Extensions.Coverages;
 
 namespace DeltaShell.NGHS.IO.Grid
 {
@@ -41,28 +45,60 @@ namespace DeltaShell.NGHS.IO.Grid
 
             Name = discretisation.Name;
 
-            var discretisationPoints = discretisation.Locations.Values.ToArray();
+            var discretisationPoints = discretisation.Locations.Values.GroupBy(lv => lv.Geometry.Coordinate).Select(crdGroup => crdGroup.First()).ToArray();
+
 
             NumberOfDiscretisationPoints = discretisationPoints.Length;
 
             if (discretisation.Network != null)
             {
-                NumberOfMeshEdges = discretisationPoints.Length
+                /*NumberOfMeshEdges = discretisationPoints.Length
                                     - discretisation.Network.Nodes.Count
                                     + discretisation.Network.Branches.Count;
+*/
 
                 BranchIdx = discretisationPoints.Select(l => l.Branch)
                     .ToArray()
                     .Select(b => discretisation.Network.Branches.IndexOf(b))
                     .ToArray();
+                
             }
 
             Offsets = discretisationPoints.Select(l => l.Chainage).ToArray();
 
             DiscretisationPointIds = discretisationPoints.Select(p => p.Name).ToArray();
+            //Branch1dMeshCalculationNodesIdx = discretisationPoints.Select(l => l.) 
+                /*discretisationPoints.Select(l => l.Branch)
+                .Select(b => discretisation.Network.Nodes.IndexOf(b.Source)).ToArray();*/
+                /*.Plus(discretisationPoints.Select(l => l.Branch)
+                    .Select(b => discretisation.Network.Nodes.IndexOf(b.Target))).ToArray();
+*/
+
             DiscretisationPointDescriptions = discretisationPoints.Select(p => p.LongName).ToArray();
             DiscretisationPointsX = discretisationPoints.Select(dp => dp.Geometry.Coordinate.X).ToArray();
             DiscretisationPointsY = discretisationPoints.Select(dp => dp.Geometry.Coordinate.Y).ToArray();
+            var networkSegments = discretisation.Segments.Values.OfType<NetworkSegment>().ToArray();
+            EdgeIdx = networkSegments.Select(s => discretisation.Network.Branches.IndexOf(s.Branch)).ToArray();
+            
+            EdgeChainage = networkSegments.Select(s => (s.Chainage + s.EndChainage)/2).ToArray(); 
+            EdgePointsX = networkSegments.Select(s => s.Geometry.Centroid.X).ToArray();
+            EdgePointsY = networkSegments.Select(s => s.Geometry.Centroid.Y).ToArray();
+            
+            EdgeNodes = networkSegments.SelectMany(s => new int[] { Array.IndexOf(discretisationPoints, discretisationPoints.FirstOrDefault(p => p.Branch == s.Branch && p.Chainage == s.Chainage || p.Geometry.Coordinate.X == s.Geometry.Coordinates[0].X && p.Geometry.Coordinate.Y == s.Geometry.Coordinates[0].Y)), Array.IndexOf(discretisationPoints, discretisationPoints.FirstOrDefault(p => p.Branch == s.Branch && p.Chainage == s.EndChainage || p.Geometry.Coordinate.X == s.Geometry.Coordinates.Last().X && p.Geometry.Coordinate.Y == s.Geometry.Coordinates.Last().Y)) }).ToArray();
+            NumberOfMeshEdges = EdgeIdx.Length;
         }
+
+        public int[] EdgeNodes { get; set; }
+
+
+        public double[] EdgeChainage { get; set; }
+
+        public int[] EdgeIdx { get; set; }
+
+        public double[] EdgePointsX { get; set; }
+
+        public double[] EdgePointsY { get; set; }
+
+        public int[] Branch1dMeshCalculationNodesIdx { get; set; }
     }
 }

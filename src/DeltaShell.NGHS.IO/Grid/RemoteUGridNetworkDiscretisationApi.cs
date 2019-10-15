@@ -14,14 +14,16 @@ namespace DeltaShell.NGHS.IO.Grid
             api = RemoteInstanceContainer.CreateInstance<IUGridNetworkDiscretisationApi, UGridNetworkDiscretisationApi>(Environment.Is64BitOperatingSystem, null, false, dimrDllAssembly);
         }
         
-        public virtual int CreateNetworkDiscretisation(int numberOfNetworkPoints)
+        public virtual int CreateNetworkDiscretisation(int numberOfMeshPoints, int numberOfMeshEdges)
         {
-            return GetFromValidUGridApiNetwork(ugridApiNetwork => ugridApiNetwork.CreateNetworkDiscretisation(numberOfNetworkPoints), GridApiDataSet.GridConstants.GENERAL_FATAL_ERR);
+            return GetFromValidUGridApiNetwork(ugridApiNetwork => ugridApiNetwork.CreateNetworkDiscretisation(numberOfMeshPoints, numberOfMeshEdges), GridApiDataSet.GridConstants.GENERAL_FATAL_ERR);
         }
 
-        public virtual int WriteNetworkDiscretisationPoints(int[] branchIdx, double[] offset, double[] discretisationPointsX, double[] discretisationPointsY, string[] ids, string[] names)
+        public virtual int WriteNetworkDiscretisationPoints(int[] branchIdx, double[] offset,
+            double[] discretisationPointsX, double[] discretisationPointsY, int[] edgeIdx, double[] edgeOffset,
+            double[] edgePointsX, double[] edgePointsY, int[] edgeNodes, string[] ids, string[] names)
         {
-            return GetFromValidUGridApiNetwork(ugridApiNetwork => ugridApiNetwork.WriteNetworkDiscretisationPoints(branchIdx, offset, discretisationPointsX, discretisationPointsY, ids, names), GridApiDataSet.GridConstants.GENERAL_FATAL_ERR);
+            return GetFromValidUGridApiNetwork(ugridApiNetwork => ugridApiNetwork.WriteNetworkDiscretisationPoints(branchIdx, offset, discretisationPointsX, discretisationPointsY, edgeIdx, edgeOffset, edgePointsX, edgePointsY, edgeNodes, ids, names), GridApiDataSet.GridConstants.GENERAL_FATAL_ERR);
         }
 
         public int GetNetworkIdFromMeshId(int meshId, out int networkId)

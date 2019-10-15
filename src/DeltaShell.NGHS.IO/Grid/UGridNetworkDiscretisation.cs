@@ -15,17 +15,17 @@ namespace DeltaShell.NGHS.IO.Grid
 
         #region Write network discretisation
 
-        public void CreateNetworkDiscretisationInFile(int numberOfMeshPoints)
+        public void CreateNetworkDiscretisationInFile(int numberOfMeshPoints, int numberOfMeshEdges)
         {
             DoWithValidGridApi(
-                uGridApi => uGridApi.CreateNetworkDiscretisation(numberOfMeshPoints),
+                uGridApi => uGridApi.CreateNetworkDiscretisation(numberOfMeshPoints, numberOfMeshEdges),
                 Resources.UGridNetworkDiscretisation_CreateNetworkDiscretisationInFile_Couldn_t_create_new_network_in_ + filename);
         }
 
-        public void WriteNetworkDiscretisationPoints(int[] branchIdx, double[] offset, double[] discretisationPointsX, double[] discretisationPointsY, string[] ids, string[] names)
+        public void WriteNetworkDiscretisationPoints(int[] branchIdx, double[] offset, double[] discretisationPointsX, double[] discretisationPointsY, int[] edgeIdx, double[] edgeOffset, double[] edgePointsX, double[] edgePointsY, int[] edgeNodes, string[] ids, string[] names)
         {
             DoWithValidGridApi(
-                uGridApi => uGridApi.WriteNetworkDiscretisationPoints(branchIdx, offset, discretisationPointsX, discretisationPointsY, ids, names),
+                uGridApi => uGridApi.WriteNetworkDiscretisationPoints(branchIdx, offset, discretisationPointsX, discretisationPointsY, edgeIdx, edgeOffset, edgePointsX, edgePointsY, edgeNodes, ids, names),
                 Resources.UGridNetworkDiscretisation_WriteNetworkDiscretisationPoints_Couldn_t_write_the_network_discretisation_points);
         }
 

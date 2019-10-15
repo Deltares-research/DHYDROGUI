@@ -48,46 +48,46 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [ExpectedException(typeof(Exception), ExpectedMessage = "Couldn't create new network in", MatchType = MessageMatch.StartsWith)]
         public void WhenInvoking_CreateNetworkDiscretisationInFile_AndApiReturnsAnErrorValueThenThrowException()
         {
-            uGridNetworkDiscretisationApi.Expect(api => api.CreateNetworkDiscretisation(Arg<int>.Is.Anything))
+            uGridNetworkDiscretisationApi.Expect(api => api.CreateNetworkDiscretisation(Arg<int>.Is.Anything, Arg<int>.Is.Anything))
                 .Return(errorValue).Repeat.Once();
 
             mocks.ReplayAll();
 
-            gridNetworkDiscretisation.CreateNetworkDiscretisationInFile(Arg<int>.Is.Anything);
+            gridNetworkDiscretisation.CreateNetworkDiscretisationInFile(Arg<int>.Is.Anything, Arg<int>.Is.Anything);
         }
 
         [Test]
         public void WhenInvoking_CreateNetworkDiscretisationInFile_AndApiReturnsNoErrorValueThenMethodCompletesWithoutErrors()
         {
-            uGridNetworkDiscretisationApi.Expect(api => api.CreateNetworkDiscretisation(Arg<int>.Is.Anything))
+            uGridNetworkDiscretisationApi.Expect(api => api.CreateNetworkDiscretisation(Arg<int>.Is.Anything, Arg<int>.Is.Anything))
                 .Return(noErrorValue).Repeat.Once();
 
             mocks.ReplayAll();
 
-            gridNetworkDiscretisation.CreateNetworkDiscretisationInFile(Arg<int>.Is.Anything);
+            gridNetworkDiscretisation.CreateNetworkDiscretisationInFile(Arg<int>.Is.Anything, Arg<int>.Is.Anything);
         }
 
         [Test]
         [ExpectedException(typeof(Exception), ExpectedMessage = "Couldn't write the network discretisation points" + standardErrorMessage)]
         public void WhenInvoking_WriteNetworkDiscretisationPoints_AndApiReturnsAnErrorValueThenThrowException()
         {
-            uGridNetworkDiscretisationApi.Expect(api => api.WriteNetworkDiscretisationPoints(Arg<int[]>.Is.Anything, Arg<double[]>.Is.Anything, Arg<double[]>.Is.Anything, Arg<double[]>.Is.Anything, Arg<string[]>.Is.Anything, Arg<string[]>.Is.Anything))
+            uGridNetworkDiscretisationApi.Expect(api => api.WriteNetworkDiscretisationPoints(Arg<int[]>.Is.Anything, Arg<double[]>.Is.Anything, Arg<double[]>.Is.Anything, Arg<double[]>.Is.Anything, Arg<int[]>.Is.Anything, Arg<double[]>.Is.Anything, Arg<double[]>.Is.Anything, Arg<double[]>.Is.Anything, Arg<int[]>.Is.Anything,  Arg<string[]>.Is.Anything, Arg<string[]>.Is.Anything))
                 .Return(errorValue).Repeat.Once();
 
             mocks.ReplayAll();
 
-            gridNetworkDiscretisation.WriteNetworkDiscretisationPoints(Arg<int[]>.Is.Anything, Arg<double[]>.Is.Anything, Arg<double[]>.Is.Anything, Arg<double[]>.Is.Anything, Arg<string[]>.Is.Anything, Arg<string[]>.Is.Anything);
+            gridNetworkDiscretisation.WriteNetworkDiscretisationPoints(Arg<int[]>.Is.Anything, Arg<double[]>.Is.Anything, Arg<double[]>.Is.Anything, Arg<double[]>.Is.Anything, Arg<int[]>.Is.Anything, Arg<double[]>.Is.Anything, Arg<double[]>.Is.Anything, Arg<double[]>.Is.Anything, Arg<int[]>.Is.Anything, Arg<string[]>.Is.Anything, Arg<string[]>.Is.Anything);
         }
 
         [Test]
         public void WhenInvoking_WriteNetworkDiscretisationPoints_AndApiReturnsNoErrorValueThenMethodCompletesWithoutErrors()
         {
-            uGridNetworkDiscretisationApi.Expect(api => api.WriteNetworkDiscretisationPoints(Arg<int[]>.Is.Anything, Arg<double[]>.Is.Anything, Arg<double[]>.Is.Anything, Arg<double[]>.Is.Anything, Arg<string[]>.Is.Anything, Arg<string[]>.Is.Anything))
+            uGridNetworkDiscretisationApi.Expect(api => api.WriteNetworkDiscretisationPoints(Arg<int[]>.Is.Anything, Arg<double[]>.Is.Anything, Arg<double[]>.Is.Anything, Arg<double[]>.Is.Anything, Arg<int[]>.Is.Anything, Arg<double[]>.Is.Anything, Arg<double[]>.Is.Anything, Arg<double[]>.Is.Anything, Arg<int[]>.Is.Anything, Arg<string[]>.Is.Anything, Arg<string[]>.Is.Anything))
                 .Return(noErrorValue).Repeat.Once();
 
             mocks.ReplayAll();
 
-            gridNetworkDiscretisation.WriteNetworkDiscretisationPoints(Arg<int[]>.Is.Anything, Arg<double[]>.Is.Anything, Arg<double[]>.Is.Anything, Arg<double[]>.Is.Anything, Arg<string[]>.Is.Anything, Arg<string[]>.Is.Anything);
+            gridNetworkDiscretisation.WriteNetworkDiscretisationPoints(Arg<int[]>.Is.Anything, Arg<double[]>.Is.Anything, Arg<double[]>.Is.Anything, Arg<double[]>.Is.Anything, Arg<int[]>.Is.Anything, Arg<double[]>.Is.Anything, Arg<double[]>.Is.Anything, Arg<double[]>.Is.Anything, Arg<int[]>.Is.Anything, Arg<string[]>.Is.Anything, Arg<string[]>.Is.Anything);
         }
         
         [Test]

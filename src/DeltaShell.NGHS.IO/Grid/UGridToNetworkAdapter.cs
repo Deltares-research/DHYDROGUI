@@ -314,8 +314,8 @@ namespace DeltaShell.NGHS.IO.Grid
                 using (var uGridNetworkDiscretisation = new UGridNetworkDiscretisation(netFilePath, GridApiDataSet.NetcdfOpenMode.nf90_write))
                 {
                     uGridNetworkDiscretisation.Initialize();
-                    uGridNetworkDiscretisation.CreateNetworkDiscretisationInFile(discretisationDataModel.NumberOfDiscretisationPoints);
-                    uGridNetworkDiscretisation.WriteNetworkDiscretisationPoints(discretisationDataModel.BranchIdx, discretisationDataModel.Offsets, discretisationDataModel.DiscretisationPointsX, discretisationDataModel.DiscretisationPointsY, discretisationDataModel.DiscretisationPointIds, discretisationDataModel.DiscretisationPointDescriptions);
+                    uGridNetworkDiscretisation.CreateNetworkDiscretisationInFile(discretisationDataModel.NumberOfDiscretisationPoints, discretisationDataModel.NumberOfMeshEdges);
+                    uGridNetworkDiscretisation.WriteNetworkDiscretisationPoints(discretisationDataModel.BranchIdx, discretisationDataModel.Offsets, discretisationDataModel.DiscretisationPointsX, discretisationDataModel.DiscretisationPointsY, discretisationDataModel.EdgeIdx,discretisationDataModel.EdgeChainage, discretisationDataModel.EdgePointsX, discretisationDataModel.EdgePointsY, discretisationDataModel.EdgeNodes, discretisationDataModel.DiscretisationPointIds, discretisationDataModel.DiscretisationPointDescriptions);
                 }
             }
             catch (Exception ex)

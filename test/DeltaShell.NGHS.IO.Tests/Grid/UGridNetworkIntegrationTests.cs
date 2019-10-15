@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.TestUtils;
@@ -408,7 +409,10 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                     Assert.AreEqual(expNrDiscrPoints, discretisationPoints.Length);
 
                     // calculate the number of mesh edges -> #meshEdges = #discretisationPoints - #connectionNodes + #branches
+                    // WIE HEEFT DIT BEDACHT???
                     var numberOfMeshEdges = discretisationPoints.Length - networkDiscretization.Network.Nodes.Count + networkDiscretization.Network.Branches.Count;// numberOfNetworkNodes + numberOfNetworkBranches;
+
+                    
                     Assert.AreEqual(expNrMeshEdges, numberOfMeshEdges);
 
                     if (!networkDiscretization.Network.Attributes.ContainsKey("IoNetCdfNetworkId"))
@@ -418,7 +422,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                     int networkId = (int)networkDiscretization.Network.Attributes["IoNetCdfNetworkId"];
 
                     // create 1D mesh
-                    uGrid1DMesh.CreateNetworkDiscretisationInFile(discretisationPoints.Length);
+                    uGrid1DMesh.CreateNetworkDiscretisationInFile(discretisationPoints.Length, numberOfMeshEdges);
                     Assert.AreEqual(expNrDiscrPoints, uGrid1DMesh.GetNumberOfNetworkDiscretisationPointsForMeshId(1));
 
                     // write 1D discretisation points
@@ -434,12 +438,27 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                     double[] offset = discretisationPoints.Select(l => l.Chainage).ToArray();
                     double[] discretisationPointsX = discretisationPoints.Select(l => l.Geometry.Coordinate.X).ToArray();
                     double[] discretisationPointsY = discretisationPoints.Select(l => l.Geometry.Coordinate.Y).ToArray();
+                    var networkSegments =
+                        networkDiscretization.Segments.Values.ToArray();
+                    int[] edgeIdx = networkSegments.Select(s => s.SegmentNumber).ToArray();
+                    double[] edgeChainage = networkSegments.Select(s => s.Chainage).ToArray();
+                    double[] edgePointsX = networkSegments.Select(s => s.Geometry.Centroid.X).ToArray();
+                    double[] edgePointsY = networkSegments.Select(s => s.Geometry.Centroid.Y).ToArray();
+                    var edgeStartNodes = networkSegments.Select(s => Array.IndexOf(discretisationPoints, discretisationPoints.FirstOrDefault(p => p.Branch == s.Branch && p.Chainage == s.Chainage || p.Geometry.Coordinate.X == s.Geometry.Coordinates[0].X && p.Geometry.Coordinate.Y == s.Geometry.Coordinates[0].Y))).ToArray();
+                    var edgeEndNodes = networkSegments.Select(s => Array.IndexOf(discretisationPoints, discretisationPoints.FirstOrDefault(p => p.Branch == s.Branch && p.Chainage == s.EndChainage || p.Geometry.Coordinate.X == s.Geometry.Coordinates.Last().X && p.Geometry.Coordinate.Y == s.Geometry.Coordinates.Last().Y))).ToArray();
 
+
+                    var edgeNodes = new int[][] { edgeStartNodes, edgeEndNodes };
                     uGrid1DMesh.WriteNetworkDiscretisationPoints(
                         meshPointsIdx,
                         offset,
                         discretisationPointsX,
                         discretisationPointsY,
+                        edgeIdx,
+                        edgeChainage,
+                        edgePointsX,
+                        edgePointsY,
+                        edgeEndNodes,
                         meshPointsIds,
                         meshPointsNames
                     );

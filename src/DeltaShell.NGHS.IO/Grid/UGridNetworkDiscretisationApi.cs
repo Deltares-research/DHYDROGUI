@@ -16,7 +16,7 @@ namespace DeltaShell.NGHS.IO.Grid
 
         #region Write Network Discretisation
 
-        public int CreateNetworkDiscretisation(int numberOfNetworkPoints)
+        public int CreateNetworkDiscretisation(int numberOfMeshPoints, int numberOfMeshEdges)
         {
             if (!Initialized)
             {
@@ -28,7 +28,7 @@ namespace DeltaShell.NGHS.IO.Grid
 
             try
             {
-                ierr = wrapper.Create1DMesh(ioncId, GridApiDataSet.DataSetNames.Network, ref meshIdForWriting, GridApiDataSet.DataSetNames.Mesh1D, numberOfNetworkPoints);
+                ierr = wrapper.Create1DMesh(ioncId, GridApiDataSet.DataSetNames.Network, ref meshIdForWriting, GridApiDataSet.DataSetNames.Mesh1D, numberOfMeshPoints, numberOfMeshEdges);
 
                 if (ierr != GridApiDataSet.GridConstants.NOERR) return ierr;
             }
@@ -40,7 +40,9 @@ namespace DeltaShell.NGHS.IO.Grid
             return ierr;
         }
 
-        public int WriteNetworkDiscretisationPoints(int[] branchIdx, double[] offset, double[] discretisationPointsX, double[] discretisationPointsY, string[] discretisationPointIds, string[] discretisationPointLongnames)
+        public int WriteNetworkDiscretisationPoints(int[] branchIdx, double[] offset, double[] discretisationPointsX,
+            double[] discretisationPointsY, int[] edgeIdx, double[] edgeOffset, double[] edgePointsX, double[] edgePointsY, int[] edgeNodes, string[] discretisationPointIds,
+            string[] discretisationPointLongnames)
         {
             if (!Initialized || !NetworkReadyForWriting)
             {
@@ -59,7 +61,13 @@ namespace DeltaShell.NGHS.IO.Grid
             IntPtr offsetPtr = IntPtr.Zero;
             IntPtr discretisationPointsXPtr = IntPtr.Zero;
             IntPtr discretisationPointsYPtr = IntPtr.Zero;
-            IntPtr edgeNodesPtr = IntPtr.Zero;
+            
+            IntPtr edgeIdxPtr = IntPtr.Zero;
+            IntPtr edgeOffsetPtr = IntPtr.Zero;
+            IntPtr edgeXPtr = IntPtr.Zero;
+            IntPtr edgeYPtr = IntPtr.Zero;
+
+            IntPtr edgeNodePtr = IntPtr.Zero;
 
             try
             {
@@ -70,13 +78,14 @@ namespace DeltaShell.NGHS.IO.Grid
                 offsetPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * numberOfDiscretisationPoints);
                 discretisationPointsXPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * numberOfDiscretisationPoints);
                 discretisationPointsYPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * numberOfDiscretisationPoints);
-                edgeNodesPtr = Marshal.AllocCoTaskMem(2 * Marshal.SizeOf(typeof(int)) * numberOfEdgeNodes);
-
+                
                 Marshal.Copy(branchIdx, 0, branchIdxPtr, numberOfDiscretisationPoints);
                 Marshal.Copy(offset, 0, offsetPtr, numberOfDiscretisationPoints);
                 Marshal.Copy(discretisationPointsX, 0, discretisationPointsXPtr, numberOfDiscretisationPoints);
                 Marshal.Copy(discretisationPointsY, 0, discretisationPointsYPtr, numberOfDiscretisationPoints);
+                //Marshal.Copy(ed, 0, discretisationPointsYPtr, numberOfDiscretisationPoints);
 
+                int ierr;
                 using (var register = new UnmanagedMemoryRegister())
                 {
                     var idsBuffer = StringBufferHandling.MakeStringBuffer(ref discretisationPointIds, GridWrapper.idssize);
@@ -84,9 +93,27 @@ namespace DeltaShell.NGHS.IO.Grid
                     IntPtr idsPtr = register.AddString(ref idsBuffer);
                     IntPtr longNamesPtr = register.AddString(ref longNamesBuffer);
 
-                    var ierr = wrapper.Write1DMeshDiscretisationPoints(ioncId, meshIdForWriting, branchIdxPtr, offsetPtr, discretisationPointsXPtr, discretisationPointsYPtr, idsPtr, longNamesPtr, numberOfDiscretisationPoints, startIndex);
-                    return ierr;
+                    ierr = wrapper.Write1DMeshDiscretisationPoints(ioncId, meshIdForWriting, branchIdxPtr, offsetPtr, discretisationPointsXPtr, discretisationPointsYPtr, idsPtr, longNamesPtr, numberOfDiscretisationPoints, startIndex);
+                    //return ierr;
                 }
+
+                var numberOfEdges = edgeIdx.Length;
+                edgeIdxPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * numberOfEdges);
+                edgeOffsetPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * numberOfEdges);
+                edgeXPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * numberOfEdges);
+                edgeYPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * numberOfEdges);
+
+                Marshal.Copy(edgeIdx, 0, edgeIdxPtr, numberOfEdges);
+                Marshal.Copy(edgeOffset, 0, edgeOffsetPtr, numberOfEdges);
+                Marshal.Copy(edgePointsX, 0, edgeXPtr, numberOfEdges);
+                Marshal.Copy(edgePointsX, 0, edgeYPtr, numberOfEdges);
+                
+                ierr = wrapper.Write1dMeshEdges(ref ioncId, ref meshIdForWriting, ref edgeIdxPtr, ref edgeOffsetPtr, ref numberOfEdges, startIndex,ref edgeXPtr, ref edgeYPtr);
+
+                edgeNodePtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * numberOfEdges * 2);
+                Marshal.Copy(edgeNodes, 0, edgeNodePtr, numberOfEdges*2);
+                ierr = wrapper.Write1dMeshEdgeNodes(ref ioncId, ref meshIdForWriting, ref numberOfEdges, ref edgeNodePtr, startIndex);
+                return ierr;
             }
             catch
             {
@@ -100,9 +127,9 @@ namespace DeltaShell.NGHS.IO.Grid
                 if (offsetPtr != IntPtr.Zero)
                     Marshal.FreeCoTaskMem(offsetPtr);
                 offsetPtr = IntPtr.Zero;
-                if (edgeNodesPtr != IntPtr.Zero)
-                    Marshal.FreeCoTaskMem(edgeNodesPtr);
-                edgeNodesPtr = IntPtr.Zero;
+                if (edgeNodePtr != IntPtr.Zero)
+                    Marshal.FreeCoTaskMem(edgeNodePtr);
+                edgeNodePtr = IntPtr.Zero;
                 if (discretisationPointsXPtr != IntPtr.Zero)
                     Marshal.FreeCoTaskMem(discretisationPointsXPtr);
                 discretisationPointsXPtr = IntPtr.Zero;
