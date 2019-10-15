@@ -63,7 +63,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Import
         {
             get { return "Model features from GIS"; }
         }
-
+        public string Description { get { return Name; } }
         public string Category
         {
             get { return "Data Import"; }

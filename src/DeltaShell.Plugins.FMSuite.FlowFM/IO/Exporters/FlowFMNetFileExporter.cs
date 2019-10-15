@@ -22,6 +22,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
 
         [ExcludeFromCodeCoverage]
         public string Name { get { return "Grid exporter"; } }
+        public string Description { get { return Name; } }
 
         [ExcludeFromCodeCoverage]
         public string Category { get { return "General"; } }

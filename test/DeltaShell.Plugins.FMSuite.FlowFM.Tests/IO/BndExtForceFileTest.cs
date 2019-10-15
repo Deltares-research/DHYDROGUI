@@ -16,6 +16,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using DelftTools.Utils;
 using DelftTools.Utils.IO;
+using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO;
 using SharpMap;
 using SharpMap.Extensions.CoordinateSystems;
@@ -779,7 +780,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var bCond = fbcFactory.CreateBoundaryCondition(boundary,
                 sedFrac.Name,
                 BoundaryConditionDataType.TimeSeries,
-                EnumDescriptionAttributeTypeConverter.GetEnumDescription(FlowBoundaryQuantityType.SedimentConcentration));
+                FlowBoundaryQuantityType.SedimentConcentration.GetDescription());
 
             model.BoundaryConditionSets[1].BoundaryConditions.Add(bCond);
 
@@ -840,7 +841,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var bCond = fbcFactory.CreateBoundaryCondition(boundary,
                 sedFrac.Name,
                 BoundaryConditionDataType.TimeSeries,
-                EnumDescriptionAttributeTypeConverter.GetEnumDescription(FlowBoundaryQuantityType.SedimentConcentration));
+                FlowBoundaryQuantityType.SedimentConcentration.GetDescription());
 
             model.BoundaryConditionSets[1].BoundaryConditions.Add(bCond);
 
@@ -880,7 +881,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         public void WriteBndExtForceFileSubFilesReturnsItemsWhenNameIsNotMissing()
         {
             var bndExtForceFile = new BndExtForceFile();
-            var testFolder = Path.GetDirectoryName(Path.GetDirectoryName(TestHelper.GetDataDir())); //This will place it under /debug
+            var testFolder = Path.GetDirectoryName(Path.GetDirectoryName(TestHelper.GetTestDataDirectory())); //This will place it under /debug
             Assert.IsNotNull(testFolder);
 
             var fileDirectory = Path.Combine(testFolder, "WriteBndExtForceFileSubFilesReturnsItemsWhenNameIsNotMissing");

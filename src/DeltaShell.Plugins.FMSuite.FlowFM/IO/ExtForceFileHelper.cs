@@ -6,6 +6,7 @@ using DelftTools.Functions;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
+using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
@@ -347,7 +348,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             foreach (int i in boundaryCondition.DataPointIndices)
             {
                 var quantity = string.Format("{0} {1} at {2}", boundaryCondition.VariableDescription.ToLower(),
-                                             EnumDescriptionAttributeTypeConverter.GetEnumDescription(boundaryCondition.DataType).ToLower(),
+                                             boundaryCondition.DataType.GetDescription().ToLower(),
                                              boundaryCoditionSet.SupportPointNames[i]);
 
                 string filePath;
@@ -775,8 +776,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 {
                     var xyzFilePath = Path.Combine(directoryName, forceFileItem.FileName);
 
-                    var newFile = new XyzFile();
-                    newFile.Write(xyzFilePath, operation.GetPoints());
+                    XyzFile.Write(xyzFilePath, operation.GetPoints());
                 }
                 else
                 {

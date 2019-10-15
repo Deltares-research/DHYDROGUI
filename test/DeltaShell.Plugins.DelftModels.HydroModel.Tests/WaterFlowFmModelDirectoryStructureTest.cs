@@ -97,7 +97,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         public void Setup()
         {
             // Get TestData Directory
-            testDataDirPath = Path.Combine(TestHelper.GetDataDir(), TestDataDirName);
+            testDataDirPath = Path.Combine(TestHelper.GetTestDataDirectory(), TestDataDirName);
 
             // Create work directory in Temp
             destinationDirPath = Path.Combine(Path.GetTempPath(), Path.GetFileNameWithoutExtension(Path.GetRandomFileName()));

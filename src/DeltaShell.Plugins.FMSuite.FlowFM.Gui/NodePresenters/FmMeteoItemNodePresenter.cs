@@ -14,7 +14,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
     /// <summary>
     /// Class responsible for providing the nodes that are generated when adding in FmMeteoItemListNodePresenter.cs
     /// </summary>
-    /// <seealso cref="DeltaShell.Plugins.FMSuite.Common.Gui.NodePresenters.FMSuiteNodePresenterBase{DeltaShell.Plugins.FMSuite.Common.FeatureData.IFmMeteoField}" />
+    /// <seealso cref="IFmMeteoField" />
     class FmMeteoItemNodePresenter : FMSuiteNodePresenterBase<IFmMeteoField>
     {
         private static readonly Bitmap PrecipitationImage = Resources.precipitation;

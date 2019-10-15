@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Import
         {
             get { return "Embankments"; }
         }
-
+        public string Description { get { return Name; } }
         public string Category { get { return "2D / 3D"; } }
 
         public Bitmap Image {

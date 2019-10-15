@@ -7,6 +7,7 @@ using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Hydro.Tests.Helpers;
 using DelftTools.Utils;
+using DelftTools.Utils.Reflection;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
 
@@ -1247,7 +1248,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var roundShape = new CrossSectionStandardShapeCircle
             {
                 Name = crossSectionDefinitionName,
-                MaterialName = EnumDescriptionAttributeTypeConverter.GetEnumDescription(materialType)
+                MaterialName = materialType.GetDescription()
             };
             AddSewerFeatureToNetwork(roundShape, network);
             Assert.That(network.SharedCrossSectionDefinitions.Count, Is.EqualTo(1));
@@ -1278,7 +1279,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             {
                 Name = crossSectionDefinitionName,
                 Diameter = 0.4,
-                MaterialName = EnumDescriptionAttributeTypeConverter.GetEnumDescription(materialType)
+                MaterialName = materialType.GetDescription()
             };
             AddSewerFeatureToNetwork(circleShape, network);
             Assert.That(network.SharedCrossSectionDefinitions.Count, Is.EqualTo(1));

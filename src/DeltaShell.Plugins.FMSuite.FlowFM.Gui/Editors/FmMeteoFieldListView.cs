@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Specialized;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -65,17 +66,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             }
         }
 
-        private void FmMeteoItemsCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        private void FmMeteoItemsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             switch (e.Action)
             {
-                case NotifyCollectionChangeAction.Add:
-                    fmMeteoItemsListBox.Items.Insert(e.Index, e.Item);
-                    fmMeteoItemsListBox.SelectedIndex = e.Index;
+                case NotifyCollectionChangedAction.Add:
+                    fmMeteoItemsListBox.Items.Insert(e.GetRemovedOrAddedIndex(), e.GetRemovedOrAddedItem());
+                    fmMeteoItemsListBox.SelectedIndex = e.GetRemovedOrAddedIndex();
                     break;
-                case NotifyCollectionChangeAction.Remove:
+                case NotifyCollectionChangedAction.Remove:
                     var oldIndex = fmMeteoItemsListBox.SelectedIndex;
-                    fmMeteoItemsListBox.Items.Remove(e.Item);
+                    fmMeteoItemsListBox.Items.Remove(e.GetRemovedOrAddedItem());
                     fmMeteoItemsListBox.SelectedIndex = fmMeteoItems.Any()
                         ? -1
                         : Math.Min(oldIndex, fmMeteoItemsListBox.Items.Count - 1);

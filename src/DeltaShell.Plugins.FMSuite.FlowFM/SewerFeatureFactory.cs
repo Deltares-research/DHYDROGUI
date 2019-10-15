@@ -5,6 +5,7 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils;
+using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using log4net;
@@ -299,7 +300,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private static TEnum GetEnumValueFromDescription<TEnum>(string valueAsString)
         {
-            return (TEnum) EnumDescriptionAttributeTypeConverter.GetEnumValue<TEnum>(valueAsString);
+            return (TEnum) typeof(TEnum).GetEnumValueFromDescription(valueAsString);
         }
 
         public static bool IsValidGwswSewerConnection(this GwswElement gwswElement)
@@ -329,7 +330,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 return false;
             }
 
-            var featureType = (SewerFeatureType)EnumDescriptionAttributeTypeConverter.GetEnumValue<SewerFeatureType>(gwswElement.ElementTypeName);
+            var featureType = (SewerFeatureType)typeof(SewerFeatureType).GetEnumValueFromDescription(gwswElement.ElementTypeName);
             return featureType == SewerFeatureType.Crosssection;
         }
 
@@ -344,7 +345,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 return false;
             }
 
-            var featureType = (SewerFeatureType)EnumDescriptionAttributeTypeConverter.GetEnumValue<SewerFeatureType>(gwswElement.ElementTypeName);
+            var featureType = (SewerFeatureType)typeof(SewerFeatureType).GetEnumValueFromDescription(gwswElement.ElementTypeName);
             return featureType == SewerFeatureType.Structure;
         }
     }

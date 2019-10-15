@@ -40,7 +40,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                 return "GIS to 2D feature importer";
             }
         }
-
+        public override string Description { get { return Name; } }
         public override string Category { get { return "2D / 3D"; } }
 
         public override Bitmap Image

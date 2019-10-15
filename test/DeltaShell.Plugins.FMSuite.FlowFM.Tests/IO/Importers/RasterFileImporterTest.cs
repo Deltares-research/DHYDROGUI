@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Controls;
+using DelftTools.Controls;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.Core;
@@ -17,6 +18,7 @@ using DeltaShell.Plugins.NetworkEditor.Gui;
 using DeltaShell.Plugins.ProjectExplorer;
 using DeltaShell.Plugins.SharpMapGis;
 using DeltaShell.Plugins.SharpMapGis.Gui;
+using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using GeoAPI.Extensions.Coverages;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
@@ -247,7 +249,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
                         importer.ImportItem(testFilePath, model);
                         // open view for model
                         gui.CommandHandler.OpenView(model);
-                        gui.GetFocusedMapView().Map.ZoomToExtents();
+                        gui.DocumentViews.ActiveView.GetViewsOfType<MapView>().FirstOrDefault()?.Map.ZoomToExtents();
                     }
                 };
 
@@ -291,7 +293,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
                         importer.ImportItem(testFilePath, model);
                         // open view for model
                         gui.CommandHandler.OpenView(model);
-                        gui.GetFocusedMapView().Map.ZoomToExtents();
+                        gui.DocumentViews.ActiveView.GetViewsOfType<MapView>().FirstOrDefault()?.Map.ZoomToExtents();
                     }
                 };
 
@@ -336,7 +338,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
                         importer.ImportItem(testFilePath, model.Bathymetry);
                         // open view for model
                         gui.CommandHandler.OpenView(model);
-                        gui.GetFocusedMapView().Map.ZoomToExtents();
+                        gui.DocumentViews.ActiveView.GetViewsOfType<MapView>().FirstOrDefault()?.Map.ZoomToExtents();
                     }
                 };
 

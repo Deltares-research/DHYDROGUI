@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Specialized;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Utils.Collections;
@@ -42,7 +43,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers
             }
         }
 
-        void NetworkRoutesCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        void NetworkRoutesCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (network == null || sender != network.Routes)
             {
@@ -53,20 +54,20 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers
 
             switch (e.Action)
             {
-                case NotifyCollectionChangeAction.Add:
-                    var route = e.Item as Route;
+                case NotifyCollectionChangedAction.Add:
+                    var route = e.GetRemovedOrAddedItem() as Route;
                     if (!RoutesLayer.Layers.OfType<NetworkCoverageGroupLayer>().Any(l => Equals(route, l.NetworkCoverage)))
                     {
-                        AddRouteLayer(route, RoutesLayer.Layers.Count, e.Index);
+                        AddRouteLayer(route, RoutesLayer.Layers.Count, e.GetRemovedOrAddedIndex());
                     }
                     break;
-                case NotifyCollectionChangeAction.Remove:
-                    var routeLayer = RoutesLayer.Layers.OfType<NetworkCoverageGroupLayer>().FirstOrDefault(rl => ReferenceEquals(rl.NetworkCoverage, e.Item));
+                case NotifyCollectionChangedAction.Remove:
+                    var routeLayer = RoutesLayer.Layers.OfType<NetworkCoverageGroupLayer>().FirstOrDefault(rl => ReferenceEquals(rl.NetworkCoverage, e.GetRemovedOrAddedItem()));
                     RoutesLayer.Layers.Remove(routeLayer);
                     break;
-                case NotifyCollectionChangeAction.Replace:
+                case NotifyCollectionChangedAction.Replace:
                     throw new NotImplementedException();
-                case NotifyCollectionChangeAction.Reset:
+                case NotifyCollectionChangedAction.Reset:
                     GenerateLayersForRoutes();
                     break;
                 default:

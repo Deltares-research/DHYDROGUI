@@ -76,7 +76,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private PolFile<GroupableFeature2DPolygon> dryAreaFile;
         private PolFile<GroupableFeature2DPolygon> enclosureFile;
         private PolFile<RoofArea> roofAreaFile;
-        private XyzFile dryPointFile;
+        
 
         // the following mdu-referenced files are written by the UI, or at least should not be copied along blindly 
         // (please keep this list up-to-date!):
@@ -629,7 +629,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 var featuresFilePaths = MduFileHelper.GetMultipleSubfilePath(targetMduFilePath, waterFlowFMProperty).ToList();
                 featuresFilePaths.RemoveAllWhere(ffp => ffp == null);
 
-                if (dryPointFile == null) dryPointFile = new XyzFile();
                 if (dryAreaFile == null) dryAreaFile = new PolFile<GroupableFeature2DPolygon>();
                 foreach (var featuresFilePath in featuresFilePaths)
                 {
@@ -646,7 +645,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         var fileNameWithoutExtension = fileName.Replace(DryPointExtension, string.Empty);
                         var groupFeatures = GetAllGroupadFeaturesFromFile<GroupablePointFeature>(dryPointsPerGroup, fileName, fileNameWithoutExtension);
                         var featuresToWrite = dryPoints.Count > 0 && groupFeatures != null ? groupFeatures : dryPoints;
-                        dryPointFile.Write(featuresFilePath, featuresToWrite.Select(p => new PointValue { X = p.X, Y = p.Y, Value = 0 }));
+                        XyzFile.Write(featuresFilePath, featuresToWrite.Select(p => new PointValue { X = p.X, Y = p.Y, Value = 0 }));
                     }
                     else if (featuresFilePath.EndsWith(DryAreaExtension))
                     {
@@ -1256,14 +1255,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             CopyFilesToProjectFolderIfNeeded(featureFilePaths, mduFilePath, modelDefinition, dryPointsPropertyKey, ref replacedFilePaths);
             if (!featureFilePaths.Any()) return;
 
-            if (dryPointFile == null) dryPointFile = new XyzFile();
             if (dryAreaFile == null) dryAreaFile = new PolFile<GroupableFeature2DPolygon>();
             foreach (var featureFilePath in featureFilePaths)
             {
                 var groupName = FileUtils.GetRelativePath(System.IO.Path.GetDirectoryName(mduFilePath), featureFilePath, true);
                 if (featureFilePath.EndsWith(DryPointExtension))
                 {
-                    var dryPointsToAdd = dryPointFile.Read(featureFilePath).Select(p => new GroupablePointFeature
+                    var dryPointsToAdd = XyzFile.Read(featureFilePath).Select(p => new GroupablePointFeature
                     {
                         Geometry = p.Geometry,
                         GroupName = groupName,

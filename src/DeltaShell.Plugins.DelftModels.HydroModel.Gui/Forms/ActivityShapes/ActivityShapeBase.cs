@@ -1,10 +1,15 @@
 using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Net.Mime;
+using System.Security.Policy;
 using System.Windows.Forms;
+using System.Windows.Shapes;
 using DelftTools.Shell.Core.Workflow;
 using Netron.GraphLib;
 using Netron.GraphLib.Interfaces;
+using Rectangle = System.Drawing.Rectangle;
+using Shape = Netron.GraphLib.Shape;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.ActivityShapes
 {
@@ -46,7 +51,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.ActivityShapes
         /// Creates an activity with a set text for a given <see cref="Netron.GraphLib.Interfaces.IGraphSite"/>.
         /// </summary>
         /// <param name="graphControl">The control hosting this shape.</param>
-        /// <param name="shapeText"><see cref="Netron.GraphLib.Entity.Text"/> of this shape.</param>
+        /// <param name="shapeText"><see cref="MediaTypeNames.Text"/> of this shape.</param>
         protected ActivityShapeBase(IGraphSite graphControl, string shapeText) : base(graphControl)
         {
             Text = shapeText;

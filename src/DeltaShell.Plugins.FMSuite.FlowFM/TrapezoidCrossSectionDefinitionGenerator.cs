@@ -2,6 +2,7 @@ using DelftTools.Hydro.CrossSections.StandardShapes;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils;
+using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM
@@ -71,7 +72,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             var defaultTrapezoid = CrossSectionStandardShapeTrapezium.CreateDefault();
             defaultTrapezoid.Name = name;
-            defaultTrapezoid.MaterialName = EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerProfileMapping.SewerProfileMaterial.Unknown);
+            defaultTrapezoid.MaterialName = SewerProfileMapping.SewerProfileMaterial.Unknown.GetDescription();
             return defaultTrapezoid;
         }
     }

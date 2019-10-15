@@ -18,7 +18,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
         {
             get { return "Boundary data to .bcm file"; }
         }
-
+        public string Description { get { return Name; } }
         public string Category { get { return "General"; } }
 
         public Func<IBoundaryCondition, DateTime?> GetRefDateForBoundaryCondition { private get; set; }

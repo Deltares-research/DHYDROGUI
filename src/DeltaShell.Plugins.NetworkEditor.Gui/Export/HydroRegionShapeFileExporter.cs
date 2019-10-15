@@ -24,7 +24,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Export
         {
             get { return "HydroRegion to Esri Shapefile"; }
         }
-
+        public string Description { get { return Name; } }
         public string Category { get { return "General"; } }
 
         public bool Export(object item, string path)

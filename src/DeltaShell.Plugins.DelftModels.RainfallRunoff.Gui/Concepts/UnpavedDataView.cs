@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
@@ -117,7 +118,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             }
         }
 
-        private void LinksCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        private void LinksCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             UpdateRunMode();
         }

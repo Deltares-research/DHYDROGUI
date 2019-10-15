@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using DelftTools.Functions;
@@ -35,12 +36,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.ValueConverters
             }
         }
 
-        private void OnConvertedValueCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        private void OnConvertedValueCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             Convert();
         }
 
-        private void ConvertedValueCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        private void ConvertedValueCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (!IsInitialized)
                 return;

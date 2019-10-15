@@ -14,6 +14,7 @@ using DelftTools.Hydro.Roughness;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils;
 using DelftTools.Utils.Editing;
+using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms.CoverageViews;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
@@ -423,7 +424,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.Roughness
                 }
 
                 return (value.GetType().IsEnum)
-                           ? EnumDescriptionAttributeTypeConverter.GetEnumDescription((Enum)value)
+                           ? ((Enum)value).GetDescription()
                            : value.ToString();
             }
         }

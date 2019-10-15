@@ -15,7 +15,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         [Category(TestCategory.DataAccess)]
         public void TestHisFileReaderRead()
         {
-            var hisFilePath = Path.Combine(TestHelper.GetDataDir(), "IO", "deltashell.his");
+            var hisFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "IO", "deltashell.his");
             var delwaqBinaryFileVariableDataList = DelwaqHisFileReader.Read(hisFilePath);
 
             Assert.AreEqual(4, delwaqBinaryFileVariableDataList.Count);
@@ -103,7 +103,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         [Category(TestCategory.DataAccess)]
         public void TestHisFileReaderReadWithEmptyFile()
         {
-            var hisFilePath = Path.Combine(TestHelper.GetDataDir(), "IO", "EmptyHisFile.his");
+            var hisFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "IO", "EmptyHisFile.his");
 
             var fileStream = new FileStream(hisFilePath, FileMode.OpenOrCreate);
             fileStream.Close();

@@ -90,7 +90,8 @@ namespace DeltaShell.Plugins.Fews
         # region IFileImporter members
 
         public string Name { get; private set; }
-        
+        public string Description { get { return Name; } }
+
         public string Category { get; private set; }
 
         public Bitmap Image

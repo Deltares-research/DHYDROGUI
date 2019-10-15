@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using DelftTools.Utils.Aop;
@@ -126,7 +127,7 @@ namespace DelftTools.Hydro
         }
 
         [EditAction]
-        private void OnBranchesCollectionChanged(object sender, NotifyCollectionChangingEventArgs notifyCollectionChangingEventArgs)
+        private void OnBranchesCollectionChanged(object sender, NotifyCollectionChangedEventArgs NotifyCollectionChangedEventArgs)
         {
             if (sender is IList<IBranch>)
             {

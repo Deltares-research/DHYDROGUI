@@ -25,7 +25,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.UI
     {
         public static string GetSobekImportTestDir()
         {
-            return TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly);
+            return TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly);
         }
 
         public static ICompositeActivity ImportModel(string file)

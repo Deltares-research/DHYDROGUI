@@ -426,7 +426,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         {
             get { return "GWSW Feature File importer"; }
         }
-
+        public string Description { get { return Name; } }
         public string Category
         {
             get { return "1D / 2D"; }

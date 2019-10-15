@@ -15,7 +15,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         {
             get { return "Delft3D Grid"; }
         }
-
+        public string Description { get { return Name; } }
         public string Category { get { return "General"; } }
 
         public bool Export(object item, string path)

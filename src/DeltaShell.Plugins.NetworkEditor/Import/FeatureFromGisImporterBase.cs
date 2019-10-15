@@ -100,6 +100,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Import
         #region IFileImporter
 
         public abstract string Name { get; }
+        public virtual string Description { get { return Name; } }
 
         public Bitmap Image { get; private set; }
 

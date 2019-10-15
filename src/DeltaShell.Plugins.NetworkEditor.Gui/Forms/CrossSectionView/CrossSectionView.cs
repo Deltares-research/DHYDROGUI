@@ -253,14 +253,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             CrossSectionViewModel.ShareDefinition();
         }
 
-        public event EventHandler<SelectedItemChangedEventArgs<ICrossSectionDefinition>> EditDefinitionClicked;
+        public event EventHandler<SelectedItemChangedEventArgs> EditDefinitionClicked;
 
         private void BtnEditClick(object sender, EventArgs e)
         {
             if (EditDefinitionClicked != null)
             {
                 var args =
-                    new SelectedItemChangedEventArgs<ICrossSectionDefinition>(CrossSectionViewModel.SharedDefinition);
+                    new SelectedItemChangedEventArgs(CrossSectionViewModel.SharedDefinition);
                 EditDefinitionClicked(this, args);
             }
         }

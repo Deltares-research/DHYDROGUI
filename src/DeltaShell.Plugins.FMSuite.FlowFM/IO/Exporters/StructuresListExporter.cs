@@ -50,7 +50,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
         #region IFileExporter
 
         public string Name { get { return GetStructuresName(); } }
-        
+        public string Description { get { return Name; } }
+
         public string Category { get { return "General"; } }
         
         public bool Export(object item, string path)

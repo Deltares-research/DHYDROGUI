@@ -2,6 +2,7 @@ using DelftTools.Hydro.CrossSections.StandardShapes;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils;
+using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM
@@ -40,7 +41,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             var defaultEgg = CrossSectionStandardShapeEgg.CreateDefault();
             defaultEgg.Name = name;
-            defaultEgg.MaterialName = EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerProfileMapping.SewerProfileMaterial.Unknown);
+            defaultEgg.MaterialName = SewerProfileMapping.SewerProfileMaterial.Unknown.GetDescription();
             return defaultEgg;
         }
     }

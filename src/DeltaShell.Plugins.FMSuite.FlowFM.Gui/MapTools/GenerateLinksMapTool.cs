@@ -94,11 +94,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
             }
         }
 
-        public override void Render(Graphics graphics, Map mapBox)
+        public override void Render(Graphics graphics)
         {
             if (InDrawingStage)
             {
-                selectPolygonTool.Render(graphics, mapBox);
+                selectPolygonTool.Render(graphics);
             }
         }
 

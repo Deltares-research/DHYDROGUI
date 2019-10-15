@@ -308,7 +308,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
 
             if (RTCModelCoordinateConvertor.Convert(realTimeControlModel))
             {
-                var mapView = gui.GetFocusedMapView();
+                var mapView = gui.DocumentViews.GetViewsOfType<MapView>().FirstOrDefault();
                 if (mapView != null && mapView.Map != null)
                     mapView.Map.ZoomToExtents();
             }

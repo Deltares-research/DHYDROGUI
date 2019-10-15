@@ -13,7 +13,7 @@ namespace DeltaShell.Plugins.Fews.Export
         private readonly IApplication app;
 
         public string Name { get { return "ModelExchangeItem information"; } }
-
+        public string Description { get { return Name; } }
         public string Category { get { return "External"; } }
 
         public string FileFilter { get { return "csv files (*.csv)|*.csv"; } }

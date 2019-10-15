@@ -15,7 +15,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Import
         {
             get { return "Network Data (GIS)"; }
         }
-
+        public string Description { get { return Name; } }
         public string Category { get; private set; }
 
         public Bitmap Image { get; private set; }

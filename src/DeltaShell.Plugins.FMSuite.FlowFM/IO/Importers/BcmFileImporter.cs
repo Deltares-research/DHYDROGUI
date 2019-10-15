@@ -27,7 +27,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         {
             get { return "Morphology boundary data from .bcm file"; }
         }
-
+        public string Description { get { return Name; } }
         [ExcludeFromCodeCoverage]
         public string Category
         {

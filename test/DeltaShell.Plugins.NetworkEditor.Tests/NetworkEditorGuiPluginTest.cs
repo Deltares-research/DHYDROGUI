@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
+using DelftTools.Controls;
 using DelftTools.Controls.Swf.Charting;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
@@ -192,7 +194,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
 
                 var project = new Project(); // Project is pretty lightweight don't need to mock here
 
-                Expect.Call(documentViews.GetActiveViews<MapView>()).Return(new[] { mapView });
+                Expect.Call(documentViews.ActiveView.GetViewsOfType<MapView>()).Return(new[] { mapView });
                 Expect.Call(gui.DocumentViews).Return(documentViews).Repeat.Any();
                 Expect.Call(gui.ToolWindowViews).Return(documentViews).Repeat.Any();
                 Expect.Call(gui.Application).Return(application).Repeat.Any();

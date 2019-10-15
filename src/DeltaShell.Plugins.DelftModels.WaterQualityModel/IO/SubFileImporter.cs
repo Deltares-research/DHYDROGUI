@@ -23,7 +23,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         {
             get { return "Substance Process Library"; }
         }
-
+        public string Description { get { return Name; } }
         public string Category { get; private set; }
         
         public Bitmap Image { get; private set; }

@@ -2,6 +2,7 @@
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
+using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using NetTopologySuite.Geometries;
@@ -23,7 +24,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var manholeLength = 7071;
             var manholeWidth = 7071;
             var compartmentShape = CompartmentShape.Square;
-            var compartmentShapeAsString = EnumDescriptionAttributeTypeConverter.GetEnumDescription(compartmentShape);
+            var compartmentShapeAsString = compartmentShape.GetDescription();
             var nodeType = string.Empty;
             var floodableArea = 45.67;
             var bottomLevel = 0.01;
@@ -50,7 +51,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var manholeLength = 7071;
             var manholeWidth = 7071;
             var compartmentShape = CompartmentShape.Square;
-            var compartmentShapeAsString = EnumDescriptionAttributeTypeConverter.GetEnumDescription(compartmentShape);
+            var compartmentShapeAsString = compartmentShape.GetDescription();
             var nodeType = string.Empty;
             var floodableArea = 45.67;
             var bottomLevel = 0.01;
@@ -77,7 +78,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var manholeLength = 7071;
             var manholeWidth = 7071;
             var compartmentShape = CompartmentShape.Square;
-            var compartmentShapeAsString = EnumDescriptionAttributeTypeConverter.GetEnumDescription(compartmentShape);
+            var compartmentShapeAsString = compartmentShape.GetDescription();
             var nodeType = string.Empty;
             var floodableArea = 45.67;
             var bottomLevel = 0.01;
@@ -110,7 +111,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var manholeLength = 7071;
             var manholeWidth = 7071;
             var compartmentShape = CompartmentShape.Square;
-            var compartmentShapeAsString = EnumDescriptionAttributeTypeConverter.GetEnumDescription(compartmentShape);
+            var compartmentShapeAsString = compartmentShape.GetDescription();
             var nodeType = string.Empty;
             var floodableArea = 45.67;
             var bottomLevel = 0.01;

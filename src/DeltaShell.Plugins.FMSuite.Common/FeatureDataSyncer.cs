@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Specialized;
 using System.Linq;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
@@ -23,17 +24,17 @@ namespace DeltaShell.Plugins.FMSuite.Common
             modelData.CollectionChanged += OnDataCollectionChanged;
         }
         
-        private void OnFeaturesCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        private void OnFeaturesCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (synchronizing) return;
             
             switch (e.Action)
             {
-                case NotifyCollectionChangeAction.Add:
+                case NotifyCollectionChangedAction.Add:
                     synchronizing = true;
                     try
                     {
-                        ModelData.Add(CreateDataForFeature((TFeat) e.Item));
+                        ModelData.Add(CreateDataForFeature((TFeat) e.GetRemovedOrAddedItem()));
                     }
                     finally
                     {
@@ -41,7 +42,7 @@ namespace DeltaShell.Plugins.FMSuite.Common
                     }
                     
                     break;
-                case NotifyCollectionChangeAction.Remove:
+                case NotifyCollectionChangedAction.Remove:
                     synchronizing = true;
                     try
                     {
@@ -50,13 +51,13 @@ namespace DeltaShell.Plugins.FMSuite.Common
                             var featureData = md as IFeatureData;
                             if (featureData != null)
                             {
-                                return Equals(featureData.Feature, e.Item);
+                                return Equals(featureData.Feature, e.GetRemovedOrAddedItem());
                             }
 
                             var feature = md as IFeature;
                             if (feature != null)
                             {
-                                return Equals(feature, e.Item);
+                                return Equals(feature, e.GetRemovedOrAddedItem());
                             }
 
                             return false;
@@ -72,15 +73,15 @@ namespace DeltaShell.Plugins.FMSuite.Common
             }
         }
 
-        private void OnDataCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        private void OnDataCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (synchronizing) return;
-            var featureData = e.Item as IFeatureData;
+            var featureData = e.GetRemovedOrAddedItem() as IFeatureData;
             if (featureData == null) return;
             if (!(featureData.Feature is TFeat)) return;
             switch (e.Action)
             {
-                case NotifyCollectionChangeAction.Add:
+                case NotifyCollectionChangedAction.Add:
                     synchronizing = true;
                     try
                     {
@@ -95,7 +96,7 @@ namespace DeltaShell.Plugins.FMSuite.Common
                     }
 
                     break;
-                case NotifyCollectionChangeAction.Remove:
+                case NotifyCollectionChangedAction.Remove:
                     synchronizing = true;
                     try
                     {
@@ -106,12 +107,12 @@ namespace DeltaShell.Plugins.FMSuite.Common
                         synchronizing = false;
                     }
                     break;
-                case NotifyCollectionChangeAction.Replace:
+                case NotifyCollectionChangedAction.Replace:
                     synchronizing = true;
                     try
                     {
                         bool replaced = false;
-                        var feature = ((IFeatureData) e.OldItem).Feature;
+                        var feature = ((IFeatureData) e.OldItems[0]).Feature;
                         if (feature is TFeat)
                         {
                             var featureIndex = Features.IndexOf((TFeat) feature);

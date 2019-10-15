@@ -15,7 +15,7 @@ namespace SobekCompare.Tests
         public void SetUp()
         {
             LogHelper.ConfigureLogging();
-            baseDir = Path.Combine(TestHelper.GetDataDir(), "BasicTst.lit");
+            baseDir = Path.Combine(TestHelper.GetTestDataDirectory(), "BasicTst.lit");
         }
 
         [TearDown]

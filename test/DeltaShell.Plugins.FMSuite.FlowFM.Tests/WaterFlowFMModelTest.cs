@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -269,7 +270,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var collectionChangedCount = 0;
             ((INotifyCollectionChanged) model).CollectionChanged += (s, e) =>
             {
-                if (e.Item != weir) return;
+                if (e.GetRemovedOrAddedItem() != weir) return;
                 collectionChangedCount++;
             };
 
@@ -321,10 +322,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var generalStructureDataItems = new List<string>
             {
                 KnownStructureProperties.CrestLevel,
-                EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.GateHeight),
+                KnownGeneralStructureProperties.GateHeight.GetDescription(),
                 KnownStructureProperties.GateLowerEdgeLevel,
-                EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.WidthCenter),
-                EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.LevelCenter)
+                KnownGeneralStructureProperties.WidthCenter.GetDescription(),
+                KnownGeneralStructureProperties.LevelCenter.GetDescription()
             };
             Assert.That(generalStructureDataItems.Count == dataItems.Count);
 

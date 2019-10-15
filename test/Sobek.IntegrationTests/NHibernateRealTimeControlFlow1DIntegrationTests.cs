@@ -549,7 +549,7 @@ namespace Sobek.IntegrationTests
             var project = new Project();
             
             // import sobek model and add to project
-            var importPath = TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"ReModels\J_10BANK_v2.sbk\4\DEFTOP.1");
+            var importPath = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"ReModels\J_10BANK_v2.sbk\4\DEFTOP.1");
             var modelImporter = new SobekHydroModelImporter(useRR: false);
             var hydroModel = (HydroModel)modelImporter.ImportItem(importPath);
             project.RootFolder.Add(hydroModel);
@@ -596,7 +596,7 @@ namespace Sobek.IntegrationTests
             var project = new Project();
 
             // import sobek model and add to project
-            var importPath = TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"HKTG.lit\1\NETWORK.TP");
+            var importPath = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"HKTG.lit\1\NETWORK.TP");
             var modelImporter = new SobekHydroModelImporter(useRR: false);
             var hydroModel = (HydroModel)modelImporter.ImportItem(importPath);
             hydroModel.ExplicitWorkingDirectory = Path.GetFullPath(Path.Combine(".", TestHelper.GetCurrentMethodName()));
@@ -649,7 +649,7 @@ namespace Sobek.IntegrationTests
             var project = new Project();
 
             // import small sobek model and add to project
-            var importPath = TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"HKTG.lit\1\NETWORK.TP");
+            var importPath = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"HKTG.lit\1\NETWORK.TP");
             var modelImporter = new SobekHydroModelImporter(useRR: false);
             var hydroModel = (HydroModel)modelImporter.ImportItem(importPath);
             project.RootFolder.Add(hydroModel);

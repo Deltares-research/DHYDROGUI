@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
@@ -48,7 +49,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
             networkSideView1.ContextMenuStripEnabled = false;
         }
 
-        void networkSideView1_SelectionChanged(object sender, SelectedItemChangedEventArgs<GeoAPI.Extensions.Feature.IFeature> e)
+        void networkSideView1_SelectionChanged(object sender, SelectedItemChangedEventArgs e)
         {
             SetSelection(e.Item);
         }
@@ -165,13 +166,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void NetworkCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        void NetworkCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            if (!(e.Item is IStructure1D))
+            if (!(e.GetRemovedOrAddedItem() is IStructure1D))
             {
                 return;
             }
-            var structure = (IStructure1D) e.Item;
+            var structure = (IStructure1D) e.GetRemovedOrAddedItem();
             if (structure.Network != null && structure.Network.IsEditing)
             {
                 return;//TODO: wait for finish and refresh
@@ -181,7 +182,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
             {
                 return;
             }
-            if (((e.Action == NotifyCollectionChangeAction.Remove)) || (e.Action == NotifyCollectionChangeAction.Add))
+            if (((e.Action == NotifyCollectionChangedAction.Remove)) || (e.Action == NotifyCollectionChangedAction.Add))
             {
                 Presenter.SetModelIntoView();
             }

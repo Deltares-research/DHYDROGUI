@@ -18,7 +18,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Category(TestCategory.Slow)]
         public void SimpleSequentialWorkflow()
         {
-            string pathToSobekModel = TestHelper.GetDataDir() + @"\demo_01.lit\1\NETWORK.TP";
+            string pathToSobekModel = TestHelper.GetTestDataDirectory() + @"\demo_01.lit\1\NETWORK.TP";
 
             var hydroModel = CreateHydroModel();
             var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekModel, hydroModel);
@@ -38,7 +38,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Category(TestCategory.Slow)]
         public void SimpleParallelWorkflow()
         {
-            string pathToSobekModel = TestHelper.GetDataDir() + @"\ZBOtest.lit\7\NETWORK.TP";
+            string pathToSobekModel = TestHelper.GetTestDataDirectory() + @"\ZBOtest.lit\7\NETWORK.TP";
 
             var hydroModel = CreateHydroModel();
             var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekModel, hydroModel);
@@ -58,7 +58,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Category(TestCategory.Slow)]
         public void ComplexWorkflow()
         {
-            string pathToSobekModel = TestHelper.GetDataDir() + @"\DWAQ_AC1\DWAQ_AC1.lit\37\NETWORK.TP";
+            string pathToSobekModel = TestHelper.GetTestDataDirectory() + @"\DWAQ_AC1\DWAQ_AC1.lit\37\NETWORK.TP";
 
             var hydroModel = CreateHydroModel();
             var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekModel, hydroModel);
@@ -79,7 +79,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Category(TestCategory.Slow)]
         public void ImportSobekModelWithSalinityThenRemoveWaterFlow1DShouldNotCrash()
         {
-            string pathToSobekModel = TestHelper.GetDataDir() + @"\SOBEK3-1015\6\DEFTOP.1";
+            string pathToSobekModel = TestHelper.GetTestDataDirectory() + @"\SOBEK3-1015\6\DEFTOP.1";
 
             var hydroModel = CreateHydroModel();
             var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekModel, hydroModel);
@@ -105,7 +105,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Category(TestCategory.Slow)]
         public void TestImportSobekModel_CompositeStructureNamesAreUnique()
         {
-            var pathToSobekModel = TestHelper.GetDataDir() + @"\SOBEK3-1015\6\DEFTOP.1";
+            var pathToSobekModel = TestHelper.GetTestDataDirectory() + @"\SOBEK3-1015\6\DEFTOP.1";
 
             var hydroModel = CreateHydroModel();
             var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekModel, hydroModel);

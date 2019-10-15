@@ -98,7 +98,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
             map.MapRendered += map_MapRendered;
 
             // enable gradient tool
-            mapControl.Tools.Add(new GradientThemeRangeTool());
+            mapControl.GetToolByType<LegendTool>().Visible = true;
             mapControl.MouseUp += mapControl_MouseUp;
 
             // query tool (always on)

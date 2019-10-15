@@ -10,6 +10,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
     public class WaterFlowFMFileExporter : IFileExporter
     {
         public string Name { get { return "Flow Flexible Mesh model"; } }
+        public string Description { get { return Name; } }
 
         public string Category { get { return "General"; } }
 

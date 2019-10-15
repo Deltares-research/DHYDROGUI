@@ -17,7 +17,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             // pump,            nrstages,       Number of stages,   Integer,    1,          1,      ,       FALSE,              Number of pump stages
             // gate,            sill_level,     Sill level,         Double,     ,           ,       ,       FALSE,              Sill level in [m]
 
-            var filePath = TestHelper.GetTestDataPath(typeof(WaterFlowFMModelTest).Assembly,
+            var filePath = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(WaterFlowFMModelTest).Assembly,
                                                       @"structures\structure-properties_TEST.csv");
             var structFile = new StructureFMPropertiesFile();
             structFile.ReadProperties(filePath);

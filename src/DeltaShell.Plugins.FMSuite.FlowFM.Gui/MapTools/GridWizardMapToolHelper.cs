@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-﻿using DelftTools.Utils.Collections.Extensions;
+using DelftTools.Utils.Collections.Extensions;
 using GeoAPI.Extensions.Coverages;
 ﻿using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;

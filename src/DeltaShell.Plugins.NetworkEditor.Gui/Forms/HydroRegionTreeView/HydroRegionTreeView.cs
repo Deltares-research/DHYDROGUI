@@ -223,7 +223,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
             ITreeNode treeNode = (ITreeNode)node;
             SelectedRegion = GetParentRegionFromNode(node);
 
-            var isActiveViewMapView = gui.DocumentViews.GetActiveViews<MapView>().Any() ;
+            var isActiveViewMapView = gui.DocumentViews.ActiveView.GetViewsOfType<MapView>().Any() ;
             if (tag is IHydroNetwork)
             {
                 buttonMenuNetworkPaste.Enabled = HydroNetworkCopyAndPasteHelper.IsChannelSetToClipBoard();

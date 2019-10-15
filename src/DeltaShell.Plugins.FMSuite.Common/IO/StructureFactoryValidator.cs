@@ -4,6 +4,7 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Utils;
+using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO;
 
 namespace DeltaShell.Plugins.FMSuite.Common.IO
@@ -118,10 +119,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                 return true;
             }
             
-            if (EnumerableExtensions.GetValueFromDescription<Structure2DType>(typeAsString) != structureType)
+            if ((Structure2DType)typeof(Structure2DType).GetEnumValueFromDescription(typeAsString) != structureType)
             {
                 errorMessage = String.Format("Structure '{0}' has conflicting types: '{1}' and '{2}' are stated.",
-                                    name, EnumDescriptionAttributeTypeConverter.GetEnumDescription(structureType), typeAsString);
+                                    name, structureType.GetDescription(), typeAsString);
                 return true;
             }
 

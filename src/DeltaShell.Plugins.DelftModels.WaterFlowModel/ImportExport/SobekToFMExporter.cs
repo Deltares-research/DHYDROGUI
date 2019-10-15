@@ -20,7 +20,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
         {
             get { return "Sobek to FM (network)"; }
         }
-
+        public string Description { get { return Name; } }
         public string Category { get { return "General"; } }
 
         public bool Export(object item, string path)

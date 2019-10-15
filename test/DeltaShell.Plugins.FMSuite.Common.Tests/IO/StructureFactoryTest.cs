@@ -5,6 +5,7 @@ using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
+using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.Plugins.FMSuite.Common.IO;
@@ -126,14 +127,14 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 if (property == KnownGeneralStructureProperties.GateHeight) continue;
 
                 var generalStructure = new Structure2D(StructureRegion.StructureTypeName.GeneralStructure);
-                generalStructure.AddProperty(EnumDescriptionAttributeTypeConverter.GetEnumDescription(property), typeof(double), "12.34");
+                generalStructure.AddProperty(property.GetDescription(), typeof(double), "12.34");
 
                 var resultingStructure = StructureFactory.CreateStructure(generalStructure, null, new DateTime());
                 var weir = resultingStructure as Weir;
                 Assert.NotNull(weir);
             
                 var weirFormulaValueDictionary = ConstructWeirFormulaValueDictionary(weir);
-                Assert.That(weirFormulaValueDictionary[property], Is.EqualTo(12.34), EnumDescriptionAttributeTypeConverter.GetEnumDescription(property));
+                Assert.That(weirFormulaValueDictionary[property], Is.EqualTo(12.34), property.GetDescription());
             }
         }
 
@@ -141,7 +142,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         public void GivenGeneralStructureAsStructure2DWithExtraResistanceEqualToZero_WhenCreatingStructure_ThenUseExtraResistanceIsFalse()
         {
             var generalStructure = new Structure2D(StructureRegion.StructureTypeName.GeneralStructure);
-            generalStructure.AddProperty(EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.ExtraResistance), typeof(double), "0.0");
+            generalStructure.AddProperty(KnownGeneralStructureProperties.ExtraResistance.GetDescription(), typeof(double), "0.0");
 
             var resultingStructure = StructureFactory.CreateStructure(generalStructure, null, new DateTime());
             var weir = resultingStructure as Weir;

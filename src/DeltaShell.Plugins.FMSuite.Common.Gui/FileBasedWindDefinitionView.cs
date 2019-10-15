@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Utils;
+using DelftTools.Utils.Reflection;
 
 namespace DeltaShell.Plugins.FMSuite.Common.Gui
 {
@@ -98,7 +99,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui
             var fileSelectionControl = new FileSelectionControl
                 {
                     ShowFileNameOnly = false,
-                    LabelText = EnumDescriptionAttributeTypeConverter.GetEnumDescription(quantity),
+                    LabelText = quantity.GetDescription(),
                     FilePath = filePath,
                     FileFilter = string.Join("|", FileBasedWindDefinition.WindQuantityFileExtensions[quantity]),
                     AfterFileSelected =
@@ -118,9 +119,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui
 
         static void TypeComboBoxFormat(object sender, ListControlConvertEventArgs e)
         {
-            e.Value =
-                EnumDescriptionAttributeTypeConverter.GetEnumDescription(
-                    (WindDefinitionType) e.ListItem);
+            e.Value =((WindDefinitionType) e.ListItem).GetDescription();
         }
 
         #region IView

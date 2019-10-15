@@ -4,6 +4,7 @@ using DelftTools.Hydro.CrossSections.StandardShapes;
 using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
+using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using NUnit.Framework;
 
@@ -13,8 +14,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
     public class SewerCrossSectionDefinitionGeneratorTest : SewerFeatureFactoryTestHelper
     {
         private const string ProfileId = "PRO1";
-        private readonly string unknownMaterialValue = EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerProfileMapping.SewerProfileMaterial.Unknown);
-        private readonly string concreteMaterialValue = EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerProfileMapping.SewerProfileMaterial.Concrete);
+        private readonly string unknownMaterialValue = SewerProfileMapping.SewerProfileMaterial.Unknown.GetDescription();
+        private readonly string concreteMaterialValue = SewerProfileMapping.SewerProfileMaterial.Concrete.GetDescription();
 
         [TestCase(SewerFeatureType.Node)]
         [TestCase(SewerFeatureType.Connection)]
@@ -52,7 +53,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [TestCase(SewerProfileMapping.SewerProfileMaterial.StoneWare, 1.7)]
         public void GivenCircleProfileGwswElement_WhenGeneratingSewerProfileCircle_ThenReturnCircleShapeWithCorrectDiameter(SewerProfileMapping.SewerProfileMaterial material, double expectedDiameter)
         {
-            var materialString = EnumDescriptionAttributeTypeConverter.GetEnumDescription(material);
+            var materialString = material.GetDescription();
             var profileGwswElement = new GwswElement
             {
                 ElementTypeName = SewerFeatureType.Crosssection.ToString(),

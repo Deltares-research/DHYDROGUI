@@ -1,4 +1,5 @@
-﻿using DelftTools.Utils.Collections;
+﻿using System.Collections.Specialized;
+using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
@@ -21,10 +22,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Editors
             {
                 switch (a.Action)
                 {
-                    case NotifyCollectionChangeAction.Add:
+                    case NotifyCollectionChangedAction.Add:
                         addCount++;
                         break;
-                    case NotifyCollectionChangeAction.Remove:
+                    case NotifyCollectionChangedAction.Remove:
                         removeCount++;
                         break;
                 }

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows.Forms;
 using DelftTools.Utils;
 using DelftTools.Utils.Data;
+using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.Common.Layers;
 using GeoAPI.CoordinateSystems.Transformations;
 using GeoAPI.Geometries;
@@ -71,7 +72,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
             }
         }
 
-        public override void Render(Graphics graphics, Map mapBox)
+        public override void Render(Graphics graphics)
         {
             if ((Unique<long>)this.newArrowLineLayer != (Unique<long>)null && this.newArrowLineGeometry != null)
             {
@@ -163,7 +164,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
             this.newArrowLineLayer = vectorLayer;
             if (theme != null)
             {
-                var styleName = EnumDescriptionAttributeTypeConverter.GetEnumDescription(LinkType);
+                var styleName = LinkType.GetDescription();
                 //var style = theme.GetStyle(LinkType) as VectorStyle;
                 var themeItem = theme.ThemeItems.FirstOrDefault(i => i.Label.Equals(styleName));
                 var style = themeItem?.Style as VectorStyle;

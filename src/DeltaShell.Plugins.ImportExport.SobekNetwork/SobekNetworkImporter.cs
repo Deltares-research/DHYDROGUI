@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.ImportExport.SobekNetwork
         {
             get { return "SOBEK Network"; }
         }
-
+        public string Description { get { return Name; } }
         public string Category
         {
             get { return "SOBEK"; }

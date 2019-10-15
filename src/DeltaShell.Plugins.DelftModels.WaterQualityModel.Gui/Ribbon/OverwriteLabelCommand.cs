@@ -19,14 +19,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Ribbon
     {
         protected override IMapTool MapTool
         {
-            get { return MapView == null ? null : MapView.MapControl.GetToolByType<QueryTool>(); }
+            get { return MapControl?.GetToolByType<QueryTool>(); }
         }
 
         public override bool Enabled
         {
             get
             {
-                var pointTool = MapView == null ? null : MapView.MapControl.GetToolByType<SamplePointTool>();
+                var pointTool = MapControl?.GetToolByType<SamplePointTool>();
 
                 if (pointTool != null)
                 {
@@ -40,7 +40,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Ribbon
         {
             if (MapTool != null)
             {
-                MapView.MapControl.ActivateTool(MapTool);
+                MapControl?.ActivateTool(MapTool);
                 var queryTool = (QueryTool)MapTool;
                 queryTool.OnMouseClick = OnMouseClick;
             }
@@ -85,7 +85,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Ribbon
                     Label = labelControl.ValueString,
                     X = clickedCoordinate.X,
                     Y = clickedCoordinate.Y,
-                    InputCoordinateSystem = MapView.Map.CoordinateSystem
+                    InputCoordinateSystem = Map.CoordinateSystem
                 };
             }
         }

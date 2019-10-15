@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         {
             get { return "Flow Flexible Mesh Model"; }
         }
-
+        public string Description { get { return Name; } }
         public string Category
         {
             get { return "2D / 3D"; }

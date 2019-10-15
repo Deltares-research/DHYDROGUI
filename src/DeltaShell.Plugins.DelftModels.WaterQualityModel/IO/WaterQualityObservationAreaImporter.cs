@@ -36,7 +36,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         {
             get { return "Observation area from GIS importer"; }
         }
-
+        public string Description { get { return Name; } }
         public string Category
         {
             get { return "Hydro"; }

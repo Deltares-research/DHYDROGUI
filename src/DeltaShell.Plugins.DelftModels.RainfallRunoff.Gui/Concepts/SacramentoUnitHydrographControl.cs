@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Windows.Forms;
 using DelftTools.Controls.Swf.Table;
 using DelftTools.Utils.Collections;
@@ -66,7 +67,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             }
         }
 
-        private void HydrographValuesChanged(object sender, NotifyCollectionChangingEventArgs e)
+        private void HydrographValuesChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             tableView.Invalidate(true);
             tableView.RefreshData();

@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         #region IFileImporter
 
         public string Name { get { return "2D structures"; } }
-
+        public string Description { get { return Name; } }
         public string Category { get { return "2D / 3D"; } }
 
         public Bitmap Image { get { return Properties.Resources.StructureFeatureSmall; } }

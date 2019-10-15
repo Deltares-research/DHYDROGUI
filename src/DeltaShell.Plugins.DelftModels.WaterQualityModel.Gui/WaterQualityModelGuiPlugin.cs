@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
@@ -516,25 +517,25 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
             project.RootFolder.CollectionChanged -= RootFolderCollectionChanged;
         }
 
-        private void RootFolderCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        private void RootFolderCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            var model = e.Item as WaterQualityModel;
+            var model = e.GetRemovedOrAddedItem() as WaterQualityModel;
             if (model != null)
             {
                 model.HydroDataChanged += ModelOnHydroDataChanged;
             }
 
-            if (e.Item is IDataItemSet && ((IDataItemSet) e.Item).Value is IEventedList<WaterQualityObservationVariableOutput>)
+            if (e.GetRemovedOrAddedItem() is IDataItemSet && ((IDataItemSet) e.GetRemovedOrAddedItem()).Value is IEventedList<WaterQualityObservationVariableOutput>)
             {
                 // Close any opened view for observation points/areas data if the corresponding model output is removed
-                CloseMonitoringOutputViews((IDataItemSet) e.Item);
+                CloseMonitoringOutputViews((IDataItemSet) e.GetRemovedOrAddedItem());
                 return;
             }
 
-            if (e.Item is IDataItem && ((IDataItem) e.Item).Value is WaterQualityObservationVariableOutput)
+            if (e.GetRemovedOrAddedItem() is IDataItem && ((IDataItem) e.GetRemovedOrAddedItem()).Value is WaterQualityObservationVariableOutput)
             {
                 // Close any opened view for observation points/areas data if the corresponding model output is removed
-                CloseMonitoringOutputViews((WaterQualityObservationVariableOutput) ((IDataItem) e.Item).Value);
+                CloseMonitoringOutputViews((WaterQualityObservationVariableOutput) ((IDataItem) e.GetRemovedOrAddedItem()).Value);
                 return;
             }
         }

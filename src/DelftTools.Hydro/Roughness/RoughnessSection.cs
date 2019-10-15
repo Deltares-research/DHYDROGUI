@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using DelftTools.Functions;
@@ -649,7 +650,7 @@ namespace DelftTools.Hydro.Roughness
 
         public event RoughnessTypeChangedHandler RoughnessTypeChanged;
 
-        void NetworkCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        void NetworkCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             //changes should be handled by EditAction handler
             if (isInKnownEditAction)
@@ -659,18 +660,18 @@ namespace DelftTools.Hydro.Roughness
             {
                 switch (e.Action)
                 {
-                    case NotifyCollectionChangeAction.Add:
+                    case NotifyCollectionChangedAction.Add:
                         // default is constant; thus already ok
                         break;
-                    case NotifyCollectionChangeAction.Remove:
+                    case NotifyCollectionChangedAction.Remove:
 
-                        if (FunctionOfHPerBranch.ContainsKey((IBranch)e.Item))
+                        if (FunctionOfHPerBranch.ContainsKey((IBranch)e.GetRemovedOrAddedItem()))
                         {
-                            FunctionOfHPerBranch.Remove((IBranch)e.Item);
+                            FunctionOfHPerBranch.Remove((IBranch)e.GetRemovedOrAddedItem());
                         }
-                        if (FunctionOfQPerBranch.ContainsKey((IBranch)e.Item))
+                        if (FunctionOfQPerBranch.ContainsKey((IBranch)e.GetRemovedOrAddedItem()))
                         {
-                            FunctionOfQPerBranch.Remove((IBranch)e.Item);
+                            FunctionOfQPerBranch.Remove((IBranch)e.GetRemovedOrAddedItem());
                         }
                         break;
                     default:

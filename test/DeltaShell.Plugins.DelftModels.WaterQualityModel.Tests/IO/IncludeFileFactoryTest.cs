@@ -756,7 +756,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         [Test]
         public void CreateSegfunctionsWithUrlIncludeTest()
         {
-            string dataDir = Path.Combine(TestHelper.GetDataDir(), @"TestSegFunctionFiles");
+            string dataDir = Path.Combine(TestHelper.GetTestDataDirectory(), @"TestSegFunctionFiles");
             string pathA = Path.Combine(dataDir, @"segFileA.tau");
             string pathB = Path.Combine(dataDir, @"segFileB.vol");
             // setup

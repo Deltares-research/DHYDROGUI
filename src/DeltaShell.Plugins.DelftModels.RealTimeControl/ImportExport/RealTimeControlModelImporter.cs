@@ -23,6 +23,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         }
 
         public string Name { get { return "RTC-Tools xml files"; }  }
+        public string Description { get { return Name; } }
         public string Category { get { return "Xml files"; } }
         public Bitmap Image { get { return Properties.Resources.brick_add; } }
         //public IEnumerable<Type> SupportedItemTypes { get { yield return typeof(HydroModel.HydroModel); } }

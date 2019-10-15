@@ -13,7 +13,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         [Category(TestCategory.DataAccess)]
         public void TestMapFileReaderReadMetaData()
         {
-            var mapFilePath = Path.Combine(TestHelper.GetDataDir(), "IO", "deltashell.map");
+            var mapFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "IO", "deltashell.map");
             var mapFileMetaData = DelwaqMapFileReader.ReadMetaData(mapFilePath);
 
             Assert.AreEqual(25, mapFileMetaData.NumberOfTimeSteps);
@@ -37,7 +37,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         [Category(TestCategory.DataAccess)]
         public void TestMapFileReaderReadTimeStep()
         {
-            var mapFilePath = Path.Combine(TestHelper.GetDataDir(), "IO", "deltashell.map");
+            var mapFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "IO", "deltashell.map");
             var mapFileMetaData = DelwaqMapFileReader.ReadMetaData(mapFilePath);
             var valuesSalinity = DelwaqMapFileReader.GetTimeStepData(mapFilePath, mapFileMetaData, 6, "Salinity");
             
@@ -69,7 +69,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         [Category(TestCategory.DataAccess)]
         public void TestMapFileReaderReadTimeStepForOneSegment()
         {
-            var mapFilePath = Path.Combine(TestHelper.GetDataDir(), "IO", "deltashell.map");
+            var mapFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "IO", "deltashell.map");
             var mapFileMetaData = DelwaqMapFileReader.ReadMetaData(mapFilePath);
             var valuesSalinity = DelwaqMapFileReader.GetTimeStepData(mapFilePath, mapFileMetaData, 6, "Salinity", 1);
 

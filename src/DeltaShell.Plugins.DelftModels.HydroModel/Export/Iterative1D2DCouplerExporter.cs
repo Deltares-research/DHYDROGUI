@@ -58,6 +58,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
         {
             get { return "Iterative1D2DCoupler Models"; }
         }
+
+        public string Description { get { return "Iterative1D2DCoupler Exporter"; } }
         public string FileFilter { get { return "ini|*.ini"; } }
         public Bitmap Icon { get { return Resources.coupled_1d2d; } }
 

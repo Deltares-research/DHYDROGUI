@@ -52,7 +52,7 @@ namespace DeltaShell.Plugins.Fews.Tests
             exporter.Export(nc, path);
             var actual =  File.ReadLines(path).ToList();
 
-            string file = TestHelper.GetDataDir() + @"pi_multipleprofiles.xml";
+            string file = TestHelper.GetTestDataDirectory() + @"pi_multipleprofiles.xml";
             var expected = File.ReadLines(file).ToList();
 
             string errors = "";

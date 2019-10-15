@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -278,7 +279,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             }
         }
 
-        private void ControlGroupCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        private void ControlGroupCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (graphControl != null)
             {
@@ -294,26 +295,26 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                     return;
                 }
 
-                if (e.Action == NotifyCollectionChangeAction.Add)
+                if (e.Action == NotifyCollectionChangedAction.Add)
                 {
                     DesubscribeGraphControlEvents();
-                    var shape = ObjectToShape(e.Item);
+                    var shape = ObjectToShape(e.GetRemovedOrAddedItem());
                     graphControl.AddShape(shape);
                     SubscribeGraphControlEvents();
                 }
-                if (e.Action == NotifyCollectionChangeAction.Remove)
+                if (e.Action == NotifyCollectionChangedAction.Remove)
                 {
                     DesubscribeGraphControlEvents();
-                    var shape = FindShapeByObject(e.Item);
+                    var shape = FindShapeByObject(e.GetRemovedOrAddedItem());
                     graphControl.Shapes.Remove(shape);
                     SubscribeGraphControlEvents();
                 }
-                if (e.Action == NotifyCollectionChangeAction.Replace)
+                if (e.Action == NotifyCollectionChangedAction.Replace)
                 {
                     if (replaceable != null)
                     {
                         var shape = FindShapeByObject(replaceable);
-                        shape.Tag = e.Item;
+                        shape.Tag = e.GetRemovedOrAddedItem();
                         replaceable = null;
                     }
                 }

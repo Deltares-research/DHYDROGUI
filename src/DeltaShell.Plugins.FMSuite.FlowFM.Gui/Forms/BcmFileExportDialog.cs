@@ -3,6 +3,7 @@ using System.Linq;
 using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Utils;
+using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters;
@@ -15,7 +16,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
         {
             if (e.ListItem is BcFile.WriteMode)
             {
-                e.Value = EnumDescriptionAttributeTypeConverter.GetEnumDescription((BcFile.WriteMode)e.ListItem);
+                e.Value = ((BcFile.WriteMode)e.ListItem).GetDescription();
             }
         }
 

@@ -70,7 +70,6 @@ using Point = NetTopologySuite.Geometries.Point;
 namespace Sobek.IntegrationTests
 {
     [TestFixture]
-    [Category(TestCategory.MemoryLeak)]
     [Category(TestCategory.WindowsForms)]
     [Category(TestCategory.Slow)]
     public class WaterFlowModel1DGuiIntegrationTest
@@ -874,7 +873,7 @@ namespace Sobek.IntegrationTests
 
             var modelImporter = new SobekWaterFlowModel1DImporter();
 
-            var modelPath = TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"ReModels\JAMM2010.sbk\40\DEFTOP.1");
+            var modelPath = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"ReModels\JAMM2010.sbk\40\DEFTOP.1");
             var importedModel = (ICompositeActivity)modelImporter.ImportItem(modelPath);
 
             app.Project.RootFolder.Items.Add(importedModel as IModel);
@@ -900,7 +899,7 @@ namespace Sobek.IntegrationTests
             var modelImporter = new SobekWaterFlowModel1DImporter();
 
             var modelPath =
-                TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly,
+                TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly,
                                            @"ReModels\JAMM2010.sbk\40\DEFTOP.1");
             var importedModel = (ICompositeActivity)modelImporter.ImportItem(modelPath);
 
@@ -938,7 +937,7 @@ namespace Sobek.IntegrationTests
 
                     gui.CommandHandler.OpenView(network, typeof(ProjectItemMapView));
 
-                    var modelPath = TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly,
+                    var modelPath = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly,
                             @"ReModels\JAMM2010.sbk\40\DEFTOP.1");
 
                     var toNetworkImported = new SobekNetworkToNetworkImporter { TargetObject = network };
@@ -962,7 +961,7 @@ namespace Sobek.IntegrationTests
                 gui.Application.Project.RootFolder.Add(waterFlowModel1D);
                 var network = waterFlowModel1D.Network;
 
-                var modelPath = TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly,
+                var modelPath = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly,
                         @"ReModels\JAMM2010.sbk\40\DEFTOP.1");
 
                 // warm-up
@@ -1018,7 +1017,7 @@ namespace Sobek.IntegrationTests
             {
                 Application.DoEvents();
 
-                var modelPath = TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly,@"ExpSBI.lit\1\NETWORK.TP");
+                var modelPath = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly,@"ExpSBI.lit\1\NETWORK.TP");
 
                 var modelImporter = new SobekWaterFlowModel1DImporter { TargetItem = new WaterFlowModel1D() };
                 var model = (WaterFlowModel1D)modelImporter.ImportItem(modelPath);
@@ -1052,7 +1051,7 @@ namespace Sobek.IntegrationTests
 
                 var exporter = new WaterFlowModel1DExporter();
 
-                string filepath = TestHelper.GetTestDataPath(typeof(WaterFlowModel1DGuiIntegrationTest).Assembly, "BridgeExport_SOBEK3-54.md1d"); 
+                string filepath = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(WaterFlowModel1DGuiIntegrationTest).Assembly, "BridgeExport_SOBEK3-54.md1d"); 
                 TestHelper.AssertIsFasterThan(6000, () => exporter.Export(model, filepath));
 
                 Assert.IsTrue(File.Exists(filepath));
@@ -1084,7 +1083,7 @@ namespace Sobek.IntegrationTests
                 gui.Application.Project.RootFolder.Add(waterFlowModel1D);
                 var network = waterFlowModel1D.Network;
 
-                var modelPath = TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly,
+                var modelPath = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly,
                         @"ReModels\JAMM2010.sbk\40\DEFTOP.1");
 
                 // warm-up
@@ -1134,7 +1133,7 @@ namespace Sobek.IntegrationTests
                 {
                     //reconstruction of 5520. Crash when importing initial conditions with open side view.
                     var modelPath =
-                        TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly,@"ReModels\JAMM2010.sbk\40\DEFTOP.1");
+                        TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly,@"ReModels\JAMM2010.sbk\40\DEFTOP.1");
                     var importer = new SobekHydroModelImporter(false);
                         
                     var model = (HydroModel)importer.ImportItem(modelPath);

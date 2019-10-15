@@ -20,6 +20,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
     public abstract class NameablePointFeatureImporter<T> : IFileImporter where T : NameablePointFeature
     {
         public abstract string Name { get; }
+        public string Description { get { return Name; } }
         public string Category { get { return "Hydro"; } }
         public abstract Bitmap Image { get; }
         public IEnumerable<Type> SupportedItemTypes { get { yield return typeof (IEventedList<T>); } }

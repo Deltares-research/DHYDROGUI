@@ -6,6 +6,7 @@ using DelftTools.Functions.Generic;
 using DelftTools.Units;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
+using DelftTools.Utils.Reflection;
 using GeoAPI.Extensions.Feature;
 
 namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
@@ -58,7 +59,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
             switch (meteoQuantity)
             {
                 case FmMeteoQuantity.Precipitation:
-                    return EnumDescriptionAttributeTypeConverter.GetEnumDescription(meteoQuantity) + " (" + Enum.GetName(typeof(FmMeteoLocationType), fmMeteoLocationType) + ")"; 
+                    return meteoQuantity.GetDescription() + " (" + Enum.GetName(typeof(FmMeteoLocationType), fmMeteoLocationType) + ")"; 
                 default:
                     throw new NotImplementedException("meteo quantity not supported");
             }

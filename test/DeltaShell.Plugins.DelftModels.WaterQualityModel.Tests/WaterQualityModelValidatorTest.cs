@@ -40,7 +40,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             bool validationExpected)
         {
             var model = new WaterQualityModel();
-            string dataDir = Path.Combine(TestHelper.GetDataDir(), @"TestSegFunctionFiles");
+            string dataDir = Path.Combine(TestHelper.GetTestDataDirectory(), @"TestSegFunctionFiles");
             string segmentFunctionPath = segmentFunctionFile != "" ? Path.Combine(dataDir, segmentFunctionFile) : null;
 
             // setup (we don't really care for the content, just for the path being valid or not.

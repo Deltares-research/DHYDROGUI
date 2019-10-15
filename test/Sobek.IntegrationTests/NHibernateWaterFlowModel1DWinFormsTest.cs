@@ -212,7 +212,7 @@ namespace Sobek.IntegrationTests
                 IApplication app = gui.Application;
 
                 var modelPath =
-                    TestHelper.GetTestDataPath(
+                    TestHelper.GetTestDataDirectoryPathForAssembly(
                         typeof(SobekWaterFlowModel1DImporterTest).Assembly,
                         @"BYPASS.Lit\3\Network.TP");
                 //what a cumbersome syntax here..

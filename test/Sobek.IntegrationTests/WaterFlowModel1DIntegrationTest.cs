@@ -95,7 +95,7 @@ namespace Sobek.IntegrationTests
         {
             var modelImporter = new SobekWaterFlowModel1DImporter();
             string pathToSobekNetwork =
-                TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly,
+                TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly,
                                            @"SW_max_1.lit\3\NETWORK.TP");
             using (var waterFlowModel1D = (WaterFlowModel1D) modelImporter.ImportItem(pathToSobekNetwork))
             {
@@ -133,7 +133,7 @@ namespace Sobek.IntegrationTests
         public void ImportModelAssertNetworkEventsDoNoLeak()
         {
             var path =
-                TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly,
+                TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly,
                                            @"HolandseNoorderkwartier\AP.lit\9\NETWORK.TP");
 
             var importer = new SobekHydroModelImporter(false, false);
@@ -152,7 +152,7 @@ namespace Sobek.IntegrationTests
             LogHelper.ConfigureLogging(Level.Debug);
 
             var path =
-                TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly,
+                TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly,
                                            @"HolandseNoorderkwartier\AP.lit\9\NETWORK.TP");
 
             var hydroModelImporter = new SobekHydroModelImporter(true, false);
@@ -169,7 +169,7 @@ namespace Sobek.IntegrationTests
             var modelImporter = new SobekWaterFlowModel1DImporter();
 
             var pathToSobekNetwork =
-                TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly,
+                TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly,
                                            @"FHM2011F.lit\1\network.tp");
             using (var waterFlowModel1D = (WaterFlowModel1D) modelImporter.ImportItem(pathToSobekNetwork))
             {
@@ -193,7 +193,7 @@ namespace Sobek.IntegrationTests
             var modelImporter = new SobekWaterFlowModel1DImporter();
             
             var pathToSobekNetwork =
-                TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly,
+                TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly,
                                            @"SW_max_1.lit\3\network.tp");
 
             using (var waterFlowModel1D = (WaterFlowModel1D) modelImporter.ImportItem(pathToSobekNetwork))
@@ -220,7 +220,7 @@ namespace Sobek.IntegrationTests
             var modelImporter = new SobekWaterFlowModel1DImporter();
             
             var pathToSobekNetwork =
-                TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly,
+                TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly,
                                            @"105_20m.lit\5\network.tp");
             using (var waterFlowModel1D = (WaterFlowModel1D) modelImporter.ImportItem(pathToSobekNetwork))
             {
@@ -263,7 +263,7 @@ namespace Sobek.IntegrationTests
         public void Test_LegacyLoader350_UpdatesDispersionCoverages() // Issue#: SOBEK3-791
         {
             // Make copy of legacy project
-            var legacyProjectDir = Path.Combine(TestHelper.GetDataDir(), @"Dispersion\LegacyProject");
+            var legacyProjectDir = Path.Combine(TestHelper.GetTestDataDirectory(), @"Dispersion\LegacyProject");
             const string workingDirectory = "MigrateLegacyProjectWithDispersion";
             var dsProjDir = Path.Combine(workingDirectory, "ThatcherHarlemanEnabled.dsproj");
 
@@ -422,7 +422,7 @@ namespace Sobek.IntegrationTests
         public void SobekOutput_RunLegacyModelAndSave_CoveragesUseNewOutputFilesAndArePersisted()
         {
             // Make copy of legacy project
-            var legacyProjectDir = Path.Combine(TestHelper.GetDataDir(), @"SobekOutput\LegacyProject");
+            var legacyProjectDir = Path.Combine(TestHelper.GetTestDataDirectory(), @"SobekOutput\LegacyProject");
             const string workingDirectory = "RunLegacyModelAndSave";
             var dsProjDir = Path.Combine(workingDirectory, "TestModel.dsproj");
 
@@ -516,7 +516,7 @@ namespace Sobek.IntegrationTests
         public void SobekOutput_RunAndSaveLegacyModelTwice_DoesNotThrowException()
         {
             // Make copy of legacy project
-            var legacyProjectDir = Path.Combine(TestHelper.GetDataDir(), @"SobekOutput\LegacyProject");
+            var legacyProjectDir = Path.Combine(TestHelper.GetTestDataDirectory(), @"SobekOutput\LegacyProject");
             const string workingDirectory = "RunLegacyModelAndSave";
 
             FileUtils.DeleteIfExists(workingDirectory);
@@ -757,7 +757,7 @@ namespace Sobek.IntegrationTests
 
                 app.Run();
 
-                var modelPath = TestHelper.GetTestDataPath(typeof (SobekWaterFlowModel1DImporterTest).Assembly,
+                var modelPath = TestHelper.GetTestDataDirectoryPathForAssembly(typeof (SobekWaterFlowModel1DImporterTest).Assembly,
                     @"ExpSBI.lit\1\NETWORK.TP");
 
                 var modelImporter = new SobekWaterFlowModel1DImporter {TargetItem = new WaterFlowModel1D()};
@@ -779,7 +779,7 @@ namespace Sobek.IntegrationTests
 
                 var exporter = new WaterFlowModel1DExporter();
 
-                string filepath = TestHelper.GetTestDataPath(typeof (WaterFlowModel1DGuiIntegrationTest).Assembly,
+                string filepath = TestHelper.GetTestDataDirectoryPathForAssembly(typeof (WaterFlowModel1DGuiIntegrationTest).Assembly,
                     "BridgeExport_SOBEK3-54.md1d");
                 TestHelper.AssertIsFasterThan(5000, () => exporter.Export(model, filepath));
 
@@ -824,7 +824,7 @@ namespace Sobek.IntegrationTests
         {
             var modelImporter = new SobekWaterFlowModel1DImporter();
             var pathToSobekNetwork =
-                TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly,
+                TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly,
                                            @"105_010.lit\7\network.tp");
 
             return (WaterFlowModel1D) modelImporter.ImportItem(pathToSobekNetwork);
@@ -834,7 +834,7 @@ namespace Sobek.IntegrationTests
         {
             var modelImporter = new SobekWaterFlowModel1DImporter();
             var pathToSobekNetwork =
-                TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly,
+                TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly,
                                            @"105_010.lit\9\network.tp");
 
             return (WaterFlowModel1D) modelImporter.ImportItem(pathToSobekNetwork);
@@ -844,7 +844,7 @@ namespace Sobek.IntegrationTests
         {
             var modelImporter = new SobekWaterFlowModel1DImporter();
             var pathToSobekNetwork =
-                TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly,
+                TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly,
                                            @"245_000.lit\3\network.tp");
 
             return (HydroModel) modelImporter.ImportItem(pathToSobekNetwork);
@@ -854,7 +854,7 @@ namespace Sobek.IntegrationTests
         {
             var modelImporter = new SobekWaterFlowModel1DImporter();
             var pathToSobekNetwork =
-                TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly,
+                TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly,
                                            @"105_20m.lit\5\network.tp");
 
             return (WaterFlowModel1D) modelImporter.ImportItem(pathToSobekNetwork);
@@ -938,7 +938,7 @@ namespace Sobek.IntegrationTests
             var modelImporter = new SobekWaterFlowModel1DImporter();
             
             var pathToSobekNetwork =
-                TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly,
+                TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly,
                                            @"243_const.lit\4\network.tp");
 
             using (var waterFlowModel1D = (WaterFlowModel1D) modelImporter.ImportItem(pathToSobekNetwork))
@@ -960,7 +960,7 @@ namespace Sobek.IntegrationTests
             var modelImporter = new SobekWaterFlowModel1DImporter();
             
             var pathToSobekNetwork =
-                TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly,
+                TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly,
                                            @"243_const.lit\4\network.tp");
 
             using (var waterFlowModel1D = (WaterFlowModel1D) modelImporter.ImportItem(pathToSobekNetwork))
@@ -994,7 +994,7 @@ namespace Sobek.IntegrationTests
             var modelImporter = new SobekWaterFlowModel1DImporter();
             
             var pathToSobekNetwork =
-                TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly,
+                TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly,
                                            @"Summerdike.lit\1\network.tp");
 
             using (var waterFlowModel1D = (WaterFlowModel1D) modelImporter.ImportItem(pathToSobekNetwork))

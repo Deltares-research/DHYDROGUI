@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using DelftTools.Hydro.CrossSections;
@@ -9,6 +10,7 @@ using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
+using DelftTools.Utils.Reflection;
 using GeoAPI.Extensions.Networks;
 using log4net;
 
@@ -99,15 +101,15 @@ namespace DelftTools.Hydro.SewerFeatures
             {
                 CrossSectionDefinition = hydroNetwork.SharedCrossSectionDefinitions.FirstOrDefault(cs => cs.Name == CrossSectionDefinitionName) as CrossSectionDefinitionStandard;
                 if (CrossSectionDefinition != null)
-                    Material = (SewerProfileMapping.SewerProfileMaterial)EnumDescriptionAttributeTypeConverter.GetEnumValue<SewerProfileMapping.SewerProfileMaterial>(CrossSectionDefinition.Shape.MaterialName);
+                    Material = (SewerProfileMapping.SewerProfileMaterial)typeof(SewerProfileMapping.SewerProfileMaterial).GetEnumValueFromDescription(CrossSectionDefinition.Shape.MaterialName);
             }
         }
 
-        private void BranchFeaturesOnCollectionChanging(object sender, NotifyCollectionChangingEventArgs notifyCollectionChangingEventArgs)
+        private void BranchFeaturesOnCollectionChanging(object sender, NotifyCollectionChangingEventArgs NotifyCollectionChangedEventArgs)
         {
-            if (notifyCollectionChangingEventArgs.Action != NotifyCollectionChangeAction.Add) return;
+            if (NotifyCollectionChangedEventArgs.Action != NotifyCollectionChangeAction.Add) return;
 
-            notifyCollectionChangingEventArgs.Cancel = true;
+            NotifyCollectionChangedEventArgs.Cancel = true;
             Log.ErrorFormat(Resources.Pipe_BranchFeaturesOnCollectionChanging_Pipe__0__does_not_allow_any_branch_feature_on_it_, Name);
         }
     }

@@ -97,6 +97,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         #region IFileImporter
 
         public override string Name { get { return ImporterName; } }
+        public override string Description { get { return Name; } }
 
         public override IEnumerable<Type> SupportedItemTypes
         {
@@ -165,7 +166,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 
         #region IFileExporter
 
-        string IFileExporter.Name { get { return ExporterName; } }
+        string ICategorizableItem.Name { get { return ExporterName; } }
 
         public virtual bool Export(object item, string path)
         {

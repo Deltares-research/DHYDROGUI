@@ -2,6 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
+using DelftTools.Controls;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
@@ -10,6 +11,7 @@ using DelftTools.Shell.Gui.Forms;
 using DeltaShell.Plugins.SharpMapGis.Gui;
 using Mono.Addins;
 using DeltaShell.Plugins.NetworkEditor.MapLayers;
+using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 
 namespace DeltaShell.Dimr.Gui
 {
@@ -46,7 +48,7 @@ namespace DeltaShell.Dimr.Gui
 
         private bool IsActiveViewMapViewWithRegion()
         {
-            var mapView = Gui.GetFocusedMapView();
+            var mapView = Gui.DocumentViews.GetViewsOfType<MapView>().FirstOrDefault();
 
             if (mapView == null || mapView.Map == null)
             {

@@ -24,7 +24,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Category(TestCategory.VerySlow)]
         public void ImportTholenCheckBoundaryConditions()
         {
-            SetImporterForFile(TestHelper.GetDataDir() + @"\Tholen.lit\29\NETWORK.TP");
+            SetImporterForFile(TestHelper.GetTestDataDirectory() + @"\Tholen.lit\29\NETWORK.TP");
             importer.Import();
             // there are 302 bc's in the file but all are linked-to-flow
             Assert.AreEqual(0, rrModel.GetAllModelData()
@@ -38,7 +38,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Category(TestCategory.Integration)]
         public void ImportRrMiniTestModelsUnpavedBoundaryConditions()
         {
-            SetImporterForFile(TestHelper.GetDataDir() + @"\RRMiniTestModels\DRRSA.lit\2\NETWORK.TP");
+            SetImporterForFile(TestHelper.GetTestDataDirectory() + @"\RRMiniTestModels\DRRSA.lit\2\NETWORK.TP");
             importer.Import();
 
             //BOUN id 'cnGFE1022' bl 0  -2.85 is 0 boun
@@ -57,7 +57,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Category(TestCategory.Integration)]
         public void ImportRrMiniTestModelsUnpavedBoundaryConditionsTable()
         {
-            SetImporterForFile(TestHelper.GetDataDir() + @"\RRMiniTestModels\DRRSA.lit\6\NETWORK.TP");
+            SetImporterForFile(TestHelper.GetTestDataDirectory() + @"\RRMiniTestModels\DRRSA.lit\6\NETWORK.TP");
             importer.Import();
 
             //BOUN id 'cnGFE1022' bl 1 '1' is  0 boun

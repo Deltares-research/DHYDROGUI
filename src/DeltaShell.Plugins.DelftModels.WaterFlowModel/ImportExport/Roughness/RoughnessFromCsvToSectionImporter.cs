@@ -14,6 +14,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness
         {
             get { return "Roughness (CSV)"; }
         }
+        public string Description { get { return Name; } }
 
         public string Category { get; private set; }
         

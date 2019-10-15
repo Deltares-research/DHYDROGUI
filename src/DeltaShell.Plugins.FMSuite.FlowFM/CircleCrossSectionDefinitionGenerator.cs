@@ -2,6 +2,7 @@ using DelftTools.Hydro.CrossSections.StandardShapes;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils;
+using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM
@@ -39,7 +40,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private static double CalculateDiameterMultiplier(string materialValue)
         {
-            var pvcDescription = EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerProfileMapping.SewerProfileMaterial.Polyvinylchlorid);
+            var pvcDescription = SewerProfileMapping.SewerProfileMaterial.Polyvinylchlorid.GetDescription();
             return materialValue == pvcDescription
                 ? 16.0 / 17.0 
                 : 1.0;
@@ -49,7 +50,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             var defaultCircle = CrossSectionStandardShapeCircle.CreateDefault();
             defaultCircle.Name = name;
-            defaultCircle.MaterialName = EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerProfileMapping.SewerProfileMaterial.Unknown);
+            defaultCircle.MaterialName = SewerProfileMapping.SewerProfileMaterial.Unknown.GetDescription();
             return defaultCircle;
         }
     }

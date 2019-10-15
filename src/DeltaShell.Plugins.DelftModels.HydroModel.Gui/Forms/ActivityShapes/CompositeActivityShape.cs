@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Net.Mime;
+using System.Security.Policy;
 using DelftTools.Shell.Core.Workflow;
 using Netron.GraphLib.Attributes;
 using Netron.GraphLib.Interfaces;
@@ -47,7 +49,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.ActivityShapes
         /// Creates a shape for a composite activity with a given name for a given <see cref="Netron.GraphLib.Interfaces.IGraphSite"/>.
         /// </summary>
         /// <param name="graphControl">The control hosting this shape.</param>
-        /// <param name="shapeText"><see cref="Netron.GraphLib.Entity.Text"/> of this shape.</param>
+        /// <param name="shapeText"><see cref="MediaTypeNames.Text"/> of this shape.</param>
         public CompositeActivityShape(IGraphSite graphControl, string shapeText) : base(graphControl, shapeText)
         {
             cachedMeasurements = new Dictionary<IActivity, RectangleF>();
@@ -58,7 +60,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.ActivityShapes
         /// The activity associated with this shape.
         /// </summary>
         /// <exception cref="ArgumentException">When value is not <see cref="ICompositeActivity"/>.</exception>
-        /// <remarks><see cref="Netron.GraphLib.Entity.Text"/> will match <see cref="ICompositeActivity.Name"/> of activity.</remarks>
+        /// <remarks><see cref="MediaTypeNames.Text"/> will match <see cref="ICompositeActivity.Name"/> of activity.</remarks>
         public override IActivity Activity
         {
             get

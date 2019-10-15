@@ -1,3 +1,4 @@
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
@@ -15,7 +16,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms
     {
         private SubstanceProcessLibrary library;
         private bool showNameAndDescriptionColumnsOnly;
-        private readonly DelayedEventHandler<NotifyCollectionChangingEventArgs> dataCollectionChangedDelayedEventHandler;
+        private readonly DelayedEventHandler<NotifyCollectionChangedEventArgs> dataCollectionChangedDelayedEventHandler;
 
         public SubstanceProcessLibraryView()
         {
@@ -23,7 +24,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms
             Image = new Bitmap(5, 5);
 
             dataCollectionChangedDelayedEventHandler =
-                new DelayedEventHandler<NotifyCollectionChangingEventArgs>(delegate { UpdateDataGridViews(); })
+                new DelayedEventHandler<NotifyCollectionChangedEventArgs>(delegate { UpdateDataGridViews(); })
                     {
                         SynchronizingObject = this
                     };

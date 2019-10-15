@@ -9,7 +9,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
         {
             get { return "SOBEK Model (Import into Existing Model)"; }
         }
-
+        public string Description { get { return Name; } }
         public bool CanImportOn(object targetObject)
         {
             return true;

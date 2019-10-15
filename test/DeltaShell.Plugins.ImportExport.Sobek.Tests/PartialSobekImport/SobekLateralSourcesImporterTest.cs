@@ -14,7 +14,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         [Category(TestCategory.DataAccess)]
         public void ImportLateralSources()
         {
-            string pathToSobekNetwork = TestHelper.GetDataDir() + @"\ReModels\J_10BANK.sbk\4\DEFTOP.1";
+            string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\ReModels\J_10BANK.sbk\4\DEFTOP.1";
             var hydroNetwork = new HydroNetwork();
 
             var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekNetwork, hydroNetwork, new IPartialSobekImporter[] { new SobekBranchesImporter(), new SobekLateralSourcesImporter() });
@@ -29,7 +29,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         [Category(TestCategory.DataAccess)]
         public void ImportSobek2NetworkWithDiffuseLateralSource()
         {
-            string pathToSobekNetwork = TestHelper.GetDataDir() + @"\diffLate.lit\1\NETWORK.TP";
+            string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\diffLate.lit\1\NETWORK.TP";
             var hydroNetwork = new HydroNetwork();
 
             var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekNetwork, hydroNetwork, new IPartialSobekImporter[] { new SobekBranchesImporter(), new SobekLateralSourcesImporter() });
@@ -45,7 +45,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         [Category(TestCategory.DataAccess)]
         public void ImportSobekRENetworkWithDiffuseLateralSource()
         {
-            string pathToSobekNetwork = TestHelper.GetDataDir() + @"\ReModels\LATERALS.sbk\2\DEFTOP.1";
+            string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\ReModels\LATERALS.sbk\2\DEFTOP.1";
             var flowModel1D = new WaterFlowModel1D();
 
             var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekNetwork, flowModel1D, new IPartialSobekImporter[] { new SobekBranchesImporter(), new SobekLateralSourcesImporter(), new SobekLateralSourcesDataImporter() });
@@ -61,7 +61,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         [Category(TestCategory.DataAccess)]
         public void UpdateExistingLateralSources()
         {
-            string pathToSobekNetwork = TestHelper.GetDataDir() + @"\ReModels\J_10BANK.sbk\4\DEFTOP.1";
+            string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\ReModels\J_10BANK.sbk\4\DEFTOP.1";
             var hydroNetwork = new HydroNetwork();
 
             var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekNetwork, hydroNetwork, new IPartialSobekImporter[] { new SobekBranchesImporter(), new SobekLateralSourcesImporter() });
@@ -87,7 +87,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         [Category(TestCategory.DataAccess)]
         public void UpdateExistingLateralSourceOnAnotherBranch()
         {
-            string pathToSobekNetwork = TestHelper.GetDataDir() + @"\ReModels\J_10BANK.sbk\4\DEFTOP.1";
+            string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\ReModels\J_10BANK.sbk\4\DEFTOP.1";
 
             var hydroNetwork = PartialSobekImporterTestHelper.GetTestNetwork();
             var branch = hydroNetwork.Branches.First();
@@ -120,7 +120,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         [Category(TestCategory.DataAccess)]
         public void ImportLateralSourcesData_Testbench_272()
         {
-            string pathToSobekNetwork = TestHelper.GetDataDir() + @"\272_000.lit\NETWORK.TP";
+            string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\272_000.lit\NETWORK.TP";
 
             var network = new HydroNetwork();
 
@@ -136,7 +136,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         [Category(TestCategory.DataAccess)]
         public void ImportModelShouldNotResultInMultipleLateralsWithIdenticalId_Tools8812()
         {
-            string pathToSobekNetwork = TestHelper.GetDataDir() + @"\LSM1_0.lit\3\network.tp";
+            string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\LSM1_0.lit\3\network.tp";
 
             var network = new HydroNetwork();
 

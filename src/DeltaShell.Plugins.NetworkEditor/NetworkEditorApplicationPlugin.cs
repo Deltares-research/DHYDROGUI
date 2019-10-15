@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Drawing;
 using System.Linq;
 using System.Reflection;
@@ -55,11 +56,6 @@ namespace DeltaShell.Plugins.NetworkEditor
         public override string FileFormatVersion
         {
             get { return "3.5.2.0"; }
-        }
-
-        public override Image Image
-        {
-            get { return new Bitmap(32, 32); }
         }
 
         public override IEnumerable<Assembly> GetPersistentAssemblies()
@@ -245,7 +241,7 @@ namespace DeltaShell.Plugins.NetworkEditor
                 SetOwnerForDataItem(child, dataItemOwner);
         }
 
-        private void OnProjectCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        private void OnProjectCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             HandleSubRegionCollectionChanged(sender, e);
 
@@ -258,16 +254,16 @@ namespace DeltaShell.Plugins.NetworkEditor
         /// <param name="sender"></param>
         /// <param name="e"></param>
         [EditAction]
-        private void HandleRegionDataItemCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        private void HandleRegionDataItemCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            var regionDataItem = e.Item as IDataItem;
+            var regionDataItem = e.GetRemovedOrAddedItem() as IDataItem;
 
             if (regionDataItem == null || !(regionDataItem.Value is IHydroRegion))
             {
                 return;
             }
 
-            if (e.Action == NotifyCollectionChangeAction.Add)
+            if (e.Action == NotifyCollectionChangedAction.Add)
             {
                 if(!(sender is IEventedList<IProjectItem>))
                 {
@@ -278,7 +274,7 @@ namespace DeltaShell.Plugins.NetworkEditor
                 return;
             }
 
-            if (e.Action == NotifyCollectionChangeAction.Remove)
+            if (e.Action == NotifyCollectionChangedAction.Remove)
             {
                 // handle child data item removed
                 var region = (IHydroRegion)regionDataItem.Value;
@@ -299,24 +295,24 @@ namespace DeltaShell.Plugins.NetworkEditor
         /// <param name="sender"></param>
         /// <param name="e"></param>
         [EditAction]
-        private void HandleSubRegionCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        private void HandleSubRegionCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             var subRegions = sender as IEventedList<IRegion>;
-            var subRegion = e.Item as IRegion;
+            var subRegion = e.GetRemovedOrAddedItem() as IRegion;
 
             if (subRegions == null || subRegion == null || subRegion.Parent == null)
             {
                 return;
             }
 
-            if (e.Action == NotifyCollectionChangeAction.Add)
+            if (e.Action == NotifyCollectionChangedAction.Add)
             {
                 var parentRegionDataItem = Application.DataItemService.GetDataItemByValue(Application.Project, subRegion.Parent);
                 AddChildRegionDataItems(parentRegionDataItem);
                 return;
             }
 
-            if (e.Action == NotifyCollectionChangeAction.Remove)
+            if (e.Action == NotifyCollectionChangedAction.Remove)
             {
                 var parentRegionDataItem = Application.DataItemService.GetDataItemByValue(Application.Project, subRegion.Parent);
                 var regionDataItem = parentRegionDataItem.Children.FirstOrDefault(di => Equals(di.Value, subRegion));

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -531,7 +532,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             UnsubscribeTimeNavigator();
         }
 
-        public event EventHandler<SelectedItemChangedEventArgs<IFeature>> SelectionChanged;
+        public event EventHandler<SelectedItemChangedEventArgs> SelectionChanged;
 
         public event Action CurrentTimeSelectionChanged;
 
@@ -605,7 +606,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         {
             if (SelectionChanged != null)
             {
-                SelectionChanged(this, new SelectedItemChangedEventArgs<IFeature>(SelectedFeature));
+                SelectionChanged(this, new SelectedItemChangedEventArgs(SelectedFeature));
             }
         }
 
@@ -689,7 +690,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             }
         }
 
-        private void NetworkCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        private void NetworkCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (Data == null)
                 return; //we're in the process of closing, stop doing anything here

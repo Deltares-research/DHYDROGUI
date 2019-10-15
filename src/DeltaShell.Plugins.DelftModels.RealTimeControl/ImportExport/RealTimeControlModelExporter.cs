@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         {
             get { return "RTC-Tools xml files"; }
         }
-
+        public string Description { get{return Name;} }
         public string Directory { private get; set; }
 
         public bool Export(object item, string path)
@@ -62,6 +62,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         {
             get { return "Xml files"; }
         }
+
+        
 
         public IEnumerable<Type> SourceTypes()
         {

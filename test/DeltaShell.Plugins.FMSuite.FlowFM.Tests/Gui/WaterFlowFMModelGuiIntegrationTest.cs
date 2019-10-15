@@ -1117,7 +1117,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     Assert.NotNull(projectItemMapView);
 
                     //importing harlingen point ~ 28800 points... this took over 15 min to load
-                    var fmtestPath = TestHelper.GetTestDataPath(typeof(WaterFlowFMModelTest).Assembly);
+                    var fmtestPath = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(WaterFlowFMModelTest).Assembly);
                     var xyzPath = Path.Combine(fmtestPath, @"harlingen_model_3d\har_V3.xyz");
                     var selection = new DataItem(area.DryPoints);
 

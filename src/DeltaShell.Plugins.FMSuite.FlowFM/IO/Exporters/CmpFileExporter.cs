@@ -17,6 +17,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
 
         [ExcludeFromCodeCoverage]
         public string Name { get { return "Boundary data to .cmp file"; } }
+        public string Description { get { return Name; } }
 
         [ExcludeFromCodeCoverage]
         public string Category { get { return "General"; } }

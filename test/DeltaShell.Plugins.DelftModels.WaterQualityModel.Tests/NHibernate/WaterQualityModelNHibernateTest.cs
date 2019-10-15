@@ -207,7 +207,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
         public void SaveAndRetrieveHydFileData()
         {
             // setup
-            var filePath = Path.Combine(TestHelper.GetDataDir(), "IO", "real", "uni3d.hyd");
+            var filePath = Path.Combine(TestHelper.GetTestDataDirectory(), "IO", "real", "uni3d.hyd");
             var entity = new HydFileData
             {
                 Path = new FileInfo(filePath), 
@@ -270,7 +270,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
         public void SaveAndRetrieveFunctionFromHydroDynamics()
         {
             // setup
-            var filePath = Path.Combine(TestHelper.GetDataDir(), "IO", "real", "uni3d.sal");
+            var filePath = Path.Combine(TestHelper.GetTestDataDirectory(), "IO", "real", "uni3d.sal");
             var entity = WaterQualityFunctionFactory.CreateFunctionFromHydroDynamics("Name", 1.2, "Component name", "Unit name", "My Description");
             entity.FilePath = filePath;
 
@@ -292,7 +292,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
         public void SaveAndRetrieveStandaloneWaterQualityModelWithoutHydFile()
         {
             // setup
-            var commonFilePath = Path.Combine(TestHelper.GetDataDir(), "IO");
+            var commonFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "IO");
 
             var entity = new WaterQualityModel
             {
@@ -513,7 +513,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
         public void SaveAndRetrieveStandAloneWaterQualityModelWithHydFileImportedAndSpatialProcessCoefficient()
         {
             // setup
-            var commonFilePath = Path.Combine(TestHelper.GetDataDir(), "IO");
+            var commonFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "IO");
             var filePath = Path.Combine(commonFilePath, "real", "uni3d.hyd");
 
             var entity = new WaterQualityModel();
@@ -572,7 +572,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
 
             var waqAppPlugin = new WaterQualityModelApplicationPlugin { Application = app };
 
-            var commonFilePath = Path.Combine(TestHelper.GetDataDir(), "IO");
+            var commonFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "IO");
 
             var filePath = Path.Combine(commonFilePath, "real", "uni3d.hyd");
 

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using DelftTools.Controls;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Shell.Core;
@@ -52,7 +53,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             
                 //setup expectations
                 Expect.Call(hydroNetworkEditorMapTool.ActiveNetworkCoverageGroupLayer).Return(networkCoverageGroupLayer);
-                Expect.Call(documentViews.GetActiveViews<MapView>()).Return(new[] {mapView});
+                Expect.Call(documentViews.ActiveView.GetViewsOfType<MapView>()).Return(new[] {mapView});
                 Expect.Call(gui.DocumentViews).Return(documentViews).Repeat.Any();
                 Expect.Call(pluginGui.Gui).Return(gui).Repeat.Any();
                 Expect.Call(gui.Application).Return(application).Repeat.Any();
@@ -125,7 +126,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
                 var coverageInMapView = new NetworkCoverage { Network = route.Network, Name = "coverageInMapView" };
                 //setup expectations
                 Expect.Call(hydroNetworkEditorMapTool.ActiveNetworkCoverageGroupLayer).Return(networkCoverageGroupLayer);
-                Expect.Call(documentViews.GetActiveViews<MapView>()).Return(new[] { mapView });
+                Expect.Call(documentViews.ActiveView.GetViewsOfType<MapView>()).Return(new[] { mapView });
                 Expect.Call(gui.DocumentViews).Return(documentViews).Repeat.Any();
                 Expect.Call(pluginGui.Gui).Return(gui).Repeat.Any();
                 Expect.Call(gui.Application).Return(application).Repeat.Any();

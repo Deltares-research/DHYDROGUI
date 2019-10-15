@@ -49,7 +49,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Integ
             {
                 string testDataDirName = "WFM1D";
                 string sourcePath =
-                    Path.GetFullPath(Path.Combine(TestHelper.GetDataDir(), @"FileWriters\IntegrationTests",
+                    Path.GetFullPath(Path.Combine(TestHelper.GetTestDataDirectory(), @"FileWriters\IntegrationTests",
                         testDataDirName));
                 FileUtils.CopyDirectory(sourcePath, testDataDirName, ".svn");
 
@@ -125,7 +125,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Integ
             {
                 string testDataDirName = "WFM1D";
                 string sourcePath =
-                    Path.GetFullPath(Path.Combine(TestHelper.GetDataDir(), @"FileWriters\IntegrationTests",
+                    Path.GetFullPath(Path.Combine(TestHelper.GetTestDataDirectory(), @"FileWriters\IntegrationTests",
                         testDataDirName));
                 FileUtils.CopyDirectory(sourcePath, testDataDirName, ".svn");
 

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -123,7 +124,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.ModelFeatureCoordinateDa
             UpdateRowsForGeometry();
         }
 
-        private void OnModelFeatureCoordinateDataCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        private void OnModelFeatureCoordinateDataCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (sender != modelFeatureCoordinateData.DataColumns) return;
 

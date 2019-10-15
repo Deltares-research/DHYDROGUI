@@ -1,10 +1,12 @@
 using System;
 using System.Drawing;
+using DelftTools.Controls.Swf.Graph;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.ActivityShapes;
 using Netron.GraphLib.UI;
 using NUnit.Framework;
+using GraphControl = Netron.GraphLib.UI.GraphControl;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.ActivityShapes
 {

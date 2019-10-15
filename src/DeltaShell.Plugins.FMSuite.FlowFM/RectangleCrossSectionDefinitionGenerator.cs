@@ -2,6 +2,7 @@ using DelftTools.Hydro.CrossSections.StandardShapes;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils;
+using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM
@@ -41,7 +42,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             var defaultElliptical = CrossSectionStandardShapeElliptical.CreateDefault();
             defaultElliptical.Name = name;
-            defaultElliptical.MaterialName = EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerProfileMapping.SewerProfileMaterial.Unknown);
+            defaultElliptical.MaterialName = SewerProfileMapping.SewerProfileMaterial.Unknown.GetDescription();
             return defaultElliptical;
         }
     }
@@ -80,7 +81,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             var defaultRectangle = CrossSectionStandardShapeRectangle.CreateDefault();
             defaultRectangle.Name = name;
-            defaultRectangle.MaterialName = EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerProfileMapping.SewerProfileMaterial.Unknown);
+            defaultRectangle.MaterialName = SewerProfileMapping.SewerProfileMaterial.Unknown.GetDescription();
             return defaultRectangle;
         }
     }

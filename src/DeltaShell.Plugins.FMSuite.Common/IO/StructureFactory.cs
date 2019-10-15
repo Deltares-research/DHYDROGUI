@@ -508,7 +508,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                 (Enum)
                     DataTypeValueParser.FromString(openingDirectionProperty.GetValueAsString(),
                         openingDirectionProperty.PropertyDefinition.DataType);
-            var displayName = EnumDescriptionAttributeTypeConverter.GetEnumDisplayName(openingDirectionValue);
+            var displayName = openingDirectionValue.GetDisplayName();
             switch (displayName)
             {
                 case "symmetric":

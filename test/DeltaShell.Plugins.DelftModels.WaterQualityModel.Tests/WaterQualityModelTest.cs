@@ -1024,7 +1024,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             model.ImportHydroData(hydroData);
 
 
-            var subFilePath = Path.Combine(TestHelper.GetDataDir(), "IO", "03d_Tewor2003.sub");
+            var subFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "IO", "03d_Tewor2003.sub");
             new SubFileImporter().Import(model.SubstanceProcessLibrary, subFilePath);
 
             FunctionTypeCreator.ReplaceFunctionUsingCreator(

@@ -117,7 +117,7 @@ namespace DeltaShell.Plugins.Fews.Tests
         {
             FileUtils.DeleteIfExists(testRunDir);
             Directory.CreateDirectory(testRunDir);
-            string sourcePath = Path.Combine(TestHelper.GetDataDir(), sourceDirName);
+            string sourcePath = Path.Combine(TestHelper.GetTestDataDirectory(), sourceDirName);
             string targetPath = Path.Combine(testRunDir, sourceDirName);
             FileUtils.CopyDirectory(sourcePath, targetPath, ".svn");
             return targetPath;

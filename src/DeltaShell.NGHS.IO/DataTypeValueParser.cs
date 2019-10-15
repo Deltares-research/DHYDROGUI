@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using DelftTools.Utils;
 using DelftTools.Utils.Reflection;
+using DeltaShell.NGHS.IO.Helpers;
 using log4net;
 
 namespace DeltaShell.NGHS.IO
@@ -151,7 +152,7 @@ namespace DeltaShell.NGHS.IO
             }
             if (dataType.IsEnum)
             {
-                return EnumDescriptionAttributeTypeConverter.GetEnumDisplayName((Enum) obj);
+                return ((Enum)obj).GetDisplayName();
             }
             if (dataType == typeof (Steerable))
             {
@@ -249,8 +250,8 @@ namespace DeltaShell.NGHS.IO
             }
             if (dataType.IsEnum)
             {
-                var enumValue = EnumDescriptionAttributeTypeConverter.GetEnumValueFromDisplayName(dataType, str);
-                if(enumValue == null) throw new FormatException(String.Format("Value of '{0}' not valid.", str));
+                var enumValue = str.GetEnumValueFromDisplayName(dataType);
+                if (enumValue == null) throw new FormatException(String.Format("Value of '{0}' not valid.", str));
                 return enumValue;
             }
             if (dataType == typeof (Steerable))

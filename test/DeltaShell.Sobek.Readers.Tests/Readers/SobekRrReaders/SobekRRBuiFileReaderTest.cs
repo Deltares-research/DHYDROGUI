@@ -32,7 +32,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         [Category(TestCategory.DataAccess)]
         public void ReadBuiFile()
         {
-            string buiFilePath = TestHelper.GetDataDir() + @"\Meteo\STNBUI09.BUI";
+            string buiFilePath = TestHelper.GetTestDataDirectory() + @"\Meteo\STNBUI09.BUI";
             var reader = new SobekRRBuiFileReader();
             var measurements = reader.ReadMeasurementData(buiFilePath).ToList();
 
@@ -48,7 +48,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         public void ReadBuiFile1()
         {
             var t = DateTime.Now;
-            string buiFilePath = TestHelper.GetDataDir() + @"\RD-02X.bui";
+            string buiFilePath = TestHelper.GetTestDataDirectory() + @"\RD-02X.bui";
             var reader = new SobekRRBuiFileReader();
             var measurements = reader.ReadMeasurementData(buiFilePath).ToList();
 
@@ -66,7 +66,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         [Category(TestCategory.Slow)]
         public void ReadBuiFileTholen()
         {
-            string buiFilePath = TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"FIXED\THOL2010.BUI");
+            string buiFilePath = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"FIXED\THOL2010.BUI");
             var reader = new SobekRRBuiFileReader();
 
             reader.ReadMeasurementData(buiFilePath).ToList();
@@ -78,7 +78,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         [Category(TestCategory.DataAccess)]
         public void ReadMultipleStationsBuiFileAndCheckData()
         {
-            string buiFilePath = TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"FIXED\Test2Stations4TimeSteps.BUI");
+            string buiFilePath = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"FIXED\Test2Stations4TimeSteps.BUI");
             var reader = new SobekRRBuiFileReader();
             var measurements = reader.ReadMeasurementData(buiFilePath).ToList();
 

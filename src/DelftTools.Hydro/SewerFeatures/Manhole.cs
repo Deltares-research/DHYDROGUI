@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Aop;
@@ -112,18 +113,18 @@ namespace DelftTools.Hydro.SewerFeatures
             }
         }
 
-        private void CompartmentCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        private void CompartmentCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            var compartment = e.Item as Compartment;
+            var compartment = e.GetRemovedOrAddedItem() as Compartment;
             if (compartment == null) return;
 
             switch (e.Action)
             {
-                case NotifyCollectionChangeAction.Remove:
+                case NotifyCollectionChangedAction.Remove:
                     //It has a NoNotifyPropertyChanged, so it won't propagate again.
                     compartment.ParentManhole = null;
                     return;
-                case NotifyCollectionChangeAction.Add:
+                case NotifyCollectionChangedAction.Add:
                     var oldParentManhole = compartment.ParentManhole;
                     if (oldParentManhole != null && oldParentManhole != this && oldParentManhole.ContainsCompartmentWithName(compartment.Name))
                     {

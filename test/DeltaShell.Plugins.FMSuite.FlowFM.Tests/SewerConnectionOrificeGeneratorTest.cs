@@ -4,6 +4,7 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils;
+using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using NUnit.Framework;
 
@@ -21,14 +22,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var targetCompartmentId = "cmp002";
 
             var connectionType = SewerConnectionMapping.ConnectionType.Orifice;
-            var connectionTypeString = EnumDescriptionAttributeTypeConverter.GetEnumDescription(connectionType);
+            var connectionTypeString = connectionType.GetDescription();
 
             var levelStart = 2.0;
             var levelEnd = 2.5;
             var length = 5.0;
 
             var waterType = SewerConnectionWaterType.DryWater;
-            var waterTypeString = EnumDescriptionAttributeTypeConverter.GetEnumDescription(waterType);
+            var waterTypeString = waterType.GetDescription();
             #endregion
 
             //Non value given
@@ -64,7 +65,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 GwswAttributeList = new List<GwswAttribute>
                 {
                     GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.UniqueId, orificeId, string.Empty),
-                    GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.StructureType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerConnectionMapping.ConnectionType.Orifice), string.Empty),
+                    GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.StructureType, SewerConnectionMapping.ConnectionType.Orifice.GetDescription(), string.Empty),
                     GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.BottomLevel, crestLevel.ToString(CultureInfo.InvariantCulture), string.Empty, TypeDouble),
                     GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.ContractionCoefficient, contractionCoef.ToString(CultureInfo.InvariantCulture), string.Empty, TypeDouble),
                     GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.MaxDischarge, maxDischarge.ToString(CultureInfo.InvariantCulture), string.Empty, TypeDouble)
@@ -93,7 +94,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 GwswAttributeList = new List<GwswAttribute>
                 {
                     GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.UniqueId, orificeId, string.Empty),
-                    GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.StructureType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerConnectionMapping.ConnectionType.Orifice), string.Empty),
+                    GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.StructureType, SewerConnectionMapping.ConnectionType.Orifice.GetDescription(), string.Empty),
                     GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.BottomLevel, crestLevel.ToString(CultureInfo.InvariantCulture), string.Empty, TypeDouble),
                     GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.ContractionCoefficient, contractionCoef.ToString(CultureInfo.InvariantCulture), string.Empty, TypeDouble),
                     GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.MaxDischarge, maxDischarge.ToString(CultureInfo.InvariantCulture), string.Empty, TypeDouble),

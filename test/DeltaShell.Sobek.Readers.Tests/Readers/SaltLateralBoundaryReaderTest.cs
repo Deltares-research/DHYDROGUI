@@ -82,7 +82,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         [Category(TestCategory.Integration)]
         public void ReadSaltBoundaryFile()
         {
-            var path = TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"ReModels\NatSobek.sbk\6\DEFCND.7");
+            var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"ReModels\NatSobek.sbk\6\DEFCND.7");
             var saltBoundaries = new SaltLateralBoundaryReader().Read(path);
             Assert.AreEqual(8, saltBoundaries.Count());
             var saltBoundary = saltBoundaries.Where(sb => sb.Id == "5576465").FirstOrDefault();

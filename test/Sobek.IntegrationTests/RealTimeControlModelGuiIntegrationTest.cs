@@ -62,7 +62,7 @@ namespace Sobek.IntegrationTests
         [Category(TestCategory.Slow)]
         public void DeleteClonedCopyOfRtcWithSaltAfterSaveAndSaveAgainShouldNotGiveException()
         {
-            string pathToSobekNetwork = TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"ReModels\JAMM2010.sbk\40\deftop.1");
+            string pathToSobekNetwork = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"ReModels\JAMM2010.sbk\40\deftop.1");
 
             var modelImporter = new SobekHydroModelImporter(false);
             var hydroModel = (HydroModel)modelImporter.ImportItem(pathToSobekNetwork);
@@ -109,7 +109,7 @@ namespace Sobek.IntegrationTests
         [Category(TestCategory.Slow)]
         public void DeleteClonedCopyOfRtcWithoutSaltAfterSaveAndSaveAgainShouldNotGiveException()
         {
-            string pathToSobekNetwork = TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"ReModels\JAMM2010.sbk\40\deftop.1");
+            string pathToSobekNetwork = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"ReModels\JAMM2010.sbk\40\deftop.1");
 
             var modelImporter = new SobekHydroModelImporter(false);
             var hydroModel = (HydroModel)modelImporter.ImportItem(pathToSobekNetwork);
@@ -404,7 +404,7 @@ namespace Sobek.IntegrationTests
         [Category(TestCategory.Slow)]
         public void RunRealTimeControlModelWithFlowModelShouldNotMarkFlowOutputOutOfSync_Issue7002()
         {
-            var path = TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"HKTG.lit\1\NETWORK.TP");
+            var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"HKTG.lit\1\NETWORK.TP");
             var modelImporter = new SobekHydroModelImporter(false);
             var hydroModel = (HydroModel)modelImporter.ImportItem(path);
             gui.Application.Project.RootFolder.Add(hydroModel);
@@ -430,7 +430,7 @@ namespace Sobek.IntegrationTests
         [Category(TestCategory.WorkInProgress)] //hydro model branch
         public void RunAndCopyPasteRealTimeControlModelWithFlowModelShouldNotMarkClonedModelFlowOutputOutOfSync()
         {
-            var path = TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"HKTG.lit\1\NETWORK.TP");
+            var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"HKTG.lit\1\NETWORK.TP");
             var modelImporter = new SobekHydroModelImporter(false);
             var hydroModel = (HydroModel)modelImporter.ImportItem(path);
 
@@ -465,7 +465,7 @@ namespace Sobek.IntegrationTests
         [Category(TestCategory.Slow)]
         public void CopyPasteImportedRtcAndFlowModelAfterRunShouldNotCrash_Issue7010()
         {
-            var path = TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"HKTG.lit\1\NETWORK.TP");
+            var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"HKTG.lit\1\NETWORK.TP");
             var modelImporter = new SobekHydroModelImporter(false);
             var hydroModel = (HydroModel)modelImporter.ImportItem(path);
             gui.Application.Project.RootFolder.Add(hydroModel);

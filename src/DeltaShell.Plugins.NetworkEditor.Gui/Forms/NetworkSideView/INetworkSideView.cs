@@ -12,7 +12,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         NetworkSideViewDataController DataController { get; set; }
         IFeature SelectedFeature { get; set; }
         void UpdateStyles(IBranchFeature branchFeature, VectorStyle normalStyle, VectorStyle selectedStyle);
-        event EventHandler<SelectedItemChangedEventArgs<IFeature>> SelectionChanged;
+        event EventHandler<SelectedItemChangedEventArgs> SelectionChanged;
         object CommandReceiver { get; }
     }
 }

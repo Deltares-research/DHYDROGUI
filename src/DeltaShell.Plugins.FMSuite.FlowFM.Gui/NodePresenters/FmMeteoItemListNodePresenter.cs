@@ -15,7 +15,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
     /// <summary>
     /// Class responsible for providing the Meteo items list node
     /// </summary>
-    /// <seealso cref="DeltaShell.Plugins.FMSuite.Common.Gui.NodePresenters.FMSuiteNodePresenterBase{DelftTools.Utils.Collections.Generic.IEventedList{DeltaShell.Plugins.FMSuite.Common.FeatureData.IFmMeteoField}}" />
+    /// <seealso cref="IFmMeteoField" />
     class FmMeteoItemListNodePresenter : FMSuiteNodePresenterBase<IEventedList<IFmMeteoField>>
     {
         private static readonly Bitmap MeteoItemsIcon = Resources.weather_cloudy;

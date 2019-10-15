@@ -13,6 +13,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         private static readonly ILog log = LogManager.GetLogger(typeof(InputFileExporter));
 
         public string Name { get { return "Input file exporter"; } }
+        public string Description { get { return Name; } }
 
         public string Category { get { return "Water quality"; } }
 

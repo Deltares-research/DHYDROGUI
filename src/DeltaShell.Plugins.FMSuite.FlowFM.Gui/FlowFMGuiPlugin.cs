@@ -755,7 +755,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 var collection = Gui.DocumentViews.AllViews.Where(v =>
                 {
                     var data = v.Data as WaterFlowFMModel;
-                    return data != null && (data == flowFmModel && v.Visible);
+                    return data != null && (data == flowFmModel);
                 }).Select(v => v.GetType());
                 if(collection != null)
                     ClosedViewTypes.AddRange(collection);

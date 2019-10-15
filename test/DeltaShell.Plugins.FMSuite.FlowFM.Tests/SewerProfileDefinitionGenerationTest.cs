@@ -5,6 +5,7 @@ using DelftTools.Hydro.CrossSections.StandardShapes;
 using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
+using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using NUnit.Framework;
 using Assert = NUnit.Framework.Assert;
@@ -24,7 +25,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [TestCase(SewerProfileMapping.SewerProfileType.Trapezoid, 1.0, 2.0)]
         public void GivenSimpleSewerProfileDataRound_WhenCreatingWithFactory_ThenProfileIsCorrectlyReturned(SewerProfileMapping.SewerProfileType sewerProfileType, double expectedHeight, double expectedSlope)
         {
-            var profileType = EnumDescriptionAttributeTypeConverter.GetEnumDescription(sewerProfileType);
+            var profileType = sewerProfileType.GetDescription();
             var profileGwswElement = GetSewerProfileGwswElement(ProfileId, profileType, "400", "600", "3.0", "1.0");
             CreateProfileAndCheckProperties(profileGwswElement, ProfileId, 0.4, expectedHeight, expectedSlope);
         }
@@ -100,7 +101,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [TestCase(SewerProfileMapping.SewerProfileType.Trapezoid)]
         public void GivenValidGwswElementWithoutWidthDefined_WhenCreatingSewerProfile_ThenLogMessageIsReturned(SewerProfileMapping.SewerProfileType sewerProfileType)
         {
-            var profileType = EnumDescriptionAttributeTypeConverter.GetEnumDescription(sewerProfileType);
+            var profileType = sewerProfileType.GetDescription();
             var sewerProfileGwswElement = new GwswElement
             {
                 ElementTypeName = SewerFeatureType.Crosssection.ToString(),
@@ -118,7 +119,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [TestCase(SewerProfileMapping.SewerProfileType.Trapezoid)]
         public void GivenValidGwswElementWithoutHeightDefined_WhenCreatingSewerProfile_ThenLogMessageIsReturned(SewerProfileMapping.SewerProfileType sewerProfileType)
         {
-            var profileType = EnumDescriptionAttributeTypeConverter.GetEnumDescription(sewerProfileType);
+            var profileType = sewerProfileType.GetDescription();
             var sewerProfileGwswElement = new GwswElement
             {
                 ElementTypeName = SewerFeatureType.Crosssection.ToString(),
@@ -135,7 +136,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [TestCase(SewerProfileMapping.SewerProfileType.Trapezoid)]
         public void GivenValidGwswElementWithoutSlopeDefined_WhenCreatingSewerProfile_ThenLogMessageIsReturnedForTrapezoidType(SewerProfileMapping.SewerProfileType sewerProfileType)
         {
-            var profileType = EnumDescriptionAttributeTypeConverter.GetEnumDescription(sewerProfileType);
+            var profileType = sewerProfileType.GetDescription();
             var sewerProfileGwswElement = new GwswElement
             {
                 ElementTypeName = SewerFeatureType.Crosssection.ToString(),

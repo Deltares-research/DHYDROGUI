@@ -18,6 +18,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
         {
             get { return "Boundary data to .bc file"; }
         }
+        public string Description { get { return Name; } }
 
         [ExcludeFromCodeCoverage]
         public string Category { get { return "General"; } }

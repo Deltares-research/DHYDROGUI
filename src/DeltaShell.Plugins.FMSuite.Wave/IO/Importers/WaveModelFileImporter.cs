@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Importers
         {
             get { return "Waves Model"; }
         }
-
+        public string Description { get { return Name; } }
         public string Category
         {
             get { return "2D / 3D"; }

@@ -3,6 +3,7 @@ using DelftTools.Hydro.CrossSections.StandardShapes;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils;
+using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using log4net;
@@ -53,7 +54,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             var materialAttribute = gwswElement.GetAttributeFromList(SewerProfileMapping.PropertyKeys.SewerProfileMaterial);
             var materialValue = materialAttribute == null
-                ? EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerProfileMapping.SewerProfileMaterial.Unknown)
+                ? SewerProfileMapping.SewerProfileMaterial.Unknown.GetDescription()
                 : materialAttribute.GetValidStringValue();
             return materialValue;
         }

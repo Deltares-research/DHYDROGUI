@@ -15,7 +15,7 @@ namespace SobekCompare.Tests
         public void SetUp()
         {
             LogHelper.ConfigureLogging();
-            baseDir = Path.Combine(TestHelper.GetDataDir(), "StuwJaap.lit");
+            baseDir = Path.Combine(TestHelper.GetTestDataDirectory(), "StuwJaap.lit");
         }
         [TearDown]
         public void TearDown()

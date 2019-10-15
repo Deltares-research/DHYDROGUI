@@ -18,7 +18,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
         {
             get { return "SOBEK Wind Data"; }
         }
-
+        public string Description { get { return Name; } }
         public string Category { get; private set; }
         
         public Bitmap Image { get; private set; }

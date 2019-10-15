@@ -183,7 +183,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui
             //TODO: method is a mess clean up.
 
             IFunction function;
-            bool activeViewIsMapView = Gui != null && Gui.DocumentViews.GetActiveViews<MapView>().Count()==1;
+            bool activeViewIsMapView = Gui != null && Gui.DocumentViews.ActiveView.GetViewsOfType<MapView>().Count()==1;
 
             if (dataobject is WaterFlowModel1DBoundaryNodeData)
             {

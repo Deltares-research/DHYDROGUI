@@ -15,7 +15,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Exporters
         {
             get { return "Waves model"; }
         }
-
+        public string Description { get { return Name; } }
         public string Category { get { return "General"; } }
 
         public bool Export(object item, string path)

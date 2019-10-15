@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Hydro;
@@ -68,12 +69,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             }
         }
 
-        private void ProjectItemsCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        private void ProjectItemsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             //start updating our stuff
-            if (e.Item is Route)
+            if (e.GetRemovedOrAddedItem() is Route)
             {
-                var routeItem = e.Item as Route;
+                var routeItem = e.GetRemovedOrAddedItem() as Route;
                 var routeItemNetwork = routeItem.Network as IHydroNetwork;
                 if (Equals(route, routeItem) && routeItemNetwork != null && Equals(routeItemNetwork.Routes, sender))
                 {
@@ -83,29 +84,29 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
                     }
                 }
             }
-            else if (e.Item is IModel && e.Action == NotifyCollectionChangeAction.Remove)
+            else if (e.GetRemovedOrAddedItem() is IModel && e.Action == NotifyCollectionChangedAction.Remove)
             {
-                (e.Item as IModel).GetAllItemsRecursive().ForEach(ModelItemRemoved);
+                (e.GetRemovedOrAddedItem() as IModel).GetAllItemsRecursive().ForEach(ModelItemRemoved);
             }
-            else if (e.Item is IDataItem)
+            else if (e.GetRemovedOrAddedItem() is IDataItem)
             {
-                var value = ((IDataItem)e.Item).Value;
+                var value = ((IDataItem)e.GetRemovedOrAddedItem()).Value;
 
                 if (!(value is ICoverage))
                     return;
 
                 switch (e.Action)
                 {
-                    case NotifyCollectionChangeAction.Add:
+                    case NotifyCollectionChangedAction.Add:
                         AddCoverage((ICoverage)value);
                         break;
-                    case NotifyCollectionChangeAction.Remove:
+                    case NotifyCollectionChangedAction.Remove:
                         if (OnCoverageRemovedFromProject != null)
                         {
                             OnCoverageRemovedFromProject((ICoverage)value);
                         }
                         break;
-                    case NotifyCollectionChangeAction.Replace:
+                    case NotifyCollectionChangedAction.Replace:
                         break;
                 }
             }

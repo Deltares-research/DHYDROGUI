@@ -52,12 +52,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         {
             get { return "1.1.1.0"; }
         }
-
-        public override Image Image
-        {
-            get { return null; }
-        }
-
+        
         public override IApplication Application
         {
             get

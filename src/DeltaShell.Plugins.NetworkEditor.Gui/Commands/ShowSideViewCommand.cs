@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using DelftTools.Controls;
 using DelftTools.Shell.Gui;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView;
 using DeltaShell.Plugins.NetworkEditor.Gui.MapTools;
@@ -62,7 +63,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Commands
         private MapView GetMapView()
         {
             //no mapview should give an exception..
-            return Gui.DocumentViews.GetActiveViews<MapView>().FirstOrDefault();
+            return Gui.DocumentViews.ActiveView.GetViewsOfType<MapView>().FirstOrDefault();
         }
 
         public IGui Gui { get; set; }

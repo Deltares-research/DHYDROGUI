@@ -22,6 +22,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 
         [ExcludeFromCodeCoverage]
         public string Name { get { return "Unstructured Grid"; } }
+        public string Description { get { return Name; } }
 
         [ExcludeFromCodeCoverage]
         public string Category { get { return "2D / 3D"; } }

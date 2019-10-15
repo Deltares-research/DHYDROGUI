@@ -31,7 +31,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Importers
         {
             get { return "Delft3D Grid"; }
         }
-
+        public string Description { get { return Name; } }
         public string Category { get; private set; }
 
         public Bitmap Image { get; private set; }

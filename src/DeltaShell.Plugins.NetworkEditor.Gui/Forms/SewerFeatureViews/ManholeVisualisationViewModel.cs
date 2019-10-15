@@ -178,20 +178,20 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             }
         }
 
-        private void CompartmentsOnCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        private void CompartmentsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            if (e.Action == NotifyCollectionChangeAction.Add)
+            if (e.Action == NotifyCollectionChangedAction.Add)
             {
-                var compartment = e.Item as Compartment;
+                var compartment = e.GetRemovedOrAddedItem() as Compartment;
                 if (compartment != null)
                 {
                     Shapes.Add(new CompartmentShape { Compartment = compartment });
                 }
             }
 
-            if (e.Action == NotifyCollectionChangeAction.Remove)
+            if (e.Action == NotifyCollectionChangedAction.Remove)
             {
-                var compartment = e.Item as Compartment;
+                var compartment = e.GetRemovedOrAddedItem() as Compartment;
                 if (compartment != null)
                 {
                     var compartmentShapeToRemove = Shapes.OfType<CompartmentShape>().FirstOrDefault(cs => cs.Compartment == compartment);
@@ -210,11 +210,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             }
         }
 
-        private void Branches_CollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        private void Branches_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            if (e.Action == NotifyCollectionChangeAction.Add)
+            if (e.Action == NotifyCollectionChangedAction.Add)
             {
-                var sewerConnection = e.Item as SewerConnection;
+                var sewerConnection = e.GetRemovedOrAddedItem() as SewerConnection;
                 if (sewerConnection == null) return;
 
                 var newConnection = sewerConnection.CreateStructureShape();
@@ -224,9 +224,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
                 Shapes.Add(newConnection);
             }
 
-            if (e.Action == NotifyCollectionChangeAction.Remove)
+            if (e.Action == NotifyCollectionChangedAction.Remove)
             {
-                var sewerConnection = e.Item as SewerConnection;
+                var sewerConnection = e.GetRemovedOrAddedItem() as SewerConnection;
                 if (sewerConnection == null) return;
 
                 var connectionShapes = Shapes.OfType<InternalConnectionShape>();

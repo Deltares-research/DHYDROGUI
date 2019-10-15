@@ -3,6 +3,7 @@ using System.Globalization;
 using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Utils;
+using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using NUnit.Framework;
 
@@ -26,11 +27,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var nodeLength = 14.0;
             var nodeWidth = 13.0;
             var nodeShape = CompartmentShape.Square;
-            var nodeShapeAsString = EnumDescriptionAttributeTypeConverter.GetEnumDescription(nodeShape);
+            var nodeShapeAsString = nodeShape.GetDescription();
             var floodableArea = 11.0;
             var bottomLevel = 10.0;
             var surfaceLevel = 5.0;
-            var nodeType = EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerStructureMapping.StructureType.Outlet); // This makes it an outlet element!
+            var nodeType = SewerStructureMapping.StructureType.Outlet.GetDescription(); // This makes it an outlet element!
             var nodeGwswElement = new GwswElement
             {
                 ElementTypeName = SewerFeatureType.Node.ToString(),
@@ -65,7 +66,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var uniqueId = "outlet123";
             var surfaceWaterLevel = 15.0;
             var structureType =
-                EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerStructureMapping.StructureType.Outlet);
+                SewerStructureMapping.StructureType.Outlet.GetDescription();
 
             var defaultDouble = 0.0;
             var structureGwswElement = GetStructureGwswElement(uniqueId, structureType, defaultDouble, defaultDouble,
@@ -83,7 +84,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var uniqueId = "outlet123";
             var surfaceWaterLevel = 15.0;
             var structureType =
-                EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerStructureMapping.StructureType.Outlet);
+                SewerStructureMapping.StructureType.Outlet.GetDescription();
 
             var defaultDouble = 0.0;
             var structureGwswElement = GetStructureGwswElement(uniqueId, structureType, defaultDouble, defaultDouble,

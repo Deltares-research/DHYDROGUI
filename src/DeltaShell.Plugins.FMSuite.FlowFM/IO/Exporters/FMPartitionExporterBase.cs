@@ -39,7 +39,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
         {
             get { return "Partition exporter"; }
         }
-
+        public string Description { get { return Name; } }
         public abstract bool Export(object item, string path);
 
         public string Category

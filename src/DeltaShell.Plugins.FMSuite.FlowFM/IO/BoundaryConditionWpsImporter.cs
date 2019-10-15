@@ -34,6 +34,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         #region IFileImporter
 
         public string Name { get { return "Boundary data from WPS"; } }
+        public string Description { get { return Name; } }
 
         public string Category { get { return "Boundary data"; } }
 

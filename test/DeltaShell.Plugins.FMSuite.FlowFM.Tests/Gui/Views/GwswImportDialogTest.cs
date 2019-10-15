@@ -157,7 +157,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Views
 
             //Load definition file and all it´s features
             var filePath = TestHelper.GetTestFilePath(path);
-            viewModel.SelectedDirectoryPath = TestHelper.GetDataDir();
+            viewModel.SelectedDirectoryPath = TestHelper.GetTestDataDirectory();
             viewModel.OnDirectorySelected.Execute(null);
             Assert.IsTrue(viewModel.GwswFeatureFiles.Any());
             var numberOfFeatures = viewModel.GwswFeatureFiles.Count;

@@ -53,7 +53,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         #region IFileImporter
 
         public override string Name { get { return GetStructuresName(); } }
-
+        public override string Description { get { return Name; } }
         public override string Category { get { return "2D / 3D"; } }
 
         public override Bitmap Image

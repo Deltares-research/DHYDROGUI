@@ -14,6 +14,7 @@ using DelftTools.Utils.IO;
 using DeltaShell.Plugins.DelftModels.HydroModel.ValueConverters;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -337,23 +338,23 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void ActivitiesCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        private void ActivitiesCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             OnActivitiesCollectionChanged(sender, e);
             BubbleCollectionChangedEvent(sender, e);
         }
 
         [EditAction]
-        private void OnActivitiesCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        private void OnActivitiesCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             // activity was removed / added
             if (Equals(sender, activities))
             {
-                var model = e.Item as IModel;
-                var timeDependentModel = e.Item as ITimeDependentModel;
+                var model = e.GetRemovedOrAddedItem() as IModel;
+                var timeDependentModel = e.GetRemovedOrAddedItem() as ITimeDependentModel;
                 switch (e.Action)
                 {
-                    case NotifyCollectionChangeAction.Add:
+                    case NotifyCollectionChangedAction.Add:
                         if (model != null)
                         {
                             model.Owner = this;
@@ -393,7 +394,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                         }
 
                         break;
-                    case NotifyCollectionChangeAction.Remove:
+                    case NotifyCollectionChangedAction.Remove:
                         if (model != null)
                         {
                             model.DisconnectExternalDataItems();
@@ -446,16 +447,16 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             BubbleCollectionChangingEvent(sender, e);
         }
 
-        private void WorkflowsOnCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        private void WorkflowsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            var activity = e.Item as ICompositeActivity;
+            var activity = e.GetRemovedOrAddedItem() as ICompositeActivity;
             if (activity != null)
             {
                 activity.GetActivitiesOfType<IHydroModelWorkFlow>().ForEach(lfc => HydroModelWorkFlowHandler(lfc, e.Action));
             }
 
-            var disposable = e.Item as IDisposable;
-            if (disposable != null && e.Action == NotifyCollectionChangeAction.Remove)
+            var disposable = e.GetRemovedOrAddedItem() as IDisposable;
+            if (disposable != null && e.Action == NotifyCollectionChangedAction.Remove)
             {
                 disposable.Dispose();
             }
@@ -463,14 +464,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             BubbleCollectionChangedEvent(sender, e);
         }
 
-        private void HydroModelWorkFlowHandler(IHydroModelWorkFlow hydroModelWorkFlow, NotifyCollectionChangeAction action)
+        private void HydroModelWorkFlowHandler(IHydroModelWorkFlow hydroModelWorkFlow, NotifyCollectionChangedAction action)
         {
-            if (action == NotifyCollectionChangeAction.Add)
+            if (action == NotifyCollectionChangedAction.Add)
             {
                 hydroModelWorkFlow.HydroModel = this;
             }
 
-            if (action == NotifyCollectionChangeAction.Remove)
+            if (action == NotifyCollectionChangedAction.Remove)
             {
                 hydroModelWorkFlow.HydroModel = null;
             }
@@ -876,24 +877,24 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         public virtual Type SupportedRegionType { get { return typeof(HydroRegion); } }
 
         [EditAction]
-        private void OnHydroRegionCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        private void OnHydroRegionCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             var subRegions = sender as IEventedList<IRegion>;
-            var subRegion = e.Item as IHydroRegion;
+            var subRegion = e.GetRemovedOrAddedItem() as IHydroRegion;
 
             if (subRegions == null || subRegion == null || subRegion.Parent == null)
             {
                 return;
             }
 
-            if (e.Action == NotifyCollectionChangeAction.Add)
+            if (e.Action == NotifyCollectionChangedAction.Add)
             {
                 var parentRegionDataItem = GetDataItemByValue(subRegion.Parent);
                 AddChildRegionDataItems(parentRegionDataItem);
                 return;
             }
 
-            if (e.Action == NotifyCollectionChangeAction.Remove)
+            if (e.Action == NotifyCollectionChangedAction.Remove)
             {
                 var parentRegionDataItem = GetDataItemByValue(subRegion.Parent);
                 var regionDataItem = parentRegionDataItem.Children.FirstOrDefault(di => Equals(di.Value, subRegion));

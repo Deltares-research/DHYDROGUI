@@ -8,6 +8,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Importers
     public class WavmFileImporter : IFileImporter
     {
         public string Name { get { return "Wave Output (WAVM)"; } }
+        public string Description { get { return Name; } }
         public string Category { get { return "2D / 3D"; } }
         public Bitmap Image { get { return Properties.Resources.wave; } }
 

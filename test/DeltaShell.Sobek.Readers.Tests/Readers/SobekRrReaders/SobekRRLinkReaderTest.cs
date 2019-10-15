@@ -43,7 +43,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         [Category(TestCategory.DataAccess)]
         public void ReadSobekRRLinkFile()
         {
-            var path = TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly,@"Tholen.lit\29\3B_Link.tp");
+            var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly,@"Tholen.lit\29\3B_Link.tp");
             var lstRRLink = new SobekRRLinkReader().Read(path);
             Assert.AreEqual(426, lstRRLink.Count());
         }

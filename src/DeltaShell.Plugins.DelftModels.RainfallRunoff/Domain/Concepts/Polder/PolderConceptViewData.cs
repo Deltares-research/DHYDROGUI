@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using DelftTools.Hydro;
 using DelftTools.Utils;
@@ -215,9 +216,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Polder
             }
         }
 
-        private void OnCollectionChanged(object sender, NotifyCollectionChangingEventArgs propertyChangedEventArgs)
+        private void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs propertyChangedEventArgs)
         {
-            var catchmentModelData = propertyChangedEventArgs.Item as CatchmentModelData;
+            var catchmentModelData = propertyChangedEventArgs.GetRemovedOrAddedItem() as CatchmentModelData;
             if (catchmentModelData == null) return;
 
             if (catchmentModelData is PavedData)

@@ -30,7 +30,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
 
             mocks.ReplayAll();
 
-            var hisFilePath = Path.Combine(TestHelper.GetDataDir(), "IO", "deltashell.his");
+            var hisFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "IO", "deltashell.his");
 
             WaqProcessorHelper.ParseHisFileData(hisFilePath, waterQualityModel1D.ObservationVariableOutputs, waterQualityModel1D.ModelSettings.MonitoringOutputLevel);
             
@@ -52,7 +52,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
 
             mocks.ReplayAll();
 
-            var hisFilePath = Path.Combine(TestHelper.GetDataDir(), "IO", "deltashell.his");
+            var hisFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "IO", "deltashell.his");
 
             WaqProcessorHelper.ParseHisFileData(hisFilePath, waterQualityModel1D.ObservationVariableOutputs, waterQualityModel1D.ModelSettings.MonitoringOutputLevel, new List<string> { "ALL SEGMENTS" }, new List<string> { "cTR2", "Continuity" });
 
@@ -73,7 +73,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
 
             mocks.ReplayAll();
 
-            var hisFilePath = Path.Combine(TestHelper.GetDataDir(), "IO", "deltashell.his");
+            var hisFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "IO", "deltashell.his");
 
             // Monitoring output level "None" => no data should be parsed from the his file
             WaqProcessorHelper.ParseHisFileData(hisFilePath, waterQualityModel1D.ObservationVariableOutputs, MonitoringOutputLevel.None);

@@ -194,7 +194,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         [Category(TestCategory.DataAccess)]
         public void ReadUnpavedFile()
         {
-            var path = TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"Tholen.lit\29\Unpaved.3B");
+            var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"Tholen.lit\29\Unpaved.3B");
             var lstUnpavedData = new SobekRRUnpavedReader().Read(path);
             Assert.AreEqual(329, lstUnpavedData.Count()); //should be 328. There is one dummy. Don't know how to filter yet.
         }

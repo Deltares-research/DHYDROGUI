@@ -485,7 +485,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 extFile.WriteExtForceFileSubFiles(sedFile, fmModel.ModelDefinition, false);
                 Assert.IsTrue(File.Exists(generatedXyzFile));
 
-                var xyzFileValues = new XyzFile().Read(generatedXyzFile).ToList();
+                var xyzFileValues = XyzFile.Read(generatedXyzFile).ToList();
                 Assert.That(xyzFileValues.ElementAt(0).X, Is.EqualTo(covSedThick.Coordinates.ElementAt(0).X));
                 Assert.That(xyzFileValues.ElementAt(0).Y, Is.EqualTo(covSedThick.Coordinates.ElementAt(0).Y));
                 Assert.That(xyzFileValues.ElementAt(0).Value, Is.EqualTo(covSedThick.GetValues<double>().ElementAt(0)));

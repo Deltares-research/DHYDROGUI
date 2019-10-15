@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -55,7 +56,6 @@ using SharpMap.Api.SpatialOperations;
 using SharpMap.Data.Providers;
 using SharpMap.SpatialOperations;
 using FixedWeir = DelftTools.Hydro.Structures.FixedWeir;
-using INotifyCollectionChanged = DelftTools.Utils.Collections.INotifyCollectionChanged;
 using ObservationCrossSection2D = DelftTools.Hydro.ObservationCrossSection2D;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM
@@ -484,14 +484,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             syncers.Add(new FeatureDataSyncer<Feature2D, SourceAndSink>(Pipes, SourcesAndSinks, CreateSourceAndSink));
         }
 
-        private void SourcesAndSinksCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        private void SourcesAndSinksCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            var sourceAndSink = e.Item as SourceAndSink;
+            var sourceAndSink = e.GetRemovedOrAddedItem() as SourceAndSink;
 
             if (sourceAndSink == null)
                 return;
 
-            if (e.Action == NotifyCollectionChangeAction.Add)
+            if (e.Action == NotifyCollectionChangedAction.Add)
             {
                 SyncFractionsAndTracers(sourceAndSink);
             }
@@ -516,14 +516,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             });
         }
 
-        private void BoundaryConditionSetsCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        private void BoundaryConditionSetsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             var tracerBoundaryConditions = Enumerable.Empty<FlowBoundaryCondition>(); ;
 
-            var boundaryConditionSet = e.Item as BoundaryConditionSet;
+            var boundaryConditionSet = e.GetRemovedOrAddedItem() as BoundaryConditionSet;
             if (boundaryConditionSet == null)
             {
-                var flowBoundaryCondition = e.Item as FlowBoundaryCondition;
+                var flowBoundaryCondition = e.GetRemovedOrAddedItem() as FlowBoundaryCondition;
                 if (flowBoundaryCondition != null && flowBoundaryCondition.FlowQuantity == FlowBoundaryQuantityType.Tracer)
                 {
                     tracerBoundaryConditions = new List<FlowBoundaryCondition>() { flowBoundaryCondition };
@@ -540,16 +540,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 switch (e.Action)
                 {
-                    case NotifyCollectionChangeAction.Add:
+                    case NotifyCollectionChangedAction.Add:
                         AddTracerToSourcesAndSink(tracerBoundaryCondition.TracerName);
                         break;
-                    case NotifyCollectionChangeAction.Remove:
+                    case NotifyCollectionChangedAction.Remove:
                         RemoveTracerFromSourcesAndSink(tracerBoundaryCondition.TracerName);
                         break;
-                    case NotifyCollectionChangeAction.Replace:
+                    case NotifyCollectionChangedAction.Replace:
                         throw new NotImplementedException("Renaming of Tracers is not yet supported");
                         break;
-                    case NotifyCollectionChangeAction.Reset:
+                    case NotifyCollectionChangedAction.Reset:
                         SourcesAndSinks.ForEach(ss => ss.TracerNames.Clear());
                         return;
                     default:
@@ -574,16 +574,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             });
         }
 
-        private void TracerDefinitionsCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        private void TracerDefinitionsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            var name = (string) e.Item;
+            var name = (string) e.GetRemovedOrAddedItem();
             switch (e.Action)
             {
-                case NotifyCollectionChangeAction.Add:
+                case NotifyCollectionChangedAction.Add:
                     // sync the initial tracers
                     InitialTracers.Add(CreateUnstructuredGridCellCoverage(name, Grid));
                     break;
-                case NotifyCollectionChangeAction.Remove:
+                case NotifyCollectionChangedAction.Remove:
                     // sync the initial tracers
                     InitialTracers.RemoveAllWhere(tr => tr.Name == name);
 
@@ -596,7 +596,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
                             if (flowCondition != null && 
                                 flowCondition.FlowQuantity == FlowBoundaryQuantityType.Tracer &&
-                                Equals(flowCondition.TracerName, e.Item))
+                                Equals(flowCondition.TracerName, e.GetRemovedOrAddedItem()))
                             {
                                 return true;
                             }
@@ -604,11 +604,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                         });
                     }
                     break;
-                case NotifyCollectionChangeAction.Replace:
+                case NotifyCollectionChangedAction.Replace:
                     // can't rename yet
                     throw new NotImplementedException("Renaming of tracer definitions is not yet supported");
                     break;
-                case NotifyCollectionChangeAction.Reset:
+                case NotifyCollectionChangedAction.Reset:
                     // sync the initial tracers
                     InitialTracers.Clear();
 
@@ -752,15 +752,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
 
-        private void SedimentFractionsCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        private void SedimentFractionsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            var sedimentFraction = e.Item as ISedimentFraction;
+            var sedimentFraction = e.GetRemovedOrAddedItem() as ISedimentFraction;
             if( sedimentFraction == null )
                 return;
             var name = sedimentFraction.Name;
             switch (e.Action)
             {
-                case NotifyCollectionChangeAction.Add:
+                case NotifyCollectionChangedAction.Add:
                     sedimentFraction.UpdateSpatiallyVaryingNames();
                     sedimentFraction.CompileAndSetVisibilityAndIfEnabled();
                     sedimentFraction.SetTransportFormulaInCurrentSedimentType();
@@ -772,7 +772,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     SyncInitialFractions(sedimentFraction);                
                     AddSedimentFractionToFlowBoundaryConditionFunction(name);            
                     break;
-                case NotifyCollectionChangeAction.Remove:
+                case NotifyCollectionChangedAction.Remove:
                     // sync the initial fractions
                     var layersToRemove = sedimentFraction.GetAllActiveSpatiallyVaryingPropertyNames();
                     InitialFractions.RemoveAllWhere( ifs => layersToRemove.Contains(ifs.Name) );
@@ -783,10 +783,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
                     SourcesAndSinks.ForEach(ss => ss.SedimentFractionNames.Remove(sedimentFraction.Name));
                     break;
-                case NotifyCollectionChangeAction.Replace:
+                case NotifyCollectionChangedAction.Replace:
                     throw new NotImplementedException("Renaming of sediment fraction is not yet supported");
                     break;
-                case NotifyCollectionChangeAction.Reset:
+                case NotifyCollectionChangedAction.Reset:
                     // sync the initial fractions
                     InitialFractions.Clear();
 
@@ -921,7 +921,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 else
                 {
                     var samplesOperation = (ImportSamplesOperation) spatialOperationList[0];
-                    var xyzFile = new XyzFile().Read(samplesOperation.FilePath).ToList();
+                    var xyzFile = XyzFile.Read(samplesOperation.FilePath).ToList();
 
                     var componentValueCount = coverage.Arguments.Aggregate(0,
                         (totaal, arguments) => totaal == 0 ? arguments.Values.Count : totaal * arguments.Values.Count);
@@ -1398,7 +1398,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             ModelDefinition.GetModelProperty(KnownProperties.WaveModelNr).SetValueAsString("3");
         }
         
-        protected override void OnInputCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        protected override void OnInputCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
         }
 
@@ -1628,7 +1628,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         #region Spatial data
 
-        private void SpatialDataLayersChanged(object sender, NotifyCollectionChangingEventArgs e)
+        private void SpatialDataLayersChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (Equals(sender, InitialSalinity.Coverages))
             {
@@ -1636,11 +1636,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
             else
             {
-                throw new ArgumentException("Unexpected layered spatial data: " + e.Item);
+                throw new ArgumentException("Unexpected layered spatial data: " + e.GetRemovedOrAddedItem());
             }
         }
 
-        private void SpatialDataTracersChanged(object sender, NotifyCollectionChangingEventArgs e)
+        private void SpatialDataTracersChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (Equals(sender, InitialTracers))
             {
@@ -1648,11 +1648,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
             else
             {
-                throw new ArgumentException("Unexpected layered spatial data: " + e.Item);
+                throw new ArgumentException("Unexpected layered spatial data: " + e.GetRemovedOrAddedItem());
             }
         }
 
-        private void SpatialDataFractionsChanged(object sender, NotifyCollectionChangingEventArgs e)
+        private void SpatialDataFractionsChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (Equals(sender, InitialFractions))
             {
@@ -1663,7 +1663,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
             else
             {
-                throw new ArgumentException("Unexpected layered spatial data: " + e.Item);
+                throw new ArgumentException("Unexpected layered spatial data: " + e.GetRemovedOrAddedItem());
             }
         }
 
@@ -2523,16 +2523,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             return false;
         }
 
-        private void HydroAreaCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        private void HydroAreaCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (!isLoading)
             {
-                var fixedWeir = e.Item as FixedWeir;
+                var fixedWeir = e.GetRemovedOrAddedItem() as FixedWeir;
                 if (fixedWeir != null)
                 {
                     switch (e.Action)
                     {
-                        case NotifyCollectionChangeAction.Add:
+                        case NotifyCollectionChangedAction.Add:
                             if (allFixedWeirsAndCorrespondingProperties.FirstOrDefault(d => d.Feature == fixedWeir) == null)
                             {
                                 allFixedWeirsAndCorrespondingProperties.Add(
@@ -2540,7 +2540,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                             }
 
                             break;
-                        case NotifyCollectionChangeAction.Remove:
+                        case NotifyCollectionChangedAction.Remove:
                             var dataToRemove =
                                 allFixedWeirsAndCorrespondingProperties.FirstOrDefault(d => d.Feature == fixedWeir);
                             if (dataToRemove == null) break;
@@ -2548,7 +2548,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                             allFixedWeirsAndCorrespondingProperties.Remove(dataToRemove);
                             dataToRemove.Dispose();
                             break;
-                        case NotifyCollectionChangeAction.Replace:
+                        case NotifyCollectionChangedAction.Replace:
                             var dataToUpdate =
                                 allFixedWeirsAndCorrespondingProperties.FirstOrDefault(d => d.Feature == fixedWeir);
                             if (dataToUpdate == null)
@@ -2566,16 +2566,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     }
                 }
 
-                var bridgePillar = e.Item as BridgePillar;
+                var bridgePillar = e.GetRemovedOrAddedItem() as BridgePillar;
                 if (bridgePillar != null)
                 {
                     switch (e.Action)
                     {
-                        case NotifyCollectionChangeAction.Add:
+                        case NotifyCollectionChangedAction.Add:
                             BridgePillarsDataModel.Add(
                                 CreateModelFeatureCoordinateDataFor(bridgePillar));
                             break;
-                        case NotifyCollectionChangeAction.Remove:
+                        case NotifyCollectionChangedAction.Remove:
                             var dataToRemove =
                                 BridgePillarsDataModel.FirstOrDefault(
                                     d => d.Feature == bridgePillar);
@@ -2584,7 +2584,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                             BridgePillarsDataModel.Remove(dataToRemove);
                             dataToRemove.Dispose();
                             break;
-                        case NotifyCollectionChangeAction.Replace:
+                        case NotifyCollectionChangedAction.Replace:
                             var dataToUpdate =
                                 BridgePillarsDataModel.FirstOrDefault(
                                     d => d.Feature == bridgePillar);
@@ -2604,35 +2604,35 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 }
             }
             
-            var groupableFeature = e.Item as IGroupableFeature;
-            if (groupableFeature != null && e.Action != NotifyCollectionChangeAction.Remove && !Area.IsEditing)
+            var groupableFeature = e.GetRemovedOrAddedItem() as IGroupableFeature;
+            if (groupableFeature != null && e.Action != NotifyCollectionChangedAction.Remove && !Area.IsEditing)
             {
                 groupableFeature.UpdateGroupName(this);
             }
             
-            var inputSender = InputFeatureCollectionsContains(e.Item);
-            var outputSender = OutputFeatureCollectionsContains(e.Item);
+            var inputSender = InputFeatureCollectionsContains(e.GetRemovedOrAddedItem());
+            var outputSender = OutputFeatureCollectionsContains(e.GetRemovedOrAddedItem());
             
             if (inputSender || outputSender)
             {
-                var feature = (IFeature) e.Item;
-                var oldFeature = (IFeature) e.OldItem;
+                var feature = (IFeature) e.GetRemovedOrAddedItem();
+                var oldFeature = (IFeature) e.OldItems[0];
                 switch (e.Action)
                 {
-                    case NotifyCollectionChangeAction.Add:
+                    case NotifyCollectionChangedAction.Add:
                         AddAreaItem(feature, inputSender);
                         break;
-                    case NotifyCollectionChangeAction.Remove:
+                    case NotifyCollectionChangedAction.Remove:
                         RemoveAreaFeature(feature);
                         break;
-                    case NotifyCollectionChangeAction.Reset:
+                    case NotifyCollectionChangedAction.Reset:
                         foreach (var areaDataItem in areaDataItems)
                         {
                             RemoveAreaFeature(areaDataItem.Key);
                         }
                         areaDataItems.Clear();
                         break;
-                    case NotifyCollectionChangeAction.Replace:
+                    case NotifyCollectionChangedAction.Replace:
                         RemoveAreaFeature(oldFeature);
                         AddAreaItem(feature, inputSender);
                         break;
@@ -2753,10 +2753,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 var weirFormula = weir.WeirFormula as GeneralStructureWeirFormula;
                 if (weirFormula != null)
                 {
-                    yield return EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.GateHeight);
+                    yield return KnownGeneralStructureProperties.GateHeight.GetDescription();
                     yield return KnownStructureProperties.GateLowerEdgeLevel;
-                    yield return EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.WidthCenter);
-                    yield return EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.LevelCenter);
+                    yield return KnownGeneralStructureProperties.WidthCenter.GetDescription();
+                    yield return KnownGeneralStructureProperties.LevelCenter.GetDescription();
                 }
             }
 

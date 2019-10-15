@@ -21,7 +21,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         {
             get { return "Boundary data from .cmp file"; }
         }
-
+        public string Description { get { return Name; } }
         public string Category
         {
             get { return "Boundary data"; }

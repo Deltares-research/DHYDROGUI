@@ -2,6 +2,7 @@
 using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Utils;
+using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using NUnit.Framework;
 
@@ -22,7 +23,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 ElementTypeName = SewerFeatureType.Connection.ToString(),
                 GwswAttributeList = new List<GwswAttribute>
                 {
-                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.PipeType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerConnectionMapping.ConnectionType.InfiltrationPipe), string.Empty),
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.PipeType, SewerConnectionMapping.ConnectionType.InfiltrationPipe.GetDescription(), string.Empty),
                     GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.SourceCompartmentId, startNode, string.Empty),
                     GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.TargetCompartmentId, endNode, string.Empty)
                 }
@@ -77,7 +78,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var sourceCompartmentId = "cmp001";
             var targetCompartmentId = "cmp002";
             var pipeType = SewerConnectionMapping.ConnectionType.ClosedConnection;
-            var pipeTypeString = EnumDescriptionAttributeTypeConverter.GetEnumDescription(pipeType);
+            var pipeTypeString = pipeType.GetDescription();
 
             var defaultString = string.Empty;
             var defaultDouble = 0.0;
@@ -115,7 +116,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 GwswAttributeList = new List<GwswAttribute>
                 {
                     GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.CrossSectionDefinitionId, crossSectionDefinitionName, string.Empty),
-                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.PipeType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerConnectionMapping.ConnectionType.ClosedConnection), string.Empty),
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.PipeType, SewerConnectionMapping.ConnectionType.ClosedConnection.GetDescription(), string.Empty),
                     GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.SourceCompartmentId, startNode, string.Empty),
                     GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.TargetCompartmentId, endNode, string.Empty)
                 }

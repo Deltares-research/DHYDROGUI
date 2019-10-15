@@ -5,6 +5,7 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
+using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DeltaShell.Plugins.NetworkEditor.Tests.Helpers;
 using NUnit.Framework;
@@ -78,7 +79,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 GwswAttributeList = new List<GwswAttribute>
                 {
                     GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.UniqueId, structureId, string.Empty),
-                    GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.StructureType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(structureType), string.Empty)
+                    GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.StructureType, structureType.GetDescription(), string.Empty)
                 }
             };
 
@@ -101,7 +102,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 GwswAttributeList = new List<GwswAttribute>
                 {
                     GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.UniqueId, structureId, string.Empty),
-                    GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.StructureType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(structureType), string.Empty)
+                    GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.StructureType, structureType.GetDescription(), string.Empty)
                 }
             };
 
@@ -264,7 +265,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             #region create outlet gwsw element
             const string compartmentName1 = "cmp1";
             const double surfaceWaterLevel = 15.0;
-            var structureType = EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerStructureMapping.StructureType.Outlet);
+            var structureType = SewerStructureMapping.StructureType.Outlet.GetDescription();
 
             const double defaultDouble = 0.0;
             var outletGwswElement = GetStructureGwswElement(compartmentName1, structureType, defaultDouble, defaultDouble,
@@ -304,7 +305,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             #region create outlet gwsw element
             const string compartmentName1 = "cmp1";
             const double surfaceWaterLevel = 15.0;
-            var structureType = EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerStructureMapping.StructureType.Outlet);
+            var structureType = SewerStructureMapping.StructureType.Outlet.GetDescription();
 
             const double defaultDouble = 0.0;
             var structureGwswElement = GetStructureGwswElement(compartmentName1, structureType, defaultDouble, defaultDouble,

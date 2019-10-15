@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Windows.Forms;
 using DelftTools.Controls.Swf;
@@ -49,7 +50,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Wizard
             }
         }
 
-        private void NetworkFeatureFromGisImporters_CollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        private void NetworkFeatureFromGisImporters_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             var noChannelImporters = hydroRegionFromGisImporter.FeatureFromGisImporters.Where(importer => !(importer is ChannelFromGisImporter));
             textBoxSnappingPrecision.Enabled = (noChannelImporters.Count() != 0);

@@ -4,6 +4,7 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils;
+using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using NUnit.Framework;
 
@@ -25,7 +26,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 ElementTypeName = SewerFeatureType.Connection.ToString(),
                 GwswAttributeList = new List<GwswAttribute>
                 {
-                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.PipeType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerConnectionMapping.ConnectionType.Pump), string.Empty),
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.PipeType, SewerConnectionMapping.ConnectionType.Pump.GetDescription(), string.Empty),
                     GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.SourceCompartmentId, sourceCompartmentName, string.Empty),
                     GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.TargetCompartmentId, targetCompartmentName, string.Empty),
                     GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.Length, length.ToString(CultureInfo.InvariantCulture), string.Empty, TypeDouble)
@@ -52,12 +53,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var endNode = "node002";
 
             var connectionType = SewerConnectionMapping.ConnectionType.Pump;
-            var connectionTypeString = EnumDescriptionAttributeTypeConverter.GetEnumDescription(connectionType);
+            var connectionTypeString = connectionType.GetDescription();
 
             var waterType = SewerConnectionWaterType.Combined;
-            var waterTypeString = EnumDescriptionAttributeTypeConverter.GetEnumDescription(waterType);
+            var waterTypeString = waterType.GetDescription();
 
-            var flowDirectionString = EnumDescriptionAttributeTypeConverter.GetEnumDescription(flowDirection);
+            var flowDirectionString = flowDirection.GetDescription();
             #endregion
             //Non value given
             var nvgString = string.Empty;
@@ -89,7 +90,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 GwswAttributeList = new List<GwswAttribute>
                 {
                     GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.UniqueId, pumpId, string.Empty),
-                    GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.StructureType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerConnectionMapping.ConnectionType.Pump), string.Empty),
+                    GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.StructureType, SewerConnectionMapping.ConnectionType.Pump.GetDescription(), string.Empty),
                     GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.PumpCapacity, pumpCapacity.ToString(CultureInfo.InvariantCulture), string.Empty, typeDouble),
                     GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.StartLevelDownstreams, startLevelDownstreams.ToString(CultureInfo.InvariantCulture), string.Empty, typeDouble),
                     GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.StopLevelDownstreams, stopLevelDownstreams.ToString(CultureInfo.InvariantCulture), string.Empty, typeDouble),

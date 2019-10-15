@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -141,20 +142,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         /// <param name="sender"></param>
         /// <param name="e"></param>
         [EditAction]
-        private void NetworkCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        private void NetworkCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             // when node is added or removed
-            if (e.Item is IHydroNode)
+            if (e.GetRemovedOrAddedItem() is IHydroNode)
             {
 
             }
-            else if (e.Item is IChannel)
+            else if (e.GetRemovedOrAddedItem() is IChannel)
             {
                 if (Equals(sender, Network.Branches))
                 {
                     switch (e.Action)
                     {
-                        case NotifyCollectionChangeAction.Remove:
+                        case NotifyCollectionChangedAction.Remove:
                             // remove all child data items
                             var dataItemsToRemove = new List<IDataItem>();
                             var networkDataItem = GetDataItemByValue(Network);
@@ -176,29 +177,29 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     ClearOutput();
                 }
             }
-            else if (Equals(sender, Network.Branches) && e.Item is ISewerConnection)
+            else if (Equals(sender, Network.Branches) && e.GetRemovedOrAddedItem() is ISewerConnection)
             {
-                var sewerConnection = e.Item as SewerConnection;
+                var sewerConnection = e.GetRemovedOrAddedItem() as SewerConnection;
                 if (sewerConnection?.Length > 0)
                 {
                     switch (e.Action)
                     {
-                        case NotifyCollectionChangeAction.Add:
+                        case NotifyCollectionChangedAction.Add:
                             AddNetworkDiscretizationCalculationLocationIfNotAlreadyCreated(new NetworkLocation(sewerConnection, 0.0));
                             AddNetworkDiscretizationCalculationLocationIfNotAlreadyCreated(new NetworkLocation(sewerConnection, sewerConnection.Length));
                             break;
                     }
                 }
             }
-            else if (e.Item is CrossSectionSectionType)
+            else if (e.GetRemovedOrAddedItem() is CrossSectionSectionType)
             {
                 UpdateRoughnessSectionsEvent(e);
             }
 
             // check if removed item is used in the child data items
-            if (e.Item is IFeature && e.Action == NotifyCollectionChangeAction.Remove)
+            if (e.GetRemovedOrAddedItem() is IFeature && e.Action == NotifyCollectionChangedAction.Remove)
             {
-                var asNetworkFeature = e.Item as INetworkFeature;
+                var asNetworkFeature = e.GetRemovedOrAddedItem() as INetworkFeature;
                 if (asNetworkFeature != null && asNetworkFeature.IsBeingMoved())
                 {
                     return;
@@ -208,7 +209,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     AllDataItems.Where(
                         di =>
                             di.Parent != null && di.ValueConverter != null &&
-                            di.ValueConverter.OriginalValue == e.Item).ToList();
+                            di.ValueConverter.OriginalValue == e.GetRemovedOrAddedItem()).ToList();
 
                 foreach (var childDataItem in childDataItems)
                 {
@@ -233,13 +234,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
 
-        private void UpdateRoughnessSectionsEvent(NotifyCollectionChangingEventArgs e)
+        private void UpdateRoughnessSectionsEvent(NotifyCollectionChangedEventArgs e)
         {
-            var sectionType = (CrossSectionSectionType)e.Item;
+            var sectionType = (CrossSectionSectionType)e.GetRemovedOrAddedItem();
 
             switch (e.Action)
             {
-                case NotifyCollectionChangeAction.Add:
+                case NotifyCollectionChangedAction.Add:
                     AddNewRoughnessSection(sectionType);
                     break;
             }

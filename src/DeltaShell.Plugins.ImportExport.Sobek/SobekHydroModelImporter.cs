@@ -52,7 +52,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
         {
             get { return "SOBEK Model"; }
         }
-
+        public string Description { get { return Name; } }
         public string Category
         {
             get { return "SOBEK"; }

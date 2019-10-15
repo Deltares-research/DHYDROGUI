@@ -4,6 +4,7 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils;
+using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using NUnit.Framework;
 
@@ -19,7 +20,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         public void GenerateWeirSewerConnectionFromGwswElement()
         {
-            var connectionTypeString = EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerConnectionMapping.ConnectionType.Crest);
+            var connectionTypeString = SewerConnectionMapping.ConnectionType.Crest.GetDescription();
 
             var length = 3.2;
             var connectionGwswElement = new GwswElement
@@ -48,7 +49,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         {
             #region GwswElement
 
-            var structureTypeString = EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerStructureMapping.StructureType.Crest);
+            var structureTypeString = SewerStructureMapping.StructureType.Crest.GetDescription();
             var crestWidth = 3.0;
             var crestLevel = 2.7;
             var dischargeCoefficient = 0.9;
@@ -84,14 +85,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [TestCase(SewerConnectionMapping.FlowDirection.FromEndToStart, FlowDirection.Negative)]
         public void GivenConnectionGwswElementWithCrestType_WhenGeneratingCrest_ThenFlowDirectionOnWeirIsCorrect(SewerConnectionMapping.FlowDirection flowDirection, FlowDirection expectedFlowDirection)
         {
-            var flowDirectionId = EnumDescriptionAttributeTypeConverter.GetEnumDescription(flowDirection);
+            var flowDirectionId = flowDirection.GetDescription();
             var sewerConnectionGwswElement = new GwswElement
             {
                 ElementTypeName = SewerFeatureType.Connection.ToString(),
                 GwswAttributeList = new List<GwswAttribute>
                 {
                     GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.UniqueId, WeirName, string.Empty),
-                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.PipeType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerConnectionMapping.ConnectionType.Crest), string.Empty),
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.PipeType, SewerConnectionMapping.ConnectionType.Crest.GetDescription(), string.Empty),
                     GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.SourceCompartmentId, SourceCompartmentName, string.Empty),
                     GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.TargetCompartmentId, TargetCompartmentName, string.Empty),
                     GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.FlowDirection, flowDirectionId, string.Empty)

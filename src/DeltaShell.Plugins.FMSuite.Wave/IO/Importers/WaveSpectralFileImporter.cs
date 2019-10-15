@@ -20,7 +20,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Importers
         {
             get { return "Swan Spectral File (*.sp2)"; }
         }
-
+        public string Description { get { return Name; } }
         public string Category { get; private set; }
 
         public string FileFilter

@@ -39,7 +39,7 @@ namespace SobekCompare.Tests
         [Test]
         public void TestRetentions()
         {
-            var testPath = Path.Combine(TestHelper.GetDataDir(), @"dsprojTests\TestRetentions");
+            var testPath = Path.Combine(TestHelper.GetTestDataDirectory(), @"dsprojTests\TestRetentions");
             var dsProjPath = Path.Combine(testPath, "RetentionTest.dsproj");
 
             RunDsProjInWaterFlow1D(dsProjPath);
@@ -56,7 +56,7 @@ namespace SobekCompare.Tests
         [Test]
         public void TestCompoundCulvertDiffBob()
         {
-            var testPath = Path.Combine(TestHelper.GetDataDir(), @"dsprojTests\TestCompoundCulvertDiffBob");
+            var testPath = Path.Combine(TestHelper.GetTestDataDirectory(), @"dsprojTests\TestCompoundCulvertDiffBob");
             var dsProjPath = Path.Combine(testPath, "TestCompoundCulvertDiffBob.dsproj");
 
             RunDsProjInWaterFlow1D(dsProjPath);
@@ -73,7 +73,7 @@ namespace SobekCompare.Tests
         [Test]
         public void TestCompoundCulvertSameBob()
         {
-            var testPath = Path.Combine(TestHelper.GetDataDir(), @"dsprojTests\TestCompoundCulvertSameBob");
+            var testPath = Path.Combine(TestHelper.GetTestDataDirectory(), @"dsprojTests\TestCompoundCulvertSameBob");
             var dsProjPath = Path.Combine(testPath, "TestCompoundCulvertSameBob.dsproj");
 
             RunDsProjInWaterFlow1D(dsProjPath);
@@ -90,7 +90,7 @@ namespace SobekCompare.Tests
        [Test]
        public void TestYZChannelsNoShared()
        {
-          var testPath = Path.Combine(TestHelper.GetDataDir(), @"dsprojTests\TestYZChannelsNoShared");
+          var testPath = Path.Combine(TestHelper.GetTestDataDirectory(), @"dsprojTests\TestYZChannelsNoShared");
           var dsProjPath = Path.Combine(testPath, "TestYZChannelsNoShared.dsproj");
 
           RunDsProjInWaterFlow1D(dsProjPath);
@@ -105,7 +105,7 @@ namespace SobekCompare.Tests
        [Test]
        public void TestYZChannelsWithShared()
        {
-          var testPath = Path.Combine(TestHelper.GetDataDir(), @"dsprojTests\TestYZChannelsWithShared");
+          var testPath = Path.Combine(TestHelper.GetTestDataDirectory(), @"dsprojTests\TestYZChannelsWithShared");
           var dsProjPath = Path.Combine(testPath, "TestYZChannelsWithShared.dsproj");
 
           RunDsProjInWaterFlow1D(dsProjPath);

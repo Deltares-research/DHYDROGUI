@@ -33,6 +33,7 @@ using NetTopologySuite.Extensions.Networks;
 using NUnit.Framework;
 using Rhino.Mocks;
 using SharpMap.Layers;
+using SharpMap.Rendering.Thematics;
 using SharpTestsEx;
 using Point = NetTopologySuite.Geometries.Point;
 

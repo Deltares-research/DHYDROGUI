@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
@@ -115,7 +116,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             FillTemperatureStationControls();
         }
 
-        private void TemperatureStationsCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        private void TemperatureStationsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             ResetTemperatureStationComboBox();
         }

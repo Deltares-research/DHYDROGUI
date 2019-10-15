@@ -227,7 +227,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         public void ReadValidHydFileReturnsAllDataRead()
         {
             // setup
-            var commonFilePath = Path.Combine(TestHelper.GetDataDir(), "IO");
+            var commonFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "IO");
             var hydFile = new FileInfo(Path.Combine(commonFilePath, "uni3d.hyd"));
             Assert.IsTrue(hydFile.Exists,
                 "Expected .hyd file to exist, but is missing.");

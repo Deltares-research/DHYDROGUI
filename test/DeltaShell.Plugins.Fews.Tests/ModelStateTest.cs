@@ -20,7 +20,7 @@ namespace DeltaShell.Plugins.Fews.Tests
         [TestFixtureSetUp]
         public void FixtureSetup()
         {
-            string testFolderName = TestHelper.GetDataDir();
+            string testFolderName = TestHelper.GetTestDataDirectory();
             string testFolderOriginal = Path.Combine(testFolderName, "fbModelState");
             statesTestFolderName = Path.Combine(testFolderName, "fbModelState.test");
             FileUtils.DeleteIfExists(statesTestFolderName);

@@ -12,6 +12,7 @@ using DeltaShell.Plugins.SharpMapGis;
 using GeoAPI.Extensions.Coverages;
 using log4net.Core;
 using NUnit.Framework;
+using Rhino.Mocks;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.HisData
 {
@@ -58,7 +59,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.HisData
         public void SaveAndRetrieveFunctionWithHisFunctionStore()
         {
             var pathProject = TestHelper.GetCurrentMethodName() + ".dsproj";
-            var pathHis = Path.Combine(TestHelper.GetDataDir(), "HisData", "flowhis.his");
+            var pathHis = Path.Combine(TestHelper.GetTestDataDirectory(), "HisData", "flowhis.his");
             var hisFunctionStore = new HisFunctionStore(pathHis);
             
             Assert.AreEqual(6,hisFunctionStore.Functions.Count);
@@ -92,7 +93,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.HisData
         public void SaveAndRetrieveNetworkCoverageWithHisFunctionStore()
         {
             var pathProject = TestHelper.GetCurrentMethodName() + ".dsproj";
-            var pathHis = Path.Combine(TestHelper.GetDataDir(), "HisData", "HisAndNetwork", "CALCPNT.HIS");
+            var pathHis = Path.Combine(TestHelper.GetTestDataDirectory(), "HisData", "HisAndNetwork", "CALCPNT.HIS");
             var hisFunctionStore = new HisFunctionStore(pathHis);
             var networkCoverage = hisFunctionStore.Functions.OfType<INetworkCoverage>().First();
             var name = networkCoverage.Name;

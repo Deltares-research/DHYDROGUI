@@ -168,7 +168,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         {
             get { return "Raster Grid Importer"; }
         }
-
+        public string Description { get { return Name; } }
         public string Category
         {
             get {return "2D / 3D";}

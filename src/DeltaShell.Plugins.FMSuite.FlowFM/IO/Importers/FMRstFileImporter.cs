@@ -14,7 +14,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         {
             get { return "Restart File"; }
         }
-
+        public string Description { get { return Name; } }
         public string Category
         {
             get { return "NetCdf"; }

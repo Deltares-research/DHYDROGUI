@@ -37,7 +37,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         {
             var waterQualityModel = new WaterQualityModel();
             // Perform import on empty substance process library
-            var commonFilePath = Path.Combine(TestHelper.GetDataDir(), "IO");
+            var commonFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "IO");
             new SubFileImporter().Import(waterQualityModel.SubstanceProcessLibrary, Path.Combine(commonFilePath, "Eutrof_simple.sub"));
 
             // Initial conditions and process coefficients should be created
@@ -75,7 +75,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                 "Precondition: hyd-file should have file to salinity data.");
 
             // Perform import on empty substance process library
-            var commonFilePath = Path.Combine(TestHelper.GetDataDir(), "IO");
+            var commonFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "IO");
 
             // call (import a library with "Salinity"
             new SubFileImporter().Import(waterQualityModel.SubstanceProcessLibrary, Path.Combine(commonFilePath, "03d_Tewor2003.sub"));
@@ -98,7 +98,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                 "Precondition: hyd-file should have file to salinity data.");
 
             // Perform import on empty substance process library
-            var commonFilePath = Path.Combine(TestHelper.GetDataDir(), "IO");
+            var commonFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "IO");
 
             new SubFileImporter().Import(waterQualityModel.SubstanceProcessLibrary, Path.Combine(commonFilePath, "03d_Tewor2003.sub"));
 
@@ -121,7 +121,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             // setup
             var waterQualityModel = new WaterQualityModel();
             // Perform import on empty substance process library
-            var commonFilePath = Path.Combine(TestHelper.GetDataDir(), "IO");
+            var commonFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "IO");
 
             new SubFileImporter().Import(waterQualityModel.SubstanceProcessLibrary, Path.Combine(commonFilePath, "03d_Tewor2003.sub"));
 
@@ -147,7 +147,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         {
             // setup
             var waterQualityModel = new WaterQualityModel();
-            var commonFilePath = Path.Combine(TestHelper.GetDataDir(), "IO");
+            var commonFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "IO");
 
             new SubFileImporter().Import(waterQualityModel.SubstanceProcessLibrary, Path.Combine(commonFilePath, "03d_Tewor2003.sub"));
 
@@ -180,7 +180,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             var waterQualityModel = new WaterQualityModel();
             LoadRealModelWithGridFromFile(waterQualityModel);
 
-            var commonFilePath = Path.Combine(TestHelper.GetDataDir(), "IO");
+            var commonFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "IO");
 
             new SubFileImporter().Import(waterQualityModel.SubstanceProcessLibrary, Path.Combine(commonFilePath, "03d_Tewor2003.sub"));
 

@@ -54,6 +54,7 @@ using log4net.Core;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Networks;
 using NUnit.Framework;
+using Rhino.Mocks;
 using SharpMap;
 using SharpMap.Layers;
 using SharpMap.UI.Forms;
@@ -164,7 +165,7 @@ namespace Sobek.IntegrationTests
         {
             //import by pass
             var modelPath =
-                TestHelper.GetTestDataPath(
+                TestHelper.GetTestDataDirectoryPathForAssembly(
                     typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"BYPASS.lit\3\Network.TP");
 
             var importedModel = (HydroModel)new SobekHydroModelImporter().ImportItem(modelPath);
@@ -1715,7 +1716,7 @@ namespace Sobek.IntegrationTests
             network.Branches.Add(new Channel("Piet", null, null,0.0));
             var defaultType = network.CrossSectionSectionTypes.First();
             var crossSectionSection = new RoughnessSection(defaultType,network);
-            crossSectionSection.AddHRoughnessFunctionToBranch(network.Branches.First(),new Function{Name = "Kees"});
+            crossSectionSection.AddHRoughnessFunctionToBranch(network.Branches.First(),new Function {Name = "Kees"});
             crossSectionSection.AddQRoughnessFunctionToBranch(network.Branches.Last(), new Function { Name = "PietR" });
 
             var project = new Project();    
@@ -1867,7 +1868,7 @@ namespace Sobek.IntegrationTests
         {
             //relates to issue 4693 but stays as a good reference test
 
-            var modelPath = TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"ReModels\JAMM2010.sbk\40\DEFTOP.1");
+            var modelPath = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"ReModels\JAMM2010.sbk\40\DEFTOP.1");
             var modelImporter = new SobekWaterFlowModel1DImporter();
             modelImporter.TargetItem = new WaterFlowModel1D(); //makes sure we don't get some composite model (with rtc) back
             var model = (IModel)modelImporter.ImportItem(modelPath);
@@ -1892,7 +1893,7 @@ namespace Sobek.IntegrationTests
         public void ImportTwenteModelSaveDeleteBranchAndSaveShouldNotTriggerReSave()
         {
             var modelPath = 
-                TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"TwenteKanaal.lit\3\network.tp");
+                TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"TwenteKanaal.lit\3\network.tp");
             var importer = new SobekHydroModelImporter(false);
             var importedModel = (HydroModel)importer.ImportItem(modelPath);
 
@@ -1923,7 +1924,7 @@ namespace Sobek.IntegrationTests
             //test reproduces issue 3507
 
             var modelPath =
-                TestHelper.GetTestDataPath(
+                TestHelper.GetTestDataDirectoryPathForAssembly(
                     typeof(SobekWaterFlowModel1DImporterTest).Assembly,
                     @"BYPASS.Lit\3\Network.TP");
             //what a cumbersome syntax here..
@@ -1991,7 +1992,7 @@ namespace Sobek.IntegrationTests
         [Test]
         public void LoadZwolleModelWithRoughnessCoverages()
         {
-            var modelPath = TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"SW_max_1.lit\3\Network.TP");
+            var modelPath = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"SW_max_1.lit\3\Network.TP");
             var importer = new SobekWaterFlowModel1DImporter();
             var model = (WaterFlowModel1D) importer.ImportItem(modelPath);
 

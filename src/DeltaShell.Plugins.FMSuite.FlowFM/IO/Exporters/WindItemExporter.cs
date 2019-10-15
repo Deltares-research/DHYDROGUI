@@ -101,7 +101,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
         {
             get { return "wind data exporter"; }
         }
-
+        public string Description { get { return Name; } }
         private IList<Type> SupportedTypes { get; set; }
 
         private IList<WindQuantity> SupportedQuantities { get; set; }

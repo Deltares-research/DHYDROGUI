@@ -45,7 +45,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         [Category(TestCategory.DataAccess)]
         public void ReadSobekRRNodeFile()
         {
-            var path = TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"Tholen.lit\29\3B_Nod.tp");
+            var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"Tholen.lit\29\3B_Nod.tp");
             var lstRRNode = new SobekRRNodeReader().Read(path);
             Assert.AreEqual(680, lstRRNode.Count());
         }

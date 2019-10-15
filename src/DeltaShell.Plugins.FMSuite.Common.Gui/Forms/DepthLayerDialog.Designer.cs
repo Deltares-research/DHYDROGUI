@@ -1,5 +1,6 @@
 ﻿using System.Windows.Forms;
 using DelftTools.Utils;
+using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.Common.DepthLayers;
 using DeltaShell.Plugins.FMSuite.Common.Gui.Editors;
 
@@ -119,7 +120,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Forms
 
         void layerTypeComboBox_Format(object sender, ListControlConvertEventArgs e)
         {
-            e.Value = EnumDescriptionAttributeTypeConverter.GetEnumDescription((DepthLayerType) e.ListItem);
+            e.Value = ((DepthLayerType) e.ListItem).GetDescription();
         }
         private Button buttonOk;
         private Button buttonCancel;

@@ -54,6 +54,7 @@ using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.Extensions.Coverages;
 using NUnit.Framework;
+using Rhino.Mocks;
 using SharpMap.Extensions.CoordinateSystems;
 using SharpTestsEx;
 using AggregationOptions = DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi.AggregationOptions;
@@ -553,7 +554,7 @@ namespace Sobek.IntegrationTests
         [Category(TestCategory.Performance)]
         public void RunRRInDWAQ_AC1()
         {
-            string path = TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"DWAQ_AC1.lit\14\NETWORK.TP");
+            string path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"DWAQ_AC1.lit\14\NETWORK.TP");
             
             var hydroModelImporter = new SobekHydroModelImporter(true, false);
             var hydroModel = (HydroModel) hydroModelImporter.ImportItem(path);
@@ -583,7 +584,7 @@ namespace Sobek.IntegrationTests
         [Category(TestCategory.WorkInProgress)]
         public void RunDWAQ_AC1TwiceAndExpectSameResultsTools9586()
         {
-            string path = TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"DWAQ_AC1.lit\14\NETWORK.TP");
+            string path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"DWAQ_AC1.lit\14\NETWORK.TP");
 
             var hydroModelImporter = new SobekHydroModelImporter(true, false);
             var hydroModel = (HydroModel)hydroModelImporter.ImportItem(path);
@@ -624,7 +625,7 @@ namespace Sobek.IntegrationTests
         [Category(TestCategory.WorkInProgress)]
         public void RunRRAndFlowSequentialAndSimultaneousAndExpectDifferentResults()
         {
-            string path = TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"DWAQ_AC1.lit\14\NETWORK.TP");
+            string path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"DWAQ_AC1.lit\14\NETWORK.TP");
 
             var hydroModelImporter = new SobekHydroModelImporter(true, false);
             var hydroModel = (HydroModel)hydroModelImporter.ImportItem(path);
@@ -660,7 +661,7 @@ namespace Sobek.IntegrationTests
         [Category(TestCategory.Slow)]
         public void ImportRunAndCloneDWAQ_AC1()
         {
-            string path = TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"DWAQ_AC1.lit\14\NETWORK.TP");
+            string path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"DWAQ_AC1.lit\14\NETWORK.TP");
 
             // import it
             var hydroModelImporter = new SobekHydroModelImporter(true, false);
@@ -779,7 +780,7 @@ namespace Sobek.IntegrationTests
         [Category(TestCategory.VerySlow)]
         public void ImportTholenInGuiShouldBeFast()
         {
-            string path = TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"THOLEN.lit\30\NETWORK.TP");
+            string path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"THOLEN.lit\30\NETWORK.TP");
 
             using (var gui = new DeltaShellGui())
             {
@@ -974,7 +975,7 @@ namespace Sobek.IntegrationTests
 
                 Action onShown = delegate
                 {
-                    string path = TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"Test_400\400_000.lit\12\NETWORK.TP");
+                    string path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"Test_400\400_000.lit\12\NETWORK.TP");
 
                     var projectService = new HybridProjectRepository(factory);
                     var projectName = @"rr400.dsproj";
@@ -1023,7 +1024,7 @@ namespace Sobek.IntegrationTests
         [Category(TestCategory.VerySlow)]
         public void RunWaterQualityModelParsingDataShouldBeFastTools9130()
         {
-            string path = TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"DWAQ_AC1.lit\47\NETWORK.TP");
+            string path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"DWAQ_AC1.lit\47\NETWORK.TP");
             var hydroModelImporter = new SobekHydroModelImporter(false, false);
             var hydroModel = (HydroModel)hydroModelImporter.ImportItem(path);
             ModelTestHelper.ReplaceStoreForOutputCoverages(hydroModel);

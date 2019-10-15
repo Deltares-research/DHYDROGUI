@@ -11,6 +11,7 @@ using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.SubstanceProc
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Extentions;
 using DeltaShell.Plugins.NetworkEditor;
 using NUnit.Framework;
+using Rhino.Mocks;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
 {
@@ -355,7 +356,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
         private void SaveAndRetrieveFunctionWithObjectTArgument<T>(T object1, T object2)
         {
             var entity = new Function
-                {
+            {
                     Arguments = {new Variable<T>()},
                     Components = {new Variable<double>()}
                 };

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
@@ -327,10 +328,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             return new string(commonFunctionName).Trim();
         }
 
-        private void MapGroupLayerLayersCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        private void MapGroupLayerLayersCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            var layer = e.Item as UnstructuredGridLayer;
-            if (layer == null || e.Action != NotifyCollectionChangeAction.Add) return;
+            var layer = e.GetRemovedOrAddedItem() as UnstructuredGridLayer;
+            if (layer == null || e.Action != NotifyCollectionChangedAction.Add) return;
 
             layer.GridColor = Color.Gray;
         }
@@ -574,7 +575,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             const int lineWidth = 3;
             var linkEndCap = new AdjustableArrowCap(4, 4, true) { BaseCap = LineCap.Triangle };
 
-            var lateralName = EnumDescriptionAttributeTypeConverter.GetEnumDescription(LinkType.Lateral);
+            var lateralName =LinkType.Lateral.GetDescription();
             var lateralStyle = new VectorStyle
             {
                 GeometryType = typeof(ILineString),
@@ -586,7 +587,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 EnableOutline = false
             };
 
-            var embeddedName = EnumDescriptionAttributeTypeConverter.GetEnumDescription(LinkType.Embedded);
+            var embeddedName = LinkType.Embedded.GetDescription();
             var embeddedStyle = new VectorStyle
             {
                 GeometryType = typeof(ILineString),
@@ -598,7 +599,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 EnableOutline = false
             };
 
-            var roofSewerName = EnumDescriptionAttributeTypeConverter.GetEnumDescription(LinkType.RoofSewer);
+            var roofSewerName = LinkType.RoofSewer.GetDescription();
             var roofSewerStyle = new VectorStyle
             {
                 GeometryType = typeof(ILineString),
@@ -610,7 +611,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 EnableOutline = false
             };
 
-            var gullySewerName = EnumDescriptionAttributeTypeConverter.GetEnumDescription(LinkType.GullySewer);
+            var gullySewerName = LinkType.GullySewer.GetDescription();
             var gullyWaterStyle = new VectorStyle
             {
                 GeometryType = typeof(ILineString),
@@ -622,7 +623,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 EnableOutline = false
             };
 
-            var inhabitantsSewerName = EnumDescriptionAttributeTypeConverter.GetEnumDescription(LinkType.InhabitantsSewer);
+            var inhabitantsSewerName = LinkType.InhabitantsSewer.GetDescription();
             var inhabitantsSewerStyle = new VectorStyle
             {
                 GeometryType = typeof(ILineString),

@@ -32,7 +32,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         public void ReadAllFromSquareModel()
         {
             // setup
-            var filePath = Path.Combine(TestHelper.GetDataDir(), "IO", "square", "square.atr");
+            var filePath = Path.Combine(TestHelper.GetTestDataDirectory(), "IO", "square", "square.atr");
             var atrFile = new FileInfo(filePath);
             
             // call
@@ -52,7 +52,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         public void ReadAllFromRealModelPerformance()
         {
             // setup
-            var filePath = Path.Combine(TestHelper.GetDataDir(), "IO", "real", "uni3d.atr");
+            var filePath = Path.Combine(TestHelper.GetTestDataDirectory(), "IO", "real", "uni3d.atr");
             var atrFile = new FileInfo(filePath);
             
             AttributesFileData data = null;
@@ -69,7 +69,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         public void ReadAllFromRandom3Layer5SegmentsPerLayerFile()
         {
             // setup
-            var filePath = Path.Combine(TestHelper.GetDataDir(), "IO", "attribute files", "random_3x5.atr");
+            var filePath = Path.Combine(TestHelper.GetTestDataDirectory(), "IO", "attribute files", "random_3x5.atr");
             var atrFile = new FileInfo(filePath);
             
             // call
@@ -94,7 +94,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         public void ReadAllFromRandom2Layer2SegmentsPerLayerFileWithTopBottomFirst()
         {
             // setup
-            var filePath = Path.Combine(TestHelper.GetDataDir(), "IO", "attribute files", "random_2x2_WithBottomTopFirst.atr");
+            var filePath = Path.Combine(TestHelper.GetTestDataDirectory(), "IO", "attribute files", "random_2x2_WithBottomTopFirst.atr");
             var atrFile = new FileInfo(filePath);
             
             // call
@@ -119,7 +119,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         public void ReadAllFromRandom2Layer2SegmentsPerLayerFileWithOnlyTopBottomFirst()
         {
             // setup
-            var filePath = Path.Combine(TestHelper.GetDataDir(), "IO", "attribute files", "random_2x2_OnlyBottomTopFirst.atr");
+            var filePath = Path.Combine(TestHelper.GetTestDataDirectory(), "IO", "attribute files", "random_2x2_OnlyBottomTopFirst.atr");
             var atrFile = new FileInfo(filePath);
             
             // call

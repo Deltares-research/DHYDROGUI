@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -98,7 +99,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
 
         private Coordinate contextMenuWorldPosition;
 
-        private Map map;
+        private IMap map;
 
         private static bool TopologyRulesEnabledState;
 
@@ -395,10 +396,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
                     {
                         map.CollectionChanged -= LayersCollectionChanged;
                     }
-                    MapControl.MouseUp -= MapControlMouseUp;
-                    MapControl.KeyDown -= MapControlKeyDown;
-                    MapControl.KeyUp -= MapControlKeyUp;
+
+                    var mapControl = MapControl as MapControl;
+
+                    if (mapControl != null)
+                    {
+                        mapControl.MouseUp -= MapControlMouseUp;
+                        mapControl.KeyDown -= MapControlKeyDown;
+                        mapControl.KeyUp -= MapControlKeyUp;
                     }
+                }
 
                 base.MapControl = value;
 
@@ -408,10 +415,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
 
                     MapControl.Map.CollectionChanged += LayersCollectionChanged;
                     map = MapControl.Map;
-                    
-                    MapControl.MouseUp += MapControlMouseUp;
-                    MapControl.KeyDown += MapControlKeyDown;
-                    MapControl.KeyUp += MapControlKeyUp;
+
+                    var mapControl = MapControl as MapControl;
+
+                    if (mapControl != null)
+                    {
+                        mapControl.MouseUp += MapControlMouseUp;
+                        mapControl.KeyDown += MapControlKeyDown;
+                        mapControl.KeyUp += MapControlKeyUp;
+                    }
 
                     var networkCovergeGroupLayer = Map.GetAllVisibleLayers(true).OfType<NetworkCoverageGroupLayer>().FirstOrDefault();
 
@@ -558,40 +570,40 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             return location;
         }
         
-        private void LayersCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        private void LayersCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            if (e.Item is INetworkCoverageGroupLayer)
+            if (e.GetRemovedOrAddedItem() is INetworkCoverageGroupLayer)
             {
-                var networkCoverageLayer = (INetworkCoverageGroupLayer) e.Item;
+                var networkCoverageLayer = (INetworkCoverageGroupLayer) e.GetRemovedOrAddedItem();
                 switch (e.Action)
                 {
-                    case NotifyCollectionChangeAction.Replace:
+                    case NotifyCollectionChangedAction.Replace:
                         throw new NotImplementedException();
 
-                    case NotifyCollectionChangeAction.Add:
+                    case NotifyCollectionChangedAction.Add:
                         // if a network coverage is already in editing mode; reset interactor
                         ActiveNetworkCoverageGroupLayer = networkCoverageLayer;
                         SetCoverageLayerTheme(networkCoverageLayer);
                         break;
 
-                    case NotifyCollectionChangeAction.Remove:
+                    case NotifyCollectionChangedAction.Remove:
                         ActiveNetworkCoverageGroupLayer = null;
 
                         // should we try to set editing to another networkcoverage if available?
                         break;
                 }
             }
-            if (e.Item is ILayer && HydroNetworkFilter((ILayer)e.Item))
+            if (e.GetRemovedOrAddedItem() is ILayer && HydroNetworkFilter((ILayer)e.GetRemovedOrAddedItem()))
             {
                 switch (e.Action)
                 {
-                    case NotifyCollectionChangeAction.Replace:
+                    case NotifyCollectionChangedAction.Replace:
                         throw new NotImplementedException();
 
-                    case NotifyCollectionChangeAction.Add:
+                    case NotifyCollectionChangedAction.Add:
                         break;
 
-                    case NotifyCollectionChangeAction.Remove:
+                    case NotifyCollectionChangedAction.Remove:
                         break;
                 }
             }
@@ -671,34 +683,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             MapControl.SelectTool.OnMouseDown(worldPosition, e);
         }
 
-
-        public override void OnDragEnter(DragEventArgs e)
-        {
-            // Allow dropping of Network data
-            var dataItem = (DataItem) e.Data.GetData(typeof (DataItem));
-            if (dataItem != null && (dataItem.Value is IHydroNetwork || dataItem.Value is IList<IFeature>))
-            {
-                e.Effect |= DragDropEffects.Link;
-            }
-        }
-
-        public override void OnDragDrop(DragEventArgs e)
-        {
-            // If a network was dropped on the map, create a network map layer for it
-            var dataItem = (DataItem) e.Data.GetData(typeof (DataItem));
-            if (dataItem == null)
-                return;
-
-            //check if dataitem is feature collection
-            if (dataItem.Value is IList<IFeature>)
-            {
-                var vectorLayer = new VectorLayer("Points")
-                                      {
-                                          DataSource = new FeatureCollection {Features = (IList) dataItem.Value}
-                                      };
-                MapControl.Map.Layers.Add(vectorLayer);
-            }
-        }
 
         /// <summary>
         /// returns the first discretization on the map

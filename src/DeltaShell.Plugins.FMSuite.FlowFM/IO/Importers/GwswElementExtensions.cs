@@ -155,7 +155,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             var description = gwswAttribute.GetValidStringValue();
             try
             {
-                return (T)EnumDescriptionAttributeTypeConverter.GetEnumValue<T>(description);
+                return (T)typeof(T).GetEnumValueFromDescription(description);
             }
             catch (Exception)
             {

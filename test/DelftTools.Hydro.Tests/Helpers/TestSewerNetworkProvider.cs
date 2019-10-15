@@ -4,6 +4,7 @@ using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils;
+using DelftTools.Utils.Reflection;
 using NetTopologySuite.Geometries;
 
 namespace DelftTools.Hydro.Tests.Helpers
@@ -219,7 +220,7 @@ namespace DelftTools.Hydro.Tests.Helpers
             var crossSectionDefinition = CrossSectionDefinitionStandard.CreateDefault();
             crossSectionDefinition.Name = crossSectionDefinitionName;
             var csDefinitionStandard = crossSectionDefinition as CrossSectionDefinitionStandard;
-            if (csDefinitionStandard != null) csDefinitionStandard.Shape.MaterialName = EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerProfileMapping.SewerProfileMaterial.Concrete);
+            if (csDefinitionStandard != null) csDefinitionStandard.Shape.MaterialName = SewerProfileMapping.SewerProfileMaterial.Concrete.GetDescription();
             network.SharedCrossSectionDefinitions.Add(crossSectionDefinition);
 
             return network;

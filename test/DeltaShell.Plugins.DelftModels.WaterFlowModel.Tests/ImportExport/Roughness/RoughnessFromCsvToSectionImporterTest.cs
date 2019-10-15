@@ -37,7 +37,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Rough
             //import maas
             var modelImporter = new SobekWaterFlowModel1DImporter {TargetItem = new WaterFlowModel1D()};
 
-            var modelPath = TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"ReModels\J_10BANK.sbk\4\DEFTOP.1");
+            var modelPath = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"ReModels\J_10BANK.sbk\4\DEFTOP.1");
             var flowModel = (WaterFlowModel1D) modelImporter.ImportItem(modelPath);
             
             var mainSection = flowModel.RoughnessSections[0];
@@ -77,7 +77,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Rough
             //import maas
             var modelImporter = new SobekWaterFlowModel1DImporter { TargetItem = new WaterFlowModel1D() };
 
-            var modelPath = TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"ReModels\J_10BANK.sbk\4\DEFTOP.1");
+            var modelPath = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"ReModels\J_10BANK.sbk\4\DEFTOP.1");
             var flowModel = (WaterFlowModel1D)modelImporter.ImportItem(modelPath);
             
             //clear roughness data

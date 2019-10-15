@@ -21,7 +21,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         {
             get { return "Boundary data from .qh file"; }
         }
-
+        public string Description { get { return Name; } }
         public string Category
         {
             get { return "Boundary data"; }

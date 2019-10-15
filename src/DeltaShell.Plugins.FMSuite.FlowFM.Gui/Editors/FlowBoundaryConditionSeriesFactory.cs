@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
@@ -248,21 +249,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                 : CreateTimeSeries(new[] {SignalFunction});
         }
 
-        private void BackgroundFunctionsCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        private void BackgroundFunctionsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             switch (e.Action)
             {
-                case NotifyCollectionChangeAction.Add:
-                    backgroundTimeSeries.Insert(e.Index,
-                                                CreateTimeSeries(new[] { (FlowBoundaryConditionPointData)e.Item }));
+                case NotifyCollectionChangedAction.Add:
+                    backgroundTimeSeries.Insert(e.GetRemovedOrAddedIndex(),
+                                                CreateTimeSeries(new[] { (FlowBoundaryConditionPointData)e.GetRemovedOrAddedItem() }));
                     break;
-                case NotifyCollectionChangeAction.Remove:
-                    backgroundTimeSeries.RemoveAt(e.Index);
+                case NotifyCollectionChangedAction.Remove:
+                    backgroundTimeSeries.RemoveAt(e.GetRemovedOrAddedIndex());
                     break;
-                case NotifyCollectionChangeAction.Replace:
-                    backgroundTimeSeries[e.Index] = CreateTimeSeries(new[] { (FlowBoundaryConditionPointData)e.Item });
+                case NotifyCollectionChangedAction.Replace:
+                    backgroundTimeSeries[e.GetRemovedOrAddedIndex()] = CreateTimeSeries(new[] { (FlowBoundaryConditionPointData)e.GetRemovedOrAddedItem() });
                     break;
-                case NotifyCollectionChangeAction.Reset:
+                case NotifyCollectionChangedAction.Reset:
                     backgroundTimeSeries.Clear();
                     break;
             }

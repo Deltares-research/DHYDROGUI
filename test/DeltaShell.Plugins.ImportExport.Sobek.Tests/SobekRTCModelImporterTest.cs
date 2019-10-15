@@ -170,7 +170,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
 
         private RealTimeControlModel GetRtcModel(string path)
         {
-            var pathToSobekNetwork =TestHelper.GetDataDir() + path;
+            var pathToSobekNetwork =TestHelper.GetTestDataDirectory() + path;
             var importer = new SobekHydroModelImporter(false);
             var model = ((ICompositeActivity)importer.ImportItem(pathToSobekNetwork)).Activities.OfType<RealTimeControlModel>().First();
             return model;

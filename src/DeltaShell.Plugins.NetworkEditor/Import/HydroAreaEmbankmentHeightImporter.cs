@@ -23,7 +23,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Import
         private int _embankmentPointIndex = 0;
 
         public string Name { get { return "Embankment heights"; } }
-
+        public string Description { get { return Name; } }
         public string Category { get { return "2D / 3D"; } }
 
         public Bitmap Image { get { return Properties.Resources.guide; } }

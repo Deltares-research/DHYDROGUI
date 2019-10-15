@@ -8,6 +8,7 @@ using DelftTools.Shell.Gui.Swf;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Drawing;
+using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
 using GeoAPI.Geometries;
@@ -144,7 +145,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
             return new CategorialThemeItem
                        {
                            Value = value,
-                           Label = EnumDescriptionAttributeTypeConverter.GetEnumDescription(value),
+                           Label = value.GetDescription(),
                            Style = new VectorStyle
                                        {
                                            Symbol = new Bitmap(image)

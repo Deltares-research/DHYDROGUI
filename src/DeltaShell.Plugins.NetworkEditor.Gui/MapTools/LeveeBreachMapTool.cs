@@ -93,7 +93,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             RemoveDrawingLayer();
         }
 
-        public override void Render(Graphics graphics, Map mapBox)
+        public override void Render(Graphics graphics)
         {
             if (movingBreachLocation)
             {
@@ -101,7 +101,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             }
             else
             {
-                base.Render(graphics, mapBox);
+                base.Render(graphics);
             }
         }
 

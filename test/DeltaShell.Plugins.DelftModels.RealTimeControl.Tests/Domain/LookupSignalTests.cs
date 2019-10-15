@@ -8,6 +8,7 @@ using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils.Domain;
 using NUnit.Framework;
+using Rhino.Mocks;
 using ValidationAspects;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain

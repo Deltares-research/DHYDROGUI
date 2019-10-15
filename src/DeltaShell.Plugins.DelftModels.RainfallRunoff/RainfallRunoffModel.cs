@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
@@ -327,7 +328,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             BubbleCollectionChangingEvent(sender, e);
         }
 
-        void MeteoStationsCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        void MeteoStationsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             BubbleCollectionChangedEvent(sender, e);
         }
@@ -356,7 +357,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             BubbleCollectionChangingEvent(sender, e);
         }
 
-        private void TemperatureStationsCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        private void TemperatureStationsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             BubbleCollectionChangedEvent(sender, e);
         }
@@ -483,7 +484,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             return false;
         }
 
-        protected override void OnInputCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        protected override void OnInputCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (ClearingOutput)
                 return;
@@ -625,7 +626,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             BubbleCollectionChangingEvent(sender, e);
         }
 
-        void ModelDataCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        void ModelDataCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             BubbleCollectionChangedEvent(sender ,e);
         }
@@ -654,7 +655,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             BubbleCollectionChangingEvent(sender, e);
         }
 
-        private void BoundaryDataCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        private void BoundaryDataCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             BubbleCollectionChangedEvent(sender, e);
         }

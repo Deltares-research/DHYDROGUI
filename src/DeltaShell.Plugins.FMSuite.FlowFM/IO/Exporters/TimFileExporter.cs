@@ -26,6 +26,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
         #region IFileExporter
 
         public string Name { get { return "Time series to .tim file"; } }
+        public string Description { get { return Name; } }
 
         public string Category { get { return "General"; } }
 

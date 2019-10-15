@@ -4,6 +4,7 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Utils;
+using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using log4net;
 
@@ -23,7 +24,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         {
             try
             {
-                Structure2DType = EnumerableExtensions.GetValueFromDescription<Structure2DType>(type); // TODO: This is also a ModelProperty! Should this refer to the ModelProperty of should we remove that one from Properties?
+                Structure2DType =  (Structure2DType)typeof(Structure2DType).GetEnumValueFromDescription(type); // TODO: This is also a ModelProperty! Should this refer to the ModelProperty of should we remove that one from Properties?
             }
             catch(ArgumentException e)
             {
@@ -53,7 +54,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 
         public ModelProperty GetProperty(KnownGeneralStructureProperties property)
         {
-            return Properties.FirstOrDefault(p => p.PropertyDefinition.FilePropertyName.ToLower() == EnumDescriptionAttributeTypeConverter.GetEnumDescription(property).ToLower());
+            return Properties.FirstOrDefault(p => p.PropertyDefinition.FilePropertyName.ToLower() ==  property.GetDescription().ToLower());
         }
     }
 }

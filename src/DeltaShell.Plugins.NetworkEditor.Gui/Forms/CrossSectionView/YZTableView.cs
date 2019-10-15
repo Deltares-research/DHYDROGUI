@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
@@ -159,15 +160,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             }
         }
 
-        void DataCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        void DataCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (!Equals(sender, data)) return;
 
-            if (e.Action == NotifyCollectionChangeAction.Add)
+            if (e.Action == NotifyCollectionChangedAction.Add)
             {
                 if (data.Count > 1)
                 {
-                    Coordinate coordinate = (Coordinate)e.Item;
+                    Coordinate coordinate = (Coordinate)e.GetRemovedOrAddedItem();
                     UnSubscribeToData();
                     // item is already added to internal list
                     coordinate.X = data[data.Count - 2].X;

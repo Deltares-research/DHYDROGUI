@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         [TestFixtureSetUp]
         public void FixtureSetup()
         {
-            commonFilePath = Path.Combine(TestHelper.GetDataDir(), "IO");
+            commonFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "IO");
         }
 
         [Test]

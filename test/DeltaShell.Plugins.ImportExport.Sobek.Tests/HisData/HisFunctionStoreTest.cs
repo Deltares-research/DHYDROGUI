@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.HisData
         public void HisFunctionStoreFunctions()
         {
             string uri = Path.Combine("HisData", "flowhis.his");
-            string path = Path.Combine(TestHelper.GetDataDir(), uri);
+            string path = Path.Combine(TestHelper.GetTestDataDirectory(), uri);
 
             var hisFileReader = new HisFileReader(path);
             var nComponents = hisFileReader.GetHisFileHeader.Components.Count;
@@ -38,7 +38,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.HisData
         public void GetArgumentValues()
         {
             string uri = Path.Combine("HisData", "flowhis.his");
-            string path = Path.Combine(TestHelper.GetDataDir(), uri);
+            string path = Path.Combine(TestHelper.GetTestDataDirectory(), uri);
 
             var hisFileReader = new HisFileReader(path);
             var timeSteps = hisFileReader.GetHisFileHeader.TimeSteps;
@@ -61,7 +61,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.HisData
         public void GetValues()
         {
             string uri = Path.Combine("HisData", "flowhis.his");
-            string path = Path.Combine(TestHelper.GetDataDir(), uri);
+            string path = Path.Combine(TestHelper.GetTestDataDirectory(), uri);
             var componentName = "Water level";
 
             var hisFileReader = new HisFileReader(path);
@@ -81,7 +81,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.HisData
         public void GetValuesOfOneTimeStep()
         {
             string uri = Path.Combine("HisData", "flowhis.his");
-            string path = Path.Combine(TestHelper.GetDataDir(), uri);
+            string path = Path.Combine(TestHelper.GetTestDataDirectory(), uri);
             var componentName = "Water level";
 
             var hisFileReader = new HisFileReader(path);
@@ -104,7 +104,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.HisData
         public void GetValuesOfOneLocation()
         {
             string uri = Path.Combine("HisData", "flowhis.his");
-            string path = Path.Combine(TestHelper.GetDataDir(), uri);
+            string path = Path.Combine(TestHelper.GetTestDataDirectory(), uri);
             var componentName = "Water level";
 
             var hisFileReader = new HisFileReader(path);
@@ -129,7 +129,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.HisData
         public void ShowInFunctionView()
         {
             string uri = Path.Combine("HisData", "flowhis.his");
-            string path = Path.Combine(TestHelper.GetDataDir(), uri);
+            string path = Path.Combine(TestHelper.GetTestDataDirectory(), uri);
 
             using (var hisFunctionStore = new HisFunctionStore(path))
             {
@@ -146,7 +146,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.HisData
         {
             string uri = Path.Combine("HisData", "HisAndNetwork");
             uri = Path.Combine(uri, "CALCPNT.HIS");
-            string path = Path.Combine(TestHelper.GetDataDir(), uri);
+            string path = Path.Combine(TestHelper.GetTestDataDirectory(), uri);
             var componentName = "Waterlevel  (m AD)";
             var indexLocation = 5;
 

@@ -2,6 +2,7 @@
 using DelftTools.Functions.Binding;
 using DelftTools.Functions.Generic;
 using NUnit.Framework;
+using Rhino.Mocks;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests
 {

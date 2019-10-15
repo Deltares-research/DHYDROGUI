@@ -14,6 +14,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
         private static readonly ILog Log = LogManager.GetLogger(typeof(WaterFlowModel1DExporter));
 
         public string Name { get { return "WaterFlowModel1D Exporter"; } }
+        public string Description { get { return Name; } }
         public bool Export(object item, string filepath)
         {
             var flow1DModel = item as WaterFlowModel1D;

@@ -34,7 +34,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         {
             get { return WindFileImporter ? "Time series file" : "Time series .tim file"; }
         }
-        
+        public string Description { get { return Name; } }
         public string Category
         {
             get { return "Time series"; }

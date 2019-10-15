@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
@@ -356,7 +357,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
 
         #region Changed Events
 
-        void CrossSectionSectionsCollectionChanged(object sender, DelftTools.Utils.Collections.NotifyCollectionChangingEventArgs e)
+        void CrossSectionSectionsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             RefreshView();
         }
