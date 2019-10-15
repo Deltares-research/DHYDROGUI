@@ -7,6 +7,7 @@ using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Roughness;
 using DelftTools.TestUtils;
 using DeltaShell.Core;
+using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
@@ -232,7 +233,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Integ
                     var modelFileNames = new ModelFileNames(modelFilename);
 
                     CrossSectionFileReader.ReadFile(modelFileNames.CrossSectionLocations,
-                        modelFileNames.CrossSectionDefinitions, waterFlowModel1D);
+                        modelFileNames.CrossSectionDefinitions, waterFlowModel1D.Network);
                 }
             }
         }
