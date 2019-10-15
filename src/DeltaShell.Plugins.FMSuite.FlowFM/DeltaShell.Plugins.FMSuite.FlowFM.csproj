@@ -154,6 +154,7 @@
     <Compile Include="IO\BathymetryFileWriter.cs" />
     <Compile Include="IO\BcMeteoFileDataBuilder.cs" />
     <Compile Include="IO\Exporters\WaterFlowFMAndF1dFileExporter.cs" />
+    <Compile Include="IO\FeatureFile1D2DReader.cs" />
     <Compile Include="IO\FeatureFile1D2DWriter.cs" />
     <Compile Include="IO\FM1DFileFunctionStore.cs" />
     <Compile Include="IO\FmMapFile1DOutputFileReader.cs" />

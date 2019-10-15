@@ -116,10 +116,12 @@
     <Compile Include="DelftBcWriter.cs" />
     <Compile Include="DelftIniReader.cs" />
     <Compile Include="DelftIniWriter.cs" />
+    <Compile Include="FileReaders\CrossSectionFileReader.cs" />
     <Compile Include="FileReaders\Definition\DefinitionReader.cs" />
     <Compile Include="FileReaders\FileReadingException.cs" />
     <Compile Include="FileReaders\Location\LocationFileReader.cs" />
     <Compile Include="FileReaders\Network\NetworkAndGridReader.cs" />
+    <Compile Include="FileReaders\StructureFileReader.cs" />
     <Compile Include="FileWriters\Boundary\BoundaryFileWriter.cs" />
     <Compile Include="FileWriters\Boundary\BoundaryRegion.cs" />
     <Compile Include="FileWriters\Boundary\DefinitionGeneratorBoundary.cs" />

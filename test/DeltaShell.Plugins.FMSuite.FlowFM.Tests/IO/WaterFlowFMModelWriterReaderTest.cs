@@ -139,7 +139,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.IsTrue(network.Pumps.Any(p => p.Name.Equals("pump1")));
 
             //1d pump manhole
-            var manhole = SewerFactory.CreateDefaultManholeAndAddToNetwork(network, new Coordinate(0, 10));
+            var manhole = SewerFactory.CreateDefaultManholeAndAddToNetwork(network, new Coordinate(0, 10)) as Manhole;
             var fromCompartment = new Compartment("cmp1");
             var toCompartment = new Compartment("cmp2");
             manhole.Compartments.Add(fromCompartment);

@@ -1960,7 +1960,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             Name = Path.GetFileNameWithoutExtension(mduFilePath);
             ModelDefinition = new WaterFlowFMModelDefinition(mduFileDir, Name);
             
-            // intialize model definition from mdu file if it exists
+            // initialize model definition from mdu file if it exists
             if (File.Exists(mduFilePath))
             {
                 isLoading = true;
@@ -2092,6 +2092,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             LoadStateFromMdu(mduPath);
             
             LoadNetworkAndDiscretisation();
+
+            FeatureFile1D2DReader.Read1D2DFeatures(mduPath, this);
 
             LoadLinks();
 

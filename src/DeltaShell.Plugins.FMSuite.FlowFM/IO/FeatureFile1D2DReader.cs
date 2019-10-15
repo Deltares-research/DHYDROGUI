@@ -1,0 +1,89 @@
+﻿using System.IO;
+using System.Linq;
+using DelftTools.Hydro;
+using DelftTools.Hydro.Roughness;
+using DelftTools.Utils.IO;
+using DeltaShell.NGHS.IO.FileReaders;
+using DeltaShell.NGHS.IO.FileWriters.Network;
+using DeltaShell.NGHS.IO.FileWriters.Roughness;
+using DeltaShell.NGHS.IO.FileWriters.Structure;
+using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+
+namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
+{
+    public static class FeatureFile1D2DReader
+    {
+        public const string NODE_FILE_NAME = "nodeFile.ini";
+        public const string STRUCTURES_FILE_NAME = "structures.ini";
+
+        public static void Read1D2DFeatures(string targetMduFilePath, WaterFlowFMModel fmModel)
+        {
+            //ReadNodeFile(fmModel.MduFilePath, fmModel.ModelDefinition, fmModel.Network);
+            ReadCrossSectionFiles(targetMduFilePath, fmModel);
+            ReadStructuresFiles(targetMduFilePath, fmModel);
+            //ReadRoughnessFiles(targetMduFilePath, fmModel);
+        }
+
+        private static void ReadNodeFile(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network)
+        {
+            var nodeFilePath = IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, NODE_FILE_NAME);
+            FileUtils.DeleteIfExists(nodeFilePath);
+
+            var compartments = network.Manholes.SelectMany(m => m.Compartments).ToList();
+            if (compartments.Any() || network.Retentions.Any())
+            {
+                modelDefinition.SetModelProperty(KnownProperties.StorageNodeFile, NODE_FILE_NAME);
+                NodeFile.Write(nodeFilePath, compartments, network.Retentions);
+            }
+            else
+            {
+                modelDefinition.SetModelProperty(KnownProperties.NodeFile, string.Empty);
+            }
+        }
+
+        private static void ReadCrossSectionFiles(string targetMduFilePath, WaterFlowFMModel fmModel)
+        {
+            var crLocFile = fmModel.ModelDefinition.GetModelProperty(KnownProperties.CrossLocFile).GetValueAsString();
+            crLocFile = IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, crLocFile);
+            if (!File.Exists(crLocFile)) return;
+            var crDefFile = fmModel.ModelDefinition.GetModelProperty(KnownProperties.CrossDefFile).GetValueAsString();
+            crDefFile =IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, crDefFile);
+            if (!File.Exists(crDefFile)) return;
+            CrossSectionFileReader.ReadFile(crLocFile,crDefFile, fmModel.Network);
+        }
+
+        private static void ReadStructuresFiles(string targetMduFilePath, WaterFlowFMModel fmModel)
+        {
+            var crDefFile = fmModel.ModelDefinition.GetModelProperty(KnownProperties.CrossDefFile).GetValueAsString();
+            crDefFile = IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, crDefFile);
+            if (!File.Exists(crDefFile)) return;
+            var structureFile = fmModel.ModelDefinition.GetModelProperty(KnownProperties.StructuresFile).GetValueAsString();
+            structureFile = IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, structureFile);
+            if (!File.Exists(structureFile)) return;
+            //StructureFileReader.ReadFile(structureFile, crDefFile , fmModel.Network);
+        }
+
+        private static void ReadRoughnessFiles(string targetMduFilePath, WaterFlowFMModel fmModel)
+        {
+            var directoryName = System.IO.Path.GetDirectoryName(targetMduFilePath);
+            if (directoryName == null) return;
+
+            var roughnessFileNames = fmModel.RoughnessSections.Select(GetRoughnessFilename);
+            fmModel.ModelDefinition.SetModelProperty(KnownProperties.FrictFile, string.Join(";", roughnessFileNames));
+
+            foreach (var roughnessSection in fmModel.RoughnessSections)
+            {
+                var roughnessFileName = GetRoughnessFilename(roughnessSection);
+                var roughnessFilePath = System.IO.Path.Combine(directoryName, roughnessFileName);
+
+                FileWritingUtils.ThrowIfFileNotExists(roughnessFilePath, directoryName, p => RoughnessDataFileWriter.WriteFile(p, roughnessSection));
+            }
+        }
+
+        private static string GetRoughnessFilename(RoughnessSection roughnessSection)
+        {
+            return "roughness-" + roughnessSection.Name + ".ini";
+        }
+    }
+}

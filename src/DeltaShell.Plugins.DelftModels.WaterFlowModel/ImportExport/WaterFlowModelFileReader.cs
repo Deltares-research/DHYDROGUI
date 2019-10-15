@@ -49,7 +49,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                     RoughnessDataFileReader.ReadFile(roughnessFile, model.Network, model.RoughnessSections);
                 }
                 reportProgress(String.Format("Reading cross sections from {0} file and {1}.", fileName.CrossSectionLocations, fileName.CrossSectionDefinitions), 7, totalSteps);
-                CrossSectionFileReader.ReadFile(fileName.CrossSectionLocations, fileName.CrossSectionDefinitions, model);
+                CrossSectionFileReader.ReadFile(fileName.CrossSectionLocations, fileName.CrossSectionDefinitions, model.Network);
             }
             catch (FileReadingException fileReadingException)
             {
