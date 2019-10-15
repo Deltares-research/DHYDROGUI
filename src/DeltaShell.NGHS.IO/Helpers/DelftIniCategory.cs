@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
-using DeltaShell.NGHS.IO.FileReaders;
 using GeoAPI.Geometries;
 
 namespace DeltaShell.NGHS.IO.Helpers
 {
-    #region DelftIniCategory
-
     public class DelftIniCategory : IDelftIniCategory
     {
         public string Name { get; private set; }
@@ -144,152 +140,6 @@ namespace DeltaShell.NGHS.IO.Helpers
         }
     }
 
-    public interface IDelftIniCategory
-    {
-        string Name { get; }
-        IList<DelftIniProperty> Properties { get; set; }
-
-        /// <summary>
-        /// The line number where this category was read in the file.
-        /// </summary>
-        int LineNumber { get; set; }
-
-        /// <summary>
-        /// for unique property names, otherwise first!
-        /// </summary>
-        /// <param name="name"></param>
-        /// <param name="defaultValue"></param>
-        /// <returns></returns>
-        string GetPropertyValue(string name, string defaultValue = null);
-        
-        /// <summary>
-        /// returns all values, ordered, for a property with multiplicity > 1
-        /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        IEnumerable<string> GetPropertyValues(string name);
-
-        void AddProperty(string name, string value, string comment = null);
-        void AddProperty(string name, DateTime time, string comment = null, string format = "yyyy-MM-dd HH:mm:ss");
-        void AddProperty(string name, IEnumerable<double> values, string comment = null, string format = "e7");
-        void AddProperty(string name, double value,  string comment = null, string format = "e7");
-        void AddProperty(string name, IEnumerable<int> values, string comment = null);
-        void AddProperty(string name, int value, string comment = null);
-
-        void SetProperty(string name, string value, string comment = null);
-        void SetProperty(string name, double value, string comment = null, string format = null);
-    }
-
-    public class PropertyNotFoundInFileException : FileReadingException
-    {
-        public PropertyNotFoundInFileException(string message)
-            : base(message)
-        {
-        }
-
-        public PropertyNotFoundInFileException(string message, Exception inner)
-            : base(message, inner)
-        {
-        }
-    }
-
-    public static class DelftIniCategoryExtensionMethods
-    {
-        public static T ReadProperty<T>(this IDelftIniCategory category, string key, ref string errorMessage)
-        {
-            var iniProperty = category.Properties.FirstOrDefault(property => PropertyEqualsKey(key, property));
-
-            if (iniProperty != null)
-                return (T)TypeDescriptor.GetConverter(typeof(T)).ConvertFromInvariantString(iniProperty.Value);
-
-            errorMessage += string.Format("Unable to parse {0} property: {1}{2}", category.Name, key, Environment.NewLine);
-            return default(T);
-        }
-
-        public static T ReadProperty<T>(this IDelftIniCategory category, string key, bool isOptional = false)
-        {
-            var iniProperty = category.Properties.FirstOrDefault(property => PropertyEqualsKey(key, property));
-
-            if (iniProperty != null)
-                return (T)TypeDescriptor.GetConverter(typeof(T)).ConvertFromInvariantString(iniProperty.Value);
-            
-            if(!isOptional)
-                throw new PropertyNotFoundInFileException(String.Format("Property {0} is not found in the file", key));
-            return default(T);
-        }
-        public static IList<T> ReadPropertiesToListOfType<T>(this IDelftIniCategory category, string key, ref string errorMessage)
-        {
-            var iniProperty = category.Properties.FirstOrDefault(property => PropertyEqualsKey(key, property));
-
-            if (iniProperty != null)
-            {
-                return iniProperty.Value.Split(' ').Select(elementValue => (T) TypeDescriptor.GetConverter(typeof (T)).ConvertFromInvariantString(elementValue.Split(',')[0])).ToList();
-            }
-
-            errorMessage += string.Format("Unable to parse {0} property: {1}{2}", category.Name, key, Environment.NewLine);
-            return default(IList<T>);
-        }
-        public static IList<T> ReadPropertiesToListOfType<T>(this IDelftIniCategory category, string key, bool isOptional = false, char separator = ' ')
-        {
-            var iniProperty = category.Properties.FirstOrDefault(property => PropertyEqualsKey(key, property));
-
-            if (iniProperty != null)
-            {
-                return iniProperty.Value.Split(separator).Select(elementValue => (T)TypeDescriptor.GetConverter(typeof(T)).ConvertFromInvariantString(elementValue)).ToList();
-            }
-
-            if (!isOptional)
-                throw new PropertyNotFoundInFileException(String.Format("Property {0} is not found in the file", key));
-            
-            return default(IList<T>);
-        }
-        private static bool PropertyEqualsKey(string key, DelftIniProperty property)
-        {
-            return property.Name.Equals(key, StringComparison.OrdinalIgnoreCase);
-        }
-    }
-    #endregion
-
-    #region Nested Type: DelftIniProperty
-
-    
-    public class DelftIniProperty : IDelftIniProperty
-    {
-        public string Name { get; set; }
-        public string Value { get; set; }
-        public string Comment { get; set; }
-        public string Id { get; set; }
-
-        /// <summary>
-        /// The line where this property was read in the file.
-        /// </summary>
-        public int LineNumber { get; set; }
-
-        public DelftIniProperty()
-        {
-            
-        }
-
-        public DelftIniProperty(string name, string value, string comment)
-        {
-            Name = name;
-            Value = value;
-            Comment = comment;
-        }
-    }
-
-    public interface IDelftIniProperty
-    {
-        string Name { get; set; }
-        string Value { get; set; }
-        string Comment { get; set; }
-
-        /// <summary>
-        /// The line where this property was read in the file.
-        /// </summary>
-        int LineNumber { get; set; }
-    }
-
     public static class DelftIniPropertyExtensionMethods
     {
         public static double[] ParseDoublesFromPropertyValue(this IDelftIniProperty property)
@@ -307,9 +157,6 @@ namespace DeltaShell.NGHS.IO.Helpers
             return propertyDoubleValues.ToArray();
         }
     }
-    #endregion
-
-    #region Nested Type: DelftBcCategory
 
     public class DelftBcCategory : DelftIniCategory, IDelftBcCategory
     {
@@ -325,10 +172,6 @@ namespace DeltaShell.NGHS.IO.Helpers
     {
         IList<IDelftBcQuantityData> Table { get; set; }
     }
-
-    #endregion
-    
-    #region Nested Type: DelftBcQuantityData
 
     public class DelftBcQuantityData : IDelftBcQuantityData
     {
@@ -367,5 +210,4 @@ namespace DeltaShell.NGHS.IO.Helpers
         int LineNumber { get; set; }
         IList<string> Values { get; set; }
     }
-    #endregion
 }
