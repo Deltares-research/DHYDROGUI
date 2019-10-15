@@ -511,8 +511,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 logHandler = logHandler ?? new LogHandler("reading the sediment file");
 
                 WaterFlowFMModelDefinition definition = model.ModelDefinition;
-                IList<DelftIniCategory> sedCategories = new SedMorDelftIniReader().ReadDelftIniFile(path);
-                foreach (DelftIniCategory category in sedCategories)
+                IList<IDelftIniCategory> sedCategories = new SedMorDelftIniReader().ReadDelftIniFile(path);
+                foreach (IDelftIniCategory category in sedCategories)
                 {
                     string categoryName = category.Name;
 
@@ -590,7 +590,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                                                                               WaterFlowFMModelDefinition definition,
                                                                               ILogHandler logHandler)
         {
-            DelftIniProperty sedimentNameProperty = category.Properties.FirstOrDefault(p => p.Name.Equals(Name.Key));
+            IDelftIniProperty sedimentNameProperty = category.Properties.FirstOrDefault(p => p.Name.Equals(Name.Key));
             string sedimentFractionName = sedimentNameProperty?.Value;
 
             ISedimentFraction selectedSedimentFraction = sedimentFractionName != null

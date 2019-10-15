@@ -245,9 +245,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 return;
             }
 
-            IList<DelftIniCategory> delftIniCategories = new SedMorDelftIniReader().ReadDelftIniFile(morFilePath);
+            IList<IDelftIniCategory> delftIniCategories = new SedMorDelftIniReader().ReadDelftIniFile(morFilePath);
 
-            foreach (DelftIniCategory delftIniCategory in delftIniCategories)
+            foreach (IDelftIniCategory delftIniCategory in delftIniCategories)
             {
                 string categoryName = delftIniCategory.Name;
 

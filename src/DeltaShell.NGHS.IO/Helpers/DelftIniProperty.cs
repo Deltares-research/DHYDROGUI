@@ -1,7 +1,7 @@
 ﻿namespace DeltaShell.NGHS.IO.Helpers
 {
     /// <summary>
-    /// Representation of a property in an .ini file.
+    /// Representation of a property in a .ini file.
     /// </summary>
     public class DelftIniProperty : IDelftIniProperty
     {

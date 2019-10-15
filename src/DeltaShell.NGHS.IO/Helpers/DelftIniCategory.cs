@@ -2,116 +2,76 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using GeoAPI.Geometries;
 
 namespace DeltaShell.NGHS.IO.Helpers
 {
+    /// <summary>
+    /// Representation of a category in a .ini file.
+    /// </summary>
     public class DelftIniCategory : IDelftIniCategory
     {
-        public string Name { get; private set; }
-        public IList<DelftIniProperty> Properties { get; set; }
-        
-        /// <summary>
-        /// The line number where this category was read in the file.
-        /// </summary>
+        /// <inheritdoc />
+        public string Name { get; }
+
+        /// <inheritdoc />
+        public IList<IDelftIniProperty> Properties { get; set; }
+
+        /// <inheritdoc />
         public int LineNumber { get; set; }
 
+        /// <summary>
+        /// Creates an instance of <see cref="DelftIniCategory"/>.
+        /// </summary>
+        /// <param name="categoryName"> The category name. </param>
         public DelftIniCategory(string categoryName)
         {
             Name = categoryName;
-            Properties = new List<DelftIniProperty>();
+            Properties = new List<IDelftIniProperty>();
         }
 
-        /// <summary>
-        /// for unique property names, otherwise first!
-        /// </summary>
-        /// <param name="name"></param>
-        /// <param name="defaultValue"></param>
-        /// <returns></returns>
+        /// <inheritdoc />
         public string GetPropertyValue(string name, string defaultValue = null)
         {
-            var prop = Properties.FirstOrDefault(p => p.Name == name);
-            return prop != null ? prop.Value : defaultValue;
+            IDelftIniProperty prop = Properties.FirstOrDefault(p => p.Name == name);
+            return prop != null 
+                       ? prop.Value 
+                       : defaultValue;
         }
 
-        /// <summary>
-        /// returns all values, ordered, for a property with multiplicity > 1
-        /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
+        /// <inheritdoc />
         public IEnumerable<string> GetPropertyValues(string name)
         {
             return Properties.Where(p => p.Name == name).Select(p => p.Value);
         }
 
-        public void RemoveProperty(DelftIniProperty property)
-        {
-            Properties.Remove(property);
-        }
-
+        /// <inheritdoc />
         public void AddProperty(string name, string value, string comment = null)
         {
             Properties.Add(new DelftIniProperty(name, value, comment ?? "" ));
         }
 
-        /// <summary>
-        /// Add a DateTime property with the specified ConfigurationSettings
-        /// <paramref name="settings"/> and the specified value <paramref name="time"/>.
-        /// </summary>
-        /// <param name="settings">The ConfigurationSetting of the time.</param>
-        /// <param name="time">The DateTime value.</param>
-        /// <remarks>
-        /// This uses the format specified in the <paramref name="settings"/>,
-        /// and not the default "yyyy-MM-dd HH:mm:ss"
-        /// </remarks>
-        public void AddProperty(ConfigurationSetting settings, DateTime time)
-        {
-            AddProperty(settings.Key, time, settings.Description, settings.Format);
-        }
-
+        /// <inheritdoc />
         public void AddProperty(string name, DateTime time, string comment = null, string format = "yyyy-MM-dd HH:mm:ss")
         {
             AddProperty(name, time.ToString(format, CultureInfo.InvariantCulture), comment);
         }
 
-        public void AddProperty(string name, IEnumerable<double> values, string comment = null, string format = "e7")
-        {
-            var valuesString = string.Join(" ", values.Select(value => value.ToString(format, CultureInfo.InvariantCulture)));
-            AddProperty(name, valuesString, comment);
-        }
-
-        /// <summary>
-        /// Add a double property with the specified ConfigurationSettings.
-        /// </summary>
-        /// <param name="settings">The ConfigurationSetting of the value.</param>
-        /// <param name="value">The value.</param>
-        /// <remarks>
-        /// This uses the format specified in <paramref name="settings"/> and not the default "e7".
-        /// </remarks>
-        public void AddProperty(ConfigurationSetting settings, double value)
-        {
-            AddProperty(settings.Key, value, settings.Description, settings.Format);
-        }
-
+        /// <inheritdoc />
         public void AddProperty(string name, double value,  string comment = null, string format = "e7")
         {
                 AddProperty(name, value.ToString(format, CultureInfo.InvariantCulture), comment);
         }
 
-        public void AddProperty(string name, IEnumerable<int> values, string comment = null)
-        {
-            var valuesString = string.Join(" ", values.Select(value => value.ToString(CultureInfo.InvariantCulture)));
-            AddProperty(name, valuesString, comment);
-        }
-
+        /// <inheritdoc />
         public void AddProperty(string name, int value, string comment = null)
         {
             AddProperty(name, value.ToString(CultureInfo.InvariantCulture), comment);
         }
 
+        /// <inheritdoc />
         public void SetProperty(string name, string value, string comment = null)
         {
-            var prop = Properties.FirstOrDefault(p => p.Name == name);
+            IDelftIniProperty prop = Properties.FirstOrDefault(p => p.Name == name);
             if (prop != null)
             {
                 prop.Value = value;
@@ -123,6 +83,7 @@ namespace DeltaShell.NGHS.IO.Helpers
             }
         }
 
+        /// <inheritdoc />
         public void SetProperty(string name, double value, string comment = null, string format = "e7")
         {
             SetProperty(name, value.ToString(format, CultureInfo.InvariantCulture), comment);

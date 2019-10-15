@@ -1020,7 +1020,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             ValidateGeneralStructureIniProperties(generalStructureCategory);
         }
 
-        private void ValidateGeneralStructureIniProperties(DelftIniCategory category)
+        private void ValidateGeneralStructureIniProperties(IDelftIniCategory category)
         {
             ValidateProperty(category, KnownGeneralStructureProperties.Upstream2Width.GetDescription(), "6");
             ValidateProperty(category, KnownGeneralStructureProperties.Upstream1Width.GetDescription(), "7");
@@ -1032,7 +1032,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             ValidateProperty(category, KnownGeneralStructureProperties.Downstream2Level.GetDescription(), "13");
         }
 
-        private void ValidateGateIniProperties(DelftIniCategory category)
+        private void ValidateGateIniProperties(IDelftIniCategory category)
         {
             ValidateProperty(category, KnownStructureProperties.GateLowerEdgeLevel, "3");
             ValidateProperty(category, KnownStructureProperties.GateOpeningWidth, "4");
@@ -1040,13 +1040,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             ValidateProperty(category, KnownStructureProperties.GateOpeningHorizontalDirection, "symmetric");
         }
 
-        private void ValidateCommonWeirIniProperties(DelftIniCategory category)
+        private void ValidateCommonWeirIniProperties(IDelftIniCategory category)
         {
             ValidateProperty(category, KnownStructureProperties.CrestLevel, "1");
             ValidateProperty(category, KnownStructureProperties.CrestWidth, "2");
         }
 
-        private static DelftIniCategory GetCategoryForStructureType(IList<DelftIniCategory> categories, string type)
+        private static IDelftIniCategory GetCategoryForStructureType(IList<IDelftIniCategory> categories, string type)
         {
             return categories.FirstOrDefault(c => c.Properties.FirstOrDefault(p => p.Name.Equals(KnownStructureProperties.Type)).Value == type);
         }
@@ -1525,7 +1525,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             CompareCategories(iniCategoriesA, iniCategoriesB);
         }
 
-        private static void CompareCategories(IList<DelftIniCategory> iniCategoriesA, IList<DelftIniCategory> iniCategoriesB)
+        private static void CompareCategories(IList<IDelftIniCategory> iniCategoriesA, IList<IDelftIniCategory> iniCategoriesB)
         {
             Assert.AreEqual(iniCategoriesA.Count, iniCategoriesB.Count, "Expected the same number of categories.");
             for (var i = 0; i < iniCategoriesA.Count; i++)
@@ -1535,7 +1535,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             }
         }
 
-        private static void CompareProperties(IList<DelftIniProperty> propertiesA, IList<DelftIniProperty> propertiesB)
+        private static void CompareProperties(IList<IDelftIniProperty> propertiesA, IList<IDelftIniProperty> propertiesB)
         {
             Assert.AreEqual(propertiesA.Count, propertiesB.Count, "Expected the same number of properties.");
             for (var i = 0; i < propertiesA.Count; i++)

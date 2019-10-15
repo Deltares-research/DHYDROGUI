@@ -88,9 +88,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
         /// <returns>List with structures</returns>
         public IEnumerable<Structure2D> ReadStructures2D(string filePath, ILogHandler logHandler = null)
         {
-            IList<DelftIniCategory> categories = new DelftIniReader().ReadDelftIniFile(filePath);
+            IList<IDelftIniCategory> categories = new DelftIniReader().ReadDelftIniFile(filePath);
 
-            foreach (DelftIniCategory category in categories)
+            foreach (IDelftIniCategory category in categories)
             {
                 RenameBackwardsCompatibleProperties(category);
                 // Filter out unexpected .ini categories:
@@ -104,7 +104,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
 
                 // TODO: Check for potentially other required properties:
                 // Read required 'type' property:
-                DelftIniProperty structureTypeProperty =
+                IDelftIniProperty structureTypeProperty = 
                     category.Properties.FirstOrDefault(p => p.Name == KnownStructureProperties.Type);
                 if (structureTypeProperty == null)
                 {
@@ -162,9 +162,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
 
         private string TimFolder { get; set; }
 
-        private void RenameBackwardsCompatibleProperties(DelftIniCategory category)
+        private void RenameBackwardsCompatibleProperties(IDelftIniCategory category)
         {
-            foreach (DelftIniProperty property in category.Properties)
+            foreach (IDelftIniProperty property in category.Properties)
             {
                 if (backwardsCompatibilityMapping.TryGetValue(property.Name, out string newName))
                 {
@@ -257,7 +257,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
 
         private Structure2D CreateStructure2D(StructureSchema<ModelPropertyDefinition> schema, 
                                               string structureType,
-                                              DelftIniCategory category, 
+                                              IDelftIniCategory category, 
                                               string filePath, 
                                               ILogHandler logHandler)
         {
