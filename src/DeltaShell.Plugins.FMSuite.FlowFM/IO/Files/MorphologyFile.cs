@@ -271,7 +271,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         {
             string categoryName = delftIniCategory.Name;
 
-            foreach (DelftIniProperty delftIniProperty in delftIniCategory.Properties)
+            foreach (IDelftIniProperty delftIniProperty in delftIniCategory.Properties)
             {
                 // Backwards Compatibility
                 delftIniProperty.Name = 
