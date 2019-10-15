@@ -140,24 +140,6 @@ namespace DeltaShell.NGHS.IO.Helpers
         }
     }
 
-    public static class DelftIniPropertyExtensionMethods
-    {
-        public static double[] ParseDoublesFromPropertyValue(this IDelftIniProperty property)
-        {
-            var propertyStringValues = property.Value.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries);
-            var propertyDoubleValues = new List<double>();
-            foreach (var propertyString in propertyStringValues)
-            {
-                double propertyDouble;
-                if (double.TryParse(propertyString, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out propertyDouble))
-                {
-                    propertyDoubleValues.Add(propertyDouble);
-                }
-            }
-            return propertyDoubleValues.ToArray();
-        }
-    }
-
     public class DelftBcCategory : DelftIniCategory, IDelftBcCategory
     {
         public IList<IDelftBcQuantityData> Table { get; set; }
