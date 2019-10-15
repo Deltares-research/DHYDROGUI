@@ -56,13 +56,15 @@ namespace DelftTools.Hydro.SewerFeatures
             get { return source; }
             set
             {
-                var manhole = value as Manhole;
-                if(manhole == null || !manhole.Compartments.Any() || source == value) return;
-
+                if (source == value) return;
                 BeforeSetSource();
                 source = value;
-                if (sourceCompartment == null || !manhole.ContainsCompartmentWithName(sourceCompartment.Name))
-                    SourceCompartment = manhole.Compartments.FirstOrDefault();
+                var manhole = value as Manhole;
+                if (manhole?.Compartments != null && manhole.Compartments.Any())
+                {
+                    if (sourceCompartment == null || !manhole.ContainsCompartmentWithName(sourceCompartment.Name))
+                        SourceCompartment = manhole.Compartments.FirstOrDefault();
+                }
                 AfterSetSource();
             }
         }
@@ -87,13 +89,15 @@ namespace DelftTools.Hydro.SewerFeatures
             get { return target; }
             set
             {
-                var manhole = value as Manhole;
-                if (manhole == null || !manhole.Compartments.Any() || target == value) return;
-
+                if (target == value) return;
                 BeforeTargetSet();
                 target = value;
-                if (targetCompartment == null || !manhole.ContainsCompartmentWithName(targetCompartment.Name))
-                    TargetCompartment = manhole.Compartments.FirstOrDefault();
+                var manhole = value as IManhole;
+                if (manhole?.Compartments != null && manhole.Compartments.Any())
+                {
+                    if (targetCompartment == null || !manhole.ContainsCompartmentWithName(targetCompartment.Name))
+                        TargetCompartment = manhole.Compartments.FirstOrDefault();
+                }
                 AfterTargetSet();
             }
         }

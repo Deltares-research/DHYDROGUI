@@ -4,6 +4,7 @@ using System.Linq;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.CrossSections.StandardShapes;
 using DelftTools.Hydro.SewerFeatures;
+using DelftTools.Utils.Collections;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Networks;
@@ -75,6 +76,21 @@ namespace DelftTools.Hydro.Structures
             if (pipe.Source == null)
             {
                 var manhole = GetExistingOrNewManholeFromNetwork(hydroNetwork, pipe.Geometry.Coordinates.First());
+                /*var sourceManhole = manhole as IManhole;
+                if (sourceManhole != null)
+                {
+                    var sourceManholeOutletCompartments = sourceManhole.Compartments.OfType<OutletCompartment>().ToList();
+                    var compartments = new List<Compartment>();
+                    foreach (var sourceManholeOutletCompartment in sourceManholeOutletCompartments)
+                    {
+                        compartments.Add((Compartment) sourceManholeOutletCompartment.Clone());
+                        sourceManhole.Compartments.Remove(sourceManholeOutletCompartment);
+                        sourceManhole.Compartments.Add();
+
+                    }
+                    
+                }*/
+
                 pipe.Source = manhole;
             }
         }
@@ -88,13 +104,13 @@ namespace DelftTools.Hydro.Structures
             pipe.CrossSectionDefinition = DefaultSewerProfile;
         }
 
-        private static IManhole GetExistingOrNewManholeFromNetwork(IHydroNetwork network, Coordinate coordinate)
+        private static INode GetExistingOrNewManholeFromNetwork(IHydroNetwork network, Coordinate coordinate)
         {
             var existingManhole = network.Manholes.FirstOrDefault(n => n.Geometry.Coordinate.X.IsEqualTo(coordinate.X) && n.Geometry.Coordinate.Y.IsEqualTo(coordinate.Y));
-            return existingManhole ?? CreateDefaultManholeAndAddToNetwork(network, coordinate);
+            return existingManhole ?? network.HydroNodes.FirstOrDefault(n => n.Geometry.Coordinate.X.IsEqualTo(coordinate.X) && n.Geometry.Coordinate.Y.IsEqualTo(coordinate.Y)) ?? CreateDefaultManholeAndAddToNetwork(network, coordinate);
         }
 
-        public static IManhole CreateDefaultManholeAndAddToNetwork(IHydroNetwork network, Coordinate coordinate)
+        public static INode CreateDefaultManholeAndAddToNetwork(IHydroNetwork network, Coordinate coordinate)
         {
             var uniqueName = NetworkHelper.GetUniqueName("Manhole{0:D3}", network.Manholes, "Manhole");
             var newManhole = new Manhole(uniqueName) {Geometry = new Point(coordinate)};

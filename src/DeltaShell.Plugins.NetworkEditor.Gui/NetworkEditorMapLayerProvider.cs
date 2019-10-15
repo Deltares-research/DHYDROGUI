@@ -52,6 +52,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                    || data is IEnumerable<IChannel>
                    || data is IEnumerable<IManhole>
                    || data is IEnumerable<OutletCompartment>
+                   || data is IEnumerable<Compartment>
                    || data is IEnumerable<Orifice>
                    || data is IEnumerable<IPipe>
                    || data is IEnumerable<ISewerConnection>
@@ -122,6 +123,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     yield return network.ObservationPoints;
                     yield return network.Orifices;
                     yield return network.OutletCompartments;
+                    //yield return network.Manholes.SelectMany(m => m.Compartments).Except(network.Manholes.SelectMany(m=>m.OutletCompartments()));
                     yield return network.Pipes;
                     yield return network.Pumps;
                     yield return network.Retentions;
@@ -219,6 +221,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             if (hydroNetwork != null && outletCompartments != null)
             {
                 return CreateNetworkVisibilityVectorLayer<OutletCompartment>(outletCompartments, "Outlets", hydroNetwork, MaxVisibilityLayerValue);
+            }
+
+            var compartments = data as IEnumerable<Compartment>;
+            if (hydroNetwork != null && compartments != null)
+            {
+                return CreateNetworkVisibilityVectorLayer<Compartment>(compartments, "Compartments", hydroNetwork, MaxVisibilityLayerValue);
             }
 
             var orifices = data as IEnumerable<Orifice>;
@@ -862,7 +870,27 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                         SnapRole = SnapRole.AllTrackers,
                         Obligatory = false,
                         PixelGravity = 40
-                    }
+                    },
+                    new BranchSnapRule
+                    {
+                        Criteria = (layer, feature) => feature is IHydroNode && layer.DataSource is HydroNetworkFeatureCollection &&
+                                                       ((HydroNetworkFeatureCollection) layer.DataSource).Network ==
+                                                       ((HydroNetworkFeatureCollection) vectorLayer.DataSource).Network,
+                        NewFeatureLayer = vectorLayer,
+                        SnapRole = SnapRole.AllTrackers,
+                        Obligatory = false,
+                        PixelGravity = 40
+                    },
+                    new BranchSnapRule
+                    {
+                    Criteria = (layer, feature) => feature is Compartment && layer.DataSource is HydroNetworkFeatureCollection &&
+                    ((HydroNetworkFeatureCollection) layer.DataSource).Network ==
+                    ((HydroNetworkFeatureCollection) vectorLayer.DataSource).Network,
+                    NewFeatureLayer = vectorLayer,
+                    SnapRole = SnapRole.AllTrackers,
+                    Obligatory = false,
+                    PixelGravity = 40
+                }
                 };
             }
 
@@ -971,7 +999,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
             if (type == typeof(Weir) || type == typeof(Pump) || type == typeof(Culvert) || 
                 type == typeof(Bridge) || type == typeof(ExtraResistance) 
-                || type == typeof(OutletCompartment) || type == typeof(Orifice))
+                || type == typeof(OutletCompartment) || type == typeof(Compartment) || type == typeof(Orifice))
             {
                 return new List<IFeatureRenderer> { new StructureRenderer() };
             }
