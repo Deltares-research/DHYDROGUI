@@ -9,6 +9,7 @@ using DelftTools.Shell.Core.Workflow.DataItems.ValueConverters;
 using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DelftTools.Units.Generics;
+using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Gui;
 using DeltaShell.Plugins.CommonTools;
@@ -19,7 +20,9 @@ using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils.Domain;
 using DeltaShell.Plugins.ProjectExplorer;
+using GeoAPI.Extensions.Feature;
 using NUnit.Framework;
+using Rhino.Mocks;
 using SharpTestsEx;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
@@ -652,9 +655,163 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             Assert.AreEqual(6, timeStepsCount);
         }
 
-        # endregion
+        #endregion
+
+        [Test]
+        public void CleanUpModelAfterModelCoupling_ShouldResetInputIfUnlinked()
+        {
+            // Given
+            var inputs = new EventedList<Input>
+            {
+                new Input
+                {
+                    Name = "test",
+                    Feature = null,
+                    ParameterName = "CrestLevel",
+                    UnitName = "[m]"
+                }
+            };
+
+            ControlGroup controlGroup = CreateControlGroupForGivenInputs(inputs);
+
+            RealTimeControlModel rtcModel = CreateRealTimeControlModelForGivenControlGroup(controlGroup);
+
+            Input retrievedInputFromRtcModel = rtcModel.ControlGroups[0].Inputs[0];
+
+            Assert.IsFalse(retrievedInputFromRtcModel.IsConnected, "Setup of the test is incorrect");
+           
+            // When
+            rtcModel.CleanUpModelAfterModelCoupling();
+
+            // Then
+            CheckResetConnectionPoint(retrievedInputFromRtcModel);
+        }
+
+        [Test]
+        public void CleanUpModelAfterModelCoupling_ShouldNotResetInputIfLinked()
+        {
+            // Given
+            var inputs = new EventedList<Input>
+            {
+                new Input
+                {
+                    Feature = MockRepository.GenerateStub<IFeature>(),
+                    ParameterName = "CrestLevel",
+                    UnitName = "[m]"
+                }
+            };
+
+            ControlGroup controlGroup = CreateControlGroupForGivenInputs(inputs);
+
+            RealTimeControlModel rtcModel = CreateRealTimeControlModelForGivenControlGroup(controlGroup);
+
+            Input retrievedInputFromRtcModel = rtcModel.ControlGroups[0].Inputs[0];
+            Assert.IsTrue(retrievedInputFromRtcModel.IsConnected, "Setup of the test is incorrect");
+
+            // When
+            rtcModel.CleanUpModelAfterModelCoupling();
+
+            // Then
+            Assert.AreSame(inputs[0], retrievedInputFromRtcModel,
+                           "The clean up should not have changed the original input");
+        }
+
+        [Test]
+        public void CleanUpModelAfterModelCoupling_ShouldResetOutputIfUnlinked()
+        {
+            // Given
+            var outputs = new EventedList<Output>
+            {
+                new Output
+                {
+                    Name = "test",
+                    Feature = null,
+                    ParameterName = "CrestLevel",
+                    UnitName = "[m]"
+                }
+            };
+
+            ControlGroup controlGroup = CreateControlGroupForGivenOutputs(outputs);
+
+            RealTimeControlModel rtcModel = CreateRealTimeControlModelForGivenControlGroup(controlGroup);
+
+            Output retrievedOutputFromRtcModel = rtcModel.ControlGroups[0].Outputs[0];
+
+            Assert.IsFalse(retrievedOutputFromRtcModel.IsConnected, "Setup of the test is incorrect");
+
+            // When
+            rtcModel.CleanUpModelAfterModelCoupling();
+
+            // Then
+            CheckResetConnectionPoint(retrievedOutputFromRtcModel);
+        }
+
+        [Test]
+        public void CleanUpModelAfterModelCoupling_ShouldNotResetOutputIfLinked()
+        {
+            // Given
+            var outputs = new EventedList<Output>
+            {
+                new Output
+                {
+                    Feature = MockRepository.GenerateStub<IFeature>(),
+                    ParameterName = "CrestLevel",
+                    UnitName = "[m]"
+                }
+            };
+
+            ControlGroup controlGroup = CreateControlGroupForGivenOutputs(outputs);
+
+            RealTimeControlModel rtcModel = CreateRealTimeControlModelForGivenControlGroup(controlGroup);
+
+            Output retrievedOutputFromRtcModel = rtcModel.ControlGroups[0].Outputs[0];
+            Assert.IsTrue(retrievedOutputFromRtcModel.IsConnected, "Setup of the test is incorrect");
+
+            // When
+            rtcModel.CleanUpModelAfterModelCoupling();
+
+            // Then
+            Assert.AreSame(outputs[0], retrievedOutputFromRtcModel,
+                           "The clean up should not have changed the original output");
+        }
 
         # region Helper functions
+
+        private static ControlGroup CreateControlGroupForGivenInputs(EventedList<Input> inputs)
+        {
+            var controlGroup = new ControlGroup
+            {
+                Inputs = inputs,
+                Outputs = new EventedList<Output>()
+            };
+            return controlGroup;
+        }
+
+        private static ControlGroup CreateControlGroupForGivenOutputs(EventedList<Output> outputs)
+        {
+            var controlGroup = new ControlGroup
+            {
+                Inputs = new EventedList<Input>(),
+                Outputs = outputs
+            };
+            return controlGroup;
+        }
+
+        private static RealTimeControlModel CreateRealTimeControlModelForGivenControlGroup(ControlGroup controlGroup)
+        {
+            var rtcModel = new RealTimeControlModel();
+            rtcModel.ControlGroups.Add(controlGroup);
+            return rtcModel;
+        }
+
+        private static void CheckResetConnectionPoint(ConnectionPoint retrievedConnectionPointFromRtcModel)
+        {
+            Assert.AreEqual("[Not Set]", retrievedConnectionPointFromRtcModel.Name, "Name of the connection point should have been reset");
+            Assert.IsEmpty(retrievedConnectionPointFromRtcModel.ParameterName, "Parameter name of the connection point should have been reset");
+            Assert.IsEmpty(retrievedConnectionPointFromRtcModel.UnitName, "Unit name of the connection point should have been reset");
+        }
+
+        
 
         private static void InitGui(IGui gui)
         {

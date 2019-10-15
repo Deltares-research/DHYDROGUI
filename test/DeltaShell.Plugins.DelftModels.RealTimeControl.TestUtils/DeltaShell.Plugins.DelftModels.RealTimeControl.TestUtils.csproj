@@ -105,6 +105,10 @@
       <Name>DeltaShell.Dimr</Name>
       <Private>False</Private>
     </ProjectReference>
+    <ProjectReference Include="..\..\src\DeltaShell.NGHS.Common\DeltaShell.NGHS.Common.csproj">
+      <Project>{AE78982B-8798-4B5A-9DB4-FCA8F5C8428B}</Project>
+      <Name>DeltaShell.NGHS.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\src\DeltaShell.Plugins.DelftModels.RealTimeControl\DeltaShell.Plugins.DelftModels.RealTimeControl.csproj">
       <Project>{7DAD8091-178D-43B1-97A7-D47A5C5FAAEA}</Project>
       <Name>DeltaShell.Plugins.DelftModels.RealTimeControl</Name>

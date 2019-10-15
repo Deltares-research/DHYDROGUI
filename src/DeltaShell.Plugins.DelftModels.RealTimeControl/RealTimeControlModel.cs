@@ -23,6 +23,7 @@ using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DelftTools.Utils.Validation;
 using DeltaShell.Dimr;
+using DeltaShell.NGHS.Common;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport;
@@ -42,7 +43,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
     /// already has it applied. Projectexplorer does not function correctly when left out.
     /// </summary>
     [Entity(FireOnCollectionChange=false)]
-    public class RealTimeControlModel : TimeDependentModelBase, IRealTimeControlModel, IDimrStateAwareModel, IModelMerge, IDisposable, IDimrModel
+    public class RealTimeControlModel : TimeDependentModelBase, IRealTimeControlModel, IDimrStateAwareModel, IModelMerge, IDisposable, IDimrModel, ICoupledModel
     {
         public const string InputPostFix = ".input";
         public const string OutputPostFix = ".output";
@@ -479,6 +480,35 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 throw new NotImplementedException($"Could not find {itemString} on {Name}");
             }
             return dataItem;
+        }
+
+        /// <summary>
+        /// Cleans up model after model coupling at the end of a
+        /// DIMR import. All input and output points
+        /// set by the RTC importer should be reset, if
+        /// coupling failed. 
+        /// </summary>
+        public virtual void CleanUpModelAfterModelCoupling()
+        {
+            foreach (IControlGroup controlGroup in ControlGroups)
+            {
+                foreach (Input input in controlGroup.Inputs)
+                {
+                    ResetConnectionPointIfUnlinked(input);
+                }
+                foreach (Output output in controlGroup.Outputs)
+                {
+                    ResetConnectionPointIfUnlinked(output);
+                }
+            }
+        }
+
+        private static void ResetConnectionPointIfUnlinked(ConnectionPoint connectionPoint)
+        {
+            if (!connectionPoint.IsConnected)
+            {
+                connectionPoint.Reset();
+            }
         }
 
         public virtual Type ExporterType
