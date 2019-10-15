@@ -6,16 +6,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
     {
         public FmMapFile1DOutputFileReader()
         {
-            branchidVariableNameInNetCDFFile = "mesh1d_nodes_branch_id";
-            chainageVariableNameInNetCDFFile = "mesh1d_nodes_branch_offset";
-            cfRoleAttributeNameInNetCdfFile = "long_name";
-            cfRoleAttributeValueInNetCdfFile = "the node ids";
+            branchidVariableNameInNetCDFFile = "network_branch_id";
+            chainageVariableNameInNetCDFFile = "mesh1d_node_offset";
+            cfRoleAttributeNameInNetCdfFile = "mesh1d_node_long_name";
+            cfRoleAttributeValueInNetCdfFile = "Long name of mesh nodes";
 
             timeVariableNameInNetCDFFile = "time";
             timeDimensionNameInNetCdfFile = "time";
 
-            xCoordinateVariableNameInNetCDFFile = "x_coordinate";
-            yCoordinateVariableNameInNetCDFFile = "y_coordinate";
+            xCoordinateVariableNameInNetCDFFile = "mesh1d_node_x";
+            yCoordinateVariableNameInNetCDFFile = "mesh1d_node_y";
             unitsAttributeKeyNameInNetCdfFile = "units";
             timeVariableUnitValuePrefixInNetCdfFile = "seconds since";
             dateTimeFormat = "yyyy-MM-dd HH:mm:ss";
