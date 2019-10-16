@@ -26,7 +26,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
         private readonly Dictionary<string, string> mduComments = new Dictionary<string, string>();
 
-        public void ReadProperties(string filePath, WaterFlowFMModelDefinition definition)
+        public void Read(string filePath, WaterFlowFMModelDefinition definition)
         {
             var logHandler = new LogHandler("reading the mdu file", log);
             OpenInputFile(filePath);

@@ -311,6 +311,7 @@
     <Compile Include="IO\ExtForceFilePerformanceTest.cs" />
     <Compile Include="IO\ExtForceFileTest.cs" />
     <Compile Include="IO\Files\Helpers\MorphologyFileBackwardsCompatibilityHelperTest.cs" />
+    <Compile Include="IO\Files\MduFileReaderTest.cs" />
     <Compile Include="IO\FMClassMapFileFunctionStoreTest.cs" />
     <Compile Include="IO\FMHisFileFunctionStoreTest.cs" />
     <Compile Include="IO\FMPartitionExporterTest.cs" />
