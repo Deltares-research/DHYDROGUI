@@ -12,7 +12,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
     public class MduFileReaderTest
     {
         [Test]
-        public void Read_FileWithOneKnownProperty_ThenPropertyValueHasChanged_PlusCheckNewReadResult()
+        public void Read_KnownPropertyNonDefaultPropertyValue_ThenPropertyValueHasChanged_PlusCheckNewReadResult()
         {
             // Setup
             string testFilePath = TestHelper.GetTestFilePath(Path.Combine("MduFileReaderTest", "OneKnownPropertyNonDefaultValue.mdu"));
@@ -37,7 +37,33 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
             }
         }
 
-        private bool Equals(WaterFlowFMModelDefinition definition1, WaterFlowFMModelDefinition definition2)
+        [Test]
+        public void Read_KnownPropertyNonDefaultComment_ThenPropertyCommentHasNotChanged_PlusCheckNewReadResult()
+        {
+            // Setup
+            string testFilePath = TestHelper.GetTestFilePath(Path.Combine("MduFileReaderTest", "OneKnownPropertyNonDefaultComment.mdu"));
+            using (var temporaryDir = new TemporaryDirectory())
+            {
+                string tempFilePath = temporaryDir.CopyTestDataFileToTempDirectory(testFilePath);
+                var oldDefinition = new WaterFlowFMModelDefinition();
+
+                // When
+                new MduFileReader().Read(tempFilePath, oldDefinition);
+
+                // Then
+                WaterFlowFMProperty property = oldDefinition.GetModelProperty("Program");
+                Assert.That(property.PropertyDefinition.FileCategoryName, Is.EqualTo("General"));
+                Assert.That(property.Value, Is.EqualTo("D-Flow FM"));
+                Assert.That(property.PropertyDefinition.Description, Is.EqualTo("Program name"));
+
+                // Equal result as new reader
+                var newDefinition = new WaterFlowFMModelDefinition();
+                new NewMduFileReader().Read(tempFilePath, newDefinition);
+                Assert.That(Equals(oldDefinition, newDefinition));
+            }
+        }
+
+        private static bool Equals(WaterFlowFMModelDefinition definition1, WaterFlowFMModelDefinition definition2)
         {
             if (definition1.Properties.Count != definition2.Properties.Count)
             {
