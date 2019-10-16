@@ -64,6 +64,30 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
             });
         }
 
+        [Test]
+        public void Read_KnownPropertyWithoutComment_ThenNewPropertyIsAddedToModelDefinitionWithPredefinedComment_PlusCheckNewReadResult()
+        {
+            ReadWithAssert("KnownPropertyWithoutComment.mdu", definition =>
+            {
+                WaterFlowFMProperty property = definition.GetModelProperty("Program");
+                Assert.That(property.PropertyDefinition.FileCategoryName, Is.EqualTo("General"));
+                Assert.That(property.Value, Is.EqualTo("D-Flow FM"));
+                Assert.That(property.PropertyDefinition.Description, Is.EqualTo("Program name"));
+            });
+        }
+
+        [Test]
+        public void Read_UnknownPropertyWithoutComment_ThenNewPropertyIsAddedToModelDefinitionWithNullComment_PlusCheckNewReadResult()
+        {
+            ReadWithAssert("UnknownPropertyWithoutComment.mdu", definition =>
+            {
+                WaterFlowFMProperty property = definition.GetModelProperty("MyCustomProperty");
+                Assert.That(property.PropertyDefinition.FileCategoryName, Is.EqualTo("General"));
+                Assert.That(property.Value, Is.EqualTo("MyValue"));
+                Assert.That(property.PropertyDefinition.Description, Is.EqualTo(null));
+            });
+        }
+
         private static void ReadWithAssert(string fileName, Action<WaterFlowFMModelDefinition> assertAction)
         {
             // Setup
@@ -81,7 +105,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
 
                 // Equal result as new reader
                 var newDefinition = new WaterFlowFMModelDefinition();
-                new NewMduFileReader().Read(tempFilePath, newDefinition);
+                NewMduFileReader.Read(tempFilePath, newDefinition);
                 Assert.That(Equals(oldDefinition, newDefinition));
             }
         }
@@ -104,7 +128,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
                 Assert.That(exception.Message, Is.EqualTo($"Invalid group on line {4} in file {tempFilePath}"));
 
                 // Equal result as new reader
-                void NewCall() => new MduFileReader().Read(tempFilePath, oldDefinition);
+                void NewCall() => NewMduFileReader.Read(tempFilePath, oldDefinition);
                 var newException = Assert.Throws<FormatException>(NewCall);
 
                 Assert.That(newException.Message, Is.EqualTo($"Invalid group on line {4} in file {tempFilePath}"));

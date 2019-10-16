@@ -6,22 +6,13 @@ using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 {
-    public class NewMduFileReader
+    public static class NewMduFileReader
     {
-        public void Read(string filePath, WaterFlowFMModelDefinition definition)
+        public static void Read(string filePath, WaterFlowFMModelDefinition definition)
         {
             IList<IDelftIniCategory> categories = new DelftIniReader().ReadDelftIniFile(filePath);
-
             UpdateLegacyNames(categories);
-
-
-            foreach (IDelftIniCategory category in categories)
-            {
-                foreach (IDelftIniProperty property in category.Properties)
-                {
-                    SetPropertyValue(definition, property, category.Name);
-                }
-            }
+            SetPropertyValues(definition, categories);
 
             definition.SetGuiTimePropertiesFromMduProperties();
         }
@@ -39,12 +30,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             });
         }
 
+        private static void SetPropertyValues(WaterFlowFMModelDefinition definition, IList<IDelftIniCategory> categories)
+        {
+            foreach (IDelftIniCategory category in categories)
+            {
+                foreach (IDelftIniProperty property in category.Properties)
+                {
+                    SetPropertyValue(definition, property, category.Name);
+                }
+            }
+        }
+
         private static void SetPropertyValue(WaterFlowFMModelDefinition definition, IDelftIniProperty property, string categoryName)
         {
             WaterFlowFMProperty modelProperty = definition.GetModelProperty(property.Name);
             if (modelProperty == null)
             {
-                WaterFlowFMPropertyDefinition newPropertyDefinition = WaterFlowFMPropertyDefinitionCreator.CreateForUnknownProperty(categoryName, property.Name, property.Comment);
+                string propertyComment = property.Comment == string.Empty ? null : property.Comment; // This is a little odd, maybe string.Empty is not so bad?.
+                WaterFlowFMPropertyDefinition newPropertyDefinition = WaterFlowFMPropertyDefinitionCreator.CreateForUnknownProperty(categoryName, property.Name, propertyComment);
                 var newProperty = new WaterFlowFMProperty(newPropertyDefinition, property.Value);
 
                 definition.AddProperty(newProperty);
