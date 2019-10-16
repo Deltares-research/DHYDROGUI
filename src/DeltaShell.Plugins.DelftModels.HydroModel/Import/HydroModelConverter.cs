@@ -81,10 +81,28 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
 
                 importer.ProgressChanged = (name, step, steps) => { };
 
-                foreach (var component in componentGroup)
+                foreach (dimrComponentXML component in componentGroup)
                 {
-                    var filePath = GetFilePath(rootFolder, component.inputFile, importer);
-                    var importedItem = importer.ImportItem(Path.GetFullPath(filePath));
+                    if (string.IsNullOrEmpty(component.workingDir))
+                    {
+                        throw new ArgumentException(string.Format(Resources.HydroModelConverter_AddModels_The_working_directory_is_missing_for_component__0__in_the_dimr_xml_,
+                                                        component.name));
+                    }
+
+                    if (component.inputFile == null)
+                    {
+                        throw new ArgumentException(string.Format(Resources.HydroModelConverter_AddModels_The_input_file_is_missing_for_component__0__in_the_dimr_xml_,
+                                                                  component.name));
+                    }
+
+                    string filePath = GetFilePath(rootFolder, component.workingDir.Trim(), component.inputFile.Trim(), importer);
+
+                    if (filePath == null)
+                    {
+                        continue;
+                    }
+
+                    object importedItem = importer.ImportItem(Path.GetFullPath(filePath));
 
                     if (!(importedItem is IActivity subModel))
                     {
@@ -115,10 +133,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
             logHandler.ReportInfo($"No importer found for extension: {extension}");
         }
 
-        private string GetFilePath(string rootFolder, string inputFileName, IDimrModelFileImporter importer)
+        private string GetFilePath(string rootFolder, string workingDirectory, string inputFileName,
+                                   IDimrModelFileImporter importer)
         {
-            var fileName = GetFileName(inputFileName);
-            var filePath = ComposeFilePath(rootFolder, fileName, importer);
+            string fileName = GetFileName(inputFileName);
+            string filePath = ComposeFilePath(rootFolder, workingDirectory, fileName, importer);
             return filePath;
         }
 
@@ -129,28 +148,39 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
                 : fileName;
         }
 
-        private string ComposeFilePath(string rootFolder, string fileName, IDimrModelFileImporter importer)
+        private string ComposeFilePath(string rootFolder, string workingDirectory, string fileName, IDimrModelFileImporter importer)
         {
             string[] pathParts;
 
             if (importer.MasterFileExtension.Equals("json"))
             {
-                var subFolder = importer.SubFolders.First();
-                var pathToFile = Path.Combine(rootFolder, subFolder, fileName);
-                var file = File.ReadAllText(pathToFile);
+                string pathToFile = Path.Combine(rootFolder, workingDirectory, fileName);
+                string file = File.ReadAllText(pathToFile);
                 var fileObject = JsonConvert.DeserializeObject<RtcXmlDirectoryLookup>(file);
+                string xmlDirectory = fileObject.XmlDirectory;
 
-                pathParts = new[] { rootFolder }
-                    .Concat(importer.SubFolders)
-                    .Plus(fileObject.XmlDirectory)
-                    .ToArray();
+                if (xmlDirectory == null)
+                {
+                    logHandler.ReportError(Resources.HydroModelConverter_ComposeFilePath_Could_not_import_RTC_model_the_settings_json_file_should_contain_an_xml_directory_);
+                    return null;
+                }
+
+                pathParts = new[]
+                {
+                    rootFolder,
+                    workingDirectory,
+                    xmlDirectory
+                };
+                    
             }
             else
             {
-                pathParts = new[] {rootFolder}
-                    .Concat(importer.SubFolders)
-                    .Plus(fileName)
-                    .ToArray();
+                pathParts = new[]
+                {
+                    rootFolder,
+                    workingDirectory,
+                    fileName
+                };
             }
 
             return Path.Combine(pathParts);

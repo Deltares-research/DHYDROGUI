@@ -116,14 +116,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
             var dimrFileImporter = mocks.DynamicMock<IDimrModelFileImporter>();
             dimrFileImporter.Expect(importer => importer.ImportItem(xmlFilePath)).Return(new object()).Repeat.Any();
             dimrFileImporter.Expect(importer => importer.MasterFileExtension).Return(XmlExtension).Repeat.Any();
-            dimrFileImporter.Expect(importer => importer.SubFolders).Return(new List<string>{SubFolder}).Repeat.Any();
-
+           
             mocks.ReplayAll();
 
             var dimrXml = new dimrXML
             {
                 component = new[] {new dimrComponentXML
                     {
+                        workingDir = SubFolder,
                         inputFile = FileName
                     }
                 }
@@ -160,6 +160,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
                 component = new[] {new dimrComponentXML
                     {
                         name = ComponentName,
+                        workingDir = SubFolder,
                         inputFile = FileName
                     }
                 }
@@ -195,6 +196,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
                 component = new[] {new dimrComponentXML
                     {
                         name = ComponentName,
+                        workingDir = SubFolder,
                         inputFile = FileName
                     }
                 },
@@ -233,7 +235,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
             var dimrFileImporter = mocks.DynamicMock<IDimrModelFileImporter>();
             dimrFileImporter.Expect(importer => importer.ImportItem(xmlFilePath)).Return(dimrModel).Repeat.Any();
             dimrFileImporter.Expect(importer => importer.MasterFileExtension).Return(XmlExtension).Repeat.Any();
-            dimrFileImporter.Expect(importer => importer.SubFolders).Return(new List<string> { SubFolder }).Repeat.Any();
+            
             return dimrFileImporter;
         }
     }

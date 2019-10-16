@@ -9,10 +9,5 @@ namespace DeltaShell.Dimr
         /// Extension (without dot) of the master definition file for this importer
         /// </summary>
         string MasterFileExtension { get; }
-
-        /// <summary>
-        /// Sub folder relative to the Dimr root folder.
-        /// </summary>
-        IEnumerable<string> SubFolders { get; }
     }
 }

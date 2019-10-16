@@ -54,10 +54,5 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         public bool OpenViewAfterImport => false;
 
         public string MasterFileExtension => "json";
-
-        public IEnumerable<string> SubFolders
-        {
-            get { yield return "rtc"; }
-        }
     }
 }
