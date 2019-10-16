@@ -54,7 +54,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Utils">
-      <HintPath>..\..\bin\Debug\DeltaShell\DelftTools.Utils.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.46180\lib\net461\DeltaShell\DelftTools.Utils.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DeltaShell.Plugins.SharpMapGis">
