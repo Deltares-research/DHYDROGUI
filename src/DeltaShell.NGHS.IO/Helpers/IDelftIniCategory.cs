@@ -11,7 +11,7 @@ namespace DeltaShell.NGHS.IO.Helpers
         /// <summary>
         /// The category name.
         /// </summary>
-        string Name { get; }
+        string Name { get; set; }
 
         /// <summary>
         /// The properties that belong to the category.

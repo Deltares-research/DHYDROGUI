@@ -47,6 +47,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
             });
         }
 
+        [Test]
+        public void Read_LegacyCategory_ThenCategoryNameIsUpdated_PlusCheckNewReadResult()
+        {
+            ReadWithAssert("LegacyCategory.mdu", definition =>
+            {
+                WaterFlowFMProperty knownProperty = definition.GetModelProperty("Program");
+                Assert.That(knownProperty.PropertyDefinition.FileCategoryName, Is.EqualTo("General"));
+                Assert.That(knownProperty.Value, Is.EqualTo("D-Flow FM"));
+                Assert.That(knownProperty.PropertyDefinition.Description, Is.EqualTo("Program name"));
+
+                WaterFlowFMProperty unknownProperty = definition.GetModelProperty("MyProperty");
+                Assert.That(unknownProperty.PropertyDefinition.FileCategoryName, Is.EqualTo("General"));
+                Assert.That(unknownProperty.Value, Is.EqualTo("MyValue"));
+                Assert.That(unknownProperty.PropertyDefinition.Description, Is.EqualTo("MyComment"));
+            });
+        }
+
         private static void ReadWithAssert(string fileName, Action<WaterFlowFMModelDefinition> assertAction)
         {
             // Setup

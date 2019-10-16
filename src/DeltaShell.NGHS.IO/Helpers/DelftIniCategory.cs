@@ -11,7 +11,7 @@ namespace DeltaShell.NGHS.IO.Helpers
     public class DelftIniCategory : IDelftIniCategory
     {
         /// <inheritdoc />
-        public string Name { get; }
+        public string Name { get; set; }
 
         /// <inheritdoc />
         public IList<IDelftIniProperty> Properties { get; set; }
