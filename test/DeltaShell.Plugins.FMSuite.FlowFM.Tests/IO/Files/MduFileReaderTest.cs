@@ -164,6 +164,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
             }
         }
 
+        [Test]
+        public void Read_PropertyValueOutOfRange_ThrowsFormatException_PlusCheckNewReadResult()
+        {
+            // Setup
+            string testFilePath = TestHelper.GetTestFilePath(Path.Combine("MduFileReaderTest", "UnifFrictTypeOutOfRange.mdu"));
+            using (var temporaryDir = new TemporaryDirectory())
+            {
+                string tempFilePath = temporaryDir.CopyTestDataFileToTempDirectory(testFilePath);
+                var oldDefinition = new WaterFlowFMModelDefinition();
+
+                // When
+                void Call() => new MduFileReader().Read(tempFilePath, oldDefinition);
+                void NewCall() => NewMduFileReader.Read(tempFilePath, oldDefinition);
+
+                // Then
+                TestHelper.AssertLogMessageIsGenerated(Call, "During reading the mdu file the following warnings were reported:\r\n- An unsupported option for *Uniform friction type* has been detected and the default value will be used.");
+                TestHelper.AssertLogMessageIsGenerated(NewCall, "During reading the mdu file the following warnings were reported:\r\n- An unsupported option for *Uniform friction type* has been detected and the default value will be used.");
+            }
+        }
+
         private static bool Equals(WaterFlowFMModelDefinition definition1, WaterFlowFMModelDefinition definition2)
         {
             IEnumerable<string> difference1 = definition2.Properties.Select(p => p.PropertyDefinition.MduPropertyName)

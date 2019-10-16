@@ -1,13 +1,19 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.IO;
+using DeltaShell.NGHS.IO.Handlers;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
+using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 {
     public static class NewMduFileReader
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(NewMduFileReader));
+
         public static void Read(string filePath, WaterFlowFMModelDefinition definition)
         {
             IList<IDelftIniCategory> categories = new DelftIniReader().ReadDelftIniFile(filePath);
@@ -61,7 +67,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 return;
             }
 
-            modelProperty.SetValueAsString(property.Value);
+            var logHandler = new LogHandler("reading the mdu file", log);
+            try
+            {
+                modelProperty.SetValueAsString(property.Value);
+            }
+            catch (FormatException e) when (e.InnerException is FormatException)
+            {
+                logHandler.ReportWarningFormat(
+                    Resources.MduFile_ReadProperties_An_unsupported_option_for_0_has_been_detected,
+                    modelProperty.PropertyDefinition.Caption);
+            }
+            finally
+            {
+                logHandler.LogReport();
+            }
         }
     }
 }
