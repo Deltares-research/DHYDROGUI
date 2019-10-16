@@ -61,7 +61,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 return;
             }
 
-            modelProperty.Value = property.Value;
+            modelProperty.SetValueAsString(property.Value);
         }
     }
 }

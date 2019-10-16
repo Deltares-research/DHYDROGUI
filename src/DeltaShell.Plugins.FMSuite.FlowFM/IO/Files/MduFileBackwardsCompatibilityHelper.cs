@@ -19,7 +19,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
         private static readonly IDictionary<string, string> categoryPropertyMapping = new Dictionary<string, string>
         {
-            {"model", "General" }
+            {"model", "General" },
+            {"enclosurefile", "GridEnclosureFile"},
+            {"trtdt", "DtTrt"},
+            {"botlevuni", "BedLevUni"},
+            {"botlevtype", "BedLevType"},
+            {"mduformatversion", "FileVersion"}
         };
 
         /// <summary>

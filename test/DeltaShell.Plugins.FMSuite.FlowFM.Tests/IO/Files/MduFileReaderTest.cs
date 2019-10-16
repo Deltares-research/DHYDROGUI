@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using DelftTools.TestUtils;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
@@ -98,6 +100,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
             });
         }
 
+        [Test]
+        public void Read_LegacyEnclosureFileProperty_ThenPropertyNameIsUpdated_PlusCheckNewReadResult()
+        {
+            ReadWithAssert("LegacyProperty_EnclosureFile.mdu", definition =>
+            {
+                Assert.IsNull(definition.GetModelProperty("EnclosureFile"));
+
+                WaterFlowFMProperty property = definition.GetModelProperty("GridEnclosureFile");
+                Assert.That(property.PropertyDefinition.FileCategoryName, Is.EqualTo("geometry"));
+                Assert.That(property.Value, Is.EqualTo(new List<string>
+                {
+                    "enclosures_enc.pol"
+                }));
+                Assert.That(property.PropertyDefinition.Description, Is.EqualTo("Enclosure polygon file *.pol (third column 1/-1: inside/outside)"));
+            });
+        }
+
         private static void ReadWithAssert(string fileName, Action<WaterFlowFMModelDefinition> assertAction)
         {
             // Setup
@@ -147,6 +166,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
 
         private static bool Equals(WaterFlowFMModelDefinition definition1, WaterFlowFMModelDefinition definition2)
         {
+            IEnumerable<string> difference1 = definition2.Properties.Select(p => p.PropertyDefinition.MduPropertyName)
+                                                         .Except(definition1.Properties.Select(p => p.PropertyDefinition.MduPropertyName));
+            IEnumerable<string> difference2 = definition1.Properties.Select(p => p.PropertyDefinition.MduPropertyName)
+                                                         .Except(definition2.Properties.Select(p => p.PropertyDefinition.MduPropertyName));
+
             Assert.That(definition1.Properties.Count, Is.EqualTo(definition2.Properties.Count), "The amount of properties is not the same.");
 
             int propertyCount = definition1.Properties.Count;

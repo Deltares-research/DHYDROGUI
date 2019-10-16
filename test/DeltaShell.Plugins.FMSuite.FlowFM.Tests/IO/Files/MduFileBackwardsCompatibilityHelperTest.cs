@@ -9,14 +9,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
     [TestFixture]
     public class MduFileBackwardsCompatibilityHelperTest
     {
-        [Test]
-        public void GetUpdatedPropertyName_WithLegacyName_ThenUpdatedNameIsReturned()
+        [TestCase("model", "General")]
+        [TestCase("Model", "General")]
+        [TestCase("enclosurefile", "GridEnclosureFile")]
+        [TestCase("EnclosureFile", "GridEnclosureFile")]
+        [TestCase("trtdt", "DtTrt")]
+        [TestCase("Trtdt", "DtTrt")]
+        [TestCase("botlevuni", "BedLevUni")]
+        [TestCase("BotLevUni", "BedLevUni")]
+        [TestCase("botlevtype", "BedLevType")]
+        [TestCase("BotLevType", "BedLevType")]
+        [TestCase("mduformatversion", "FileVersion")]
+        [TestCase("MduFormatVersion", "FileVersion")]
+        public void GetUpdatedPropertyName_WithLegacyName_ThenUpdatedNameIsReturned(string oldName, string newName)
         {
             // Call
-            string updatedName = MduFileBackwardsCompatibilityHelper.GetUpdatedPropertyName("model");
+            string updatedName = MduFileBackwardsCompatibilityHelper.GetUpdatedPropertyName(oldName);
 
             // Assert
-            Assert.That(updatedName, Is.EqualTo("General"));
+            Assert.That(updatedName, Is.EqualTo(newName));
         }
 
         [Test]
