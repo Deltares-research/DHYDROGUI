@@ -15,7 +15,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 foreach (IDelftIniProperty property in category.Properties)
                 {
                     WaterFlowFMProperty modelProperty = definition.GetModelProperty(property.Name);
-                    modelProperty.Value = property.Value;}
+                    if (modelProperty == null)
+                    {
+                        WaterFlowFMPropertyDefinition newPropertyDefinition =
+                            WaterFlowFMPropertyDefinitionCreator.CreateForUnknownProperty(
+                                category.Name, property.Name, property.Comment);
+                        var newProperty = new WaterFlowFMProperty(newPropertyDefinition, property.Value);
+
+                        definition.AddProperty(newProperty);
+                        continue;
+                    }
+
+                    modelProperty.Value = property.Value;
+
+                }
             }
 
             definition.SetGuiTimePropertiesFromMduProperties();

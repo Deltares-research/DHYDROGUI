@@ -63,6 +63,32 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
             }
         }
 
+        [Test]
+        public void Read_UnknownProperty_ThenNewPropertyIsAddedToModelDefinition_PlusCheckNewReadResult()
+        {
+            // Setup
+            string testFilePath = TestHelper.GetTestFilePath(Path.Combine("MduFileReaderTest", "OneUnknownProperty.mdu"));
+            using (var temporaryDir = new TemporaryDirectory())
+            {
+                string tempFilePath = temporaryDir.CopyTestDataFileToTempDirectory(testFilePath);
+                var oldDefinition = new WaterFlowFMModelDefinition();
+
+                // When
+                new MduFileReader().Read(tempFilePath, oldDefinition);
+
+                // Then
+                WaterFlowFMProperty property = oldDefinition.GetModelProperty("MyCustomProperty");
+                Assert.That(property.PropertyDefinition.FileCategoryName, Is.EqualTo("General"));
+                Assert.That(property.Value, Is.EqualTo("MyValue"));
+                Assert.That(property.PropertyDefinition.Description, Is.EqualTo("MyDescription"));
+
+                // Equal result as new reader
+                var newDefinition = new WaterFlowFMModelDefinition();
+                new NewMduFileReader().Read(tempFilePath, newDefinition);
+                Assert.That(Equals(oldDefinition, newDefinition));
+            }
+        }
+
         private static bool Equals(WaterFlowFMModelDefinition definition1, WaterFlowFMModelDefinition definition2)
         {
             if (definition1.Properties.Count != definition2.Properties.Count)

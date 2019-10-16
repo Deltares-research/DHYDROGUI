@@ -321,10 +321,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
 
             WaterFlowFMPropertyDefinition propertyDefinition =
-                WaterFlowFMProperty.CreatePropertyDefinitionForUnknownProperty(fileCategoryName,
-                                                                               delftIniProperty.Name,
-                                                                               delftIniProperty.Comment,
-                                                                               PropertySource.MorphologyFile);
+                WaterFlowFMPropertyDefinitionCreator.CreateForUnknownProperty(fileCategoryName,
+                                                                              delftIniProperty.Name,
+                                                                              delftIniProperty.Comment,
+                                                                              PropertySource.MorphologyFile);
             propertyDefinition.Category = categoryName;
 
             var modelProperty = new WaterFlowFMProperty(propertyDefinition, delftIniProperty.Value);

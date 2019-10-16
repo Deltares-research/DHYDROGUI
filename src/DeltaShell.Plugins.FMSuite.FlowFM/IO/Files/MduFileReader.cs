@@ -121,10 +121,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                         else
                         {
                             // create definition for unknown property:
-                            WaterFlowFMPropertyDefinition propDef = WaterFlowFMProperty.CreatePropertyDefinitionForUnknownProperty(
-                                currentGroupName,
-                                mduPropertyName,
-                                mduComment);
+                            WaterFlowFMPropertyDefinition propDef =
+                                WaterFlowFMPropertyDefinitionCreator.CreateForUnknownProperty(
+                                    currentGroupName,
+                                    mduPropertyName,
+                                    mduComment);
 
                             currentProperty = new WaterFlowFMProperty(propDef, mduPropertyValue);
 
