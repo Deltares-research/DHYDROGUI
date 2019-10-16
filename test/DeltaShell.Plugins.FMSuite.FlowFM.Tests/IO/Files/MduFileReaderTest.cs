@@ -88,6 +88,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
             });
         }
 
+        [Test]
+        public void Read_HdamPropertyInFile_ThenPropertyIsNotAddedToModelDefinition_PlusCheckNewReadResult()
+        {
+            ReadWithAssert("HdamPropertyInFile.mdu", definition =>
+            {
+                WaterFlowFMProperty property = definition.GetModelProperty("hdam");
+                Assert.IsNull(property);
+            });
+        }
+
         private static void ReadWithAssert(string fileName, Action<WaterFlowFMModelDefinition> assertAction)
         {
             // Setup
@@ -137,10 +147,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
 
         private static bool Equals(WaterFlowFMModelDefinition definition1, WaterFlowFMModelDefinition definition2)
         {
-            if (definition1.Properties.Count != definition2.Properties.Count)
-            {
-                return false;
-            }
+            Assert.That(definition1.Properties.Count, Is.EqualTo(definition2.Properties.Count), "The amount of properties is not the same.");
 
             int propertyCount = definition1.Properties.Count;
             for (var i = 0; i < propertyCount; i++)

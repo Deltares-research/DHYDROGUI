@@ -12,6 +12,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         {
             IList<IDelftIniCategory> categories = new DelftIniReader().ReadDelftIniFile(filePath);
             UpdateLegacyNames(categories);
+            RemoveRedundantCategories(categories);
+
             SetPropertyValues(definition, categories);
 
             definition.SetGuiTimePropertiesFromMduProperties();
@@ -28,6 +30,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                         MduFileBackwardsCompatibilityHelper.GetUpdatedPropertyName(property.Name);
                 });
             });
+        }
+
+        private static void RemoveRedundantCategories(IList<IDelftIniCategory> categories)
+        {
+            categories.ForEach(category => { category.Properties.RemoveAllWhere(p => p.Name.ToLowerInvariant() == "hdam"); });
         }
 
         private static void SetPropertyValues(WaterFlowFMModelDefinition definition, IList<IDelftIniCategory> categories)
