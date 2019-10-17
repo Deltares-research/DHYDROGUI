@@ -38,6 +38,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
         }
 
         [Test]
+        public void Read_KnownPropertyInLowerCase_ThenPropertyValueHasChanged_PlusCheckNewReadResult()
+        {
+            ReadWithAssert("KnownPropertyLowerCase.mdu", definition =>
+            {
+                WaterFlowFMProperty property = definition.GetModelProperty("Program");
+                Assert.That(property.PropertyDefinition.FileCategoryName, Is.EqualTo("General"));
+                Assert.That(property.Value, Is.EqualTo("MyProgram"));
+                Assert.That(property.PropertyDefinition.Description, Is.EqualTo("Program name"));
+            });
+        }
+
+        [Test]
         public void Read_CustomProperty_ThenNewPropertyIsAddedToModelDefinition_PlusCheckNewReadResult()
         {
             ReadWithAssert("CustomProperty.mdu", definition =>
