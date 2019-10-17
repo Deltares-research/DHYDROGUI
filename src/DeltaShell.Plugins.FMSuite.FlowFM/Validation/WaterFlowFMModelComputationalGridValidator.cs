@@ -33,15 +33,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             }
 
             var branchesWithoutGridSegments = GetBranchesWithoutGridSegments(networkDiscretization).ToList();
+/*
             var branchLocationsLookup =
                 networkDiscretization.Locations.Values.GroupBy(l => l.Branch).ToDictionary(g => g.Key, g => g);
+*/
 
             foreach (var branch in networkDiscretization.Network.Branches)
             {
                 var sewerConnection = branch as ISewerConnection;
                 if(sewerConnection != null && Math.Abs(sewerConnection.Length) < 10e-6) continue;
 
-                if (branchesWithoutGridSegments.Contains(branch) || !branchLocationsLookup.ContainsKey(branch))
+                if (branchesWithoutGridSegments.Contains(branch))//|| !branchLocationsLookup.ContainsKey(branch)
                 {
                     var message =
                         string.Format(
@@ -52,11 +54,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                     continue; //no computational grid, so no sense reporting additional errors
                 }
 
-                var branchLocations = branchLocationsLookup[branch].ToList();
+                /*var branchLocations = branchLocationsLookup[branch].ToList();*/
 
-                issues.AddRange(CheckBranchLocations(networkDiscretization, branch, branchLocations));
+                //issues.AddRange(CheckBranchLocations(networkDiscretization, branch));
 
-                issues.AddRange(CheckBranchStructureLocations(networkDiscretization, branch, branchLocations));
+                issues.AddRange(CheckBranchStructureLocations(networkDiscretization, branch, networkDiscretization.GetLocationsForBranch(branch)));
 
                 /* QBoundaries and Resistances tests removed as we do not need them now. 
                     * Once snapped features are available for the 1D they will be required, needed validations
@@ -72,6 +74,31 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             }
 
             return new ValidationReport(CategoryName, issues, subReports);
+        }
+
+        private static IEnumerable<ValidationIssue> CheckBranchLocations(IDiscretization networkDiscretization, IBranch branch)
+        {
+            /*var firstXCoordinate = branch?.Geometry?.Coordinates?.FirstOrDefault()?.X;
+            if(!firstXCoordinate.HasValue) yield break;
+            var firstYCoordinate = branch?.Geometry?.Coordinates?.FirstOrDefault()?.Y;
+            if (!firstYCoordinate.HasValue) yield break;
+            var lastXCoordinate = branch?.Geometry?.Coordinates?.LastOrDefault()?.X;
+            if (!lastXCoordinate.HasValue) yield break;
+            var lastYCoordinate = branch?.Geometry?.Coordinates?.LastOrDefault()?.Y;
+            if (!lastYCoordinate.HasValue) yield break;
+            if (networkDiscretization.GetLocationOnBranch(firstXCoordinate.Value, firstYCoordinate.Value) == null ||
+                networkDiscretization.GetLocationOnBranch(lastXCoordinate.Value, lastYCoordinate.Value) == null)*/
+            var locationsForThisBranch = networkDiscretization.GetLocationsForBranch(branch);
+            if(!locationsForThisBranch.Any(l => l.Chainage <= BranchFeature.Epsilon) ||
+               !locationsForThisBranch.Any(l => DoubleEquals(l.Chainage, branch.Length)))
+            {
+                var message = string.Format(
+                    Resources
+                        .WaterFlowFMModelComputationalGridValidator_CheckBranchLocations_Not_enough_grid_points_defined_for_branch__0___Make_sure_you_have_at_least_gridpoints_at_start_and_end_of_branch_,
+                    branch.Name);
+
+                yield return new ValidationIssue(branch, ValidationSeverity.Error, message, networkDiscretization);
+            }
         }
 
         private static bool NetworkDiscretizationIsValid(IDiscretization networkDiscretization)
@@ -110,7 +137,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 
         private static IEnumerable<ValidationIssue> CheckBranchStructureLocations(IDiscretization networkDiscretization,
                                                                                   IBranch branch,
-                                                                                  List<INetworkLocation> branchLocations)
+                                                                                  IList<INetworkLocation> branchLocations)
         {
             // There should be at least one grid point between structures
             var branchStructures =
@@ -135,21 +162,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                     new ValidationIssue(branchStructureSecond.GetStructureType(), ValidationSeverity.Error, message, branchStructureFirst.Chainage);
             }
         }
-
-        private static IEnumerable<ValidationIssue> CheckBranchLocations(IDiscretization networkDiscretization,
-                                                                         IBranch branch,
-                                                                         IList<INetworkLocation> branchLocations)
-        {
-            // Each branch should have calculation point at start and end
-            if (!branchLocations.Any(l => Math.Abs(l.Chainage) < BranchFeature.Epsilon) ||
-                !branchLocations.Any(l => DoubleEquals(l.Chainage, branch.Length)))
-            {
-                var message = string.Format(Resources.WaterFlowFMModelComputationalGridValidator_CheckBranchLocations_Not_enough_grid_points_defined_for_branch__0___Make_sure_you_have_at_least_gridpoints_at_start_and_end_of_branch_,
-                                            branch.Name);
-
-                yield return new ValidationIssue(branch, ValidationSeverity.Error, message, networkDiscretization);
-            }
-        }
+        
 
         private static IEnumerable<IBranch> GetBranchesWithoutGridSegments(IDiscretization networkDiscretization)
         {
@@ -159,8 +172,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             {
                 branches.Remove(seg.Branch);
             }
+            var otherBranches = new HashSet<IBranch>();
+            foreach (var branch in branches)
+            {
+                var b = networkDiscretization.Locations?.Values.Any(l => l.Geometry.Coordinate.Equals(branch.Source.Geometry.Coordinate));
+                if (b != null)
+                {
+                    otherBranches.Add(branch);
+                    continue;
+                }
+                b = networkDiscretization.Locations?.Values.Any(l => l.Geometry.Coordinate.Equals(branch.Target.Geometry.Coordinate));
+                if (b != null)
+                {
+                    otherBranches.Add(branch);
+                }
+            }
 
-            return branches;
+            branches.ExceptWith(otherBranches);
+            return branches;//.RemoveWhere(b=>networkDiscretization.Locations.Values.Select(l => l.Geometry.Coordinate.Equals(b.Source.Geometry.Coordinate)));
         }
 
         private static IEnumerable<ValidationReport> ValidateIds(IDiscretization networkDiscretization)
