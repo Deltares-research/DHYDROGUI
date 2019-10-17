@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -692,6 +692,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
                 return ResourceManager.GetString("MorphologySediment_ReadCategoryProperties_Unsupported_keyword___0___at_line___1__" +
                         "_detected_and_will_be_passed_to_the_computational_core__Note_that_some_data_or_t" +
                         "he_connection_to_linked_files_may_be_lost_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Obsolete Fixed Weir Scheme {0} detected and it will be corrected to the default Numerical Scheme..
+        /// </summary>
+        public static string NewMduFileReader_Obsolete_Fixed_Weir_Scheme__0__detected {
+            get {
+                return ResourceManager.GetString("NewMduFileReader_Obsolete_Fixed_Weir_Scheme__0__detected", resourceCulture);
             }
         }
         

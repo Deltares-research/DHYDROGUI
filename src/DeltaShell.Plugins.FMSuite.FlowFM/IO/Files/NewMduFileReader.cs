@@ -20,28 +20,34 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             IList<IDelftIniCategory> categories = new DelftIniReader().ReadDelftIniFile(filePath);
             UpdateLegacyNames(categories);
             RemoveRedundantCategories(categories);
-
-            IDelftIniProperty fixedWeirProperty = categories.SelectMany(c => c.Properties)
-                                                            .FirstOrDefault(p => p.Name.ToLowerInvariant() == KnownProperties.FixedWeirScheme);
-
-            if (fixedWeirProperty != null)
-            {
-                string propertyValue = fixedWeirProperty.Value;
-                if (propertyValue != "0" && propertyValue != "6" && propertyValue != "8" && propertyValue != "9")
-                {
-                    log.Warn(string.Format(
-                                 "Obsolete Fixed Weir Scheme {0} detected and it will be corrected to the default Numerical Scheme.",
-                                 propertyValue));
-                    fixedWeirProperty.Value = "6";
-                }
-            }
+            CorrectInvalidFixedWeirSchemeValue(categories);
 
             SetPropertyValues(definition, categories);
 
             definition.SetGuiTimePropertiesFromMduProperties();
         }
 
-        private static void UpdateLegacyNames(IList<IDelftIniCategory> categories)
+        private static void CorrectInvalidFixedWeirSchemeValue(IEnumerable<IDelftIniCategory> categories)
+        {
+            IDelftIniProperty fixedWeirProperty = categories.SelectMany(c => c.Properties)
+                                                            .FirstOrDefault(p => p.Name.ToLowerInvariant() == KnownProperties.FixedWeirScheme);
+
+            if (fixedWeirProperty == null)
+            {
+                return;
+            }
+
+            string propertyValue = fixedWeirProperty.Value;
+            if (propertyValue == "0" || propertyValue == "6" || propertyValue == "8" || propertyValue == "9")
+            {
+                return;
+            }
+
+            log.Warn(string.Format(Resources.NewMduFileReader_Obsolete_Fixed_Weir_Scheme__0__detected, propertyValue));
+            fixedWeirProperty.Value = "6";
+        }
+
+        private static void UpdateLegacyNames(IEnumerable<IDelftIniCategory> categories)
         {
             categories.ForEach(category =>
             {
@@ -54,12 +60,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             });
         }
 
-        private static void RemoveRedundantCategories(IList<IDelftIniCategory> categories)
+        private static void RemoveRedundantCategories(IEnumerable<IDelftIniCategory> categories)
         {
             categories.ForEach(category => { category.Properties.RemoveAllWhere(p => p.Name.ToLowerInvariant() == "hdam"); });
         }
 
-        private static void SetPropertyValues(WaterFlowFMModelDefinition definition, IList<IDelftIniCategory> categories)
+        private static void SetPropertyValues(WaterFlowFMModelDefinition definition, IEnumerable<IDelftIniCategory> categories)
         {
             foreach (IDelftIniCategory category in categories)
             {

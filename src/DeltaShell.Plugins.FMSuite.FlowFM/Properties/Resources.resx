@@ -601,4 +601,7 @@ Manhole with unique id '{4}' is not imported.</value>
   <data name="WaterFlowFMModel_DimrModel_GetDataItemByItemString_parameter_name__0__in__1__cannot_be_found_in_the_FM_model" xml:space="preserve">
     <value>parameter name {0} in {1} cannot be found in the FM model.</value>
   </data>
+  <data name="NewMduFileReader_Obsolete_Fixed_Weir_Scheme__0__detected" xml:space="preserve">
+    <value>Obsolete Fixed Weir Scheme {0} detected and it will be corrected to the default Numerical Scheme.</value>
+  </data>
 </root>
