@@ -12,10 +12,18 @@ using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 {
+    /// <summary>
+    /// Reader for mdu files.
+    /// </summary>
     public static class NewMduFileReader
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(NewMduFileReader));
 
+        /// <summary>
+        /// Reads data from an mdu file and sets this data on a <see cref="WaterFlowFMModelDefinition"/>.
+        /// </summary>
+        /// <param name="filePath"> The file path of the mdu file. </param>
+        /// <param name="definition"> The model definition. </param>
         public static void Read(string filePath, WaterFlowFMModelDefinition definition)
         {
             IList<IDelftIniCategory> categories = new DelftIniReader().ReadDelftIniFile(filePath);
@@ -80,24 +88,33 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             {
                 foreach (IDelftIniProperty property in category.Properties)
                 {
-                    SetPropertyValue(definition, property, category.Name);
+                    if (!definition.ContainsProperty(property.Name))
+                    {
+                        WaterFlowFMProperty newFmProperty = CreateFmProperty(property, category);
+                        definition.AddProperty(newFmProperty);
+                        continue;
+                    }
+
+                    SetPropertyValue(definition, property);
                 }
             }
         }
 
-        private static void SetPropertyValue(WaterFlowFMModelDefinition definition, IDelftIniProperty property, string categoryName)
+        private static WaterFlowFMProperty CreateFmProperty(IDelftIniProperty property, IDelftIniCategory category)
+        {
+            string propertyComment = property.Comment == string.Empty
+                                         ? null 
+                                         : property.Comment; // This is a little odd, maybe string.Empty is not so bad?.
+
+            WaterFlowFMPropertyDefinition newPropertyDefinition =
+                WaterFlowFMPropertyDefinitionCreator.CreateForUnknownProperty(category.Name, property.Name, propertyComment);
+
+            return new WaterFlowFMProperty(newPropertyDefinition, property.Value);
+        }
+
+        private static void SetPropertyValue(WaterFlowFMModelDefinition definition, IDelftIniProperty property)
         {
             WaterFlowFMProperty modelProperty = definition.GetModelProperty(property.Name);
-            if (modelProperty == null)
-            {
-                string propertyComment = property.Comment == string.Empty ? null : property.Comment; // This is a little odd, maybe string.Empty is not so bad?.
-                WaterFlowFMPropertyDefinition newPropertyDefinition = WaterFlowFMPropertyDefinitionCreator.CreateForUnknownProperty(categoryName, property.Name, propertyComment);
-                var newProperty = new WaterFlowFMProperty(newPropertyDefinition, property.Value);
-
-                definition.AddProperty(newProperty);
-                return;
-            }
-
             var logHandler = new LogHandler("reading the mdu file", log);
             try
             {
