@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.Handlers;
@@ -19,6 +20,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             IList<IDelftIniCategory> categories = new DelftIniReader().ReadDelftIniFile(filePath);
             UpdateLegacyNames(categories);
             RemoveRedundantCategories(categories);
+
+            IDelftIniProperty fixedWeirProperty = categories.SelectMany(c => c.Properties)
+                                                            .FirstOrDefault(p => p.Name.ToLowerInvariant() == KnownProperties.FixedWeirScheme);
+
+            if (fixedWeirProperty != null)
+            {
+                string propertyValue = fixedWeirProperty.Value;
+                if (propertyValue != "0" && propertyValue != "6" && propertyValue != "8" && propertyValue != "9")
+                {
+                    log.Warn(string.Format(
+                                 "Obsolete Fixed Weir Scheme {0} detected and it will be corrected to the default Numerical Scheme.",
+                                 propertyValue));
+                    fixedWeirProperty.Value = "6";
+                }
+            }
 
             SetPropertyValues(definition, categories);
 

@@ -155,6 +155,37 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
             });
         }
 
+        [Test]
+        public void Read_InvalidFixedWeirSchemeValue_ThenPropertyValueIsSetTo6_PlusCheckNewReadResult()
+        {
+            ReadWithAssert("InvalidFixedWeirSchemeValue.mdu", definition =>
+            {
+                WaterFlowFMProperty property = definition.GetModelProperty("FixedWeirScheme");
+                Assert.That(property.GetValueAsString(), Is.EqualTo("6"));
+            });
+        }
+
+        [Test]
+        public void Read_InvalidFixedWeirSchemeValue_ThenWarningMessageIsLogged_PlusCheckNewReadResult()
+        {
+            // Setup
+            string testFilePath = TestHelper.GetTestFilePath(Path.Combine("MduFileReaderTest", "InvalidFixedWeirSchemeValue.mdu"));
+            using (var temporaryDir = new TemporaryDirectory())
+            {
+                string tempFilePath = temporaryDir.CopyTestDataFileToTempDirectory(testFilePath);
+                var oldDefinition = new WaterFlowFMModelDefinition();
+
+                // Call
+                void Call() => new MduFileReader().Read(tempFilePath, oldDefinition);
+                void NewCall() => NewMduFileReader.Read(tempFilePath, oldDefinition);
+
+                // Assert
+                const string expectedMessage = "Obsolete Fixed Weir Scheme 222 detected and it will be corrected to the default Numerical Scheme.";
+                TestHelper.AssertLogMessageIsGenerated(Call, expectedMessage);
+                TestHelper.AssertLogMessageIsGenerated(NewCall, expectedMessage);
+            }
+        }
+
         private static void ReadWithAssert(string fileName, Action<WaterFlowFMModelDefinition> assertAction)
         {
             // Setup
@@ -164,10 +195,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
                 string tempFilePath = temporaryDir.CopyTestDataFileToTempDirectory(testFilePath);
                 var oldDefinition = new WaterFlowFMModelDefinition();
 
-                // When
+                // Call
                 new MduFileReader().Read(tempFilePath, oldDefinition);
 
-                // Then
+                // Assert
                 assertAction(oldDefinition);
 
                 // Equal result as new reader
@@ -187,10 +218,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
                 string tempFilePath = temporaryDir.CopyTestDataFileToTempDirectory(testFilePath);
                 var oldDefinition = new WaterFlowFMModelDefinition();
 
-                // When
+                // Call
                 void Call() => new MduFileReader().Read(tempFilePath, oldDefinition);
 
-                // Then
+                // Assert
                 var exception = Assert.Throws<FormatException>(Call);
                 Assert.That(exception.Message, Is.EqualTo($"Invalid group on line {4} in file {tempFilePath}"));
 
@@ -212,11 +243,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
                 string tempFilePath = temporaryDir.CopyTestDataFileToTempDirectory(testFilePath);
                 var oldDefinition = new WaterFlowFMModelDefinition();
 
-                // When
+                // Call
                 void Call() => new MduFileReader().Read(tempFilePath, oldDefinition);
                 void NewCall() => NewMduFileReader.Read(tempFilePath, oldDefinition);
 
-                // Then
+                // Assert
                 TestHelper.AssertLogMessageIsGenerated(Call, "During reading the mdu file the following warnings were reported:\r\n- An unsupported option for *Uniform friction type* has been detected and the default value will be used.");
                 TestHelper.AssertLogMessageIsGenerated(NewCall, "During reading the mdu file the following warnings were reported:\r\n- An unsupported option for *Uniform friction type* has been detected and the default value will be used.");
             }
