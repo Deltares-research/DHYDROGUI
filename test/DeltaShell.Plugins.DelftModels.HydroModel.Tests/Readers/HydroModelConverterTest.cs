@@ -297,6 +297,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void GivenValidDimrXmlObjectWithXmlDirIsNullInRtcJsonFile_WhenConvertingToHydroModel_ThenRtcModelShouldNotBeImported()
         {
             // Given
