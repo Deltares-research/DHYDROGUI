@@ -19,9 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
             ReadWithAssert("KnownPropertyNonDefaultValue.mdu", definition =>
             {
                 WaterFlowFMProperty property = definition.GetModelProperty("Program");
-                Assert.That(property.PropertyDefinition.FileCategoryName, Is.EqualTo("General"));
-                Assert.That(property.Value, Is.EqualTo("MyProgram"));
-                Assert.That(property.PropertyDefinition.Description, Is.EqualTo("Program name"));
+                AssertPropertyValues(property, "General", "MyProgram", "Program name");
             });
         }
 
@@ -31,9 +29,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
             ReadWithAssert("KnownPropertyNonDefaultComment.mdu", definition =>
             {
                 WaterFlowFMProperty property = definition.GetModelProperty("Program");
-                Assert.That(property.PropertyDefinition.FileCategoryName, Is.EqualTo("General"));
-                Assert.That(property.Value, Is.EqualTo("D-Flow FM"));
-                Assert.That(property.PropertyDefinition.Description, Is.EqualTo("Program name"));
+                AssertPropertyValues(property, "General", "D-Flow FM", "Program name");
             });
         }
 
@@ -43,9 +39,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
             ReadWithAssert("KnownPropertyLowerCase.mdu", definition =>
             {
                 WaterFlowFMProperty property = definition.GetModelProperty("Program");
-                Assert.That(property.PropertyDefinition.FileCategoryName, Is.EqualTo("General"));
-                Assert.That(property.Value, Is.EqualTo("MyProgram"));
-                Assert.That(property.PropertyDefinition.Description, Is.EqualTo("Program name"));
+                AssertPropertyValues(property, "General", "MyProgram", "Program name");
             });
         }
 
@@ -55,9 +49,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
             ReadWithAssert("CustomProperty.mdu", definition =>
             {
                 WaterFlowFMProperty property = definition.GetModelProperty("MyCustomProperty");
-                Assert.That(property.PropertyDefinition.FileCategoryName, Is.EqualTo("General"));
-                Assert.That(property.Value, Is.EqualTo("MyValue"));
-                Assert.That(property.PropertyDefinition.Description, Is.EqualTo("MyDescription"));
+                AssertPropertyValues(property, "General", "MyValue", "MyDescription");
             });
         }
 
@@ -67,14 +59,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
             ReadWithAssert("LegacyCategory.mdu", definition =>
             {
                 WaterFlowFMProperty knownProperty = definition.GetModelProperty("Program");
-                Assert.That(knownProperty.PropertyDefinition.FileCategoryName, Is.EqualTo("General"));
-                Assert.That(knownProperty.Value, Is.EqualTo("D-Flow FM"));
-                Assert.That(knownProperty.PropertyDefinition.Description, Is.EqualTo("Program name"));
+                AssertPropertyValues(knownProperty, "General", "D-Flow FM", "Program name");
 
-                WaterFlowFMProperty unknownProperty = definition.GetModelProperty("MyProperty");
-                Assert.That(unknownProperty.PropertyDefinition.FileCategoryName, Is.EqualTo("General"));
-                Assert.That(unknownProperty.Value, Is.EqualTo("MyValue"));
-                Assert.That(unknownProperty.PropertyDefinition.Description, Is.EqualTo("MyComment"));
+                WaterFlowFMProperty customProperty = definition.GetModelProperty("MyProperty");
+                AssertPropertyValues(customProperty, "General", "MyValue", "MyComment");
             });
         }
 
@@ -84,9 +72,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
             ReadWithAssert("KnownPropertyWithoutComment.mdu", definition =>
             {
                 WaterFlowFMProperty property = definition.GetModelProperty("Program");
-                Assert.That(property.PropertyDefinition.FileCategoryName, Is.EqualTo("General"));
-                Assert.That(property.Value, Is.EqualTo("D-Flow FM"));
-                Assert.That(property.PropertyDefinition.Description, Is.EqualTo("Program name"));
+                AssertPropertyValues(property, "General", "D-Flow FM", "Program name");
             });
         }
 
@@ -96,9 +82,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
             ReadWithAssert("CustomPropertyWithoutComment.mdu", definition =>
             {
                 WaterFlowFMProperty property = definition.GetModelProperty("MyCustomProperty");
-                Assert.That(property.PropertyDefinition.FileCategoryName, Is.EqualTo("General"));
-                Assert.That(property.Value, Is.EqualTo("MyValue"));
-                Assert.That(property.PropertyDefinition.Description, Is.EqualTo(null));
+                AssertPropertyValues(property, "General", "MyValue", null);
             });
         }
 
@@ -108,9 +92,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
             ReadWithAssert("KnownPropertyEmptyValue.mdu", definition =>
             {
                 WaterFlowFMProperty property = definition.GetModelProperty("Program");
-                Assert.That(property.PropertyDefinition.FileCategoryName, Is.EqualTo("General"));
-                Assert.That(property.Value, Is.EqualTo("D-Flow FM"));
-                Assert.That(property.PropertyDefinition.Description, Is.EqualTo("Program name"));
+                AssertPropertyValues(property, "General", "D-Flow FM", "Program name");
             });
         }
 
@@ -120,9 +102,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
             ReadWithAssert("CustomPropertyEmptyValue.mdu", definition =>
             {
                 WaterFlowFMProperty property = definition.GetModelProperty("MyCustomProperty");
-                Assert.That(property.PropertyDefinition.FileCategoryName, Is.EqualTo("General"));
-                Assert.That(property.Value, Is.EqualTo(string.Empty));
-                Assert.That(property.PropertyDefinition.Description, Is.EqualTo("MyDescription"));
+                AssertPropertyValues(property, "General", string.Empty, "MyDescription");
             });
         }
 
@@ -132,9 +112,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
             ReadWithAssert("CustomCategoryCustomProperty.mdu", definition =>
             {
                 WaterFlowFMProperty property = definition.GetModelProperty("MyCustomProperty");
-                Assert.That(property.PropertyDefinition.FileCategoryName, Is.EqualTo("MyCustomCategory"));
-                Assert.That(property.Value, Is.EqualTo("MyValue"));
-                Assert.That(property.PropertyDefinition.Description, Is.EqualTo("MyComment"));
+                AssertPropertyValues(property, "MyCustomCategory", "MyValue", "MyComment");
             });
         }
 
@@ -144,12 +122,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
             ReadWithAssert("CustomCategoryKnownProperty.mdu", definition =>
             {
                 WaterFlowFMProperty property = definition.GetModelProperty("Program");
-                Assert.That(property.PropertyDefinition.FileCategoryName, Is.EqualTo("General"));
-                Assert.That(property.Value, Is.EqualTo("MyProgram"));
-                Assert.That(property.PropertyDefinition.Description, Is.EqualTo("Program name"));
+                AssertPropertyValues(property, "General", "MyProgram", "Program name");
 
                 Assert.IsEmpty(definition.Properties.Where(p => p.PropertyDefinition.FileCategoryName == "MyCustomCategory"));
             });
+        }
+
+        private static void AssertPropertyValues(WaterFlowFMProperty property, string categoryName, string propertyValue, string propertyComment)
+        {
+            Assert.That(property.PropertyDefinition.FileCategoryName, Is.EqualTo(categoryName));
+            Assert.That(property.Value, Is.EqualTo(propertyValue));
+            Assert.That(property.PropertyDefinition.Description, Is.EqualTo(propertyComment));
         }
 
         [Test]
