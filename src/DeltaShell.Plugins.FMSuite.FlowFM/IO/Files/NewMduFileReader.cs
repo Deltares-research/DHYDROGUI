@@ -74,9 +74,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
             catch (FormatException e) when (e.InnerException is FormatException)
             {
-                logHandler.ReportWarningFormat(
-                    Resources.MduFile_ReadProperties_An_unsupported_option_for_0_has_been_detected,
-                    modelProperty.PropertyDefinition.Caption);
+                logHandler.ReportWarningFormat(Resources.MduFile_ReadProperties_An_unsupported_option_for_0_has_been_detected,
+                                               modelProperty.PropertyDefinition.Caption);
             }
             finally
             {

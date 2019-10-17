@@ -91,6 +91,30 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
         }
 
         [Test]
+        public void Read_CustomCategoryCustomProperty_ThenNewCategoryWithNewPropertyIsAdded_PlusCheckNewReadResult()
+        {
+            ReadWithAssert("CustomCategoryCustomProperty.mdu", definition =>
+            {
+                WaterFlowFMProperty property = definition.GetModelProperty("MyCustomProperty");
+                Assert.That(property.PropertyDefinition.FileCategoryName, Is.EqualTo("MyCustomCategory"));
+                Assert.That(property.Value, Is.EqualTo("MyValue"));
+                Assert.That(property.PropertyDefinition.Description, Is.EqualTo("MyComment"));
+            });
+        }
+
+        [Test]
+        public void Read_CustomCategoryKnownProperty_Then_PlusCheckNewReadResult()
+        {
+            ReadWithAssert("CustomCategoryKnownProperty.mdu", definition =>
+            {
+                WaterFlowFMProperty property = definition.GetModelProperty("Program");
+                Assert.That(property.PropertyDefinition.FileCategoryName, Is.EqualTo("General"));
+                Assert.That(property.Value, Is.EqualTo("MyProgram"));
+                Assert.That(property.PropertyDefinition.Description, Is.EqualTo("Program name"));
+            });
+        }
+
+        [Test]
         public void Read_HdamPropertyInFile_ThenPropertyIsNotAddedToModelDefinition_PlusCheckNewReadResult()
         {
             ReadWithAssert("HdamPropertyInFile.mdu", definition =>
@@ -165,7 +189,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
         }
 
         [Test]
-        public void Read_PropertyValueOutOfRange_ThrowsFormatException_PlusCheckNewReadResult()
+        public void Read_PropertyValueOutOfRange_ThenWarningMessageIsLogged_PlusCheckNewReadResult()
         {
             // Setup
             string testFilePath = TestHelper.GetTestFilePath(Path.Combine("MduFileReaderTest", "UnifFrictTypeOutOfRange.mdu"));
