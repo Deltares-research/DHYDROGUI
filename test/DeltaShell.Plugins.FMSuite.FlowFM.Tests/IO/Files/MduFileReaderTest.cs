@@ -107,6 +107,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
         }
 
         [Test]
+        public void Read_EmptyPropertyName_ThenNewPropertyValueIsAddedWithEmptyValue_PlusCheckNewReadResult()
+        {
+            ReadWithAssert("MultipleValuedProperty.mdu", definition =>
+            {
+                WaterFlowFMProperty property = definition.GetModelProperty("DryPointsFile");
+                AssertPropertyValues(property, "geometry", new List<string> { "myPoints1_dry.pol", "myPoints2_dry.pol" }, 
+                                     "Dry points file *.xyz (third column dummy z values), or dry areas polygon file *.pol (third column 1/-1: inside/outside)");
+            });
+        }
+
+        [Test]
         public void Read_KnownCategoryLowerCase_ThenPropertyIsAddedToKnownCategory_PlusCheckNewReadResult()
         {
             ReadWithAssert("KnownCategoryLowerCase.mdu", definition =>
@@ -139,6 +150,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
         }
 
         private static void AssertPropertyValues(WaterFlowFMProperty property, string categoryName, string propertyValue, string propertyComment)
+        {
+            Assert.That(property.PropertyDefinition.FileCategoryName, Is.EqualTo(categoryName));
+            Assert.That(property.Value, Is.EqualTo(propertyValue));
+            Assert.That(property.PropertyDefinition.Description, Is.EqualTo(propertyComment));
+        }
+
+        private static void AssertPropertyValues(WaterFlowFMProperty property, string categoryName, List<string> propertyValue, string propertyComment)
         {
             Assert.That(property.PropertyDefinition.FileCategoryName, Is.EqualTo(categoryName));
             Assert.That(property.Value, Is.EqualTo(propertyValue));
