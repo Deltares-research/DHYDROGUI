@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow;
-using DelftTools.Utils.Collections;
 using DeltaShell.Dimr;
 using DeltaShell.Dimr.xsd;
 using DeltaShell.NGHS.Common;
@@ -66,6 +65,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
 
         private void AddModels(HydroModel hydroModel, ICollection<IDimrModelFileImporter> fileImporters, dimrXML dimrObject, string rootFolder)
         {
+            foreach (var component in dimrObject.component)
+            {
+                ValidateComponent(component);
+            }
+
             var componentGroups = dimrObject.component
                 .GroupBy(component => Path.GetExtension(component.inputFile)?.TrimStart('.'));
 
@@ -83,18 +87,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
 
                 foreach (dimrComponentXML component in componentGroup)
                 {
-                    if (string.IsNullOrEmpty(component.workingDir))
-                    {
-                        throw new ArgumentException(string.Format(Resources.HydroModelConverter_AddModels_The_working_directory_is_missing_for_component__0__in_the_dimr_xml_,
-                                                        component.name));
-                    }
-
-                    if (component.inputFile == null)
-                    {
-                        throw new ArgumentException(string.Format(Resources.HydroModelConverter_AddModels_The_input_file_is_missing_for_component__0__in_the_dimr_xml_,
-                                                                  component.name));
-                    }
-
                     string filePath = GetFilePath(rootFolder, component.workingDir.Trim(), component.inputFile.Trim(), importer);
 
                     if (filePath == null)
@@ -113,6 +105,21 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
                     RenameSubModelWhenNeeded(subModel, component.name);
                     SetHydroModelProperties(hydroModel, subModel);
                 }
+            }
+        }
+
+        private static void ValidateComponent(dimrComponentXML component)
+        {
+            if (string.IsNullOrEmpty(component.workingDir))
+            {
+                throw new ArgumentException(string.Format(Resources.HydroModelConverter_AddModels_The_working_directory_is_missing_for_component__0__in_the_dimr_xml_,
+                                                component.name));
+            }
+
+            if (component.inputFile == null)
+            {
+                throw new ArgumentException(string.Format(Resources.HydroModelConverter_AddModels_The_input_file_is_missing_for_component__0__in_the_dimr_xml_,
+                                                component.name));
             }
         }
 

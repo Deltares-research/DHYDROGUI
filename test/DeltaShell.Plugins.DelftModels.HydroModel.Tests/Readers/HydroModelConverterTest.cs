@@ -227,6 +227,113 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
             logHandler.VerifyAllExpectations();
         }
 
+        [Test]
+        public void GivenInValidDimrXmlObjectWithWorkingDirectoryIsNull_WhenConvertingToHydroModel_ThenReturnArgumentException()
+        {
+            // Given
+            IDimrModelFileImporter dimrFileImporter = mocks.DynamicMock<IDimrModelFileImporter>();
+            dimrFileImporter.Expect(importer => importer.MasterFileExtension).Return("mdu").Repeat.Any();
+
+            string dimrPath = Path.Combine("FileReader", "dimr.xml");
+            mocks.ReplayAll();
+
+            var dimrXml = new dimrXML
+            {
+                component = new[] {new dimrComponentXML
+                    {
+                        name = "FlowFM",
+                        workingDir = null,
+                        inputFile = "myFile.mdu"
+                    }
+                }
+            };
+
+            var importers = new List<IDimrModelFileImporter> { dimrFileImporter };
+            
+            // When / Then
+            ArgumentException ex =
+                Assert.Throws<ArgumentException>(() => hydroModelConverter.Convert(dimrXml, dimrPath, importers));
+            Assert.AreEqual(string.Format(Resources.HydroModelConverter_AddModels_The_working_directory_is_missing_for_component__0__in_the_dimr_xml_,
+                                          dimrXml.component[0].name), ex.Message,
+                            "The exception message is different than expected"); 
+
+            mocks.VerifyAll();
+            logHandler.VerifyAllExpectations();
+        }
+
+        [Test]
+        public void GivenInValidDimrXmlObjectWithInputFileIsNull_WhenConvertingToHydroModel_ThenReturnArgumentException()
+        {
+            // Given
+            IDimrModelFileImporter dimrFileImporter = mocks.DynamicMock<IDimrModelFileImporter>();
+            dimrFileImporter.Expect(importer => importer.MasterFileExtension).Return("mdu").Repeat.Any();
+
+            string dimrPath = Path.Combine("FileReader", "dimr.xml");
+
+            var dimrXml = new dimrXML
+            {
+                component = new[] {new dimrComponentXML
+                    {
+                        name = "FlowFM",
+                        workingDir = ".",
+                        inputFile = null
+                    }
+                }
+            };
+
+            var importers = new List<IDimrModelFileImporter> { dimrFileImporter };
+
+            mocks.ReplayAll();
+
+            // When Then
+            ArgumentException ex =
+                Assert.Throws<ArgumentException>(() => hydroModelConverter.Convert(dimrXml, dimrPath, importers));
+            Assert.AreEqual(string.Format(Resources.HydroModelConverter_AddModels_The_input_file_is_missing_for_component__0__in_the_dimr_xml_,
+                                          dimrXml.component[0].name), ex.Message,
+                            "The exception message is different than expected");
+
+            mocks.VerifyAll();
+            logHandler.VerifyAllExpectations();
+        }
+
+        [Test]
+        public void GivenValidDimrXmlObjectWithXmlDirIsNullInRtcJsonFile_WhenConvertingToHydroModel_ThenRtcModelShouldNotBeImported()
+        {
+            // Given
+            IDimrModelFileImporter dimrFileImporter = mocks.DynamicMock<IDimrModelFileImporter>();
+            dimrFileImporter.Expect(importer => importer.MasterFileExtension).Return("json").Repeat.Any();
+
+            var importers = new List<IDimrModelFileImporter> { dimrFileImporter };
+
+            logHandler.Expect(l => l.ReportError(Resources.HydroModelConverter_ComposeFilePath_Could_not_import_RTC_model_the_settings_json_file_should_contain_an_xml_directory_)).Repeat.Once();
+            
+            string dimrPath = TestHelper.GetTestFilePath(Path.Combine("FileReader", "dimr.xml"));
+
+            var dimrXml = new dimrXML
+            {
+                component = new[] 
+                {new dimrComponentXML
+                    {
+                        name = "RTC",
+                        workingDir = "IncorrectSettingsJson",
+                        inputFile = "."
+                    }
+                }
+            };
+
+            mocks.ReplayAll();
+
+            // When
+            HydroModel hydroModel = hydroModelConverter.Convert(dimrXml, dimrPath, importers);
+
+            //Then
+            Assert.IsNotNull(hydroModel, "The returned model was expected to be not null.");
+            Assert.That(hydroModel.Activities.Count, Is.EqualTo(0));
+
+            mocks.VerifyAll();
+            logHandler.VerifyAllExpectations();
+        }
+
         private IDimrModelFileImporter GetDimrModelFileImporter<T>(string subModelName) where T : IActivity
         {
             var dimrModel = mocks.Stub<IDimrModel>();
