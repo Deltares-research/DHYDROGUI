@@ -87,7 +87,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
         }
 
         [Test]
-        public void Read_KnownPropertyEmptyValue_ThenPropertyValueIsEmpty_PlusCheckNewReadResult()
+        public void Read_KnownPropertyEmptyValue_ThenPropertyValueIsNotChanged_PlusCheckNewReadResult()
         {
             ReadWithAssert("KnownPropertyEmptyValue.mdu", definition =>
             {
@@ -97,12 +97,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
         }
 
         [Test]
-        public void Read_CustomPropertyEmptyValue_ThenPropertyValueIsEmpty_PlusCheckNewReadResult()
+        public void Read_CustomPropertyEmptyValue_ThenNewPropertyValueIsAddedWithEmptyValue_PlusCheckNewReadResult()
         {
             ReadWithAssert("CustomPropertyEmptyValue.mdu", definition =>
             {
                 WaterFlowFMProperty property = definition.GetModelProperty("MyCustomProperty");
                 AssertPropertyValues(property, "General", string.Empty, "MyDescription");
+            });
+        }
+
+        [Test]
+        public void Read_KnownCategoryLowerCase_ThenPropertyIsAddedToKnownCategory_PlusCheckNewReadResult()
+        {
+            ReadWithAssert("KnownCategoryLowerCase.mdu", definition =>
+            {
+                WaterFlowFMProperty property = definition.GetModelProperty("Program");
+                AssertPropertyValues(property, "General", "MyProgram", "Program name");
             });
         }
 
