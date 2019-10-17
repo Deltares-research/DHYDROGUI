@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Controls;
+using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
@@ -20,9 +21,7 @@ using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils.Domain;
 using DeltaShell.Plugins.ProjectExplorer;
-using GeoAPI.Extensions.Feature;
 using NUnit.Framework;
-using Rhino.Mocks;
 using SharpTestsEx;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
@@ -672,9 +671,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 }
             };
 
-            ControlGroup controlGroup = CreateControlGroupForGivenInputs(inputs);
+            ControlGroup controlGroup = new ControlGroup
+            {
+                Inputs = inputs
+            };
 
-            RealTimeControlModel rtcModel = CreateRealTimeControlModelForGivenControlGroup(controlGroup);
+            var rtcModel = new RealTimeControlModel();
+            rtcModel.ControlGroups.Add(controlGroup);
 
             Input retrievedInputFromRtcModel = rtcModel.ControlGroups[0].Inputs[0];
 
@@ -695,15 +698,19 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             {
                 new Input
                 {
-                    Feature = MockRepository.GenerateStub<IFeature>(),
+                    Feature = new ObservationPoint(),
                     ParameterName = "CrestLevel",
                     UnitName = "[m]"
                 }
             };
 
-            ControlGroup controlGroup = CreateControlGroupForGivenInputs(inputs);
+            ControlGroup controlGroup = new ControlGroup
+            {
+                Inputs = inputs
+            };
 
-            RealTimeControlModel rtcModel = CreateRealTimeControlModelForGivenControlGroup(controlGroup);
+            var rtcModel = new RealTimeControlModel();
+            rtcModel.ControlGroups.Add(controlGroup);
 
             Input retrievedInputFromRtcModel = rtcModel.ControlGroups[0].Inputs[0];
             Assert.IsTrue(retrievedInputFromRtcModel.IsConnected, "Setup of the test is incorrect");
@@ -712,8 +719,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             rtcModel.CleanUpModelAfterModelCoupling();
 
             // Then
-            Assert.AreSame(inputs[0], retrievedInputFromRtcModel,
-                           "The clean up should not have changed the original input");
+            Assert.AreEqual("observation_CrestLevel", inputs[0].Name,
+                            "The clean up should not have changed the name of the output");
+            Assert.AreEqual("CrestLevel", inputs[0].ParameterName,
+                            "The clean up should not have changed the parameter name of the output");
+            Assert.AreEqual("[m]", inputs[0].UnitName,
+                            "The clean up should not have changed the unit name of the output");
         }
 
         [Test]
@@ -731,9 +742,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 }
             };
 
-            ControlGroup controlGroup = CreateControlGroupForGivenOutputs(outputs);
+            ControlGroup controlGroup = new ControlGroup
+            {
+                Outputs = outputs
+            };
 
-            RealTimeControlModel rtcModel = CreateRealTimeControlModelForGivenControlGroup(controlGroup);
+            var rtcModel = new RealTimeControlModel();
+            rtcModel.ControlGroups.Add(controlGroup);
 
             Output retrievedOutputFromRtcModel = rtcModel.ControlGroups[0].Outputs[0];
 
@@ -754,56 +769,37 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             {
                 new Output
                 {
-                    Feature = MockRepository.GenerateStub<IFeature>(),
+                    Feature = new Weir2D(),
                     ParameterName = "CrestLevel",
                     UnitName = "[m]"
                 }
             };
+            
+            ControlGroup controlGroup = new ControlGroup
+            {
+                Outputs = outputs
+            };
 
-            ControlGroup controlGroup = CreateControlGroupForGivenOutputs(outputs);
+            var rtcModel = new RealTimeControlModel();
+            rtcModel.ControlGroups.Add(controlGroup);
 
-            RealTimeControlModel rtcModel = CreateRealTimeControlModelForGivenControlGroup(controlGroup);
-
-            Output retrievedOutputFromRtcModel = rtcModel.ControlGroups[0].Outputs[0];
-            Assert.IsTrue(retrievedOutputFromRtcModel.IsConnected, "Setup of the test is incorrect");
+           Assert.IsTrue(outputs[0].IsConnected, "Setup of the test is incorrect");
+            
 
             // When
             rtcModel.CleanUpModelAfterModelCoupling();
 
             // Then
-            Assert.AreSame(outputs[0], retrievedOutputFromRtcModel,
-                           "The clean up should not have changed the original output");
+            Assert.AreEqual("Structure_CrestLevel", outputs[0].Name, 
+                            "The clean up should not have changed the name of the output");
+            Assert.AreEqual("CrestLevel", outputs[0].ParameterName,
+                            "The clean up should not have changed the parameter name of the output");
+            Assert.AreEqual("[m]", outputs[0].UnitName,
+                            "The clean up should not have changed the unit name of the output");
+            
         }
-
+    
         # region Helper functions
-
-        private static ControlGroup CreateControlGroupForGivenInputs(EventedList<Input> inputs)
-        {
-            var controlGroup = new ControlGroup
-            {
-                Inputs = inputs,
-                Outputs = new EventedList<Output>()
-            };
-            return controlGroup;
-        }
-
-        private static ControlGroup CreateControlGroupForGivenOutputs(EventedList<Output> outputs)
-        {
-            var controlGroup = new ControlGroup
-            {
-                Inputs = new EventedList<Input>(),
-                Outputs = outputs
-            };
-            return controlGroup;
-        }
-
-        private static RealTimeControlModel CreateRealTimeControlModelForGivenControlGroup(ControlGroup controlGroup)
-        {
-            var rtcModel = new RealTimeControlModel();
-            rtcModel.ControlGroups.Add(controlGroup);
-            return rtcModel;
-        }
-
         private static void CheckResetConnectionPoint(ConnectionPoint retrievedConnectionPointFromRtcModel)
         {
             Assert.AreEqual("[Not Set]", retrievedConnectionPointFromRtcModel.Name, "Name of the connection point should have been reset");

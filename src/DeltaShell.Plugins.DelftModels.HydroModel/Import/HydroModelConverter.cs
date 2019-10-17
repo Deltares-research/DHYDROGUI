@@ -228,12 +228,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
                 CoupleModelsByDimrCouplerXml(sourceModel, targetModel, dimrCouplerXml.item);
             }
 
-            foreach (IDimrModel subModel in subModels)
+            foreach (ICoupledModel coupledModel in subModels.OfType<ICoupledModel>())
             {
-                if (subModel is ICoupledModel coupledModel)
-                {
-                    coupledModel.CleanUpModelAfterModelCoupling();
-                }
+                coupledModel.CleanUpModelAfterModelCoupling();
             }
         }
 
