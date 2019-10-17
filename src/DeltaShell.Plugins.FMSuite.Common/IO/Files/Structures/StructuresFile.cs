@@ -263,7 +263,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
         {
             var newStructure = new Structure2D(structureType);
 
-            foreach (DelftIniProperty property in category.Properties)
+            foreach (IDelftIniProperty property in category.Properties)
             {
                 ModelPropertyDefinition modelPropertyDefinition = schema.GetDefinition(structureType, property.Name);
                 if (modelPropertyDefinition == null)

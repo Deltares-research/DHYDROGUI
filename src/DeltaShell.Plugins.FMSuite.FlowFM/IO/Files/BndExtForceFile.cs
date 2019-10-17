@@ -461,7 +461,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         {
             modelDefinition.Boundaries.ForEach(b => { existingPolylineFiles[b] = b.Name + ".pli"; });
 
-            foreach (DelftIniCategory delftIniCategory in bndBlocks)
+            foreach (IDelftIniCategory delftIniCategory in bndBlocks)
             {
                 string locationFile = delftIniCategory.GetPropertyValue(LocationFileKey);
                 bool locationFileHasAlreadyBeenRead = existingPolylineFiles.Values.Contains(locationFile);
@@ -529,7 +529,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             });
         }
 
-        private static bool IsEmbankmentCategory(DelftIniCategory delftIniCategory)
+        private static bool IsEmbankmentCategory(IDelftIniCategory delftIniCategory)
         {
             return delftIniCategory.GetPropertyValue(QuantityKey) == ExtForceQuantNames.EmbankmentBnd;
         }

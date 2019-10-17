@@ -607,7 +607,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 }
 
                 ModelPropertyGroup definedCategory = modelSchema.ModelDefinitionCategory[category.Name];
-                foreach (DelftIniProperty mdwProperty in category.Properties)
+                foreach (IDelftIniProperty mdwProperty in category.Properties)
                 {
                     string propName = mdwProperty.Name;
                     string propertyValue = mdwProperty.Value;
@@ -1071,7 +1071,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 timepointData.WindDirectionConstant = winddir;
             }
 
-            foreach (DelftIniCategory timepoint in timePointCategories)
+            foreach (IDelftIniCategory timepoint in timePointCategories)
             {
                 DateTime time = referenceDate.AddMinutes(double.Parse(
                                                              timepoint.GetPropertyValue(

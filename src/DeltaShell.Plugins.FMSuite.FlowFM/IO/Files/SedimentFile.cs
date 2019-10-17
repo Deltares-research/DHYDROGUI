@@ -564,7 +564,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
             ISet<string> overallProps = new HashSet<string>(model.SedimentOverallProperties.Select(p => p.Name));
 
-            foreach (DelftIniProperty readProp in category.Properties)
+            foreach (IDelftIniProperty readProp in category.Properties)
             {
                 if (!overallProps.Contains(readProp.Name))
                 {
@@ -579,7 +579,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         {
             string categoryName = category.Name;
 
-            foreach (DelftIniProperty property in category.Properties)
+            foreach (IDelftIniProperty property in category.Properties)
             {
                 AddUnknownSedimentProperty(property, definition, categoryName, logHandler);
             }
