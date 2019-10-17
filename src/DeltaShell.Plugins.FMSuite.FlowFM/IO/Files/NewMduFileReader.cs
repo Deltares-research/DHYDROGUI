@@ -5,6 +5,7 @@ using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.Handlers;
 using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.Plugins.FMSuite.Common;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using log4net;
@@ -18,13 +19,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         public static void Read(string filePath, WaterFlowFMModelDefinition definition)
         {
             IList<IDelftIniCategory> categories = new DelftIniReader().ReadDelftIniFile(filePath);
+
+            RemoveRedundantProperties(categories, definition);
             UpdateLegacyNames(categories);
-            RemoveRedundantCategories(categories);
             CorrectInvalidFixedWeirSchemeValue(categories);
 
             SetPropertyValues(definition, categories);
-
+            
+            definition.GetModelProperty(KnownProperties.RefDate).Value =
+                FMParser.ParseFMDateTime(definition.GetModelProperty(KnownProperties.RefDate).GetValueAsString());
             definition.SetGuiTimePropertiesFromMduProperties();
+            definition.UpdateHeatFluxModel();
+            definition.UpdateWriteOutputSnappedFeatures();
         }
 
         private static void CorrectInvalidFixedWeirSchemeValue(IEnumerable<IDelftIniCategory> categories)
@@ -60,9 +66,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             });
         }
 
-        private static void RemoveRedundantCategories(IEnumerable<IDelftIniCategory> categories)
+        private static void RemoveRedundantProperties(IEnumerable<IDelftIniCategory> categories, WaterFlowFMModelDefinition definition)
         {
-            categories.ForEach(category => { category.Properties.RemoveAllWhere(p => p.Name.ToLowerInvariant() == "hdam"); });
+            categories.ForEach(category => 
+            {
+                category.Properties.RemoveAllWhere(p => p.Name.ToLowerInvariant() == "hdam" || definition.ContainsProperty(p.Name) && p.Value == string.Empty);
+            });
         }
 
         private static void SetPropertyValues(WaterFlowFMModelDefinition definition, IEnumerable<IDelftIniCategory> categories)
