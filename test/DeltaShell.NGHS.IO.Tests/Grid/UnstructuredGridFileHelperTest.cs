@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Link1d2d;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
@@ -10,6 +11,7 @@ using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
 using NUnit.Framework;
 using SharpMap.Extensions.CoordinateSystems;
+using SharpMapTestUtils;
 
 namespace DeltaShell.NGHS.IO.Tests.Grid
 {
@@ -188,7 +190,19 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             var localtestFilePath = TestHelper.CreateLocalCopy(testFilePath);
             Assert.IsFalse(File.Exists(testFilePath));
 
-            UnstructuredGridFileHelper.WriteGridToFile(localtestFilePath, new UnstructuredGrid(), new HydroNetwork(), new Discretization(), new List<ILink1D2D>(), "myName", "myPlugin", "myVersion", UnstructuredGridFileHelper.BedLevelLocation.NodesMaxLev, new double[] { });
+            var unstructuredGrid = UnstructuredGridTestHelper.GenerateRegularGrid(5,5,10,10);
+            var hydroNetwork = HydroNetworkHelper.GetSnakeHydroNetwork(4, true);
+
+            var networkDiscretization = new Discretization() {Network = hydroNetwork, Name = "Mydiscreatisation"};
+            HydroNetworkHelper.GenerateDiscretization(networkDiscretization, true, false, 0.5, false, 1.0, false, false, true, 2, null);
+
+            var link1D2Ds = new List<ILink1D2D>()
+            {
+                {new Link1D2D(1, 1, "my link") {TypeOfLink = LinkType.Embedded}}
+            };
+
+            UnstructuredGridFileHelper.WriteGridToFile(localtestFilePath, unstructuredGrid, hydroNetwork, networkDiscretization, link1D2Ds, "myName", "myPlugin", "myVersion", UnstructuredGridFileHelper.BedLevelLocation.NodesMaxLev, new double[] { });
+
             Assert.IsTrue(File.Exists(localtestFilePath));
 
             FileUtils.DeleteIfExists(localtestFilePath);

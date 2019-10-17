@@ -302,13 +302,21 @@ namespace DeltaShell.NGHS.IO.Grid
 
             public IntPtr layer_zs;
             public IntPtr interface_zs;
+
+            public IntPtr nodeids;
+            public IntPtr nodelongnames;
+            public IntPtr nbranchids;
+            public IntPtr nbranchlongnames;
+            public IntPtr nnodeids;
+            public IntPtr nnodelongnames;
+            public int startIndex;
         }
 
         [StructLayout(LayoutKind.Sequential)]
         public struct meshgeomdim
         {
-            //[MarshalAs(UnmanagedType.ByValArray, SizeConst = 256)]
-            public char[] meshname;
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 255)]
+            public char[] name;
             public int dim;
             public int numnode;
             public int numedge;
@@ -320,6 +328,7 @@ namespace DeltaShell.NGHS.IO.Grid
             public int nbranches;
             public int ngeometry;
             public int epgs;
+            public int numlinks;
         }
 
         #endregion meshgeom
