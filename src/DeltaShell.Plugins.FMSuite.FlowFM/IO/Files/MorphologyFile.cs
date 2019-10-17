@@ -321,7 +321,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
 
             WaterFlowFMPropertyDefinition propertyDefinition =
-                WaterFlowFMPropertyDefinitionCreator.CreateForUnknownProperty(fileCategoryName,
+                WaterFlowFMPropertyDefinitionCreator.CreateForCustomProperty(fileCategoryName,
                                                                               delftIniProperty.Name,
                                                                               delftIniProperty.Comment,
                                                                               PropertySource.MorphologyFile);

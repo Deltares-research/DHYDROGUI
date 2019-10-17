@@ -330,7 +330,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                                                        string sedimentFractionName = null)
         {
             WaterFlowFMPropertyDefinition propertyDefinition =
-                WaterFlowFMPropertyDefinitionCreator.CreateForUnknownProperty(categoryName,
+                WaterFlowFMPropertyDefinitionCreator.CreateForCustomProperty(categoryName,
                                                                               delftIniProperty.Name,
                                                                               delftIniProperty.Comment,
                                                                               PropertySource.SedimentFile);

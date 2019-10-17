@@ -107,7 +107,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                                          : property.Comment; // This is a little odd, maybe string.Empty is not so bad?.
 
             WaterFlowFMPropertyDefinition newPropertyDefinition =
-                WaterFlowFMPropertyDefinitionCreator.CreateForUnknownProperty(category.Name, property.Name, propertyComment);
+                WaterFlowFMPropertyDefinitionCreator.CreateForCustomProperty(category.Name, property.Name, propertyComment);
 
             return new WaterFlowFMProperty(newPropertyDefinition, property.Value);
         }

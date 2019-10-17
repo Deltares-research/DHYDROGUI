@@ -115,7 +115,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                         {
                             // create definition for unknown property:
                             WaterFlowFMPropertyDefinition propDef =
-                                WaterFlowFMPropertyDefinitionCreator.CreateForUnknownProperty(
+                                WaterFlowFMPropertyDefinitionCreator.CreateForCustomProperty(
                                     currentGroupName,
                                     mduPropertyName,
                                     mduComment);

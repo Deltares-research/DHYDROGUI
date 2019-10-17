@@ -229,13 +229,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var modelDefinition = new WaterFlowFMModelDefinition();
 
             WaterFlowFMPropertyDefinition propertyDefinitionMorphologyCategory =
-                WaterFlowFMPropertyDefinitionCreator.CreateForUnknownProperty(KnownProperties.morphology,
+                WaterFlowFMPropertyDefinitionCreator.CreateForCustomProperty(KnownProperties.morphology,
                                                                               customPropertyName,
                                                                               "",
                                                                               PropertySource.MorphologyFile);
 
             WaterFlowFMPropertyDefinition propertyDefinitionCustomCategory =
-                WaterFlowFMPropertyDefinitionCreator.CreateForUnknownProperty(customCategoryName,
+                WaterFlowFMPropertyDefinitionCreator.CreateForCustomProperty(customCategoryName,
                                                                               customPropertyName,
                                                                               "",
                                                                               PropertySource.MorphologyFile);
@@ -286,7 +286,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 modelDefinition.BoundaryConditionSets[0].BoundaryConditions.AddRange(new[] { morbc1 });
 
                 WaterFlowFMPropertyDefinition def =
-                    WaterFlowFMPropertyDefinitionCreator.CreateForUnknownProperty(KnownProperties.morphology,
+                    WaterFlowFMPropertyDefinitionCreator.CreateForCustomProperty(KnownProperties.morphology,
                                                                                   "myprop",
                                                                                   string.Empty);
                 var prop = new WaterFlowFMProperty(def, "801");
@@ -349,7 +349,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 modelDefinition.BoundaryConditionSets[0].BoundaryConditions.AddRange(new[] {morbc1});
 
-                var def = WaterFlowFMPropertyDefinitionCreator.CreateForUnknownProperty(KnownProperties.morphology,
+                var def = WaterFlowFMPropertyDefinitionCreator.CreateForCustomProperty(KnownProperties.morphology,
                                                                                         "myprop", string.Empty);
                 var prop = new WaterFlowFMProperty(def, "801");
                 modelDefinition.AddProperty(prop);

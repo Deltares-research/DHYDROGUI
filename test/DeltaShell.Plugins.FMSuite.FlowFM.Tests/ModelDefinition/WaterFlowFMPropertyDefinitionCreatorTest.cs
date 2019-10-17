@@ -14,7 +14,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.ModelDefinition
             const string comment = "myComment";
 
             WaterFlowFMPropertyDefinition definition =
-                WaterFlowFMPropertyDefinitionCreator.CreateForUnknownProperty(
+                WaterFlowFMPropertyDefinitionCreator.CreateForCustomProperty(
                     mduGroupName, mduPropertyName, comment);
 
             Assert.That(definition.Caption, Is.EqualTo(mduPropertyName));
@@ -40,7 +40,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.ModelDefinition
         public void CreateForUnknownProperty_WithPropertySource_ThenUnknownPropertySourceIsSet(PropertySource source)
         {
             WaterFlowFMPropertyDefinition definition =
-                WaterFlowFMPropertyDefinitionCreator.CreateForUnknownProperty(
+                WaterFlowFMPropertyDefinitionCreator.CreateForCustomProperty(
                     string.Empty, string.Empty, string.Empty, source);
 
             Assert.That(definition.UnknownPropertySource, Is.EqualTo(source));
