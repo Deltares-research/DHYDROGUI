@@ -64,13 +64,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                         {
                             currentGroupName = "General";
                         }
-
-                        if (currentGroupNameLowerCase.Equals("structure"))
-                        {
-                            // put structure block
-                            StructuresFile.ParseStructure(this);
-                            continue;
-                        }
                     }
                     else
                     {

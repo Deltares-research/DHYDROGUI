@@ -134,11 +134,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             new DelftIniWriter().WriteDelftIniFile(structures.Select(CreateDelftIniCategory), path);
         }
 
-        public static void ParseStructure(FMSuiteFileBase fmSuiteFileBase)
-        {
-            throw new NotImplementedException();
-        }
-
         public IList<IStructure> Read(string filePath)
         {
             var logHandler = new LogHandler($"reading the structures file ({filePath}),", Log);
