@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using DeltaShell.NGHS.IO.Handlers;
 using DeltaShell.Plugins.FMSuite.Common;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files;
-using DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using log4net;
