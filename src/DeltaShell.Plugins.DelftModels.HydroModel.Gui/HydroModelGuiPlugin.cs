@@ -513,12 +513,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
 
         private void OnGuiAfterRun()
         {
-            var initializeThread = new Thread(InitializeThread) { Priority = ThreadPriority.BelowNormal };
-            initializeThread.Start();
-        }
-
-        private static void InitializeThread()
-        {
             // speed-up hydro model (including all sub-models) creation
             HydroModel.BuildModel(ModelGroup.All);
         }
