@@ -55,14 +55,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             var nodeLengthAttribute = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.NodeLength);
             if (nodeLengthAttribute.TryGetValueAsDouble(out auxDouble))
                 compartment.ManholeLength = auxDouble / 1000.0; // Conversion from mm to m
+            else
+                compartment.ManholeLength = 0.8d;
 
             var nodeWidthAttribute = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.NodeWidth);
             if (nodeWidthAttribute.TryGetValueAsDouble(out auxDouble))
                 compartment.ManholeWidth = auxDouble / 1000.0; // Conversion from mm to m
+            else
+                compartment.ManholeWidth = 0.8d;
 
             var floodableAreaAttribute = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.FloodableArea);
             if (floodableAreaAttribute.TryGetValueAsDouble(out auxDouble))
                 compartment.FloodableArea = auxDouble;
+            else
+                compartment.FloodableArea = 100;
 
             var bottomLevelAttribute = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.BottomLevel);
             if (bottomLevelAttribute.TryGetValueAsDouble(out auxDouble))

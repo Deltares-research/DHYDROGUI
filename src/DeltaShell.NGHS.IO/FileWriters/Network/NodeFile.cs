@@ -53,10 +53,10 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
             iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.ManholeId, compartment.ParentManhole.Name, string.Empty));
             iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.UseTable, "0", string.Empty));
             iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.BedLevel, GetValueAsStringWithFormat(compartment.BottomLevel, "{0:0.000}"), string.Empty));
-            iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.Area, GetValueAsStringWithFormat(compartment.ManholeLength * compartment.ManholeWidth, "{0:0.0000}"), string.Empty));
+            iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.Area, GetValueAsStringWithFormat(compartment.ManholeLength * compartment.ManholeWidth, "{0:0.0000000}"), string.Empty));
             iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.StreetLevel, GetValueAsStringWithFormat(compartment.SurfaceLevel, "{0:0.000}"), string.Empty));
             iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.StorageType, "Reservoir", string.Empty));
-            iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.StreetStorageArea, "100.00", string.Empty));
+            iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.StreetStorageArea, GetValueAsStringWithFormat(compartment.FloodableArea, "{0:0.000}"), string.Empty));
             return iniCategory;
         }
 
