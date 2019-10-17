@@ -1322,42 +1322,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             }
         }
 
-        /* Clone of function from WaterFlowFMModel */
-        private static List<double> GetWaterLevelValuesAtPoint(WaterFlowFMModel model, Coordinate measureLocation)
-        {
-            var result = new List<double>();
-            if (model == null || model.OutputWaterLevel == null || model.OutputWaterLevel.Time == null)
-            {
-                Assert.Fail("Water level coverage not found.");
-            }
-
-            foreach (var time in model.OutputWaterLevel.Time.Values)
-                result.Add((double)model.OutputWaterLevel.Evaluate(measureLocation, time));
-
-            return result;
-        }
-        /* Custom made function to retreive velocity */
-        private static List<double> GetVelocityValuesAtPoint(WaterFlowFMModel model, Coordinate measureLocation)
-        {
-            var result = new List<double>();
-            if (model == null || model.OutputMapFileStore == null ||
-                model.OutputMapFileStore.CustomVelocityCoverage == null)
-            {
-                Assert.Fail("Velocity coverage not found.");
-            }
-
-            var velocity = model.OutputMapFileStore.CustomVelocityCoverage as UnstructuredGridCellCoverage;
-            if (velocity == null || velocity.Time == null)
-            {
-                Assert.Fail("Velocity coverage not found.");
-            }
-
-            foreach (var time in velocity.Time.Values)
-                result.Add((double)velocity.Evaluate(measureLocation, time));
-
-            return result;
-        }
-
         [Test]
         public void CreateFixedWeirAndChangeSchemeAndNumberOfCoordinates()
         {
