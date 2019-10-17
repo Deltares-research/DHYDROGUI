@@ -16,7 +16,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
         [Test]
         public void Read_KnownPropertyNonDefaultPropertyValue_ThenPropertyValueHasChanged_PlusCheckNewReadResult()
         {
-            ReadWithAssert("OneKnownPropertyNonDefaultValue.mdu", definition =>
+            ReadWithAssert("KnownPropertyNonDefaultValue.mdu", definition =>
             {
                 WaterFlowFMProperty property = definition.GetModelProperty("Program");
                 Assert.That(property.PropertyDefinition.FileCategoryName, Is.EqualTo("General"));
@@ -28,7 +28,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
         [Test]
         public void Read_KnownPropertyNonDefaultComment_ThenPropertyCommentHasNotChanged_PlusCheckNewReadResult()
         {
-            ReadWithAssert("OneKnownPropertyNonDefaultComment.mdu", definition =>
+            ReadWithAssert("KnownPropertyNonDefaultComment.mdu", definition =>
             {
                 WaterFlowFMProperty property = definition.GetModelProperty("Program");
                 Assert.That(property.PropertyDefinition.FileCategoryName, Is.EqualTo("General"));
@@ -38,9 +38,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
         }
 
         [Test]
-        public void Read_UnknownProperty_ThenNewPropertyIsAddedToModelDefinition_PlusCheckNewReadResult()
+        public void Read_CustomProperty_ThenNewPropertyIsAddedToModelDefinition_PlusCheckNewReadResult()
         {
-            ReadWithAssert("OneUnknownProperty.mdu", definition =>
+            ReadWithAssert("CustomProperty.mdu", definition =>
             {
                 WaterFlowFMProperty property = definition.GetModelProperty("MyCustomProperty");
                 Assert.That(property.PropertyDefinition.FileCategoryName, Is.EqualTo("General"));
@@ -79,9 +79,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
         }
 
         [Test]
-        public void Read_UnknownPropertyWithoutComment_ThenNewPropertyIsAddedToModelDefinitionWithNullComment_PlusCheckNewReadResult()
+        public void Read_CustomPropertyWithoutComment_ThenNewPropertyIsAddedToModelDefinitionWithNullComment_PlusCheckNewReadResult()
         {
-            ReadWithAssert("UnknownPropertyWithoutComment.mdu", definition =>
+            ReadWithAssert("CustomPropertyWithoutComment.mdu", definition =>
             {
                 WaterFlowFMProperty property = definition.GetModelProperty("MyCustomProperty");
                 Assert.That(property.PropertyDefinition.FileCategoryName, Is.EqualTo("General"));
@@ -103,7 +103,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
         }
 
         [Test]
-        public void Read_CustomCategoryKnownProperty_Then_PlusCheckNewReadResult()
+        public void Read_CustomCategoryKnownProperty_ThenPropertyIsAddedToKnownCategoryAndCustomCategoryIsLost_PlusCheckNewReadResult()
         {
             ReadWithAssert("CustomCategoryKnownProperty.mdu", definition =>
             {
@@ -111,6 +111,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
                 Assert.That(property.PropertyDefinition.FileCategoryName, Is.EqualTo("General"));
                 Assert.That(property.Value, Is.EqualTo("MyProgram"));
                 Assert.That(property.PropertyDefinition.Description, Is.EqualTo("Program name"));
+
+                Assert.IsEmpty(definition.Properties.Where(p => p.PropertyDefinition.FileCategoryName == "MyCustomCategory"));
             });
         }
 
