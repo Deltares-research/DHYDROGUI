@@ -201,7 +201,7 @@
     <value>Renamed model {0} to {1}.</value>
   </data>
   <data name="HydroModelConverter_ComposeFilePath_Could_not_import_RTC_model_the_settings_json_file_should_contain_an_xml_directory_" xml:space="preserve">
-    <value>Could not import RTC model, the settings.json file should contain an xml directory</value>
+    <value>Could not import RTC model, the settings.json file should contain an xml directory.</value>
   </data>
   <data name="HydroModelConverter_CoupleSubModels_Could_not_couple_models____0___to___1___" xml:space="preserve">
     <value>Could not couple models: '{0}' to '{1}'.</value>

@@ -177,7 +177,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Could not import RTC model, the settings.json file should contain an xml directory.
+        ///   Looks up a localized string similar to Could not import RTC model, the settings.json file should contain an xml directory..
         /// </summary>
         public static string HydroModelConverter_ComposeFilePath_Could_not_import_RTC_model_the_settings_json_file_should_contain_an_xml_directory_ {
             get {

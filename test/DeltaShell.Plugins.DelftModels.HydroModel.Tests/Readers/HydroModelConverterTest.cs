@@ -253,8 +253,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
             // When / Then
             ArgumentException ex =
                 Assert.Throws<ArgumentException>(() => hydroModelConverter.Convert(dimrXml, dimrPath, importers));
-            Assert.AreEqual(string.Format(Resources.HydroModelConverter_AddModels_The_working_directory_is_missing_for_component__0__in_the_dimr_xml_,
-                                          dimrXml.component[0].name), ex.Message,
+            Assert.AreEqual("The working directory is missing for component FlowFM in the dimr xml.", ex.Message,
                             "The exception message is different than expected"); 
 
             mocks.VerifyAll();
@@ -288,8 +287,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
             // When Then
             ArgumentException ex =
                 Assert.Throws<ArgumentException>(() => hydroModelConverter.Convert(dimrXml, dimrPath, importers));
-            Assert.AreEqual(string.Format(Resources.HydroModelConverter_AddModels_The_input_file_is_missing_for_component__0__in_the_dimr_xml_,
-                                          dimrXml.component[0].name), ex.Message,
+            Assert.AreEqual("The input file is missing for component FlowFM in the dimr xml.", ex.Message,
                             "The exception message is different than expected");
 
             mocks.VerifyAll();
@@ -306,7 +304,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
 
             var importers = new List<IDimrModelFileImporter> { dimrFileImporter };
 
-            logHandler.Expect(l => l.ReportError(Resources.HydroModelConverter_ComposeFilePath_Could_not_import_RTC_model_the_settings_json_file_should_contain_an_xml_directory_)).Repeat.Once();
+            logHandler.Expect(l => l.ReportError("Could not import RTC model, the settings.json file should contain an xml directory.")).Repeat.Once();
             
             string dimrPath = TestHelper.GetTestFilePath(Path.Combine("FileReader", "dimr.xml"));
 
