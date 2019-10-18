@@ -56,6 +56,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         private readonly IList<IDataItem> linkedDataItemsOriginalValues;
         private ICoordinateSystem coordinateSystem;
         private RealTimeControlOutputFileFunctionStore outputFileFunctionStore;
+        private bool disposed;
 
         protected virtual IList<ExplicitValueConverterLookupItem> explicitValueConverterLookupItems { get; set; }
 
@@ -1371,15 +1372,30 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         public void Dispose()
         {
-            // Ensure all stores are closed
-            var fileStores = AllDataItems.Where(di => di.LinkedTo == null && di.ValueType.Implements(typeof(IFunction)))
-                    .Select(di => di.Value).OfType<IFunction>()
-                    .Select(nc => nc.Store).OfType<IFileBased>();
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
 
-            foreach (var fileStore in fileStores)
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposed) return;
+            // Ensure all stores are closed
+
+            if (disposing)
             {
-                fileStore.Close();
+                IEnumerable<IFileBased> fileStores = AllDataItems
+                                                     .Where(di => di.LinkedTo == null &&
+                                                                  di.ValueType.Implements(typeof(IFunction)))
+                                                     .Select(di => di.Value).OfType<IFunction>()
+                                                     .Select(nc => nc.Store).OfType<IFileBased>();
+
+                foreach (IFileBased fileStore in fileStores)
+                {
+                    fileStore.Close();
+                }
             }
+
+            disposed = true;
         }
 
         #region TimeDependentModelBase
