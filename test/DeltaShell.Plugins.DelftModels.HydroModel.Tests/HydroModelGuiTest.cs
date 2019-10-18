@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Windows.Forms;
-using DelftTools.Controls;
 using DelftTools.Controls.Swf;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
@@ -11,7 +8,6 @@ using DelftTools.Shell.Gui.Forms;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui;
 using NUnit.Framework;
 using Rhino.Mocks;
-
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 {

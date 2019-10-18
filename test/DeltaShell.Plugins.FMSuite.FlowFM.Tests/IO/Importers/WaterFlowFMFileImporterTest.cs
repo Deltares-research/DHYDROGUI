@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using DeltaShell.Dimr;
+﻿using DeltaShell.Dimr;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
 using NUnit.Framework;
 
