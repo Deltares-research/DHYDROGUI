@@ -116,10 +116,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             Expect.Call(gui.UndoRedoManager).Return(undoRedoManager);
             Expect.Call(gui.DocumentViews).Return(documentViews);
 
-            gui.Expect(g => g.SelectionChanged -= Arg<EventHandler<SelectedItemChangedEventArgs>>.Is.Anything);
-            application.Expect(a => a.ProjectClosing -= Arg<Action<Project>>.Is.Anything).Repeat.Twice();
-            application.Expect(a => a.ProjectOpened -= Arg<Action<Project>>.Is.Anything).Repeat.Twice();
-            application.Expect(a => a.ProjectSaving -= Arg<Action<Project>>.Is.Anything);
+            application.Expect(a => a.ProjectClosing -= Arg<Action<Project>>.Is.Anything);
+            application.Expect(a => a.ProjectOpened -= Arg<Action<Project>>.Is.Anything);
 
             // Create some other stubs
             var waterQualityModel1D = mocks.Stub<WaterQualityModel>();

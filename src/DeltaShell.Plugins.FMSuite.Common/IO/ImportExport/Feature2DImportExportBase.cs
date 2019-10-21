@@ -43,8 +43,20 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.ImportExport
                                                              IFeature2DImporterExporter
         where TFeat : IFeature, INameable
     {
+        /// <summary>
+        /// Gets the name of the exporter.
+        /// </summary>
+        /// <value>
+        /// The name of the exporter.
+        /// </value>
         protected abstract string ExporterName { get; }
 
+        /// <summary>
+        /// Gets the name of the importer.
+        /// </summary>
+        /// <value>
+        /// The name of the importer.
+        /// </value>
         protected abstract string ImporterName { get; }
 
         public string[] Files { get; set; }
@@ -91,8 +103,18 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.ImportExport
         /// </summary>
         public Func<object, object, bool> ShouldReplace { get; set; }
 
+        /// <summary>
+        /// Imports the file at the specified path.
+        /// </summary>
+        /// <param name="path">The path.</param>
+        /// <returns>A collection of <see cref="TFeat"/> objects.</returns>
         protected abstract IEnumerable<TFeat> Import(string path);
 
+        /// <summary>
+        /// Exports the specified features.
+        /// </summary>
+        /// <param name="features">The features.</param>
+        /// <param name="path">The path.</param>
         protected abstract void Export(IEnumerable<TFeat> features, string path);
 
         #region IFileImporter
@@ -209,7 +231,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.ImportExport
 
             if (featureList != null)
             {
+                BeforeExportActionDelegate?.Invoke(featureList);
                 Export(featureList, file);
+                AfterExportActionDelegate?.Invoke(featureList);
                 return true;
             }
 

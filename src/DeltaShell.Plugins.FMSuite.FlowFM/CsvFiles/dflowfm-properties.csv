@@ -193,7 +193,7 @@ output,WaqInterval,,,WAQ output interval,DoubleArray,0,0,,TRUE,,,,,,"Interval (i
 GUIOnly,SpecifyWaqOutputStartTime, output, Water Quality,Specify WAQ start time output,0|1,0,,,FALSE,SpecifyWaqOutputInterval,,,,,"Specify WAQ start time output"
 GUIOnly,WaqOutputStartTime, output, Water Quality,WAQ output-start-time,Datetime,,,,FALSE,SpecifyWaqOutputInterval && SpecifyWaqOutputStartTime,,,,,WAQ Start time output [YYYY-MM-DD HH:MM:SS]
 GUIOnly,SpecifyWaqOutputStopTime, output, Water Quality,Specify WAQ stop time output,0|1,0,,,FALSE,SpecifyWaqOutputInterval && SpecifyWaqOutputStartTime,,,,,"Specify WAQ stop time output"
-GUIOnly,WaqOutputStopTime, output, Water Quality,Water Quality output-end-time,Datetime,,,,FALSE,SpecifyWaqOutputInterval && SpecifyWaqOutputStartTime && SpecifyWaqOutputStopTime,,,,,WAQ End time output [YYYY-MM-DD HH:MM:SS]
+GUIOnly,WaqOutputStopTime, output, Water Quality,WAQ output-end-time,Datetime,,,,FALSE,SpecifyWaqOutputInterval && SpecifyWaqOutputStartTime && SpecifyWaqOutputStopTime,,,,,WAQ End time output [YYYY-MM-DD HH:MM:SS]
 *,,,,,,,,,,,,,,,
 GUIOnly,WriteSnappedFeatures,output,Shape files,Write Snapped Features,0|1,0,,,FALSE,,,,,,Write generated output snapped features
 output,Wrishp_crs,output,Shape files,Write shape file for cross section,0|1,0,,,FALSE,WriteSnappedFeatures,,,,,Write shape file for cross section

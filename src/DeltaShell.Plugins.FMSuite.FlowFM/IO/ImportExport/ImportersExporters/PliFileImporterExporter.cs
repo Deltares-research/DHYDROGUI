@@ -14,77 +14,35 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.ImportersExporters
     public class PliFileImporterExporter<TParent, TFeat> : PlizFileImporterExporter<TParent, TFeat>
         where TFeat : class, IFeature, INameable, new() where TParent : INameable
     {
-        /// <summary>
-        /// Gets the name of the importer.
-        /// </summary>
-        /// <value>
-        /// The name of the importer.
-        /// </value>
+        /// <inheritdoc />
         protected override string ImporterName => "Features from .pli(z) file";
 
-        /// <summary>
-        /// Gets the name of the exporter.
-        /// </summary>
-        /// <value>
-        /// The name of the exporter.
-        /// </value>
+        /// <inheritdoc />
         protected override string ExporterName => "Features to .pli file";
 
-        /// <summary>
-        /// Gets the file filter.
-        /// </summary>
-        /// <value>
-        /// The file filter.
-        /// </value>
+        /// <inheritdoc />
         public override string FileFilter => "Feature polyline files (*.pli)|*.pli|polyline-z files (*.pliz)|*.pliz";
 
-        /// <summary>
-        /// Imports from the specified path.
-        /// </summary>
-        /// <param name="path">The file path.</param>
-        /// <returns></returns>
+        /// <inheritdoc />
         protected override IEnumerable<TFeat> Import(string path)
         {
             if (Path.GetExtension(path) == ".pli")
             {
-                var reader = new PliFile<TFeat>
-                {
-                    CreateDelegate = CreateDelegate,
-                };
-                return reader.Read(path, (s, c, t) => ProgressChanged?.Invoke(s, c, t));
+                return ReadFeaturesFromFile<PliFile<TFeat>>(path);
             }
 
             return base.Import(path);
         }
 
-        /// <summary>
-        /// Exports the specified features.
-        /// </summary>
-        /// <param name="features">The features.</param>
-        /// <param name="path">The path.</param>
+        /// <inheritdoc />
         protected override void Export(IEnumerable<TFeat> features, string path)
         {
-            BeforeExportActionDelegate?.Invoke(features);
-
             if (Path.GetExtension(path) == ".pli")
             {
-                var writer = new PliFile<TFeat>
-                {
-                    CreateDelegate = CreateDelegate,
-                };
-                writer.Write(path, features);
+                WriteFeaturesToFile<PliFile<TFeat>>(path, features);
             }
 
-            if (Path.GetExtension(path) == ".pliz")
-            {
-                var writer = new PlizFile<TFeat>
-                {
-                    CreateDelegate = CreateDelegate,
-                };
-                writer.Write(path, features);
-            }
-
-            AfterExportActionDelegate?.Invoke(features);
+            base.Export(features, path);
         }
     }
 }

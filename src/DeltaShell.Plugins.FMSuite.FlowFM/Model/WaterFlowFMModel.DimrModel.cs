@@ -9,6 +9,7 @@ using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.FMSuite.FlowFM.Validation;
 using GeoAPI.Extensions.Feature;
 
@@ -45,26 +46,65 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             return string.Join("/", concatNames);
         }
 
+        /// <summary>
+        /// Gets the data item by item string.
+        /// </summary>
+        /// <param name="itemString"> The item string. </param>
+        /// <returns> The matching data item. </returns>
+        /// <remarks> <param name="itemString"/> cannot be null. </remarks>
+        /// <exception cref="ArgumentException">
+        /// Thrown in case,
+        /// - <param name="itemString"/> does not contain 3 elements
+        /// - category in <param name="itemString"/> is unknown
+        /// - feature in <param name="itemString"/> is unknown
+        /// - parameter name in <param name="itemString"/> is unknown. </exception>
         public virtual IDataItem GetDataItemByItemString(string itemString)
         {
             string[] stringParts = itemString.Split('/');
-            string featureCategory = stringParts[0];
+
+            if (stringParts.Length != 3)
+            {
+                throw new ArgumentException(string.Format(
+                                                Resources.WaterFlowFMModel_DimrModel_GetDataItemByItemString__0__should_contain_a_category_feature_name_and_a_parameter_name,
+                                                itemString));
+            }
+
+            string category = stringParts[0];
             string featureName = stringParts[1];
             string parameterName = stringParts[2];
 
-            IEnumerable<INameable> featuresFromCategory = Area.GetFeaturesFromCategory(featureCategory).OfType<INameable>();
+            IFeature feature = GetAreaFeature(category, featureName);
 
-            var feature = (IFeature) featuresFromCategory.FirstOrDefault(f => f.Name.Equals(featureName));
+            if (feature == null)
+            {
+                throw new ArgumentException(string.Format(
+                                                Resources.WaterFlowFMModel_DimrModel_GetDataItemByItemString_feature__0__in__1__cannot_be_found_in_the_FM_model,
+                                                featureName, itemString));
+            }
 
-            IEnumerable<IDataItem> childDataItems = GetChildDataItems(feature);
+            IDataItem dataItem = GetChildDataItems(feature).FirstOrDefault(di =>
+            {
+                var parameterValueConverter = di.ValueConverter as ParameterValueConverter;
+                return parameterValueConverter?.ParameterName == parameterName;
+            });
 
-            IDataItem dataItem = childDataItems.FirstOrDefault(di => (di.ValueConverter as ParameterValueConverter)?
-                                                                     .ParameterName == parameterName);
+            if (dataItem == null)
+            {
+                throw new ArgumentException(string.Format(
+                                                Resources.WaterFlowFMModel_DimrModel_GetDataItemByItemString_parameter_name__0__in__1__cannot_be_found_in_the_FM_model,
+                                                parameterName, itemString));
+            }
 
             return dataItem;
         }
 
-        
+        private IFeature GetAreaFeature(string featureCategory, string featureName)
+        {
+            IEnumerable<INameable> featuresFromCategory =
+                Area.GetFeaturesFromCategory(featureCategory).OfType<INameable>();
+
+            return (IFeature) featuresFromCategory.FirstOrDefault(f => f.Name.Equals(featureName));
+        }
 
         public virtual string MpiCommunicatorString => "DFM_COMM_DFMWORLD";
 

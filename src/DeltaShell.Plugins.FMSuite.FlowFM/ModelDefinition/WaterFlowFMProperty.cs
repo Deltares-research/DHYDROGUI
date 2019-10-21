@@ -7,31 +7,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         public WaterFlowFMProperty(ModelPropertyDefinition propertyDefinition, string valueAsString) :
             base(propertyDefinition, valueAsString) {}
 
-        public static WaterFlowFMPropertyDefinition CreatePropertyDefinitionForUnknownProperty(
-            string mduGroupName,
-            string mduPropertyName,
-            string comment,
-            PropertySource propertySource = PropertySource.MduFile)
-        {
-            return new WaterFlowFMPropertyDefinition
-            {
-                Caption = mduPropertyName,
-                MduPropertyName = mduPropertyName,
-                FileCategoryName = mduGroupName,
-                FilePropertyName = mduPropertyName,
-                Category = "Miscellaneous",
-                SubCategory = null,
-                DataType = typeof(string),
-                DefaultValueAsString = "",
-                EnabledDependencies = "",
-                VisibleDependencies = "",
-                Description = comment,
-                IsDefinedInSchema = false,
-                IsFile = false,
-                UnknownPropertySource = propertySource
-            };
-        }
-
         public new WaterFlowFMPropertyDefinition PropertyDefinition =>
             (WaterFlowFMPropertyDefinition) base.PropertyDefinition;
 

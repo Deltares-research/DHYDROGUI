@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -87,6 +87,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Properties {
             get {
                 object obj = ResourceManager.GetObject("arrow_switch", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Exporting to file type &apos;{0}&apos; is not supported..
+        /// </summary>
+        public static string BoundaryConditionDialogLauncher_Exporting_to_file_type_0_is_not_supported {
+            get {
+                return ResourceManager.GetString("BoundaryConditionDialogLauncher_Exporting_to_file_type_0_is_not_supported", resourceCulture);
             }
         }
         
@@ -558,7 +567,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Weir.
+        ///   Looks up a localized string similar to Structure.
         /// </summary>
         public static string WeirProperties_DisplayName {
             get {

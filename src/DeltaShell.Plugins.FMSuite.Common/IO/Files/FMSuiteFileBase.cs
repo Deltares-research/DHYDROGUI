@@ -17,9 +17,14 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
 
         protected override string CreateContentIdentifier(string line)
         {
+            if (line == null)
+            {
+                return string.Empty;
+            }
+
             var i = 0;
             var contentIdentifier = new char[line.Length];
-            foreach (char c in line.ToCharArray())
+            foreach (char c in line)
             {
                 if (c == ' ' || c == '\t')
                 {

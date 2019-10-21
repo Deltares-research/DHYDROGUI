@@ -1,32 +1,37 @@
 from pathlib import Path
 import shutil
 import argparse
+import zipfile
+import datetime
+from itertools import chain
 
 
 # Currently Assumes Cleaned repository folder.
+def get_relevant_files(svn_root: Path):
+    """
+    Get all files from the src and test folders except for the test-data 
+    folders and contents.
 
-def copy(svn_root, contents):
-    contents.mkdir()
+    :param svn_root: The root path of the svn.
+    """
+    src_path = svn_root / Path("src")
+    test_path = svn_root / Path("test")
 
-    path_src = svn_root / Path("src").resolve()
-    print(path_src)
+    return chain(src_path.glob("**/*"), 
+                 (p for p in test_path.glob("**/*") if not "test-data" in p.parts))
 
-    shutil.copytree(str(path_src), 
-                    str(contents / Path("src"))) # we want the whole src folder
-    
-    # we want everything but the test-data.
-    folders_in_test = (svn_root / Path("test")).glob("*")
 
-    for p_folder in folders_in_test:
-        target_path = (contents / Path("test") / Path(p_folder.name))
-        target_path.mkdir(parents=True, exist_ok=True)
+def write_zipfile(content_paths, zip_path: Path) -> None:
+    """
+    Write the specified content paths to the specified zip.
 
-        for p_relevant_file in list(p for p in p_folder.glob("*") if p.name != "test-data"):
-            target = target_path / Path(p_relevant_file.name)
-            if p_relevant_file.is_dir():
-                shutil.copytree(str(p_relevant_file), str(target))
-            else:
-                shutil.copyfile(str(p_relevant_file), str(target))
+    :param content_paths: The collection of paths which need to be written to
+                         the zipfile.
+    :param zip_path: The path to zip file that will be written.
+    """
+    with zipfile.ZipFile(str(zip_path), 'w') as w_zip:
+        for p in content_paths:
+            w_zip.write(str(p))
 
 
 def compose_argument_parser() -> argparse.ArgumentParser:
@@ -36,22 +41,20 @@ def compose_argument_parser() -> argparse.ArgumentParser:
     :returns: An argument parser with the correct settings.
     """
     parser = argparse.ArgumentParser()
-    parser.add_argument("root_path", 
-                        help="Path svn repository.",
-                        type=str)
+    parser.add_argument("root_path", help="Path svn repository.", type=str)
+    parser.add_argument("zip_name", help="zip name, will be changed to '<zip_name>_YYYYMMDD.zip'.")
 
     return parser
 
 
 if __name__ == "__main__":
-    # Parse the arguments
     parser = compose_argument_parser()
     args = parser.parse_args()
 
-    # Collect all relevant files
     svn_src_path = Path(args.root_path)
     build_path = svn_src_path / Path("zip_contents")
 
-    copy(svn_src_path, build_path)
+    today = datetime.date.today()
+    zip_file_name = "{}_{}.zip".format(args.zip_name, today.strftime("%Y%m%d"))
 
-    #shutil.make_archive(str(build_path), 'zip', str(svn_src_path)) need to debug this
+    write_zipfile(get_relevant_files(svn_src_path), svn_src_path / Path(zip_file_name))

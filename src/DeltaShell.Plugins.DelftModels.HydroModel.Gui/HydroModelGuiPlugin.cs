@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Threading;
 using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Controls.Swf;
@@ -512,12 +511,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
         }
 
         private void OnGuiAfterRun()
-        {
-            var initializeThread = new Thread(InitializeThread) { Priority = ThreadPriority.BelowNormal };
-            initializeThread.Start();
-        }
-
-        private static void InitializeThread()
         {
             // speed-up hydro model (including all sub-models) creation
             HydroModel.BuildModel(ModelGroup.All);

@@ -55,9 +55,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters
                 // is Area
                 targetHydroArea = (HydroArea) item;
                 model = GetModelForArea(targetHydroArea);
-                if (model == null && targetHydroArea.Parent != null)
+                if (model == null)
                 {
-                    Log.ErrorFormat("Cannot export structures from an integrated model (yet).");
+                    if (targetHydroArea.Parent != null)
+                    {
+                        Log.ErrorFormat("Cannot export structures from an integrated model (yet).");
+                    }
+
                     return false;
                 }
             }

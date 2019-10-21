@@ -23,6 +23,7 @@ using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DelftTools.Utils.Validation;
 using DeltaShell.Dimr;
+using DeltaShell.NGHS.Common;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport;
@@ -42,7 +43,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
     /// already has it applied. Projectexplorer does not function correctly when left out.
     /// </summary>
     [Entity(FireOnCollectionChange=false)]
-    public class RealTimeControlModel : TimeDependentModelBase, IRealTimeControlModel, IDimrStateAwareModel, IModelMerge, IDisposable, IDimrModel
+    public class RealTimeControlModel : TimeDependentModelBase, IRealTimeControlModel, IDimrStateAwareModel, IModelMerge, IDisposable, IDimrModel, ICoupledModel
     {
         public const string InputPostFix = ".input";
         public const string OutputPostFix = ".output";
@@ -55,6 +56,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         private readonly IList<IDataItem> linkedDataItemsOriginalValues;
         private ICoordinateSystem coordinateSystem;
         private RealTimeControlOutputFileFunctionStore outputFileFunctionStore;
+        private bool disposed;
 
         protected virtual IList<ExplicitValueConverterLookupItem> explicitValueConverterLookupItems { get; set; }
 
@@ -479,6 +481,35 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 throw new NotImplementedException($"Could not find {itemString} on {Name}");
             }
             return dataItem;
+        }
+
+        /// <summary>
+        /// Cleans up model after model coupling at the end of a
+        /// DIMR import. All input and output points
+        /// set by the RTC importer should be reset, if
+        /// coupling failed. 
+        /// </summary>
+        public virtual void CleanUpModelAfterModelCoupling()
+        {
+            foreach (IControlGroup controlGroup in ControlGroups)
+            {
+                foreach (Input input in controlGroup.Inputs)
+                {
+                    ResetConnectionPointIfUnlinked(input);
+                }
+                foreach (Output output in controlGroup.Outputs)
+                {
+                    ResetConnectionPointIfUnlinked(output);
+                }
+            }
+        }
+
+        private static void ResetConnectionPointIfUnlinked(ConnectionPoint connectionPoint)
+        {
+            if (!connectionPoint.IsConnected)
+            {
+                connectionPoint.Reset();
+            }
         }
 
         public virtual Type ExporterType
@@ -1341,15 +1372,30 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         public void Dispose()
         {
-            // Ensure all stores are closed
-            var fileStores = AllDataItems.Where(di => di.LinkedTo == null && di.ValueType.Implements(typeof(IFunction)))
-                    .Select(di => di.Value).OfType<IFunction>()
-                    .Select(nc => nc.Store).OfType<IFileBased>();
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
 
-            foreach (var fileStore in fileStores)
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposed) return;
+            // Ensure all stores are closed
+
+            if (disposing)
             {
-                fileStore.Close();
+                IEnumerable<IFileBased> fileStores = AllDataItems
+                                                     .Where(di => di.LinkedTo == null &&
+                                                                  di.ValueType.Implements(typeof(IFunction)))
+                                                     .Select(di => di.Value).OfType<IFunction>()
+                                                     .Select(nc => nc.Store).OfType<IFileBased>();
+
+                foreach (IFileBased fileStore in fileStores)
+                {
+                    fileStore.Close();
+                }
             }
+
+            disposed = true;
         }
 
         #region TimeDependentModelBase

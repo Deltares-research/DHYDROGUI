@@ -1,6 +1,4 @@
-﻿using DelftTools.Controls.Swf.Table;
-
-namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
+﻿namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 {
     partial class FlowBoundaryConditionDataView
     {
@@ -18,7 +16,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             if (disposing && (components != null))
             {
                 components.Dispose();
+                FileDialog.Dispose();
+                SaveFileDialog.Dispose();
             }
+            
             base.Dispose(disposing);
         }
 

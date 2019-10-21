@@ -68,6 +68,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void Read_FMModelSchema_DoesNotSplitMduNameWithCommas()
         {
             // Setup
@@ -78,7 +79,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 var schemaReader = new ModelSchemaCsvFile();
 
                 // Call
-                ModelSchema<WaterFlowFMPropertyDefinition> schema = schemaReader.ReadModelSchema<WaterFlowFMPropertyDefinition>(testFilePath, "MduGroup");
+                ModelPropertySchema<WaterFlowFMPropertyDefinition> schema = schemaReader.ReadModelSchema<WaterFlowFMPropertyDefinition>(testFilePath, "MduGroup");
 
                 // Assert
                 WaterFlowFMPropertyDefinition readPropertyDefinition = schema.PropertyDefinitions.Single().Value;

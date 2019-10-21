@@ -17,7 +17,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.ModelDefinition
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(WaveModelDefinition));
         public IEventedList<WaveModelProperty> Properties { get; set; }
-        public ModelSchema<WaveModelPropertyDefinition> ModelSchema { get; private set; }
+        public ModelPropertySchema<WaveModelPropertyDefinition> ModelSchema { get; private set; }
 
         public bool BoundaryIsDefinedBySpecFile { get; set; }
         public string OverallSpecFile { get; set; }

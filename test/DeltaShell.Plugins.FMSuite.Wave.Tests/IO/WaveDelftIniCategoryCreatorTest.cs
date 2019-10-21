@@ -242,7 +242,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             DelftIniCategory category = WaveDelftIniCategoryCreator.CreateBoundaryConditionCategory(waveBoundaryCondition);
 
             // Then
-            DelftIniProperty[] properties = category.Properties.Where(p => p.Name == KnownWaveProperties.CondSpecAtDist).ToArray();
+            IDelftIniProperty[] properties = category.Properties.Where(p => p.Name == KnownWaveProperties.CondSpecAtDist).ToArray();
             Assert.That(properties.Length, Is.EqualTo(2));
             Assert.That(properties.First().Value, Is.EqualTo(GetStringValue(0.0)));
 
@@ -265,7 +265,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             DelftIniCategory category = WaveDelftIniCategoryCreator.CreateBoundaryConditionCategory(waveBoundaryCondition);
 
             // Then
-            DelftIniProperty[] properties = category.Properties.Where(p => p.Name == KnownWaveProperties.Spectrum).ToArray();
+            IDelftIniProperty[] properties = category.Properties.Where(p => p.Name == KnownWaveProperties.Spectrum).ToArray();
             Assert.That(properties.Length, Is.EqualTo(2));
             Assert.That(properties.First().Value, Is.EqualTo(spectrumFileName1));
             Assert.That(properties.Last().Value, Is.EqualTo(spectrumFileName2));
@@ -316,7 +316,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
 
         private static void AssertPropertyValues(IDelftIniCategory category, string propertyName, double firstValue, double secondValue)
         {
-            DelftIniProperty[] properties = category.Properties
+            IDelftIniProperty[] properties = category.Properties
                                                     .Where(p => p.Name == propertyName)
                                                     .ToArray();
 

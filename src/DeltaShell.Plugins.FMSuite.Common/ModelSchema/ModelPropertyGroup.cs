@@ -14,7 +14,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
             PropertyDefinitions = new List<ModelPropertyDefinition>();
         }
 
-        public void AddPropertyDefinition(ModelPropertyDefinition propertyDefinition)
+        public void Add(ModelPropertyDefinition propertyDefinition)
         {
             if (!PropertyDefinitions.Contains(propertyDefinition))
             {

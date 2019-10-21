@@ -69,7 +69,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 
         public virtual void SedimentPropertyLoad(IDelftIniCategory category)
         {
-            DelftIniProperty prop = category.Properties.FirstOrDefault(p => p.Name == Name);
+            IDelftIniProperty prop = category.Properties.FirstOrDefault(p => p.Name == Name);
             if (prop == null)
             {
                 return;
@@ -148,7 +148,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             catch
             {
                 // check if we can cast to string so we can find out if it is a spatially varying property
-                DelftIniProperty prop = category.Properties.FirstOrDefault(p => p.Name == Name);
+                IDelftIniProperty prop = category.Properties.FirstOrDefault(p => p.Name == Name);
                 if (prop == null)
                 {
                     return;

@@ -7,6 +7,7 @@ using DelftTools.Shell.Core;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO.ImportExport;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Properties;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
@@ -142,6 +143,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
             }
         }
 
+        /// <summary>
+        /// Sets up the exporters for a <see cref="SaveFileDialog"/> and exports a <see cref="FlowBoundaryCondition"/> to the chosen file format.
+        /// </summary>
+        /// <param name="saveFileDialog"> The save dialog. </param>
+        /// <param name="boundaryCondition"> The boundary condition to export. </param>
+        /// <param name="selectedPointIndex"> The index of the selected point on <paramref name="boundaryCondition"/>. </param>
+        /// <param name="modelRefDate"> The reference time of the owning model. </param>
         public static void LaunchExporterDialog(SaveFileDialog saveFileDialog, FlowBoundaryCondition boundaryCondition, int selectedPointIndex,
             DateTime modelRefDate)
         {
@@ -152,7 +160,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
                 GetFeature = bc => bc.Feature
             };
             var exporters = new List<IFileExporter>(new IFileExporter[] {bcFileExporter, pliFileExporter});
-            var dataExporter = DataExporters.FirstOrDefault(e => e.ForcingTypes.Contains(boundaryCondition.DataType));
+            BoundaryDataExporterBase dataExporter = DataExporters.FirstOrDefault(e => e.ForcingTypes.Contains(boundaryCondition.DataType));
 
             if (dataExporter != null)
             {
@@ -180,12 +188,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
                     break;
 
                 case FileType.Other:
-                    dataExporter.SelectedIndex = selectedPointIndex;
-                    dataExporter.ModelReferenceDate = modelRefDate;
-
-                    ((IFileExporter)dataExporter).Export(boundaryCondition, saveFileDialog.FileName);
-                    break;
-                default:
                     if (dataExporter != null)
                     {
                         dataExporter.SelectedIndex = selectedPointIndex;
@@ -193,8 +195,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
 
                         ((IFileExporter)dataExporter).Export(boundaryCondition, saveFileDialog.FileName);
                     }
-
                     break;
+
+                default:
+                    throw new NotSupportedException(string.Format(Resources.BoundaryConditionDialogLauncher_Exporting_to_file_type_0_is_not_supported, chosenFilter));
             }
         }
     }

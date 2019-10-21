@@ -89,7 +89,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to An error occurred while trying to import a {0};.
+        ///   Looks up a localized string similar to An error occurred while trying to import a {0}; .
         /// </summary>
         public static string DHydroConfigXmlImporter_ImportItem_An_error_occurred_while_trying_to_import_a__0__ {
             get {
@@ -157,11 +157,60 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The input file is missing for component {0} in the dimr xml..
+        /// </summary>
+        public static string HydroModelConverter_AddModels_The_input_file_is_missing_for_component__0__in_the_dimr_xml_ {
+            get {
+                return ResourceManager.GetString("HydroModelConverter_AddModels_The_input_file_is_missing_for_component__0__in_the_" +
+                        "dimr_xml_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The working directory is missing for component {0} in the dimr xml..
+        /// </summary>
+        public static string HydroModelConverter_AddModels_The_working_directory_is_missing_for_component__0__in_the_dimr_xml_ {
+            get {
+                return ResourceManager.GetString("HydroModelConverter_AddModels_The_working_directory_is_missing_for_component__0__" +
+                        "in_the_dimr_xml_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not import RTC model, the settings.json file should contain an xml directory..
+        /// </summary>
+        public static string HydroModelConverter_ComposeFilePath_Could_not_import_RTC_model_the_settings_json_file_should_contain_an_xml_directory_ {
+            get {
+                return ResourceManager.GetString("HydroModelConverter_ComposeFilePath_Could_not_import_RTC_model_the_settings_json_" +
+                        "file_should_contain_an_xml_directory_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cannot convert empty dimr data object..
         /// </summary>
         public static string HydroModelConverter_Convert_Cannot_convert_empty_dimr_data_object {
             get {
                 return ResourceManager.GetString("HydroModelConverter_Convert_Cannot_convert_empty_dimr_data_object", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not link {0} to {1}.
+        /// </summary>
+        public static string HydroModelConverter_CoupleModelsByDimrCouplerXml_Could_not_link__0__to__1__ {
+            get {
+                return ResourceManager.GetString("HydroModelConverter_CoupleModelsByDimrCouplerXml_Could_not_link__0__to__1__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not link an item from {0} to {1}.
+        /// </summary>
+        public static string HydroModelConverter_CoupleModelsByDimrCouplerXml_Could_not_link_an_item_from__0__to__1__ {
+            get {
+                return ResourceManager.GetString("HydroModelConverter_CoupleModelsByDimrCouplerXml_Could_not_link_an_item_from__0__" +
+                        "to__1__", resourceCulture);
             }
         }
         

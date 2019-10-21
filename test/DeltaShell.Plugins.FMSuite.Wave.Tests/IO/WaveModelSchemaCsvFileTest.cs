@@ -92,8 +92,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         [Category(TestCategory.DataAccess)]
         public void GivenADwavePropertiesCsvWithPropertiesUsingOneDefaultValue_WhenReadingThisFile_ThenThePropertyDefinitionShouldBeSetCorrectly()
         {
-            var model = new WaveModel();
-
             var modelPropertySchema =
                 new ModelSchemaCsvFile().ReadModelSchema<WaveModelPropertyDefinition>(
                     "plugins\\DeltaShell.Plugins.FMSuite.Wave\\dwave-properties.csv", "MdwGroup");

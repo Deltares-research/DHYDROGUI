@@ -1001,6 +1001,34 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             }
         }
 
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void GivenExternalForcingsFileWithComments_WhenReadingAndWriting_ThenCommentsHaveBeenPreserved()
+        {
+            // Setup
+            string mduFilePath = TestHelper.GetTestFilePath(@"fm_files\fm_files.mdu");
+            var modelDefinition = new WaterFlowFMModelDefinition(Path.GetDirectoryName(mduFilePath), Path.GetFileName(mduFilePath));
+
+            var extForceFile = new ExtForceFile();
+            const string relativeExtForceFilePath = @"fm_files\fm_files.ext";
+            string extForceFilePath = TestHelper.GetTestFilePath(relativeExtForceFilePath);
+            extForceFile.Read(extForceFilePath, modelDefinition, mduFilePath);
+
+            using (var temporaryDirectory = new TemporaryDirectory())
+            {
+                // When
+                string newExtForceFilePath = Path.Combine(temporaryDirectory.Path, Path.GetFileName(relativeExtForceFilePath));
+                extForceFile.Write(newExtForceFilePath, modelDefinition);
+
+                // Assert
+                string extForceFileContent = File.ReadAllText(newExtForceFilePath);
+                Assert.IsTrue(extForceFileContent.Contains(
+                                  "* FACTOR  =   : Conversion factor for this provider"));
+                Assert.IsTrue(extForceFileContent.Contains(
+                                  "* This comment line will not be removed, eventhough shiptxy is not yet supported."));
+            }
+        }
+
         private static void ValidateUnknownQuantities(WaterFlowFMModelDefinition def)
         {
             Assert.AreEqual(2, def.UnsupportedFileBasedExtForceFileItems.Count,

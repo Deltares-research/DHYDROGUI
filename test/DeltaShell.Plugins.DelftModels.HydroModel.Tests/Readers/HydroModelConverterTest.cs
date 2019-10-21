@@ -116,14 +116,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
             var dimrFileImporter = mocks.DynamicMock<IDimrModelFileImporter>();
             dimrFileImporter.Expect(importer => importer.ImportItem(xmlFilePath)).Return(new object()).Repeat.Any();
             dimrFileImporter.Expect(importer => importer.MasterFileExtension).Return(XmlExtension).Repeat.Any();
-            dimrFileImporter.Expect(importer => importer.SubFolders).Return(new List<string>{SubFolder}).Repeat.Any();
-
+           
             mocks.ReplayAll();
 
             var dimrXml = new dimrXML
             {
                 component = new[] {new dimrComponentXML
                     {
+                        workingDir = SubFolder,
                         inputFile = FileName
                     }
                 }
@@ -160,6 +160,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
                 component = new[] {new dimrComponentXML
                     {
                         name = ComponentName,
+                        workingDir = SubFolder,
                         inputFile = FileName
                     }
                 }
@@ -195,6 +196,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
                 component = new[] {new dimrComponentXML
                     {
                         name = ComponentName,
+                        workingDir = SubFolder,
                         inputFile = FileName
                     }
                 },
@@ -225,6 +227,112 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
             logHandler.VerifyAllExpectations();
         }
 
+        [Test]
+        public void GivenInValidDimrXmlObjectWithWorkingDirectoryIsNull_WhenConvertingToHydroModel_ThenReturnArgumentException()
+        {
+            // Given
+            IDimrModelFileImporter dimrFileImporter = mocks.DynamicMock<IDimrModelFileImporter>();
+            dimrFileImporter.Expect(importer => importer.MasterFileExtension).Return("mdu").Repeat.Any();
+
+            string dimrPath = Path.Combine("FileReader", "dimr.xml");
+            mocks.ReplayAll();
+
+            var dimrXml = new dimrXML
+            {
+                component = new[] {new dimrComponentXML
+                    {
+                        name = "FlowFM",
+                        workingDir = null,
+                        inputFile = "myFile.mdu"
+                    }
+                }
+            };
+
+            var importers = new List<IDimrModelFileImporter> { dimrFileImporter };
+            
+            // When / Then
+            ArgumentException ex =
+                Assert.Throws<ArgumentException>(() => hydroModelConverter.Convert(dimrXml, dimrPath, importers));
+            Assert.AreEqual("The working directory is missing for component FlowFM in the dimr xml.", ex.Message,
+                            "The exception message is different than expected"); 
+
+            mocks.VerifyAll();
+            logHandler.VerifyAllExpectations();
+        }
+
+        [Test]
+        public void GivenInValidDimrXmlObjectWithInputFileIsNull_WhenConvertingToHydroModel_ThenReturnArgumentException()
+        {
+            // Given
+            IDimrModelFileImporter dimrFileImporter = mocks.DynamicMock<IDimrModelFileImporter>();
+            dimrFileImporter.Expect(importer => importer.MasterFileExtension).Return("mdu").Repeat.Any();
+
+            string dimrPath = Path.Combine("FileReader", "dimr.xml");
+
+            var dimrXml = new dimrXML
+            {
+                component = new[] {new dimrComponentXML
+                    {
+                        name = "FlowFM",
+                        workingDir = ".",
+                        inputFile = null
+                    }
+                }
+            };
+
+            var importers = new List<IDimrModelFileImporter> { dimrFileImporter };
+
+            mocks.ReplayAll();
+
+            // When Then
+            ArgumentException ex =
+                Assert.Throws<ArgumentException>(() => hydroModelConverter.Convert(dimrXml, dimrPath, importers));
+            Assert.AreEqual("The input file is missing for component FlowFM in the dimr xml.", ex.Message,
+                            "The exception message is different than expected");
+
+            mocks.VerifyAll();
+            logHandler.VerifyAllExpectations();
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void GivenValidDimrXmlObjectWithXmlDirIsNullInRtcJsonFile_WhenConvertingToHydroModel_ThenRtcModelShouldNotBeImported()
+        {
+            // Given
+            IDimrModelFileImporter dimrFileImporter = mocks.DynamicMock<IDimrModelFileImporter>();
+            dimrFileImporter.Expect(importer => importer.MasterFileExtension).Return("json").Repeat.Any();
+
+            var importers = new List<IDimrModelFileImporter> { dimrFileImporter };
+
+            logHandler.Expect(l => l.ReportError("Could not import RTC model, the settings.json file should contain an xml directory.")).Repeat.Once();
+            
+            string dimrPath = TestHelper.GetTestFilePath(Path.Combine("FileReader", "dimr.xml"));
+
+            var dimrXml = new dimrXML
+            {
+                component = new[] 
+                {new dimrComponentXML
+                    {
+                        name = "RTC",
+                        workingDir = "IncorrectSettingsJson",
+                        inputFile = "."
+                    }
+                }
+            };
+
+            mocks.ReplayAll();
+
+            // When
+            HydroModel hydroModel = hydroModelConverter.Convert(dimrXml, dimrPath, importers);
+
+            //Then
+            Assert.IsNotNull(hydroModel, "The returned model was expected to be not null.");
+            Assert.That(hydroModel.Activities.Count, Is.EqualTo(0));
+
+            mocks.VerifyAll();
+            logHandler.VerifyAllExpectations();
+        }
+
         private IDimrModelFileImporter GetDimrModelFileImporter<T>(string subModelName) where T : IActivity
         {
             var dimrModel = mocks.Stub<IDimrModel>();
@@ -233,7 +341,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
             var dimrFileImporter = mocks.DynamicMock<IDimrModelFileImporter>();
             dimrFileImporter.Expect(importer => importer.ImportItem(xmlFilePath)).Return(dimrModel).Repeat.Any();
             dimrFileImporter.Expect(importer => importer.MasterFileExtension).Return(XmlExtension).Repeat.Any();
-            dimrFileImporter.Expect(importer => importer.SubFolders).Return(new List<string> { SubFolder }).Repeat.Any();
+            
             return dimrFileImporter;
         }
     }

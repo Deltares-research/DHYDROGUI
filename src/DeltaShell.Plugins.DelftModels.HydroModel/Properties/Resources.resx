@@ -146,7 +146,6 @@
   <data name="HydroModelApplicationPlugin_Description" xml:space="preserve">
     <value>Provides functionality to create and run integrated models.</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="DHydroConfigWriter_CreateConfigDocument_Empty_model_cannot_generate_a_configuration_file_" xml:space="preserve">
     <value>Empty model cannot generate a configuration file.</value>
   </data>
@@ -192,8 +191,17 @@
   <data name="HydroModelConverter_AddModels_Could_not_import_sub_model_defined_at_location__0__to_integrated_model_" xml:space="preserve">
     <value>Could not import sub model defined at location {0} to integrated model.</value>
   </data>
+  <data name="HydroModelConverter_AddModels_The_working_directory_is_missing_for_component__0__in_the_dimr_xml_" xml:space="preserve">
+    <value>The working directory is missing for component {0} in the dimr xml.</value>
+  </data>
+  <data name="HydroModelConverter_AddModels_The_input_file_is_missing_for_component__0__in_the_dimr_xml_" xml:space="preserve">
+    <value>The input file is missing for component {0} in the dimr xml.</value>
+  </data>
   <data name="HydroModelConverter_AddModels_Renamed_model__0__to__1_" xml:space="preserve">
     <value>Renamed model {0} to {1}.</value>
+  </data>
+  <data name="HydroModelConverter_ComposeFilePath_Could_not_import_RTC_model_the_settings_json_file_should_contain_an_xml_directory_" xml:space="preserve">
+    <value>Could not import RTC model, the settings.json file should contain an xml directory.</value>
   </data>
   <data name="HydroModelConverter_CoupleSubModels_Could_not_couple_models____0___to___1___" xml:space="preserve">
     <value>Could not couple models: '{0}' to '{1}'.</value>
@@ -202,6 +210,12 @@
     <value>Activity of type {0} cannot be exported to DIMR file tree and shall be ignored.</value>
   </data>
   <data name="DHydroConfigXmlImporter_ImportItem_An_error_occurred_while_trying_to_import_a__0__" xml:space="preserve">
-    <value>An error occurred while trying to import a {0};</value>
+    <value>An error occurred while trying to import a {0}; </value>
+  </data>
+  <data name="HydroModelConverter_CoupleModelsByDimrCouplerXml_Could_not_link_an_item_from__0__to__1__" xml:space="preserve">
+    <value>Could not link an item from {0} to {1}</value>
+  </data>
+  <data name="HydroModelConverter_CoupleModelsByDimrCouplerXml_Could_not_link__0__to__1__" xml:space="preserve">
+    <value>Could not link {0} to {1}</value>
   </data>
 </root>
