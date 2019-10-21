@@ -256,14 +256,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     {
                         boundaryConditionToSelect = o.BoundaryConditions.FirstOrDefault();
                     }
-                    
+
                     // This can occur when the BoundaryConditionSet does not contain a 
                     // boundary condition with an earlier selected name. Setting the 
                     // selected category to the initial selected category will force the 
                     // old window to retain the current selection. 
-                    v.SelectedCategory = boundaryConditionToSelect == null
-                        ? currentSelectedCategory
-                        :boundaryConditionToSelect.ProcessName;
+                    if (boundaryConditionToSelect == null)
+                    {
+                        // If both the boundaryConditionToSelect and the currentSelectedCategory
+                        // are null, return to prevent a null/empty option in the dropdown.
+                        if (currentSelectedCategory == null)
+                        {
+                            return;
+                        }
+                        v.SelectedCategory = currentSelectedCategory;
+                    }
+                    else
+                    {
+                        v.SelectedCategory = boundaryConditionToSelect.ProcessName;
+                    }
                     v.SelectedBoundaryCondition = boundaryConditionToSelect;
                 },
                 CloseForData = (v, bcs) => Equals(v.Data, bcs)
