@@ -21,7 +21,7 @@ namespace DeltaShell.NGHS.IO.Helpers
         /// <summary>
         /// The line number where this category was read in the file.
         /// </summary>
-        int LineNumber { get; set; }
+        int LineNumber { get; }
 
         /// <summary>
         /// Gets the property value as a string.

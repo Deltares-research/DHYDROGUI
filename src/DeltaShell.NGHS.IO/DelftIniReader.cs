@@ -44,7 +44,7 @@ namespace DeltaShell.NGHS.IO
 
                     if (IsNewCategory(line, ref categoryName))
                     {
-                        currentCategory = new DelftIniCategory(categoryName) {LineNumber = LineNumber};
+                        currentCategory = new DelftIniCategory(categoryName, LineNumber);
                         content.Add(currentCategory);
                         continue;
                     }

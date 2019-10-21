@@ -10,15 +10,6 @@ namespace DeltaShell.NGHS.IO.Helpers
     /// </summary>
     public class DelftIniCategory : IDelftIniCategory
     {
-        /// <inheritdoc />
-        public string Name { get; set; }
-
-        /// <inheritdoc />
-        public IList<IDelftIniProperty> Properties { get; set; }
-
-        /// <inheritdoc />
-        public int LineNumber { get; set; }
-
         /// <summary>
         /// Creates an instance of <see cref="DelftIniCategory"/>.
         /// </summary>
@@ -29,12 +20,27 @@ namespace DeltaShell.NGHS.IO.Helpers
             Properties = new List<IDelftIniProperty>();
         }
 
+        public DelftIniCategory(string categoryName, int lineNumber)
+            : this(categoryName)
+        {
+            LineNumber = lineNumber;
+        }
+
+        /// <inheritdoc />
+        public string Name { get; set; }
+
+        /// <inheritdoc />
+        public IList<IDelftIniProperty> Properties { get; set; }
+
+        /// <inheritdoc />
+        public int LineNumber { get; }
+
         /// <inheritdoc />
         public string GetPropertyValue(string name, string defaultValue = null)
         {
             IDelftIniProperty prop = Properties.FirstOrDefault(p => p.Name == name);
-            return prop != null 
-                       ? prop.Value 
+            return prop != null
+                       ? prop.Value
                        : defaultValue;
         }
 
@@ -47,19 +53,20 @@ namespace DeltaShell.NGHS.IO.Helpers
         /// <inheritdoc />
         public void AddProperty(string name, string value, string comment = null)
         {
-            Properties.Add(new DelftIniProperty(name, value, comment ?? "" ));
+            Properties.Add(new DelftIniProperty(name, value, comment ?? ""));
         }
 
         /// <inheritdoc />
-        public void AddProperty(string name, DateTime time, string comment = null, string format = "yyyy-MM-dd HH:mm:ss")
+        public void AddProperty(string name, DateTime time, string comment = null,
+                                string format = "yyyy-MM-dd HH:mm:ss")
         {
             AddProperty(name, time.ToString(format, CultureInfo.InvariantCulture), comment);
         }
 
         /// <inheritdoc />
-        public void AddProperty(string name, double value,  string comment = null, string format = "e7")
+        public void AddProperty(string name, double value, string comment = null, string format = "e7")
         {
-                AddProperty(name, value.ToString(format, CultureInfo.InvariantCulture), comment);
+            AddProperty(name, value.ToString(format, CultureInfo.InvariantCulture), comment);
         }
 
         /// <inheritdoc />
