@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Configuration;
 using System.IO;
 using System.Linq;
 using DelftTools.Functions;
@@ -22,6 +21,42 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
     [TestFixture]
     public class WaveModelTest
     {
+        [Test]
+        public void DefaultConstructor_SetsCorrectTimeProperties()
+        {
+            // Setup
+            using (var model = new WaveModel())
+            {
+                // Assert
+                WaveModelDefinition modelDefinition = model.ModelDefinition;
+                DateTime modelReferenceDateTime = modelDefinition.ModelReferenceDateTime;
+
+                DateTime currentTime = DateTime.Now;
+                var expectedDateTime = new DateTime(currentTime.Year, currentTime.Month, currentTime.Day);
+                Assert.That(modelReferenceDateTime, Is.EqualTo(expectedDateTime));
+                Assert.That(model.StartTime, Is.EqualTo(modelReferenceDateTime));
+                Assert.That(model.StopTime, Is.EqualTo(modelReferenceDateTime.AddDays(1)));
+            }
+        }
+
+        [Test]
+        public void ConstructorWithParameter_SetsCorrectTimeProperties()
+        {
+            // Setup
+            string waveFilePath = TestHelper.GetTestFilePath(@"mdw_coordinates\cartesian.mdw");
+            string localFilePath = TestHelper.CreateLocalCopy(waveFilePath);
+            using (var model = new WaveModel(localFilePath))
+            {
+                // Assert
+                WaveModelDefinition modelDefinition = model.ModelDefinition;
+                DateTime modelReferenceDateTime = modelDefinition.ModelReferenceDateTime;
+
+                Assert.That(modelReferenceDateTime, Is.EqualTo(new DateTime(2000, 07, 14)));
+                Assert.That(model.StartTime, Is.EqualTo(modelReferenceDateTime));
+                Assert.That(model.StopTime, Is.EqualTo(modelReferenceDateTime.AddDays(1)));
+            }
+        }
+
         [Test]
         [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]
@@ -335,34 +370,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
             waveModel.OuterDomain.GridFileName = newName;
 
             Assert.AreEqual(WaveModel.WavmStoreDataItemTag + newName, dataItem.Tag);
-        }
-
-        [Test]
-        public void NewlyCreatedModelHasReferenceTimeSetToCurrentDate()
-        {
-            var now = DateTime.Now;
-            var model = new WaveModel();
-
-            Assert.AreEqual(now.ToString("yyyy-MM-dd"), model.ModelDefinition.ModelReferenceDateTime.ToString("yyyy-MM-dd"));
-        }
-
-        [Test]
-        public void NewlyCreatedWaveModelHasDefaultCouplingStartTimeSetToModelReferenceDate()
-        {
-            using (var model = new WaveModel())
-            {
-                Assert.That(model.StartTime, Is.EqualTo(model.ModelDefinition.ModelReferenceDateTime));
-            }
-        }
-
-        [Test]
-        public void NewlyCreatedWaveModelHasDefaultCouplingStopTimeSetToModelReferenceDatePlusOneDay()
-        {
-            using (var model = new WaveModel())
-            {
-                Assert.That(model.StopTime, Is.EqualTo(model.ModelDefinition.ModelReferenceDateTime.AddDays(1)));
-            }
-                
         }
 
         [Test]

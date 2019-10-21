@@ -451,6 +451,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             InitializeCouplingTime();
         }
 
+        private void InitializeCouplingTime()
+        {
+            StartTime = ModelDefinition.ModelReferenceDateTime;
+            StopTime = ModelDefinition.ModelReferenceDateTime.AddDays(1);
+        }
+
         /// <summary>
         /// Watch out, this method can/will be called multiple times for the same instance!!
         /// </summary>
@@ -1569,12 +1575,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         private DateTime startTime;
 
         private DateTime stopTime;
-
-        private void InitializeCouplingTime()
-        {
-            this.StartTime = this.ModelDefinition.ModelReferenceDateTime;
-            this.StopTime = this.ModelDefinition.ModelReferenceDateTime.AddDays(1);
-        }
 
         private TimeSpan timeStep;
         //private IHydroRegion region;
