@@ -905,7 +905,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     Assert.That(activeView, Is.TypeOf<BoundaryConditionEditor>(), $"Associated view with a {typeof(BoundaryConditionSet)} must be of type {typeof(BoundaryConditionEditor)}");
 
                     var editor = (BoundaryConditionEditor) activeView;
-                    Assert.That(editor.SelectedCategory, Is.Not.Null, "The selected category can not be NULL");
+                    Assert.That(editor.SelectedCategory, Is.Not.Null, "The selected category cannot be NULL");
                     Assert.That(editor.Data, Is.SameAs(boundaryConditionSet), "Data on the editor must have the same reference for which it was opened for");
 
                     var controller = editor.Controller as FlowBoundaryConditionEditorController;
