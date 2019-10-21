@@ -509,7 +509,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             string mduContent = File.ReadAllText(mduFileSaveToPath);
             WaterFlowFMMduFileTestHelper.AssertContainsMduLine(mduContent, "TStart", "504");
             WaterFlowFMMduFileTestHelper.AssertContainsMduLine(mduContent, "HisInterval", "600");
-            //Assert.IsTrue(mduContent.Contains("! for now, no Smag."));
 
             string pliFileSaveToPath = NGHSFileBase.GetOtherFilePathInSameDirectory(mduFileSaveToPath, "versie2_01.pli");
             string pliFileContent = File.ReadAllText(pliFileSaveToPath);
