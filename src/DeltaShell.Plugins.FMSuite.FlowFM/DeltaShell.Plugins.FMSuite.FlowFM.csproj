@@ -169,7 +169,6 @@
     <Compile Include="IO\Files\Helpers\MorphologyFileBackwardsCompatibilityHelper.cs" />
     <Compile Include="IO\Files\MduFileBackwardsCompatibilityHelper.cs" />
     <Compile Include="IO\Files\MduFileReader.cs" />
-    <Compile Include="IO\Files\NewMduFileReader.cs" />
     <Compile Include="IO\ImportExport\Exporters\BcmFileExporter.cs" />
     <Compile Include="IO\ImportExport\Exporters\FMGridPartitionExporter.cs" />
     <Compile Include="IO\ImportExport\Exporters\FMModelPartitionExporter.cs" />

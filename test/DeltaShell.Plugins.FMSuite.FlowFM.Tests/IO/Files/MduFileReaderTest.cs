@@ -201,7 +201,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
         }
 
         [Test]
-        public void Read_InvalidFixedWeirSchemeValue_ThenWarningMessageIsLogged_PlusCheckNewReadResult()
+        public void Read_InvalidFixedWeirSchemeValue_ThenWarningMessageIsLogged()
         {
             // Setup
             string testFilePath = TestHelper.GetTestFilePath(Path.Combine("MduFileReaderTest", "InvalidFixedWeirSchemeValue.mdu"));
@@ -211,13 +211,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
                 var oldDefinition = new WaterFlowFMModelDefinition();
 
                 // Call
-                void Call() => new MduFileReader().Read(tempFilePath, oldDefinition);
-                void NewCall() => NewMduFileReader.Read(tempFilePath, oldDefinition);
+                void Call() => MduFileReader.Read(tempFilePath, oldDefinition);
 
                 // Assert
                 const string expectedMessage = "Obsolete Fixed Weir Scheme 222 detected and it will be corrected to the default Numerical Scheme.";
                 TestHelper.AssertLogMessageIsGenerated(Call, expectedMessage);
-                TestHelper.AssertLogMessageIsGenerated(NewCall, expectedMessage);
             }
         }
 
@@ -231,20 +229,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
                 var oldDefinition = new WaterFlowFMModelDefinition();
 
                 // Call
-                new MduFileReader().Read(tempFilePath, oldDefinition);
+                MduFileReader.Read(tempFilePath, oldDefinition);
 
                 // Assert
                 assertAction(oldDefinition);
-
-                // Equal result as new reader
-                var newDefinition = new WaterFlowFMModelDefinition();
-                NewMduFileReader.Read(tempFilePath, newDefinition);
-                Assert.That(Equals(oldDefinition, newDefinition));
             }
         }
 
         [Test]
-        public void Read_BadFormatForMduCategory_ThrowsFormatException_PlusCheckNewReadResult()
+        public void Read_BadFormatForMduCategory_ThrowsFormatException()
         {
             // Setup
             string testFilePath = TestHelper.GetTestFilePath(Path.Combine("MduFileReaderTest", "BadFormatForMduCategory.mdu"));
@@ -254,22 +247,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
                 var oldDefinition = new WaterFlowFMModelDefinition();
 
                 // Call
-                void Call() => new MduFileReader().Read(tempFilePath, oldDefinition);
+                void Call() => MduFileReader.Read(tempFilePath, oldDefinition);
 
                 // Assert
                 var exception = Assert.Throws<FormatException>(Call);
                 Assert.That(exception.Message, Is.EqualTo($"Invalid group on line {4} in file {tempFilePath}"));
-
-                // Equal result as new reader
-                void NewCall() => NewMduFileReader.Read(tempFilePath, oldDefinition);
-                var newException = Assert.Throws<FormatException>(NewCall);
-
-                Assert.That(newException.Message, Is.EqualTo($"Invalid group on line {4} in file {tempFilePath}"));
             }
         }
 
         [Test]
-        public void Read_MultiplePropertyValuesOutOfRange_ThenWarningMessageIsLogged_PlusCheckNewReadResult()
+        public void Read_MultiplePropertyValuesOutOfRange_ThenWarningMessageIsLogged()
         {
             // Setup
             string testFilePath = TestHelper.GetTestFilePath(Path.Combine("MduFileReaderTest", "MultiplePropertyValuesOutOfRange.mdu"));
@@ -279,8 +266,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
                 var oldDefinition = new WaterFlowFMModelDefinition();
 
                 // Call
-                void Call() => new MduFileReader().Read(tempFilePath, oldDefinition);
-                void NewCall() => NewMduFileReader.Read(tempFilePath, oldDefinition);
+                void Call() => MduFileReader.Read(tempFilePath, oldDefinition);
 
                 // Assert
                 string expectedMessage = "During reading the mdu file the following warnings were reported:"
@@ -289,73 +275,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
                                          + Environment.NewLine
                                          + "- An unsupported option for *Turbulence model* has been detected and the default value will be used.";
                 TestHelper.AssertLogMessageIsGenerated(Call, expectedMessage);
-                TestHelper.AssertLogMessageIsGenerated(NewCall, expectedMessage);
             }
-        }
-
-        private static bool Equals(WaterFlowFMModelDefinition definition1, WaterFlowFMModelDefinition definition2)
-        {
-            IEnumerable<string> difference1 = definition2.Properties.Select(p => p.PropertyDefinition.MduPropertyName)
-                                                         .Except(definition1.Properties.Select(p => p.PropertyDefinition.MduPropertyName));
-            IEnumerable<string> difference2 = definition1.Properties.Select(p => p.PropertyDefinition.MduPropertyName)
-                                                         .Except(definition2.Properties.Select(p => p.PropertyDefinition.MduPropertyName));
-
-            Assert.That(definition1.Properties.Count, Is.EqualTo(definition2.Properties.Count), "The amount of properties is not the same.");
-
-            int propertyCount = definition1.Properties.Count;
-            for (var i = 0; i < propertyCount; i++)
-            {
-                WaterFlowFMProperty property1 = definition1.Properties[i];
-                WaterFlowFMProperty property2 = definition2.Properties[i];
-
-                Assert.That(property1.MinValue, Is.EqualTo(property2.MinValue), $"{property1.PropertyDefinition.Caption} - MinValue");
-                Assert.That(property1.MaxValue, Is.EqualTo(property2.MaxValue), $"{property1.PropertyDefinition.Caption} - MaxValue");
-
-                WaterFlowFMPropertyDefinition propertyDefinition1 = property1.PropertyDefinition;
-                WaterFlowFMPropertyDefinition propertyDefinition2 = property2.PropertyDefinition;
-
-                Assert.That(propertyDefinition1.Caption, Is.EqualTo(propertyDefinition2.Caption), $"{property1.PropertyDefinition.Caption} - Caption");
-                Assert.That(propertyDefinition1.MduPropertyName, Is.EqualTo(propertyDefinition2.MduPropertyName), $"{property1.PropertyDefinition.Caption} - MduPropertyName");
-                Assert.That(propertyDefinition1.FileCategoryName, Is.EqualTo(propertyDefinition2.FileCategoryName), $"{property1.PropertyDefinition.Caption} - FileCategoryName");
-                Assert.That(propertyDefinition1.FilePropertyName, Is.EqualTo(propertyDefinition2.FilePropertyName), $"{property1.PropertyDefinition.Caption} - FilePropertyName");
-                Assert.That(propertyDefinition1.Category, Is.EqualTo(propertyDefinition2.Category), $"{property1.PropertyDefinition.Caption} - Category");
-                Assert.That(propertyDefinition1.SubCategory, Is.EqualTo(propertyDefinition2.SubCategory), $"{property1.PropertyDefinition.Caption} - SubCategory");
-                Assert.That(propertyDefinition1.DataType, Is.EqualTo(propertyDefinition2.DataType), $"{property1.PropertyDefinition.Caption} - DataType");
-                Assert.That(propertyDefinition1.DefaultValueAsString, Is.EqualTo(propertyDefinition2.DefaultValueAsString), $"{property1.PropertyDefinition.Caption} - DefaultValueAsString");
-                Assert.That(propertyDefinition1.EnabledDependencies, Is.EqualTo(propertyDefinition2.EnabledDependencies), $"{property1.PropertyDefinition.Caption} - EnabledDependencies");
-                Assert.That(propertyDefinition1.VisibleDependencies, Is.EqualTo(propertyDefinition2.VisibleDependencies), $"{property1.PropertyDefinition.Caption} - VisibleDependencies");
-                Assert.That(propertyDefinition1.Description, Is.EqualTo(propertyDefinition2.Description), $"{property1.PropertyDefinition.Caption} - Description");
-                Assert.That(propertyDefinition1.IsDefinedInSchema, Is.EqualTo(propertyDefinition2.IsDefinedInSchema), $"{property1.PropertyDefinition.Caption} - IsDefinedInSchema");
-                Assert.That(propertyDefinition1.IsFile, Is.EqualTo(propertyDefinition2.IsFile), $"{property1.PropertyDefinition.Caption} - IsFile");
-                Assert.That(propertyDefinition1.IsEnabled, Is.EqualTo(propertyDefinition2.IsEnabled), $"{property1.PropertyDefinition.Caption} - IsEnabled");
-                Assert.That(propertyDefinition1.IsVisible, Is.EqualTo(propertyDefinition2.IsVisible), $"{property1.PropertyDefinition.Caption} - IsVisible");
-                Assert.That(propertyDefinition1.UnknownPropertySource, Is.EqualTo(propertyDefinition2.UnknownPropertySource), $"{property1.PropertyDefinition.Caption} - UnknownPropertySource");
-
-                Assert.That(propertyDefinition1.DefaultValueDependentOn, Is.EqualTo(propertyDefinition2.DefaultValueDependentOn), $"{property1.PropertyDefinition.Caption} - DefaultValueDependentOn");
-                Assert.That(propertyDefinition1.DocumentationSection, Is.EqualTo(propertyDefinition2.DocumentationSection), $"{property1.PropertyDefinition.Caption} - DocumentationSection");
-                Assert.That(propertyDefinition1.FromRevision, Is.EqualTo(propertyDefinition2.FromRevision), $"{property1.PropertyDefinition.Caption} - FromRevision");
-                Assert.That(propertyDefinition1.IsMultipleFile, Is.EqualTo(propertyDefinition2.IsMultipleFile), $"{property1.PropertyDefinition.Caption} - IsMultipleFile");
-                Assert.That(propertyDefinition1.MinValueAsString, Is.EqualTo(propertyDefinition2.MinValueAsString), $"{property1.PropertyDefinition.Caption} - MinValueAsString");
-                Assert.That(propertyDefinition1.MaxValueAsString, Is.EqualTo(propertyDefinition2.MaxValueAsString), $"{property1.PropertyDefinition.Caption} - MaxValueAsString");
-                Assert.That(propertyDefinition1.ModelFileOnly, Is.EqualTo(propertyDefinition2.ModelFileOnly), $"{property1.PropertyDefinition.Caption} - ModelFileOnly");
-                Assert.That(propertyDefinition1.MultipleDefaultValues, Is.EqualTo(propertyDefinition2.MultipleDefaultValues), $"{property1.PropertyDefinition.Caption} - MultipleDefaultValues");
-                Assert.That(propertyDefinition1.MultipleDefaultValuesAvailable, Is.EqualTo(propertyDefinition2.MultipleDefaultValuesAvailable), $"{property1.PropertyDefinition.Caption} - MultipleDefaultValuesAvailable");
-                Assert.That(propertyDefinition1.Unit, Is.EqualTo(propertyDefinition2.Unit), $"{property1.PropertyDefinition.Caption} - Unit");
-                Assert.That(propertyDefinition1.UntilRevision, Is.EqualTo(propertyDefinition2.UntilRevision), $"{property1.PropertyDefinition.Caption} - UntilRevision");
-
-                if (propertyDefinition1.Caption != "Restart Time")
-                {
-                    Assert.That(property1.Value, Is.EqualTo(property2.Value), $"{property1.PropertyDefinition.Caption} - Value");
-                }
-                else
-                {
-                    DateTime date1 = ((DateTime) property1.Value).Date;
-                    DateTime date2 = ((DateTime) property2.Value).Date;
-                    Assert.That(date1, Is.EqualTo(date2), $"{property1.PropertyDefinition.Caption} - Value");
-                }
-            }
-
-            return true;
         }
     }
 }
