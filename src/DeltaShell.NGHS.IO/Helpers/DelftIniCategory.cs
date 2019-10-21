@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using DelftTools.Utils.Collections;
 
 namespace DeltaShell.NGHS.IO.Helpers
 {
@@ -10,6 +11,8 @@ namespace DeltaShell.NGHS.IO.Helpers
     /// </summary>
     public class DelftIniCategory
     {
+        private List<IDelftIniProperty> delftIniProperties;
+
         /// <summary>
         /// Creates an instance of <see cref="DelftIniCategory"/>.
         /// </summary>
@@ -17,7 +20,7 @@ namespace DeltaShell.NGHS.IO.Helpers
         public DelftIniCategory(string categoryName)
         {
             Name = categoryName;
-            Properties = new List<IDelftIniProperty>();
+            delftIniProperties = new List<IDelftIniProperty>();
         }
 
         public DelftIniCategory(string categoryName, int lineNumber)
@@ -34,7 +37,7 @@ namespace DeltaShell.NGHS.IO.Helpers
         /// <summary>
         /// The properties that belong to the category.
         /// </summary>
-        public IList<IDelftIniProperty> Properties { get; set; }
+        public IEnumerable<IDelftIniProperty> Properties => delftIniProperties;
 
         /// <summary>
         /// The line number where this category was read in the file.
@@ -69,6 +72,24 @@ namespace DeltaShell.NGHS.IO.Helpers
         }
 
         /// <summary>
+        /// Adds a <see cref="DelftIniProperty"/> to this category.
+        /// </summary>
+        /// <param name="property"> The property to add. </param>
+        public void AddProperty(DelftIniProperty property)
+        {
+            delftIniProperties.Add(property);
+        }
+
+        /// <summary>
+        /// Adds a collection of <see cref="DelftIniProperty"/> objects to this category.
+        /// </summary>
+        /// <param name="properties"> The properties to add. </param>
+        public void AddProperties(List<DelftIniProperty> properties)
+        {
+            properties.AddRange(properties);
+        }
+
+        /// <summary>
         /// Adds a string-valued <see cref="DelftIniProperty"/> to this category with the given values.
         /// </summary>
         /// <param name="name"> The property name. </param>
@@ -76,7 +97,7 @@ namespace DeltaShell.NGHS.IO.Helpers
         /// <param name="comment"> The property comment. </param>
         public void AddProperty(string name, string value, string comment = null)
         {
-            Properties.Add(new DelftIniProperty(name, value, comment ?? ""));
+            delftIniProperties.Add(new DelftIniProperty(name, value, comment ?? ""));
         }
 
         /// <summary>
@@ -149,6 +170,16 @@ namespace DeltaShell.NGHS.IO.Helpers
         public void SetProperty(string name, double value, string comment = null, string format = "e7")
         {
             SetProperty(name, value.ToString(format, CultureInfo.InvariantCulture), comment);
+        }
+
+        /// <summary>
+        /// Removes all properties from this category that satisfy the condition that is
+        /// defined in the argument.
+        /// </summary>
+        /// <param name="condition"> The removal condition. </param>
+        public void RemoveAllPropertiesWhere(Func<IDelftIniProperty, bool> condition)
+        {
+            delftIniProperties.RemoveAllWhere(condition);
         }
     }
 }

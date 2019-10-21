@@ -368,7 +368,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
                         if (!BcFile.IsCorrectionType(tuple.Item1.DataType) && existingPaths.Contains(corrPath))
                         {
-                            existingBlock.Properties.RemoveAllWhere(p => p.Value == corrPath);
+                            existingBlock.RemoveAllPropertiesWhere(p => p.Value == corrPath);
                         }
                     }
 

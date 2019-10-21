@@ -1089,79 +1089,81 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         private static DelftIniCategory CreateOldGeneralStructureDelftIniCategory()
         {
             const string structureName = "general_structure";
-            var generalStructureCategory = new DelftIniCategory("structure")
+            var properties = new List<DelftIniProperty>
             {
-                Properties =
-                {
-                    new DelftIniProperty("type", "generalstructure", ""),
-                    new DelftIniProperty("id", structureName, ""),
-                    new DelftIniProperty("polylinefile", $"{structureName}.pli", ""),
-                    new DelftIniProperty("pos_freegateflowcoeff", "0", ""),
-                    new DelftIniProperty("pos_drowngateflowcoeff", "0", ""),
-                    new DelftIniProperty("pos_freeweirflowcoeff", "0", ""),
-                    new DelftIniProperty("pos_drownweirflowcoeff", "0", ""),
-                    new DelftIniProperty("pos_contrcoeffreegate", "0", ""),
-                    new DelftIniProperty("neg_freegateflowcoeff", "0", ""),
-                    new DelftIniProperty("neg_drowngateflowcoeff", "0", ""),
-                    new DelftIniProperty("neg_freeweirflowcoeff", "0", ""),
-                    new DelftIniProperty("neg_drownweirflowcoeff", "0", ""),
-                    new DelftIniProperty("neg_contrcoeffreegate", "0", ""),
-                    new DelftIniProperty("extraresistance", "0", ""),
-                    new DelftIniProperty("levelcenter", "1", ""),
-                    new DelftIniProperty("widthcenter", "2", ""),
-                    new DelftIniProperty("gateheight", "3", ""),
-                    new DelftIniProperty("door_opening_width", "4", ""),
-                    new DelftIniProperty("gatedoorheight", "5", ""),
-                    new DelftIniProperty("horizontal_opening_direction", "symmetric", ""),
-                    new DelftIniProperty("widthleftW1", "6", ""),
-                    new DelftIniProperty("widthleftWsdl", "7", ""),
-                    new DelftIniProperty("widthrightWsdr", "8", ""),
-                    new DelftIniProperty("widthrightW2", "9", ""),
-                    new DelftIniProperty("levelleftZb1", "10", ""),
-                    new DelftIniProperty("levelleftZbsl", "11", ""),
-                    new DelftIniProperty("levelrightZbsr", "12", ""),
-                    new DelftIniProperty("levelrightZb2", "13", "")
-                }
+                new DelftIniProperty("type", "generalstructure", ""),
+                new DelftIniProperty("id", structureName, ""),
+                new DelftIniProperty("polylinefile", $"{structureName}.pli", ""),
+                new DelftIniProperty("pos_freegateflowcoeff", "0", ""),
+                new DelftIniProperty("pos_drowngateflowcoeff", "0", ""),
+                new DelftIniProperty("pos_freeweirflowcoeff", "0", ""),
+                new DelftIniProperty("pos_drownweirflowcoeff", "0", ""),
+                new DelftIniProperty("pos_contrcoeffreegate", "0", ""),
+                new DelftIniProperty("neg_freegateflowcoeff", "0", ""),
+                new DelftIniProperty("neg_drowngateflowcoeff", "0", ""),
+                new DelftIniProperty("neg_freeweirflowcoeff", "0", ""),
+                new DelftIniProperty("neg_drownweirflowcoeff", "0", ""),
+                new DelftIniProperty("neg_contrcoeffreegate", "0", ""),
+                new DelftIniProperty("extraresistance", "0", ""),
+                new DelftIniProperty("levelcenter", "1", ""),
+                new DelftIniProperty("widthcenter", "2", ""),
+                new DelftIniProperty("gateheight", "3", ""),
+                new DelftIniProperty("door_opening_width", "4", ""),
+                new DelftIniProperty("gatedoorheight", "5", ""),
+                new DelftIniProperty("horizontal_opening_direction", "symmetric", ""),
+                new DelftIniProperty("widthleftW1", "6", ""),
+                new DelftIniProperty("widthleftWsdl", "7", ""),
+                new DelftIniProperty("widthrightWsdr", "8", ""),
+                new DelftIniProperty("widthrightW2", "9", ""),
+                new DelftIniProperty("levelleftZb1", "10", ""),
+                new DelftIniProperty("levelleftZbsl", "11", ""),
+                new DelftIniProperty("levelrightZbsr", "12", ""),
+                new DelftIniProperty("levelrightZb2", "13", "")
             };
+
+            var generalStructureCategory = new DelftIniCategory("structure");
+            generalStructureCategory.AddProperties(properties);
+
             return generalStructureCategory;
         }
 
         private static DelftIniCategory CreateOldGateDelftIniCategory()
         {
             const string structureName = "gated_weir";
-            var gateCategory = new DelftIniCategory("structure")
+
+            var properties = new List<DelftIniProperty>
             {
-                Properties =
-                {
-                    new DelftIniProperty("type", "gate", ""),
-                    new DelftIniProperty("id", structureName, ""),
-                    new DelftIniProperty("polylinefile", $"{structureName}.pli", ""),
-                    new DelftIniProperty("sill_level", "1", ""),
-                    new DelftIniProperty("sill_width", "2", ""),
-                    new DelftIniProperty("lower_edge_level", "3", ""),
-                    new DelftIniProperty("opening_width", "4", ""),
-                    new DelftIniProperty("door_height", "5", ""),
-                    new DelftIniProperty("horizontal_opening_direction", "symmetric", "")
-                }
+                new DelftIniProperty("type", "gate", ""),
+                new DelftIniProperty("id", structureName, ""),
+                new DelftIniProperty("polylinefile", $"{structureName}.pli", ""),
+                new DelftIniProperty("sill_level", "1", ""),
+                new DelftIniProperty("sill_width", "2", ""),
+                new DelftIniProperty("lower_edge_level", "3", ""),
+                new DelftIniProperty("opening_width", "4", ""),
+                new DelftIniProperty("door_height", "5", ""),
+                new DelftIniProperty("horizontal_opening_direction", "symmetric", "")
             };
+            var gateCategory = new DelftIniCategory("structure");
+            gateCategory.AddProperties(properties);
+
             return gateCategory;
         }
 
         private static DelftIniCategory CreateOldWeirDelftIniCategory()
         {
             const string structureName = "simple_weir";
-            var weirCategory = new DelftIniCategory("structure")
+            var properties = new List<DelftIniProperty>
             {
-                Properties =
-                {
-                    new DelftIniProperty("type", "weir", ""),
-                    new DelftIniProperty("id", structureName, ""),
-                    new DelftIniProperty("polylinefile", $"{structureName}.pli", ""),
-                    new DelftIniProperty("lat_contr_coeff", "0", ""),
-                    new DelftIniProperty("crest_level", "1", ""),
-                    new DelftIniProperty("crest_width", "2", "")
-                }
+                new DelftIniProperty("type", "weir", ""),
+                new DelftIniProperty("id", structureName, ""),
+                new DelftIniProperty("polylinefile", $"{structureName}.pli", ""),
+                new DelftIniProperty("lat_contr_coeff", "0", ""),
+                new DelftIniProperty("crest_level", "1", ""),
+                new DelftIniProperty("crest_width", "2", "")
             };
+            var weirCategory = new DelftIniCategory("structure");
+            weirCategory.AddProperties(properties);
+
             return weirCategory;
         }
 
@@ -1531,7 +1533,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             for (var i = 0; i < iniCategoriesA.Count; i++)
             {
                 Assert.AreEqual(iniCategoriesA[i].Name, iniCategoriesB[i].Name, String.Format("Names are not the same at index = {0}.", i));
-                CompareProperties(iniCategoriesA[i].Properties, iniCategoriesB[i].Properties);
+                CompareProperties(iniCategoriesA[i].Properties.ToList(), iniCategoriesB[i].Properties.ToList());
             }
         }
 

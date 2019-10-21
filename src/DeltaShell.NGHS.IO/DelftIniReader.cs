@@ -52,7 +52,7 @@ namespace DeltaShell.NGHS.IO
 
                     string[] fields = GetKeyValueComment(line);
                     var delftIniProperty = new DelftIniProperty(fields[0], fields[1], fields[2], LineNumber);
-                    currentCategory.Properties.Add(delftIniProperty);
+                    currentCategory.AddProperty(delftIniProperty);
                 }
             }
             finally

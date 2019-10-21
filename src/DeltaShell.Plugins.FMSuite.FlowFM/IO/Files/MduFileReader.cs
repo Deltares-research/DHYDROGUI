@@ -78,7 +78,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         {
             categories.ForEach(category => 
             {
-                category.Properties.RemoveAllWhere(p => p.Name.ToLowerInvariant() == "hdam" || definition.ContainsProperty(p.Name) && p.Value == string.Empty);
+                category.RemoveAllPropertiesWhere(p => p.Name.ToLowerInvariant() == "hdam" || definition.ContainsProperty(p.Name) && p.Value == string.Empty);
             });
         }
 

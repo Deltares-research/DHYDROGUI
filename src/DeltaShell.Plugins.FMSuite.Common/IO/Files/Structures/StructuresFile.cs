@@ -231,7 +231,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
                     property.GetValueAsString(), 
                     property.PropertyDefinition.Description);
 
-                delftIniCategory.Properties.Add(delftIniProperty);
+                delftIniCategory.AddProperty(delftIniProperty);
             }
 
             return delftIniCategory;
@@ -244,7 +244,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
 
             foreach (DelftIniProperty property in delftIniProperties)
             {
-                delftIniCategory.Properties.Add(property);
+                delftIniCategory.AddProperty(property);
             }
 
             return delftIniCategory;
