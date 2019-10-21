@@ -43,7 +43,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
     [TestFixture]
     public class WaterFlowFMModelDefinitionTest
     {
-        private const string TestFilePath = @"fm_files\fm_files.mdu";
+        private const string testFilePath = @"fm_files\fm_files.mdu";
 
         [Test]
         public void SetGuiTimePropertiesFromMduPropertiesTest()
@@ -134,7 +134,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             if (Directory.Exists(outputDirName)) Directory.Delete(outputDirName, true);
 
             // setup
-            var mduFilePath = TestHelper.GetTestFilePath(TestFilePath);
+            var mduFilePath = TestHelper.GetTestFilePath(testFilePath);
             var mduDir = Path.GetDirectoryName(mduFilePath);
             var modelName = Path.GetFileName(mduFilePath);
 
@@ -188,7 +188,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             if (Directory.Exists(outputDirName)) Directory.Delete(outputDirName, true);
 
             // setup
-            var mduFilePath = TestHelper.GetTestFilePath(TestFilePath);
+            var mduFilePath = TestHelper.GetTestFilePath(testFilePath);
             var mduDir = Path.GetDirectoryName(mduFilePath);
             var modelName = Path.GetFileName(mduFilePath);
 
@@ -225,34 +225,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             // Attribute Value: "projected_coordinate_system" - relates to the variable name in NetCdfFile
             Assert.AreEqual("projected_coordinate_system", gridMapping);
-        }
-
-        [Test]
-        [Category(TestCategory.DataAccess)]
-        public void ReadAndWriteMduFile()
-        {
-            var mduFilePath = TestHelper.GetTestFilePath(TestFilePath);
-            var mduDir = Path.GetDirectoryName(mduFilePath);
-            var modelName = Path.GetFileName(mduFilePath);
-
-            var area = new HydroArea();
-            var modelDefinition = new WaterFlowFMModelDefinition(mduDir, modelName);
-            var allFixedWeirsAndCorrespondingProperties = new Dictionary<FixedWeir, ModelFeatureCoordinateData<FixedWeir>>();
-            var mduFile = new MduFile();
-            mduFile.Read(mduFilePath, modelDefinition, area, allFixedWeirsAndCorrespondingProperties);
-
-            Directory.CreateDirectory("readWriteMdu");
-            mduFile.Write("readWriteMdu/fm_files.mdu", modelDefinition, area, allFixedWeirsAndCorrespondingProperties.Values);
-
-            var mduContent = File.ReadAllText("readWriteMdu/fm_files.mdu");
-            var extForceFileContent = File.ReadAllText("readWriteMdu/fm_files.ext");
-            Assert.IsTrue(extForceFileContent.Contains(
-                "* FACTOR  =   : Conversion factor for this provider"));
-            Assert.IsTrue(extForceFileContent.Contains(
-                "* This comment line will not be removed, eventhough shiptxy is not yet supported."));
-            Assert.IsTrue(mduContent.Contains(
-                "! comment line on initial water level"));
-            WaterFlowFMMduFileTestHelper.AssertContainsMduLine(mduContent, "SomeNewFactor", "3.7", "# new factor that should be read and written, but is not known");
         }
 
         [Test]
@@ -321,7 +293,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Category(TestCategory.DataAccess)]
         public void ReadLandBoundaryAndObservationsFile()
         {
-            var mduFilePath = TestHelper.GetTestFilePath(TestFilePath);
+            var mduFilePath = TestHelper.GetTestFilePath(testFilePath);
             var mduDir = Path.GetDirectoryName(mduFilePath);
             var modelName = Path.GetFileName(mduFilePath);
 
@@ -359,7 +331,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Category(TestCategory.DataAccess)]
         public void ReadFixedWeirsWithMissingValuesFile()
         {
-            var mduFilePath = TestHelper.GetTestFilePath(TestFilePath);
+            var mduFilePath = TestHelper.GetTestFilePath(testFilePath);
             var mduDir = Path.GetDirectoryName(mduFilePath);
             var modelName = Path.GetFileName(mduFilePath);
 
@@ -386,7 +358,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Category(TestCategory.DataAccess)]
         public void ReadExtForceFileAndPlifiles()
         {
-            var mduFilePath = TestHelper.GetTestFilePath(TestFilePath);
+            var mduFilePath = TestHelper.GetTestFilePath(testFilePath);
             var mduDir = Path.GetDirectoryName(mduFilePath);
             var modelName = Path.GetFileName(mduFilePath);
 
@@ -430,7 +402,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Category(TestCategory.DataAccess)]
         public void ReadStructuresFile()
         {
-            var mduFilePath = TestHelper.GetTestFilePath(TestFilePath);
+            var mduFilePath = TestHelper.GetTestFilePath(testFilePath);
             var mduDir = Path.GetDirectoryName(mduFilePath);
             var modelName = Path.GetFileName(mduFilePath);
 
@@ -757,7 +729,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Category(TestCategory.Integration)]
         public void ReadMduAndVerifyIsEnabled()
         {
-            var mduFilePath = TestHelper.GetTestFilePath(TestFilePath);
+            var mduFilePath = TestHelper.GetTestFilePath(testFilePath);
             var mduDir = Path.GetDirectoryName(mduFilePath);
             var modelName = Path.GetFileName(mduFilePath);
 
@@ -781,7 +753,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Category(TestCategory.Integration)]
         public void PropertyChangedEventsAreBubbledForModelProperties()
         {
-            var mduFilePath = TestHelper.GetTestFilePath(TestFilePath);
+            var mduFilePath = TestHelper.GetTestFilePath(testFilePath);
             var mduDir = Path.GetDirectoryName(mduFilePath);
             var modelName = Path.GetFileName(mduFilePath);
 
@@ -805,7 +777,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Category(TestCategory.DataAccess)]
         public void SettingUseMorSedShouldWriteSedimentSection()
         {
-            var mduFilePath = TestHelper.GetTestFilePath(TestFilePath);
+            var mduFilePath = TestHelper.GetTestFilePath(testFilePath);
             mduFilePath = TestHelper.CreateLocalCopy(mduFilePath);
             var mduDir = Path.GetDirectoryName(mduFilePath);
 
