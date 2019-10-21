@@ -41,7 +41,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         public IEnumerable<IHydroModelWorkFlowData> WorkFlowDatas
         {
-            get { return hydroModelWorkFlowDataLookUp.Keys; }
+            get { return workFlowDatas; }
         }
 
         public IEnumerable<IDataItem> OutputDataItems

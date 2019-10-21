@@ -1315,7 +1315,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccess
                 unit = "seconds since " + referenceTime.Value.ToString("yyyy-MM-dd HH:mm:ss");
             }
 
-            if (argument.ValueType != typeof(double) || unit.ToLower() != "deg/h")
+            if (argument.ValueType != typeof(double) || unit?.ToLower() != "deg/h")
             {
                 return CreateBcQuantityData(quantity, argument, referenceTime, unit, converter);
             }

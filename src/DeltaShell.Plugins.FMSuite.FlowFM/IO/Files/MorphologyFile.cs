@@ -245,9 +245,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 return;
             }
 
-            IList<DelftIniCategory> delftIniCategories = new SedMorDelftIniReader().ReadDelftIniFile(morFilePath);
+            IList<IDelftIniCategory> delftIniCategories = new SedMorDelftIniReader().ReadDelftIniFile(morFilePath);
 
-            foreach (DelftIniCategory delftIniCategory in delftIniCategories)
+            foreach (IDelftIniCategory delftIniCategory in delftIniCategories)
             {
                 string categoryName = delftIniCategory.Name;
 
@@ -271,7 +271,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         {
             string categoryName = delftIniCategory.Name;
 
-            foreach (DelftIniProperty delftIniProperty in delftIniCategory.Properties)
+            foreach (IDelftIniProperty delftIniProperty in delftIniCategory.Properties)
             {
                 // Backwards Compatibility
                 delftIniProperty.Name = 
@@ -321,10 +321,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
 
             WaterFlowFMPropertyDefinition propertyDefinition =
-                WaterFlowFMProperty.CreatePropertyDefinitionForUnknownProperty(fileCategoryName,
-                                                                               delftIniProperty.Name,
-                                                                               delftIniProperty.Comment,
-                                                                               PropertySource.MorphologyFile);
+                WaterFlowFMPropertyDefinitionCreator.CreateForCustomProperty(fileCategoryName,
+                                                                              delftIniProperty.Name,
+                                                                              delftIniProperty.Comment,
+                                                                              PropertySource.MorphologyFile);
             propertyDefinition.Category = categoryName;
 
             var modelProperty = new WaterFlowFMProperty(propertyDefinition, delftIniProperty.Value);

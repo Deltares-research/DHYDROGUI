@@ -131,13 +131,5 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
         }
 
         public string MasterFileExtension => "mdu";
-
-        public IEnumerable<string> SubFolders
-        {
-            get
-            {
-                yield return "dflowfm";
-            }
-        }
     }
 }

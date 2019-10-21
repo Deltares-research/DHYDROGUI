@@ -9,7 +9,6 @@ using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Features.Generic;
-using NetTopologySuite.Extensions.Geometries;
 
 namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
 {

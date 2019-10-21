@@ -77,14 +77,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
         {
             Assert.AreEqual(false, importer.OpenViewAfterImport);
         }
-
-        [Test]
-        public void GivenARealTimeControlModelImporter_WhenSubFoldersIsCalled_ThenExpectedIsReturned()
-        {
-            var expectedSubFolders = new List<string> {"rtc"};
-            Assert.AreEqual(expectedSubFolders, importer.SubFolders);
-        }
-
+        
         [Test]
         public void GivenARealTimeControlModelImporter_WhenSupportedItemTypesIsCalled_ThenExpectedIsReturned()
         {

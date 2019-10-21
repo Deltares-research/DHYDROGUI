@@ -11,8 +11,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
         public const string Weirs = "weirs";
         public const string GeneralStructures = "generalstructures";
         public const string Gates = "gates";
-        public const string Observations = "observations";
-        public const string CrossSections = "crosssections";
+        public const string ObservationPoints = "observations";
+        public const string ObservationCrossSections = "crosssections";
         public const string Pumps = "pumps";
     }
 }

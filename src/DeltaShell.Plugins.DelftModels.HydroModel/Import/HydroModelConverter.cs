@@ -4,9 +4,9 @@ using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow;
-using DelftTools.Utils.Collections;
 using DeltaShell.Dimr;
 using DeltaShell.Dimr.xsd;
+using DeltaShell.NGHS.Common;
 using DeltaShell.NGHS.IO.Handlers;
 using DeltaShell.Plugins.DelftModels.HydroModel.Properties;
 using log4net;
@@ -65,6 +65,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
 
         private void AddModels(HydroModel hydroModel, ICollection<IDimrModelFileImporter> fileImporters, dimrXML dimrObject, string rootFolder)
         {
+            foreach (var component in dimrObject.component)
+            {
+                ValidateComponent(component);
+            }
+
             var componentGroups = dimrObject.component
                 .GroupBy(component => Path.GetExtension(component.inputFile)?.TrimStart('.'));
 
@@ -80,10 +85,16 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
 
                 importer.ProgressChanged = (name, step, steps) => { };
 
-                foreach (var component in componentGroup)
+                foreach (dimrComponentXML component in componentGroup)
                 {
-                    var filePath = GetFilePath(rootFolder, component.inputFile, importer);
-                    var importedItem = importer.ImportItem(Path.GetFullPath(filePath));
+                    string filePath = GetFilePath(rootFolder, component.workingDir.Trim(), component.inputFile.Trim(), importer);
+
+                    if (filePath == null)
+                    {
+                        continue;
+                    }
+
+                    object importedItem = importer.ImportItem(Path.GetFullPath(filePath));
 
                     if (!(importedItem is IActivity subModel))
                     {
@@ -94,6 +105,21 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
                     RenameSubModelWhenNeeded(subModel, component.name);
                     SetHydroModelProperties(hydroModel, subModel);
                 }
+            }
+        }
+
+        private static void ValidateComponent(dimrComponentXML component)
+        {
+            if (string.IsNullOrEmpty(component.workingDir))
+            {
+                throw new ArgumentException(string.Format(Resources.HydroModelConverter_AddModels_The_working_directory_is_missing_for_component__0__in_the_dimr_xml_,
+                                                component.name));
+            }
+
+            if (component.inputFile == null)
+            {
+                throw new ArgumentException(string.Format(Resources.HydroModelConverter_AddModels_The_input_file_is_missing_for_component__0__in_the_dimr_xml_,
+                                                component.name));
             }
         }
 
@@ -114,10 +140,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
             logHandler.ReportInfo($"No importer found for extension: {extension}");
         }
 
-        private string GetFilePath(string rootFolder, string inputFileName, IDimrModelFileImporter importer)
+        private string GetFilePath(string rootFolder, string workingDirectory, string inputFileName,
+                                   IDimrModelFileImporter importer)
         {
-            var fileName = GetFileName(inputFileName);
-            var filePath = ComposeFilePath(rootFolder, fileName, importer);
+            string fileName = GetFileName(inputFileName);
+            string filePath = ComposeFilePath(rootFolder, workingDirectory, fileName, importer);
             return filePath;
         }
 
@@ -128,28 +155,39 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
                 : fileName;
         }
 
-        private string ComposeFilePath(string rootFolder, string fileName, IDimrModelFileImporter importer)
+        private string ComposeFilePath(string rootFolder, string workingDirectory, string fileName, IDimrModelFileImporter importer)
         {
             string[] pathParts;
 
             if (importer.MasterFileExtension.Equals("json"))
             {
-                var subFolder = importer.SubFolders.First();
-                var pathToFile = Path.Combine(rootFolder, subFolder, fileName);
-                var file = File.ReadAllText(pathToFile);
+                string pathToFile = Path.Combine(rootFolder, workingDirectory, fileName);
+                string file = File.ReadAllText(pathToFile);
                 var fileObject = JsonConvert.DeserializeObject<RtcXmlDirectoryLookup>(file);
+                string xmlDirectory = fileObject.XmlDirectory;
 
-                pathParts = new[] { rootFolder }
-                    .Concat(importer.SubFolders)
-                    .Plus(fileObject.XmlDirectory)
-                    .ToArray();
+                if (xmlDirectory == null)
+                {
+                    logHandler.ReportError(Resources.HydroModelConverter_ComposeFilePath_Could_not_import_RTC_model_the_settings_json_file_should_contain_an_xml_directory_);
+                    return null;
+                }
+
+                pathParts = new[]
+                {
+                    rootFolder,
+                    workingDirectory,
+                    xmlDirectory
+                };
+                    
             }
             else
             {
-                pathParts = new[] {rootFolder}
-                    .Concat(importer.SubFolders)
-                    .Plus(fileName)
-                    .ToArray();
+                pathParts = new[]
+                {
+                    rootFolder,
+                    workingDirectory,
+                    fileName
+                };
             }
 
             return Path.Combine(pathParts);
@@ -189,6 +227,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
 
                 CoupleModelsByDimrCouplerXml(sourceModel, targetModel, dimrCouplerXml.item);
             }
+
+            foreach (ICoupledModel coupledModel in subModels.OfType<ICoupledModel>())
+            {
+                coupledModel.CleanUpModelAfterModelCoupling();
+            }
         }
 
         private void CoupleModelsByDimrCouplerXml(IDimrModel sourceModel, IDimrModel targetModel, dimrCoupledItemXML[] dimrCouplerXml)
@@ -197,20 +240,33 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
             {
                 try
                 {
+                    if (string.IsNullOrEmpty(couplerXml.sourceName) || string.IsNullOrEmpty(couplerXml.targetName))
+                    {
+                        logHandler.ReportErrorFormat(Resources.HydroModelConverter_CoupleModelsByDimrCouplerXml_Could_not_link_an_item_from__0__to__1__,
+                            sourceModel.Name, targetModel.Name);
+                        continue;
+                    }
+
                     var sourceDataItem = sourceModel.GetDataItemByItemString(couplerXml.sourceName);
                     var targetDataItem = targetModel.GetDataItemByItemString(couplerXml.targetName);
 
                     if (sourceDataItem == null || targetDataItem == null)
                     {
-                        logHandler.ReportError($"Could not link {couplerXml.sourceName} to {couplerXml.targetName}");
+                        logHandler.ReportErrorFormat(Resources.HydroModelConverter_CoupleModelsByDimrCouplerXml_Could_not_link__0__to__1__, 
+                                                     couplerXml.sourceName, couplerXml.targetName);
                         continue;
                     }
 
                     targetDataItem.LinkTo(sourceDataItem);
                 }
-                catch (NotImplementedException exception)
+                catch (Exception e) when (e is NotImplementedException ||
+                                          e is ArgumentException)
                 {
-                    logHandler.ReportError($"Could not link {couplerXml.sourceName} to {couplerXml.targetName} : {exception.Message}");
+                    var mainMessage = string.Format(
+                        Resources.HydroModelConverter_CoupleModelsByDimrCouplerXml_Could_not_link__0__to__1__,
+                        couplerXml.sourceName, couplerXml.targetName);
+
+                    logHandler.ReportError(string.Concat(mainMessage, $": {e.Message}"));
                 }
             }
         }

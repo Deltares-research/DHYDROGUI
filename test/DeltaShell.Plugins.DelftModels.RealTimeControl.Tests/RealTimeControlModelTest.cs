@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Controls;
+using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
@@ -9,6 +10,7 @@ using DelftTools.Shell.Core.Workflow.DataItems.ValueConverters;
 using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DelftTools.Units.Generics;
+using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Gui;
 using DeltaShell.Plugins.CommonTools;
@@ -652,9 +654,160 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             Assert.AreEqual(6, timeStepsCount);
         }
 
-        # endregion
+        #endregion
 
+        [Test]
+        public void CleanUpModelAfterModelCoupling_ShouldResetInputIfUnlinked()
+        {
+            // Given
+            var inputs = new EventedList<Input>
+            {
+                new Input
+                {
+                    Name = "test",
+                    Feature = null,
+                    ParameterName = "CrestLevel",
+                    UnitName = "[m]"
+                }
+            };
+
+            ControlGroup controlGroup = new ControlGroup
+            {
+                Inputs = inputs
+            };
+
+            var rtcModel = new RealTimeControlModel();
+            rtcModel.ControlGroups.Add(controlGroup);
+
+            Input retrievedInputFromRtcModel = rtcModel.ControlGroups[0].Inputs[0];
+
+            Assert.IsFalse(retrievedInputFromRtcModel.IsConnected, "Setup of the test is incorrect");
+           
+            // When
+            rtcModel.CleanUpModelAfterModelCoupling();
+
+            // Then
+            CheckResetConnectionPoint(retrievedInputFromRtcModel);
+        }
+
+        [Test]
+        public void CleanUpModelAfterModelCoupling_ShouldNotResetInputIfLinked()
+        {
+            // Given
+            var inputs = new EventedList<Input>
+            {
+                new Input
+                {
+                    Feature = new ObservationPoint(),
+                    ParameterName = "CrestLevel",
+                    UnitName = "[m]"
+                }
+            };
+
+            ControlGroup controlGroup = new ControlGroup
+            {
+                Inputs = inputs
+            };
+
+            var rtcModel = new RealTimeControlModel();
+            rtcModel.ControlGroups.Add(controlGroup);
+
+            Input retrievedInputFromRtcModel = rtcModel.ControlGroups[0].Inputs[0];
+            Assert.IsTrue(retrievedInputFromRtcModel.IsConnected, "Setup of the test is incorrect");
+
+            // When
+            rtcModel.CleanUpModelAfterModelCoupling();
+
+            // Then
+            Assert.AreEqual("observation_CrestLevel", inputs[0].Name,
+                            "The clean up should not have changed the name of the output");
+            Assert.AreEqual("CrestLevel", inputs[0].ParameterName,
+                            "The clean up should not have changed the parameter name of the output");
+            Assert.AreEqual("[m]", inputs[0].UnitName,
+                            "The clean up should not have changed the unit name of the output");
+        }
+
+        [Test]
+        public void CleanUpModelAfterModelCoupling_ShouldResetOutputIfUnlinked()
+        {
+            // Given
+            var outputs = new EventedList<Output>
+            {
+                new Output
+                {
+                    Name = "test",
+                    Feature = null,
+                    ParameterName = "CrestLevel",
+                    UnitName = "[m]"
+                }
+            };
+
+            ControlGroup controlGroup = new ControlGroup
+            {
+                Outputs = outputs
+            };
+
+            var rtcModel = new RealTimeControlModel();
+            rtcModel.ControlGroups.Add(controlGroup);
+
+            Output retrievedOutputFromRtcModel = rtcModel.ControlGroups[0].Outputs[0];
+
+            Assert.IsFalse(retrievedOutputFromRtcModel.IsConnected, "Setup of the test is incorrect");
+
+            // When
+            rtcModel.CleanUpModelAfterModelCoupling();
+
+            // Then
+            CheckResetConnectionPoint(retrievedOutputFromRtcModel);
+        }
+
+        [Test]
+        public void CleanUpModelAfterModelCoupling_ShouldNotResetOutputIfLinked()
+        {
+            // Given
+            var outputs = new EventedList<Output>
+            {
+                new Output
+                {
+                    Feature = new Weir2D(),
+                    ParameterName = "CrestLevel",
+                    UnitName = "[m]"
+                }
+            };
+            
+            ControlGroup controlGroup = new ControlGroup
+            {
+                Outputs = outputs
+            };
+
+            var rtcModel = new RealTimeControlModel();
+            rtcModel.ControlGroups.Add(controlGroup);
+
+           Assert.IsTrue(outputs[0].IsConnected, "Setup of the test is incorrect");
+            
+
+            // When
+            rtcModel.CleanUpModelAfterModelCoupling();
+
+            // Then
+            Assert.AreEqual("Structure_CrestLevel", outputs[0].Name, 
+                            "The clean up should not have changed the name of the output");
+            Assert.AreEqual("CrestLevel", outputs[0].ParameterName,
+                            "The clean up should not have changed the parameter name of the output");
+            Assert.AreEqual("[m]", outputs[0].UnitName,
+                            "The clean up should not have changed the unit name of the output");
+            
+        }
+    
         # region Helper functions
+        private static void CheckResetConnectionPoint(ConnectionPoint retrievedConnectionPointFromRtcModel)
+        {
+            Assert.AreEqual("[Not Set]", retrievedConnectionPointFromRtcModel.Name, "Name of the connection point should have been reset");
+            Assert.IsEmpty(retrievedConnectionPointFromRtcModel.ParameterName, "Parameter name of the connection point should have been reset");
+            Assert.IsEmpty(retrievedConnectionPointFromRtcModel.UnitName, "Unit name of the connection point should have been reset");
+        }
+
+        
 
         private static void InitGui(IGui gui)
         {

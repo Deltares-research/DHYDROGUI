@@ -7,7 +7,6 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataItemMetaData;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
-using DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties;
 using log4net;
 using NetTopologySuite.Extensions.Coverages;
 
@@ -139,17 +138,20 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Extensions
             if (model.ModelSettings != null)
             {
                 model.ModelSettings.WorkDirectory = modelWorkFolder;
-                model.ModelSettings.OutputDirectory = Path.Combine(model.ModelDataDirectory, FileConstants.OutputDirectoryName);
+                model.ModelSettings.OutputDirectory =
+                    Path.Combine(model.ModelDataDirectory, FileConstants.OutputDirectoryName);
             }
 
             if (model.BoundaryDataManager != null)
             {
-                model.BoundaryDataManager.FolderPath = Path.Combine(model.ModelDataDirectory, FileConstants.BoundaryDataDirectoryName);
+                model.BoundaryDataManager.FolderPath =
+                    Path.Combine(model.ModelDataDirectory, FileConstants.BoundaryDataDirectoryName);
             }
 
             if (model.LoadsDataManager != null)
             {
-                model.LoadsDataManager.FolderPath = Path.Combine(model.ModelDataDirectory, FileConstants.LoadsDataDirectoryName);
+                model.LoadsDataManager.FolderPath =
+                    Path.Combine(model.ModelDataDirectory, FileConstants.LoadsDataDirectoryName);
             }
         }
     }

@@ -136,8 +136,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Api
                 oldArch = Environment.GetEnvironmentVariable("ARCH");
                 originalWorkingDirectory = Directory.GetCurrentDirectory();
 
-                DimrRun = DimrRun && DimrRun;
-
                 Environment.SetEnvironmentVariable("D3D_HOME", d3DhomeDir);
                 Environment.SetEnvironmentVariable(
                     "PATH",

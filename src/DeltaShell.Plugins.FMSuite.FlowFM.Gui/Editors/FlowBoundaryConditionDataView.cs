@@ -39,7 +39,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 {
     public partial class FlowBoundaryConditionDataView : UserControl, ICompositeView
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(FlowBoundaryConditionDataView));
+        private static readonly ILog log = LogManager.GetLogger(typeof(FlowBoundaryConditionDataView));
 
         private readonly OpenFileDialog FileDialog = new OpenFileDialog()
         {
@@ -1149,9 +1149,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
         private void FileExportButtonClick(object sender, EventArgs e)
         {
-            BoundaryConditionDialogLauncher.LaunchExporterDialog(SaveFileDialog,
-                                                                 BoundaryCondition as FlowBoundaryCondition,
-                                                                 SupportPointIndex, Model.ReferenceTime);
+            try
+            {
+                BoundaryConditionDialogLauncher.LaunchExporterDialog(SaveFileDialog,
+                                                                     BoundaryCondition as FlowBoundaryCondition,
+                                                                     SupportPointIndex, Model.ReferenceTime);
+            }
+            catch (NotSupportedException exception)
+            {
+                log.ErrorFormat(exception.Message);
+            }
         }
     }
 }

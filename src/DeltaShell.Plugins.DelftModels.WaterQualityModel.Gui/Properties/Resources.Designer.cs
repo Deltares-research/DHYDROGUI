@@ -775,6 +775,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Choose the options to use for importing the hyd file &apos;{0}&apos; from model &apos;{1}&apos;.
+        /// </summary>
+        internal static string WaterQualityModelGuiPlugin_CreateHydFileModelMenuItem_Choose_the_options_to_use_for_importing_the_hyd_file___0___from_model___1__ {
+            get {
+                return ResourceManager.GetString("WaterQualityModelGuiPlugin_CreateHydFileModelMenuItem_Choose_the_options_to_use_f" +
+                        "or_importing_the_hyd_file___0___from_model___1__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Hyd file is not present at &apos;{0}&apos;..
         /// </summary>
         internal static string WaterQualityModelGuiPlugin_CreateHydFileModelMenuItem_Hyd_file_is_not_present {

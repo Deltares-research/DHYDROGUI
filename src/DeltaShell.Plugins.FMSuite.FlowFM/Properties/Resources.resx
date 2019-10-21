@@ -589,4 +589,19 @@ Manhole with unique id '{4}' is not imported.</value>
   <data name="MorphologyFile_Read_Sediment_model_numbers_1_2_3_are_not_supported_" xml:space="preserve">
     <value>Sediment model numbers 1, 2 &amp; 3 are not supported.</value>
   </data>
+  <data name="WaterFlowFMModelHydroAreaExtensions_GetFeaturesFromCategory_unknown_category__0__used" xml:space="preserve">
+    <value>unknown category {0} used.</value>
+  </data>
+  <data name="WaterFlowFMModel_DimrModel_GetDataItemByItemString__0__should_contain_a_category_feature_name_and_a_parameter_name" xml:space="preserve">
+    <value>{0} should contain a category, feature name and a parameter name.</value>
+  </data>
+  <data name="WaterFlowFMModel_DimrModel_GetDataItemByItemString_feature__0__in__1__cannot_be_found_in_the_FM_model" xml:space="preserve">
+    <value>feature {0} in {1} cannot be found in the FM model.</value>
+  </data>
+  <data name="WaterFlowFMModel_DimrModel_GetDataItemByItemString_parameter_name__0__in__1__cannot_be_found_in_the_FM_model" xml:space="preserve">
+    <value>parameter name {0} in {1} cannot be found in the FM model.</value>
+  </data>
+  <data name="NewMduFileReader_Obsolete_Fixed_Weir_Scheme__0__detected" xml:space="preserve">
+    <value>Obsolete Fixed Weir Scheme {0} detected and it will be corrected to the default Numerical Scheme.</value>
+  </data>
 </root>

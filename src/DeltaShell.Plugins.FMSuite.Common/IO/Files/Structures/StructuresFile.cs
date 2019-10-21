@@ -89,9 +89,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
         /// <returns>List with structures</returns>
         public IEnumerable<Structure2D> ReadStructures2D(string filePath, ILogHandler logHandler = null)
         {
-            IList<DelftIniCategory> categories = new DelftIniReader().ReadDelftIniFile(filePath);
+            IList<IDelftIniCategory> categories = new DelftIniReader().ReadDelftIniFile(filePath);
 
-            foreach (DelftIniCategory category in categories)
+            foreach (IDelftIniCategory category in categories)
             {
                 RenameBackwardsCompatibleProperties(category);
                 // Filter out unexpected .ini categories:
@@ -105,7 +105,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
 
                 // TODO: Check for potentially other required properties:
                 // Read required 'type' property:
-                DelftIniProperty structureTypeProperty =
+                IDelftIniProperty structureTypeProperty = 
                     category.Properties.FirstOrDefault(p => p.Name == KnownStructureProperties.Type);
                 if (structureTypeProperty == null)
                 {
@@ -137,11 +137,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             new DelftIniWriter().WriteDelftIniFile(structures.Select(CreateDelftIniCategory), path);
         }
 
-        public static void ParseStructure(FMSuiteFileBase fmSuiteFileBase)
-        {
-            throw new NotImplementedException();
-        }
-
         public IList<IStructure> Read(string filePath)
         {
             var logHandler = new LogHandler($"reading the structures file ({filePath}),", Log);
@@ -165,9 +160,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
 
         private string TimFolder { get; set; }
 
-        private void RenameBackwardsCompatibleProperties(DelftIniCategory category)
+        private void RenameBackwardsCompatibleProperties(IDelftIniCategory category)
         {
-            foreach (DelftIniProperty property in category.Properties)
+            foreach (IDelftIniProperty property in category.Properties)
             {
                 if (backwardsCompatibilityMapping.TryGetValue(property.Name, out string newName))
                 {
@@ -234,12 +229,12 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
                     continue;
                 }
 
-                delftIniCategory.Properties.Add(new DelftIniProperty
-                {
-                    Name = property.PropertyDefinition.FilePropertyName,
-                    Value = property.GetValueAsString(),
-                    Comment = property.PropertyDefinition.Description
-                });
+                var delftIniProperty = new DelftIniProperty(
+                    property.PropertyDefinition.FilePropertyName, 
+                    property.GetValueAsString(), 
+                    property.PropertyDefinition.Description);
+
+                delftIniCategory.Properties.Add(delftIniProperty);
             }
 
             return delftIniCategory;
@@ -260,13 +255,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
 
         private Structure2D CreateStructure2D(StructureSchema<ModelPropertyDefinition> schema, 
                                               string structureType,
-                                              DelftIniCategory category, 
+                                              IDelftIniCategory category, 
                                               string filePath, 
                                               ILogHandler logHandler)
         {
             var newStructure = new Structure2D(structureType);
 
-            foreach (DelftIniProperty property in category.Properties)
+            foreach (IDelftIniProperty property in category.Properties)
             {
                 ModelPropertyDefinition modelPropertyDefinition = schema.GetDefinition(structureType, property.Name);
                 if (modelPropertyDefinition == null)
@@ -959,12 +954,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
         private DelftIniProperty ConstructProperty(string propertyName, object value, string structureType)
         {
             ModelPropertyDefinition definition = StructureSchema.GetDefinition(structureType, propertyName);
-            var delftIniProperty = new DelftIniProperty
-            {
-                Name = definition.FilePropertyName,
-                Value = FMParser.ToString(value, value is ICollection ? typeof(IList<double>) : value.GetType()),
-                Comment = definition.Description
-            };
+            string propertyValue = FMParser.ToString(value, value is ICollection ? typeof(IList<double>) : value.GetType());
+
+            var delftIniProperty = new DelftIniProperty(
+                definition.FilePropertyName, 
+                propertyValue, 
+                definition.Description
+            );
             return delftIniProperty;
         }
 
