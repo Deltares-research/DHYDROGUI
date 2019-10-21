@@ -269,10 +269,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
         }
 
         [Test]
-        public void Read_PropertyValueOutOfRange_ThenWarningMessageIsLogged_PlusCheckNewReadResult()
+        public void Read_MultiplePropertyValuesOutOfRange_ThenWarningMessageIsLogged_PlusCheckNewReadResult()
         {
             // Setup
-            string testFilePath = TestHelper.GetTestFilePath(Path.Combine("MduFileReaderTest", "UnifFrictTypeOutOfRange.mdu"));
+            string testFilePath = TestHelper.GetTestFilePath(Path.Combine("MduFileReaderTest", "MultiplePropertyValuesOutOfRange.mdu"));
             using (var temporaryDir = new TemporaryDirectory())
             {
                 string tempFilePath = temporaryDir.CopyTestDataFileToTempDirectory(testFilePath);
@@ -283,8 +283,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
                 void NewCall() => NewMduFileReader.Read(tempFilePath, oldDefinition);
 
                 // Assert
-                TestHelper.AssertLogMessageIsGenerated(Call, "During reading the mdu file the following warnings were reported:\r\n- An unsupported option for *Uniform friction type* has been detected and the default value will be used.");
-                TestHelper.AssertLogMessageIsGenerated(NewCall, "During reading the mdu file the following warnings were reported:\r\n- An unsupported option for *Uniform friction type* has been detected and the default value will be used.");
+                string expectedMessage = "During reading the mdu file the following warnings were reported:"
+                                         + Environment.NewLine
+                                         + "- An unsupported option for *Uniform friction type* has been detected and the default value will be used."
+                                         + Environment.NewLine
+                                         + "- An unsupported option for *Turbulence model* has been detected and the default value will be used.";
+                TestHelper.AssertLogMessageIsGenerated(Call, expectedMessage);
+                TestHelper.AssertLogMessageIsGenerated(NewCall, expectedMessage);
             }
         }
 

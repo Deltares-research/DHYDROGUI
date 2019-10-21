@@ -84,38 +84,40 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
         private static void SetPropertyValues(WaterFlowFMModelDefinition definition, IEnumerable<IDelftIniCategory> categories)
         {
+            var logHandler = new LogHandler("reading the mdu file", log);
             foreach (IDelftIniCategory category in categories)
             {
                 foreach (IDelftIniProperty property in category.Properties)
                 {
                     if (!definition.ContainsProperty(property.Name))
                     {
-                        WaterFlowFMProperty newFmProperty = CreateFmProperty(property, category);
+                        WaterFlowFMProperty newFmProperty = CreateFmProperty(property, category.Name);
                         definition.AddProperty(newFmProperty);
                         continue;
                     }
 
-                    SetPropertyValue(definition, property);
+                    SetPropertyValue(definition, property, logHandler);
                 }
             }
+            
+            logHandler.LogReport();
         }
 
-        private static WaterFlowFMProperty CreateFmProperty(IDelftIniProperty property, IDelftIniCategory category)
+        private static WaterFlowFMProperty CreateFmProperty(IDelftIniProperty property, string categoryName)
         {
             string propertyComment = property.Comment == string.Empty
                                          ? null 
                                          : property.Comment; // This is a little odd, maybe string.Empty is not so bad?.
 
             WaterFlowFMPropertyDefinition newPropertyDefinition =
-                WaterFlowFMPropertyDefinitionCreator.CreateForCustomProperty(category.Name, property.Name, propertyComment);
+                WaterFlowFMPropertyDefinitionCreator.CreateForCustomProperty(categoryName, property.Name, propertyComment);
 
             return new WaterFlowFMProperty(newPropertyDefinition, property.Value);
         }
 
-        private static void SetPropertyValue(WaterFlowFMModelDefinition definition, IDelftIniProperty property)
+        private static void SetPropertyValue(WaterFlowFMModelDefinition definition, IDelftIniProperty property, ILogHandler logHandler)
         {
             WaterFlowFMProperty modelProperty = definition.GetModelProperty(property.Name);
-            var logHandler = new LogHandler("reading the mdu file", log);
             try
             {
                 modelProperty.SetValueAsString(property.Value);
@@ -124,10 +126,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             {
                 logHandler.ReportWarningFormat(Resources.MduFile_ReadProperties_An_unsupported_option_for_0_has_been_detected,
                                                modelProperty.PropertyDefinition.Caption);
-            }
-            finally
-            {
-                logHandler.LogReport();
             }
         }
     }
