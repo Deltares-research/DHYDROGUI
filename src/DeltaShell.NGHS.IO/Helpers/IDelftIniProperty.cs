@@ -23,6 +23,6 @@
         /// <summary>
         /// The line where this property was read in the file.
         /// </summary>
-        int LineNumber { get; set; }
+        int LineNumber { get; }
     }
 }

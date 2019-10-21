@@ -15,19 +15,32 @@
         public string Comment { get; set; }
 
         /// <inheritdoc />
-        public int LineNumber { get; set; }
+        public int LineNumber { get; }
 
         /// <summary>
-        /// Creates a new instance of <see cref="DelftIniProperty"/>.
+        /// Creates a new instance of <see cref="DelftIniProperty" />.
         /// </summary>
         /// <param name="name"> The property name. </param>
-        /// <param name="value"> The property value as a <see cref="string"/>. </param>
+        /// <param name="value"> The property value as a <see cref="string" />. </param>
         /// <param name="comment"> The property comment. </param>
         public DelftIniProperty(string name, string value, string comment)
         {
             Name = name;
             Value = value;
             Comment = comment;
+        }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="DelftIniProperty" />.
+        /// </summary>
+        /// <param name="name"> The property name. </param>
+        /// <param name="value"> The property value as a <see cref="string" />. </param>
+        /// <param name="comment"> The property comment. </param>
+        /// <param name="lineNumber"> The line number. </param>
+        public DelftIniProperty(string name, string value, string comment, int lineNumber)
+            : this(name, value, comment)
+        {
+            LineNumber = lineNumber;
         }
     }
 }
