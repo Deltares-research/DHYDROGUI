@@ -1088,7 +1088,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             var totalSteps = 5;
 
             reportProgress("Reading properties", 1, totalSteps);
-            new MduFileReader().Read(filePath, modelDefinition);
+            NewMduFileReader.Read(filePath, modelDefinition);
             
             var pathsRelativeToParent =
                 (bool) modelDefinition.GetModelProperty(KnownProperties.PathsRelativeToParent).Value;
