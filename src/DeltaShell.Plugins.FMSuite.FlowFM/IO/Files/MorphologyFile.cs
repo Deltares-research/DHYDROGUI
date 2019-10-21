@@ -271,7 +271,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         {
             string categoryName = delftIniCategory.Name;
 
-            foreach (IDelftIniProperty delftIniProperty in delftIniCategory.Properties)
+            foreach (DelftIniProperty delftIniProperty in delftIniCategory.Properties)
             {
                 // Backwards Compatibility
                 delftIniProperty.Name = 
@@ -301,7 +301,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         }
 
         private static WaterFlowFMProperty GetExistingPropertyInCategory(WaterFlowFMModelDefinition modelDefinition,
-                                                                         IDelftIniProperty delftIniProperty, 
+                                                                         DelftIniProperty delftIniProperty, 
                                                                          string categoryName)
         {
             return modelDefinition.Properties.FirstOrDefault(
@@ -311,8 +311,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                      && p.PropertyDefinition.Category == categoryName);
         }
 
-        private static WaterFlowFMProperty CreateModelPropertyForUnknownDelftIniProperty(
-            string categoryName, IDelftIniProperty delftIniProperty)
+        private static WaterFlowFMProperty CreateModelPropertyForUnknownDelftIniProperty(string categoryName, DelftIniProperty delftIniProperty)
         {
             string fileCategoryName = categoryName;
             if (fileCategoryName.Equals(KnownProperties.morphology, StringComparison.InvariantCultureIgnoreCase))

@@ -104,7 +104,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
 
                 // TODO: Check for potentially other required properties:
                 // Read required 'type' property:
-                IDelftIniProperty structureTypeProperty = 
+                DelftIniProperty structureTypeProperty = 
                     category.Properties.FirstOrDefault(p => p.Name == KnownStructureProperties.Type);
                 if (structureTypeProperty == null)
                 {
@@ -159,7 +159,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
 
         private void RenameBackwardsCompatibleProperties(DelftIniCategory category)
         {
-            foreach (IDelftIniProperty property in category.Properties)
+            foreach (DelftIniProperty property in category.Properties)
             {
                 if (backwardsCompatibilityMapping.TryGetValue(property.Name, out string newName))
                 {
@@ -258,7 +258,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
         {
             var newStructure = new Structure2D(structureType);
 
-            foreach (IDelftIniProperty property in category.Properties)
+            foreach (DelftIniProperty property in category.Properties)
             {
                 ModelPropertyDefinition modelPropertyDefinition = schema.GetDefinition(structureType, property.Name);
                 if (modelPropertyDefinition == null)

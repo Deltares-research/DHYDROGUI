@@ -340,7 +340,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.RgfGrid
 
             foreach (Tuple<string, string> prop in expectedProperties)
             {
-                IDelftIniProperty propInCategory = category.Properties.FirstOrDefault(p => p.Name == prop.Item1);
+                DelftIniProperty propInCategory = category.Properties.FirstOrDefault(p => p.Name == prop.Item1);
                 Assert.That(propInCategory, Is.Not.Null,
                             $"Expected a {prop.Item1} property to be in {headerName} header.");
 

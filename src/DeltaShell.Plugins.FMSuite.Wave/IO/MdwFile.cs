@@ -531,7 +531,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             IList<DelftIniCategory> mdwCategories = new DelftIniReader().ReadDelftIniFile(MdwFilePath);
             string mdwDir = Path.GetDirectoryName(filePath);
 
-            ConvertMdwCategoriesToModeldefinitionProperties(modelDefinition, mdwCategories);
+            ConvertMdwCategoriesToModelDefinitionProperties(modelDefinition, mdwCategories);
 
             // domain(s) and nesting
             List<WaveDomainData> allDomains = CreateWaveDomainData(mdwCategories).ToList();
@@ -595,7 +595,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
         /// </summary>
         /// <param name="modelDefinition"> </param>
         /// <param name="mdwCategories"> </param>
-        private void ConvertMdwCategoriesToModeldefinitionProperties(WaveModelDefinition modelDefinition,
+        private void ConvertMdwCategoriesToModelDefinitionProperties(WaveModelDefinition modelDefinition,
                                                                      IEnumerable<DelftIniCategory> mdwCategories)
         {
             foreach (DelftIniCategory category in mdwCategories)
@@ -607,7 +607,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 }
 
                 ModelPropertyGroup definedCategory = modelSchema.ModelDefinitionCategory[category.Name];
-                foreach (IDelftIniProperty mdwProperty in category.Properties)
+                foreach (DelftIniProperty mdwProperty in category.Properties)
                 {
                     string propName = mdwProperty.Name;
                     string propertyValue = mdwProperty.Value;

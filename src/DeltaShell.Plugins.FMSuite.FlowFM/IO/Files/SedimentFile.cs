@@ -324,7 +324,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                    && p.PropertyDefinition.UnknownPropertySource.Equals(PropertySource.SedimentFile);
         }
 
-        private static void AddUnknownSedimentProperty(IDelftIniProperty delftIniProperty,
+        private static void AddUnknownSedimentProperty(DelftIniProperty delftIniProperty,
                                                        WaterFlowFMModelDefinition definition, string categoryName,
                                                        ILogHandler logHandler,
                                                        string sedimentFractionName = null)
@@ -564,7 +564,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
             ISet<string> overallProps = new HashSet<string>(model.SedimentOverallProperties.Select(p => p.Name));
 
-            foreach (IDelftIniProperty readProp in category.Properties)
+            foreach (DelftIniProperty readProp in category.Properties)
             {
                 if (!overallProps.Contains(readProp.Name))
                 {
@@ -579,7 +579,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         {
             string categoryName = category.Name;
 
-            foreach (IDelftIniProperty property in category.Properties)
+            foreach (DelftIniProperty property in category.Properties)
             {
                 AddUnknownSedimentProperty(property, definition, categoryName, logHandler);
             }
@@ -590,7 +590,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                                                                               WaterFlowFMModelDefinition definition,
                                                                               ILogHandler logHandler)
         {
-            IDelftIniProperty sedimentNameProperty = category.Properties.FirstOrDefault(p => p.Name.Equals(Name.Key));
+            DelftIniProperty sedimentNameProperty = category.Properties.FirstOrDefault(p => p.Name.Equals(Name.Key));
             string sedimentFractionName = sedimentNameProperty?.Value;
 
             ISedimentFraction selectedSedimentFraction = sedimentFractionName != null

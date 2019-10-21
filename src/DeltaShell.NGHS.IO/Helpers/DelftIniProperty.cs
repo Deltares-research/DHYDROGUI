@@ -3,18 +3,26 @@
     /// <summary>
     /// Representation of a property in a .ini file.
     /// </summary>
-    public class DelftIniProperty : IDelftIniProperty
+    public class DelftIniProperty
     {
-        /// <inheritdoc />
+        /// <summary>
+        /// The property name.
+        /// </summary>
         public string Name { get; set; }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// The property value.
+        /// </summary>
         public string Value { get; set; }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// The property comment, describing the property.
+        /// </summary>
         public string Comment { get; set; }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// The line where this property was read in the file.
+        /// </summary>
         public int LineNumber { get; }
 
         /// <summary>

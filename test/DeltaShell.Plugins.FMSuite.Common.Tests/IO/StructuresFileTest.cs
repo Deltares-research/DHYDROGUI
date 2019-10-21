@@ -1537,7 +1537,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             }
         }
 
-        private static void CompareProperties(IList<IDelftIniProperty> propertiesA, IList<IDelftIniProperty> propertiesB)
+        private static void CompareProperties(IList<DelftIniProperty> propertiesA, IList<DelftIniProperty> propertiesB)
         {
             Assert.AreEqual(propertiesA.Count, propertiesB.Count, "Expected the same number of properties.");
             for (var i = 0; i < propertiesA.Count; i++)

@@ -43,8 +43,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
         private static void CorrectInvalidFixedWeirSchemeValue(IEnumerable<DelftIniCategory> categories)
         {
-            IDelftIniProperty fixedWeirProperty = categories.SelectMany(c => c.Properties)
-                                                            .FirstOrDefault(p => p.Name.ToLowerInvariant() == KnownProperties.FixedWeirScheme);
+            DelftIniProperty fixedWeirProperty = categories.SelectMany(c => c.Properties)
+                                                           .FirstOrDefault(p => p.Name.ToLowerInvariant() == KnownProperties.FixedWeirScheme);
 
             if (fixedWeirProperty == null)
             {
@@ -87,7 +87,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             var logHandler = new LogHandler("reading the mdu file", log);
             foreach (DelftIniCategory category in categories)
             {
-                foreach (IDelftIniProperty property in category.Properties)
+                foreach (DelftIniProperty property in category.Properties)
                 {
                     if (!definition.ContainsProperty(property.Name))
                     {
@@ -103,7 +103,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             logHandler.LogReport();
         }
 
-        private static WaterFlowFMProperty CreateFmProperty(IDelftIniProperty property, string categoryName)
+        private static WaterFlowFMProperty CreateFmProperty(DelftIniProperty property, string categoryName)
         {
             string propertyComment = property.Comment == string.Empty
                                          ? null 
@@ -115,7 +115,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             return new WaterFlowFMProperty(newPropertyDefinition, property.Value);
         }
 
-        private static void SetPropertyValue(WaterFlowFMModelDefinition definition, IDelftIniProperty property, ILogHandler logHandler)
+        private static void SetPropertyValue(WaterFlowFMModelDefinition definition, DelftIniProperty property, ILogHandler logHandler)
         {
             WaterFlowFMProperty modelProperty = definition.GetModelProperty(property.Name);
             try

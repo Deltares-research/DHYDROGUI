@@ -51,7 +51,7 @@ namespace DeltaShell.NGHS.IO
             }
         }
 
-        protected virtual void WriteProperty(IDelftIniProperty property, bool writeComment = false)
+        protected virtual void WriteProperty(DelftIniProperty property, bool writeComment = false)
         {
             if (string.IsNullOrEmpty(property.Value)) return;
 

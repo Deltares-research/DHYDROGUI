@@ -11,7 +11,7 @@ namespace DeltaShell.NGHS.IO.Helpers
     /// </summary>
     public class DelftIniCategory
     {
-        private List<IDelftIniProperty> delftIniProperties;
+        private readonly List<DelftIniProperty> delftIniProperties;
 
         /// <summary>
         /// Creates an instance of <see cref="DelftIniCategory"/>.
@@ -20,7 +20,7 @@ namespace DeltaShell.NGHS.IO.Helpers
         public DelftIniCategory(string categoryName)
         {
             Name = categoryName;
-            delftIniProperties = new List<IDelftIniProperty>();
+            delftIniProperties = new List<DelftIniProperty>();
         }
 
         public DelftIniCategory(string categoryName, int lineNumber)
@@ -37,7 +37,7 @@ namespace DeltaShell.NGHS.IO.Helpers
         /// <summary>
         /// The properties that belong to the category.
         /// </summary>
-        public IEnumerable<IDelftIniProperty> Properties => delftIniProperties;
+        public IEnumerable<DelftIniProperty> Properties => delftIniProperties;
 
         /// <summary>
         /// The line number where this category was read in the file.
@@ -55,9 +55,9 @@ namespace DeltaShell.NGHS.IO.Helpers
         /// first property will be returned. </remarks>
         public string GetPropertyValue(string name, string defaultValue = null)
         {
-            IDelftIniProperty prop = Properties.FirstOrDefault(p => p.Name == name);
-            return prop != null
-                       ? prop.Value
+            DelftIniProperty property = Properties.FirstOrDefault(p => p.Name == name);
+            return property != null
+                       ? property.Value
                        : defaultValue;
         }
 
@@ -146,7 +146,7 @@ namespace DeltaShell.NGHS.IO.Helpers
         /// <param name="comment"> The property comment. </param>
         public void SetProperty(string name, string value, string comment = null)
         {
-            IDelftIniProperty prop = Properties.FirstOrDefault(p => p.Name == name);
+            DelftIniProperty prop = Properties.FirstOrDefault(p => p.Name == name);
             if (prop != null)
             {
                 prop.Value = value;
@@ -177,7 +177,7 @@ namespace DeltaShell.NGHS.IO.Helpers
         /// defined in the argument.
         /// </summary>
         /// <param name="condition"> The removal condition. </param>
-        public void RemoveAllPropertiesWhere(Func<IDelftIniProperty, bool> condition)
+        public void RemoveAllPropertiesWhere(Func<DelftIniProperty, bool> condition)
         {
             delftIniProperties.RemoveAllWhere(condition);
         }
