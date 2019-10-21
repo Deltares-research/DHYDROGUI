@@ -37,7 +37,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
             return generalCategory;
         }
 
-        private static void AddGeneralProperties(IDelftIniCategory generalDelftIniCategory)
+        private static void AddGeneralProperties(DelftIniCategory generalDelftIniCategory)
         {
             DateTime creationTime = DateTime.Now;
             generalDelftIniCategory.AddProperty(SedimentFile.FileCreatedBy, createdBy);

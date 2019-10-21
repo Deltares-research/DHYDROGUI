@@ -314,7 +314,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             AssertPropertyValues(category, KnownWaveProperties.DirectionalSpreadingValue, spreading0, spreading1);
         }
 
-        private static void AssertPropertyValues(IDelftIniCategory category, string propertyName, double firstValue, double secondValue)
+        private static void AssertPropertyValues(DelftIniCategory category, string propertyName, double firstValue, double secondValue)
         {
             IDelftIniProperty[] properties = category.Properties
                                                     .Where(p => p.Name == propertyName)

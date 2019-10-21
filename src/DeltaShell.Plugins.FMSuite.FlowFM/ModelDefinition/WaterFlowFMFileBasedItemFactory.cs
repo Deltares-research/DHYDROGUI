@@ -69,7 +69,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 
                         bndExtForceFile.WriteToDisk = false;
 
-                        IList<IDelftIniCategory> bndExtForceFileItems =
+                        IList<DelftIniCategory> bndExtForceFileItems =
                             bndExtForceFile.WriteBndExtForceFileSubFiles(
                                 model.Name, model.BoundaryConditionSets, model.ReferenceTime);
 

@@ -88,9 +88,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
         /// <returns>List with structures</returns>
         public IEnumerable<Structure2D> ReadStructures2D(string filePath, ILogHandler logHandler = null)
         {
-            IList<IDelftIniCategory> categories = new DelftIniReader().ReadDelftIniFile(filePath);
+            IList<DelftIniCategory> categories = new DelftIniReader().ReadDelftIniFile(filePath);
 
-            foreach (IDelftIniCategory category in categories)
+            foreach (DelftIniCategory category in categories)
             {
                 RenameBackwardsCompatibleProperties(category);
                 // Filter out unexpected .ini categories:
@@ -157,7 +157,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
 
         private string TimFolder { get; set; }
 
-        private void RenameBackwardsCompatibleProperties(IDelftIniCategory category)
+        private void RenameBackwardsCompatibleProperties(DelftIniCategory category)
         {
             foreach (IDelftIniProperty property in category.Properties)
             {
@@ -252,7 +252,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
 
         private Structure2D CreateStructure2D(StructureSchema<ModelPropertyDefinition> schema, 
                                               string structureType,
-                                              IDelftIniCategory category, 
+                                              DelftIniCategory category, 
                                               string filePath, 
                                               ILogHandler logHandler)
         {

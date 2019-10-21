@@ -528,7 +528,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             MdwFilePath = filePath;
 
             var modelDefinition = new WaveModelDefinition();
-            IList<IDelftIniCategory> mdwCategories = new DelftIniReader().ReadDelftIniFile(MdwFilePath);
+            IList<DelftIniCategory> mdwCategories = new DelftIniReader().ReadDelftIniFile(MdwFilePath);
             string mdwDir = Path.GetDirectoryName(filePath);
 
             ConvertMdwCategoriesToModeldefinitionProperties(modelDefinition, mdwCategories);
@@ -596,9 +596,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
         /// <param name="modelDefinition"> </param>
         /// <param name="mdwCategories"> </param>
         private void ConvertMdwCategoriesToModeldefinitionProperties(WaveModelDefinition modelDefinition,
-                                                                     IEnumerable<IDelftIniCategory> mdwCategories)
+                                                                     IEnumerable<DelftIniCategory> mdwCategories)
         {
-            foreach (IDelftIniCategory category in mdwCategories)
+            foreach (DelftIniCategory category in mdwCategories)
             {
                 ModelPropertySchema<WaveModelPropertyDefinition> modelSchema = modelDefinition.ModelSchema;
                 if (!modelSchema.ModelDefinitionCategory.ContainsKey(category.Name))
@@ -644,12 +644,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                         propertyDefinition.Value.FileCategoryName;
 
                     //Both available
-                    List<IDelftIniCategory> categoryOfDependentOnProperty =
+                    List<DelftIniCategory> categoryOfDependentOnProperty =
                         mdwCategories.Where(mc => mc.Properties
                                                     .Any(p => p.Name.Equals(nameOfDependentOnProperty)))
                                      .ToList();
 
-                    List<IDelftIniCategory> categoryOfPropertyWithMultipleDefaultValues =
+                    List<DelftIniCategory> categoryOfPropertyWithMultipleDefaultValues =
                         mdwCategories.Where(mc => mc.Properties
                                                     .Any(p => p.Name.Equals(nameOfPropertyWithMultipleDefaultValues)))
                                      .ToList();
@@ -676,9 +676,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             }
         }
 
-        private IEnumerable<WaveDomainData> CreateWaveDomainData(IEnumerable<IDelftIniCategory> categories)
+        private IEnumerable<WaveDomainData> CreateWaveDomainData(IEnumerable<DelftIniCategory> categories)
         {
-            foreach (IDelftIniCategory domainCategory in categories.Where(
+            foreach (DelftIniCategory domainCategory in categories.Where(
                 c => c.Name == KnownWaveCategories.DomainCategory))
             {
                 string gridFileName = domainCategory.GetPropertyValue("Grid", "");
@@ -759,10 +759,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             }
         }
 
-        private IEnumerable<WaveBoundaryCondition> CreateWaveBoundaries(IList<IDelftIniCategory> categories,
+        private IEnumerable<WaveBoundaryCondition> CreateWaveBoundaries(IList<DelftIniCategory> categories,
                                                                         WaveModelDefinition modelDefinition)
         {
-            IDelftIniCategory generalCategory = categories.First(c => c.Name == KnownWaveCategories.GeneralCategory);
+            DelftIniCategory generalCategory = categories.First(c => c.Name == KnownWaveCategories.GeneralCategory);
 
             string bcwFilePath = generalCategory.GetPropertyValue(KnownWaveProperties.TimeSeriesFile);
 
@@ -772,7 +772,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 functionLookup = new BcwFile().Read(Path.Combine(Path.GetDirectoryName(MdwFilePath), bcwFilePath));
             }
 
-            List<IDelftIniCategory> boundaries =
+            List<DelftIniCategory> boundaries =
                 categories.Where(c => c.Name == KnownWaveCategories.BoundaryCategory).ToList();
             if (boundaries.Count == 1 &&
                 boundaries[0].GetPropertyValue(KnownWaveProperties.Definition) == "fromsp2file")
@@ -790,7 +790,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 yield break;
             }
 
-            foreach (IDelftIniCategory boundaryData in boundaries)
+            foreach (DelftIniCategory boundaryData in boundaries)
             {
                 string name = boundaryData.GetPropertyValue(KnownWaveProperties.Name);
                 BoundaryConditionDataType dataType =
@@ -983,7 +983,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             }
         }
 
-        private WaveBoundarySpectralData GetSpectralData(IDelftIniCategory boundaryData)
+        private WaveBoundarySpectralData GetSpectralData(DelftIniCategory boundaryData)
         {
             return new WaveBoundarySpectralData
             {
@@ -1014,7 +1014,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             boundaryCondition.GaussianSpreadingValue = spectralData.GaussianSpreadingValue;
         }
 
-        private WaveInputFieldData CreateTimePointData(IEnumerable<IDelftIniCategory> mdwCategories,
+        private WaveInputFieldData CreateTimePointData(IEnumerable<DelftIniCategory> mdwCategories,
                                                        DateTime referenceDate, out IList<DateTime> times)
         {
             var timepointData = new WaveInputFieldData
@@ -1024,7 +1024,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             };
 
             times = new List<DateTime>();
-            List<IDelftIniCategory> timePointCategories =
+            List<DelftIniCategory> timePointCategories =
                 mdwCategories.Where(c => c.Name == KnownWaveCategories.TimePointCategory).ToList();
             if (timePointCategories.Any(c => c.GetPropertyValue(KnownWaveProperties.WaterLevel) != null))
             {
@@ -1036,7 +1036,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 timepointData.WindDataType = InputFieldDataType.TimeVarying;
             }
 
-            IDelftIniCategory generalCategory = mdwCategories.First(c => c.Name == KnownWaveCategories.GeneralCategory);
+            DelftIniCategory generalCategory = mdwCategories.First(c => c.Name == KnownWaveCategories.GeneralCategory);
             List<string> meteoFiles = generalCategory.GetPropertyValues(KnownWaveProperties.MeteoFile).ToList();
             if (meteoFiles.Any())
             {
@@ -1071,7 +1071,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 timepointData.WindDirectionConstant = winddir;
             }
 
-            foreach (IDelftIniCategory timepoint in timePointCategories)
+            foreach (DelftIniCategory timepoint in timePointCategories)
             {
                 DateTime time = referenceDate.AddMinutes(double.Parse(
                                                              timepoint.GetPropertyValue(
@@ -1181,7 +1181,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             return data;
         }
 
-        private IEnumerable<WaveObstacle> CreateObstacleData(IDelftIniCategory generalCategory,
+        private IEnumerable<WaveObstacle> CreateObstacleData(DelftIniCategory generalCategory,
                                                              WaveModelDefinition modelDefinition)
         {
             string obstacleFile = generalCategory.GetPropertyValue(KnownWaveProperties.ObstacleFile, string.Empty);
@@ -1199,9 +1199,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             }
 
             var delftIniReader = new DelftIniReader();
-            IList<IDelftIniCategory> obtCategories = delftIniReader.ReadDelftIniFile(obstacleFilePath);
+            IList<DelftIniCategory> obtCategories = delftIniReader.ReadDelftIniFile(obstacleFilePath);
 
-            IDelftIniCategory fileInfo =
+            DelftIniCategory fileInfo =
                 obtCategories.First(c => c.Name == KnownWaveCategories.ObstacleFileInfoCategory);
             string polylineFileName = fileInfo.GetPropertyValue(PolyfileName);
             string geometryFilePath = Path.Combine(mdwDirectory, polylineFileName);
@@ -1216,7 +1216,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             var pliFile = new PliFile<Feature2D>();
             Dictionary<string, Feature2D> features = pliFile.Read(geometryFilePath).ToDictionary(f => f.Name);
 
-            foreach (IDelftIniCategory obstacle in obtCategories.Where(
+            foreach (DelftIniCategory obstacle in obtCategories.Where(
                 o => o.Name == KnownWaveCategories.ObstacleCategory))
             {
                 string name = obstacle.GetPropertyValue(WaveObstaclePropertyName, "default name");
@@ -1274,7 +1274,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             }
         }
 
-        private double GetObstaclePropertyAndLogIfFails(IDelftIniCategory obstacle, string fileName, string property,
+        private double GetObstaclePropertyAndLogIfFails(DelftIniCategory obstacle, string fileName, string property,
                                                         double defaultValue)
         {
             string input = obstacle.GetPropertyValue(property);

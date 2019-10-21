@@ -16,8 +16,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         bool IsVisible { get; set; }
         string Description { get; set; }
         string DataTemplateName { get; }
-        void SedimentPropertyLoad(IDelftIniCategory category);
-        void SedimentPropertyWrite(IDelftIniCategory category);
+        void SedimentPropertyLoad(DelftIniCategory category);
+        void SedimentPropertyWrite(DelftIniCategory category);
     }
 
     public interface ISedimentProperty<T> : ISedimentProperty

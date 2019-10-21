@@ -8,7 +8,7 @@ namespace DeltaShell.NGHS.IO.Helpers
     /// <summary>
     /// Representation of a category in a .ini file.
     /// </summary>
-    public class DelftIniCategory : IDelftIniCategory
+    public class DelftIniCategory
     {
         /// <summary>
         /// Creates an instance of <see cref="DelftIniCategory"/>.
@@ -26,16 +26,30 @@ namespace DeltaShell.NGHS.IO.Helpers
             LineNumber = lineNumber;
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// The category name.
+        /// </summary>
         public string Name { get; set; }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// The properties that belong to the category.
+        /// </summary>
         public IList<IDelftIniProperty> Properties { get; set; }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// The line number where this category was read in the file.
+        /// </summary>
         public int LineNumber { get; }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Gets the property value as a string.
+        /// </summary>
+        /// <param name="name"> The name of the requested property. </param>
+        /// <param name="defaultValue"> The returned value in case the requested
+        /// property does not exist in <see cref="Properties"/>. </param>
+        /// <returns> A string representation of the value of the requested <see cref="DelftIniProperty"/>. </returns>
+        /// <remarks> If multiple properties exist with the requested name, only the value of the
+        /// first property will be returned. </remarks>
         public string GetPropertyValue(string name, string defaultValue = null)
         {
             IDelftIniProperty prop = Properties.FirstOrDefault(p => p.Name == name);
@@ -44,38 +58,71 @@ namespace DeltaShell.NGHS.IO.Helpers
                        : defaultValue;
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Returns all property values for a property with multiplicity > 1.
+        /// </summary>
+        /// <param name="name"> The name of the requested property. </param>
+        /// <returns> String representations of the requested values. </returns>
         public IEnumerable<string> GetPropertyValues(string name)
         {
             return Properties.Where(p => p.Name == name).Select(p => p.Value);
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Adds a string-valued <see cref="DelftIniProperty"/> to this category with the given values.
+        /// </summary>
+        /// <param name="name"> The property name. </param>
+        /// <param name="value"> The property value. </param>
+        /// <param name="comment"> The property comment. </param>
         public void AddProperty(string name, string value, string comment = null)
         {
             Properties.Add(new DelftIniProperty(name, value, comment ?? ""));
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Adds a date-valued <see cref="DelftIniProperty"/> to this category with the given values.
+        /// </summary>
+        /// <param name="name"> The property name. </param>
+        /// <param name="time"> The property <see cref="DateTime"/> value. </param>
+        /// <param name="comment"> The property comment. </param>
+        /// <param name="format"> The string format for the property value. </param>
         public void AddProperty(string name, DateTime time, string comment = null,
                                 string format = "yyyy-MM-dd HH:mm:ss")
         {
             AddProperty(name, time.ToString(format, CultureInfo.InvariantCulture), comment);
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Adds a decimal-valued <see cref="DelftIniProperty"/> to this category with the given values.
+        /// </summary>
+        /// <param name="name"> The property name. </param>
+        /// <param name="value"> The property value. </param>
+        /// <param name="comment"> The property comment. </param>
+        /// <param name="format"> The string format for the property value. </param>
         public void AddProperty(string name, double value, string comment = null, string format = "e7")
         {
             AddProperty(name, value.ToString(format, CultureInfo.InvariantCulture), comment);
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Adds a integer-valued <see cref="DelftIniProperty"/> to this category with the given values.
+        /// </summary>
+        /// <param name="name"> The property name. </param>
+        /// <param name="value"> The property value. </param>
+        /// <param name="comment"> The property comment. </param>
         public void AddProperty(string name, int value, string comment = null)
         {
             AddProperty(name, value.ToString(CultureInfo.InvariantCulture), comment);
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Sets the property value and comment of an existing <see cref="DelftIniProperty"/> with the
+        /// requested property name. If the requested property does not exist, a new property is added
+        /// with the given values.
+        /// </summary>
+        /// <param name="name"> The property name. </param>
+        /// <param name="value"> The property value. </param>
+        /// <param name="comment"> The property comment. </param>
         public void SetProperty(string name, string value, string comment = null)
         {
             IDelftIniProperty prop = Properties.FirstOrDefault(p => p.Name == name);
@@ -90,7 +137,15 @@ namespace DeltaShell.NGHS.IO.Helpers
             }
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Sets the decimal property value and comment of an existing <see cref="DelftIniProperty"/> with the
+        /// requested property name. If the requested property does not exist, a new property is added
+        /// with the given values.
+        /// </summary>
+        /// <param name="name"> The property name. </param>
+        /// <param name="value"> The property value. </param>
+        /// <param name="comment"> The property comment. </param>
+        /// <param name="format"> The string format for the property value. </param>
         public void SetProperty(string name, double value, string comment = null, string format = "e7")
         {
             SetProperty(name, value.ToString(format, CultureInfo.InvariantCulture), comment);

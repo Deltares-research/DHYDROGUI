@@ -146,7 +146,6 @@
     <Compile Include="Helpers\ConfigurationSetting.cs" />
     <Compile Include="Helpers\DelftIniCategory.cs" />
     <Compile Include="Helpers\DelftIniProperty.cs" />
-    <Compile Include="Helpers\IDelftIniCategory.cs" />
     <Compile Include="Helpers\IDelftIniProperty.cs" />
     <Compile Include="NGHSFileBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

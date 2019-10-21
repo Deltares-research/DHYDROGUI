@@ -738,21 +738,6 @@
       <FileName>FileReaders\Definition\DefinitionReader.cs</FileName>
     </TypeIdentifier>
   </Interface>
-  <Interface Name="DeltaShell.NGHS.IO.Helpers.IDelftIniCategory">
-    <Position X="25.5" Y="3" Width="2.25" />
-    <AssociationLine Name="Properties" Type="DeltaShell.NGHS.IO.Helpers.IDelftIniProperty">
-      <MemberNameLabel ManuallyPlaced="true">
-        <Position X="0.551" Y="-1.005" />
-      </MemberNameLabel>
-    </AssociationLine>
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAABAAAAAAAAAIAgQAAAEAAAAIAAAAAAACAAA=</HashCode>
-      <FileName>Helpers\DelftIniCategory.cs</FileName>
-    </TypeIdentifier>
-    <ShowAsCollectionAssociation>
-      <Property Name="Properties" />
-    </ShowAsCollectionAssociation>
-  </Interface>
   <Interface Name="DeltaShell.NGHS.IO.Helpers.IDelftIniProperty">
     <Position X="29.25" Y="3.25" Width="1.5" />
     <TypeIdentifier>

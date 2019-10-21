@@ -26,7 +26,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         /// <param name="definition"> The model definition. </param>
         public static void Read(string filePath, WaterFlowFMModelDefinition definition)
         {
-            IList<IDelftIniCategory> categories = new DelftIniReader().ReadDelftIniFile(filePath);
+            IList<DelftIniCategory> categories = new DelftIniReader().ReadDelftIniFile(filePath);
 
             RemoveRedundantProperties(categories, definition);
             UpdateLegacyNames(categories);
@@ -41,7 +41,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             definition.UpdateWriteOutputSnappedFeatures();
         }
 
-        private static void CorrectInvalidFixedWeirSchemeValue(IEnumerable<IDelftIniCategory> categories)
+        private static void CorrectInvalidFixedWeirSchemeValue(IEnumerable<DelftIniCategory> categories)
         {
             IDelftIniProperty fixedWeirProperty = categories.SelectMany(c => c.Properties)
                                                             .FirstOrDefault(p => p.Name.ToLowerInvariant() == KnownProperties.FixedWeirScheme);
@@ -61,7 +61,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             fixedWeirProperty.Value = "6";
         }
 
-        private static void UpdateLegacyNames(IEnumerable<IDelftIniCategory> categories)
+        private static void UpdateLegacyNames(IEnumerable<DelftIniCategory> categories)
         {
             categories.ForEach(category =>
             {
@@ -74,7 +74,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             });
         }
 
-        private static void RemoveRedundantProperties(IEnumerable<IDelftIniCategory> categories, WaterFlowFMModelDefinition definition)
+        private static void RemoveRedundantProperties(IEnumerable<DelftIniCategory> categories, WaterFlowFMModelDefinition definition)
         {
             categories.ForEach(category => 
             {
@@ -82,10 +82,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             });
         }
 
-        private static void SetPropertyValues(WaterFlowFMModelDefinition definition, IEnumerable<IDelftIniCategory> categories)
+        private static void SetPropertyValues(WaterFlowFMModelDefinition definition, IEnumerable<DelftIniCategory> categories)
         {
             var logHandler = new LogHandler("reading the mdu file", log);
-            foreach (IDelftIniCategory category in categories)
+            foreach (DelftIniCategory category in categories)
             {
                 foreach (IDelftIniProperty property in category.Properties)
                 {
