@@ -44,10 +44,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Common.IO
             Assert.That(categories.Count, Is.EqualTo(4));
 
             Assert.That(categories[1].Name, Is.EqualTo("Node=1"));
-            Assert.That(categories[1].Properties[0].Value, Is.EqualTo("Node001=6"));
+            Assert.That(categories[1].Properties.FirstOrDefault()?.Value, Is.EqualTo("Node001=6"));
 
             Assert.That(categories[2].Name, Is.EqualTo("Node"));
-            Assert.That(categories[2].Properties[0].Value, Is.EqualTo("T1_B1_Manhole_x=1000m"));
+            Assert.That(categories[2].Properties.FirstOrDefault()?.Value, Is.EqualTo("T1_B1_Manhole_x=1000m"));
         }
 
         [Test]

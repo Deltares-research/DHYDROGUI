@@ -166,7 +166,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 });
 
                 // Read file with ini reader again.
-                IDelftIniCategory category = AssertThatStructureCategoryExistsInFileAndReturn(exportFilePath);
+                DelftIniCategory category = AssertThatStructureCategoryExistsInFileAndReturn(exportFilePath);
                 AssertThatPropertyExistsAndIsEmpty(category, KnownStructureProperties.CrestWidth);
             });
         }
@@ -288,10 +288,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             return structuresFile;
         }
 
-        private static IDelftIniCategory AssertThatStructureCategoryExistsInFileAndReturn(string filePath)
+        private static DelftIniCategory AssertThatStructureCategoryExistsInFileAndReturn(string filePath)
         {
-            IList<IDelftIniCategory> categories = new DelftIniReader().ReadDelftIniFile(filePath);
-            IDelftIniCategory category = categories.Single();
+            IList<DelftIniCategory> categories = new DelftIniReader().ReadDelftIniFile(filePath);
+            DelftIniCategory category = categories.Single();
 
             Assert.That(category.Name, Is.EqualTo("structure")
                         , "The name of the category does not match the expectation.");
@@ -304,7 +304,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         /// </summary>
         /// <param name="category">The category.</param>
         /// <param name="propertyName">Name of the property.</param>
-        private static void AssertThatPropertyExistsAndIsEmpty(IDelftIniCategory category, string propertyName)
+        private static void AssertThatPropertyExistsAndIsEmpty(DelftIniCategory category, string propertyName)
         {
             Assert.That(category.Properties, Is.Not.Null
                         , "The Properties of the structure category should not be null.");

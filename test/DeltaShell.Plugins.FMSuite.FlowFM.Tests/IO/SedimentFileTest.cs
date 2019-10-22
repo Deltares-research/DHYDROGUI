@@ -1011,7 +1011,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                                           int nUnknownSediment,
                                           int nUnknownUnknown)
         {
-            var iniCategories = new List<IDelftIniCategory>();
+            var iniCategories = new List<DelftIniCategory>();
 
             // General Category
             var sedimentFileInformationCategory = new DelftIniCategory(SedimentFile.GeneralHeader);

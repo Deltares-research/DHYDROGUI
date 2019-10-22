@@ -61,21 +61,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             }
         }
 
-        public virtual void SedimentPropertyWrite(IDelftIniCategory category)
+        public virtual void SedimentPropertyWrite(DelftIniCategory category)
         {
             category.AddSedimentProperty(Name, string.Format(CultureInfo.InvariantCulture, "{0}", Value), Unit,
                                          Description);
         }
 
-        public virtual void SedimentPropertyLoad(IDelftIniCategory category)
+        public virtual void SedimentPropertyLoad(DelftIniCategory category)
         {
-            IDelftIniProperty prop = category.Properties.FirstOrDefault(p => p.Name == Name);
-            if (prop == null)
+            DelftIniProperty property = category.Properties.FirstOrDefault(p => p.Name == Name);
+            if (property == null)
             {
                 return;
             }
 
-            Value = (T) Convert.ChangeType(prop.Value, typeof(T), CultureInfo.InvariantCulture);
+            Value = (T) Convert.ChangeType(property.Value, typeof(T), CultureInfo.InvariantCulture);
         }
 
         public string Name { get; set; }
@@ -125,7 +125,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 
         #region Overrides of SedimentProperty<T>
 
-        public override void SedimentPropertyWrite(IDelftIniCategory category)
+        public override void SedimentPropertyWrite(DelftIniCategory category)
         {
             if (!IsSpatiallyVarying)
             {
@@ -139,7 +139,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             }
         }
 
-        public override void SedimentPropertyLoad(IDelftIniCategory category)
+        public override void SedimentPropertyLoad(DelftIniCategory category)
         {
             try
             {
@@ -148,7 +148,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             catch
             {
                 // check if we can cast to string so we can find out if it is a spatially varying property
-                IDelftIniProperty prop = category.Properties.FirstOrDefault(p => p.Name == Name);
+                DelftIniProperty prop = category.Properties.FirstOrDefault(p => p.Name == Name);
                 if (prop == null)
                 {
                     return;

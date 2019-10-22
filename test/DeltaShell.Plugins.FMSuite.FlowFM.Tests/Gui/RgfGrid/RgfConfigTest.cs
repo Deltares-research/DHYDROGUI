@@ -115,7 +115,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.RgfGrid
             var config = new RgfConfig();
             
             // When
-            IList<IDelftIniCategory> categories = config.ToDelftIniCategories().ToList();
+            IList<DelftIniCategory> categories = config.ToDelftIniCategories().ToList();
 
             // Then
             Assert.That(categories, Is.Not.Null, 
@@ -123,7 +123,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.RgfGrid
             Assert.That(categories, Has.Count.EqualTo(1), 
                         "Expected a single category to be returned.");
 
-            IDelftIniCategory category = categories.First();
+            DelftIniCategory category = categories.First();
             AssertValidCategory(category, RgfConfig.FileInformationHeader,
                 new Tuple<string, string>(RgfConfig.FileGeneratedBy, null),
                 new Tuple<string, string>(RgfConfig.FileCreationData, null),
@@ -145,13 +145,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.RgfGrid
             config.AdditionalGeometryPaths.Add(additionalPath);
 
             // When
-            IList<IDelftIniCategory> categories = config.ToDelftIniCategories().ToList();
+            IList<DelftIniCategory> categories = config.ToDelftIniCategories().ToList();
 
             // Then
             Assert.That(categories, Is.Not.Null,
                         "Expected the returned categories not to be null.");
 
-            IDelftIniCategory geometryCategory = categories.FirstOrDefault(c => c.Name == RgfConfig.GeometryHeader);
+            DelftIniCategory geometryCategory = categories.FirstOrDefault(c => c.Name == RgfConfig.GeometryHeader);
             AssertValidCategory(geometryCategory, RgfConfig.GeometryHeader,
                                 new Tuple<string, string>(RgfConfig.LandBoundaryFile, additionalPath),
                                 new Tuple<string, string>(RgfConfig.LandBoundaryFormat, expectedFormat));
@@ -171,13 +171,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.RgfGrid
             config.AddGridFileNames(new Tuple<string, string>(gridFilePath, gridFileFormat));
 
             // When
-            IList<IDelftIniCategory> categories = config.ToDelftIniCategories().ToList();
+            IList<DelftIniCategory> categories = config.ToDelftIniCategories().ToList();
 
             // Then
             Assert.That(categories, Is.Not.Null,
                         "Expected the returned categories not to be null.");
 
-            IDelftIniCategory gridCategory = categories.FirstOrDefault(c => c.Name == RgfConfig.GridHeader);
+            DelftIniCategory gridCategory = categories.FirstOrDefault(c => c.Name == RgfConfig.GridHeader);
             AssertValidCategory(gridCategory, RgfConfig.GridHeader,
                                 new Tuple<string, string>(RgfConfig.GridFileName, gridFilePath),
                                 new Tuple<string, string>(RgfConfig.GridType, gridFileFormat));
@@ -200,7 +200,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.RgfGrid
             };
 
             // When 
-            IList<IDelftIniCategory> categories = config.ToDelftIniCategories().ToList();
+            IList<DelftIniCategory> categories = config.ToDelftIniCategories().ToList();
 
             // Then
             Assert.That(categories, Is.Not.Null,
@@ -235,18 +235,18 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.RgfGrid
             config.AddGridFileNames(expectedGridFileName);
 
             // When 
-            IList<IDelftIniCategory> categories = config.ToDelftIniCategories().ToList();
+            IList<DelftIniCategory> categories = config.ToDelftIniCategories().ToList();
 
             // Then
             Assert.That(categories, Is.Not.Null,
                         "Expected the returned categories not to be null.");
 
-            IDelftIniCategory polygonCategory = categories.FirstOrDefault(c => c.Name == RgfConfig.PolygonsHeader);
+            DelftIniCategory polygonCategory = categories.FirstOrDefault(c => c.Name == RgfConfig.PolygonsHeader);
             AssertValidCategory(polygonCategory, 
                                 RgfConfig.PolygonsHeader, 
                                 new Tuple<string, string>(RgfConfig.PolygonFileName, expectedPolFileName));
 
-            IDelftIniCategory batchCategory = categories.FirstOrDefault(c => c.Name == RgfConfig.BatchHeader);
+            DelftIniCategory batchCategory = categories.FirstOrDefault(c => c.Name == RgfConfig.BatchHeader);
             AssertValidCategory(batchCategory, 
                 RgfConfig.BatchHeader,
                 new Tuple<string, string>(RgfConfig.BatchFileName, expectedGridFileName),
@@ -324,7 +324,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.RgfGrid
             Assert.Throws<InvalidOperationException>(testAction, "Expected a different exception:");
         }
 
-        private static void AssertValidCategory(IDelftIniCategory category,
+        private static void AssertValidCategory(DelftIniCategory category,
                                                 string headerName,
                                                 params Tuple<string, string>[] expectedProperties)
         {
@@ -340,7 +340,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.RgfGrid
 
             foreach (Tuple<string, string> prop in expectedProperties)
             {
-                IDelftIniProperty propInCategory = category.Properties.FirstOrDefault(p => p.Name == prop.Item1);
+                DelftIniProperty propInCategory = category.Properties.FirstOrDefault(p => p.Name == prop.Item1);
                 Assert.That(propInCategory, Is.Not.Null,
                             $"Expected a {prop.Item1} property to be in {headerName} header.");
 

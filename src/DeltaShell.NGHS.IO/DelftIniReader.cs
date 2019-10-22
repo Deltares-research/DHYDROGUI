@@ -27,9 +27,9 @@ namespace DeltaShell.NGHS.IO
         /// <exception cref="DirectoryNotFoundException">The specified path is invalid, such as being on an unmapped drive.</exception>
         /// <exception cref="IOException"><paramref name="iniFile"/> includes an incorrect or invalid syntax for file name, directory name, or volume label.</exception>
         /// <exception cref="FormatException">When an invalid line was encountered.</exception>
-        public IList<IDelftIniCategory> ReadDelftIniFile(string iniFile)
+        public IList<DelftIniCategory> ReadDelftIniFile(string iniFile)
         {
-            var content = new List<IDelftIniCategory>();
+            var content = new List<DelftIniCategory>();
 
             OpenInputFile(iniFile);
             try
@@ -44,18 +44,15 @@ namespace DeltaShell.NGHS.IO
 
                     if (IsNewCategory(line, ref categoryName))
                     {
-                        currentCategory = new DelftIniCategory(categoryName) {LineNumber = LineNumber};
+                        currentCategory = new DelftIniCategory(categoryName, LineNumber);
                         content.Add(currentCategory);
                         continue;
                     }
                     if (currentCategory == null) continue;
 
                     string[] fields = GetKeyValueComment(line);
-                    var delftIniProperty = new DelftIniProperty(fields[0], fields[1], fields[2])
-                    {
-                        LineNumber = LineNumber
-                    };
-                    currentCategory.Properties.Add(delftIniProperty);
+                    var delftIniProperty = new DelftIniProperty(fields[0], fields[1], fields[2], LineNumber);
+                    currentCategory.AddProperty(delftIniProperty);
                 }
             }
             finally
