@@ -261,7 +261,7 @@ namespace DelftTools.Hydro.Structures
             if (WeirFormula is GeneralStructureWeirFormula) return StructureType.GeneralStructure;
             return StructureType.Unknown;
         }
-
+        [EditAction]
         public virtual void AddToHydroNetwork(IHydroNetwork hydroNetwork)
         {
             var sewerConnection = hydroNetwork.SewerConnections.FirstOrDefault(

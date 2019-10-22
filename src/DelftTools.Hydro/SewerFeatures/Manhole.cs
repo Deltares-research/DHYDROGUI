@@ -209,7 +209,7 @@ namespace DelftTools.Hydro.SewerFeatures
         #endregion
 
         #region Network is visiting us
-
+        [EditAction]
         public void AddToHydroNetwork(IHydroNetwork hydroNetwork)
         {
             throw new System.NotImplementedException();

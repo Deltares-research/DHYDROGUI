@@ -76,7 +76,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         /// <param name="path">File to import. If this argument is missing then FilesToImport will be taken instead.</param>
         /// <param name="target"></param>
         /// <returns></returns>
-        [EditAction]
         public object ImportItem(string path, object target = null)
         {
             if (GwswAttributesDefinition == null || !GwswAttributesDefinition.Any())

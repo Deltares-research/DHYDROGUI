@@ -312,13 +312,14 @@ namespace DelftTools.Hydro.SewerFeatures
 
 
         #region Network is visiting us
-        
+        [EditAction]
         public void AddToHydroNetwork(IHydroNetwork hydroNetwork)
         {
             hydroNetwork.Branches.RemoveAllWhere(sc => sc.Name == Name && sc is SewerConnection);
 
-            var sourceManhole = hydroNetwork.Manholes.FirstOrDefault(m => m.ContainsCompartmentWithName(SourceCompartmentName));
-            var targetManhole = hydroNetwork.Manholes.FirstOrDefault(m => m.ContainsCompartmentWithName(TargetCompartmentName));
+            var hydroNetworkManholes = hydroNetwork.Manholes.ToArray();
+            var sourceManhole = hydroNetworkManholes.FirstOrDefault(m => m.ContainsCompartmentWithName(SourceCompartmentName));
+            var targetManhole = hydroNetworkManholes.FirstOrDefault(m => m.ContainsCompartmentWithName(TargetCompartmentName));
 
             ConnectSourceCompartment(sourceManhole);
             ConnectTargetCompartment(targetManhole);
@@ -330,7 +331,7 @@ namespace DelftTools.Hydro.SewerFeatures
             AddCrossSectionDefinition(hydroNetwork);
             hydroNetwork.Branches.Add(this);
         }
-
+        [EditAction]
         protected virtual void AddCrossSectionDefinition(IHydroNetwork hydroNetwork)
         {
         }

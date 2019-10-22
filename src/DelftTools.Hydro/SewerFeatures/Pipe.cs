@@ -94,7 +94,7 @@ namespace DelftTools.Hydro.SewerFeatures
 
             }
         }
-
+        [EditAction]
         protected override void AddCrossSectionDefinition(IHydroNetwork hydroNetwork)
         {
             if (CrossSectionDefinitionName == null) CrossSectionDefinition = (CrossSectionDefinitionStandard)CrossSectionDefinitionStandard.CreateDefault();

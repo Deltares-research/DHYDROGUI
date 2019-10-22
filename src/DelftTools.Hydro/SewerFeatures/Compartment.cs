@@ -122,7 +122,7 @@ namespace DelftTools.Hydro.SewerFeatures
         #region Network is visiting us
 
         public string ParentManholeName { get; set; }
-
+        [EditAction]
         public virtual void AddToHydroNetwork(IHydroNetwork network)
         {
             AssignParentManholeNameIfMissing(network);
@@ -155,10 +155,11 @@ namespace DelftTools.Hydro.SewerFeatures
 
         private Manhole GetManholeInNetworkToAddCompartmentTo(IHydroNetwork network)
         {
-            var manhole = network.Manholes.FirstOrDefault(m => m.Name == ParentManholeName) as Manhole;
+            var networkManholes = network.Manholes.ToArray();
+            var manhole = networkManholes.FirstOrDefault(m => m.Name == ParentManholeName) as Manhole;
             if (manhole == null)
             {
-                manhole = network.Manholes.FirstOrDefault(m => m.ContainsCompartmentWithName(Name)) as Manhole;
+                manhole = networkManholes.FirstOrDefault(m => m.ContainsCompartmentWithName(Name)) as Manhole;
             }
 
             return manhole;
