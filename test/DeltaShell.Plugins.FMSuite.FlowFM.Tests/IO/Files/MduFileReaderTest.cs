@@ -28,6 +28,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
         }
 
         [Test]
+        public void Read_CommentLinesInContent_ThenCommentLinesAreSkippedAndReadingIsExecutedWithoutProblems()
+        {
+            string fileContent = "# Generated on 2019-10-22 14:02:32"
+                                 + Environment.NewLine
+                                 + "# Deltares, Delft3D FM 2018 Suite Version 1.6.0.0, D-Flow FM Version 1.2.63.64757M"
+                                 + Environment.NewLine
+                                 + "[General]"
+                                 + Environment.NewLine
+                                 + "Program = MyProgram # Program name"
+                                 + Environment.NewLine
+                                 + "# Another comment line here that should be ignored while reading.";
+
+            ReadWithAssert(fileContent, definition =>
+            {
+                WaterFlowFMProperty property = definition.GetModelProperty("Program");
+                AssertPropertyValues(property, "General", "MyProgram", "Program name");
+            });
+        }
+
+        [Test]
         public void Read_KnownPropertyNonDefaultComment_ThenPropertyCommentHasNotChanged()
         {
             string fileContent = "[General]"
