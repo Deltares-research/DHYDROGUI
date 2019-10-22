@@ -19,8 +19,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             cfRoleAttributeValueInNetCdfFile = WaterFlowModel1DOutputFileConstants.AttributeValues.CfRole;
             branchidVariableNameInNetCDFFile = WaterFlowModel1DOutputFileConstants.VariableNames.BranchId;
             chainageVariableNameInNetCDFFile = WaterFlowModel1DOutputFileConstants.VariableNames.Chainage;
-            xCoordinateVariableNameInNetCDFFile = WaterFlowModel1DOutputFileConstants.VariableNames.XCoordinate;
-            yCoordinateVariableNameInNetCDFFile = WaterFlowModel1DOutputFileConstants.VariableNames.YCoordinate;
+            xNodeCoordinateVariableNameInNetCDFFile = WaterFlowModel1DOutputFileConstants.VariableNames.XCoordinate;
+            yNodeCoordinateVariableNameInNetCDFFile = WaterFlowModel1DOutputFileConstants.VariableNames.YCoordinate;
             unitsAttributeKeyNameInNetCdfFile = WaterFlowModel1DOutputFileConstants.AttributeKeys.Units;
             timeVariableUnitValuePrefixInNetCdfFile = WaterFlowModel1DOutputFileConstants.TimeVariableUnitValuePrefix;
             dateTimeFormat = WaterFlowModel1DOutputFileConstants.DateTimeFormat;

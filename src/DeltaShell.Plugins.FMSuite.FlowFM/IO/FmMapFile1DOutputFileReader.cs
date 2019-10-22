@@ -14,8 +14,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             timeVariableNameInNetCDFFile = "time";
             timeDimensionNameInNetCdfFile = "time";
 
-            xCoordinateVariableNameInNetCDFFile = "mesh1d_node_x";
-            yCoordinateVariableNameInNetCDFFile = "mesh1d_node_y";
+            xNodeCoordinateVariableNameInNetCDFFile = "mesh1d_node_x";
+            yNodeCoordinateVariableNameInNetCDFFile = "mesh1d_node_y";
+
+            edgeIdVariableNameInNetCDFFile = "mesh1d_edge_nodes";
+            edgeBranchidVariableNameInNetCDFFile = "mesh1d_edge_branch";
+            edgeChainageVariableNameInNetCDFFile = "mesh1d_edge_offset";
+
+            xEdgeCoordinateVariableNameInNetCDFFile = "mesh1d_edge_x";
+            yEdgeCoordinateVariableNameInNetCDFFile = "mesh1d_edge_y";
+            
             unitsAttributeKeyNameInNetCdfFile = "units";
             timeVariableUnitValuePrefixInNetCdfFile = "seconds since";
             dateTimeFormat = "yyyy-MM-dd HH:mm:ss";

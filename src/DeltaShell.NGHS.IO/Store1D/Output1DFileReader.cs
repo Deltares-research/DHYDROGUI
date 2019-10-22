@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using DelftTools.Utils.Collections;
 using DelftTools.Utils.NetCdf;
 using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
@@ -16,8 +17,13 @@ namespace DeltaShell.NGHS.IO.Store1D
         protected string cfRoleAttributeValueInNetCdfFile;
         protected string branchidVariableNameInNetCDFFile;
         protected string chainageVariableNameInNetCDFFile;
-        protected string xCoordinateVariableNameInNetCDFFile;
-        protected string yCoordinateVariableNameInNetCDFFile;
+        protected string edgeIdVariableNameInNetCDFFile;
+        protected string edgeBranchidVariableNameInNetCDFFile;
+        protected string edgeChainageVariableNameInNetCDFFile;
+        protected string xNodeCoordinateVariableNameInNetCDFFile;
+        protected string yNodeCoordinateVariableNameInNetCDFFile;
+        protected string xEdgeCoordinateVariableNameInNetCDFFile;
+        protected string yEdgeCoordinateVariableNameInNetCDFFile;
         protected string unitsAttributeKeyNameInNetCdfFile;
         protected string timeVariableUnitValuePrefixInNetCdfFile;
         protected string dateTimeFormat;
@@ -114,18 +120,41 @@ namespace DeltaShell.NGHS.IO.Store1D
                         continue;
                     }
 
-                    
-                    if(variableName == branchidVariableNameInNetCDFFile)
+                    if (variableName == edgeIdVariableNameInNetCDFFile)
+                    {
+                        var list = Parse1DNetCdfVariable<int>(path, variableName).ToList();
+                        var edgeNodesNameIds = new List<string>();
+                        for (int i = 0; i < list.Count; i+=2)
+                        {
+                            edgeNodesNameIds.Add(string.Format("{0}_{1}", list[i].ToString(), list[i+1].ToString()));
+                        }
+
+                        locationIds = edgeNodesNameIds;
+                    } 
+
+                    if (variableName == branchidVariableNameInNetCDFFile)
                         branchIds = Parse1DNetCdfVariable<int>(path, variableName);
                     
                     if (variableName == chainageVariableNameInNetCDFFile)
                         chainages = Parse1DNetCdfVariable<double>(path, variableName);
 
+                    if (variableName == edgeBranchidVariableNameInNetCDFFile)
+                        branchIds = Parse1DNetCdfVariable<int>(path, variableName);
                     
-                    if (variableName == xCoordinateVariableNameInNetCDFFile)
+                    if (variableName == edgeChainageVariableNameInNetCDFFile)
+                        chainages = Parse1DNetCdfVariable<double>(path, variableName);
+
+                    
+                    if (variableName == xNodeCoordinateVariableNameInNetCDFFile)
                         xCoordinates = Parse1DNetCdfVariable<double>(path, variableName);
 
-                    if (variableName == yCoordinateVariableNameInNetCDFFile)
+                    if (variableName == yNodeCoordinateVariableNameInNetCDFFile)
+                        yCoordinates = Parse1DNetCdfVariable<double>(path, variableName);
+
+                    if (variableName == xEdgeCoordinateVariableNameInNetCDFFile)
+                        xCoordinates = Parse1DNetCdfVariable<double>(path, variableName);
+
+                    if (variableName == yEdgeCoordinateVariableNameInNetCDFFile)
                         yCoordinates = Parse1DNetCdfVariable<double>(path, variableName);
                 }
 
