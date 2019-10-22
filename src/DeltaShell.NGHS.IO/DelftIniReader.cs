@@ -44,7 +44,7 @@ namespace DeltaShell.NGHS.IO
         /// <exception cref="DirectoryNotFoundException">The specified path is invalid, such as being on an unmapped drive.</exception>
         /// <exception cref="IOException"><paramref name="iniFile"/> includes an incorrect or invalid syntax for file name, directory name, or volume label.</exception>
         /// <exception cref="FormatException">When an invalid line was encountered.</exception>
-        [Obsolete]
+        [Obsolete("2019-10-22: Please use ReadDelftIniFile(Stream stream, string filePath).")]
         public IList<DelftIniCategory> ReadDelftIniFile(string iniFile)
         {
             OpenInputFile(iniFile);

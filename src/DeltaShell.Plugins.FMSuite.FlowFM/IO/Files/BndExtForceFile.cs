@@ -450,7 +450,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             BndExtFilePath = bndExtForceFilePath;
             BndExtSubFilesReferenceFilePath = bndExtSubFilesReferenceFilePath;
 
-            IList<DelftIniCategory> bndBlocks = new DelftIniReader().ReadDelftIniFile(bndExtForceFilePath);
+            IList<DelftIniCategory> bndBlocks;
+            using (var fileStream = new FileStream(bndExtForceFilePath, FileMode.Open, FileAccess.Read))
+            {
+                bndBlocks = new DelftIniReader().ReadDelftIniFile(fileStream, bndExtForceFilePath);
+            }
 
             ReadPolyLines(bndBlocks, modelDefinition);
 
