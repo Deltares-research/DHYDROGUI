@@ -6,7 +6,7 @@ using DelftTools.Hydro;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO;
-using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;

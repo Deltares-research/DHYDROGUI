@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.Plugins.FMSuite.Common.Gui.RgfGrid;
 using GeoAPI.Geometries;
 using NUnit.Framework;

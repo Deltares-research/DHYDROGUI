@@ -1,4 +1,4 @@
-﻿namespace DeltaShell.NGHS.IO.Helpers
+﻿namespace DeltaShell.NGHS.IO.DelftIniObjects
 {
     /// <summary>
     /// Representation of a property in a .ini file.

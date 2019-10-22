@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using DelftTools.Utils.RegularExpressions;
-using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.NGHS.IO.Properties;
 
 namespace DeltaShell.NGHS.IO

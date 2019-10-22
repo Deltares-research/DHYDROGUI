@@ -7,6 +7,7 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Validation;
 using DeltaShell.NGHS.IO;
+using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.NGHS.IO.Handlers;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;

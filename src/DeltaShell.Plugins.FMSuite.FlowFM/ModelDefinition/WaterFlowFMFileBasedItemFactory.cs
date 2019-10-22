@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;

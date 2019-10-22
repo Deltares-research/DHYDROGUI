@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using DelftTools.TestUtils;
 using DeltaShell.NGHS.IO;
-using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.NGHS.IO.Properties;
 using NUnit.Framework;
 

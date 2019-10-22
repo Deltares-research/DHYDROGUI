@@ -10,7 +10,7 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO;
-using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures;
 using DeltaShell.Plugins.FMSuite.Common.Tests.IO;
 using NUnit.Framework;

@@ -6,7 +6,7 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.Core;
 using DeltaShell.NGHS.IO;
-using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;

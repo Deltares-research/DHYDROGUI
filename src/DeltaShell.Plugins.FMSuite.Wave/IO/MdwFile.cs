@@ -10,7 +10,7 @@ using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO;
-using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;

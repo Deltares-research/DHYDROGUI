@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Linq;
 using DelftTools.Utils.Collections;
 
-namespace DeltaShell.NGHS.IO.Helpers
+namespace DeltaShell.NGHS.IO.DelftIniObjects
 {
     /// <summary>
     /// Representation of a category in a .ini file.
