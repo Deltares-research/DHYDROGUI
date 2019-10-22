@@ -7,6 +7,9 @@ using DeltaShell.NGHS.IO.Properties;
 
 namespace DeltaShell.NGHS.IO
 {
+    /// <summary>
+    /// Reader for Delft Ini-files.
+    /// </summary>
     public class DelftIniReader : NGHSFileBase
     {
         /// <summary>
@@ -25,39 +28,9 @@ namespace DeltaShell.NGHS.IO
         /// <remarks> The stream is implicitly disposed. </remarks>
         public IList<DelftIniCategory> ReadDelftIniFile(Stream stream, string filePath)
         {
-            var content = new List<DelftIniCategory>();
-
             OpenInputFile(stream);
             InputFilePath = filePath;
-            try
-            {
-                string line;
-                DelftIniCategory currentCategory = null;
-                string categoryName = null;
-                while ((line = GetNextLine()) != null)
-                {
-                    line = line.Trim();
-                    if (string.IsNullOrEmpty(line)) continue; // Skip white-space characters.
-
-                    if (IsNewCategory(line, ref categoryName))
-                    {
-                        currentCategory = new DelftIniCategory(categoryName, LineNumber);
-                        content.Add(currentCategory);
-                        continue;
-                    }
-                    if (currentCategory == null) continue;
-
-                    string[] fields = GetKeyValueComment(line);
-                    var delftIniProperty = new DelftIniProperty(fields[0], fields[1], fields[2], LineNumber);
-                    currentCategory.AddProperty(delftIniProperty);
-                }
-            }
-            finally
-            {
-                CloseInputFile();
-            }
-
-            return content;
+            return Read();
         }
 
         /// <summary>
@@ -74,9 +47,13 @@ namespace DeltaShell.NGHS.IO
         [Obsolete]
         public IList<DelftIniCategory> ReadDelftIniFile(string iniFile)
         {
-            var content = new List<DelftIniCategory>();
-
             OpenInputFile(iniFile);
+            return Read();
+        }
+
+        private IList<DelftIniCategory> Read()
+        {
+            var content = new List<DelftIniCategory>();
             try
             {
                 string line;
@@ -85,7 +62,7 @@ namespace DeltaShell.NGHS.IO
                 while ((line = GetNextLine()) != null)
                 {
                     line = line.Trim();
-                    if(string.IsNullOrEmpty(line)) continue; // Skip white-space characters.
+                    if (string.IsNullOrEmpty(line)) continue; // Skip white-space characters.
 
                     if (IsNewCategory(line, ref categoryName))
                     {
@@ -93,6 +70,7 @@ namespace DeltaShell.NGHS.IO
                         content.Add(currentCategory);
                         continue;
                     }
+
                     if (currentCategory == null) continue;
 
                     string[] fields = GetKeyValueComment(line);
@@ -136,7 +114,7 @@ namespace DeltaShell.NGHS.IO
         /// <param name="newCategory">Set to the name of the category/group, when returning true.</param>
         /// <returns>True if the line represents a new category/group; False otherwise.</returns>
         /// <exception cref="FormatException">When an invalid category/group line was encountered.</exception>
-        protected bool IsNewCategory(string line, ref string newCategory)
+        private bool IsNewCategory(string line, ref string newCategory)
         {
             if (line.StartsWith("["))
             {
