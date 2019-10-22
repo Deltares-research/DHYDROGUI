@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.IO;
@@ -22,11 +23,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         /// <summary>
         /// Reads data from an mdu file and sets this data on a <see cref="WaterFlowFMModelDefinition"/>.
         /// </summary>
+        /// <param name="stream"> The stream to read the ini-file from. </param>
         /// <param name="filePath"> The file path of the mdu file. </param>
         /// <param name="definition"> The model definition. </param>
-        public static void Read(string filePath, WaterFlowFMModelDefinition definition)
+        /// <remarks> The stream is implicitly disposed. </remarks>
+        public static void Read(Stream stream, string filePath, WaterFlowFMModelDefinition definition)
         {
-            IList<DelftIniCategory> categories = new DelftIniReader().ReadDelftIniFile(filePath);
+            IList<DelftIniCategory> categories = new DelftIniReader().ReadDelftIniFile(stream, filePath);
 
             RemoveRedundantProperties(categories, definition);
             UpdateLegacyNames(categories);
@@ -106,8 +109,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
         private static WaterFlowFMProperty CreateFmProperty(DelftIniProperty property, string categoryName)
         {
+            string propertyComment = property.Comment == string.Empty
+                                         ? null 
+                                         : property.Comment; // This is a little odd, maybe string.Empty is not so bad?.
+
             WaterFlowFMPropertyDefinition newPropertyDefinition =
-                WaterFlowFMPropertyDefinitionCreator.CreateForCustomProperty(categoryName, property.Name, property.Comment);
+                WaterFlowFMPropertyDefinitionCreator.CreateForCustomProperty(categoryName, property.Name, propertyComment);
 
             return new WaterFlowFMProperty(newPropertyDefinition, property.Value);
         }

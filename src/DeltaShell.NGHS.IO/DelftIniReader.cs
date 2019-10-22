@@ -22,6 +22,7 @@ namespace DeltaShell.NGHS.IO
         /// <param name="stream"> The <see cref="Stream"/> to read the ini file from. </param>
         /// <param name="filePath"> The path to the file location. </param>
         /// <returns> A collection of <see cref="DelftIniCategory"/> instances. </returns>
+        /// <remarks> The stream is implicitly disposed. </remarks>
         public IList<DelftIniCategory> ReadDelftIniFile(Stream stream, string filePath)
         {
             var content = new List<DelftIniCategory>();
@@ -70,6 +71,7 @@ namespace DeltaShell.NGHS.IO
         /// <exception cref="DirectoryNotFoundException">The specified path is invalid, such as being on an unmapped drive.</exception>
         /// <exception cref="IOException"><paramref name="iniFile"/> includes an incorrect or invalid syntax for file name, directory name, or volume label.</exception>
         /// <exception cref="FormatException">When an invalid line was encountered.</exception>
+        [Obsolete]
         public IList<DelftIniCategory> ReadDelftIniFile(string iniFile)
         {
             var content = new List<DelftIniCategory>();

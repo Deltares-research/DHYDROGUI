@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using DelftTools.TestUtils;
-using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using NUnit.Framework;
@@ -14,9 +14,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
     public class MduFileReaderTest
     {
         [Test]
-        public void Read_KnownPropertyNonDefaultPropertyValue_ThenPropertyValueHasChanged_PlusCheckNewReadResult()
+        public void Read_KnownPropertyNonDefaultValue_ThenPropertyValueHasChanged()
         {
-            ReadWithAssert("KnownPropertyNonDefaultValue.mdu", definition =>
+            string fileContent = "[General]"
+                                 + Environment.NewLine
+                                 + "Program = MyProgram # Program name";
+
+            ReadWithAssert(fileContent, definition =>
             {
                 WaterFlowFMProperty property = definition.GetModelProperty("Program");
                 AssertPropertyValues(property, "General", "MyProgram", "Program name");
@@ -24,9 +28,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
         }
 
         [Test]
-        public void Read_KnownPropertyNonDefaultComment_ThenPropertyCommentHasNotChanged_PlusCheckNewReadResult()
+        public void Read_KnownPropertyNonDefaultComment_ThenPropertyCommentHasNotChanged()
         {
-            ReadWithAssert("KnownPropertyNonDefaultComment.mdu", definition =>
+            string fileContent = "[General]"
+                                 + Environment.NewLine
+                                 + "Program = D-Flow FM # MyDescription";
+
+            ReadWithAssert(fileContent, definition =>
             {
                 WaterFlowFMProperty property = definition.GetModelProperty("Program");
                 AssertPropertyValues(property, "General", "D-Flow FM", "Program name");
@@ -34,9 +42,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
         }
 
         [Test]
-        public void Read_KnownPropertyInLowerCase_ThenPropertyValueHasChanged_PlusCheckNewReadResult()
+        public void Read_KnownPropertyInLowerCase_ThenPropertyValueHasChanged()
         {
-            ReadWithAssert("KnownPropertyLowerCase.mdu", definition =>
+            string fileContent = "[General]"
+                                 + Environment.NewLine
+                                 + "program = MyProgram # Program name";
+
+            ReadWithAssert(fileContent, definition =>
             {
                 WaterFlowFMProperty property = definition.GetModelProperty("Program");
                 AssertPropertyValues(property, "General", "MyProgram", "Program name");
@@ -44,9 +56,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
         }
 
         [Test]
-        public void Read_CustomProperty_ThenNewPropertyIsAddedToModelDefinition_PlusCheckNewReadResult()
+        public void Read_CustomProperty_ThenNewPropertyIsAddedToModelDefinition()
         {
-            ReadWithAssert("CustomProperty.mdu", definition =>
+            string fileContent = "[General]"
+                                 + Environment.NewLine
+                                 + "MyCustomProperty = MyValue # MyDescription";
+
+            ReadWithAssert(fileContent, definition =>
             {
                 WaterFlowFMProperty property = definition.GetModelProperty("MyCustomProperty");
                 AssertPropertyValues(property, "General", "MyValue", "MyDescription");
@@ -54,9 +70,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
         }
 
         [Test]
-        public void Read_LegacyCategory_ThenCategoryNameIsUpdated_PlusCheckNewReadResult()
+        public void Read_LegacyCategory_ThenCategoryNameIsUpdated()
         {
-            ReadWithAssert("LegacyCategory.mdu", definition =>
+            string fileContent = "[Model]"
+                                 + Environment.NewLine
+                                 + "Program = D-Flow FM # Program name"
+                                 + Environment.NewLine
+                                 + "MyProperty = MyValue # MyComment";
+
+            ReadWithAssert(fileContent, definition =>
             {
                 WaterFlowFMProperty knownProperty = definition.GetModelProperty("Program");
                 AssertPropertyValues(knownProperty, "General", "D-Flow FM", "Program name");
@@ -67,9 +89,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
         }
 
         [Test]
-        public void Read_KnownPropertyWithoutComment_ThenNewPropertyIsAddedToModelDefinitionWithPredefinedComment_PlusCheckNewReadResult()
+        public void Read_KnownPropertyWithoutComment_ThenNewPropertyIsAddedToModelDefinitionWithPredefinedComment()
         {
-            ReadWithAssert("KnownPropertyWithoutComment.mdu", definition =>
+            string fileContent = "[General]"
+                                 + Environment.NewLine
+                                 + "Program = D-Flow FM";
+
+            ReadWithAssert(fileContent, definition =>
             {
                 WaterFlowFMProperty property = definition.GetModelProperty("Program");
                 AssertPropertyValues(property, "General", "D-Flow FM", "Program name");
@@ -77,9 +103,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
         }
 
         [Test]
-        public void Read_CustomPropertyWithoutComment_ThenNewPropertyIsAddedToModelDefinitionWithNullComment_PlusCheckNewReadResult()
+        public void Read_CustomPropertyWithoutComment_ThenNewPropertyIsAddedToModelDefinitionWithNullComment()
         {
-            ReadWithAssert("CustomPropertyWithoutComment.mdu", definition =>
+            string fileContent = "[General]"
+                                 + Environment.NewLine
+                                 + "MyCustomProperty = MyValue";
+
+            ReadWithAssert(fileContent, definition =>
             {
                 WaterFlowFMProperty property = definition.GetModelProperty("MyCustomProperty");
                 AssertPropertyValues(property, "General", "MyValue", null);
@@ -87,9 +117,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
         }
 
         [Test]
-        public void Read_KnownPropertyEmptyValue_ThenPropertyValueIsNotChanged_PlusCheckNewReadResult()
+        public void Read_KnownPropertyEmptyValue_ThenPropertyValueIsNotChanged()
         {
-            ReadWithAssert("KnownPropertyEmptyValue.mdu", definition =>
+            string fileContent = "[General]"
+                                 + Environment.NewLine
+                                 + "Program =   # Program name";
+
+            ReadWithAssert(fileContent, definition =>
             {
                 WaterFlowFMProperty property = definition.GetModelProperty("Program");
                 AssertPropertyValues(property, "General", "D-Flow FM", "Program name");
@@ -97,9 +131,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
         }
 
         [Test]
-        public void Read_CustomPropertyEmptyValue_ThenNewPropertyValueIsAddedWithEmptyValue_PlusCheckNewReadResult()
+        public void Read_CustomPropertyEmptyValue_ThenNewPropertyValueIsAddedWithEmptyValue()
         {
-            ReadWithAssert("CustomPropertyEmptyValue.mdu", definition =>
+            string fileContent = "[General]"
+                                 + Environment.NewLine
+                                 + "MyCustomProperty =   # MyDescription";
+
+            ReadWithAssert(fileContent, definition =>
             {
                 WaterFlowFMProperty property = definition.GetModelProperty("MyCustomProperty");
                 AssertPropertyValues(property, "General", string.Empty, "MyDescription");
@@ -107,9 +145,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
         }
 
         [Test]
-        public void Read_EmptyPropertyName_ThenNewPropertyValueIsAddedWithEmptyValue_PlusCheckNewReadResult()
+        public void Read_EmptyPropertyName_ThenNewPropertyValueIsAddedWithEmptyValue()
         {
-            ReadWithAssert("MultipleValuedProperty.mdu", definition =>
+            string fileContent = "[Geometry]"
+                                 + Environment.NewLine
+                                 + "DryPointsFile = myPoints1_dry.pol myPoints2_dry.pol # Dry points files";
+
+            ReadWithAssert(fileContent, definition =>
             {
                 WaterFlowFMProperty property = definition.GetModelProperty("DryPointsFile");
                 AssertPropertyValues(property, "geometry", new List<string> { "myPoints1_dry.pol", "myPoints2_dry.pol" }, 
@@ -118,9 +160,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
         }
 
         [Test]
-        public void Read_KnownCategoryLowerCase_ThenPropertyIsAddedToKnownCategory_PlusCheckNewReadResult()
+        public void Read_KnownCategoryLowerCase_ThenPropertyIsAddedToKnownCategory()
         {
-            ReadWithAssert("KnownCategoryLowerCase.mdu", definition =>
+            string fileContent = "[general]"
+                                 + Environment.NewLine
+                                 + "Program = MyProgram # Program name";
+
+            ReadWithAssert(fileContent, definition =>
             {
                 WaterFlowFMProperty property = definition.GetModelProperty("Program");
                 AssertPropertyValues(property, "General", "MyProgram", "Program name");
@@ -128,9 +174,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
         }
 
         [Test]
-        public void Read_CustomCategoryCustomProperty_ThenNewCategoryWithNewPropertyIsAdded_PlusCheckNewReadResult()
+        public void Read_CustomCategoryCustomProperty_ThenNewCategoryWithNewPropertyIsAdded()
         {
-            ReadWithAssert("CustomCategoryCustomProperty.mdu", definition =>
+            string fileContent = "[MyCustomCategory]"
+                                 + Environment.NewLine
+                                 + "MyCustomProperty = MyValue # MyComment";
+
+            ReadWithAssert(fileContent, definition =>
             {
                 WaterFlowFMProperty property = definition.GetModelProperty("MyCustomProperty");
                 AssertPropertyValues(property, "MyCustomCategory", "MyValue", "MyComment");
@@ -138,9 +188,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
         }
 
         [Test]
-        public void Read_CustomCategoryKnownProperty_ThenPropertyIsAddedToKnownCategoryAndCustomCategoryIsLost_PlusCheckNewReadResult()
+        public void Read_CustomCategoryKnownProperty_ThenPropertyIsAddedToKnownCategoryAndCustomCategoryIsLost()
         {
-            ReadWithAssert("CustomCategoryKnownProperty.mdu", definition =>
+            string fileContent = "[MyCustomCategory]"
+                                 + Environment.NewLine
+                                 + "Program = MyProgram # Program name";
+
+            ReadWithAssert(fileContent, definition =>
             {
                 WaterFlowFMProperty property = definition.GetModelProperty("Program");
                 AssertPropertyValues(property, "General", "MyProgram", "Program name");
@@ -156,7 +210,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
             Assert.That(property.PropertyDefinition.Description, Is.EqualTo(propertyComment));
         }
 
-        private static void AssertPropertyValues(WaterFlowFMProperty property, string categoryName, List<string> propertyValue, string propertyComment)
+        private static void AssertPropertyValues(WaterFlowFMProperty property, string categoryName, IReadOnlyCollection<string> propertyValue, string propertyComment)
         {
             Assert.That(property.PropertyDefinition.FileCategoryName, Is.EqualTo(categoryName));
             Assert.That(property.Value, Is.EqualTo(propertyValue));
@@ -164,9 +218,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
         }
 
         [Test]
-        public void Read_HdamPropertyInFile_ThenPropertyIsNotAddedToModelDefinition_PlusCheckNewReadResult()
+        public void Read_HdamPropertyInFile_ThenPropertyIsNotAddedToModelDefinition()
         {
-            ReadWithAssert("HdamPropertyInFile.mdu", definition =>
+            string fileContent = "[numerics]"
+                                 + Environment.NewLine
+                                 + "Hdam = 0. # Threshold for minimum bottomlevel step at which to apply energy conservation factor i.c. flow contraction";
+
+            ReadWithAssert(fileContent, definition =>
             {
                 WaterFlowFMProperty property = definition.GetModelProperty("hdam");
                 Assert.IsNull(property);
@@ -174,9 +232,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
         }
 
         [Test]
-        public void Read_LegacyEnclosureFileProperty_ThenPropertyNameIsUpdated_PlusCheckNewReadResult()
+        public void Read_LegacyEnclosureFileProperty_ThenPropertyNameIsUpdated()
         {
-            ReadWithAssert("LegacyProperty_EnclosureFile.mdu", definition =>
+            string fileContent = "[geometry]"
+                                 + Environment.NewLine
+                                 + "EnclosureFile = enclosures_enc.pol # MyComment";
+
+            ReadWithAssert(fileContent, definition =>
             {
                 Assert.IsNull(definition.GetModelProperty("EnclosureFile"));
 
@@ -191,91 +253,97 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
         }
 
         [Test]
-        public void Read_InvalidFixedWeirSchemeValue_ThenPropertyValueIsSetTo6_PlusCheckNewReadResult()
+        public void Read_InvalidFixedWeirSchemeValue_ThenPropertyValueIsSetTo6()
         {
-            ReadWithAssert("InvalidFixedWeirSchemeValue.mdu", definition =>
+            string fileContent = "[numerics]"
+                                 + Environment.NewLine
+                                 + "FixedWeirScheme = 222 # Fixed weir scheme (0: None, 6: Numerical, 8: Tabellenboek, 9: Villemonte)";
+
+            ReadWithAssert(fileContent, definition =>
             {
                 WaterFlowFMProperty property = definition.GetModelProperty("FixedWeirScheme");
                 Assert.That(property.GetValueAsString(), Is.EqualTo("6"));
             });
         }
 
+        private static void ReadWithAssert(string fileContent, Action<WaterFlowFMModelDefinition> assertAction)
+        {
+            // Setup
+            var definition = new WaterFlowFMModelDefinition();
+            var stream = new MemoryStream(Encoding.ASCII.GetBytes(fileContent));
+
+            // Call
+            MduFileReader.Read(stream, string.Empty, definition);
+
+            // Assert
+            assertAction(definition);
+        }
+
         [Test]
         public void Read_InvalidFixedWeirSchemeValue_ThenWarningMessageIsLogged()
         {
             // Setup
-            string testFilePath = TestHelper.GetTestFilePath(Path.Combine("MduFileReaderTest", "InvalidFixedWeirSchemeValue.mdu"));
-            using (var temporaryDir = new TemporaryDirectory())
-            {
-                string tempFilePath = temporaryDir.CopyTestDataFileToTempDirectory(testFilePath);
-                var oldDefinition = new WaterFlowFMModelDefinition();
+            string fileContent = "[numerics]"
+                                 + Environment.NewLine
+                                 + "FixedWeirScheme = 222 # Fixed weir scheme (0: None, 6: Numerical, 8: Tabellenboek, 9: Villemonte)";
 
-                // Call
-                void Call() => MduFileReader.Read(tempFilePath, oldDefinition);
+            var stream = new MemoryStream(Encoding.ASCII.GetBytes(fileContent));
+            var definition = new WaterFlowFMModelDefinition();
 
-                // Assert
-                const string expectedMessage = "Obsolete Fixed Weir Scheme 222 detected and it will be corrected to the default Numerical Scheme.";
-                TestHelper.AssertLogMessageIsGenerated(Call, expectedMessage);
-            }
-        }
+            // Call
+            void Call() => MduFileReader.Read(stream, string.Empty, definition);
 
-        private static void ReadWithAssert(string fileName, Action<WaterFlowFMModelDefinition> assertAction)
-        {
-            // Setup
-            string testFilePath = TestHelper.GetTestFilePath(Path.Combine("MduFileReaderTest", fileName));
-            using (var temporaryDir = new TemporaryDirectory())
-            {
-                string tempFilePath = temporaryDir.CopyTestDataFileToTempDirectory(testFilePath);
-                var oldDefinition = new WaterFlowFMModelDefinition();
-
-                // Call
-                MduFileReader.Read(tempFilePath, oldDefinition);
-
-                // Assert
-                assertAction(oldDefinition);
-            }
+            // Assert
+            const string expectedMessage = "Obsolete Fixed Weir Scheme 222 detected and it will be corrected to the default Numerical Scheme.";
+            TestHelper.AssertLogMessageIsGenerated(Call, expectedMessage);
         }
 
         [Test]
         public void Read_BadFormatForMduCategory_ThrowsFormatException()
         {
             // Setup
-            string testFilePath = TestHelper.GetTestFilePath(Path.Combine("MduFileReaderTest", "BadFormatForMduCategory.mdu"));
-            using (var temporaryDir = new TemporaryDirectory())
-            {
-                string tempFilePath = temporaryDir.CopyTestDataFileToTempDirectory(testFilePath);
-                var oldDefinition = new WaterFlowFMModelDefinition();
+            const string tempFilePath = @"C:/myPath";
+            string fileContent = "[]" 
+                                 + Environment.NewLine
+                                 + "Program = D-Flow FM # Program name";
 
-                // Call
-                void Call() => MduFileReader.Read(tempFilePath, oldDefinition);
+            var stream = new MemoryStream(Encoding.ASCII.GetBytes(fileContent));
+            var definition = new WaterFlowFMModelDefinition();
 
-                // Assert
-                var exception = Assert.Throws<FormatException>(Call);
-                Assert.That(exception.Message, Is.EqualTo($"Invalid group on line {4} in file {tempFilePath}"));
-            }
+            // Call
+            void Call() => MduFileReader.Read(stream, tempFilePath, definition);
+
+            // Assert
+            var exception = Assert.Throws<FormatException>(Call);
+            Assert.That(exception.Message, Is.EqualTo($"Invalid group on line 1 in file {tempFilePath}"));
         }
 
         [Test]
         public void Read_MultiplePropertyValuesOutOfRange_ThenWarningMessageIsLogged()
         {
             // Setup
-            string testFilePath = TestHelper.GetTestFilePath(Path.Combine("MduFileReaderTest", "MultiplePropertyValuesOutOfRange.mdu"));
-            using (var temporaryDir = new TemporaryDirectory())
-            {
-                string tempFilePath = temporaryDir.CopyTestDataFileToTempDirectory(testFilePath);
-                var oldDefinition = new WaterFlowFMModelDefinition();
+            string fileContent = "[physics]"
+                                 + Environment.NewLine
+                                 + "UnifFrictType = 3000 # Uniform friction type (0: Chezy, 1: Manning, 2: White-Colebrook)"
+                                 + Environment.NewLine
+                                 + Environment.NewLine
+                                 + "[numerics]"
+                                 + Environment.NewLine
+                                 + "Turbulencemodel = 5 # Turbulence model (0: none, 1: constant, 2: algebraic, 3: k-epsilon, 4: k-tau)";
 
-                // Call
-                void Call() => MduFileReader.Read(tempFilePath, oldDefinition);
+            var stream = new MemoryStream(Encoding.ASCII.GetBytes(fileContent));
+            var definition = new WaterFlowFMModelDefinition();
 
-                // Assert
-                string expectedMessage = "During reading the mdu file the following warnings were reported:"
-                                         + Environment.NewLine
-                                         + "- An unsupported option for *Uniform friction type* has been detected and the default value will be used."
-                                         + Environment.NewLine
-                                         + "- An unsupported option for *Turbulence model* has been detected and the default value will be used.";
-                TestHelper.AssertLogMessageIsGenerated(Call, expectedMessage);
-            }
+            // Call
+            void Call() => MduFileReader.Read(stream, string.Empty, definition);
+
+            // Assert
+            string expectedMessage = "During reading the mdu file the following warnings were reported:"
+                                     + Environment.NewLine
+                                     + "- An unsupported option for *Uniform friction type* has been detected and the default value will be used."
+                                     + Environment.NewLine
+                                     + "- An unsupported option for *Turbulence model* has been detected and the default value will be used.";
+            TestHelper.AssertLogMessageIsGenerated(Call, expectedMessage);
         }
     }
 }
