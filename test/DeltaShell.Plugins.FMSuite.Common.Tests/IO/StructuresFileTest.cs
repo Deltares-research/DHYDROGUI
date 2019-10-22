@@ -1122,7 +1122,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             };
 
             var generalStructureCategory = new DelftIniCategory("structure");
-            DelftIniCategory.AddProperties(properties);
+            generalStructureCategory.AddProperties(properties);
 
             return generalStructureCategory;
         }
@@ -1144,7 +1144,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 new DelftIniProperty("horizontal_opening_direction", "symmetric", "")
             };
             var gateCategory = new DelftIniCategory("structure");
-            DelftIniCategory.AddProperties(properties);
+            gateCategory.AddProperties(properties);
 
             return gateCategory;
         }
@@ -1162,7 +1162,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 new DelftIniProperty("crest_width", "2", "")
             };
             var weirCategory = new DelftIniCategory("structure");
-            DelftIniCategory.AddProperties(properties);
+            weirCategory.AddProperties(properties);
 
             return weirCategory;
         }

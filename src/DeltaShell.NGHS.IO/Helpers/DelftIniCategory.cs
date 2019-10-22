@@ -75,9 +75,9 @@ namespace DeltaShell.NGHS.IO.Helpers
         /// Adds a collection of <see cref="DelftIniProperty"/> objects to this category.
         /// </summary>
         /// <param name="properties"> The properties to add. </param>
-        public static void AddProperties(List<DelftIniProperty> properties)
+        public void AddProperties(IEnumerable<DelftIniProperty> properties)
         {
-            properties.AddRange(properties);
+            delftIniProperties.AddRange(properties);
         }
 
         /// <summary>
