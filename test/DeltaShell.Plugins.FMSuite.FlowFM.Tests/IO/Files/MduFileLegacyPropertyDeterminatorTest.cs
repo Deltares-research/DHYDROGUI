@@ -20,7 +20,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
             Assert.IsTrue(isLegacyPropertyName);
         }
 
-        private string GetRandomCasedString(string text)
+        [Test]
+        public void IsLegacyPropertyName_NotHdam_ReturnsFalse()
+        {
+            // Setup
+            string propertyName = GetRandomCasedString("NonLegacyName");
+
+            // Call
+            bool isLegacyPropertyName = MduFileLegacyPropertyDeterminator.IsLegacyPropertyName(propertyName);
+
+            // Assert
+            Assert.IsFalse(isLegacyPropertyName);
+        }
+
+        private static string GetRandomCasedString(string text)
         {
             var rng = new Randomizer();
             int[] randomNumbers = rng.GetInts(1, 11, text.Length);
