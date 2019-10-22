@@ -8,7 +8,7 @@ using DelftTools.Utils.IO;
 
 namespace DeltaShell.NGHS.IO
 {
-    public class NGHSFileBase
+    public abstract class NGHSFileBase
     {
         protected StreamReader reader;
         protected StreamWriter writer;
@@ -26,7 +26,7 @@ namespace DeltaShell.NGHS.IO
         /// <summary>
         /// Constructor, not external forcings file by default.
         /// </summary>
-        public NGHSFileBase()
+        protected NGHSFileBase()
         {
             headingCommentBlocks = new List<List<string>>();
             commentBlocks = new Dictionary<string, List<string>>();
@@ -50,7 +50,7 @@ namespace DeltaShell.NGHS.IO
 
         protected int LineNumber { get; set; }
 
-        protected string InputFilePath { get; private set; }
+        protected string InputFilePath { get; set; }
 
         protected string OutputFilePath { get; private set; }
 
@@ -65,10 +65,18 @@ namespace DeltaShell.NGHS.IO
         /// <exception cref="FileNotFoundException">The file cannot be found.</exception>
         /// <exception cref="DirectoryNotFoundException">The specified path is invalid, such as being on an unmapped drive.</exception>
         /// <exception cref="IOException"><paramref name="filePath"/> includes an incorrect or invalid syntax for file name, directory name, or volume label.</exception>
+        [Obsolete("2019-10-22: Please use the OpenInputFile(Stream stream).")]
         protected void OpenInputFile(string filePath)
         {
             InputFilePath = filePath;
             reader = new StreamReader(filePath);
+            fileContentHasStarted = false;
+            LineNumber = 0;
+        }
+
+        protected void OpenInputFile(Stream stream)
+        {
+            reader = new StreamReader(stream);
             fileContentHasStarted = false;
             LineNumber = 0;
         }

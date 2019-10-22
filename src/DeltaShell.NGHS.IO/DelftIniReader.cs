@@ -19,6 +19,49 @@ namespace DeltaShell.NGHS.IO
         /// <summary>
         /// Reads a Delft .ini format file.
         /// </summary>
+        /// <param name="stream"> The <see cref="Stream"/> to read the ini file from. </param>
+        /// <param name="filePath"> The path to the file location. </param>
+        /// <returns> A collection of <see cref="DelftIniCategory"/> instances. </returns>
+        public IList<DelftIniCategory> ReadDelftIniFile(Stream stream, string filePath)
+        {
+            var content = new List<DelftIniCategory>();
+
+            OpenInputFile(stream);
+            InputFilePath = filePath;
+            try
+            {
+                string line;
+                DelftIniCategory currentCategory = null;
+                string categoryName = null;
+                while ((line = GetNextLine()) != null)
+                {
+                    line = line.Trim();
+                    if (string.IsNullOrEmpty(line)) continue; // Skip white-space characters.
+
+                    if (IsNewCategory(line, ref categoryName))
+                    {
+                        currentCategory = new DelftIniCategory(categoryName, LineNumber);
+                        content.Add(currentCategory);
+                        continue;
+                    }
+                    if (currentCategory == null) continue;
+
+                    string[] fields = GetKeyValueComment(line);
+                    var delftIniProperty = new DelftIniProperty(fields[0], fields[1], fields[2], LineNumber);
+                    currentCategory.AddProperty(delftIniProperty);
+                }
+            }
+            finally
+            {
+                CloseInputFile();
+            }
+
+            return content;
+        }
+
+        /// <summary>
+        /// Reads a Delft .ini format file.
+        /// </summary>
         /// <param name="iniFile">File path to be read</param>
         /// <returns>All parsed .ini groups with key-value pairs and comments.</returns>
         /// <exception cref="ArgumentException"><paramref name="iniFile"/> is an empty string ("").</exception>
