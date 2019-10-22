@@ -22,7 +22,6 @@ namespace DelftTools.Hydro.SewerFeatures
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(SewerConnection));
 
-        protected IEventedList<IBranchFeature> branchFeatures;
         private INode source;
         private INode target;
         private Compartment sourceCompartment;
@@ -192,15 +191,22 @@ namespace DelftTools.Hydro.SewerFeatures
         {
             get { return true; }
         }
-        
+
+        [Aggregation]
         public override IEventedList<IBranchFeature> BranchFeatures
         {
-            get { return branchFeatures; }
+            get { return base.BranchFeatures; }
             set
             {
-                if (branchFeatures != null) branchFeatures.CollectionChanging -= BranchFeaturesOnCollectionChanging;
+                if (base.BranchFeatures != null)
+                {
+                    base.BranchFeatures.CollectionChanging -= BranchFeaturesOnCollectionChanging;
+                }
                 AddBranchFeatureWhenEmpty(value);
-                if (branchFeatures != null) branchFeatures.CollectionChanging += BranchFeaturesOnCollectionChanging;
+                if (base.BranchFeatures != null)
+                {
+                    base.BranchFeatures.CollectionChanging += BranchFeaturesOnCollectionChanging;
+                }
             }
         }
 
@@ -209,7 +215,7 @@ namespace DelftTools.Hydro.SewerFeatures
             //For the sewer connection we only allow one branch feature per sewer connection
             if (value != null && value.Count <= 1)
             {
-                branchFeatures = value;
+                base.BranchFeatures = value;
             }
             else
             {
@@ -262,9 +268,9 @@ namespace DelftTools.Hydro.SewerFeatures
         private void BranchFeaturesOnCollectionChanging(object sender, NotifyCollectionChangingEventArgs e)
         {
             if (e.Action != NotifyCollectionChangeAction.Add) return;
-            if (!branchFeatures.Any()) return;
+            if (!BranchFeatures.Any()) return;
 
-            var compositeStructures = branchFeatures.OfType<CompositeBranchStructure>().ToList();
+            var compositeStructures = BranchFeatures.OfType<CompositeBranchStructure>().ToList();
             if (!compositeStructures.Any() ||
                 (compositeStructures.First().Structures.Any() &&
                  !compositeStructures.First().Structures.Contains(e.Item)))

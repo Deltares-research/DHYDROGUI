@@ -9,6 +9,7 @@ using System.Reflection;
 using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Shell.Core;
+using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Csv.Importer;
@@ -75,6 +76,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         /// <param name="path">File to import. If this argument is missing then FilesToImport will be taken instead.</param>
         /// <param name="target"></param>
         /// <returns></returns>
+        [EditAction]
         public object ImportItem(string path, object target = null)
         {
             if (GwswAttributesDefinition == null || !GwswAttributesDefinition.Any())
@@ -136,10 +138,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 
             return importedFeatureElements;
         }
-
+        [EditAction]
         private static void AddSewerFeaturesToNetwork(IList<ISewerFeature> importedFeatureElements, IHydroNetwork network)
         {
-            importedFeatureElements.ForEach(e => e.AddToHydroNetwork(network));
+            importedFeatureElements.ForEach(e =>
+            {
+                try
+                {
+                    e.AddToHydroNetwork(network);
+                }
+                catch (Exception exception)
+                {
+                    Log.ErrorFormat(exception.Message);
+                }
+            });
         }
 
         private static void AddBoundariesOfNetworkOutletCompartmentsToModelDefinition(WaterFlowFMModel fmModel)
@@ -302,7 +314,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                 return null;
             }
 
-            var csvImporter = new CsvImporter();
+            var csvImporter = new CsvImporter {AllowEmptyCells = true};
             var importedCsv = new DataTable();
             try
             {
@@ -557,7 +569,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                 return null;
             }
 
-            var csvImporter = new CsvImporter();
+            var csvImporter = new CsvImporter {AllowEmptyCells = true};
             var importedCsv = new DataTable();
             try
             {

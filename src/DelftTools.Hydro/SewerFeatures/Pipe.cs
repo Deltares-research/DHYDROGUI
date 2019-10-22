@@ -64,14 +64,15 @@ namespace DelftTools.Hydro.SewerFeatures
 
         public SewerProfileMapping.SewerProfileMaterial Material { get; set; }
 
+        [Aggregation]
         public override IEventedList<IBranchFeature> BranchFeatures
         {
-            get { return branchFeatures; }
+            get { return base.BranchFeatures; }
             set
             {
-                if (branchFeatures != null)
+                if (base.BranchFeatures != null)
                 {
-                    branchFeatures.CollectionChanging -= BranchFeaturesOnCollectionChanging;
+                    base.BranchFeatures.CollectionChanging -= BranchFeaturesOnCollectionChanging;
                 }
 
                 if (value != null)
@@ -82,13 +83,13 @@ namespace DelftTools.Hydro.SewerFeatures
                     }
                     else
                     {
-                        branchFeatures = value;
+                        base.BranchFeatures = value;
                     }
                 }
 
-                if (branchFeatures != null)
+                if (base.BranchFeatures != null)
                 {
-                    branchFeatures.CollectionChanging += BranchFeaturesOnCollectionChanging;
+                    base.BranchFeatures.CollectionChanging += BranchFeaturesOnCollectionChanging;
                 }
 
             }
