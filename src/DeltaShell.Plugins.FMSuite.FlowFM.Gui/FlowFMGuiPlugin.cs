@@ -842,7 +842,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                                                   fn.Contains(din[0]) &&
                                                   fn.Contains(din[1]))))
                 {
-                    Gui.CommandHandler.RemoveAllViewsForItem(multipleFunctionView.Data);
+                    Gui.DocumentViews.Remove(multipleFunctionView);
                 }
             }
         }
