@@ -146,11 +146,11 @@ namespace DeltaShell.NGHS.IO.Helpers
         /// <param name="comment"> The property comment. </param>
         public void SetProperty(string name, string value, string comment = null)
         {
-            DelftIniProperty prop = Properties.FirstOrDefault(p => p.Name == name);
-            if (prop != null)
+            DelftIniProperty property = delftIniProperties.FirstOrDefault(p => p.Name == name);
+            if (property != null)
             {
-                prop.Value = value;
-                prop.Comment = comment;
+                property.Value = value;
+                property.Comment = comment;
             }
             else
             {
