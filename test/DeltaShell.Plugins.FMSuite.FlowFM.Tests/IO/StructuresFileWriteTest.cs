@@ -290,7 +290,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
         private static DelftIniCategory AssertThatStructureCategoryExistsInFileAndReturn(string filePath)
         {
-            IList<DelftIniCategory> categories = new DelftIniReader().ReadDelftIniFile(filePath);
+            IList<DelftIniCategory> categories;
+            using (var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+            {
+                categories = new DelftIniReader().ReadDelftIniFile(fileStream, filePath);
+            }
             DelftIniCategory category = categories.Single();
 
             Assert.That(category.Name, Is.EqualTo("structure")

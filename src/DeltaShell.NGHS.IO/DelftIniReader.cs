@@ -30,29 +30,7 @@ namespace DeltaShell.NGHS.IO
         {
             OpenInputFile(stream);
             InputFilePath = filePath;
-            return Read();
-        }
 
-        /// <summary>
-        /// Reads a Delft .ini format file.
-        /// </summary>
-        /// <param name="iniFile">File path to be read</param>
-        /// <returns>All parsed .ini groups with key-value pairs and comments.</returns>
-        /// <exception cref="ArgumentException"><paramref name="iniFile"/> is an empty string ("").</exception>
-        /// <exception cref="ArgumentNullException"><paramref name="iniFile"/> is null.</exception>
-        /// <exception cref="FileNotFoundException">The file cannot be found.</exception>
-        /// <exception cref="DirectoryNotFoundException">The specified path is invalid, such as being on an unmapped drive.</exception>
-        /// <exception cref="IOException"><paramref name="iniFile"/> includes an incorrect or invalid syntax for file name, directory name, or volume label.</exception>
-        /// <exception cref="FormatException">When an invalid line was encountered.</exception>
-        [Obsolete("2019-10-22: Please use ReadDelftIniFile(Stream stream, string filePath).")]
-        public IList<DelftIniCategory> ReadDelftIniFile(string iniFile)
-        {
-            OpenInputFile(iniFile);
-            return Read();
-        }
-
-        private IList<DelftIniCategory> Read()
-        {
             var content = new List<DelftIniCategory>();
             try
             {
