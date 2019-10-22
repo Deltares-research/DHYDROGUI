@@ -118,11 +118,6 @@ namespace DeltaShell.NGHS.IO
             writer.Close();
         }
 
-        protected void IgnoreCommentLines(string[] commentsToBeIgnored)
-        {
-            commentLineStartsToBeIgnored.AddRange(commentsToBeIgnored);
-        }
-
         /// <summary>
         /// Reads the file up to the next data line, processing all comments and empty lines along the way.
         /// </summary>
