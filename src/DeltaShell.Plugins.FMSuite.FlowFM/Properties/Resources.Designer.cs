@@ -696,15 +696,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Obsolete Fixed Weir Scheme {0} detected and it will be corrected to the default Numerical Scheme..
-        /// </summary>
-        public static string NewMduFileReader_Obsolete_Fixed_Weir_Scheme__0__detected {
-            get {
-                return ResourceManager.GetString("NewMduFileReader_Obsolete_Fixed_Weir_Scheme__0__detected", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap Observation {

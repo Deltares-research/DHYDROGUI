@@ -280,25 +280,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
         }
 
         [Test]
-        public void Read_InvalidFixedWeirSchemeValue_ThenWarningMessageIsLogged()
-        {
-            // Setup
-            string fileContent = "[numerics]"
-                                 + Environment.NewLine
-                                 + "FixedWeirScheme = 222 # Fixed weir scheme (0: None, 6: Numerical, 8: Tabellenboek, 9: Villemonte)";
-
-            var stream = new MemoryStream(Encoding.ASCII.GetBytes(fileContent));
-            var definition = new WaterFlowFMModelDefinition();
-
-            // Call
-            void Call() => MduFileReader.Read(stream, string.Empty, definition);
-
-            // Assert
-            const string expectedMessage = "Obsolete Fixed Weir Scheme 222 detected and it will be corrected to the default Numerical Scheme.";
-            TestHelper.AssertLogMessageIsGenerated(Call, expectedMessage);
-        }
-
-        [Test]
         public void Read_BadFormatForMduCategory_ThrowsFormatException()
         {
             // Setup

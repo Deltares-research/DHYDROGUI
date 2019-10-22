@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.Handlers;
@@ -33,7 +32,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
             RemoveRedundantProperties(categories, definition);
             UpdateLegacyNames(categories);
-            CorrectInvalidFixedWeirSchemeValue(categories);
 
             AddOrUpdateProperties(definition, categories);
             
@@ -60,26 +58,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                         MduFileBackwardsCompatibilityHelper.GetUpdatedPropertyName(property.Name);
                 });
             });
-        }
-
-        private static void CorrectInvalidFixedWeirSchemeValue(IEnumerable<DelftIniCategory> categories)
-        {
-            DelftIniProperty fixedWeirProperty = categories.SelectMany(c => c.Properties)
-                                                           .FirstOrDefault(p => p.Name.ToLowerInvariant() == KnownProperties.FixedWeirScheme);
-
-            if (fixedWeirProperty == null)
-            {
-                return;
-            }
-
-            string propertyValue = fixedWeirProperty.Value;
-            if (propertyValue == "0" || propertyValue == "6" || propertyValue == "8" || propertyValue == "9")
-            {
-                return;
-            }
-
-            log.Warn(string.Format(Resources.NewMduFileReader_Obsolete_Fixed_Weir_Scheme__0__detected, propertyValue));
-            fixedWeirProperty.Value = "6";
         }
 
         private static void AddOrUpdateProperties(WaterFlowFMModelDefinition definition, IEnumerable<DelftIniCategory> categories)
