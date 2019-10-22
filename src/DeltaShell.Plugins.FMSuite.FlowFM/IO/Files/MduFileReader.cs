@@ -106,12 +106,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
         private static WaterFlowFMProperty CreateFmProperty(DelftIniProperty property, string categoryName)
         {
-            string propertyComment = property.Comment == string.Empty
-                                         ? null 
-                                         : property.Comment; // This is a little odd, maybe string.Empty is not so bad?.
-
             WaterFlowFMPropertyDefinition newPropertyDefinition =
-                WaterFlowFMPropertyDefinitionCreator.CreateForCustomProperty(categoryName, property.Name, propertyComment);
+                WaterFlowFMPropertyDefinitionCreator.CreateForCustomProperty(categoryName, property.Name, property.Comment);
 
             return new WaterFlowFMProperty(newPropertyDefinition, property.Value);
         }
