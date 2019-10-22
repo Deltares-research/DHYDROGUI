@@ -130,7 +130,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private void AddNetworkToModel()
         {
             Network = new HydroNetwork {Name = NetworkObjectName};
-            NetworkDiscretization = new Discretization {Network = network, Name = DiscretizationObjectName};
+            NetworkDiscretization = new Discretization {Network = network, Name = DiscretizationObjectName, SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocationsAndConnectedBranchesWithoutLocationOnThemFullyCovered };
         }
 
         private void AddAreaToModel()

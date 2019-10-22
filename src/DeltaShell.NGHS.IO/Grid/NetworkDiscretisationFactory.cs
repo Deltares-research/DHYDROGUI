@@ -48,6 +48,7 @@ namespace DeltaShell.NGHS.IO.Grid
             {
                 Name = discretisationDataModel.Name,
                 Network = network,
+                SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocationsAndConnectedBranchesWithoutLocationOnThemFullyCovered
             };
 
             // check if size of branchindices and offsets are equal and > 0.
@@ -66,10 +67,10 @@ namespace DeltaShell.NGHS.IO.Grid
             var uniqueBranchIndices = branchIndices.Distinct();
 
             // get the size and check if there are that many branches.
-            if (network.Branches.Count != uniqueBranchIndices.Count())
+            /*if (network.Branches.Count != uniqueBranchIndices.Count())
             {
                 return null;
-            }
+            }*/
 
             for (var i = 0; i < branchIndices.Length; i++)
             {
