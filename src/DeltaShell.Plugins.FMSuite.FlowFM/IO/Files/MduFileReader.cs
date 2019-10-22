@@ -35,13 +35,31 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             UpdateLegacyNames(categories);
             CorrectInvalidFixedWeirSchemeValue(categories);
 
-            SetPropertyValues(definition, categories);
+            AddOrUpdateProperties(definition, categories);
             
-            definition.GetModelProperty(KnownProperties.RefDate).Value =
-                FMParser.ParseFMDateTime(definition.GetModelProperty(KnownProperties.RefDate).GetValueAsString());
-            definition.SetGuiTimePropertiesFromMduProperties();
-            definition.UpdateHeatFluxModel();
-            definition.UpdateWriteOutputSnappedFeatures();
+            ExecutePostReadActions(definition);
+        }
+
+        private static void RemoveRedundantProperties(IEnumerable<DelftIniCategory> categories, WaterFlowFMModelDefinition definition)
+        {
+            categories.ForEach(category => 
+            {
+                category.RemoveAllPropertiesWhere(p => MduFileLegacyPropertyDeterminator.IsLegacyPropertyName(p.Name));
+                category.RemoveAllPropertiesWhere(p => definition.ContainsProperty(p.Name) && p.Value == string.Empty);
+            });
+        }
+
+        private static void UpdateLegacyNames(IEnumerable<DelftIniCategory> categories)
+        {
+            categories.ForEach(category =>
+            {
+                category.Name = MduFileBackwardsCompatibilityHelper.GetUpdatedPropertyName(category.Name);
+                category.Properties.ForEach(property =>
+                {
+                    property.Name =
+                        MduFileBackwardsCompatibilityHelper.GetUpdatedPropertyName(property.Name);
+                });
+            });
         }
 
         private static void CorrectInvalidFixedWeirSchemeValue(IEnumerable<DelftIniCategory> categories)
@@ -64,29 +82,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             fixedWeirProperty.Value = "6";
         }
 
-        private static void UpdateLegacyNames(IEnumerable<DelftIniCategory> categories)
-        {
-            categories.ForEach(category =>
-            {
-                category.Name = MduFileBackwardsCompatibilityHelper.GetUpdatedPropertyName(category.Name);
-                category.Properties.ForEach(property =>
-                {
-                    property.Name =
-                        MduFileBackwardsCompatibilityHelper.GetUpdatedPropertyName(property.Name);
-                });
-            });
-        }
-
-        private static void RemoveRedundantProperties(IEnumerable<DelftIniCategory> categories, WaterFlowFMModelDefinition definition)
-        {
-            categories.ForEach(category => 
-            {
-                category.RemoveAllPropertiesWhere(p => MduFileLegacyPropertyDeterminator.IsLegacyPropertyName(p.Name));
-                category.RemoveAllPropertiesWhere(p => definition.ContainsProperty(p.Name) && p.Value == string.Empty);
-            });
-        }
-
-        private static void SetPropertyValues(WaterFlowFMModelDefinition definition, IEnumerable<DelftIniCategory> categories)
+        private static void AddOrUpdateProperties(WaterFlowFMModelDefinition definition, IEnumerable<DelftIniCategory> categories)
         {
             var logHandler = new LogHandler("reading the mdu file", log);
             foreach (DelftIniCategory category in categories)
@@ -109,12 +105,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
         private static WaterFlowFMProperty CreateFmProperty(DelftIniProperty property, string categoryName)
         {
-            string propertyComment = property.Comment == string.Empty
-                                         ? null 
-                                         : property.Comment; // This is a little odd, maybe string.Empty is not so bad?.
-
             WaterFlowFMPropertyDefinition newPropertyDefinition =
-                WaterFlowFMPropertyDefinitionCreator.CreateForCustomProperty(categoryName, property.Name, propertyComment);
+                WaterFlowFMPropertyDefinitionCreator.CreateForCustomProperty(categoryName, property.Name, property.Comment);
 
             return new WaterFlowFMProperty(newPropertyDefinition, property.Value);
         }
@@ -131,6 +123,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 logHandler.ReportWarningFormat(Resources.MduFile_ReadProperties_An_unsupported_option_for_0_has_been_detected,
                                                modelProperty.PropertyDefinition.Caption);
             }
+        }
+
+        private static void ExecutePostReadActions(WaterFlowFMModelDefinition definition)
+        {
+            definition.GetModelProperty(KnownProperties.RefDate).Value =
+                FMParser.ParseFMDateTime(definition.GetModelProperty(KnownProperties.RefDate).GetValueAsString());
+            definition.SetGuiTimePropertiesFromMduProperties();
+            definition.UpdateHeatFluxModel();
+            definition.UpdateWriteOutputSnappedFeatures();
         }
     }
 }

@@ -112,7 +112,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
             ReadWithAssert(fileContent, definition =>
             {
                 WaterFlowFMProperty property = definition.GetModelProperty("MyCustomProperty");
-                AssertPropertyValues(property, "General", "MyValue", null);
+                AssertPropertyValues(property, "General", "MyValue", string.Empty);
             });
         }
 
