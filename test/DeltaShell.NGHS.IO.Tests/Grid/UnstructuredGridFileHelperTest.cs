@@ -27,6 +27,33 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
 
         [Test]
+        [TestCase("", false)]
+        [TestCase("fileDoesNotExist.nc", false)]
+        [TestCase(@"ugrid\Custom_Ugrid.nc", true)]
+        [TestCase(@"nonUgrid\TAK3_net.nc", false)]
+        public void IsUGrid_WithVariousFiles_ReturnsExpectedValue(string filePath, bool expectedValue)
+        {
+            // Setup
+            string testFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), filePath);
+
+            // Call
+            bool isUGrid = UnstructuredGridFileHelper.IsUGrid(testFilePath);
+
+            // Assert
+            Assert.AreEqual(expectedValue, isUGrid);
+        }
+
+        [Test]
+        public void IsUGrid_FilePathNull_ReturnsFalse()
+        {
+            // Call
+            bool isUGrid = UnstructuredGridFileHelper.IsUGrid(null);
+
+            // Assert
+            Assert.IsFalse(isUGrid);
+        }
+
+        [Test]
         [TestCase(@"ugrid\BedLevelValues_NodesAndFaces.nc", UnstructuredGridFileHelper.BedLevelLocation.Faces)]
         [TestCase(@"ugrid\BedLevelValues_NodesAndFaces.nc", UnstructuredGridFileHelper.BedLevelLocation.FacesMeanLevFromNodes)]
         [TestCase(@"ugrid\BedLevelValues_NodesAndFaces.nc", UnstructuredGridFileHelper.BedLevelLocation.NodesMaxLev)]

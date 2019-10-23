@@ -89,6 +89,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 return;
             }
 
+            // Determine if the function file store files are compatible:
+            if (!UnstructuredGridFileHelper.IsUGrid(mapFilePath))
+            {
+                Log.Warn("Associated output files are unsupported, these will not be loaded");
+                return;
+            }
+
             FireImportProgressChanged(this, "Reading output files - Reading Map file", 1, 2);
             BeginEdit(new DefaultEditAction("Reconnect output files"));
 

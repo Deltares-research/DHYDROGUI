@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
@@ -13,6 +14,50 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
     [TestFixture]
     public partial class WaterFlowFMModelTest
     {
+        [Test]
+        [Category(TestCategory.Slow)]
+        public void Constructor_WithFilePathToSupportedMDUFiles_SetsOutputProperties()
+        {
+            // Setup
+            string testDataDirectory = TestHelper.GetTestFilePath(@"Model\Output\FlowFM");
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                FileUtils.CopyDirectory(testDataDirectory, tempDirectory.Path);
+                string mduFilePath = Path.Combine(tempDirectory.Path, "input", "FlowFM.mdu");
+
+                // Call
+                using (var model = new WaterFlowFMModel(mduFilePath))
+                {
+                    // Assert
+                    Assert.That(model.OutputHisFileStore, Is.Not.Null, "Output files should be loaded.");
+                    Assert.That(model.OutputMapFileStore, Is.Not.Null, "Output files should be loaded.");
+                    Assert.That(model.OutputClassMapFileStore, Is.Not.Null, "Output files should be loaded.");
+                }
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.Slow)]
+        public void Constructor_WithFilePathToSupportedMDUFiles_DoesNotSetOutputProperties()
+        {
+            // Setup
+            string testDataDirectory = TestHelper.GetTestFilePath(@"Model\UnsupportedModelWithOutput");
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                FileUtils.CopyDirectory(testDataDirectory, tempDirectory.Path);
+                string mduFilePath = Path.Combine(tempDirectory.Path, "EINDH.mdu");
+
+                // Call
+                using (var model = new WaterFlowFMModel(mduFilePath))
+                {
+                    // Assert
+                    Assert.That(model.OutputHisFileStore, Is.Null, "Output files should not be loaded.");
+                    Assert.That(model.OutputMapFileStore, Is.Null, "Output files should not be loaded.");
+                    Assert.That(model.OutputClassMapFileStore, Is.Null, "Output files should not be loaded.");
+                }
+            }
+        }
+
         [Test]
         public void ClearOutput_WithTextDocumentOutput_ThenOutputIsRemovedFromModel()
         {
@@ -67,6 +112,56 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 Assert.That(File.Exists(mapFilePath), Is.True, "Model output files should not be removed at model output clearance.");
                 Assert.That(waterFlowFmModel.OutputClassMapFileStore, Is.Null, "Class map file store should be set to null at model output clearance.");
                 Assert.That(File.Exists(classMapFilePath), Is.True, "Model output files should not be removed at model output clearance.");
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.Slow)]
+        public void ConnectOutput_WithUnsupportedMDUFiles_OutputNotSetAndLogMessageGenerated()
+        {
+            // Setup
+            string unsupportedOutputPath = TestHelper.GetTestFilePath(@"Model\UnsupportedOutput");
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                string tempDirectoryPath = tempDirectory.Path;
+                FileUtils.CopyDirectory(unsupportedOutputPath, tempDirectoryPath);
+
+                using (var model = new WaterFlowFMModel())
+                {
+                    // Call
+                    Action call = () => model.ConnectOutput(tempDirectoryPath);
+
+                    // Assert
+                    TestHelper.AssertLogMessageIsGenerated(call, "Associated output files are unsupported, these will not be loaded");
+
+                    Assert.That(model.OutputHisFileStore, Is.Null, "Output files should not be loaded.");
+                    Assert.That(model.OutputMapFileStore, Is.Null, "Output files should not be loaded.");
+                    Assert.That(model.OutputClassMapFileStore, Is.Null, "Output files should not be loaded.");
+                }
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.Slow)]
+        public void ConnectOutput_WithSupportedMDUFiles_OutputSet()
+        {
+            // Setup
+            string testDataDirectory = TestHelper.GetTestFilePath(@"Model\Output\FlowFM");
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                FileUtils.CopyDirectory(testDataDirectory, tempDirectory.Path);
+                string outputFilePath = Path.Combine(tempDirectory.Path, "Output");
+
+                using (var model = new WaterFlowFMModel())
+                {
+                    // Call
+                    model.ConnectOutput(outputFilePath);
+
+                    // Assert
+                    Assert.That(model.OutputHisFileStore, Is.Not.Null, "Output files should be loaded.");
+                    Assert.That(model.OutputMapFileStore, Is.Not.Null, "Output files should be loaded.");
+                    Assert.That(model.OutputClassMapFileStore, Is.Not.Null, "Output files should be loaded.");
+                }
             }
         }
     }
