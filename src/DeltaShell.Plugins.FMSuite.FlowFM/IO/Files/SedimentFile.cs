@@ -7,6 +7,7 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Validation;
 using DeltaShell.NGHS.IO;
+using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.NGHS.IO.Handlers;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
@@ -511,7 +512,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 logHandler = logHandler ?? new LogHandler("reading the sediment file");
 
                 WaterFlowFMModelDefinition definition = model.ModelDefinition;
-                IList<DelftIniCategory> sedCategories = new SedMorDelftIniReader().ReadDelftIniFile(path);
+
+                IList<DelftIniCategory> sedCategories;
+                using (var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
+                {
+                    sedCategories = new SedMorDelftIniReader().ReadDelftIniFile(fileStream, path);
+                }
+
                 foreach (DelftIniCategory category in sedCategories)
                 {
                     string categoryName = category.Name;

@@ -10,8 +10,8 @@ using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO;
+using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.NGHS.IO.Handlers;
-using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
@@ -996,23 +996,26 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
         private void ValidateWrittenStructuresFile(string filePath)
         {
-            var iniReader = new DelftIniReader();
-            var categories = iniReader.ReadDelftIniFile(filePath);
+            IList<DelftIniCategory> categories;
+            using (var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+            {
+                categories = new DelftIniReader().ReadDelftIniFile(fileStream, filePath);
+            }
 
             Assert.AreEqual(3, categories.Count,
                             "3 categories were expected to be read from the structures file.");
-            var weirCategory = GetCategoryForStructureType(categories, StructureRegion.StructureTypeName.Weir);
+            DelftIniCategory weirCategory = GetCategoryForStructureType(categories, StructureRegion.StructureTypeName.Weir);
             Assert.IsNotNull(weirCategory,
                              $"There was no delft ini catageory with structure type {StructureRegion.StructureTypeName.Weir}");
             ValidateCommonWeirIniProperties(weirCategory);
 
-            var gateCategory = GetCategoryForStructureType(categories, StructureRegion.StructureTypeName.Gate);
+            DelftIniCategory gateCategory = GetCategoryForStructureType(categories, StructureRegion.StructureTypeName.Gate);
             Assert.IsNotNull(weirCategory,
                              $"There was no delft ini catageory with structure type {StructureRegion.StructureTypeName.Gate}");
             ValidateCommonWeirIniProperties(gateCategory);
             ValidateGateIniProperties(gateCategory);
 
-            var generalStructureCategory = GetCategoryForStructureType(categories, StructureRegion.StructureTypeName.GeneralStructure);
+            DelftIniCategory generalStructureCategory = GetCategoryForStructureType(categories, StructureRegion.StructureTypeName.GeneralStructure);
             Assert.IsNotNull(weirCategory,
                              $"There was no delft ini catageory with structure type {StructureRegion.StructureTypeName.GeneralStructure}");
             ValidateCommonWeirIniProperties(generalStructureCategory);
@@ -1521,10 +1524,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
         private static void CompareStructureIniFiles(string iniFilePathA, string iniFilePathB)
         {
-            var iniCategoriesA = new DelftIniReader().ReadDelftIniFile(iniFilePathA);
-            var iniCategoriesB = new DelftIniReader().ReadDelftIniFile(iniFilePathB);
-
-            CompareCategories(iniCategoriesA, iniCategoriesB);
+            using (var fileStreamA = new FileStream(iniFilePathA, FileMode.Open, FileAccess.Read))
+            using (var fileStreamB = new FileStream(iniFilePathB, FileMode.Open, FileAccess.Read))
+            {
+                IList<DelftIniCategory> iniCategoriesA = new DelftIniReader().ReadDelftIniFile(fileStreamA, iniFilePathA);
+                IList<DelftIniCategory> iniCategoriesB = new DelftIniReader().ReadDelftIniFile(fileStreamB, iniFilePathB);
+                CompareCategories(iniCategoriesA, iniCategoriesB);
+            }
         }
 
         private static void CompareCategories(IList<DelftIniCategory> iniCategoriesA, IList<DelftIniCategory> iniCategoriesB)

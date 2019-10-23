@@ -6,7 +6,7 @@ using DelftTools.Hydro;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO;
-using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
@@ -450,7 +450,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             BndExtFilePath = bndExtForceFilePath;
             BndExtSubFilesReferenceFilePath = bndExtSubFilesReferenceFilePath;
 
-            IList<DelftIniCategory> bndBlocks = new DelftIniReader().ReadDelftIniFile(bndExtForceFilePath);
+            IList<DelftIniCategory> bndBlocks;
+            using (var fileStream = new FileStream(bndExtForceFilePath, FileMode.Open, FileAccess.Read))
+            {
+                bndBlocks = new DelftIniReader().ReadDelftIniFile(fileStream, bndExtForceFilePath);
+            }
 
             ReadPolyLines(bndBlocks, modelDefinition);
 

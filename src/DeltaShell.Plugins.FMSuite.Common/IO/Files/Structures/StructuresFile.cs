@@ -10,8 +10,8 @@ using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO;
+using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.NGHS.IO.Handlers;
-using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using DeltaShell.Plugins.FMSuite.Common.Properties;
 using GeoAPI.Geometries;
@@ -89,7 +89,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
         /// <returns>List with structures</returns>
         public IEnumerable<Structure2D> ReadStructures2D(string filePath, ILogHandler logHandler = null)
         {
-            IList<DelftIniCategory> categories = new DelftIniReader().ReadDelftIniFile(filePath);
+            IList<DelftIniCategory> categories;
+            using (var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+            {
+                categories = new DelftIniReader().ReadDelftIniFile(fileStream, filePath);
+            }
 
             foreach (DelftIniCategory category in categories)
             {

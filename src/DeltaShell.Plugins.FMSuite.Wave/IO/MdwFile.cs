@@ -10,7 +10,7 @@ using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO;
-using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
@@ -528,7 +528,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             MdwFilePath = filePath;
 
             var modelDefinition = new WaveModelDefinition();
-            IList<DelftIniCategory> mdwCategories = new DelftIniReader().ReadDelftIniFile(MdwFilePath);
+
+            IList<DelftIniCategory> mdwCategories;
+            using (var fileStream = new FileStream(MdwFilePath, FileMode.Open, FileAccess.Read))
+            {
+                mdwCategories = new DelftIniReader().ReadDelftIniFile(fileStream, MdwFilePath);
+            }
             string mdwDir = Path.GetDirectoryName(filePath);
 
             ConvertMdwCategoriesToModelDefinitionProperties(modelDefinition, mdwCategories);
@@ -1199,7 +1204,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             }
 
             var delftIniReader = new DelftIniReader();
-            IList<DelftIniCategory> obtCategories = delftIniReader.ReadDelftIniFile(obstacleFilePath);
+            IList<DelftIniCategory> obtCategories;
+            using (var fileStream = new FileStream(obstacleFilePath, FileMode.Open, FileAccess.Read))
+            {
+                obtCategories = delftIniReader.ReadDelftIniFile(fileStream, obstacleFilePath);
+            }
 
             DelftIniCategory fileInfo =
                 obtCategories.First(c => c.Name == KnownWaveCategories.ObstacleFileInfoCategory);

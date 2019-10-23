@@ -1,4 +1,4 @@
-using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.NGHS.IO.DelftIniObjects;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {

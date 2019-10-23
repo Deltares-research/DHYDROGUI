@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Linq;
 using DelftTools.Utils.Collections;
 
-namespace DeltaShell.NGHS.IO.Helpers
+namespace DeltaShell.NGHS.IO.DelftIniObjects
 {
     /// <summary>
     /// Representation of a category in a .ini file.
@@ -72,21 +72,21 @@ namespace DeltaShell.NGHS.IO.Helpers
         }
 
         /// <summary>
+        /// Adds a collection of <see cref="DelftIniProperty"/> objects to this category.
+        /// </summary>
+        /// <param name="properties"> The properties to add. </param>
+        public void AddProperties(IEnumerable<DelftIniProperty> properties)
+        {
+            delftIniProperties.AddRange(properties);
+        }
+
+        /// <summary>
         /// Adds a <see cref="DelftIniProperty"/> to this category.
         /// </summary>
         /// <param name="property"> The property to add. </param>
         public void AddProperty(DelftIniProperty property)
         {
             delftIniProperties.Add(property);
-        }
-
-        /// <summary>
-        /// Adds a collection of <see cref="DelftIniProperty"/> objects to this category.
-        /// </summary>
-        /// <param name="properties"> The properties to add. </param>
-        public void AddProperties(List<DelftIniProperty> properties)
-        {
-            properties.AddRange(properties);
         }
 
         /// <summary>
@@ -146,11 +146,11 @@ namespace DeltaShell.NGHS.IO.Helpers
         /// <param name="comment"> The property comment. </param>
         public void SetProperty(string name, string value, string comment = null)
         {
-            DelftIniProperty prop = Properties.FirstOrDefault(p => p.Name == name);
-            if (prop != null)
+            DelftIniProperty property = delftIniProperties.FirstOrDefault(p => p.Name == name);
+            if (property != null)
             {
-                prop.Value = value;
-                prop.Comment = comment;
+                property.Value = value;
+                property.Comment = comment;
             }
             else
             {

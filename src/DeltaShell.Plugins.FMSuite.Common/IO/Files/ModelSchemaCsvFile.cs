@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using DelftTools.Utils.Collections;
@@ -27,14 +28,17 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
         {
             FileGroupName = fileGroupName;
 
-            OpenInputFile(filePath);
-            try
+            using (var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
             {
-                return ReadModelPropertySchema<TDef>();
-            }
-            finally
-            {
-                CloseInputFile();
+                OpenInputFile(fileStream);
+                try
+                {
+                    return ReadModelPropertySchema<TDef>();
+                }
+                finally
+                {
+                    CloseInputFile();
+                }
             }
         }
 

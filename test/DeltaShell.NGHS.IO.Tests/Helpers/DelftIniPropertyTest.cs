@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Linq.Expressions;
-using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.NGHS.IO.DelftIniObjects;
 using NUnit.Framework;
 
 namespace DeltaShell.NGHS.IO.Tests.Helpers
