@@ -230,7 +230,6 @@
     </Compile>
     <Compile Include="Forms\CaseAnalysis\NetworkCoverageOperations.cs" />
     <Compile Include="Forms\ChartEditors\ChartDrawingContext.cs" />
-    <Compile Include="Forms\ChartEditors\ChartShapeEditors\ArchShapeEditor.cs" />
     <Compile Include="Forms\ChartEditors\ChartShapeEditors\CircleShapeEditor.cs" />
     <Compile Include="Forms\ChartEditors\ChartShapeEditors\CompositeShapeEditor.cs" />
     <Compile Include="Forms\ChartEditors\ChartShapeEditors\IShapeFeatureEditor.cs" />
