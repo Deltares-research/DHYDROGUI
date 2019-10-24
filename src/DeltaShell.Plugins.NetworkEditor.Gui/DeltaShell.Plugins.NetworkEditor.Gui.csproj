@@ -238,7 +238,6 @@
     <Compile Include="Forms\ChartEditors\ChartShapeEditors\RectangleShapeEditor.cs" />
     <Compile Include="Forms\ChartEditors\ChartShapeEditors\ShapeFeatureEditor.cs" />
     <Compile Include="Forms\ChartEditors\ChartShapeEditors\SymbolShapeEditor.cs" />
-    <Compile Include="Forms\ChartEditors\ChartShapes\ArchesShapeFeature.cs" />
     <Compile Include="Forms\ChartEditors\ChartShapes\CircleShapeFeature.cs" />
     <Compile Include="Forms\ChartEditors\ChartShapes\CompositeShapeFeature.cs" />
     <Compile Include="Forms\ChartEditors\ChartShapes\FixedRectangleShapeFeature.cs" />
