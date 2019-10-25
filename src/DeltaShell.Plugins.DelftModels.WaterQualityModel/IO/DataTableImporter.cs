@@ -7,9 +7,9 @@ using DeltaShell.Plugins.DelftModels.WaterQualityModel.Model;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 {
-    public class DataTableImporter : IFileImporter
+    public class DataTableImporter :  IFileImporter
     {
-        public string Name => "Data table importer";
+        public virtual string Name => "Data table importer";
 
         public string Category => "WAQ data tables";
 
@@ -25,7 +25,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             }
         }
 
-        public bool CanImportOn(object targetObject)
+        public virtual bool CanImportOn(object targetObject)
         {
             return true;
         }
@@ -38,6 +38,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 
         public bool ShouldCancel { get; set; }
 
+        public string FilePath { get; set; }
+
         public ImportProgressChangedDelegate ProgressChanged { get; set; }
 
         public bool OpenViewAfterImport => false;
@@ -45,9 +47,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         public object ImportItem(string path, object target = null)
         {
             var targetManager = target as DataTableManager;
+
             if (targetManager == null)
             {
                 throw new NotSupportedException("Target of import must be an instance of DataTableManager.");
+            }
+
+            if (path == null)
+            {
+                path = FilePath;
             }
 
             DataTableCsvContents readDataTableData =

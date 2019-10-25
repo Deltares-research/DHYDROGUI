@@ -26,9 +26,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
             issues = new List<ValidationIssue>();
             timePoints = model.TimePointData.TimePoints;
 
+            ValidateReferenceTime();
             ValidateBoundaryConditionTimePoints();
             ValidateTimePoints();
-            ValidateReferenceTime();
+            
 
             return new ValidationReport("Waves Model Time Points", issues);
         }

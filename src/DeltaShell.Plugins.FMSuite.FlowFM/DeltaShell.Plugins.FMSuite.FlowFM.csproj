@@ -118,6 +118,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="ValidationAspects, Version=2.1.0.0, Culture=neutral, PublicKeyToken=cef13554f3ca1f2d, processorArchitecture=MSIL">
       <HintPath>..\..\packages\ValidationAspects.dll.2.1.0.0\lib\net35\ValidationAspects.dll</HintPath>
@@ -186,6 +187,7 @@
     <Compile Include="IO\ImportExport\Importers\ShapeFileImporterHelper.cs" />
     <Compile Include="IO\ImportExport\Importers\SourceAndSinkImportExtensions.cs" />
     <Compile Include="IO\DataAccessObjects\IUnsupportedFileBasedExtForceFileItem.cs" />
+    <Compile Include="IO\ImportExport\ImportersExporters\IniFileImporterExporterTypes.cs" />
     <Compile Include="IO\MduFileWriteConfig.cs" />
     <Compile Include="IO\MorphologyBoundaryConditionQuantityType.cs" />
     <Compile Include="IO\Files\Helpers\MorphologySedimentIniFileHelper.cs" />

@@ -201,6 +201,7 @@
     <Compile Include="Gui\Editors\WaveBoundaryConditionDataViewTest.cs" />
     <Compile Include="Gui\Editors\WaveModelViewWPFTest.cs" />
     <Compile Include="Gui\WaveBoundaryTimeSelectionDialogTest.cs" />
+    <Compile Include="Gui\WaveDomainNodePresenterTest.cs" />
     <Compile Include="Gui\WaveGuiPluginTest.cs" />
     <Compile Include="Gui\WaveMeteoDataEditorTest.cs" />
     <Compile Include="Gui\WaveModelGroupLayerTest.cs" />

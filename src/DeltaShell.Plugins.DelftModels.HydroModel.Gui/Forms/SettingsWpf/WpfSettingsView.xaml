@@ -209,7 +209,7 @@
                            Style="{StaticResource LabelTextBlockStyle}"/>
                 <xctk:DateTimePicker
                     Grid.Column="1"
-                    Value="{Binding Value, Mode=TwoWay, ValidatesOnDataErrors=True, ValidatesOnNotifyDataErrors=True}" 
+                    Value="{Binding Value, Mode=TwoWay, ValidatesOnDataErrors=True, ValidatesOnNotifyDataErrors=True, ValidatesOnExceptions=True}" 
                     Style="{StaticResource ControlWithErrorStyle}"
                     AllowTextInput="True"
                     Format="Custom"
@@ -230,7 +230,7 @@
                 <TextBlock 
                     Text="{Binding Label}" 
                     Style="{StaticResource LabelTextBlockStyle}"/>
-                <controls:TimeSpanView Grid.Column="1" CurrentTimeSpan="{Binding Value}" />
+                <controls:TimeSpanView Grid.Column="1" CurrentTimeSpan="{Binding Value}"/>
             </Grid>
         </DataTemplate>
 

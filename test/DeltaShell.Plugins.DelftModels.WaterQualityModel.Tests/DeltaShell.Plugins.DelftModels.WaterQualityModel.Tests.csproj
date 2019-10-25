@@ -80,10 +80,13 @@
     <Compile Include="DataObjects\SubstanceProcessLibrary\WaterQualityOutputParameterTest.cs" />
     <Compile Include="DataObjects\SubstanceProcessLibrary\WaterQualityParameterTest.cs" />
     <Compile Include="DataObjects\SubstanceProcessLibrary\WaterQualityProcessTest.cs" />
+    <Compile Include="IO\BoundaryDataTableImporterTest.cs" />
     <Compile Include="Forms\FunctionListViewTest\BloomFunctionsTableViewTest.cs" />
     <Compile Include="Forms\UnstructuredGridLayerTest.cs" />
     <Compile Include="GUI\MapTools\FindGridCellToolTest.cs" />
+    <Compile Include="BoundaryWizardPageTest.cs" />
     <Compile Include="IO\BloomSpeFileReaderTest.cs" />
+    <Compile Include="IO\LoadsDataTableImporterTest.cs" />
     <Compile Include="IO\DelwaqNetCdfHistoryFileReaderTest.cs" />
     <Compile Include="IO\DelwaqNetCdfMapFileReaderTest.cs" />
     <Compile Include="IO\InputFileExporterTest.cs" />
@@ -94,6 +97,7 @@
     <Compile Include="IO\WaqProcessValidationRuleTest.cs" />
     <Compile Include="IO\WaqValidationRulesExtensionTest.cs" />
     <Compile Include="IO\WaterQualityObservationAreaImporterTest.cs" />
+    <Compile Include="LoadsWizardPageTest.cs" />
     <Compile Include="Model\WaqInitializationDataVerifierTest.cs" />
     <Compile Include="NHibernate\WaterQualityModelNHibernateIntegrationTest.cs" />
     <Compile Include="ObservationAreas\OverwriteLabelOperationTest.cs" />

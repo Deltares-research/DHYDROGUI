@@ -67,6 +67,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                                                  waveValidationShortcut
                 );
             }
+
+            if (model.StopTime <= model.StartTime)
+            {
+                yield return new ValidationIssue("Coupling", ValidationSeverity.Error,
+                                                Resources.WaveCouplingValidator_ValidateModelTimeSettings_start_time_must_be_smaller_than_stop_time_,
+                                                waveValidationShortcut);
+            }
+
         }
 
         private static IEnumerable<ValidationIssue> ValidateWaveDomainData(WaveDomainData waveDomainData)

@@ -229,6 +229,9 @@
   <data name="WaveCouplingValidator_ValidateModelTimeSettings_Time_step_cannot_be_set_to_Zero_" xml:space="preserve">
     <value>The coupling time step must be positive.</value>
   </data>
+  <data name="WaveCouplingValidator_ValidateModelTimeSettings_start_time_must_be_smaller_than_stop_time_" xml:space="preserve">
+    <value>The coupling period must be positive.</value>
+  </data>
   <data name="WaveDelftIniCategoryConverter_CreateBoundaryConditionCategory_No_data_points_found_for_boundary___0____" xml:space="preserve">
     <value>No data points found for boundary '{0}', saved boundary will default to Uniform spatial definition type</value>
   </data>

@@ -447,6 +447,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                                        SwanLogDataItemTag));
 
             tempWorkingDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+
+            InitializeCouplingTime();
+        }
+
+        private void InitializeCouplingTime()
+        {
+            StartTime = ModelDefinition.ModelReferenceDateTime;
+            StopTime = ModelDefinition.ModelReferenceDateTime.AddDays(1);
         }
 
         /// <summary>

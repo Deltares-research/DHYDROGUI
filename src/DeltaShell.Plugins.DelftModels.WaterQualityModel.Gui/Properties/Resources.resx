@@ -379,4 +379,28 @@
   <data name="WaterQualityModelGuiPlugin_CreateHydFileModelMenuItem_Choose_the_options_to_use_for_importing_the_hyd_file___0___from_model___1__" xml:space="preserve">
     <value>Choose the options to use for importing the hyd file '{0}' from model '{1}'</value>
   </data>
+  <data name="BoundaryDataWizard_Finished_message" xml:space="preserve">
+    <value>Press Finish to import your boundary data file.</value>
+  </data>
+  <data name="BoundaryDataWizard_Title" xml:space="preserve">
+    <value>Import a boundary data file (in CSV format)</value>
+  </data>
+  <data name="BoundaryDataWizard_Welcome_message" xml:space="preserve">
+    <value>This wizard will import a Boundary File.</value>
+  </data>
+  <data name="BoundaryDataWizardPage_Description" xml:space="preserve">
+    <value>Select csv file with boundary data</value>
+  </data>
+  <data name="LoadsDataWizardPage_Description" xml:space="preserve">
+    <value>Select csv file with laods data</value>
+  </data>
+  <data name="LoadsDataWizard_Finished_message" xml:space="preserve">
+    <value>Press Finish to import your loads data file.</value>
+  </data>
+  <data name="LoadsDataWizard_Title" xml:space="preserve">
+    <value>Import a loads data file (in CSV format)</value>
+  </data>
+  <data name="LoadsDataWizard_Welcome_message" xml:space="preserve">
+    <value>This wizard will import a Loads File.</value>
+  </data>
 </root>

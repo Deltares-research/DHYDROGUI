@@ -27,6 +27,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
     {
         private const string StructureCategoryName = "structure";
         private static readonly ILog Log = LogManager.GetLogger(typeof(StructuresFile));
+        public List<string> propertyTypesFromIni = new List<string>();
 
         private readonly Dictionary<string, string> backwardsCompatibilityMapping = new Dictionary<string, string>
         {
@@ -128,6 +129,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
                                                   errorMessage);
                     continue;
                 }
+
+                propertyTypesFromIni.Add(structureTypeProperty.Value);
 
                 yield return structure2D;
             }

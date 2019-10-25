@@ -22,9 +22,12 @@ using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
 using DeltaShell.Plugins.Data.NHibernate;
+using DeltaShell.Plugins.FMSuite.Common.FeatureData;
+using DeltaShell.Plugins.FMSuite.Common.Gui.Editors;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
+using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.ImportersExporters;
@@ -869,7 +872,145 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 }
             }
         }
-        
+
+        [Test]
+        [Category(TestCategory.WindowsForms)]
+        public void GivenWaterFlowFMModelWithEmptyBoundarySet_WhenOpeningBoundaryConditionsEditor_ThenEditorCorrectlyConfigured()
+        {
+            // Given
+            using(var gui = new DeltaShellGui())
+            using (var model = new WaterFlowFMModel())
+            {
+                var boundaryConditionSet = new BoundaryConditionSet
+                {
+                    Feature = new Feature2D
+                    {
+                        Name = "Feature",
+                        Geometry = new LineString(new Coordinate[0])
+                    }
+                };
+                model.BoundaryConditionSets.Add(boundaryConditionSet);
+
+                RunConfiguredFmSuiteGui(gui);
+
+                gui.Application.Project.RootFolder.Add(model);
+
+                Action mainWindowShown = () =>
+                {
+                    // When
+                    gui.CommandHandler.OpenView(boundaryConditionSet);
+                    IView activeView = gui.DocumentViews.ActiveView;
+
+                    // Then
+                    Assert.That(activeView, Is.TypeOf<BoundaryConditionEditor>(), $"Associated view with a {typeof(BoundaryConditionSet)} must be of type {typeof(BoundaryConditionEditor)}");
+
+                    var editor = (BoundaryConditionEditor) activeView;
+                    Assert.That(editor.SelectedCategory, Is.Not.Null, "The selected category cannot be NULL");
+                    Assert.That(editor.Data, Is.SameAs(boundaryConditionSet), "Data on the editor must have the same reference for which it was opened for");
+
+                    var controller = editor.Controller as FlowBoundaryConditionEditorController;
+                    Assert.That(controller, Is.Not.Null, "Controller must be instantiated");
+                    Assert.That(controller.Model, Is.SameAs(model), "Controller must have the same reference of the model it belongs to");
+                };
+
+                WpfTestHelper.ShowModal(gui.MainWindow as Control, mainWindowShown);
+                gui.Dispose();
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.WindowsForms)]
+        public void GivenWaterFlowFMModelWithBoundarySet_WhenOpeningBoundaryConditionsEditor_ThenEditorCorrectlyConfigured()
+        {
+            // Given
+            using (var gui = new DeltaShellGui())
+            using (var model = new WaterFlowFMModel())
+            {
+                var boundaryConditionSet = new BoundaryConditionSet
+                {
+                    Feature = new Feature2D
+                    {
+                        Name = "Feature",
+                        Geometry = new LineString(new []
+                        {
+                            new Coordinate(0, 0),
+                            new Coordinate(1, 0),
+                            new Coordinate(2, 0)
+                        })
+                    }
+                };
+                var boundaryConditions = new []
+                {
+                    new FlowBoundaryCondition(FlowBoundaryQuantityType.Salinity, BoundaryConditionDataType.TimeSeries), 
+                    new FlowBoundaryCondition(FlowBoundaryQuantityType.Temperature, BoundaryConditionDataType.TimeSeries)
+                };
+                boundaryConditionSet.BoundaryConditions.AddRange(boundaryConditions);
+                model.BoundaryConditionSets.Add(boundaryConditionSet);
+
+                RunConfiguredFmSuiteGui(gui);
+
+                gui.Application.Project.RootFolder.Add(model);
+
+                Action mainWindowShown = () =>
+                {
+                    // When
+                    gui.CommandHandler.OpenView(boundaryConditionSet);
+                    IView activeView = gui.DocumentViews.ActiveView;
+
+                    // Then
+                    Assert.That(activeView, Is.TypeOf<BoundaryConditionEditor>(), $"Associated view with a {typeof(BoundaryConditionSet)} must be of type {typeof(BoundaryConditionEditor)}");
+
+                    var editor = (BoundaryConditionEditor)activeView;
+                    Assert.That(editor.SelectedCategory, Is.EqualTo("Salinity"), "First initialization with a non-empty set must select the first boundary condition in the set");
+                    Assert.That(editor.Data, Is.SameAs(boundaryConditionSet), "Data on the editor must have the same reference for which it was opened for");
+
+                    var controller = editor.Controller as FlowBoundaryConditionEditorController;
+                    Assert.That(controller, Is.Not.Null, "Controller must be instantiated");
+                    Assert.That(controller.Model, Is.SameAs(model), "Controller must have the same reference of the model it belongs to");
+                };
+
+                WpfTestHelper.ShowModal(gui.MainWindow as Control, mainWindowShown);
+                gui.Dispose();
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.WindowsForms)]
+        [TestCaseSource(nameof(GetConfiguredBoundaryConditionSets))]
+        public void GivenWaterFlowFMModelWithBoundarySetAndEditorOpened_WhenOpeningBoundaryConditionsEditorForOtherSet_ThenEditorCorrectlyConfigured(
+            IEnumerable<BoundaryConditionSet> boundaryConditionSets)
+        {
+            // Given
+            using (var gui = new DeltaShellGui())
+            using (var model = new WaterFlowFMModel())
+            {
+                model.BoundaryConditionSets.AddRange(boundaryConditionSets);
+                RunConfiguredFmSuiteGui(gui);
+
+                gui.Application.Project.RootFolder.Add(model);
+
+                Action mainWindowShown = () =>
+                {
+                    BoundaryConditionSet boundaryConditionSetOne = boundaryConditionSets.ElementAt(0);
+                    BoundaryConditionSet boundaryConditionSetTwo = boundaryConditionSets.ElementAt(1);
+                    gui.CommandHandler.OpenView(boundaryConditionSetOne);
+
+                    // When 
+                    gui.CommandHandler.OpenView(boundaryConditionSetTwo);
+                    IView activeView = gui.DocumentViews.ActiveView;
+
+                    // Then
+                    Assert.That(activeView, Is.TypeOf<BoundaryConditionEditor>(), $"Associated view with a {typeof(BoundaryConditionSet)} must be of type {typeof(BoundaryConditionEditor)}");
+
+                    var editor = (BoundaryConditionEditor)activeView;
+                    Assert.That(editor.SelectedCategory, Is.EqualTo("Salinity"), "Second initialization of the editor with a non-empty set must select the same category as was selected by the first initialization");
+                    Assert.That(editor.Data, Is.SameAs(boundaryConditionSetTwo), "Data on the editor must have the same reference for which it was opened for");
+                };
+
+                WpfTestHelper.ShowModal(gui.MainWindow as Control, mainWindowShown);
+                gui.Dispose();
+            }
+        }
 
         #region Helper methods
 
@@ -935,6 +1076,99 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             Assert.IsNotNull(coverageLayer, "coverage layer not found");
             Assert.IsTrue(coverageLayer.Visible, "not visible");
         }
+
+        private static IEnumerable<TestCaseData> GetConfiguredBoundaryConditionSets()
+        {
+            var defaultBoundaryConditionsSet = new BoundaryConditionSet
+            {
+                Feature = new Feature2D
+                {
+                    Name = "First Set",
+                    Geometry = new LineString(new[]
+                    {
+                        new Coordinate(0, 0),
+                        new Coordinate(1, 0),
+                        new Coordinate(2, 0)
+                    })
+                }
+            };
+            defaultBoundaryConditionsSet.BoundaryConditions.AddRange(new[]
+            {
+                new FlowBoundaryCondition(FlowBoundaryQuantityType.Salinity, BoundaryConditionDataType.TimeSeries),
+                new FlowBoundaryCondition(FlowBoundaryQuantityType.Temperature, BoundaryConditionDataType.TimeSeries)
+            });
+
+            yield return new TestCaseData(new List<BoundaryConditionSet>
+            {
+                defaultBoundaryConditionsSet,
+                new BoundaryConditionSet
+                {
+                    Feature = new Feature2D
+                    { 
+                        Name = "Second Set",
+                        Geometry = new LineString(new[]
+                        {
+                            new Coordinate(0, 0),
+                            new Coordinate(1, 0),
+                            new Coordinate(2, 0)
+                        })
+                    }
+                }
+            }).SetName("Second boundary set empty");
+
+            // [D3DFMIQ-1276]
+            // Disabling following testcase as this causes an GDI+ exception on the build agent which cannot be easily solved. 
+            // According to sources on the internet, the exception is caused by MultiThreading access to a certain source.
+            // However, setting the test with the STAThread or RequiresSTA attribute does not resolve this issue on the agent.
+            // Locally this test runs fine.
+
+            //            var boundaryConditionSetWithoutMatchingBoundaryCondition = new BoundaryConditionSet
+            //            {
+            //                Feature = new Feature2D
+            //                {
+            //                    Name = "Second Set",
+            //                    Geometry = new LineString(new[]
+            //                    {
+            //                        new Coordinate(0, 0),
+            //                        new Coordinate(1, 0),
+            //                        new Coordinate(2, 0)
+            //                    })
+            //                }
+            //            };
+            //            boundaryConditionSetWithoutMatchingBoundaryCondition.BoundaryConditions.AddRange(new[]
+            //            {
+            //                new FlowBoundaryCondition(FlowBoundaryQuantityType.WaterLevel, BoundaryConditionDataType.TimeSeries)
+            //            });
+            //            yield return new TestCaseData(new List<BoundaryConditionSet>
+            //            {
+            //                defaultBoundaryConditionsSet,
+            //                boundaryConditionSetWithoutMatchingBoundaryCondition
+            //            }).SetName("Second boundary set, no matching flow boundary condition");
+
+            var boundaryConditionSetWithMatchingBoundaryCondition = new BoundaryConditionSet
+            {
+                Feature = new Feature2D
+                {
+                    Name = "Second Set",
+                    Geometry = new LineString(new[]
+                    {
+                        new Coordinate(0, 0),
+                        new Coordinate(1, 0),
+                        new Coordinate(2, 0)
+                    })
+                }
+            };
+            boundaryConditionSetWithMatchingBoundaryCondition.BoundaryConditions.AddRange(new[]
+            {
+                new FlowBoundaryCondition(FlowBoundaryQuantityType.Salinity, BoundaryConditionDataType.TimeSeries),
+            });
+            yield return new TestCaseData(new List<BoundaryConditionSet>
+            {
+                defaultBoundaryConditionsSet,
+                boundaryConditionSetWithMatchingBoundaryCondition
+            }).SetName("Second boundary set, matching flow boundary condition");
+        }
+
         #endregion
 
     }

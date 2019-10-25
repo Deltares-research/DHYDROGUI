@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Windows.Controls;
+using DelftTools.Controls;
 using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
@@ -52,6 +53,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         public void ShowNew()
         {
             WindowsFormsTestHelper.ShowModal(new BoundaryConditionEditor());
+        }
+
+        [Test]
+        public void Constructor_ExpectedValues()
+        {
+            // Call
+            using (var editor = new BoundaryConditionEditor())
+            {
+                // Assert
+                Assert.That(editor, Is.InstanceOf<System.Windows.Forms.UserControl>());
+                Assert.That(editor, Is.InstanceOf<ICompositeView>());
+                Assert.That(editor, Is.InstanceOf<IReusableView>());
+                Assert.That(editor, Is.InstanceOf<ISuspendibleView>());
+
+                Assert.That(editor.Controller, Is.Null);
+                Assert.That(editor.SelectedCategory, Is.Null);
+                Assert.That(editor.SelectedSupportPointIndex, Is.EqualTo(0));
+                Assert.That(editor.BoundaryConditionDataView, Is.Null);
+                Assert.That(editor.BoundaryConditionSet, Is.Null);
+                Assert.That(editor.Image, Is.Null);
+                Assert.That(editor.ViewInfo, Is.Null);
+            }
         }
 
         [Test]

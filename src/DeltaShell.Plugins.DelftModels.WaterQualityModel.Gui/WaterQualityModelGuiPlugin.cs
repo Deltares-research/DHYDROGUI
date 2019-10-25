@@ -309,6 +309,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
                 GetViewName = (v, o) => "Substance process library",
                 Image = Properties.Resources.Library
             };
+
             yield return new ViewInfo<WaterQualityFunctionDataWrapper, IEventedList<IFunction>, FunctionListView>
             {
                 Description = "Functions",
@@ -389,6 +390,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
             yield return new ViewInfo<SubFileImporter, SubstanceProcessLibraryWizard>
             {
                 Description = "Substance process library wizard",
+                AdditionalDataCheck = importer => importer != null,
                 AfterCreate = (v, o) =>
                 {
                     if (Gui.SelectedModel is WaterQualityModel)
@@ -397,7 +399,19 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
                     }
                 },
             };
-
+            
+            yield return new ViewInfo<BoundaryDataTableImporter, BoundaryDataWizard> 
+            {
+                Description = "Boundary Data Wizard Dialog",
+                AdditionalDataCheck = importer => importer != null
+            };
+           
+            yield return new ViewInfo<LoadsDataTableImporter, LoadsDataWizard>
+            {
+                Description = "Loads Data Wizard Dialog",
+                AdditionalDataCheck = importer => importer != null
+            };
+            
             yield return new ViewInfo<WaterQualityModel, ValidationView>
             {
                 Description = "Validation Report",
@@ -407,14 +421,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
                     v.OnValidate = m => new WaterQualityModelValidator().Validate(m as WaterQualityModel);
                 }
             };
-
+            
             yield return new ViewInfo<DataTableManager, DataTableManagerView>
             {
                 Description = "Data Table Manager",
                 GetViewName = (v, o) => o.Name,
                 Image = Properties.Resources.DataTableManager
             };
-
+            
             yield return SharpMapGisGuiPlugin.CreateAttributeTableViewInfo<WaterQualityLoad, WaterQualityModel>(
                 m => m.Loads, () => Gui);
             yield return SharpMapGisGuiPlugin
