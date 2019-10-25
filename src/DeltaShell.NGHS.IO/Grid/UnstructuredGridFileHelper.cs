@@ -25,23 +25,6 @@ namespace DeltaShell.NGHS.IO.Grid
             FacesMeanLevFromNodes = 6
         }
 
-        /// <summary>
-        /// Determines whether the file contains an UGrid.
-        /// </summary>
-        /// <param name="path">The path to read the file from.</param>
-        /// <returns><c>true</c> if the file contains an UGrid, <c>false</c> otherwise.</returns>
-        /// <exception cref="Exception">Thrown when it could not be determined whether the
-        /// file is an UGrid or not.</exception>
-        public static bool IsUGrid(string path)
-        {
-            if (!File.Exists(path) || Path.GetFileName(path) == null)
-            {
-                return false;
-            }
-            
-            return GetConvention(path) == GridApiDataSet.DataSetConventions.CONV_UGRID;
-        }
-
         public static UnstructuredGrid LoadFromFile(string path, bool loadFlowLinksAndCells = false)
         {
             if (!File.Exists(path) || Path.GetFileName(path) == null)
