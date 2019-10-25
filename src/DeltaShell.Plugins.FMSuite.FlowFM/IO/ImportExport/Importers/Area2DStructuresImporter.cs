@@ -44,7 +44,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
 
         public bool CanImportOnRootLevel => false;
 
-        public string FileFilter => "Structures file|*.ini";
+        public string FileFilter => $"Structures file|*{FileConstants.IniFileExtension}";
 
         public string TargetDataDirectory { get; set; }
 

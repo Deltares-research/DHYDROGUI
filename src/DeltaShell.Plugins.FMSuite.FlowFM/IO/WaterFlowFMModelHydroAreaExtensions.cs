@@ -76,12 +76,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             string strucGroupName = structure.GroupName;
             if (string.IsNullOrEmpty(strucGroupName) || !Path.IsPathRooted(strucGroupName) ||
-                strucGroupName.EndsWith(".ini"))
+                strucGroupName.EndsWith(FileConstants.IniFileExtension))
             {
                 return;
             }
 
-            string[] iniFiles = Directory.GetFiles(Path.GetDirectoryName(strucGroupName), "*.ini");
+            string[] iniFiles = Directory.GetFiles(Path.GetDirectoryName(strucGroupName), $"*{FileConstants.IniFileExtension}");
             var strucFile = new StructuresFile
             {
                 StructureSchema = model.ModelDefinition.StructureSchema,
@@ -101,7 +101,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
 
             structure.GroupName =
-                Path.Combine(Path.GetDirectoryName(structure.GroupName), model.Name + "_structures.ini");
+                Path.Combine(Path.GetDirectoryName(structure.GroupName), model.Name + FileConstants.StructuresFileExtension);
         }
     }
 }

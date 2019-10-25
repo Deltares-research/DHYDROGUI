@@ -26,7 +26,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters
 
         #region IFileExporter
 
-        public string Name => "Time series to .tim file";
+        public string Name => $"Time series to {FileConstants.TimFileExtension} file";
 
         public string Category => "General";
 
@@ -118,7 +118,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters
             yield return typeof(HeatFluxModel);
         }
 
-        public string FileFilter => "Time series file|*.tim";
+        public string FileFilter => $"Time series file|*{FileConstants.TimFileExtension}";
 
         [ExcludeFromCodeCoverage]
         public Bitmap Icon => Resources.TextDocument;

@@ -34,7 +34,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
 
         public bool CanImportOnRootLevel => true;
 
-        public string FileFilter => "FM His File|*_his.nc";
+        public string FileFilter => $"FM His File|*{FileConstants.HisFileExtension}";
 
         public string TargetDataDirectory { get; set; }
 

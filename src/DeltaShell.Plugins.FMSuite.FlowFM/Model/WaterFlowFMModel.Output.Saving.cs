@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Utils.IO;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 {
@@ -81,7 +82,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             }
 
             string waqOutputDir = Path.Combine(PersistentOutputDirectoryPath, DelwaqOutputDirectoryName);
-            string snappedOutputDir = Path.Combine(PersistentOutputDirectoryPath, SnappedFeaturesDirectoryName);
+            string snappedOutputDir = Path.Combine(PersistentOutputDirectoryPath, FileConstants.SnappedFeaturesDirectoryName);
             ReconnectOutputFiles(MapFilePath, HisFilePath, ClassMapFilePath, waqOutputDir, snappedOutputDir, true);
 
             if (sourceIsWorkingDir)
@@ -126,7 +127,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 string parentDirectoryName = Path.GetFileName(Path.GetDirectoryName(path));
 
                 // Snapped feature files are locked when the map in the GUI is open, so we ignore and copy snapped files instead.
-                if (parentDirectoryName != SnappedFeaturesDirectoryName && FileUtils.IsFileLocked(path))
+                if (parentDirectoryName != FileConstants.SnappedFeaturesDirectoryName && FileUtils.IsFileLocked(path))
                 {
                     yield return path;
                 }
@@ -145,7 +146,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             var targetDirectoryInfo =
                 new DirectoryInfo(Path.Combine(targetParentDirectoryPath, sourceDirectoryInfo.Name));
 
-            if (onSameVolume && sourceDirectoryInfo.Name != SnappedFeaturesDirectoryName)
+            if (onSameVolume && sourceDirectoryInfo.Name != FileConstants.SnappedFeaturesDirectoryName)
             {
                 sourceDirectoryInfo.MoveTo(targetDirectoryInfo.FullName);
             }

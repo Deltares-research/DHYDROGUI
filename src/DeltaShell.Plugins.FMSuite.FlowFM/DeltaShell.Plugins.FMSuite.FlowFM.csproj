@@ -164,6 +164,7 @@
     <Compile Include="IO\DataAccessObjects\BcmBlockData.cs" />
     <Compile Include="IO\DataAccessObjects\BcmQuantityData.cs" />
     <Compile Include="IO\DataAccessObjects\BcQuantityData.cs" />
+    <Compile Include="IO\FileConstants.cs" />
     <Compile Include="IO\Files\BcmFile.cs" />
     <Compile Include="IO\DataAccessBuilders\BcmFileFlowBoundaryDataBuilder.cs" />
     <Compile Include="IO\DelftIniCategoryExtension.cs" />

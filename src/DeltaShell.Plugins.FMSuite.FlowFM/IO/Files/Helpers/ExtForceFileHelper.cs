@@ -664,8 +664,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
             ExtForceFileItem extForceFileItem = existingExtForceFileItem ?? new ExtForceFileItem(quantityName)
             {
                 FileName =
-                    string.Format("{0}_{1}.pol", extForceFileQuantityName,
-                                  operation.Name.Replace(" ", "_").Replace("\t", "_")),
+                    $"{extForceFileQuantityName}_{operation.Name.Replace(" ", "_").Replace("\t", "_")}{FileConstants.PolylineFileExtension}",
                 FileType = ExtForceQuantNames.FileTypes.InsidePolygon,
                 Method = GetSpatialOperationMethod(operation),
             };

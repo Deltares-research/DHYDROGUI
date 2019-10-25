@@ -27,10 +27,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
     public class ExtForceFile : FMSuiteFileBase
     {
         // Known file extensions
-        public const string Extension = ".ext";
-        public const string GriddedHeatFluxModelExtension = ".htc";
-        public const string UniformHeatFluxModelExtension = ".tim";
-
 
         // keywords in file used for modelDefinition specific data
         public const string FricTypeKey = "IFRCTYP";
@@ -145,7 +141,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             var modelReferenceDate = (DateTime) modelDefinition.GetModelProperty(KnownProperties.RefDate).Value;
 
             foreach (ExtForceFileItem extForceFileItem in extForceFileItems.Where(
-                e => e.FileName.ToLower().EndsWith(".pli")))
+                e => e.FileName.ToLower().EndsWith(FileConstants.PliFileExtension)))
             {
                 if (extForceFileItem.FileType != ExtForceQuantNames.FileTypes.PolyTim)
                 {
@@ -321,12 +317,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 string extension = Path.GetExtension(forceFileItem.FileName);
 
                 string filePath = GetOtherFilePathInSameDirectory(ExtSubFilesReferenceFilePath, forceFileItem.FileName);
-                if (extension == UniformHeatFluxModelExtension)
+                if (extension == FileConstants.TimFileExtension)
                 {
                     new TimFile().Read(filePath, heatFluxModel.MeteoData, modelReferenceDate);
                     existingForceFileItems[forceFileItem] = heatFluxModel.MeteoData;
                 }
-                else if (extension == GriddedHeatFluxModelExtension)
+                else if (extension == FileConstants.GriddedHeatFluxModelFileExtension)
                 {
                     string gridFilePath = HeatFluxModel.GetCorrespondingGridFilePath(filePath);
 
@@ -374,7 +370,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                                 ? ExtForceQuantNames.MeteoDataWithRadiation
                                 : ExtForceQuantNames.MeteoData)
                         {
-                            FileName = modelDefinition.ModelName + "_meteo.tim",
+                            FileName = modelDefinition.ModelName + FileConstants.MeteoFileExtension,
                             FileType = ExtForceQuantNames.FileTypes.Uniform,
                             Method = 1,
                             Operand = ExtForceQuantNames.OperatorToStringMapping[

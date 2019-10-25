@@ -49,7 +49,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters
             string nonzeroPath = FilePath ?? path;
             string filePathWithoutExtension = Path.Combine(Path.GetDirectoryName(nonzeroPath),
                                                            Path.GetFileNameWithoutExtension(nonzeroPath));
-            TargetNetFilePath = filePathWithoutExtension + "_net.nc";
+            TargetNetFilePath = filePathWithoutExtension + FileConstants.NetFileExtension;
             SourceNetFilePath = netFilePath;
 
             if (PolygonFile == null && NumDomains == 1)
@@ -78,7 +78,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters
             yield return typeof(ImportedFMNetFile);
         }
 
-        public override string FileFilter => "Flexible Mesh Net File|*_net.nc";
+        public override string FileFilter => $"Flexible Mesh Net File|*{FileConstants.NetFileExtension}";
 
         #endregion
     }

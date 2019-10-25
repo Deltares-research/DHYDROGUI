@@ -880,7 +880,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var bndExtForceFile = new BndExtForceFile();
             var extFileName = model.ModelDefinition.GetModelProperty(KnownProperties.ExtForceFile).GetValueAsString();
             if (string.IsNullOrEmpty(extFileName))
-                extFileName = model.ModelDefinition.ModelName + ExtForceFile.Extension;
+                extFileName = model.ModelDefinition.ModelName + FileConstants.ExternalForcingFileExtension;
             
             bndExtForceFile.Write(extFileName, model.ModelDefinition);
 
@@ -940,7 +940,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var bndExtForceFile = new BndExtForceFile();
             var extFileName = model.ModelDefinition.GetModelProperty(KnownProperties.ExtForceFile).GetValueAsString();
             if (string.IsNullOrEmpty(extFileName))
-                extFileName = model.ModelDefinition.ModelName + ExtForceFile.Extension;
+                extFileName = model.ModelDefinition.ModelName + FileConstants.ExternalForcingFileExtension;
 
             bndExtForceFile.Write(extFileName, model.ModelDefinition);
             var modelDefinition = new WaterFlowFMModelDefinition(Path.GetTempPath(),"myModel");

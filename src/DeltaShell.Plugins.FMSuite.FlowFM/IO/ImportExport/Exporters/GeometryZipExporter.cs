@@ -67,17 +67,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters
             while (File.Exists(targetNetFilePath))
             {
                 string newNetFileName =
-                    string.Concat(Path.GetFileNameWithoutExtension(netFileName), "(", k++, ")", ".nc");
+                    string.Concat(Path.GetFileNameWithoutExtension(netFileName), "(", k++, ")", FileConstants.NetCdfFileExtension);
                 targetNetFilePath = Path.Combine(targetDirectory, newNetFileName);
             }
 
-            string geomFileName = string.Concat(Path.GetFileNameWithoutExtension(netFileName), "geom.nc");
+            string geomFileName = string.Concat(Path.GetFileNameWithoutExtension(netFileName), FileConstants.GeomFileExtension);
             string targetGeomFilePath = Path.Combine(targetDirectory, geomFileName);
             k = 2;
             while (File.Exists(targetGeomFilePath))
             {
                 string newGeomFileName =
-                    string.Concat(Path.GetFileNameWithoutExtension(geomFileName), "(", k++, ")", ".nc");
+                    string.Concat(Path.GetFileNameWithoutExtension(geomFileName), "(", k++, ")", FileConstants.NetCdfFileExtension);
                 targetGeomFilePath = Path.Combine(targetDirectory, newGeomFileName);
             }
 

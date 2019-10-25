@@ -13,13 +13,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.ImportersExporters
 
         public override string Description => string.Empty;
 
-        public override string FileFilter => "Observation points|*.xyn";
+        public override string FileFilter => $"Observation points|*{FileConstants.XynFileExtension}";
 
         public override Bitmap Image => Resources.Observation;
 
-        protected override string ExporterName => "Observation points to .xyn file";
+        protected override string ExporterName => $"Observation points to {FileConstants.XynFileExtension} file";
 
-        protected override string ImporterName => "Observation points from .xyn file";
+        protected override string ImporterName => $"Observation points from {FileConstants.XynFileExtension} file";
 
         protected override IEnumerable<T> Import(string path)
         {

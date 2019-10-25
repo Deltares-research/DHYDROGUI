@@ -64,7 +64,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
         public bool CanImportOnRootLevel => true;
 
         [ExcludeFromCodeCoverage]
-        public string FileFilter => "Net file|*.nc";
+        public string FileFilter => $"Net file|*{FileConstants.NetCdfFileExtension}";
 
         public string TargetDataDirectory { get; set; }
 
