@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
@@ -127,19 +126,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
 
             if (pumpsIni > 0)
             {
-                logPumpsIniString = "Pumps : " + pumpsIni.ToString() + " ";
+                logPumpsIniString = "Pumps : " + pumpsIni + " ";
             }
             if (simpleWeirIni > 0)
             {
-                simpleWeirString = "Weirs: " + simpleWeirIni.ToString() + " ";
+                simpleWeirString = "Weirs: " + simpleWeirIni + " ";
             }
             if (gatedWeirIni > 0)
             {
-                gatedWeirString = "Gates : " + gatedWeirIni.ToString() + " ";
+                gatedWeirString = "Gates : " + gatedWeirIni + " ";
             }
             if (generalFormulaIni > 0)
             {
-                generalFormulaString = "General structures: " + generalFormulaIni.ToString();
+                generalFormulaString = "General structures: " + generalFormulaIni;
             }
 
             return logPumpsIniString + simpleWeirString + gatedWeirString + generalFormulaString;
@@ -173,7 +172,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
                 }
             }
 
-            foreach (string propertyType in structuresFile.propertyTypesFromIni)
+            foreach (string propertyType in structuresFile.PropertyTypesFromIni)
             {
                 if (propertyType.Equals(IniFileImporterExporterTypes.WeirImportTypeDescription))
                 {
