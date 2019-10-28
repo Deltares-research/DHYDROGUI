@@ -332,6 +332,7 @@
     <Compile Include="IO\MduFileHelperTest.cs" />
     <Compile Include="IO\MduFileTest.cs" />
     <Compile Include="IO\PlizFileImporterExporterTest.cs" />
+    <Compile Include="IO\Readers\MduDelftIniReaderTest.cs" />
     <Compile Include="IO\StructuresFileIntegrationTest.cs" />
     <Compile Include="IO\StructuresFileReadTest.cs" />
     <Compile Include="IO\WaterFlowFMDataAccessListenerTest.cs" />
