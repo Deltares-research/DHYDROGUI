@@ -633,13 +633,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                 {
                     BeginEdit(new DefaultEditAction("Switching write COM"));
                     WriteCOM = WriteCOM;
-                    if (!WriteCOM)
-                    {
-                        ModelDefinition
-                            .GetModelProperty(KnownWaveCategories.OutputCategory, KnownWaveProperties.COMFile)
-                            .SetValueAsString("");
-                    }
-
                     EndEdit();
                 }
                 else if (prop.PropertyDefinition.FilePropertyName.Equals(KnownWaveProperties.WriteTable,
