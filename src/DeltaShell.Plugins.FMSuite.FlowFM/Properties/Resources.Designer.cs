@@ -522,6 +522,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid comment placed on line {0} in file &apos;{1}&apos;.
+        /// </summary>
+        public static string MduDelftIniReader_Invalid_comment_placed_on_line__0__in_file___1__ {
+            get {
+                return ResourceManager.GetString("MduDelftIniReader_Invalid_comment_placed_on_line__0__in_file___1__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Copied file at location &apos;{0}&apos; to location &apos;{1}&apos;,
         ///because the file existed outside of the project folder of model &apos;{2}&apos;..
         /// </summary>

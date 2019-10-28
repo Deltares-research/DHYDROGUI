@@ -13,7 +13,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Readers
     public class MduDelftIniReaderTest
     {
         [Test]
-        [TestCaseSource(nameof(MyStrings))]
+        [TestCaseSource(nameof(GetMultiValuedPropertiesFileContents))]
         public void ReadDelftIniFile_WithMultipleValuedPropertyMultilineDefined_ThenPropertyIsReadCorrectly(string fileContent)
         {
             // Setup
@@ -78,7 +78,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Readers
             Assert.That(exception.Message, Is.EqualTo($"Invalid comment placed on line 3 in file '{fileName}'"));
         }
 
-        private IEnumerable<string> MyStrings()
+        private IEnumerable<string> GetMultiValuedPropertiesFileContents()
         {
             yield return "[output]"
                          + Environment.NewLine

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using DelftTools.Utils.RegularExpressions;
 using DeltaShell.NGHS.IO;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Readers
 {
@@ -46,7 +47,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Readers
             {
                 if (keyValueComment[2] != string.Empty)
                 {
-                    throw new FormatException($"Invalid comment placed on line {LineNumber} in file '{InputFilePath}'");
+                    throw new FormatException(string.Format(Resources.MduDelftIniReader_Invalid_comment_placed_on_line__0__in_file___1__, LineNumber, InputFilePath));
                 }
                 return ParseMultilineDefinedProperty(keyValueComment);
             }
@@ -99,7 +100,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Readers
 
                 if (keyValueComment[1].EndsWith(@"\") && keyValueComment[2] != string.Empty)
                 {
-                    throw new FormatException($"Invalid comment placed on line {LineNumber} in file '{InputFilePath}'");
+                    throw new FormatException(string.Format(Resources.MduDelftIniReader_Invalid_comment_placed_on_line__0__in_file___1__,
+                                                            LineNumber, InputFilePath));
                 }
             }
         }
