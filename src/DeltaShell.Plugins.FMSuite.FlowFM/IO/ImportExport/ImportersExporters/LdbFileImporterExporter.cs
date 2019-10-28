@@ -31,10 +31,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.ImportersExporters
 
         public override Bitmap Image => Resources.TextDocument;
 
-        public override string FileFilter => "Land boundary files|*.ldb";
+        public override string FileFilter => $"Land boundary files|*{FileConstants.LandBoundaryFileExtension}";
 
-        protected override string ImporterName => "Land boundaries from .ldb file";
+        protected override string ImporterName => $"Land boundaries from {FileConstants.LandBoundaryFileExtension} file";
 
-        protected override string ExporterName => "Land boundaries to .ldb file";
+        protected override string ExporterName => $"Land boundaries to {FileConstants.LandBoundaryFileExtension} file";
     }
 }

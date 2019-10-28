@@ -31,7 +31,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
 
         #region IFileImporter
 
-        public string Name => WindFileImporter ? "Time series file" : "Time series .tim file";
+        public string Name => WindFileImporter ? "Time series file" : $"Time series {FileConstants.TimFileExtension} file";
 
         public string Category => "Time series";
 
@@ -64,8 +64,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
 
         public override string FileFilter =>
             WindFileImporter
-                ? "Time series file (*.tim)|*.tim|Wind file (*.wnd)|*.wnd"
-                : "Time series file (*.tim)|*.tim";
+                ? string.Format("Time series file (*{0})|*{0}|Wind file (*{1})|*{1}",
+                                FileConstants.TimFileExtension,
+                                FileConstants.WindFileExtension)
+                : string.Format("Time series file (*{0})|*{0}",
+                                FileConstants.TimFileExtension);
 
         public string TargetDataDirectory { get; set; }
 

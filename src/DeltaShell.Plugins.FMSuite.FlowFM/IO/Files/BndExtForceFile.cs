@@ -252,7 +252,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 string existingFile;
                 if (!existingPolylineFiles.TryGetValue(embankment, out existingFile))
                 {
-                    existingFile = embankment.Name + "_bnk.pliz";
+                    existingFile = embankment.Name + FileConstants.EmbankmentFileExtension;
                     existingPolylineFiles[embankment] = existingFile;
                 }
 
@@ -463,7 +463,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
         private void ReadPolyLines(IEnumerable<DelftIniCategory> bndBlocks, WaterFlowFMModelDefinition modelDefinition)
         {
-            modelDefinition.Boundaries.ForEach(b => { existingPolylineFiles[b] = b.Name + ".pli"; });
+            modelDefinition.Boundaries.ForEach(b => { existingPolylineFiles[b] = b.Name + FileConstants.PliFileExtension; });
 
             foreach (DelftIniCategory delftIniCategory in bndBlocks)
             {
@@ -527,7 +527,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             string directory = Directory.GetParent(pliFilePath).FullName;
             onePointEmbankments.ForEach(e =>
             {
-                string embankmentFilePath = Path.Combine(directory, $"{e.Name}_bnk.pliz");
+                string embankmentFilePath = Path.Combine(directory, $"{e.Name}{FileConstants.EmbankmentFileExtension}");
                 Log.Warn(
                     $"Embankment file '{embankmentFilePath}' with only 1 point detected and it will not be imported.");
             });

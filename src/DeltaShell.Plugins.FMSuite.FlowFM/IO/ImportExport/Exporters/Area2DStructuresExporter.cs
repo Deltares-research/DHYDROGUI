@@ -103,7 +103,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters
             yield return typeof(HydroArea);
         }
 
-        public string FileFilter => "Structures file|*.ini";
+        public string FileFilter => $"Structures file|*{FileConstants.IniFileExtension}";
 
         [ExcludeFromCodeCoverage]
         public Bitmap Icon => Resources.StructureFeatureSmall;

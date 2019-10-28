@@ -119,7 +119,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters
         }
 
         [ExcludeFromCodeCoverage]
-        public string FileFilter => "Net file|*.nc";
+        public string FileFilter => $"Net file|*{FileConstants.NetCdfFileExtension}";
 
         [ExcludeFromCodeCoverage]
         public Bitmap Icon => Resources.unstruc;

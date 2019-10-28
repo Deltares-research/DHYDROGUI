@@ -102,7 +102,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
 
         public override bool CanImportOnRootLevel => false;
 
-        public override string FileFilter => "Structures file|*.ini";
+        public override string FileFilter => $"Structures file|*{FileConstants.IniFileExtension}";
 
         public override string TargetDataDirectory { get; set; }
 

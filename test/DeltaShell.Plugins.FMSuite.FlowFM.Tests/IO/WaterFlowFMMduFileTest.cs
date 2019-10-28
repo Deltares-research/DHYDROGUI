@@ -175,8 +175,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             Assert.NotNull(mduDir);
             
-            var defaultNameWE = String.Concat(Path.GetFileName(pathWithoutExtension), MduFile.ObsExtension);
-            var group1NameWE = String.Concat("Group1", MduFile.ObsExtension);
+            var defaultNameWE = String.Concat(Path.GetFileName(pathWithoutExtension), FileConstants.ObsPointFileExtension);
+            var group1NameWE = String.Concat("Group1", FileConstants.ObsPointFileExtension);
             var fileObsPointsDefault = Path.Combine(mduDir, defaultNameWE);
             var fileObsPointsGroup1 = Path.Combine(mduDir, group1NameWE);
             using (var model = new WaterFlowFMModel(mduFilePath){ Area = new HydroArea()})
@@ -620,14 +620,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 CompareHydroAreaFeatures(originalArea, savedArea);
                 //Check default group was created.
                 var mduPathName = Path.GetFileNameWithoutExtension(savePath);
-                CheckDefaultGroupIsInFeature("LandBoundaries", originalArea.LandBoundaries, mduPathName, MduFile.LandBoundariesExtension);
-                CheckDefaultGroupIsInFeature("FixedWeirs", originalArea.FixedWeirs, mduPathName, MduFile.FixedWeirExtension);
-                CheckDefaultGroupIsInFeature("ObservationPoints", originalArea.ObservationPoints, mduPathName, MduFile.ObsExtension);
-                CheckDefaultGroupIsInFeature("ObservationCrossSections", originalArea.ObservationCrossSections, mduPathName, MduFile.ObsCrossExtension);
-                CheckDefaultGroupIsInFeature("DryAreas", originalArea.DryAreas, mduPathName, MduFile.DryAreaExtension);
-                CheckDefaultGroupIsInFeature("Enclosures", originalArea.Enclosures, mduPathName, MduFile.EnclosureExtension);
-                CheckDefaultGroupIsInFeature("Pumps", originalArea.Pumps, mduPathName, MduFile.StructuresExtension);
-                CheckDefaultGroupIsInFeature("Weirs", originalArea.Weirs, mduPathName, MduFile.StructuresExtension);
+                CheckDefaultGroupIsInFeature("LandBoundaries", originalArea.LandBoundaries, mduPathName, FileConstants.LandBoundaryFileExtension);
+                CheckDefaultGroupIsInFeature("FixedWeirs", originalArea.FixedWeirs, mduPathName, FileConstants.FixedWeirPlizFileExtension);
+                CheckDefaultGroupIsInFeature("ObservationPoints", originalArea.ObservationPoints, mduPathName, FileConstants.ObsPointFileExtension);
+                CheckDefaultGroupIsInFeature("ObservationCrossSections", originalArea.ObservationCrossSections, mduPathName, FileConstants.ObsCrossSectionPliFileExtension);
+                CheckDefaultGroupIsInFeature("DryAreas", originalArea.DryAreas, mduPathName, FileConstants.DryAreaFileExtension);
+                CheckDefaultGroupIsInFeature("Enclosures", originalArea.Enclosures, mduPathName, FileConstants.EnclosureExtension);
+                CheckDefaultGroupIsInFeature("Pumps", originalArea.Pumps, mduPathName, FileConstants.StructuresFileExtension);
+                CheckDefaultGroupIsInFeature("Weirs", originalArea.Weirs, mduPathName, FileConstants.StructuresFileExtension);
             }
             finally
             {
@@ -880,9 +880,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [TestCase("OBSPOINTS", "obspoints", false)]
         public void GivenTwoFeaturesWithNameThatDifferByACapitalLetter_WhenWritingMduFile_ThenBothAreWrittenToTheSameFile(string firstGroupName, string secondGroupName, bool fileShouldAlreadyExists)
         {
-            string groupName1 = firstGroupName + MduFile.ObsExtension;
-            string groupName2 = secondGroupName + MduFile.ObsExtension;
-            string existingGroupName = "ObSpOiNtS" + MduFile.ObsExtension;
+            string groupName1 = firstGroupName + FileConstants.ObsPointFileExtension;
+            string groupName2 = secondGroupName + FileConstants.ObsPointFileExtension;
+            string existingGroupName = "ObSpOiNtS" + FileConstants.ObsPointFileExtension;
 
             var mduFilePath = string.Concat(Path.GetTempFileName(), ".mdu");
             var mduFile = new MduFile();
@@ -955,7 +955,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.That(newArea.DryAreas.Count, Is.EqualTo(1));
             Assert.That(newArea.DryPoints.Count, Is.EqualTo(1));
 
-            var dryPointsFileNameWithExtension = dryPointsGroupName + MduFile.DryPointExtension;
+            var dryPointsFileNameWithExtension = dryPointsGroupName + FileConstants.DryPointFileExtension;
 
             FileUtils.DeleteIfExists(mduFilePath);
             FileUtils.DeleteIfExists(mduFilePath.Replace(".mdu", string.Empty));
@@ -983,8 +983,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             var readAllText = File.ReadAllText(mduFilePath);
 
-            var dryPointsFileNameWithExtension = dryPointsGroupName + MduFile.DryPointExtension;
-            var dryAreasFileNameWithExtension = dryAreasGroupName + MduFile.DryAreaExtension;
+            var dryPointsFileNameWithExtension = dryPointsGroupName + FileConstants.DryPointFileExtension;
+            var dryAreasFileNameWithExtension = dryAreasGroupName + FileConstants.DryAreaFileExtension;
 
             WaterFlowFMMduFileTestHelper.AssertContainsMduLine(readAllText, "DryPointsFile", dryPointsFileNameWithExtension + " " + dryAreasFileNameWithExtension);
 
@@ -1054,11 +1054,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 
             var readAllText = File.ReadAllText(mduFilePath);
 
-            var obsFileNameWithExtension = pointGroupName + MduFile.ObsExtension;
-            var enclosureFileNameWithExtension = enclosureGroupName + MduFile.EnclosureExtension;
-            var dryPointsFileNameWithExtension = dryPointsGroupName + MduFile.DryPointExtension;
-            var landBoundariesFileNameWithExtension = landBoundariesGroupName + MduFile.LandBoundariesExtension;
-            var structuresFileNameWithExtension = structureGroupName + MduFile.StructuresExtension;
+            var obsFileNameWithExtension = pointGroupName + FileConstants.ObsPointFileExtension;
+            var enclosureFileNameWithExtension = enclosureGroupName + FileConstants.EnclosureExtension;
+            var dryPointsFileNameWithExtension = dryPointsGroupName + FileConstants.DryPointFileExtension;
+            var landBoundariesFileNameWithExtension = landBoundariesGroupName + FileConstants.LandBoundaryFileExtension;
+            var structuresFileNameWithExtension = structureGroupName + FileConstants.StructuresFileExtension;
 
             WaterFlowFMMduFileTestHelper.AssertContainsMduLine(readAllText, modelDefinition.GetModelProperty(KnownProperties.ObsFile).PropertyDefinition.Caption, obsFileNameWithExtension);
             WaterFlowFMMduFileTestHelper.AssertContainsMduLine(readAllText, modelDefinition.GetModelProperty(KnownProperties.EnclosureFile).PropertyDefinition.Caption, enclosureFileNameWithExtension);
@@ -1103,8 +1103,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 }
             );
 
-            var obsFileNameWithExtension = pointGroupName + MduFile.ObsExtension;
-            var dryPointsFileNameWithExtension = dryPointsGroupName + MduFile.DryPointExtension;
+            var obsFileNameWithExtension = pointGroupName + FileConstants.ObsPointFileExtension;
+            var dryPointsFileNameWithExtension = dryPointsGroupName + FileConstants.DryPointFileExtension;
             DeleteAllFilesAndFoldersInSubDirectory(new DirectoryInfo(Path.GetDirectoryName(Path.Combine(mduDir, dryPointsFileNameWithExtension))));
 
             var modelDefinition = new WaterFlowFMModelDefinition(mduDir, modelName);

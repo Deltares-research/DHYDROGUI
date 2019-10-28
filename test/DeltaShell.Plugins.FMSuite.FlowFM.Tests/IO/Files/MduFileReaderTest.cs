@@ -282,7 +282,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
             ReadWithAssert(fileContent, definition =>
             {
                 WaterFlowFMProperty property = definition.GetModelProperty("FixedWeirScheme");
-                Assert.That(property.GetValueAsString(), Is.EqualTo("6"));
+                Assert.That(property.GetValueAsString(), Is.EqualTo("9"));
             });
         }
 

@@ -355,7 +355,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 Log.ErrorFormat(
                     Resources
                         .MduFile_ReadMorphologyProperties_Cannot_read_ibedcond_because_this_is_not_an_integer__number__in_file__0_,
-                    Path.ChangeExtension(mduFilePath, ".mor"));
+                    Path.ChangeExtension(mduFilePath, FileConstants.MorphologyFileExtension));
                 return;
             }
 
@@ -417,7 +417,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 return Enumerable.Empty<Feature2D>();
             }
 
-            string pliFilePath = Path.Combine(Path.GetDirectoryName(mduFilePath), locationFile + ".pli");
+            string pliFilePath = Path.Combine(Path.GetDirectoryName(mduFilePath), locationFile + FileConstants.PliFileExtension);
 
             if (!File.Exists(pliFilePath))
             {

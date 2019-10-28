@@ -53,7 +53,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
 
         public bool CanImportOnRootLevel => true;
 
-        public string FileFilter => "Flexible Mesh Model Definition|*.mdu";
+        public string FileFilter => $"Flexible Mesh Model Definition|*{FileConstants.MduFileExtension}";
 
         public string TargetDataDirectory { get; set; }
 

@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.IO;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Dimr;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
@@ -13,14 +14,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 {
     public partial class WaterFlowFMModel
     {
-        private const string mduExtension = ".mdu";
-        private const string InputDirectoryName = "input";
-        private const string OutputDirectoryName = "output";
-        private const string PrefixDelwaqDirectoryName = "DFM_DELWAQ_";
-        private const string SnappedFeaturesDirectoryName = "snapped";
         private string currentOutputDirectoryPath;
         private string outputSnappedFeaturesPath;
-        private string inputFolder;
+
         private readonly MduFile mduFile = new MduFile();
 
         public MduFile MduFile => mduFile;
@@ -36,7 +32,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         }
 
         public virtual string KernelDirectoryLocation => DimrApiDataSet.DFlowFmDllPath;
-        public string DelwaqOutputDirectoryName => PrefixDelwaqDirectoryName + Name;
+        public string DelwaqOutputDirectoryName => FileConstants.PrefixDelwaqDirectoryName + Name;
 
         /// <summary>
         /// For FM the working directory is the same as the working directory from the application,
@@ -58,9 +54,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         public string DelwaqOutputDirectoryPath { get; set; }
 
         public string WorkingOutputDirectoryPath =>
-            Path.Combine(WorkingDirectoryPath, DirectoryName, OutputDirectoryName);
+            Path.Combine(WorkingDirectoryPath, DirectoryName, FileConstants.OutputDirectoryName);
 
-        public string PersistentOutputDirectoryPath => Path.Combine(ModelDirectoryPath, OutputDirectoryName);
+        public string PersistentOutputDirectoryPath => Path.Combine(ModelDirectoryPath, FileConstants.OutputDirectoryName);
         public virtual string MduFilePath { get; protected set; }
 
         #region Implementation of IHydFileModel
@@ -111,7 +107,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                     return HisFilePath;
                 }
 
-                return Name + WaterFlowFMModelDefinition.HisFileExtension;
+                return Name + FileConstants.HisFileExtension;
             }
         }
 
@@ -129,7 +125,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                     return MapFilePath;
                 }
 
-                return Name + WaterFlowFMModelDefinition.MapFileExtension;
+                return Name + FileConstants.MapFileExtension;
             }
         }
 
@@ -147,7 +143,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                     return ClassMapFilePath;
                 }
 
-                return Name + WaterFlowFMModelDefinition.ClassMapFileExtension;
+                return Name + FileConstants.ClassMapFileExtension;
             }
         }
 
@@ -259,13 +255,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 ? Path.Combine(PersistentOutputDirectoryPath, ModelDefinition.ClassMapFileName)
                 : null;
 
-        private string GetMduPathFromDeltaShellPath(string path, string subFoldersFromModelFolder = "input")
+        private string GetMduPathFromDeltaShellPath(string path, string subFoldersFromModelFolder = FileConstants.InputDirectoryName)
         {
             string directoryName = path != null
                                        ? Path.GetDirectoryName(path) ?? ""
                                        : "";
 
-            return Path.Combine(directoryName, Name, subFoldersFromModelFolder, Name + mduExtension);
+            return Path.Combine(directoryName, Name, subFoldersFromModelFolder, Name + FileConstants.MduFileExtension);
         }
 
         public IEnumerable<KeyValuePair<WaterFlowFMProperty, string>> SubFiles
@@ -282,15 +278,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 var modelNameBasedFiles = new Dictionary<string, string>
                 {
                     {KnownProperties.NetFile, NetFile.FullExtension},
-                    {KnownProperties.ExtForceFile, ExtForceFile.Extension},
-                    {KnownProperties.BndExtForceFile, ExtForceFile.Extension},
-                    {KnownProperties.LandBoundaryFile, MduFile.LandBoundariesExtension},
-                    {KnownProperties.ThinDamFile, MduFile.ThinDamExtension},
-                    {KnownProperties.FixedWeirFile, MduFile.FixedWeirExtension},
-                    {KnownProperties.StructuresFile, MduFile.StructuresExtension},
-                    {KnownProperties.ObsFile, MduFile.ObsExtension},
-                    {KnownProperties.ObsCrsFile, MduFile.ObsCrossExtension},
-                    {KnownProperties.DryPointsFile, MduFile.DryPointExtension}
+                    {KnownProperties.ExtForceFile, FileConstants.ExternalForcingFileExtension},
+                    {KnownProperties.BndExtForceFile, FileConstants.ExternalForcingFileExtension},
+                    {KnownProperties.LandBoundaryFile, FileConstants.LandBoundaryFileExtension},
+                    {KnownProperties.ThinDamFile, FileConstants.ThinDamPliFileExtension},
+                    {KnownProperties.FixedWeirFile, FileConstants.FixedWeirPlizFileExtension},
+                    {KnownProperties.StructuresFile, FileConstants.StructuresFileExtension},
+                    {KnownProperties.ObsFile, FileConstants.ObsPointFileExtension},
+                    {KnownProperties.ObsCrsFile, FileConstants.ObsCrossSectionPliFileExtension},
+                    {KnownProperties.DryPointsFile, FileConstants.DryPointFileExtension}
                 };
 
                 foreach (KeyValuePair<string, string> pair in modelNameBasedFiles)
@@ -361,7 +357,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         public virtual string GetExporterPath(string directoryName)
         {
-            return Path.Combine(directoryName, InputFile == null ? Name + mduExtension : Path.GetFileName(InputFile));
+            return Path.Combine(directoryName, InputFile == null ? Name + FileConstants.MduFileExtension: Path.GetFileName(InputFile));
         }
 
         public virtual string DimrExportDirectoryPath
@@ -370,8 +366,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             set => WorkingDirectoryPath = value;
         }
 
-        public virtual string DimrModelRelativeWorkingDirectory => Path.Combine(DirectoryName, InputDirectoryName);
-        public virtual string DimrModelRelativeOutputDirectory => Path.Combine(DirectoryName, OutputDirectoryName);
+        public virtual string DimrModelRelativeWorkingDirectory => Path.Combine(DirectoryName, FileConstants.InputDirectoryName);
+        public virtual string DimrModelRelativeOutputDirectory => Path.Combine(DirectoryName, FileConstants.OutputDirectoryName);
 
         public void SetModelStateHandlerModelWorkingDirectory(string modelExplicitWorkingDirectory)
         {

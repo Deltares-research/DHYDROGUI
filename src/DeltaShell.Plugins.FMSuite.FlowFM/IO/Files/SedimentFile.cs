@@ -468,7 +468,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 return;
             }
 
-            string xyzFilePath = NGHSFileBase.GetOtherFilePathInSameDirectory(path, dataItemName + ".xyz");
+            string xyzFilePath = NGHSFileBase.GetOtherFilePathInSameDirectory(path, dataItemName + FileConstants.XyzFileExtension);
             if (!File.Exists(xyzFilePath))
             {
                 return;

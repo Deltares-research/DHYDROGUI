@@ -47,10 +47,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         public const string ClassMapFilePropertyName = "ClassMapFile";
         public const string HisFilePropertyName = "HisFile";
         public const string MapFilePropertyName = "MapFile";
-        public const string MapFileExtension = "_map.nc";
-        public const string HisFileExtension = "_his.nc";
-        public const string ClassMapFileExtension = "_clm.nc";
-        public const string DefaultOutputDirectoryName = "output";
 
         public static readonly string[] SpatialDataItemNames =
         {
@@ -344,14 +340,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             set => GetModelProperty(GuiProperties.UseMorSed).Value = value;
         }
 
-        public string MapFileName => GetFileNameFromProperty(MapFilePropertyName, ModelName + MapFileExtension);
+        public string MapFileName => GetFileNameFromProperty(MapFilePropertyName, ModelName + FileConstants.MapFileExtension);
 
-        public string HisFileName => GetFileNameFromProperty(HisFilePropertyName, ModelName + HisFileExtension);
+        public string HisFileName => GetFileNameFromProperty(HisFilePropertyName, ModelName + FileConstants.HisFileExtension);
 
         /// <summary> Gets the relative class map file path. </summary>
         /// <value> The relative class map file path. </value>
         public string ClassMapFileName =>
-            GetFileNameFromProperty(ClassMapFilePropertyName, ModelName + ClassMapFileExtension);
+            GetFileNameFromProperty(ClassMapFilePropertyName, ModelName + FileConstants.ClassMapFileExtension);
 
         private string GetFileNameFromProperty(string propertyName, string defaultName)
         {
@@ -366,7 +362,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         {
             get
             {
-                string comFileName = ModelName + "_com.nc";
+                string comFileName = ModelName + FileConstants.ComFileExtension;
                 return Path.Combine(OutputDirectoryName, comFileName);
             }
         }
@@ -388,14 +384,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             {
                 if (!ContainsProperty(KnownProperties.OutputDir))
                 {
-                    return DefaultOutputDirectoryName;
+                    return FileConstants.OutputDirectoryName;
                 }
 
                 string mduOutputDir = GetModelProperty(KnownProperties.OutputDir).GetValueAsString()?.Trim();
 
                 if (string.IsNullOrEmpty(mduOutputDir))
                 {
-                    return DefaultOutputDirectoryName;
+                    return FileConstants.OutputDirectoryName;
                 }
 
                 if (string.Equals(mduOutputDir, "."))
