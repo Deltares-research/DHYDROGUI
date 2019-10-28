@@ -93,7 +93,6 @@
     <Compile Include="IO\WaterQualityObservationAreaImporter.cs" />
     <Compile Include="IO\LazyMapFileFunctionStore.cs" />
     <Compile Include="IO\MultiDimentionalArrayAdapter.cs" />
-    <Compile Include="IO\LoadsDataTableImporter.cs" />
     <Compile Include="Model\WaqInitializationDataVerifier.cs" />
     <Compile Include="NHibernate\WaterQualityModel350LegacyLoader.cs" />
     <Compile Include="ObservationAreas\ObservationPointType.cs" />
@@ -105,7 +104,6 @@
     <Compile Include="IO\AttributesFileReader.cs" />
     <Compile Include="IO\DataTableCsvFileReader.cs" />
     <Compile Include="IO\DataTableCsvContents.cs" />
-    <Compile Include="IO\BoundaryDataTableImporter.cs" />
     <Compile Include="IO\BoundaryDataTableImporter.cs" />
     <Compile Include="IO\DataTableInterpolationType.cs" />
     <Compile Include="IO\HydFileElement\SchematizationElement.cs" />
