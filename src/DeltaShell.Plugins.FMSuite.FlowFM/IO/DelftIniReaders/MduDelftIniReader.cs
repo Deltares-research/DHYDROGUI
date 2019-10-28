@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using DelftTools.Utils.RegularExpressions;
 using DeltaShell.NGHS.IO;
@@ -23,14 +24,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Readers
     public class MduDelftIniReader : DelftIniReader
     {
         private const string ValueSlashPattern =
-            @"^\s*" +              // pre-whitespaces
-            @"(?<value>[^(\)]*)" + // value, until first backslash
-            @"\\+\z";              // At least one backslash and every character until the end of the line
+            @"^\s*" +                   // pre-whitespaces
+            @"(?<value>[^(\)]*)" +      // value, until first backslash
+            @"\\+\z";                   // At least one backslash and every character until the end of the line
 
         private const string ValueCommentPattern =
             @"^\s*" +                   // pre-whitespaces
             @"(?<value>[^#]*)" +        // value, until '#'-sign
-            @"#+\s*" +                   // '#'-sign with whitespaces
+            @"#+\s*" +                  // '#'-sign with whitespaces
             @"((?<comment>.*))?\z";     // comment, every character until the end of the line
 
         /// <summary>
@@ -43,6 +44,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Readers
             string[] keyValueComment = base.GetKeyValueComment(lineContent);
             if (keyValueComment[1].EndsWith(@"\"))
             {
+                if (keyValueComment[2] != string.Empty)
+                {
+                    throw new FormatException($"Invalid comment placed on line {LineNumber} in file '{InputFilePath}'");
+                }
                 return ParseMultilineDefinedProperty(keyValueComment);
             }
             
@@ -81,7 +86,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Readers
             return true;
         }
 
-        private static void ParseValueCommentLine(IList<string> keyValueComment, string lineContent)
+        private void ParseValueCommentLine(IList<string> keyValueComment, string lineContent)
         {
             MatchCollection matchesValueComment = RegularExpression.GetMatches(ValueCommentPattern, lineContent);
             if (matchesValueComment.Count > 0)
@@ -91,6 +96,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Readers
                 keyValueComment[1] = string.Join(" ", existingValue, additionalValue);
 
                 keyValueComment[2] = matchesValueComment[0].Groups["comment"].Value;
+
+                if (keyValueComment[1].EndsWith(@"\") && keyValueComment[2] != string.Empty)
+                {
+                    throw new FormatException($"Invalid comment placed on line {LineNumber} in file '{InputFilePath}'");
+                }
             }
         }
     }
