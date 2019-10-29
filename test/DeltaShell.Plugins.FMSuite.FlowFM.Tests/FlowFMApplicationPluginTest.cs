@@ -1,13 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Gui;
 using DeltaShell.NGHS.TestUtils;
+using DeltaShell.Plugins.FMSuite.Common.FeatureData;
+using DeltaShell.Plugins.FMSuite.Common.IO.ImportExport;
+using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.ImportersExporters;
+using NetTopologySuite.Extensions.Features;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -105,6 +111,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Type expectedType = typeof(PlizFileImporterExporter<FixedWeir, FixedWeir>);
             Assert.NotNull(importer.SingleOrDefault(e => e.GetType() == expectedType),
                            $"An importer of type {expectedType} was expected to be returned.");
+        }
+
+        [Test]
+        public void GetFileExporters_ContainsExpectedExporterForEmbankments()
+        {
+            // Set-up
+            var application = new FlowFMApplicationPlugin();
+
+            // Call
+            IEnumerable<IFileExporter> exporters = application.GetFileExporters();
+
+            // Assert
+            Type expectedType = typeof(PlizFileImporterExporter<Embankment, Embankment>);
+            var embankmentExporter = (IFeature2DImporterExporter) exporters.SingleOrDefault(e => e.GetType() == expectedType);
+            Assert.That(embankmentExporter, Is.Not.Null,
+                        $"No file exporter with the expected type was found: {nameof(expectedType)}.");
+            Assert.That(embankmentExporter.Mode, Is.EqualTo(Feature2DImportExportMode.Export),
+                        $"The property {embankmentExporter.Mode} of the file exporter was incorrect.");
         }
 
         /// <summary>
