@@ -52,39 +52,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         private ICoordinateSystem coordinateSystem;
         private IList<IDisposable> disposableItems = new List<IDisposable>();
 
-        /// <summary>
-        /// Mwaaah...
-        /// </summary>
-        public bool IsCoupledToFlow
+       public bool IsCoupledToFlow
         {
             get => isCoupledToFlow;
-            set
-            {
-                isCoupledToFlow = value;
-                if (!isCoupledToFlow)
-                {
-                    DeCoupleFromFlow();
-                }
-            }
-        }
-
-        [EditAction]
-        private void DeCoupleFromFlow()
-        {
-            ModelDefinition.GetModelProperty(KnownWaveCategories.OutputCategory, KnownWaveProperties.WriteCOM)
-                           .SetValueAsString("false");
-            foreach (WaveDomainData waveDomainData in WaveDomainHelper.GetAllDomains(OuterDomain))
-            {
-                waveDomainData.HydroFromFlowData.BedLevelUsage = UsageFromFlowType.DoNotUse;
-                waveDomainData.HydroFromFlowData.WaterLevelUsage = UsageFromFlowType.DoNotUse;
-                waveDomainData.HydroFromFlowData.VelocityUsage = UsageFromFlowType.DoNotUse;
-                waveDomainData.HydroFromFlowData.WindUsage = UsageFromFlowType.DoNotUse;
-            }
-
-            ModelDefinition.DefaultBedLevelUsage = UsageFromFlowType.DoNotUse;
-            ModelDefinition.DefaultWaterLevelUsage = UsageFromFlowType.DoNotUse;
-            ModelDefinition.DefaultVelocityUsage = UsageFromFlowType.DoNotUse;
-            ModelDefinition.DefaultWindUsage = UsageFromFlowType.DoNotUse;
+            set => isCoupledToFlow = value;
         }
 
         public int SimulationMode
