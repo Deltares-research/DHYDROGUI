@@ -256,12 +256,6 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\BoundaryConditionDialogLauncher.FileType.cs" />
-    <Compile Include="Forms\FMModelInspectionWindow.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\FMModelInspectionWindow.Designer.cs">
-      <DependentUpon>FMModelInspectionWindow.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\BcFileExportDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -432,9 +426,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Editors\WaterFlowFMFileStructureView.resx">
       <DependentUpon>WaterFlowFMFileStructureView.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FMModelInspectionWindow.resx">
-      <DependentUpon>FMModelInspectionWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\BcFileExportDialog.resx">
       <DependentUpon>BcFileExportDialog.cs</DependentUpon>
