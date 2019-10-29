@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DelftTools.Controls.Swf;
+﻿using DelftTools.Controls.Swf;
 using DelftTools.Shell.Gui;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Properties;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
