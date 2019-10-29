@@ -5,7 +5,7 @@ using DelftTools.Utils.RegularExpressions;
 using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 
-namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Readers
+namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DelftIniReaders
 {
     /// <summary>
     /// Reader for mdu files. This reader supports multiple-valued properties that

@@ -5,7 +5,7 @@ using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.NGHS.IO.Handlers;
 using DeltaShell.Plugins.FMSuite.Common;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.Readers;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.DelftIniReaders;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using log4net;
