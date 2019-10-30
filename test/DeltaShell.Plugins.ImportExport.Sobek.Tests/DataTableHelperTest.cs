@@ -4,7 +4,6 @@ using DelftTools.Functions.Generic;
 using DelftTools.TestUtils;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
 {

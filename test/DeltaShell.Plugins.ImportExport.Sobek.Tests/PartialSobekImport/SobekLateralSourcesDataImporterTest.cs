@@ -2,8 +2,8 @@
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.TestUtils;
+using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
 using DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter;
 using NUnit.Framework;
 
@@ -94,21 +94,21 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
 
             Assert.IsNotNull(lsd_T7_Qlat1);
             Assert.IsFalse(lsd_T7_Qlat1.Feature.IsDiffuse);
-            Assert.AreEqual(WaterFlowModel1DLateralDataType.FlowConstant,lsd_T7_Qlat1.DataType);
+            Assert.AreEqual(Model1DLateralDataType.FlowConstant,lsd_T7_Qlat1.DataType);
             Assert.AreEqual(1.0, lsd_T7_Qlat1.Flow);
 
             var lsd_T7_Qlat2 = waterFlowModel1DModel.LateralSourceData.FirstOrDefault(lsd => lsd.Name.StartsWith("T7_Qlat2"));
 
             Assert.IsNotNull(lsd_T7_Qlat2);
             Assert.IsFalse(lsd_T7_Qlat2.Feature.IsDiffuse);
-            Assert.AreEqual(WaterFlowModel1DLateralDataType.FlowConstant, lsd_T7_Qlat2.DataType);
+            Assert.AreEqual(Model1DLateralDataType.FlowConstant, lsd_T7_Qlat2.DataType);
             Assert.AreEqual(2.0, lsd_T7_Qlat2.Flow);
 
             //diffuse and constant
             var lsd_31 = waterFlowModel1DModel.LateralSourceData.FirstOrDefault(lsd => lsd.Name.StartsWith("3")); //diffuse lateral source 31 -> branch 8. All diffuse lateralsources are merged to one diffuse lateralsource per branch
 
             Assert.IsNotNull(lsd_31);
-            Assert.AreEqual(WaterFlowModel1DLateralDataType.FlowConstant, lsd_31.DataType);
+            Assert.AreEqual(Model1DLateralDataType.FlowConstant, lsd_31.DataType);
             Assert.AreEqual(1.0, lsd_31.Flow); //0.002 * lengthe 500 = 1 (m2/s/m -> m3/m)
         }
     }

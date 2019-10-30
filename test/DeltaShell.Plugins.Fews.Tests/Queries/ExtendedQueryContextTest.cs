@@ -9,7 +9,7 @@ using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
+using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi;
 using NetTopologySuite.Extensions.Coverages;
 using NUnit.Framework;
@@ -107,7 +107,7 @@ namespace DeltaShell.Plugins.Fews.Tests.Queries
             var context = new ExtendedQueryContext(project);
 
             // call                  
-            var queryResults = context.GetAllByFeatureOwner<WaterFlowModel1DBoundaryNodeData>();
+            var queryResults = context.GetAllByFeatureOwner<Model1DBoundaryNodeData>();
 
             Assert.IsNotNull(queryResults);
             Assert.IsTrue(queryResults.Any(), "There are no results found using the query GetAllByFeatureOwner");            
@@ -539,7 +539,7 @@ namespace DeltaShell.Plugins.Fews.Tests.Queries
             var queryResults = context.GetAllByParameterIdAndLocationId(parameterIdWlts, locationIdNode3);
 
             //checks
-            WaterFlowModel1DBoundaryNodeData boundaryCondition =
+            Model1DBoundaryNodeData boundaryCondition =
                 model.BoundaryConditions.FirstOrDefault(n => n.Node.Name == locationIdNode3);
             Assert.IsNotNull(boundaryCondition);
             for (int i = 0; i < boundaryCondition.Data.Components[0].Values.Count; i++)

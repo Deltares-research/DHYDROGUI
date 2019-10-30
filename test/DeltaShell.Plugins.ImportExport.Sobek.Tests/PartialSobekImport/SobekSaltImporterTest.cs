@@ -1,8 +1,8 @@
 ﻿using System.Linq;
 using DelftTools.Functions;
 using DelftTools.TestUtils;
+using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
 using DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter;
 using NUnit.Framework;
 

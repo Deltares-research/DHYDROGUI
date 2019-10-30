@@ -6,7 +6,7 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Shell.Core.Workflow;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
+using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.TestUtils;
 using GeoAPI.Geometries;
@@ -89,11 +89,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
             // set boundary conditions
             var boundaryConditionInflow = flowModel1D.BoundaryConditions.First(bc => bc.Feature == node1);
-            boundaryConditionInflow.DataType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant;
+            boundaryConditionInflow.DataType = Model1DBoundaryNodeDataType.WaterLevelConstant;
             boundaryConditionInflow.WaterLevel = 5.0;
 
             var boundaryConditionOutflow = flowModel1D.BoundaryConditions.First(bc => bc.Feature == node2);
-            boundaryConditionOutflow.DataType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant;
+            boundaryConditionOutflow.DataType = Model1DBoundaryNodeDataType.WaterLevelConstant;
             boundaryConditionOutflow.WaterLevel = 3.0;
 
             // set output coverages

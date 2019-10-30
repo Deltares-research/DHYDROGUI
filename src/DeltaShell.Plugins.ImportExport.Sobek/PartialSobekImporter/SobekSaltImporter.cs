@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
+using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
 using DeltaShell.Sobek.Readers;
 using DeltaShell.Sobek.Readers.Readers;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
@@ -94,7 +94,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             }
 
             var saltLateralBoundaries = new SaltLateralBoundaryReader().Read(path);
-            var lateralSourceDataMapping = new Dictionary<IFeature, WaterFlowModel1DLateralSourceData>();
+            var lateralSourceDataMapping = new Dictionary<IFeature, Model1DLateralSourceData>();
             var createdLateralSourceFeatures = HydroNetwork.LateralSources.ToDictionary(ls => ls.Name, ls => ls);
 
             foreach (var flowModel1DLateralSourceData in waterFlowModel1D.LateralSourceData)
@@ -122,7 +122,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                             {
                                 lateralSourceData.SaltLateralDischargeType = SaltLateralDischargeType.MassConstant;
                                 lateralSourceData.SaltConcentrationDischargeConstant = sobekSaltBoundary.DryLoadConst;
-                                lateralSourceData.DataType = WaterFlowModel1DLateralDataType.FlowConstant;
+                                lateralSourceData.DataType = Model1DLateralDataType.FlowConstant;
                                 lateralSourceData.Flow = 0.0;
                             }
                             else
@@ -139,7 +139,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                                 lateralSourceData.SaltLateralDischargeType = SaltLateralDischargeType.MassTimeSeries;
                                 DataTableHelper.SetTableToFunction(
                                     sobekSaltBoundary.DryLoadTable, lateralSourceData.SaltMassTimeSeries);
-                                lateralSourceData.DataType = WaterFlowModel1DLateralDataType.FlowConstant;
+                                lateralSourceData.DataType = Model1DLateralDataType.FlowConstant;
                                 lateralSourceData.Flow = 0.0;
                             }
                             else

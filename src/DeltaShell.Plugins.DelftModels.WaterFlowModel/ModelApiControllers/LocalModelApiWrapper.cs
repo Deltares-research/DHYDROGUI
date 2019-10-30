@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers

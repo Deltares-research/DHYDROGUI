@@ -2,10 +2,10 @@
 using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
+using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
 using NUnit.Framework;
 using NetTopologySuite.Extensions.Networks;
 
@@ -60,7 +60,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             var n = new Node("test node");
             flowModel.Network.Nodes.Add(n);
             folder.Add(flowModel);
-            var boundary = new WaterFlowModel1DBoundaryNodeData {Name = "test boundary", Feature = n};
+            var boundary = new Model1DBoundaryNodeData {Name = "test boundary", Feature = n};
             flowModel.BoundaryConditions.Add(boundary);
 
             var builder = new HydroModelBuilder();
@@ -126,7 +126,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             var n = new Node("test node");
             flowModel.Network.Nodes.Add(n);
             folder.Add(flowModel);
-            var boundary = new WaterFlowModel1DBoundaryNodeData { Name = "test boundary", Feature = n };
+            var boundary = new Model1DBoundaryNodeData { Name = "test boundary", Feature = n };
             flowModel.BoundaryConditions.Add(boundary);
 
             flowModel.UpgradeModelIntoIntegratedModel(folder);

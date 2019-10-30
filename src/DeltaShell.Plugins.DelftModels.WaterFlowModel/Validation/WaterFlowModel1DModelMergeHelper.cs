@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Utils.Validation;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
+using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.NetworkEditor.Import;
 using GeoAPI.CoordinateSystems.Transformations;
 using GeoAPI.Extensions.Networks;
@@ -122,11 +122,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation
             return destinationNetworkElements.Contains(newName) || sourceNetworkElementsNames.Contains(newName) ? GenerateNewFormattedName(destinationNetworkElements, sourceNetworkElementsNames, modelName, index + 1, newName) : newName;
         }
 
-        public static IEnumerable<WaterFlowModel1DBoundaryNodeData> connectedNodesBoundaryConditions(WaterFlowModel1D model, IEnumerable<INode> connectedNodes)
+        public static IEnumerable<Model1DBoundaryNodeData> connectedNodesBoundaryConditions(WaterFlowModel1D model, IEnumerable<INode> connectedNodes)
         {
             return connectedNodes
                 .Select(connectedNode => model.BoundaryConditions.FirstOrDefault(nodeBoundaryCondition => nodeBoundaryCondition.Node == connectedNode))
-                .Where(nodeBoundaryCondition => nodeBoundaryCondition != null && nodeBoundaryCondition.DataType != WaterFlowModel1DBoundaryNodeDataType.None);
+                .Where(nodeBoundaryCondition => nodeBoundaryCondition != null && nodeBoundaryCondition.DataType != Model1DBoundaryNodeDataType.None);
         }
 
         public static IList<ValidationIssue> FitSourceChannelsOnDestinationNode(INode destinationNode, INode sourceNode, WaterFlowModel1D sourceModel1D, Func<INode, INode, IChannel,ValidationIssue> HandleFitting = null)
@@ -177,7 +177,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation
                 if (existingBoundaryCondition != null) destinationModel.BoundaryConditions.Remove(existingBoundaryCondition);
 
                 // Add source model boundary conditions
-                var sourceBoundaryCondition = sourceModel.BoundaryConditions.FirstOrDefault(bc => bc.Node == node && bc.DataType != WaterFlowModel1DBoundaryNodeDataType.None);
+                var sourceBoundaryCondition = sourceModel.BoundaryConditions.FirstOrDefault(bc => bc.Node == node && bc.DataType != Model1DBoundaryNodeDataType.None);
                 if (sourceBoundaryCondition != null)
                     destinationModel.BoundaryConditions.Add(sourceBoundaryCondition);
             }
@@ -389,7 +389,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation
 
             foreach (var destinationConnectedNodesBoundaryCondition in destinationConnectedNodesBoundaryConditions)
             {
-                destinationConnectedNodesBoundaryCondition.DataType = WaterFlowModel1DBoundaryNodeDataType.None;
+                destinationConnectedNodesBoundaryCondition.DataType = Model1DBoundaryNodeDataType.None;
             }
 
         }

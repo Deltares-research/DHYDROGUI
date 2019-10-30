@@ -15,11 +15,10 @@ using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.IO;
 using DeltaShell.Core;
+using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.DelftModels.HydroModel;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
 
@@ -57,10 +56,10 @@ namespace DeltaShell.Plugins.Fews.Tests.Queries
             const string testValue = "test";
             timeSeries.Components[0].Attributes[FunctionAttributes.StandardName] = testValue;
             timeSeries.Attributes[FunctionAttributes.StandardName] = testValue;
-            var boundaryData = new WaterFlowModel1DBoundaryNodeData
+            var boundaryData = new Model1DBoundaryNodeData
             {
                 Name = "aap",
-                DataType = WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries,
+                DataType = Model1DBoundaryNodeDataType.FlowTimeSeries,
                 Data = timeSeries
             };
 
@@ -77,7 +76,7 @@ namespace DeltaShell.Plugins.Fews.Tests.Queries
                 app.OpenProject(projPath);
                 var retrievedProject = app.Project;
                 IDataItem[] retrievedDataItems = retrievedProject.RootFolder.DataItems.ToArray();
-                var retrievedTimeSeries = (WaterFlowModel1DBoundaryNodeData)retrievedDataItems[0].Value;
+                var retrievedTimeSeries = (Model1DBoundaryNodeData)retrievedDataItems[0].Value;
 
                 //compare
                 Assert.AreEqual(retrievedTimeSeries.Data.Components[0].Attributes[FunctionAttributes.StandardName], boundaryData.Data.Components[0].Attributes[FunctionAttributes.StandardName]);
@@ -95,7 +94,7 @@ namespace DeltaShell.Plugins.Fews.Tests.Queries
 
             // Set boundary conditions
             var constantFlowBoundary = model.BoundaryConditions.First(bc => bc.Feature == model.Network.Nodes.First(s => !s.IsConnectedToMultipleBranches));
-            constantFlowBoundary.DataType = WaterFlowModel1DBoundaryNodeDataType.FlowConstant;
+            constantFlowBoundary.DataType = Model1DBoundaryNodeDataType.FlowConstant;
             constantFlowBoundary.Data = null; // remove time function
             constantFlowBoundary.Flow = 2.0;
 
@@ -103,7 +102,7 @@ namespace DeltaShell.Plugins.Fews.Tests.Queries
             boundaryFeature.Name = "Q(h)";
 
             var qhBoundary = model.BoundaryConditions.First(bc => bc.Feature == boundaryFeature);
-            qhBoundary.DataType = WaterFlowModel1DBoundaryNodeDataType.FlowWaterLevelTable;
+            qhBoundary.DataType = Model1DBoundaryNodeDataType.FlowWaterLevelTable;
             qhBoundary.WaterLevel = 1.0;
 
             // Get a flow timeseries 
@@ -127,9 +126,9 @@ namespace DeltaShell.Plugins.Fews.Tests.Queries
         {
             // setup
             var model = CreateDemoModel();
-            WaterFlowModel1DLateralSourceData waterFlowModel1DLateralSourceData =
+            Model1DLateralSourceData model1DLateralSourceData =
                 GetWaterFlowModel1DLateralSourceData(LocationIdLateral, false);
-            model.LateralSourceData.Add(waterFlowModel1DLateralSourceData);
+            model.LateralSourceData.Add(model1DLateralSourceData);
             var project = new Project();
             project.RootFolder.Add(model);
             var strategy = new FeatureDataTimeSeriesAggregator {DataItems = project.GetAllItemsRecursive()};
@@ -150,9 +149,9 @@ namespace DeltaShell.Plugins.Fews.Tests.Queries
         {
             // setup
             var model = CreateDemoModel();
-            WaterFlowModel1DLateralSourceData waterFlowModel1DLateralSourceData =
+            Model1DLateralSourceData model1DLateralSourceData =
                 GetWaterFlowModel1DLateralSourceData(LocationIdLateral, true);
-            model.LateralSourceData.Add(waterFlowModel1DLateralSourceData);
+            model.LateralSourceData.Add(model1DLateralSourceData);
             model.UseSalt = true;
             model.Initialize();
 
@@ -375,15 +374,15 @@ namespace DeltaShell.Plugins.Fews.Tests.Queries
 
         
         #region privates
-        private WaterFlowModel1DLateralSourceData GetWaterFlowModel1DLateralSourceData(string id, bool useSalt)
+        private Model1DLateralSourceData GetWaterFlowModel1DLateralSourceData(string id, bool useSalt)
         {
             DateTime now = DateTime.Now;
             var t = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, 0);
             var lateralSource = new LateralSource();
-            var waterFlowModel1DLateralSourceData = new WaterFlowModel1DLateralSourceData
+            var waterFlowModel1DLateralSourceData = new Model1DLateralSourceData
             {
                 Feature = lateralSource,
-                DataType = WaterFlowModel1DLateralDataType.FlowTimeSeries
+                DataType = Model1DLateralDataType.FlowTimeSeries
             };
             lateralSource.Name = id;
             waterFlowModel1DLateralSourceData.Data[t] = 1.0;

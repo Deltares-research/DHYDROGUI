@@ -1,6 +1,6 @@
 ﻿using DelftTools.TestUtils;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms;
+using DeltaShell.NGHS.IO.DataObjects;
+using DeltaShell.Plugins.FMSuite.Common.Gui.Forms;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Forms
@@ -8,7 +8,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Forms
     [TestFixture]
     public class WaterFlowModel1DBoundaryNodeDataViewWpfTest
     {
-        private WaterFlowModel1DBoundaryNodeData boundaryNodeData;
+        private Model1DBoundaryNodeData boundaryNodeData;
 
         [SetUp]
         public void Setup()
@@ -25,7 +25,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Forms
         {
             boundaryNodeData.UseSalt = saltEnabled;
             boundaryNodeData.UseTemperature = temperatureEnabled;
-            var view = new WaterFlowModel1DBoundaryNodeDataViewWpf() { Data = boundaryNodeData };
+            var view = new Model1DBoundaryNodeDataViewWpf() { Data = boundaryNodeData };
             WpfTestHelper.ShowModal(view);
         }
 

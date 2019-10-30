@@ -9,9 +9,9 @@ using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
+using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi;
 using NUnit.Framework;
 using Point = NetTopologySuite.Geometries.Point;
@@ -46,7 +46,7 @@ namespace Sobek.IntegrationTests
 
             var boundaryCondition1 = model.BoundaryConditions.FirstOrDefault();
             if (boundaryCondition1 == null) throw new ArgumentNullException("boundaryCondition1");
-            boundaryCondition1.DataType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries;
+            boundaryCondition1.DataType = Model1DBoundaryNodeDataType.WaterLevelTimeSeries;
 
             var t = DateTime.Now;
             // Round t down to nearest minute: (See TOOLS-23841)
@@ -58,7 +58,7 @@ namespace Sobek.IntegrationTests
 
             var boundaryCondition2 = model.BoundaryConditions.ElementAt(1);
             if (boundaryCondition2 == null) throw new ArgumentNullException("boundaryCondition2");
-            boundaryCondition2.DataType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries;
+            boundaryCondition2.DataType = Model1DBoundaryNodeDataType.WaterLevelTimeSeries;
             boundaryCondition2.Data[bcStartTime] = 0.0;
             boundaryCondition2.Data[bcStartTime.AddDays(1)] = 0.0;
 
@@ -2699,7 +2699,7 @@ namespace Sobek.IntegrationTests
         {
             var boundaryCondition1 = model.BoundaryConditions.FirstOrDefault();
             if (boundaryCondition1 == null) throw new ArgumentNullException("boundaryCondition1");
-            boundaryCondition1.DataType = WaterFlowModel1DBoundaryNodeDataType.FlowConstant;
+            boundaryCondition1.DataType = Model1DBoundaryNodeDataType.FlowConstant;
             boundaryCondition1.Flow = 3.0;
 
             Assert.IsTrue(CheckGetSetGetAfterModelInitialization(WaterFlowParametersCategories.BoundaryConditions,
@@ -2716,12 +2716,12 @@ namespace Sobek.IntegrationTests
         {
             var boundaryCondition1 = model.BoundaryConditions.FirstOrDefault();
             if (boundaryCondition1 == null) throw new ArgumentNullException("boundaryCondition1");
-            boundaryCondition1.DataType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant;
+            boundaryCondition1.DataType = Model1DBoundaryNodeDataType.WaterLevelConstant;
             boundaryCondition1.WaterLevel = 3.0;
 
             var boundaryCondition2 = model.BoundaryConditions.ElementAt(1);
             if (boundaryCondition2 == null) throw new ArgumentNullException("boundaryCondition2");
-            boundaryCondition2.DataType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant;
+            boundaryCondition2.DataType = Model1DBoundaryNodeDataType.WaterLevelConstant;
             boundaryCondition2.WaterLevel = 5.0;
 
             Assert.IsTrue(CheckGetSetGetAfterModelInitialization(WaterFlowParametersCategories.BoundaryConditions,
@@ -2774,7 +2774,7 @@ namespace Sobek.IntegrationTests
 
             var lateral1 = laterals.FirstOrDefault();
             if (lateral1 == null) throw new ArgumentNullException("lateral1");
-            lateral1.DataType = WaterFlowModel1DLateralDataType.FlowConstant;
+            lateral1.DataType = Model1DLateralDataType.FlowConstant;
             lateral1.Flow = 3.0;
 
             Assert.IsTrue(CheckGetSetGetAfterModelInitialization(WaterFlowParametersCategories.Laterals,
@@ -2801,7 +2801,7 @@ namespace Sobek.IntegrationTests
 
             var lateral1 = laterals.FirstOrDefault();
             if (lateral1 == null) throw new ArgumentNullException("lateral1");
-            lateral1.DataType = WaterFlowModel1DLateralDataType.FlowWaterLevelTable;
+            lateral1.DataType = Model1DLateralDataType.FlowWaterLevelTable;
             
             lateral1.Data[1.0] = 3.0;
             lateral1.Data[5.0] = 7.0;

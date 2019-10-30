@@ -39,6 +39,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
     [Extension(typeof(IPlugin))]
     public class FlowFMApplicationPlugin : ApplicationPlugin, IDataAccessListenersProvider
     {
+        public const string FlowFlexibleMeshModelModelInfoName = "Flow Flexible Mesh Model";
         private static ILog Log = LogManager.GetLogger(typeof(FlowFMApplicationPlugin));
         public static string PluginVersion; // 1.2
         public static string PluginName; // D-Flow Flexible Mesh Plugin
@@ -79,7 +80,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             yield return new ModelInfo
                 {
-                    Name = "Flow Flexible Mesh Model",
+                    Name = FlowFlexibleMeshModelModelInfoName,
                     Category = "1D / 2D / 3D Standalone Models",
                     Image = Properties.Resources.unstrucModel,
                     AdditionalOwnerCheck = owner => 

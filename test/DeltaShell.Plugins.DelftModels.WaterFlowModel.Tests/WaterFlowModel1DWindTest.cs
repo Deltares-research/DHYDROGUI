@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using DelftTools.Hydro.Helpers;
 using DelftTools.TestUtils;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
+using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi;
 using NUnit.Framework;
 using Point = NetTopologySuite.Geometries.Point;
@@ -48,12 +48,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                                                       0.5, false, false, true, 200);
 
 
-            WaterFlowModel1DBoundaryNodeData qBoundary = model.BoundaryConditions[0];
-            qBoundary.DataType = WaterFlowModel1DBoundaryNodeDataType.FlowConstant;
+            Model1DBoundaryNodeData qBoundary = model.BoundaryConditions[0];
+            qBoundary.DataType = Model1DBoundaryNodeDataType.FlowConstant;
             qBoundary.Flow = 2.0;
 
-            WaterFlowModel1DBoundaryNodeData hBoundary = model.BoundaryConditions[1];
-            hBoundary.DataType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant;
+            Model1DBoundaryNodeData hBoundary = model.BoundaryConditions[1];
+            hBoundary.DataType = Model1DBoundaryNodeDataType.WaterLevelConstant;
             hBoundary.WaterLevel = 3.0;
 
             model.OutputSettings.LocationWaterDepth = AggregationOptions.Current;
@@ -101,12 +101,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                                                       0.5, false, false, true, 200);
 
 
-            WaterFlowModel1DBoundaryNodeData qBoundary = model.BoundaryConditions[0];
-            qBoundary.DataType = WaterFlowModel1DBoundaryNodeDataType.FlowConstant;
+            Model1DBoundaryNodeData qBoundary = model.BoundaryConditions[0];
+            qBoundary.DataType = Model1DBoundaryNodeDataType.FlowConstant;
             qBoundary.Flow = 2.0;
 
-            WaterFlowModel1DBoundaryNodeData hBoundary = model.BoundaryConditions[1];
-            hBoundary.DataType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant;
+            Model1DBoundaryNodeData hBoundary = model.BoundaryConditions[1];
+            hBoundary.DataType = Model1DBoundaryNodeDataType.WaterLevelConstant;
             hBoundary.WaterLevel = 3.0;
 
             model.Wind[startTime] = new[] { 60.0, 90.0 }; //velocity, direction
@@ -157,12 +157,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                                                       0.5, false, false, true, 200);
 
 
-            WaterFlowModel1DBoundaryNodeData qBoundary = model.BoundaryConditions[0];
-            qBoundary.DataType = WaterFlowModel1DBoundaryNodeDataType.FlowConstant;
+            Model1DBoundaryNodeData qBoundary = model.BoundaryConditions[0];
+            qBoundary.DataType = Model1DBoundaryNodeDataType.FlowConstant;
             qBoundary.Flow = 2.0;
 
-            WaterFlowModel1DBoundaryNodeData hBoundary = model.BoundaryConditions[1];
-            hBoundary.DataType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant;
+            Model1DBoundaryNodeData hBoundary = model.BoundaryConditions[1];
+            hBoundary.DataType = Model1DBoundaryNodeDataType.WaterLevelConstant;
             hBoundary.WaterLevel = 3.0;
 
             model.Wind[startTime] = new[] { 60.0, 90.0 }; //velocity, direction

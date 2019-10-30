@@ -7,7 +7,6 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.Editing;
 using DeltaShell.Plugins.FMSuite.Common.Gui.Editors;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 {

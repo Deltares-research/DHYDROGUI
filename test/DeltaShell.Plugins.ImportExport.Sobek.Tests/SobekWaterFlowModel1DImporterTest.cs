@@ -12,9 +12,9 @@ using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
+using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.DelftModels.HydroModel;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
 using DeltaShell.Sobek.Readers.Readers;
 using GeoAPI.Extensions.Coverages;
 using NetTopologySuite.Extensions.Coverages;
@@ -215,14 +215,14 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
 
             // first is Q(h)
             var QhBoundaryData = waterFlowModel1D.BoundaryConditions[0];
-            Assert.AreEqual(WaterFlowModel1DBoundaryNodeDataType.FlowWaterLevelTable, QhBoundaryData.DataType);
+            Assert.AreEqual(Model1DBoundaryNodeDataType.FlowWaterLevelTable, QhBoundaryData.DataType);
             // check the argument H
             Assert.AreEqual(new[] {0, 1, 3, 4}, QhBoundaryData.Data.Arguments[0].Values);
             // the component Q
             Assert.AreEqual(new[] {1, 2, 4, 5}, QhBoundaryData.Data.Components[0].Values);
 
             // first is default is none
-            Assert.AreEqual(WaterFlowModel1DBoundaryNodeDataType.None, waterFlowModel1D.BoundaryConditions[1].DataType);
+            Assert.AreEqual(Model1DBoundaryNodeDataType.None, waterFlowModel1D.BoundaryConditions[1].DataType);
         }
 
         [Test]
@@ -232,7 +232,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             var waterFlowModel1D = GetWaterFlowModel1D(TestHelper.GetTestDataDirectory() + @"\036_000.lit\1\network.tp");
             Assert.AreEqual(2, waterFlowModel1D.BoundaryConditions.Count);
             // second is default is dead end
-            Assert.AreEqual(WaterFlowModel1DBoundaryNodeDataType.None,
+            Assert.AreEqual(Model1DBoundaryNodeDataType.None,
                             waterFlowModel1D.BoundaryConditions[1].DataType);
 
         }
@@ -252,7 +252,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             // ...
             // thus at node AL2_05 must be Q boundary Time series first datetime is 2002/12/15;00:00:00
             var boundaryNode = waterFlowModel1D.BoundaryConditions.Where(bc => bc.Feature.Name == "AL2_05").FirstOrDefault();
-            Assert.AreEqual(WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries, boundaryNode.DataType);
+            Assert.AreEqual(Model1DBoundaryNodeDataType.FlowTimeSeries, boundaryNode.DataType);
             Assert.Greater(boundaryNode.Data.Arguments[0].Values.Count, 0);
             Assert.AreEqual(new DateTime(2002, 12, 15, 0, 0, 0), boundaryNode.Data.Arguments[0].Values[0]);
         }
@@ -278,7 +278,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             // STBO id '12' ty 1 co co 0 0.2 9.9999e+009 tl 9.9999e+009 tu 0 stbo
             
             var boundaryNode = waterFlowModel1D.BoundaryConditions.Where(bc => bc.Feature.Name == "28").FirstOrDefault();
-            Assert.AreEqual(WaterFlowModel1DBoundaryNodeDataType.FlowConstant, boundaryNode.DataType);
+            Assert.AreEqual(Model1DBoundaryNodeDataType.FlowConstant, boundaryNode.DataType);
             Assert.AreEqual(0.0, boundaryNode.Flow, 1.0e-6);
             Assert.IsTrue(waterFlowModel1D.UseSalt);
             // ty 1 is zeroflux = none
@@ -300,7 +300,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         {
             var waterFlowModel1D = GetWaterFlowModel1D(TestHelper.GetTestDataDirectory() + @"\ReModels\20110331_NDB.sbk\6\deftop.1");
             var boundaryData = waterFlowModel1D.BoundaryConditions.FirstOrDefault(bc => bc.Feature.Name == "P_P_P_Volk_91");
-            Assert.AreEqual(WaterFlowModel1DBoundaryNodeDataType.FlowWaterLevelTable, boundaryData.DataType);
+            Assert.AreEqual(Model1DBoundaryNodeDataType.FlowWaterLevelTable, boundaryData.DataType);
             // check the argument H
             Assert.AreEqual(new[] { 0, 0.79, 0.8 }, boundaryData.Data.Arguments[0].Values);
             Assert.AreEqual(new[] { 0, 0, -200 }, boundaryData.Data.Components[0].Values);

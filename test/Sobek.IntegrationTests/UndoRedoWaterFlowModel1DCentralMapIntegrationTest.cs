@@ -11,11 +11,11 @@ using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.Editing;
 using DeltaShell.Gui;
+using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi;
 using DeltaShell.Plugins.NetCDF;
@@ -387,7 +387,7 @@ namespace Sobek.IntegrationTests
                     var boundaryCondition = model.BoundaryConditions[0];
 
                     //change boundary type to q_constant
-                    boundaryCondition.DataType = WaterFlowModel1DBoundaryNodeDataType.FlowConstant;
+                    boundaryCondition.DataType = Model1DBoundaryNodeDataType.FlowConstant;
 
                     //set q_const to value
                     boundaryCondition.Flow = 5.0;
@@ -412,7 +412,7 @@ namespace Sobek.IntegrationTests
                     var boundaryCondition = model.BoundaryConditions[0];
 
                     //change boundary type to q_constant
-                    boundaryCondition.DataType = WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries;
+                    boundaryCondition.DataType = Model1DBoundaryNodeDataType.FlowTimeSeries;
 
                     //set q_const to value
                     boundaryCondition.Data[t0] = 5.0;

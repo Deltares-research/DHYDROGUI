@@ -4,9 +4,8 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Validators;
-using DelftTools.Utils;
 using DelftTools.Utils.Validation;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
+using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Networks;
@@ -94,7 +93,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation
         }
         
         private static IEnumerable<ValidationIssue> ValidateNetworkDiscretizationQBoundariesAndStructures(IDiscretization networkDiscretization,
-            IEnumerable<WaterFlowModel1DBoundaryNodeData> boundaryNodeData, IBranch branch, List<INetworkLocation> branchLocations)
+            IEnumerable<Model1DBoundaryNodeData> boundaryNodeData, IBranch branch, List<INetworkLocation> branchLocations)
         {
             var structures = branch.BranchFeatures.OfType<ICompositeBranchStructure>().OrderBy(s => s.Chainage).ToList();
             if (!structures.Any())
@@ -147,7 +146,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation
         }
 
         private static IEnumerable<ValidationIssue> ValidateNetworkDiscretizationBoundariesAndExtraResistances(IDiscretization networkDiscretization,
-            IEnumerable<WaterFlowModel1DBoundaryNodeData> boundaryNodeData, IBranch branch, List<INetworkLocation> branchLocations)
+            IEnumerable<Model1DBoundaryNodeData> boundaryNodeData, IBranch branch, List<INetworkLocation> branchLocations)
         {
             var extraresistances = branch.BranchFeatures.OfType<IExtraResistance>().OrderBy(s => s.Chainage).ToList();
             if (!extraresistances.Any())
@@ -179,11 +178,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation
             }
         }
 
-        private static WaterFlowModel1DBoundaryNodeData GetQBoundary(IEnumerable<WaterFlowModel1DBoundaryNodeData> boundaryNodeData, INode node)
+        private static Model1DBoundaryNodeData GetQBoundary(IEnumerable<Model1DBoundaryNodeData> boundaryNodeData, INode node)
         {
             var boundary = boundaryNodeData.FirstOrDefault(bc => bc.Feature == node);
-            if (boundary != null && (boundary.DataType == WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries ||
-                                     boundary.DataType == WaterFlowModel1DBoundaryNodeDataType.FlowConstant))
+            if (boundary != null && (boundary.DataType == Model1DBoundaryNodeDataType.FlowTimeSeries ||
+                                     boundary.DataType == Model1DBoundaryNodeDataType.FlowConstant))
             {
                 return boundary;
             }

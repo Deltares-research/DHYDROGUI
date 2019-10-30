@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using DelftTools.Utils.Interop;
 using DeltaShell.Dimr;
+using DeltaShell.NGHS.IO.DataObjects;
 using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi
@@ -16,18 +17,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.Mode
         TabbedLevel = 3,
     }
 
-    public enum BoundaryType
-    {
-        None = 0,
-        Level = 1,
-        Discharge,
-        Salinity,
-        WindVelocity,
-        WindDirection,
-        AirTemperature,
-        RelativeHumidity,
-        Cloudiness
-    }
+    
 
     // The parameters supported by ModelApi; always check with availablity of QuantityType per ElementSet!
     public enum QuantityType

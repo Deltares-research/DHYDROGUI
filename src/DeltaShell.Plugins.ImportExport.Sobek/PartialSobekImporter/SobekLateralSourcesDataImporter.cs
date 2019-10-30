@@ -3,8 +3,8 @@ using System.IO;
 using System.Linq;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
+using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
 using DeltaShell.Sobek.Readers;
 using DeltaShell.Sobek.Readers.Readers;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
@@ -42,8 +42,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             var sobekLateralConditions = sobekLateralFlowReader.ReadLateralBoundaries(lateralPath);
 
             // reuse WaterFlowModel1DLateralSourceData object already in model.
-            var lateralSourceDataMapping = new Dictionary<IFeature, WaterFlowModel1DLateralSourceData>();
-            foreach (WaterFlowModel1DLateralSourceData flowModel1DLateralSourceData in waterFlowModel1D.LateralSourceData)
+            var lateralSourceDataMapping = new Dictionary<IFeature, Model1DLateralSourceData>();
+            foreach (Model1DLateralSourceData flowModel1DLateralSourceData in waterFlowModel1D.LateralSourceData)
             {
                 lateralSourceDataMapping[flowModel1DLateralSourceData.Feature] = flowModel1DLateralSourceData;
             }
@@ -66,72 +66,72 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
         /// <summary>
         /// Fill waterFlowModel1DLateralSourceData with values imported from sobekfile
         /// </summary>
-        /// <param name="waterFlowModel1DLateralSourceData"></param>
+        /// <param name="model1DLateralSourceData"></param>
         /// <param name="bSobekRE"></param>
-        public static void ConvertToLateralSourceData(SobekLateralFlow sobekLateralFlow, WaterFlowModel1DLateralSourceData waterFlowModel1DLateralSourceData, bool bSobekRE = false)
+        public static void ConvertToLateralSourceData(SobekLateralFlow sobekLateralFlow, Model1DLateralSourceData model1DLateralSourceData, bool bSobekRE = false)
         {
             if (bSobekRE)
             {
-                ConvertToLateralSourceDataFromRE(sobekLateralFlow, waterFlowModel1DLateralSourceData);
+                ConvertToLateralSourceDataFromRE(sobekLateralFlow, model1DLateralSourceData);
             }
             else
             {
-                ConvertToLateralSourceDataFrom212(sobekLateralFlow, waterFlowModel1DLateralSourceData); 
+                ConvertToLateralSourceDataFrom212(sobekLateralFlow, model1DLateralSourceData); 
             }
         }
 
-        private static void ConvertToLateralSourceDataFromRE(SobekLateralFlow sobekLateralFlow, WaterFlowModel1DLateralSourceData waterFlowModel1DLateralSourceData)
+        private static void ConvertToLateralSourceDataFromRE(SobekLateralFlow sobekLateralFlow, Model1DLateralSourceData model1DLateralSourceData)
         {
             if (sobekLateralFlow.IsConstantDischarge)
             {
-                waterFlowModel1DLateralSourceData.DataType = WaterFlowModel1DLateralDataType.FlowConstant;
-                waterFlowModel1DLateralSourceData.Flow = sobekLateralFlow.ConstantDischarge;
+                model1DLateralSourceData.DataType = Model1DLateralDataType.FlowConstant;
+                model1DLateralSourceData.Flow = sobekLateralFlow.ConstantDischarge;
             }
             else if (sobekLateralFlow.FlowTimeTable != null)
             {
 
-                waterFlowModel1DLateralSourceData.DataType = WaterFlowModel1DLateralDataType.FlowTimeSeries;
-                DataTableHelper.SetTableToFunction(sobekLateralFlow.FlowTimeTable, waterFlowModel1DLateralSourceData.Data);
+                model1DLateralSourceData.DataType = Model1DLateralDataType.FlowTimeSeries;
+                DataTableHelper.SetTableToFunction(sobekLateralFlow.FlowTimeTable, model1DLateralSourceData.Data);
                 //ConvertTableToTimeFunction(FlowTimeTable, waterFlowModel1DLateralSourceData);
-                waterFlowModel1DLateralSourceData.Data.Arguments[0].InterpolationType = sobekLateralFlow.InterpolationType;
-                waterFlowModel1DLateralSourceData.Data.Arguments[0].ExtrapolationType = sobekLateralFlow.ExtrapolationType;
+                model1DLateralSourceData.Data.Arguments[0].InterpolationType = sobekLateralFlow.InterpolationType;
+                model1DLateralSourceData.Data.Arguments[0].ExtrapolationType = sobekLateralFlow.ExtrapolationType;
             }
             else if (sobekLateralFlow.LevelQhTable != null)
             {
-                waterFlowModel1DLateralSourceData.DataType = WaterFlowModel1DLateralDataType.FlowWaterLevelTable;
-                DataTableHelper.SetTableToFunction(sobekLateralFlow.LevelQhTable, waterFlowModel1DLateralSourceData.Data);
-                waterFlowModel1DLateralSourceData.Data.Arguments[0].InterpolationType = InterpolationType.Linear;
-                waterFlowModel1DLateralSourceData.Data.Arguments[0].ExtrapolationType = ExtrapolationType.Constant;
+                model1DLateralSourceData.DataType = Model1DLateralDataType.FlowWaterLevelTable;
+                DataTableHelper.SetTableToFunction(sobekLateralFlow.LevelQhTable, model1DLateralSourceData.Data);
+                model1DLateralSourceData.Data.Arguments[0].InterpolationType = InterpolationType.Linear;
+                model1DLateralSourceData.Data.Arguments[0].ExtrapolationType = ExtrapolationType.Constant;
             }
             if (sobekLateralFlow.ExtrapolationType == ExtrapolationType.Periodic)
             {
-                TimeSeriesHelper.SetPeriodicExtrapolationSobek(waterFlowModel1DLateralSourceData.Data, sobekLateralFlow.ExtrapolationPeriod);
+                TimeSeriesHelper.SetPeriodicExtrapolationSobek(model1DLateralSourceData.Data, sobekLateralFlow.ExtrapolationPeriod);
             }
 
             if (!sobekLateralFlow.IsPointDischarge)
             {
-                waterFlowModel1DLateralSourceData.Feature.Length = sobekLateralFlow.Length;
-                UpdateFeatureGeometry(waterFlowModel1DLateralSourceData.Feature);
+                model1DLateralSourceData.Feature.Length = sobekLateralFlow.Length;
+                UpdateFeatureGeometry(model1DLateralSourceData.Feature);
             }
         }
 
-        private static void ConvertToLateralSourceDataFrom212(SobekLateralFlow sobekLateralFlow, WaterFlowModel1DLateralSourceData waterFlowModel1DLateralSourceData)
+        private static void ConvertToLateralSourceDataFrom212(SobekLateralFlow sobekLateralFlow, Model1DLateralSourceData model1DLateralSourceData)
         {
             var isDiffuse = !sobekLateralFlow.IsPointDischarge;
             var length = sobekLateralFlow.Length;
 
-            if (waterFlowModel1DLateralSourceData.Feature != null)
+            if (model1DLateralSourceData.Feature != null)
             {
-                if (waterFlowModel1DLateralSourceData.Feature.IsDiffuse != isDiffuse)
+                if (model1DLateralSourceData.Feature.IsDiffuse != isDiffuse)
                 {
                     log.WarnFormat("Lateral source data for {0} does not match. Lateral source data is for type {1}, the lateral source is of type {2}",
                         sobekLateralFlow.Id,
                         (isDiffuse) ? "'diffuse'" : "'point'",
-                        (waterFlowModel1DLateralSourceData.Feature.IsDiffuse) ? "'diffuse'" : "'point'"
+                        (model1DLateralSourceData.Feature.IsDiffuse) ? "'diffuse'" : "'point'"
                         );
                     return;
                 }
-                length = waterFlowModel1DLateralSourceData.Feature.Length;
+                length = model1DLateralSourceData.Feature.Length;
             }
 
             if (length == 0.0)
@@ -141,57 +141,57 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
             if (sobekLateralFlow.IsConstantDischarge)
             {
-                waterFlowModel1DLateralSourceData.DataType = WaterFlowModel1DLateralDataType.FlowConstant;
+                model1DLateralSourceData.DataType = Model1DLateralDataType.FlowConstant;
 
                 if (isDiffuse)
                 {
                     log.WarnFormat("The data of diffuse lateral source {0} has been changed from m2/s to m3/s (* length {1})", sobekLateralFlow.Id, length);
-                    waterFlowModel1DLateralSourceData.Flow = sobekLateralFlow.ConstantDischarge * length;
+                    model1DLateralSourceData.Flow = sobekLateralFlow.ConstantDischarge * length;
                 }
                 else
                 {
-                    waterFlowModel1DLateralSourceData.Flow = sobekLateralFlow.ConstantDischarge;
+                    model1DLateralSourceData.Flow = sobekLateralFlow.ConstantDischarge;
                 }
             }
             else if (sobekLateralFlow.FlowTimeTable != null)
             {
 
-                waterFlowModel1DLateralSourceData.DataType = WaterFlowModel1DLateralDataType.FlowTimeSeries;
-                DataTableHelper.SetTableToFunction(sobekLateralFlow.FlowTimeTable, waterFlowModel1DLateralSourceData.Data);
+                model1DLateralSourceData.DataType = Model1DLateralDataType.FlowTimeSeries;
+                DataTableHelper.SetTableToFunction(sobekLateralFlow.FlowTimeTable, model1DLateralSourceData.Data);
 
                 if (isDiffuse)
                 {
                     log.WarnFormat("The data of diffuse lateral source {0} has been changed from m2/s to m3/s (* length {1})", sobekLateralFlow.Id, length);
-                    var values = waterFlowModel1DLateralSourceData.Data.Components[0].GetValues<double>();
+                    var values = model1DLateralSourceData.Data.Components[0].GetValues<double>();
                     for (int i = 0; i < values.Count; i++)
                     {
-                        waterFlowModel1DLateralSourceData.Data.Components[0].Values[i] = values[i] * length;
+                        model1DLateralSourceData.Data.Components[0].Values[i] = values[i] * length;
                     }
                 }
-                waterFlowModel1DLateralSourceData.Data.Arguments[0].InterpolationType = sobekLateralFlow.InterpolationType;
-                waterFlowModel1DLateralSourceData.Data.Arguments[0].ExtrapolationType = sobekLateralFlow.ExtrapolationType;
+                model1DLateralSourceData.Data.Arguments[0].InterpolationType = sobekLateralFlow.InterpolationType;
+                model1DLateralSourceData.Data.Arguments[0].ExtrapolationType = sobekLateralFlow.ExtrapolationType;
             }
             else if (sobekLateralFlow.LevelQhTable != null)
             {
-                waterFlowModel1DLateralSourceData.DataType = WaterFlowModel1DLateralDataType.FlowWaterLevelTable;
-                DataTableHelper.SetTableToFunction(sobekLateralFlow.LevelQhTable, waterFlowModel1DLateralSourceData.Data);
+                model1DLateralSourceData.DataType = Model1DLateralDataType.FlowWaterLevelTable;
+                DataTableHelper.SetTableToFunction(sobekLateralFlow.LevelQhTable, model1DLateralSourceData.Data);
 
                 if (isDiffuse)
                 {
                     log.WarnFormat("The data of diffuse lateral source {0} has been changed from m2/s to m3/s (* length {1})", sobekLateralFlow.Id, length);
-                    var values = waterFlowModel1DLateralSourceData.Data.Arguments[0].GetValues<double>();
+                    var values = model1DLateralSourceData.Data.Arguments[0].GetValues<double>();
                     for (int i = 0; i < values.Count; i++)
                     {
-                        waterFlowModel1DLateralSourceData.Data.Arguments[0].Values[i] = values[i] * length;
+                        model1DLateralSourceData.Data.Arguments[0].Values[i] = values[i] * length;
                     }
                 }
 
-                waterFlowModel1DLateralSourceData.Data.Arguments[0].InterpolationType = InterpolationType.Linear;
-                waterFlowModel1DLateralSourceData.Data.Arguments[0].ExtrapolationType = ExtrapolationType.Constant;
+                model1DLateralSourceData.Data.Arguments[0].InterpolationType = InterpolationType.Linear;
+                model1DLateralSourceData.Data.Arguments[0].ExtrapolationType = ExtrapolationType.Constant;
             }
             if (sobekLateralFlow.ExtrapolationType == ExtrapolationType.Periodic)
             {
-                TimeSeriesHelper.SetPeriodicExtrapolationSobek(waterFlowModel1DLateralSourceData.Data, sobekLateralFlow.ExtrapolationPeriod);
+                TimeSeriesHelper.SetPeriodicExtrapolationSobek(model1DLateralSourceData.Data, sobekLateralFlow.ExtrapolationPeriod);
             }
         }
 

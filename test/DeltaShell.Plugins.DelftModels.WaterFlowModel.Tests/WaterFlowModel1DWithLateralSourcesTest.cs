@@ -6,7 +6,7 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
+using DeltaShell.NGHS.IO.DataObjects;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Networks;
 using NetTopologySuite.Extensions.Coverages;
@@ -87,10 +87,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
         private static void SetBoundaryConditions(WaterFlowModel1D flowModel1D1, INode inflowNode, INode outflowNode)
         {
             var boundaryConditionInflow = flowModel1D1.BoundaryConditions.First(bc => bc.Feature == inflowNode);
-            boundaryConditionInflow.DataType = WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries;
+            boundaryConditionInflow.DataType = Model1DBoundaryNodeDataType.FlowTimeSeries;
 
             var boundaryConditionOutflow = flowModel1D1.BoundaryConditions.First(bc => bc.Feature == outflowNode);
-            boundaryConditionOutflow.DataType = WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries;            
+            boundaryConditionOutflow.DataType = Model1DBoundaryNodeDataType.FlowTimeSeries;            
         }
 
         private static void SetTimeParameters(WaterFlowModel1D flowModel1D1, DateTime t)

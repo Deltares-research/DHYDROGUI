@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="DeltaShell.NGHS.IO.DataObjects" assembly="DeltaShell.NGHS.IO">
+  <subclass name="FlowWaterLevelTable" discriminator-value="flow_waterlevel_table" extends="DelftTools.Functions.Function,DelftTools.Functions" lazy="false" >
+  </subclass>
+</hibernate-mapping>

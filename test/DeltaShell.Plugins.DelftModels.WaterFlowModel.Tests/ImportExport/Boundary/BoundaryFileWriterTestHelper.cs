@@ -1,7 +1,7 @@
 ﻿using System;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
+using DeltaShell.NGHS.IO.DataObjects;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Boundary
 {
@@ -11,17 +11,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
 
         // Node1: Constant Flow
         public const string NodeConstantFlowName = "Node001";
-        public const WaterFlowModel1DBoundaryNodeDataType NodeConstantFlowType = WaterFlowModel1DBoundaryNodeDataType.FlowConstant;
+        public const Model1DBoundaryNodeDataType NodeConstantFlowType = Model1DBoundaryNodeDataType.FlowConstant;
         public const double NodeConstantFlowValue = 1.0;
 
         // Node2: Constant WaterLevel
         public const string NodeConstantWaterLevelName = "Node002";
-        public const WaterFlowModel1DBoundaryNodeDataType NodeConstantWaterLevelType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant;
+        public const Model1DBoundaryNodeDataType NodeConstantWaterLevelType = Model1DBoundaryNodeDataType.WaterLevelConstant;
         public const double NodeConstantWaterLevelValue = 3.0;
 
         // Node3: Flow TimeSeries
         public const string NodeFlowTimeSeriesName = "Node003";
-        public const WaterFlowModel1DBoundaryNodeDataType NodeFlowTimeSeriesType = WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries;
+        public const Model1DBoundaryNodeDataType NodeFlowTimeSeriesType = Model1DBoundaryNodeDataType.FlowTimeSeries;
         public const int NodeFlowTimeSeriesArgument1 = 7;
         public const int NodeFlowTimeSeriesArgument2 = 11;
         public const double NodeFlowTimeSeriesComponent1 = 13.0;
@@ -29,7 +29,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
 
         // Node4: WaterLevel TimeSeries
         public const string NodeWaterLevelTimeSeriesName = "Node004";
-        public const WaterFlowModel1DBoundaryNodeDataType NodeWaterLevelTimeSeriesType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries;
+        public const Model1DBoundaryNodeDataType NodeWaterLevelTimeSeriesType = Model1DBoundaryNodeDataType.WaterLevelTimeSeries;
         public const int NodeWaterLevelTimeSeriesArgument1 = 19;
         public const int NodeWaterLevelTimeSeriesArgument2 = 23;
         public const double NodeWaterLevelTimeSeriesComponent1 = 29.0;
@@ -37,7 +37,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
 
         // Node5: Flow WaterLevel
         public const string NodeFlowWaterLevelName = "Node005";
-        public const WaterFlowModel1DBoundaryNodeDataType NodeFlowWaterLevelType = WaterFlowModel1DBoundaryNodeDataType.FlowWaterLevelTable;
+        public const Model1DBoundaryNodeDataType NodeFlowWaterLevelType = Model1DBoundaryNodeDataType.FlowWaterLevelTable;
         public const double NodeFlowWaterLevelArgument1 = 37.0;
         public const double NodeFlowWaterLevelArgument2 = 41.0;
         public const double NodeFlowWaterLevelComponent1 = 43.0;
@@ -45,12 +45,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
 
         // Lateral1: Constant Flow
         public const string LateralConstantFlowName = "LateralSource1";
-        public const WaterFlowModel1DLateralDataType LateralConstantFlowType = WaterFlowModel1DLateralDataType.FlowConstant;
+        public const Model1DLateralDataType LateralConstantFlowType = Model1DLateralDataType.FlowConstant;
         public const double LateralConstantFlowValue = 53.0;
 
         // Lateral2: Flow WaterLevel
         public const string LateralFlowWaterLevelName = "LateralSource2";
-        public const WaterFlowModel1DLateralDataType LateralFlowWaterLevelType = WaterFlowModel1DLateralDataType.FlowWaterLevelTable;
+        public const Model1DLateralDataType LateralFlowWaterLevelType = Model1DLateralDataType.FlowWaterLevelTable;
         public const double LateralFlowWaterLevelArgument1 = 59.0;
         public const double LateralFlowWaterLevelArgument2 = 61.0;
         public const double LateralFlowWaterLevelComponent1 = 67.0;
@@ -58,7 +58,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
 
         // Lateral3: Flow TimeSeries
         public const string LateralFlowTimeSeriesName = "LateralSource3";
-        public const WaterFlowModel1DLateralDataType LateralFlowTimeSeriesType = WaterFlowModel1DLateralDataType.FlowTimeSeries;
+        public const Model1DLateralDataType LateralFlowTimeSeriesType = Model1DLateralDataType.FlowTimeSeries;
         public const int LateralFlowTimeSeriesArgument1 = 73;
         public const int LateralFlowTimeSeriesArgument2 = 79;
         public const double LateralFlowTimeSeriesComponent1 = 83.0;
@@ -89,10 +89,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
         
         #endregion
 
-        public static WaterFlowModel1DBoundaryNodeData GetBoundaryNodeDataWithConstantType(
-            string nodeName, WaterFlowModel1DBoundaryNodeDataType boundaryNodeDataType, double value)
+        public static Model1DBoundaryNodeData GetBoundaryNodeDataWithConstantType(
+            string nodeName, Model1DBoundaryNodeDataType boundaryNodeDataType, double value)
         {
-            var boundaryNodeData = new WaterFlowModel1DBoundaryNodeData() 
+            var boundaryNodeData = new Model1DBoundaryNodeData() 
             {
                 Feature = new HydroNode(nodeName),
                 DataType = boundaryNodeDataType,
@@ -102,10 +102,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
             return boundaryNodeData;
         }
 
-        public static WaterFlowModel1DBoundaryNodeData GetBoundaryNodeDataWithTimeSeriesType(
-            string nodeName, WaterFlowModel1DBoundaryNodeDataType boundaryNodeDataType, DateTime[] argumentValues, double[] componentValues)
+        public static Model1DBoundaryNodeData GetBoundaryNodeDataWithTimeSeriesType(
+            string nodeName, Model1DBoundaryNodeDataType boundaryNodeDataType, DateTime[] argumentValues, double[] componentValues)
         {
-            var boundaryNodeData = new WaterFlowModel1DBoundaryNodeData()
+            var boundaryNodeData = new Model1DBoundaryNodeData()
             {
                 Feature = new HydroNode(nodeName),
                 DataType = boundaryNodeDataType
@@ -121,10 +121,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
             return boundaryNodeData;
         }
 
-        public static WaterFlowModel1DBoundaryNodeData GetBoundaryNodeDataWithFlowWaterLevelData(
-            string nodeName, WaterFlowModel1DBoundaryNodeDataType boundaryNodeDataType, double[] argumentValues, double[] componentValues)
+        public static Model1DBoundaryNodeData GetBoundaryNodeDataWithFlowWaterLevelData(
+            string nodeName, Model1DBoundaryNodeDataType boundaryNodeDataType, double[] argumentValues, double[] componentValues)
         {
-            var boundaryNodeData = new WaterFlowModel1DBoundaryNodeData()
+            var boundaryNodeData = new Model1DBoundaryNodeData()
             {
                 Feature = new HydroNode(nodeName),
                 DataType = boundaryNodeDataType
@@ -140,10 +140,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
             return boundaryNodeData;
         }
 
-        public static WaterFlowModel1DLateralSourceData GetLateralSourceDataWithFlowData(
-            string lateralName, WaterFlowModel1DLateralDataType lateralDataType, double value)
+        public static Model1DLateralSourceData GetLateralSourceDataWithFlowData(
+            string lateralName, Model1DLateralDataType lateralDataType, double value)
         {
-            var lateralSourceData = new WaterFlowModel1DLateralSourceData()
+            var lateralSourceData = new Model1DLateralSourceData()
             {
                 Feature = new LateralSource(){Name = lateralName},
                 DataType = lateralDataType,
@@ -153,10 +153,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
             return lateralSourceData;
         }
 
-        public static WaterFlowModel1DLateralSourceData GetLateralSourceDataWithFlowWaterLevelData(
-            string lateralName, WaterFlowModel1DLateralDataType lateralDataType, double[] argumentValues, double[] componentValues)
+        public static Model1DLateralSourceData GetLateralSourceDataWithFlowWaterLevelData(
+            string lateralName, Model1DLateralDataType lateralDataType, double[] argumentValues, double[] componentValues)
         {
-            var lateralSourceData = new WaterFlowModel1DLateralSourceData()
+            var lateralSourceData = new Model1DLateralSourceData()
             {
                 Feature = new LateralSource() { Name = lateralName },
                 DataType = lateralDataType
@@ -172,10 +172,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
             return lateralSourceData;
         }
 
-        public static WaterFlowModel1DLateralSourceData GetLateralSourceDataWithFlowTimeSeriesData(
-            string lateralName, WaterFlowModel1DLateralDataType lateralDataType, DateTime[] argumentValues, double[] componentValues)
+        public static Model1DLateralSourceData GetLateralSourceDataWithFlowTimeSeriesData(
+            string lateralName, Model1DLateralDataType lateralDataType, DateTime[] argumentValues, double[] componentValues)
         {
-            var lateralSourceData = new WaterFlowModel1DLateralSourceData()
+            var lateralSourceData = new Model1DLateralSourceData()
             {
                 Feature = new LateralSource() { Name = lateralName },
                 DataType = lateralDataType

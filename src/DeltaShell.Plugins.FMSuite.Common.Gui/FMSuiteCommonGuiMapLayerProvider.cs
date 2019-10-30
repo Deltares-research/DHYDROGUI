@@ -1,0 +1,159 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.IO;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using DelftTools.Functions;
+using DelftTools.Hydro;
+using DelftTools.Hydro.Link1d2d;
+using DelftTools.Hydro.Roughness;
+using DelftTools.Shell.Core.Workflow;
+using DelftTools.Shell.Gui;
+using DelftTools.Shell.Gui.Swf;
+using DelftTools.Utils;
+using DelftTools.Utils.Collections;
+using DelftTools.Utils.Collections.Generic;
+using DelftTools.Utils.Drawing;
+using DelftTools.Utils.Reflection;
+using DeltaShell.NGHS.IO.DataObjects;
+using DeltaShell.Plugins.FMSuite.Common.FeatureData;
+using DeltaShell.Plugins.FMSuite.Common.IO;
+using DeltaShell.Plugins.FMSuite.Common.Layers;
+using GeoAPI.Extensions.CoordinateSystems;
+using GeoAPI.Extensions.Coverages;
+using GeoAPI.Geometries;
+using log4net;
+using NetTopologySuite.Extensions.Features;
+using NetTopologySuite.Geometries;
+using SharpMap.Api;
+using SharpMap.Api.Layers;
+using SharpMap.Data.Providers;
+using SharpMap.Editors;
+using SharpMap.Editors.Interactors;
+using SharpMap.Layers;
+using SharpMap.Rendering;
+using SharpMap.Rendering.Thematics;
+using SharpMap.Styles;
+
+namespace DeltaShell.Plugins.FMSuite.Common.Gui
+{
+    public class FMSuiteCommonGuiMapLayerProvider : IMapLayerProvider
+    {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(FMSuiteCommonGuiMapLayerProvider));
+
+        public ILayer CreateLayer(object data, object parent)
+        {
+            var boundaryNodeData = data as IEventedList<Model1DBoundaryNodeData>;
+            var coordinateSystem = (parent as IHasCoordinateSystem)?.CoordinateSystem;
+            if (coordinateSystem == null)
+            {
+                if (parent is ModelFolder)
+                {
+                    var networkModel = ((ModelFolder) parent) as IModelWithNetwork;
+                    coordinateSystem = networkModel?.Network?.CoordinateSystem;
+                } 
+            }
+            if (boundaryNodeData != null)
+            {
+                return CreateBoundaryNodeDataLayer(boundaryNodeData, coordinateSystem);
+            }
+            var lateralSourceData = data as IEventedList<Model1DLateralSourceData>;
+            if (lateralSourceData != null)
+            {
+                return CreateLateralDataLayer(lateralSourceData, coordinateSystem);
+            }
+            return null;
+        }
+        private static VectorLayer CreateBoundaryNodeDataLayer(IEventedList<Model1DBoundaryNodeData> boundaryNodeDataList, ICoordinateSystem coordinateSystem)
+        {
+            return new VectorLayer("Boundary Data 1D")
+            {
+                Visible = false,
+                Selectable = true,
+                NameIsReadOnly = true,
+                DataSource = new FeatureCollection
+                {
+                    FeatureType = typeof(Model1DBoundaryNodeData),
+                    Features = (IList)boundaryNodeDataList,
+                    CoordinateSystem = coordinateSystem
+                },
+                Theme = new CategorialTheme
+                {
+                    
+                    AttributeName = nameof(Model1DBoundaryNodeData.DataTypeValue),
+                    DefaultStyle = new VectorStyle(){
+                        GeometryType = typeof(IPoint),}
+                    ,
+                    NoDataValues = new List<string> { "" },
+                    ThemeItems = new EventedList<IThemeItem>
+                    {
+                        CreateCategorialThemeItem(Model1DBoundaryNodeDataType.None.GetDescription(), Properties.Resources.none),
+                        CreateCategorialThemeItem(Model1DBoundaryNodeDataType.WaterLevelConstant.GetDescription(), Properties.Resources.HConst),
+                        CreateCategorialThemeItem(Model1DBoundaryNodeDataType.WaterLevelTimeSeries.GetDescription(), Properties.Resources.HBoundary),
+                        CreateCategorialThemeItem(Model1DBoundaryNodeDataType.FlowConstant.GetDescription(), Properties.Resources.QConst),
+                        CreateCategorialThemeItem(Model1DBoundaryNodeDataType.FlowTimeSeries.GetDescription(), Properties.Resources.QBoundary),
+                        CreateCategorialThemeItem(Model1DBoundaryNodeDataType.FlowWaterLevelTable.GetDescription(), Properties.Resources.QHBoundary)
+                    }
+                }
+            };
+        }
+
+        private static VectorLayer CreateLateralDataLayer(IEventedList<Model1DLateralSourceData> lateralSourceDataList, ICoordinateSystem coordinateSystem)
+        {
+            return new VectorLayer("Lateral Data 1D")
+            {
+                Visible = false,
+                Selectable = true,
+                NameIsReadOnly = true,
+                DataSource = new FeatureCollection
+                {
+                    FeatureType = typeof(Model1DLateralSourceData),
+                    Features = (IList)lateralSourceDataList,
+                    CoordinateSystem = coordinateSystem
+                },
+                Theme = new CategorialTheme
+                {
+                    AttributeName = nameof(Model1DLateralSourceData.DataTypeValue),
+                    DefaultStyle = new VectorStyle(),
+                    NoDataValues = new List<string> { "" },
+                    ThemeItems = new EventedList<IThemeItem>
+                    {
+                        CreateCategorialThemeItem(Model1DLateralDataType.None.GetDescription(), Properties.Resources.none),
+                        CreateCategorialThemeItem(Model1DLateralDataType.FlowConstant.GetDescription(), Properties.Resources.QConst),
+                        CreateCategorialThemeItem(Model1DLateralDataType.FlowTimeSeries.GetDescription(), Properties.Resources.QBoundary),
+                        CreateCategorialThemeItem(Model1DLateralDataType.FlowWaterLevelTable.GetDescription(), Properties.Resources.QHBoundary)
+                    }
+                }
+            };
+        }
+        private static CategorialThemeItem CreateCategorialThemeItem(string enumValue, Image overlayImage)
+        {
+            return new CategorialThemeItem
+            {
+                Category = enumValue,
+                Value = enumValue,
+                Label = enumValue,
+                Style = new VectorStyle
+                {
+                    Symbol = new Bitmap(Properties.Resources.Boundary_1d.AddOverlayImage(overlayImage, 1, 1))
+                },
+                
+            };
+        }
+        public bool CanCreateLayerFor(object data, object parentObject)
+        {
+            return data is IEventedList<Model1DBoundaryNodeData>
+                   || data is IEventedList<Model1DLateralSourceData>;
+
+        }
+
+        public IEnumerable<object> ChildLayerObjects(object data)
+        {
+           yield break;
+        }
+    }
+}

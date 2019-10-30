@@ -13,12 +13,12 @@ using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using Deltares.IO.FewsPI;
 using DeltaShell.Core;
+using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.DelftModels.HydroModel;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.TestUtils;
 using DeltaShell.Plugins.Fews.Tests.Queries;
@@ -290,10 +290,10 @@ namespace DeltaShell.Plugins.Fews.Tests
             DateTime now = DateTime.Now;
             var t = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, 0);
             var lateralSource = new LateralSource();
-            var waterFlowModel1DLateralSourceData = new WaterFlowModel1DLateralSourceData
+            var waterFlowModel1DLateralSourceData = new Model1DLateralSourceData
             {
                 Feature = lateralSource,
-                DataType = WaterFlowModel1DLateralDataType.FlowTimeSeries
+                DataType = Model1DLateralDataType.FlowTimeSeries
             };
             lateralSource.Name = id;
 

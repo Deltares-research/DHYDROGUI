@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -32,7 +31,7 @@ using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DelftTools.Utils.Validation;
 using DeltaShell.Dimr;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
+using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.PhysicalParameters;
@@ -70,7 +69,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
         private string workDirectory; // model engine work directory
         private string previousWorkDirectory;
 
-        private List<WaterFlowModel1DBoundaryNodeData> boundaryConditionDataList;
+        private List<Model1DBoundaryNodeData> boundaryConditionDataList;
 
         // ordered lists of features as used in outputcoverages and by modelapi; allows to store arrays from modelapi to featurecoverage
         private List<IStructure1D> structureMappingToModelApi;
@@ -179,13 +178,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             Longitude = longitudDefault;
 
             /* */
-            var boundaryNodeDataItemSet = new DataItemSet(new EventedList<WaterFlowModel1DBoundaryNodeData>(), WaterFlowModel1DDataSet.BoundaryConditionsTag, DataItemRole.Input, true, WaterFlowModel1DDataSet.BoundaryConditionsTag, typeof(WaterFlowModel1DBoundaryNodeData))
+            var boundaryNodeDataItemSet = new DataItemSet(new EventedList<Model1DBoundaryNodeData>(), WaterFlowModel1DDataSet.BoundaryConditionsTag, DataItemRole.Input, true, WaterFlowModel1DDataSet.BoundaryConditionsTag, typeof(Model1DBoundaryNodeData))
                 {
                     ValueType = typeof(FeatureData<IFunction, INode>)
                 };
             dataItems.Add(boundaryNodeDataItemSet);
 
-            var lateralSourceDataItemSet = new DataItemSet(new EventedList<WaterFlowModel1DLateralSourceData>(), WaterFlowModel1DDataSet.LateralSourcesDataTag, DataItemRole.Input, true, WaterFlowModel1DDataSet.LateralSourcesDataTag, typeof(WaterFlowModel1DLateralSourceData));
+            var lateralSourceDataItemSet = new DataItemSet(new EventedList<Model1DLateralSourceData>(), WaterFlowModel1DDataSet.LateralSourcesDataTag, DataItemRole.Input, true, WaterFlowModel1DDataSet.LateralSourcesDataTag, typeof(Model1DLateralSourceData));
             dataItems.Add(lateralSourceDataItemSet);
 
             AddDataItemSet(new EventedList<RoughnessSection>(), WaterFlowModel1DDataSet.RoughnessSectionsTag,
@@ -391,9 +390,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
         /// <summary>
         /// Gets the boundary conditions for this model
         /// </summary>
-        public virtual IEventedList<WaterFlowModel1DBoundaryNodeData> BoundaryConditions
+        public virtual IEventedList<Model1DBoundaryNodeData> BoundaryConditions
         {
-            get { return GetDataItemSetByTag(WaterFlowModel1DDataSet.BoundaryConditionsTag).AsEventedList<WaterFlowModel1DBoundaryNodeData>(); }
+            get { return GetDataItemSetByTag(WaterFlowModel1DDataSet.BoundaryConditionsTag).AsEventedList<Model1DBoundaryNodeData>(); }
         }
         
         /// <summary>
@@ -407,9 +406,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
         /// <summary>
         /// Gets the lateral source data for this model
         /// </summary>
-        public virtual IEventedList<WaterFlowModel1DLateralSourceData> LateralSourceData
+        public virtual IEventedList<Model1DLateralSourceData> LateralSourceData
         {
-            get { return GetDataItemSetByTag(WaterFlowModel1DDataSet.LateralSourcesDataTag).AsEventedList<WaterFlowModel1DLateralSourceData>(); }
+            get { return GetDataItemSetByTag(WaterFlowModel1DDataSet.LateralSourcesDataTag).AsEventedList<Model1DLateralSourceData>(); }
         }
 
         /// <summary>
@@ -1301,12 +1300,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
         /// <summary>
         /// Replaces an existing boundary condition by <paramref name="boundaryNodeData"/>
         /// </summary>
-        public virtual void ReplaceBoundaryCondition(WaterFlowModel1DBoundaryNodeData boundaryNodeData)
+        public virtual void ReplaceBoundaryCondition(Model1DBoundaryNodeData boundaryNodeData)
         {
             if (boundaryNodeData == null) return;
 
             var dataItemSet = GetDataItemSetByTag(WaterFlowModel1DDataSet.BoundaryConditionsTag);
-            var currentDataItem = dataItemSet.DataItems.FirstOrDefault(di => ((WaterFlowModel1DBoundaryNodeData)di.Value).Feature == boundaryNodeData.Feature);
+            var currentDataItem = dataItemSet.DataItems.FirstOrDefault(di => ((Model1DBoundaryNodeData)di.Value).Feature == boundaryNodeData.Feature);
             if (currentDataItem == null) return;
 
             var insertIndex = dataItemSet.DataItems.IndexOf(currentDataItem);
@@ -1509,13 +1508,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             GetDataItemSetByTag(WaterFlowModel1DDataSet.BoundaryConditionsTag).DataItems.Clear();
         }
 
-        private void AddBoundaryCondition(WaterFlowModel1DBoundaryNodeData boundaryNodeData)
+        private void AddBoundaryCondition(Model1DBoundaryNodeData boundaryNodeData)
         {
-            var dataItem = new DataItem(boundaryNodeData) { Hidden = (boundaryNodeData.DataType == WaterFlowModel1DBoundaryNodeDataType.None) };
+            var dataItem = new DataItem(boundaryNodeData) { Hidden = (boundaryNodeData.DataType == Model1DBoundaryNodeDataType.None) };
             GetDataItemSetByTag(WaterFlowModel1DDataSet.BoundaryConditionsTag).DataItems.Add(dataItem);
         }
 
-        private void RemoveBoundaryCondition(WaterFlowModel1DBoundaryNodeData boundaryNodeData)
+        private void RemoveBoundaryCondition(Model1DBoundaryNodeData boundaryNodeData)
         {
             var dataItemSet = GetDataItemSetByTag(WaterFlowModel1DDataSet.BoundaryConditionsTag);
             var dataItem = dataItemSet.DataItems.FirstOrDefault(di => ReferenceEquals(di.Value, boundaryNodeData));
@@ -1538,7 +1537,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             GetDataItemSetByTag(WaterFlowModel1DDataSet.LateralSourcesDataTag).DataItems.Clear();
         }
 
-        private void AddLateralSourceData(WaterFlowModel1DLateralSourceData lateralSourceData)
+        private void AddLateralSourceData(Model1DLateralSourceData lateralSourceData)
         {
             lateralSourceData.UseSalt = UseSalt;
             lateralSourceData.UseTemperature = UseTemperature;
@@ -1546,7 +1545,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             GetDataItemSetByTag(WaterFlowModel1DDataSet.LateralSourcesDataTag).DataItems.Add(new DataItem(lateralSourceData));
         }
 
-        private void RemoveLateralSourceData(WaterFlowModel1DLateralSourceData lateralSourceData)
+        private void RemoveLateralSourceData(Model1DLateralSourceData lateralSourceData)
         {
             var dataItemSet = GetDataItemSetByTag(WaterFlowModel1DDataSet.LateralSourcesDataTag);
             var dataItem = dataItemSet.DataItems.FirstOrDefault(di => ReferenceEquals(di.Value, lateralSourceData));
@@ -1648,7 +1647,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             {
                 foreach (var lateralSource in Network.LateralSources)
                 {
-                    AddLateralSourceData(new WaterFlowModel1DLateralSourceData { Feature = (LateralSource)lateralSource });
+                    AddLateralSourceData(new Model1DLateralSourceData { Feature = (LateralSource)lateralSource });
                 }
             }
 
@@ -1905,7 +1904,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
                         var channel = (IChannel)e.GetRemovedOrAddedItem();
                         foreach (var lateralSource in channel.BranchSources)
                         {
-                            AddLateralSourceData(new WaterFlowModel1DLateralSourceData { Feature = lateralSource });
+                            AddLateralSourceData(new Model1DLateralSourceData { Feature = lateralSource });
                         }
                     }
                             break;
@@ -1973,7 +1972,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
                     throw new NotImplementedException();
 
                 case NotifyCollectionChangedAction.Add:
-                    AddLateralSourceData(new WaterFlowModel1DLateralSourceData { Feature = lateralSource });
+                    AddLateralSourceData(new Model1DLateralSourceData { Feature = lateralSource });
                     break;
                 case NotifyCollectionChangedAction.Remove:
                     RemoveLateralSourceData(lateralSource);
@@ -2817,7 +2816,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             var clonedLateralSourceFeatures = clonedModel.Network.LateralSources.ToList();
             for (int i = 0; i < LateralSourceData.Count; i++)
             {
-                WaterFlowModel1DLateralSourceData lateralSourceData = LateralSourceData[i];
+                Model1DLateralSourceData lateralSourceData = LateralSourceData[i];
                 var clonedLateralSourceData = clonedModel.LateralSourceData[i];
                 var index = lateralSourceFeatures.IndexOf(lateralSourceData.Feature);
                 clonedLateralSourceData.Feature = (LateralSource)clonedLateralSourceFeatures[index];
@@ -2985,10 +2984,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
         {
             if (location is IHydroNode)
             {
-                WaterFlowModel1DBoundaryNodeData boundary =
+                Model1DBoundaryNodeData boundary =
                     BoundaryConditions.First(boundaryNodeData => boundaryNodeData.Node.Equals(location));
-                if (boundary.DataType == WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant ||
-                    boundary.DataType == WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries)
+                if (boundary.DataType == Model1DBoundaryNodeDataType.WaterLevelConstant ||
+                    boundary.DataType == Model1DBoundaryNodeDataType.WaterLevelTimeSeries)
                 {
                     yield return new EngineParameter(QuantityType.WaterLevel, ElementSet.HBoundaries,
                                                      DataItemRole.Input, FunctionAttributes.StandardNames.WaterLevel,
@@ -2997,8 +2996,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
                                                      DataItemRole.Output, FunctionAttributes.StandardNames.WaterDischarge,
                                                      new Unit("Cubic meter", "m³"));
                 }
-                else if (boundary.DataType == WaterFlowModel1DBoundaryNodeDataType.FlowConstant ||
-                    boundary.DataType == WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries)
+                else if (boundary.DataType == Model1DBoundaryNodeDataType.FlowConstant ||
+                    boundary.DataType == Model1DBoundaryNodeDataType.FlowTimeSeries)
                 {
                     yield return new EngineParameter(QuantityType.Discharge, ElementSet.QBoundaries,
                                                      DataItemRole.Input, FunctionAttributes.StandardNames.WaterDischarge,
@@ -3041,12 +3040,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
                 return;
             }
 
-            if (e.PropertyName == "DataType" && sender is WaterFlowModel1DBoundaryNodeData)
+            if (e.PropertyName == "DataType" && sender is Model1DBoundaryNodeData)
             {
-                var bc = sender as WaterFlowModel1DBoundaryNodeData;
+                var bc = sender as Model1DBoundaryNodeData;
                 var dataItemSet = GetDataItemSetByTag(WaterFlowModel1DDataSet.BoundaryConditionsTag);
                 var bcDataItem = dataItemSet.DataItems.First(di => ReferenceEquals(di.Value, bc));
-                bcDataItem.Hidden = bc.DataType == WaterFlowModel1DBoundaryNodeDataType.None;
+                bcDataItem.Hidden = bc.DataType == Model1DBoundaryNodeDataType.None;
             }
 
             // events from child data items do not trigger clear output

@@ -2,7 +2,7 @@
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Utils.Reflection;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
+using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.Tools;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -26,7 +26,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Forms.Tools
             TypeUtils.CallPrivateMethod(boundaryNodeDataMapTool, "TurnSelectedNodesIntoQTimeSeries", new object[] { null, null });
             TypeUtils.CallPrivateMethod(boundaryNodeDataMapTool, "TurnSelectedNodesIntoQHTable", new object[] { null, null });
 
-            boundaryNodeDataMapTool.BoundaryNodeData = new List<WaterFlowModel1DBoundaryNodeData>();
+            boundaryNodeDataMapTool.BoundaryNodeData = new List<Model1DBoundaryNodeData>();
 
             // No exceptions should be thrown
             TypeUtils.CallPrivateMethod(boundaryNodeDataMapTool, "TurnSelectedNodesIntoNone", new object[] { null, null });
@@ -36,44 +36,44 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Forms.Tools
             TypeUtils.CallPrivateMethod(boundaryNodeDataMapTool, "TurnSelectedNodesIntoQTimeSeries", new object[] { null, null });
             TypeUtils.CallPrivateMethod(boundaryNodeDataMapTool, "TurnSelectedNodesIntoQHTable", new object[] { null, null });
 
-            boundaryNodeDataMapTool.BoundaryNodeData = new List<WaterFlowModel1DBoundaryNodeData>
+            boundaryNodeDataMapTool.BoundaryNodeData = new List<Model1DBoundaryNodeData>
                                                        {
-                                                           new WaterFlowModel1DBoundaryNodeData { DataType = WaterFlowModel1DBoundaryNodeDataType.FlowWaterLevelTable },
-                                                           new WaterFlowModel1DBoundaryNodeData { DataType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries }
+                                                           new Model1DBoundaryNodeData { DataType = Model1DBoundaryNodeDataType.FlowWaterLevelTable },
+                                                           new Model1DBoundaryNodeData { DataType = Model1DBoundaryNodeDataType.WaterLevelTimeSeries }
                                                        };
 
             TypeUtils.CallPrivateMethod(boundaryNodeDataMapTool, "TurnSelectedNodesIntoNone", new object[] { null, null });
-            Assert.AreEqual(WaterFlowModel1DBoundaryNodeDataType.None, boundaryNodeDataMapTool.BoundaryNodeData.ElementAt(0).DataType);
-            Assert.AreEqual(WaterFlowModel1DBoundaryNodeDataType.None, boundaryNodeDataMapTool.BoundaryNodeData.ElementAt(1).DataType);
+            Assert.AreEqual(Model1DBoundaryNodeDataType.None, boundaryNodeDataMapTool.BoundaryNodeData.ElementAt(0).DataType);
+            Assert.AreEqual(Model1DBoundaryNodeDataType.None, boundaryNodeDataMapTool.BoundaryNodeData.ElementAt(1).DataType);
 
             TypeUtils.CallPrivateMethod(boundaryNodeDataMapTool, "TurnSelectedNodesIntoHBoundary", new object[] { null, null });
-            Assert.AreEqual(WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant, boundaryNodeDataMapTool.BoundaryNodeData.ElementAt(0).DataType);
-            Assert.AreEqual(WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant, boundaryNodeDataMapTool.BoundaryNodeData.ElementAt(1).DataType);
+            Assert.AreEqual(Model1DBoundaryNodeDataType.WaterLevelConstant, boundaryNodeDataMapTool.BoundaryNodeData.ElementAt(0).DataType);
+            Assert.AreEqual(Model1DBoundaryNodeDataType.WaterLevelConstant, boundaryNodeDataMapTool.BoundaryNodeData.ElementAt(1).DataType);
 
             TypeUtils.CallPrivateMethod(boundaryNodeDataMapTool, "TurnSelectedNodesIntoHTimeSeries", new object[] { null, null });
-            Assert.AreEqual(WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries, boundaryNodeDataMapTool.BoundaryNodeData.ElementAt(0).DataType);
-            Assert.AreEqual(WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries, boundaryNodeDataMapTool.BoundaryNodeData.ElementAt(1).DataType);
+            Assert.AreEqual(Model1DBoundaryNodeDataType.WaterLevelTimeSeries, boundaryNodeDataMapTool.BoundaryNodeData.ElementAt(0).DataType);
+            Assert.AreEqual(Model1DBoundaryNodeDataType.WaterLevelTimeSeries, boundaryNodeDataMapTool.BoundaryNodeData.ElementAt(1).DataType);
 
             TypeUtils.CallPrivateMethod(boundaryNodeDataMapTool, "TurnSelectedNodesIntoQBoundary", new object[] { null, null });
-            Assert.AreEqual(WaterFlowModel1DBoundaryNodeDataType.FlowConstant, boundaryNodeDataMapTool.BoundaryNodeData.ElementAt(0).DataType);
-            Assert.AreEqual(WaterFlowModel1DBoundaryNodeDataType.FlowConstant, boundaryNodeDataMapTool.BoundaryNodeData.ElementAt(1).DataType);
+            Assert.AreEqual(Model1DBoundaryNodeDataType.FlowConstant, boundaryNodeDataMapTool.BoundaryNodeData.ElementAt(0).DataType);
+            Assert.AreEqual(Model1DBoundaryNodeDataType.FlowConstant, boundaryNodeDataMapTool.BoundaryNodeData.ElementAt(1).DataType);
 
             TypeUtils.CallPrivateMethod(boundaryNodeDataMapTool, "TurnSelectedNodesIntoQTimeSeries", new object[] { null, null });
-            Assert.AreEqual(WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries, boundaryNodeDataMapTool.BoundaryNodeData.ElementAt(0).DataType);
-            Assert.AreEqual(WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries, boundaryNodeDataMapTool.BoundaryNodeData.ElementAt(1).DataType);
+            Assert.AreEqual(Model1DBoundaryNodeDataType.FlowTimeSeries, boundaryNodeDataMapTool.BoundaryNodeData.ElementAt(0).DataType);
+            Assert.AreEqual(Model1DBoundaryNodeDataType.FlowTimeSeries, boundaryNodeDataMapTool.BoundaryNodeData.ElementAt(1).DataType);
 
             TypeUtils.CallPrivateMethod(boundaryNodeDataMapTool, "TurnSelectedNodesIntoQHTable", new object[] { null, null });
-            Assert.AreEqual(WaterFlowModel1DBoundaryNodeDataType.FlowWaterLevelTable, boundaryNodeDataMapTool.BoundaryNodeData.ElementAt(0).DataType);
-            Assert.AreEqual(WaterFlowModel1DBoundaryNodeDataType.FlowWaterLevelTable, boundaryNodeDataMapTool.BoundaryNodeData.ElementAt(1).DataType);
+            Assert.AreEqual(Model1DBoundaryNodeDataType.FlowWaterLevelTable, boundaryNodeDataMapTool.BoundaryNodeData.ElementAt(0).DataType);
+            Assert.AreEqual(Model1DBoundaryNodeDataType.FlowWaterLevelTable, boundaryNodeDataMapTool.BoundaryNodeData.ElementAt(1).DataType);
         }
 
         [Test]
         public void BoundaryNodeDataMaptToolCreateContextMenuWithoutBoundaryData()
         {
             MockRepository mocks;
-            WaterFlowModel1DBoundaryNodeData boundaryNodeData1;
-            WaterFlowModel1DBoundaryNodeData boundaryNodeData2;
-            WaterFlowModel1DBoundaryNodeData boundaryNodeData3;
+            Model1DBoundaryNodeData boundaryNodeData1;
+            Model1DBoundaryNodeData boundaryNodeData2;
+            Model1DBoundaryNodeData boundaryNodeData3;
             var boundaryNodeDataMapTool = CreateBoundaryNodeDataMapTool(out mocks, out boundaryNodeData1, out boundaryNodeData2, out boundaryNodeData3);
 
             // Without boundary data
@@ -88,13 +88,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Forms.Tools
         public void BoundaryNodeDataMapToolCreateContextMenuForEmptyBoundaryData()
         {
             MockRepository mocks;
-            WaterFlowModel1DBoundaryNodeData boundaryNodeData1;
-            WaterFlowModel1DBoundaryNodeData boundaryNodeData2;
-            WaterFlowModel1DBoundaryNodeData boundaryNodeData3;
+            Model1DBoundaryNodeData boundaryNodeData1;
+            Model1DBoundaryNodeData boundaryNodeData2;
+            Model1DBoundaryNodeData boundaryNodeData3;
             var boundaryNodeDataMapTool = CreateBoundaryNodeDataMapTool(out mocks, out boundaryNodeData1, out boundaryNodeData2, out boundaryNodeData3);
 
             // With empty boundary data
-            boundaryNodeDataMapTool.MapControl.SelectedFeatures = new List<WaterFlowModel1DBoundaryNodeData>();
+            boundaryNodeDataMapTool.MapControl.SelectedFeatures = new List<Model1DBoundaryNodeData>();
 
             var items = boundaryNodeDataMapTool.GetContextMenuItems(null);
 
@@ -107,13 +107,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Forms.Tools
         public void BoundaryNodeDataMapToolCreateContextMenuForHqBoundary()
         {
             MockRepository mocks;
-            WaterFlowModel1DBoundaryNodeData boundaryNodeData1;
-            WaterFlowModel1DBoundaryNodeData boundaryNodeData2;
-            WaterFlowModel1DBoundaryNodeData boundaryNodeData3;
+            Model1DBoundaryNodeData boundaryNodeData1;
+            Model1DBoundaryNodeData boundaryNodeData2;
+            Model1DBoundaryNodeData boundaryNodeData3;
             var boundaryNodeDataMapTool = CreateBoundaryNodeDataMapTool(out mocks, out boundaryNodeData1, out boundaryNodeData2, out boundaryNodeData3);
 
             // With Q/H boundary data
-            boundaryNodeDataMapTool.MapControl.SelectedFeatures = new List<WaterFlowModel1DBoundaryNodeData> { boundaryNodeData1, boundaryNodeData3 };
+            boundaryNodeDataMapTool.MapControl.SelectedFeatures = new List<Model1DBoundaryNodeData> { boundaryNodeData1, boundaryNodeData3 };
 
             var items = boundaryNodeDataMapTool.GetContextMenuItems(null);
             Assert.AreEqual(1, items.Count());
@@ -135,13 +135,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Forms.Tools
         public void BoundaryNodeDataMapToolCreateContextMenuForHBoundaryOnly()
         {
             MockRepository mocks;
-            WaterFlowModel1DBoundaryNodeData boundaryNodeData1;
-            WaterFlowModel1DBoundaryNodeData boundaryNodeData2;
-            WaterFlowModel1DBoundaryNodeData boundaryNodeData3;
+            Model1DBoundaryNodeData boundaryNodeData1;
+            Model1DBoundaryNodeData boundaryNodeData2;
+            Model1DBoundaryNodeData boundaryNodeData3;
             var boundaryNodeDataMapTool = CreateBoundaryNodeDataMapTool(out mocks, out boundaryNodeData1, out boundaryNodeData2, out boundaryNodeData3);
 
             // With H only boundary data
-            boundaryNodeDataMapTool.MapControl.SelectedFeatures = new List<WaterFlowModel1DBoundaryNodeData> { boundaryNodeData1, boundaryNodeData2, boundaryNodeData3 };
+            boundaryNodeDataMapTool.MapControl.SelectedFeatures = new List<Model1DBoundaryNodeData> { boundaryNodeData1, boundaryNodeData2, boundaryNodeData3 };
 
             var items = boundaryNodeDataMapTool.GetContextMenuItems(null);
             Assert.AreEqual(1, items.Count());
@@ -160,9 +160,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Forms.Tools
         }
 
         private static BoundaryNodeDataMapTool CreateBoundaryNodeDataMapTool(out MockRepository mocks,
-                                                                             out WaterFlowModel1DBoundaryNodeData boundaryNodeData1,
-                                                                             out WaterFlowModel1DBoundaryNodeData boundaryNodeData2,
-                                                                             out WaterFlowModel1DBoundaryNodeData boundaryNodeData3)
+                                                                             out Model1DBoundaryNodeData boundaryNodeData1,
+                                                                             out Model1DBoundaryNodeData boundaryNodeData2,
+                                                                             out Model1DBoundaryNodeData boundaryNodeData3)
         {
             mocks = new MockRepository();
 
@@ -171,9 +171,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Forms.Tools
             var node1 = mocks.Stub<HydroNode>();
             var node2 = mocks.Stub<HydroNode>();
             var node3 = mocks.Stub<HydroNode>();
-            boundaryNodeData1 = mocks.Stub<WaterFlowModel1DBoundaryNodeData>();
-            boundaryNodeData2 = mocks.Stub<WaterFlowModel1DBoundaryNodeData>();
-            boundaryNodeData3 = mocks.Stub<WaterFlowModel1DBoundaryNodeData>();
+            boundaryNodeData1 = mocks.Stub<Model1DBoundaryNodeData>();
+            boundaryNodeData2 = mocks.Stub<Model1DBoundaryNodeData>();
+            boundaryNodeData3 = mocks.Stub<Model1DBoundaryNodeData>();
             var boundaryNodeDataMapTool = new BoundaryNodeDataMapTool{MapControl = mapcontrol};
 
             node1.Stub(n => n.IsConnectedToMultipleBranches).Return(false);

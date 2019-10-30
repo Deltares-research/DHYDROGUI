@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using DeltaShell.NGHS.IO.DataObjects;
+using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 {

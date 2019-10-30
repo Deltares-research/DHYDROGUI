@@ -7,6 +7,7 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.Gui;
+using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.Data.NHibernate;
@@ -15,11 +16,10 @@ using DeltaShell.Plugins.DelftModels.HydroModel;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.TestUtils;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel;
+using DeltaShell.Plugins.FMSuite.Common.Gui.Forms;
 using DeltaShell.Plugins.ImportExport.Sobek;
 using DeltaShell.Plugins.ImportExport.Sobek.Tests;
 using DeltaShell.Plugins.NetCDF;
@@ -493,11 +493,11 @@ namespace Sobek.IntegrationTests
             modelImporter.TargetItem = new WaterFlowModel1D();
             var importedModel = (WaterFlowModel1D)modelImporter.ImportItem(modelPath);
 
-            var view = new WaterFlowModel1DBoundaryNodeDataViewWpf();
-            var boundaryData = new WaterFlowModel1DBoundaryNodeData
+            var view = new Model1DBoundaryNodeDataViewWpf();
+            var boundaryData = new Model1DBoundaryNodeData
                                    {
                                        Name = "test",
-                                       DataType = WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries,
+                                       DataType = Model1DBoundaryNodeDataType.FlowTimeSeries,
                                        Data = importedModel.BoundaryConditions[0].Data
                                    };
             view.Data = boundaryData;

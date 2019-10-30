@@ -5,7 +5,7 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
+using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.TestUtils;
 using GeoAPI.Extensions.Coverages;
@@ -227,18 +227,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
                 //TODO: make it sinusoidal like the modelapi test
                 //one side is inflow of salt water 
-                WaterFlowModel1DBoundaryNodeData qBoundary = model.BoundaryConditions[0];
+                Model1DBoundaryNodeData qBoundary = model.BoundaryConditions[0];
                 qBoundary.SaltConditionType = SaltBoundaryConditionType.TimeDependent;
                 qBoundary.SaltConcentrationTimeSeries[startTime] = 0.0;
                 qBoundary.SaltConcentrationTimeSeries[stopTime] = 10.0;
-                qBoundary.DataType = WaterFlowModel1DBoundaryNodeDataType.FlowConstant;
+                qBoundary.DataType = Model1DBoundaryNodeDataType.FlowConstant;
                 qBoundary.Flow = 2.0;
 
                 //the other side is constant Sal and H 
-                WaterFlowModel1DBoundaryNodeData hBoundary = model.BoundaryConditions[1];
+                Model1DBoundaryNodeData hBoundary = model.BoundaryConditions[1];
                 hBoundary.SaltConditionType = SaltBoundaryConditionType.Constant;
                 hBoundary.SaltConcentrationConstant = 1.0;
-                hBoundary.DataType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant;
+                hBoundary.DataType = Model1DBoundaryNodeDataType.WaterLevelConstant;
                 hBoundary.WaterLevel = 3.0;
 
                 // set output coverages on
@@ -301,18 +301,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
                 //TODO: make it sinusoidal like the modelapi test
                 //one side is inflow of salt water 
-                WaterFlowModel1DBoundaryNodeData qBoundary = model.BoundaryConditions[0];
+                Model1DBoundaryNodeData qBoundary = model.BoundaryConditions[0];
                 qBoundary.SaltConditionType = SaltBoundaryConditionType.TimeDependent;
                 qBoundary.SaltConcentrationTimeSeries[startTime] = 0.0;
                 qBoundary.SaltConcentrationTimeSeries[stopTime] = 10.0;
-                qBoundary.DataType = WaterFlowModel1DBoundaryNodeDataType.FlowConstant;
+                qBoundary.DataType = Model1DBoundaryNodeDataType.FlowConstant;
                 qBoundary.Flow = 2.0;
 
                 //the other side is constant Sal and H 
-                WaterFlowModel1DBoundaryNodeData hBoundary = model.BoundaryConditions[1];
+                Model1DBoundaryNodeData hBoundary = model.BoundaryConditions[1];
                 hBoundary.SaltConditionType = SaltBoundaryConditionType.Constant;
                 hBoundary.SaltConcentrationConstant = 1.0;
-                hBoundary.DataType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant;
+                hBoundary.DataType = Model1DBoundaryNodeDataType.WaterLevelConstant;
                 hBoundary.WaterLevel = 3.0;
 
                 //////////////////////////////////////////////////////////////////////////////////
@@ -379,18 +379,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                 model.OutputSettings.LocationWaterDepth = AggregationOptions.Current;
 
                 //one side is inflow of salt water 
-                WaterFlowModel1DBoundaryNodeData qBoundary = model.BoundaryConditions[0];
+                Model1DBoundaryNodeData qBoundary = model.BoundaryConditions[0];
                 qBoundary.SaltConditionType = SaltBoundaryConditionType.TimeDependent;
                 qBoundary.SaltConcentrationTimeSeries[startTime] = 0.0;
                 qBoundary.SaltConcentrationTimeSeries[stopTime] = 10.0;
-                qBoundary.DataType = WaterFlowModel1DBoundaryNodeDataType.FlowConstant;
+                qBoundary.DataType = Model1DBoundaryNodeDataType.FlowConstant;
                 qBoundary.Flow = 2.0;
 
                 //the other side is constant Sal and H 
-                WaterFlowModel1DBoundaryNodeData hBoundary = model.BoundaryConditions[1];
+                Model1DBoundaryNodeData hBoundary = model.BoundaryConditions[1];
                 hBoundary.SaltConditionType = SaltBoundaryConditionType.Constant;
                 hBoundary.SaltConcentrationConstant = 0.0;
-                hBoundary.DataType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant;
+                hBoundary.DataType = Model1DBoundaryNodeDataType.WaterLevelConstant;
                 hBoundary.WaterLevel = 3.0;
 
                 //////////////////////////////////////////////////////////////////////////////////
@@ -458,7 +458,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                 qBoundary.SaltConditionType = SaltBoundaryConditionType.TimeDependent;
                 qBoundary.SaltConcentrationTimeSeries[model.StartTime] = 0.0;
                 qBoundary.SaltConcentrationTimeSeries[model.StopTime] = 3.0;
-                qBoundary.DataType = WaterFlowModel1DBoundaryNodeDataType.FlowConstant;
+                qBoundary.DataType = Model1DBoundaryNodeDataType.FlowConstant;
                 qBoundary.Flow = 1.5;
 
                 var modelResolutions = new List<ModelResolution>

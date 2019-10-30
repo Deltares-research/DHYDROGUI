@@ -4,8 +4,7 @@ using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi;
+using DeltaShell.NGHS.IO.DataObjects;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
 
@@ -16,12 +15,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
     /// </summary>
     public static class WaterFlowModel1DHelper
     {
-        public static WaterFlowModel1DBoundaryNodeData CreateDefaultBoundaryCondition(INode node, bool useSalt, bool useTemperature)
+        public static Model1DBoundaryNodeData CreateDefaultBoundaryCondition(INode node, bool useSalt, bool useTemperature)
         {
-            var bc = new WaterFlowModel1DBoundaryNodeData
+            var bc = new Model1DBoundaryNodeData
                          {
                              Feature = node,
-                             DataType = WaterFlowModel1DBoundaryNodeDataType.None,
+                             DataType = Model1DBoundaryNodeDataType.None,
                              UseSalt = useSalt,
                              UseTemperature = useTemperature
                          };
@@ -29,19 +28,19 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             return bc;
         }
 
-        public static BoundaryType GetBoundaryType(WaterFlowModel1DBoundaryNodeData boundaryNodeData)
+        public static BoundaryType GetBoundaryType(Model1DBoundaryNodeData boundaryNodeData)
         {
             switch (boundaryNodeData.DataType)
             {
-                case WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries:
+                case Model1DBoundaryNodeDataType.WaterLevelTimeSeries:
                     return BoundaryType.Level;
-                case WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries:
+                case Model1DBoundaryNodeDataType.FlowTimeSeries:
                     return BoundaryType.Discharge;
-                case WaterFlowModel1DBoundaryNodeDataType.FlowConstant:
+                case Model1DBoundaryNodeDataType.FlowConstant:
                     return BoundaryType.Discharge;
-                case WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant:
+                case Model1DBoundaryNodeDataType.WaterLevelConstant:
                     return BoundaryType.Level;
-                case WaterFlowModel1DBoundaryNodeDataType.FlowWaterLevelTable:
+                case Model1DBoundaryNodeDataType.FlowWaterLevelTable:
                     // SOBEK3-1035
                     if (boundaryNodeData.Data != null && 
                         boundaryNodeData.Data.Components.Any() && 
@@ -60,7 +59,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             }
         }
 
-        public static IEnumerable<WaterFlowModel1DBoundaryNodeDataType> GetTimeSeriesDataTypes(IFunction series)
+        public static IEnumerable<Model1DBoundaryNodeDataType> GetTimeSeriesDataTypes(IFunction series)
         {
             var isDischargeSeries = false;
 
@@ -76,8 +75,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
                     }
                 }
                 yield return isDischargeSeries
-                           ? WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries
-                           : WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries;
+                           ? Model1DBoundaryNodeDataType.FlowTimeSeries
+                           : Model1DBoundaryNodeDataType.WaterLevelTimeSeries;
             }
         }
 

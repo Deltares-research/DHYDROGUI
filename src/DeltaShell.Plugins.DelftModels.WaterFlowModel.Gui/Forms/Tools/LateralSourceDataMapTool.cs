@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
+using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Properties;
 using GeoAPI.Geometries;
 using SharpMap.UI.Tools;
@@ -14,7 +14,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.Tools
         /// <summary>
         /// The lateral source data to apply the map tool logic for/to
         /// </summary>
-        public IEnumerable<WaterFlowModel1DLateralSourceData> LateralSourceData { get; set; }
+        public IEnumerable<Model1DLateralSourceData> LateralSourceData { get; set; }
 
         public override bool AlwaysActive
         {
@@ -24,8 +24,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.Tools
         public override IEnumerable<MapToolContextMenuItem> GetContextMenuItems(Coordinate worldPosition)
         {
             LateralSourceData = MapControl == null || MapControl.SelectedFeatures == null
-                ? Enumerable.Empty<WaterFlowModel1DLateralSourceData>()
-                : MapControl.SelectedFeatures.OfType<WaterFlowModel1DLateralSourceData>();
+                ? Enumerable.Empty<Model1DLateralSourceData>()
+                : MapControl.SelectedFeatures.OfType<Model1DLateralSourceData>();
 
             if (!LateralSourceData.Any()) return Enumerable.Empty<MapToolContextMenuItem>();
             
@@ -58,7 +58,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.Tools
 
             foreach (var lateralSourceData in LateralSourceData)
             {
-                lateralSourceData.DataType = WaterFlowModel1DLateralDataType.FlowConstant;
+                lateralSourceData.DataType = Model1DLateralDataType.FlowConstant;
             }
         }
 
@@ -68,7 +68,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.Tools
 
             foreach (var lateralSourceData in LateralSourceData)
             {
-                lateralSourceData.DataType = WaterFlowModel1DLateralDataType.FlowTimeSeries;
+                lateralSourceData.DataType = Model1DLateralDataType.FlowTimeSeries;
             }
         }
 
@@ -78,7 +78,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.Tools
 
             foreach (var lateralSourceData in LateralSourceData)
             {
-                lateralSourceData.DataType = WaterFlowModel1DLateralDataType.FlowWaterLevelTable;
+                lateralSourceData.DataType = Model1DLateralDataType.FlowWaterLevelTable;
             }
         }
     }

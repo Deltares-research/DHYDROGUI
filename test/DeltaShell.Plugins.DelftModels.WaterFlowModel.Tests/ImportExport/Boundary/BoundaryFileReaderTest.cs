@@ -2,8 +2,8 @@
 using System.IO;
 using System.Linq;
 using DelftTools.Functions.Generic;
+using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.NGHS.IO.TestUtils;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
 using NUnit.Framework;
 
@@ -20,13 +20,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
             var startTime = DateTime.Now;
             originalModel = BoundaryFileReaderTestHelper.GetSimpleModel();
             
-            originalModel.BoundaryConditions[1].DataType = WaterFlowModel1DBoundaryNodeDataType.FlowConstant;
+            originalModel.BoundaryConditions[1].DataType = Model1DBoundaryNodeDataType.FlowConstant;
             originalModel.BoundaryConditions[1].Flow = 19.63;
 
-            originalModel.BoundaryConditions[2].DataType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant;
+            originalModel.BoundaryConditions[2].DataType = Model1DBoundaryNodeDataType.WaterLevelConstant;
             originalModel.BoundaryConditions[2].WaterLevel = 13.57;
 
-            originalModel.BoundaryConditions[3].DataType = WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries;
+            originalModel.BoundaryConditions[3].DataType = Model1DBoundaryNodeDataType.FlowTimeSeries;
             originalModel.BoundaryConditions[3].Data.Arguments.Clear();
             originalModel.BoundaryConditions[3].Data.Arguments.Add(
                 new Variable<DateTime>()
@@ -40,7 +40,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
                     Values = { 11.13, 13.17, 17.19, 19.23, 23.29 }
                 });
 
-            originalModel.BoundaryConditions[4].DataType = WaterFlowModel1DBoundaryNodeDataType.FlowWaterLevelTable;
+            originalModel.BoundaryConditions[4].DataType = Model1DBoundaryNodeDataType.FlowWaterLevelTable;
             originalModel.BoundaryConditions[4].Data.Arguments.Clear();
             originalModel.BoundaryConditions[4].Data.Arguments.Add(
                 new Variable<double>()
@@ -54,7 +54,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
                     Values = { 11.13, 13.17, 17.19, 19.23, 23.29 }
                 });
 
-            originalModel.BoundaryConditions[5].DataType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries;
+            originalModel.BoundaryConditions[5].DataType = Model1DBoundaryNodeDataType.WaterLevelTimeSeries;
             originalModel.BoundaryConditions[5].Data.Arguments.Clear();
             originalModel.BoundaryConditions[5].Data.Arguments.Add(
                 new Variable<DateTime>()
@@ -69,10 +69,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
                 });
 
 
-            originalModel.LateralSourceData[0].DataType = WaterFlowModel1DLateralDataType.FlowConstant;
+            originalModel.LateralSourceData[0].DataType = Model1DLateralDataType.FlowConstant;
             originalModel.LateralSourceData[0].Flow = 47.92;
 
-            originalModel.LateralSourceData[1].DataType = WaterFlowModel1DLateralDataType.FlowTimeSeries;
+            originalModel.LateralSourceData[1].DataType = Model1DLateralDataType.FlowTimeSeries;
             originalModel.LateralSourceData[1].Data.Arguments.Clear();
             originalModel.LateralSourceData[1].Data.Arguments.Add(
                 new Variable<DateTime>()
@@ -86,7 +86,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
                     Values = { 11.13, 13.17, 17.19, 19.23, 23.29 }
                 });
 
-            originalModel.LateralSourceData[2].DataType = WaterFlowModel1DLateralDataType.FlowWaterLevelTable;
+            originalModel.LateralSourceData[2].DataType = Model1DLateralDataType.FlowWaterLevelTable;
             originalModel.LateralSourceData[2].Data.Arguments.Clear();
             originalModel.LateralSourceData[2].Data.Arguments.Add(
                 new Variable<double>()

@@ -5,8 +5,8 @@ using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
+using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
 using DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter;
 using DeltaShell.Sobek.Readers.Readers;
 using NUnit.Framework;
@@ -181,9 +181,9 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
 
             var lateralFlow = reader.GetLateralFlow(initialConditionsText);
 
-            WaterFlowModel1DLateralSourceData waterFlowModel1DLateralSourceData = new WaterFlowModel1DLateralSourceData();
-            SobekLateralSourcesDataImporter.ConvertToLateralSourceData(lateralFlow, waterFlowModel1DLateralSourceData);
-            Assert.AreEqual(InterpolationType.Constant, waterFlowModel1DLateralSourceData.Data.Arguments[0].InterpolationType);
+            Model1DLateralSourceData model1DLateralSourceData = new Model1DLateralSourceData();
+            SobekLateralSourcesDataImporter.ConvertToLateralSourceData(lateralFlow, model1DLateralSourceData);
+            Assert.AreEqual(InterpolationType.Constant, model1DLateralSourceData.Data.Arguments[0].InterpolationType);
         }
 
         [Test]
@@ -201,11 +201,11 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
 
             var lateralFlow = reader.GetLateralFlow(source);
 
-            var waterFlowModel1DLateralSourceData = new WaterFlowModel1DLateralSourceData();
+            var waterFlowModel1DLateralSourceData = new Model1DLateralSourceData();
 
             SobekLateralSourcesDataImporter.ConvertToLateralSourceData(lateralFlow, waterFlowModel1DLateralSourceData);
 
-            Assert.AreEqual(WaterFlowModel1DLateralDataType.FlowWaterLevelTable,
+            Assert.AreEqual(Model1DLateralDataType.FlowWaterLevelTable,
                             waterFlowModel1DLateralSourceData.DataType);
             Assert.AreEqual(0.0, (double)waterFlowModel1DLateralSourceData.Data[49.86], 1.0e-6);
             Assert.AreEqual(-10.0, (double)waterFlowModel1DLateralSourceData.Data[49.96], 1.0e-6);

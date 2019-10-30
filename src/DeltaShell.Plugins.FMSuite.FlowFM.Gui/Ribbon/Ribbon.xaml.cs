@@ -1,11 +1,8 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Windows;
 using DelftTools.Controls;
 using DelftTools.Shell.Gui.Forms;
 using DeltaShell.Plugins.SharpMapGis.Gui;
-using DeltaShell.Plugins.SharpMapGis.Gui.Commands;
-using DeltaShell.Plugins.SharpMapGis.Gui.Commands.SpatialOperations;
 using Fluent;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Ribbon

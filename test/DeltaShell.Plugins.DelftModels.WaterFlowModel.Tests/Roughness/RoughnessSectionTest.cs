@@ -18,7 +18,6 @@ using GeoAPI.Extensions.Coverages;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Networks;
 using NUnit.Framework;
-using Rhino.Mocks;
 using Point = NetTopologySuite.Geometries.Point;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Roughness

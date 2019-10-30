@@ -8,9 +8,9 @@ using DelftTools.Hydro.Helpers;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils.Editing;
+using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.DelftModels.HydroModel;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
 using DeltaShell.Plugins.FMSuite.Common.Gui.RgfGrid;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools;
@@ -138,9 +138,9 @@ namespace DeltaShell.Plugins.DeveloperTools.Commands.IntegratedDemoModels
             flowModel1D.NetworkDiscretization.EndEdit();
 
             // Boundary
-            var boundary = new WaterFlowModel1DBoundaryNodeData();
+            var boundary = new Model1DBoundaryNodeData();
             boundary.Feature = flowModel1D.Network.Nodes.First();
-            boundary.DataType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant;
+            boundary.DataType = Model1DBoundaryNodeDataType.WaterLevelConstant;
             boundary.WaterLevel = 0.5;
             flowModel1D.ReplaceBoundaryCondition(boundary);
 

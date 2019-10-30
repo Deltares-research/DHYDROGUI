@@ -5,7 +5,6 @@ using System.Linq;
 using NUnit.Framework;
 using DelftTools.TestUtils;
 using DelftTools.Units;
-using DelftTools.Utils;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;

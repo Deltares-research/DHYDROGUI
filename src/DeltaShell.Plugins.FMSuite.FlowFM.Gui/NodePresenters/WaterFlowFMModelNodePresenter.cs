@@ -15,6 +15,7 @@ using DelftTools.Shell.Gui.Swf.Validation;
 using DelftTools.Utils;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Dimr;
+using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
 using DeltaShell.Plugins.FMSuite.Common.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors;
@@ -41,6 +42,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
         private static readonly Bitmap TimeFrameIcon = new Bitmap(Common.Gui.Properties.Resources.timers, 16, 16);
         private static readonly Bitmap InitialConditionsIcon = new Bitmap(Resources.initial_folder, 16, 16);
         private static readonly Bitmap BoundaryConditionIcon = new Bitmap(Common.Gui.Properties.Resources.boundary_folder, 16, 16);
+        private static readonly Bitmap FolderIcon = new Bitmap(Resources.folder, 16, 16);
         private static readonly Bitmap SourceSinkIcon = new Bitmap(Resources.SourceSinkFolder, 16, 16);
         private static readonly Bitmap PhysParamIcon = new Bitmap(Common.Gui.Properties.Resources.folder_wrench, 16, 16);
         private static readonly Bitmap NumParamIcon = new Bitmap(Common.Gui.Properties.Resources.settings, 16, 16);
@@ -115,6 +117,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
             yield return new FmModelTreeShortcut("Bed Level", Resources.unstrucWater, model, model.Bathymetry, ShortCutType.SpatialCoverage);
             yield return new FmModelTreeShortcut("Time Frame", TimeFrameIcon, model, "Time Frame");
             yield return new FmModelTreeShortcut("1D Roughness", Resources.Roughness, model, null, ShortCutType.FeatureSet, model.RoughnessSections);
+            yield return new FmModelTreeShortcut("1D Boundary Conditions", BoundaryConditionIcon, model, model.BoundaryConditions1D, ShortCutType.FeatureSet, model.BoundaryConditions1D.Where(boundaryNodeData => boundaryNodeData.DataType != Model1DBoundaryNodeDataType.None));
+            yield return new FmModelTreeShortcut("1D Lateral Sources", FolderIcon, model, model.LateralSourcesData, ShortCutType.FeatureSet, model.LateralSourcesData.Where(lateralSourceData => lateralSourceData.DataType != Model1DLateralDataType.None));
             yield return new FmModelTreeShortcut("Processes", ProcessesIcon, model, "Processes");
             yield return new FmModelTreeShortcut("Initial Conditions", InitialConditionsIcon, model, "Initial Conditions", ShortCutType.SettingsTab, GetInitialConditionsItems(model));
             yield return new FmModelTreeShortcut("Boundary Conditions", BoundaryConditionIcon, model, model.BoundaryConditionSets, ShortCutType.FeatureSet, model.BoundaryConditionSets);

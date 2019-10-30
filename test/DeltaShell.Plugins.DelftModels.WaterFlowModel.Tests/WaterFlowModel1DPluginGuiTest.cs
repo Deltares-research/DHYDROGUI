@@ -8,7 +8,7 @@ using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
+using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui;
 using GeoAPI.Extensions.Coverages;
 using NetTopologySuite.Extensions.Actions;
@@ -38,10 +38,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             var dataItemLinked = new DataItem() { Role = DataItemRole.Input };
             dataItemLinked.LinkTo(dataItemInput);
 
-            var boundaryFlowSerie = new WaterFlowModel1DBoundaryNodeData(){DataType = WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries};
-            var boundaryFlowConstant = new WaterFlowModel1DBoundaryNodeData() { DataType = WaterFlowModel1DBoundaryNodeDataType.FlowConstant };
-            var boundaryLevelSerie = new WaterFlowModel1DBoundaryNodeData(){DataType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries};
-            var boundaryLevelConstant = new WaterFlowModel1DBoundaryNodeData() { DataType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant };
+            var boundaryFlowSerie = new Model1DBoundaryNodeData(){DataType = Model1DBoundaryNodeDataType.FlowTimeSeries};
+            var boundaryFlowConstant = new Model1DBoundaryNodeData() { DataType = Model1DBoundaryNodeDataType.FlowConstant };
+            var boundaryLevelSerie = new Model1DBoundaryNodeData(){DataType = Model1DBoundaryNodeDataType.WaterLevelTimeSeries};
+            var boundaryLevelConstant = new Model1DBoundaryNodeData() { DataType = Model1DBoundaryNodeDataType.WaterLevelConstant };
             var function = new Function();
 
             //menu
@@ -72,8 +72,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             var dataItemLinked = new DataItem() { Role = DataItemRole.Input };
             dataItemLinked.LinkTo(dataItemInput);
 
-            var lateralFlowSerie = new WaterFlowModel1DLateralSourceData() { DataType = WaterFlowModel1DLateralDataType.FlowTimeSeries };
-            var lateralFlowConstant = new WaterFlowModel1DLateralSourceData() { DataType = WaterFlowModel1DLateralDataType.FlowConstant };
+            var lateralFlowSerie = new Model1DLateralSourceData() { DataType = Model1DLateralDataType.FlowTimeSeries };
+            var lateralFlowConstant = new Model1DLateralSourceData() { DataType = Model1DLateralDataType.FlowConstant };
             var function = new Function();
 
             //menu

@@ -31,6 +31,7 @@ using LandBoundary2D = DelftTools.Hydro.LandBoundary2D;
 using ObservationCrossSection2D = DelftTools.Hydro.ObservationCrossSection2D;
 using ThinDam2D = DelftTools.Hydro.Structures.ThinDam2D;
 using DelftTools.Hydro.Roughness;
+using GeoAPI.Extensions.Networks;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui
 {
@@ -944,8 +945,26 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     }
                 };
             }
+            
 
-            if (type == typeof(CompositeBranchStructure) || type == typeof(LateralSource) || type == typeof(Retention) || type == typeof(ObservationPoint))
+            if (type == typeof(LateralSource))
+            {
+                return new List<ISnapRule>
+                           {
+                               new SnapRule
+                                   {
+                                       Criteria = (layer, feature) => (feature is Channel || feature is INode) && layer.DataSource is HydroNetworkFeatureCollection &&
+                                                                      ((HydroNetworkFeatureCollection) layer.DataSource).Network ==
+                                                                      ((HydroNetworkFeatureCollection) vectorLayer.DataSource).Network,
+                                       NewFeatureLayer = vectorLayer,
+                                       SnapRole = SnapRole.FreeAtObject,
+                                       Obligatory = true,
+                                       PixelGravity = 40
+                                   }
+                           };
+            }
+
+            if (type == typeof(CompositeBranchStructure) || type == typeof(Retention) || type == typeof(ObservationPoint))
             {
                 return new List<ISnapRule>
                            {

@@ -6,9 +6,9 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Shell.Gui;
+using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.DelftModels.HydroModel;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
@@ -68,18 +68,18 @@ namespace DeltaShell.Plugins.DeveloperTools.Commands.IntegratedDemoModels
             var downstreamNodeBoundaryConditions =
                 flowModel1D.BoundaryConditions.First(
                     bc => bc.Feature == flowModel1D.Network.Nodes.First(n => n.Name == DownstreamNodeName));
-            downstreamNodeBoundaryConditions.DataType = WaterFlowModel1DBoundaryNodeDataType.FlowConstant;
+            downstreamNodeBoundaryConditions.DataType = Model1DBoundaryNodeDataType.FlowConstant;
             downstreamNodeBoundaryConditions.Flow = 0.01;
 
             var upstreamNodeBoundaryConditions =
                 flowModel1D.BoundaryConditions.First(
                     bc => bc.Feature == flowModel1D.Network.Nodes.First(n => n.Name == UpstreamNodeName));
-            upstreamNodeBoundaryConditions.DataType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant;
+            upstreamNodeBoundaryConditions.DataType = Model1DBoundaryNodeDataType.WaterLevelConstant;
             upstreamNodeBoundaryConditions.WaterLevel = 0.0;
 
             // Lateral Source data:
             var lateralInflow = flowModel1D.LateralSourceData.First();
-            lateralInflow.DataType = WaterFlowModel1DLateralDataType.FlowTimeSeries;
+            lateralInflow.DataType = Model1DLateralDataType.FlowTimeSeries;
             lateralInflow.Data.Arguments[0].ExtrapolationType = ExtrapolationType.None;
             lateralInflow.Data.Arguments[0].InterpolationType = InterpolationType.Constant;
             lateralInflow.Data[new DateTime(2010, 1, 1, 0, 0, 0)] = 0.0;

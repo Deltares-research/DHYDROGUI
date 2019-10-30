@@ -3,7 +3,7 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Utils.Validation;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
+using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.PhysicalParameters;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
@@ -306,7 +306,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation
                         sourceModel.Name,
                         destinationConnectedNode.Name,
                         destinationConnectedNodesBoundaryCondition.DataType,
-                        WaterFlowModel1DBoundaryNodeDataType.None));
+                        Model1DBoundaryNodeDataType.None));
                 bcIssues.Add(issue);
             }
 

@@ -23,6 +23,7 @@ using DelftTools.Utils.Reflection;
 using DeltaShell.Core;
 using DeltaShell.Core.Services;
 using DeltaShell.Gui;
+using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.Data.NHibernate;
@@ -31,7 +32,6 @@ using DeltaShell.Plugins.DelftModels.HydroModel;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.TestUtils;
@@ -54,7 +54,6 @@ using log4net.Core;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Networks;
 using NUnit.Framework;
-using Rhino.Mocks;
 using SharpMap;
 using SharpMap.Layers;
 using SharpMap.UI.Forms;
@@ -1366,7 +1365,7 @@ namespace Sobek.IntegrationTests
 
             //create a timeseries bc
             var firstBoundaryCondition = model1.BoundaryConditions.First();
-            firstBoundaryCondition.DataType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries;
+            firstBoundaryCondition.DataType = Model1DBoundaryNodeDataType.WaterLevelTimeSeries;
             firstBoundaryCondition.Data[new DateTime(2000, 1, 1)] = 4.0;
             
             //save 
@@ -1430,7 +1429,7 @@ namespace Sobek.IntegrationTests
 
             //create a constant bc
             var firstBoundaryCondition = model1.BoundaryConditions.First();
-            firstBoundaryCondition.DataType = WaterFlowModel1DBoundaryNodeDataType.FlowConstant;
+            firstBoundaryCondition.DataType = Model1DBoundaryNodeDataType.FlowConstant;
             firstBoundaryCondition.Flow = 1.1;
             
             //save 
@@ -1544,9 +1543,9 @@ namespace Sobek.IntegrationTests
 
             model1.UseSalt = true;
 
-            var waterFlowModel1DLateralSourceData = new WaterFlowModel1DLateralSourceData();
+            var waterFlowModel1DLateralSourceData = new Model1DLateralSourceData();
 
-            waterFlowModel1DLateralSourceData.DataType = WaterFlowModel1DLateralDataType.FlowConstant;
+            waterFlowModel1DLateralSourceData.DataType = Model1DLateralDataType.FlowConstant;
             waterFlowModel1DLateralSourceData.Flow = 1.5;
             waterFlowModel1DLateralSourceData.UseSalt = true;
             waterFlowModel1DLateralSourceData.SaltLateralDischargeType = SaltLateralDischargeType.MassConstant;
@@ -1567,7 +1566,7 @@ namespace Sobek.IntegrationTests
                 var retrievedModel = (WaterFlowModel1D)retrievedProject.RootFolder.Models.FirstOrDefault();
                 var retrievedLateralSourceData= retrievedModel.LateralSourceData.First();
 
-                Assert.AreEqual(WaterFlowModel1DLateralDataType.FlowConstant,retrievedLateralSourceData.DataType);
+                Assert.AreEqual(Model1DLateralDataType.FlowConstant,retrievedLateralSourceData.DataType);
                 Assert.AreEqual(1.5,retrievedLateralSourceData.Flow);
                 Assert.IsTrue(retrievedLateralSourceData.UseSalt);
                 Assert.AreEqual(SaltLateralDischargeType.MassConstant,retrievedLateralSourceData.SaltLateralDischargeType);
@@ -1588,7 +1587,7 @@ namespace Sobek.IntegrationTests
 
             //create a constant bc
             var firstBoundaryCondition = model1.BoundaryConditions.First();
-            firstBoundaryCondition.DataType = WaterFlowModel1DBoundaryNodeDataType.FlowConstant;
+            firstBoundaryCondition.DataType = Model1DBoundaryNodeDataType.FlowConstant;
             
 
             //save 
@@ -2230,9 +2229,9 @@ namespace Sobek.IntegrationTests
 
             model1.UseTemperature = true;
 
-            var waterFlowModel1DLateralSourceData = new WaterFlowModel1DLateralSourceData();
+            var waterFlowModel1DLateralSourceData = new Model1DLateralSourceData();
 
-            waterFlowModel1DLateralSourceData.DataType = WaterFlowModel1DLateralDataType.FlowConstant;
+            waterFlowModel1DLateralSourceData.DataType = Model1DLateralDataType.FlowConstant;
             waterFlowModel1DLateralSourceData.Flow = 1.5;
             waterFlowModel1DLateralSourceData.UseTemperature = true;
             waterFlowModel1DLateralSourceData.TemperatureLateralDischargeType = TemperatureLateralDischargeType.TimeDependent;
@@ -2251,7 +2250,7 @@ namespace Sobek.IntegrationTests
                 var retrievedModel = (WaterFlowModel1D)retrievedProject.RootFolder.Models.FirstOrDefault();
                 var retrievedLateralSourceData = retrievedModel.LateralSourceData.First();
 
-                Assert.AreEqual(WaterFlowModel1DLateralDataType.FlowConstant, retrievedLateralSourceData.DataType);
+                Assert.AreEqual(Model1DLateralDataType.FlowConstant, retrievedLateralSourceData.DataType);
                 Assert.AreEqual(1.5, retrievedLateralSourceData.Flow);
                 Assert.IsTrue(retrievedLateralSourceData.UseTemperature);
                 Assert.AreEqual(TemperatureLateralDischargeType.TimeDependent, retrievedLateralSourceData.TemperatureLateralDischargeType);

@@ -1,6 +1,6 @@
 ﻿using DelftTools.TestUtils;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms;
+using DeltaShell.NGHS.IO.DataObjects;
+using DeltaShell.Plugins.FMSuite.Common.Gui.Forms;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Forms
@@ -8,7 +8,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Forms
     [TestFixture]
     public class WaterFlowModel1DBoundaryNodeDataViewWpfViewModelTest
     {
-        private WaterFlowModel1DBoundaryNodeData boundaryNodeData;
+        private Model1DBoundaryNodeData boundaryNodeData;
 
         [SetUp]
         public void Setup()
@@ -20,28 +20,28 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Forms
         [Test]
         public void TestChangeFlowDataTypeInViewModelIsReflectedInObjectModel()
         {
-            using (var view = new WaterFlowModel1DBoundaryNodeDataViewWpf { Data = boundaryNodeData })
+            using (var view = new Model1DBoundaryNodeDataViewWpf { Data = boundaryNodeData })
             {
-                var viewModel = view.DataContext as WaterFlowModel1DBoundaryNodeDataViewWpfViewModel;
+                var viewModel = view.DataContext as Model1DBoundaryNodeDataViewWpfViewModel;
                 Assert.NotNull(viewModel);
 
-                viewModel.BoundaryNodeDataType = WaterFlowModel1DBoundaryNodeDataType.None;
-                Assert.IsTrue(boundaryNodeData.DataType == WaterFlowModel1DBoundaryNodeDataType.None);
+                viewModel.BoundaryNodeDataType = Model1DBoundaryNodeDataType.None;
+                Assert.IsTrue(boundaryNodeData.DataType == Model1DBoundaryNodeDataType.None);
 
-                viewModel.BoundaryNodeDataType = WaterFlowModel1DBoundaryNodeDataType.FlowConstant;
-                Assert.IsTrue(boundaryNodeData.DataType == WaterFlowModel1DBoundaryNodeDataType.FlowConstant);
+                viewModel.BoundaryNodeDataType = Model1DBoundaryNodeDataType.FlowConstant;
+                Assert.IsTrue(boundaryNodeData.DataType == Model1DBoundaryNodeDataType.FlowConstant);
                 
-                viewModel.BoundaryNodeDataType = WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries;
-                Assert.IsTrue(boundaryNodeData.DataType == WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries);
+                viewModel.BoundaryNodeDataType = Model1DBoundaryNodeDataType.FlowTimeSeries;
+                Assert.IsTrue(boundaryNodeData.DataType == Model1DBoundaryNodeDataType.FlowTimeSeries);
                 
-                viewModel.BoundaryNodeDataType = WaterFlowModel1DBoundaryNodeDataType.FlowWaterLevelTable;
-                Assert.IsTrue(boundaryNodeData.DataType == WaterFlowModel1DBoundaryNodeDataType.FlowWaterLevelTable);
+                viewModel.BoundaryNodeDataType = Model1DBoundaryNodeDataType.FlowWaterLevelTable;
+                Assert.IsTrue(boundaryNodeData.DataType == Model1DBoundaryNodeDataType.FlowWaterLevelTable);
                 
-                viewModel.BoundaryNodeDataType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant;
-                Assert.IsTrue(boundaryNodeData.DataType == WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant);
+                viewModel.BoundaryNodeDataType = Model1DBoundaryNodeDataType.WaterLevelConstant;
+                Assert.IsTrue(boundaryNodeData.DataType == Model1DBoundaryNodeDataType.WaterLevelConstant);
                 
-                viewModel.BoundaryNodeDataType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries;
-                Assert.IsTrue(boundaryNodeData.DataType == WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries);
+                viewModel.BoundaryNodeDataType = Model1DBoundaryNodeDataType.WaterLevelTimeSeries;
+                Assert.IsTrue(boundaryNodeData.DataType == Model1DBoundaryNodeDataType.WaterLevelTimeSeries);
             }
         }
 
@@ -49,9 +49,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Forms
         [Test]
         public void TestChangeSaltDataTypeInViewModelIsReflectedInObjectModel()
         {
-            using (var view = new WaterFlowModel1DBoundaryNodeDataViewWpf { Data = boundaryNodeData })
+            using (var view = new Model1DBoundaryNodeDataViewWpf { Data = boundaryNodeData })
             {
-                var viewModel = view.DataContext as WaterFlowModel1DBoundaryNodeDataViewWpfViewModel;
+                var viewModel = view.DataContext as Model1DBoundaryNodeDataViewWpfViewModel;
                 Assert.NotNull(viewModel);
 
                 viewModel.SaltConditionType = SaltBoundaryConditionType.None;
@@ -69,9 +69,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Forms
         [Test]
         public void TestChangeTemperatureDataTypeInViewModelIsReflectedInObjectModel()
         {
-            using (var view = new WaterFlowModel1DBoundaryNodeDataViewWpf { Data = boundaryNodeData })
+            using (var view = new Model1DBoundaryNodeDataViewWpf { Data = boundaryNodeData })
             {
-                var viewModel = view.DataContext as WaterFlowModel1DBoundaryNodeDataViewWpfViewModel;
+                var viewModel = view.DataContext as Model1DBoundaryNodeDataViewWpfViewModel;
                 Assert.NotNull(viewModel);
 
                 viewModel.TemperatureConditionType = TemperatureBoundaryConditionType.None;
@@ -89,9 +89,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Forms
         [Test]
         public void TestUpdateConstantFlowDataInViewModelIsReflectedInObjectModel()
         {
-            using (var view = new WaterFlowModel1DBoundaryNodeDataViewWpf { Data = boundaryNodeData })
+            using (var view = new Model1DBoundaryNodeDataViewWpf { Data = boundaryNodeData })
             {
-                var viewModel = view.DataContext as WaterFlowModel1DBoundaryNodeDataViewWpfViewModel;
+                var viewModel = view.DataContext as Model1DBoundaryNodeDataViewWpfViewModel;
                 Assert.NotNull(viewModel);
 
                 viewModel.WaterLevel = boundaryNodeData.WaterLevel + 0.555;
@@ -106,9 +106,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Forms
         [Test]
         public void TestUpdateConstantSaltDataInViewModelIsReflectedInObjectModel()
         {
-            using (var view = new WaterFlowModel1DBoundaryNodeDataViewWpf { Data = boundaryNodeData })
+            using (var view = new Model1DBoundaryNodeDataViewWpf { Data = boundaryNodeData })
             {
-                var viewModel = view.DataContext as WaterFlowModel1DBoundaryNodeDataViewWpfViewModel;
+                var viewModel = view.DataContext as Model1DBoundaryNodeDataViewWpfViewModel;
                 Assert.NotNull(viewModel);
 
                 viewModel.SaltConcentrationConstant = boundaryNodeData.SaltConcentrationConstant + 0.555;
@@ -123,9 +123,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Forms
         [Test]
         public void TestUpdateConstantTemperatureDataInViewModelIsReflectedInObjectModel()
         {
-            using (var view = new WaterFlowModel1DBoundaryNodeDataViewWpf { Data = boundaryNodeData })
+            using (var view = new Model1DBoundaryNodeDataViewWpf { Data = boundaryNodeData })
             {
-                var viewModel = view.DataContext as WaterFlowModel1DBoundaryNodeDataViewWpfViewModel;
+                var viewModel = view.DataContext as Model1DBoundaryNodeDataViewWpfViewModel;
                 Assert.NotNull(viewModel);
 
                 viewModel.TemperatureConstant = boundaryNodeData.TemperatureConstant + 0.555;

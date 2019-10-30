@@ -8,8 +8,8 @@ using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Csv.Importer;
+using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.CommonTools.Functions;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
 using GeoAPI.Extensions.Feature;
 using NUnit.Framework;
@@ -26,7 +26,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
         {
             var filePath = TestHelper.GetTestFilePath("timeseries.csv");
             var importer = new FlowTimeSeriesCsvFileImporter();
-            IFeatureData featureData = new WaterFlowModel1DLateralSourceData()
+            IFeatureData featureData = new Model1DLateralSourceData()
             {
                 Data = HydroTimeSeriesFactory.CreateFlowTimeSeries()
             };

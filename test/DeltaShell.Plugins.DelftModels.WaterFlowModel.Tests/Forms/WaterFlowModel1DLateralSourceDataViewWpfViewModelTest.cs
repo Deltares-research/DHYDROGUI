@@ -1,6 +1,6 @@
 ﻿using DelftTools.TestUtils;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms;
+using DeltaShell.NGHS.IO.DataObjects;
+using DeltaShell.Plugins.FMSuite.Common.Gui.Forms;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Forms
@@ -8,7 +8,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Forms
     [TestFixture]
     public class WaterFlowModel1DLateralSourceDataViewWpfViewModelTest
     {
-        private WaterFlowModel1DLateralSourceData lateralSourceData;
+        private Model1DLateralSourceData lateralSourceData;
         
         [SetUp]
         public void Setup()
@@ -20,19 +20,19 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Forms
         [Test]
         public void TestChangeFlowDataTypeInViewModelIsReflectedInObjectModel()
         {
-            using (var view = new WaterFlowModel1DLateralSourceDataViewWpf {Data = lateralSourceData})
+            using (var view = new Model1DLateralSourceDataViewWpf {Data = lateralSourceData})
             {
-                var viewModel = view.DataContext as WaterFlowModel1DLateralSourceDataViewWpfViewModel;
+                var viewModel = view.DataContext as Model1DLateralSourceDataViewWpfViewModel;
                 Assert.NotNull(viewModel);
 
-                viewModel.LateralDischargeDataType = WaterFlowModel1DLateralDataType.FlowConstant;
-                Assert.IsTrue(lateralSourceData.DataType == WaterFlowModel1DLateralDataType.FlowConstant);
+                viewModel.LateralDischargeDataType = Model1DLateralDataType.FlowConstant;
+                Assert.IsTrue(lateralSourceData.DataType == Model1DLateralDataType.FlowConstant);
 
-                viewModel.LateralDischargeDataType = WaterFlowModel1DLateralDataType.FlowWaterLevelTable;
-                Assert.IsTrue(lateralSourceData.DataType == WaterFlowModel1DLateralDataType.FlowWaterLevelTable);
+                viewModel.LateralDischargeDataType = Model1DLateralDataType.FlowWaterLevelTable;
+                Assert.IsTrue(lateralSourceData.DataType == Model1DLateralDataType.FlowWaterLevelTable);
 
-                viewModel.LateralDischargeDataType = WaterFlowModel1DLateralDataType.FlowTimeSeries;
-                Assert.IsTrue(lateralSourceData.DataType == WaterFlowModel1DLateralDataType.FlowTimeSeries);
+                viewModel.LateralDischargeDataType = Model1DLateralDataType.FlowTimeSeries;
+                Assert.IsTrue(lateralSourceData.DataType == Model1DLateralDataType.FlowTimeSeries);
             }
         }
 
@@ -40,9 +40,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Forms
         [Test]
         public void TestChangeSaltDataTypeInViewModelIsReflectedInObjectModel()
         {
-            using (var view = new WaterFlowModel1DLateralSourceDataViewWpf { Data = lateralSourceData })
+            using (var view = new Model1DLateralSourceDataViewWpf { Data = lateralSourceData })
             {
-                var viewModel = view.DataContext as WaterFlowModel1DLateralSourceDataViewWpfViewModel;
+                var viewModel = view.DataContext as Model1DLateralSourceDataViewWpfViewModel;
                 Assert.NotNull(viewModel);
 
                 viewModel.SaltLateralDischargeType = SaltLateralDischargeType.Default;
@@ -66,9 +66,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Forms
         [Test]
         public void TestChangeTemperatureDataTypeInViewModelIsReflectedInObjectModel()
         {
-            using (var view = new WaterFlowModel1DLateralSourceDataViewWpf { Data = lateralSourceData })
+            using (var view = new Model1DLateralSourceDataViewWpf { Data = lateralSourceData })
             {
-                var viewModel = view.DataContext as WaterFlowModel1DLateralSourceDataViewWpfViewModel;
+                var viewModel = view.DataContext as Model1DLateralSourceDataViewWpfViewModel;
                 Assert.NotNull(viewModel);
 
                 viewModel.TemperatureDischargeType = TemperatureLateralDischargeType.None;
@@ -86,9 +86,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Forms
         [Test]
         public void TestUpdateConstantFlowDataInViewModelIsReflectedInObjectModel()
         {
-            using (var view = new WaterFlowModel1DLateralSourceDataViewWpf {Data = lateralSourceData})
+            using (var view = new Model1DLateralSourceDataViewWpf {Data = lateralSourceData})
             {
-                var viewModel = view.DataContext as WaterFlowModel1DLateralSourceDataViewWpfViewModel;
+                var viewModel = view.DataContext as Model1DLateralSourceDataViewWpfViewModel;
                 Assert.NotNull(viewModel);
 
                 viewModel.Flow = lateralSourceData.Flow + 0.555;
@@ -100,9 +100,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Forms
         [Test]
         public void TestUpdateConstantSaltDataInViewModelIsReflectedInObjectModel()
         {
-            using (var view = new WaterFlowModel1DLateralSourceDataViewWpf { Data = lateralSourceData })
+            using (var view = new Model1DLateralSourceDataViewWpf { Data = lateralSourceData })
             {
-                var viewModel = view.DataContext as WaterFlowModel1DLateralSourceDataViewWpfViewModel;
+                var viewModel = view.DataContext as Model1DLateralSourceDataViewWpfViewModel;
                 Assert.NotNull(viewModel);
 
                 viewModel.SaltConcentrationConstant = lateralSourceData.SaltConcentrationDischargeConstant + 0.555;
@@ -117,9 +117,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Forms
         [Test]
         public void TestUpdateConstantTemperatureDataInViewModelIsReflectedInObjectModel()
         {
-            using (var view = new WaterFlowModel1DLateralSourceDataViewWpf { Data = lateralSourceData })
+            using (var view = new Model1DLateralSourceDataViewWpf { Data = lateralSourceData })
             {
-                var viewModel = view.DataContext as WaterFlowModel1DLateralSourceDataViewWpfViewModel;
+                var viewModel = view.DataContext as Model1DLateralSourceDataViewWpfViewModel;
                 Assert.NotNull(viewModel);
 
                 viewModel.TemperatureConstant = lateralSourceData.TemperatureConstant + 0.555;

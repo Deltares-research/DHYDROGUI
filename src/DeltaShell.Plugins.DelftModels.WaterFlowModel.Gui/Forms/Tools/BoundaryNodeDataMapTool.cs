@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
+using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Properties;
 using GeoAPI.Geometries;
 using SharpMap.UI.Tools;
@@ -14,7 +14,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.Tools
         /// <summary>
         /// The boundary node data to apply the map tool logic for/to
         /// </summary>
-        public IEnumerable<WaterFlowModel1DBoundaryNodeData> BoundaryNodeData { get; set; }
+        public IEnumerable<Model1DBoundaryNodeData> BoundaryNodeData { get; set; }
 
         public override bool AlwaysActive
         {
@@ -24,8 +24,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.Tools
         public override IEnumerable<MapToolContextMenuItem> GetContextMenuItems(Coordinate worldPosition)
         {
             BoundaryNodeData = MapControl == null || MapControl.SelectedFeatures == null
-                ? Enumerable.Empty<WaterFlowModel1DBoundaryNodeData>()
-                : MapControl.SelectedFeatures.OfType<WaterFlowModel1DBoundaryNodeData>();
+                ? Enumerable.Empty<Model1DBoundaryNodeData>()
+                : MapControl.SelectedFeatures.OfType<Model1DBoundaryNodeData>();
 
             if (!BoundaryNodeData.Any()) return Enumerable.Empty<MapToolContextMenuItem>();
 
@@ -62,7 +62,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.Tools
 
             foreach (var boundaryNodeData in BoundaryNodeData)
             {
-                boundaryNodeData.DataType = WaterFlowModel1DBoundaryNodeDataType.None;
+                boundaryNodeData.DataType = Model1DBoundaryNodeDataType.None;
             }
         }
 
@@ -72,7 +72,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.Tools
             
             foreach (var boundaryNodeData in BoundaryNodeData)
             {
-                boundaryNodeData.DataType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant;
+                boundaryNodeData.DataType = Model1DBoundaryNodeDataType.WaterLevelConstant;
             }
         }
 
@@ -82,7 +82,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.Tools
             
             foreach (var boundaryNodeData in BoundaryNodeData)
             {
-                boundaryNodeData.DataType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries;
+                boundaryNodeData.DataType = Model1DBoundaryNodeDataType.WaterLevelTimeSeries;
             }
         }
 
@@ -92,7 +92,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.Tools
             
             foreach (var boundaryNodeData in BoundaryNodeData)
             {
-                boundaryNodeData.DataType = WaterFlowModel1DBoundaryNodeDataType.FlowConstant;
+                boundaryNodeData.DataType = Model1DBoundaryNodeDataType.FlowConstant;
             }
         }
 
@@ -102,7 +102,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.Tools
             
             foreach (var boundaryNodeData in BoundaryNodeData)
             {
-                boundaryNodeData.DataType = WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries;
+                boundaryNodeData.DataType = Model1DBoundaryNodeDataType.FlowTimeSeries;
             }
         }
 
@@ -112,7 +112,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.Tools
             
             foreach (var boundaryNodeData in BoundaryNodeData)
             {
-                boundaryNodeData.DataType = WaterFlowModel1DBoundaryNodeDataType.FlowWaterLevelTable;
+                boundaryNodeData.DataType = Model1DBoundaryNodeDataType.FlowWaterLevelTable;
             }
         }
     }

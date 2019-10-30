@@ -319,6 +319,11 @@
       <Name>DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui</Name>
       <Private>False</Private>
     </ProjectReference>
+    <ProjectReference Include="..\..\src\DeltaShell.Plugins.FMSuite.Common.Gui\DeltaShell.Plugins.FMSuite.Common.Gui.csproj">
+      <Project>{7F3D15D6-3425-47A6-AFD4-9B6E054EE8BE}</Project>
+      <Name>DeltaShell.Plugins.FMSuite.Common.Gui</Name>
+      <Private>False</Private>
+    </ProjectReference>
     <ProjectReference Include="..\..\src\DeltaShell.Plugins.ImportExport.Sobek\DeltaShell.Plugins.ImportExport.Sobek.csproj">
       <Project>{08A3EA33-B6D2-4ACF-8C00-5D920141E809}</Project>
       <Name>DeltaShell.Plugins.ImportExport.Sobek</Name>

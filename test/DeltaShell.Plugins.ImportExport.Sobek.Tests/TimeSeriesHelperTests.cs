@@ -2,7 +2,6 @@
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
 {

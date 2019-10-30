@@ -2,8 +2,8 @@
 using System.IO;
 using System.Linq;
 using DelftTools.Functions.Generic;
+using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
 using DeltaShell.Sobek.Readers;
 using DeltaShell.Sobek.Readers.Readers;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
@@ -70,9 +70,9 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                         // end node thus invert boundary
                         flowBoundaryConditionData.Flow *= -1.0;
 
-                        if (flowBoundaryConditionData.DataType == WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries ||
-                            flowBoundaryConditionData.DataType == WaterFlowModel1DBoundaryNodeDataType.FlowWaterLevelTable ||
-                            flowBoundaryConditionData.DataType == WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries)
+                        if (flowBoundaryConditionData.DataType == Model1DBoundaryNodeDataType.FlowTimeSeries ||
+                            flowBoundaryConditionData.DataType == Model1DBoundaryNodeDataType.FlowWaterLevelTable ||
+                            flowBoundaryConditionData.DataType == Model1DBoundaryNodeDataType.WaterLevelTimeSeries)
                         {
                             var values = ((IMultiDimensionalArray<double>)flowBoundaryConditionData.Data.Components[0].Values).ToArray();
                             for (var i = 0; i < values.Length; i++)

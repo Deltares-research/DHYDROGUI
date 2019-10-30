@@ -22,6 +22,7 @@ using DeltaShell.Core.Services;
 using DeltaShell.Dimr;
 using DeltaShell.Gui;
 using DeltaShell.IntegrationTestUtils;
+using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Functions;
 using DeltaShell.Plugins.Data.NHibernate;
@@ -37,7 +38,6 @@ using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel;
 using DeltaShell.Plugins.FMSuite.FlowFM;
@@ -54,7 +54,6 @@ using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.Extensions.Coverages;
 using NUnit.Framework;
-using Rhino.Mocks;
 using SharpMap.Extensions.CoordinateSystems;
 using SharpTestsEx;
 using AggregationOptions = DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi.AggregationOptions;
@@ -398,8 +397,8 @@ namespace Sobek.IntegrationTests
 
             // set model data to Q(t) (to allow linking)
             flow.BoundaryConditions.First(bc => bc.Feature == node).DataType =
-                WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries;
-            flow.LateralSourceData.First(lc => lc.Feature == lateral).DataType = WaterFlowModel1DLateralDataType.FlowTimeSeries;
+                Model1DBoundaryNodeDataType.FlowTimeSeries;
+            flow.LateralSourceData.First(lc => lc.Feature == lateral).DataType = Model1DLateralDataType.FlowTimeSeries;
 
             // set meteo for RR
             SetGlobalMeteoDataForTesting(rr);
@@ -504,7 +503,7 @@ namespace Sobek.IntegrationTests
             flowModel.GetDataItemByTag(WaterFlowModel1DDataSet.NetworkTag).LinkTo(hydroModel.GetDataItemByValue(network));
 
             // set some data on flow
-            flowModel.BoundaryConditions.First().DataType = WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries;
+            flowModel.BoundaryConditions.First().DataType = Model1DBoundaryNodeDataType.FlowTimeSeries;
             flowModel.NetworkDiscretization[new NetworkLocation(channel, 0)] = 0.0; // add grid point
             
             // clone hydro model
@@ -514,7 +513,7 @@ namespace Sobek.IntegrationTests
             var clonedFlow = clonedHydromodel.Models.OfType<WaterFlowModel1D>().First();
 
             // assert flow data is not lost
-            clonedFlow.BoundaryConditions.First().DataType.Should("boundary node type").Be.EqualTo(WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries);
+            clonedFlow.BoundaryConditions.First().DataType.Should("boundary node type").Be.EqualTo(Model1DBoundaryNodeDataType.FlowTimeSeries);
             clonedFlow.NetworkDiscretization.Locations.Values.Count.Should("one grid point").Be.EqualTo(1);
 
             clonedFlow.NetworkDiscretization.Locations.Values.First().Network.Should().Be.SameInstanceAs(clonedNetwork);

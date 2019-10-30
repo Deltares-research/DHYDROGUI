@@ -1,6 +1,6 @@
 ﻿using DelftTools.TestUtils;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms;
+using DeltaShell.NGHS.IO.DataObjects;
+using DeltaShell.Plugins.FMSuite.Common.Gui.Forms;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Forms
@@ -8,7 +8,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Forms
     [TestFixture]
     public class WaterFlowModel1DLateralSourceDataViewWpfTest
     {
-        private WaterFlowModel1DLateralSourceData lateralSourceData;
+        private Model1DLateralSourceData lateralSourceData;
 
         [SetUp]
         public void Setup()
@@ -25,7 +25,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Forms
         {
             lateralSourceData.UseSalt = saltEnabled;
             lateralSourceData.UseTemperature = temperatureEnabled;
-            var view = new WaterFlowModel1DLateralSourceDataViewWpf { Data = lateralSourceData };
+            var view = new Model1DLateralSourceDataViewWpf { Data = lateralSourceData };
             WpfTestHelper.ShowModal(view);
         }
 

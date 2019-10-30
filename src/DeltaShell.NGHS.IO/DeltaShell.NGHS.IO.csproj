@@ -115,6 +115,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Adaptors\UGridToUnstructuredGridAdaptor.cs" />
+    <Compile Include="DataObjects\FlowParameter.cs" />
+    <Compile Include="DataObjects\FlowWaterLevelTable.cs" />
+    <Compile Include="DataObjects\Helper1D.cs" />
+    <Compile Include="DataObjects\SaltBoundaryConditionType.cs" />
+    <Compile Include="DataObjects\TemperatureBoundaryConditionType.cs" />
+    <Compile Include="DataObjects\Model1DBoundaryNodeData.cs" />
+    <Compile Include="DataObjects\Model1DBoundaryNodeDataType.cs" />
+    <Compile Include="DataObjects\Model1DLateralDataType.cs" />
+    <Compile Include="DataObjects\Model1DLateralSourceData.cs" />
+    <Compile Include="DataObjects\WaterLevelParameter.cs" />
     <Compile Include="DelftBcReader.cs" />
     <Compile Include="DelftBcWriter.cs" />
     <Compile Include="DelftIniReader.cs" />
@@ -295,6 +305,24 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DataObjects\Model1DLateralSourceData.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DataObjects\Model1DBoundaryNodeData.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DataObjects\FlowParameter.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DataObjects\WaterLevelParameter.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DataObjects\FlowWaterLevelTable.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>SubWCRev.exe "$(ProjectDir). " "$(ProjectDir)Properties\AssemblyInfo.cs.svn " "$(ProjectDir)Properties\AssemblyInfo.cs "</PreBuildEvent>

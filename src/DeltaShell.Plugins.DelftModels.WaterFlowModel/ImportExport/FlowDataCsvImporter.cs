@@ -1,4 +1,4 @@
-/*
+﻿/*
  *
  *  Copyright (C) Stichting Deltares, 2015.
  *    
@@ -30,14 +30,14 @@
  *
  */
 
-﻿using System;
+ using System;
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Functions;
 ﻿using DelftTools.Shell.Core.Workflow.DataItems;
-using DeltaShell.Plugins.CommonTools.Functions;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
-using GeoAPI.Extensions.Feature;
+ using DeltaShell.NGHS.IO.DataObjects;
+ using DeltaShell.Plugins.CommonTools.Functions;
+ using GeoAPI.Extensions.Feature;
 using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
@@ -65,10 +65,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
         {
             get
             {
-                yield return typeof(WaterFlowModel1DBoundaryNodeData);
-                yield return typeof(WaterFlowModel1DLateralSourceData);
-                yield return typeof(DataItemsEventedListAdapter<WaterFlowModel1DBoundaryNodeData>);
-                yield return typeof(DataItemsEventedListAdapter<WaterFlowModel1DLateralSourceData>);
+                yield return typeof(Model1DBoundaryNodeData);
+                yield return typeof(Model1DLateralSourceData);
+                yield return typeof(DataItemsEventedListAdapter<Model1DBoundaryNodeData>);
+                yield return typeof(DataItemsEventedListAdapter<Model1DLateralSourceData>);
             }
         }
 
@@ -90,13 +90,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                     var data = functionList[0];
                     var importSucceeded = false;
 
-                    var lateralSourceData = targetFeatureData as WaterFlowModel1DLateralSourceData;
+                    var lateralSourceData = targetFeatureData as Model1DLateralSourceData;
                     if (lateralSourceData != null)
                     {
                         UpdateLateralSourceData(lateralSourceData, data);
                         importSucceeded = true;
                     }
-                    var boundaryNodeData = targetFeatureData as WaterFlowModel1DBoundaryNodeData;
+                    var boundaryNodeData = targetFeatureData as Model1DBoundaryNodeData;
                     if (boundaryNodeData != null)
                     {
                         UpdateBoundaryConditionsSourceData(boundaryNodeData, data);
@@ -113,13 +113,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 }
             }
 
-            var targetAsLateralList = target as DataItemsEventedListAdapter<WaterFlowModel1DLateralSourceData>;
+            var targetAsLateralList = target as DataItemsEventedListAdapter<Model1DLateralSourceData>;
             if (targetAsLateralList != null)
             {
                 UpdateDataItems(functionList, targetAsLateralList);
             }
 
-            var targetAsBoundariesList = target as DataItemsEventedListAdapter<WaterFlowModel1DBoundaryNodeData>;
+            var targetAsBoundariesList = target as DataItemsEventedListAdapter<Model1DBoundaryNodeData>;
             if (targetAsBoundariesList != null)
             {
                 UpdateDataItems(functionList, targetAsBoundariesList);
@@ -142,7 +142,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 var overwritten = false;
                 foreach (var existingDataItem in existingList.DataItems)
                 {
-                    var lateralSourceData = existingDataItem.Value as WaterFlowModel1DLateralSourceData;
+                    var lateralSourceData = existingDataItem.Value as Model1DLateralSourceData;
                     if (lateralSourceData != null && newFunction.Name == lateralSourceData.Feature.Name)
                     {
                         UpdateLateralSourceData(lateralSourceData, newFunction);
@@ -150,7 +150,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                         break;   // Stop searching. 
                     }
 
-                    var boundaryData = existingDataItem.Value as WaterFlowModel1DBoundaryNodeData;
+                    var boundaryData = existingDataItem.Value as Model1DBoundaryNodeData;
                     if (boundaryData != null && newFunction.Name == boundaryData.Feature.Name)
                     {
                         UpdateBoundaryConditionsSourceData(boundaryData, newFunction);
@@ -166,11 +166,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             }
         }
 
-        private void UpdateLateralSourceData(WaterFlowModel1DLateralSourceData existingData, IFunction newData)
+        private void UpdateLateralSourceData(Model1DLateralSourceData existingData, IFunction newData)
         {
             if (FlowFileImporter.BoundaryRelationType == BoundaryRelationType.Q)
             {
-                existingData.DataType = WaterFlowModel1DLateralDataType.FlowConstant;
+                existingData.DataType = Model1DLateralDataType.FlowConstant;
                 existingData.Flow = (double) newData.Components[0].Values[0];
             }
             else if (FlowFileImporter.BoundaryRelationType == BoundaryRelationType.QH || FlowFileImporter.BoundaryRelationType == BoundaryRelationType.QT)
@@ -181,16 +181,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             }
         }
 
-        private void UpdateBoundaryConditionsSourceData(WaterFlowModel1DBoundaryNodeData existingData, IFunction newData)
+        private void UpdateBoundaryConditionsSourceData(Model1DBoundaryNodeData existingData, IFunction newData)
         {
             if (FlowFileImporter.BoundaryRelationType == BoundaryRelationType.Q)
             {
-                existingData.DataType = WaterFlowModel1DBoundaryNodeDataType.FlowConstant;
+                existingData.DataType = Model1DBoundaryNodeDataType.FlowConstant;
                 existingData.Flow = (double)newData.Components[0].Values[0];
             }
             else if (FlowFileImporter.BoundaryRelationType == BoundaryRelationType.H)
             {
-                existingData.DataType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant;
+                existingData.DataType = Model1DBoundaryNodeDataType.WaterLevelConstant;
                 existingData.Flow = (double)newData.Components[0].Values[0];
             }
             else if (FlowFileImporter.BoundaryRelationType == BoundaryRelationType.QH ||

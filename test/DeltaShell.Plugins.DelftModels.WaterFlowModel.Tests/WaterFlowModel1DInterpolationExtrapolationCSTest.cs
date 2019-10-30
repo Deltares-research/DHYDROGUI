@@ -9,7 +9,7 @@ using DelftTools.Hydro.CrossSections.StandardShapes;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
+using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.TestUtils;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
@@ -67,12 +67,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
             // set boundary conditions
             var boundaryConditionInflow = flowModel1D.BoundaryConditions.First(bc => bc.Feature == flowModel1D.Network.Nodes.First(n =>n.Name == "node1"));
-            boundaryConditionInflow.DataType = WaterFlowModel1DBoundaryNodeDataType.FlowConstant;
+            boundaryConditionInflow.DataType = Model1DBoundaryNodeDataType.FlowConstant;
             boundaryConditionInflow.WaterLevel = 5.0;
 
 
             var boundaryConditionOutflow = flowModel1D.BoundaryConditions.First(bc => bc.Feature == flowModel1D.Network.Nodes.First(n => n.Name == "node4"));
-            boundaryConditionOutflow.DataType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant;
+            boundaryConditionOutflow.DataType = Model1DBoundaryNodeDataType.WaterLevelConstant;
             boundaryConditionOutflow.WaterLevel = 5;
 
             GenerateDiscretisation(flowModel1D, 10.0);
@@ -139,12 +139,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
             // set boundary conditions
             var boundaryConditionInflow = flowModel1D.BoundaryConditions.First(bc => bc.Feature == flowModel1D.Network.Nodes.First(n => n.Name == "node1"));
-            boundaryConditionInflow.DataType = WaterFlowModel1DBoundaryNodeDataType.FlowConstant;
+            boundaryConditionInflow.DataType = Model1DBoundaryNodeDataType.FlowConstant;
             boundaryConditionInflow.WaterLevel = 5;
 
 
             var boundaryConditionOutflow = flowModel1D.BoundaryConditions.First(bc => bc.Feature == flowModel1D.Network.Nodes.First(n => n.Name == "node4"));
-            boundaryConditionOutflow.DataType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant;
+            boundaryConditionOutflow.DataType = Model1DBoundaryNodeDataType.WaterLevelConstant;
             boundaryConditionOutflow.WaterLevel = -5;
 
             GenerateDiscretisation(flowModel1D, 10.0);
@@ -211,12 +211,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
             // set boundary conditions
             var boundaryConditionInflow = flowModel1D.BoundaryConditions.First(bc => bc.Feature == flowModel1D.Network.Nodes.First(n => n.Name == "node1"));
-            boundaryConditionInflow.DataType = WaterFlowModel1DBoundaryNodeDataType.FlowConstant;
+            boundaryConditionInflow.DataType = Model1DBoundaryNodeDataType.FlowConstant;
             boundaryConditionInflow.WaterLevel = 5;
 
 
             var boundaryConditionOutflow = flowModel1D.BoundaryConditions.First(bc => bc.Feature == flowModel1D.Network.Nodes.First(n => n.Name == "node4"));
-            boundaryConditionOutflow.DataType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant;
+            boundaryConditionOutflow.DataType = Model1DBoundaryNodeDataType.WaterLevelConstant;
             boundaryConditionOutflow.WaterLevel = -5;
 
             GenerateDiscretisation(flowModel1D, 10.0);
@@ -269,11 +269,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
             // set boundary conditions
             var boundaryConditionInflow = flowModel1D.BoundaryConditions.First(bc => bc.Feature == flowModel1D.Network.Nodes.First(n => n.Name == "node1"));
-            boundaryConditionInflow.DataType = WaterFlowModel1DBoundaryNodeDataType.FlowConstant;
+            boundaryConditionInflow.DataType = Model1DBoundaryNodeDataType.FlowConstant;
             boundaryConditionInflow.WaterLevel = 5;
 
             var boundaryConditionOutflow = flowModel1D.BoundaryConditions.First(bc => bc.Feature == flowModel1D.Network.Nodes.First(n => n.Name == "node4"));
-            boundaryConditionOutflow.DataType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant;
+            boundaryConditionOutflow.DataType = Model1DBoundaryNodeDataType.WaterLevelConstant;
             boundaryConditionOutflow.WaterLevel = 5;
 
             GenerateDiscretisation(flowModel1D, 10.0);
@@ -336,12 +336,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
             // set boundary conditions
             var boundaryConditionInflow = flowModel1D.BoundaryConditions.First(bc => bc.Feature == flowModel1D.Network.Nodes.First(n => n.Name == "node1"));
-            boundaryConditionInflow.DataType = WaterFlowModel1DBoundaryNodeDataType.FlowConstant;
+            boundaryConditionInflow.DataType = Model1DBoundaryNodeDataType.FlowConstant;
             boundaryConditionInflow.WaterLevel = 5;
 
 
             var boundaryConditionOutflow = flowModel1D.BoundaryConditions.First(bc => bc.Feature == flowModel1D.Network.Nodes.First(n => n.Name == "node4"));
-            boundaryConditionOutflow.DataType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant;
+            boundaryConditionOutflow.DataType = Model1DBoundaryNodeDataType.WaterLevelConstant;
             boundaryConditionOutflow.WaterLevel = -5;
 
             GenerateDiscretisation(flowModel1D, 10.0);
@@ -402,12 +402,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
             // set boundary conditions
             var boundaryConditionInflow = flowModel1D.BoundaryConditions.First(bc => bc.Feature == flowModel1D.Network.Nodes.First(n => n.Name == "node1"));
-            boundaryConditionInflow.DataType = WaterFlowModel1DBoundaryNodeDataType.FlowConstant;
+            boundaryConditionInflow.DataType = Model1DBoundaryNodeDataType.FlowConstant;
             boundaryConditionInflow.WaterLevel = 5;
 
 
             var boundaryConditionOutflow = flowModel1D.BoundaryConditions.First(bc => bc.Feature == flowModel1D.Network.Nodes.First(n => n.Name == "node4"));
-            boundaryConditionOutflow.DataType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant;
+            boundaryConditionOutflow.DataType = Model1DBoundaryNodeDataType.WaterLevelConstant;
             boundaryConditionOutflow.WaterLevel = -5;
 
             GenerateDiscretisation(flowModel1D, 10.0);
@@ -466,12 +466,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
             // set boundary conditions
             var boundaryConditionInflow = flowModel1D.BoundaryConditions.First(bc => bc.Feature == flowModel1D.Network.Nodes.First(n => n.Name == "node1"));
-            boundaryConditionInflow.DataType = WaterFlowModel1DBoundaryNodeDataType.FlowConstant;
+            boundaryConditionInflow.DataType = Model1DBoundaryNodeDataType.FlowConstant;
             boundaryConditionInflow.WaterLevel = 5;
 
 
             var boundaryConditionOutflow = flowModel1D.BoundaryConditions.First(bc => bc.Feature == flowModel1D.Network.Nodes.First(n => n.Name == "node4"));
-            boundaryConditionOutflow.DataType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant;
+            boundaryConditionOutflow.DataType = Model1DBoundaryNodeDataType.WaterLevelConstant;
             boundaryConditionOutflow.WaterLevel = 5;
 
             GenerateDiscretisation(flowModel1D, 10.0);
@@ -540,11 +540,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
             // set boundary conditions
             var boundaryConditionInflow = flowModel1D.BoundaryConditions.First(bc => bc.Feature == flowModel1D.Network.Nodes.First(n => n.Name == "node1"));
-            boundaryConditionInflow.DataType = WaterFlowModel1DBoundaryNodeDataType.FlowConstant;
+            boundaryConditionInflow.DataType = Model1DBoundaryNodeDataType.FlowConstant;
             boundaryConditionInflow.WaterLevel = 5;
 
             var boundaryConditionOutflow = flowModel1D.BoundaryConditions.First(bc => bc.Feature == flowModel1D.Network.Nodes.First(n => n.Name == "node4"));
-            boundaryConditionOutflow.DataType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant;
+            boundaryConditionOutflow.DataType = Model1DBoundaryNodeDataType.WaterLevelConstant;
             boundaryConditionOutflow.WaterLevel = -5;
 
             GenerateDiscretisation(flowModel1D, 10.0);

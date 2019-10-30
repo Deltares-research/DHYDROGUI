@@ -283,4 +283,100 @@
   <data name="GwswImportDialogViewModel_AddFeatureFile_Feature_file__0__added_to_the_list_correctly__Path___1_" xml:space="preserve">
     <value>Feature file {0} added to the list correctly. Path: {1}</value>
   </data>
+  <data name="HBoundary" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\HBoundary.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="HConst" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\HConst.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="linkOverlay" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\linkOverlay.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="none" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\none.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="QBoundary" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\QBoundary.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="QConst" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\QConst.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="QHBoundary" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\QHBoundary.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Model1DBoundaryNodeDataProperties_DisplayName" xml:space="preserve">
+    <value>Boundary node data</value>
+  </data>
+  <data name="Categories_General" xml:space="preserve">
+    <value>General</value>
+  </data>
+  <data name="Common_Name_DisplayName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Model1DBoundaryNodeDataProperties_Name_Description" xml:space="preserve">
+    <value>Name of the boundary node data shown to the user.</value>
+  </data>
+  <data name="Model1DBoundaryNodeDataProperties_Type_DisplayName" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="Model1DBoundaryNodeDataProperties_Type_Description" xml:space="preserve">
+    <value>Data type of the boundary node data.</value>
+  </data>
+  <data name="Model1DBoundaryNodeDataProperties_InterpolationTypeT_DisplayName" xml:space="preserve">
+    <value>Interpolation scheme for Q(t) or H(t)</value>
+  </data>
+  <data name="Model1DBoundaryNodeDataProperties_InterpolationTypeT_Description" xml:space="preserve">
+    <value>Interpolation scheme used along the time axis for the time-dependent water flow and water level time-series.</value>
+  </data>
+  <data name="Model1DBoundaryNodeDataProperties_InterpolationTypeQh_DisplayName" xml:space="preserve">
+    <value>Interpolation scheme for Q(h)</value>
+  </data>
+  <data name="Model1DBoundaryNodeDataProperties_InterpolationTypeQh_Description" xml:space="preserve">
+    <value>Interpolation scheme used along the water level axis for the water level dependent water flow data series.</value>
+  </data>
+  <data name="Model1DBoundaryNodeDataProperties_ExtrapolationTypeT_DisplayName" xml:space="preserve">
+    <value>Extrapolation scheme for Q(t) or H(t)</value>
+  </data>
+  <data name="Model1DBoundaryNodeDataProperties_ExtrapolationTypeT_Description" xml:space="preserve">
+    <value>Extrapolation scheme used along the time axis for the time-dependent water flow and water level time-series.</value>
+  </data>
+  <data name="Model1DBoundaryNodeDataProperties_ExtrapolationTypeQh_DisplayName" xml:space="preserve">
+    <value>Extrapolation scheme for Q(h)</value>
+  </data>
+  <data name="Model1DBoundaryNodeDataProperties_ExtrapolationTypeQh_Description" xml:space="preserve">
+    <value>Extrapolation scheme used along the water level axis for the water level dependent water flow data series.</value>
+  </data>
+  <data name="Model1DBoundaryNodeDataProperties_NodeName_DisplayName" xml:space="preserve">
+    <value>Boundary node name</value>
+  </data>
+  <data name="Model1DBoundaryNodeDataProperties_NodeName_Description" xml:space="preserve">
+    <value>Name of the node associated with this boundary data.</value>
+  </data>
+  <data name="Model1DLateralDataProperties_DisplayName" xml:space="preserve">
+    <value>Lateral source boundary data</value>
+  </data>
+  <data name="Model1DLateralDataProperties_Name_Description" xml:space="preserve">
+    <value>Name of the lateral sources boundary data shown to the user.</value>
+  </data>
+  <data name="Model1DLateralDataProperties_Type_DisplayName" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="Model1DLateralDataProperties_Type_Description" xml:space="preserve">
+    <value>Data type of the lateral source boundary data.</value>
+  </data>
+  <data name="Model1DLateralDataProperties_InterpolationTypeQt_DisplayName" xml:space="preserve">
+    <value>Interpolation scheme for Q(t)</value>
+  </data>
+  <data name="Model1DLateralDataProperties_InterpolationTypeQt_Description" xml:space="preserve">
+    <value>Interpolation scheme used along the time axis for the time-dependent water flow time-series.</value>
+  </data>
+  <data name="Model1DLateralDataProperties_ExtrapolationTypeQt_Description" xml:space="preserve">
+    <value>Extrapolation scheme used along the time axis for the time-dependent water flow time-series.</value>
+  </data>
+  <data name="Model1DLateralDataProperties_ExtrapolationTypeQt_DisplayName" xml:space="preserve">
+    <value>Extrapolation scheme for Q(t)</value>
+  </data>
+  <data name="Boundary_1d" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Boundary_1d.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

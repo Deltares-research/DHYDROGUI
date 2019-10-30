@@ -9,7 +9,7 @@ using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Roughness;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Collections;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
+using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.TestUtils;
 using GeoAPI.Extensions.Coverages;
@@ -149,7 +149,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
             // set boundary conditions
             var boundaryConditionInflow = flowModel1D.BoundaryConditions.First(bc => bc.Feature == inflowNode);
-            boundaryConditionInflow.DataType = WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries;
+            boundaryConditionInflow.DataType = Model1DBoundaryNodeDataType.FlowTimeSeries;
             boundaryConditionInflow.Data[t] = 1.0;
             boundaryConditionInflow.Data[t.AddSeconds(30)] = 1.0;
             boundaryConditionInflow.Data[t.AddSeconds(60)] = 1.5;
@@ -158,7 +158,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             boundaryConditionInflow.Data.Arguments[0].ExtrapolationType = ExtrapolationType.Constant;
 
             var boundaryConditionOutflow = flowModel1D.BoundaryConditions.First(bc => bc.Feature == outflowNode);
-            boundaryConditionOutflow.DataType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries;
+            boundaryConditionOutflow.DataType = Model1DBoundaryNodeDataType.WaterLevelTimeSeries;
             boundaryConditionOutflow.Data[t] = 0.1;
             boundaryConditionOutflow.Data[t.AddSeconds(30)] = 0.1;
             boundaryConditionOutflow.Data[t.AddSeconds(60)] = 0.2;
@@ -183,7 +183,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
         {
             var boundaryConditionOutflow = flowModel1D.BoundaryConditions.First(bc => bc.Feature == node);
 
-            boundaryConditionOutflow.DataType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries;
+            boundaryConditionOutflow.DataType = Model1DBoundaryNodeDataType.WaterLevelTimeSeries;
             boundaryConditionOutflow.Data[t] = 0.1;
             boundaryConditionOutflow.Data[t.AddSeconds(30)] = 0.1;
             boundaryConditionOutflow.Data[t.AddSeconds(60)] = 0.2;
@@ -197,7 +197,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             // set boundary conditions
             var boundaryConditionInflow = flowModel1D.BoundaryConditions.First(bc => bc.Feature == node);
             
-            boundaryConditionInflow.DataType = WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries;
+            boundaryConditionInflow.DataType = Model1DBoundaryNodeDataType.FlowTimeSeries;
             boundaryConditionInflow.Data[t] = 1.0;
             boundaryConditionInflow.Data[t.AddSeconds(30)] = 1.0;
             boundaryConditionInflow.Data[t.AddSeconds(60)] = 1.5;

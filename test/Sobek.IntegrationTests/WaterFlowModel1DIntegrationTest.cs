@@ -16,11 +16,11 @@ using DelftTools.Utils.Reflection;
 using DeltaShell.Core;
 using DeltaShell.Core.Services;
 using DeltaShell.Gui;
+using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.DelftModels.HydroModel;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi;
@@ -723,9 +723,9 @@ namespace Sobek.IntegrationTests
                         var boundaryTarget =
                             waterFlowModel1D.BoundaryConditions.FirstOrDefault(bc => bc.Feature == channel.Target);
 
-                        boundarySource.DataType = WaterFlowModel1DBoundaryNodeDataType.FlowConstant;
+                        boundarySource.DataType = Model1DBoundaryNodeDataType.FlowConstant;
                         boundarySource.Flow = 1.0;
-                        boundaryTarget.DataType = WaterFlowModel1DBoundaryNodeDataType.FlowConstant;
+                        boundaryTarget.DataType = Model1DBoundaryNodeDataType.FlowConstant;
                         boundaryTarget.Flow = 2.0;
 
                         networkMapTool.ReverseBranch((IChannel) waterFlowModel1D.Network.Branches[0]);
@@ -737,10 +737,10 @@ namespace Sobek.IntegrationTests
                         Assert.AreEqual(newBoundarySource, boundaryTarget);
                         Assert.AreEqual(newBoundaryTarget, boundarySource);
 
-                        Assert.AreEqual(WaterFlowModel1DBoundaryNodeDataType.FlowConstant, newBoundarySource.DataType);
+                        Assert.AreEqual(Model1DBoundaryNodeDataType.FlowConstant, newBoundarySource.DataType);
                         Assert.AreEqual(2.0, newBoundarySource.Flow, 1.0e-6);
 
-                        Assert.AreEqual(WaterFlowModel1DBoundaryNodeDataType.FlowConstant, newBoundaryTarget.DataType);
+                        Assert.AreEqual(Model1DBoundaryNodeDataType.FlowConstant, newBoundaryTarget.DataType);
                         Assert.AreEqual(1.0, newBoundaryTarget.Flow, 1.0e-6);
                     }
                 }
@@ -1097,7 +1097,7 @@ namespace Sobek.IntegrationTests
 
                     // change 1st bc type to flow time series
                     waterFlowModel1D.BoundaryConditions[0].DataType =
-                        WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries;
+                        Model1DBoundaryNodeDataType.FlowTimeSeries;
 
                     // add model clone to project
                     var modelClone = (WaterFlowModel1D) waterFlowModel1D.DeepClone();
@@ -1105,7 +1105,7 @@ namespace Sobek.IntegrationTests
 
                     // asserts
                     modelClone.BoundaryConditions[0].DataType.Should().Be.EqualTo(
-                        WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries);
+                        Model1DBoundaryNodeDataType.FlowTimeSeries);
                 }
             }
         }

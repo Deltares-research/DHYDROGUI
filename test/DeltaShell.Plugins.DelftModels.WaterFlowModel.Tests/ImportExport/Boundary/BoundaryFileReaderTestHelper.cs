@@ -1,6 +1,6 @@
 ﻿using DelftTools.Functions;
 using DelftTools.Hydro;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
+using DeltaShell.NGHS.IO.DataObjects;
 using Point = NetTopologySuite.Geometries.Point;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Boundary
@@ -41,7 +41,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
             return model;
         }
 
-        public static bool CompareBoundaryNodeData(WaterFlowModel1DBoundaryNodeData boundaryNodeData1, WaterFlowModel1DBoundaryNodeData boundaryNodeData2)
+        public static bool CompareBoundaryNodeData(Model1DBoundaryNodeData boundaryNodeData1, Model1DBoundaryNodeData boundaryNodeData2)
         {
             var areEqual = true;
 
@@ -72,7 +72,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
             return areEqual;
         }
 
-        public static bool CompareLateralSourceData(WaterFlowModel1DLateralSourceData lateralSourceData1, WaterFlowModel1DLateralSourceData lateralSourceData2)
+        public static bool CompareLateralSourceData(Model1DLateralSourceData lateralSourceData1, Model1DLateralSourceData lateralSourceData2)
         {
             var areEqual = true;
 

@@ -162,11 +162,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DataObjects\TemperatureBoundaryConditionType.cs" />
     <Compile Include="DispersionFormulationType.cs" />
     <Compile Include="Commands\InitialConditionsCommand.cs" />
-    <Compile Include="DataObjects\SaltBoundaryConditionType.cs" />
-    <Compile Include="DataObjects\WaterFlowModel1DLateralDataType.cs" />
     <Compile Include="EngineParameter.cs" />
     <Compile Include="EngineParameters.cs" />
     <Compile Include="FiniteVolumeDiscretizationProvider.cs" />
@@ -230,10 +227,6 @@
     <Compile Include="Validation\WaterFlowModel1DModelMergeValidator.cs" />
     <Compile Include="Validation\WaterFlowModel1DModelValidator.cs" />
     <Compile Include="ImportExport\FlowDataCsvImporter.cs" />
-    <Compile Include="DataObjects\WaterFlowModel1DBoundaryNodeData.cs" />
-    <Compile Include="DataObjects\WaterFlowModel1DBoundaryNodeDataType.cs" />
-    <Compile Include="FlowParameter.cs" />
-    <Compile Include="DataObjects\WaterFlowModel1DLateralSourceData.cs" />
     <Compile Include="WaterFlowModel1D30LegacyLoader.cs" />
     <Compile Include="WaterFlowModel1D350LegacyLoader.cs" />
     <Compile Include="WaterFlowModel1D352LegacyLoader.cs" />
@@ -252,8 +245,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="FlowWaterLevelTable.cs" />
-    <Compile Include="WaterLevelParameter.cs" />
     <Compile Include="WaterFlowModel1DConveyanceCalculator.cs" />
     <Compile Include="WindFunction.cs" />
   </ItemGroup>
@@ -320,14 +311,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="DataObjects\WaterFlowModel1DLateralSourceData.hbm.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="DataObjects\WaterFlowModel1DBoundaryNodeData.hbm.xml" />
-  </ItemGroup>
-  <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
       <Visible>False</Visible>
       <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
@@ -349,15 +332,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\HConst.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="FlowParameter.hbm.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="WaterLevelParameter.hbm.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="FlowWaterLevelTable.hbm.xml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="WaterFlowModel1D.3.5.2.hbm.xml" />
@@ -397,7 +371,9 @@
     <Content Include="Resources\Wind.png" />
     <EmbeddedResource Include="WindFunction.hbm.xml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="DataObjects\" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>SubWCRev.exe "$(ProjectDir). " "$(ProjectDir)Properties\AssemblyInfo.cs.svn " "$(ProjectDir)Properties\AssemblyInfo.cs "</PreBuildEvent>

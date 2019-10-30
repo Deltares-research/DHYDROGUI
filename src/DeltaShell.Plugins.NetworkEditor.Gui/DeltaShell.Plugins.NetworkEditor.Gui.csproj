@@ -692,7 +692,7 @@
     <Compile Include="MapTools\PasteIntoBranchFeaturesMapTool.cs" />
     <Compile Include="MapTools\SelectBranchesAlongShortestPathTool.cs" />
     <Compile Include="MapTools\SingleFeature2DLineTool.cs" />
-    <Compile Include="NetworkEditorGraphicsProvider.cs" />
+    <Compile Include="GraphicsProviders\NetworkEditorGraphicsProvider.cs" />
     <Compile Include="NetworkEditorGuiPlugin.cs" />
     <Compile Include="NetworkEditorMapLayerProvider.cs" />
     <Compile Include="NetworkLayerStyleFactory.cs" />
@@ -1209,7 +1209,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="NetworkEditorGraphics.xaml">
+    <Page Include="GraphicsProviders\NetworkEditorGraphics.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

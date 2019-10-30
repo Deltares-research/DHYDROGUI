@@ -5,10 +5,10 @@ using System.IO;
 using System.Linq;
 using DelftTools.Functions;
 using DeltaShell.NGHS.IO;
+using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.FileWriters.Boundary;
 using DeltaShell.NGHS.IO.Helpers;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
 using GeoAPI.Extensions.Feature;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
@@ -137,7 +137,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 function.Arguments[0].SetValues(dateTimes);
         }
 
-        private static void ReadBoundaryCondition(WaterFlowModel1DBoundaryNodeData boundaryCondition, IDelftBcCategory boundaryCategory)
+        private static void ReadBoundaryCondition(Model1DBoundaryNodeData boundaryCondition, IDelftBcCategory boundaryCategory)
         {
             // TODO: the following 2 lines should be removed when we implement salt in the reader, currently we temporarily ignore Salt Boundaries
             var saltBoundaryQuantity = boundaryCategory.Table.Where(bcq => bcq.Quantity.Value == BoundaryRegion.QuantityStrings.WaterSalinity);
@@ -150,27 +150,27 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                     switch (boundaryCategory.Table[0].Quantity.Value)
                     {
                         case BoundaryRegion.QuantityStrings.WaterDischarge:
-                            boundaryCondition.DataType = WaterFlowModel1DBoundaryNodeDataType.FlowConstant;
+                            boundaryCondition.DataType = Model1DBoundaryNodeDataType.FlowConstant;
                             boundaryCondition.Flow = ReadConstantValue(boundaryCategory.Table[0], boundaryCategory.Name);
                             break;
                         case BoundaryRegion.QuantityStrings.WaterLevel:
-                            boundaryCondition.DataType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant;
+                            boundaryCondition.DataType = Model1DBoundaryNodeDataType.WaterLevelConstant;
                             boundaryCondition.WaterLevel = ReadConstantValue(boundaryCategory.Table[0], boundaryCategory.Name);
                             break;
                     }
                     break;
                 case BoundaryRegion.FunctionStrings.QhTable:
-                    boundaryCondition.DataType = WaterFlowModel1DBoundaryNodeDataType.FlowWaterLevelTable;
+                    boundaryCondition.DataType = Model1DBoundaryNodeDataType.FlowWaterLevelTable;
                     SetCategoryValuesToFeatureData(boundaryCondition, boundaryCategory, ConvertStringsToDoubles, ConvertStringsToDoubles);
                     break;
                 case BoundaryRegion.FunctionStrings.TimeSeries:
                     switch (boundaryCategory.Table[1].Quantity.Value)
                     {
                         case BoundaryRegion.QuantityStrings.WaterDischarge:
-                            boundaryCondition.DataType = WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries;
+                            boundaryCondition.DataType = Model1DBoundaryNodeDataType.FlowTimeSeries;
                             break;
                         case BoundaryRegion.QuantityStrings.WaterLevel:
-                            boundaryCondition.DataType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries;
+                            boundaryCondition.DataType = Model1DBoundaryNodeDataType.WaterLevelTimeSeries;
                             break;
                     }
                     SetCategoryValuesToFeatureData(boundaryCondition, boundaryCategory, GetDateTimesValues, ConvertStringsToDoubles);
@@ -181,7 +181,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             }
         }
 
-        private static void ReadLateralSource(WaterFlowModel1DLateralSourceData lateralSource, IDelftBcCategory lateralSourceCategory)
+        private static void ReadLateralSource(Model1DLateralSourceData lateralSource, IDelftBcCategory lateralSourceCategory)
         {
             // TODO: the following 2 lines should be removed when we implement salt in the reader, currently we temporarily ignore Salt Boundaries
             var saltBoundaryQuantity = lateralSourceCategory.Table.Where(bcq => bcq.Quantity.Value == BoundaryRegion.QuantityStrings.WaterSalinity);
@@ -191,15 +191,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             switch (function)
             {
                 case BoundaryRegion.FunctionStrings.Constant:
-                    lateralSource.DataType = WaterFlowModel1DLateralDataType.FlowConstant;
+                    lateralSource.DataType = Model1DLateralDataType.FlowConstant;
                     lateralSource.Flow = ReadConstantValue(lateralSourceCategory.Table[0], lateralSourceCategory.Name);
                     break;
                 case BoundaryRegion.FunctionStrings.QhTable:
-                    lateralSource.DataType = WaterFlowModel1DLateralDataType.FlowWaterLevelTable;
+                    lateralSource.DataType = Model1DLateralDataType.FlowWaterLevelTable;
                     SetCategoryValuesToFeatureData(lateralSource, lateralSourceCategory, ConvertStringsToDoubles, ConvertStringsToDoubles);
                     break;
                 case BoundaryRegion.FunctionStrings.TimeSeries:
-                    lateralSource.DataType = WaterFlowModel1DLateralDataType.FlowTimeSeries;
+                    lateralSource.DataType = Model1DLateralDataType.FlowTimeSeries;
                     SetCategoryValuesToFeatureData(lateralSource, lateralSourceCategory, GetDateTimesValues, ConvertStringsToDoubles);
                     break;
                 default:

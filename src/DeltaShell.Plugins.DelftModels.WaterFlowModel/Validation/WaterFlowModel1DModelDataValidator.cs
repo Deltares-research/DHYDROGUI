@@ -6,14 +6,12 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.Structures;
-using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Hydro.Validators;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.Restart;
 using DelftTools.Utils.Validation;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
+using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties;
-using ValidationAspects;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation
 {
@@ -49,9 +47,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation
 
             var boundaryConditionsWithMultipleConnectingBranches = model.BoundaryConditions
                 .Where(bc => bc.Feature.IsConnectedToMultipleBranches
-                             && (bc.DataType == WaterFlowModel1DBoundaryNodeDataType.FlowConstant
-                                 || bc.DataType == WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries
-                                 || bc.DataType == WaterFlowModel1DBoundaryNodeDataType.FlowWaterLevelTable));
+                             && (bc.DataType == Model1DBoundaryNodeDataType.FlowConstant
+                                 || bc.DataType == Model1DBoundaryNodeDataType.FlowTimeSeries
+                                 || bc.DataType == Model1DBoundaryNodeDataType.FlowWaterLevelTable));
 
             foreach (var bc in boundaryConditionsWithMultipleConnectingBranches)
             {
@@ -60,7 +58,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation
             }
 
             // SOBEK3-1035: Q(h) boundaries should have values in sequence
-            foreach (var bc in model.BoundaryConditions.Where(bc => bc.DataType == WaterFlowModel1DBoundaryNodeDataType.FlowWaterLevelTable && bc.Data != null))
+            foreach (var bc in model.BoundaryConditions.Where(bc => bc.DataType == Model1DBoundaryNodeDataType.FlowWaterLevelTable && bc.Data != null))
             {
                 var values = bc.Data.GetValues<double>().ToList();
 

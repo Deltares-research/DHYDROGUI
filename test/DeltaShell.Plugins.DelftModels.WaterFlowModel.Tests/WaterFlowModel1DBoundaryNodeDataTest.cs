@@ -3,7 +3,7 @@ using System.ComponentModel;
 using DelftTools.Functions;
 using DelftTools.Functions.Filters;
 using DelftTools.Shell.Core.Workflow.DataItems;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
+using DeltaShell.NGHS.IO.DataObjects;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -16,7 +16,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
         [ExpectedException(typeof(NotImplementedException), ExpectedMessage = "BoundaryNodeDataType not supported.")]
         public void GivenAnEmptyWaterFlowModel1DBoundaryNodeData_WhenGetValueIsCalledWithAnyValue_ThenANotImplementedExceptionIsRaised()
         {
-            var nodeData = new WaterFlowModel1DBoundaryNodeData();
+            var nodeData = new Model1DBoundaryNodeData();
             nodeData.GetValue(Arg<DateTime>.Is.Anything);
         }
 
@@ -24,9 +24,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
         public void GivenAWaterFlowModel1DBoundaryNodeDateWithAFlowConstantDataType_WhenGetValueIsCalledWithAnyDateTimeValue_ThenTheConstantValueIsReturned()
         {
             const double expectedValue = 50.0;
-            var nodeData = new WaterFlowModel1DBoundaryNodeData
+            var nodeData = new Model1DBoundaryNodeData
             {
-                DataType = WaterFlowModel1DBoundaryNodeDataType.FlowConstant,
+                DataType = Model1DBoundaryNodeDataType.FlowConstant,
                 Flow = expectedValue
             };
 
@@ -37,9 +37,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
         public void GivenAWaterFlowModel1DBoundaryNodeDateWithAWaterLevelConstantDataType_WhenGetValueIsCalledWithAnyDateTimeValue_ThenTheConstantValueIsReturned()
         {
             const double expectedValue = 50.0;
-            var nodeData = new WaterFlowModel1DBoundaryNodeData
+            var nodeData = new Model1DBoundaryNodeData
             {
-                DataType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant,
+                DataType = Model1DBoundaryNodeDataType.WaterLevelConstant,
                 WaterLevel = expectedValue
             };
 
@@ -61,9 +61,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
             mocks.ReplayAll();
 
-            var nodeData = new WaterFlowModel1DBoundaryNodeData
+            var nodeData = new Model1DBoundaryNodeData
             {
-                DataType = WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries,
+                DataType = Model1DBoundaryNodeDataType.FlowTimeSeries,
                 SeriesDataItem = seriesDataItemMock
             };
 
@@ -79,7 +79,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
         public void GivenAnEmptyWaterFlowModel1DBoundaryNodeData_WhenGetSaltValueIsCalledWithAnyValue_ThenAnArgumentOutOfRangeExceptionIsRaised()
         {
-            var nodeData = new WaterFlowModel1DBoundaryNodeData();
+            var nodeData = new Model1DBoundaryNodeData();
             var result = nodeData.GetSaltValue(Arg<DateTime>.Is.Anything);
         }
 
@@ -88,7 +88,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
         {
             const double expectedVal = 50.0;
 
-            var nodeData = new WaterFlowModel1DBoundaryNodeData()
+            var nodeData = new Model1DBoundaryNodeData()
             {
                 SaltConditionType = SaltBoundaryConditionType.Constant,
                 SaltConcentrationConstant = expectedVal
@@ -114,7 +114,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
             mocks.ReplayAll();
 
-            var nodeData = new WaterFlowModel1DBoundaryNodeData()
+            var nodeData = new Model1DBoundaryNodeData()
             {
                 SaltConditionType = SaltBoundaryConditionType.TimeDependent,
                 SaltConcentrationTimeSeries = timeSeriesMock
@@ -131,7 +131,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
         public void GivenAnEmptyWaterFlowModel1DBoundaryNodeData_WhenGetTemperatureValueIsCalledWithAnyValue_ThenAnArgumentOutOfRangeExceptionIsRaised()
         {
-            var nodeData = new WaterFlowModel1DBoundaryNodeData();
+            var nodeData = new Model1DBoundaryNodeData();
             var result = nodeData.GetTemperatureValue(Arg<DateTime>.Is.Anything);
         }
 
@@ -140,7 +140,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
         {
             const double expectedVal = 50.0;
 
-            var nodeData = new WaterFlowModel1DBoundaryNodeData()
+            var nodeData = new Model1DBoundaryNodeData()
             {
                 TemperatureConditionType = TemperatureBoundaryConditionType.Constant,
                 TemperatureConstant = expectedVal
@@ -166,7 +166,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
             mocks.ReplayAll();
 
-            var nodeData = new WaterFlowModel1DBoundaryNodeData()
+            var nodeData = new Model1DBoundaryNodeData()
             {
                 TemperatureConditionType = TemperatureBoundaryConditionType.TimeDependent,
                 TemperatureTimeSeries = timeSeriesMock
@@ -181,7 +181,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
         [Test]
         public void GivenAWaterFlowModel1DBoundaryNodeDataWhenToStringIsCalledThenTheNameOfTheDataIsReturned()
         {
-            var nodeData = new WaterFlowModel1DBoundaryNodeData();
+            var nodeData = new Model1DBoundaryNodeData();
             Assert.That(nodeData.ToString(), Is.StringEnding(" - None"));
         }
     }

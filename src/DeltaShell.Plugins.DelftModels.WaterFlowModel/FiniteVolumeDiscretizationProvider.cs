@@ -5,7 +5,6 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Validators;
 using DelftTools.Utils.Validation;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Networks;
 using log4net;

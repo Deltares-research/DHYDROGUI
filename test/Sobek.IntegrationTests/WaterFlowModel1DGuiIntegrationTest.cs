@@ -37,9 +37,9 @@ using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.TestUtils;
+using DeltaShell.Plugins.FMSuite.Common.Gui.Forms;
 using DeltaShell.Plugins.ImportExport.Sobek;
 using DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter;
 using DeltaShell.Plugins.ImportExport.Sobek.Tests;
@@ -374,7 +374,7 @@ namespace Sobek.IntegrationTests
 
             WpfTestHelper.ShowModal(mainWindow, () =>
                 {
-                    gui.DocumentViewsResolver.OpenViewForData(model.BoundaryConditions[0], typeof(WaterFlowModel1DBoundaryNodeDataViewWpf));
+                    gui.DocumentViewsResolver.OpenViewForData(model.BoundaryConditions[0], typeof(Model1DBoundaryNodeDataViewWpf));
 
                     model.OutputFunctions.First().Components[0].Values.Count.Should("Model ran and view opened: should still have output coverages").Be.GreaterThan(0);
                 });

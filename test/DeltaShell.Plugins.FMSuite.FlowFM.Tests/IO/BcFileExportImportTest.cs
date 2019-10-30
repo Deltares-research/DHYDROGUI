@@ -3,7 +3,6 @@ using System.IO;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.TestUtils;
-using DelftTools.Utils;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;

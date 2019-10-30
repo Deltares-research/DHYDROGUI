@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
@@ -10,7 +9,6 @@ using DeltaShell.Sobek.Readers.SobekDataObjects;
 using GeoAPI.Extensions.Networks;
 using log4net;
 using NetTopologySuite.Extensions.Networks;
-using NetTopologySuite.Geometries;
 using Point = NetTopologySuite.Geometries.Point;
 
 namespace DeltaShell.Plugins.ImportExport.SobekNetwork.Importers

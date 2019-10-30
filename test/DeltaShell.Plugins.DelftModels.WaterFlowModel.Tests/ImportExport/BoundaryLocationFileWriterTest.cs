@@ -3,12 +3,11 @@ using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
 using DeltaShell.NGHS.IO;
+using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.NGHS.IO.FileWriters.General;
 using DeltaShell.NGHS.IO.FileWriters.Location;
 using DeltaShell.NGHS.IO.TestUtils;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Boundary;
 using GeoAPI.Extensions.Networks;
 using NetTopologySuite.Extensions.Networks;
@@ -50,9 +49,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
             var componentValues = new double[] { 0, -1, -2, -3, -4, -5 };
 
             var boundaryNodeData = BoundaryFileWriterTestHelper.GetBoundaryNodeDataWithFlowWaterLevelData(nwNodes[0].Name,
-                WaterFlowModel1DBoundaryNodeDataType.FlowWaterLevelTable, argumentValues, componentValues);
+                Model1DBoundaryNodeDataType.FlowWaterLevelTable, argumentValues, componentValues);
 
-            var boundLocNodes = new List<WaterFlowModel1DBoundaryNodeData> {boundaryNodeData};
+            var boundLocNodes = new List<Model1DBoundaryNodeData> {boundaryNodeData};
 
             // Write boundary locations
             BoundaryLocationFileWriter.WriteFileBoundaryLocations(FileWriterTestHelper.ModelFileNames.BoundaryLocations, boundLocNodes, nwNodes);
@@ -89,9 +88,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
             var componentValues = new double[] { 0, 1, 2, 3, 4, 5 };
 
             var boundaryNodeData = BoundaryFileWriterTestHelper.GetBoundaryNodeDataWithFlowWaterLevelData(nwNodes[0].Name,
-                WaterFlowModel1DBoundaryNodeDataType.FlowWaterLevelTable, argumentValues, componentValues);
+                Model1DBoundaryNodeDataType.FlowWaterLevelTable, argumentValues, componentValues);
 
-            var boundLocNodes = new List<WaterFlowModel1DBoundaryNodeData> { boundaryNodeData };
+            var boundLocNodes = new List<Model1DBoundaryNodeData> { boundaryNodeData };
 
             // Write boundary locations
             BoundaryLocationFileWriter.WriteFileBoundaryLocations(FileWriterTestHelper.ModelFileNames.BoundaryLocations, boundLocNodes, nwNodes);
@@ -120,15 +119,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
         [Test]
         public void TestBoundaryLocationsFileWriterGivesExpectedResults()
         {
-            var boundLocNodes = new List<WaterFlowModel1DBoundaryNodeData>();
+            var boundLocNodes = new List<Model1DBoundaryNodeData>();
             IHydroNetwork network = new HydroNetwork();
             
             var nwNodes = new List<INode>() { network.AddNode(), network.AddNode(), network.AddNode(), network.AddNode(), network.AddNode() };
-            boundLocNodes.Add(new WaterFlowModel1DBoundaryNodeData() { Feature = nwNodes[0], DataType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries });
-            boundLocNodes.Add(new WaterFlowModel1DBoundaryNodeData() { Feature = nwNodes[1], DataType = WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries });
-            boundLocNodes.Add(new WaterFlowModel1DBoundaryNodeData() { Feature = nwNodes[2], DataType = WaterFlowModel1DBoundaryNodeDataType.FlowWaterLevelTable });
-            boundLocNodes.Add(new WaterFlowModel1DBoundaryNodeData() { Feature = nwNodes[3], DataType = WaterFlowModel1DBoundaryNodeDataType.FlowConstant });
-            boundLocNodes.Add(new WaterFlowModel1DBoundaryNodeData() { Feature = nwNodes[4], DataType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant });
+            boundLocNodes.Add(new Model1DBoundaryNodeData() { Feature = nwNodes[0], DataType = Model1DBoundaryNodeDataType.WaterLevelTimeSeries });
+            boundLocNodes.Add(new Model1DBoundaryNodeData() { Feature = nwNodes[1], DataType = Model1DBoundaryNodeDataType.FlowTimeSeries });
+            boundLocNodes.Add(new Model1DBoundaryNodeData() { Feature = nwNodes[2], DataType = Model1DBoundaryNodeDataType.FlowWaterLevelTable });
+            boundLocNodes.Add(new Model1DBoundaryNodeData() { Feature = nwNodes[3], DataType = Model1DBoundaryNodeDataType.FlowConstant });
+            boundLocNodes.Add(new Model1DBoundaryNodeData() { Feature = nwNodes[4], DataType = Model1DBoundaryNodeDataType.WaterLevelConstant });
 
             BoundaryLocationFileWriter.WriteFileBoundaryLocations(FileWriterTestHelper.ModelFileNames.BoundaryLocations, boundLocNodes, nwNodes);
 

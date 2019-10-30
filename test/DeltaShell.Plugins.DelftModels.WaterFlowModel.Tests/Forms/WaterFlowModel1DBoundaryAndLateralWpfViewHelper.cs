@@ -1,13 +1,13 @@
 ﻿using DelftTools.Functions;
 using DelftTools.Functions.Generic;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
 using System;
+using DeltaShell.NGHS.IO.DataObjects;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Forms
 {
     public static class WaterFlowModel1DBoundaryAndLateralWpfViewHelper
     {
-        public static WaterFlowModel1DLateralSourceData GetStandardLateralSourceData()
+        public static Model1DLateralSourceData GetStandardLateralSourceData()
         {
             var t0 = DateTime.Now;
             var t1 = t0.AddMinutes(30);
@@ -31,9 +31,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Forms
             temperatureTimeSeries[t1] = 21.47;
             temperatureTimeSeries[t2] = 23.69;
 
-            var lateralSourceData = new WaterFlowModel1DLateralSourceData
+            var lateralSourceData = new Model1DLateralSourceData
             {
-                DataType = WaterFlowModel1DLateralDataType.FlowTimeSeries,
+                DataType = Model1DLateralDataType.FlowTimeSeries,
                 Data = flowTimeSeries,
                 Flow = 0.567,
                 UseSalt = true, // be sure to enable salt before changing type
@@ -49,7 +49,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Forms
             return lateralSourceData;
         }
 
-        public static WaterFlowModel1DBoundaryNodeData GetStandardBoundaryNodeData()
+        public static Model1DBoundaryNodeData GetStandardBoundaryNodeData()
         {
             var t0 = DateTime.Now;
             var t1 = t0.AddMinutes(30);
@@ -73,9 +73,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Forms
             temperatureTimeSeries[t1] = 21.47;
             temperatureTimeSeries[t2] = 23.69;
 
-            var boundaryNodeData = new WaterFlowModel1DBoundaryNodeData
+            var boundaryNodeData = new Model1DBoundaryNodeData
             {
-                DataType = WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries, // be sure to change type before setting data
+                DataType = Model1DBoundaryNodeDataType.FlowTimeSeries, // be sure to change type before setting data
                 Data = flowTimeSeries,
                 Flow = 0.567,
                 UseSalt = true, // be sure to enable salt before changing type

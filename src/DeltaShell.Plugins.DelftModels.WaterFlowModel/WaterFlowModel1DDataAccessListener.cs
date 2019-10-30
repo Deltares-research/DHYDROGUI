@@ -9,7 +9,7 @@ using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Units;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
+using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
@@ -36,13 +36,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             {
                 ProjectRepository.PreLoad<Parameter>(fp => fp.Value);
 
-                ProjectRepository.PreLoad<WaterFlowModel1DLateralSourceData>(lsd => lsd.Feature);
-                ProjectRepository.PreLoad<WaterFlowModel1DLateralSourceData>(lsd => lsd.SeriesDataItem);
-                ProjectRepository.PreLoad<WaterFlowModel1DLateralSourceData>(lsd => lsd.FlowConstantDataItem);
+                ProjectRepository.PreLoad<Model1DLateralSourceData>(lsd => lsd.Feature);
+                ProjectRepository.PreLoad<Model1DLateralSourceData>(lsd => lsd.SeriesDataItem);
+                ProjectRepository.PreLoad<Model1DLateralSourceData>(lsd => lsd.FlowConstantDataItem);
 
-                ProjectRepository.PreLoad<WaterFlowModel1DBoundaryNodeData>(bnd => bnd.Feature);
-                ProjectRepository.PreLoad<WaterFlowModel1DBoundaryNodeData>(bnd => bnd.SeriesDataItem);
-                ProjectRepository.PreLoad<WaterFlowModel1DBoundaryNodeData>(bnd => bnd.FlowConstantDataItem);
+                ProjectRepository.PreLoad<Model1DBoundaryNodeData>(bnd => bnd.Feature);
+                ProjectRepository.PreLoad<Model1DBoundaryNodeData>(bnd => bnd.SeriesDataItem);
+                ProjectRepository.PreLoad<Model1DBoundaryNodeData>(bnd => bnd.FlowConstantDataItem);
 
                 firstFlowModel = false;
             }

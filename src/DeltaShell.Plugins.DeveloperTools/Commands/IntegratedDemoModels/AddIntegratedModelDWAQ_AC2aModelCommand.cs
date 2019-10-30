@@ -9,6 +9,7 @@ using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils.Editing;
+using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.DelftModels.HydroModel;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
@@ -16,7 +17,6 @@ using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Unpaved;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
@@ -303,7 +303,7 @@ namespace DeltaShell.Plugins.DeveloperTools.Commands.IntegratedDemoModels
             var node1BoundaryConditions =
                     flowModel1D.BoundaryConditions.First(
                         bc => bc.Feature == flowModel1D.Network.Nodes.First(n => n.Name == HydroNode1Name));
-            node1BoundaryConditions.DataType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries;
+            node1BoundaryConditions.DataType = Model1DBoundaryNodeDataType.WaterLevelTimeSeries;
             node1BoundaryConditions.Data[new DateTime(2010, 1, 1, 0, 0, 0)] = 0.01;
             node1BoundaryConditions.Data[new DateTime(2010, 1, 2, 0, 0, 0)] = 0.02;
             node1BoundaryConditions.Data[new DateTime(2010, 1, 3, 0, 0, 0)] = 0.05;
@@ -314,13 +314,13 @@ namespace DeltaShell.Plugins.DeveloperTools.Commands.IntegratedDemoModels
             var node9BoundaryConditions =
                 flowModel1D.BoundaryConditions.First(
                     bc => bc.Feature == flowModel1D.Network.Nodes.First(n => n.Name == HydroNode9Name));
-            node9BoundaryConditions.DataType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant;
+            node9BoundaryConditions.DataType = Model1DBoundaryNodeDataType.WaterLevelConstant;
             node9BoundaryConditions.WaterLevel = 0.0;
 
             var node21BoundaryConditions =
                 flowModel1D.BoundaryConditions.First(
                     bc => bc.Feature == flowModel1D.Network.Nodes.First(n => n.Name == HydroNode21Name));
-            node21BoundaryConditions.DataType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant;
+            node21BoundaryConditions.DataType = Model1DBoundaryNodeDataType.WaterLevelConstant;
             node21BoundaryConditions.WaterLevel = -0.5;
 
             #endregion
@@ -330,7 +330,7 @@ namespace DeltaShell.Plugins.DeveloperTools.Commands.IntegratedDemoModels
             var lateralDataL1 =
                     flowModel1D.LateralSourceData.First(
                         lsd => ReferenceEquals(lsd.Feature, flowModel1D.Network.LateralSources.First(ls => ls.Name == LateralSourceL1Name)));
-            lateralDataL1.DataType = WaterFlowModel1DLateralDataType.FlowTimeSeries;
+            lateralDataL1.DataType = Model1DLateralDataType.FlowTimeSeries;
             lateralDataL1.Data.Arguments[0].ExtrapolationType = ExtrapolationType.None;
             lateralDataL1.Data.Arguments[0].InterpolationType = InterpolationType.Constant;
             lateralDataL1.Data[new DateTime(2010, 1, 1, 0, 0, 0)] = 0.0;
@@ -341,7 +341,7 @@ namespace DeltaShell.Plugins.DeveloperTools.Commands.IntegratedDemoModels
             var lateralData7 =
                 flowModel1D.LateralSourceData.First(
                     lsd => ReferenceEquals(lsd.Feature, flowModel1D.Network.LateralSources.First(ls => ls.Name == LateralSource7Name)));
-            lateralData7.DataType = WaterFlowModel1DLateralDataType.FlowTimeSeries;
+            lateralData7.DataType = Model1DLateralDataType.FlowTimeSeries;
             lateralData7.Data.Arguments[0].ExtrapolationType = ExtrapolationType.Constant;
             lateralData7.Data.Arguments[0].InterpolationType = InterpolationType.Linear;
             lateralData7.Data.Clear();

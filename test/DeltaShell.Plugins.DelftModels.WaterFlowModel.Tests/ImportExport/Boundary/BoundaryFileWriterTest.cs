@@ -5,10 +5,10 @@ using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DeltaShell.NGHS.IO;
+using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.NGHS.IO.FileWriters.Boundary;
 using DeltaShell.NGHS.IO.FileWriters.General;
 using DeltaShell.NGHS.IO.TestUtils;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
 using NUnit.Framework;
 
@@ -339,12 +339,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
             const double saltConstant = 10.37;
             double[] saltTimeSeries = new double[4] { 11.13, 17.19, 23.27, 37.43 };
 
-            var boundaryNode1 = BoundaryFileWriterTestHelper.GetBoundaryNodeDataWithConstantType("Node001", WaterFlowModel1DBoundaryNodeDataType.FlowConstant, 1.3);
+            var boundaryNode1 = BoundaryFileWriterTestHelper.GetBoundaryNodeDataWithConstantType("Node001", Model1DBoundaryNodeDataType.FlowConstant, 1.3);
             boundaryNode1.SaltConditionType = SaltBoundaryConditionType.Constant;
             boundaryNode1.SaltConcentrationConstant = saltConstant;
             boundaryNode1.ThatcherHarlemannCoefficient = thCoeff;
 
-            var boundaryNode2 = BoundaryFileWriterTestHelper.GetBoundaryNodeDataWithConstantType("Node002", WaterFlowModel1DBoundaryNodeDataType.FlowConstant, 2.7);
+            var boundaryNode2 = BoundaryFileWriterTestHelper.GetBoundaryNodeDataWithConstantType("Node002", Model1DBoundaryNodeDataType.FlowConstant, 2.7);
             boundaryNode2.SaltConditionType = SaltBoundaryConditionType.TimeDependent;
             boundaryNode2.SaltConcentrationTimeSeries = new TimeSeries();
             boundaryNode2.ThatcherHarlemannCoefficient = thCoeff;
@@ -359,7 +359,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
             boundaryNode2.SaltConcentrationTimeSeries.Components.Clear();
             boundaryNode2.SaltConcentrationTimeSeries.Components.Add(component);
 
-            boundaryNodeData.AddRange(new List<WaterFlowModel1DBoundaryNodeData>(){boundaryNode1, boundaryNode2});
+            boundaryNodeData.AddRange(new List<Model1DBoundaryNodeData>(){boundaryNode1, boundaryNode2});
             WaterFlowModel1DBoundaryFileWriter.WriteFile(FileWriterTestHelper.ModelFileNames.BoundaryConditions, model);
 
             var delftBcReader = new DelftBcReader();
@@ -414,20 +414,20 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
             const double SALT_VALUE_PPT = 10.37;
             const double SALT_VALUE_MASS = 32.17;
 
-            var lateralSource1 = BoundaryFileWriterTestHelper.GetLateralSourceDataWithFlowData("LateralSource001", WaterFlowModel1DLateralDataType.FlowConstant, 1.3);
+            var lateralSource1 = BoundaryFileWriterTestHelper.GetLateralSourceDataWithFlowData("LateralSource001", Model1DLateralDataType.FlowConstant, 1.3);
             lateralSource1.SaltLateralDischargeType = SaltLateralDischargeType.ConcentrationConstant;
             lateralSource1.SaltConcentrationDischargeConstant = SALT_VALUE_PPT;
 
-            var lateralSource2 = BoundaryFileWriterTestHelper.GetLateralSourceDataWithFlowData("LateralSource002", WaterFlowModel1DLateralDataType.FlowConstant, 2.7);
+            var lateralSource2 = BoundaryFileWriterTestHelper.GetLateralSourceDataWithFlowData("LateralSource002", Model1DLateralDataType.FlowConstant, 2.7);
             lateralSource2.SaltLateralDischargeType = SaltLateralDischargeType.MassConstant;
             lateralSource2.SaltMassDischargeConstant = SALT_VALUE_MASS;
 
-            var lateralSource3 = BoundaryFileWriterTestHelper.GetLateralSourceDataWithFlowData("LateralSource003", WaterFlowModel1DLateralDataType.FlowConstant, 3.9);
+            var lateralSource3 = BoundaryFileWriterTestHelper.GetLateralSourceDataWithFlowData("LateralSource003", Model1DLateralDataType.FlowConstant, 3.9);
             lateralSource3.SaltLateralDischargeType = SaltLateralDischargeType.MassConstant;
             lateralSource3.SaltMassDischargeConstant = SALT_VALUE_MASS;
             lateralSource3.SaltLateralDischargeType = SaltLateralDischargeType.Default; // change to default
             
-            lateralSourceData.AddRange(new List<WaterFlowModel1DLateralSourceData>() { lateralSource1, lateralSource2, lateralSource3 });
+            lateralSourceData.AddRange(new List<Model1DLateralSourceData>() { lateralSource1, lateralSource2, lateralSource3 });
             WaterFlowModel1DBoundaryFileWriter.WriteFile(FileWriterTestHelper.ModelFileNames.BoundaryConditions, model);
 
             var delftBcReader = new DelftBcReader();
@@ -466,7 +466,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
             Assert.AreEqual(BoundaryRegion.QuantityStrings.WaterSalinity, lateralSourceCategories[5].Table[0].Quantity.Value);
             Assert.AreEqual(BoundaryRegion.UnitStrings.SaltPpt, lateralSourceCategories[5].Table[0].Unit.Value);
             Assert.AreEqual(1, lateralSourceCategories[5].Table[0].Values.Count);
-            Assert.AreEqual(WaterFlowModel1DLateralSourceData.DefaultSalinity.ToString(CultureInfo.InvariantCulture), lateralSourceCategories[5].Table[0].Values[0]);
+            Assert.AreEqual(Model1DLateralSourceData.DefaultSalinity.ToString(CultureInfo.InvariantCulture), lateralSourceCategories[5].Table[0].Values[0]);
         }
 
         [Test]
@@ -481,11 +481,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
             const double temperatureConstant = 10.37;
             double[] temperatureTimeSeries = new double[4] { 11.13, 17.19, 23.27, 37.43 };
 
-            var boundaryNode1 = BoundaryFileWriterTestHelper.GetBoundaryNodeDataWithConstantType("Node001", WaterFlowModel1DBoundaryNodeDataType.FlowConstant, 1.3);
+            var boundaryNode1 = BoundaryFileWriterTestHelper.GetBoundaryNodeDataWithConstantType("Node001", Model1DBoundaryNodeDataType.FlowConstant, 1.3);
             boundaryNode1.TemperatureConditionType = TemperatureBoundaryConditionType.Constant;
             boundaryNode1.TemperatureConstant = temperatureConstant;
 
-            var boundaryNode2 = BoundaryFileWriterTestHelper.GetBoundaryNodeDataWithConstantType("Node002", WaterFlowModel1DBoundaryNodeDataType.FlowConstant, 2.7);
+            var boundaryNode2 = BoundaryFileWriterTestHelper.GetBoundaryNodeDataWithConstantType("Node002", Model1DBoundaryNodeDataType.FlowConstant, 2.7);
             boundaryNode2.TemperatureConditionType = TemperatureBoundaryConditionType.TimeDependent;
             boundaryNode2.TemperatureTimeSeries = new TimeSeries();
 
@@ -499,7 +499,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
             boundaryNode2.TemperatureTimeSeries.Components.Clear();
             boundaryNode2.TemperatureTimeSeries.Components.Add(component);
 
-            boundaryNodeData.AddRange(new List<WaterFlowModel1DBoundaryNodeData>() { boundaryNode1, boundaryNode2 });
+            boundaryNodeData.AddRange(new List<Model1DBoundaryNodeData>() { boundaryNode1, boundaryNode2 });
             WaterFlowModel1DBoundaryFileWriter.WriteFile(FileWriterTestHelper.ModelFileNames.BoundaryConditions, model);
             
             var delftBcReader = new DelftBcReader();
@@ -553,11 +553,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
             const double temperatureConstant = 10.37;
             double[] temperatureTimeSeries = new double[4] { 11.13, 17.19, 23.27, 37.43 };
 
-            var lateralSource1 = BoundaryFileWriterTestHelper.GetLateralSourceDataWithFlowData("LateralSource001", WaterFlowModel1DLateralDataType.FlowConstant, 1.3);
+            var lateralSource1 = BoundaryFileWriterTestHelper.GetLateralSourceDataWithFlowData("LateralSource001", Model1DLateralDataType.FlowConstant, 1.3);
             lateralSource1.TemperatureLateralDischargeType = TemperatureLateralDischargeType.Constant;
             lateralSource1.TemperatureConstant = temperatureConstant;
 
-            var lateralSource2 = BoundaryFileWriterTestHelper.GetLateralSourceDataWithFlowData("LateralSource002", WaterFlowModel1DLateralDataType.FlowConstant, 2.7);
+            var lateralSource2 = BoundaryFileWriterTestHelper.GetLateralSourceDataWithFlowData("LateralSource002", Model1DLateralDataType.FlowConstant, 2.7);
             lateralSource2.TemperatureLateralDischargeType = TemperatureLateralDischargeType.TimeDependent;
             lateralSource2.TemperatureTimeSeries = new TimeSeries();
 
@@ -571,7 +571,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
             lateralSource2.TemperatureTimeSeries.Components.Clear();
             lateralSource2.TemperatureTimeSeries.Components.Add(component);
             
-            lateralSourceData.AddRange(new List<WaterFlowModel1DLateralSourceData>() { lateralSource1, lateralSource2 });
+            lateralSourceData.AddRange(new List<Model1DLateralSourceData>() { lateralSource1, lateralSource2 });
             WaterFlowModel1DBoundaryFileWriter.WriteFile(FileWriterTestHelper.ModelFileNames.BoundaryConditions, model);
             
             var delftBcReader = new DelftBcReader();

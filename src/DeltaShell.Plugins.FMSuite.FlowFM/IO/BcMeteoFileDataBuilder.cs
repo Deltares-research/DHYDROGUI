@@ -5,7 +5,6 @@ using DelftTools.Functions.Generic;
 using DelftTools.Utils;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using log4net;
-using NetTopologySuite.Extensions.Features;
 
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO

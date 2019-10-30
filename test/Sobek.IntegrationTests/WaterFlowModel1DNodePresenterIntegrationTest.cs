@@ -6,10 +6,10 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Gui;
+using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui;
 using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.NetworkEditor.Gui;
@@ -120,7 +120,7 @@ namespace Sobek.IntegrationTests
                     var branch1 = new Channel("branch1", node1, node2) {Geometry = new LineString(new [] {node1.Geometry.Coordinate,node2.Geometry.Coordinate})};
                     var network = new HydroNetwork { Branches = { branch1 }, Nodes = { node1, node2 } };
                     var model = new WaterFlowModel1D { Name = "model", Network = network };
-                    model.BoundaryConditions[0].DataType = WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries;
+                    model.BoundaryConditions[0].DataType = Model1DBoundaryNodeDataType.FlowTimeSeries;
 
                     var rootFolder = app.Project.RootFolder;
                     rootFolder.Add(model);
@@ -141,7 +141,7 @@ namespace Sobek.IntegrationTests
                     treeView.Nodes[0].Nodes[2].Nodes[0].Nodes[0].Expand(); // Boundary Data
 
                     // link
-                    var boundaryCondition = (WaterFlowModel1DBoundaryNodeData)modelClone.GetDataItemByValue(modelClone.BoundaryConditions[0]).Value;
+                    var boundaryCondition = (Model1DBoundaryNodeData)modelClone.GetDataItemByValue(modelClone.BoundaryConditions[0]).Value;
                     boundaryCondition.SeriesDataItem.LinkTo(timeSeriesDataItem);
 
                     treeView.WaitUntilAllEventsAreProcessed();

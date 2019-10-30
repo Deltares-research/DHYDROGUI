@@ -13,7 +13,7 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Validation;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
+using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.PhysicalParameters;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Boundary;
@@ -83,13 +83,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Validation
             IHydroNetwork network = model.Network;
             var nwNodes = network.HydroNodes.ToList();
 
-            model.BoundaryConditions.ForEach(bc => bc.DataType = WaterFlowModel1DBoundaryNodeDataType.None);
+            model.BoundaryConditions.ForEach(bc => bc.DataType = Model1DBoundaryNodeDataType.None);
 
             var argumentValues = new double[] { 0, 1, 2, 3, 4, 5, 6 };
             var componentValues = new double[] { 0, -1, -2, -3, -5, -8, -13 };
 
             var boundaryNodeData = BoundaryFileWriterTestHelper.GetBoundaryNodeDataWithFlowWaterLevelData(nwNodes[0].Name,
-                WaterFlowModel1DBoundaryNodeDataType.FlowWaterLevelTable, argumentValues, componentValues);
+                Model1DBoundaryNodeDataType.FlowWaterLevelTable, argumentValues, componentValues);
 
             var previous = model.BoundaryConditions.First(bc => bc.Feature == nwNodes[0]);
             model.BoundaryConditions.Remove(previous);
@@ -141,13 +141,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Validation
             IHydroNetwork network = model.Network;
             var nwNodes = network.HydroNodes.ToList();
 
-            model.BoundaryConditions.ForEach(bc => bc.DataType = WaterFlowModel1DBoundaryNodeDataType.None);
+            model.BoundaryConditions.ForEach(bc => bc.DataType = Model1DBoundaryNodeDataType.None);
 
             var argumentValues = new double[] { 0, 1, 2, 3, 4, 5, 6 };
             var componentValues = new double[] { 0, -1, 2, -3, 5, -8, 13 };
 
             var boundaryNodeData = BoundaryFileWriterTestHelper.GetBoundaryNodeDataWithFlowWaterLevelData(nwNodes[0].Name,
-                WaterFlowModel1DBoundaryNodeDataType.FlowWaterLevelTable, argumentValues, componentValues);
+                Model1DBoundaryNodeDataType.FlowWaterLevelTable, argumentValues, componentValues);
 
             var previous = model.BoundaryConditions.First(bc => bc.Feature == nwNodes[0]);
             model.BoundaryConditions.Remove(previous);
@@ -230,17 +230,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Validation
             var boundaryConditionCenterNode = model.BoundaryConditions.First(bc2 => bc2.Feature == centerNode);
 
             // Make the bc for the center node FlowConstant and assert the validation exception
-            boundaryConditionCenterNode.DataType = WaterFlowModel1DBoundaryNodeDataType.FlowConstant;
+            boundaryConditionCenterNode.DataType = Model1DBoundaryNodeDataType.FlowConstant;
             Assert.IsTrue(ContainsError(new WaterFlowModel1DModelValidator().Validate(model),
                                         "The boundary condition centerNode - Q: 0 m^3/s has multiple connecting branches. This is only possible for waterlevel boundary conditions."));
 
             // Make the bc for the center node FlowTimeSeries and assert the validation exception
-            boundaryConditionCenterNode.DataType = WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries;
+            boundaryConditionCenterNode.DataType = Model1DBoundaryNodeDataType.FlowTimeSeries;
             Assert.IsTrue(ContainsError(new WaterFlowModel1DModelValidator().Validate(model),
                                         "The boundary condition centerNode - Q(t) has multiple connecting branches. This is only possible for waterlevel boundary conditions."));
 
             // Make the bc for the center node FlowWaterLevelTable and assert the validation exception
-            boundaryConditionCenterNode.DataType = WaterFlowModel1DBoundaryNodeDataType.FlowWaterLevelTable;
+            boundaryConditionCenterNode.DataType = Model1DBoundaryNodeDataType.FlowWaterLevelTable;
             Assert.IsTrue(ContainsError(new WaterFlowModel1DModelValidator().Validate(model),
                                         "The boundary condition centerNode - Q(h) has multiple connecting branches. This is only possible for waterlevel boundary conditions."));
         }
@@ -278,7 +278,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Validation
             Assert.IsTrue(model.BoundaryConditions.Count > 0);
             var boundaryConditionNode = model.BoundaryConditions.First();
 
-            boundaryConditionNode.DataType = WaterFlowModel1DBoundaryNodeDataType.FlowConstant;
+            boundaryConditionNode.DataType = Model1DBoundaryNodeDataType.FlowConstant;
             boundaryConditionNode.SaltConditionType = SaltBoundaryConditionType.None;
             Assert.IsTrue(ContainsError(new WaterFlowModel1DModelValidator().Validate(model),
                 "The boundary condition leftNode - Q: 0 m^3/s has a salinity type of None. All open boundaries must specify salinity values."));
@@ -1574,11 +1574,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Validation
             var startTime = new DateTime(2000, 1, 1);
             var stopTime = new DateTime(2000, 1, 10);
 
-            WaterFlowModel1DBoundaryNodeData qBoundary = model.BoundaryConditions[0];
+            Model1DBoundaryNodeData qBoundary = model.BoundaryConditions[0];
             qBoundary.TemperatureConditionType = TemperatureBoundaryConditionType.TimeDependent;
             qBoundary.TemperatureTimeSeries[startTime] = 30.0;
             qBoundary.TemperatureTimeSeries[stopTime] = 10.0;
-            qBoundary.DataType = WaterFlowModel1DBoundaryNodeDataType.FlowConstant;
+            qBoundary.DataType = Model1DBoundaryNodeDataType.FlowConstant;
             qBoundary.Flow = 2.0;
 
             var validationReport = WaterFlowModel1DTemperatureValidator.Validate(model);
@@ -1596,11 +1596,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Validation
             var startTime = new DateTime(2000, 1, 1);
             var stopTime = new DateTime(2000, 1, 10);
 
-            WaterFlowModel1DBoundaryNodeData qBoundary = model.BoundaryConditions[0];
+            Model1DBoundaryNodeData qBoundary = model.BoundaryConditions[0];
             qBoundary.TemperatureConditionType = TemperatureBoundaryConditionType.TimeDependent;
             qBoundary.TemperatureTimeSeries[startTime] = 300.0;
             qBoundary.TemperatureTimeSeries[stopTime] = 10.0;
-            qBoundary.DataType = WaterFlowModel1DBoundaryNodeDataType.FlowConstant;
+            qBoundary.DataType = Model1DBoundaryNodeDataType.FlowConstant;
             qBoundary.Flow = 2.0;
 
             var validationReport = WaterFlowModel1DTemperatureValidator.Validate(model);
@@ -1617,10 +1617,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Validation
 
             model.UseTemperature = true;
 
-            WaterFlowModel1DBoundaryNodeData qBoundary = model.BoundaryConditions[0];
+            Model1DBoundaryNodeData qBoundary = model.BoundaryConditions[0];
             qBoundary.TemperatureConditionType = TemperatureBoundaryConditionType.Constant;
             qBoundary.TemperatureConstant = 30;
-            qBoundary.DataType = WaterFlowModel1DBoundaryNodeDataType.FlowConstant;
+            qBoundary.DataType = Model1DBoundaryNodeDataType.FlowConstant;
             qBoundary.Flow = 2.0;
 
             var validationReport = WaterFlowModel1DTemperatureValidator.Validate(model);
@@ -1636,10 +1636,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Validation
 
             model.UseTemperature = true;
 
-            WaterFlowModel1DBoundaryNodeData qBoundary = model.BoundaryConditions[0];
+            Model1DBoundaryNodeData qBoundary = model.BoundaryConditions[0];
             qBoundary.TemperatureConditionType = TemperatureBoundaryConditionType.Constant;
             qBoundary.TemperatureConstant = 300;
-            qBoundary.DataType = WaterFlowModel1DBoundaryNodeDataType.FlowConstant;
+            qBoundary.DataType = Model1DBoundaryNodeDataType.FlowConstant;
             qBoundary.Flow = 2.0;
 
             var validationReport = WaterFlowModel1DTemperatureValidator.Validate(model);
@@ -1660,7 +1660,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Validation
                 var startTime = new DateTime(2000, 1, 1);
                 var stopTime = new DateTime(2000, 1, 10);
                 model.UseTemperature = true;
-                WaterFlowModel1DLateralSourceData lateralSourceData = model.LateralSourceData[0];
+                Model1DLateralSourceData lateralSourceData = model.LateralSourceData[0];
                 lateralSourceData.TemperatureLateralDischargeType = TemperatureLateralDischargeType.TimeDependent;
                 lateralSourceData.TemperatureTimeSeries[startTime] = 30.0;
                 lateralSourceData.TemperatureTimeSeries[stopTime] = 10.0;
@@ -1684,7 +1684,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Validation
                 var startTime = new DateTime(2000, 1, 1);
                 var stopTime = new DateTime(2000, 1, 10);
                 model.UseTemperature = true;
-                WaterFlowModel1DLateralSourceData lateralSourceData = model.LateralSourceData[0];
+                Model1DLateralSourceData lateralSourceData = model.LateralSourceData[0];
                 lateralSourceData.TemperatureLateralDischargeType = TemperatureLateralDischargeType.TimeDependent;
                 lateralSourceData.TemperatureTimeSeries[startTime] = 300.0;
                 lateralSourceData.TemperatureTimeSeries[stopTime] = 10.0;
@@ -1707,7 +1707,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Validation
                 network.Branches[0].BranchFeatures.Add(new LateralSource());
                 
                 model.UseTemperature = true;
-                WaterFlowModel1DLateralSourceData lateralSourceData = model.LateralSourceData[0];
+                Model1DLateralSourceData lateralSourceData = model.LateralSourceData[0];
                 lateralSourceData.TemperatureLateralDischargeType = TemperatureLateralDischargeType.Constant;
                 lateralSourceData.TemperatureConstant = 30.0;
 
@@ -1728,7 +1728,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Validation
                 network.Branches[0].BranchFeatures.Add(new LateralSource());
 
                 model.UseTemperature = true;
-                WaterFlowModel1DLateralSourceData lateralSourceData = model.LateralSourceData[0];
+                Model1DLateralSourceData lateralSourceData = model.LateralSourceData[0];
                 lateralSourceData.TemperatureLateralDischargeType = TemperatureLateralDischargeType.Constant;
                 lateralSourceData.TemperatureConstant = 300.0;
 

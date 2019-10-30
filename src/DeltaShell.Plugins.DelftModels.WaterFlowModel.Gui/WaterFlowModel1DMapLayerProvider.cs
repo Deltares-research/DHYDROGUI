@@ -6,11 +6,10 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf;
-using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Drawing;
 using DelftTools.Utils.Reflection;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
+using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Properties;
 using GeoAPI.Extensions.CoordinateSystems;
 using SharpMap.Api;
@@ -28,8 +27,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui
         {
             return data is WaterFlowModel1D
                    || (data is ModelFolder && ((ModelFolder)data).Model is WaterFlowModel1D)
-                   || data is IEventedList<WaterFlowModel1DLateralSourceData>
-                   || data is IEventedList<WaterFlowModel1DBoundaryNodeData>
+                   //|| data is IEventedList<Model1DLateralSourceData>
+                   //|| data is IEventedList<Model1DBoundaryNodeData>
                    ;
         }
 
@@ -101,7 +100,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui
                 return CreateReadonlyGroupLayer(modelFolder.Role == DataItemRole.Input ? "Input" : "Output");
             }
             
-            var lateralSourceData = data as IEventedList<WaterFlowModel1DLateralSourceData>;
+            /*var lateralSourceData = data as IEventedList<Model1DLateralSourceData>;
             if (lateralSourceData != null)
             {
                 ICoordinateSystem coordinateSystem = null;
@@ -114,7 +113,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui
                 return CreateLateralDataLayer(lateralSourceData, coordinateSystem);
             }
 
-            var boundaryNodeData = data as IEventedList<WaterFlowModel1DBoundaryNodeData>;
+            var boundaryNodeData = data as IEventedList<Model1DBoundaryNodeData>;
             if (boundaryNodeData != null)
             {
                 ICoordinateSystem coordinateSystem = null;
@@ -125,12 +124,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui
                 }
 
                 return CreateBoundaryNodeDataLayer(boundaryNodeData, coordinateSystem);
-            }
+            }*/
             
             return null;
         }
 
-        private static VectorLayer CreateLateralDataLayer(IEventedList<WaterFlowModel1DLateralSourceData> lateralSourceDataList, ICoordinateSystem coordinateSystem)
+        private static VectorLayer CreateLateralDataLayer(IEventedList<Model1DLateralSourceData> lateralSourceDataList, ICoordinateSystem coordinateSystem)
         {
             return new VectorLayer("Lateral Data")
                        {
@@ -139,7 +138,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui
                            NameIsReadOnly = true,
                            DataSource = new FeatureCollection
                                             {
-                                                FeatureType = typeof (WaterFlowModel1DLateralSourceData),
+                                                FeatureType = typeof (Model1DLateralSourceData),
                                                 Features = (IList) lateralSourceDataList,
                                                 CoordinateSystem = coordinateSystem
                                             },
@@ -148,15 +147,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui
                                            AttributeName = "DataType",
                                            ThemeItems = new EventedList<IThemeItem>
                                                             {
-                                                                CreateCategorialThemeItem(WaterFlowModel1DLateralDataType.FlowConstant, Resources.QConst),
-                                                                CreateCategorialThemeItem(WaterFlowModel1DLateralDataType.FlowTimeSeries, Resources.QBoundary),
-                                                                CreateCategorialThemeItem(WaterFlowModel1DLateralDataType.FlowWaterLevelTable, Resources.QHBoundary)
+                                                                CreateCategorialThemeItem(Model1DLateralDataType.FlowConstant, Resources.QConst),
+                                                                CreateCategorialThemeItem(Model1DLateralDataType.FlowTimeSeries, Resources.QBoundary),
+                                                                CreateCategorialThemeItem(Model1DLateralDataType.FlowWaterLevelTable, Resources.QHBoundary)
                                                             }
                                        }
                        };
         }
 
-        private static VectorLayer CreateBoundaryNodeDataLayer(IEventedList<WaterFlowModel1DBoundaryNodeData> boundaryNodeDataList, ICoordinateSystem coordinateSystem)
+        private static VectorLayer CreateBoundaryNodeDataLayer(IEventedList<Model1DBoundaryNodeData> boundaryNodeDataList, ICoordinateSystem coordinateSystem)
         {
             return new VectorLayer("Boundary Data")
                        {
@@ -165,7 +164,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui
                            NameIsReadOnly = true,
                            DataSource = new FeatureCollection
                                             {
-                                                FeatureType = typeof(WaterFlowModel1DBoundaryNodeData),
+                                                FeatureType = typeof(Model1DBoundaryNodeData),
                                                 Features = (IList) boundaryNodeDataList,
                                                 CoordinateSystem = coordinateSystem
                                             },
@@ -174,12 +173,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui
                                            AttributeName = "DataType",
                                            ThemeItems = new EventedList<IThemeItem>
                                                             {
-                                                                CreateCategorialThemeItem(WaterFlowModel1DBoundaryNodeDataType.None, Resources.None),
-                                                                CreateCategorialThemeItem(WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant, Resources.HConst),
-                                                                CreateCategorialThemeItem(WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries, Resources.HBoundary),
-                                                                CreateCategorialThemeItem(WaterFlowModel1DBoundaryNodeDataType.FlowConstant, Resources.QConst),
-                                                                CreateCategorialThemeItem(WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries, Resources.QBoundary),
-                                                                CreateCategorialThemeItem(WaterFlowModel1DBoundaryNodeDataType.FlowWaterLevelTable, Resources.QHBoundary)
+                                                                CreateCategorialThemeItem(Model1DBoundaryNodeDataType.None, Resources.None),
+                                                                CreateCategorialThemeItem(Model1DBoundaryNodeDataType.WaterLevelConstant, Resources.HConst),
+                                                                CreateCategorialThemeItem(Model1DBoundaryNodeDataType.WaterLevelTimeSeries, Resources.HBoundary),
+                                                                CreateCategorialThemeItem(Model1DBoundaryNodeDataType.FlowConstant, Resources.QConst),
+                                                                CreateCategorialThemeItem(Model1DBoundaryNodeDataType.FlowTimeSeries, Resources.QBoundary),
+                                                                CreateCategorialThemeItem(Model1DBoundaryNodeDataType.FlowWaterLevelTable, Resources.QHBoundary)
                                                             }
                                        }
                        };
@@ -196,7 +195,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui
                            Style = new VectorStyle
                                        {
                                            Symbol = new Bitmap(Resources.Boundary.AddOverlayImage(overlayImage, 1, 1))
-                                       }
+                                       },
+
                        };
         }
 

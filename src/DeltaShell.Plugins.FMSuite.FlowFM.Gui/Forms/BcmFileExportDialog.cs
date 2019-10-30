@@ -2,7 +2,6 @@ using System;
 using System.Linq;
 using System.Windows.Forms;
 using DelftTools.Controls;
-using DelftTools.Utils;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;

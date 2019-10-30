@@ -15,7 +15,6 @@ using log4net;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.Operation.Overlay;
-using SharpMap;
 using SharpMap.Api.Layers;
 using SharpMap.CoordinateSystems.Transformations;
 using SharpMap.Data.Providers;

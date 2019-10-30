@@ -8,8 +8,8 @@ using DelftTools.Hydro.Roughness;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
+using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.NGHS.IO.TestUtils;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.TestUtils;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation;
 using DeltaShell.Plugins.NetworkEditor.Gui.Helpers;
@@ -89,13 +89,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Validation
         {
             var bc_before = destinationWFM1D.BoundaryConditions.FirstOrDefault(bc => bc.Node.Name == "node2");
             Assert.That(bc_before, Is.Not.Null);
-            Assert.That(bc_before.DataType, Is.EqualTo(WaterFlowModel1DBoundaryNodeDataType.FlowConstant));
+            Assert.That(bc_before.DataType, Is.EqualTo(Model1DBoundaryNodeDataType.FlowConstant));
             Assert.That(bc_before.Flow, Is.EqualTo(42));
 
             destinationWFM1D.Merge(sourceWFM1D, null);
             var bc_after = destinationWFM1D.BoundaryConditions.FirstOrDefault(bc => bc.Node.Name == "node2");
             Assert.That(bc_after, Is.Not.Null);
-            Assert.That(bc_after.DataType, Is.EqualTo(WaterFlowModel1DBoundaryNodeDataType.None));
+            Assert.That(bc_after.DataType, Is.EqualTo(Model1DBoundaryNodeDataType.None));
         }
         
         [Test]
@@ -119,7 +119,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Validation
         public void TestMergeCopiesSourceModelBoundaryConditionsToDestinationModel()
         {
             var sourceBoundaryCondition = sourceWFM1D.BoundaryConditions.First(bc => bc.Node.Name == "node2");
-            sourceBoundaryCondition.DataType = WaterFlowModel1DBoundaryNodeDataType.FlowConstant;
+            sourceBoundaryCondition.DataType = Model1DBoundaryNodeDataType.FlowConstant;
             sourceBoundaryCondition.Flow = 5.555;
 
             destinationWFM1D.Merge(sourceWFM1D, null);
@@ -133,7 +133,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Validation
         public void TestMergeDoesNotCopySourceModelBoundaryConditionsOfTypeNoneToDestinationModel()
         {
             var sourceBoundaryCondition = sourceWFM1D.BoundaryConditions.First(bc => bc.Node.Name == "node2");
-            sourceBoundaryCondition.DataType = WaterFlowModel1DBoundaryNodeDataType.None;
+            sourceBoundaryCondition.DataType = Model1DBoundaryNodeDataType.None;
             
             destinationWFM1D.Merge(sourceWFM1D, null);
 
@@ -199,9 +199,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Validation
             var lateralSource = new LateralSource(){ Branch = sourceModelBranch };
             sourceModelBranch.BranchFeatures.Add(lateralSource);
             
-            var lateralSourceData = new WaterFlowModel1DLateralSourceData()
+            var lateralSourceData = new Model1DLateralSourceData()
             {
-                DataType = WaterFlowModel1DLateralDataType.FlowConstant, 
+                DataType = Model1DLateralDataType.FlowConstant, 
                 Flow = 5.555, 
                 Feature = lateralSource
             };

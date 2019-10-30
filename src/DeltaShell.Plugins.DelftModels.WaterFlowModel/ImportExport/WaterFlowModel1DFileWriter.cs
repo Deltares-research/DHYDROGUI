@@ -14,7 +14,6 @@ using DeltaShell.NGHS.IO.FileWriters.SpatialData;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.NGHS.IO.Helpers;
-using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.NetworkEditor.IO;
 using log4net;
 

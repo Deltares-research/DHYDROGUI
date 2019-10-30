@@ -21,6 +21,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using GeoAPI.Extensions.CoordinateSystems;
 using DelftTools.Utils;
+using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Geometries;
 using log4net;
@@ -106,6 +107,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 
         public IEventedList<Feature2D> Boundaries { get; private set; }
 
+        public IEventedList<Model1DBoundaryNodeData> BoundaryConditions1D { get; private set; }
+        public IEventedList<Model1DLateralSourceData> LateralSourcesData { get; private set; }
         public IEventedList<BoundaryConditionSet> BoundaryConditionSets { get; private set; }
 
         public StructureSchema<ModelPropertyDefinition> StructureSchema { get { return StructureSchemaInstance; } }
@@ -186,6 +189,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 
             SetGuiTimePropertiesFromMduProperties();
 
+            BoundaryConditions1D = new EventedList<Model1DBoundaryNodeData>();
+            LateralSourcesData = new EventedList<Model1DLateralSourceData>();
             Boundaries = new EventedList<Feature2D>();
             BoundaryConditionSets = new EventedList<BoundaryConditionSet>();
             WindFields = new EventedList<IWindField>();
@@ -200,7 +205,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             UpdateWriteOutputSnappedFeatures();
         }
 
-       private void OnWaterFlowFMCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        
+        private void OnWaterFlowFMCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (e.Action == NotifyCollectionChangedAction.Add)
             {

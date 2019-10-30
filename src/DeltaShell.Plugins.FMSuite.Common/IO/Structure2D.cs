@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures.KnownStructureProperties;
-using DelftTools.Utils;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using log4net;

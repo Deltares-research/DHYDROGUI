@@ -7,10 +7,10 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DeltaShell.Core;
 using DeltaShell.Gui;
+using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.TestUtils;
 using DeltaShell.Plugins.NetCDF;
 using DeltaShell.Plugins.NetworkEditor;
@@ -472,9 +472,9 @@ namespace Sobek.IntegrationTests
         private static WaterFlowModel1D CreateSimpleFlowModel()
         {
             var flowModel = WaterFlowModel1DDemoModelTestHelper.CreateModelWithDemoNetwork();
-            flowModel.BoundaryConditions[0].DataType = WaterFlowModel1DBoundaryNodeDataType.FlowConstant;
+            flowModel.BoundaryConditions[0].DataType = Model1DBoundaryNodeDataType.FlowConstant;
             flowModel.BoundaryConditions[0].Flow = 300.0;
-            flowModel.BoundaryConditions[2].DataType = WaterFlowModel1DBoundaryNodeDataType.FlowConstant;
+            flowModel.BoundaryConditions[2].DataType = Model1DBoundaryNodeDataType.FlowConstant;
             flowModel.BoundaryConditions[2].Flow = -100.0;
             flowModel.OutputTimeStep = new TimeSpan(0, 0, 10, 0);
             return flowModel;

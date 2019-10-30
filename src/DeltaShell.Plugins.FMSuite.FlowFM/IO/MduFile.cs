@@ -4,27 +4,19 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using DelftTools.Hydro;
-using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.IO;
-using DelftTools.Utils.NetCdf;
 using DeltaShell.NGHS.IO;
-using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
-using DeltaShell.NGHS.IO.FileWriters.Roughness;
-using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Grid;
-using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Api;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
-using DeltaShell.Plugins.NetworkEditor.IO;
-using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Extensions.Coverages;
@@ -361,7 +353,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             ExternalForcingsFile.Write(extForceFilePath, modelDefinition,
                 !(newFormatBoundaryConditions || newBoundaries));
 
-            if (newFormatBoundaryConditions || newBoundaries || hasEmbankments || modelDefinition.FmMeteoFields.Any())
+            if (newFormatBoundaryConditions || newBoundaries || hasEmbankments || modelDefinition.FmMeteoFields.Any() || modelDefinition.BoundaryConditions1D.Any())
             {
                 var bndExtFileName =
                     modelDefinition.GetModelProperty(KnownProperties.BndExtForceFile).GetValueAsString();

@@ -1,9 +1,7 @@
-using DelftTools.Hydro;
 using DelftTools.Hydro.Roughness;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
-using GeoAPI.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM

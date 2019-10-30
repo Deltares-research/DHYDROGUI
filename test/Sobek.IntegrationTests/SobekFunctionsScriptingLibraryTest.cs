@@ -11,13 +11,13 @@ using DelftTools.Hydro.Roughness;
 using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DeltaShell.Gui;
+using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.DelftModels.HydroModel;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi;
 using DeltaShell.Plugins.NetCDF;
@@ -240,7 +240,7 @@ namespace Sobek.IntegrationTests
                 WpfTestHelper.ShowModal((Control)gui.MainWindow, () =>
                 {
                     var declaredVariables = gui.Application.ScriptRunner.RunScript(script, variables);
-                    var boundaryData = declaredVariables.FirstOrDefault(kvp => kvp.Key == "boundaryData").Value as WaterFlowModel1DBoundaryNodeData;
+                    var boundaryData = declaredVariables.FirstOrDefault(kvp => kvp.Key == "boundaryData").Value as Model1DBoundaryNodeData;
 
                     Assert.AreEqual(boundaryDataNode1, boundaryData);
                 });
@@ -295,7 +295,7 @@ namespace Sobek.IntegrationTests
                 WpfTestHelper.ShowModal((Control)gui.MainWindow, () =>
                 {
                     var declaredVariables = gui.Application.ScriptRunner.RunScript(script, variables);
-                    var lateralData = declaredVariables.FirstOrDefault(kvp => kvp.Key == "lateralData").Value as WaterFlowModel1DLateralSourceData;
+                    var lateralData = declaredVariables.FirstOrDefault(kvp => kvp.Key == "lateralData").Value as Model1DLateralSourceData;
 
                     Assert.AreEqual(lateral1SourceData, lateralData);
                 });
@@ -465,14 +465,14 @@ namespace Sobek.IntegrationTests
                         {"flowModel", waterFlowModel1D}
                     };
 
-                Assert.AreEqual(WaterFlowModel1DBoundaryNodeDataType.None, boundaryDataNode1.DataType);
+                Assert.AreEqual(Model1DBoundaryNodeDataType.None, boundaryDataNode1.DataType);
                 Assert.AreEqual(0, boundaryDataNode1.Flow);
 
                 WpfTestHelper.ShowModal((Control)gui.MainWindow, () =>
                 {
                     gui.Application.ScriptRunner.RunScript(script, variables);
 
-                    Assert.AreEqual(WaterFlowModel1DBoundaryNodeDataType.FlowConstant, boundaryDataNode1.DataType);
+                    Assert.AreEqual(Model1DBoundaryNodeDataType.FlowConstant, boundaryDataNode1.DataType);
                     Assert.AreEqual(6.0, boundaryDataNode1.Flow);
                 });
             }
@@ -523,14 +523,14 @@ namespace Sobek.IntegrationTests
                         {"flowModel", waterFlowModel1D}
                     };
 
-                Assert.AreEqual(WaterFlowModel1DLateralDataType.FlowTimeSeries, lateralSourceData1.DataType);
+                Assert.AreEqual(Model1DLateralDataType.FlowTimeSeries, lateralSourceData1.DataType);
                 Assert.AreEqual(0, lateralSourceData1.Flow);
 
                 WpfTestHelper.ShowModal((Control)gui.MainWindow, () =>
                 {
                     gui.Application.ScriptRunner.RunScript(script, variables);
 
-                    Assert.AreEqual(WaterFlowModel1DLateralDataType.FlowConstant, lateralSourceData1.DataType);
+                    Assert.AreEqual(Model1DLateralDataType.FlowConstant, lateralSourceData1.DataType);
                     Assert.AreEqual(6.0, lateralSourceData1.Flow);
                 });
             }

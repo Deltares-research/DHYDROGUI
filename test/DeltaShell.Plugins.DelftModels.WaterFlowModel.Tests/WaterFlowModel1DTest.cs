@@ -20,9 +20,9 @@ using DelftTools.Utils.Editing;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO;
+using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.Helpers;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.TestUtils;
@@ -210,13 +210,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
                 // set boundary conditions
                 var boundaryConditionInflow = waterFlowModel1D.BoundaryConditions.First(bc => bc.Feature == node1);
-                boundaryConditionInflow.DataType = WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries;
+                boundaryConditionInflow.DataType = Model1DBoundaryNodeDataType.FlowTimeSeries;
                 boundaryConditionInflow.Data[waterFlowModel1D.StartTime] = 1000.0;
                 boundaryConditionInflow.Data[waterFlowModel1D.StartTime.AddHours(1)] = 500.0;
                 boundaryConditionInflow.Data.Arguments[0].ExtrapolationType = ExtrapolationType.Constant;
 
                 var boundaryConditionOutflow = waterFlowModel1D.BoundaryConditions.First(bc => bc.Feature == node2);
-                boundaryConditionOutflow.DataType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant;
+                boundaryConditionOutflow.DataType = Model1DBoundaryNodeDataType.WaterLevelConstant;
                 boundaryConditionOutflow.WaterLevel = 0;
 
                 waterFlowModel1D.OutputSettings.GetEngineParameter(QuantityType.SuctionSideLevel, ElementSet.Pumps).AggregationOptions = AggregationOptions.Current;
@@ -414,7 +414,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
                 // set boundary conditions
                 var boundaryConditionInflow = waterFlowModel1D.BoundaryConditions.First(bc => bc.Feature == node1);
-                boundaryConditionInflow.DataType = WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries;
+                boundaryConditionInflow.DataType = Model1DBoundaryNodeDataType.FlowTimeSeries;
                 boundaryConditionInflow.Data[t] = 1.0;
                 boundaryConditionInflow.Data[t.AddSeconds(30)] = 1.0;
                 boundaryConditionInflow.Data[t.AddSeconds(60)] = 1.5;
@@ -426,7 +426,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
 
                 var boundaryConditionOutflow = waterFlowModel1D.BoundaryConditions.First(bc => bc.Feature == node3);
-                boundaryConditionOutflow.DataType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries;
+                boundaryConditionOutflow.DataType = Model1DBoundaryNodeDataType.WaterLevelTimeSeries;
                 boundaryConditionOutflow.Data[t] = 0.1;
                 boundaryConditionOutflow.Data[t.AddSeconds(30)] = 0.1;
                 boundaryConditionOutflow.Data[t.AddSeconds(60)] = 0.2;
@@ -856,7 +856,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                 //set a nice output timestep
                 waterFlowModel1D.OutputSettings.StructureOutputTimeStep = waterFlowModel1D.TimeStep;
 
-                waterFlowModel1D.BoundaryConditions[0].DataType = WaterFlowModel1DBoundaryNodeDataType.FlowConstant;
+                waterFlowModel1D.BoundaryConditions[0].DataType = Model1DBoundaryNodeDataType.FlowConstant;
                 waterFlowModel1D.BoundaryConditions[0].Flow = 50.0;
 
                 var branch = waterFlowModel1D.Network.Branches[0];
@@ -904,7 +904,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                 //set a nice output timestep
                 waterFlowModel1D.OutputSettings.StructureOutputTimeStep = waterFlowModel1D.TimeStep;
 
-                waterFlowModel1D.BoundaryConditions[0].DataType = WaterFlowModel1DBoundaryNodeDataType.FlowConstant;
+                waterFlowModel1D.BoundaryConditions[0].DataType = Model1DBoundaryNodeDataType.FlowConstant;
                 waterFlowModel1D.BoundaryConditions[0].Flow = 50.0;
 
                 var branch = waterFlowModel1D.Network.Branches[0];
@@ -957,7 +957,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                 const double initialDepth = 3.0;
                 waterFlowModel1D.DefaultInitialDepth = initialDepth;
 
-                waterFlowModel1D.BoundaryConditions[1].DataType = WaterFlowModel1DBoundaryNodeDataType.FlowConstant;
+                waterFlowModel1D.BoundaryConditions[1].DataType = Model1DBoundaryNodeDataType.FlowConstant;
                 waterFlowModel1D.BoundaryConditions[1].Flow = 0.0;
 
                 //add lateral source with discharge
@@ -1002,7 +1002,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                 //set a nice output timestep
                 waterFlowModel1D.OutputSettings.StructureOutputTimeStep = waterFlowModel1D.TimeStep;
 
-                waterFlowModel1D.BoundaryConditions[0].DataType = WaterFlowModel1DBoundaryNodeDataType.FlowConstant;
+                waterFlowModel1D.BoundaryConditions[0].DataType = Model1DBoundaryNodeDataType.FlowConstant;
                 waterFlowModel1D.BoundaryConditions[0].Flow = 50.0;
 
                 //add lateral source with negative discharge
@@ -1144,7 +1144,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             using (var waterFlowModel1D = WaterFlowModel1DDemoModelTestHelper.CreateModelWithDemoNetwork())
             {
                 // Adjust the boundary conditions so that a constant H resides on a node that is connected to multiple branches
-                waterFlowModel1D.BoundaryConditions[1].DataType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant;
+                waterFlowModel1D.BoundaryConditions[1].DataType = Model1DBoundaryNodeDataType.WaterLevelConstant;
 
                 int timeStepCount = 0;
 
@@ -1177,7 +1177,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             using (var waterFlowModel1D = WaterFlowModel1DDemoModelTestHelper.CreateModelWithDemoNetwork())
             {
                 // Adjust the boundary conditions so that a H time series resides on a node that is connected to multiple branches
-                waterFlowModel1D.BoundaryConditions[1].DataType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries;
+                waterFlowModel1D.BoundaryConditions[1].DataType = Model1DBoundaryNodeDataType.WaterLevelTimeSeries;
 
                 int timeStepCount = 0;
 
@@ -1490,7 +1490,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
         private static void SetConstantFlowDischarge(WaterFlowModel1D waterFlowModel1D, LateralSource lateralSource, double discharge)
         {
-            waterFlowModel1D.LateralSourceData.First(l => l.Feature == lateralSource).DataType = WaterFlowModel1DLateralDataType.FlowConstant;
+            waterFlowModel1D.LateralSourceData.First(l => l.Feature == lateralSource).DataType = Model1DLateralDataType.FlowConstant;
             waterFlowModel1D.LateralSourceData.First(l => l.Feature == lateralSource).Flow = discharge;
         }
 
@@ -1691,11 +1691,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             using (var waterFlowModel1D = new WaterFlowModel1D { Network = network })
             {
                 Assert.AreEqual(3, waterFlowModel1D.BoundaryConditions.Count());
-                Assert.AreEqual(WaterFlowModel1DBoundaryNodeDataType.None,
+                Assert.AreEqual(Model1DBoundaryNodeDataType.None,
                                 waterFlowModel1D.BoundaryConditions[0].DataType);
-                Assert.AreEqual(WaterFlowModel1DBoundaryNodeDataType.None,
+                Assert.AreEqual(Model1DBoundaryNodeDataType.None,
                                 waterFlowModel1D.BoundaryConditions[1].DataType);
-                Assert.AreEqual(WaterFlowModel1DBoundaryNodeDataType.None,
+                Assert.AreEqual(Model1DBoundaryNodeDataType.None,
                                 waterFlowModel1D.BoundaryConditions[2].DataType);
 
                 waterFlowModel1D.Network = null;
@@ -1767,32 +1767,32 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
                 var boundaryConditions = waterFlowModel1D.BoundaryConditions;
                 Assert.AreEqual(3, boundaryConditions.Count());
-                Assert.AreEqual(WaterFlowModel1DBoundaryNodeDataType.None, boundaryConditions[0].DataType);
-                Assert.AreEqual(WaterFlowModel1DBoundaryNodeDataType.None, boundaryConditions[1].DataType);
-                Assert.AreEqual(WaterFlowModel1DBoundaryNodeDataType.None, boundaryConditions[2].DataType);
+                Assert.AreEqual(Model1DBoundaryNodeDataType.None, boundaryConditions[0].DataType);
+                Assert.AreEqual(Model1DBoundaryNodeDataType.None, boundaryConditions[1].DataType);
+                Assert.AreEqual(Model1DBoundaryNodeDataType.None, boundaryConditions[2].DataType);
 
-                var newBoundaryCondition1 = new WaterFlowModel1DBoundaryNodeData
+                var newBoundaryCondition1 = new Model1DBoundaryNodeData
                                                 {
                                                     Feature = node1,
-                                                    DataType = WaterFlowModel1DBoundaryNodeDataType.FlowConstant
+                                                    DataType = Model1DBoundaryNodeDataType.FlowConstant
                                                 };
 
-                var newBoundaryCondition2 = new WaterFlowModel1DBoundaryNodeData
+                var newBoundaryCondition2 = new Model1DBoundaryNodeData
                                                 {
                                                     Feature = node2,
-                                                    DataType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries
+                                                    DataType = Model1DBoundaryNodeDataType.WaterLevelTimeSeries
                                                 };
 
-                var newBoundaryCondition3 = new WaterFlowModel1DBoundaryNodeData
+                var newBoundaryCondition3 = new Model1DBoundaryNodeData
                                                 {
                                                     Feature = node3,
-                                                    DataType = WaterFlowModel1DBoundaryNodeDataType.FlowWaterLevelTable
+                                                    DataType = Model1DBoundaryNodeDataType.FlowWaterLevelTable
                                                 };
 
-                var newBoundaryCondition4 = new WaterFlowModel1DBoundaryNodeData
+                var newBoundaryCondition4 = new Model1DBoundaryNodeData
                                                 {
                                                     Feature = new Node(),
-                                                    DataType = WaterFlowModel1DBoundaryNodeDataType.FlowWaterLevelTable
+                                                    DataType = Model1DBoundaryNodeDataType.FlowWaterLevelTable
                                                 };
 
 
@@ -1806,10 +1806,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
                 boundaryConditions = waterFlowModel1D.BoundaryConditions;
                 Assert.AreEqual(3, boundaryConditions.Count());
-                Assert.AreEqual(WaterFlowModel1DBoundaryNodeDataType.FlowConstant, boundaryConditions[0].DataType);
-                Assert.AreEqual(WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries,
+                Assert.AreEqual(Model1DBoundaryNodeDataType.FlowConstant, boundaryConditions[0].DataType);
+                Assert.AreEqual(Model1DBoundaryNodeDataType.WaterLevelTimeSeries,
                                 boundaryConditions[1].DataType);
-                Assert.AreEqual(WaterFlowModel1DBoundaryNodeDataType.FlowWaterLevelTable, boundaryConditions[2].DataType);
+                Assert.AreEqual(Model1DBoundaryNodeDataType.FlowWaterLevelTable, boundaryConditions[2].DataType);
             }
         }
 
@@ -1966,7 +1966,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                 Assert.AreEqual(2, waterFlowModel1D.BoundaryConditions.Count);
 
                 waterFlowModel1D.BoundaryConditions.First().DataType =
-                    WaterFlowModel1DBoundaryNodeDataType.FlowWaterLevelTable;
+                    Model1DBoundaryNodeDataType.FlowWaterLevelTable;
 
                 var networkDataItem = waterFlowModel1D.GetDataItemByValue(waterFlowModel1D.Network);
                 var sourceDataItem = new DataItem(network2);
@@ -1981,7 +1981,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                 Assert.AreEqual(3, waterFlowModel1D.BoundaryConditions.Count);
                 Assert.AreEqual(3,
                                 waterFlowModel1D.BoundaryConditions.Count(
-                                    bc => bc.DataType == WaterFlowModel1DBoundaryNodeDataType.None));
+                                    bc => bc.DataType == Model1DBoundaryNodeDataType.None));
             }
         }
 
@@ -2004,7 +2004,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                 Assert.AreEqual(2, waterFlowModel1D.BoundaryConditions.Count);
 
                 waterFlowModel1D.BoundaryConditions.First().DataType =
-                    WaterFlowModel1DBoundaryNodeDataType.FlowWaterLevelTable;
+                    Model1DBoundaryNodeDataType.FlowWaterLevelTable;
 
                 // link waterFlowModel1D network data item to new network data item
                 var networkDataItem = waterFlowModel1D.GetDataItemByValue(waterFlowModel1D.Network);
@@ -2027,7 +2027,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                 Assert.AreEqual(3, waterFlowModel1D.BoundaryConditions.Count);
                 Assert.AreEqual(3,
                                 waterFlowModel1D.BoundaryConditions.Count(
-                                    bc => bc.DataType == WaterFlowModel1DBoundaryNodeDataType.None));
+                                    bc => bc.DataType == Model1DBoundaryNodeDataType.None));
 
                 // Unlink the waterFlowModel1D network from the other network
                 networkDataItem.Unlink();
@@ -2067,7 +2067,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                 Assert.AreEqual(2, waterFlowModel1D.BoundaryConditions.Count);
 
                 waterFlowModel1D.BoundaryConditions.First().DataType =
-                    WaterFlowModel1DBoundaryNodeDataType.FlowWaterLevelTable;
+                    Model1DBoundaryNodeDataType.FlowWaterLevelTable;
 
                 var networkDataItem = waterFlowModel1D.GetDataItemByValue(waterFlowModel1D.Network);
                 var targetDataItem = new DataItem(network2);
@@ -2075,13 +2075,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                 // Link another network to the waterFlowModel1D network
                 targetDataItem.LinkTo(networkDataItem);
                 Assert.AreEqual(2, waterFlowModel1D.BoundaryConditions.Count);
-                Assert.AreEqual(WaterFlowModel1DBoundaryNodeDataType.FlowWaterLevelTable,
+                Assert.AreEqual(Model1DBoundaryNodeDataType.FlowWaterLevelTable,
                                 waterFlowModel1D.BoundaryConditions.First().DataType);
 
                 // Unlink the other network from the waterFlowModel1D network
                 targetDataItem.LinkTo(networkDataItem);
                 Assert.AreEqual(2, waterFlowModel1D.BoundaryConditions.Count);
-                Assert.AreEqual(WaterFlowModel1DBoundaryNodeDataType.FlowWaterLevelTable,
+                Assert.AreEqual(Model1DBoundaryNodeDataType.FlowWaterLevelTable,
                                 waterFlowModel1D.BoundaryConditions.First().DataType);
             }
         }
@@ -2154,14 +2154,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                 NetworkHelper.AddBranchFeatureToBranch(new LateralSource(), waterFlowModel1D.Network.Branches[0], 80);
 
                 // Setup waterFlowModel1D data
-                waterFlowModel1D.LateralSourceData[0].DataType = WaterFlowModel1DLateralDataType.FlowConstant;
+                waterFlowModel1D.LateralSourceData[0].DataType = Model1DLateralDataType.FlowConstant;
                 waterFlowModel1D.LateralSourceData[0].Flow = 22.0;
 
                 // Split the branch so the lateral is placed on a new branch
                 HydroNetworkHelper.SplitChannelAtNode(channel, 50);
 
                 // Verify waterFlowModel1D data is maintained
-                Assert.AreEqual(WaterFlowModel1DLateralDataType.FlowConstant, waterFlowModel1D.LateralSourceData[0].DataType);
+                Assert.AreEqual(Model1DLateralDataType.FlowConstant, waterFlowModel1D.LateralSourceData[0].DataType);
                 Assert.AreEqual(22.0d, waterFlowModel1D.LateralSourceData[0].Flow);
 
                 // Merge the branch so the lateral is placed on a new branch
@@ -2169,7 +2169,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                                                 waterFlowModel1D.Network);
 
                 // Verify waterFlowModel1D data is maintained
-                Assert.AreEqual(WaterFlowModel1DLateralDataType.FlowConstant, waterFlowModel1D.LateralSourceData[0].DataType);
+                Assert.AreEqual(Model1DLateralDataType.FlowConstant, waterFlowModel1D.LateralSourceData[0].DataType);
                 Assert.AreEqual(22.0d, waterFlowModel1D.LateralSourceData[0].Flow);
             }
         }
@@ -3160,9 +3160,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             using (var waterFlowModel1D = CreateSmallDiffuseLateralNetwork(branchlength / 4, branchlength / (5 * 10), branchlength)) // Between 2 grid points
             {
                 var bndNode1 = waterFlowModel1D.BoundaryConditions.First(bc => bc.Feature == waterFlowModel1D.Network.Nodes[0]);
-                bndNode1.DataType = WaterFlowModel1DBoundaryNodeDataType.None;
+                bndNode1.DataType = Model1DBoundaryNodeDataType.None;
                 var bndNode2 = waterFlowModel1D.BoundaryConditions.First(bc => bc.Feature == waterFlowModel1D.Network.Nodes[1]);
-                bndNode2.DataType = WaterFlowModel1DBoundaryNodeDataType.None;
+                bndNode2.DataType = Model1DBoundaryNodeDataType.None;
 
                 RunModel(waterFlowModel1D);
                 var timeValues = waterFlowModel1D.OutputWaterLevel.Arguments[0].Values;
@@ -3238,11 +3238,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
             // Set boundary Conditions
             var boundaryConditionNode1 = waterFlowModel1D.BoundaryConditions.First(bc => ReferenceEquals(bc.Feature, node1));
-            boundaryConditionNode1.DataType = WaterFlowModel1DBoundaryNodeDataType.FlowConstant;
+            boundaryConditionNode1.DataType = Model1DBoundaryNodeDataType.FlowConstant;
             boundaryConditionNode1.Flow = 1.0;
 
             var boundaryConditionNode2 = waterFlowModel1D.BoundaryConditions.First(bc => ReferenceEquals(bc.Feature, node2));
-            boundaryConditionNode2.DataType = WaterFlowModel1DBoundaryNodeDataType.FlowConstant;
+            boundaryConditionNode2.DataType = Model1DBoundaryNodeDataType.FlowConstant;
             boundaryConditionNode2.Flow = -3.0;
 
             //  Add 1m diffuse lateral with Q = 2
@@ -3250,7 +3250,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             branch1.BranchFeatures.Add(dls);
 
             HydroRegionEditorHelper.UpdateBranchFeatureGeometry(dls, lateralSourceLength);
-            waterFlowModel1D.LateralSourceData[0].DataType = WaterFlowModel1DLateralDataType.FlowConstant;
+            waterFlowModel1D.LateralSourceData[0].DataType = Model1DLateralDataType.FlowConstant;
             waterFlowModel1D.LateralSourceData[0].Flow = 2.0;
 
             return waterFlowModel1D;
@@ -3374,7 +3374,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                 project.RootFolder.Add(networkDataItem);
 
                 // change 1st bc type to flow time series
-                waterFlowModel1D.BoundaryConditions[0].DataType = WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries;
+                waterFlowModel1D.BoundaryConditions[0].DataType = Model1DBoundaryNodeDataType.FlowTimeSeries;
 
                 // add waterFlowModel1D clone to project
                 var modelClone = (WaterFlowModel1D)waterFlowModel1D.DeepClone();
@@ -3382,7 +3382,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
                 // asserts
                 modelClone.BoundaryConditions[0].DataType.Should().Be.EqualTo(
-                    WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries);
+                    Model1DBoundaryNodeDataType.FlowTimeSeries);
             }
         }
         [Test]
@@ -3474,11 +3474,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
             // set boundary conditions
             var boundaryConditionInflow = flowModel1D.BoundaryConditions.First(bc => bc.Feature == node1);
-            boundaryConditionInflow.DataType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant;
+            boundaryConditionInflow.DataType = Model1DBoundaryNodeDataType.WaterLevelConstant;
             boundaryConditionInflow.WaterLevel = 5.0;
 
             var boundaryConditionOutflow = flowModel1D.BoundaryConditions.First(bc => bc.Feature == node2);
-            boundaryConditionOutflow.DataType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant;
+            boundaryConditionOutflow.DataType = Model1DBoundaryNodeDataType.WaterLevelConstant;
             boundaryConditionOutflow.WaterLevel = 3.0;
 
             // set output coverages
@@ -3654,7 +3654,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
             //Lateral : constant Q = 5
             var lateralSourceData = flowModel1D.LateralSourceData.First();
-            lateralSourceData.DataType = WaterFlowModel1DLateralDataType.FlowConstant;
+            lateralSourceData.DataType = Model1DLateralDataType.FlowConstant;
             lateralSourceData.Flow = 5.0;
 
             // set initial conditions
@@ -3663,11 +3663,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
             // set boundary conditions
             var boundaryConditionInflow = flowModel1D.BoundaryConditions.First(bc => bc.Feature == node1);
-            boundaryConditionInflow.DataType = WaterFlowModel1DBoundaryNodeDataType.FlowConstant;
+            boundaryConditionInflow.DataType = Model1DBoundaryNodeDataType.FlowConstant;
             boundaryConditionInflow.Flow = 10.0;
 
             var boundaryConditionOutflow = flowModel1D.BoundaryConditions.First(bc => bc.Feature == node2);
-            boundaryConditionOutflow.DataType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant;
+            boundaryConditionOutflow.DataType = Model1DBoundaryNodeDataType.WaterLevelConstant;
             boundaryConditionOutflow.WaterLevel = -0.5;
 
             // set output coverages

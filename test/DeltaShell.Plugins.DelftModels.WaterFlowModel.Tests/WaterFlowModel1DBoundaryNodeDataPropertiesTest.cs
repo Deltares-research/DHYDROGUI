@@ -1,6 +1,7 @@
 ﻿using DelftTools.Functions.Generic;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
+using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid;
+using DeltaShell.Plugins.FMSuite.Common.Gui.Forms;
 using NetTopologySuite.Extensions.Networks;
 using NUnit.Framework;
 
@@ -14,22 +15,22 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
         {
             //reproduces issue 4160
 
-            var properties = new WaterFlowModel1DBoundaryNodeDataProperties
+            var properties = new Model1DBoundaryNodeDataProperties
                 {
-                    Data = new WaterFlowModel1DBoundaryNodeData
+                    Data = new Model1DBoundaryNodeData
                         {
                             Feature = new Node(),
-                            DataType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries
+                            DataType = Model1DBoundaryNodeDataType.WaterLevelTimeSeries
                         }
                 };
 
             //change the condition type a few times..
-            properties.Type = WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant;
+            properties.Type = Model1DBoundaryNodeDataType.WaterLevelConstant;
 
             //setting the type to none will reset the data function
-            properties.Type = WaterFlowModel1DBoundaryNodeDataType.None;
+            properties.Type = Model1DBoundaryNodeDataType.None;
             
-            properties.Type = WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant;
+            properties.Type = Model1DBoundaryNodeDataType.WaterLevelConstant;
 
             //get extrapolation type caused an exception
             Assert.AreEqual(ExtrapolationType.None, properties.ExtrapolationTypeT);

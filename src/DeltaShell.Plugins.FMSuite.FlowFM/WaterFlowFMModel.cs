@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using BasicModelInterface;
+using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Link1d2d;
 using DelftTools.Hydro.Structures;
@@ -25,7 +26,9 @@ using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DelftTools.Utils.Validation;
 using DeltaShell.Dimr;
+using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.NGHS.IO.Grid;
+using DeltaShell.Plugins.DelftModels.WaterFlowModel;
 using DeltaShell.Plugins.FMSuite.Common;
 using DeltaShell.Plugins.FMSuite.Common.DepthLayers;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
@@ -46,9 +49,11 @@ using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.CoordinateSystems.Transformations;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
+using GeoAPI.Extensions.Networks;
 using log4net;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
+using NetTopologySuite.Extensions.Features.Generic;
 using NetTopologySuite.Extensions.Grids;
 using SharpMap;
 using SharpMap.Api;
@@ -80,6 +85,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private IEventedList<SourceAndSink> sourcesAndSinks;
         private IEventedList<ISedimentFraction> sedimentFractions;
         private IEventedList<BoundaryConditionSet> boundaryConditionSets;
+        private List<Model1DBoundaryNodeData> boundaryConditionDataList;
         private IDataItem areaDataItem;
 
         private readonly Dictionary<IFeature, List<IDataItem>> areaDataItems = new Dictionary<IFeature, List<IDataItem>>();
@@ -131,6 +137,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             Network = new HydroNetwork {Name = NetworkObjectName};
             NetworkDiscretization = new Discretization {Network = network, Name = DiscretizationObjectName, SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocationsAndConnectedBranchesWithoutLocationOnThemFullyCovered };
+            /*var boundaryNodeDataItemSet = new DataItemSet(new EventedList<Model1DBoundaryNodeData>(), WaterFlowFMModelDataSet.BoundaryConditionsTag, DataItemRole.Input, true, WaterFlowFMModelDataSet.BoundaryConditionsTag, typeof(Model1DBoundaryNodeData))
+            {
+                ValueType = typeof(FeatureData<IFunction, INode>)
+            };
+            dataItems.Add(boundaryNodeDataItemSet);*/
+
+            var lateralSourceDataItemSet = new DataItemSet(new EventedList<Model1DLateralSourceData>(), WaterFlowFMModelDataSet.LateralSourcesDataTag, DataItemRole.Input, true, WaterFlowFMModelDataSet.LateralSourcesDataTag, typeof(Model1DLateralSourceData));
+            dataItems.Add(lateralSourceDataItemSet);
         }
 
         private void AddAreaToModel()
@@ -260,8 +274,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         public IList<IUnsupportedFileBasedExtForceFileItem> UnsupportedFileBasedExtForceFileItems { get; private set; }
 
-        public HeatFluxModelType HeatFluxModelType { get; private set; }
-         
+        public HeatFluxModelType HeatFluxModelType
+        {
+            get { return heatFluxModelType; }
+            private set{
+                if (value != heatFluxModelType)
+                {
+                    ToggleTemperature(value != HeatFluxModelType.None);
+                    heatFluxModelType = value;
+                }}
+        }
+
         public IList<ModelFeatureCoordinateData<FixedWeir>> FixedWeirsProperties
         {
             get { return allFixedWeirsAndCorrespondingProperties; }
@@ -298,7 +321,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             get { return (HeatFluxModelType)ModelDefinition.GetModelProperty(KnownProperties.Temperature).Value != HeatFluxModelType.None; }
         }
-
+            
+        private void ToggleTemperature(bool useTemperature)
+        {
+            if (UseTemperature == useTemperature) return;
+            BoundaryConditions1D.ForEach(bc => bc.UseTemperature = useTemperature);
+            LateralSourcesData.ForEach(lat => lat.UseTemperature = useTemperature);
+        }
         public bool UseMorSed
         {
             get { return ModelDefinition.UseMorphologySediment; }
@@ -467,6 +496,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private void SynchronizeModelDefinitions()
         {
             HeatFluxModelType = ModelDefinition.HeatFluxModel.Type; // sync the heat flux model
+            BoundaryConditions1D = ModelDefinition.BoundaryConditions1D;
+            LateralSourcesData = ModelDefinition.LateralSourcesData;
             Boundaries = ModelDefinition.Boundaries;
             BoundaryConditionSets = ModelDefinition.BoundaryConditionSets;
             WindFields = ModelDefinition.WindFields;
@@ -1033,7 +1064,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         public override IEnumerable<IDataItem> AllDataItems
         {
-            get { return base.AllDataItems.Concat(areaDataItems.Values.SelectMany(v => v)); }
+            get
+            {
+                return base.AllDataItems.Concat(areaDataItems.Values.SelectMany(v => v));
+            }
         }
 
         private void OnModelDefinitionPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -1060,6 +1094,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 {
                     BeginEdit(new DefaultEditAction("Switching salinity process"));
                     UseSalinity = UseSalinity;
+                    BoundaryConditions1D.ForEach(bc => bc.UseSalt = UseSalinity);
+                    LateralSourcesData.ForEach(lat => lat.UseSalt = UseSalinity);
                     EndEdit();
                 }
                 else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.UseMorSed,
@@ -1405,6 +1441,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         // [TOOLS-22813] Override OnInputPropertyChanged to stop base class (ModelBase) from clearing the output
         protected override void OnInputPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
+            if (e.PropertyName == nameof(Model1DBoundaryNodeData.DataType) && sender is Model1DBoundaryNodeData)
+            {
+                var bc = sender as Model1DBoundaryNodeData;
+                var dataItemSet = GetDataItemSetByTag(WaterFlowFMModelDataSet.BoundaryConditionsTag);
+                var bcDataItem = dataItemSet.DataItems.First(di => ReferenceEquals(di.Value, bc));
+                bcDataItem.Hidden = bc.DataType == Model1DBoundaryNodeDataType.None;
+            }
         }
 
         protected override void OnClearOutput()
@@ -1592,7 +1635,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
 
-        public IEnumerable<IBoundaryCondition> BoundaryConditions
+        public virtual IEnumerable<IBoundaryCondition> BoundaryConditions
         {
             get { return ModelDefinition.BoundaryConditions; }
         }
@@ -2275,6 +2318,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private bool isLoading;
         private IEventedList<ILink1D2D> links;
         private FM1DFileFunctionStore output1DFileStore;
+        private HeatFluxModelType heatFluxModelType;
 
         private const int TotalImportSteps = 10;
 
@@ -2411,30 +2455,37 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 var cs = UnstructuredGridFileHelper.GetCoordinateSystem(mapFilePath);
 
                 // update map file coordinate system:
-                if (CoordinateSystem != null && cs != CoordinateSystem)
-                    NetFile.WriteCoordinateSystem(mapFilePath, CoordinateSystem);
-                if (switchTo && OutputMapFileStore != null)
+                if (!Grid.IsEmpty)
                 {
-                    OutputMapFileStore.Path = mapFilePath;
-                }
-                else
-                {
-                    OutputMapFileStore = new FMMapFileFunctionStore(this);
-                    // don't change this to a property setter, because the timing is of great importance.
-                    // elsewise, there will be no subscription to the read and Path triggers the Read().
-                    OutputMapFileStore.Path = mapFilePath;
+                    if (CoordinateSystem != null && cs != CoordinateSystem)
+                        NetFile.WriteCoordinateSystem(mapFilePath, CoordinateSystem);
+                    if (switchTo && OutputMapFileStore != null)
+                    {
+                        OutputMapFileStore.Path = mapFilePath;
+                    }
+                    else
+                    {
+                        OutputMapFileStore = new FMMapFileFunctionStore(this);
+                        // don't change this to a property setter, because the timing is of great importance.
+                        // elsewise, there will be no subscription to the read and Path triggers the Read().
+                        OutputMapFileStore.Path = mapFilePath;
+                    }
                 }
 
-                if (switchTo && Output1DFileStore != null)
+                if (!Network.IsEdgesEmpty && !Network.IsVerticesEmpty)
                 {
-                    Output1DFileStore.Path = mapFilePath;
-                }
-                else
-                {
-                    Output1DFileStore = new FM1DFileFunctionStore();
-                    // don't change this to a property setter, because the timing is of great importance.
-                    // elsewise, there will be no subscription to the read and Path triggers the Read().
-                    Output1DFileStore.Path = mapFilePath;
+
+                    if (switchTo && Output1DFileStore != null)
+                    {
+                        Output1DFileStore.Path = mapFilePath;
+                    }
+                    else
+                    {
+                        Output1DFileStore = new FM1DFileFunctionStore();
+                        // don't change this to a property setter, because the timing is of great importance.
+                        // elsewise, there will be no subscription to the read and Path triggers the Read().
+                        Output1DFileStore.Path = mapFilePath;
+                    }
                 }
             }
 
@@ -3120,8 +3171,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             ReportProgressText("Reading dia file");
             var diaFileName = string.Format("{0}.dia", Name);
-
-            var diaFilePath = Path.Combine(outputDirectory, diaFileName);
+            var diaFilePath = Path.Combine(outputDirectory, ModelDefinition.RelativeMapFilePath, diaFileName);
             if (File.Exists(diaFilePath))
             {
                 try
@@ -3241,6 +3291,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             previousProgress = 0;
             DataItems.RemoveAllWhere(di => di.Tag == WaterFlowFMModelDataSet.DiaFileDataItemTag);
+            boundaryConditionDataList = BoundaryConditions1D.ToList();
 
             var mduPath = Path.Combine(WorkingDirectory, Path.GetFileName(MduFilePath));
 
@@ -3256,6 +3307,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         
         protected override void OnCleanup()
         {
+            foreach (var bc in boundaryConditionDataList)
+            {
+                var data = bc.Data;
+                if (data != null)
+                {
+                    data.SkipArgumentValidationInEvaluate = false;
+                }
+            }
+            boundaryConditionDataList = null;
+
             if (runTimeGridOperationApi != null)
             {
                 runTimeGridOperationApi.Dispose();

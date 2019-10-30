@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="DeltaShell.NGHS.IO.DataObjects" assembly="DeltaShell.NGHS.IO">
+  <!-- cannot subclass parameter'[double] :( -->
+  <subclass name="FlowParameter" discriminator-value="flow_parameter" extends="DelftTools.Units.Parameter,DelftTools.Units" lazy="false" batch-size="30">
+    <property name="Value" type ="System.Double" column="value_double"/>
+    <property name="DefaultValue" type ="System.Double" column="default_value_double"/>
+  </subclass>
+</hibernate-mapping>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Drawing;
@@ -14,7 +15,9 @@ using DelftTools.Shell.Gui;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
+using DelftTools.Utils.Drawing;
 using DelftTools.Utils.Reflection;
+using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.Common.Layers;
@@ -41,6 +44,7 @@ using SharpMap.Rendering.Thematics;
 using SharpMap.Styles;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers;
+using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Coverages;
 using SharpMap.Api;
 
@@ -308,7 +312,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 
             return null;
         }
-
         private static string GetCommonFunctionName(IList<IFunction> functions)
         {
             if (!functions.Any()) return string.Empty;
@@ -368,6 +371,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             if (model != null)
             {
                 yield return model.Network;
+                yield return model.BoundaryConditions1D;
+                yield return model.LateralSourcesData;
+
                 var rootModel = GetRootModel(model);
                 if (rootModel == null || rootModel is WaterFlowFMModel || model.GetDataItemByValue(model.Area).LinkedTo == null)
                 {

@@ -6,10 +6,10 @@ using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.IO;
+using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.NGHS.IO.FileWriters.Boundary;
 using DeltaShell.NGHS.IO.FileWriters.General;
 using DeltaShell.NGHS.IO.Helpers;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.PhysicalParameters;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
@@ -33,7 +33,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 
             var startTime = waterFlowModel1D.StartTime;
 
-            var boundaryNodeData = waterFlowModel1D.BoundaryConditions.Where(bc => bc.DataType != WaterFlowModel1DBoundaryNodeDataType.None).ToList();
+            var boundaryNodeData = waterFlowModel1D.BoundaryConditions.Where(bc => bc.DataType != Model1DBoundaryNodeDataType.None).ToList();
             categories.AddRange(boundaryNodeData.Select(data => GenerateBoundaryConditionDefinition(startTime, data)));
             categories.AddRange(waterFlowModel1D.LateralSourceData.Select(lateralSourceData => GenerateLateralDischargeDefinition(startTime, lateralSourceData)));
 
@@ -58,7 +58,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             new DelftBcWriter().WriteBcFile(categories, targetFile);
         }
         
-        private IDelftBcCategory GenerateBoundaryConditionDefinition(DateTime startTime, WaterFlowModel1DBoundaryNodeData boundaryNodeData)
+        private IDelftBcCategory GenerateBoundaryConditionDefinition(DateTime startTime, Model1DBoundaryNodeData boundaryNodeData)
         {
             var functionType = BoundaryFileWriterHelper.GetFunctionString(boundaryNodeData.DataType);
             var interpolationType = (boundaryNodeData.InterpolationType == InterpolationType.Constant ?
@@ -74,22 +74,22 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 
             switch (boundaryNodeData.DataType)
             {
-                case WaterFlowModel1DBoundaryNodeDataType.FlowConstant:
+                case Model1DBoundaryNodeDataType.FlowConstant:
                     boundaryDefinition.Table = GenerateTableForConstantData(BoundaryRegion.QuantityStrings.WaterDischarge,
                         BoundaryRegion.UnitStrings.WaterDischarge, boundaryNodeData.Flow);
                     break;
-                case WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries:
+                case Model1DBoundaryNodeDataType.FlowTimeSeries:
                     var waterDischargeData = new Dictionary<string, string>{ {BoundaryRegion.QuantityStrings.WaterDischarge, BoundaryRegion.UnitStrings.WaterDischarge} };
                     boundaryDefinition.Table = GenerateTableForTimeSeriesData(waterDischargeData, boundaryNodeData.Data, startTime);
                     break;
-                case WaterFlowModel1DBoundaryNodeDataType.FlowWaterLevelTable:
+                case Model1DBoundaryNodeDataType.FlowWaterLevelTable:
                     boundaryDefinition.Table = GenerateTableForDischargeWaterLevelData(boundaryNodeData.Data);
                     break;
-                case WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant:
+                case Model1DBoundaryNodeDataType.WaterLevelConstant:
                     boundaryDefinition.Table = GenerateTableForConstantData(BoundaryRegion.QuantityStrings.WaterLevel,
                         BoundaryRegion.UnitStrings.WaterLevel, boundaryNodeData.WaterLevel);
                     break;
-                case WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries:
+                case Model1DBoundaryNodeDataType.WaterLevelTimeSeries:
                     var waterLevelData = new Dictionary<string, string> { { BoundaryRegion.QuantityStrings.WaterLevel, BoundaryRegion.UnitStrings.WaterLevel } };
                     boundaryDefinition.Table = GenerateTableForTimeSeriesData(waterLevelData, boundaryNodeData.Data, startTime);
                     break;
@@ -97,7 +97,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             return boundaryDefinition;
         }
         
-        private static IDelftBcCategory GenerateBoundaryConditionDefinitionForSalt(DateTime startTime, WaterFlowModel1DBoundaryNodeData boundaryNodeData)
+        private static IDelftBcCategory GenerateBoundaryConditionDefinitionForSalt(DateTime startTime, Model1DBoundaryNodeData boundaryNodeData)
         {
             var functionType = BoundaryFileWriterHelper.GetFunctionString(boundaryNodeData.SaltConditionType);
             var interpolationType = (boundaryNodeData.SaltInterpolationType == InterpolationType.Constant ?
@@ -124,7 +124,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             return boundaryDefinition;
         }
 
-        private static IDelftBcCategory GenerateBoundaryConditionDefinitionForTemperature(DateTime startTime, WaterFlowModel1DBoundaryNodeData boundaryNodeData)
+        private static IDelftBcCategory GenerateBoundaryConditionDefinitionForTemperature(DateTime startTime, Model1DBoundaryNodeData boundaryNodeData)
         {
             var functionType = BoundaryFileWriterHelper.GetFunctionString(boundaryNodeData.TemperatureConditionType);
             var interpolationType = (boundaryNodeData.TemperatureInterpolationType == InterpolationType.Constant ?
@@ -151,7 +151,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             return boundaryDefinition;
         }
 
-        private static IDelftBcCategory GenerateLateralDischargeDefinition(DateTime startTime, WaterFlowModel1DLateralSourceData lateralSourceData)
+        private static IDelftBcCategory GenerateLateralDischargeDefinition(DateTime startTime, Model1DLateralSourceData lateralSourceData)
         {
             var functionType = BoundaryFileWriterHelper.GetFunctionString(lateralSourceData.DataType);
             var interpolationType = GetTimeSeriesInterpolationTypeProperty(lateralSourceData.Data);
@@ -162,22 +162,22 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             
             switch (lateralSourceData.DataType)
             {
-                case WaterFlowModel1DLateralDataType.FlowConstant:
+                case Model1DLateralDataType.FlowConstant:
                     lateralDefinition.Table = GenerateTableForConstantData(BoundaryRegion.QuantityStrings.WaterDischarge,
                         BoundaryRegion.UnitStrings.WaterDischarge, lateralSourceData.Flow);
                     break;
-                case WaterFlowModel1DLateralDataType.FlowTimeSeries:
+                case Model1DLateralDataType.FlowTimeSeries:
                     var waterDischargeData = new Dictionary<string, string> { { BoundaryRegion.QuantityStrings.WaterDischarge, BoundaryRegion.UnitStrings.WaterDischarge } };
                     lateralDefinition.Table = GenerateTableForTimeSeriesData(waterDischargeData, lateralSourceData.Data, startTime);
                     break;
-                case WaterFlowModel1DLateralDataType.FlowWaterLevelTable:
+                case Model1DLateralDataType.FlowWaterLevelTable:
                     lateralDefinition.Table = GenerateTableForDischargeWaterLevelData(lateralSourceData.Data);
                     break;
             }
             return lateralDefinition;
         }
 
-        private static IDelftBcCategory GenerateLateralDischargeDefinitionForSalt(DateTime startTime, WaterFlowModel1DLateralSourceData lateralSourceData)
+        private static IDelftBcCategory GenerateLateralDischargeDefinitionForSalt(DateTime startTime, Model1DLateralSourceData lateralSourceData)
         {
             var functionType = BoundaryFileWriterHelper.GetFunctionString(lateralSourceData.SaltLateralDischargeType);
             var interpolationType = BoundaryRegion.TimeInterpolationStrings.LinearAndExtrapolate;
@@ -211,13 +211,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                     break;
                 case SaltLateralDischargeType.Default:
                     lateralDefinition.Table = GenerateTableForConstantData(BoundaryRegion.QuantityStrings.WaterSalinity, 
-                        BoundaryRegion.UnitStrings.SaltPpt, WaterFlowModel1DLateralSourceData.DefaultSalinity);
+                        BoundaryRegion.UnitStrings.SaltPpt, Model1DLateralSourceData.DefaultSalinity);
                     break;
             }
             return lateralDefinition;
         }
 
-        private static IDelftBcCategory GenerateLateralDischargeDefinitionForTemperature(DateTime startTime, WaterFlowModel1DLateralSourceData lateralSourceData)
+        private static IDelftBcCategory GenerateLateralDischargeDefinitionForTemperature(DateTime startTime, Model1DLateralSourceData lateralSourceData)
         {
             var functionType = BoundaryFileWriterHelper.GetFunctionString(lateralSourceData.TemperatureLateralDischargeType);
             var interpolationType = BoundaryRegion.TimeInterpolationStrings.LinearAndExtrapolate;

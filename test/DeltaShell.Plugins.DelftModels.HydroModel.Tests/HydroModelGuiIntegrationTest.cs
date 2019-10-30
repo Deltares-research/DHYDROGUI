@@ -14,7 +14,6 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Reflection;
-using DeltaShell.Core;
 using DeltaShell.Gui;
 using DeltaShell.Gui.Forms.MainWindow;
 using DeltaShell.Plugins.CommonTools;

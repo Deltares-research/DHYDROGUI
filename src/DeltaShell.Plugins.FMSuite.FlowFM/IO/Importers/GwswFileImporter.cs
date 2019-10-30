@@ -14,9 +14,10 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Csv.Importer;
 using DelftTools.Utils.Editing;
+using DeltaShell.NGHS.IO.DataObjects;
+using DeltaShell.Plugins.DelftModels.WaterFlowModel;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
-using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Extensions.Networks;
 using log4net;
@@ -157,11 +158,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         {
             foreach (var outletCompartment in fmModel.Network.OutletCompartments)
             {
+                //var boundaryCondition = WaterFlowModel1DHelper.CreateDefaultBoundaryCondition(outletCompartment.ParentManhole, fmModel.UseSalinity, fmModel.UseTemperature);
+                var boundaryCondition = fmModel.BoundaryConditions1D.FirstOrDefault(bc => bc.Node == outletCompartment.ParentManhole);
+                if (boundaryCondition == null) continue;
+
+                boundaryCondition.DataType = Model1DBoundaryNodeDataType.WaterLevelTimeSeries;
+                boundaryCondition.Data[fmModel.StartTime] = -1000.0;
+                boundaryCondition.Data[fmModel.StopTime] = -1000.0;
+
+                /*
                 fmModel.ModelDefinition.Boundaries.Add(outletCompartment.OutletCompartmentBoundaryFeature);
 
                 var boundaryConditionSet = fmModel.BoundaryConditionSets.FirstOrDefault(bcs => bcs.Name.StartsWith(outletCompartment.Name));
                 var boundaryCondition = CreateOutletCompartmentBoundaryCondition(fmModel, outletCompartment);
-                boundaryConditionSet?.BoundaryConditions.Add(boundaryCondition);
+                boundaryConditionSet?.BoundaryConditions.Add(boundaryCondition);*/
+                //fmModel
             }
         }
 

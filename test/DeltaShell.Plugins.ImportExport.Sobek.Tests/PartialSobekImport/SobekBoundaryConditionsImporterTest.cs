@@ -2,8 +2,8 @@
 using System.Linq;
 using DelftTools.Functions.Generic;
 using DelftTools.TestUtils;
+using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
 using DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter;
 using DeltaShell.Sobek.Readers.Readers;
 using NUnit.Framework;
@@ -27,7 +27,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
 
             var boundaryConditions = waterFlowModel1DModel.BoundaryConditions;
             Assert.AreEqual(34, boundaryConditions.Count());
-            Assert.AreEqual(9, boundaryConditions.Count(bc => bc.DataType != WaterFlowModel1DBoundaryNodeDataType.None));
+            Assert.AreEqual(9, boundaryConditions.Count(bc => bc.DataType != Model1DBoundaryNodeDataType.None));
         }
 
         [Test]

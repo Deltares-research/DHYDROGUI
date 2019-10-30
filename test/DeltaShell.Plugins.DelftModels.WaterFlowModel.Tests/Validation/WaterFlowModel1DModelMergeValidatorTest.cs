@@ -1,7 +1,7 @@
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Utils.Validation;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
+using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.PhysicalParameters;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.TestUtils;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation;
@@ -402,12 +402,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Validation
             model2.Name = "Source Model"; 
             var bc1 = model1.BoundaryConditions.FirstOrDefault(b => b.Node.Name == "node2");
             Assert.That(bc1, Is.Not.Null);
-            Assert.That(bc1.DataType, Is.EqualTo(WaterFlowModel1DBoundaryNodeDataType.FlowConstant));
+            Assert.That(bc1.DataType, Is.EqualTo(Model1DBoundaryNodeDataType.FlowConstant));
             Assert.That(bc1.Flow, Is.EqualTo(42));
             
             var bc2 = model2.BoundaryConditions.FirstOrDefault(b => b.Node.Name == "node1");
             Assert.That(bc2, Is.Not.Null);
-            bc2.DataType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant;
+            bc2.DataType = Model1DBoundaryNodeDataType.WaterLevelConstant;
             bc2.WaterLevel = 801;
 
             var validationReport = WaterFlowModel1DModelMergeValidator.ValidateBoundaryConditionClearCheck(model1, model2);
@@ -419,7 +419,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Validation
             
             var warningBoundaryCondition = validationReport.Issues.FirstOrDefault(issue => issue.Severity == ValidationSeverity.Warning);
             Assert.That(warningBoundaryCondition, Is.Not.Null);
-            Assert.That(warningBoundaryCondition.Message, Contains.Substring(string.Format(", will be set to {0} AFTER the merge.", WaterFlowModel1DBoundaryNodeDataType.None)));
+            Assert.That(warningBoundaryCondition.Message, Contains.Substring(string.Format(", will be set to {0} AFTER the merge.", Model1DBoundaryNodeDataType.None)));
 		}
 
         [Test]
@@ -431,7 +431,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Validation
             model2.Name = "Source Model"; 
             var bc1 = model1.BoundaryConditions.FirstOrDefault(b => b.Node.Name == "node2");
             Assert.That(bc1, Is.Not.Null);
-            bc1.DataType = WaterFlowModel1DBoundaryNodeDataType.None;
+            bc1.DataType = Model1DBoundaryNodeDataType.None;
             
             var validationReport = WaterFlowModel1DModelMergeValidator.ValidateBoundaryConditionClearCheck(model1, model2);
             Assert.That(validationReport.IsEmpty, Is.Not.True);
@@ -449,11 +449,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Validation
             var model2 = WaterFlowModel1DModelMergeTestHelper.SetupWFM1D(100, 200);
             var bc1 = model1.BoundaryConditions.FirstOrDefault(b => b.Node.Name == "node2");
             Assert.That(bc1, Is.Not.Null);
-            bc1.DataType = WaterFlowModel1DBoundaryNodeDataType.None;
+            bc1.DataType = Model1DBoundaryNodeDataType.None;
 
             var bc2 = model2.BoundaryConditions.FirstOrDefault(b => b.Node.Name == "node1");
             Assert.That(bc2, Is.Not.Null);
-            bc2.DataType = WaterFlowModel1DBoundaryNodeDataType.None;
+            bc2.DataType = Model1DBoundaryNodeDataType.None;
             
             var validationReport = WaterFlowModel1DModelMergeValidator.ValidateBoundaryConditionClearCheck(model1, model2);
             Assert.That(validationReport.IsEmpty, Is.True);

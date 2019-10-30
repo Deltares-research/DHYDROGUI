@@ -21,7 +21,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>$(SolutionDir)bin\Debug\plugins\$(AssemblyName)</OutputPath>
+    <OutputPath>$(SolutionDir)bin\$(Configuration)\plugins\$(AssemblyName)</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -29,7 +29,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>$(SolutionDir)bin\Release\plugins\$(AssemblyName)</OutputPath>
+    <OutputPath>$(SolutionDir)bin\$(Configuration)\plugins\$(AssemblyName)</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -109,6 +109,12 @@
       <HintPath>..\..\packages\PostSharp.Redist.5.0.55\lib\net45\PostSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="QuickGraph">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.46317\lib\net461\DeltaShell\QuickGraph.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="SharpMap">
       <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.46317\lib\net461\DeltaShell\SharpMap.dll</HintPath>
       <Private>False</Private>
@@ -129,10 +135,14 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Editors\ListBoxItemRemovingEventArgs.cs" />
+    <Compile Include="ExtrapolationTypeQh.cs" />
     <Compile Include="FeatureCollectionViewInfoHelper.cs" />
     <Compile Include="FileBasedWindDefinitionView.cs">
       <SubType>UserControl</SubType>
@@ -146,6 +156,8 @@
     <Compile Include="FileSelectionControl.Designer.cs">
       <DependentUpon>FileSelectionControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="FMSuiteCommonGuiMapLayerProvider.cs" />
+    <Compile Include="FMSuiteCommonGuiPlugin.cs" />
     <Compile Include="FMMenuItemHelper.cs" />
     <Compile Include="Forms\AstroComponentSelection.cs">
       <SubType>Form</SubType>
@@ -167,6 +179,21 @@
       <DependentUpon>BoundaryConditionEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="Editors\Buttons\ToolboxesPanel.cs" />
+    <Compile Include="Forms\InterpolationTypeBoundaryQh.cs" />
+    <Compile Include="Forms\InterpolationTypeBoundaryTime.cs" />
+    <Compile Include="Forms\Model1DBoundaryNodeDataProperties.cs" />
+    <Compile Include="Forms\Model1DBoundaryNodeDataViewWpf.xaml.cs">
+      <DependentUpon>Model1DBoundaryNodeDataViewWpf.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Model1DBoundaryNodeDataViewWpfViewModel.cs" />
+    <Compile Include="Forms\Model1DLateralDataProperties.cs" />
+    <Compile Include="Forms\Model1DLateralSourceDataViewWpf.xaml.cs">
+      <DependentUpon>Model1DLateralSourceDataViewWpf.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Model1DLateralSourceDataViewWpfViewModel.cs" />
+    <Compile Include="Forms\WindowsFormsHostFunctionView.cs" />
+    <Compile Include="NodePresenters\WaterFlowModel1DBoundaryNodeDataProjectNodePresenter.cs" />
+    <Compile Include="NodePresenters\WaterFlowModel1DLateralDataProjectNodePresenter.cs" />
     <Compile Include="Forms\SupportPointMode.cs" />
     <Compile Include="Forms\SupportPointPropertiesForm.cs">
       <SubType>Form</SubType>
@@ -225,6 +252,7 @@
     <Compile Include="NodePresenters\ContextMenuFactory.cs" />
     <Compile Include="NodePresenters\FMSuiteNodePresenterBase.cs" />
     <Compile Include="NodePresenters\ModelTreeShortcutNodePresenterBase.cs" />
+    <Compile Include="Properties\PluginInfo.cs" />
     <Compile Include="ShortCutType.cs" />
     <Compile Include="TimeArgumentConfigurer.cs" />
     <Compile Include="ITabbedModelView.cs" />
@@ -404,6 +432,11 @@
     <None Include="Resources\document-tree.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\linkOverlay.png" />
+    <None Include="Resources\none.png" />
+    <None Include="Resources\QHBoundary.png" />
+    <None Include="Resources\QConst.png" />
+    <None Include="Resources\QBoundary.png" />
     <None Include="Resources\weir.png" />
     <None Include="Resources\pump.png" />
     <None Include="Resources\landboundary.png" />
@@ -411,6 +444,9 @@
     <None Include="Resources\dry_point.png" />
     <None Include="Resources\dry_area.png" />
     <None Include="Resources\gate.png" />
+    <None Include="Resources\HConst.png" />
+    <None Include="Resources\HBoundary.png" />
+    <Content Include="Resources\Boundary_1d.png" />
     <Content Include="Resources\hurricane2.png" />
     <None Include="Resources\thindam.png" />
     <Resource Include="Resources\Observation.png" />
@@ -418,6 +454,17 @@
     <None Include="Resources\settings.png" />
     <None Include="Resources\hurricane_del.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Page Include="Forms\Model1DBoundaryNodeDataViewWpf.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Forms\Model1DLateralSourceDataViewWpf.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>SubWCRev.exe "$(ProjectDir). " "$(ProjectDir)Properties\AssemblyInfo.cs.svn " "$(ProjectDir)Properties\AssemblyInfo.cs "</PreBuildEvent>

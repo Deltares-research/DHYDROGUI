@@ -57,13 +57,8 @@
     <Compile Include="Forms\ProjectExplorer\TemperatureCoverageNodePresenter.cs" />
     <Compile Include="Forms\ProjectExplorer\WaterFlowBoundaryConditionsNodePresenter.cs" />
     <Compile Include="Forms\ProjectExplorer\WaterFlowModel1DBoundaryNodeDataItem.cs" />
-    <Compile Include="Forms\ProjectExplorer\WaterFlowModel1DBoundaryNodeDataProjectNodePresenter.cs" />
-    <Compile Include="Forms\ProjectExplorer\WaterFlowModel1DLateralDataProjectNodePresenter.cs" />
     <Compile Include="Forms\ProjectExplorer\WaterFlowModel1DNodePresenter.cs" />
     <Compile Include="Forms\ProjectExplorer\WindFunctionNodePresenter.cs" />
-    <Compile Include="Forms\PropertyGrid\ExtrapolationTypeQh.cs" />
-    <Compile Include="Forms\PropertyGrid\InterpolationTypeBoundaryQh.cs" />
-    <Compile Include="Forms\PropertyGrid\InterpolationTypeBoundaryTime.cs" />
     <Compile Include="Forms\PropertyGrid\SelectBoundaryNodeIdTypeConverter.cs" />
     <Compile Include="Forms\PropertyGrid\WaterFlowModel1DAdvancedOptions.cs" />
     <Compile Include="Forms\PropertyGrid\WaterFlowModel1DMorphologyProperties.cs" />
@@ -75,17 +70,8 @@
     </Compile>
     <Compile Include="Forms\Tools\BoundaryNodeDataMapTool.cs" />
     <Compile Include="Forms\Tools\LateralSourceDataMapTool.cs" />
-    <Compile Include="Forms\WaterFlowModel1DBoundaryNodeDataViewWpf.xaml.cs">
-      <DependentUpon>WaterFlowModel1DBoundaryNodeDataViewWpf.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\WaterFlowModel1DBoundaryNodeDataViewWpfViewModel.cs" />
     <Compile Include="Forms\PropertyGrid\ModelApiParameterProperties.cs" />
     <Compile Include="Forms\ProjectExplorer\ObservationPointNodePresenter.cs" />
-    <Compile Include="Forms\WaterFlowModel1DLateralSourceDataViewWpf.xaml.cs">
-      <DependentUpon>WaterFlowModel1DLateralSourceDataViewWpf.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\WaterFlowModel1DLateralSourceDataViewWpfViewModel.cs" />
-    <Compile Include="Forms\WindowsFormsHostFunctionView.cs" />
     <Compile Include="GetInterpolatedCrossSection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\PluginInfo.cs" />
@@ -94,11 +80,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Forms\PropertyGrid\WaterFlowModel1DBoundaryNodeDataProperties.cs" />
     <Compile Include="PathEditor.cs" />
     <Compile Include="Forms\RefreshMainSectionWidthsDialogViewModel.cs" />
     <Compile Include="WaterFlowModel1DGuiPlugin.cs" />
-    <Compile Include="Forms\PropertyGrid\WaterFlowModel1DLateralDataProperties.cs" />
     <Compile Include="Forms\PropertyGrid\WaterFlowModel1DOutputSettingsProperties.cs" />
     <Compile Include="WaterFlowModel1DMapLayerProvider.cs" />
     <Compile Include="WaterFlowModelConstants.cs" />
@@ -280,6 +264,16 @@
       <Name>DeltaShell.Dimr</Name>
       <Private>False</Private>
     </ProjectReference>
+    <ProjectReference Include="..\DeltaShell.NGHS.IO\DeltaShell.NGHS.IO.csproj">
+      <Project>{E22A9330-5EE9-4C26-A014-3269BCF78DED}</Project>
+      <Name>DeltaShell.NGHS.IO</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\DeltaShell.Plugins.FMSuite.Common.Gui\DeltaShell.Plugins.FMSuite.Common.Gui.csproj">
+      <Project>{7F3D15D6-3425-47A6-AFD4-9B6E054EE8BE}</Project>
+      <Name>DeltaShell.Plugins.FMSuite.Common.Gui</Name>
+      <Private>False</Private>
+    </ProjectReference>
     <ProjectReference Include="..\DeltaShell.Plugins.NetworkEditor.Gui\DeltaShell.Plugins.NetworkEditor.Gui.csproj">
       <Project>{56F47238-4ADC-4F56-BC27-BF1A0476D85C}</Project>
       <Name>DeltaShell.Plugins.NetworkEditor.Gui</Name>
@@ -299,14 +293,6 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Forms\RefreshMainSectionWidthsDialog.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Forms\WaterFlowModel1DBoundaryNodeDataViewWpf.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Forms\WaterFlowModel1DLateralSourceDataViewWpf.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

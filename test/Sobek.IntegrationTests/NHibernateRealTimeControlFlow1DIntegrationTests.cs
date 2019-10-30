@@ -17,6 +17,7 @@ using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Gui;
 using DeltaShell.IntegrationTestUtils;
+using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.DelftModels.HydroModel;
@@ -24,7 +25,6 @@ using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.TestUtils;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel;
 using DeltaShell.Plugins.ImportExport.Sobek;
@@ -157,7 +157,7 @@ namespace Sobek.IntegrationTests
             Assert.AreEqual(new DateTime(1994, 12, 01), hydroModel.StartTime, "hydromodel starttime");
             
             Assert.IsNotNull(zwDef.SummerDike);
-            Assert.IsTrue(flow.LateralSourceData.Any(lsd => lsd.DataType != WaterFlowModel1DLateralDataType.FlowTimeSeries));
+            Assert.IsTrue(flow.LateralSourceData.Any(lsd => lsd.DataType != Model1DLateralDataType.FlowTimeSeries));
             Assert.AreEqual(5, rtc.ControlGroups.Count, "#control groups");
             Assert.IsNotNull(rtc.ControlGroups[0].Inputs[0].Feature, "linking not correct1");
 

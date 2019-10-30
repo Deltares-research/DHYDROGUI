@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Resources;
+using System.Windows.Forms;
 using DelftTools.Controls;
+using DelftTools.Controls.Swf;
 using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
+using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Forms;
 using DelftTools.Shell.Gui.Swf.Validation;
@@ -18,17 +21,21 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
+using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.Gui;
 using DeltaShell.Plugins.FMSuite.Common.Gui.Editors;
+using DeltaShell.Plugins.FMSuite.Common.Gui.Forms;
+using DeltaShell.Plugins.FMSuite.Common.Gui.NodePresenters;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.ModelFeatureCoordinateDataEditor;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms;
+using DeltaShell.Plugins.FMSuite.FlowFM.Gui.GraphicsProviders;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters;
@@ -56,6 +63,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
     [Extension(typeof (IPlugin))]
     public class FlowFMGuiPlugin : GuiPlugin
     {
+        private readonly IGraphicsProvider graphicsProvider;
+        private ClonableToolStripMenuItem generateDataInSeriesToolStripMenuItem;
+        private ClonableToolStripMenuItem zoomToToolStripMenuItem;
+        private ContextMenuStrip generateDataMenu;
+
         public override string Name
         {
             get { return "Delft3D FM (Gui)"; }
@@ -81,8 +93,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             get { return "1.1.0.0"; }
         }
 
+        public override IGraphicsProvider GraphicsProvider
+        {
+            get { return graphicsProvider; }
+        }
+
+
         public override IEnumerable<ITreeNodePresenter> GetProjectTreeViewNodePresenters()
         {
+            //yield return new Model1DBoundaryNodeDataProjectNodePresenter { GuiPlugin = this };
+            //yield return new Model1DLateralDataProjectNodePresenter { GuiPlugin = this };
             yield return new WaterFlowFMModelNodePresenter(this);
             yield return new FmModelTreeShortcutNodePresenter { GuiPlugin = this};
             yield return new BoundaryConditionSetNodePresenter { GuiPlugin = this };
@@ -96,6 +116,85 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             yield return new WindItemNodePresenter {GuiPlugin = this};
             yield return new FmMeteoItemNodePresenter {GuiPlugin = this};
             yield return new FmMeteoItemListNodePresenter { GuiPlugin = this };
+        }
+        public override IMenuItem GetContextMenu(object sender, object dataobject)
+        {
+            //TODO: method is a mess clean up.
+
+            IFunction function;
+            bool activeViewIsMapView = Gui != null && Gui.DocumentViews.ActiveView.GetViewsOfType<MapView>().Count() == 1;
+
+            if (dataobject is Model1DBoundaryNodeData)
+            {
+                //add zoom to functionality to context menu
+                var waterFlowModel1DBoundaryNodeData = (Model1DBoundaryNodeData)dataobject;
+                if (waterFlowModel1DBoundaryNodeData.IsLinked ||
+                    waterFlowModel1DBoundaryNodeData.DataType == Model1DBoundaryNodeDataType.FlowConstant ||
+                    waterFlowModel1DBoundaryNodeData.DataType == Model1DBoundaryNodeDataType.WaterLevelConstant)
+                {
+                    if (activeViewIsMapView)
+                    {
+                        zoomToToolStripMenuItem.Available = true;
+                        generateDataInSeriesToolStripMenuItem.Available = false;
+                        return new MenuItemContextMenuStripAdapter(generateDataMenu);
+                    }
+                    return null;
+                }
+                function = waterFlowModel1DBoundaryNodeData.Data;
+            }
+            else if (dataobject is Model1DLateralSourceData)
+            {
+                var waterFlowModel1DLateralSourceData = (Model1DLateralSourceData)dataobject;
+                if (waterFlowModel1DLateralSourceData.IsLinked ||
+                    waterFlowModel1DLateralSourceData.DataType == Model1DLateralDataType.FlowConstant)
+                {
+                    if (activeViewIsMapView)
+                    {
+                        zoomToToolStripMenuItem.Available = true;
+                        generateDataInSeriesToolStripMenuItem.Available = false;
+                        return new MenuItemContextMenuStripAdapter(generateDataMenu);
+                    }
+                    return null;
+                }
+                function = waterFlowModel1DLateralSourceData.Data;
+            }
+            else
+            {
+                return null;
+            }
+
+            var node = sender as TreeNode;
+            if (node != null && node.Tag is IDataItem)
+            {
+                if (((IDataItem)node.Tag).Role != DataItemRole.Input)
+                {
+                    return null;
+                }
+                if (((IDataItem)node.Tag).IsLinked)
+                {
+                    return null;
+                }
+            }
+
+            if (function == null || function is IVariable)
+            {
+                return null;
+            }
+
+            if (function.Arguments.Count > 0)
+            {
+                if (function.Arguments[0].ValueType != typeof(DateTime))
+                {
+                    return null;
+                }
+            }
+            zoomToToolStripMenuItem.Available = activeViewIsMapView;
+            generateDataInSeriesToolStripMenuItem.Available = true;
+            generateDataInSeriesToolStripMenuItem.Tag = function;
+            // only support dataserieswizard for function with one argument for now.
+            generateDataInSeriesToolStripMenuItem.Enabled = (function.Arguments.Count == 1);
+            return new MenuItemContextMenuStripAdapter(generateDataMenu);
+
         }
 
         public override IEnumerable<ViewInfo> GetViewInfoObjects()
@@ -234,7 +333,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     v.ZoomToFeature = feature => centralMap.MapView.EnsureVisible(o.FirstOrDefault(bcs => bcs.BoundaryConditions.Contains(feature as IBoundaryCondition)));
                 }
             };
-
+            
             yield return allBoundarySetsViewInfo;
 
             yield return ViewInfoWrapper<FmModelTreeShortcut>.Create(allBoundarySetsViewInfo, o => o.Data, o => o.ShortCutType == ShortCutType.FeatureSet);
@@ -257,7 +356,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 
             var pipesViewInfo = FeatureCollectionViewInfoHelper.CreateViewInfo<Feature2D, WaterFlowFMModel>("Sources and Sinks", m => m.Pipes, () => Gui);
             yield return ViewInfoWrapper<FmModelTreeShortcut>.Create(pipesViewInfo, GetPipesFromSourcesAndSinks,o => o.ShortCutType == ShortCutType.FeatureSet, (v, o) => v.CanAddDeleteAttributes = false);
+
+            var boundaryConditions1DViewInfo = SharpMapGisGuiPlugin.CreateAttributeTableViewInfo<Model1DBoundaryNodeData, WaterFlowFMModel>( m => m.BoundaryConditions1D, () => Gui);
+            yield return ViewInfoWrapper<FmModelTreeShortcut>.Create(boundaryConditions1DViewInfo,o => o.Data,o => o.ShortCutType == ShortCutType.FeatureSet, (v, o) => v.CanAddDeleteAttributes = false);
             
+            var lateralSourcesViewInfo = SharpMapGisGuiPlugin.CreateAttributeTableViewInfo<Model1DLateralSourceData, WaterFlowFMModel>(m => m.LateralSourcesData, () => Gui);
+            yield return ViewInfoWrapper<FmModelTreeShortcut>.Create(lateralSourcesViewInfo,o => o.Data,o => o.ShortCutType == ShortCutType.FeatureSet, (v, o) => v.CanAddDeleteAttributes = false);
+            
+
             // Heat flux model
             yield return new ViewInfo<HeatFluxModel, HeatFluxModelView>
             {
@@ -467,6 +573,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         {
             yield return CreatePropertyInfoDynamic<WaterFlowFMModel>();
             yield return CreatePropertyInfoDynamic<PointCloudLayer>();
+            //yield return new PropertyInfo<Model1DBoundaryNodeData, Model1DBoundaryNodeDataProperties>();
+            //yield return new PropertyInfo<Model1DLateralSourceData, Model1DLateralDataProperties>();
             yield return new PropertyInfo<IWeir, FMWeirProperties>{ AdditionalDataCheck = w => FlowModels.Any(m => m.Area.Weirs.Contains(w)) };
             yield return new PropertyInfo<FmModelTreeShortcut, HydroNetworkProperties>
             {
@@ -802,6 +910,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         public FlowFMGuiPlugin()
         {
             getActiveMapViewFunc = GetActiveMapView;
+            graphicsProvider = new FmGuiGraphicsProvider();
         }
 
         private void MakeLayerVisibleAfterImport(object layerData)

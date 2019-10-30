@@ -131,6 +131,11 @@
       <Name>DeltaShell.Dimr</Name>
       <Private>False</Private>
     </ProjectReference>
+    <ProjectReference Include="..\..\src\DeltaShell.NGHS.IO\DeltaShell.NGHS.IO.csproj">
+      <Project>{E22A9330-5EE9-4C26-A014-3269BCF78DED}</Project>
+      <Name>DeltaShell.NGHS.IO</Name>
+      <Private>False</Private>
+    </ProjectReference>
     <ProjectReference Include="..\..\src\DeltaShell.Plugins.DelftModels.WaterFlowModel\DeltaShell.Plugins.DelftModels.WaterFlowModel.csproj">
       <Project>{3038ff2f-a3b0-462e-8c41-30dfe1247822}</Project>
       <Name>DeltaShell.Plugins.DelftModels.WaterFlowModel</Name>

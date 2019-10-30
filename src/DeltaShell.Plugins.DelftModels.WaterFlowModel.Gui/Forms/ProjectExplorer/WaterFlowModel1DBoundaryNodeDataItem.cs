@@ -1,6 +1,6 @@
 ﻿using System;
 using DelftTools.Shell.Core.Workflow.DataItems;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
+using DeltaShell.NGHS.IO.DataObjects;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.ProjectExplorer
 {
@@ -19,18 +19,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.ProjectExplore
 
         public override bool IsLinked
         {
-            get { return ((WaterFlowModel1DBoundaryNodeData)Value).SeriesDataItem.IsLinked; }
+            get { return ((Model1DBoundaryNodeData)Value).SeriesDataItem.IsLinked; }
         }
 
         public override string Name
         {
-            get { return ((WaterFlowModel1DBoundaryNodeData)Value).Name; }
+            get { return ((Model1DBoundaryNodeData)Value).Name; }
             set { }
         }
 
         public override void Unlink()
         {
-            ((WaterFlowModel1DBoundaryNodeData)Value).SeriesDataItem.Unlink();
+            ((Model1DBoundaryNodeData)Value).SeriesDataItem.Unlink();
         }
 
         protected bool Equals(WaterFlowModel1DBoundaryNodeDataItem other)
@@ -49,7 +49,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.ProjectExplore
                 return true;
             }
 
-            var bc = Value as WaterFlowModel1DBoundaryNodeData;
+            var bc = Value as Model1DBoundaryNodeData;
             if (bc != null)
             {
                 if (Equals(obj, bc) || Equals(obj, bc.SeriesDataItem)) // oops, make it look like original data item, for tree view

@@ -6,7 +6,6 @@ using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Hydro.Tests.Helpers;
-using DelftTools.Utils;
 using DelftTools.Utils.Reflection;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;

@@ -1,5 +1,5 @@
 ﻿using System.Data;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
+using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
 using NUnit.Framework;
 
@@ -37,7 +37,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
 
             var flowBoundaryNodeData = WaterFlowModel1DBoundaryNodeDataBuilder.ToFlowBoundaryNodeData(condition);
 
-            Assert.AreEqual(WaterFlowModel1DBoundaryNodeDataType.FlowWaterLevelTable,flowBoundaryNodeData.DataType);
+            Assert.AreEqual(Model1DBoundaryNodeDataType.FlowWaterLevelTable,flowBoundaryNodeData.DataType);
             Assert.AreEqual(1.0, flowBoundaryNodeData.Data[5.0]);
         }
 
@@ -63,7 +63,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             // builder will convert to Q function of h
             var flowBoundaryNodeData = WaterFlowModel1DBoundaryNodeDataBuilder.ToFlowBoundaryNodeData(condition);
 
-            Assert.AreEqual(WaterFlowModel1DBoundaryNodeDataType.FlowWaterLevelTable, flowBoundaryNodeData.DataType);
+            Assert.AreEqual(Model1DBoundaryNodeDataType.FlowWaterLevelTable, flowBoundaryNodeData.DataType);
             Assert.AreEqual(1.0, flowBoundaryNodeData.Data[5.0]);
 
         }

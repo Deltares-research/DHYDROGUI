@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -131,24 +131,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Properties {
         internal static string BoundaryNodeDataMapTool_AddToolStripMenuItems_Turn_selected_nodes_into_Q_t_ {
             get {
                 return ResourceManager.GetString("BoundaryNodeDataMapTool_AddToolStripMenuItems_Turn_selected_nodes_into_Q_t_", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to General.
-        /// </summary>
-        internal static string Categories_General {
-            get {
-                return ResourceManager.GetString("Categories_General", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Name.
-        /// </summary>
-        internal static string Common_Name_DisplayName {
-            get {
-                return ResourceManager.GetString("Common_Name_DisplayName", resourceCulture);
             }
         }
         
@@ -428,132 +410,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Boundary node data.
-        /// </summary>
-        internal static string WaterFlowModel1DBoundaryNodeDataProperties_DisplayName {
-            get {
-                return ResourceManager.GetString("WaterFlowModel1DBoundaryNodeDataProperties_DisplayName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Extrapolation scheme used along the water level axis for the water level dependent water flow data series..
-        /// </summary>
-        internal static string WaterFlowModel1DBoundaryNodeDataProperties_ExtrapolationTypeQh_Description {
-            get {
-                return ResourceManager.GetString("WaterFlowModel1DBoundaryNodeDataProperties_ExtrapolationTypeQh_Description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Extrapolation scheme for Q(h).
-        /// </summary>
-        internal static string WaterFlowModel1DBoundaryNodeDataProperties_ExtrapolationTypeQh_DisplayName {
-            get {
-                return ResourceManager.GetString("WaterFlowModel1DBoundaryNodeDataProperties_ExtrapolationTypeQh_DisplayName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Extrapolation scheme used along the time axis for the time-dependent water flow and water level time-series..
-        /// </summary>
-        internal static string WaterFlowModel1DBoundaryNodeDataProperties_ExtrapolationTypeT_Description {
-            get {
-                return ResourceManager.GetString("WaterFlowModel1DBoundaryNodeDataProperties_ExtrapolationTypeT_Description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Extrapolation scheme for Q(t) or H(t).
-        /// </summary>
-        internal static string WaterFlowModel1DBoundaryNodeDataProperties_ExtrapolationTypeT_DisplayName {
-            get {
-                return ResourceManager.GetString("WaterFlowModel1DBoundaryNodeDataProperties_ExtrapolationTypeT_DisplayName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Interpolation scheme used along the water level axis for the water level dependent water flow data series..
-        /// </summary>
-        internal static string WaterFlowModel1DBoundaryNodeDataProperties_InterpolationTypeQh_Description {
-            get {
-                return ResourceManager.GetString("WaterFlowModel1DBoundaryNodeDataProperties_InterpolationTypeQh_Description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Interpolation scheme for Q(h).
-        /// </summary>
-        internal static string WaterFlowModel1DBoundaryNodeDataProperties_InterpolationTypeQh_DisplayName {
-            get {
-                return ResourceManager.GetString("WaterFlowModel1DBoundaryNodeDataProperties_InterpolationTypeQh_DisplayName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Interpolation scheme used along the time axis for the time-dependent water flow and water level time-series..
-        /// </summary>
-        internal static string WaterFlowModel1DBoundaryNodeDataProperties_InterpolationTypeT_Description {
-            get {
-                return ResourceManager.GetString("WaterFlowModel1DBoundaryNodeDataProperties_InterpolationTypeT_Description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Interpolation scheme for Q(t) or H(t).
-        /// </summary>
-        internal static string WaterFlowModel1DBoundaryNodeDataProperties_InterpolationTypeT_DisplayName {
-            get {
-                return ResourceManager.GetString("WaterFlowModel1DBoundaryNodeDataProperties_InterpolationTypeT_DisplayName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Name of the boundary node data shown to the user..
-        /// </summary>
-        internal static string WaterFlowModel1DBoundaryNodeDataProperties_Name_Description {
-            get {
-                return ResourceManager.GetString("WaterFlowModel1DBoundaryNodeDataProperties_Name_Description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Name of the node associated with this boundary data..
-        /// </summary>
-        internal static string WaterFlowModel1DBoundaryNodeDataProperties_NodeName_Description {
-            get {
-                return ResourceManager.GetString("WaterFlowModel1DBoundaryNodeDataProperties_NodeName_Description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Boundary node name.
-        /// </summary>
-        internal static string WaterFlowModel1DBoundaryNodeDataProperties_NodeName_DisplayName {
-            get {
-                return ResourceManager.GetString("WaterFlowModel1DBoundaryNodeDataProperties_NodeName_DisplayName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Data type of the boundary node data..
-        /// </summary>
-        internal static string WaterFlowModel1DBoundaryNodeDataProperties_Type_Description {
-            get {
-                return ResourceManager.GetString("WaterFlowModel1DBoundaryNodeDataProperties_Type_Description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Type.
-        /// </summary>
-        internal static string WaterFlowModel1DBoundaryNodeDataProperties_Type_DisplayName {
-            get {
-                return ResourceManager.GetString("WaterFlowModel1DBoundaryNodeDataProperties_Type_DisplayName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Generate Data in Series....
         /// </summary>
         internal static string WaterFlowModel1DGuiPlugin_InitializeComponent_Generate_Data_in_Series___ {
@@ -577,78 +433,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Properties {
         internal static string WaterFlowModel1DGuiPlugin_InitializeComponent_Zoom_to_Feature {
             get {
                 return ResourceManager.GetString("WaterFlowModel1DGuiPlugin_InitializeComponent_Zoom_to_Feature", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Lateral source boundary data.
-        /// </summary>
-        internal static string WaterFlowModel1DLateralDataProperties_DisplayName {
-            get {
-                return ResourceManager.GetString("WaterFlowModel1DLateralDataProperties_DisplayName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Extrapolation scheme used along the time axis for the time-dependent water flow time-series..
-        /// </summary>
-        internal static string WaterFlowModel1DLateralDataProperties_ExtrapolationTypeQt_Description {
-            get {
-                return ResourceManager.GetString("WaterFlowModel1DLateralDataProperties_ExtrapolationTypeQt_Description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Extrapolation scheme for Q(t).
-        /// </summary>
-        internal static string WaterFlowModel1DLateralDataProperties_ExtrapolationTypeQt_DisplayName {
-            get {
-                return ResourceManager.GetString("WaterFlowModel1DLateralDataProperties_ExtrapolationTypeQt_DisplayName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Interpolation scheme used along the time axis for the time-dependent water flow time-series..
-        /// </summary>
-        internal static string WaterFlowModel1DLateralDataProperties_InterpolationTypeQt_Description {
-            get {
-                return ResourceManager.GetString("WaterFlowModel1DLateralDataProperties_InterpolationTypeQt_Description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Interpolation scheme for Q(t).
-        /// </summary>
-        internal static string WaterFlowModel1DLateralDataProperties_InterpolationTypeQt_DisplayName {
-            get {
-                return ResourceManager.GetString("WaterFlowModel1DLateralDataProperties_InterpolationTypeQt_DisplayName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Name of the lateral sources boundary data shown to the user..
-        /// </summary>
-        internal static string WaterFlowModel1DLateralDataProperties_Name_Description {
-            get {
-                return ResourceManager.GetString("WaterFlowModel1DLateralDataProperties_Name_Description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Data type of the lateral source boundary data..
-        /// </summary>
-        internal static string WaterFlowModel1DLateralDataProperties_Type_Description {
-            get {
-                return ResourceManager.GetString("WaterFlowModel1DLateralDataProperties_Type_Description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Type.
-        /// </summary>
-        internal static string WaterFlowModel1DLateralDataProperties_Type_DisplayName {
-            get {
-                return ResourceManager.GetString("WaterFlowModel1DLateralDataProperties_Type_DisplayName", resourceCulture);
             }
         }
         

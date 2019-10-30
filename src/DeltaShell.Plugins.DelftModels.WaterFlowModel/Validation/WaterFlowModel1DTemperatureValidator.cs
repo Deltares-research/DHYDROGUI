@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Utils.Validation;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
+using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.PhysicalParameters;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties;
 
@@ -30,7 +30,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation
             if (model.UseTemperature)
             {
                 var invalidTemperatureBoundaryConditions = model.BoundaryConditions
-                    .Where(bc => bc.DataType != WaterFlowModel1DBoundaryNodeDataType.None
+                    .Where(bc => bc.DataType != Model1DBoundaryNodeDataType.None
                                  && bc.TemperatureConditionType == TemperatureBoundaryConditionType.None);
 
                 foreach (var bc in invalidTemperatureBoundaryConditions)

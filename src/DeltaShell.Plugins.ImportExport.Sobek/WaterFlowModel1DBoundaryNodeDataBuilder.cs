@@ -1,5 +1,5 @@
 ﻿using DelftTools.Functions.Generic;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
+using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
 using log4net;
 
@@ -12,19 +12,19 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(WaterFlowModel1DBoundaryNodeDataBuilder));
 
-        public static WaterFlowModel1DBoundaryNodeData ToFlowBoundaryNodeData(SobekFlowBoundaryCondition sobekFlowBoundaryCondition)
+        public static Model1DBoundaryNodeData ToFlowBoundaryNodeData(SobekFlowBoundaryCondition sobekFlowBoundaryCondition)
         {
-            var flowBoundaryCondition = new WaterFlowModel1DBoundaryNodeData();
+            var flowBoundaryCondition = new Model1DBoundaryNodeData();
             if (sobekFlowBoundaryCondition.StorageType == SobekFlowBoundaryStorageType.Constant)
             {
                 if (sobekFlowBoundaryCondition.BoundaryType == SobekFlowBoundaryConditionType.Level)
                 {
-                    flowBoundaryCondition.DataType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant;
+                    flowBoundaryCondition.DataType = Model1DBoundaryNodeDataType.WaterLevelConstant;
                     flowBoundaryCondition.WaterLevel = sobekFlowBoundaryCondition.LevelConstant;
                 }
                 else
                 {
-                    flowBoundaryCondition.DataType = WaterFlowModel1DBoundaryNodeDataType.FlowConstant;
+                    flowBoundaryCondition.DataType = Model1DBoundaryNodeDataType.FlowConstant;
                     flowBoundaryCondition.Flow = sobekFlowBoundaryCondition.FlowConstant;
                 }
             }
@@ -32,12 +32,12 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             {
                 if (sobekFlowBoundaryCondition.BoundaryType == SobekFlowBoundaryConditionType.Level)
                 {
-                    flowBoundaryCondition.DataType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries;
+                    flowBoundaryCondition.DataType = Model1DBoundaryNodeDataType.WaterLevelTimeSeries;
                     DataTableHelper.SetTableToFunction(sobekFlowBoundaryCondition.LevelTimeTable, flowBoundaryCondition.Data);
                 }
                 else
                 {
-                    flowBoundaryCondition.DataType = WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries;
+                    flowBoundaryCondition.DataType = Model1DBoundaryNodeDataType.FlowTimeSeries;
                     DataTableHelper.SetTableToFunction(sobekFlowBoundaryCondition.FlowTimeTable, flowBoundaryCondition.Data);
                 }
             }
@@ -46,7 +46,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                 if (SobekFlowBoundaryConditionType.Level == sobekFlowBoundaryCondition.BoundaryType)
                 {
                     // Hq boundaries are not supported; TvM just swap columns
-                    flowBoundaryCondition.DataType = WaterFlowModel1DBoundaryNodeDataType.FlowWaterLevelTable;
+                    flowBoundaryCondition.DataType = Model1DBoundaryNodeDataType.FlowWaterLevelTable;
                     DataTableHelper.SetTableToFunction(DataTableHelper.SwapColumns(sobekFlowBoundaryCondition.LevelQhTable), flowBoundaryCondition.Data);
                     //set to BoundaryType from level to flow so it will be treated as flow
                     sobekFlowBoundaryCondition.BoundaryType = SobekFlowBoundaryConditionType.Flow;
@@ -54,16 +54,16 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                 else
                 {
                     //SobekFlowBoundaryConditionType.Flow == sobekFlowBoundaryCondition.BoundaryType)
-                    flowBoundaryCondition.DataType = WaterFlowModel1DBoundaryNodeDataType.FlowWaterLevelTable;
+                    flowBoundaryCondition.DataType = Model1DBoundaryNodeDataType.FlowWaterLevelTable;
                     DataTableHelper.SetTableToFunction(sobekFlowBoundaryCondition.FlowHqTable, flowBoundaryCondition.Data);
                 }
                 //Log.WarnFormat("Boundary conditions of QH type not yet supported (id = {0}).", sobekFlowBoundaryCondition.ID);
                // ConvertTableToTimeFunction(sobekFlowBoundaryCondition.FlowTimeTable, flowBoundaryCondition);
             }
 
-            if (flowBoundaryCondition.DataType == WaterFlowModel1DBoundaryNodeDataType.FlowWaterLevelTable ||
-                flowBoundaryCondition.DataType == WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries ||
-                flowBoundaryCondition.DataType == WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries)
+            if (flowBoundaryCondition.DataType == Model1DBoundaryNodeDataType.FlowWaterLevelTable ||
+                flowBoundaryCondition.DataType == Model1DBoundaryNodeDataType.FlowTimeSeries ||
+                flowBoundaryCondition.DataType == Model1DBoundaryNodeDataType.WaterLevelTimeSeries)
             {
                 flowBoundaryCondition.Data.Arguments[0].InterpolationType = sobekFlowBoundaryCondition.InterpolationType;
             }

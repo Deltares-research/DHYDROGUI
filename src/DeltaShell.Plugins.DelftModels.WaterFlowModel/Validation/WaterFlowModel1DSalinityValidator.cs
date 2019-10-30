@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Utils.Validation;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
+using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation
@@ -26,7 +26,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation
             var issues = new List<ValidationIssue>();
             
             var invalidSaltBoundaryConditions = model.BoundaryConditions
-                .Where(bc => bc.DataType != WaterFlowModel1DBoundaryNodeDataType.None
+                .Where(bc => bc.DataType != Model1DBoundaryNodeDataType.None
                     && bc.SaltConditionType == SaltBoundaryConditionType.None);
 
             foreach (var bc in invalidSaltBoundaryConditions)

@@ -330,6 +330,7 @@
     <Compile Include="Forms\FmMeteoSelectionDialog.Designer.cs">
       <DependentUpon>FmMeteoSelectionDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="GraphicsProviders\FMGuiGraphicsProvider.cs" />
     <Compile Include="MapTools\Add1D2DLinkMapTool.cs" />
     <Compile Include="MapTools\Base1D2DLinksMapTool.cs" />
     <Compile Include="MapTools\GenerateLinksMapTool.cs" />
@@ -562,6 +563,13 @@
     <None Include="Resources\BoundaryType_Harmonics.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\folder.png" />
+    <None Include="Resources\QHBoundary.png" />
+    <None Include="Resources\QConst.png" />
+    <None Include="Resources\QBoundary.png" />
+    <None Include="Resources\HConst.png" />
+    <None Include="Resources\HBoundary.png" />
+    <None Include="Resources\Boundary.png" />
     <None Include="Resources\weather-cloudy.png" />
     <None Include="Resources\precipitation.png" />
     <None Include="Resources\Gully.png" />
@@ -629,6 +637,10 @@
     <Page Include="Editors\TracerDefinitionsEditorWpf.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GraphicsProviders\FMGuiGraphics.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Ribbon\RibbonBrushes.xaml">
       <SubType>Designer</SubType>

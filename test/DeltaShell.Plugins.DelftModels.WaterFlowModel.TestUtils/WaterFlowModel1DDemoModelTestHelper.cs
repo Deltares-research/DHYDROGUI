@@ -9,7 +9,7 @@ using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
+using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi;
 using DeltaShell.Plugins.NetCDF;
 using GeoAPI.Extensions.Coverages;
@@ -87,7 +87,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.TestUtils
 
             // set boundary conditions
             var boundaryConditionInflow = model.BoundaryConditions.First(bc => bc.Feature == network.Nodes[0]);
-            boundaryConditionInflow.DataType = WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries;
+            boundaryConditionInflow.DataType = Model1DBoundaryNodeDataType.FlowTimeSeries;
             boundaryConditionInflow.Data[t] = 1.0;
             boundaryConditionInflow.Data[t.AddSeconds(30)] = 1.0;
             boundaryConditionInflow.Data[t.AddSeconds(60)] = 1.5;
@@ -96,7 +96,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.TestUtils
             boundaryConditionInflow.Data.Arguments[0].ExtrapolationType = ExtrapolationType.Constant;
 
             var boundaryConditionOutflow = model.BoundaryConditions.First(bc => bc.Feature == network.Nodes[2]);
-            boundaryConditionOutflow.DataType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries;
+            boundaryConditionOutflow.DataType = Model1DBoundaryNodeDataType.WaterLevelTimeSeries;
             boundaryConditionOutflow.Data[t] = 0.1;
             boundaryConditionOutflow.Data[t.AddSeconds(30)] = 0.1;
             boundaryConditionOutflow.Data[t.AddSeconds(60)] = 0.2;
@@ -142,11 +142,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.TestUtils
 
             // set boundary conditions
             var boundaryConditionInflow = model.BoundaryConditions.First(bc => bc.Feature == network.Nodes[0]);
-            boundaryConditionInflow.DataType = WaterFlowModel1DBoundaryNodeDataType.FlowConstant;
+            boundaryConditionInflow.DataType = Model1DBoundaryNodeDataType.FlowConstant;
             boundaryConditionInflow.Flow = 2.0;
 
             var boundaryConditionOutflow = model.BoundaryConditions.First(bc => bc.Feature == network.Nodes[2]);
-            boundaryConditionOutflow.DataType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant;
+            boundaryConditionOutflow.DataType = Model1DBoundaryNodeDataType.WaterLevelConstant;
             boundaryConditionOutflow.WaterLevel = 1.0;
 
             return model;

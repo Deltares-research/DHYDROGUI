@@ -12,7 +12,6 @@ using DeltaShell.Plugins.SharpMapGis;
 using GeoAPI.Extensions.Coverages;
 using log4net.Core;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.HisData
 {

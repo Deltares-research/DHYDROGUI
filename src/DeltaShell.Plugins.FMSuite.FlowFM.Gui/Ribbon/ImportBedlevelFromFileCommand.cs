@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
-using DeltaShell.Plugins.SharpMapGis.Gui;
 using DeltaShell.Plugins.SharpMapGis.Gui.Commands.SpatialOperations;
 using GeoAPI.Extensions.Coverages;
 using SharpMap.Api.Layers;

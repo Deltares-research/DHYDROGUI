@@ -4,7 +4,7 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Utils.Collections;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
+using DeltaShell.NGHS.IO.DataObjects;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
@@ -47,7 +47,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.TestUtils
             var waterFlowModel1D = new WaterFlowModel1D() { Network = network, Name = name };
             waterFlowModel1D.BoundaryConditions.ForEach(bc =>
             {
-                bc.DataType = WaterFlowModel1DBoundaryNodeDataType.FlowConstant;
+                bc.DataType = Model1DBoundaryNodeDataType.FlowConstant;
                 bc.Flow = 42;
             });
             return waterFlowModel1D;

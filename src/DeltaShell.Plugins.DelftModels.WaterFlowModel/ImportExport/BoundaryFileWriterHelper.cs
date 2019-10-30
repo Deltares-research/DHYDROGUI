@@ -1,36 +1,36 @@
-﻿using DeltaShell.NGHS.IO.FileWriters.Boundary;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
+﻿using DeltaShell.NGHS.IO.DataObjects;
+using DeltaShell.NGHS.IO.FileWriters.Boundary;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 {
     public static class BoundaryFileWriterHelper
     {
-        public static string GetFunctionString(WaterFlowModel1DBoundaryNodeDataType boundaryNodeDataType)
+        public static string GetFunctionString(Model1DBoundaryNodeDataType boundaryNodeDataType)
         {
             switch (boundaryNodeDataType)
             {
-                case WaterFlowModel1DBoundaryNodeDataType.FlowConstant:
-                case WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant:
+                case Model1DBoundaryNodeDataType.FlowConstant:
+                case Model1DBoundaryNodeDataType.WaterLevelConstant:
                     return BoundaryRegion.FunctionStrings.Constant;
-                case WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries:
-                case WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries:
+                case Model1DBoundaryNodeDataType.FlowTimeSeries:
+                case Model1DBoundaryNodeDataType.WaterLevelTimeSeries:
                     return BoundaryRegion.FunctionStrings.TimeSeries;
-                case WaterFlowModel1DBoundaryNodeDataType.FlowWaterLevelTable:
+                case Model1DBoundaryNodeDataType.FlowWaterLevelTable:
                     return BoundaryRegion.FunctionStrings.QhTable;
                 default:
                     return string.Empty;
             }
         }
 
-        public static string GetFunctionString(WaterFlowModel1DLateralDataType lateralSourceDataType)
+        public static string GetFunctionString(Model1DLateralDataType lateralSourceDataType)
         {
             switch (lateralSourceDataType)
             {
-                case WaterFlowModel1DLateralDataType.FlowConstant:
+                case Model1DLateralDataType.FlowConstant:
                     return BoundaryRegion.FunctionStrings.Constant;
-                case WaterFlowModel1DLateralDataType.FlowTimeSeries:
+                case Model1DLateralDataType.FlowTimeSeries:
                     return BoundaryRegion.FunctionStrings.TimeSeries;
-                case WaterFlowModel1DLateralDataType.FlowWaterLevelTable:
+                case Model1DLateralDataType.FlowWaterLevelTable:
                     return BoundaryRegion.FunctionStrings.QhTable;
                 default:
                     return string.Empty;

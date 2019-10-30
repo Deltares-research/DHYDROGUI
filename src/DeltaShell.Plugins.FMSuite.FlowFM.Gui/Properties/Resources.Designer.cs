@@ -93,6 +93,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap Boundary {
+            get {
+                object obj = ResourceManager.GetObject("Boundary", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap BoundaryType_AstroComponent {
             get {
                 object obj = ResourceManager.GetObject("BoundaryType_AstroComponent", resourceCulture);
@@ -263,6 +273,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap folder {
+            get {
+                object obj = ResourceManager.GetObject("folder", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap FunctionGrid2D {
             get {
                 object obj = ResourceManager.GetObject("FunctionGrid2D", resourceCulture);
@@ -306,6 +326,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Properties {
         public static System.Drawing.Bitmap Gully {
             get {
                 object obj = ResourceManager.GetObject("Gully", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap HBoundary {
+            get {
+                object obj = ResourceManager.GetObject("HBoundary", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap HConst {
+            get {
+                object obj = ResourceManager.GetObject("HConst", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -383,6 +423,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap none {
+            get {
+                object obj = ResourceManager.GetObject("none", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap pipette {
             get {
                 object obj = ResourceManager.GetObject("pipette", resourceCulture);
@@ -426,6 +476,36 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Properties {
         public static System.Drawing.Bitmap Pump {
             get {
                 object obj = ResourceManager.GetObject("Pump", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap QBoundary {
+            get {
+                object obj = ResourceManager.GetObject("QBoundary", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap QConst {
+            get {
+                object obj = ResourceManager.GetObject("QConst", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap QHBoundary {
+            get {
+                object obj = ResourceManager.GetObject("QHBoundary", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

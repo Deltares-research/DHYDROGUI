@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.NGHS.IO.FileWriters;
 using DeltaShell.NGHS.IO.FileWriters.General;
 using DeltaShell.NGHS.IO.FileWriters.Location;
 using DeltaShell.NGHS.IO.Helpers;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
 using GeoAPI.Extensions.Networks;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
@@ -14,11 +14,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
     {
         public static void WriteFile(string targetFile, WaterFlowModel1D waterFlowModel1D)
         {
-            var boundLocNodes = waterFlowModel1D.BoundaryConditions.Where(bc => bc.DataType != WaterFlowModel1DBoundaryNodeDataType.None);
+            var boundLocNodes = waterFlowModel1D.BoundaryConditions.Where(bc => bc.DataType != Model1DBoundaryNodeDataType.None);
             WriteFileBoundaryLocations(targetFile, boundLocNodes, waterFlowModel1D.Network.Nodes);
         }
 
-        public static void WriteFileBoundaryLocations(string targetFile, IEnumerable<WaterFlowModel1DBoundaryNodeData> boundaryNodes, IList<INode> nodes)
+        public static void WriteFileBoundaryLocations(string targetFile, IEnumerable<Model1DBoundaryNodeData> boundaryNodes, IList<INode> nodes)
         {
             var categories = new List<DelftIniCategory>()
             {
@@ -37,7 +37,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             new IniFileWriter().WriteIniFile(categories, targetFile);
         }
 
-        private static DelftIniCategory GenerateBoundaryLocationDefinition(WaterFlowModel1DBoundaryNodeData boundaryNodeData, int nodeType)
+        private static DelftIniCategory GenerateBoundaryLocationDefinition(Model1DBoundaryNodeData boundaryNodeData, int nodeType)
         {
             var definition = new DelftIniCategory(BoundaryRegion.BoundaryHeader);
             definition.AddProperty(BoundaryRegion.NodeId.Key, boundaryNodeData.Node.Name, BoundaryRegion.NodeId.Description);

@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -133,10 +133,29 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap Boundary_1d {
+            get {
+                object obj = ResourceManager.GetObject("Boundary_1d", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap boundary_folder {
             get {
                 object obj = ResourceManager.GetObject("boundary_folder", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to General.
+        /// </summary>
+        public static string Categories_General {
+            get {
+                return ResourceManager.GetString("Categories_General", resourceCulture);
             }
         }
         
@@ -147,6 +166,15 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Properties {
             get {
                 object obj = ResourceManager.GetObject("Chart", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name.
+        /// </summary>
+        public static string Common_Name_DisplayName {
+            get {
+                return ResourceManager.GetString("Common_Name_DisplayName", resourceCulture);
             }
         }
         
@@ -367,6 +395,26 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap HBoundary {
+            get {
+                object obj = ResourceManager.GetObject("HBoundary", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap HConst {
+            get {
+                object obj = ResourceManager.GetObject("HConst", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap hurricane_del {
             get {
                 object obj = ResourceManager.GetObject("hurricane_del", resourceCulture);
@@ -427,9 +475,227 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap linkOverlay {
+            get {
+                object obj = ResourceManager.GetObject("linkOverlay", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap merge {
             get {
                 object obj = ResourceManager.GetObject("merge", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Boundary node data.
+        /// </summary>
+        public static string Model1DBoundaryNodeDataProperties_DisplayName {
+            get {
+                return ResourceManager.GetString("Model1DBoundaryNodeDataProperties_DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Extrapolation scheme used along the water level axis for the water level dependent water flow data series..
+        /// </summary>
+        public static string Model1DBoundaryNodeDataProperties_ExtrapolationTypeQh_Description {
+            get {
+                return ResourceManager.GetString("Model1DBoundaryNodeDataProperties_ExtrapolationTypeQh_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Extrapolation scheme for Q(h).
+        /// </summary>
+        public static string Model1DBoundaryNodeDataProperties_ExtrapolationTypeQh_DisplayName {
+            get {
+                return ResourceManager.GetString("Model1DBoundaryNodeDataProperties_ExtrapolationTypeQh_DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Extrapolation scheme used along the time axis for the time-dependent water flow and water level time-series..
+        /// </summary>
+        public static string Model1DBoundaryNodeDataProperties_ExtrapolationTypeT_Description {
+            get {
+                return ResourceManager.GetString("Model1DBoundaryNodeDataProperties_ExtrapolationTypeT_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Extrapolation scheme for Q(t) or H(t).
+        /// </summary>
+        public static string Model1DBoundaryNodeDataProperties_ExtrapolationTypeT_DisplayName {
+            get {
+                return ResourceManager.GetString("Model1DBoundaryNodeDataProperties_ExtrapolationTypeT_DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Interpolation scheme used along the water level axis for the water level dependent water flow data series..
+        /// </summary>
+        public static string Model1DBoundaryNodeDataProperties_InterpolationTypeQh_Description {
+            get {
+                return ResourceManager.GetString("Model1DBoundaryNodeDataProperties_InterpolationTypeQh_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Interpolation scheme for Q(h).
+        /// </summary>
+        public static string Model1DBoundaryNodeDataProperties_InterpolationTypeQh_DisplayName {
+            get {
+                return ResourceManager.GetString("Model1DBoundaryNodeDataProperties_InterpolationTypeQh_DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Interpolation scheme used along the time axis for the time-dependent water flow and water level time-series..
+        /// </summary>
+        public static string Model1DBoundaryNodeDataProperties_InterpolationTypeT_Description {
+            get {
+                return ResourceManager.GetString("Model1DBoundaryNodeDataProperties_InterpolationTypeT_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Interpolation scheme for Q(t) or H(t).
+        /// </summary>
+        public static string Model1DBoundaryNodeDataProperties_InterpolationTypeT_DisplayName {
+            get {
+                return ResourceManager.GetString("Model1DBoundaryNodeDataProperties_InterpolationTypeT_DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name of the boundary node data shown to the user..
+        /// </summary>
+        public static string Model1DBoundaryNodeDataProperties_Name_Description {
+            get {
+                return ResourceManager.GetString("Model1DBoundaryNodeDataProperties_Name_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name of the node associated with this boundary data..
+        /// </summary>
+        public static string Model1DBoundaryNodeDataProperties_NodeName_Description {
+            get {
+                return ResourceManager.GetString("Model1DBoundaryNodeDataProperties_NodeName_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Boundary node name.
+        /// </summary>
+        public static string Model1DBoundaryNodeDataProperties_NodeName_DisplayName {
+            get {
+                return ResourceManager.GetString("Model1DBoundaryNodeDataProperties_NodeName_DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Data type of the boundary node data..
+        /// </summary>
+        public static string Model1DBoundaryNodeDataProperties_Type_Description {
+            get {
+                return ResourceManager.GetString("Model1DBoundaryNodeDataProperties_Type_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Type.
+        /// </summary>
+        public static string Model1DBoundaryNodeDataProperties_Type_DisplayName {
+            get {
+                return ResourceManager.GetString("Model1DBoundaryNodeDataProperties_Type_DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lateral source boundary data.
+        /// </summary>
+        public static string Model1DLateralDataProperties_DisplayName {
+            get {
+                return ResourceManager.GetString("Model1DLateralDataProperties_DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Extrapolation scheme used along the time axis for the time-dependent water flow time-series..
+        /// </summary>
+        public static string Model1DLateralDataProperties_ExtrapolationTypeQt_Description {
+            get {
+                return ResourceManager.GetString("Model1DLateralDataProperties_ExtrapolationTypeQt_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Extrapolation scheme for Q(t).
+        /// </summary>
+        public static string Model1DLateralDataProperties_ExtrapolationTypeQt_DisplayName {
+            get {
+                return ResourceManager.GetString("Model1DLateralDataProperties_ExtrapolationTypeQt_DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Interpolation scheme used along the time axis for the time-dependent water flow time-series..
+        /// </summary>
+        public static string Model1DLateralDataProperties_InterpolationTypeQt_Description {
+            get {
+                return ResourceManager.GetString("Model1DLateralDataProperties_InterpolationTypeQt_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Interpolation scheme for Q(t).
+        /// </summary>
+        public static string Model1DLateralDataProperties_InterpolationTypeQt_DisplayName {
+            get {
+                return ResourceManager.GetString("Model1DLateralDataProperties_InterpolationTypeQt_DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name of the lateral sources boundary data shown to the user..
+        /// </summary>
+        public static string Model1DLateralDataProperties_Name_Description {
+            get {
+                return ResourceManager.GetString("Model1DLateralDataProperties_Name_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Data type of the lateral source boundary data..
+        /// </summary>
+        public static string Model1DLateralDataProperties_Type_Description {
+            get {
+                return ResourceManager.GetString("Model1DLateralDataProperties_Type_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Type.
+        /// </summary>
+        public static string Model1DLateralDataProperties_Type_DisplayName {
+            get {
+                return ResourceManager.GetString("Model1DLateralDataProperties_Type_DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap none {
+            get {
+                object obj = ResourceManager.GetObject("none", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -510,6 +776,36 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Properties {
         public static System.Drawing.Bitmap pump {
             get {
                 object obj = ResourceManager.GetObject("pump", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap QBoundary {
+            get {
+                object obj = ResourceManager.GetObject("QBoundary", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap QConst {
+            get {
+                object obj = ResourceManager.GetObject("QConst", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap QHBoundary {
+            get {
+                object obj = ResourceManager.GetObject("QHBoundary", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

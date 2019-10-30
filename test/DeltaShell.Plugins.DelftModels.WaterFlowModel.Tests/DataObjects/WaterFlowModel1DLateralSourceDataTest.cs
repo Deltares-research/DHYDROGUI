@@ -1,6 +1,6 @@
 ﻿using System;
 using DelftTools.Hydro;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
+using DeltaShell.NGHS.IO.DataObjects;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.DataObjects
                     Length = 100
                 };
 
-            var lateralSourceData = new WaterFlowModel1DLateralSourceData { Feature = lateralSource };
+            var lateralSourceData = new Model1DLateralSourceData { Feature = lateralSource };
 
             Assert.IsTrue(lateralSourceData.Geometry is IPoint);
             Assert.AreEqual(50, ((IPoint)lateralSourceData.Geometry).Y);
@@ -28,10 +28,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.DataObjects
         [Test]
         public void Clone()
         {
-            var lateralSourceData = new WaterFlowModel1DLateralSourceData
+            var lateralSourceData = new Model1DLateralSourceData
             {
                 Feature = new LateralSource(),
-                DataType = WaterFlowModel1DLateralDataType.FlowTimeSeries,
+                DataType = Model1DLateralDataType.FlowTimeSeries,
                 Flow = 5,
                 UseSalt = true,
                 SaltLateralDischargeType = SaltLateralDischargeType.ConcentrationTimeSeries,
@@ -46,7 +46,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.DataObjects
             lateralSourceData.SaltMassTimeSeries[new DateTime(2000, 1, 1)] = 5.6667;
             lateralSourceData.TemperatureTimeSeries[new DateTime(2000, 1, 1)] = 6.7778;
             
-            var clonedLateralSourceData = (WaterFlowModel1DLateralSourceData)lateralSourceData.Clone();
+            var clonedLateralSourceData = (Model1DLateralSourceData)lateralSourceData.Clone();
 
             Assert.AreEqual(lateralSourceData.DataType, clonedLateralSourceData.DataType);
             Assert.AreEqual(lateralSourceData.Flow, clonedLateralSourceData.Flow);

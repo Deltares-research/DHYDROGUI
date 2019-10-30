@@ -10,6 +10,7 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DeltaShell.Core;
+using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Functions;
 using DeltaShell.Plugins.Data.NHibernate;
@@ -19,7 +20,6 @@ using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.TestUtils;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects;
@@ -896,7 +896,7 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
             Assert.AreEqual(discharge, (double) flowTimeSeries[f1DModel.StartTime], 0.1d);
             Assert.AreEqual(discharge + 1, (double) flowTimeSeries[f1DModel.StopTime], 0.1d);
             var boundaryConditionInflow = f1DModel.BoundaryConditions.First(bc => bc.Feature == f1DModel.Network.Nodes[1]);
-            Assert.AreEqual((object) WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries,boundaryConditionInflow.DataType);
+            Assert.AreEqual((object) Model1DBoundaryNodeDataType.FlowTimeSeries,boundaryConditionInflow.DataType);
             Assert.AreEqual(ExtrapolationType.Constant, boundaryConditionInflow.Data.Arguments[0].ExtrapolationType);
             Assert.AreEqual(10.0d, (double) boundaryConditionInflow.Data[f1DModel.StartTime], 0.1d);
             Assert.AreEqual(15.5d, (double)boundaryConditionInflow.Data[f1DModel.StartTime.AddSeconds(60)], 0.1d);
@@ -1293,7 +1293,7 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
             myWaterFlowModel1D.LateralSourceData.First(d => d.Feature == lateralSource).Data = flowTimeSeries;
             
             var boundaryCondition = myWaterFlowModel1D.BoundaryConditions.First(bc => bc.Feature == myWaterFlowModel1D.Network.Nodes[1]);
-            boundaryCondition.DataType = WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries;
+            boundaryCondition.DataType = Model1DBoundaryNodeDataType.FlowTimeSeries;
             boundaryCondition.Data[myWaterFlowModel1D.StartTime] = 10.0;
             boundaryCondition.Data[myWaterFlowModel1D.StartTime.AddSeconds(60)] = 15.5;
             boundaryCondition.Data[myWaterFlowModel1D.StartTime.AddSeconds(120)] = 5.5;

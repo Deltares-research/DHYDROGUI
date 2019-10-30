@@ -18,14 +18,16 @@ using DelftTools.Shell.Gui.Swf;
 using DelftTools.Shell.Gui.Swf.Validation;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
+using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.ProjectExplorer;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.Tools;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation;
+using DeltaShell.Plugins.FMSuite.Common.Gui.Forms;
+using DeltaShell.Plugins.FMSuite.Common.Gui.NodePresenters;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView;
 using DeltaShell.Plugins.NetworkEditor.Gui.MapTools;
 using DeltaShell.Plugins.SharpMapGis.Gui;
@@ -91,8 +93,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui
                     AdditionalDataCheck = o => o.Text == WaterFlowModelConstants.OutputFolderName && o.Parent is WaterFlowModel1D,
                     GetObjectPropertiesData = o => o.Parent 
                 };
-            yield return new PropertyInfo<WaterFlowModel1DBoundaryNodeData, WaterFlowModel1DBoundaryNodeDataProperties>();
-            yield return new PropertyInfo<WaterFlowModel1DLateralSourceData, WaterFlowModel1DLateralDataProperties>();
+            //yield return new PropertyInfo<WaterFlowModel1DBoundaryNodeData, WaterFlowModel1DBoundaryNodeDataProperties>();
+            //yield return new PropertyInfo<WaterFlowModel1DLateralSourceData, WaterFlowModel1DLateralDataProperties>();
             yield return new PropertyInfo<WaterFlowModel1D, WaterFlowModel1DProperties>();
             yield return new PropertyInfo<WindFunction, WindFunctionProperties>();
         }
@@ -108,22 +110,22 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui
                         if (guiSelectionDataItem == null)
                             throw new InvalidOperationException("Can not start the Flow1D CSV importer.");
 
-                        if (guiSelectionDataItem.Value is DataItemsEventedListAdapter<WaterFlowModel1DLateralSourceData>)
+                        if (guiSelectionDataItem.Value is DataItemsEventedListAdapter<Model1DLateralSourceData>)
                         {
                             v.BatchMode = true;
                             v.ForBoundaryConditions = false;
                         }
-                        else if (guiSelectionDataItem.Value is DataItemsEventedListAdapter<WaterFlowModel1DBoundaryNodeData>)
+                        else if (guiSelectionDataItem.Value is DataItemsEventedListAdapter<Model1DBoundaryNodeData>)
                         {
                             v.BatchMode = true;
                             v.ForBoundaryConditions = true;
                         }
-                        else if (guiSelectionDataItem.Value is WaterFlowModel1DLateralSourceData)
+                        else if (guiSelectionDataItem.Value is Model1DLateralSourceData)
                         {
                             v.BatchMode = false;
                             v.ForBoundaryConditions = false;
                         }
-                        else if (guiSelectionDataItem.Value is WaterFlowModel1DBoundaryNodeData)
+                        else if (guiSelectionDataItem.Value is Model1DBoundaryNodeData)
                         {
                             v.BatchMode = false;
                             v.ForBoundaryConditions = true;
@@ -131,16 +133,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui
 
                     }
                 };
-            yield return SharpMapGisGuiPlugin.CreateAttributeTableViewInfo<WaterFlowModel1DBoundaryNodeData, WaterFlowModel1D>( m => m.BoundaryConditions, () => Gui);
-            yield return SharpMapGisGuiPlugin.CreateAttributeTableViewInfo<WaterFlowModel1DLateralSourceData, WaterFlowModel1D>(m => m.LateralSourceData, () => Gui);
-            yield return new ViewInfo<WaterFlowModel1DBoundaryNodeData, WaterFlowModel1DBoundaryNodeDataViewWpf>
+            yield return SharpMapGisGuiPlugin.CreateAttributeTableViewInfo<Model1DBoundaryNodeData, WaterFlowModel1D>( m => m.BoundaryConditions, () => Gui);
+            yield return SharpMapGisGuiPlugin.CreateAttributeTableViewInfo<Model1DLateralSourceData, WaterFlowModel1D>(m => m.LateralSourceData, () => Gui);
+            /*yield return new ViewInfo<WaterFlowModel1DBoundaryNodeData, WaterFlowModel1DBoundaryNodeDataViewWpf>
                 {
                     Description = "Boundary Node Data View (Flow 1D)"
                 };
-            yield return new ViewInfo<WaterFlowModel1DLateralSourceData, WaterFlowModel1DLateralSourceDataViewWpf>
+            yield return new ViewInfo<WaterFlowModel1DLateralSourceData, Model1DLateralSourceDataViewWpf>
                 {
                     Description = "Lateral Source Data View (Flow 1D)"
-                };           
+                };           */
             yield return new ViewInfo<WaterFlowModel1D, ValidationView>
                 {
                     Description = "Validation report",
@@ -185,13 +187,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui
             IFunction function;
             bool activeViewIsMapView = Gui != null && Gui.DocumentViews.ActiveView.GetViewsOfType<MapView>().Count()==1;
 
-            if (dataobject is WaterFlowModel1DBoundaryNodeData)
+            if (dataobject is Model1DBoundaryNodeData)
             {
                 //add zoom to functionality to context menu
-                var waterFlowModel1DBoundaryNodeData = (WaterFlowModel1DBoundaryNodeData) dataobject;
+                var waterFlowModel1DBoundaryNodeData = (Model1DBoundaryNodeData) dataobject;
                 if (waterFlowModel1DBoundaryNodeData.IsLinked || 
-                    waterFlowModel1DBoundaryNodeData.DataType == WaterFlowModel1DBoundaryNodeDataType.FlowConstant ||
-                    waterFlowModel1DBoundaryNodeData.DataType == WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant)
+                    waterFlowModel1DBoundaryNodeData.DataType == Model1DBoundaryNodeDataType.FlowConstant ||
+                    waterFlowModel1DBoundaryNodeData.DataType == Model1DBoundaryNodeDataType.WaterLevelConstant)
                 {
                     if (activeViewIsMapView)
                     {
@@ -203,11 +205,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui
                 }
                 function = waterFlowModel1DBoundaryNodeData.Data;
             }
-            else if (dataobject is WaterFlowModel1DLateralSourceData)
+            else if (dataobject is Model1DLateralSourceData)
             {
-                var waterFlowModel1DLateralSourceData = (WaterFlowModel1DLateralSourceData)dataobject;
+                var waterFlowModel1DLateralSourceData = (Model1DLateralSourceData)dataobject;
                 if (waterFlowModel1DLateralSourceData.IsLinked || 
-                    waterFlowModel1DLateralSourceData.DataType == WaterFlowModel1DLateralDataType.FlowConstant)
+                    waterFlowModel1DLateralSourceData.DataType == Model1DLateralDataType.FlowConstant)
                 {
                     if (activeViewIsMapView)
                     {
@@ -261,8 +263,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui
         public override IEnumerable<ITreeNodePresenter> GetProjectTreeViewNodePresenters()
         {
             //yield return new WaterFlowBoundaryConditionsNodePresenter(this);
-            yield return new WaterFlowModel1DBoundaryNodeDataProjectNodePresenter {GuiPlugin = this};
-            yield return new WaterFlowModel1DLateralDataProjectNodePresenter { GuiPlugin = this };
             yield return new WaterFlowModel1DNodePresenter(this);
             yield return new WindFunctionNodePresenter();
             yield return new MeteoFunctionNodePresenter();
@@ -344,8 +344,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui
                     return;
                 }
 
-                GetInterpolatedCrossSection.HydroNetwork = hydroRegionEditorMapTool.HydroRegions.OfType<IHydroNetwork>().FirstOrDefault();
-                addInterpolatedCrossSectionTool.GetFeaturePerProvider = GetCrossSectionPerProvider;
+                /*GetInterpolatedCrossSection.HydroNetwork = hydroRegionEditorMapTool.HydroRegions.OfType<IHydroNetwork>().FirstOrDefault();
+                addInterpolatedCrossSectionTool.GetFeaturePerProvider = GetCrossSectionPerProvider;*/
             }
         }
 
@@ -386,7 +386,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui
         private void ApplicationProjectClosing(Project project)
         {
             ((INotifyPropertyChanged)project).PropertyChanged -= ProjectPropertyChanged; 
-            GetInterpolatedCrossSection.DisposeInstance();
+            //GetInterpolatedCrossSection.DisposeInstance();
         }
 
         private void ApplicationProjectOpened(Project project)
@@ -487,13 +487,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui
             {
                 var cmd = new MapZoomToFeatureCommand();
                 var valueObject = ((DataItem) Gui.Selection).Value;
-                if(valueObject is WaterFlowModel1DBoundaryNodeData)
+                if(valueObject is Model1DBoundaryNodeData)
                 {
-                    cmd.Execute(((WaterFlowModel1DBoundaryNodeData)valueObject).Feature);
+                    cmd.Execute(((Model1DBoundaryNodeData)valueObject).Feature);
                 }
-                if (valueObject is WaterFlowModel1DLateralSourceData)
+                if (valueObject is Model1DLateralSourceData)
                 {
-                    cmd.Execute(((WaterFlowModel1DLateralSourceData)valueObject).Feature);
+                    cmd.Execute(((Model1DLateralSourceData)valueObject).Feature);
                 }
             }
         }

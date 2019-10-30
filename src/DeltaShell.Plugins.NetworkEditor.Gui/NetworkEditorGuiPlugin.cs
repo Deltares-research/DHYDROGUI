@@ -36,6 +36,7 @@ using DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.Roughness;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView;
+using DeltaShell.Plugins.NetworkEditor.Gui.GraphicsProviders;
 using DeltaShell.Plugins.NetworkEditor.Gui.Helpers;
 using DeltaShell.Plugins.NetworkEditor.Gui.MapTools;
 using DeltaShell.Plugins.NetworkEditor.Gui.ProjectExplorer;

@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Windows.Forms.VisualStyles;
 using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow.DataItems;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
+using DeltaShell.NGHS.IO.DataObjects;
 using NetTopologySuite.Extensions.Networks;
 using NUnit.Framework;
 
@@ -16,16 +15,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.DataObjects
         public void ChangeTypeClearsValuesOfBoundaryCondition()
         {
             var node = new HydroNode();
-            var boundaryCondition = new WaterFlowModel1DBoundaryNodeData
+            var boundaryCondition = new Model1DBoundaryNodeData
                                         {
                                             Feature = node,
-                                            DataType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries
+                                            DataType = Model1DBoundaryNodeDataType.WaterLevelTimeSeries
                                         };
             
             boundaryCondition.Data[DateTime.Now] = 0.1;
             
             // Change the type
-            boundaryCondition.DataType = WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries;
+            boundaryCondition.DataType = Model1DBoundaryNodeDataType.FlowTimeSeries;
             
             // Assert the condition is cleared
             Assert.AreEqual(0, boundaryCondition.Data.Arguments[0].Values.Count);
@@ -35,18 +34,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.DataObjects
         public void ChangeTypeToConstantAgainClearsValuesOfBoundaryCondition()
         {
             var node = new HydroNode();
-            var boundaryCondition = new WaterFlowModel1DBoundaryNodeData
+            var boundaryCondition = new Model1DBoundaryNodeData
                                         {
                                             Feature = node,
-                                            DataType = WaterFlowModel1DBoundaryNodeDataType.FlowConstant,
+                                            DataType = Model1DBoundaryNodeDataType.FlowConstant,
                                             Flow = 42
                                         };
 
-            boundaryCondition.DataType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries;
+            boundaryCondition.DataType = Model1DBoundaryNodeDataType.WaterLevelTimeSeries;
             boundaryCondition.Data[DateTime.Now] = 0.1;
 
             // Change the type
-            boundaryCondition.DataType = WaterFlowModel1DBoundaryNodeDataType.FlowConstant;
+            boundaryCondition.DataType = Model1DBoundaryNodeDataType.FlowConstant;
 
             // Assert the condition is set to 0
             Assert.AreEqual(0, boundaryCondition.Flow);
@@ -56,15 +55,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.DataObjects
         public void SetFunctionDataInNoneBoundaryNodeChangesType()
         {
             var node = new HydroNode();
-            var boundaryCondition = new WaterFlowModel1DBoundaryNodeData
+            var boundaryCondition = new Model1DBoundaryNodeData
                                         {
                                             Feature = node,
-                                            DataType = WaterFlowModel1DBoundaryNodeDataType.None,
+                                            DataType = Model1DBoundaryNodeDataType.None,
                                             Data = HydroTimeSeriesFactory.CreateFlowTimeSeries()
                                         };
 
             // Assert the condition type changed
-            Assert.AreEqual(WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries, boundaryCondition.DataType);
+            Assert.AreEqual(Model1DBoundaryNodeDataType.FlowTimeSeries, boundaryCondition.DataType);
         }
 
         [Test]
@@ -77,13 +76,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.DataObjects
             nodeConnectedToMultipleBranches.OutgoingBranches.Add(new Branch());
             nodeConnectedToMultipleBranches.IncomingBranches.Add(new Branch());
 
-            var boundaryCondition1 = new WaterFlowModel1DBoundaryNodeData { Feature = null };
+            var boundaryCondition1 = new Model1DBoundaryNodeData { Feature = null };
             Assert.IsFalse(boundaryCondition1.WaterLevelOnly);
 
-            var boundaryCondition2 = new WaterFlowModel1DBoundaryNodeData { Feature = nodeConnectedToSingleBranch };
+            var boundaryCondition2 = new Model1DBoundaryNodeData { Feature = nodeConnectedToSingleBranch };
             Assert.IsFalse(boundaryCondition2.WaterLevelOnly);
 
-            var boundaryCondition3 = new WaterFlowModel1DBoundaryNodeData { Feature = nodeConnectedToMultipleBranches };
+            var boundaryCondition3 = new Model1DBoundaryNodeData { Feature = nodeConnectedToMultipleBranches };
             Assert.IsTrue(boundaryCondition3.WaterLevelOnly);
         }
 
@@ -91,7 +90,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.DataObjects
         public void WaterLevelOnlyIsUpdatedAfterChangingBranches()
         {
             var node = new HydroNode();
-            var boundaryCondition = new WaterFlowModel1DBoundaryNodeData { Feature = node };
+            var boundaryCondition = new Model1DBoundaryNodeData { Feature = node };
 
             Assert.IsFalse(boundaryCondition.WaterLevelOnly);
 
@@ -109,86 +108,86 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.DataObjects
         public void SettingWaterLevelOnlyResultsInChangesForFlowDataTypes()
         {
             var node = new HydroNode();
-            var boundaryCondition = new WaterFlowModel1DBoundaryNodeData
+            var boundaryCondition = new Model1DBoundaryNodeData
                                         {
                                             Feature = node,
-                                            DataType = WaterFlowModel1DBoundaryNodeDataType.FlowConstant
+                                            DataType = Model1DBoundaryNodeDataType.FlowConstant
                                         };
 
-            Assert.AreEqual(WaterFlowModel1DBoundaryNodeDataType.FlowConstant, boundaryCondition.DataType);
+            Assert.AreEqual(Model1DBoundaryNodeDataType.FlowConstant, boundaryCondition.DataType);
 
             node.OutgoingBranches.Add(new Branch());
-            Assert.AreEqual(WaterFlowModel1DBoundaryNodeDataType.FlowConstant, boundaryCondition.DataType);
+            Assert.AreEqual(Model1DBoundaryNodeDataType.FlowConstant, boundaryCondition.DataType);
 
             node.OutgoingBranches.Add(new Branch()); // Water level only
-            Assert.AreEqual(WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant, boundaryCondition.DataType);
+            Assert.AreEqual(Model1DBoundaryNodeDataType.WaterLevelConstant, boundaryCondition.DataType);
 
             node.OutgoingBranches.RemoveAt(0);
-            Assert.AreEqual(WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant, boundaryCondition.DataType);
+            Assert.AreEqual(Model1DBoundaryNodeDataType.WaterLevelConstant, boundaryCondition.DataType);
 
-            boundaryCondition.DataType = WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries;
-            Assert.AreEqual(WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries, boundaryCondition.DataType);
+            boundaryCondition.DataType = Model1DBoundaryNodeDataType.FlowTimeSeries;
+            Assert.AreEqual(Model1DBoundaryNodeDataType.FlowTimeSeries, boundaryCondition.DataType);
 
             node.OutgoingBranches.Add(new Branch()); // Water level only
-            Assert.AreEqual(WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant, boundaryCondition.DataType);
+            Assert.AreEqual(Model1DBoundaryNodeDataType.WaterLevelConstant, boundaryCondition.DataType);
 
             node.OutgoingBranches.RemoveAt(0);
-            Assert.AreEqual(WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant, boundaryCondition.DataType);
+            Assert.AreEqual(Model1DBoundaryNodeDataType.WaterLevelConstant, boundaryCondition.DataType);
 
-            boundaryCondition.DataType = WaterFlowModel1DBoundaryNodeDataType.FlowWaterLevelTable;
-            Assert.AreEqual(WaterFlowModel1DBoundaryNodeDataType.FlowWaterLevelTable, boundaryCondition.DataType);
+            boundaryCondition.DataType = Model1DBoundaryNodeDataType.FlowWaterLevelTable;
+            Assert.AreEqual(Model1DBoundaryNodeDataType.FlowWaterLevelTable, boundaryCondition.DataType);
 
             node.OutgoingBranches.Add(new Branch()); // Water level only
-            Assert.AreEqual(WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant, boundaryCondition.DataType);
+            Assert.AreEqual(Model1DBoundaryNodeDataType.WaterLevelConstant, boundaryCondition.DataType);
 
             node.OutgoingBranches.RemoveAt(0);
-            Assert.AreEqual(WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant, boundaryCondition.DataType);
+            Assert.AreEqual(Model1DBoundaryNodeDataType.WaterLevelConstant, boundaryCondition.DataType);
         }
 
         [Test]
         public void SettingWaterLevelOnlyDoesNotResultInChangesForNonFlowDataTypes()
         {
             var node = new HydroNode();
-            var boundaryCondition = new WaterFlowModel1DBoundaryNodeData { Feature = node };
+            var boundaryCondition = new Model1DBoundaryNodeData { Feature = node };
 
-            Assert.AreEqual(WaterFlowModel1DBoundaryNodeDataType.None, boundaryCondition.DataType);
+            Assert.AreEqual(Model1DBoundaryNodeDataType.None, boundaryCondition.DataType);
 
             node.OutgoingBranches.Add(new Branch());
-            Assert.AreEqual(WaterFlowModel1DBoundaryNodeDataType.None, boundaryCondition.DataType);
+            Assert.AreEqual(Model1DBoundaryNodeDataType.None, boundaryCondition.DataType);
 
             node.OutgoingBranches.Add(new Branch()); // Water level only
-            Assert.AreEqual(WaterFlowModel1DBoundaryNodeDataType.None, boundaryCondition.DataType);
+            Assert.AreEqual(Model1DBoundaryNodeDataType.None, boundaryCondition.DataType);
 
             node.OutgoingBranches.RemoveAt(0);
-            Assert.AreEqual(WaterFlowModel1DBoundaryNodeDataType.None, boundaryCondition.DataType);
+            Assert.AreEqual(Model1DBoundaryNodeDataType.None, boundaryCondition.DataType);
 
-            boundaryCondition.DataType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries;
-            Assert.AreEqual(WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries, boundaryCondition.DataType);
+            boundaryCondition.DataType = Model1DBoundaryNodeDataType.WaterLevelTimeSeries;
+            Assert.AreEqual(Model1DBoundaryNodeDataType.WaterLevelTimeSeries, boundaryCondition.DataType);
 
             node.OutgoingBranches.Add(new Branch()); // Water level only
-            Assert.AreEqual(WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries, boundaryCondition.DataType);
+            Assert.AreEqual(Model1DBoundaryNodeDataType.WaterLevelTimeSeries, boundaryCondition.DataType);
 
             node.OutgoingBranches.RemoveAt(0);
-            Assert.AreEqual(WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries, boundaryCondition.DataType);
+            Assert.AreEqual(Model1DBoundaryNodeDataType.WaterLevelTimeSeries, boundaryCondition.DataType);
 
-            boundaryCondition.DataType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant;
-            Assert.AreEqual(WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant, boundaryCondition.DataType);
+            boundaryCondition.DataType = Model1DBoundaryNodeDataType.WaterLevelConstant;
+            Assert.AreEqual(Model1DBoundaryNodeDataType.WaterLevelConstant, boundaryCondition.DataType);
 
             node.OutgoingBranches.Add(new Branch()); // Water level only
-            Assert.AreEqual(WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant, boundaryCondition.DataType);
+            Assert.AreEqual(Model1DBoundaryNodeDataType.WaterLevelConstant, boundaryCondition.DataType);
 
             node.OutgoingBranches.RemoveAt(0);
-            Assert.AreEqual(WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant, boundaryCondition.DataType);
+            Assert.AreEqual(Model1DBoundaryNodeDataType.WaterLevelConstant, boundaryCondition.DataType);
         }
 
         [Test]
         public void LinkBoundaryConditionToFlowWaterLevelSeriesDataItem()
         {
             var node = new HydroNode { Name = "Node1" };
-            var boundaryCondition = new WaterFlowModel1DBoundaryNodeData
+            var boundaryCondition = new Model1DBoundaryNodeData
                                         {
                                             Feature = node,
-                                            DataType = WaterFlowModel1DBoundaryNodeDataType.FlowWaterLevelTable
+                                            DataType = Model1DBoundaryNodeDataType.FlowWaterLevelTable
                                         };
 
             // Get a flow timeseries 
@@ -200,7 +199,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.DataObjects
             boundaryCondition.SeriesDataItem.LinkTo(dataItem);
 
             // Assert the condition was linked correctly
-            Assert.AreEqual(WaterFlowModel1DBoundaryNodeDataType.FlowWaterLevelTable, boundaryCondition.DataType);
+            Assert.AreEqual(Model1DBoundaryNodeDataType.FlowWaterLevelTable, boundaryCondition.DataType);
             Assert.AreEqual("Node1 - Q(h) (Amsterdam)", boundaryCondition.Name);
             Assert.AreEqual(5.0, boundaryCondition.Data[2.0]);
         }
@@ -209,10 +208,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.DataObjects
         public void Clone()
         {
             var node = new HydroNode { Name = "Node1" };
-            var boundaryCondition = new WaterFlowModel1DBoundaryNodeData
+            var boundaryCondition = new Model1DBoundaryNodeData
             {
                 Feature = node,
-                DataType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant,
+                DataType = Model1DBoundaryNodeDataType.WaterLevelConstant,
                 WaterLevel = 5,
                 UseSalt = true,
                 ThatcherHarlemannCoefficient = 3600,
@@ -227,7 +226,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.DataObjects
             boundaryCondition.SaltConcentrationTimeSeries[new DateTime(2000, 1, 1)] = 4.0;
             boundaryCondition.TemperatureTimeSeries[new DateTime(2000, 1, 1)] = 5.6667;
             
-            var clonedBoundaryCondition = (WaterFlowModel1DBoundaryNodeData) boundaryCondition.Clone();
+            var clonedBoundaryCondition = (Model1DBoundaryNodeData) boundaryCondition.Clone();
             
             Assert.AreEqual(boundaryCondition.DataType,clonedBoundaryCondition.DataType);
             Assert.AreEqual(boundaryCondition.WaterLevel, clonedBoundaryCondition.WaterLevel);
@@ -248,15 +247,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.DataObjects
         public void AddLinkToNoneBoundaryAddsQIs0Boundary()
         {
             // TOOLS-20866
-            var boundary = new WaterFlowModel1DBoundaryNodeData();
-            boundary.DataType = WaterFlowModel1DBoundaryNodeDataType.None;
+            var boundary = new Model1DBoundaryNodeData();
+            boundary.DataType = Model1DBoundaryNodeDataType.None;
 
             HydroNode node1 = new HydroNode("node1");
             boundary.Feature = node1; 
             node1.Links.Add(new HydroLink());
 
             // Now the type of the boundary should be set to Q=0
-            Assert.That(boundary.DataType == WaterFlowModel1DBoundaryNodeDataType.FlowConstant);
+            Assert.That(boundary.DataType == Model1DBoundaryNodeDataType.FlowConstant);
             Assert.That((boundary.FlowConstantDataItem.Value as FlowParameter).Value == 0.0);
         }
 
@@ -264,10 +263,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.DataObjects
         public void EnableSaltAddsProperties()
         {
             var node = new HydroNode();
-            var boundaryCondition = new WaterFlowModel1DBoundaryNodeData
+            var boundaryCondition = new Model1DBoundaryNodeData
                                         {
                                             Feature = node,
-                                            DataType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries
+                                            DataType = Model1DBoundaryNodeDataType.WaterLevelTimeSeries
                                         };
 
             // Defaults to false
@@ -298,10 +297,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.DataObjects
         public void EnableTemperatureAddsProperties()
         {
             var node = new HydroNode();
-            var boundaryCondition = new WaterFlowModel1DBoundaryNodeData
+            var boundaryCondition = new Model1DBoundaryNodeData
             {
                 Feature = node,
-                DataType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries
+                DataType = Model1DBoundaryNodeDataType.WaterLevelTimeSeries
             };
 
             // Check default values
@@ -329,10 +328,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.DataObjects
         public void GetSetValuesInSaltyBoundaryCondition()
         {
             var node = new HydroNode();
-            var boundaryCondition = new WaterFlowModel1DBoundaryNodeData
+            var boundaryCondition = new Model1DBoundaryNodeData
                                         {
                                             Feature = node,
-                                            DataType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries,
+                                            DataType = Model1DBoundaryNodeDataType.WaterLevelTimeSeries,
                                             UseSalt = true // This enables us to set values
                                         };
 
