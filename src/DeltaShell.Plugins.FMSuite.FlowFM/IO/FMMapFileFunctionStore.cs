@@ -1055,7 +1055,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 ? string.Format("{0} ({1})", longName, netCdfVariableName)
                 : netCdfVariableName;
 
-            if (secondDimensionName.Equals("nlinks1d2d_connections")) // UGrid 1d2d links
+            if (secondDimensionName.Equals("links1d2d_nContacts")) // UGrid 1d2d links
             {
                 yield return GetNewBoundaryLinkValues(netCdfVariableName, coverageLongName);
                 yield break;
