@@ -5,9 +5,8 @@ using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.WaterQualityModelWizard
 {
-    class LoadsDataWizard: WizardDialog, IConfigureDialog
+    internal class LoadsDataWizard : WizardDialog, IConfigureDialog
     {
-        private LoadsDataTableImporter loadsDataItemFileImporter;
         private readonly LoadsDataWizardPage loadsDataWizardPage;
 
         public LoadsDataWizard()
@@ -22,10 +21,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.WaterQualit
                     Resources.LoadsDataWizardPage_Description);
         }
 
-        public void Configure(object targetItemFileImporter)
+        public void Configure(object model)
         {
-            loadsDataItemFileImporter = (LoadsDataTableImporter)targetItemFileImporter;
-            loadsDataItemFileImporter.FilePath = loadsDataWizardPage.CsvLoadsPath;
+            var importer = (LoadsDataTableImporter) model;
+            importer.FilePath = loadsDataWizardPage.CsvLoadsPath;
         }
     }
 }
