@@ -47,8 +47,8 @@ namespace DelftTools.Hydro.SewerFeatures
 
         #region Source and Target
 
-        [DisplayName("To manhole")]
-        [FeatureAttribute(ExportName = "To manhole", Order = 12)]
+        [DisplayName("From manhole")]
+        [FeatureAttribute(ExportName = "From manhole", Order = 10)]
         [ReadOnly(true)]
         public override INode Source
         {
@@ -80,8 +80,8 @@ namespace DelftTools.Hydro.SewerFeatures
             source?.OutgoingBranches.Add(this);
         }
 
-        [DisplayName("From manhole")]
-        [FeatureAttribute(ExportName = "From manhole", Order = 10)]
+        [DisplayName("To manhole")]
+        [FeatureAttribute(ExportName = "To manhole", Order = 11)]
         [ReadOnly(true)]
         public override INode Target
         {
@@ -116,7 +116,7 @@ namespace DelftTools.Hydro.SewerFeatures
         #endregion
 
         [DisplayName("From compartment")]
-        [FeatureAttribute(ExportName = "From compartment", Order = 11)]
+        [FeatureAttribute(ExportName = "From compartment", Order = 12)]
         [ReadOnly(true)]
         public Compartment SourceCompartment
         {
