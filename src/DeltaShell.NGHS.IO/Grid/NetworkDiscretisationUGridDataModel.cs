@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using DelftTools.Utils.Collections;
 using GeoAPI.Extensions.Coverages;
 using NetTopologySuite.Extensions.Coverages;
 
@@ -83,8 +81,18 @@ namespace DeltaShell.NGHS.IO.Grid
             EdgeChainage = networkSegments.Select(s => (s.Chainage + s.EndChainage)/2).ToArray(); 
             EdgePointsX = networkSegments.Select(s => s.Geometry.Centroid.X).ToArray();
             EdgePointsY = networkSegments.Select(s => s.Geometry.Centroid.Y).ToArray();
-            
-            EdgeNodes = networkSegments.SelectMany(s => new int[] { Array.IndexOf(discretisationPoints, discretisationPoints.FirstOrDefault(p => p.Branch == s.Branch && p.Chainage == s.Chainage || p.Geometry.Coordinate.X == s.Geometry.Coordinates[0].X && p.Geometry.Coordinate.Y == s.Geometry.Coordinates[0].Y)), Array.IndexOf(discretisationPoints, discretisationPoints.FirstOrDefault(p => p.Branch == s.Branch && p.Chainage == s.EndChainage || p.Geometry.Coordinate.X == s.Geometry.Coordinates.Last().X && p.Geometry.Coordinate.Y == s.Geometry.Coordinates.Last().Y)) }).ToArray();
+
+            EdgeNodes = networkSegments.SelectMany(s => new int[]
+            {
+                Array.IndexOf(discretisationPoints,
+                    discretisationPoints.FirstOrDefault(p =>
+                        p.Branch == s.Branch && Math.Abs(p.Chainage - s.Chainage) < double.Epsilon ||
+                        p.Geometry.Coordinate.Equals(s.Geometry.Coordinates[0]))),
+                Array.IndexOf(discretisationPoints,
+                    discretisationPoints.FirstOrDefault(p =>
+                        p.Branch == s.Branch && Math.Abs(p.Chainage - s.EndChainage) < double.Epsilon ||
+                        p.Geometry.Coordinate.Equals(s.Geometry.Coordinates.Last())))
+            }).ToArray();
             NumberOfMeshEdges = EdgeIdx.Length;
         }
 
