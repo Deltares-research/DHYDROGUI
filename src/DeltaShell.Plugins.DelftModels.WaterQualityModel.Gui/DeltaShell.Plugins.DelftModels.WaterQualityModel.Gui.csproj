@@ -213,14 +213,14 @@
     <Compile Include="Forms\WaterQualityModelWizard\LoadsDataWizardPage.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Forms\WaterQualityModelWizard\CsvDataWizardPage.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\WaterQualityModelWizard\CsvDataWizardPage.Designer.cs">
-      <DependentUpon>CsvDataWizardPage.cs</DependentUpon>
+    <Compile Include="Forms\WaterQualityModelWizard\LoadsDataWizardPage.Designer.cs">
+      <DependentUpon>LoadsDataWizardPage.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\WaterQualityModelWizard\BoundaryDataWizardPage.cs">
       <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\WaterQualityModelWizard\BoundaryDataWizardPage.Designer.cs">
+      <DependentUpon>BoundaryDataWizardPage.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\WaterQualityModelWizard\SubstanceProcessLibraryWizard.cs">
       <SubType>Form</SubType>
@@ -274,8 +274,11 @@
       <DependentUpon>SubstanceProcessLibraryView.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\WaterQualityModelWizard\CsvDataWizardPage.resx">
-      <DependentUpon>CsvDataWizardPage.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\WaterQualityModelWizard\LoadsDataWizardPage.resx">
+      <DependentUpon>LoadsDataWizardPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\WaterQualityModelWizard\BoundaryDataWizardPage.resx">
+      <DependentUpon>BoundaryDataWizardPage.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\WaterQualityModelWizard\SubstanceProcessLibraryWizardPage.resx">
       <DependentUpon>SubstanceProcessLibraryWizardPage.cs</DependentUpon>

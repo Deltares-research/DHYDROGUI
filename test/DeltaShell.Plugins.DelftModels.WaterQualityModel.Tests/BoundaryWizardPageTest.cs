@@ -11,7 +11,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         [Test]
         public void BoundaryWizardConstructorSetCorrectValues()
         {
-            using (var wizard = new BoundaryDataWizard())
+            using (BoundaryDataWizard wizard = new BoundaryDataWizard())
             {
                 Assert.AreEqual(wizard.Height, 700);
                 Assert.AreEqual(wizard.Title, "Import a boundary data file (in CSV format)");
@@ -24,7 +24,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         [Test]
         public void CanDoMethodsReturnTrue()
         {
-            using (var wizardPage = new BoundaryDataWizardPage())
+            using (BoundaryDataWizardPage wizardPage = new BoundaryDataWizardPage())
             {
                 Assert.IsTrue(wizardPage.CanDoNext());
                 Assert.IsTrue(wizardPage.CanDoPrevious());

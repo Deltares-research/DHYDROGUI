@@ -167,15 +167,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Open Boundary Data File.
-        /// </summary>
-        internal static string BoundaryDataWizardPage_Open_Boundary_Data_File {
-            get {
-                return ResourceManager.GetString("BoundaryDataWizardPage_Open_Boundary_Data_File", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap clock_history {
@@ -398,15 +389,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Properties {
         internal static string LoadsDataWizardPage_Description {
             get {
                 return ResourceManager.GetString("LoadsDataWizardPage_Description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Open Loads Data File.
-        /// </summary>
-        internal static string LoadsDataWizardPage_Open_Loads_Data_File {
-            get {
-                return ResourceManager.GetString("LoadsDataWizardPage_Open_Loads_Data_File", resourceCulture);
             }
         }
         

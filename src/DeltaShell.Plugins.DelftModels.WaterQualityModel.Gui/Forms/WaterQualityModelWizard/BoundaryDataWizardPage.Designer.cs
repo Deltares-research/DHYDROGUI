@@ -1,6 +1,6 @@
 ﻿namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.WaterQualityModelWizard
 {
-    partial class CsvDataWizardPage
+    partial class BoundaryDataWizardPage
     {
         /// <summary>
         /// Required designer variable.
@@ -26,11 +26,11 @@
         /// Required method for Designer support - do not modify
         /// the contents of this method with the code editor.
         /// </summary>
-        protected void InitializeComponent(string labelText)
+        private void InitializeComponent()
         {
             this.openCsvFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.importBoundaryDataFile = new System.Windows.Forms.Button();
-            this.dataTypeLabel = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.previewTextBox = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -54,14 +54,14 @@
             this.importBoundaryDataFile.UseVisualStyleBackColor = true;
             this.importBoundaryDataFile.Click += new System.EventHandler(this.OpenCsvButton_Click);
             // 
-            // dataTypeLabel
+            // label1
             // 
-            this.dataTypeLabel.AutoSize = true;
-            this.dataTypeLabel.Location = new System.Drawing.Point(28, 22);
-            this.dataTypeLabel.Name = "dataTypeLabel";
-            this.dataTypeLabel.Size = new System.Drawing.Size(126, 13);
-            this.dataTypeLabel.TabIndex = 1;
-            this.dataTypeLabel.Text = labelText;
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(28, 22);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(126, 13);
+            this.label1.TabIndex = 1;
+            this.label1.Text = "Open Boundary Data File";
             // 
             // splitContainer1
             // 
@@ -71,7 +71,7 @@
             // 
             // splitContainer1.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.dataTypeLabel);
+            this.splitContainer1.Panel1.Controls.Add(this.label1);
             this.splitContainer1.Panel1.Controls.Add(this.importBoundaryDataFile);
             // 
             // splitContainer1.Panel2
@@ -90,12 +90,12 @@
             this.previewTextBox.Size = new System.Drawing.Size(502, 384);
             this.previewTextBox.TabIndex = 0;
             // 
-            // CsvDataWizardPage
+            // BoundaryDataWizardPage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.splitContainer1);
-            this.Name = "CsvDataWizardPage";
+            this.Name = "BoundaryDataWizardPage";
             this.Size = new System.Drawing.Size(759, 384);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel1.PerformLayout();
@@ -111,7 +111,7 @@
 
         private System.Windows.Forms.OpenFileDialog openCsvFileDialog;
         private System.Windows.Forms.Button importBoundaryDataFile;
-        private System.Windows.Forms.Label dataTypeLabel;
+        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.TextBox previewTextBox;
     }
