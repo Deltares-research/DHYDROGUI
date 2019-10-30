@@ -51,12 +51,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         private bool snappingGeometry;
         private ICoordinateSystem coordinateSystem;
         private IList<IDisposable> disposableItems = new List<IDisposable>();
-
-       public bool IsCoupledToFlow
-        {
-            get => isCoupledToFlow;
-            set => isCoupledToFlow = value;
-        }
+        
+        /// <summary>
+        /// Gets or sets a value indicating whether this wave model is online (parallel) coupled
+        /// to a FM model.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this wave model is online coupled to a FM model in an integrated model;
+        /// otherwise it is a stand alone model with or without COM file as input, <c>false</c>.
+        /// </value>
+        public bool IsCoupledToFlow { get; set; }
 
         public int SimulationMode
         {
@@ -1534,8 +1538,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         private string path;
         private WaveModelDefinition modelDefinition;
-        private bool isCoupledToFlow;
-
         private DateTime startTime;
 
         private DateTime stopTime;

@@ -188,7 +188,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             var validationReport = WaveCouplingValidator.Validate(waveModel);
 
             // Then
-            ContainsValidationErrorWithMessage(validationReport, Resources.WaveCouplingValidator_Validate_Stand_alone_wave_model_cannot_write_COM_file);
+            ContainsValidationErrorWithMessage(validationReport, "Stand-alone wave model cannot write COM-file");
         }
         
         [TestCase(UsageFromFlowType.UseAndExtend)]
