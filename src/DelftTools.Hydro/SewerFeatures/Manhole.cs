@@ -20,6 +20,7 @@ namespace DelftTools.Hydro.SewerFeatures
         public Manhole(string manholeId) : base(manholeId)
         {
             Compartments = new EventedList<Compartment>();
+            Links = new EventedList<HydroLink>();
             Geometry = new Point(0, 0);
         }
 

@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Properties;
 using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.Structures;
-using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
@@ -105,13 +103,15 @@ namespace DelftTools.Hydro.SewerFeatures
                     Material = (SewerProfileMapping.SewerProfileMaterial)typeof(SewerProfileMapping.SewerProfileMaterial).GetEnumValueFromDescription(CrossSectionDefinition.Shape.MaterialName);
             }
         }
-
+        [EditAction]
         private void BranchFeaturesOnCollectionChanging(object sender, NotifyCollectionChangingEventArgs NotifyCollectionChangedEventArgs)
         {
             if (NotifyCollectionChangedEventArgs.Action != NotifyCollectionChangeAction.Add) return;
-
-            NotifyCollectionChangedEventArgs.Cancel = true;
-            Log.ErrorFormat(Resources.Pipe_BranchFeaturesOnCollectionChanging_Pipe__0__does_not_allow_any_branch_feature_on_it_, Name);
+            if (!(NotifyCollectionChangedEventArgs.Item is LateralSource))
+            {
+                NotifyCollectionChangedEventArgs.Cancel = true;
+                Log.ErrorFormat(Resources.Pipe_BranchFeaturesOnCollectionChanging_Pipe__0__does_not_allow_any_branch_feature_on_it_, Name);
+            }
         }
     }
 }

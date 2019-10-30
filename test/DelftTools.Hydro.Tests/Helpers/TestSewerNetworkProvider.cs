@@ -3,7 +3,6 @@ using DelftTools.Hydro.CrossSections.StandardShapes;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
-using DelftTools.Utils;
 using DelftTools.Utils.Reflection;
 using NetTopologySuite.Geometries;
 

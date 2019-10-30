@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
-using System.Windows.Forms.VisualStyles;
 using DelftTools.Controls;
 using DelftTools.Controls.Swf.Charting;
 using DelftTools.Hydro;

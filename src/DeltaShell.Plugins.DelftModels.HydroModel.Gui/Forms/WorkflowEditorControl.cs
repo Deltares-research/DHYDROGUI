@@ -6,7 +6,6 @@ using System.Windows.Forms;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
-using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.ActivityShapes;
 using Netron.GraphLib;

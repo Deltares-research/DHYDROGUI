@@ -8,7 +8,6 @@ using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Gui;
-using DeltaShell.Gui.Forms.MainWindow;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.NetworkEditor.Gui;

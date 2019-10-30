@@ -3,7 +3,6 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using DelftTools.Utils.Aop;
-using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;

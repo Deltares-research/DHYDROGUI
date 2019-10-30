@@ -20,7 +20,6 @@ using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Helpers;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport;
 using DeltaShell.Plugins.DelftModels.RTCShapes.Shapes;
-using DeltaShell.Plugins.SharpMapGis.Gui;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms.CoverageViews;
 using GeoAPI.Extensions.Coverages;

@@ -2,13 +2,9 @@ using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Net.Mime;
-using System.Security.Policy;
 using System.Windows.Forms;
-using System.Windows.Shapes;
 using DelftTools.Shell.Core.Workflow;
-using Netron.GraphLib;
 using Netron.GraphLib.Interfaces;
-using Rectangle = System.Drawing.Rectangle;
 using Shape = Netron.GraphLib.Shape;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.ActivityShapes

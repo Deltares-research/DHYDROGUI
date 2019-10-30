@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Drawing;
 using System.Reflection;
 using DelftTools.Shell.Core;
 using DeltaShell.Plugins.Fews.Export;

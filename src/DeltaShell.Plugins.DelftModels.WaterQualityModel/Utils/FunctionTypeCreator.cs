@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using DelftTools.Functions;
 using DelftTools.Utils.Editing;
 using IEditableObject = DelftTools.Utils.Editing.IEditableObject;

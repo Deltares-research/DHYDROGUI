@@ -1,7 +1,6 @@
 ﻿using System;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
-using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Hydro.Structures.LeveeBreachFormula;
 using DeltaShell.NGHS.IO.Helpers;
 

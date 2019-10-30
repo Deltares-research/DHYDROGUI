@@ -15,7 +15,6 @@ using GeoAPI.Extensions.Feature;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace DeltaShell.NGHS.IO.Tests.FunctionStores
 {

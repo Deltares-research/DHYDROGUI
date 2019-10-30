@@ -1,11 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections.Generic;
-using DelftTools.Utils.Editing;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils;
 using IEditableObject = DelftTools.Utils.Editing.IEditableObject;
 

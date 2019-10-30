@@ -5,7 +5,6 @@ using System.Windows.Forms;
 using DelftTools.Hydro.Structures;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
-using SharpMap;
 using SharpMap.Api.Editors;
 using SharpMap.Data.Providers;
 using SharpMap.Editors.Snapping;

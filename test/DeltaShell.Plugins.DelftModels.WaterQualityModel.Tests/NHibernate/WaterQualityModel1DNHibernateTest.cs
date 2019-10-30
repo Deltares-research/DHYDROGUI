@@ -11,7 +11,6 @@ using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.SubstanceProc
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Extentions;
 using DeltaShell.Plugins.NetworkEditor;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
 {

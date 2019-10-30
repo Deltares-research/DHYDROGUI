@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Units;
-using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model;

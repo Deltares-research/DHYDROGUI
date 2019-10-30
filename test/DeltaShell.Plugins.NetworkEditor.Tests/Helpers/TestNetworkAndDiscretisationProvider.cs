@@ -1,5 +1,4 @@
-﻿using System.Windows.Forms.VisualStyles;
-using DelftTools.Hydro;
+﻿using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
 using DeltaShell.NGHS.IO.Grid;
 using GeoAPI.Extensions.Coverages;

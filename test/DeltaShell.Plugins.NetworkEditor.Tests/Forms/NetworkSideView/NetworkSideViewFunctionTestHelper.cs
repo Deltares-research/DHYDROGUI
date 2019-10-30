@@ -1,5 +1,4 @@
-﻿using System.Windows.Forms.VisualStyles;
-using DelftTools.Hydro;
+﻿using DelftTools.Hydro;
 using DelftTools.Units;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView;
 using GeoAPI.Extensions.Coverages;

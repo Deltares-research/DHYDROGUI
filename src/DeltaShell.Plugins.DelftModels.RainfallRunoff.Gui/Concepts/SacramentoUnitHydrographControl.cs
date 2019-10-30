@@ -2,7 +2,6 @@
 using System.ComponentModel;
 using System.Windows.Forms;
 using DelftTools.Controls.Swf.Table;
-using DelftTools.Utils.Collections;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Controls;
 

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 using DelftTools.Controls;
 using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.SewerFeatures;

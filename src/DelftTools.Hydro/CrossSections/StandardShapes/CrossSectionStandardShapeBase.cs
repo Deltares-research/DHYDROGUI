@@ -2,7 +2,6 @@
 using System.Linq;
 using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.Structures;
-using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Data;

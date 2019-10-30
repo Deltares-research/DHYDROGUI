@@ -12,7 +12,6 @@ using DeltaShell.Plugins.SharpMapGis.Gui.Forms.CoverageViews;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
-using SharpMap;
 using SharpMap.Api;
 using SharpMap.Layers;
 using SharpMap.Rendering;

@@ -7,7 +7,6 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
-using DelftTools.Utils.Collections;
 using DelftTools.Utils.Editing;
 using GeoAPI.Extensions.Feature;
 using SharpMap.Api.Layers;

@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using System.Windows.Forms.VisualStyles;
-using DelftTools.Hydro;
+﻿using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.NetworkEditor.Tests.Helpers;

@@ -5,7 +5,6 @@ using System.Linq;
 using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Hydro.Structures.WeirFormula;
-using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView;
 using GeoAPI.Geometries;

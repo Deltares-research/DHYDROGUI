@@ -6,12 +6,10 @@ using DelftTools.Hydro;
 using DelftTools.Utils.NetCdf;
 using DeltaShell.NGHS.IO.FileWriters.Network;
 using DeltaShell.NGHS.IO.Helpers;
-using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Coverages;
 using log4net;
 using NetTopologySuite.Extensions.Coverages;
-using NetTopologySuite.Extensions.Grids;
 
 namespace DeltaShell.NGHS.IO.Grid
 {

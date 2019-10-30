@@ -5,7 +5,6 @@ using System.ComponentModel;
 using System.Linq;
 using DelftTools.Hydro.CrossSections.DataSets;
 using DelftTools.Utils.Aop;
-using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Data;
 using DelftTools.Utils.Editing;

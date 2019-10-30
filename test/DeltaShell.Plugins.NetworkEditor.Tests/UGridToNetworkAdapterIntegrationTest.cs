@@ -5,7 +5,6 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
-using DelftTools.Utils.NetCdf;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.NetworkEditor.Tests.Helpers;
 using GeoAPI.Geometries;

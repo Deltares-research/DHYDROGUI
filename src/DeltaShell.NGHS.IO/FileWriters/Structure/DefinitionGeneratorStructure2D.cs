@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Linq;
+﻿using System.Linq;
 using DelftTools.Hydro;
 
 namespace DeltaShell.NGHS.IO.FileWriters.Structure

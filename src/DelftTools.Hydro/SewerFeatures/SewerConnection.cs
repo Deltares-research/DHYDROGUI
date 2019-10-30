@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using DelftTools.Hydro.Properties;
@@ -270,7 +269,7 @@ namespace DelftTools.Hydro.SewerFeatures
             if (e.Action != NotifyCollectionChangeAction.Add) return;
             if (!BranchFeatures.Any()) return;
 
-            var compositeStructures = BranchFeatures.OfType<CompositeBranchStructure>().ToList();
+            var compositeStructures = BranchFeatures.Where(bf => !(bf is LateralSource)).OfType<CompositeBranchStructure>().ToList();
             if (!compositeStructures.Any() ||
                 (compositeStructures.First().Structures.Any() &&
                  !compositeStructures.First().Structures.Contains(e.Item)))

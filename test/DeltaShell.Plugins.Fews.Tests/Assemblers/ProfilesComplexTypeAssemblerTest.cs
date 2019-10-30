@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Windows.Forms.VisualStyles;
 using DelftTools.Hydro.Helpers;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.Fews.Assemblers;

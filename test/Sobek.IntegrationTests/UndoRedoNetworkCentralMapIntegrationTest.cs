@@ -24,7 +24,6 @@ using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Networks;
 using NUnit.Framework;
-using SharpMap.Extensions.Layers;
 using SharpMap.Layers;
 using Point = NetTopologySuite.Geometries.Point;
 

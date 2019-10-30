@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Forms.VisualStyles;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
@@ -13,7 +12,6 @@ using NetTopologySuite.Geometries;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Networks;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
 {

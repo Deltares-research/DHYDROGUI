@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Net.Mime;
-using System.Security.Policy;
 using DelftTools.Shell.Core.Workflow;
 using Netron.GraphLib.Attributes;
 using Netron.GraphLib.Interfaces;

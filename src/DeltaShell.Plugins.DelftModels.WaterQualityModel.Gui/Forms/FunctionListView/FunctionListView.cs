@@ -11,7 +11,6 @@ using DelftTools.Functions;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
-using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
 using DelftTools.Utils.Threading;

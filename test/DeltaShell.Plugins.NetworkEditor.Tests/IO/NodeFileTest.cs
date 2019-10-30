@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.FileWriters.Network;

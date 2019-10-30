@@ -1,6 +1,4 @@
-﻿using System;
-using DelftTools.Hydro;
-using DelftTools.Hydro.Structures;
+﻿using DelftTools.Hydro;
 using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.IO.Helpers;
 

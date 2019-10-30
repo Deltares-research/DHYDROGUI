@@ -8,7 +8,6 @@ using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Forms;
-using DeltaShell.Plugins.SharpMapGis.Gui;
 using Mono.Addins;
 using DeltaShell.Plugins.NetworkEditor.MapLayers;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;

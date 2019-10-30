@@ -1,8 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro.CrossSections;
-using DelftTools.Hydro.CrossSections.DataSets;
 using DelftTools.Hydro.Roughness;
 using DeltaShell.NGHS.IO.FileWriters.Location;
 using DeltaShell.NGHS.IO.Helpers;
