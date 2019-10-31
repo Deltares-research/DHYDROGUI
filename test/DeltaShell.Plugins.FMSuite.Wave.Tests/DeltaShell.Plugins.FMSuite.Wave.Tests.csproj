@@ -200,6 +200,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Boundaries\GeometricDefinitions\GridSideTest.cs" />
     <Compile Include="Boundaries\SpectralData\WaveBoundaryParametersTest.cs" />
     <Compile Include="Boundaries\SpectralData\WaveDirectionalSpreadingTypeTest.cs" />
     <Compile Include="Boundaries\SpectralData\WavePeriodTypeTest.cs" />
