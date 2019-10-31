@@ -166,7 +166,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
 
         [Test]
         [TestCaseSource(nameof(GetMultiValuedPropertiesFileContents))]
-        public void Read_EmptyPropertyName_ThenNewPropertyValueIsAddedWithEmptyValue(string fileContent)
+        public void Read_MultiValuedProperty_ThenNewPropertyValueIsAddedWithMultipleValues(string fileContent)
         {
             ReadWithAssert(fileContent, definition =>
             {
@@ -233,14 +233,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
             });
         }
 
-        private static void AssertPropertyValues(WaterFlowFMProperty property, string categoryName, string propertyValue, string propertyComment)
-        {
-            Assert.That(property.PropertyDefinition.FileCategoryName, Is.EqualTo(categoryName));
-            Assert.That(property.Value, Is.EqualTo(propertyValue));
-            Assert.That(property.PropertyDefinition.Description, Is.EqualTo(propertyComment));
-        }
-
-        private static void AssertPropertyValues(WaterFlowFMProperty property, string categoryName, IReadOnlyCollection<string> propertyValue, string propertyComment)
+        private static void AssertPropertyValues(WaterFlowFMProperty property, string categoryName, object propertyValue, string propertyComment)
         {
             Assert.That(property.PropertyDefinition.FileCategoryName, Is.EqualTo(categoryName));
             Assert.That(property.Value, Is.EqualTo(propertyValue));

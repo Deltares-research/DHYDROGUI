@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -518,15 +518,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         public static string Invalid_Variables_detected_in_imported_SourceAndSink_Function___0_ {
             get {
                 return ResourceManager.GetString("Invalid_Variables_detected_in_imported_SourceAndSink_Function___0_", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Invalid comment placed on line {0} in file &apos;{1}&apos;.
-        /// </summary>
-        public static string MduDelftIniReader_Invalid_comment_placed_on_line__0__in_file___1__ {
-            get {
-                return ResourceManager.GetString("MduDelftIniReader_Invalid_comment_placed_on_line__0__in_file___1__", resourceCulture);
             }
         }
         

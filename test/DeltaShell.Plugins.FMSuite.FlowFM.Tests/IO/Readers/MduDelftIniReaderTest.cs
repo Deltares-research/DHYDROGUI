@@ -61,53 +61,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Readers
                          + @"obs_2_obs.xyn \"
                          + Environment.NewLine
                          + "obs_3_obs.xyn  # My comment";
-        }
 
-        [Test]
-        [TestCaseSource(nameof(GetInvalidFileContents))]
-        public void ReadDelftIniFile_WithMultipleValuedPropertyThatHasInvalidCommentFormat_ThrowsFormatException(string fileContent, int invalidLineNumber)
-        {
-            // Setup
-            var stream = new MemoryStream(Encoding.ASCII.GetBytes(fileContent));
-            var reader = new MduDelftIniReader();
+            yield return "[output]"
+                         + Environment.NewLine
+                         + @"ObsFile  = obs_1_obs.xyn \ # This comment should be ignored"
+                         + Environment.NewLine
+                         + "obs_2_obs.xyn obs_3_obs.xyn  # My comment";
 
-            // Call
-            const string fileName = "myFile.mdu";
-
-            void Call()
-            {
-                reader.ReadDelftIniFile(stream, fileName);
-            }
-
-            // Assert
-            var exception = Assert.Throws<FormatException>(Call);
-            Assert.That(exception.Message,
-                        Is.EqualTo($"Invalid comment placed on line {invalidLineNumber} in file '{fileName}'"));
-        }
-
-        private static IEnumerable<object> GetInvalidFileContents()
-        {
-            yield return new object[]
-            {
-                "[output]"
-                + Environment.NewLine
-                + @"ObsFile  = obs_1_obs.xyn \ # Invalid place for comment"
-                + Environment.NewLine
-                + "obs_3_obs.xyn  # My comment",
-                2
-            };
-
-            yield return new object[]
-            {
-                "[output]"
-                + Environment.NewLine
-                + @"ObsFile  = obs_1_obs.xyn \"
-                + Environment.NewLine
-                + @"obs_2_obs.xyn \ # Invalid place for comment"
-                + Environment.NewLine
-                + "obs_3_obs.xyn  # My comment",
-                3
-            };
+            yield return "[output]"
+                         + Environment.NewLine
+                         + @"ObsFile  = obs_1_obs.xyn \"
+                         + Environment.NewLine
+                         + @"obs_2_obs.xyn \ # This comment should be ignored"
+                         + Environment.NewLine
+                         + "obs_3_obs.xyn  # My comment";
         }
     }
 }
