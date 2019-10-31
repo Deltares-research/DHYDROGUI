@@ -53,6 +53,7 @@
         public const string EnclosureExtension = "_enc" + PolylineFileExtension;
         public const string EmbankmentFileExtension = "_bnk" + PlizFileExtension;
         public const string MeteoFileExtension = "_meteo" + TimFileExtension;
+        public const string BoundaryExternalForcingFileExtension = "_bnd" + ExternalForcingFileExtension;
 
         #endregion
     }

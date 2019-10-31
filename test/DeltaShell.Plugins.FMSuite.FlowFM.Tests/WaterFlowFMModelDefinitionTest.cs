@@ -848,7 +848,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var newModel = new WaterFlowFMModel(newnameMdu);
 
             Assert.AreEqual(model.Name, newModel.ModelDefinition.ModelName);
-            Assert.AreEqual(model.Name + "_bnd" + FileConstants.ExternalForcingFileExtension,
+            Assert.AreEqual(model.Name + FileConstants.BoundaryExternalForcingFileExtension,
                 newModel.ModelDefinition.GetModelProperty(KnownProperties.BndExtForceFile).Value);
         }
 
