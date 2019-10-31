@@ -124,6 +124,7 @@
     <Compile Include="Api\RemoteWaveModelApi.cs" />
     <Compile Include="Api\WaveModelApi.cs" />
     <Compile Include="Api\WaveModelDll.cs" />
+    <Compile Include="Boundaries\GeometricDefinitions\GridBoundary.cs" />
     <Compile Include="Boundaries\GeometricDefinitions\GridCoordinate.cs" />
     <Compile Include="Boundaries\GeometricDefinitions\GridSide.cs" />
     <Compile Include="Boundaries\GeometricDefinitions\IWaveBoundaryGeometricDefinition.cs" />
