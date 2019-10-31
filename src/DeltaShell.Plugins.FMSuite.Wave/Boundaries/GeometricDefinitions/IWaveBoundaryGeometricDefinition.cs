@@ -25,5 +25,10 @@
         /// <see cref="IWaveBoundary"/>.
         /// </value>
         int EndingIndex { get; set; }
+
+        /// <summary>
+        /// The side of the grid this <see cref="IWaveBoundary"/> is located on.
+        /// </summary>
+        GridSide GridSide { get; set; }
     }
 }
