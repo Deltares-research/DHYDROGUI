@@ -6,6 +6,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
     {
         void Write(string filePath, IEnumerable<TFeat> features);
 
-        IList<TFeat> Read(string path);
+        IList<TFeat> Read(string filePath);
     }
 }

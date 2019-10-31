@@ -87,9 +87,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
             Write(filePath, features, true);
         }
 
-        public IList<T> Read(string path)
+        public IList<T> Read(string filePath)
         {
-            return Read(path, true);
+            return Read(filePath, true);
         }
     }
 }
