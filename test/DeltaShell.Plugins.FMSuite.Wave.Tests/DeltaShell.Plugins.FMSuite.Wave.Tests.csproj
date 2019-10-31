@@ -202,6 +202,7 @@
   <ItemGroup>
     <Compile Include="Boundaries\GeometricDefinitions\GridBoundaryTest.cs" />
     <Compile Include="Boundaries\GeometricDefinitions\GridCoordinateTest.cs" />
+    <Compile Include="Boundaries\GeometricDefinitions\GridCoordinateValueComparerTest.cs" />
     <Compile Include="Boundaries\GeometricDefinitions\GridSideTest.cs" />
     <Compile Include="Boundaries\SpectralData\WaveBoundaryParametersTest.cs" />
     <Compile Include="Boundaries\SpectralData\WaveDirectionalSpreadingTypeTest.cs" />
