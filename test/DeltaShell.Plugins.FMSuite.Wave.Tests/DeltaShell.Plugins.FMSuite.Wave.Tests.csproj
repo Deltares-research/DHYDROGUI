@@ -201,6 +201,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Boundaries\SpectralData\WaveBoundaryParametersTest.cs" />
+    <Compile Include="Boundaries\SpectralData\WaveDirectionalSpreadingTypeTest.cs" />
     <Compile Include="Boundaries\SpectralData\WavePeriodTypeTest.cs" />
     <Compile Include="Boundaries\SpectralData\WaveSpectrumShapeTypeTest.cs" />
     <Compile Include="Common\IO\Delft3DDepthFileExporterTest.cs" />
