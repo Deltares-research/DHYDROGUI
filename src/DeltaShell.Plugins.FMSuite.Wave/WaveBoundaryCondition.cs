@@ -9,6 +9,7 @@ using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Editing;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.SpectralData;
 using DeltaShell.Plugins.FMSuite.Wave.IO;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;

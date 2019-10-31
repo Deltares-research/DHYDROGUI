@@ -124,6 +124,7 @@
     <Compile Include="Api\RemoteWaveModelApi.cs" />
     <Compile Include="Api\WaveModelApi.cs" />
     <Compile Include="Api\WaveModelDll.cs" />
+    <Compile Include="Boundaries\SpectralData\WaveBoundarySpectralData.cs" />
     <Compile Include="FunctionArgumentSyncer.cs" />
     <Compile Include="IO\BcwFile.cs" />
     <Compile Include="IO\Exporters\WaveModelFileExporter.cs" />
@@ -227,6 +228,7 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>

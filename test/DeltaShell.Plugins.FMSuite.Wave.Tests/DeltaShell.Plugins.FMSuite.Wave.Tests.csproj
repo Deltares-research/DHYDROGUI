@@ -245,7 +245,7 @@
     <Compile Include="WaveApplicationPluginTest.cs" />
     <Compile Include="WaveBoundaryConditionTest.cs" />
     <Compile Include="WaveBoundaryParametersTest.cs" />
-    <Compile Include="WaveBoundarySpectralDataTest.cs" />
+    <Compile Include="Boundaries\SpectralData\WaveBoundarySpectralDataTest.cs" />
     <Compile Include="WaveGridOperationApiTest.cs" />
     <Compile Include="WaveModelApiTest.cs" />
     <Compile Include="WaveModelRunTest.cs" />

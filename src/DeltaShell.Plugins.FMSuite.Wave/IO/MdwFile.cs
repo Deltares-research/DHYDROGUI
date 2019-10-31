@@ -15,6 +15,7 @@ using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using DeltaShell.Plugins.FMSuite.Common.Wind;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.SpectralData;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 using GeoAPI.Geometries;
 using log4net;
