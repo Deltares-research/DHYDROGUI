@@ -1,13 +1,13 @@
 ﻿using DeltaShell.Plugins.FMSuite.Wave.Boundaries.SpectralData;
 using NUnit.Framework;
 
-namespace DeltaShell.Plugins.FMSuite.Wave.Tests
+namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.SpectralData
 {
     [TestFixture]
     public class WaveBoundarySpectralDataTest
     {
         [Test]
-        public void WhenInstantiatingWaveBoundarySpectralDataObject_ThenDefaultValuesAreSet()
+        public void Constructor_ExpectedValues()
         {
             // Call
             var waveBoundarySpectralData = new WaveBoundarySpectralData();

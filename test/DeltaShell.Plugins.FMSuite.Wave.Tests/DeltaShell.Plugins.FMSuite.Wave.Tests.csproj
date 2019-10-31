@@ -200,6 +200,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Boundaries\SpectralData\WaveBoundaryParametersTest.cs" />
     <Compile Include="Common\IO\Delft3DDepthFileExporterTest.cs" />
     <Compile Include="Common\IO\Delft3DDepthFileImporterTest.cs" />
     <Compile Include="Common\IO\Delft3DDepthFileReaderTest.cs" />
@@ -244,7 +245,6 @@
     <Compile Include="Gui\WaveTimePointValidatorTest.cs" />
     <Compile Include="WaveApplicationPluginTest.cs" />
     <Compile Include="WaveBoundaryConditionTest.cs" />
-    <Compile Include="WaveBoundaryParametersTest.cs" />
     <Compile Include="Boundaries\SpectralData\WaveBoundarySpectralDataTest.cs" />
     <Compile Include="WaveGridOperationApiTest.cs" />
     <Compile Include="WaveModelApiTest.cs" />
