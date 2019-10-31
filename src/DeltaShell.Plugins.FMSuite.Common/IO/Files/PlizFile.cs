@@ -12,10 +12,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
 {
     public class PlizFile<T> : PliFile<T> where T : IFeature, INameable, new()
     {
-        public override void Write(string path, IEnumerable<T> features)
+        public override void Write(string filePath, IEnumerable<T> features)
         {
             IEnumerable<T> pliFeatures = features.Select(ToPolyline);
-            base.Write(path, pliFeatures);
+            base.Write(filePath, pliFeatures);
         }
 
         /// <summary>

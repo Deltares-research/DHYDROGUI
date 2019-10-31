@@ -70,9 +70,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
             }
         }
 
-        public void Write(string path, IEnumerable<T> features)
+        public void Write(string filePath, IEnumerable<T> features)
         {
-            Write(path, features.Cast<IFeature>());
+            Write(filePath, features.Cast<IFeature>());
         }
 
         public IList<T> Read(string polFilePath)

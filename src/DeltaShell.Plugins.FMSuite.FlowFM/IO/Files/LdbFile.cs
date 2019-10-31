@@ -11,9 +11,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 {
     public class LdbFile : FMSuiteFileBase, IFeature2DFileBase<LandBoundary2D>
     {
-        public void Write(string polFilePath, IEnumerable<LandBoundary2D> area2DFeatures)
+        public void Write(string filePath, IEnumerable<LandBoundary2D> area2DFeatures)
         {
-            OpenOutputFile(polFilePath);
+            OpenOutputFile(filePath);
             try
             {
                 foreach (LandBoundary2D area2DFeature in area2DFeatures)

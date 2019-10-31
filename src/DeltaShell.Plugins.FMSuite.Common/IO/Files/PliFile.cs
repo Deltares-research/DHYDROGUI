@@ -59,16 +59,16 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
         /// <summary>
         /// Writes a polyline file for the collection of features <see cref="features" />
         /// </summary>
-        /// <param name="pliFilePath"> The target file path to write the .pli file to. </param>
+        /// <param name="filePath"> The target file path to write the .pli file to. </param>
         /// <param name="features">
         /// The features of type <typeparamref name="T" /> that are used to write data to file
-        /// at path <paramref name="pliFilePath" />
+        /// at path <paramref name="filePath" />
         /// </param>
-        public virtual void Write(string pliFilePath, IEnumerable<T> features)
+        public virtual void Write(string filePath, IEnumerable<T> features)
         {
             using (CultureUtils.SwitchToInvariantCulture())
             {
-                OpenOutputFile(pliFilePath);
+                OpenOutputFile(filePath);
                 try
                 {
                     foreach (T feature2D in features)
