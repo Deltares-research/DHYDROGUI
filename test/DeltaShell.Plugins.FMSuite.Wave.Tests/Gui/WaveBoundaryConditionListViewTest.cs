@@ -1,4 +1,5 @@
 ﻿using DelftTools.TestUtils;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.SpectralData;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;

@@ -3,17 +3,6 @@
 namespace DeltaShell.Plugins.FMSuite.Wave
 {
 
-    public enum WaveSpectrumShapeType
-    {
-        [Description("Jonswap")]
-        Jonswap,
-
-        [Description("Pierson-Moskowitz")]
-        PiersonMoskowitz,
-
-        [Description("Gauss")]
-        Gauss
-    }
 
     public enum WavePeriodType
     {

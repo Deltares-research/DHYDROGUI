@@ -126,6 +126,7 @@
     <Compile Include="Api\WaveModelDll.cs" />
     <Compile Include="Boundaries\SpectralData\WaveBoundaryParameters.cs" />
     <Compile Include="Boundaries\SpectralData\WaveBoundarySpectralData.cs" />
+    <Compile Include="Boundaries\SpectralData\WaveSpectrumShapeType.cs" />
     <Compile Include="FunctionArgumentSyncer.cs" />
     <Compile Include="IO\BcwFile.cs" />
     <Compile Include="IO\Exporters\WaveModelFileExporter.cs" />
