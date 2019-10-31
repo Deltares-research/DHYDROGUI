@@ -125,11 +125,13 @@
     <Compile Include="Api\WaveModelApi.cs" />
     <Compile Include="Api\WaveModelDll.cs" />
     <Compile Include="Boundaries\GeometricDefinitions\IWaveBoundaryGeometricDefinition.cs" />
+    <Compile Include="Boundaries\IWaveBoundary.cs" />
     <Compile Include="Boundaries\SpectralData\WaveBoundaryParameters.cs" />
     <Compile Include="Boundaries\SpectralData\WaveBoundarySpectralData.cs" />
     <Compile Include="Boundaries\SpectralData\WaveDirectionalSpreadingType.cs" />
     <Compile Include="Boundaries\SpectralData\WavePeriodType.cs" />
     <Compile Include="Boundaries\SpectralData\WaveSpectrumShapeType.cs" />
+    <Compile Include="Boundaries\WaveBoundary.cs" />
     <Compile Include="FunctionArgumentSyncer.cs" />
     <Compile Include="IO\BcwFile.cs" />
     <Compile Include="IO\Exporters\WaveModelFileExporter.cs" />
