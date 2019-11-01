@@ -61,5 +61,25 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
 
             return $"Domain ({domainName})";
         }
+
+        /// <summary>
+        /// Gets the name of the output layer given a <paramref name="domainName"/>.
+        /// </summary>
+        /// <param name="domainName">Name of the domain.</param>
+        /// <returns>
+        /// The name of the output layer given a <paramref name="domainName"/>.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="domainName"/> is <c>null</c>.
+        /// </exception>
+        public static string GetOutputLayerName(string domainName)
+        {
+            if (domainName == null)
+            {
+                throw new ArgumentNullException(nameof(domainName));
+            }
+
+            return $"Output ({domainName})";
+        }
     }
 }

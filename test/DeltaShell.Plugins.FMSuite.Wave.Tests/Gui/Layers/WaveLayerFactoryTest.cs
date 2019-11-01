@@ -232,5 +232,42 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
             var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception, Has.Property("ParamName").EqualTo("snappedFeatures"));
         }
+
+        [Test]
+        [TestCase(true, "domainName", "domainName")]
+        [TestCase(false, "domainName", "Output (domainName)")]
+        public void CreateOutputLayer_ValidDomainName_ReturnsCorrectResults(bool overrideLayerName, 
+                                                                            string domainName, 
+                                                                            string expectedName)
+        {
+            // Setup
+            var model = new WaveModel();
+            var waveSnappedFeatures = new WaveSnappedFeaturesGroupLayerData(model);
+
+            // Call
+            ILayer layer = WaveLayerFactory.CreateSnappedFeaturesLayer(waveSnappedFeatures);
+
+            // Assert
+            Assert.That(layer, Is.InstanceOf<GroupLayer>(),
+                        $"Expected the result to be an instance of {nameof(GroupLayer)}");
+            Assert.That(layer.Name, Is.EqualTo("Estimated Grid-snapped features"),
+                        "Expected the layer to have a different name.");
+
+            var groupLayer = (GroupLayer) layer;
+            Assert.That(groupLayer.Layers.Count, Is.EqualTo(waveSnappedFeatures.ChildData.Count()),
+                        "Expected a different number of layers:");
+        }
+
+        [Test]
+        public void CreateOutputLayer_DomainNameNull_ThrowsArgumentNullException()
+        {
+            // Call
+            void Call() => WaveLayerFactory.CreateOutputLayer(null);
+
+            // Assert
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception, Has.Property("ParamName").EqualTo("domainName"));
+        }
+
     }
 }

@@ -27,5 +27,27 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
             var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception, Has.Property("ParamName").EqualTo("domainName"));
         }
+
+        [Test]
+        public void GetOutputLayerName_ValidDomainName_ReturnsExpectedResults()
+        {
+            // Call
+            string result = WaveLayerNames.GetOutputLayerName("domainName");
+
+            // Assert
+            Assert.That(result, Is.EqualTo("Output (domainName)"));
+        }
+
+        [Test]
+        public void GetOutputLayerName_DomainNameNull_ThrowsArgumentNullException()
+        {
+            // Call
+            void Call() => WaveLayerNames.GetOutputLayerName(null);
+            
+            // Assert
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception, Has.Property("ParamName").EqualTo("domainName"));
+        }
+
     }
 }
