@@ -13,6 +13,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries
             var container = new BoundaryContainer();
 
             // Assert
+            Assert.That(container, Is.InstanceOf<IBoundaryContainer>());
             Assert.That(container.Boundaries, Is.Not.Null);
             Assert.That(container.Boundaries, Is.Empty);
         }
