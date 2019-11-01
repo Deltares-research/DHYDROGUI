@@ -69,5 +69,37 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.FeatureProviders
             var exception = Assert.Throws<NotSupportedException>(Call);
             Assert.That(exception, Has.Message.EqualTo("This operation is currently not supported."));
         }
+
+        [Test]
+        public void IsReadOnly_ReturnsFalse()
+        {
+            // Setup
+            Tuple<object, IEventedList<object>> ObtainObservedValueFunc(object _) => null;
+            object CreateDisplayedValueFunc(object _) => null;
+
+            IList<object> list = new MultiIEventedListAdapter<object, object>(ObtainObservedValueFunc, CreateDisplayedValueFunc);
+
+            // Call
+            bool result = list.IsReadOnly;
+
+            // Assert
+            Assert.That(result, Is.False, "Expected a different result for IsReadOnly:");
+        }
+
+        [Test]
+        public void IsFixedSize_ReturnsFalse()
+        {
+            // Setup
+            Tuple<object, IEventedList<object>> ObtainObservedValueFunc(object _) => null;
+            object CreateDisplayedValueFunc(object _) => null;
+
+            var list = new MultiIEventedListAdapter<object, object>(ObtainObservedValueFunc, CreateDisplayedValueFunc);
+
+            // Call
+            bool result = list.IsFixedSize;
+
+            // Assert
+            Assert.That(result, Is.False, "Expected a different result for IsFixedSize:");
+        }
     }
 }
