@@ -30,8 +30,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
     {
         private static readonly string ModelName = typeof(WaveModel).Name;
 
-        private static readonly Bitmap coordinateBasedBoundaryIcon = Resources.boundary;
-        private static readonly Bitmap obstacleDataIcon = Properties.Resources.wall_brick;
 
         public ILayer CreateLayer(object data, object parent)
         {
@@ -201,7 +199,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                                                        model.CoordinateSystem),
                     Style = new VectorStyle
                     {
-                        Symbol = coordinateBasedBoundaryIcon,
+                        Symbol = WaveLayerIcons.CoordinateBasedBoundary,
                         GeometryType = typeof(IPoint)
                     },
                     NameIsReadOnly = true
@@ -218,7 +216,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                                                        model.CoordinateSystem),
                     Style = new VectorStyle
                     {
-                        Symbol = obstacleDataIcon,
+                        Symbol = WaveLayerIcons.ObstacleData,
                         GeometryType = typeof(IPoint)
                     },
                     NameIsReadOnly = true
