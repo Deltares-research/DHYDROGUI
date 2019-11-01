@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using DelftTools.Utils.RegularExpressions;
 using DeltaShell.NGHS.IO;
@@ -8,9 +7,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DelftIniReaders
 {
     /// <summary>
     /// Reader for mdu files. This reader supports multiple-valued properties that
-    /// are defined on multiple lines and are separated by backslashes.
+    /// are defined on multiple lines and are separated by backslashes. Comments that
+    /// are not defined at the last line of the property definition are ignored.
     ///
-    /// For example:
+    /// Examples:
     /// 
     /// [output]
     /// ObsFile  = obs_1_obs.xyn obs_2_obs.xyn \
@@ -23,12 +23,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DelftIniReaders
     /// </summary>
     public class MduDelftIniReader : DelftIniReader
     {
-        private const string ValueSlashPattern =
+        private const string valueSlashPattern =
             @"^\s*" +                   // pre-whitespaces
             @"(?<value>[^(\)]*)" +      // value, until first backslash
-            @"\\+(?<comment>.*)?\z";    // At least one backslash and every character until the end of the line
+            @"\\+(?<comment>.*)?$";    // At least one backslash and every character until the end of the line
 
-        private const string ValueCommentPattern =
+        private const string valueCommentPattern =
             @"^\s*" +                   // pre-whitespaces
             @"(?<value>[^#]*)" +        // value, until '#'-sign
             @"(#\s*(?<comment>.*))?$";  // comment, every character until the end of the line
@@ -41,12 +41,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DelftIniReaders
         protected override string[] GetKeyValueComment(string lineContent)
         {
             string[] keyValueComment = base.GetKeyValueComment(lineContent);
-            if (keyValueComment[1].EndsWith(@"\"))
-            {
-                return ParseMultilineDefinedProperty(keyValueComment);
-            }
-            
-            return keyValueComment;
+            return keyValueComment[1].EndsWith(@"\") 
+                       ? ParseMultilineDefinedProperty(keyValueComment) 
+                       : keyValueComment;
         }
 
         private string[] ParseMultilineDefinedProperty(string[] keyValueComment)
@@ -66,7 +63,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DelftIniReaders
 
         private static bool ParseValueSlashLine(IList<string> keyValueComment, string lineContent)
         {
-            MatchCollection matchesValueSlash = RegularExpression.GetMatches(ValueSlashPattern, lineContent);
+            MatchCollection matchesValueSlash = RegularExpression.GetMatches(valueSlashPattern, lineContent);
             if (matchesValueSlash.Count > 0)
             {
                 string existingValue = keyValueComment[1].TrimEnd('\\', ' ');
@@ -81,19 +78,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DelftIniReaders
             return true;
         }
 
-        private void ParseValueCommentLine(IList<string> keyValueComment, string lineContent)
+        private static void ParseValueCommentLine(IList<string> keyValueComment, string lineContent)
         {
-            MatchCollection matchesValueComment = RegularExpression.GetMatches(ValueCommentPattern, lineContent);
-            if (matchesValueComment.Count > 0)
+            MatchCollection matchesValueComment = RegularExpression.GetMatches(valueCommentPattern, lineContent);
+            if (matchesValueComment.Count == 0)
             {
-                string existingValue = keyValueComment[1].TrimEnd('\\', ' ');
-                string additionalValue = matchesValueComment[0].Groups["value"].Value.Trim();
-                keyValueComment[1] = string.Join(" ", existingValue, additionalValue);
+                return;
+            }
+
+            string existingValue = keyValueComment[1].TrimEnd('\\', ' ');
+            string additionalValue = matchesValueComment[0].Groups["value"].Value.Trim();
+            keyValueComment[1] = string.Join(" ", existingValue, additionalValue);
                 
-                if (!keyValueComment[1].EndsWith(@"\"))
-                {
-                    keyValueComment[2] = matchesValueComment[0].Groups["comment"].Value;
-                }
+            if (!keyValueComment[1].EndsWith(@"\"))
+            {
+                keyValueComment[2] = matchesValueComment[0].Groups["comment"].Value;
             }
         }
     }
