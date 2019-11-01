@@ -161,20 +161,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
         }
 
         [Test]
-        public void CreateObstacleDataLayer_CoordinateSystemNull_ThrowsArgumentNullException()
-        {
-            // Setup
-            var obstacleData = new EventedList<WaveObstacle>();
-
-            // Call
-            void Call() => WaveLayerFactory.CreateObstacleDataLayer(obstacleData, null);
-
-            // Assert
-            var exception = Assert.Throws<ArgumentNullException>(Call);
-            Assert.That(exception, Has.Property("ParamName").EqualTo("coordinateSystem"));
-        }
-
-        [Test]
         public void CreateObservationCrossSectionsLayer_ValidWaveModel_ReturnsCorrectResults()
         {
             // Setup

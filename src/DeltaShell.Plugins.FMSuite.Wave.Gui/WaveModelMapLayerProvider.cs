@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using DelftTools.Functions;
+using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
-using DeltaShell.Plugins.FMSuite.Common.Gui.Properties;
-using DeltaShell.Plugins.FMSuite.Common.Layers;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers;
 using DeltaShell.Plugins.FMSuite.Wave.IO;
 using DeltaShell.Plugins.FMSuite.Wave.Layers;
@@ -26,91 +25,89 @@ using SharpMap.Styles;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui
 {
+    /// <summary>
+    /// <see cref="WaveModelMapLayerProvider"/> provides the layers of the Wave plugin.
+    /// </summary>
+    /// <seealso cref="IMapLayerProvider" />
     public class WaveModelMapLayerProvider : IMapLayerProvider
     {
-        private static readonly string ModelName = typeof(WaveModel).Name;
+        private static readonly string modelName = typeof(WaveModel).Name;
 
-
+        // TODO this need to be further split up.
+        /// <summary>
+        /// Create the layer associated with the <paramref name="data"/> and
+        /// <paramref name="parent"/>.
+        /// </summary>
+        /// <param name="data">The data.</param>
+        /// <param name="parent">The parent.</param>
+        /// <returns>
+        /// A new <see cref="ILayer"/> if it could be created; <c>null</c> otherwise.
+        /// </returns>
         public ILayer CreateLayer(object data, object parent)
         {
-            var waveModel = data as WaveModel;
-            if (waveModel != null)
+            if (data is WaveModel waveModel)
             {
-                return new ModelGroupLayer
-                {
-                    Name = waveModel.Name,
-                    Model = waveModel
-                };
+                return WaveLayerFactory.CreateModelGroupLayer(waveModel);
             }
 
-            var domain = data as WaveDomainData;
-            if (domain != null)
+            if (data is WaveDomainData domainData)
             {
-                return new GroupLayer("Domain (" + domain.Name + ")");
+                return WaveLayerFactory.CreateWaveDomainDataLayer(domainData);
+            }
+
+            if (data is WaveSnappedFeaturesGroupLayerData snappedFeaturesGroupLayerData)
+            {
+                return WaveLayerFactory.CreateSnappedFeaturesLayer(snappedFeaturesGroupLayerData);
             }
 
             var model = parent as IWaveModel;
-            var discreteGrid = data as IDiscreteGridPointCoverage;
-            if (discreteGrid != null)
+
+            if (data is WavmFileFunctionStore wavmFileFunctionStore &&
+                wavmFileFunctionStore.Functions.Count != 0)
             {
-                ICoordinateSystem coordinateSystem;
+                return GetOutputLayer(wavmFileFunctionStore, model);
+            }
 
-                var store = parent as WavmFileFunctionStore;
-                if (model != null)
-                {
-                    coordinateSystem = model.CoordinateSystem;
-                }
-                else if (store != null)
-                {
-                    coordinateSystem = null;
-                }
-                else
-                {
-                    WaveModel ownerWaveModel =
-                        GetWaveModels?.Invoke().FirstOrDefault(w => w.GetAllItemsRecursive()
-                                                                     .Contains(discreteGrid));
+            if (data is IDiscreteGridPointCoverage discreteGrid)
+            {
+                return GetGridLayer(parent, model, discreteGrid);
+            }
 
-                    coordinateSystem = ownerWaveModel == null ? null : ownerWaveModel.CoordinateSystem;
-                }
+            // Model dependent layers
+            if (model == null)
+            {
+                return null;
+            }
 
-                if (discreteGrid is CurvilinearGrid)
+            if (data is IEventedList<WaveBoundaryCondition> boundaryConditions)
+            {
+                return new VectorLayer(WaveLayerNames.BoundaryConditionLayerName)
                 {
-                    return new CurvilinearGridLayer
+                    DataSource =
+                        new Feature2DCollection().Init(boundaryConditions, "BoundaryCondition", modelName,
+                                                       model.CoordinateSystem),
+                    Style = new VectorStyle
                     {
-                        Name = discreteGrid.Name,
-                        CurviLinearGrid = discreteGrid,
-                        OptimizeRendering = discreteGrid.X.Values.Count > 50000,
-                        DataSource = new WaveGridBasedDataSource(discreteGrid)
-                        {
-                            CoordinateSystem = coordinateSystem
-                        },
-                        ReadOnly = true // to exclude from spatial editor
-                    };
-                }
-
-                return new CurvilinearVertexCoverageLayer
-                {
-                    Name = discreteGrid.Name,
-                    Coverage = discreteGrid,
-                    Visible = false,
-                    OptimizeRendering = discreteGrid.X.Values.Count > 30000,
-                    DataSource = new WaveGridBasedDataSource(discreteGrid)
-                    {
-                        CoordinateSystem = coordinateSystem
+                        Symbol = WaveLayerIcons.CoordinateBasedBoundary,
+                        GeometryType = typeof(IPoint)
                     },
-                    ReadOnly = !discreteGrid.IsEditable // Exclude output from spatial editor
+                    NameIsReadOnly = true
                 };
             }
 
-            var features = data as IEnumerable<Feature2D>;
-            if (features != null && model != null)
+            if (data is EventedList<WaveObstacle> obstacleData)
             {
+                return WaveLayerFactory.CreateObstacleDataLayer(obstacleData, model.CoordinateSystem);
+            }
+
+            if (data is IEnumerable<Feature2D> features) { 
+
                 if (Equals(features, model.Boundaries))
                 {
                     return new VectorLayer(WaveLayerNames.BoundaryLayerName)
                     {
                         DataSource =
-                            new Feature2DCollection().Init(model.Boundaries, "Boundary", ModelName,
+                            new Feature2DCollection().Init(model.Boundaries, "Boundary", modelName,
                                                            model.CoordinateSystem, model.GetGridSnappedBoundary),
                         FeatureEditor = new Feature2DEditor(model),
                         Style = WaveModelLayerStyles.BoundaryStyle,
@@ -119,29 +116,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                     };
                 }
 
-                if (Equals(features, model.Obstacles))
-                {
-                    return new VectorLayer(WaveLayerNames.ObstacleLayerName)
-                    {
-                        DataSource =
-                            new Feature2DCollection().Init(model.Obstacles, "Obstacle", ModelName,
-                                                           model.CoordinateSystem),
-                        FeatureEditor = new Feature2DEditor(model),
-                        Style = new VectorStyle
-                        {
-                            Line = new Pen(Color.Red, 3f),
-                            GeometryType = typeof(ILineString)
-                        },
-                        NameIsReadOnly = true
-                    };
-                }
-
                 if (Equals(features, model.Sp2Boundaries))
                 {
                     return new VectorLayer("Boundary from sp2")
                     {
                         DataSource =
-                            new Feature2DCollection().Init(model.Sp2Boundaries, "Sp2Boundary", ModelName,
+                            new Feature2DCollection().Init(model.Sp2Boundaries, "Sp2Boundary", modelName,
                                                            model.CoordinateSystem),
                         Style = new VectorStyle
                         {
@@ -153,124 +133,99 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                     };
                 }
 
+                if (Equals(features, model.Obstacles))
+                {
+                    return WaveLayerFactory.CreateObstacleLayer(model);
+                }
+
                 if (Equals(features, model.ObservationCrossSections))
                 {
-                    return new VectorLayer(WaveLayerNames.ObservationCrossSectionLayerName)
-                    {
-                        DataSource =
-                            new Feature2DCollection().Init(model.ObservationCrossSections, "CrS",
-                                                           ModelName, model.CoordinateSystem),
-                        FeatureEditor = new Feature2DEditor(model),
-                        Style =
-                            new VectorStyle
-                            {
-                                Line = new Pen(Color.LightSteelBlue, 3f),
-                                GeometryType = typeof(ILineString)
-                            },
-                        NameIsReadOnly = true
-                    };
+                    return WaveLayerFactory.CreateObservationCrossSectionLayer(model);
                 }
 
                 if (Equals(features, model.ObservationPoints))
                 {
-                    return new VectorLayer(WaveLayerNames.ObservationPointLayerName)
-                    {
-                        NameIsReadOnly = true,
-                        FeatureEditor = new Feature2DEditor(model),
-                        Style = new VectorStyle
-                        {
-                            GeometryType = typeof(IPoint),
-                            Symbol = Resources.Observation
-                        },
-                        DataSource =
-                            new Feature2DCollection().Init(model.ObservationPoints, "ObservationPoints", ModelName,
-                                                           model.CoordinateSystem)
-                    };
+                    return WaveLayerFactory.CreateObservationPointsLayer(model);
                 }
-            }
-
-            var boundaryConditions = data as IEventedList<WaveBoundaryCondition>;
-            if (boundaryConditions != null && model != null)
-            {
-                return new VectorLayer(WaveLayerNames.BoundaryConditionLayerName)
-                {
-                    DataSource =
-                        new Feature2DCollection().Init(boundaryConditions, "BoundaryCondition", ModelName,
-                                                       model.CoordinateSystem),
-                    Style = new VectorStyle
-                    {
-                        Symbol = WaveLayerIcons.CoordinateBasedBoundary,
-                        GeometryType = typeof(IPoint)
-                    },
-                    NameIsReadOnly = true
-                };
-            }
-
-            var obstacleData = data as IEventedList<WaveObstacle>;
-            if (obstacleData != null && model != null)
-            {
-                return new VectorLayer(WaveLayerNames.ObstacleDataLayerName)
-                {
-                    DataSource =
-                        new Feature2DCollection().Init(obstacleData, "WaveObstacleData", ModelName,
-                                                       model.CoordinateSystem),
-                    Style = new VectorStyle
-                    {
-                        Symbol = WaveLayerIcons.ObstacleData,
-                        GeometryType = typeof(IPoint)
-                    },
-                    NameIsReadOnly = true
-                };
-            }
-
-            var snappedGroupLayerData = data as WaveSnappedFeaturesGroupLayerData;
-            if (snappedGroupLayerData != null)
-            {
-                var groupLayer = new GroupLayer(WaveLayerNames.GridSnappedFeaturesLayerName);
-                foreach (FeatureCollection snappedFeatures in snappedGroupLayerData.ChildData)
-                {
-                    var vectorLayer = new VectorLayer("Boundaries")
-                    {
-                        DataSource = snappedFeatures,
-                        NameIsReadOnly = true,
-                        Selectable = false,
-                        Style = new VectorStyle
-                        {
-                            Fill = Brushes.Gray,
-                            GeometryType = typeof(IPoint)
-                        }
-                    };
-                    groupLayer.Layers.Add(vectorLayer);
-                }
-
-                return groupLayer;
-            }
-
-            var wavmFileFunctionStore = data as WavmFileFunctionStore;
-            if (wavmFileFunctionStore != null && wavmFileFunctionStore.Functions.Count != 0)
-            {
-                if (model != null)
-                {
-                    IDataItem dataItem = model.GetDataItemByValue(wavmFileFunctionStore);
-                    if (dataItem.Tag.StartsWith(WaveModel.WavmStoreDataItemTag))
-                    {
-                        string domainName = string.Join(" ",
-                                                        new string(
-                                                            dataItem.Tag.Skip(WaveModel.WavmStoreDataItemTag.Count())
-                                                                    .ToArray()), "WAVM");
-                        return new GroupLayer("Output (" + domainName + ")")
-                        {
-                            LayersReadOnly = true,
-                        };
-                    }
-                }
-
-                return new GroupLayer(wavmFileFunctionStore.Path) {LayersReadOnly = true};
             }
 
             return null;
         }
 
+        private ILayer GetGridLayer(object parent, IHasCoordinateSystem model, IDiscreteGridPointCoverage discreteGrid)
+        {
+            ICoordinateSystem coordinateSystem;
+
+            var store = parent as WavmFileFunctionStore;
+            if (model != null)
+            {
+                coordinateSystem = model.CoordinateSystem;
+            }
+            else if (store != null)
+            {
+                coordinateSystem = null;
+            }
+            else
+            {
+                WaveModel ownerWaveModel =
+                    GetWaveModels?.Invoke().FirstOrDefault(w => w.GetAllItemsRecursive()
+                                                                 .Contains(discreteGrid));
+
+                coordinateSystem = ownerWaveModel == null ? null : ownerWaveModel.CoordinateSystem;
+            }
+
+            if (discreteGrid is CurvilinearGrid)
+            {
+                return new CurvilinearGridLayer
+                {
+                    Name = discreteGrid.Name,
+                    CurviLinearGrid = discreteGrid,
+                    OptimizeRendering = discreteGrid.X.Values.Count > 50000,
+                    DataSource = new WaveGridBasedDataSource(discreteGrid) {CoordinateSystem = coordinateSystem},
+                    ReadOnly = true // to exclude from spatial editor
+                };
+            }
+
+            return new CurvilinearVertexCoverageLayer
+            {
+                Name = discreteGrid.Name,
+                Coverage = discreteGrid,
+                Visible = false,
+                OptimizeRendering = discreteGrid.X.Values.Count > 30000,
+                DataSource = new WaveGridBasedDataSource(discreteGrid) {CoordinateSystem = coordinateSystem},
+                ReadOnly = !discreteGrid.IsEditable // Exclude output from spatial editor
+            };
+        }
+
+        private static ILayer GetOutputLayer(WavmFileFunctionStore wavmFileFunctionStore, IWaveModel model)
+        {
+            string domainName = wavmFileFunctionStore.Path;
+            var overrideDomainName = true;
+
+            if (model != null)
+            {
+                IDataItem dataItem = model.GetDataItemByValue(wavmFileFunctionStore);
+                string dataItemTag = dataItem.Tag;
+
+                if (dataItemTag.StartsWith(WaveModel.WavmStoreDataItemTag))
+                {
+                    var paramsValue = new string(dataItemTag.Skip(WaveModel.WavmStoreDataItemTag.Length).ToArray());
+                    domainName = string.Join(" ", paramsValue, "WAVM");
+                    overrideDomainName = false;
+                }
+            }
+
+            return WaveLayerFactory.CreateOutputLayer(domainName, overrideDomainName);
+        }
+
+        /// <summary>
+        /// Determine if a layer can be created for the specified data
+        /// </summary>
+        /// <param name="data">Data to create a layer for</param>
+        /// <param name="parentData">Parent data of the data</param>
+        /// <returns>
+        /// Whether a layer be created given the parameters.
+        /// </returns>
         public bool CanCreateLayerFor(object data, object parentData)
         {
             return data is WaveModel

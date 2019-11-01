@@ -109,17 +109,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         /// <exception cref="ArgumentNullException">
         /// Thrown when any of the parameters is <c>null</c>.
         /// </exception>
-        public static ILayer CreateObstacleDataLayer(EventedList<WaveObstacle> obstacleData, 
+        public static ILayer CreateObstacleDataLayer(IEventedList<WaveObstacle> obstacleData, 
                                                      ICoordinateSystem coordinateSystem)
         {
             if (obstacleData == null)
             {
                 throw new ArgumentNullException(nameof(obstacleData));
-            }
-
-            if (coordinateSystem == null)
-            {
-                throw new ArgumentNullException(nameof(coordinateSystem));
             }
 
             return new VectorLayer(WaveLayerNames.ObstacleDataLayerName)
