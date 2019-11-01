@@ -1,7 +1,12 @@
 ﻿using System;
+using System.Drawing;
 using DeltaShell.Plugins.FMSuite.Common.Layers;
+using GeoAPI.Geometries;
 using SharpMap.Api.Layers;
+using SharpMap.Data.Providers;
+using SharpMap.Editors.Interactors;
 using SharpMap.Layers;
+using SharpMap.Styles;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
 {
@@ -11,6 +16,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
     /// </summary>
     public static class WaveLayerFactory
     {
+        /// <summary> The wave model name. </summary>
+        private static readonly string waveModelName = typeof(WaveModel).Name;
+
         /// <summary>
         /// Create a new model layer from the given <paramref name="waveModel"/>.
         /// </summary>
@@ -50,7 +58,30 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
                 throw new ArgumentNullException(nameof(domain));
             }
 
-            return new GroupLayer($"Domain ({domain.Name})");
+            return new GroupLayer(WaveLayerNames.GetDomainLayerName(domain.Name));
+        }
+
+        public static ILayer CreateObstacleLayer(IWaveModel waveModel)
+        {
+            if (waveModel == null)
+            {
+                throw new ArgumentNullException(nameof(waveModel));
+            }
+
+            return new VectorLayer(WaveLayerNames.ObstacleLayerName)
+            {
+                DataSource = new Feature2DCollection().Init(waveModel.Obstacles,
+                                                            "Obstacle", 
+                                                            waveModelName,
+                                                            waveModel.CoordinateSystem),
+                FeatureEditor = new Feature2DEditor(waveModel),
+                Style = new VectorStyle
+                {
+                    Line = new Pen(Color.Red, 3f),
+                    GeometryType = typeof(ILineString)
+                },
+                NameIsReadOnly = true
+            };
         }
     }
 }

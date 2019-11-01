@@ -52,7 +52,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
             ILayer layer = WaveLayerFactory.CreateWaveDomainDataLayer(domain);
 
             // Assert
-            Assert.That(layer, Is.InstanceOf<GroupLayer>());
+            Assert.That(layer, Is.InstanceOf<GroupLayer>(),
+                        $"Expected the result to be an instance of {nameof(GroupLayer)}");
             Assert.That(layer.Name, Is.EqualTo($"Domain ({expectedDomainName})"),
                         "Expected the layer to have a different name.");
         }
@@ -66,6 +67,33 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception, Has.Property("ParamName").EqualTo("domain"));
+        }
+
+        [Test]
+        public void CreateObstacleLayer_ValidWaveModel_ReturnsCorrectResults()
+        {
+            // Setup
+            var model = new WaveModel();
+
+            // Call
+            ILayer layer = WaveLayerFactory.CreateObstacleLayer(model);
+
+            // Assert
+            Assert.That(layer, Is.InstanceOf<VectorLayer>(),
+                        $"Expected the result to be an instance of {nameof(VectorLayer)}");
+            Assert.That(layer.Name, Is.EqualTo("Obstacles"),
+                        "Expected the layer to have a different name.");
+        }
+
+        [Test]
+        public void CreateObstacleLayer_WaveModelNull_ThrowsArgumentNullException()
+        {
+            // Call
+            void Call() => WaveLayerFactory.CreateObstacleLayer(null);
+
+            // Assert
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception, Has.Property("ParamName").EqualTo("waveModel"));
         }
     }
 }
