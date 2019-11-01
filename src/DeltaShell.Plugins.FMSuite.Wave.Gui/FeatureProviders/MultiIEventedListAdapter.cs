@@ -5,15 +5,16 @@ using DelftTools.Utils.Collections.Generic;
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders
 {
     /// <summary>
-    /// <see cref="MultiIEventedListAdapter{TObserved, TDisplayed}" /> provides an adapter implementation
-    /// to view multiple lists of an arbitrary type into an <see cref="IEventedList{TDisplayed}" />
-    /// and <see cref="IList" /> of another type.
+    /// <see cref="MultiIEventedListAdapter{TObserved, TDisplayed}" /> provides
+    /// an adapter implementation to view multiple <see cref="IEventedList{TObserved}"/>
+    /// as a single <see cref="IEventedList{TDisplayed}"/> and <see cref="IList"/>.
     /// </summary>
     /// <typeparam name="TObserved">The type of objects which are observed.</typeparam>
     /// <typeparam name="TDisplayed">The type of objects which are displayed.</typeparam>
     /// <remarks>
     /// This class is required to properly map the data within the DataModel of the
-    /// waves model on the required FeatureProviders.
+    /// waves model on the required FeatureProviders. This is purely done, such that it can
+    /// play nice with the expectations of the framework and sharpmap in particular.
     ///
     /// The <see cref="MultiIEventedListAdapter{TObserved,TDisplayed}"/> will hold a copy
     /// of each <typeparamref name="TDisplayed"/> for each <typeparamref name="TObserved"/>.
@@ -27,7 +28,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders
         /// The values of this <see cref="MultiIEventedListAdapter{TObserved,TDisplayed}"/>
         /// and the respective <see cref="IEventedList{TObserved}"/> they belong too.
         /// </summary>
-        private readonly IList<Tuple<TObserved, IEventedList<TObserved>>> values;
+        private readonly IList<Tuple<TDisplayed, IEventedList<TObserved>>> values;
 
         private readonly Func<TDisplayed, Tuple<TObserved, IEventedList<TObserved>>> obtainObservedValueFunc;
         private readonly Func<TObserved, TDisplayed> createDisplayedValueFunc;
@@ -62,9 +63,38 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders
             this.obtainObservedValueFunc = obtainObservedValueFunc;
             this.createDisplayedValueFunc = createDisplayedValueFunc;
 
-            values = new List<Tuple<TObserved, IEventedList<TObserved>>>();
-
+            values = new List<Tuple<TDisplayed, IEventedList<TObserved>>>();
         }
 
+        /// <summary>
+        /// Obtain the observed value and the <see cref="IEventedList{TObserved}"/>
+        /// it belongs to, from the provided <paramref name="val"/>.
+        /// </summary>
+        /// <param name="val">
+        /// The <typeparamref name="TDisplayed"/> of which the corresponding
+        /// <typeparamref name="TObserved"/> should be retrieved.
+        /// </param>
+        /// <returns>
+        /// A tuple consisting of a <typeparamref name="TObserved"/>
+        /// corresponding with the provided <paramref name="val"/> and the
+        /// <see cref="IEventedList{TObserved}"/> the <typeparamref name="TObserved"/>
+        /// belongs to.
+        /// </returns>
+        private Tuple<TObserved, IEventedList<TObserved>> ObtainObservedValue(TDisplayed val) =>
+            obtainObservedValueFunc.Invoke(val);
+
+        /// <summary>
+        /// Create a <typeparamref name="TDisplayed"/> corresponding with the
+        /// provided <paramref name="val"/>.
+        /// </summary>
+        /// <param name="val">
+        /// The value from which the <typeparamref name="TDisplayed"/> should
+        /// be created.
+        /// </param>
+        /// <returns>
+        /// The <typeparamref name="TDisplayed"/> based on the <paramref name="val"/>.
+        /// </returns>
+        private TDisplayed CreateDisplayedValue(TObserved val) =>
+            createDisplayedValueFunc.Invoke(val);
     }
 }
