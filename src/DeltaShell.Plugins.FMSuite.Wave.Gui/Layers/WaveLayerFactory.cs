@@ -144,7 +144,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         /// <returns>
         /// A new <see cref="ILayer"/> visualising the observation points features.
         /// </returns>
-        /// <exception cref="ArgumentNullException">waveModel
+        /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="waveModel"/> is <c>null</c>.
         /// </exception>
         public static ILayer CreateObservationPointsLayer(IWaveModel waveModel)
@@ -167,6 +167,40 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
                                                             "ObservationPoints",
                                                             waveModelName,
                                                             waveModel.CoordinateSystem),
+            };
+        }
+
+        /// <summary>
+        /// Create a new observation cross-section layer from the observation cross sections
+        /// within <paramref name="waveModel"/>.
+        /// </summary>
+        /// <param name="waveModel">The wave model.</param>
+        /// <returns>
+        /// A new <see cref="ILayer"/> visualising the observation cross-sections features.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="waveModel"/> is <c>null</c>.
+        /// </exception>
+        public static ILayer CreateObservationCrossSectionLayer(IWaveModel waveModel)
+        {
+            if (waveModel == null)
+            {
+                throw new ArgumentNullException(nameof(waveModel));
+            }
+
+            return new VectorLayer(WaveLayerNames.ObservationCrossSectionLayerName)
+            {
+                DataSource = new Feature2DCollection().Init(waveModel.ObservationCrossSections, 
+                                                            "CrS",
+                                                            waveModelName,
+                                                            waveModel.CoordinateSystem),
+                FeatureEditor = new Feature2DEditor(waveModel),
+                Style = new VectorStyle
+                {
+                    Line = new Pen(Color.LightSteelBlue, 3f),
+                    GeometryType = typeof(ILineString)
+                },
+                NameIsReadOnly = true
             };
         }
     }

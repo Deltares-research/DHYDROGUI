@@ -172,5 +172,32 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
             Assert.That(exception, Has.Property("ParamName").EqualTo("coordinateSystem"));
         }
 
+        [Test]
+        public void CreateObservationCrossSectionsLayer_ValidWaveModel_ReturnsCorrectResults()
+        {
+            // Setup
+            var model = new WaveModel();
+
+            // Call
+            ILayer layer = WaveLayerFactory.CreateObservationCrossSectionLayer(model);
+
+            // Assert
+            Assert.That(layer, Is.InstanceOf<VectorLayer>(),
+                        $"Expected the result to be an instance of {nameof(VectorLayer)}");
+            Assert.That(layer.Name, Is.EqualTo("Observation Cross-Sections"),
+                        "Expected the layer to have a different name.");
+        }
+
+        [Test]
+        public void CreateObservationCrosSectionsLayer_WaveModelNull_ThrowsArgumentNullException()
+        {
+            // Call
+            void Call() => WaveLayerFactory.CreateObservationCrossSectionLayer(null);
+
+            // Assert
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception, Has.Property("ParamName").EqualTo("waveModel"));
+        }
+
     }
 }
