@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Drawing;
+using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Common.Layers;
+using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Geometries;
 using SharpMap.Api.Layers;
 using SharpMap.Data.Providers;
@@ -69,7 +71,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         /// <returns>
         /// A new <see cref="ILayer"/> visualising the obstacle features.
         /// </returns>
-        /// <exception cref="ArgumentNullException">waveModel
+        /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="waveModel"/> is <c>null</c>.
         /// </exception>
         public static ILayer CreateObstacleLayer(IWaveModel waveModel)
@@ -90,6 +92,45 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
                 {
                     Line = new Pen(Color.Red, 3f),
                     GeometryType = typeof(ILineString)
+                },
+                NameIsReadOnly = true
+            };
+        }
+
+        /// <summary>
+        /// Create a new obstacle data layer.
+        /// </summary>
+        /// <param name="obstacleData">The obstacle data.</param>
+        /// <param name="coordinateSystem">The coordinate system.</param>
+        /// <returns>
+        /// A new <see cref="ILayer"/> visualising the obstacle data features.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when any of the parameters is <c>null</c>.
+        /// </exception>
+        public static ILayer CreateObstacleDataLayer(EventedList<WaveObstacle> obstacleData, 
+                                                     ICoordinateSystem coordinateSystem)
+        {
+            if (obstacleData == null)
+            {
+                throw new ArgumentNullException(nameof(obstacleData));
+            }
+
+            if (coordinateSystem == null)
+            {
+                throw new ArgumentNullException(nameof(coordinateSystem));
+            }
+
+            return new VectorLayer(WaveLayerNames.ObstacleDataLayerName)
+            {
+                DataSource = new Feature2DCollection().Init(obstacleData, 
+                                                            "WaveObstacleData", 
+                                                            waveModelName,
+                                                            coordinateSystem),
+                Style = new VectorStyle
+                {
+                    Symbol = WaveLayerIcons.ObstacleData,
+                    GeometryType = typeof(IPoint)
                 },
                 NameIsReadOnly = true
             };
