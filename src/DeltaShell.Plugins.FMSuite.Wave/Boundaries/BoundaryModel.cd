@@ -1,2 +1,46 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ClassDiagram /> 
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="DeltaShell.Plugins.FMSuite.Wave.Boundaries.WaveBoundary" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="0.5" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Boundaries\WaveBoundary.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.FMSuite.Wave.Boundaries.BoundaryContainer">
+    <Position X="3.5" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Boundaries\BoundaryContainer.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Boundaries" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions.GridBoundary" Collapsed="true">
+    <Position X="0.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAEAAAAAACAAAAAAIAAABAAAAAAABIAAAAAA=</HashCode>
+      <FileName>Boundaries\GeometricDefinitions\GridBoundary.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="DeltaShell.Plugins.FMSuite.Wave.Boundaries.IWaveBoundary">
+    <Position X="3.25" Y="2.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Boundaries\IWaveBoundary.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="GeometricDefinition" />
+    </ShowAsAssociation>
+  </Interface>
+  <Interface Name="DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions.IWaveBoundaryGeometricDefinition">
+    <Position X="2.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAEgAAAAAAAAAA=</HashCode>
+      <FileName>Boundaries\GeometricDefinitions\IWaveBoundaryGeometricDefinition.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
