@@ -22,6 +22,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
     public class WaveModelTest
     {
         [Test]
+        public void Constructor_SetsCorrectBoundaryContainer()
+        {
+            // Call
+            using (var model = new WaveModel())
+            {
+                // Assert
+                Assert.That(model.BoundaryContainer, Is.Not.Null);
+            }
+        }
+
+        [Test]
         public void DefaultConstructor_SetsCorrectTimeProperties()
         {
             // Setup

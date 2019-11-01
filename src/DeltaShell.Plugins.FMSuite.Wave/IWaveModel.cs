@@ -2,6 +2,7 @@
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Editing;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;
 
@@ -29,6 +30,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         /// Get or set the obstacles.
         /// </summary>
         IEventedList<WaveObstacle> Obstacles { get; }
+
+        /// <summary>
+        /// Get the boundary container of this <see cref="IWaveModel"/>.
+        /// </summary>
+        IBoundaryContainer BoundaryContainer { get; }
 
         // TODO: This will most likely be removed.
         IEventedList<Feature2D> Boundaries { get; }

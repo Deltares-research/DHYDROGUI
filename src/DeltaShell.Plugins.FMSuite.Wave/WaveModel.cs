@@ -23,6 +23,7 @@ using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO.Readers;
 using DeltaShell.Plugins.FMSuite.Common.IO.Writers;
 using DeltaShell.Plugins.FMSuite.Wave.Api;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.IO;
 using DeltaShell.Plugins.FMSuite.Wave.IO.Exporters;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
@@ -191,6 +192,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         private readonly MdwFile mdwFile = new MdwFile();
         private IWaveModelApi waveApi;
 
+        public IBoundaryContainer BoundaryContainer { get; }
         public IEventedList<Feature2D> Boundaries { get; }
         public IEventedList<Feature2D> Sp2Boundaries { get; }
 
@@ -424,6 +426,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             tempWorkingDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
 
             InitializeCouplingTime();
+
+            BoundaryContainer = new BoundaryContainer();
         }
 
         private void InitializeCouplingTime()
