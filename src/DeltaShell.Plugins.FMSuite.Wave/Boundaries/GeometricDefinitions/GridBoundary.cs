@@ -78,6 +78,25 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
         /// </returns>
         public IReadOnlyList<GridCoordinate> this[GridSide gridSide] => boundaries[gridSide];
 
+        /// <summary>
+        /// Gets the grid envelope.
+        /// </summary>
+        /// <returns>
+        /// The envelope of this <see cref="GridBoundary"/>.
+        /// </returns>
+        public IEnumerable<GridCoordinate> GetGridEnvelope()
+        {
+            GridSide[] sides =
+            {
+                GridSide.West,
+                GridSide.North,
+                GridSide.East,
+                GridSide.South
+            };
+
+            return sides.SelectMany(x => this[x]).Distinct(new GridCoordinateValueComparer());
+        }
+
         private IEnumerable<GridCoordinate> GetBoundaryAtSide(GridSide side)
         {
             int sizeM = observedGrid.Size1;
