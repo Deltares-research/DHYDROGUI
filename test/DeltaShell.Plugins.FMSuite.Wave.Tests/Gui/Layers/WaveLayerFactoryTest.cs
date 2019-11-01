@@ -95,5 +95,32 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
             var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception, Has.Property("ParamName").EqualTo("waveModel"));
         }
+
+        [Test]
+        public void CreateObservationPointsLayer_ValidWaveModel_ReturnsCorrectResults()
+        {
+            // Setup
+            var model = new WaveModel();
+
+            // Call
+            ILayer layer = WaveLayerFactory.CreateObservationPointsLayer(model);
+
+            // Assert
+            Assert.That(layer, Is.InstanceOf<VectorLayer>(),
+                        $"Expected the result to be an instance of {nameof(VectorLayer)}");
+            Assert.That(layer.Name, Is.EqualTo("Observation Points"),
+                        "Expected the layer to have a different name.");
+        }
+
+        [Test]
+        public void CreateObservationPointsLayer_WaveModelNull_ThrowsArgumentNullException()
+        {
+            // Call
+            void Call() => WaveLayerFactory.CreateObservationPointsLayer(null);
+
+            // Assert
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception, Has.Property("ParamName").EqualTo("waveModel"));
+        }
     }
 }

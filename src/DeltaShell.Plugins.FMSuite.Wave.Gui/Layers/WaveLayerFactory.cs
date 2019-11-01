@@ -94,5 +94,39 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
                 NameIsReadOnly = true
             };
         }
+
+        /// <summary>
+        /// Create a new observation points layer from the observation points
+        /// within <paramref name="waveModel"/>.
+        /// </summary>
+        /// <param name="waveModel">The wave model.</param>
+        /// <returns>
+        /// A new <see cref="ILayer"/> visualising the observation points features.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">waveModel
+        /// Thrown when <paramref name="waveModel"/> is <c>null</c>.
+        /// </exception>
+        public static ILayer CreateObservationPointsLayer(IWaveModel waveModel)
+        {
+            if (waveModel == null)
+            {
+                throw new ArgumentNullException(nameof(waveModel));
+            }
+
+            return new VectorLayer(WaveLayerNames.ObservationPointLayerName)
+            {
+                NameIsReadOnly = true,
+                FeatureEditor = new Feature2DEditor(waveModel),
+                Style = new VectorStyle
+                {
+                    GeometryType = typeof(IPoint),
+                    Symbol = WaveLayerIcons.ObservationPoint
+                },
+                DataSource = new Feature2DCollection().Init(waveModel.ObservationPoints, 
+                                                            "ObservationPoints",
+                                                            waveModelName,
+                                                            waveModel.CoordinateSystem),
+            };
+        }
     }
 }
