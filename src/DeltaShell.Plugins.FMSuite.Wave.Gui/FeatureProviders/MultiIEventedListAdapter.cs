@@ -167,10 +167,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders
         }
         bool IList.IsReadOnly { get; }
         public bool IsFixedSize { get; }
-        void ICollection<TDisplayed>.Clear()
-        {
-            throw new NotImplementedException();
-        }
+
+        void ICollection<TDisplayed>.Clear() => throw new NotSupportedException("This operation is currently not supported.");
 
         public bool Contains(TDisplayed item)
         {

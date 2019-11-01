@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders;
 using NUnit.Framework;
@@ -50,6 +51,23 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.FeatureProviders
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception, Has.Property("ParamName").EqualTo("createDisplayedValueFunc"));
+        }
+
+        [Test]
+        public void Clear_ThrowsNotSupportedException()
+        {
+            // Setup
+            Tuple<object, IEventedList<object>> ObtainObservedValueFunc(object _) => null;
+            object CreateDisplayedValueFunc(object _) => null;
+
+            ICollection<object> list = new MultiIEventedListAdapter<object, object>(ObtainObservedValueFunc, CreateDisplayedValueFunc);
+
+            // Call
+            void Call() => list.Clear();
+
+            // Assert
+            var exception = Assert.Throws<NotSupportedException>(Call);
+            Assert.That(exception, Has.Message.EqualTo("This operation is currently not supported."));
         }
     }
 }
