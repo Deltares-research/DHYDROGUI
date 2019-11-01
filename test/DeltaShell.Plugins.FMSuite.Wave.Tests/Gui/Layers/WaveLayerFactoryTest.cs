@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Linq;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Common.Layers;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers;
+using DeltaShell.Plugins.FMSuite.Wave.Layers;
 using GeoAPI.Extensions.CoordinateSystems;
 using NSubstitute;
 using NUnit.Framework;
@@ -199,5 +201,36 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
             Assert.That(exception, Has.Property("ParamName").EqualTo("waveModel"));
         }
 
+        [Test]
+        public void CreateSnappedFeaturesLayer_ValidSnappedFeatures_ReturnsCorrectResults()
+        {
+            // Setup
+            var model = new WaveModel();
+            var waveSnappedFeatures = new WaveSnappedFeaturesGroupLayerData(model);
+
+            // Call
+            ILayer layer = WaveLayerFactory.CreateSnappedFeaturesLayer(waveSnappedFeatures);
+
+            // Assert
+            Assert.That(layer, Is.InstanceOf<GroupLayer>(),
+                        $"Expected the result to be an instance of {nameof(GroupLayer)}");
+            Assert.That(layer.Name, Is.EqualTo("Estimated Grid-snapped features"),
+                        "Expected the layer to have a different name.");
+
+            var groupLayer = (GroupLayer) layer;
+            Assert.That(groupLayer.Layers.Count, Is.EqualTo(waveSnappedFeatures.ChildData.Count()),
+                        "Expected a different number of layers:");
+        }
+
+        [Test]
+        public void CreateSnappedFeaturesLayer_SnappedFeaturesNull_ThrowsArgumentNullException()
+        {
+            // Call
+            void Call() => WaveLayerFactory.CreateSnappedFeaturesLayer(null);
+
+            // Assert
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception, Has.Property("ParamName").EqualTo("snappedFeatures"));
+        }
     }
 }

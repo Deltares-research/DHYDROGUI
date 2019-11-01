@@ -2,6 +2,7 @@
 using System.Drawing;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Common.Layers;
+using DeltaShell.Plugins.FMSuite.Wave.Layers;
 using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Geometries;
 using SharpMap.Api.Layers;
@@ -202,6 +203,44 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
                 },
                 NameIsReadOnly = true
             };
+        }
+
+        /// <summary>
+        /// Create a new snapped features layer from the <paramref name="snappedFeatures"/>.
+        /// </summary>
+        /// <param name="snappedFeatures">The snapped features.</param>
+        /// <returns>
+        /// A new <see cref="ILayer"/> visualising the snapped features.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="snappedFeatures"/> is <c>null</c>.
+        /// </exception>
+        public static ILayer CreateSnappedFeaturesLayer(WaveSnappedFeaturesGroupLayerData snappedFeatures)
+        {
+            if (snappedFeatures == null)
+            {
+                throw new ArgumentNullException(nameof(snappedFeatures));
+            }
+
+            var groupLayer = new GroupLayer(WaveLayerNames.GridSnappedFeaturesLayerName);
+            foreach (FeatureCollection snappedFeaturesData in snappedFeatures.ChildData)
+            {
+                var vectorLayer = new VectorLayer("Boundaries")
+                {
+                    DataSource = snappedFeaturesData,
+                    NameIsReadOnly = true,
+                    Selectable = false,
+                    Style = new VectorStyle
+                    {
+                        Fill = Brushes.Gray,
+                        GeometryType = typeof(IPoint)
+                    }
+                };
+
+                groupLayer.Layers.Add(vectorLayer);
+            }
+
+            return groupLayer;
         }
     }
 }
