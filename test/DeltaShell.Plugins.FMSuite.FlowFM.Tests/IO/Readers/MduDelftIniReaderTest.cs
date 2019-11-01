@@ -14,7 +14,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Readers
     {
         [Test]
         [TestCaseSource(nameof(GetMultiValuedPropertiesFileContents))]
-        public void ReadDelftIniFile_WithMultipleValuedProperty_ThenPropertyIsReadCorrectly(string fileContent)
+        public void ReadDelftIniFile_WithMultipleValuedProperty_ThenPropertyIsReadCorrectly(string fileContent, string expectedComment)
         {
             // Setup
             var stream = new MemoryStream(Encoding.ASCII.GetBytes(fileContent));
@@ -29,52 +29,87 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Readers
             DelftIniProperty property = category.Properties.Single();
             Assert.That(property.Name, Is.EqualTo("ObsFile"));
             Assert.That(property.Value, Is.EqualTo("obs_1_obs.xyn obs_2_obs.xyn obs_3_obs.xyn"));
-            Assert.That(property.Comment, Is.EqualTo("My comment"));
+            Assert.That(property.Comment, Is.EqualTo(expectedComment));
         }
 
-        private static IEnumerable<string> GetMultiValuedPropertiesFileContents()
+        private static IEnumerable<object> GetMultiValuedPropertiesFileContents()
         {
-            yield return "[output]"
-                         + Environment.NewLine
-                         + @"ObsFile  = obs_1_obs.xyn obs_2_obs.xyn obs_3_obs.xyn  # My comment";
+            yield return new object[]
+            {
+                "[output]"
+                + Environment.NewLine
+                + @"ObsFile  = obs_1_obs.xyn obs_2_obs.xyn obs_3_obs.xyn  # My comment",
+                "My comment"
+            };
 
-            yield return "[output]"
-                         + Environment.NewLine
-                         + @"ObsFile  = obs_1_obs.xyn obs_2_obs.xyn \"
-                         + Environment.NewLine
-                         + "obs_3_obs.xyn  # My comment";
+            yield return new object[]
+            {
+                "[output]"
+                + Environment.NewLine
+                + @"ObsFile  = obs_1_obs.xyn obs_2_obs.xyn \"
+                + Environment.NewLine
+                + "obs_3_obs.xyn  # My comment",
+                "My comment"
+            };
 
-            yield return "[output]"
-                         + Environment.NewLine
-                         + @"ObsFile  = obs_1_obs.xyn \"
-                         + Environment.NewLine
-                         + @"obs_2_obs.xyn \"
-                         + Environment.NewLine
-                         + "obs_3_obs.xyn  # My comment";
+            yield return new object[]
+            {
+                "[output]"
+                + Environment.NewLine
+                + @"ObsFile  = obs_1_obs.xyn \"
+                + Environment.NewLine
+                + @"obs_2_obs.xyn \"
+                + Environment.NewLine
+                + "obs_3_obs.xyn  # My comment",
+                "My comment"
+            };
 
-            yield return "[output]"
-                         + Environment.NewLine
-                         + @"ObsFile  = \"
-                         + Environment.NewLine
-                         + @"obs_1_obs.xyn \"
-                         + Environment.NewLine
-                         + @"obs_2_obs.xyn \"
-                         + Environment.NewLine
-                         + "obs_3_obs.xyn  # My comment";
+            yield return new object[]
+            {
+                "[output]"
+                + Environment.NewLine
+                + @"ObsFile  = \"
+                + Environment.NewLine
+                + @"obs_1_obs.xyn \"
+                + Environment.NewLine
+                + @"obs_2_obs.xyn \"
+                + Environment.NewLine
+                + "obs_3_obs.xyn  # My comment",
+                "My comment"
+            };
 
-            yield return "[output]"
-                         + Environment.NewLine
-                         + @"ObsFile  = obs_1_obs.xyn \ # This comment should be ignored"
-                         + Environment.NewLine
-                         + "obs_2_obs.xyn obs_3_obs.xyn  # My comment";
+            yield return new object[]
+            {
+                "[output]"
+                + Environment.NewLine
+                + @"ObsFile  = obs_1_obs.xyn \"
+                + Environment.NewLine
+                + "obs_2_obs.xyn obs_3_obs.xyn",
+                string.Empty
+            };
 
-            yield return "[output]"
-                         + Environment.NewLine
-                         + @"ObsFile  = obs_1_obs.xyn \"
-                         + Environment.NewLine
-                         + @"obs_2_obs.xyn \ # This comment should be ignored"
-                         + Environment.NewLine
-                         + "obs_3_obs.xyn  # My comment";
+
+            yield return new object[]
+            {
+                "[output]"
+                + Environment.NewLine
+                + @"ObsFile  = obs_1_obs.xyn \ # This comment should be ignored"
+                + Environment.NewLine
+                + "obs_2_obs.xyn obs_3_obs.xyn  # My comment",
+                "My comment"
+            };
+
+            yield return new object[]
+            {
+                "[output]"
+                + Environment.NewLine
+                + @"ObsFile  = obs_1_obs.xyn \"
+                + Environment.NewLine
+                + @"obs_2_obs.xyn \ # This comment should be ignored"
+                + Environment.NewLine
+                + "obs_3_obs.xyn  # My comment",
+                "My comment"
+            };
         }
     }
 }

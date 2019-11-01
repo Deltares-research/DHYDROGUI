@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using DelftTools.Utils.RegularExpressions;
 using DeltaShell.NGHS.IO;
-using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DelftIniReaders
 {
@@ -27,13 +26,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DelftIniReaders
         private const string ValueSlashPattern =
             @"^\s*" +                   // pre-whitespaces
             @"(?<value>[^(\)]*)" +      // value, until first backslash
-            @"\\+(?<comment>.*)?\z";                   // At least one backslash and every character until the end of the line
+            @"\\+(?<comment>.*)?\z";    // At least one backslash and every character until the end of the line
 
         private const string ValueCommentPattern =
             @"^\s*" +                   // pre-whitespaces
             @"(?<value>[^#]*)" +        // value, until '#'-sign
-            @"#+\s*" +                  // '#'-sign with whitespaces
-            @"((?<comment>.*))?\z";     // comment, every character until the end of the line
+            @"(#\s*(?<comment>.*))?$";  // comment, every character until the end of the line
 
         /// <summary>
         /// Parses one or multiple lines expecting a key-value-comment pattern or a multiline defined property.
