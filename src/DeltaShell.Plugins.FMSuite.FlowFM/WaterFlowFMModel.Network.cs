@@ -15,7 +15,6 @@ using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Editing;
 using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.NGHS.IO.Grid;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
@@ -429,7 +428,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     throw new NotImplementedException();
 
                 case NotifyCollectionChangedAction.Add:
-                    AddBoundaryCondition(WaterFlowModel1DHelper.CreateDefaultBoundaryCondition(node, UseSalinity, UseTemperature));
+                    AddBoundaryCondition(Helper1D.CreateDefaultBoundaryCondition(node, UseSalinity, UseTemperature));
                     break;
 
                 case NotifyCollectionChangedAction.Remove:
