@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders;
 using NUnit.Framework;
@@ -17,6 +18,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.FeatureProviders
 
             // Call
             var list = new MultiIEventedListAdapter<object, object>(ObtainObservedValueFunc, CreateDisplayedValueFunc);
+
+            // Assert
+            Assert.That(list, Is.InstanceOf<IEventedList<object>>());
+            Assert.That(list, Is.InstanceOf<IList>());
         }
 
         [Test]
