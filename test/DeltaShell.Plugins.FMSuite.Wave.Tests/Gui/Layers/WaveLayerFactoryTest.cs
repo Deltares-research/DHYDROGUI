@@ -3,6 +3,7 @@ using DeltaShell.Plugins.FMSuite.Common.Layers;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers;
 using NUnit.Framework;
 using SharpMap.Api.Layers;
+using SharpMap.Layers;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
 {
@@ -38,6 +39,33 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception, Has.Property("ParamName").EqualTo("waveModel"));
+        }
+
+        [Test]
+        public void CreateWaveDomainDataLayer_ValidDomain_ReturnsCorrectResults()
+        {
+            // Setup
+            var expectedDomainName = "DomainName";
+            var domain = new WaveDomainData(expectedDomainName);
+
+            // Call
+            ILayer layer = WaveLayerFactory.CreateWaveDomainDataLayer(domain);
+
+            // Assert
+            Assert.That(layer, Is.InstanceOf<GroupLayer>());
+            Assert.That(layer.Name, Is.EqualTo($"Domain ({expectedDomainName})"),
+                        "Expected the layer to have a different name.");
+        }
+
+        [Test]
+        public void CreateWaveDomainDataLayer_DomainNull_ThrowsArgumentNullException()
+        {
+            // Call
+            void Call() => WaveLayerFactory.CreateWaveDomainDataLayer(null);
+
+            // Assert
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception, Has.Property("ParamName").EqualTo("domain"));
         }
     }
 }

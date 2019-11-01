@@ -1,6 +1,7 @@
 ﻿using System;
 using DeltaShell.Plugins.FMSuite.Common.Layers;
 using SharpMap.Api.Layers;
+using SharpMap.Layers;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
 {
@@ -30,6 +31,26 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
                 Name = waveModel.Name,
                 Model = waveModel,
             };
+        }
+
+        /// <summary>
+        /// Create a new <see cref="WaveDomainData"/> layer.
+        /// </summary>
+        /// <param name="domain">The domain.</param>
+        /// <returns>
+        /// A new <see cref="ILayer"/> of the <see cref="WaveDomainData"/>.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="domain"/> is <c>null</c>.
+        /// </exception>
+        public static ILayer CreateWaveDomainDataLayer(WaveDomainData domain)
+        {
+            if (domain == null)
+            {
+                throw new ArgumentNullException(nameof(domain));
+            }
+
+            return new GroupLayer($"Domain ({domain.Name})");
         }
     }
 }
