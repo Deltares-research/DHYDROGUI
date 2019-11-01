@@ -61,6 +61,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
             return new GroupLayer(WaveLayerNames.GetDomainLayerName(domain.Name));
         }
 
+        /// <summary>
+        /// Create a new obstacle layer from the obstacles within
+        /// <paramref name="waveModel"/>.
+        /// </summary>
+        /// <param name="waveModel">The wave model.</param>
+        /// <returns>
+        /// A new <see cref="ILayer"/> visualising the obstacle features.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">waveModel
+        /// Thrown when <paramref name="waveModel"/> is <c>null</c>.
+        /// </exception>
         public static ILayer CreateObstacleLayer(IWaveModel waveModel)
         {
             if (waveModel == null)
