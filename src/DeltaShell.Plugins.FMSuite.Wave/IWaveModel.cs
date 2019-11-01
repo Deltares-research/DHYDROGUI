@@ -18,17 +18,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         /// <summary>
         /// Get or set the observation points.
         /// </summary>
-        IEventedList<Feature2DPoint> ObservationPoints { get; set; }
+        IEventedList<Feature2DPoint> ObservationPoints { get; }
 
         /// <summary>
         /// Get or set the observation cross sections.
         /// </summary>
-        IEventedList<Feature2D> ObservationCrossSections { get; set; }
+        IEventedList<Feature2D> ObservationCrossSections { get; }
 
         /// <summary>
         /// Get or set the obstacles.
         /// </summary>
-        IEventedList<WaveObstacle> Obstacles { get; set; }
+        IEventedList<WaveObstacle> Obstacles { get; }
 
         // TODO: This will most likely be removed.
         IEventedList<Feature2D> Boundaries { get; }
