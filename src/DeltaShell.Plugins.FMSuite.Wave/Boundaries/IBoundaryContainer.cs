@@ -3,10 +3,10 @@
 namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries
 {
     /// <summary>
-    /// <see cref="BoundaryContainer"/> is responsible for managing a set of
+    /// <see cref="IBoundaryContainer"/> is responsible for managing a set of
     /// boundaries linked to the current outer grid.
     /// </summary>
-    public class BoundaryContainer : IBoundaryContainer
+    public interface IBoundaryContainer
     {
         /// <summary>
         /// Get the boundaries defined on the current outer grid.
@@ -14,10 +14,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries
         /// <value>
         /// The boundaries defined on the current outer grid.
         /// </value>
-        /// <remarks>
-        /// This class is the logical owner of the <see cref="IWaveBoundary"/>
-        /// within the model it is part of.
-        /// </remarks>
-        public IEventedList<IWaveBoundary> Boundaries { get; } = new EventedList<IWaveBoundary>();
+        IEventedList<IWaveBoundary> Boundaries { get; }
     }
 }
