@@ -9,6 +9,7 @@ using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Common.Gui.Properties;
 using DeltaShell.Plugins.FMSuite.Common.Layers;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers;
 using DeltaShell.Plugins.FMSuite.Wave.IO;
 using DeltaShell.Plugins.FMSuite.Wave.Layers;
 using GeoAPI.Extensions.CoordinateSystems;
@@ -27,14 +28,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
 {
     public class WaveModelMapLayerProvider : IMapLayerProvider
     {
-        public const string ObstacleLayerName = "Obstacles";
-        public const string ObstacleDataLayerName = "Obstacle Data";
-        public const string BoundaryLayerName = "Boundaries";
-        public const string BoundaryConditionLayerName = "Boundary Conditions";
-        public const string ObservationPointLayerName = "Observation Points";
-        public const string ObservationCrossSectionLayerName = "Observation Cross-Sections";
-        public const string GridSnappedFeaturesLayerName = "Estimated Grid-snapped features";
-
         private static readonly string ModelName = typeof(WaveModel).Name;
 
         private static readonly Bitmap coordinateBasedBoundaryIcon = Resources.boundary;
@@ -116,7 +109,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             {
                 if (Equals(features, model.Boundaries))
                 {
-                    return new VectorLayer(BoundaryLayerName)
+                    return new VectorLayer(WaveLayerNames.BoundaryLayerName)
                     {
                         DataSource =
                             new Feature2DCollection().Init(model.Boundaries, "Boundary", ModelName,
@@ -130,7 +123,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
 
                 if (Equals(features, model.Obstacles))
                 {
-                    return new VectorLayer(ObstacleLayerName)
+                    return new VectorLayer(WaveLayerNames.ObstacleLayerName)
                     {
                         DataSource =
                             new Feature2DCollection().Init(model.Obstacles, "Obstacle", ModelName,
@@ -164,7 +157,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
 
                 if (Equals(features, model.ObservationCrossSections))
                 {
-                    return new VectorLayer(ObservationCrossSectionLayerName)
+                    return new VectorLayer(WaveLayerNames.ObservationCrossSectionLayerName)
                     {
                         DataSource =
                             new Feature2DCollection().Init(model.ObservationCrossSections, "CrS",
@@ -182,7 +175,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
 
                 if (Equals(features, model.ObservationPoints))
                 {
-                    return new VectorLayer(ObservationPointLayerName)
+                    return new VectorLayer(WaveLayerNames.ObservationPointLayerName)
                     {
                         NameIsReadOnly = true,
                         FeatureEditor = new Feature2DEditor(model),
@@ -201,7 +194,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             var boundaryConditions = data as IEventedList<WaveBoundaryCondition>;
             if (boundaryConditions != null && model != null)
             {
-                return new VectorLayer(BoundaryConditionLayerName)
+                return new VectorLayer(WaveLayerNames.BoundaryConditionLayerName)
                 {
                     DataSource =
                         new Feature2DCollection().Init(boundaryConditions, "BoundaryCondition", ModelName,
@@ -218,7 +211,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             var obstacleData = data as IEventedList<WaveObstacle>;
             if (obstacleData != null && model != null)
             {
-                return new VectorLayer(ObstacleDataLayerName)
+                return new VectorLayer(WaveLayerNames.ObstacleDataLayerName)
                 {
                     DataSource =
                         new Feature2DCollection().Init(obstacleData, "WaveObstacleData", ModelName,
@@ -235,7 +228,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             var snappedGroupLayerData = data as WaveSnappedFeaturesGroupLayerData;
             if (snappedGroupLayerData != null)
             {
-                var groupLayer = new GroupLayer(GridSnappedFeaturesLayerName);
+                var groupLayer = new GroupLayer(WaveLayerNames.GridSnappedFeaturesLayerName);
                 foreach (FeatureCollection snappedFeatures in snappedGroupLayerData.ChildData)
                 {
                     var vectorLayer = new VectorLayer("Boundaries")

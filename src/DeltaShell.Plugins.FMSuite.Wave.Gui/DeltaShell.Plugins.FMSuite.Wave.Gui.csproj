@@ -234,6 +234,7 @@
     <Compile Include="Forms\WaveBoundaryTimeSelectionDialog.Designer.cs">
       <DependentUpon>WaveBoundaryTimeSelectionDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="Layers\WaveLayerNames.cs" />
     <Compile Include="Layers\WaveLayerFactory.cs" />
     <Compile Include="NodePresenters\WaveBoundaryNodePresenter.cs" />
     <Compile Include="NodePresenters\WaveDomainNodePresenter.cs" />

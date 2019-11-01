@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Extensions;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Properties;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using SharpMap.Api.Layers;
@@ -37,12 +38,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
 
             // tools:
             tools.Add(
-                new Feature2DLineTool(WaveModelMapLayerProvider.ObstacleLayerName, ObstacleToolName, ObstacleIcon));
+                new Feature2DLineTool(WaveLayerNames.ObstacleLayerName, ObstacleToolName, ObstacleIcon));
             tools.Add(
-                new Feature2DLineTool(WaveModelMapLayerProvider.BoundaryLayerName, BoundaryToolName, BoundaryIcon));
-            tools.Add(new Feature2DPointTool(WaveModelMapLayerProvider.ObservationPointLayerName,
+                new Feature2DLineTool(WaveLayerNames.BoundaryLayerName, BoundaryToolName, BoundaryIcon));
+            tools.Add(new Feature2DPointTool(WaveLayerNames.ObservationPointLayerName,
                                              ObservationPointToolName, ObservationPointIcon));
-            tools.Add(new Feature2DLineTool(WaveModelMapLayerProvider.ObservationCrossSectionLayerName,
+            tools.Add(new Feature2DLineTool(WaveLayerNames.ObservationCrossSectionLayerName,
                                             ObservationCrossSectionToolName, ObservationCrossSectionIcon));
 
             tools.Cast<ITargetLayerTool>().ForEach(t => t.LayerFilter = GetLayerFilter(t));
