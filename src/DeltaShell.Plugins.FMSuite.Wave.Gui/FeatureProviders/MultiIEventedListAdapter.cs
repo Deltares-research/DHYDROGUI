@@ -37,9 +37,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders
 
         private readonly Func<TDisplayed, Tuple<TObserved, IEventedList<TObserved>>> obtainObservedValueFunc;
         private readonly Func<TObserved, TDisplayed> createDisplayedValueFunc;
-        private int count;
-        private bool isReadOnly;
-        private int count1;
 
         /// <summary>
         /// Create a new <see cref="MultiIEventedListAdapter{TObserved, TDisplayed}"/>.
@@ -130,12 +127,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders
             throw new NotImplementedException();
         }
 
-        public bool Contains(object value)
+        public bool Contains(TDisplayed item)
         {
             throw new NotImplementedException();
         }
 
-        void IList.Clear()
+
+        public bool Contains(object value)
         {
             throw new NotImplementedException();
         }
@@ -146,6 +144,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders
         }
 
         public void Insert(int index, object value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Remove(TDisplayed item)
         {
             throw new NotImplementedException();
         }
@@ -166,23 +169,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders
             set => throw new NotImplementedException();
         }
 
-        bool IList.IsReadOnly => false;
+        public bool IsReadOnly => false;
 
         public bool IsFixedSize => false;
 
-        void ICollection<TDisplayed>.Clear() => throw new NotSupportedException("This operation is currently not supported.");
+        public void Clear() => throw new NotSupportedException("This operation is currently not supported.");
 
-        public bool Contains(TDisplayed item)
-        {
-            throw new NotImplementedException();
-        }
 
         public void CopyTo(TDisplayed[] array, int arrayIndex)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool Remove(TDisplayed item)
         {
             throw new NotImplementedException();
         }
@@ -192,18 +186,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders
             throw new NotImplementedException();
         }
 
-        int ICollection.Count
-        {
-            get
-            {
-                return count1;
-            }
-        }
-
-        public object SyncRoot { get; }
-        public bool IsSynchronized { get; }
-
-        int ICollection<TDisplayed>.Count
+        public int Count
         {
             get
             {
@@ -211,13 +194,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders
             }
         }
 
-        bool ICollection<TDisplayed>.IsReadOnly
-        {
-            get
-            {
-                return isReadOnly;
-            }
-        }
+        private int count;
+
+        public object SyncRoot { get; }
+        public bool IsSynchronized { get; }
 
         public int IndexOf(TDisplayed item)
         {
@@ -248,6 +228,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders
 
         public event NotifyCollectionChangingEventHandler CollectionChanging;
         public event NotifyCollectionChangedEventHandler CollectionChanged;
+
         public bool SkipChildItemEventBubbling { get; set; }
     }
 }

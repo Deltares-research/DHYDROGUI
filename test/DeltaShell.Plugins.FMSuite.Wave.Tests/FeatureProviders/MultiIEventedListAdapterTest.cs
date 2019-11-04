@@ -77,7 +77,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.FeatureProviders
             Tuple<object, IEventedList<object>> ObtainObservedValueFunc(object _) => null;
             object CreateDisplayedValueFunc(object _) => null;
 
-            IList<object> list = new MultiIEventedListAdapter<object, object>(ObtainObservedValueFunc, CreateDisplayedValueFunc);
+            var list = new MultiIEventedListAdapter<object, object>(ObtainObservedValueFunc, CreateDisplayedValueFunc);
 
             // Call
             bool result = list.IsReadOnly;
