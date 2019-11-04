@@ -116,6 +116,7 @@
     </Reference>
     <Reference Include="SharpMap.Api">
       <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.46369\lib\net461\DeltaShell\SharpMap.Api.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="SharpMap.Extensions">
       <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.46369\lib\net461\DeltaShell\SharpMap.Extensions.dll</HintPath>
@@ -195,6 +196,7 @@
     <ProjectReference Include="..\..\src\DeltaShell.Plugins.FMSuite.FlowFM\DeltaShell.Plugins.FMSuite.FlowFM.csproj">
       <Project>{56103155-E7A6-45D7-BA64-50A6F9D81B94}</Project>
       <Name>DeltaShell.Plugins.FMSuite.FlowFM</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\src\DeltaShell.Plugins.NetworkEditor\DeltaShell.Plugins.NetworkEditor.csproj">
       <Project>{11330F89-2B3D-449D-9211-EA3E0D7F6CDC}</Project>

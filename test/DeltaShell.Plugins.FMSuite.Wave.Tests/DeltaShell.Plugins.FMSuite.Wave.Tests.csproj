@@ -46,6 +46,7 @@
     </Reference>
     <Reference Include="DelftTools.Controls.Swf">
       <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.46369\lib\net461\DeltaShell\DelftTools.Controls.Swf.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Functions">
       <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.46369\lib\net461\DeltaShell\DelftTools.Functions.dll</HintPath>
@@ -62,6 +63,7 @@
     </Reference>
     <Reference Include="DelftTools.Shell.Gui.Swf">
       <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.46369\lib\net461\DeltaShell\DelftTools.Shell.Gui.Swf.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.TestUtils, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\DeltaShell.TestProject.1.4.0.46369\lib\net40\DelftTools.TestUtils.dll</HintPath>
@@ -251,6 +253,7 @@
     <ProjectReference Include="..\..\src\DeltaShell.Plugins.DelftModels.HydroModel.Gui\DeltaShell.Plugins.DelftModels.HydroModel.Gui.csproj">
       <Project>{67C4F55D-2CF5-424D-91A3-A68365AC1C9C}</Project>
       <Name>DeltaShell.Plugins.DelftModels.HydroModel.Gui</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\src\DeltaShell.Plugins.FMSuite.Common.Gui\DeltaShell.Plugins.FMSuite.Common.Gui.csproj">
       <Project>{7f3d15d6-3425-47a6-afd4-9b6e054ee8be}</Project>
