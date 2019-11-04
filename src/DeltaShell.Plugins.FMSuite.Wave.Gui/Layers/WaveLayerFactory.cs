@@ -4,7 +4,9 @@ using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Common.Layers;
 using DeltaShell.Plugins.FMSuite.Wave.Layers;
 using GeoAPI.Extensions.CoordinateSystems;
+using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
+using NetTopologySuite.Extensions.Grids;
 using SharpMap.Api.Layers;
 using SharpMap.Data.Providers;
 using SharpMap.Editors.Interactors;
@@ -23,7 +25,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         private static readonly string waveModelName = typeof(WaveModel).Name;
 
         /// <summary>
-        /// Create a new model layer from the given <paramref name="waveModel"/>.
+        /// Creates a new model layer from the given <paramref name="waveModel"/>.
         /// </summary>
         /// <param name="waveModel">The wave model.</param>
         /// <returns>A new <see cref="ILayer"/> containing teh model.</returns>
@@ -45,7 +47,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         }
 
         /// <summary>
-        /// Create a new <see cref="WaveDomainData"/> layer.
+        /// Creates a new <see cref="WaveDomainData"/> layer.
         /// </summary>
         /// <param name="domain">The domain.</param>
         /// <returns>
@@ -65,7 +67,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         }
 
         /// <summary>
-        /// Create a new obstacle layer from the obstacles within
+        /// Creates a new obstacle layer from the obstacles within
         /// <paramref name="waveModel"/>.
         /// </summary>
         /// <param name="waveModel">The wave model.</param>
@@ -99,7 +101,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         }
 
         /// <summary>
-        /// Create a new obstacle data layer.
+        /// Creates a new obstacle data layer.
         /// </summary>
         /// <param name="obstacleData">The obstacle data.</param>
         /// <param name="coordinateSystem">The coordinate system.</param>
@@ -133,7 +135,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         }
 
         /// <summary>
-        /// Create a new observation points layer from the observation points
+        /// Creates a new observation points layer from the observation points
         /// within <paramref name="waveModel"/>.
         /// </summary>
         /// <param name="waveModel">The wave model.</param>
@@ -167,7 +169,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         }
 
         /// <summary>
-        /// Create a new observation cross-section layer from the observation cross sections
+        /// Creates a new observation cross-section layer from the observation cross sections
         /// within <paramref name="waveModel"/>.
         /// </summary>
         /// <param name="waveModel">The wave model.</param>
@@ -201,7 +203,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         }
 
         /// <summary>
-        /// Create a new snapped features layer from the <paramref name="snappedFeatures"/>.
+        /// Creates a new snapped features layer from the <paramref name="snappedFeatures"/>.
         /// </summary>
         /// <param name="snappedFeatures">The snapped features.</param>
         /// <returns>
@@ -239,7 +241,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         }
 
         /// <summary>
-        /// Create a new output layer with the given <paramref name="domainName"/>.
+        /// Creates a new output layer with the given <paramref name="domainName"/>.
         /// </summary>
         /// <param name="domainName">Name of the domain.</param>
         /// <param name="overrideLayerName">if set to <c>true</c> use the <paramref name="domainName"/> verbatim.</param>
@@ -262,6 +264,58 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
             return new GroupLayer(layerName)
             {
                 LayersReadOnly = true,
+            };
+        }
+
+        /// <summary>
+        /// Creates a new grid layer from the given <paramref name="discreteGrid"/>
+        /// and <paramref name="coordinateSystem"/>.
+        /// </summary>
+        /// <param name="discreteGrid">The discrete grid.</param>
+        /// <param name="coordinateSystem">The coordinate system.</param>
+        /// <returns>
+        /// A new grid <see cref="ILayer"/>.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="discreteGrid"/> is <c>null</c>.
+        /// </exception>
+        public static ILayer CreateGridLayer(IDiscreteGridPointCoverage discreteGrid,
+                                             ICoordinateSystem coordinateSystem)
+        {
+            if (discreteGrid == null)
+            {
+                throw new ArgumentNullException(nameof(discreteGrid));
+            }
+
+            return discreteGrid is CurvilinearGrid 
+                       ? CreateCurvilinearGridLayer(discreteGrid, coordinateSystem) 
+                       : CreateCurvilinearVertexCoverageLayer(discreteGrid, coordinateSystem);
+        }
+
+        private static ILayer CreateCurvilinearGridLayer(IDiscreteGridPointCoverage discreteGrid,
+                                                         ICoordinateSystem coordinateSystem)
+        {
+            return new CurvilinearGridLayer
+            {
+                Name = discreteGrid.Name,
+                CurviLinearGrid = discreteGrid,
+                OptimizeRendering = discreteGrid.X.Values.Count > 50000,
+                DataSource = new WaveGridBasedDataSource(discreteGrid) {CoordinateSystem = coordinateSystem},
+                ReadOnly = true // to exclude from spatial editor
+            };
+        }
+
+        private static ILayer CreateCurvilinearVertexCoverageLayer(IDiscreteGridPointCoverage discreteGrid,
+                                                                   ICoordinateSystem coordinateSystem)
+        {
+            return new CurvilinearVertexCoverageLayer
+            {
+                Name = discreteGrid.Name,
+                Coverage = discreteGrid,
+                Visible = false,
+                OptimizeRendering = discreteGrid.X.Values.Count > 30000,
+                DataSource = new WaveGridBasedDataSource(discreteGrid) {CoordinateSystem = coordinateSystem},
+                ReadOnly = !discreteGrid.IsEditable // Exclude output from spatial editor
             };
         }
     }

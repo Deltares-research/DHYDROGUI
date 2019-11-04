@@ -1,10 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Common.Layers;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers;
 using DeltaShell.Plugins.FMSuite.Wave.Layers;
 using GeoAPI.Extensions.CoordinateSystems;
+using GeoAPI.Extensions.Coverages;
+using NetTopologySuite.Extensions.Coverages;
+using NetTopologySuite.Extensions.Grids;
 using NSubstitute;
 using NUnit.Framework;
 using SharpMap.Api.Layers;
@@ -253,6 +257,70 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception, Has.Property("ParamName").EqualTo("domainName"));
+        }
+
+        [Test]
+        public void CreateGridLayer_ValidCurvilinearGrid_ReturnsCorrectResults()
+        {
+            // Setup
+            const string gridName = "gridName";
+
+            IList<double> xCoordinates = new List<double> { 0.0 };
+            IList<double> yCoordinates = new List<double> { 0.0 };
+
+            var coordinateSystem = Substitute.For<ICoordinateSystem>();
+            var grid = new CurvilinearGrid(1, 1,
+                                           xCoordinates, yCoordinates,
+                                           string.Empty)
+            {
+                Name = gridName,
+            };
+
+            // Call
+            ILayer layer = WaveLayerFactory.CreateGridLayer(grid, coordinateSystem);
+
+            // Assert
+            Assert.That(layer, Is.InstanceOf<CurvilinearGridLayer>(),
+                        $"Expected the result to be an instance of {nameof(CurvilinearGridLayer)}");
+            Assert.That(layer.Name, Is.EqualTo(gridName),
+                        "Expected the layer to have a different name.");
+        }
+
+        [Test]
+        public void CreateGridLayer_ValidIDiscreteGridPointCoverage_ReturnsCorrectResults()
+        {
+            // Setup
+            const string gridName = "gridName";
+            IList<double> xCoordinates = new List<double> { 0.0 };
+            IList<double> yCoordinates = new List<double> { 0.0 };
+
+            var grid = new DiscreteGridPointCoverage(1, 1, xCoordinates, yCoordinates) {Name = gridName};
+
+            var coordinateSystem = Substitute.For<ICoordinateSystem>();
+
+            // Call
+            ILayer layer = WaveLayerFactory.CreateGridLayer(grid, coordinateSystem);
+
+            // Assert
+            Assert.That(layer, Is.InstanceOf<CurvilinearVertexCoverageLayer>(),
+                        $"Expected the result to be an instance of {nameof(CurvilinearVertexCoverageLayer)}");
+            Assert.That(layer.Name, Is.EqualTo(gridName),
+                        "Expected the layer to have a different name.");
+        }
+
+
+        [Test]
+        public void CreateGridLayer_DiscreteGridNull_ThrowsArgumentNullException()
+        {
+            // Setup
+            var coordinateSystem = Substitute.For<ICoordinateSystem>();
+
+            // Call
+            void Call() => WaveLayerFactory.CreateGridLayer(null, coordinateSystem);
+
+            // Assert
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception, Has.Property("ParamName").EqualTo("discreteGrid"));
         }
 
     }
