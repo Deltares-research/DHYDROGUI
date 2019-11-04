@@ -69,6 +69,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders
             this.createDisplayedValueFunc = createDisplayedValueFunc;
 
             values = new List<Tuple<TDisplayed, IEventedList<TObserved>>>();
+
+            SyncRoot = new object();
         }
 
         /// <summary>
@@ -186,15 +188,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders
             throw new NotImplementedException();
         }
 
-        public int Count
-        {
-            get
-            {
-                return count;
-            }
-        }
-
-        private int count;
+        public int Count => values.Count;
 
         public object SyncRoot { get; }
         public bool IsSynchronized { get; }

@@ -23,6 +23,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.FeatureProviders
             // Assert
             Assert.That(list, Is.InstanceOf<IEventedList<object>>());
             Assert.That(list, Is.InstanceOf<IList>());
+            Assert.That(list, Has.Count.EqualTo(0));
         }
 
         [Test]
