@@ -7,6 +7,7 @@ using System.Windows.Markup;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.Collections.Generic;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders
 {
@@ -131,6 +132,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders
             SubscribeToObservedList(observedList);
         }
 
+        public void DeregisterList(IEventedList<TObserved> observedList)
+        {
+            if (observedList == null)
+            {
+                throw new ArgumentNullException(nameof(observedList));
+            }
+
+            RemoveSourceListContents(observedList);
+            UnsubscribeFromSourceList(observedList);
+        }
+
         private void AddObservedListContents(IEventedList<TObserved> observedList)
         {
             if (!observedList.Any())
@@ -138,10 +150,28 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders
                 return;
             }
 
-            var addedItems = AddItems(observedList, observedList.ToList());
+            IList addedItems = AddItems(observedList, observedList.ToList());
             CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(
                                           NotifyCollectionChangedAction.Add,
                                           addedItems));
+        }
+
+        private void RemoveSourceListContents(IEventedList<TObserved> observedList)
+        {
+            if (!observedList.Any())
+            {
+                return;
+            }
+
+            IList removeItems = RemoveItems(observedList, observedList.ToList());
+            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(
+                                          NotifyCollectionChangedAction.Remove,
+                                          removeItems));
+        }
+
+        private void UnsubscribeFromSourceList(IEventedList<TObserved> observedList)
+        {
+            observedList.CollectionChanged -= HandleCollectionChanged;
         }
 
         private void SubscribeToObservedList(IEventedList<TObserved> observedList)
@@ -384,5 +414,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders
         public event NotifyCollectionChangedEventHandler CollectionChanged;
 
         public bool SkipChildItemEventBubbling { get; set; }
+
     }
 }

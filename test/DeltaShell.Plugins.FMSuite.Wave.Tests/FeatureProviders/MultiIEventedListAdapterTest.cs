@@ -516,6 +516,155 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.FeatureProviders
         }
 
         [Test]
+        public void GivenAnAdapterWithARegisteredList_WhenDeregisterListIsCalled_ThenTheListContentsAreRemoved()
+        {
+            // Setup
+            IEventedList<IWaveBoundary> list = 
+                GetEventedList();
+            MultiIEventedListAdapter<IWaveBoundary, IWaveBoundaryGeometricDefinition> adapter =
+                GetAdapterWithRegisteredList(list);
+            adapter.RegisterList(list);
+
+            // Precondition
+            Assert.That(adapter, Has.Count.EqualTo(2), 
+                        "Expected the adapter to have two members.");
+
+            // Call
+            adapter.DeregisterList(list);
+
+            // Assert
+            Assert.That(adapter, Has.Count.EqualTo(0),
+                        "Expected the adapter to be empty.");
+        }
+
+        [Test]
+        public void GivenAnAdapterWithARegisteredList_WhenDeregisterListIsCalled_ThenACollectionChangedIsInvoked()
+        {
+            // Setup
+            IEventedList<IWaveBoundary> list = 
+                GetEventedList();
+            MultiIEventedListAdapter<IWaveBoundary, IWaveBoundaryGeometricDefinition> adapter =
+                GetAdapterWithRegisteredList(list);
+            adapter.RegisterList(list);
+
+            object lastSender = null;
+            NotifyCollectionChangedEventArgs lastArgs = null;
+            int nCalls = 0;
+
+            void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs args)
+            {
+                nCalls += 1;
+                lastSender = sender;
+                lastArgs = args;
+            }
+
+            adapter.CollectionChanged += OnCollectionChanged;
+
+            // Precondition
+            Assert.That(adapter, Has.Count.EqualTo(2), 
+                        "Expected the adapter to have two members.");
+
+            // Call
+            adapter.DeregisterList(list);
+
+            // Assert
+            Assert.That(nCalls, Is.EqualTo(1), "Expected one callback.");
+            Assert.That(lastSender, Is.SameAs(adapter), "Expected the sender to be different:");
+
+            Assert.That(lastArgs, Is.Not.Null, "Expected the event args to not be null:");
+            Assert.That(lastArgs.Action, Is.EqualTo(NotifyCollectionChangedAction.Remove),
+                        "Expected elements to be added.");
+
+            Assert.That(lastArgs.NewItems, Is.Null);
+            Assert.That(lastArgs.OldItems, Has.Count.EqualTo(list.Count));
+            foreach (var value in list)
+            {
+                Assert.That(lastArgs.OldItems, Has.Member(value.GeometricDefinition));
+            }
+        }
+
+        [Test]
+        public void GivenAnAdapterWithAnEmptyRegisteredList_WhenDeregisterListIsCalled_ThenNoCollectionChangedIsInvoked()
+        {
+            // Setup
+            IEventedList<IWaveBoundary> list = new EventedList<IWaveBoundary>();
+            MultiIEventedListAdapter<IWaveBoundary, IWaveBoundaryGeometricDefinition> adapter =
+                GetAdapterWithRegisteredList(list);
+            adapter.RegisterList(list);
+
+            int nCalls = 0;
+
+            void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs args)
+            {
+                nCalls += 1;
+            }
+
+            adapter.CollectionChanged += OnCollectionChanged;
+
+            // Call
+            adapter.DeregisterList(list);
+
+            // Assert
+            Assert.That(nCalls, Is.EqualTo(0), "Expected no callback.");
+        }
+
+
+        [Test]
+        public void DeregisterList_CallingArgumentNameNull_ThrowsArgumentNullException()
+        {
+            // Setup
+            Tuple<object, IEventedList<object>> ObtainObservedValueFunc(object _) => null;
+            object CreateDisplayedValueFunc(object _) => null;
+
+            var list = new MultiIEventedListAdapter<object, object>(ObtainObservedValueFunc, CreateDisplayedValueFunc);
+
+            // Call
+            void Call() => list.DeregisterList(null);
+
+            // Assert
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception, Has.Property("ParamName").EqualTo("observedList"));
+        }
+
+        [Test]
+        public void GivenAnAdapterWithDeregisteredList_WhenAnElementIsAdded_ThenNoCollectionChangedIsInvoked()
+        {
+            // Setup
+            IEventedList<IWaveBoundary> list = 
+                GetEventedList();
+            MultiIEventedListAdapter<IWaveBoundary, IWaveBoundaryGeometricDefinition> adapter =
+                GetAdapterWithRegisteredList(list);
+            adapter.RegisterList(list);
+
+            Assert.That(adapter, Has.Count.EqualTo(2), 
+                        "Expected the adapter to have two members.");
+
+            adapter.DeregisterList(list);
+
+            Assert.That(adapter, Has.Count.EqualTo(0), 
+                        "Expected the adapter to empty.");
+
+            object lastSender = null;
+            NotifyCollectionChangedEventArgs lastArgs = null;
+            int nCalls = 0;
+
+            void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs args)
+            {
+                nCalls += 1;
+                lastSender = sender;
+                lastArgs = args;
+            }
+
+            adapter.CollectionChanged += OnCollectionChanged;
+
+            // Call
+            list.Add(Substitute.For<IWaveBoundary>());
+
+            // Assert
+            Assert.That(nCalls, Is.EqualTo(0), "Expected no callback.");
+        }
+
+        [Test]
         public void Clear_ThrowsNotSupportedException()
         {
             // Setup
