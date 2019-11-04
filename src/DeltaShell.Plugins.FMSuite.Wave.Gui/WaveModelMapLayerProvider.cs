@@ -8,6 +8,7 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
+using DelftTools.Utils.Editing;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers;
 using DeltaShell.Plugins.FMSuite.Wave.IO;
 using DeltaShell.Plugins.FMSuite.Wave.Layers;
@@ -70,7 +71,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
 
             if (data is IDiscreteGridPointCoverage discreteGrid)
             {
-                return GetGridLayer(parent, model, discreteGrid);
+                ICoordinateSystem coordinateSystem = GetGridCoordinateSystem(parent, model, discreteGrid);
+                return WaveLayerFactory.CreateGridLayer(discreteGrid, coordinateSystem);
             }
 
             // Model dependent layers
@@ -152,49 +154,22 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             return null;
         }
 
-        private ILayer GetGridLayer(object parent, IHasCoordinateSystem model, IDiscreteGridPointCoverage discreteGrid)
+        private ICoordinateSystem GetGridCoordinateSystem(object parent, IHasCoordinateSystem model, IEditableObject discreteGrid)
         {
-            ICoordinateSystem coordinateSystem;
-
-            var store = parent as WavmFileFunctionStore;
             if (model != null)
             {
-                coordinateSystem = model.CoordinateSystem;
-            }
-            else if (store != null)
-            {
-                coordinateSystem = null;
-            }
-            else
-            {
-                WaveModel ownerWaveModel =
-                    GetWaveModels?.Invoke().FirstOrDefault(w => w.GetAllItemsRecursive()
-                                                                 .Contains(discreteGrid));
-
-                coordinateSystem = ownerWaveModel == null ? null : ownerWaveModel.CoordinateSystem;
+                return model.CoordinateSystem;
             }
 
-            if (discreteGrid is CurvilinearGrid)
+            if (parent is WavmFileFunctionStore)
             {
-                return new CurvilinearGridLayer
-                {
-                    Name = discreteGrid.Name,
-                    CurviLinearGrid = discreteGrid,
-                    OptimizeRendering = discreteGrid.X.Values.Count > 50000,
-                    DataSource = new WaveGridBasedDataSource(discreteGrid) {CoordinateSystem = coordinateSystem},
-                    ReadOnly = true // to exclude from spatial editor
-                };
+                return null;
             }
 
-            return new CurvilinearVertexCoverageLayer
-            {
-                Name = discreteGrid.Name,
-                Coverage = discreteGrid,
-                Visible = false,
-                OptimizeRendering = discreteGrid.X.Values.Count > 30000,
-                DataSource = new WaveGridBasedDataSource(discreteGrid) {CoordinateSystem = coordinateSystem},
-                ReadOnly = !discreteGrid.IsEditable // Exclude output from spatial editor
-            };
+            WaveModel ownerWaveModel = GetWaveModels?.Invoke()
+                                                    .FirstOrDefault(w => w.GetAllItemsRecursive()
+                                                                          .Contains(discreteGrid));
+            return ownerWaveModel?.CoordinateSystem;
         }
 
         private static ILayer GetOutputLayer(WavmFileFunctionStore wavmFileFunctionStore, IWaveModel model)
