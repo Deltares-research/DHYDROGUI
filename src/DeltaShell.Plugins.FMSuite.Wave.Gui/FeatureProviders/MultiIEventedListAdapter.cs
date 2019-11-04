@@ -2,7 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Linq;
+using System.Windows.Markup;
 using DelftTools.Utils.Collections;
+using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.Collections.Generic;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders
@@ -23,6 +26,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders
     /// 
     /// The <see cref="MultiIEventedListAdapter{TObserved,TDisplayed}" /> will hold a copy
     /// of each <typeparamref name="TDisplayed" /> for each <typeparamref name="TObserved" />.
+    ///
+    /// This list does not respect ordering of elements, as this would lead to unnecessary
+    /// overhead to figure this out for the different lists.
     /// </remarks>
     /// <invariant>
     /// | There are no null values within the <see cref="MultiIEventedListAdapter" />.
@@ -37,6 +43,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders
 
         private readonly Func<TDisplayed, Tuple<TObserved, IEventedList<TObserved>>> obtainObservedValueFunc;
         private readonly Func<TObserved, TDisplayed> createDisplayedValueFunc;
+
+        private int? nextAdd = null;
 
         /// <summary>
         /// Create a new <see cref="MultiIEventedListAdapter{TObserved, TDisplayed}"/>.
@@ -104,20 +112,172 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders
         private TDisplayed CreateDisplayedValue(TObserved val) =>
             createDisplayedValueFunc.Invoke(val);
 
+        /// <summary>
+        /// Register <paramref name="observedList"/> to the observed lists of this
+        /// <see cref="MultiIEventedListAdapter{TObserved,TDisplayed}"/>.
+        /// </summary>
+        /// <param name="observedList">The list to be observed.</param>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="observedList"/> is <c>null</c>.
+        /// </exception>
+        public void RegisterList(IEventedList<TObserved> observedList)
+        {
+            if (observedList == null)
+            {
+                throw new ArgumentNullException(nameof(observedList));
+            }
+
+            AddObservedListContents(observedList);
+            SubscribeToObservedList(observedList);
+        }
+
+        private void AddObservedListContents(IEventedList<TObserved> observedList)
+        {
+            if (!observedList.Any())
+            {
+                return;
+            }
+
+            var addedItems = AddItems(observedList, observedList.ToList());
+            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(
+                                          NotifyCollectionChangedAction.Add,
+                                          addedItems));
+        }
+
+        private void SubscribeToObservedList(IEventedList<TObserved> observedList)
+        {
+            observedList.CollectionChanged += HandleCollectionChanged;
+        }
+
+        private void HandleCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (!(sender is IEventedList<TObserved> observedList))
+            {
+                return;
+            }
+
+            switch (e.Action)
+            {
+                case NotifyCollectionChangedAction.Replace:
+                    HandleCollectionChangedReplaced(observedList, e);
+                    break;
+                case NotifyCollectionChangedAction.Add:
+                    HandleCollectionChangedAdd(observedList, e);
+                    break;
+                case NotifyCollectionChangedAction.Remove:
+                case NotifyCollectionChangedAction.Reset:
+                    HandleCollectionChangedRemove(observedList, e);
+                    break;
+                case NotifyCollectionChangedAction.Move:
+                default:
+                    break;
+            }
+        }
+
+        private void HandleCollectionChangedReplaced(IEventedList<TObserved> observedList, NotifyCollectionChangedEventArgs e)
+        {
+            var removedItems = RemoveItems(observedList, e.OldItems);
+            var addedItems = AddItems(observedList, e.NewItems);
+            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(
+                                          NotifyCollectionChangedAction.Replace,
+                                          addedItems,
+                                          removedItems));
+        }
+
+        private void HandleCollectionChangedAdd(IEventedList<TObserved> observedList, NotifyCollectionChangedEventArgs e)
+        {
+            var addedItems = AddItems(observedList, e.NewItems);
+            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(
+                                          NotifyCollectionChangedAction.Add,
+                                          addedItems));
+        }
+
+        private void HandleCollectionChangedRemove(IEventedList<TObserved> observedList, NotifyCollectionChangedEventArgs e)
+        {
+            var removedItems = RemoveItems(observedList, e.OldItems);
+            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(
+                                          NotifyCollectionChangedAction.Remove,
+                                          removedItems));
+        }
+
+        private IList AddItems(IEventedList<TObserved> observedList, IList addedItems)
+        {
+            var result = new List<TDisplayed>();
+
+            foreach (var addedItem in addedItems)
+            {
+                if (!(addedItem is TObserved addedObservedItem))
+                {
+                    continue;
+                }
+
+                result.Add(Emplace(observedList, addedObservedItem));
+            }
+
+            return result;
+        }
+
+        private IList RemoveItems(IEventedList<TObserved> observedlist, IList removedItems)
+        {
+            var result = new List<TDisplayed>();
+
+            foreach (object removedItem in removedItems)
+            {
+                if (!(removedItem is TObserved removedSourceItem) ||
+                    !values.Any(x => IsValueEqualToObservedFeature(x, removedSourceItem, observedlist)))
+                {
+                    continue;
+                }
+
+                result.Add(PopItem(observedlist, removedSourceItem));
+            }
+
+            return result;
+        }
+
+        private TDisplayed Emplace(IEventedList<TObserved> container, TObserved observedFeature)
+        {
+            var newGoalValue = CreateDisplayedValue(observedFeature);
+            var newElement = new Tuple<TDisplayed, IEventedList<TObserved>>(newGoalValue, container);
+
+            if (nextAdd != null)
+            {
+                values.Insert(nextAdd.Value, newElement);
+                nextAdd = null;
+            }
+            else
+            {
+                values.Add(newElement);
+            }
+
+            return newGoalValue;
+        }
+
+        private bool IsValueEqualToObservedFeature(Tuple<TDisplayed, IEventedList<TObserved>> value,
+                                                   TObserved sourceFeature, 
+                                                   IEventedList<TObserved> container)
+        {
+            return Equals(ObtainObservedValue(value.Item1).Item1, sourceFeature) && 
+                   Equals(value.Item2, container);
+        }
+
+        private TDisplayed PopItem(IEventedList<TObserved> container, TObserved sourceFeature)
+        {
+            Tuple<TDisplayed, IEventedList<TObserved>> correspondingItem = 
+                values.First(x => IsValueEqualToObservedFeature(x, sourceFeature, container));
+
+            values.Remove(correspondingItem);
+            return correspondingItem.Item1;
+        }
+
         public void AddRange(IEnumerable<TDisplayed> enumerable)
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerator<TDisplayed> GetEnumerator()
-        {
-            throw new NotImplementedException();
-        }
+        public IEnumerator<TDisplayed> GetEnumerator() => values.Select(x => x.Item1).GetEnumerator();
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         public void Add(TDisplayed item)
         {
