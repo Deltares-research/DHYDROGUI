@@ -755,6 +755,105 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.FeatureProviders
         }
 
         [Test]
+        public void IndexOf_ItemNotTDisplayed_ReturnsMinusOne()
+        {
+            // Setup
+            IEventedList<IWaveBoundary> list = 
+                GetEventedList();
+            MultiIEventedListAdapter<IWaveBoundary, IWaveBoundaryGeometricDefinition> adapter =
+                GetAdapterWithRegisteredList(list);
+            adapter.RegisterList(list);
+
+            // Call
+            int result = adapter.IndexOf(new object());
+
+            // Assert
+            Assert.That(result, Is.EqualTo(-1));
+        }
+
+        [Test]
+        public void IndexOf_ItemTDisplayedNotInList_ReturnsMinusOne()
+        {
+            // Setup
+            IEventedList<IWaveBoundary> list = 
+                GetEventedList();
+            MultiIEventedListAdapter<IWaveBoundary, IWaveBoundaryGeometricDefinition> adapter =
+                GetAdapterWithRegisteredList(list);
+            adapter.RegisterList(list);
+
+            object obj = Substitute.For<IWaveBoundaryGeometricDefinition>();
+
+            // Call
+            int result = adapter.IndexOf(obj);
+            
+            // Assert
+            Assert.That(result, Is.EqualTo(-1));
+        }
+
+        [Test]
+        public void IndexOf_ItemTDisplayedInList_ReturnsCorrectIndex()
+        {
+            // Setup
+            IEventedList<IWaveBoundary> list = 
+                GetEventedList();
+            MultiIEventedListAdapter<IWaveBoundary, IWaveBoundaryGeometricDefinition> adapter =
+                GetAdapterWithRegisteredList(list);
+            adapter.RegisterList(list);
+
+            for (var i = 0; i < adapter.Count; i++)
+            {
+                object item = adapter[i];
+
+                // Call
+                int result = adapter.IndexOf(item);
+
+                // Assert
+                Assert.That(result, Is.EqualTo(i), "Expected the index to be the same as the retrieved location.");
+            }
+        }
+
+        [Test]
+        public void IndexOf_ItemNotInList_ReturnsMinusOne()
+        {
+            // Setup
+            IEventedList<IWaveBoundary> list = 
+                GetEventedList();
+            MultiIEventedListAdapter<IWaveBoundary, IWaveBoundaryGeometricDefinition> adapter =
+                GetAdapterWithRegisteredList(list);
+            adapter.RegisterList(list);
+
+            IWaveBoundaryGeometricDefinition obj = Substitute.For<IWaveBoundaryGeometricDefinition>();
+
+            // Call
+            int result = adapter.IndexOf(obj);
+            
+            // Assert
+            Assert.That(result, Is.EqualTo(-1));
+        }
+
+        [Test]
+        public void IndexOf_ItemInList_ReturnsCorrectIndex()
+        {
+            // Setup
+            IEventedList<IWaveBoundary> list = 
+                GetEventedList();
+            MultiIEventedListAdapter<IWaveBoundary, IWaveBoundaryGeometricDefinition> adapter =
+                GetAdapterWithRegisteredList(list);
+            adapter.RegisterList(list);
+
+            for (var i = 0; i < adapter.Count; i++)
+            {
+                IWaveBoundaryGeometricDefinition item = adapter[i];
+
+                // Call
+                int result = adapter.IndexOf(item);
+
+                // Assert
+                Assert.That(result, Is.EqualTo(i), "Expected the index to be the same as the retrieved location.");
+            }
+        }
+
+        [Test]
         public void Clear_ThrowsNotSupportedException()
         {
             // Setup

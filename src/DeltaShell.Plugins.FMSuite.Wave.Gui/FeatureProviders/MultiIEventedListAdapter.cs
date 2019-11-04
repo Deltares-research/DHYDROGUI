@@ -3,11 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
-using System.Windows.Markup;
 using DelftTools.Utils.Collections;
-using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.Collections.Generic;
-using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders
 {
@@ -331,7 +328,30 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders
             return this.Contains(displayedItem);
         }
 
+        public int IndexOf(TDisplayed item)
+        {
+            for (var i = 0; i < values.Count; i++)
+            {
+                if (Equals(item, values[i].Item1))
+                {
+                    return i;
+                }
+            }
+
+            return -1;
+        }
+
         public int IndexOf(object value)
+        {
+            if (!(value is TDisplayed goalValue))
+            {
+                return -1;
+            }
+
+            return IndexOf(goalValue);
+        }
+
+        public void Insert(int index, TDisplayed item)
         {
             throw new NotImplementedException();
         }
@@ -351,14 +371,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders
             throw new NotImplementedException();
         }
 
-        void IList.RemoveAt(int index)
+        public void RemoveAt(int index)
         {
             throw new NotImplementedException();
         }
 
         object IList.this[int index]
         {
-            get => throw new NotImplementedException();
+            get => this[index];
+            set => throw new NotImplementedException();
+        }
+
+        public TDisplayed this[int index]
+        {
+            get => values[index].Item1;
             set => throw new NotImplementedException();
         }
 
@@ -383,33 +409,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders
 
         public object SyncRoot { get; }
         public bool IsSynchronized { get; }
-
-        public int IndexOf(TDisplayed item)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Insert(int index, TDisplayed item)
-        {
-            throw new NotImplementedException();
-        }
-
-        void IList<TDisplayed>.RemoveAt(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        public TDisplayed this[int index]
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
 
         public event NotifyCollectionChangingEventHandler CollectionChanging;
         public event NotifyCollectionChangedEventHandler CollectionChanged;
