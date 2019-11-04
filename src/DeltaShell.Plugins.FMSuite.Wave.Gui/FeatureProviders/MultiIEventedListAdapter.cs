@@ -319,15 +319,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders
             throw new NotImplementedException();
         }
 
-        public bool Contains(TDisplayed item)
-        {
-            throw new NotImplementedException();
-        }
-
+        public bool Contains(TDisplayed item) => values.Any(x => Equals(x.Item1, item));
 
         public bool Contains(object value)
         {
-            throw new NotImplementedException();
+            if (!(value is TDisplayed displayedItem))
+            {
+                return false;
+            }
+
+            return this.Contains(displayedItem);
         }
 
         public int IndexOf(object value)
@@ -414,6 +415,5 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders
         public event NotifyCollectionChangedEventHandler CollectionChanged;
 
         public bool SkipChildItemEventBubbling { get; set; }
-
     }
 }

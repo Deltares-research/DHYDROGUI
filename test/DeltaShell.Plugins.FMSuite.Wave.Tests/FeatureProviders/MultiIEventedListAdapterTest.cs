@@ -665,6 +665,96 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.FeatureProviders
         }
 
         [Test]
+        public void Contains_ItemOfNotTDisplayed_ReturnsFalse()
+        {
+            // Setup
+            Tuple<IWaveBoundary, IEventedList<IWaveBoundary>> ObtainObservedValueFunc(IWaveBoundaryGeometricDefinition _) => null;
+            IWaveBoundaryGeometricDefinition CreateDisplayedValueFunc(IWaveBoundary _) => null;
+
+            var list = new MultiIEventedListAdapter<IWaveBoundary, IWaveBoundaryGeometricDefinition>(ObtainObservedValueFunc,
+                                                                                                     CreateDisplayedValueFunc);
+
+            // Call
+            var result = list.Contains(new object());
+
+            // Assert
+            Assert.That(result, Is.False);
+        }
+
+        [Test]
+        public void Contains_ItemOfTDisplayedAndInList_ReturnsTrue()
+        {
+            // Setup
+            IEventedList<IWaveBoundary> list = 
+                GetEventedList();
+            MultiIEventedListAdapter<IWaveBoundary, IWaveBoundaryGeometricDefinition> adapter =
+                GetAdapterWithRegisteredList(list);
+            adapter.RegisterList(list);
+
+            object obj = list[1].GeometricDefinition;
+
+
+            // Call
+            bool result = adapter.Contains(obj);
+
+            // Assert
+            Assert.That(result, Is.True);
+        }
+
+        [Test]
+        public void Contains_ItemOfTDisplayedButNotInList_ReturnsFalse()
+        {
+            // Setup
+            IEventedList<IWaveBoundary> list = 
+                GetEventedList();
+            MultiIEventedListAdapter<IWaveBoundary, IWaveBoundaryGeometricDefinition> adapter =
+                GetAdapterWithRegisteredList(list);
+            adapter.RegisterList(list);
+
+            object obj = Substitute.For<IWaveBoundaryGeometricDefinition>();
+
+            // Call
+            bool result = adapter.Contains(obj);
+
+            // Assert
+            Assert.That(result, Is.False);
+        }
+
+        [Test]
+        public void Contains_ItemInAdapter_ReturnsTrue()
+        {
+            // Setup
+            IEventedList<IWaveBoundary> list = 
+                GetEventedList();
+            MultiIEventedListAdapter<IWaveBoundary, IWaveBoundaryGeometricDefinition> adapter =
+                GetAdapterWithRegisteredList(list);
+            adapter.RegisterList(list);
+
+            // Call
+            bool result = adapter.Contains(list[1].GeometricDefinition);
+
+            // Assert
+            Assert.That(result, Is.True);
+        }
+
+        [Test]
+        public void Contains_ItemNotInAdapter_ReturnsFalse()
+        {
+            // Setup
+            IEventedList<IWaveBoundary> list = 
+                GetEventedList();
+            MultiIEventedListAdapter<IWaveBoundary, IWaveBoundaryGeometricDefinition> adapter =
+                GetAdapterWithRegisteredList(list);
+            adapter.RegisterList(list);
+
+            // Call
+            bool result = adapter.Contains(Substitute.For<IWaveBoundaryGeometricDefinition>());
+
+            // Assert
+            Assert.That(result, Is.False);
+        }
+
+        [Test]
         public void Clear_ThrowsNotSupportedException()
         {
             // Setup
