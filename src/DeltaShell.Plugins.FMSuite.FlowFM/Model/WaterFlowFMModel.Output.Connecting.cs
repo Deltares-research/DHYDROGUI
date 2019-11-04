@@ -118,6 +118,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 }
             }
 
+            if (OutputMapFileStore != null && OutputMapFileStore.Grid == null)
+            {
+                Log.Warn("Associated output files are unsupported, these will not be loaded");
+                OutputMapFileStore = null;
+                return;
+            }
+
             if (existsHisFile)
             {
                 ReportProgressText("Reading his file");
