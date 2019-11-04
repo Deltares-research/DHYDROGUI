@@ -46,27 +46,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         private int propertyKeyAlignmentLength;
         private int propertyValueAlignmentLength;
 
-        public const string MduExtension = ".mdu";
-        public const string LandBoundariesExtension = ".ldb";
-        public const string ThinDamExtension = "_thd.pli";
-        public const string ThinDamAlternativeExtension = "_thd.pliz";
-        public const string FixedWeirExtension = "_fxw.pliz";
-        public const string BridgePillarExtension = ".pliz";
-        public const string FixedWeirAlternativeExtension = "_fxw.pli";
 
-        public const string
-            StructuresExtension = "_structures.ini"; // TODO: Might not want to require a specific extension
-
-        public const string ObsExtension = "_obs.xyn";
-        public const string ObsCrossExtension = "_crs.pli";
-        public const string ObsCrossAlternativeExtension = "_crs.pliz";
-        private const string PolExtension = ".pol";
-        public const string DryAreaExtension = "_dry.pol";
-        public const string DryPointExtension = "_dry.xyz";
-        public const string DryPointExtensionWithoutSuffix = ".xyz";
-        public const string EnclosureExtension = "_enc.pol";
-        public const string MorphologyExtension = ".mor";
-        public const string SedimentExtension = ".sed";
 
         private LdbFile landBoundariesFile;
         private PliFile<ThinDam2D> thinDamFile;
@@ -434,7 +414,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             string extFileName = modelDefinition.GetModelProperty(KnownProperties.ExtForceFile).GetValueAsString();
             if (string.IsNullOrEmpty(extFileName))
             {
-                extFileName = modelDefinition.ModelName + ExtForceFile.Extension;
+                extFileName = modelDefinition.ModelName + FileConstants.ExternalForcingFileExtension;
             }
 
             string extForceFilePath = System.IO.Path.Combine(exportDirectory, extFileName);
@@ -467,7 +447,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 if (string.IsNullOrEmpty(bndExtFileName))
                 {
                     bndExtFileName = System.IO.Path.GetFileNameWithoutExtension(extFileName) + "_bnd" +
-                                     ExtForceFile.Extension;
+                                     FileConstants.ExternalForcingFileExtension;
                 }
 
                 string bndExtForceFilePath = System.IO.Path.Combine(exportDirectory, bndExtFileName);
@@ -645,8 +625,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
 
             string targetDirPath = System.IO.Path.GetDirectoryName(mduFilePath);
-            string targetMorFilePath = ReplaceMduExtension(mduFilePath, MorphologyExtension);
-            string targetSedFilePath = ReplaceMduExtension(mduFilePath, SedimentExtension);
+            string targetMorFilePath = ReplaceMduExtension(mduFilePath, FileConstants.MorphologyFileExtension);
+            string targetSedFilePath = ReplaceMduExtension(mduFilePath, FileConstants.SedimentFileExtension);
 
             WaterFlowFMProperty morFileProperty = modelDefinition.FirstOrDefault(p =>
                                                                                      p.PropertyDefinition
@@ -840,9 +820,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             {
                 List<IGrouping<string, IGroupableFeature>> dryPointsPerGroup;
                 List<IGrouping<string, IGroupableFeature>> dryAreasPerGroup;
-                InitializeFeatureWriter(targetMduFilePath, dryPoints, DryPointExtension, waterFlowFMProperty,
+                InitializeFeatureWriter(targetMduFilePath, dryPoints, FileConstants.DryPointFileExtension, waterFlowFMProperty,
                                         out dryPointsPerGroup);
-                AddDryAreasToWriter(targetMduFilePath, dryAreas, DryAreaExtension, waterFlowFMProperty,
+                AddDryAreasToWriter(targetMduFilePath, dryAreas, FileConstants.DryAreaFileExtension, waterFlowFMProperty,
                                     out dryAreasPerGroup);
 
                 List<string> featuresFilePaths =
@@ -856,7 +836,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
                 foreach (string featuresFilePath in featuresFilePaths)
                 {
-                    if (featuresFilePath.EndsWith(DryPointExtension))
+                    if (featuresFilePath.EndsWith(FileConstants.DryPointFileExtension))
                     {
                         // Create the directory to which the file is being written, because XyzFile class does not handle this.
                         string writeDirectory = System.IO.Path.GetDirectoryName(featuresFilePath);
@@ -868,7 +848,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                         string fileName =
                             FileUtils.GetRelativePath(System.IO.Path.GetDirectoryName(targetMduFilePath),
                                                       featuresFilePath, true);
-                        string fileNameWithoutExtension = fileName.Replace(DryPointExtension, string.Empty);
+                        string fileNameWithoutExtension = fileName.Replace(FileConstants.DryPointFileExtension, string.Empty);
                         List<GroupablePointFeature> groupFeatures =
                             GetAllGroupadFeaturesFromFile<GroupablePointFeature>(
                                 dryPointsPerGroup, fileName, fileNameWithoutExtension);
@@ -881,12 +861,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                             Value = 0
                         }));
                     }
-                    else if (featuresFilePath.EndsWith(DryAreaExtension))
+                    else if (featuresFilePath.EndsWith(FileConstants.DryAreaFileExtension))
                     {
                         string fileName =
                             FileUtils.GetRelativePath(System.IO.Path.GetDirectoryName(targetMduFilePath),
                                                       featuresFilePath, true);
-                        string fileNameWithoutExtension = fileName.Replace(DryAreaExtension, string.Empty);
+                        string fileNameWithoutExtension = fileName.Replace(FileConstants.DryAreaFileExtension, string.Empty);
                         List<GroupableFeature2DPolygon> groupFeatures =
                             GetAllGroupadFeaturesFromFile<GroupableFeature2DPolygon>(
                                 dryAreasPerGroup, fileName, fileNameWithoutExtension);
@@ -955,10 +935,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                                            allFixedWeirsAndCorrespondingProperties)
         {
             WriteFeatures(targetMduFilePath, modelDefinition, KnownProperties.LandBoundaryFile,
-                          hydroArea.LandBoundaries, ref landBoundariesFile, LandBoundariesExtension);
+                          hydroArea.LandBoundaries, ref landBoundariesFile, FileConstants.LandBoundaryFileExtension);
 
             WriteFeatures(targetMduFilePath, modelDefinition, KnownProperties.ThinDamFile, hydroArea.ThinDams.ToList(),
-                          ref thinDamFile, ThinDamExtension, ThinDamAlternativeExtension);
+                          ref thinDamFile, FileConstants.ThinDamPliFileExtension, FileConstants.ThinDamPlizFileExtension);
 
             //fix attributes for fixed weirs. Create attributes from modelfeaturecoordinatdata.
             foreach (FixedWeir fixedWeir in hydroArea.FixedWeirs)
@@ -999,7 +979,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
             WriteFeatures(targetMduFilePath, modelDefinition, KnownProperties.FixedWeirFile,
                           hydroArea.FixedWeirs.ToList(),
-                          ref fixedWeirFile, FixedWeirExtension, FixedWeirAlternativeExtension);
+                          ref fixedWeirFile, FileConstants.FixedWeirPlizFileExtension, FileConstants.FixedWeirPliFileExtension);
 
             foreach (FixedWeir fixedWeir in hydroArea.FixedWeirs)
             {
@@ -1008,37 +988,37 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
             /*Bridge pillars*/
             WriteFeatures(targetMduFilePath, modelDefinition, KnownProperties.BridgePillarFile, hydroArea.BridgePillars,
-                          ref bridgePillarFile, BridgePillarExtension);
+                          ref bridgePillarFile, FileConstants.PlizFileExtension);
             /**/
 
             WriteFeatures(targetMduFilePath, modelDefinition, KnownProperties.ObsFile, hydroArea.ObservationPoints,
-                          ref obsFile, ObsExtension);
+                          ref obsFile, FileConstants.ObsPointFileExtension);
 
             WriteFeatures(targetMduFilePath, modelDefinition, KnownProperties.ObsCrsFile,
                           hydroArea.ObservationCrossSections.ToList(),
-                          ref obsCrsFile, ObsCrossExtension, ObsCrossAlternativeExtension);
+                          ref obsCrsFile, FileConstants.ObsCrossSectionPliFileExtension, FileConstants.ObsCrossSectionPlizFileExtension);
 
             List<IStructure> structures = hydroArea.Pumps.Cast<IStructure>().Concat(hydroArea.Weirs).ToList();
 
             WriteFeatures(targetMduFilePath, modelDefinition, KnownProperties.StructuresFile, structures,
-                          ref structuresFile, StructuresExtension);
+                          ref structuresFile, FileConstants.StructuresFileExtension);
 
             WriteDryPointsAndDryAreas(targetMduFilePath, modelDefinition, hydroArea.DryPoints, hydroArea.DryAreas);
 
             WriteFeatures(targetMduFilePath, modelDefinition, KnownProperties.EnclosureFile, hydroArea.Enclosures,
-                          ref enclosureFile, EnclosureExtension);
+                          ref enclosureFile, FileConstants.EnclosureExtension);
         }
 
         public void WriteLandBoundaries(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition,
                                         HydroArea hydroArea)
         {
             WriteFeatures(targetMduFilePath, modelDefinition, KnownProperties.LandBoundaryFile,
-                          hydroArea.LandBoundaries, ref landBoundariesFile, LandBoundariesExtension);
+                          hydroArea.LandBoundaries, ref landBoundariesFile, FileConstants.LandBoundaryFileExtension);
         }
 
         private static string ReplaceMduExtension(string mduFilePath, string newExtension)
         {
-            return mduFilePath.Substring(0, mduFilePath.Length - MduExtension.Length) + newExtension;
+            return mduFilePath.Substring(0, mduFilePath.Length - FileConstants.MduFileExtension.Length) + newExtension;
         }
 
         private static List<TFeat> GetAllGroupadFeaturesFromFile<TFeat>(
@@ -1051,7 +1031,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                                              || g.Key.ToLowerInvariant()
                                                  .Equals(fileNameWithoutExtension.ToLowerInvariant())
                                              || g.Key.ToLowerInvariant()
-                                                 .Replace(System.IO.Path.GetExtension(DryAreaExtension), string.Empty)
+                                                 .Replace(System.IO.Path.GetExtension(FileConstants.DryAreaFileExtension), string.Empty)
                                                  .Equals(fileNameWithoutExtension.ToLowerInvariant()));
             if (groupFeatures == null)
             {
@@ -1088,8 +1068,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             var totalSteps = 5;
 
             reportProgress("Reading properties", 1, totalSteps);
-            MduFileReader.Read(filePath, modelDefinition);
-            
+            using (var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+            {
+                MduFileReader.Read(fileStream, filePath, modelDefinition);
+            }
+
             var pathsRelativeToParent =
                 (bool) modelDefinition.GetModelProperty(KnownProperties.PathsRelativeToParent).Value;
 
@@ -1315,23 +1298,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         private void ReadAreaFeatures(string filePath, WaterFlowFMModelDefinition modelDefinition, HydroArea hydroArea)
         {
             ReadFeatures(filePath, modelDefinition, KnownProperties.LandBoundaryFile, hydroArea.LandBoundaries,
-                         ref landBoundariesFile, LandBoundariesExtension);
+                         ref landBoundariesFile, FileConstants.LandBoundaryFileExtension);
 
-            ReadFeatures(filePath, modelDefinition, KnownProperties.ThinDamFile, hydroArea.ThinDams, ref thinDamFile,
-                         ThinDamExtension);
+            ReadFeatures(filePath, modelDefinition, KnownProperties.ThinDamFile, hydroArea.ThinDams, ref thinDamFile, FileConstants.ThinDamPliFileExtension);
             ReadFeatures(filePath, modelDefinition, KnownProperties.FixedWeirFile, hydroArea.FixedWeirs,
-                         ref fixedWeirFile, FixedWeirExtension);
-            ReadFeatures(filePath, modelDefinition, KnownProperties.ObsFile, hydroArea.ObservationPoints, ref obsFile,
-                         ObsExtension);
+                         ref fixedWeirFile, FileConstants.FixedWeirPlizFileExtension);
+            ReadFeatures(filePath, modelDefinition, KnownProperties.ObsFile, hydroArea.ObservationPoints, ref obsFile, FileConstants.ObsPointFileExtension);
             ReadFeatures(filePath, modelDefinition, KnownProperties.ObsCrsFile, hydroArea.ObservationCrossSections,
-                         ref obsCrsFile, ObsCrossExtension);
+                         ref obsCrsFile, FileConstants.ObsCrossSectionPliFileExtension);
             ReadFeatures(filePath, modelDefinition, KnownProperties.BridgePillarFile, hydroArea.BridgePillars,
-                         ref bridgePillarFile, BridgePillarExtension);
+                         ref bridgePillarFile, FileConstants.PlizFileExtension);
 
             var structures = new List<IStructure>();
 
-            ReadFeatures(filePath, modelDefinition, KnownProperties.StructuresFile, structures, ref structuresFile,
-                         StructuresExtension);
+            ReadFeatures(filePath, modelDefinition, KnownProperties.StructuresFile, structures, ref structuresFile, FileConstants.StructuresFileExtension);
 
             foreach (IStructure structure in structures)
             {
@@ -1371,7 +1351,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             if (enclosureMultipleFilePath.Count > 0)
             {
                 ReadFeatures(filePath, modelDefinition, KnownProperties.EnclosureFile, hydroArea.Enclosures,
-                             ref enclosureFile, EnclosureExtension);
+                             ref enclosureFile, FileConstants.EnclosureExtension);
 
                 if (hydroArea.Enclosures.Count > 1)
                 {
@@ -1410,7 +1390,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                     FileUtils.GetRelativePath(System.IO.Path.GetDirectoryName(mduFilePath), featureFilePath, true);
                 //By checking if the feature file path only ends with .xyz (without the _dry suffix),
                 //we can assure that backwards compatibility is ensure i.e. some old mdu files still refer to the dry point file without the _dry suffix.
-                if (featureFilePathExtension != null && featureFilePath.EndsWith(DryPointExtensionWithoutSuffix))
+                if (featureFilePathExtension != null && featureFilePath.EndsWith(FileConstants.XyzFileExtension))
                 {
                     IList<IPointValue> pointValues = XyzFile.Read(featureFilePath);
                     bool isDefaultGroup = groupName.Replace(featureFilePathExtension, string.Empty).Trim()
@@ -1425,14 +1405,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                     hydroArea.DryPoints.AddRange(dryPointsToAdd);
                 }
                 // D3DFMIQ-1037: We want to import all kind of dry areas as long as they come from a .pol file (regardles of their suffix).
-                else if (featureFilePath.EndsWith(PolExtension))
+                else if (featureFilePath.EndsWith(FileConstants.PolylineFileExtension))
                 {
                     IList<GroupableFeature2DPolygon> dryAreasToAdd = dryAreaFile.Read(featureFilePath);
                     EnumerableExtensions.ForEach(dryAreasToAdd, f =>
                     {
                         f.GroupName = groupName;
                         f.IsDefaultGroup = groupName != null &&
-                                           groupName.Replace(PolExtension, string.Empty).Trim().Equals(mduPathName);
+                                           groupName.Replace(FileConstants.PolylineFileExtension, string.Empty).Trim().Equals(mduPathName);
                     });
                     hydroArea.DryAreas.AddRange(dryAreasToAdd);
                 }

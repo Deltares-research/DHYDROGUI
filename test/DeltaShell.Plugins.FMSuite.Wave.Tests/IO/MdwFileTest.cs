@@ -6,6 +6,7 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.Core;
 using DeltaShell.NGHS.IO;
+using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
@@ -444,11 +445,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
 
                         Assert.AreEqual("Waves.bcw", model.ModelDefinition.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.TimeSeriesFile).GetValueAsString());
 
-
                         var mdwFilePath = model.MdwFilePath;
-                        var reader = new DelftIniReader();
+                        IList<DelftIniCategory> categories;
+                        using (var fileStream = new FileStream(mdwFilePath, FileMode.Open, FileAccess.Read))
+                        {
+                            categories = new DelftIniReader().ReadDelftIniFile(fileStream, mdwFilePath);
+                        }
 
-                        var categories = reader.ReadDelftIniFile(mdwFilePath);
                         var tSeriesFilePropValue = categories
                             .FirstOrDefault(c => c.Name == KnownWaveCategories.GeneralCategory)
                             .GetPropertyValue(KnownWaveProperties.TimeSeriesFile);

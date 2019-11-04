@@ -22,6 +22,7 @@ using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
@@ -1527,7 +1528,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             var resultedPath = model.ClassMapSavePath;
 
             // Then
-            var expectedPath = Path.Combine(model.PersistentOutputDirectoryPath, modelName + WaterFlowFMModelDefinition.ClassMapFileExtension);
+            var expectedPath = Path.Combine(model.PersistentOutputDirectoryPath, modelName + FileConstants.ClassMapFileExtension);
             Assert.AreEqual(expectedPath, resultedPath);
         }
 

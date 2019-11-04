@@ -9,6 +9,7 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Core.Workflow.Restart;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.IO;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
@@ -136,7 +137,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             IModelState unpackedState = ModelStateHandler.CreateStateFromFile(Name, RestartInput.Path);
             string restartFileName = Path.GetFileName(((ModelStateFilesImpl) unpackedState)
                                                       .GetFilesInModelState()
-                                                      .FirstOrDefault(f => f.EndsWith("_rst.nc")));
+                                                      .FirstOrDefault(f => f.EndsWith(FileConstants.RestartFileExtension)));
             if (ModelStateHandler.FeedStateToModel(unpackedState))
             {
                 ModelDefinition.GetModelProperty(KnownProperties.RestartFile).SetValueAsString(restartFileName);
@@ -159,9 +160,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             if (length < 5 || splitFileName[length - 2] != "rst")
             {
                 throw new ArgumentException(
-                    string.Format(
-                        "Invalid restart file name {0}: your file should be formatted as <name>_yyyyMMdd_HHmmss_rst.nc",
-                        fileName));
+                    $"Invalid restart file name {fileName}: your file should be formatted as <name>_yyyyMMdd_HHmmss{FileConstants.RestartFileExtension}");
             }
 
             if (splitFileName.Last() != "nc")
@@ -175,9 +174,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                                         DateTimeStyles.None, out dateTime))
             {
                 throw new ArgumentException(
-                    string.Format(
-                        "Invalid restart file name {0}: your file should be formatted as <name>_yyyyMMdd_HHmmss_rst.nc",
-                        fileName));
+                    $"Invalid restart file name {fileName}: your file should be formatted as <name>_yyyyMMdd_HHmmss{FileConstants.RestartFileExtension}");
             }
 
             ModelStateHandler.ModelWorkingDirectory = Path.GetDirectoryName(Path.GetFullPath(MduFilePath));
@@ -198,8 +195,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             ModelFileBasedStateHandler modelFileBasedStateHandler = ModelStateHandler;
 
             // modify Out filename list to account for CurrentTime (instance is same as used inside ModelStateHandler)
-            string restartFileName = string.Format("{0}_{1}_rst.nc", Name,
-                                                   CurrentTime.ToString("yyyyMMdd_HHmmss"));
+            string restartFileName = $"{Name}_{CurrentTime.ToString("yyyyMMdd_HHmmss")}{FileConstants.RestartFileExtension}";
             outAndInFileNames[0].First = Path.Combine(ModelDefinition.OutputDirectoryName, restartFileName);
             outAndInFileNames[0].Second = restartFileName; //out and in is the same
 

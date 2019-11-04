@@ -10,6 +10,7 @@ using DelftTools.Utils.Aop;
 using DelftTools.Utils.IO;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using GeoAPI.Extensions.Feature;
 using NetTopologySuite.Extensions.Features;
@@ -66,7 +67,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         public override IProjectItem DeepClone()
         {
             string tempDir = FileUtils.CreateTempDirectory();
-            string mduFileName = MduFilePath != null ? Path.GetFileName(MduFilePath) : "some_temp.mdu";
+            string mduFileName = MduFilePath != null ? Path.GetFileName(MduFilePath) : $"some_temp{FileConstants.MduFileExtension}";
             string tempFilePath = Path.Combine(tempDir, mduFileName);
             ExportTo(tempFilePath, false);
 

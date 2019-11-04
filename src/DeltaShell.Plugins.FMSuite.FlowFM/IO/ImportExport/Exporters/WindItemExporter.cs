@@ -32,7 +32,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters
                             WindQuantity.VelocityVector,
                             WindQuantity.VelocityVectorAirPressure
                         },
-                    FileFilter = "time series file|*.tim",
+                    FileFilter = $"time series file|*{FileConstants.TimFileExtension}",
                     Icon = Resources.TimeSeries
                 };
             yield return

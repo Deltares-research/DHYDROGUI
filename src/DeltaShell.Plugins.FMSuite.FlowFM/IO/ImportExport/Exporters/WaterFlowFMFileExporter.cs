@@ -34,7 +34,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters
             string fullPath = path;
             if (Directory.Exists(path))
             {
-                fullPath = Path.Combine(path, waterFlowFMModel.Name + ".mdu");
+                fullPath = Path.Combine(path, waterFlowFMModel.Name + FileConstants.MduFileExtension);
             }
 
             return waterFlowFMModel.ExportTo(fullPath, false);
@@ -53,6 +53,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters
             return true;
         }
 
-        public string FileFilter => "Flexible Mesh Model Definition|*.mdu";
+        public string FileFilter => $"Flexible Mesh Model Definition|*{FileConstants.MduFileExtension}";
     }
 }

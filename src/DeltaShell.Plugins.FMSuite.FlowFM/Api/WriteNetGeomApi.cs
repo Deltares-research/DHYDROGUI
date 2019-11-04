@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using DelftTools.Utils.IO;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
@@ -42,7 +43,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
 
                 File.Copy(model.NetFilePath, Path.Combine(tempPath, Path.GetFileName(model.NetFilePath)));
 
-                string mduName = tempModel.Name + MduFile.MduExtension;
+                string mduName = tempModel.Name + FileConstants.MduFileExtension;
                 string mduFilePath = Path.Combine(tempPath, mduName);
 
                 tempModel.ExportTo(mduFilePath, false, false, false);

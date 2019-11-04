@@ -1,10 +1,10 @@
-using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.NGHS.IO.DelftIniObjects;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
     public static class DelftIniCategoryExtension
     {
-        public static void AddSedimentProperty(this IDelftIniCategory category, string name, string value, string unit,
+        public static void AddSedimentProperty(this DelftIniCategory category, string name, string value, string unit,
                                                string comment)
         {
             category.AddProperty(name, value,

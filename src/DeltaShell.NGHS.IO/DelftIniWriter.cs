@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.NGHS.IO.DelftIniObjects;
 
 namespace DeltaShell.NGHS.IO
 {
@@ -31,7 +31,7 @@ namespace DeltaShell.NGHS.IO
         ///   or volume label syntax.
         /// </exception>
         /// <exception cref="System.Security.SecurityException">The caller does not have the required permission.</exception>
-        public virtual void WriteDelftIniFile(IEnumerable<IDelftIniCategory> categories, string iniFile, bool writeComment = true)
+        public virtual void WriteDelftIniFile(IEnumerable<DelftIniCategory> categories, string iniFile, bool writeComment = true)
         {
             OpenOutputFile(iniFile);
             try
@@ -51,7 +51,7 @@ namespace DeltaShell.NGHS.IO
             }
         }
 
-        protected virtual void WriteProperty(IDelftIniProperty property, bool writeComment = false)
+        protected virtual void WriteProperty(DelftIniProperty property, bool writeComment = false)
         {
             if (string.IsNullOrEmpty(property.Value)) return;
 

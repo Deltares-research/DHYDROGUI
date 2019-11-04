@@ -35,7 +35,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
 
         public bool CanImportOnRootLevel => true;
 
-        public string FileFilter => "FM Map File|*_map.nc";
+        public string FileFilter => $"FM Map File|*{FileConstants.MapFileExtension}";
 
         public string TargetDataDirectory { get; set; }
 

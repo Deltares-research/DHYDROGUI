@@ -80,9 +80,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             tempPath = FileUtils.CreateTempDirectory();
 
             // gather paths            
-            string mduName = model.Name + MduFile.MduExtension;
+            string mduName = model.Name + FileConstants.MduFileExtension;
 
-            mduFilePath = Path.Combine(tempPath, model.Name, "input", mduName);
+            mduFilePath = Path.Combine(tempPath, model.Name, FileConstants.InputDirectoryName, mduName);
 
             // make sure we initialize without: ext, thin dams, cross sections, etc..
             List<WaterFlowFMProperty> adjustedMduProperties = model.ModelDefinition.Properties.ToList();

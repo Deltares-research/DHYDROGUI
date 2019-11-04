@@ -1,5 +1,0 @@
-# Generated on 2019-10-15 15:34:04
-# Deltares, Delft3D FM 2018 Suite Version 1.6.0.0, D-Flow FM Version 1.2.63.64757M
-
-[numerics]
-FixedWeirScheme                   = 222                     # Fixed weir scheme (0: None, 6: Numerical, 8: Tabellenboek, 9: Villemonte)

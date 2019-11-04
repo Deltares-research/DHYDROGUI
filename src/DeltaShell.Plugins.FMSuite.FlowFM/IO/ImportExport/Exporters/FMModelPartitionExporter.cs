@@ -39,7 +39,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters
                 string filePathWithoutExtension = Path.Combine(Path.GetDirectoryName(nonzeroPath),
                                                                Path.GetFileNameWithoutExtension(nonzeroPath));
 
-                string filePath = filePathWithoutExtension + ".mdu";
+                string filePath = filePathWithoutExtension + FileConstants.MduFileExtension;
                 WaterFlowFMModelDefinition modelDefinition = waterFlowFMModel.ModelDefinition;
                 WaterFlowFMProperty igcSolverProperty = modelDefinition.GetModelProperty(KnownProperties.SolverType);
                 string originalSolverType = igcSolverProperty.GetValueAsString();
@@ -66,7 +66,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters
                     partFileName = partFileName.Substring(0, partFileName.Count() - 4);
                 }
 
-                partFileName += "_part.pol";
+                partFileName += $"_part{FileConstants.PolylineFileExtension}";
 
                 WriteNetPartition(api);
                 WaterFlowFMProperty netFileProperty = modelDefinition.GetModelProperty(KnownProperties.NetFile);
@@ -78,7 +78,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters
                 var i = 0;
                 foreach (string netFile in FindNetFiles(TargetNetFilePath))
                 {
-                    filePath = filePathWithoutExtension + "_" + string.Format("{0:0000}", i++) + ".mdu";
+                    filePath = filePathWithoutExtension + "_" + string.Format("{0:0000}", i++) + FileConstants.MduFileExtension;
 
                     netFileProperty.SetValueAsString(netFile);
                     igcSolverProperty.SetValueAsString(SolverType > 0 ? SolverType.ToString() : originalSolverType);
@@ -105,7 +105,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters
 
         private static IEnumerable<string> FindNetFiles(string netFileName)
         {
-            int index = netFileName.LastIndexOf("_net.nc", StringComparison.InvariantCulture);
+            int index = netFileName.LastIndexOf($"{FileConstants.NetFileExtension}", StringComparison.InvariantCulture);
             if (index < 0)
             {
                 yield break;
@@ -116,7 +116,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters
             var i = 0;
             do
             {
-                string fileName = strippedName + "_" + string.Format("{0:0000}", i++) + "_net.nc";
+                string fileName = strippedName + "_" + $"{i++:0000}" + $"{FileConstants.NetFileExtension}";
                 fileFound = File.Exists(fileName);
                 if (fileFound)
                 {
@@ -130,6 +130,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters
             yield return typeof(WaterFlowFMModel);
         }
 
-        public override string FileFilter => "Flexible Mesh Model Definition|*.mdu";
+        public override string FileFilter => $"Flexible Mesh Model Definition|*{FileConstants.MduFileExtension}";
     }
 }

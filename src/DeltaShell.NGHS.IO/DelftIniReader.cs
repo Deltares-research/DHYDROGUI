@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.IO;
 using DelftTools.Utils.RegularExpressions;
-using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.NGHS.IO.Properties;
 
 namespace DeltaShell.NGHS.IO
 {
+    /// <summary>
+    /// Reader for Delft Ini-files.
+    /// </summary>
     public class DelftIniReader : NGHSFileBase
     {
         /// <summary>
@@ -19,19 +22,16 @@ namespace DeltaShell.NGHS.IO
         /// <summary>
         /// Reads a Delft .ini format file.
         /// </summary>
-        /// <param name="iniFile">File path to be read</param>
-        /// <returns>All parsed .ini groups with key-value pairs and comments.</returns>
-        /// <exception cref="ArgumentException"><paramref name="iniFile"/> is an empty string ("").</exception>
-        /// <exception cref="ArgumentNullException"><paramref name="iniFile"/> is null.</exception>
-        /// <exception cref="FileNotFoundException">The file cannot be found.</exception>
-        /// <exception cref="DirectoryNotFoundException">The specified path is invalid, such as being on an unmapped drive.</exception>
-        /// <exception cref="IOException"><paramref name="iniFile"/> includes an incorrect or invalid syntax for file name, directory name, or volume label.</exception>
-        /// <exception cref="FormatException">When an invalid line was encountered.</exception>
-        public IList<IDelftIniCategory> ReadDelftIniFile(string iniFile)
+        /// <param name="stream"> The <see cref="Stream"/> to read the ini file from. </param>
+        /// <param name="filePath"> The path to the file location. </param>
+        /// <returns> A collection of <see cref="DelftIniCategory"/> instances. </returns>
+        /// <remarks> The stream is implicitly disposed. </remarks>
+        public IList<DelftIniCategory> ReadDelftIniFile(Stream stream, string filePath)
         {
-            var content = new List<IDelftIniCategory>();
+            OpenInputFile(stream);
+            InputFilePath = filePath;
 
-            OpenInputFile(iniFile);
+            var content = new List<DelftIniCategory>();
             try
             {
                 string line;
@@ -40,22 +40,20 @@ namespace DeltaShell.NGHS.IO
                 while ((line = GetNextLine()) != null)
                 {
                     line = line.Trim();
-                    if(string.IsNullOrEmpty(line)) continue; // Skip white-space characters.
+                    if (string.IsNullOrEmpty(line)) continue; // Skip white-space characters.
 
                     if (IsNewCategory(line, ref categoryName))
                     {
-                        currentCategory = new DelftIniCategory(categoryName) {LineNumber = LineNumber};
+                        currentCategory = new DelftIniCategory(categoryName, LineNumber);
                         content.Add(currentCategory);
                         continue;
                     }
+
                     if (currentCategory == null) continue;
 
                     string[] fields = GetKeyValueComment(line);
-                    var delftIniProperty = new DelftIniProperty(fields[0], fields[1], fields[2])
-                    {
-                        LineNumber = LineNumber
-                    };
-                    currentCategory.Properties.Add(delftIniProperty);
+                    var delftIniProperty = new DelftIniProperty(fields[0], fields[1], fields[2], LineNumber);
+                    currentCategory.AddProperty(delftIniProperty);
                 }
             }
             finally
@@ -94,7 +92,7 @@ namespace DeltaShell.NGHS.IO
         /// <param name="newCategory">Set to the name of the category/group, when returning true.</param>
         /// <returns>True if the line represents a new category/group; False otherwise.</returns>
         /// <exception cref="FormatException">When an invalid category/group line was encountered.</exception>
-        protected bool IsNewCategory(string line, ref string newCategory)
+        private bool IsNewCategory(string line, ref string newCategory)
         {
             if (line.StartsWith("["))
             {

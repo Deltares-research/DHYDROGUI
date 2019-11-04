@@ -8,8 +8,8 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO;
+using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.NGHS.IO.Handlers;
-using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
@@ -1011,7 +1011,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                                           int nUnknownSediment,
                                           int nUnknownUnknown)
         {
-            var iniCategories = new List<IDelftIniCategory>();
+            var iniCategories = new List<DelftIniCategory>();
 
             // General Category
             var sedimentFileInformationCategory = new DelftIniCategory(SedimentFile.GeneralHeader);

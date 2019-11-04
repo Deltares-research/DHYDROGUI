@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.NGHS.IO.Handlers;
-using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
@@ -73,7 +73,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
         private static void CreateBoundaryConditionFileProperty(IEnumerable<IBoundaryCondition> boundaryConditions,
                                                                 WaterFlowFMModelDefinition modelDefinition,
-                                                                IDelftIniCategory delftIniCategory)
+                                                                DelftIniCategory delftIniCategory)
         {
             string bcmFilePath = boundaryConditions.OfType<FlowBoundaryCondition>()
                                                    .Any(fbc =>
@@ -174,7 +174,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                                          KnownProperties.MorFile, 
                                          modelDefinition, 
                                          logHandler,
-                                         out IList<IDelftIniCategory> boundaryCategories);
+                                         out IList<DelftIniCategory> boundaryCategories);
 
                 string bcmFile = modelDefinition.GetModelProperty(KnownProperties.BcmFile).Value.ToString();
                 if (!string.IsNullOrEmpty(bcmFile)
@@ -199,14 +199,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
         private static void ReadMorphologyBoundaryConditions(string mduFilePath, 
                                                              string bcmFile,
-                                                             IEnumerable<IDelftIniCategory> boundaryDelftIniCategories,
+                                                             IEnumerable<DelftIniCategory> boundaryDelftIniCategories,
                                                              WaterFlowFMModelDefinition modelDefinition)
         {
             var bcmFileReader = new BcmFile();
             string bcmFilePath = Path.Combine(Path.GetDirectoryName(mduFilePath), bcmFile);
             IEnumerable<BcBlockData> bcBlockDatas = bcmFileReader.Read(bcmFilePath);
 
-            foreach (IDelftIniCategory boundaryCategory in boundaryDelftIniCategories)
+            foreach (DelftIniCategory boundaryCategory in boundaryDelftIniCategories)
             {
                 Feature2D feature = ReadPolyLines(boundaryCategory, mduFilePath, modelDefinition).FirstOrDefault();
                 if (feature == null)
@@ -235,9 +235,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                                                      string propertyName,
                                                      WaterFlowFMModelDefinition modelDefinition,
                                                      ILogHandler logHandler,
-                                                     out IList<IDelftIniCategory> boundaryDelftIniCategories)
+                                                     out IList<DelftIniCategory> boundaryDelftIniCategories)
         {
-            boundaryDelftIniCategories = new List<IDelftIniCategory>();
+            boundaryDelftIniCategories = new List<DelftIniCategory>();
             string morFilePath =
                 MduFileHelper.GetSubfilePath(mduFilePath, modelDefinition.GetModelProperty(propertyName));
             if (!File.Exists(morFilePath))
@@ -245,9 +245,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 return;
             }
 
-            IList<IDelftIniCategory> delftIniCategories = new SedMorDelftIniReader().ReadDelftIniFile(morFilePath);
+            IList<DelftIniCategory> delftIniCategories;
+            using (var fileStream = new FileStream(morFilePath, FileMode.Open, FileAccess.Read))
+            {
+                delftIniCategories = new SedMorDelftIniReader().ReadDelftIniFile(fileStream, morFilePath);
+            }
 
-            foreach (IDelftIniCategory delftIniCategory in delftIniCategories)
+            foreach (DelftIniCategory delftIniCategory in delftIniCategories)
             {
                 string categoryName = delftIniCategory.Name;
 
@@ -266,12 +270,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         }
 
         private static void ReadCategoryProperties(WaterFlowFMModelDefinition modelDefinition,
-                                                   IDelftIniCategory delftIniCategory,
+                                                   DelftIniCategory delftIniCategory,
                                                    ILogHandler logHandler)
         {
             string categoryName = delftIniCategory.Name;
 
-            foreach (IDelftIniProperty delftIniProperty in delftIniCategory.Properties)
+            foreach (DelftIniProperty delftIniProperty in delftIniCategory.Properties)
             {
                 // Backwards Compatibility
                 delftIniProperty.Name = 
@@ -301,7 +305,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         }
 
         private static WaterFlowFMProperty GetExistingPropertyInCategory(WaterFlowFMModelDefinition modelDefinition,
-                                                                         IDelftIniProperty delftIniProperty, 
+                                                                         DelftIniProperty delftIniProperty, 
                                                                          string categoryName)
         {
             return modelDefinition.Properties.FirstOrDefault(
@@ -311,8 +315,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                      && p.PropertyDefinition.Category == categoryName);
         }
 
-        private static WaterFlowFMProperty CreateModelPropertyForUnknownDelftIniProperty(
-            string categoryName, IDelftIniProperty delftIniProperty)
+        private static WaterFlowFMProperty CreateModelPropertyForUnknownDelftIniProperty(string categoryName, DelftIniProperty delftIniProperty)
         {
             string fileCategoryName = categoryName;
             if (fileCategoryName.Equals(KnownProperties.morphology, StringComparison.InvariantCultureIgnoreCase))
@@ -338,7 +341,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             return modelProperty;
         }
 
-        private static void ReadBoundaryConditionsBlock(IDelftIniCategory delftIniCategory, 
+        private static void ReadBoundaryConditionsBlock(DelftIniCategory delftIniCategory, 
                                                         Feature2D feature,
                                                         IEnumerable<BcBlockData> featureBlockData, 
                                                         string mduFilePath,
@@ -352,7 +355,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 Log.ErrorFormat(
                     Resources
                         .MduFile_ReadMorphologyProperties_Cannot_read_ibedcond_because_this_is_not_an_integer__number__in_file__0_,
-                    Path.ChangeExtension(mduFilePath, ".mor"));
+                    Path.ChangeExtension(mduFilePath, FileConstants.MorphologyFileExtension));
                 return;
             }
 
@@ -398,7 +401,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
         }
 
-        private static IEnumerable<Feature2D> ReadPolyLines(IDelftIniCategory delftIniCategory, string mduFilePath,
+        private static IEnumerable<Feature2D> ReadPolyLines(DelftIniCategory delftIniCategory, string mduFilePath,
                                                             WaterFlowFMModelDefinition modelDefinition)
         {
             string locationFile = delftIniCategory.GetPropertyValue(BoundaryName);
@@ -414,7 +417,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 return Enumerable.Empty<Feature2D>();
             }
 
-            string pliFilePath = Path.Combine(Path.GetDirectoryName(mduFilePath), locationFile + ".pli");
+            string pliFilePath = Path.Combine(Path.GetDirectoryName(mduFilePath), locationFile + FileConstants.PliFileExtension);
 
             if (!File.Exists(pliFilePath))
             {

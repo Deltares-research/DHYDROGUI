@@ -36,7 +36,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
 
         public bool CanImportOnRootLevel => false;
 
-        public string FileFilter => "FM restart files|*_rst.nc";
+        public string FileFilter => $"FM restart files|*{FileConstants.RestartFileExtension}";
 
         public string TargetDataDirectory { get; set; }
 

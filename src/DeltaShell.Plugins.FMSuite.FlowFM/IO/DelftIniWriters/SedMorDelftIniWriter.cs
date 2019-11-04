@@ -1,12 +1,11 @@
 ﻿using DeltaShell.NGHS.IO;
-using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.NGHS.IO.DelftIniObjects;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Writers
 {
     public class SedMorDelftIniWriter : DelftIniWriter
     {
-        protected override void
-            WriteProperty(IDelftIniProperty property, bool writeComment = false) // flag ignored, always write comment
+        protected override void WriteProperty(DelftIniProperty property, bool writeComment = false) // flag ignored, always write comment
         {
             if (string.IsNullOrEmpty(property.Value))
             {

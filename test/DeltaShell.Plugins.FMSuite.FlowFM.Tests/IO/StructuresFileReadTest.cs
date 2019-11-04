@@ -8,7 +8,7 @@ using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO;
-using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures;
 using DeltaShell.Plugins.FMSuite.Common.Tests.IO;
 using NUnit.Framework;
@@ -190,9 +190,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         /// <param name="structureCategory">The structure category.</param>
         /// <param name="tempDir">The temporary dir.</param>
         /// <remarks> The newly created file is always called structures.ini </remarks>
-        private static void WriteStructuresIniFile(IDelftIniCategory structureCategory, string tempDir)
+        private static void WriteStructuresIniFile(DelftIniCategory structureCategory, string tempDir)
         {
-            var categories = new List<IDelftIniCategory>() { structureCategory };
+            var categories = new List<DelftIniCategory>() { structureCategory };
 
             var fileIniPath = Path.Combine(tempDir, "structures.ini");
             (new DelftIniWriter()).WriteDelftIniFile(categories, fileIniPath);
@@ -233,13 +233,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             return structureCategory;
         }
 
-        private static void SetSimpleWeirRequiredProperties(IDelftIniCategory structureCategory)
+        private static void SetSimpleWeirRequiredProperties(DelftIniCategory structureCategory)
         {
             structureCategory.AddProperty(KnownStructureProperties.CrestLevel, "0.0", "#");
             structureCategory.AddProperty(KnownStructureProperties.LateralContractionCoefficient, "1.0", "#");
         }
 
-        private static void SetSimpleGateRequiredProperties(IDelftIniCategory structureCategory)
+        private static void SetSimpleGateRequiredProperties(DelftIniCategory structureCategory)
         {
             structureCategory.AddProperty(KnownStructureProperties.CrestLevel,      "0.0", "#");
             structureCategory.AddProperty(KnownStructureProperties.GateLowerEdgeLevel, "0.0", "#");
@@ -248,7 +248,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             structureCategory.AddProperty(KnownStructureProperties.GateOpeningHorizontalDirection, "symmetric", "#");
         }
 
-        private static void SetGeneralStructureRequiredProperties(IDelftIniCategory structureCategory)
+        private static void SetGeneralStructureRequiredProperties(DelftIniCategory structureCategory)
         {
             structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.Upstream2Level),   "0.0", "#");
             structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.Upstream1Level),  "0.0", "#");

@@ -9,9 +9,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.ImportersExporters
 {
     public class PolFileImporterExporter : Feature2DImportExportBase<GroupableFeature2DPolygon>
     {
-        protected override string ExporterName => "Features to .pol file";
+        protected override string ExporterName => $"Features to {FileConstants.PolylineFileExtension} file";
 
-        protected override string ImporterName => "Features from .pol file";
+        protected override string ImporterName => $"Features from {FileConstants.PolylineFileExtension} file";
 
         protected override IEnumerable<GroupableFeature2DPolygon> Import(string path)
         {
@@ -29,7 +29,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.ImportersExporters
 
         public override string Description => string.Empty;
 
-        public override string FileFilter => "Feature polygon file|*.pol";
+        public override string FileFilter => $"Feature polygon file|*{FileConstants.PolylineFileExtension}";
 
         public override Bitmap Image => Resources.TextDocument;
     }

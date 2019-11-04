@@ -21,13 +21,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.ImportersExporters
         where TFeat : class, IFeature, INameable, new() where TParent : INameable
     {
         /// <inheritdoc />
-        protected override string ImporterName => "Features from .pliz file";
+        protected override string ImporterName => $"Features from {FileConstants.PlizFileExtension} file";
 
         /// <inheritdoc />
-        protected override string ExporterName => "Features to .pliz file";
+        protected override string ExporterName => $"Features to {FileConstants.PlizFileExtension} file";
 
         /// <inheritdoc />
-        public override string FileFilter => "Feature polyline-z files (*.pliz)|*.pliz";
+        public override string FileFilter => $"Feature polyline-z files (*{FileConstants.PlizFileExtension})|*{FileConstants.PlizFileExtension}";
 
         /// <inheritdoc />
         public override string Category => "Feature geometries";
@@ -89,7 +89,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.ImportersExporters
         /// <inheritdoc />
         protected override IEnumerable<TFeat> Import(string path)
         {
-            if (Path.GetExtension(path) == ".pliz")
+            if (Path.GetExtension(path) == FileConstants.PlizFileExtension)
             {
                 return ReadFeaturesFromFile<PlizFile<TFeat>>(path);
             }
@@ -162,7 +162,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.ImportersExporters
         /// <inheritdoc />
         protected override void Export(IEnumerable<TFeat> features, string path)
         {
-            if (Path.GetExtension(path) == ".pliz")
+            if (Path.GetExtension(path) == FileConstants.PlizFileExtension)
             {
                 WriteFeaturesToFile<PlizFile<TFeat>>(path, features);
             }

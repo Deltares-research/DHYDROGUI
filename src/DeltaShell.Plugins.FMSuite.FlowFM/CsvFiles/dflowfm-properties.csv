@@ -78,7 +78,7 @@ numerics,Limtypmom,advanced,Advanced,Advection velocity limiter type:None|MinMod
 numerics,Limtypsa,advanced,Advanced,Salinity transport limiter type:None|MinMod|Van Leer|Koren|Monotone Central,0|1|2|3|4,4,0,4,FALSE,Salinity,,,,,"Limiter type for salinity transport (0: none, 1: minmod, 2: van Leer, 3: Koren, 4: monotone central)"
 numerics,Icgsolver,advanced,Advanced,Solver type:sobekGS_OMP|sobekGS_OMPthreadsafe|sobekGS|sobekGS + Saadilud|parallel/Uniform Saad|parallel/Petsc|parallel/GS,1|2|3|4|5|6|7,4,1,7,FALSE,,,,,,"Solver type (1: sobekGS_OMP, 2: sobekGS_OMPthreadsafe, 3: sobekGS, 4: sobekGS + Saadilud, 5: parallel/global Saad, 6: parallel/Petsc, 7: parallel/GS)"
 numerics,Maxdegree,advanced,Advanced,Max degree in Gauss elimination,Integer,6,0,,FALSE,,,,,,Maximum degree in Gauss elimination
-numerics,FixedWeirScheme,numerics,Fixed weir parameters,Fixed weir scheme :None|Numerical|Tabellenboek|Villemonte,0|6|8|9,9,0,9,FALSE,,,,,,"Fixed weir scheme (0: None, 6: Numerical, 8: Tabellenboek, 9: Villemonte)"
+numerics,FixedWeirScheme,numerics,Fixed weir parameters,Fixed weir scheme:None|Numerical|Tabellenboek|Villemonte,0|6|8|9,9,0,9,FALSE,,,,,,"Fixed weir scheme (0: None, 6: Numerical, 8: Tabellenboek, 9: Villemonte)"
 numerics,FixedWeirContraction,numerics,Fixed weir parameters,Fixed weir contraction,Double,1,0,,FALSE,,,,,,Fixed weir flow width contraction factor,-
 numerics,Izbndpos,numerics,Numerical Parameters,Position of z boundary:Delft3D-FLOW|On net boundary|On specified polyline,0|1|2,0,0,2,TRUE,,,,,,"Position of z boundary (0: Delft3D-FLOW, 1: on net boundary, 2: on specifiend polyline)"
 numerics,Tlfsmo,numerics,Numerical Parameters,Boundary smoothing time,Double,3600,0,,FALSE,,,,,,Fourier smoothing time on water level boundaries, s

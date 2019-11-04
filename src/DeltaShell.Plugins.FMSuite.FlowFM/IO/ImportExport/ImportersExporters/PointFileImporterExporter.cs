@@ -9,9 +9,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.ImportersExporters
 {
     public class PointFileImporterExporter : Feature2DImportExportBase<Feature2DPoint>
     {
-        protected override string ImporterName => "Points from .xyn file";
+        protected override string ImporterName => $"Points from {FileConstants.XynFileExtension} file";
 
-        protected override string ExporterName => "Points to .xyn file";
+        protected override string ExporterName => $"Points to {FileConstants.XynFileExtension} file";
 
         protected override IEnumerable<Feature2DPoint> Import(string path)
         {
@@ -31,6 +31,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.ImportersExporters
 
         public override Bitmap Image => Resources.Observation;
 
-        public override string FileFilter => "2D points file|*.xyn";
+        public override string FileFilter => $"2D points file|*{FileConstants.XynFileExtension}";
     }
 }

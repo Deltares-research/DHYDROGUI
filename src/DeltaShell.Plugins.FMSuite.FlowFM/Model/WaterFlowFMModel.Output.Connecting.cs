@@ -7,6 +7,7 @@ using DelftTools.Utils.Editing;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.Common.IO.Readers;
 using DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using GeoAPI.Extensions.CoordinateSystems;
@@ -70,7 +71,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             string hisFilePath = Path.Combine(outputDirectory, ModelDefinition.HisFileName);
             string classMapFilePath = Path.Combine(outputDirectory, ModelDefinition.ClassMapFileName);
             string waqFilePath = Path.Combine(outputDirectory, DelwaqOutputDirectoryName);
-            string snappedFolderPath = Path.Combine(outputDirectory, SnappedFeaturesDirectoryName);
+            string snappedFolderPath = Path.Combine(outputDirectory, FileConstants.SnappedFeaturesDirectoryName);
 
             ReconnectOutputFiles(mapFilePath, hisFilePath, classMapFilePath, waqFilePath, snappedFolderPath);
         }

@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DelftTools.Functions;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO;
+using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
@@ -849,7 +851,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             };
 
             bc1.AddPoint(1);
-            var data = bc1.GetDataAtPoint(1);
+            IFunction data = bc1.GetDataAtPoint(1);
             data["M1"] = new[]
             {
                 0.5,
@@ -885,13 +887,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             };
             AddBoundaryCondition(model, bc2);
 
-            var mduPath = Path.GetFullPath(@"exportwls.mdu");
+            string mduPath = Path.GetFullPath(@"exportwls.mdu");
 
             model.ExportTo(mduPath);
 
-            var path = model.BndExtFilePath;
-            var blocks = new DelftIniReader().ReadDelftIniFile(path);
-            Assert.AreEqual(2, blocks.Count());
+            string path = model.BndExtFilePath;
+            IList<DelftIniCategory> blocks;
+            using (var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
+            {
+                blocks = new DelftIniReader().ReadDelftIniFile(fileStream, path);
+            }
+            Assert.AreEqual(2, blocks.Count);
         }
 
         [Test]

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using DelftTools.TestUtils;
-using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Wave.IO;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
@@ -242,7 +242,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             DelftIniCategory category = WaveDelftIniCategoryCreator.CreateBoundaryConditionCategory(waveBoundaryCondition);
 
             // Then
-            IDelftIniProperty[] properties = category.Properties.Where(p => p.Name == KnownWaveProperties.CondSpecAtDist).ToArray();
+            DelftIniProperty[] properties = category.Properties.Where(p => p.Name == KnownWaveProperties.CondSpecAtDist).ToArray();
             Assert.That(properties.Length, Is.EqualTo(2));
             Assert.That(properties.First().Value, Is.EqualTo(GetStringValue(0.0)));
 
@@ -265,7 +265,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             DelftIniCategory category = WaveDelftIniCategoryCreator.CreateBoundaryConditionCategory(waveBoundaryCondition);
 
             // Then
-            IDelftIniProperty[] properties = category.Properties.Where(p => p.Name == KnownWaveProperties.Spectrum).ToArray();
+            DelftIniProperty[] properties = category.Properties.Where(p => p.Name == KnownWaveProperties.Spectrum).ToArray();
             Assert.That(properties.Length, Is.EqualTo(2));
             Assert.That(properties.First().Value, Is.EqualTo(spectrumFileName1));
             Assert.That(properties.Last().Value, Is.EqualTo(spectrumFileName2));
@@ -314,9 +314,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             AssertPropertyValues(category, KnownWaveProperties.DirectionalSpreadingValue, spreading0, spreading1);
         }
 
-        private static void AssertPropertyValues(IDelftIniCategory category, string propertyName, double firstValue, double secondValue)
+        private static void AssertPropertyValues(DelftIniCategory category, string propertyName, double firstValue, double secondValue)
         {
-            IDelftIniProperty[] properties = category.Properties
+            DelftIniProperty[] properties = category.Properties
                                                     .Where(p => p.Name == propertyName)
                                                     .ToArray();
 

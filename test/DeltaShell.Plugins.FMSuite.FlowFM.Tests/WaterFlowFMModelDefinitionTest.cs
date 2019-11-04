@@ -829,7 +829,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var model = new WaterFlowFMModel();
 
             Assert.AreEqual(model.ModelDefinition.ModelName, model.Name);
-            Assert.AreEqual(model.Name + ExtForceFile.Extension,
+            Assert.AreEqual(model.Name + FileConstants.ExternalForcingFileExtension,
                             model.ModelDefinition.GetModelProperty(KnownProperties.ExtForceFile).Value);
 
             model.Name = "newname";
@@ -848,7 +848,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var newModel = new WaterFlowFMModel(newnameMdu);
 
             Assert.AreEqual(model.Name, newModel.ModelDefinition.ModelName);
-            Assert.AreEqual(model.Name + "_bnd" + ExtForceFile.Extension,
+            Assert.AreEqual(model.Name + "_bnd" + FileConstants.ExternalForcingFileExtension,
                 newModel.ModelDefinition.GetModelProperty(KnownProperties.BndExtForceFile).Value);
         }
 
@@ -862,7 +862,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var model = new WaterFlowFMModel(mduPath);
 
             Assert.AreEqual(model.ModelDefinition.ModelName, model.Name);
-            Assert.AreNotEqual(model.Name + ExtForceFile.Extension,
+            Assert.AreNotEqual(model.Name + FileConstants.ExternalForcingFileExtension,
                             model.ModelDefinition.GetModelProperty(KnownProperties.ExtForceFile).Value);
 
             model.Name = "newname";
@@ -879,7 +879,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var newModel = new WaterFlowFMModel(fullDirectoryPath);
 
             Assert.AreEqual(model.Name, newModel.ModelDefinition.ModelName);
-            Assert.AreNotEqual(model.Name + ExtForceFile.Extension,
+            Assert.AreNotEqual(model.Name + FileConstants.ExternalForcingFileExtension,
                             newModel.ModelDefinition.GetModelProperty(KnownProperties.ExtForceFile).Value);
         }
 
@@ -1617,11 +1617,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        [TestCase("", WaterFlowFMModelDefinition.DefaultOutputDirectoryName)]
-        [TestCase(null, WaterFlowFMModelDefinition.DefaultOutputDirectoryName)]
+        [TestCase("", FileConstants.OutputDirectoryName)]
+        [TestCase(null, FileConstants.OutputDirectoryName)]
         [TestCase(".", "")]
         [TestCase("custom", "custom")]
-        [TestCase(WaterFlowFMModelDefinition.DefaultOutputDirectoryName, WaterFlowFMModelDefinition.DefaultOutputDirectoryName)]
+        [TestCase(FileConstants.OutputDirectoryName, FileConstants.OutputDirectoryName)]
         public void GivenAWaterFlowFMModelDefinitionWithAnOutputDirectoryProperty_WhenOutputDirectoryNameIsCalled_ThenCorrectStringIsReturned(string propertyValue, string expectedString)
         {
             // given
@@ -1643,7 +1643,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var modelDefinition = new WaterFlowFMModelDefinition();
             var property = modelDefinition.GetModelProperty(KnownProperties.OutputDir);
             modelDefinition.Properties.Remove(property);
-            const string expectedString = WaterFlowFMModelDefinition.DefaultOutputDirectoryName;
+            const string expectedString = FileConstants.OutputDirectoryName;
 
             // When
             var resultedString = modelDefinition.OutputDirectoryName;
