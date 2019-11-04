@@ -2643,7 +2643,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                                 BridgePillarsDataModel.Add(
                                     CreateModelFeatureCoordinateDataFor(bridgePillar));
                                 break;
-            }
+                            }
 
                             dataToUpdate.Feature = bridgePillar;
                             break;
@@ -2666,7 +2666,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (inputSender || outputSender)
             {
                 var feature = (IFeature) e.GetRemovedOrAddedItem();
-                var oldFeature = (IFeature) e.OldItems[0];
                 switch (e.Action)
                 {
                     case NotifyCollectionChangedAction.Add:
@@ -2683,6 +2682,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                         areaDataItems.Clear();
                         break;
                     case NotifyCollectionChangedAction.Replace:
+                        var oldFeature = e.OldItems?.OfType<IFeature>().FirstOrDefault();
                         RemoveAreaFeature(oldFeature);
                         AddAreaItem(feature, inputSender);
                         break;
