@@ -106,38 +106,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
 
             return false;
         }
-        public static string GetFeatureCategory(this IFeature feature)
-        {
-            if (feature is IPump)
-            {
-                return WaterFlowParametersCategories.Pumps;;
-            }
-            if (feature is IWeir)
-            {
-                return WaterFlowParametersCategories.Weirs;
-            }
-            if (feature is ICulvert)
-            {
-                return WaterFlowParametersCategories.Culverts;
-            }
-            if (feature is IObservationPoint)
-            {
-                return WaterFlowParametersCategories.ObservationPoints;
-            }
-            if (feature is IRetention)
-            {
-                return WaterFlowParametersCategories.Retentions;
-            }
-            if (feature is ILateralSource)
-            {
-                return WaterFlowParametersCategories.Laterals;
-            }
-            if (feature is IHydroNode)
-            {
-                return WaterFlowParametersCategories.BoundaryConditions;
-            }
-            return null;
-        }
 
         public static string BMIPropertyString(this IFeature feature, string property)
         {

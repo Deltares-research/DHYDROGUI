@@ -187,12 +187,6 @@ namespace DeltaShell.NGHS.IO.DataObjects
         }
 
         [FeatureAttribute]
-        public virtual string DataTypeValue
-        {
-            get { return DataType.GetDescription(); }
-        }
-
-        [FeatureAttribute]
         public virtual Model1DBoundaryNodeDataType DataType
         {
             get { return dataType; }

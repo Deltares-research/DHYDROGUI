@@ -1,6 +1,6 @@
 ﻿using DelftTools.TestUtils;
+using DeltaShell.NGHS.IO.DataObjects.Model1D;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi;
 using DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter;
 using NUnit.Framework;
 

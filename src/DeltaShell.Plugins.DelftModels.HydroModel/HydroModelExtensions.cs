@@ -39,7 +39,19 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                 {
                     hydroRegions.Remove(integratedModelHydroRegion);
                 }
-                hydroRegions.Add(sourceModel.Region);
+                
+                if (sourceModel.Region.SubRegions.Any())
+                {
+                    foreach (var subRegion in sourceModel.Region.SubRegions)
+                    {
+                        hydroRegions.Add(subRegion);
+                    }
+                }
+                else
+                {
+                    hydroRegions.Add(sourceModel.Region);
+                }
+
             }
             // Move (overwrite) model itself to target HydroModel. 
             var targetFlowModel =

@@ -16,6 +16,7 @@ using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
+using DelftTools.Units;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
@@ -27,6 +28,7 @@ using DelftTools.Utils.Reflection;
 using DelftTools.Utils.Validation;
 using DeltaShell.Dimr;
 using DeltaShell.NGHS.IO.DataObjects;
+using DeltaShell.NGHS.IO.DataObjects.Model1D;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.Common;
 using DeltaShell.Plugins.FMSuite.Common.DepthLayers;
@@ -54,11 +56,13 @@ using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Features.Generic;
 using NetTopologySuite.Extensions.Grids;
+using NetTopologySuite.Geometries;
 using SharpMap;
 using SharpMap.Api;
 using SharpMap.Api.SpatialOperations;
 using SharpMap.Data.Providers;
 using SharpMap.SpatialOperations;
+using EngineParameter = DeltaShell.NGHS.IO.DataObjects.Model1D.EngineParameter;
 using FixedWeir = DelftTools.Hydro.Structures.FixedWeir;
 using ObservationCrossSection2D = DelftTools.Hydro.ObservationCrossSection2D;
 
@@ -105,7 +109,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             AddNetworkToModel();
             AddAreaToModel();
-
+            fmRegion = new HydroRegion(){Name = Name, SubRegions = new EventedList<IRegion>(){Area, Network}};
             if (!string.IsNullOrEmpty(mduFilePath))
             {
                 LoadStateFromMdu(mduFilePath);
@@ -134,13 +138,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private void AddNetworkToModel()
         {
-            Network = new HydroNetwork {Name = NetworkObjectName};
+            // network
+            var network = new HydroNetwork { Name = NetworkObjectName };
+            AddDataItem(network, DataItemRole.Input, WaterFlowFMModelDataSet.NetworkTag);
+            SubscribeToNetwork();
+
             NetworkDiscretization = new Discretization {Network = network, Name = DiscretizationObjectName, SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocationsAndConnectedBranchesWithoutLocationOnThemFullyCovered };
-            /*var boundaryNodeDataItemSet = new DataItemSet(new EventedList<Model1DBoundaryNodeData>(), WaterFlowFMModelDataSet.BoundaryConditionsTag, DataItemRole.Input, true, WaterFlowFMModelDataSet.BoundaryConditionsTag, typeof(Model1DBoundaryNodeData))
+            
+            // q's supplied by externals
+            AddInflowsDataItem();
+
+            var boundaryNodeDataItemSet = new DataItemSet(new EventedList<Model1DBoundaryNodeData>(), WaterFlowFMModelDataSet.BoundaryConditionsTag, DataItemRole.Input, true, WaterFlowFMModelDataSet.BoundaryConditionsTag, typeof(Model1DBoundaryNodeData))
             {
                 ValueType = typeof(FeatureData<IFunction, INode>)
             };
-            dataItems.Add(boundaryNodeDataItemSet);*/
+            dataItems.Add(boundaryNodeDataItemSet);
 
             var lateralSourceDataItemSet = new DataItemSet(new EventedList<Model1DLateralSourceData>(), WaterFlowFMModelDataSet.LateralSourcesDataTag, DataItemRole.Input, true, WaterFlowFMModelDataSet.LateralSourcesDataTag, typeof(Model1DLateralSourceData));
             dataItems.Add(lateralSourceDataItemSet);
@@ -159,7 +171,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             ((INotifyCollectionChanged) area).CollectionChanged += HydroAreaCollectionChanged;
             ((INotifyPropertyChanged) area).PropertyChanged += HydroAreaPropertyChanged;
             ((INotifyCollectionChanged) this).CollectionChanged += (s, e) => { MarkDirty(); };
-            ((INotifyPropertyChange) this).PropertyChanged += (s, e) => { MarkDirty(); };
+            ((INotifyPropertyChange) this).PropertyChanged += OnFMModelPropertyChanged;
+        }
+
+        private void OnFMModelPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            MarkDirty();
+            if (e.PropertyName == nameof(Name))
+            {
+                fmRegion.Name = Name;
+            }
         }
 
         private void InitializeModelProperties()
@@ -384,6 +405,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 ((INotifyCollectionChange) areaDataItem.Value).CollectionChanged += HydroAreaCollectionChanged;
                 ((INotifyPropertyChanged) areaDataItem.Value).PropertyChanged += HydroAreaPropertyChanged;
             }
+            SubscribeToNetwork();
         }
 
         protected override void OnBeforeDataItemsSet()
@@ -396,6 +418,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 ((INotifyCollectionChange)areaDataItem.Value).CollectionChanged -= HydroAreaCollectionChanged;
                 ((INotifyPropertyChanged)areaDataItem.Value).PropertyChanged -= HydroAreaPropertyChanged;
             }
+            UnSubscribeFromNetwork();
         }
 
         protected override void OnDataItemLinked(object sender, LinkedUnlinkedEventArgs<IDataItem> e)
@@ -504,6 +527,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             UnsupportedFileBasedExtForceFileItems = ModelDefinition.UnsupportedFileBasedExtForceFileItems;
             Pipes = ModelDefinition.Pipes;
             SourcesAndSinks = ModelDefinition.SourcesAndSinks;
+            Inflows = ModelDefinition.Inflows;
 
             // read depth layer definition
             DepthLayerDefinition = ModelDefinition.Kmx == 0
@@ -1359,17 +1383,97 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             if ((role & DataItemRole.Input) == DataItemRole.Input)
             {
-                return InputFeatureCollections.OfType<IList>().SelectMany(l => l.OfType<IFeature>());
+                foreach (var inputFeature2D in InputFeatureCollections.OfType<IList>().SelectMany(l => l.OfType<IFeature>()).ToArray())
+                {
+                    yield return inputFeature2D;
+                }
             }
 
             if ((role & DataItemRole.Output) == DataItemRole.Output)
             {
-                return OutputFeatureCollections.OfType<IList>().SelectMany(l => l.OfType<IFeature>());
+                foreach (var outputFeature2D in OutputFeatureCollections.OfType<IList>()
+                    .SelectMany(l => l.OfType<IFeature>()))
+                {
+                    yield return outputFeature2D;
+                }
             }
 
-            return Enumerable.Empty<IFeature>();
+            foreach (var feature1D in Get1DChildDataItemLocations(role).ToArray())
+            {
+                yield return feature1D;
+            }
+                        
         }
 
+        private IEnumerable<IFeature> Get1DChildDataItemLocations(DataItemRole role)
+        {
+            if ((role & DataItemRole.Input) == DataItemRole.Input || (role & DataItemRole.Output) == DataItemRole.Output)
+            {
+                foreach (var weir in Network.Weirs)
+                {
+                    yield return weir;
+                }
+                foreach (var gate in Network.Gates)
+                {
+                    yield return gate;
+                }
+                foreach (var culvert in Network.Culverts)
+                {
+                    yield return culvert;
+                }
+                foreach (var pump in Network.Pumps)
+                {
+                    yield return pump;
+                }
+                foreach (var lateralSource in Network.LateralSources)
+                {
+                    yield return lateralSource;
+                }
+                foreach (var hydroNode in Network.HydroNodes.Where(hn => !hn.IsConnectedToMultipleBranches))
+                {
+                    yield return hydroNode;
+                }
+            }
+            if ((role & DataItemRole.Output) == DataItemRole.Output)
+            {
+                foreach (var location in Network.ObservationPoints)
+                {
+                    yield return location;
+                }
+                foreach (var location in Network.Retentions)
+                {
+                    yield return location;
+                }
+
+                INetworkLocation[] segmentsCentroidLocations = NetworkDiscretization.Segments.Values
+                                        .Where(s => s.Geometry.Centroid != null)
+                                        .Select(s => new NetworkLocation(s.Branch, (s.EndChainage + s.Chainage) / 2))
+                                        .OfType<INetworkLocation>()
+                                        .ToArray();
+
+                yield return new Feature // all locations
+                {
+                    Geometry = NetworkDiscretization.Geometry,
+                    Attributes = new DictionaryFeatureAttributeCollection
+                            {
+                                { "locations", NetworkDiscretization.Locations.Values },
+                                { "StandardFeatureName", EngineParameters.GetStandardFeatureName(ElementSet.GridpointsOnBranches)},
+                                { "ElementType", "GridpointsOnBranches" }
+                            }
+                };
+
+                yield return new Feature // all staggered locations
+                {
+                    Geometry = new GeometryCollection(segmentsCentroidLocations.Select(nl => nl.Geometry).ToArray()),
+                    Attributes = new DictionaryFeatureAttributeCollection
+                            {
+                                { "locations", segmentsCentroidLocations },
+                                { "StandardFeatureName", EngineParameters.GetStandardFeatureName(ElementSet.ReachSegElmSet)},
+                                { "ElementType", "ReachSegElmSet" }
+                            }
+                };
+            }
+        }
         public override IEnumerable<IDataItem> GetChildDataItems(IFeature location)
         {
             if (location == null) yield break;
@@ -1377,11 +1481,98 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             List<IDataItem> items;
             areaDataItems.TryGetValue(location, out items);
 
-            if (items == null) yield break;
-
-            foreach (var di in items)
+            if (items != null)
             {
-                yield return di;
+                foreach (var di in items)
+                {
+                    yield return di;
+                }
+            }
+
+            if (location.Geometry is Point)
+            {
+                var networkDataItem = GetDataItemByValue(Network);
+                // Engine parameters that can be set by RTC
+                foreach (var engineParameter in GetEngineParametersForLocation(location))
+                {
+                    // search it first in existing data items
+                    var existingDataItem =
+                        networkDataItem.Children.FirstOrDefault(
+                            delegate (IDataItem di)
+                            {
+                                var valueConverter = di.ValueConverter as Model1DBranchFeatureValueConverter;
+                                return di.ValueType == typeof(double)
+                                       && (
+                                           valueConverter != null &&
+                                           valueConverter.ParameterName == engineParameter.Name &&
+                                           valueConverter.Role == engineParameter.Role
+                                           && valueConverter.ElementSet == engineParameter.ElementSet &&
+                                           valueConverter.QuantityType == engineParameter.QuantityType
+                                           && Equals(valueConverter.Location, location
+                                           ));
+                            });
+
+                    if (existingDataItem != null)
+                    {
+                        yield return existingDataItem;
+                    }
+                    else
+                    {
+                        yield return new DataItem
+                        {
+                            Name = location + " - " + engineParameter.Name, //todo: clean this up
+                            Role = engineParameter.Role,
+                            ValueType = typeof(double),
+                            Parent = networkDataItem,
+                            ShouldBeRemovedAfterUnlink = true,
+                            ValueConverter =
+                                new Model1DBranchFeatureValueConverter(
+                                    this,
+                                    location,
+                                    engineParameter.Name,
+                                    engineParameter.QuantityType,
+                                    engineParameter.ElementSet,
+                                    engineParameter.Role,
+                                    engineParameter.Unit.Symbol)
+                        };
+                    }
+                }
+            }
+        }
+
+        private IEnumerable<EngineParameter> GetEngineParametersForLocation(IFeature location)
+        {
+            if (location is IHydroNode)
+            {
+                Model1DBoundaryNodeData boundary =
+                    BoundaryConditions1D.First(boundaryNodeData => boundaryNodeData.Node.Equals(location));
+                if (boundary.DataType == Model1DBoundaryNodeDataType.WaterLevelConstant ||
+                    boundary.DataType == Model1DBoundaryNodeDataType.WaterLevelTimeSeries)
+                {
+                    yield return new EngineParameter(QuantityType.WaterLevel, ElementSet.HBoundaries,
+                                                     DataItemRole.Input, FunctionAttributes.StandardNames.WaterLevel,
+                                                     new Unit("Meter above reference level", "m AD"));
+                    yield return new EngineParameter(QuantityType.Discharge, ElementSet.HBoundaries,
+                                                     DataItemRole.Output, FunctionAttributes.StandardNames.WaterDischarge,
+                                                     new Unit("Cubic meter", "m³"));
+                }
+                else if (boundary.DataType == Model1DBoundaryNodeDataType.FlowConstant ||
+                    boundary.DataType == Model1DBoundaryNodeDataType.FlowTimeSeries)
+                {
+                    yield return new EngineParameter(QuantityType.Discharge, ElementSet.QBoundaries,
+                                                     DataItemRole.Input, FunctionAttributes.StandardNames.WaterDischarge,
+                                                     new Unit("Cubic meter", "m³"));
+                    yield return new EngineParameter(QuantityType.Discharge, ElementSet.QBoundaries,
+                                                     DataItemRole.Output, FunctionAttributes.StandardNames.WaterLevel,
+                                                     new Unit("Meter above reference level", "m AD"));
+                }
+            }
+            else
+            {
+                foreach (EngineParameter exchangableParameter in EngineParameters.GetExchangableParameters(EngineParameters.EngineMapping(), location))
+                {
+                    yield return exchangableParameter;
+                }
             }
         }
 
@@ -2318,6 +2509,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private IEventedList<ILink1D2D> links;
         private FM1DFileFunctionStore output1DFileStore;
         private HeatFluxModelType heatFluxModelType;
+        private IHydroRegion fmRegion;
 
         private const int TotalImportSteps = 10;
 
@@ -2912,7 +3104,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         public IHydroRegion Region
         {
-            get { return Area; }
+            get { return fmRegion; }
         }
 
         public Type SupportedRegionType

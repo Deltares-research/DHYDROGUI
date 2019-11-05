@@ -10,7 +10,7 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DeltaShell.NGHS.IO.DataObjects;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi;
+using DeltaShell.NGHS.IO.DataObjects.Model1D;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Networks;
 using NetTopologySuite.Extensions.Coverages;

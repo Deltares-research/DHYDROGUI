@@ -135,14 +135,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui
                 };
             yield return SharpMapGisGuiPlugin.CreateAttributeTableViewInfo<Model1DBoundaryNodeData, WaterFlowModel1D>( m => m.BoundaryConditions, () => Gui);
             yield return SharpMapGisGuiPlugin.CreateAttributeTableViewInfo<Model1DLateralSourceData, WaterFlowModel1D>(m => m.LateralSourceData, () => Gui);
-            /*yield return new ViewInfo<WaterFlowModel1DBoundaryNodeData, WaterFlowModel1DBoundaryNodeDataViewWpf>
-                {
-                    Description = "Boundary Node Data View (Flow 1D)"
-                };
-            yield return new ViewInfo<WaterFlowModel1DLateralSourceData, Model1DLateralSourceDataViewWpf>
-                {
-                    Description = "Lateral Source Data View (Flow 1D)"
-                };           */
             yield return new ViewInfo<WaterFlowModel1D, ValidationView>
                 {
                     Description = "Validation report",

@@ -32,6 +32,7 @@ using DelftTools.Utils.Reflection;
 using DelftTools.Utils.Validation;
 using DeltaShell.Dimr;
 using DeltaShell.NGHS.IO.DataObjects;
+using DeltaShell.NGHS.IO.DataObjects.Model1D;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.PhysicalParameters;
@@ -46,6 +47,7 @@ using NetTopologySuite.Extensions.Actions;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Features.Generic;
+using AggregationOptions = DeltaShell.NGHS.IO.DataObjects.Model1D.AggregationOptions;
 using Point = NetTopologySuite.Geometries.Point;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
@@ -421,22 +423,22 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
 
         public virtual INetworkCoverage OutputFlow
         {
-            get { return (INetworkCoverage)RetrieveOutputFunctionByDataItemTag(WaterFlowModelParameterNames.BranchDischarge); }
+            get { return (INetworkCoverage)RetrieveOutputFunctionByDataItemTag(Model1DParameterNames.BranchDischarge); }
         } 
 
         public virtual INetworkCoverage OutputDepth
         {
-            get { return (INetworkCoverage)RetrieveOutputFunctionByDataItemTag(WaterFlowModelParameterNames.LocationWaterDepth); }
+            get { return (INetworkCoverage)RetrieveOutputFunctionByDataItemTag(Model1DParameterNames.LocationWaterDepth); }
         }
 
         public virtual INetworkCoverage OutputWaterLevel
         {
-            get { return (INetworkCoverage)RetrieveOutputFunctionByDataItemTag(WaterFlowModelParameterNames.LocationWaterLevel); }
+            get { return (INetworkCoverage)RetrieveOutputFunctionByDataItemTag(Model1DParameterNames.LocationWaterLevel); }
         }
 
         public virtual INetworkCoverage OutputVelocity
         {
-            get { return (INetworkCoverage)RetrieveOutputFunctionByDataItemTag(WaterFlowModelParameterNames.BranchVelocity); }
+            get { return (INetworkCoverage)RetrieveOutputFunctionByDataItemTag(Model1DParameterNames.BranchVelocity); }
         }
 
         [NoNotifyPropertyChange]
@@ -1326,7 +1328,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
                 //output is cleared. This gives problems if the coverage updates itself (for example branch split, reverse, etc): being
                 //output means being stored in NetCdf and thus it crashes on modification of the function structure. Both conceptually 
                 //and practically it is better if it's treated as non-output, e.g. 'none'.
-                var isFiniteVolumeGrid = engineParameter.Name == WaterFlowModelParameterNames.FiniteVolumeGridType;
+                var isFiniteVolumeGrid = engineParameter.Name == Model1DParameterNames.FiniteVolumeGridType;
                 var expectedRole = isFiniteVolumeGrid ? DataItemRole.None : DataItemRole.Output;
 
                 AddOrRemoveOutputCoverages(engineParameter, expectedRole); 
@@ -1875,7 +1877,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
                         foreach (var dataItem in networkDataItem.Children)
                         {
                             // check if child data item uses WaterFlowModelBranchFeatureValueConverter
-                            var valueConverter = dataItem.ValueConverter as WaterFlowModelBranchFeatureValueConverter;
+                            var valueConverter = dataItem.ValueConverter as Model1DBranchFeatureValueConverter;
                             if (valueConverter == null || !(valueConverter.Location is IBranchFeature))
                             {
                                 continue;
@@ -2693,9 +2695,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             var allFeaturesCloned = clonedModel.Network.GetAllItemsRecursive().ToList();
 
             // update cloned child data items containing WaterFlowModelBranchFeatureValueConverter
-            IEnumerable<WaterFlowModelBranchFeatureValueConverter> valueConverters =
-                clonedModel.AllDataItems.Where(di => di.ValueConverter is WaterFlowModelBranchFeatureValueConverter).Select(
-                    di => di.ValueConverter as WaterFlowModelBranchFeatureValueConverter);
+            IEnumerable<Model1DBranchFeatureValueConverter> valueConverters =
+                clonedModel.AllDataItems.Where(di => di.ValueConverter is Model1DBranchFeatureValueConverter).Select(
+                    di => di.ValueConverter as Model1DBranchFeatureValueConverter);
             foreach (var valueConverter in valueConverters)
             {
                 valueConverter.Model = clonedModel;
@@ -2940,7 +2942,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
                         networkDataItem.Children.FirstOrDefault(
                             delegate(IDataItem di)
                             {
-                                var valueConverter = di.ValueConverter as WaterFlowModelBranchFeatureValueConverter;
+                                var valueConverter = di.ValueConverter as Model1DBranchFeatureValueConverter;
                                 return di.ValueType == typeof(double)
                                        && (
                                            valueConverter != null &&
@@ -2966,7 +2968,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
                             Parent = networkDataItem,
                             ShouldBeRemovedAfterUnlink = true,
                             ValueConverter =
-                                new WaterFlowModelBranchFeatureValueConverter(
+                                new Model1DBranchFeatureValueConverter(
                                     this,
                                     location,
                                     engineParameter.Name,
@@ -3645,16 +3647,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             IFeature feature = null;
             switch (category)
             {
-                case WaterFlowParametersCategories.Weirs:
+                case Model1DParametersCategories.Weirs:
                     feature = Network.Weirs.FirstOrDefault(w => w.Name == itemName);
                     break;
-                case WaterFlowParametersCategories.Culverts:
+                case Model1DParametersCategories.Culverts:
                     feature = Network.Culverts.FirstOrDefault(c => c.Name == itemName);
                     break;
-                case WaterFlowParametersCategories.Pumps:
+                case Model1DParametersCategories.Pumps:
                     feature = Network.Pumps.FirstOrDefault(p => p.Name == itemName);
                     break;
-                case WaterFlowParametersCategories.Laterals:
+                case Model1DParametersCategories.Laterals:
                     feature = Network.LateralSources.FirstOrDefault(l => l.Name == itemName);
                     break;
             }

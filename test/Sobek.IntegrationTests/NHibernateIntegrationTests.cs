@@ -2,9 +2,9 @@
 using DelftTools.TestUtils;
 using DelftTools.Units;
 using DeltaShell.IntegrationTestUtils;
+using DeltaShell.NGHS.IO.DataObjects.Model1D;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi;
 using DeltaShell.Plugins.NetworkEditor;
 using NUnit.Framework;
 

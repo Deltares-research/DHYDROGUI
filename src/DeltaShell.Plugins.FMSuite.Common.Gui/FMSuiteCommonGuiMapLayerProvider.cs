@@ -84,19 +84,19 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui
                 Theme = new CategorialTheme
                 {
                     
-                    AttributeName = nameof(Model1DBoundaryNodeData.DataTypeValue),
+                    AttributeName = nameof(Model1DBoundaryNodeData.DataType),
                     DefaultStyle = new VectorStyle(){
                         GeometryType = typeof(IPoint),}
                     ,
                     NoDataValues = new List<string> { "" },
                     ThemeItems = new EventedList<IThemeItem>
                     {
-                        CreateCategorialThemeItem(Model1DBoundaryNodeDataType.None.GetDescription(), Properties.Resources.none),
-                        CreateCategorialThemeItem(Model1DBoundaryNodeDataType.WaterLevelConstant.GetDescription(), Properties.Resources.HConst),
-                        CreateCategorialThemeItem(Model1DBoundaryNodeDataType.WaterLevelTimeSeries.GetDescription(), Properties.Resources.HBoundary),
-                        CreateCategorialThemeItem(Model1DBoundaryNodeDataType.FlowConstant.GetDescription(), Properties.Resources.QConst),
-                        CreateCategorialThemeItem(Model1DBoundaryNodeDataType.FlowTimeSeries.GetDescription(), Properties.Resources.QBoundary),
-                        CreateCategorialThemeItem(Model1DBoundaryNodeDataType.FlowWaterLevelTable.GetDescription(), Properties.Resources.QHBoundary)
+                        CreateCategorialThemeItem(Model1DBoundaryNodeDataType.None, Properties.Resources.none),
+                        CreateCategorialThemeItem(Model1DBoundaryNodeDataType.WaterLevelConstant, Properties.Resources.HConst),
+                        CreateCategorialThemeItem(Model1DBoundaryNodeDataType.WaterLevelTimeSeries, Properties.Resources.HBoundary),
+                        CreateCategorialThemeItem(Model1DBoundaryNodeDataType.FlowConstant, Properties.Resources.QConst),
+                        CreateCategorialThemeItem(Model1DBoundaryNodeDataType.FlowTimeSeries, Properties.Resources.QBoundary),
+                        CreateCategorialThemeItem(Model1DBoundaryNodeDataType.FlowWaterLevelTable, Properties.Resources.QHBoundary)
                     }
                 }
             };
@@ -117,31 +117,32 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui
                 },
                 Theme = new CategorialTheme
                 {
-                    AttributeName = nameof(Model1DLateralSourceData.DataTypeValue),
+                    AttributeName = nameof(Model1DLateralSourceData.DataType),
                     DefaultStyle = new VectorStyle(),
                     NoDataValues = new List<string> { "" },
                     ThemeItems = new EventedList<IThemeItem>
                     {
-                        CreateCategorialThemeItem(Model1DLateralDataType.None.GetDescription(), Properties.Resources.none),
-                        CreateCategorialThemeItem(Model1DLateralDataType.FlowConstant.GetDescription(), Properties.Resources.QConst),
-                        CreateCategorialThemeItem(Model1DLateralDataType.FlowTimeSeries.GetDescription(), Properties.Resources.QBoundary),
-                        CreateCategorialThemeItem(Model1DLateralDataType.FlowWaterLevelTable.GetDescription(), Properties.Resources.QHBoundary)
+                        CreateCategorialThemeItem(Model1DLateralDataType.FlowConstant, Properties.Resources.QConst),
+                        CreateCategorialThemeItem(Model1DLateralDataType.FlowTimeSeries, Properties.Resources.QBoundary),
+                        CreateCategorialThemeItem(Model1DLateralDataType.FlowWaterLevelTable, Properties.Resources.QHBoundary)
                     }
                 }
             };
         }
-        private static CategorialThemeItem CreateCategorialThemeItem(string enumValue, Image overlayImage)
+       
+        private static CategorialThemeItem CreateCategorialThemeItem<T>(T enumValue, Image overlayImage) where T : struct, IConvertible
         {
+            var value = (Enum)Enum.Parse(typeof(T), enumValue.ToString());
+
             return new CategorialThemeItem
             {
-                Category = enumValue,
-                Value = enumValue,
-                Label = enumValue,
+                Value = value,
+                Label = value.GetDescription(),
                 Style = new VectorStyle
                 {
                     Symbol = new Bitmap(Properties.Resources.Boundary_1d.AddOverlayImage(overlayImage, 1, 1))
                 },
-                
+
             };
         }
         public bool CanCreateLayerFor(object data, object parentObject)

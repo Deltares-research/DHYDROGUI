@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Functions;
+using DelftTools.Hydro;
+using DelftTools.Hydro.Structures;
+using DeltaShell.NGHS.IO.DataObjects.Model1D;
+using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
 
 namespace DeltaShell.NGHS.IO.DataObjects
@@ -63,7 +67,7 @@ namespace DeltaShell.NGHS.IO.DataObjects
                     // if Q >= 0 return Discharge type (returned by default)
                     return BoundaryType.Discharge;
                 default:
-                    throw new ArgumentOutOfRangeException(string.Format("BoundaryNodeDataType {0} is not supported by the ModelApi", boundaryNodeData.DataType));
+                    throw new ArgumentOutOfRangeException(String.Format("BoundaryNodeDataType {0} is not supported by the ModelApi", boundaryNodeData.DataType));
             }
         }
 
@@ -88,5 +92,37 @@ namespace DeltaShell.NGHS.IO.DataObjects
             }
         }
 
+        public static string GetFeatureCategory(this IFeature feature)
+        {
+            if (feature is IPump)
+            {
+                return Model1DParametersCategories.Pumps;;
+            }
+            if (feature is IWeir)
+            {
+                return Model1DParametersCategories.Weirs;
+            }
+            if (feature is ICulvert)
+            {
+                return Model1DParametersCategories.Culverts;
+            }
+            if (feature is IObservationPoint)
+            {
+                return Model1DParametersCategories.ObservationPoints;
+            }
+            if (feature is IRetention)
+            {
+                return Model1DParametersCategories.Retentions;
+            }
+            if (feature is ILateralSource)
+            {
+                return Model1DParametersCategories.Laterals;
+            }
+            if (feature is IHydroNode)
+            {
+                return Model1DParametersCategories.BoundaryConditions;
+            }
+            return null;
+        }
     }
 }

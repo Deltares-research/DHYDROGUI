@@ -10,9 +10,9 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.DataObjects;
+using DeltaShell.NGHS.IO.DataObjects.Model1D;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi;
 using NUnit.Framework;
 using Point = NetTopologySuite.Geometries.Point;
 
@@ -101,7 +101,7 @@ namespace Sobek.IntegrationTests
                 OBSERVATION_POINT_NAME, 
                 chainage);
             
-            Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.ObservationPoints,
+            Assert.IsTrue(CheckAfterModelExecution(Model1DParametersCategories.ObservationPoints,
                                                     OBSERVATION_POINT_ID.ToString(),
                                                     FunctionAttributes.StandardNames.WaterDischarge,
                                                     14993.663));
@@ -118,7 +118,7 @@ namespace Sobek.IntegrationTests
                 OBSERVATION_POINT_NAME,
                 chainage);
             
-            Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.ObservationPoints,
+            Assert.IsTrue(CheckAfterModelExecution(Model1DParametersCategories.ObservationPoints,
                                                     OBSERVATION_POINT_ID.ToString(),
                                                     FunctionAttributes.StandardNames.WaterVelocity,
                                                     6.218));
@@ -135,7 +135,7 @@ namespace Sobek.IntegrationTests
                 OBSERVATION_POINT_NAME,
                 chainage);
             
-            Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.ObservationPoints,
+            Assert.IsTrue(CheckAfterModelExecution(Model1DParametersCategories.ObservationPoints,
                                                     OBSERVATION_POINT_ID.ToString(),
                                                     FunctionAttributes.StandardNames.WaterFlowArea,
                                                     1.667));
@@ -152,7 +152,7 @@ namespace Sobek.IntegrationTests
                 OBSERVATION_POINT_NAME,
                 chainage);
             
-            Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.ObservationPoints,
+            Assert.IsTrue(CheckAfterModelExecution(Model1DParametersCategories.ObservationPoints,
                                                     OBSERVATION_POINT_ID.ToString(),
                                                     FunctionAttributes.StandardNames.WaterDepth,
                                                     10.75));
@@ -176,7 +176,7 @@ namespace Sobek.IntegrationTests
                 StructureFileWriterTestHelper.WEIR_DISCHARGE_COEFF,
                 StructureFileWriterTestHelper.WEIR_LATERAL_DISCHARGE_COEFF);
 
-            Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Weirs,
+            Assert.IsTrue(CheckAfterModelExecution(Model1DParametersCategories.Weirs,
                                                     StructureFileWriterTestHelper.WEIR_ID.ToString(),
                                                     FunctionAttributes.StandardNames.WaterDischarge,
                                                     12.0554));
@@ -197,7 +197,7 @@ namespace Sobek.IntegrationTests
                 StructureFileWriterTestHelper.WEIR_DISCHARGE_COEFF,
                 StructureFileWriterTestHelper.WEIR_LATERAL_DISCHARGE_COEFF);
 
-            Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Weirs,
+            Assert.IsTrue(CheckAfterModelExecution(Model1DParametersCategories.Weirs,
                                                     StructureFileWriterTestHelper.WEIR_ID.ToString(),
                                                     FunctionAttributes.StandardNames.WaterVelocity,
                                                     1.808));
@@ -218,7 +218,7 @@ namespace Sobek.IntegrationTests
                 StructureFileWriterTestHelper.WEIR_DISCHARGE_COEFF,
                 StructureFileWriterTestHelper.WEIR_LATERAL_DISCHARGE_COEFF);
 
-            Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Weirs,
+            Assert.IsTrue(CheckAfterModelExecution(Model1DParametersCategories.Weirs,
                                                     StructureFileWriterTestHelper.WEIR_ID.ToString(),
                                                     FunctionAttributes.StandardNames.WaterFlowArea,
                                                     6.667));
@@ -239,7 +239,7 @@ namespace Sobek.IntegrationTests
                 StructureFileWriterTestHelper.WEIR_DISCHARGE_COEFF,
                 StructureFileWriterTestHelper.WEIR_LATERAL_DISCHARGE_COEFF);
 
-            Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Weirs,
+            Assert.IsTrue(CheckAfterModelExecution(Model1DParametersCategories.Weirs,
                                                     StructureFileWriterTestHelper.WEIR_ID.ToString(),
                                                     FunctionAttributes.StandardNames.StructurePressureDifference,
                                                     1226.250));
@@ -262,7 +262,7 @@ namespace Sobek.IntegrationTests
                 StructureFileWriterTestHelper.WEIR_LATERAL_DISCHARGE_COEFF);
 
             double checkValue = crestLevel - 1.0;
-            Assert.IsTrue(CheckGetSetGetAfterModelInitialization(WaterFlowParametersCategories.Weirs,
+            Assert.IsTrue(CheckGetSetGetAfterModelInitialization(Model1DParametersCategories.Weirs,
                                                                     StructureFileWriterTestHelper.WEIR_ID.ToString(),
                                                                     FunctionAttributes.StandardNames.StructureCrestLevel,
                                                                     crestLevel,
@@ -284,7 +284,7 @@ namespace Sobek.IntegrationTests
                 StructureFileWriterTestHelper.WEIR_LATERAL_DISCHARGE_COEFF);
 
             double checkValue = StructureFileWriterTestHelper.WEIR_CREST_WIDTH - 1.0;
-            Assert.IsTrue(CheckGetSetGetAfterModelInitialization(WaterFlowParametersCategories.Weirs,
+            Assert.IsTrue(CheckGetSetGetAfterModelInitialization(Model1DParametersCategories.Weirs,
                                                                     StructureFileWriterTestHelper.WEIR_ID.ToString(),
                                                                     FunctionAttributes.StandardNames.StructureCrestWidth,
                                                                     StructureFileWriterTestHelper.WEIR_CREST_WIDTH,
@@ -305,7 +305,7 @@ namespace Sobek.IntegrationTests
                 StructureFileWriterTestHelper.WEIR_DISCHARGE_COEFF,
                 StructureFileWriterTestHelper.WEIR_LATERAL_DISCHARGE_COEFF);
 
-            Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Weirs,
+            Assert.IsTrue(CheckAfterModelExecution(Model1DParametersCategories.Weirs,
                                                     StructureFileWriterTestHelper.WEIR_ID.ToString(),
                                                     FunctionAttributes.StandardNames.StructureWaterLevelUpstream,
                                                     1.0));
@@ -326,7 +326,7 @@ namespace Sobek.IntegrationTests
                 StructureFileWriterTestHelper.WEIR_DISCHARGE_COEFF,
                 StructureFileWriterTestHelper.WEIR_LATERAL_DISCHARGE_COEFF);
 
-            Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Weirs,
+            Assert.IsTrue(CheckAfterModelExecution(Model1DParametersCategories.Weirs,
                                                     StructureFileWriterTestHelper.WEIR_ID.ToString(),
                                                     FunctionAttributes.StandardNames.StructureWaterLevelDownstream,
                                                     0.00000000));
@@ -347,7 +347,7 @@ namespace Sobek.IntegrationTests
                 StructureFileWriterTestHelper.WEIR_DISCHARGE_COEFF,
                 StructureFileWriterTestHelper.WEIR_LATERAL_DISCHARGE_COEFF);
 
-            Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Weirs,
+            Assert.IsTrue(CheckAfterModelExecution(Model1DParametersCategories.Weirs,
                                                     StructureFileWriterTestHelper.WEIR_ID.ToString(),
                                                     FunctionAttributes.StandardNames.StructureWaterHead,
                                                     1.00000000));
@@ -368,7 +368,7 @@ namespace Sobek.IntegrationTests
                 StructureFileWriterTestHelper.WEIR_DISCHARGE_COEFF,
                 StructureFileWriterTestHelper.WEIR_LATERAL_DISCHARGE_COEFF);
 
-            Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Weirs,
+            Assert.IsTrue(CheckAfterModelExecution(Model1DParametersCategories.Weirs,
                                                     StructureFileWriterTestHelper.WEIR_ID.ToString(),
                                                     FunctionAttributes.StandardNames.StructureWaterLevelAtCrest,
                                                     1.00000000));
@@ -399,7 +399,7 @@ namespace Sobek.IntegrationTests
                 StructureFileWriterTestHelper.ADV_WEIR_PIER_CONTRACTION_NEG,
                 StructureFileWriterTestHelper.ADV_WEIR_ABUT_CONTRACTION_NEG);
 
-            Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Weirs,
+            Assert.IsTrue(CheckAfterModelExecution(Model1DParametersCategories.Weirs,
                                                     StructureFileWriterTestHelper.ADV_WEIR_ID.ToString(),
                                                     FunctionAttributes.StandardNames.WaterDischarge,
                                                     3.8));
@@ -426,7 +426,7 @@ namespace Sobek.IntegrationTests
                 StructureFileWriterTestHelper.ADV_WEIR_PIER_CONTRACTION_NEG,
                 StructureFileWriterTestHelper.ADV_WEIR_ABUT_CONTRACTION_NEG);
 
-            Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Weirs,
+            Assert.IsTrue(CheckAfterModelExecution(Model1DParametersCategories.Weirs,
                                                     StructureFileWriterTestHelper.ADV_WEIR_ID.ToString(),
                                                     FunctionAttributes.StandardNames.WaterVelocity,
                                                     1.982));
@@ -453,7 +453,7 @@ namespace Sobek.IntegrationTests
                 StructureFileWriterTestHelper.ADV_WEIR_PIER_CONTRACTION_NEG,
                 StructureFileWriterTestHelper.ADV_WEIR_ABUT_CONTRACTION_NEG);
 
-            Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Weirs,
+            Assert.IsTrue(CheckAfterModelExecution(Model1DParametersCategories.Weirs,
                                                     StructureFileWriterTestHelper.ADV_WEIR_ID.ToString(),
                                                     FunctionAttributes.StandardNames.WaterFlowArea,
                                                     1.917));
@@ -480,7 +480,7 @@ namespace Sobek.IntegrationTests
                 StructureFileWriterTestHelper.ADV_WEIR_PIER_CONTRACTION_NEG,
                 StructureFileWriterTestHelper.ADV_WEIR_ABUT_CONTRACTION_NEG);
 
-            Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Weirs,
+            Assert.IsTrue(CheckAfterModelExecution(Model1DParametersCategories.Weirs,
                                                     StructureFileWriterTestHelper.ADV_WEIR_ID.ToString(),
                                                     FunctionAttributes.StandardNames.StructurePressureDifference,
                                                     1226.250));
@@ -508,7 +508,7 @@ namespace Sobek.IntegrationTests
                 StructureFileWriterTestHelper.ADV_WEIR_ABUT_CONTRACTION_NEG);
 
             double checkValue = 0.5 - 1.0;
-            Assert.IsTrue(CheckGetSetGetAfterModelInitialization(WaterFlowParametersCategories.Weirs,
+            Assert.IsTrue(CheckGetSetGetAfterModelInitialization(Model1DParametersCategories.Weirs,
                                                                     StructureFileWriterTestHelper.ADV_WEIR_ID.ToString(),
                                                                     FunctionAttributes.StandardNames.StructureCrestLevel,
                                                                     0.5,
@@ -536,7 +536,7 @@ namespace Sobek.IntegrationTests
                 StructureFileWriterTestHelper.ADV_WEIR_ABUT_CONTRACTION_NEG);
 
             double checkValue = StructureFileWriterTestHelper.ADV_WEIR_CREST_WIDTH - 1.0;
-            Assert.IsTrue(CheckGetSetGetAfterModelInitialization(WaterFlowParametersCategories.Weirs,
+            Assert.IsTrue(CheckGetSetGetAfterModelInitialization(Model1DParametersCategories.Weirs,
                                                                     StructureFileWriterTestHelper.ADV_WEIR_ID.ToString(),
                                                                     FunctionAttributes.StandardNames.StructureCrestWidth,
                                                                     StructureFileWriterTestHelper.ADV_WEIR_CREST_WIDTH,
@@ -563,7 +563,7 @@ namespace Sobek.IntegrationTests
                 StructureFileWriterTestHelper.ADV_WEIR_PIER_CONTRACTION_NEG,
                 StructureFileWriterTestHelper.ADV_WEIR_ABUT_CONTRACTION_NEG);
 
-            Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Weirs,
+            Assert.IsTrue(CheckAfterModelExecution(Model1DParametersCategories.Weirs,
                                                     StructureFileWriterTestHelper.ADV_WEIR_ID.ToString(),
                                                     FunctionAttributes.StandardNames.StructureWaterLevelUpstream,
                                                     1.0));
@@ -590,7 +590,7 @@ namespace Sobek.IntegrationTests
                 StructureFileWriterTestHelper.ADV_WEIR_PIER_CONTRACTION_NEG,
                 StructureFileWriterTestHelper.ADV_WEIR_ABUT_CONTRACTION_NEG);
 
-            Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Weirs,
+            Assert.IsTrue(CheckAfterModelExecution(Model1DParametersCategories.Weirs,
                                                     StructureFileWriterTestHelper.ADV_WEIR_ID.ToString(),
                                                     FunctionAttributes.StandardNames.StructureWaterLevelDownstream,
                                                     0.00000000));
@@ -617,7 +617,7 @@ namespace Sobek.IntegrationTests
                 StructureFileWriterTestHelper.ADV_WEIR_PIER_CONTRACTION_NEG,
                 StructureFileWriterTestHelper.ADV_WEIR_ABUT_CONTRACTION_NEG);
 
-            Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Weirs,
+            Assert.IsTrue(CheckAfterModelExecution(Model1DParametersCategories.Weirs,
                                                     StructureFileWriterTestHelper.ADV_WEIR_ID.ToString(),
                                                     FunctionAttributes.StandardNames.StructureWaterHead,
                                                     1.00000000));
@@ -643,7 +643,7 @@ namespace Sobek.IntegrationTests
                 StructureFileWriterTestHelper.ADV_WEIR_PIER_CONTRACTION_NEG,
                 StructureFileWriterTestHelper.ADV_WEIR_ABUT_CONTRACTION_NEG);
 
-            Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Weirs,
+            Assert.IsTrue(CheckAfterModelExecution(Model1DParametersCategories.Weirs,
                                                     StructureFileWriterTestHelper.ADV_WEIR_ID.ToString(),
                                                     FunctionAttributes.StandardNames.StructureWaterLevelAtCrest,
                                                     1.0));
@@ -667,7 +667,7 @@ namespace Sobek.IntegrationTests
                 UNI_WEIR_Z_VALUES.ToArray(),
                 StructureFileWriterTestHelper.UNI_WEIR_DISCHARGE_COEFF);
             
-            Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Weirs,
+            Assert.IsTrue(CheckAfterModelExecution(Model1DParametersCategories.Weirs,
                                                     StructureFileWriterTestHelper.UNI_WEIR_ID.ToString(),
                                                     FunctionAttributes.StandardNames.WaterDischarge,
                                                     1.241));
@@ -687,7 +687,7 @@ namespace Sobek.IntegrationTests
                 UNI_WEIR_Z_VALUES.ToArray(),
                 StructureFileWriterTestHelper.UNI_WEIR_DISCHARGE_COEFF);
             
-            Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Weirs,
+            Assert.IsTrue(CheckAfterModelExecution(Model1DParametersCategories.Weirs,
                                                     StructureFileWriterTestHelper.UNI_WEIR_ID.ToString(),
                                                     FunctionAttributes.StandardNames.WaterVelocity,
                                                     1.7925679683367921));
@@ -707,7 +707,7 @@ namespace Sobek.IntegrationTests
                 UNI_WEIR_Z_VALUES.ToArray(),
                 StructureFileWriterTestHelper.UNI_WEIR_DISCHARGE_COEFF);
             
-            Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Weirs,
+            Assert.IsTrue(CheckAfterModelExecution(Model1DParametersCategories.Weirs,
                                                     StructureFileWriterTestHelper.UNI_WEIR_ID.ToString(),
                                                     FunctionAttributes.StandardNames.WaterFlowArea,
                                                     0.6923));
@@ -727,7 +727,7 @@ namespace Sobek.IntegrationTests
                 UNI_WEIR_Z_VALUES.ToArray(),
                 StructureFileWriterTestHelper.UNI_WEIR_DISCHARGE_COEFF);
             
-            Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Weirs,
+            Assert.IsTrue(CheckAfterModelExecution(Model1DParametersCategories.Weirs,
                                                     StructureFileWriterTestHelper.UNI_WEIR_ID.ToString(),
                                                     FunctionAttributes.StandardNames.StructurePressureDifference,
                                                     1226.250));
@@ -752,7 +752,7 @@ namespace Sobek.IntegrationTests
                 StructureFileWriterTestHelper.UNI_WEIR_DISCHARGE_COEFF);
             
             double checkValue = UNI_WEIR_Z_VALUES.ToArray().Min() - 1.0;
-            Assert.IsTrue(CheckGetSetGetAfterModelInitialization(WaterFlowParametersCategories.Weirs,
+            Assert.IsTrue(CheckGetSetGetAfterModelInitialization(Model1DParametersCategories.Weirs,
                                                                     StructureFileWriterTestHelper.UNI_WEIR_ID.ToString(),
                                                                     FunctionAttributes.StandardNames.StructureCrestLevel,
                                                                     UNI_WEIR_Z_VALUES.ToArray().Min(),
@@ -772,7 +772,7 @@ namespace Sobek.IntegrationTests
                 UNI_WEIR_Z_VALUES.ToArray(),
                 StructureFileWriterTestHelper.UNI_WEIR_DISCHARGE_COEFF);
             
-            Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Weirs,
+            Assert.IsTrue(CheckAfterModelExecution(Model1DParametersCategories.Weirs,
                                                     StructureFileWriterTestHelper.UNI_WEIR_ID.ToString(),
                                                     FunctionAttributes.StandardNames.StructureWaterLevelUpstream,
                                                     1.0));
@@ -792,7 +792,7 @@ namespace Sobek.IntegrationTests
                 UNI_WEIR_Z_VALUES.ToArray(),
                 StructureFileWriterTestHelper.UNI_WEIR_DISCHARGE_COEFF);
             
-            Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Weirs,
+            Assert.IsTrue(CheckAfterModelExecution(Model1DParametersCategories.Weirs,
                                                     StructureFileWriterTestHelper.UNI_WEIR_ID.ToString(),
                                                     FunctionAttributes.StandardNames.StructureWaterLevelDownstream,
                                                     0.00000000));
@@ -811,7 +811,7 @@ namespace Sobek.IntegrationTests
                 UNI_WEIR_Z_VALUES.ToArray(),
                 StructureFileWriterTestHelper.UNI_WEIR_DISCHARGE_COEFF);
             
-            Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Weirs,
+            Assert.IsTrue(CheckAfterModelExecution(Model1DParametersCategories.Weirs,
                                                     StructureFileWriterTestHelper.UNI_WEIR_ID.ToString(),
                                                     FunctionAttributes.StandardNames.StructureWaterHead,
                                                     1.00000000));
@@ -831,7 +831,7 @@ namespace Sobek.IntegrationTests
                 UNI_WEIR_Z_VALUES.ToArray(),
                 StructureFileWriterTestHelper.UNI_WEIR_DISCHARGE_COEFF);
             
-            Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Weirs,
+            Assert.IsTrue(CheckAfterModelExecution(Model1DParametersCategories.Weirs,
                                                     StructureFileWriterTestHelper.UNI_WEIR_ID.ToString(),
                                                     FunctionAttributes.StandardNames.StructureWaterLevelAtCrest,
                                                     1.00000000));
@@ -860,7 +860,7 @@ namespace Sobek.IntegrationTests
                 StructureFileWriterTestHelper.RIVER_WEIR_NEG_SF.ToArray(),
                 StructureFileWriterTestHelper.RIVER_WEIR_NEG_RED.ToArray());
 
-            Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Weirs,
+            Assert.IsTrue(CheckAfterModelExecution(Model1DParametersCategories.Weirs,
                                                     StructureFileWriterTestHelper.RIVER_WEIR_ID.ToString(),
                                                     FunctionAttributes.StandardNames.WaterDischarge,
                                                     4.219));
@@ -886,7 +886,7 @@ namespace Sobek.IntegrationTests
                 StructureFileWriterTestHelper.RIVER_WEIR_NEG_SF.ToArray(),
                 StructureFileWriterTestHelper.RIVER_WEIR_NEG_RED.ToArray());
 
-            Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Weirs,
+            Assert.IsTrue(CheckAfterModelExecution(Model1DParametersCategories.Weirs,
                                                     StructureFileWriterTestHelper.RIVER_WEIR_ID.ToString(),
                                                     FunctionAttributes.StandardNames.WaterVelocity,
                                                     2.5316));
@@ -912,7 +912,7 @@ namespace Sobek.IntegrationTests
                 StructureFileWriterTestHelper.RIVER_WEIR_NEG_SF.ToArray(),
                 StructureFileWriterTestHelper.RIVER_WEIR_NEG_RED.ToArray());
 
-            Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Weirs,
+            Assert.IsTrue(CheckAfterModelExecution(Model1DParametersCategories.Weirs,
                                                     StructureFileWriterTestHelper.RIVER_WEIR_ID.ToString(),
                                                     FunctionAttributes.StandardNames.WaterFlowArea,
                                                     1.667));
@@ -938,7 +938,7 @@ namespace Sobek.IntegrationTests
                 StructureFileWriterTestHelper.RIVER_WEIR_NEG_SF.ToArray(),
                 StructureFileWriterTestHelper.RIVER_WEIR_NEG_RED.ToArray());
 
-            Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Weirs,
+            Assert.IsTrue(CheckAfterModelExecution(Model1DParametersCategories.Weirs,
                                                     StructureFileWriterTestHelper.RIVER_WEIR_ID.ToString(),
                                                     FunctionAttributes.StandardNames.StructurePressureDifference,
                                                     1226.250));
@@ -966,7 +966,7 @@ namespace Sobek.IntegrationTests
                 StructureFileWriterTestHelper.RIVER_WEIR_NEG_RED.ToArray());
 
             double checkValue = crestLevel - 1.0;
-            Assert.IsTrue(CheckGetSetGetAfterModelInitialization(WaterFlowParametersCategories.Weirs,
+            Assert.IsTrue(CheckGetSetGetAfterModelInitialization(Model1DParametersCategories.Weirs,
                                                                     StructureFileWriterTestHelper.RIVER_WEIR_ID.ToString(),
                                                                     FunctionAttributes.StandardNames.StructureCrestLevel,
                                                                     crestLevel,
@@ -993,7 +993,7 @@ namespace Sobek.IntegrationTests
                 StructureFileWriterTestHelper.RIVER_WEIR_NEG_RED.ToArray());
 
             double checkValue = StructureFileWriterTestHelper.RIVER_WEIR_CREST_WIDTH - 1.0;
-            Assert.IsTrue(CheckGetSetGetAfterModelInitialization(WaterFlowParametersCategories.Weirs,
+            Assert.IsTrue(CheckGetSetGetAfterModelInitialization(Model1DParametersCategories.Weirs,
                                                                     StructureFileWriterTestHelper.RIVER_WEIR_ID.ToString(),
                                                                     FunctionAttributes.StandardNames.StructureCrestWidth,
                                                                     StructureFileWriterTestHelper.RIVER_WEIR_CREST_WIDTH,
@@ -1019,7 +1019,7 @@ namespace Sobek.IntegrationTests
                 StructureFileWriterTestHelper.RIVER_WEIR_NEG_SF.ToArray(),
                 StructureFileWriterTestHelper.RIVER_WEIR_NEG_RED.ToArray());
 
-            Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Weirs,
+            Assert.IsTrue(CheckAfterModelExecution(Model1DParametersCategories.Weirs,
                                                     StructureFileWriterTestHelper.RIVER_WEIR_ID.ToString(),
                                                     FunctionAttributes.StandardNames.StructureWaterLevelUpstream,
                                                     1.0));
@@ -1045,7 +1045,7 @@ namespace Sobek.IntegrationTests
                 StructureFileWriterTestHelper.RIVER_WEIR_NEG_SF.ToArray(),
                 StructureFileWriterTestHelper.RIVER_WEIR_NEG_RED.ToArray());
 
-            Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Weirs,
+            Assert.IsTrue(CheckAfterModelExecution(Model1DParametersCategories.Weirs,
                                                     StructureFileWriterTestHelper.RIVER_WEIR_ID.ToString(),
                                                     FunctionAttributes.StandardNames.StructureWaterLevelDownstream,
                                                     0.00000000));
@@ -1071,7 +1071,7 @@ namespace Sobek.IntegrationTests
                 StructureFileWriterTestHelper.RIVER_WEIR_NEG_SF.ToArray(),
                 StructureFileWriterTestHelper.RIVER_WEIR_NEG_RED.ToArray());
 
-            Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Weirs,
+            Assert.IsTrue(CheckAfterModelExecution(Model1DParametersCategories.Weirs,
                                                     StructureFileWriterTestHelper.RIVER_WEIR_ID.ToString(),
                                                     FunctionAttributes.StandardNames.StructureWaterHead,
                                                     1.00000000));
@@ -1097,7 +1097,7 @@ namespace Sobek.IntegrationTests
                 StructureFileWriterTestHelper.RIVER_WEIR_NEG_SF.ToArray(),
                 StructureFileWriterTestHelper.RIVER_WEIR_NEG_RED.ToArray());
 
-            Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Weirs,
+            Assert.IsTrue(CheckAfterModelExecution(Model1DParametersCategories.Weirs,
                                                     StructureFileWriterTestHelper.RIVER_WEIR_ID.ToString(),
                                                     FunctionAttributes.StandardNames.StructureWaterLevelAtCrest,
                                                     1.00000000));
@@ -1127,7 +1127,7 @@ namespace Sobek.IntegrationTests
                 false,
                 StructureFileWriterTestHelper.ORIFICE_LIMIT_FLOW_NEG);
 
-            Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Weirs, 
+            Assert.IsTrue(CheckAfterModelExecution(Model1DParametersCategories.Weirs, 
                                                     StructureFileWriterTestHelper.ORIFICE_ID.ToString(), 
                                                     FunctionAttributes.StandardNames.WaterDischarge,
                                                     3.014));
@@ -1153,7 +1153,7 @@ namespace Sobek.IntegrationTests
                 false,
                 StructureFileWriterTestHelper.ORIFICE_LIMIT_FLOW_NEG);
 
-            Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Weirs, 
+            Assert.IsTrue(CheckAfterModelExecution(Model1DParametersCategories.Weirs, 
                                                     StructureFileWriterTestHelper.ORIFICE_ID.ToString(), 
                                                     FunctionAttributes.StandardNames.WaterVelocity,
                                                     1.808));
@@ -1179,7 +1179,7 @@ namespace Sobek.IntegrationTests
                 false,
                 StructureFileWriterTestHelper.ORIFICE_LIMIT_FLOW_NEG);
 
-            Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Weirs, 
+            Assert.IsTrue(CheckAfterModelExecution(Model1DParametersCategories.Weirs, 
                                                     StructureFileWriterTestHelper.ORIFICE_ID.ToString(), 
                                                     FunctionAttributes.StandardNames.WaterFlowArea,
                                                     1.667));
@@ -1205,7 +1205,7 @@ namespace Sobek.IntegrationTests
                 false,
                 StructureFileWriterTestHelper.ORIFICE_LIMIT_FLOW_NEG);
 
-            Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Weirs, 
+            Assert.IsTrue(CheckAfterModelExecution(Model1DParametersCategories.Weirs, 
                                                     StructureFileWriterTestHelper.ORIFICE_ID.ToString(), 
                                                     FunctionAttributes.StandardNames.StructurePressureDifference,
                                                     1226.250));
@@ -1232,7 +1232,7 @@ namespace Sobek.IntegrationTests
                 StructureFileWriterTestHelper.ORIFICE_LIMIT_FLOW_NEG);
 
             double checkValue = StructureFileWriterTestHelper.ORIFICE_CREST_LEVEL - 1.0;
-            Assert.IsTrue(CheckGetSetGetAfterModelInitialization(WaterFlowParametersCategories.Weirs,
+            Assert.IsTrue(CheckGetSetGetAfterModelInitialization(Model1DParametersCategories.Weirs,
                                                                     StructureFileWriterTestHelper.ORIFICE_ID.ToString(),
                                                                     FunctionAttributes.StandardNames.StructureCrestLevel,
                                                                     StructureFileWriterTestHelper.ORIFICE_CREST_LEVEL,
@@ -1259,7 +1259,7 @@ namespace Sobek.IntegrationTests
                 StructureFileWriterTestHelper.ORIFICE_LIMIT_FLOW_NEG);
 
             double checkValue = StructureFileWriterTestHelper.ORIFICE_CREST_WIDTH - 1.0;
-            Assert.IsTrue(CheckGetSetGetAfterModelInitialization(WaterFlowParametersCategories.Weirs,
+            Assert.IsTrue(CheckGetSetGetAfterModelInitialization(Model1DParametersCategories.Weirs,
                                                                     StructureFileWriterTestHelper.ORIFICE_ID.ToString(),
                                                                     FunctionAttributes.StandardNames.StructureCrestWidth,
                                                                     StructureFileWriterTestHelper.ORIFICE_CREST_WIDTH,
@@ -1286,7 +1286,7 @@ namespace Sobek.IntegrationTests
                 StructureFileWriterTestHelper.ORIFICE_LIMIT_FLOW_NEG);
 
             const double checkValue = StructureFileWriterTestHelper.ORIFICE_CREST_WIDTH + StructureFileWriterTestHelper.ORIFICE_GATE_OPENING - 1.0;
-            Assert.IsTrue(CheckGetSetGetAfterModelInitialization(WaterFlowParametersCategories.Weirs,
+            Assert.IsTrue(CheckGetSetGetAfterModelInitialization(Model1DParametersCategories.Weirs,
                                                                     StructureFileWriterTestHelper.ORIFICE_ID.ToString(),
                                                                     FunctionAttributes.StandardNames.StructureGateLowerEdgeLevel,
                                                                     StructureFileWriterTestHelper.ORIFICE_CREST_LEVEL + StructureFileWriterTestHelper.ORIFICE_GATE_OPENING,
@@ -1313,7 +1313,7 @@ namespace Sobek.IntegrationTests
                 StructureFileWriterTestHelper.ORIFICE_LIMIT_FLOW_NEG);
 
             double checkValue =  StructureFileWriterTestHelper.ORIFICE_GATE_OPENING - 1.0;
-            Assert.IsTrue(CheckGetSetGetAfterModelInitialization(WaterFlowParametersCategories.Weirs,
+            Assert.IsTrue(CheckGetSetGetAfterModelInitialization(Model1DParametersCategories.Weirs,
                                                                     StructureFileWriterTestHelper.ORIFICE_ID.ToString(),
                                                                     FunctionAttributes.StandardNames.StructureGateOpeningHeight,
                                                                     StructureFileWriterTestHelper.ORIFICE_GATE_OPENING,
@@ -1339,7 +1339,7 @@ namespace Sobek.IntegrationTests
                 false,
                 StructureFileWriterTestHelper.ORIFICE_LIMIT_FLOW_NEG);
 
-            Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Weirs,
+            Assert.IsTrue(CheckAfterModelExecution(Model1DParametersCategories.Weirs,
                                                     StructureFileWriterTestHelper.ORIFICE_ID.ToString(),
                                                     FunctionAttributes.StandardNames.StructureWaterLevelUpstream,
                                                     1.00));
@@ -1365,7 +1365,7 @@ namespace Sobek.IntegrationTests
                 false,
                 StructureFileWriterTestHelper.ORIFICE_LIMIT_FLOW_NEG);
 
-            Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Weirs,
+            Assert.IsTrue(CheckAfterModelExecution(Model1DParametersCategories.Weirs,
                                                     StructureFileWriterTestHelper.ORIFICE_ID.ToString(),
                                                     FunctionAttributes.StandardNames.StructureWaterLevelDownstream,
                                                     0.00));
@@ -1391,7 +1391,7 @@ namespace Sobek.IntegrationTests
                 false,
                 StructureFileWriterTestHelper.ORIFICE_LIMIT_FLOW_NEG);
 
-            Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Weirs,
+            Assert.IsTrue(CheckAfterModelExecution(Model1DParametersCategories.Weirs,
                                                     StructureFileWriterTestHelper.ORIFICE_ID.ToString(),
                                                     FunctionAttributes.StandardNames.StructureWaterHead,
                                                     1.00000000));
@@ -1417,7 +1417,7 @@ namespace Sobek.IntegrationTests
                 false,
                 StructureFileWriterTestHelper.ORIFICE_LIMIT_FLOW_NEG);
 
-            Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Weirs,
+            Assert.IsTrue(CheckAfterModelExecution(Model1DParametersCategories.Weirs,
                                                     StructureFileWriterTestHelper.ORIFICE_ID.ToString(),
                                                     FunctionAttributes.StandardNames.StructureWaterLevelAtCrest,
                                                     1.00000000));
@@ -1459,7 +1459,7 @@ namespace Sobek.IntegrationTests
                 StructureFileWriterTestHelper.GENERAL_STRUCTURE_DROWN_WEIR_FLOW_COEFF_NEG,
                 StructureFileWriterTestHelper.GENERAL_STRUCTURE_CONTROL_COEFF_FREE_GATE_NEG);
 
-            Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Weirs,
+            Assert.IsTrue(CheckAfterModelExecution(Model1DParametersCategories.Weirs,
                                                     StructureFileWriterTestHelper.GENERAL_STRUCTURE_ID.ToString(),
                                                     FunctionAttributes.StandardNames.WaterDischarge,
                                                     4.34));
@@ -1497,7 +1497,7 @@ namespace Sobek.IntegrationTests
                 StructureFileWriterTestHelper.GENERAL_STRUCTURE_DROWN_WEIR_FLOW_COEFF_NEG,
                 StructureFileWriterTestHelper.GENERAL_STRUCTURE_CONTROL_COEFF_FREE_GATE_NEG);
 
-            Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Weirs,
+            Assert.IsTrue(CheckAfterModelExecution(Model1DParametersCategories.Weirs,
                                                     StructureFileWriterTestHelper.GENERAL_STRUCTURE_ID.ToString(),
                                                     FunctionAttributes.StandardNames.WaterVelocity,
                                                     2.17));
@@ -1535,7 +1535,7 @@ namespace Sobek.IntegrationTests
                 StructureFileWriterTestHelper.GENERAL_STRUCTURE_DROWN_WEIR_FLOW_COEFF_NEG,
                 StructureFileWriterTestHelper.GENERAL_STRUCTURE_CONTROL_COEFF_FREE_GATE_NEG);
 
-            Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Weirs,
+            Assert.IsTrue(CheckAfterModelExecution(Model1DParametersCategories.Weirs,
                                                     StructureFileWriterTestHelper.GENERAL_STRUCTURE_ID.ToString(),
                                                     FunctionAttributes.StandardNames.WaterFlowArea,
                                                     2.00));
@@ -1573,7 +1573,7 @@ namespace Sobek.IntegrationTests
                 StructureFileWriterTestHelper.GENERAL_STRUCTURE_DROWN_WEIR_FLOW_COEFF_NEG,
                 StructureFileWriterTestHelper.GENERAL_STRUCTURE_CONTROL_COEFF_FREE_GATE_NEG);
 
-            Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Weirs,
+            Assert.IsTrue(CheckAfterModelExecution(Model1DParametersCategories.Weirs,
                                                     StructureFileWriterTestHelper.GENERAL_STRUCTURE_ID.ToString(),
                                                     FunctionAttributes.StandardNames.StructurePressureDifference,
                                                     1226.250));
@@ -1613,7 +1613,7 @@ namespace Sobek.IntegrationTests
                 StructureFileWriterTestHelper.GENERAL_STRUCTURE_CONTROL_COEFF_FREE_GATE_NEG);
 
             double checkValue = levelCenter - 1.0;
-            Assert.IsTrue(CheckGetSetGetAfterModelInitialization(WaterFlowParametersCategories.Weirs,
+            Assert.IsTrue(CheckGetSetGetAfterModelInitialization(Model1DParametersCategories.Weirs,
                                                                     StructureFileWriterTestHelper.GENERAL_STRUCTURE_ID.ToString(),
                                                                     FunctionAttributes.StandardNames.StructureCrestLevel,
                                                                     levelCenter,
@@ -1653,7 +1653,7 @@ namespace Sobek.IntegrationTests
                 StructureFileWriterTestHelper.GENERAL_STRUCTURE_CONTROL_COEFF_FREE_GATE_NEG);
 
             double checkValue = widthCenter - 1.0;
-            Assert.IsTrue(CheckGetSetGetAfterModelInitialization(WaterFlowParametersCategories.Weirs,
+            Assert.IsTrue(CheckGetSetGetAfterModelInitialization(Model1DParametersCategories.Weirs,
                                                                     StructureFileWriterTestHelper.GENERAL_STRUCTURE_ID.ToString(),
                                                                     FunctionAttributes.StandardNames.StructureCrestWidth,
                                                                     widthCenter,
@@ -1693,7 +1693,7 @@ namespace Sobek.IntegrationTests
                 StructureFileWriterTestHelper.GENERAL_STRUCTURE_CONTROL_COEFF_FREE_GATE_NEG);
 
             var checkValue = levelCenter + StructureFileWriterTestHelper.GENERAL_STRUCTURE_GATE_OPENING - 1.0;
-            Assert.IsTrue(CheckGetSetGetAfterModelInitialization(WaterFlowParametersCategories.Weirs,
+            Assert.IsTrue(CheckGetSetGetAfterModelInitialization(Model1DParametersCategories.Weirs,
                                                                     StructureFileWriterTestHelper.GENERAL_STRUCTURE_ID.ToString(),
                                                                     FunctionAttributes.StandardNames.StructureGateLowerEdgeLevel,
                                                                     levelCenter + StructureFileWriterTestHelper.GENERAL_STRUCTURE_GATE_OPENING,
@@ -1732,7 +1732,7 @@ namespace Sobek.IntegrationTests
                 StructureFileWriterTestHelper.GENERAL_STRUCTURE_CONTROL_COEFF_FREE_GATE_NEG);
 
             double checkValue = StructureFileWriterTestHelper.GENERAL_STRUCTURE_GATE_OPENING - 1.0;
-            Assert.IsTrue(CheckGetSetGetAfterModelInitialization(WaterFlowParametersCategories.Weirs,
+            Assert.IsTrue(CheckGetSetGetAfterModelInitialization(Model1DParametersCategories.Weirs,
                                                                     StructureFileWriterTestHelper.GENERAL_STRUCTURE_ID.ToString(),
                                                                     FunctionAttributes.StandardNames.StructureGateOpeningHeight,
                                                                     StructureFileWriterTestHelper.GENERAL_STRUCTURE_GATE_OPENING,
@@ -1770,7 +1770,7 @@ namespace Sobek.IntegrationTests
                 StructureFileWriterTestHelper.GENERAL_STRUCTURE_DROWN_WEIR_FLOW_COEFF_NEG,
                 StructureFileWriterTestHelper.GENERAL_STRUCTURE_CONTROL_COEFF_FREE_GATE_NEG);
 
-            Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Weirs,
+            Assert.IsTrue(CheckAfterModelExecution(Model1DParametersCategories.Weirs,
                                                     StructureFileWriterTestHelper.GENERAL_STRUCTURE_ID.ToString(),
                                                     FunctionAttributes.StandardNames.StructureWaterLevelUpstream,
                                                     1.00));
@@ -1808,7 +1808,7 @@ namespace Sobek.IntegrationTests
                 StructureFileWriterTestHelper.GENERAL_STRUCTURE_DROWN_WEIR_FLOW_COEFF_NEG,
                 StructureFileWriterTestHelper.GENERAL_STRUCTURE_CONTROL_COEFF_FREE_GATE_NEG);
 
-            Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Weirs,
+            Assert.IsTrue(CheckAfterModelExecution(Model1DParametersCategories.Weirs,
                                                     StructureFileWriterTestHelper.GENERAL_STRUCTURE_ID.ToString(),
                                                     FunctionAttributes.StandardNames.StructureWaterLevelDownstream,
                                                     0.00));
@@ -1846,7 +1846,7 @@ namespace Sobek.IntegrationTests
                 StructureFileWriterTestHelper.GENERAL_STRUCTURE_DROWN_WEIR_FLOW_COEFF_NEG,
                 StructureFileWriterTestHelper.GENERAL_STRUCTURE_CONTROL_COEFF_FREE_GATE_NEG);
 
-            Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Weirs,
+            Assert.IsTrue(CheckAfterModelExecution(Model1DParametersCategories.Weirs,
                                                     StructureFileWriterTestHelper.GENERAL_STRUCTURE_ID.ToString(),
                                                     FunctionAttributes.StandardNames.StructureWaterHead,
                                                     1.000));
@@ -1884,7 +1884,7 @@ namespace Sobek.IntegrationTests
                 StructureFileWriterTestHelper.GENERAL_STRUCTURE_DROWN_WEIR_FLOW_COEFF_NEG,
                 StructureFileWriterTestHelper.GENERAL_STRUCTURE_CONTROL_COEFF_FREE_GATE_NEG);
 
-            Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Weirs,
+            Assert.IsTrue(CheckAfterModelExecution(Model1DParametersCategories.Weirs,
                                                     StructureFileWriterTestHelper.GENERAL_STRUCTURE_ID.ToString(),
                                                     FunctionAttributes.StandardNames.StructureWaterLevelAtCrest,
                                                     0.833));
@@ -1917,7 +1917,7 @@ namespace Sobek.IntegrationTests
                 StructureFileWriterTestHelper.CULVERT_GROUNDLAYER_ENABLED,
                 StructureFileWriterTestHelper.CULVERT_GROUNDLAYER_ROUGHNESS);
 
-            Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Culverts,
+            Assert.IsTrue(CheckAfterModelExecution(Model1DParametersCategories.Culverts,
                                                     StructureFileWriterTestHelper.CULVERT_ID.ToString(),
                                                     FunctionAttributes.StandardNames.WaterDischarge,
                                                     4.0425));
@@ -1946,7 +1946,7 @@ namespace Sobek.IntegrationTests
                 StructureFileWriterTestHelper.CULVERT_GROUNDLAYER_ENABLED,
                 StructureFileWriterTestHelper.CULVERT_GROUNDLAYER_ROUGHNESS);
 
-            Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Culverts,
+            Assert.IsTrue(CheckAfterModelExecution(Model1DParametersCategories.Culverts,
                                                     StructureFileWriterTestHelper.CULVERT_ID.ToString(),
                                                     FunctionAttributes.StandardNames.WaterVelocity,
                                                     1.292));
@@ -1976,7 +1976,7 @@ namespace Sobek.IntegrationTests
                 StructureFileWriterTestHelper.CULVERT_GROUNDLAYER_ROUGHNESS);
 
 
-            Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Culverts,
+            Assert.IsTrue(CheckAfterModelExecution(Model1DParametersCategories.Culverts,
                                                     StructureFileWriterTestHelper.CULVERT_ID.ToString(),
                                                     FunctionAttributes.StandardNames.WaterFlowArea,
                                                     3.129));
@@ -2007,7 +2007,7 @@ namespace Sobek.IntegrationTests
 
 
             double checkValue = StructureFileWriterTestHelper.CULVERT_GATE_INITIAL_OPENING +0.5 ;
-            Assert.IsTrue(CheckGetSetGetAfterModelInitialization(WaterFlowParametersCategories.Culverts,
+            Assert.IsTrue(CheckGetSetGetAfterModelInitialization(Model1DParametersCategories.Culverts,
                                                                     StructureFileWriterTestHelper.CULVERT_ID.ToString(),
                                                                     FunctionAttributes.StandardNames.StructureValveOpening,
                                                                     StructureFileWriterTestHelper.CULVERT_GATE_INITIAL_OPENING,
@@ -2036,7 +2036,7 @@ namespace Sobek.IntegrationTests
                 StructureFileWriterTestHelper.CULVERT_GROUNDLAYER_ENABLED,
                 StructureFileWriterTestHelper.CULVERT_GROUNDLAYER_ROUGHNESS);
 
-            Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Culverts,
+            Assert.IsTrue(CheckAfterModelExecution(Model1DParametersCategories.Culverts,
                                                     StructureFileWriterTestHelper.CULVERT_ID.ToString(),
                                                     FunctionAttributes.StandardNames.StructureWaterLevelUpstream,
                                                     1.00));
@@ -2065,7 +2065,7 @@ namespace Sobek.IntegrationTests
                 StructureFileWriterTestHelper.CULVERT_GROUNDLAYER_ENABLED,
                 StructureFileWriterTestHelper.CULVERT_GROUNDLAYER_ROUGHNESS);
 
-            Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Culverts,
+            Assert.IsTrue(CheckAfterModelExecution(Model1DParametersCategories.Culverts,
                                                     StructureFileWriterTestHelper.CULVERT_ID.ToString(),
                                                     FunctionAttributes.StandardNames.StructureWaterLevelDownstream,
                                                     0.00000000));
@@ -2101,7 +2101,7 @@ namespace Sobek.IntegrationTests
                 StructureFileWriterTestHelper.SIPHON_TURNON_LEVEL,
                 StructureFileWriterTestHelper.SIPHON_TURNOFF_LEVEL);
 
-            Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Culverts,
+            Assert.IsTrue(CheckAfterModelExecution(Model1DParametersCategories.Culverts,
                                                     StructureFileWriterTestHelper.SIPHON_ID.ToString(),
                                                     FunctionAttributes.StandardNames.WaterDischarge,
                                                     0.3835));
@@ -2133,7 +2133,7 @@ namespace Sobek.IntegrationTests
                 StructureFileWriterTestHelper.SIPHON_TURNON_LEVEL,
                 StructureFileWriterTestHelper.SIPHON_TURNOFF_LEVEL);
 
-            Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Culverts,
+            Assert.IsTrue(CheckAfterModelExecution(Model1DParametersCategories.Culverts,
                                                     StructureFileWriterTestHelper.SIPHON_ID.ToString(),
                                                     FunctionAttributes.StandardNames.WaterVelocity,
                                                     0.1226));
@@ -2165,7 +2165,7 @@ namespace Sobek.IntegrationTests
                 StructureFileWriterTestHelper.SIPHON_TURNON_LEVEL,
                 StructureFileWriterTestHelper.SIPHON_TURNOFF_LEVEL);
 
-            Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Culverts,
+            Assert.IsTrue(CheckAfterModelExecution(Model1DParametersCategories.Culverts,
                                                     StructureFileWriterTestHelper.SIPHON_ID.ToString(),
                                                     FunctionAttributes.StandardNames.WaterFlowArea,
                                                     3.1287));
@@ -2198,7 +2198,7 @@ namespace Sobek.IntegrationTests
                 StructureFileWriterTestHelper.SIPHON_TURNOFF_LEVEL);
 
             double checkValue = StructureFileWriterTestHelper.SIPHON_GATE_INITIAL_OPENING - 1.0;
-            Assert.IsTrue(CheckGetSetGetAfterModelInitialization(WaterFlowParametersCategories.Culverts,
+            Assert.IsTrue(CheckGetSetGetAfterModelInitialization(Model1DParametersCategories.Culverts,
                                                                     StructureFileWriterTestHelper.SIPHON_ID.ToString(),
                                                                     FunctionAttributes.StandardNames.StructureValveOpening,
                                                                     StructureFileWriterTestHelper.SIPHON_GATE_INITIAL_OPENING,
@@ -2230,7 +2230,7 @@ namespace Sobek.IntegrationTests
                 StructureFileWriterTestHelper.SIPHON_TURNON_LEVEL,
                 StructureFileWriterTestHelper.SIPHON_TURNOFF_LEVEL);
 
-            Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Culverts,
+            Assert.IsTrue(CheckAfterModelExecution(Model1DParametersCategories.Culverts,
                                                     StructureFileWriterTestHelper.SIPHON_ID.ToString(),
                                                     FunctionAttributes.StandardNames.StructureWaterLevelUpstream,
                                                     1.00));
@@ -2262,7 +2262,7 @@ namespace Sobek.IntegrationTests
                 StructureFileWriterTestHelper.SIPHON_TURNON_LEVEL,
                 StructureFileWriterTestHelper.SIPHON_TURNOFF_LEVEL);
 
-            Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Culverts,
+            Assert.IsTrue(CheckAfterModelExecution(Model1DParametersCategories.Culverts,
                                                     StructureFileWriterTestHelper.SIPHON_ID.ToString(),
                                                     FunctionAttributes.StandardNames.StructureWaterLevelDownstream,
                                                     0.00000000));
@@ -2296,7 +2296,7 @@ namespace Sobek.IntegrationTests
                 StructureFileWriterTestHelper.INV_SIPHON_GROUNDLAYER_ROUGHNESS,
                 StructureFileWriterTestHelper.INV_SIPHON_BEND_LOSS_COEFF);
             
-            Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Culverts,
+            Assert.IsTrue(CheckAfterModelExecution(Model1DParametersCategories.Culverts,
                                                     StructureFileWriterTestHelper.INV_SIPHON_ID.ToString(),
                                                     FunctionAttributes.StandardNames.WaterDischarge,
                                                     0.0773));
@@ -2326,7 +2326,7 @@ namespace Sobek.IntegrationTests
                 StructureFileWriterTestHelper.INV_SIPHON_GROUNDLAYER_ROUGHNESS,
                 StructureFileWriterTestHelper.INV_SIPHON_BEND_LOSS_COEFF);
             
-            Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Culverts,
+            Assert.IsTrue(CheckAfterModelExecution(Model1DParametersCategories.Culverts,
                                                     StructureFileWriterTestHelper.INV_SIPHON_ID.ToString(),
                                                     FunctionAttributes.StandardNames.WaterVelocity,
                                                     0.0247));
@@ -2356,7 +2356,7 @@ namespace Sobek.IntegrationTests
                 StructureFileWriterTestHelper.INV_SIPHON_GROUNDLAYER_ROUGHNESS,
                 StructureFileWriterTestHelper.INV_SIPHON_BEND_LOSS_COEFF);
             
-            Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Culverts,
+            Assert.IsTrue(CheckAfterModelExecution(Model1DParametersCategories.Culverts,
                                                     StructureFileWriterTestHelper.INV_SIPHON_ID.ToString(),
                                                     FunctionAttributes.StandardNames.WaterFlowArea,
                                                     3.128));
@@ -2387,7 +2387,7 @@ namespace Sobek.IntegrationTests
                 StructureFileWriterTestHelper.INV_SIPHON_BEND_LOSS_COEFF);
 
             double checkValue = StructureFileWriterTestHelper.INV_SIPHON_GATE_INITIAL_OPENING - 1.0;
-            Assert.IsTrue(CheckGetSetGetAfterModelInitialization(WaterFlowParametersCategories.Culverts,
+            Assert.IsTrue(CheckGetSetGetAfterModelInitialization(Model1DParametersCategories.Culverts,
                                                                     StructureFileWriterTestHelper.INV_SIPHON_ID.ToString(),
                                                                     FunctionAttributes.StandardNames.StructureValveOpening,
                                                                     StructureFileWriterTestHelper.INV_SIPHON_GATE_INITIAL_OPENING,
@@ -2417,7 +2417,7 @@ namespace Sobek.IntegrationTests
                 StructureFileWriterTestHelper.INV_SIPHON_GROUNDLAYER_ROUGHNESS,
                 StructureFileWriterTestHelper.INV_SIPHON_BEND_LOSS_COEFF);
             
-            Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Culverts,
+            Assert.IsTrue(CheckAfterModelExecution(Model1DParametersCategories.Culverts,
                                                     StructureFileWriterTestHelper.INV_SIPHON_ID.ToString(),
                                                     FunctionAttributes.StandardNames.StructureWaterLevelUpstream,
                                                     1.0));
@@ -2447,7 +2447,7 @@ namespace Sobek.IntegrationTests
                 StructureFileWriterTestHelper.INV_SIPHON_GROUNDLAYER_ROUGHNESS,
                 StructureFileWriterTestHelper.INV_SIPHON_BEND_LOSS_COEFF);
             
-            Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Culverts,
+            Assert.IsTrue(CheckAfterModelExecution(Model1DParametersCategories.Culverts,
                                                     StructureFileWriterTestHelper.INV_SIPHON_ID.ToString(),
                                                     FunctionAttributes.StandardNames.StructureWaterLevelDownstream,
                                                     0.00000000));
@@ -2481,7 +2481,7 @@ namespace Sobek.IntegrationTests
                 reduction //StructureFileWriterTestHelper.PUMP_REDUCTION_VALUES
                 );
 
-            Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Pumps,
+            Assert.IsTrue(CheckAfterModelExecution(Model1DParametersCategories.Pumps,
                                                     StructureFileWriterTestHelper.PUMP_ID.ToString(),
                                                     FunctionAttributes.StandardNames.WaterDischarge,
                                                     3.0));
@@ -2506,7 +2506,7 @@ namespace Sobek.IntegrationTests
                 StructureFileWriterTestHelper.PUMP_REDUCTION_VALUES);
 
             double checkValue = StructureFileWriterTestHelper.PUMP_CAPACITY - 1.0;
-            Assert.IsTrue(CheckGetSetGetAfterModelInitialization(WaterFlowParametersCategories.Pumps,
+            Assert.IsTrue(CheckGetSetGetAfterModelInitialization(Model1DParametersCategories.Pumps,
                                                                     StructureFileWriterTestHelper.PUMP_ID.ToString(),
                                                                     FunctionAttributes.StandardNames.StructureSetPoint,
                                                                     StructureFileWriterTestHelper.PUMP_CAPACITY,
@@ -2530,7 +2530,7 @@ namespace Sobek.IntegrationTests
                 StructureFileWriterTestHelper.PUMP_HEAD_VALUES,
                 StructureFileWriterTestHelper.PUMP_REDUCTION_VALUES);
 
-            Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Pumps,
+            Assert.IsTrue(CheckAfterModelExecution(Model1DParametersCategories.Pumps,
                                                     StructureFileWriterTestHelper.PUMP_ID.ToString(),
                                                     FunctionAttributes.StandardNames.StructureWaterLevelUpstream,
                                                     1.00));
@@ -2554,7 +2554,7 @@ namespace Sobek.IntegrationTests
                 StructureFileWriterTestHelper.PUMP_HEAD_VALUES,
                 StructureFileWriterTestHelper.PUMP_REDUCTION_VALUES);
 
-            Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Pumps,
+            Assert.IsTrue(CheckAfterModelExecution(Model1DParametersCategories.Pumps,
                                                     StructureFileWriterTestHelper.PUMP_ID.ToString(),
                                                     FunctionAttributes.StandardNames.StructureWaterLevelDownstream,
                                                     0.000));
@@ -2588,7 +2588,7 @@ namespace Sobek.IntegrationTests
             if (retention1 == null) throw new ArgumentNullException("retention1");
             retention1.Data[1.0] = 10.0;
 
-            Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Retentions,
+            Assert.IsTrue(CheckAfterModelExecution(Model1DParametersCategories.Retentions,
                                                     retention1.Name,
                                                     FunctionAttributes.StandardNames.WaterLevel,
                                                     0.7469));
@@ -2618,7 +2618,7 @@ namespace Sobek.IntegrationTests
             if (retention1 == null) throw new ArgumentNullException("retention1");
             retention1.Data[1.0] = 10.0;
 
-            Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Retentions,
+            Assert.IsTrue(CheckAfterModelExecution(Model1DParametersCategories.Retentions,
                                                     retention1.Name,
                                                     FunctionAttributes.StandardNames.WaterVolume,
                                                     7467.690));
@@ -2647,11 +2647,11 @@ namespace Sobek.IntegrationTests
             var retention1 = retentions.FirstOrDefault();
             if (retention1 == null) throw new ArgumentNullException("retention1");
             retention1.Data[1.0] = 10.0;
-            var engineParam = model.OutputSettings.EngineParameters.FirstOrDefault(ep => ep.Name == WaterFlowModelParameterNames.RetentionWaterLevel);
+            var engineParam = model.OutputSettings.EngineParameters.FirstOrDefault(ep => ep.Name == Model1DParameterNames.RetentionWaterLevel);
             Assert.That(engineParam, Is.Not.Null);
             engineParam.AggregationOptions = AggregationOptions.Current;
             
-            Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Retentions,
+            Assert.IsTrue(CheckAfterModelExecution(Model1DParametersCategories.Retentions,
                                                     retention1.Name,
                                                     FunctionAttributes.StandardNames.WaterLevel,
                                                     0.7469));
@@ -2680,11 +2680,11 @@ namespace Sobek.IntegrationTests
             var retention1 = retentions.FirstOrDefault();
             if (retention1 == null) throw new ArgumentNullException("retention1");
             retention1.Data[1.0] = 10.0;
-            var engineParam = model.OutputSettings.EngineParameters.FirstOrDefault(ep => ep.Name == WaterFlowModelParameterNames.RetentionVolume);
+            var engineParam = model.OutputSettings.EngineParameters.FirstOrDefault(ep => ep.Name == Model1DParameterNames.RetentionVolume);
             Assert.That(engineParam, Is.Not.Null);
             engineParam.AggregationOptions = AggregationOptions.Current;
 
-            Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Retentions,
+            Assert.IsTrue(CheckAfterModelExecution(Model1DParametersCategories.Retentions,
                                                     retention1.Name,
                                                     FunctionAttributes.StandardNames.WaterVolume,
                                                     7467.690));
@@ -2702,7 +2702,7 @@ namespace Sobek.IntegrationTests
             boundaryCondition1.DataType = Model1DBoundaryNodeDataType.FlowConstant;
             boundaryCondition1.Flow = 3.0;
 
-            Assert.IsTrue(CheckGetSetGetAfterModelInitialization(WaterFlowParametersCategories.BoundaryConditions,
+            Assert.IsTrue(CheckGetSetGetAfterModelInitialization(Model1DParametersCategories.BoundaryConditions,
                                                     boundaryCondition1.Node.Name,
                                                     FunctionAttributes.StandardNames.WaterDischarge,
                                                     3.0,
@@ -2724,7 +2724,7 @@ namespace Sobek.IntegrationTests
             boundaryCondition2.DataType = Model1DBoundaryNodeDataType.WaterLevelConstant;
             boundaryCondition2.WaterLevel = 5.0;
 
-            Assert.IsTrue(CheckGetSetGetAfterModelInitialization(WaterFlowParametersCategories.BoundaryConditions,
+            Assert.IsTrue(CheckGetSetGetAfterModelInitialization(Model1DParametersCategories.BoundaryConditions,
                                                     boundaryCondition1.Node.Name,
                                                     FunctionAttributes.StandardNames.WaterLevel,
                                                     3.0,
@@ -2777,7 +2777,7 @@ namespace Sobek.IntegrationTests
             lateral1.DataType = Model1DLateralDataType.FlowConstant;
             lateral1.Flow = 3.0;
 
-            Assert.IsTrue(CheckGetSetGetAfterModelInitialization(WaterFlowParametersCategories.Laterals,
+            Assert.IsTrue(CheckGetSetGetAfterModelInitialization(Model1DParametersCategories.Laterals,
                                                     lateral1.Feature.Name,
                                                     FunctionAttributes.StandardNames.WaterDischarge,
                                                     3.0,
@@ -2806,7 +2806,7 @@ namespace Sobek.IntegrationTests
             lateral1.Data[1.0] = 3.0;
             lateral1.Data[5.0] = 7.0;
 
-            Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Laterals,
+            Assert.IsTrue(CheckAfterModelExecution(Model1DParametersCategories.Laterals,
                                                     lateral1.Feature.Name,
                                                     FunctionAttributes.StandardNames.WaterLevel,
                                                     0.785));

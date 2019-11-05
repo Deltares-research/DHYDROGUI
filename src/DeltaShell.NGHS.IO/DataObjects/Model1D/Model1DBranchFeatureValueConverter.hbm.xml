@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                  auto-import="false"
+                  namespace="DeltaShell.NGHS.IO.DataObjects.Model1D"
+                  assembly="DeltaShell.NGHS.IO">
+
+  <subclass name="Model1DBranchFeatureValueConverter" lazy="false" extends="DelftTools.Shell.Core.Workflow.DataItems.ValueConverters.ParameterValueConverter, DelftTools.Shell.Core" discriminator-value="model1d_branchfeature_value_converter" >
+
+    <!--many-to-one name="coverage"
+                 access="field"
+                 cascade="save-update"
+                 class="NetTopologySuite.Extensions.Coverages.FeatureCoverage, NetTopologySuite.Extensions"
+                 column="fcve_feature_coverage_id" /-->
+
+    <property name="quantityType" access="field" column="quantityType" />
+    <property name="elementSet" access="field" column="elementset" />
+    <property name="ParameterName" access="property" column="parameterName" />
+    <property name="Role"/>
+
+    <!--one-to-many class="DelftTools.Shell.Core.Workflow.IModel"/-->
+    <many-to-one name="Model"
+                 access="property"
+                 class="DelftTools.Shell.Core.Workflow.IModel, DelftTools.Shell.Core"
+                 column="wmbfe_model_id"
+                 cascade="save-update" />
+  </subclass>
+</hibernate-mapping>

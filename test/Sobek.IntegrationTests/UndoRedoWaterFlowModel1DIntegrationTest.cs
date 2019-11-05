@@ -10,6 +10,7 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Editing;
 using DeltaShell.Gui;
+using DeltaShell.NGHS.IO.DataObjects.Model1D;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.Data.NHibernate;
@@ -17,7 +18,6 @@ using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.TestUtils;
 using DeltaShell.Plugins.NetCDF;
 using DeltaShell.Plugins.NetworkEditor;
@@ -479,7 +479,7 @@ namespace Sobek.IntegrationTests
                 project.RootFolder.Items.Add(model);
 
                 // change discretization type
-                var gridTypeParameter = model.OutputSettings.EngineParameters.First(p => p.Name == WaterFlowModelParameterNames.FiniteVolumeGridType);
+                var gridTypeParameter = model.OutputSettings.EngineParameters.First(p => p.Name == Model1DParameterNames.FiniteVolumeGridType);
                 gridTypeParameter.AggregationOptions = (AggregationOptions) /* WTF?!? */ (int) FiniteVolumeDiscretizationType.OnGridPoints;
                 // undo: exception was generated here, has to do with FixedSize = -1 in network coverages flushed into NetCDF files
                 gui.UndoRedoManager.Undo();

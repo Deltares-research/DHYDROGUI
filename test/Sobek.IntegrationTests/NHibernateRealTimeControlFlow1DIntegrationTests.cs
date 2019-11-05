@@ -18,6 +18,7 @@ using DelftTools.Utils.Reflection;
 using DeltaShell.Gui;
 using DeltaShell.IntegrationTestUtils;
 using DeltaShell.NGHS.IO.DataObjects;
+using DeltaShell.NGHS.IO.DataObjects.Model1D;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.DelftModels.HydroModel;
@@ -37,8 +38,6 @@ using DeltaShell.Plugins.SharpMapGis.Gui;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
-using ElementSet = DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi.ElementSet;
-using QuantityType = DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi.QuantityType;
 
 namespace Sobek.IntegrationTests
 {
@@ -209,7 +208,7 @@ namespace Sobek.IntegrationTests
 
                 var flow = hydroModel.Activities.OfType<WaterFlowModel1D>().First();
 
-                Assert.AreEqual(10, flow.AllDataItems.Count(di => di.ValueConverter is WaterFlowModelBranchFeatureValueConverter));
+                Assert.AreEqual(10, flow.AllDataItems.Count(di => di.ValueConverter is Model1DBranchFeatureValueConverter));
 
                 try
                 {

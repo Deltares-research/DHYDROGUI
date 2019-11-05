@@ -21,6 +21,7 @@ using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.DataObjects;
+using DeltaShell.NGHS.IO.DataObjects.Model1D;
 using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
@@ -782,12 +783,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                 var dischargeAtStaggeredGrid =
                     (INetworkCoverage)
                     waterFlowModel1D.OutputFunctions.First(
-                        c => c.Name.StartsWith(WaterFlowModelParameterNames.BranchDischarge));
+                        c => c.Name.StartsWith(Model1DParameterNames.BranchDischarge));
 
                 var dischargeAtStructures =
                     (IFeatureCoverage)
                     waterFlowModel1D.OutputFunctions.First(
-                        c => c.Name.StartsWith(WaterFlowModelParameterNames.StructureDischarge));
+                        c => c.Name.StartsWith(Model1DParameterNames.StructureDischarge));
 
                 var dischargesAtWeir = new List<double>();
                 var dischargesAtWeirLocation = new List<double>();
@@ -879,7 +880,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
                 RunModel(waterFlowModel1D);
 
-                var dischargeAtLateral = waterFlowModel1D.OutputFunctions.OfType<FeatureCoverage>().First(c => c.Name == WaterFlowModelParameterNames.LateralActualDischarge);
+                var dischargeAtLateral = waterFlowModel1D.OutputFunctions.OfType<FeatureCoverage>().First(c => c.Name == Model1DParameterNames.LateralActualDischarge);
                 foreach (var value in dischargeAtLateral.Components[0].Values.OfType<double>().Skip(1))
                 //not the first timestep
                 {
@@ -920,7 +921,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
                 RunModel(waterFlowModel1D);
 
-                var dischargeAtLateral = waterFlowModel1D.OutputFunctions.OfType<FeatureCoverage>().First(c => c.Name == WaterFlowModelParameterNames.LateralActualDischarge);
+                var dischargeAtLateral = waterFlowModel1D.OutputFunctions.OfType<FeatureCoverage>().First(c => c.Name == Model1DParameterNames.LateralActualDischarge);
                 foreach (var value in dischargeAtLateral.Components[0].Values.OfType<double>().Skip(1))
                 //not the first timestep
                 {
@@ -1016,7 +1017,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
                 RunModel(waterFlowModel1D);
 
-                var dischargeAtLateral = waterFlowModel1D.OutputFunctions.OfType<FeatureCoverage>().First(c => c.Name == WaterFlowModelParameterNames.LateralActualDischarge);
+                var dischargeAtLateral = waterFlowModel1D.OutputFunctions.OfType<FeatureCoverage>().First(c => c.Name == Model1DParameterNames.LateralActualDischarge);
                 foreach (var value in dischargeAtLateral.Components[0].Values.OfType<double>().Skip(1))
                 //not the first timestep
                 {
@@ -1275,7 +1276,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                 var lateralDischargeCoverage =
                     (FeatureCoverage)
                     waterFlowModel1D.OutputFunctions.First(
-                        c => c.Name.StartsWith(WaterFlowModelParameterNames.LateralActualDischarge));
+                        c => c.Name.StartsWith(Model1DParameterNames.LateralActualDischarge));
                 //check the 2nd timestep should be equal to what is set on the lateral..
                 Assert.AreEqual(branch1Discharge,
                                 lateralDischargeCoverage[startTime.AddSeconds(1), lateralSourceOnBranch1]);
@@ -1335,7 +1336,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                 var lateralDischargeCoverage =
                     (FeatureCoverage)
                     waterFlowModel1D.OutputFunctions.First(
-                        c => c.Name.StartsWith(WaterFlowModelParameterNames.LateralActualDischarge));
+                        c => c.Name.StartsWith(Model1DParameterNames.LateralActualDischarge));
                 //check the 2nd timestep, should be equal to what is set on the lateral
                 Assert.AreEqual(branch1Discharge,
                                 lateralDischargeCoverage[startTime.AddSeconds(1), lateralSourceOnBranch1]);
@@ -1394,7 +1395,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                 var lateralWaterLevelCoverage =
                     (FeatureCoverage)
                     waterFlowModel1D.OutputFunctions.First(
-                        c => c.Name.StartsWith(WaterFlowModelParameterNames.LateralWaterLevel));
+                        c => c.Name.StartsWith(Model1DParameterNames.LateralWaterLevel));
 
                 Assert.AreEqual(1, lateralWaterLevelCoverage.Features.Count);
                 Assert.AreNotEqual(0, lateralWaterLevelCoverage.Components[0].Values.OfType<double>().Sum());
@@ -1458,11 +1459,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                 var lateralWaterLevelCoverage =
                     (FeatureCoverage)
                     waterFlowModel1D.OutputFunctions.First(
-                        c => c.Name.StartsWith(WaterFlowModelParameterNames.LateralWaterLevel));
+                        c => c.Name.StartsWith(Model1DParameterNames.LateralWaterLevel));
                 var gridpointsWaterLevelCoverage =
                     (NetworkCoverage)
                     waterFlowModel1D.OutputFunctions.First(
-                        c => c.Name.StartsWith(WaterFlowModelParameterNames.LocationWaterLevel));
+                        c => c.Name.StartsWith(Model1DParameterNames.LocationWaterLevel));
 
                 var calculationPointsBranch1 =
                     gridpointsWaterLevelCoverage.Locations.Values.Where(l => l.Branch == branch1).ToArray();
@@ -2459,11 +2460,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             {
                 var waterLevelEngineParameter =
                     waterFlowModel1D.OutputSettings.EngineParameters.First(
-                        ep => ep.Name == WaterFlowModelParameterNames.LocationWaterLevel);
+                        ep => ep.Name == Model1DParameterNames.LocationWaterLevel);
                 Assert.AreEqual(AggregationOptions.Current, waterLevelEngineParameter.AggregationOptions);
 
                 var waterLevelOutputDataItem =
-                    waterFlowModel1D.DataItems.Single(di => di.Tag == WaterFlowModelParameterNames.LocationWaterLevel);
+                    waterFlowModel1D.DataItems.Single(di => di.Tag == Model1DParameterNames.LocationWaterLevel);
                 Assert.AreEqual("Water level", waterLevelOutputDataItem.Name);
                 Assert.AreEqual("Water level", ((INameable)waterLevelOutputDataItem.Value).Name);
                 Assert.AreEqual("Water level", waterFlowModel1D.OutputWaterLevel.Name);
@@ -2473,7 +2474,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                 waterLevelEngineParameter.AggregationOptions = AggregationOptions.Maximum;
 
                 var waterLevelOutputDataItemAfterChange =
-                    waterFlowModel1D.DataItems.Single(di => di.Tag == WaterFlowModelParameterNames.LocationWaterLevel);
+                    waterFlowModel1D.DataItems.Single(di => di.Tag == Model1DParameterNames.LocationWaterLevel);
 
                 // There should be only 1 data item with this tag!
                 Assert.AreEqual("Water level (Maximum)", waterLevelOutputDataItemAfterChange.Name);

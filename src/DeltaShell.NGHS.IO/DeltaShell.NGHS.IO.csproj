@@ -115,15 +115,23 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Adaptors\UGridToUnstructuredGridAdaptor.cs" />
+    <Compile Include="DataObjects\Model1D\AggregationOptions.cs" />
+    <Compile Include="DataObjects\Model1D\ElementSet.cs" />
+    <Compile Include="DataObjects\Model1D\EngineParameter.cs" />
+    <Compile Include="DataObjects\Model1D\EngineParameters.cs" />
     <Compile Include="DataObjects\FlowParameter.cs" />
     <Compile Include="DataObjects\FlowWaterLevelTable.cs" />
     <Compile Include="DataObjects\Helper1D.cs" />
+    <Compile Include="DataObjects\Model1D\QuantityType.cs" />
     <Compile Include="DataObjects\SaltBoundaryConditionType.cs" />
     <Compile Include="DataObjects\TemperatureBoundaryConditionType.cs" />
     <Compile Include="DataObjects\Model1DBoundaryNodeData.cs" />
     <Compile Include="DataObjects\Model1DBoundaryNodeDataType.cs" />
     <Compile Include="DataObjects\Model1DLateralDataType.cs" />
     <Compile Include="DataObjects\Model1DLateralSourceData.cs" />
+    <Compile Include="DataObjects\Model1D\Model1DBranchFeatureValueConverter.cs" />
+    <Compile Include="DataObjects\Model1D\Model1DParameterNames.cs" />
+    <Compile Include="DataObjects\Model1D\Model1DParametersCategories.cs" />
     <Compile Include="DataObjects\WaterLevelParameter.cs" />
     <Compile Include="DelftBcReader.cs" />
     <Compile Include="DelftBcWriter.cs" />
@@ -321,6 +329,16 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="DataObjects\FlowWaterLevelTable.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DataObjects\Model1D\EngineParameter.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DataObjects\Model1D\Model1DBranchFeatureValueConverter.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

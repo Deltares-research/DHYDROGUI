@@ -15,6 +15,7 @@ using DelftTools.Utils.Collections;
 using DeltaShell.Core;
 using DeltaShell.IntegrationTestUtils;
 using DeltaShell.NGHS.IO.DataObjects;
+using DeltaShell.NGHS.IO.DataObjects.Model1D;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.DelftModels.HydroModel;
@@ -28,10 +29,10 @@ using DeltaShell.Plugins.NetCDF;
 using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.SharpMapGis;
 using NUnit.Framework;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.TestUtils;
 using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
+using AggregationOptions = DeltaShell.NGHS.IO.DataObjects.Model1D.AggregationOptions;
 
 
 namespace Sobek.IntegrationTests
@@ -511,7 +512,7 @@ namespace Sobek.IntegrationTests
                 flowModel.OutputSettings.EngineParameters.FirstOrDefault(
                     ep => ep.QuantityType == QuantityType.CrestLevel && ep.ElementSet == ElementSet.Structures);
             Assert.IsNotNull(crestLevelOutput);
-            crestLevelOutput.AggregationOptions = DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi.AggregationOptions.Current;
+            crestLevelOutput.AggregationOptions = AggregationOptions.Current;
         }
 
         /// <summary>

@@ -7,6 +7,7 @@ using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
+using DeltaShell.NGHS.IO.DataObjects.Model1D;
 using DeltaShell.Plugins.CommonTools.Functions;
 using DeltaShell.Plugins.DelftModels.HydroModel;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
@@ -16,10 +17,8 @@ using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
 using GeoAPI.Extensions.Coverages;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
-using AggregationOptions = DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi.AggregationOptions;
-using ElementSet = DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi.ElementSet;
+using AggregationOptions = DeltaShell.NGHS.IO.DataObjects.Model1D.AggregationOptions;
 using Point = NetTopologySuite.Geometries.Point;
-using QuantityType = DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi.QuantityType;
 
 namespace Sobek.IntegrationTests
 {

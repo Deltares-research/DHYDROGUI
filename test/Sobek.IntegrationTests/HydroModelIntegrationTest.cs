@@ -23,6 +23,7 @@ using DeltaShell.Dimr;
 using DeltaShell.Gui;
 using DeltaShell.IntegrationTestUtils;
 using DeltaShell.NGHS.IO.DataObjects;
+using DeltaShell.NGHS.IO.DataObjects.Model1D;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Functions;
 using DeltaShell.Plugins.Data.NHibernate;
@@ -56,11 +57,9 @@ using NetTopologySuite.Extensions.Coverages;
 using NUnit.Framework;
 using SharpMap.Extensions.CoordinateSystems;
 using SharpTestsEx;
-using AggregationOptions = DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi.AggregationOptions;
+using AggregationOptions = DeltaShell.NGHS.IO.DataObjects.Model1D.AggregationOptions;
 using Application = System.Windows.Forms.Application;
-using ElementSet = DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi.ElementSet;
 using Point = NetTopologySuite.Geometries.Point;
-using QuantityType = DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi.QuantityType;
 
 namespace Sobek.IntegrationTests
 {

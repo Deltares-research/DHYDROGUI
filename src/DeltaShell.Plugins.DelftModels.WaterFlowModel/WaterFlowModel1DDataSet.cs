@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using DelftTools.Functions;
+using DeltaShell.NGHS.IO.DataObjects;
+using DeltaShell.NGHS.IO.DataObjects.Model1D;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
 {
@@ -59,37 +61,37 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
         {
             Dictionary<string, string> dHydroNamesDictionary = new Dictionary<string, string>();
 
-            dHydroNamesDictionary.Add(WaterFlowModelParameterNames.StructureDischarge, FunctionAttributes.StandardNames.WaterDischarge);
-            dHydroNamesDictionary.Add(WaterFlowModelParameterNames.StructureVelocity, FunctionAttributes.StandardNames.WaterVelocity);
-            dHydroNamesDictionary.Add(WaterFlowModelParameterNames.StructureFlowArea, FunctionAttributes.StandardNames.WaterFlowArea);
-            dHydroNamesDictionary.Add(WaterFlowModelParameterNames.StructurePressureDifference, FunctionAttributes.StandardNames.StructurePressureDifference);
-            dHydroNamesDictionary.Add(WaterFlowModelParameterNames.StructureCrestLevel, FunctionAttributes.StandardNames.StructureCrestLevel);
+            dHydroNamesDictionary.Add(Model1DParameterNames.StructureDischarge, FunctionAttributes.StandardNames.WaterDischarge);
+            dHydroNamesDictionary.Add(Model1DParameterNames.StructureVelocity, FunctionAttributes.StandardNames.WaterVelocity);
+            dHydroNamesDictionary.Add(Model1DParameterNames.StructureFlowArea, FunctionAttributes.StandardNames.WaterFlowArea);
+            dHydroNamesDictionary.Add(Model1DParameterNames.StructurePressureDifference, FunctionAttributes.StandardNames.StructurePressureDifference);
+            dHydroNamesDictionary.Add(Model1DParameterNames.StructureCrestLevel, FunctionAttributes.StandardNames.StructureCrestLevel);
 
-            dHydroNamesDictionary.Add(WaterFlowModelParameterNames.StructureCrestWidth, FunctionAttributes.StandardNames.StructureCrestWidth);
-            dHydroNamesDictionary.Add(WaterFlowModelParameterNames.StructureGateLevel, FunctionAttributes.StandardNames.StructureGateLowerEdgeLevel);
-            dHydroNamesDictionary.Add(WaterFlowModelParameterNames.StructureOpeningHeight, FunctionAttributes.StandardNames.StructureGateOpeningHeight);
-            dHydroNamesDictionary.Add(WaterFlowModelParameterNames.StructureValveOpening, FunctionAttributes.StandardNames.StructureValveOpening);
-            dHydroNamesDictionary.Add(WaterFlowModelParameterNames.StructureWaterlevelUp, FunctionAttributes.StandardNames.StructureWaterLevelUpstream);
+            dHydroNamesDictionary.Add(Model1DParameterNames.StructureCrestWidth, FunctionAttributes.StandardNames.StructureCrestWidth);
+            dHydroNamesDictionary.Add(Model1DParameterNames.StructureGateLevel, FunctionAttributes.StandardNames.StructureGateLowerEdgeLevel);
+            dHydroNamesDictionary.Add(Model1DParameterNames.StructureOpeningHeight, FunctionAttributes.StandardNames.StructureGateOpeningHeight);
+            dHydroNamesDictionary.Add(Model1DParameterNames.StructureValveOpening, FunctionAttributes.StandardNames.StructureValveOpening);
+            dHydroNamesDictionary.Add(Model1DParameterNames.StructureWaterlevelUp, FunctionAttributes.StandardNames.StructureWaterLevelUpstream);
 
-            dHydroNamesDictionary.Add(WaterFlowModelParameterNames.StructureWaterlevelDown, FunctionAttributes.StandardNames.StructureWaterLevelDownstream);
-            dHydroNamesDictionary.Add(WaterFlowModelParameterNames.StructureHeadDifference, FunctionAttributes.StandardNames.StructureWaterHead);
-            dHydroNamesDictionary.Add(WaterFlowModelParameterNames.StructureWaterLevelAtCrest, FunctionAttributes.StandardNames.StructureWaterLevelAtCrest);
-            dHydroNamesDictionary.Add(WaterFlowModelParameterNames.StructureSetPoint, FunctionAttributes.StandardNames.StructureSetPoint);
+            dHydroNamesDictionary.Add(Model1DParameterNames.StructureWaterlevelDown, FunctionAttributes.StandardNames.StructureWaterLevelDownstream);
+            dHydroNamesDictionary.Add(Model1DParameterNames.StructureHeadDifference, FunctionAttributes.StandardNames.StructureWaterHead);
+            dHydroNamesDictionary.Add(Model1DParameterNames.StructureWaterLevelAtCrest, FunctionAttributes.StandardNames.StructureWaterLevelAtCrest);
+            dHydroNamesDictionary.Add(Model1DParameterNames.StructureSetPoint, FunctionAttributes.StandardNames.StructureSetPoint);
 
-            dHydroNamesDictionary.Add(WaterFlowModelParameterNames.LateralActualDischarge, FunctionAttributes.StandardNames.WaterDischarge);
-            dHydroNamesDictionary.Add(WaterFlowModelParameterNames.LateralDefinedDischarge, FunctionAttributes.StandardNames.WaterDischarge);
-            dHydroNamesDictionary.Add(WaterFlowModelParameterNames.LateralDifference, FunctionAttributes.StandardNames.WaterDischarge);
-            dHydroNamesDictionary.Add(WaterFlowModelParameterNames.LateralWaterLevel, FunctionAttributes.StandardNames.WaterLevel);
+            dHydroNamesDictionary.Add(Model1DParameterNames.LateralActualDischarge, FunctionAttributes.StandardNames.WaterDischarge);
+            dHydroNamesDictionary.Add(Model1DParameterNames.LateralDefinedDischarge, FunctionAttributes.StandardNames.WaterDischarge);
+            dHydroNamesDictionary.Add(Model1DParameterNames.LateralDifference, FunctionAttributes.StandardNames.WaterDischarge);
+            dHydroNamesDictionary.Add(Model1DParameterNames.LateralWaterLevel, FunctionAttributes.StandardNames.WaterLevel);
 
-            dHydroNamesDictionary.Add(WaterFlowModelParameterNames.RetentionWaterLevel, FunctionAttributes.StandardNames.WaterLevel);
-            dHydroNamesDictionary.Add(WaterFlowModelParameterNames.RetentionVolume, FunctionAttributes.StandardNames.WaterVolume);
+            dHydroNamesDictionary.Add(Model1DParameterNames.RetentionWaterLevel, FunctionAttributes.StandardNames.WaterLevel);
+            dHydroNamesDictionary.Add(Model1DParameterNames.RetentionVolume, FunctionAttributes.StandardNames.WaterVolume);
 
-            dHydroNamesDictionary.Add(WaterFlowModelParameterNames.ObservationPointWaterLevel, FunctionAttributes.StandardNames.WaterLevel);
-            dHydroNamesDictionary.Add(WaterFlowModelParameterNames.ObservationPointWaterDepth, FunctionAttributes.StandardNames.WaterDepth);
+            dHydroNamesDictionary.Add(Model1DParameterNames.ObservationPointWaterLevel, FunctionAttributes.StandardNames.WaterLevel);
+            dHydroNamesDictionary.Add(Model1DParameterNames.ObservationPointWaterDepth, FunctionAttributes.StandardNames.WaterDepth);
             //dHydroNamesDictionary.Add(WaterFlowModelParameterNames.ObservationPointSurfaceArea, ????);
-            dHydroNamesDictionary.Add(WaterFlowModelParameterNames.ObservationPointDischarge, FunctionAttributes.StandardNames.WaterDischarge);
-            dHydroNamesDictionary.Add(WaterFlowModelParameterNames.ObservationPointVelocity, FunctionAttributes.StandardNames.WaterVelocity);
-            dHydroNamesDictionary.Add(WaterFlowModelParameterNames.ObservationPointSaltConcentration, FunctionAttributes.StandardNames.WaterSalinity);
+            dHydroNamesDictionary.Add(Model1DParameterNames.ObservationPointDischarge, FunctionAttributes.StandardNames.WaterDischarge);
+            dHydroNamesDictionary.Add(Model1DParameterNames.ObservationPointVelocity, FunctionAttributes.StandardNames.WaterVelocity);
+            dHydroNamesDictionary.Add(Model1DParameterNames.ObservationPointSaltConcentration, FunctionAttributes.StandardNames.WaterSalinity);
 
 
             return dHydroNamesDictionary;

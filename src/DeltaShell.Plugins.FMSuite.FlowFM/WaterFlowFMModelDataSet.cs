@@ -6,6 +6,7 @@
         public const string HydroAreaTag = "hydro_area_tag";
         public const string LateralSourcesDataTag = "1D Lateral Data";
         public const string BoundaryConditionsTag = "1D Boundary Data";
-
+        public const string InflowsTag = "inflows"; //todo: find good name
+        public const string NetworkTag = "network";
     }
 }

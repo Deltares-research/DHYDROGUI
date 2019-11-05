@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi;
+using DeltaShell.NGHS.IO.DataObjects.Model1D;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.Fews.Tests

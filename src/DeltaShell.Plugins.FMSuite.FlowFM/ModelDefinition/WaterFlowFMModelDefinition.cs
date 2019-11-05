@@ -7,6 +7,7 @@ using System.Linq;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow.DataItems;
+using DelftTools.Units;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
@@ -23,6 +24,8 @@ using GeoAPI.Extensions.CoordinateSystems;
 using DelftTools.Utils;
 using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
+using GeoAPI.Extensions.Coverages;
+using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Extensions.Coverages;
@@ -121,7 +124,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         public IEventedList<Feature2D> Pipes { get; private set; }
         
         public IEventedList<SourceAndSink> SourcesAndSinks { get; private set; }
-        
+        public IFeatureCoverage Inflows { get; private set; }
+
         public IList<Embankment> Embankments { get; set; }
 
         static WaterFlowFMModelDefinition()
@@ -202,6 +206,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             InitialTracerNames = new List<string>();
             InitialSpatiallyVaryingSedimentPropertyNames = new List<string>();
             Embankments = new EventedList<Embankment>();
+            Inflows = new FeatureCoverage("Inflows");
+            Inflows.Arguments.Add(new Variable<DateTime>()); //time variable
+            Inflows.Arguments.Add(new Variable<IFeature> { IsAutoSorted = false }); //feature variable
+            Inflows.Components.Add(new Variable<double>("Inflows", new Unit("Discharge", "m³/s"))); //component
+
+
             UpdateWriteOutputSnappedFeatures();
         }
 
@@ -431,7 +441,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 
         // Enable when kernel supports non-equidistant layering
         public static bool CanSpecifyLayerThicknesses { get { return false; } }
-
+        
         public void SetMduTimePropertiesFromGuiProperties()
         {
             var originalStartTime = GetAbsoluteDateTime((double)GetModelProperty(KnownProperties.TStart).Value, true);

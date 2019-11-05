@@ -97,12 +97,6 @@ namespace DeltaShell.NGHS.IO.DataObjects
                 return name;
             }
         }
-        [FeatureAttribute]
-        public virtual string DataTypeValue
-        {
-            get { return DataType.GetDescription(); }
-        }
-
         [FeatureAttribute(Order = 2)]
         public virtual Model1DLateralDataType DataType
         {

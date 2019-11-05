@@ -24,6 +24,7 @@ using DeltaShell.Core;
 using DeltaShell.Core.Services;
 using DeltaShell.Gui;
 using DeltaShell.NGHS.IO.DataObjects;
+using DeltaShell.NGHS.IO.DataObjects.Model1D;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.Data.NHibernate;
@@ -58,12 +59,10 @@ using SharpMap;
 using SharpMap.Layers;
 using SharpMap.UI.Forms;
 using SharpTestsEx;
-using AggregationOptions = DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi.AggregationOptions;
+using AggregationOptions = DeltaShell.NGHS.IO.DataObjects.Model1D.AggregationOptions;
 using Application = System.Windows.Forms.Application;
-using ElementSet = DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi.ElementSet;
 using GeometryFactory = SharpMap.Converters.Geometries.GeometryFactory;
 using Point = NetTopologySuite.Geometries.Point;
-using QuantityType = DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi.QuantityType;
 
 namespace Sobek.IntegrationTests
 {
@@ -516,7 +515,7 @@ namespace Sobek.IntegrationTests
             saltParameter.AggregationOptions = AggregationOptions.Current;
 
             //test start situation
-            var saltConcentrationCoverageName = String.Format("{0}", WaterFlowModelParameterNames.LocationSaltConcentration);
+            var saltConcentrationCoverageName = String.Format("{0}", Model1DParameterNames.LocationSaltConcentration);
             Assert.AreEqual(1, flowModel1D.OutputFunctions.Count(c => c.Name == saltConcentrationCoverageName));
             Assert.AreEqual(1, project.RootFolder.GetAllItemsRecursive().OfType<INetworkCoverage>().Count(nc => nc.Name == saltConcentrationCoverageName));
 
@@ -2167,7 +2166,7 @@ namespace Sobek.IntegrationTests
             // Create a dummy model
             var waterFlowModel1D = WaterFlowModel1DDemoModelTestHelper.CreateModelWithDemoNetwork();
             var path = TestHelper.GetCurrentMethodName() + ".dsproj";
-            var gridTypeParameter = waterFlowModel1D.OutputSettings.EngineParameters.First(p => p.Name == WaterFlowModelParameterNames.FiniteVolumeGridType);
+            var gridTypeParameter = waterFlowModel1D.OutputSettings.EngineParameters.First(p => p.Name == Model1DParameterNames.FiniteVolumeGridType);
             gridTypeParameter.AggregationOptions = finiteVolumeDiscretizationType;
 
             // Save the model 
@@ -2178,7 +2177,7 @@ namespace Sobek.IntegrationTests
             {
                 var retrievedProject = projectRepository.Open(path);
                 var retrievedModel = (WaterFlowModel1D) retrievedProject.RootFolder.Models.FirstOrDefault();
-                gridTypeParameter = retrievedModel.OutputSettings.EngineParameters.First(p => p.Name == WaterFlowModelParameterNames.FiniteVolumeGridType);
+                gridTypeParameter = retrievedModel.OutputSettings.EngineParameters.First(p => p.Name == Model1DParameterNames.FiniteVolumeGridType);
                 
                 Assert.AreEqual(finiteVolumeDiscretizationType, gridTypeParameter.AggregationOptions);
             }

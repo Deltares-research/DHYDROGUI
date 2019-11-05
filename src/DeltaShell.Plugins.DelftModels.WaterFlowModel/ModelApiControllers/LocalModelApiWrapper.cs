@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using DeltaShell.NGHS.IO.DataObjects;
+using DeltaShell.NGHS.IO.DataObjects.Model1D;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi;
+using AggregationOptions = DeltaShell.NGHS.IO.DataObjects.Model1D.AggregationOptions;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers
 {

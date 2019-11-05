@@ -9,10 +9,9 @@ using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils;
+using DeltaShell.NGHS.IO.DataObjects.Model1D;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
 using GeoAPI.Extensions.Feature;
 using log4net;
@@ -430,7 +429,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             var inputDataItem = inputDataItems.FirstOrDefault(
                 item =>
                     {
-                        var flowValueConverter = item.ValueConverter as WaterFlowModelBranchFeatureValueConverter;
+                        var flowValueConverter = item.ValueConverter as Model1DBranchFeatureValueConverter;
                         if (flowValueConverter != null)
                         {
                             return flowValueConverter.QuantityType == quantityType
@@ -481,7 +480,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                 structureDataItems.FirstOrDefault(
                     item =>
                         {
-                            var converter = (WaterFlowModelBranchFeatureValueConverter)item.ValueConverter;
+                            var converter = (Model1DBranchFeatureValueConverter)item.ValueConverter;
                             return converter.QuantityType == GetWaterFlowModelQuantityType(structure, controller.SobekControllerParameterType)
                                    && converter.ElementSet == ElementSet.Structures;
                         });
@@ -512,7 +511,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             var structureDataItem = structureDataItems.FirstOrDefault(
                 item =>
                     {
-                        var flowValueConverter = item.ValueConverter as WaterFlowModelBranchFeatureValueConverter;
+                        var flowValueConverter = item.ValueConverter as Model1DBranchFeatureValueConverter;
                         if (flowValueConverter != null)
                         {
                             return flowValueConverter.QuantityType

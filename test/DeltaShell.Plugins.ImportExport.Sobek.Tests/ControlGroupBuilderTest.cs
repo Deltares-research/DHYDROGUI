@@ -6,10 +6,10 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
+using DeltaShell.NGHS.IO.DataObjects.Model1D;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi;
 using DeltaShell.Sobek.Readers;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
 using GeoAPI.Extensions.Feature;
@@ -1259,7 +1259,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             {
                 Role = role,
                 ValueType = typeof(double),
-                ValueConverter = new WaterFlowModelBranchFeatureValueConverter(modelMock, hydroNode, parameterName, quantityType, elementSet, role, "")
+                ValueConverter = new Model1DBranchFeatureValueConverter(modelMock, hydroNode, parameterName, quantityType, elementSet, role, "")
             });
         }
 

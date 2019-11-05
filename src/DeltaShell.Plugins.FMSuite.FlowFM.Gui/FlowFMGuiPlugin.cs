@@ -101,8 +101,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 
         public override IEnumerable<ITreeNodePresenter> GetProjectTreeViewNodePresenters()
         {
-            //yield return new Model1DBoundaryNodeDataProjectNodePresenter { GuiPlugin = this };
-            //yield return new Model1DLateralDataProjectNodePresenter { GuiPlugin = this };
             yield return new WaterFlowFMModelNodePresenter(this);
             yield return new FmModelTreeShortcutNodePresenter { GuiPlugin = this};
             yield return new BoundaryConditionSetNodePresenter { GuiPlugin = this };
@@ -357,12 +355,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             var pipesViewInfo = FeatureCollectionViewInfoHelper.CreateViewInfo<Feature2D, WaterFlowFMModel>("Sources and Sinks", m => m.Pipes, () => Gui);
             yield return ViewInfoWrapper<FmModelTreeShortcut>.Create(pipesViewInfo, GetPipesFromSourcesAndSinks,o => o.ShortCutType == ShortCutType.FeatureSet, (v, o) => v.CanAddDeleteAttributes = false);
 
-            var boundaryConditions1DViewInfo = SharpMapGisGuiPlugin.CreateAttributeTableViewInfo<Model1DBoundaryNodeData, WaterFlowFMModel>( m => m.BoundaryConditions1D, () => Gui);
-            yield return ViewInfoWrapper<FmModelTreeShortcut>.Create(boundaryConditions1DViewInfo,o => o.Data,o => o.ShortCutType == ShortCutType.FeatureSet, (v, o) => v.CanAddDeleteAttributes = false);
-            
-            var lateralSourcesViewInfo = SharpMapGisGuiPlugin.CreateAttributeTableViewInfo<Model1DLateralSourceData, WaterFlowFMModel>(m => m.LateralSourcesData, () => Gui);
-            yield return ViewInfoWrapper<FmModelTreeShortcut>.Create(lateralSourcesViewInfo,o => o.Data,o => o.ShortCutType == ShortCutType.FeatureSet, (v, o) => v.CanAddDeleteAttributes = false);
-            
+            yield return SharpMapGisGuiPlugin.CreateAttributeTableViewInfo<Model1DBoundaryNodeData, WaterFlowFMModel>(m => m.BoundaryConditions1D, () => Gui);
+            yield return SharpMapGisGuiPlugin.CreateAttributeTableViewInfo<Model1DLateralSourceData, WaterFlowFMModel>(m => m.LateralSourcesData, () => Gui);
 
             // Heat flux model
             yield return new ViewInfo<HeatFluxModel, HeatFluxModelView>

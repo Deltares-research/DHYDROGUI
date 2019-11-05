@@ -11,6 +11,7 @@ using DelftTools.Utils.Editing;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Gui;
 using DeltaShell.IntegrationTestUtils;
+using DeltaShell.NGHS.IO.DataObjects.Model1D;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.Data.NHibernate;
@@ -175,7 +176,7 @@ namespace Sobek.IntegrationTests
                 var target1 = new DataItem
                 {
                     Role = DataItemRole.Output,
-                    ValueConverter = new WaterFlowModelBranchFeatureValueConverter(model, lateral1, "Discharge",
+                    ValueConverter = new Model1DBranchFeatureValueConverter(model, lateral1, "Discharge",
                         QuantityType.Discharge, ElementSet.Laterals, DataItemRole.Output, "m3/s"),
                     ValueType = typeof(double),
                     Parent = networkDataItem
@@ -184,7 +185,7 @@ namespace Sobek.IntegrationTests
                 var target2 = new DataItem
                 {
                     Role = DataItemRole.Input,
-                    ValueConverter = new WaterFlowModelBranchFeatureValueConverter(model, lateral2, "Discharge", 
+                    ValueConverter = new Model1DBranchFeatureValueConverter(model, lateral2, "Discharge", 
                         QuantityType.Discharge, ElementSet.Laterals, DataItemRole.Input, "m3/s"),
                     ValueType = typeof(double),
                     Parent = networkDataItem
@@ -248,7 +249,7 @@ namespace Sobek.IntegrationTests
                 var target1 = new DataItem
                 {
                     Role = DataItemRole.Output,
-                    ValueConverter = new WaterFlowModelBranchFeatureValueConverter(model, lateral, "Discharge",
+                    ValueConverter = new Model1DBranchFeatureValueConverter(model, lateral, "Discharge",
                         QuantityType.Discharge, ElementSet.Laterals, DataItemRole.Output, "m3/s"),
                     ValueType = typeof(double),
                     Parent = networkDataItem

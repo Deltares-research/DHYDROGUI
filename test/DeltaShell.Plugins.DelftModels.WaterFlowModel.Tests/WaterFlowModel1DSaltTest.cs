@@ -6,7 +6,7 @@ using DelftTools.Hydro.Helpers;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DeltaShell.NGHS.IO.DataObjects;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi;
+using DeltaShell.NGHS.IO.DataObjects.Model1D;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.TestUtils;
 using GeoAPI.Extensions.Coverages;
 using NUnit.Framework;
@@ -244,9 +244,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                 // set output coverages on
                 model.OutputSettings.LocationSaltConcentration = AggregationOptions.Current;
                 model.OutputSettings.EngineParameters.First(
-                    p => p.Name == WaterFlowModelParameterNames.BranchSaltDispersion).AggregationOptions =
+                    p => p.Name == Model1DParameterNames.BranchSaltDispersion).AggregationOptions =
                     AggregationOptions.Current;
-                model.OutputSettings.EngineParameters.First(p => p.Name == WaterFlowModelParameterNames.LocationDensity)
+                model.OutputSettings.EngineParameters.First(p => p.Name == Model1DParameterNames.LocationDensity)
                     .AggregationOptions = AggregationOptions.Current;
 
 
@@ -255,7 +255,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
                 var outputSaltConcentration =
                     (INetworkCoverage)
-                    model.OutputFunctions.First(o => o.Name == WaterFlowModelParameterNames.LocationSaltConcentration);
+                    model.OutputFunctions.First(o => o.Name == Model1DParameterNames.LocationSaltConcentration);
                 var location = outputSaltConcentration.Locations.Values[4];
                 var time = outputSaltConcentration.Time.Values[10];
 
@@ -263,11 +263,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                 Assert.AreNotEqual(0.0, (double) outputSaltConcentration[time, location]);
                 var outputCoverageDispersion =
                     (INetworkCoverage)
-                    model.OutputFunctions.First(oc => oc.Name == WaterFlowModelParameterNames.BranchSaltDispersion);
+                    model.OutputFunctions.First(oc => oc.Name == Model1DParameterNames.BranchSaltDispersion);
                 Assert.AreNotEqual(0.0, (double) outputCoverageDispersion[time, location]);
                 var outputCoverageDensity =
                     (INetworkCoverage)
-                    model.OutputFunctions.First(oc => oc.Name == WaterFlowModelParameterNames.LocationDensity);
+                    model.OutputFunctions.First(oc => oc.Name == Model1DParameterNames.LocationDensity);
                 Assert.AreNotEqual(0.0, (double) outputCoverageDensity[time, location]);
             }
         }
@@ -330,7 +330,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                 var outputSaltConcentration =
                     (INetworkCoverage)
                     model.OutputFunctions.First(
-                        o => o.Name.StartsWith(WaterFlowModelParameterNames.LocationSaltConcentration));
+                        o => o.Name.StartsWith(Model1DParameterNames.LocationSaltConcentration));
 
                 var location = outputSaltConcentration.Locations.Values[4];
                 var time = outputSaltConcentration.Time.Values[10];
@@ -404,7 +404,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                 var outputSaltConcentration =
                     (INetworkCoverage)
                     model.OutputFunctions.First(
-                        o => o.Name.StartsWith(WaterFlowModelParameterNames.LocationSaltConcentration));
+                        o => o.Name.StartsWith(Model1DParameterNames.LocationSaltConcentration));
 
                 var location = outputSaltConcentration.Locations.Values[4];
                 var time = outputSaltConcentration.Time.Values[10];
@@ -493,7 +493,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                     
                     // gather salt concentration
                     var outputSaltConcentration = (INetworkCoverage) model.OutputFunctions.First(
-                        o => o.Name == WaterFlowModelParameterNames.LocationSaltConcentration);
+                        o => o.Name == Model1DParameterNames.LocationSaltConcentration);
 
                     var saltConc = outputSaltConcentration.Evaluate(sampleTime,
                                                                     sampleLocation);

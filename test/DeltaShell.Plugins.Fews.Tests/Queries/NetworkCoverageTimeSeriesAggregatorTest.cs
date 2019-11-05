@@ -7,8 +7,8 @@ using DelftTools.ModelExchange.Queries.Aggregators;
 using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
+using DeltaShell.NGHS.IO.DataObjects.Model1D;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.TestUtils;
 using NUnit.Framework;
 

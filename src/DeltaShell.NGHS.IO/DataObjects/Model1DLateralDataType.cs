@@ -8,11 +8,6 @@ namespace DeltaShell.NGHS.IO.DataObjects
     public enum Model1DLateralDataType
     {
         /// <summary>
-        /// None
-        /// </summary>
-        [Description("None")]
-        None,
-        /// <summary>
         /// Q(t) function
         /// </summary>
         [Description("Q(t) : Flow time series")]

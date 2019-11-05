@@ -6,6 +6,7 @@ using System.Linq;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO;
+using DeltaShell.NGHS.IO.DataObjects.Model1D;
 using DeltaShell.NGHS.IO.FileWriters.General;
 using DeltaShell.NGHS.IO.FileWriters.SpatialData;
 using DeltaShell.NGHS.IO.Helpers;

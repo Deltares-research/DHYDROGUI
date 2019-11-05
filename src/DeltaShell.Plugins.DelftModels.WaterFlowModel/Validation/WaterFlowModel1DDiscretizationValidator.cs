@@ -6,10 +6,12 @@ using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Validators;
 using DelftTools.Utils.Validation;
 using DeltaShell.NGHS.IO.DataObjects;
+using DeltaShell.NGHS.IO.DataObjects.Model1D;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Networks;
 using NetTopologySuite.Extensions.Networks;
+using AggregationOptions = DeltaShell.NGHS.IO.DataObjects.Model1D.AggregationOptions;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation
 {
@@ -66,7 +68,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation
             if (waterFlowModel1D == null)
                 return true; //hack: if no model, check finite volume errors (as finite volume calls this validation manually)
 
-            var gridTypeParameter = waterFlowModel1D.OutputSettings.EngineParameters.First(p => p.Name == WaterFlowModelParameterNames.FiniteVolumeGridType);
+            var gridTypeParameter = waterFlowModel1D.OutputSettings.EngineParameters.First(p => p.Name == Model1DParameterNames.FiniteVolumeGridType);
             return gridTypeParameter.AggregationOptions != (AggregationOptions) FiniteVolumeDiscretizationType.None;
         }
 

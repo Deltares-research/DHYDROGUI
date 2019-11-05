@@ -1,5 +1,7 @@
 using DelftTools.Utils.Interop;
 using DeltaShell.Dimr;
+using DeltaShell.NGHS.IO.DataObjects;
+using DeltaShell.NGHS.IO.DataObjects.Model1D;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi;
 using ProtoBufRemote;
 

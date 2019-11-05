@@ -1,6 +1,6 @@
 ﻿using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi;
+using DeltaShell.NGHS.IO.DataObjects.Model1D;
 using GeoAPI.Extensions.Feature;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -19,9 +19,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             var model = mocks.Stub<IModel>();
             var feature = mocks.Stub<IFeature>();
 
-            var converter = new WaterFlowModelBranchFeatureValueConverter(model, feature, "parameter", QuantityType.CrestLevel, ElementSet.Observations, DataItemRole.Output, "m");
+            var converter = new Model1DBranchFeatureValueConverter(model, feature, "parameter", QuantityType.CrestLevel, ElementSet.Observations, DataItemRole.Output, "m");
 
-            var converterClone = (WaterFlowModelBranchFeatureValueConverter)converter.DeepClone();
+            var converterClone = (Model1DBranchFeatureValueConverter)converter.DeepClone();
 
             converterClone.Model.Should().Be.SameInstanceAs(model);
             converterClone.Location.Should().Be.SameInstanceAs(feature);

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi;
+using DeltaShell.NGHS.IO.DataObjects;
+using DeltaShell.NGHS.IO.DataObjects.Model1D;
+using AggregationOptions = DeltaShell.NGHS.IO.DataObjects.Model1D.AggregationOptions;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 {
@@ -48,137 +50,137 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             new LookupTable(WaterFlowModel1DOutputFileConstants.FileNames.GridPointsFile, new Dictionary<string, string>()
             {
              // {[variable name in file],                                                               [existing coverage tag]}
-                {WaterFlowModel1DOutputFileConstants.VariableNames.NegativeDepthCount,                  WaterFlowModelParameterNames.SimulationInfoNegativeDepthDisplayName},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.NoInteration,                        WaterFlowModelParameterNames.SimulationInfoNumberOfIterationsDisplayName},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterDensity,                        WaterFlowModelParameterNames.LocationDensity},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterDepth,                          WaterFlowModelParameterNames.LocationWaterDepth},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterLateralFlow2D1D,                WaterFlowModelParameterNames.LocationQTotal_1d2d},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterLevel,                          WaterFlowModelParameterNames.LocationWaterLevel},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterSalinity,                       WaterFlowModelParameterNames.LocationSaltConcentration},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterTotalArea,                      WaterFlowModelParameterNames.LocationTotalArea},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterTotalWidth,                     WaterFlowModelParameterNames.LocationTotalWidth},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterVolume,                         WaterFlowModelParameterNames.LocationVolume},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterLateralFlowAtNode,              WaterFlowModelParameterNames.LocationLateralAtNodes},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterTemperature,                    WaterFlowModelParameterNames.LocationTemperature},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.TotalHeatFlux,                       WaterFlowModelParameterNames.LocationTotalHeatFlux},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.RadFluxClearSky,                     WaterFlowModelParameterNames.LocationRadFluxClearSky},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.HeatLossConv,                        WaterFlowModelParameterNames.LocationHeatLossConv},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.NetSolarRad,                         WaterFlowModelParameterNames.LocationNetSolarRad},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.EffectiveBackRad,                    WaterFlowModelParameterNames.LocationEffectiveBackRad},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.HeatLossEvap,                        WaterFlowModelParameterNames.LocationHeatLossEvap},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.HeatlossForcedEvap,                  WaterFlowModelParameterNames.LocationHeatLossForcedEvap},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.HeatlossFreeEvap,                    WaterFlowModelParameterNames.LocationHeatLossFreeEvap},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.HeatlossForcedConv,                  WaterFlowModelParameterNames.LocationHeatLossForcedConv},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.HeatlossFreeConv,                    WaterFlowModelParameterNames.LocationHeatLossFreeConv}
+                {WaterFlowModel1DOutputFileConstants.VariableNames.NegativeDepthCount,                  Model1DParameterNames.SimulationInfoNegativeDepthDisplayName},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.NoInteration,                        Model1DParameterNames.SimulationInfoNumberOfIterationsDisplayName},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterDensity,                        Model1DParameterNames.LocationDensity},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterDepth,                          Model1DParameterNames.LocationWaterDepth},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterLateralFlow2D1D,                Model1DParameterNames.LocationQTotal_1d2d},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterLevel,                          Model1DParameterNames.LocationWaterLevel},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterSalinity,                       Model1DParameterNames.LocationSaltConcentration},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterTotalArea,                      Model1DParameterNames.LocationTotalArea},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterTotalWidth,                     Model1DParameterNames.LocationTotalWidth},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterVolume,                         Model1DParameterNames.LocationVolume},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterLateralFlowAtNode,              Model1DParameterNames.LocationLateralAtNodes},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterTemperature,                    Model1DParameterNames.LocationTemperature},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.TotalHeatFlux,                       Model1DParameterNames.LocationTotalHeatFlux},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.RadFluxClearSky,                     Model1DParameterNames.LocationRadFluxClearSky},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.HeatLossConv,                        Model1DParameterNames.LocationHeatLossConv},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.NetSolarRad,                         Model1DParameterNames.LocationNetSolarRad},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.EffectiveBackRad,                    Model1DParameterNames.LocationEffectiveBackRad},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.HeatLossEvap,                        Model1DParameterNames.LocationHeatLossEvap},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.HeatlossForcedEvap,                  Model1DParameterNames.LocationHeatLossForcedEvap},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.HeatlossFreeEvap,                    Model1DParameterNames.LocationHeatLossFreeEvap},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.HeatlossForcedConv,                  Model1DParameterNames.LocationHeatLossForcedConv},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.HeatlossFreeConv,                    Model1DParameterNames.LocationHeatLossFreeConv}
 
             }),
 
             new LookupTable(WaterFlowModel1DOutputFileConstants.FileNames.LateralsFile, new Dictionary<string, string>()
             {
              // {[variable name in file],                                                               [existing coverage tag]}
-                {WaterFlowModel1DOutputFileConstants.VariableNames.LateralActualDischarge,              WaterFlowModelParameterNames.LateralActualDischarge},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.LateralDefinedDischarge,             WaterFlowModelParameterNames.LateralDefinedDischarge},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.LateralDifference,                   WaterFlowModelParameterNames.LateralDifference},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.LateralWaterLevel,                   WaterFlowModelParameterNames.LateralWaterLevel},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.LateralActualDischarge,              Model1DParameterNames.LateralActualDischarge},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.LateralDefinedDischarge,             Model1DParameterNames.LateralDefinedDischarge},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.LateralDifference,                   Model1DParameterNames.LateralDifference},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.LateralWaterLevel,                   Model1DParameterNames.LateralWaterLevel},
             }),
 
             new LookupTable(WaterFlowModel1DOutputFileConstants.FileNames.ObservationsFile, new Dictionary<string, string>()
             {
              // {[variable name in file],                                                               [existing coverage tag]}
-                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterDepth,                          WaterFlowModelParameterNames.ObservationPointWaterDepth},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterDischarge,                      WaterFlowModelParameterNames.ObservationPointDischarge},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterDispersion,                     WaterFlowModelParameterNames.ObservationPointSaltDispersion},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterLevel,                          WaterFlowModelParameterNames.ObservationPointWaterLevel},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterSalinity,                       WaterFlowModelParameterNames.ObservationPointSaltConcentration},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterVelocity,                       WaterFlowModelParameterNames.ObservationPointVelocity},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterVolume,                         WaterFlowModelParameterNames.ObservationPointVolume},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterTemperature,                    WaterFlowModelParameterNames.ObservationPointTemperature}
+                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterDepth,                          Model1DParameterNames.ObservationPointWaterDepth},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterDischarge,                      Model1DParameterNames.ObservationPointDischarge},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterDispersion,                     Model1DParameterNames.ObservationPointSaltDispersion},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterLevel,                          Model1DParameterNames.ObservationPointWaterLevel},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterSalinity,                       Model1DParameterNames.ObservationPointSaltConcentration},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterVelocity,                       Model1DParameterNames.ObservationPointVelocity},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterVolume,                         Model1DParameterNames.ObservationPointVolume},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterTemperature,                    Model1DParameterNames.ObservationPointTemperature}
             }),
 
             new LookupTable(WaterFlowModel1DOutputFileConstants.FileNames.ReachSegmentsFile, new Dictionary<string, string>()
             {
              // {[variable name in file],                                                               [existing coverage tag]}
-                {WaterFlowModel1DOutputFileConstants.VariableNames.Froude,                              WaterFlowModelParameterNames.BranchFroudeNumber},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.TimeStepEstimation,                  WaterFlowModelParameterNames.SimulationInfoTimeStepEstimationDisplayName},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterChezy,                          WaterFlowModelParameterNames.BranchRoughness},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterChezyFP1,                       WaterFlowModelParameterNames.FloodPlain1 + WaterFlowModelParameterNames.BranchRoughness},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterChezyFP2,                       WaterFlowModelParameterNames.FloodPlain2 + WaterFlowModelParameterNames.BranchRoughness},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterChezyMain,                      WaterFlowModelParameterNames.MainChannel + WaterFlowModelParameterNames.BranchRoughness},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterConveyance,                     WaterFlowModelParameterNames.BranchConveyance},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterDischarge,                      WaterFlowModelParameterNames.BranchDischarge},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterDischargeFP1,                   WaterFlowModelParameterNames.FloodPlain1 + WaterFlowModelParameterNames.BranchDischarge},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterDischargeFP2,                   WaterFlowModelParameterNames.FloodPlain2 + WaterFlowModelParameterNames.BranchDischarge},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterDischargeMain,                  WaterFlowModelParameterNames.MainChannel + WaterFlowModelParameterNames.BranchDischarge},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterDispersion,                     WaterFlowModelParameterNames.BranchSaltDispersion},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterEnergyLevel,                    WaterFlowModelParameterNames.BranchEnergyHeadLevel},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterFlowArea,                       WaterFlowModelParameterNames.BranchFlowArea},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterFlowAreaFP1,                    WaterFlowModelParameterNames.FloodPlain1 + WaterFlowModelParameterNames.BranchFlowArea},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterFlowAreaFP2,                    WaterFlowModelParameterNames.FloodPlain2 + WaterFlowModelParameterNames.BranchFlowArea},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterFlowAreaMain,                   WaterFlowModelParameterNames.MainChannel + WaterFlowModelParameterNames.BranchFlowArea},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterFlowWidthFP1,                   WaterFlowModelParameterNames.FloodPlain1 + WaterFlowModelParameterNames.SubSectionFlowWidth},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterFlowWidthFP2,                   WaterFlowModelParameterNames.FloodPlain2 + WaterFlowModelParameterNames.SubSectionFlowWidth},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterFlowWidthMain,                  WaterFlowModelParameterNames.MainChannel + WaterFlowModelParameterNames.SubSectionFlowWidth},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterHydraulicRadius,                WaterFlowModelParameterNames.SubSectionHydraulicRadius},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterHydraulicRadiusFP1,             WaterFlowModelParameterNames.FloodPlain1 + WaterFlowModelParameterNames.SubSectionHydraulicRadius},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterHydraulicRadiusFP2,             WaterFlowModelParameterNames.FloodPlain2 + WaterFlowModelParameterNames.SubSectionHydraulicRadius},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterHydraulicRadiusMain,            WaterFlowModelParameterNames.MainChannel + WaterFlowModelParameterNames.SubSectionHydraulicRadius},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterLevelGradient,                  WaterFlowModelParameterNames.BranchWaterLevelGradient},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterVelocity,                       WaterFlowModelParameterNames.BranchVelocity},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.Froude,                              Model1DParameterNames.BranchFroudeNumber},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.TimeStepEstimation,                  Model1DParameterNames.SimulationInfoTimeStepEstimationDisplayName},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterChezy,                          Model1DParameterNames.BranchRoughness},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterChezyFP1,                       Model1DParameterNames.FloodPlain1 + Model1DParameterNames.BranchRoughness},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterChezyFP2,                       Model1DParameterNames.FloodPlain2 + Model1DParameterNames.BranchRoughness},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterChezyMain,                      Model1DParameterNames.MainChannel + Model1DParameterNames.BranchRoughness},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterConveyance,                     Model1DParameterNames.BranchConveyance},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterDischarge,                      Model1DParameterNames.BranchDischarge},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterDischargeFP1,                   Model1DParameterNames.FloodPlain1 + Model1DParameterNames.BranchDischarge},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterDischargeFP2,                   Model1DParameterNames.FloodPlain2 + Model1DParameterNames.BranchDischarge},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterDischargeMain,                  Model1DParameterNames.MainChannel + Model1DParameterNames.BranchDischarge},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterDispersion,                     Model1DParameterNames.BranchSaltDispersion},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterEnergyLevel,                    Model1DParameterNames.BranchEnergyHeadLevel},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterFlowArea,                       Model1DParameterNames.BranchFlowArea},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterFlowAreaFP1,                    Model1DParameterNames.FloodPlain1 + Model1DParameterNames.BranchFlowArea},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterFlowAreaFP2,                    Model1DParameterNames.FloodPlain2 + Model1DParameterNames.BranchFlowArea},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterFlowAreaMain,                   Model1DParameterNames.MainChannel + Model1DParameterNames.BranchFlowArea},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterFlowWidthFP1,                   Model1DParameterNames.FloodPlain1 + Model1DParameterNames.SubSectionFlowWidth},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterFlowWidthFP2,                   Model1DParameterNames.FloodPlain2 + Model1DParameterNames.SubSectionFlowWidth},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterFlowWidthMain,                  Model1DParameterNames.MainChannel + Model1DParameterNames.SubSectionFlowWidth},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterHydraulicRadius,                Model1DParameterNames.SubSectionHydraulicRadius},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterHydraulicRadiusFP1,             Model1DParameterNames.FloodPlain1 + Model1DParameterNames.SubSectionHydraulicRadius},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterHydraulicRadiusFP2,             Model1DParameterNames.FloodPlain2 + Model1DParameterNames.SubSectionHydraulicRadius},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterHydraulicRadiusMain,            Model1DParameterNames.MainChannel + Model1DParameterNames.SubSectionHydraulicRadius},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterLevelGradient,                  Model1DParameterNames.BranchWaterLevelGradient},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterVelocity,                       Model1DParameterNames.BranchVelocity},
             }),
 
             new LookupTable(WaterFlowModel1DOutputFileConstants.FileNames.RetentionsFile, new Dictionary<string, string>()
             {
                 // {[variable name in file],                                                            [existing coverage tag]}
-                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterLevel,                          WaterFlowModelParameterNames.RetentionWaterLevel},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterVolume,                         WaterFlowModelParameterNames.RetentionVolume},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterLevel,                          Model1DParameterNames.RetentionWaterLevel},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterVolume,                         Model1DParameterNames.RetentionVolume},
             }),
             
             new LookupTable(WaterFlowModel1DOutputFileConstants.FileNames.StructuresFile, new Dictionary<string, string>()
             {
              // {[variable name in file],                                                               [existing coverage tag]}
-                {WaterFlowModel1DOutputFileConstants.VariableNames.PressureDifference,                  WaterFlowModelParameterNames.StructurePressureDifference},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.StructureCrestLevel,                 WaterFlowModelParameterNames.StructureCrestLevel},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.StructureCrestWidth,                 WaterFlowModelParameterNames.StructureCrestWidth},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.StructureGateLowerEdgeLevel,         WaterFlowModelParameterNames.StructureGateLevel},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.StructureGateOpeningHeight,          WaterFlowModelParameterNames.StructureOpeningHeight},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.StructureSetPoint,                   WaterFlowModelParameterNames.StructureSetPoint},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.StructureValveOpening,               WaterFlowModelParameterNames.StructureValveOpening},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.StructureWaterHead,                  WaterFlowModelParameterNames.StructureHeadDifference},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.StructureWaterLevelAtCrest,          WaterFlowModelParameterNames.StructureWaterLevelAtCrest},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.StructureWaterLevelDown,             WaterFlowModelParameterNames.StructureWaterlevelDown},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.StructureWaterLevelUp,               WaterFlowModelParameterNames.StructureWaterlevelUp},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterDischarge,                      WaterFlowModelParameterNames.StructureDischarge},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterFlowArea,                       WaterFlowModelParameterNames.StructureFlowArea},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterVelocity,                       WaterFlowModelParameterNames.StructureVelocity},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.PressureDifference,                  Model1DParameterNames.StructurePressureDifference},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.StructureCrestLevel,                 Model1DParameterNames.StructureCrestLevel},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.StructureCrestWidth,                 Model1DParameterNames.StructureCrestWidth},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.StructureGateLowerEdgeLevel,         Model1DParameterNames.StructureGateLevel},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.StructureGateOpeningHeight,          Model1DParameterNames.StructureOpeningHeight},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.StructureSetPoint,                   Model1DParameterNames.StructureSetPoint},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.StructureValveOpening,               Model1DParameterNames.StructureValveOpening},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.StructureWaterHead,                  Model1DParameterNames.StructureHeadDifference},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.StructureWaterLevelAtCrest,          Model1DParameterNames.StructureWaterLevelAtCrest},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.StructureWaterLevelDown,             Model1DParameterNames.StructureWaterlevelDown},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.StructureWaterLevelUp,               Model1DParameterNames.StructureWaterlevelUp},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterDischarge,                      Model1DParameterNames.StructureDischarge},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterFlowArea,                       Model1DParameterNames.StructureFlowArea},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterVelocity,                       Model1DParameterNames.StructureVelocity},
             }),
 
             new LookupTable(WaterFlowModel1DOutputFileConstants.FileNames.PumpsFile, new Dictionary<string, string>()
             {
              // {[variable name in file],                                                               [existing coverage tag]}
-                {WaterFlowModel1DOutputFileConstants.VariableNames.PumpSuctionSide,                     WaterFlowModelParameterNames.PumpSuctionSide},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.PumpDeliverySide,                    WaterFlowModelParameterNames.PumpDeliverySide},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.PumpHead,                            WaterFlowModelParameterNames.PumpHead},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.PumpStage,                           WaterFlowModelParameterNames.PumpStage},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.PumpReductionFactor,                 WaterFlowModelParameterNames.PumpReductionFactor},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.PumpCapacity,                        WaterFlowModelParameterNames.PumpCapacity},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.PumpDischarge,                       WaterFlowModelParameterNames.PumpDischarge}
+                {WaterFlowModel1DOutputFileConstants.VariableNames.PumpSuctionSide,                     Model1DParameterNames.PumpSuctionSide},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.PumpDeliverySide,                    Model1DParameterNames.PumpDeliverySide},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.PumpHead,                            Model1DParameterNames.PumpHead},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.PumpStage,                           Model1DParameterNames.PumpStage},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.PumpReductionFactor,                 Model1DParameterNames.PumpReductionFactor},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.PumpCapacity,                        Model1DParameterNames.PumpCapacity},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.PumpDischarge,                       Model1DParameterNames.PumpDischarge}
             }),
 
             new LookupTable(WaterFlowModel1DOutputFileConstants.FileNames.WaterBalanceFile, new Dictionary<string, string>()
             {
              // {[variable name in file],                                                               [existing coverage tag]}
-                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterBalance2D1DIn,                  WaterFlowModelParameterNames.SimulationInfoWaterBalanceLateral1D2DDischargeIn},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterBalance2D1DOut,                 WaterFlowModelParameterNames.SimulationInfoWaterBalanceLateral1D2DDischargeOut},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterBalance2D1DTotal,               WaterFlowModelParameterNames.SimulationInfoWaterBalanceLateral1D2DDischargeTotal},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterBalanceBoundariesIn,            WaterFlowModelParameterNames.SimulationInfoWaterBalanceBoundariesIn},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterBalanceBoundariesOut,           WaterFlowModelParameterNames.SimulationInfoWaterBalanceBoundariesOut},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterBalanceBoundariesTotal,         WaterFlowModelParameterNames.SimulationInfoWaterBalanceBoundariesTotal},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterBalanceError,                   WaterFlowModelParameterNames.SimulationInfoWaterBalanceVolumeError},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterBalanceLateralIn,               WaterFlowModelParameterNames.SimulationInfoWaterBalanceLateralDischargeIn},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterBalanceLateralOut,              WaterFlowModelParameterNames.SimulationInfoWaterBalanceLateralDischargeOut},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterBalanceLateralTotal,            WaterFlowModelParameterNames.SimulationInfoWaterBalanceLateralDischargeTotal},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterBalanceStorage,                 WaterFlowModelParameterNames.SimulationInfoWaterBalanceTotalStorage},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterBalanceVolume,                  WaterFlowModelParameterNames.SimulationInfoWaterBalanceTotalVolume},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterBalance2D1DIn,                  Model1DParameterNames.SimulationInfoWaterBalanceLateral1D2DDischargeIn},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterBalance2D1DOut,                 Model1DParameterNames.SimulationInfoWaterBalanceLateral1D2DDischargeOut},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterBalance2D1DTotal,               Model1DParameterNames.SimulationInfoWaterBalanceLateral1D2DDischargeTotal},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterBalanceBoundariesIn,            Model1DParameterNames.SimulationInfoWaterBalanceBoundariesIn},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterBalanceBoundariesOut,           Model1DParameterNames.SimulationInfoWaterBalanceBoundariesOut},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterBalanceBoundariesTotal,         Model1DParameterNames.SimulationInfoWaterBalanceBoundariesTotal},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterBalanceError,                   Model1DParameterNames.SimulationInfoWaterBalanceVolumeError},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterBalanceLateralIn,               Model1DParameterNames.SimulationInfoWaterBalanceLateralDischargeIn},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterBalanceLateralOut,              Model1DParameterNames.SimulationInfoWaterBalanceLateralDischargeOut},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterBalanceLateralTotal,            Model1DParameterNames.SimulationInfoWaterBalanceLateralDischargeTotal},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterBalanceStorage,                 Model1DParameterNames.SimulationInfoWaterBalanceTotalStorage},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterBalanceVolume,                  Model1DParameterNames.SimulationInfoWaterBalanceTotalVolume},
             }),
         };
     }

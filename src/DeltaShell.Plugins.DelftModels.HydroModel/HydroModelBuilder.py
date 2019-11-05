@@ -241,6 +241,18 @@ class HydroModelBuilder(object):
             w.Activities.AddRange((ActivityWrapper(dflowfm), ActivityWrapper(flow)))
             model.Workflows.Add(w)
 
+        if rr and dflowfm and rtc:
+            w = SequentialActivity(Name="RR + (RTC + FlowFM)")
+            w1 = ParallelActivity(Name="Parallel")
+            w1.Activities.AddRange((ActivityWrapper(rtc), ActivityWrapper(dflowfm)))
+            w.Activities.AddRange((ActivityWrapper(rr), w1))
+            model.Workflows.Add(w)
+
+        if rr and dflowfm:
+            w = SequentialActivity(Name="(RR) + (FlowFM)")
+            w.Activities.AddRange((ActivityWrapper(rr), ActivityWrapper(dflowfm)))
+            model.Workflows.Add(w)
+
         if dflowfm and flow and rtc:            
             w = Iterative1D2DCoupler(Name="(FlowFM + Flow1D)")
             w.Flow1DModel = flow
@@ -303,11 +315,21 @@ class HydroModelBuilder(object):
         if flow1DPlugin.loaded:
             flow = self.get_first_by_type(model.Activities, WaterFlowModel1D)
 
+        fm = None
+        if fmPlugin.loaded:
+            fm = self.get_first_by_type(model.Activities, WaterFlowFMModel)
+
         # remove rr -> flow
         # remove flow -> rr
         if ((activityBeingRemoved == rr and flow) or (activityBeingRemoved == flow and rr)):
             self.links_from_rr_to_flow(model, rr, flow, remove=True)
             self.links_from_flow_to_rr(model, flow, rr, remove=True)
+        
+        # remove rr -> fm
+        # remove fm -> rr
+        if ((activityBeingRemoved == rr and fm) or (activityBeingRemoved == fm and rr)):
+            self.links_from_rr_to_flowfm(model, rr, fm, remove=True)
+            self.links_from_fm_to_rr(model, fm, rr, remove=True)
         
     # Note: we no longer want to remove the area from a region when fm model is removed from hydro model
     # I've left this function stub here as we may want to use it for other things in future - RP    
@@ -324,6 +346,10 @@ class HydroModelBuilder(object):
         if flow1DPlugin.loaded:
             flow = self.get_first_by_type(model.Activities, WaterFlowModel1D)
 
+        fm = None
+        if fmPlugin.loaded:
+            fm = self.get_first_by_type(model.Activities, WaterFlowFMModel)
+
         # not rtc
 
         # remove rr -> flow
@@ -331,6 +357,12 @@ class HydroModelBuilder(object):
         if (rr and flow):
             self.links_from_rr_to_flow(model, rr, flow, remove=True)
             self.links_from_flow_to_rr(model, flow, rr, remove=True)
+
+        # remove rr -> fm
+        # remove fm -> rr
+        if (rr and fm):
+            self.links_from_rr_to_flowfm(model, rr, fm, remove=True)
+            self.links_from_fm_to_rr(model, fm, rr, remove=True)
 
         # rebuild
         for activity in model.Activities:
@@ -383,6 +415,56 @@ class HydroModelBuilder(object):
 
                 rrWaterLevel.Children.Add(convertedWaterLevelDataItem)
 
+    def links_from_rr_to_flowfm(self, model, rr, fm, remove=False):
+        # fm <- rr
+        #                
+        # Ql(laterals/nodes, t) 
+        #     Ql(c, t)  ----------------> Ql(c, t) 
+        #      + value converter
+        #         
+        rrOutflow  = rr.GetDataItemByValue(rr.BoundaryDischarge)
+        fmInflow = fm.GetDataItemByValue(fm.Inflows)
+
+        if remove:
+            if fmInflow.Children.Count > 0:
+                convertedDischargeDataItem = fmInflow.Children[0]
+                convertedDischargeDataItem.Unlink()
+                fmInflow.Children.Remove(convertedDischargeDataItem)
+        else:
+            if fmInflow.Children.Count == 0:
+                # model is integrated mode, fm has 2 regions. find network ralph
+                dischargeValueConverter = HydroLinksFeatureCoverageValueConverter(HydroRegion = model.Region, OriginalValue = fmInflow.Value)
+
+                convertedDischargeDataItem = DataItem(ValueType = IFeatureCoverage, ShouldBeRemovedAfterUnlink = True, ValueConverter = dischargeValueConverter, Name="discharge (from rr 0d)")
+                convertedDischargeDataItem.LinkTo(rrOutflow)
+
+                fmInflow.Children.Add(convertedDischargeDataItem)
+
+    def links_from_fm_to_rr(self, model, fm, rr, remove=False):
+        # fm -> rr
+        #
+        #                           DI_H(c, t)
+        # DI_H(nl, t) <---------------  DI_H(nl, t)
+        #                                 + value converter
+        fmWaterLevel = fm.GetDataItemByValue(fm.OutputWaterLevel1D)
+        rrWaterLevel = rr.GetDataItemByValue(rr.InputWaterLevel)
+
+        if remove:
+            if rrWaterLevel.Children.Count > 0:
+                convertedWaterLevelDataItem = rrWaterLevel.Children[0]
+                convertedWaterLevelDataItem.Unlink()
+                rrWaterLevel.Children.Remove(convertedWaterLevelDataItem)
+        else:
+            if rrWaterLevel.Children.Count == 0:
+                # hier hetzelfde sukkel, region is !
+                waterLevelValueConverter = HydroRegionFeatureCoverageFromNetworkCoverageValueConverter(HydroRegion = model.Region, OriginalValue = rrWaterLevel.Value)
+
+                convertedWaterLevelDataItem = DataItem(ValueType = INetworkCoverage, ShouldBeRemovedAfterUnlink = True, ValueConverter = waterLevelValueConverter, Name="water depth (from fm 1d)")
+                convertedWaterLevelDataItem.LinkTo(fmWaterLevel)
+
+                rrWaterLevel.Children.Add(convertedWaterLevelDataItem)
+    
+                
     def links_from_flow1d_to_flowfm(self, flow, fm, remove=False):
         print "linking overland flow stuff"
 
@@ -397,9 +479,9 @@ class HydroModelBuilder(object):
 
     def auto_add_required_model_links(self, model, child, updateRegions=True, relinking=False):
         # query first region
-        network = self.get_first_by_type(model.Region.SubRegions, HydroNetwork)
+        network = self.get_first_by_type(model.Region.AllRegions, HydroNetwork)
         basin = self.get_first_by_type(model.Region.SubRegions, DrainageBasin)
-        area = self.get_first_by_type(model.Region.SubRegions, HydroArea)
+        area = self.get_first_by_type(model.Region.AllRegions, HydroArea)
         
         # query first model
         rr = None
@@ -436,6 +518,8 @@ class HydroModelBuilder(object):
             if fm and fm == child and not area:
                 area = HydroArea(Name="Area")
                 model.Region.SubRegions.Add(area)
+                network = HydroNetwork(Name="Network")
+                model.Region.SubRegions.Add(network)
 
             # rr basin
             if rr and rr == child: # this is the only rr 0d model
@@ -448,6 +532,7 @@ class HydroModelBuilder(object):
             # fm area
             if fm and fm == child:
                 fm.GetDataItemByValue(fm.Area).LinkTo(model.GetDataItemByValue(area), relinking)
+                fm.GetDataItemByValue(fm.Network).LinkTo(model.GetDataItemByValue(network), relinking)
 
         # rr or flow
         if flow and rr and (rr == child or flow == child): # rr or flow is added and flow or rr exists
@@ -455,6 +540,13 @@ class HydroModelBuilder(object):
 
             if (rr in CompositeActivityExtensions.GetActivitiesRunningSimultaneous(model, flow)):
                 self.links_from_flow_to_rr(model, flow, rr)
+
+        # rr or fm
+        if fm and rr and (rr == child or fm == child): # rr or fm is added and fm or rr exists
+            self.links_from_rr_to_flowfm(model, rr, fm)
+
+            if (rr in CompositeActivityExtensions.GetActivitiesRunningSimultaneous(model, fm)):
+                self.links_from_fm_to_rr(model, fm, rr)
 
         # wave added and fm already or v.v.
         if wave and fm and (wave == child or fm == child):

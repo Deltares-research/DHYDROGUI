@@ -164,8 +164,6 @@
   <ItemGroup>
     <Compile Include="DispersionFormulationType.cs" />
     <Compile Include="Commands\InitialConditionsCommand.cs" />
-    <Compile Include="EngineParameter.cs" />
-    <Compile Include="EngineParameters.cs" />
     <Compile Include="FiniteVolumeDiscretizationProvider.cs" />
     <Compile Include="FiniteVolumeDiscretizationType.cs" />
     <Compile Include="Flow1DBasicModelInterface.cs" />
@@ -236,7 +234,6 @@
     <Compile Include="ImportExport\WaterFlowModel1DNetCdfFunctionStore.cs" />
     <Compile Include="WaterFlowModel1DOutputSettingData.cs" />
     <Compile Include="WaterFlowModel1DHelper.cs" />
-    <Compile Include="WaterFlowModelBranchFeatureValueConverter.cs" />
     <Compile Include="WaterFlowModel1D.cs" />
     <Compile Include="WaterFlowModel1DApplicationPlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -340,12 +337,6 @@
     </EmbeddedResource>
     <None Include="Resources\Observation.png" />
     <EmbeddedResource Include="WaterFlowModel1DOutputSettingData.hbm.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="WaterFlowModelBranchFeatureValueConverter.hbm.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="EngineParameter.hbm.xml">
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="Resources\Boundary.png" />

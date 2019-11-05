@@ -3,7 +3,7 @@ using System.Linq;
 using DelftTools.Hydro.Helpers;
 using DelftTools.TestUtils;
 using DeltaShell.NGHS.IO.DataObjects;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi;
+using DeltaShell.NGHS.IO.DataObjects.Model1D;
 using NUnit.Framework;
 using Point = NetTopologySuite.Geometries.Point;
 

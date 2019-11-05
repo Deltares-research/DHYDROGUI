@@ -3,6 +3,8 @@ using System.ComponentModel;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils;
+using DeltaShell.NGHS.IO.DataObjects;
+using DeltaShell.NGHS.IO.DataObjects.Model1D;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Properties;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi;
 using log4net;
@@ -60,7 +62,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
         [PropertyOrder(10)]
         [Category(LocationsCategoryName)]
         [Description("Water level at the computational gridpoints")]
-        [DisplayName(WaterFlowModelParameterNames.LocationWaterLevel)]
+        [DisplayName(Model1DParameterNames.LocationWaterLevel)]
         [DefaultValue(typeof(AggregationOptions), "Current")]
         public AggregationOptions LocationWaterLevel
         {
@@ -71,7 +73,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
         [PropertyOrder(11)]
         [Category(LocationsCategoryName)]
         [Description("Water depth at the computational gridpoints")]
-        [DisplayName(WaterFlowModelParameterNames.LocationWaterDepth)]
+        [DisplayName(Model1DParameterNames.LocationWaterDepth)]
         [DefaultValue(typeof(AggregationOptions), "Current")]
         public AggregationOptions LocationWaterDepth
         {
@@ -82,7 +84,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
         [Category(LocationsCategoryName)]
         [Description("Volume at the computational gridpoints")]
         [PropertyOrder(13)]
-        [DisplayName(WaterFlowModelParameterNames.LocationVolume)]
+        [DisplayName(Model1DParameterNames.LocationVolume)]
         [DefaultValue(typeof(AggregationOptions), "None")]
         public AggregationOptions LocationVolume
         {
@@ -93,7 +95,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
         [Category(LocationsCategoryName)]
         [Description("Total area at the computational gridpoints")]
         [PropertyOrder(14)]
-        [DisplayName(WaterFlowModelParameterNames.LocationTotalArea)]
+        [DisplayName(Model1DParameterNames.LocationTotalArea)]
         [DefaultValue(typeof(AggregationOptions), "None")]
         public AggregationOptions LocationTotalArea
         {
@@ -104,7 +106,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
         [Category(LocationsCategoryName)]
         [Description("Total width at the computational gridpoints")]
         [PropertyOrder(15)]
-        [DisplayName(WaterFlowModelParameterNames.LocationTotalWidth)]
+        [DisplayName(Model1DParameterNames.LocationTotalWidth)]
         [DefaultValue(typeof(AggregationOptions), "None")]
         public AggregationOptions LocationTotalwidth
         {
@@ -115,7 +117,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
         [Category(LocationsCategoryName)]
         [Description("Salt concentration at the computational gridpoints; salt must be enabled.")]
         [PropertyOrder(16)]
-        [DisplayName(WaterFlowModelParameterNames.LocationSaltConcentration)]
+        [DisplayName(Model1DParameterNames.LocationSaltConcentration)]
         [DefaultValue(typeof(AggregationOptions), "None")]
         public AggregationOptions SaltConcentration
         {
@@ -126,7 +128,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
         [Category(LocationsCategoryName)]
         [Description("Density (water & salt) at the computational gridpoints.")]
         [PropertyOrder(18)]
-        [DisplayName(WaterFlowModelParameterNames.LocationDensity)]
+        [DisplayName(Model1DParameterNames.LocationDensity)]
         [DefaultValue(typeof(AggregationOptions), "None")]
         public AggregationOptions Density
         {
@@ -136,7 +138,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
 
         [Category(LocationsCategoryName)]
         [Description("Lateral at nodes")]
-        [DisplayName(WaterFlowModelParameterNames.LocationLateralAtNodes)]
+        [DisplayName(Model1DParameterNames.LocationLateralAtNodes)]
         [PropertyOrder(19)]
         [DefaultValue(typeof(AggregationOptions), "None")]
         public AggregationOptions BranchLateralAtNodes
@@ -149,7 +151,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
         [Category(LocationsCategoryName)]
         [Description("Lateral discharge from 2d area to the computational gridpoints in 1d.")]
         [PropertyOrder(20)]
-        [DisplayName(WaterFlowModelParameterNames.LocationQTotal_1d2d)]
+        [DisplayName(Model1DParameterNames.LocationQTotal_1d2d)]
         [DefaultValue(typeof(AggregationOptions), "None")]
         public AggregationOptions Lateral1D2D
         {
@@ -159,7 +161,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
 
         [Category(LocationsCategoryName)]
         [Description("Temperature computation grid points")]
-        [DisplayName(WaterFlowModelParameterNames.LocationTemperature)]
+        [DisplayName(Model1DParameterNames.LocationTemperature)]
         [PropertyOrder(21)]
         [DefaultValue(typeof(AggregationOptions), "None")]
         public AggregationOptions BranchTemperature
@@ -169,8 +171,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
         }
 
         [Category(LocationsCategoryName)]
-        [Description(WaterFlowModelParameterNames.LocationTotalHeatFlux)]
-        [DisplayName(WaterFlowModelParameterNames.LocationTotalHeatFlux)]
+        [Description(Model1DParameterNames.LocationTotalHeatFlux)]
+        [DisplayName(Model1DParameterNames.LocationTotalHeatFlux)]
         [PropertyOrder(22)]
         [DefaultValue(typeof(AggregationOptions), "None")]
         public AggregationOptions BranchLocationTotalHeatFlux
@@ -180,8 +182,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
         }
 
         [Category(LocationsCategoryName)]
-        [Description(WaterFlowModelParameterNames.LocationRadFluxClearSky)]
-        [DisplayName(WaterFlowModelParameterNames.LocationRadFluxClearSky)]
+        [Description(Model1DParameterNames.LocationRadFluxClearSky)]
+        [DisplayName(Model1DParameterNames.LocationRadFluxClearSky)]
         [PropertyOrder(23)]
         [DefaultValue(typeof(AggregationOptions), "None")]
         public AggregationOptions LocationRadFluxClearSky
@@ -191,8 +193,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
         }
 
         [Category(LocationsCategoryName)]
-        [Description(WaterFlowModelParameterNames.LocationHeatLossConv)]
-        [DisplayName(WaterFlowModelParameterNames.LocationHeatLossConv)]
+        [Description(Model1DParameterNames.LocationHeatLossConv)]
+        [DisplayName(Model1DParameterNames.LocationHeatLossConv)]
         [PropertyOrder(24)]
         [DefaultValue(typeof(AggregationOptions), "None")]
         public AggregationOptions LocationHeatLossConv
@@ -202,8 +204,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
         }
 
         [Category(LocationsCategoryName)]
-        [Description(WaterFlowModelParameterNames.LocationNetSolarRad)]
-        [DisplayName(WaterFlowModelParameterNames.LocationNetSolarRad)]
+        [Description(Model1DParameterNames.LocationNetSolarRad)]
+        [DisplayName(Model1DParameterNames.LocationNetSolarRad)]
         [PropertyOrder(25)]
         [DefaultValue(typeof(AggregationOptions), "None")]
         public AggregationOptions LocationNetSolarRad
@@ -213,8 +215,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
         }
 
         [Category(LocationsCategoryName)]
-        [Description(WaterFlowModelParameterNames.LocationEffectiveBackRad)]
-        [DisplayName(WaterFlowModelParameterNames.LocationEffectiveBackRad)]
+        [Description(Model1DParameterNames.LocationEffectiveBackRad)]
+        [DisplayName(Model1DParameterNames.LocationEffectiveBackRad)]
         [PropertyOrder(26)]
         [DefaultValue(typeof(AggregationOptions), "None")]
         public AggregationOptions LocationEffectiveBackRad
@@ -224,8 +226,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
         }
 
         [Category(LocationsCategoryName)]
-        [Description(WaterFlowModelParameterNames.LocationHeatLossEvap)]
-        [DisplayName(WaterFlowModelParameterNames.LocationHeatLossEvap)]
+        [Description(Model1DParameterNames.LocationHeatLossEvap)]
+        [DisplayName(Model1DParameterNames.LocationHeatLossEvap)]
         [PropertyOrder(27)]
         [DefaultValue(typeof(AggregationOptions), "None")]
         public AggregationOptions LocationHeatLossEvap
@@ -235,8 +237,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
         }
 
         [Category(LocationsCategoryName)]
-        [Description(WaterFlowModelParameterNames.LocationHeatLossForcedEvap)]
-        [DisplayName(WaterFlowModelParameterNames.LocationHeatLossForcedEvap)]
+        [Description(Model1DParameterNames.LocationHeatLossForcedEvap)]
+        [DisplayName(Model1DParameterNames.LocationHeatLossForcedEvap)]
         [PropertyOrder(28)]
         [DefaultValue(typeof(AggregationOptions), "None")]
         public AggregationOptions LocationHeatLossForcedEvap
@@ -246,8 +248,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
         }
 
         [Category(LocationsCategoryName)]
-        [Description(WaterFlowModelParameterNames.LocationHeatLossFreeEvap)]
-        [DisplayName(WaterFlowModelParameterNames.LocationHeatLossFreeEvap)]
+        [Description(Model1DParameterNames.LocationHeatLossFreeEvap)]
+        [DisplayName(Model1DParameterNames.LocationHeatLossFreeEvap)]
         [PropertyOrder(29)]
         [DefaultValue(typeof(AggregationOptions), "None")]
         public AggregationOptions LocationHeatLossFreeEvap
@@ -257,8 +259,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
         }
 
         [Category(LocationsCategoryName)]
-        [Description(WaterFlowModelParameterNames.LocationHeatLossForcedConv)]
-        [DisplayName(WaterFlowModelParameterNames.LocationHeatLossForcedConv)]
+        [Description(Model1DParameterNames.LocationHeatLossForcedConv)]
+        [DisplayName(Model1DParameterNames.LocationHeatLossForcedConv)]
         [PropertyOrder(30)]
         [DefaultValue(typeof(AggregationOptions), "None")]
         public AggregationOptions LocationHeatLossForcedConv
@@ -268,8 +270,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
         }
 
         [Category(LocationsCategoryName)]
-        [Description(WaterFlowModelParameterNames.LocationHeatLossFreeConv)]
-        [DisplayName(WaterFlowModelParameterNames.LocationHeatLossFreeConv)]
+        [Description(Model1DParameterNames.LocationHeatLossFreeConv)]
+        [DisplayName(Model1DParameterNames.LocationHeatLossFreeConv)]
         [PropertyOrder(31)]
         [DefaultValue(typeof(AggregationOptions), "None")]
         public AggregationOptions LocationHeatLossFreeConv
@@ -285,7 +287,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
         [Category(BranchCategoryName)]
         [Description("Discharge at reach segments")]
         [PropertyOrder(21)]
-        [DisplayName(WaterFlowModelParameterNames.BranchDischarge)]
+        [DisplayName(Model1DParameterNames.BranchDischarge)]
         [DefaultValue(typeof(AggregationOptions), "Current")]
         public AggregationOptions BranchDischarge
         {
@@ -296,7 +298,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
         [Category(BranchCategoryName)]
         [Description("Velocity at reach segments")]
         [PropertyOrder(22)]
-        [DisplayName(WaterFlowModelParameterNames.BranchVelocity)]
+        [DisplayName(Model1DParameterNames.BranchVelocity)]
         [DefaultValue(typeof(AggregationOptions), "Current")]
         public AggregationOptions BranchVelocity
         {
@@ -307,7 +309,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
         [Category(BranchCategoryName)]
         [Description("Flow area at reach segments")]
         [PropertyOrder(23)]
-        [DisplayName(WaterFlowModelParameterNames.BranchFlowArea)]
+        [DisplayName(Model1DParameterNames.BranchFlowArea)]
         [DefaultValue(typeof(AggregationOptions), "Current")]
         public AggregationOptions BranchFlowArea
         {
@@ -318,7 +320,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
         [Category(BranchCategoryName)]
         [Description("Hydraulic radius at reach segments")]
         [PropertyOrder(24)]
-        [DisplayName(WaterFlowModelParameterNames.BranchHydraulicRadius)]
+        [DisplayName(Model1DParameterNames.BranchHydraulicRadius)]
         [DefaultValue(typeof(AggregationOptions), "None")]
         public AggregationOptions BranchFlowHydrad
         {
@@ -329,7 +331,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
         [Category(BranchCategoryName)]
         [Description("Salt dispersion at the computational gridpoints; salt must be enabled.")]
         [PropertyOrder(25)]
-        [DisplayName(WaterFlowModelParameterNames.BranchSaltDispersion)]
+        [DisplayName(Model1DParameterNames.BranchSaltDispersion)]
         [DefaultValue(typeof(AggregationOptions), "None")]
         public AggregationOptions SaltDispersion
         {
@@ -351,7 +353,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
         [Category(BranchCategoryName)]
         [Description("Conveyance at reach segments")]
         [PropertyOrder(25)]
-        [DisplayName(WaterFlowModelParameterNames.BranchConveyance)]
+        [DisplayName(Model1DParameterNames.BranchConveyance)]
         [DefaultValue(typeof(AggregationOptions), "None")]
         public AggregationOptions FlowConv
         {
@@ -361,7 +363,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
 
         [Category(BranchCategoryName)]
         [Description("Roughness as Chezy at reach segments")]
-        [DisplayName(WaterFlowModelParameterNames.BranchRoughness)]
+        [DisplayName(Model1DParameterNames.BranchRoughness)]
         [PropertyOrder(26)]
         [DefaultValue(typeof(AggregationOptions), "None")]
         public AggregationOptions BranchRoughness
@@ -373,7 +375,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
         [PropertyOrder(27)]
         [Category(BranchCategoryName)]
         [Description("Water level gradient at reach segments")]
-        [DisplayName(WaterFlowModelParameterNames.BranchWaterLevelGradient)]
+        [DisplayName(Model1DParameterNames.BranchWaterLevelGradient)]
         [DefaultValue(typeof(AggregationOptions), "None")]
         public AggregationOptions BranchWaterLevelGradient
         {
@@ -383,7 +385,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
 
         [Category(BranchCategoryName)]
         [Description("Froude number at reach segments")]
-        [DisplayName(WaterFlowModelParameterNames.BranchFroudeNumber)]
+        [DisplayName(Model1DParameterNames.BranchFroudeNumber)]
         [PropertyOrder(28)]
         [DefaultValue(typeof(AggregationOptions), "None")]
         public AggregationOptions BranchFroudeNumber
@@ -394,7 +396,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
 
         [Category(BranchCategoryName)]
         [Description("Results for Discharge, Flow area, Hydraulic radius and Chezy at Main channel, Floodplain1 and Floodplain2")]
-        [DisplayName(WaterFlowModelParameterNames.BranchSubsectionParameters)]
+        [DisplayName(Model1DParameterNames.BranchSubsectionParameters)]
         [PropertyOrder(29)]
         [DefaultValue(typeof(AggregationOptions), "None")]
         public AggregationOptions BranchSubsectionsNumber
@@ -410,7 +412,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
 
         [Category(StructureCategoryName)]
         [Description("Discharge at Structures")]
-        [DisplayName(WaterFlowModelParameterNames.StructureDischarge)]
+        [DisplayName(Model1DParameterNames.StructureDischarge)]
         [PropertyOrder(41)]
         [DefaultValue(typeof(AggregationOptions), "None")]
         public AggregationOptions StructureDischarge
@@ -421,7 +423,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
 
         [Category(StructureCategoryName)]
         [Description("Velocity at Structures")]
-        [DisplayName(WaterFlowModelParameterNames.StructureVelocity)]
+        [DisplayName(Model1DParameterNames.StructureVelocity)]
         [PropertyOrder(42)]
         [DefaultValue(typeof(AggregationOptions), "None")]
         public AggregationOptions StructureVelocity
@@ -432,7 +434,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
 
         [Category(StructureCategoryName)]
         [Description("Flow area at Structures")]
-        [DisplayName(WaterFlowModelParameterNames.StructureFlowArea)]
+        [DisplayName(Model1DParameterNames.StructureFlowArea)]
         [PropertyOrder(43)]
         [DefaultValue(typeof(AggregationOptions), "None")]
         public AggregationOptions StructureFlowArea
@@ -443,7 +445,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
 
         [Category(StructureCategoryName)]
         [Description("Crest level at Structures")]
-        [DisplayName(WaterFlowModelParameterNames.StructureCrestLevel)]
+        [DisplayName(Model1DParameterNames.StructureCrestLevel)]
         [PropertyOrder(44)]
         [DefaultValue(typeof(AggregationOptions), "None")]
         public AggregationOptions StructureCrestLevel
@@ -454,7 +456,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
 
         [Category(StructureCategoryName)]
         [Description("Crest width at Structures")]
-        [DisplayName(WaterFlowModelParameterNames.StructureCrestWidth)]
+        [DisplayName(Model1DParameterNames.StructureCrestWidth)]
         [PropertyOrder(45)]
         [DefaultValue(typeof(AggregationOptions), "None")]
         public AggregationOptions StructureCrestWidth
@@ -465,7 +467,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
 
         [Category(StructureCategoryName)]
         [Description("Gate level at Structures")]
-        [DisplayName(WaterFlowModelParameterNames.StructureGateLevel)]
+        [DisplayName(Model1DParameterNames.StructureGateLevel)]
         [PropertyOrder(46)]
         [DefaultValue(typeof(AggregationOptions), "None")]
         public AggregationOptions StructureGateLevel
@@ -476,7 +478,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
 
         [Category(StructureCategoryName)]
         [Description("Gate opening at Structures")]
-        [DisplayName(WaterFlowModelParameterNames.StructureOpeningHeight)]
+        [DisplayName(Model1DParameterNames.StructureOpeningHeight)]
         [PropertyOrder(47)]
         [DefaultValue(typeof(AggregationOptions), "None")]
         public AggregationOptions StructureOpeningHeight
@@ -487,7 +489,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
 
         [Category(StructureCategoryName)]
         [Description("Valve opening at Structures")]
-        [DisplayName(WaterFlowModelParameterNames.StructureValveOpening)]
+        [DisplayName(Model1DParameterNames.StructureValveOpening)]
         [PropertyOrder(48)]
         [DefaultValue(typeof(AggregationOptions), "None")]
         public AggregationOptions StructureValveOpening
@@ -498,7 +500,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
 
         [Category(StructureCategoryName)]
         [Description("Water level up at Structures")]
-        [DisplayName(WaterFlowModelParameterNames.StructureWaterlevelUp)]
+        [DisplayName(Model1DParameterNames.StructureWaterlevelUp)]
         [PropertyOrder(49)]
         [DefaultValue(typeof(AggregationOptions), "None")]
         public AggregationOptions StructureWaterLevelUp
@@ -509,7 +511,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
 
         [Category(StructureCategoryName)]
         [Description("Water level down at Structures")]
-        [DisplayName(WaterFlowModelParameterNames.StructureWaterlevelDown)]
+        [DisplayName(Model1DParameterNames.StructureWaterlevelDown)]
         [PropertyOrder(50)]
         [DefaultValue(typeof(AggregationOptions), "None")]
         public AggregationOptions StructureWaterLevelDown
@@ -520,7 +522,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
 
         [Category(StructureCategoryName)]
         [Description("Head difference at Structures")]
-        [DisplayName(WaterFlowModelParameterNames.StructureHeadDifference)]
+        [DisplayName(Model1DParameterNames.StructureHeadDifference)]
         [PropertyOrder(51)]
         [DefaultValue(typeof(AggregationOptions), "None")]
         public AggregationOptions StructureHeadDifference
@@ -531,7 +533,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
 
         [Category(StructureCategoryName)]
         [Description("Pressure difference at Structures")]
-        [DisplayName(WaterFlowModelParameterNames.StructurePressureDifference)]
+        [DisplayName(Model1DParameterNames.StructurePressureDifference)]
         [PropertyOrder(52)]
         [DefaultValue(typeof(AggregationOptions), "None")]
         public AggregationOptions StructurePressureDifference
@@ -542,7 +544,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
 
         [Category(StructureCategoryName)]
         [Description("Water level at crest at Structures")]
-        [DisplayName(WaterFlowModelParameterNames.StructureWaterLevelAtCrest)]
+        [DisplayName(Model1DParameterNames.StructureWaterLevelAtCrest)]
         [PropertyOrder(53)]
         [DefaultValue(typeof(AggregationOptions), "None")]
         public AggregationOptions StructureWaterLevelAtCrest
@@ -557,7 +559,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
 
         [Category(ObservationPointsCategoryName)]
         [Description("Water level at observation points")]
-        [DisplayName(WaterFlowModelParameterNames.ObservationPointWaterLevel)]
+        [DisplayName(Model1DParameterNames.ObservationPointWaterLevel)]
         [PropertyOrder(71)]
         [DefaultValue(typeof(AggregationOptions), "None")]
         public AggregationOptions ObservationPointWaterLevel
@@ -568,7 +570,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
 
         [Category(ObservationPointsCategoryName)]
         [Description("Water depth at observation points")]
-        [DisplayName(WaterFlowModelParameterNames.ObservationPointWaterDepth)]
+        [DisplayName(Model1DParameterNames.ObservationPointWaterDepth)]
         [PropertyOrder(72)]
         [DefaultValue(typeof(AggregationOptions), "None")]
         public AggregationOptions ObservationPointWaterDepth
@@ -579,7 +581,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
 
         [Category(ObservationPointsCategoryName)]
         [Description("Discharge at observation points")]
-        [DisplayName(WaterFlowModelParameterNames.ObservationPointDischarge)]
+        [DisplayName(Model1DParameterNames.ObservationPointDischarge)]
         [PropertyOrder(74)]
         [DefaultValue(typeof(AggregationOptions), "None")]
         public AggregationOptions ObservationPointDischarge
@@ -590,7 +592,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
 
         [Category(ObservationPointsCategoryName)]
         [Description("Velocity at observation points")]
-        [DisplayName(WaterFlowModelParameterNames.ObservationPointVelocity)]
+        [DisplayName(Model1DParameterNames.ObservationPointVelocity)]
         [PropertyOrder(75)]
         [DefaultValue(typeof(AggregationOptions), "None")]
         public AggregationOptions ObservationPointVelocity
@@ -601,7 +603,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
 
         [Category(ObservationPointsCategoryName)]
         [Description("Salinity at observation points")]
-        [DisplayName(WaterFlowModelParameterNames.ObservationPointSaltConcentration)]
+        [DisplayName(Model1DParameterNames.ObservationPointSaltConcentration)]
         [PropertyOrder(76)]
         [DefaultValue(typeof(AggregationOptions), "None")]
         public AggregationOptions ObservationPointSaltConcentration
@@ -612,7 +614,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
 
         [Category(ObservationPointsCategoryName)]
         [Description("Salt dispersion at observation points; salt must be enabled.")]
-        [DisplayName(WaterFlowModelParameterNames.ObservationPointSaltDispersion)]
+        [DisplayName(Model1DParameterNames.ObservationPointSaltDispersion)]
         [PropertyOrder(77)]
         [DefaultValue(typeof(AggregationOptions), "None")]
         public AggregationOptions ObservationPointSaltDispersion
@@ -623,7 +625,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
 
         [Category(ObservationPointsCategoryName)]
         [Description("Water volume at observation points")]
-        [DisplayName(WaterFlowModelParameterNames.ObservationPointVolume)]
+        [DisplayName(Model1DParameterNames.ObservationPointVolume)]
         [PropertyOrder(78)]
         [DefaultValue(typeof(AggregationOptions), "None")]
         public AggregationOptions ObservationPointVolume
@@ -634,7 +636,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
 
         [Category(ObservationPointsCategoryName)]
         [Description("Temperature at observation points")]
-        [DisplayName(WaterFlowModelParameterNames.ObservationPointTemperature)]
+        [DisplayName(Model1DParameterNames.ObservationPointTemperature)]
         [PropertyOrder(79)]
         [DefaultValue(typeof(AggregationOptions), "None")]
         public AggregationOptions ObservationPointTemperature
@@ -649,7 +651,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
         
         [Category(PumpsCategoryName)]
         [Description("Pump Suction Side")]
-        [DisplayName(WaterFlowModelParameterNames.PumpSuctionSide)]
+        [DisplayName(Model1DParameterNames.PumpSuctionSide)]
         [PropertyOrder(55)]
         [DefaultValue(typeof(AggregationOptions), "None")]
         public AggregationOptions StructurePumpSuctionSide
@@ -660,7 +662,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
 
         [Category(PumpsCategoryName)]
         [Description("Pump Delivery Side")]
-        [DisplayName(WaterFlowModelParameterNames.PumpDeliverySide)]
+        [DisplayName(Model1DParameterNames.PumpDeliverySide)]
         [PropertyOrder(56)]
         [DefaultValue(typeof(AggregationOptions), "None")]
         public AggregationOptions StructurePumpDeliverySide
@@ -671,7 +673,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
 
         [Category(PumpsCategoryName)]
         [Description("Pump Head")]
-        [DisplayName(WaterFlowModelParameterNames.PumpHead)]
+        [DisplayName(Model1DParameterNames.PumpHead)]
         [PropertyOrder(57)]
         [DefaultValue(typeof(AggregationOptions), "None")]
         public AggregationOptions StructurePumpHead
@@ -682,7 +684,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
 
         [Category(PumpsCategoryName)]
         [Description("Pump Stage")]
-        [DisplayName(WaterFlowModelParameterNames.PumpStage)]
+        [DisplayName(Model1DParameterNames.PumpStage)]
         [PropertyOrder(58)]
         [DefaultValue(typeof(AggregationOptions), "None")]
         public AggregationOptions StructurePumpStage
@@ -693,7 +695,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
 
         [Category(PumpsCategoryName)]
         [Description("Pump Capacity")]
-        [DisplayName(WaterFlowModelParameterNames.PumpCapacity)]
+        [DisplayName(Model1DParameterNames.PumpCapacity)]
         [PropertyOrder(59)]
         [DefaultValue(typeof(AggregationOptions), "None")]
         public AggregationOptions StructurePumpCapacity
@@ -704,7 +706,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
 
         [Category(PumpsCategoryName)]
         [Description("Pump Reduction Factor")]
-        [DisplayName(WaterFlowModelParameterNames.PumpReductionFactor)]
+        [DisplayName(Model1DParameterNames.PumpReductionFactor)]
         [PropertyOrder(60)]
         [DefaultValue(typeof(AggregationOptions), "None")]
         public AggregationOptions StructurePumpReductionFactor
@@ -715,7 +717,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
 
         [Category(PumpsCategoryName)]
         [Description("Pump Discharge")]
-        [DisplayName(WaterFlowModelParameterNames.PumpDischarge)]
+        [DisplayName(Model1DParameterNames.PumpDischarge)]
         [PropertyOrder(61)]
         [DefaultValue(typeof(AggregationOptions), "None")]
         public AggregationOptions StructurePumpDischarge
@@ -730,7 +732,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
 
         [Category(RetentionsCategoryName)]
         [Description("Water level at retention locations")]
-        [DisplayName(WaterFlowModelParameterNames.RetentionWaterLevel)]
+        [DisplayName(Model1DParameterNames.RetentionWaterLevel)]
         [PropertyOrder(79)]
         [DefaultValue(typeof(AggregationOptions), "None")]
         public AggregationOptions RetentionWaterLevel
@@ -741,7 +743,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
 
         [Category(RetentionsCategoryName)]
         [Description("Water volume at retention locations")]
-        [DisplayName(WaterFlowModelParameterNames.RetentionVolume)]
+        [DisplayName(Model1DParameterNames.RetentionVolume)]
         [PropertyOrder(80)]
         [DefaultValue(typeof(AggregationOptions), "None")]
         public AggregationOptions RetentionVolume
@@ -756,7 +758,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
         
         [Category(LateralSourcesCategoryName)]
         [Description("Actual lateral discharge.")]
-        [DisplayName(WaterFlowModelParameterNames.LateralActualDischarge)]
+        [DisplayName(Model1DParameterNames.LateralActualDischarge)]
         [PropertyOrder(81)]
         [DefaultValue(typeof(AggregationOptions), "None")]
         public AggregationOptions LateralActualDischarge
@@ -767,7 +769,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
 
         [Category(LateralSourcesCategoryName)]
         [Description("Defined lateral discharge.")]
-        [DisplayName(WaterFlowModelParameterNames.LateralDefinedDischarge)]
+        [DisplayName(Model1DParameterNames.LateralDefinedDischarge)]
         [PropertyOrder(82)]
         [DefaultValue(typeof(AggregationOptions), "None")]
         public AggregationOptions LateralDefinedDischarge
@@ -778,7 +780,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
 
         [Category(LateralSourcesCategoryName)]
         [Description("Lateral difference.")]
-        [DisplayName(WaterFlowModelParameterNames.LateralDifference)]
+        [DisplayName(Model1DParameterNames.LateralDifference)]
         [PropertyOrder(83)]
         [DefaultValue(typeof(AggregationOptions), "None")]
         public AggregationOptions LateralDifference
@@ -789,7 +791,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
 
         [Category(LateralSourcesCategoryName)]
         [Description("Water level at lateral source.")]
-        [DisplayName(WaterFlowModelParameterNames.LateralWaterLevel)]
+        [DisplayName(Model1DParameterNames.LateralWaterLevel)]
         [PropertyOrder(84)]
         [DefaultValue(typeof(AggregationOptions), "None")]
         public AggregationOptions LateralSourceWaterLevel
@@ -814,7 +816,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
 
         [Category(SimulationInfoCategoryName)]
         [Description("Simulation info negative depth")]
-        [DisplayName(WaterFlowModelParameterNames.SimulationInfoNegativeDepthDisplayName)]
+        [DisplayName(Model1DParameterNames.SimulationInfoNegativeDepthDisplayName)]
         [PropertyOrder(91)]
         [DefaultValue(typeof(AggregationOptions), "None")]
         public AggregationOptions SimulationInfoNegativeDepth
@@ -825,7 +827,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
 
         [Category(SimulationInfoCategoryName)]
         [Description("Number of iterations")]
-        [DisplayName(WaterFlowModelParameterNames.SimulationInfoNumberOfIterationsDisplayName)]
+        [DisplayName(Model1DParameterNames.SimulationInfoNumberOfIterationsDisplayName)]
         [PropertyOrder(92)]
         [DefaultValue(typeof(AggregationOptions), "None")]
         public AggregationOptions SimulationInfoNumberOfIterations
@@ -836,7 +838,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
 
         [Category(SimulationInfoCategoryName)]
         [Description("Time step estimation")]
-        [DisplayName(WaterFlowModelParameterNames.SimulationInfoTimeStepEstimationDisplayName)]
+        [DisplayName(Model1DParameterNames.SimulationInfoTimeStepEstimationDisplayName)]
         [PropertyOrder(93)]
         [DefaultValue(typeof(AggregationOptions), "None")] 
         public AggregationOptions SimulationInfoTimeStepEstimation
@@ -847,7 +849,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
 
         [Category(SimulationInfoCategoryName)]
         [Description("Waterbalance1D Total Volume")]
-        [DisplayName(WaterFlowModelParameterNames.SimulationInfoWaterBalanceTotalVolume)]
+        [DisplayName(Model1DParameterNames.SimulationInfoWaterBalanceTotalVolume)]
         [PropertyOrder(94)]
         [DefaultValue(typeof(AggregationOptions), "None")]
         public AggregationOptions SimulationInfoWaterSystemTotalVolume
@@ -858,7 +860,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
 
         [Category(SimulationInfoCategoryName)]
         [Description("Waterbalance1D Volume Error")]
-        [DisplayName(WaterFlowModelParameterNames.SimulationInfoWaterBalanceVolumeError)]
+        [DisplayName(Model1DParameterNames.SimulationInfoWaterBalanceVolumeError)]
         [PropertyOrder(95)]
         [DefaultValue(typeof(AggregationOptions), "None")]
         public AggregationOptions SimulationInfoWaterSystemVolumeError
@@ -869,7 +871,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
 
         [Category(SimulationInfoCategoryName)]
         [Description("Waterbalance1D Storage")]
-        [DisplayName(WaterFlowModelParameterNames.SimulationInfoWaterBalanceTotalStorage)]
+        [DisplayName(Model1DParameterNames.SimulationInfoWaterBalanceTotalStorage)]
         [PropertyOrder(96)]
         [DefaultValue(typeof(AggregationOptions), "None")]
         public AggregationOptions SimulationInfoWaterSystemTotalStorage
@@ -880,7 +882,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
 
         [Category(SimulationInfoCategoryName)]
         [Description("Waterbalance1D Boundaries In")]
-        [DisplayName(WaterFlowModelParameterNames.SimulationInfoWaterBalanceBoundariesIn)]
+        [DisplayName(Model1DParameterNames.SimulationInfoWaterBalanceBoundariesIn)]
         [PropertyOrder(97)]
         [DefaultValue(typeof(AggregationOptions), "None")]
         public AggregationOptions SimulationInfoWaterBalanceBoundariesIn
@@ -891,7 +893,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
 
         [Category(SimulationInfoCategoryName)]
         [Description("Waterbalance1D Boundaries Out")]
-        [DisplayName(WaterFlowModelParameterNames.SimulationInfoWaterBalanceBoundariesOut)]
+        [DisplayName(Model1DParameterNames.SimulationInfoWaterBalanceBoundariesOut)]
         [PropertyOrder(98)]
         [DefaultValue(typeof(AggregationOptions), "None")]
         public AggregationOptions SimulationInfoWaterBalanceBoundariesOut
@@ -902,7 +904,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
 
         [Category(SimulationInfoCategoryName)]
         [Description("Waterbalance1D Boundaries Total")]
-        [DisplayName(WaterFlowModelParameterNames.SimulationInfoWaterBalanceBoundariesTotal)]
+        [DisplayName(Model1DParameterNames.SimulationInfoWaterBalanceBoundariesTotal)]
         [PropertyOrder(99)]
         [DefaultValue(typeof(AggregationOptions), "None")]
         public AggregationOptions SimulationInfoWaterBalanceBoundariesTotal
@@ -913,7 +915,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
 
         [Category(SimulationInfoCategoryName)]
         [Description("Waterbalance1D Lateral Discharge In")]
-        [DisplayName(WaterFlowModelParameterNames.SimulationInfoWaterBalanceLateralDischargeIn)]
+        [DisplayName(Model1DParameterNames.SimulationInfoWaterBalanceLateralDischargeIn)]
         [PropertyOrder(100)]
         [DefaultValue(typeof(AggregationOptions), "None")]
         public AggregationOptions SimulationInfoWaterBalanceLateralDischargeIn
@@ -924,7 +926,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
 
         [Category(SimulationInfoCategoryName)]
         [Description("Waterbalance1D Lateral Discharge Out")]
-        [DisplayName(WaterFlowModelParameterNames.SimulationInfoWaterBalanceLateralDischargeOut)]
+        [DisplayName(Model1DParameterNames.SimulationInfoWaterBalanceLateralDischargeOut)]
         [PropertyOrder(101)]
         [DefaultValue(typeof(AggregationOptions), "None")]
         public AggregationOptions SimulationInfoWaterBalanceLateralDischargeOut
@@ -935,7 +937,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
 
         [Category(SimulationInfoCategoryName)]
         [Description("Waterbalance1D Lateral Discharge Total")]
-        [DisplayName(WaterFlowModelParameterNames.SimulationInfoWaterBalanceLateralDischargeTotal)]
+        [DisplayName(Model1DParameterNames.SimulationInfoWaterBalanceLateralDischargeTotal)]
         [PropertyOrder(102)]
         [DefaultValue(typeof(AggregationOptions), "None")]
         public AggregationOptions SimulationInfoWaterBalanceLateralDischargeTotal
@@ -946,7 +948,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
 
         [Category(SimulationInfoCategoryName)]
         [Description("Waterbalance1D Lateral 1D2D Discharge In")]
-        [DisplayName(WaterFlowModelParameterNames.SimulationInfoWaterBalanceLateral1D2DDischargeIn)]
+        [DisplayName(Model1DParameterNames.SimulationInfoWaterBalanceLateral1D2DDischargeIn)]
         [PropertyOrder(103)]
         [DefaultValue(typeof(AggregationOptions), "None")]
         public AggregationOptions SimulationInfoWaterBalanceLateral1D2DDischargeIn
@@ -957,7 +959,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
 
         [Category(SimulationInfoCategoryName)]
         [Description("Waterbalance1D Lateral 1D2D Discharge Out")]
-        [DisplayName(WaterFlowModelParameterNames.SimulationInfoWaterBalanceLateral1D2DDischargeOut)]
+        [DisplayName(Model1DParameterNames.SimulationInfoWaterBalanceLateral1D2DDischargeOut)]
         [PropertyOrder(104)]
         [DefaultValue(typeof(AggregationOptions), "None")]
         public AggregationOptions SimulationInfoWaterBalanceLateral1D2DDischargeOut
@@ -968,7 +970,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
 
         [Category(SimulationInfoCategoryName)]
         [Description("Waterbalance1D Lateral 1D2D Discharge Total")]
-        [DisplayName(WaterFlowModelParameterNames.SimulationInfoWaterBalanceLateral1D2DDischargeTotal)]
+        [DisplayName(Model1DParameterNames.SimulationInfoWaterBalanceLateral1D2DDischargeTotal)]
         [PropertyOrder(105)]
         [DefaultValue(typeof(AggregationOptions), "None")]
         public AggregationOptions SimulationInfoWaterBalanceLateral1D2DDischargeTotal
