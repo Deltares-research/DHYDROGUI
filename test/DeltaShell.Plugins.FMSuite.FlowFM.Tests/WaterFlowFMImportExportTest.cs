@@ -38,6 +38,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Category(TestCategory.DataAccess)]
         public void ImportModelWithSedimentSpatiallyVaryingOperations()
         {
+            if (Map.CoordinateSystemFactory == null)
+                Map.CoordinateSystemFactory = new OgrCoordinateSystemFactory();
             /* This test is relevant because when we are importing a model we do not load the state from the DB
               so it could happen the Spatially Varying operations are not loaded. */
             var mduPath = TestHelper.GetTestFilePath(@"spatially_varying_sediment_properties_in_model\FlowFM.mdu");

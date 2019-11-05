@@ -610,8 +610,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             var outputDirectory = FileUtils.CreateTempDirectory();
             var diaFileName = $"{model.Name}.dia";
-            var diaFilePath = Path.Combine(outputDirectory, diaFileName);
-
+            var diaFilePath = Path.Combine(outputDirectory, Path.GetDirectoryName(model.ModelDefinition.RelativeMapFilePath) ?? string.Empty,  diaFileName);
+            
             TestHelper.AssertAtLeastOneLogMessagesContains(() =>
                 TypeUtils.CallPrivateMethod(model, "ReadDiaFile", outputDirectory),
                 string.Format(Properties.Resources.WaterFlowFMModel_ReadDiaFile_Could_not_find_log_file___0__at_expected_path___1_, diaFileName, diaFilePath)

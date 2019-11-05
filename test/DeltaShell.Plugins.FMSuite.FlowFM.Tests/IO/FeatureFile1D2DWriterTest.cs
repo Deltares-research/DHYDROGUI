@@ -50,7 +50,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             Assert.IsTrue(File.Exists(nodeFilePath));
 
-            var nodeFileProperty = fmModel.ModelDefinition.GetModelProperty(KnownProperties.NodeFile);
+            var nodeFileProperty = fmModel.ModelDefinition.GetModelProperty(KnownProperties.StorageNodeFile);
             Assert.That(nodeFileProperty.GetValueAsString(), Is.EqualTo(NodeFileName));
         }
 

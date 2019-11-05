@@ -1,7 +1,7 @@
 [forcing]
 Name                            = L1_0001
 Function                        = timeseries
-Time-interpolation              = linear
+timeInterpolation               = linear
 Quantity                        = time
 Unit                            = seconds since 2008-01-09 00:00:00
 Quantity                        = dischargebnd

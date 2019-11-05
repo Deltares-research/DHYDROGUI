@@ -561,7 +561,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 mduFile.Write(savePath, originalMD, originalArea, allFixedWeirsAndCorrespondingProperties,switchTo: false);
 
-                var generatedResultsContent = File.ReadAllLines(@"FlowFMFixedWeirs\MduFileReadsAndWritesTest\TwoFixedWeirs_fxw2_fxw.pliz");
+                var generatedResultsContent = File.ReadAllLines(@"TestOutput\FlowFMFixedWeirs\MduFileReadsAndWritesTest\TwoFixedWeirs_fxw2_fxw.pliz");
 
                 var expectedResultsContent = 
                     new string[]{
@@ -634,7 +634,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                     mduFile.Write(savePath, originalMD, originalArea, allFixedWeirsAndCorrespondingProperties, switchTo: false);
 
-                    var generatedResultsContent = File.ReadAllLines(@"FlowFMFixedWeirs\MduFileReadsAndWritesTest\TwoFixedWeirs_fxw.pliz");
+                    var generatedResultsContent = File.ReadAllLines(@"TestOutput\FlowFMFixedWeirs\MduFileReadsAndWritesTest\TwoFixedWeirs_fxw.pliz");
 
                     var expectedResultsContent =
                         new string[]{

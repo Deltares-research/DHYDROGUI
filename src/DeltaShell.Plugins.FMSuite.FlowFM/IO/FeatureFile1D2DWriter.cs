@@ -41,7 +41,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
             else
             {
-                modelDefinition.SetModelProperty(KnownProperties.NodeFile, string.Empty);
+                modelDefinition.SetModelProperty(KnownProperties.StorageNodeFile, string.Empty);
             }
         }
 

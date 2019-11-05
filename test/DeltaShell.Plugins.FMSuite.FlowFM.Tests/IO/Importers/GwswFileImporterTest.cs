@@ -1177,7 +1177,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
                 gwswImporter.ImportItem(null, fmModel);
 
                 var discretization = fmModel.NetworkDiscretization;
-                Assert.That(discretization.Locations.Values.Count, Is.EqualTo(4));
+                Assert.That(discretization.Locations.Values.Count, Is.EqualTo(3));
 
                 var coords = discretization.Geometry.Coordinates;
                 Assert.That(coords[0], Is.EqualTo(new Coordinate(10, 20, double.NaN)));

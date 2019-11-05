@@ -1095,13 +1095,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private void OnModelDefinitionPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            var prop = (WaterFlowFMProperty) sender;
-            if (e.PropertyName == TypeUtils.GetMemberName(() => prop.Value))
+            var prop = sender as WaterFlowFMProperty;
+            if (prop != null && e.PropertyName == TypeUtils.GetMemberName(() => prop.Value))
             {
                 if (prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.FixedWeirScheme,
-                    StringComparison.InvariantCultureIgnoreCase))
+                        StringComparison.InvariantCultureIgnoreCase))
                 {
-                    allFixedWeirsAndCorrespondingProperties.ForEach(p => p.UpdateDataColumns(prop.GetValueAsString()));                    
+                    allFixedWeirsAndCorrespondingProperties?.ForEach(p => p.UpdateDataColumns(prop.GetValueAsString()));                    
                 }
                 if (prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.BedlevType,
                     StringComparison.InvariantCultureIgnoreCase))
@@ -1117,8 +1117,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 {
                     BeginEdit(new DefaultEditAction("Switching salinity process"));
                     UseSalinity = UseSalinity;
-                    BoundaryConditions1D.ForEach(bc => bc.UseSalt = UseSalinity);
-                    LateralSourcesData.ForEach(lat => lat.UseSalt = UseSalinity);
+                    BoundaryConditions1D?.ForEach(bc => bc.UseSalt = UseSalinity);
+                    LateralSourcesData?.ForEach(lat => lat.UseSalt = UseSalinity);
                     EndEdit();
                 }
                 else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.UseMorSed,
@@ -3362,7 +3362,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             ReportProgressText("Reading dia file");
             var diaFileName = string.Format("{0}.dia", Name);
-            var diaFilePath = Path.Combine(outputDirectory, ModelDefinition.RelativeMapFilePath, diaFileName);
+            var diaFilePath = Path.Combine(outputDirectory, Path.GetDirectoryName(ModelDefinition.RelativeMapFilePath)??string.Empty, diaFileName);
             if (File.Exists(diaFilePath))
             {
                 try
