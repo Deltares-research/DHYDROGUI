@@ -14,13 +14,21 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition
     public interface IDefinitionReader
     {
         ICrossSectionDefinition ReadCrossSectionDefinition(IDelftIniCategory category);
+
         IStructure1D ReadStructureDefinition(IDelftIniCategory category);
     }
 
     abstract class DefinitionReader : IDefinitionReader
     {
-        public virtual ICrossSectionDefinition ReadCrossSectionDefinition(IDelftIniCategory category){return null;}
-        public virtual IStructure1D ReadStructureDefinition(IDelftIniCategory category){ return null; }
+        public virtual ICrossSectionDefinition ReadCrossSectionDefinition(IDelftIniCategory category)
+        {
+            return null;
+        }
+
+        public virtual IStructure1D ReadStructureDefinition(IDelftIniCategory category)
+        {
+            return null;
+        }
 
         protected void SetCommonCrossSectionDefinitionsProperties(ICrossSectionDefinition crossSectionDefinition, IDelftIniCategory category)
         {
@@ -292,6 +300,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition
     {
         public override IStructure1D ReadStructureDefinition(IDelftIniCategory category)
         {
+
 
             var slope = category.ReadProperty<double>(DefinitionPropertySettings.Slope.Key);
             var bottomWidth = category.ReadProperty<double>(DefinitionPropertySettings.BottomWidth.Key);

@@ -2126,7 +2126,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 var newPath = Path.Combine(Path.GetDirectoryName(ExtFilePath), Path.GetFileName(notUsedExtForceFileItem.Path));
                 notUsedExtForceFileItem.SwitchTo(newPath);
-        }
+            }
         }
 
         private void OnLoad(string mduPath)
