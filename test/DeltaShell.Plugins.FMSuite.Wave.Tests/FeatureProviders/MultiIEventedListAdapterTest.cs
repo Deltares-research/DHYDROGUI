@@ -1080,5 +1080,289 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.FeatureProviders
             Assert.That(exception, Has.Message.EqualTo("Currently not supported, implement when needed"));
         }
 
+        [Test]
+        public void RemoveAt_ValidIndex_RemovesElement()
+        {
+            // Setup
+            IEventedList<IWaveBoundary> list =
+                GetEventedList();
+            MultiIEventedListAdapter<IWaveBoundary, IWaveBoundaryGeometricDefinition> adapter =
+                GetAdapterWithRegisteredList(list);
+            adapter.RegisterList(list);
+
+            object lastSender = null;
+            NotifyCollectionChangedEventArgs lastArgs = null;
+            var nCalls = 0;
+
+            var element0 = adapter[0];
+            var element1 = adapter[1];
+
+            void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs args)
+            {
+                nCalls += 1;
+                lastSender = sender;
+                lastArgs = args;
+            }
+
+            adapter.CollectionChanged += OnCollectionChanged;
+
+            Assert.That(adapter, Has.Count.EqualTo(2), 
+                        "Expected the adapter to have two members.");
+
+            // Call
+            adapter.RemoveAt(0);
+
+            // Assert
+            Assert.That(adapter, Has.Count.EqualTo(1));
+            Assert.That(adapter[0], Is.SameAs(element1));
+
+            Assert.That(nCalls, Is.EqualTo(1));
+            Assert.That(lastSender, Is.SameAs(adapter));
+            Assert.That(lastArgs.Action, Is.EqualTo(NotifyCollectionChangedAction.Remove));
+            Assert.That(lastArgs.NewItems, Is.Null);
+            Assert.That(lastArgs.OldItems, Has.Count.EqualTo(1));
+            Assert.That(lastArgs.OldItems[0], Is.EqualTo(element0));
+        }
+
+        [Test]
+        [TestCase(-1)]
+        [TestCase(12)]
+        public void RemoveAt_InvalidIndex_DoesNotChangeTheCollection(int indexToRemove)
+        {
+            // Setup
+            IEventedList<IWaveBoundary> list =
+                GetEventedList();
+            MultiIEventedListAdapter<IWaveBoundary, IWaveBoundaryGeometricDefinition> adapter =
+                GetAdapterWithRegisteredList(list);
+            adapter.RegisterList(list);
+
+            var nCalls = 0;
+            void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs args)
+            {
+                nCalls += 1;
+            }
+
+            adapter.CollectionChanged += OnCollectionChanged;
+
+            var element0 = adapter[0];
+            var element1 = adapter[1];
+
+            // Precondition
+            Assert.That(adapter, Has.Count.EqualTo(2), 
+                        "Expected the adapter to have two members.");
+
+            // Call
+            adapter.RemoveAt(indexToRemove);
+
+            // Assert
+            Assert.That(nCalls, Is.EqualTo(0));
+            Assert.That(adapter, Has.Count.EqualTo(2), 
+                        "Expected the adapter to not have changed.");
+            Assert.That(adapter[0], Is.SameAs(element0));
+            Assert.That(adapter[1], Is.SameAs(element1));
+        }
+
+        [Test]
+        public void RemoveTDisplayed_ValidItem_RemovesElement()
+        {
+            // Setup
+            IEventedList<IWaveBoundary> list =
+                GetEventedList();
+            MultiIEventedListAdapter<IWaveBoundary, IWaveBoundaryGeometricDefinition> adapter =
+                GetAdapterWithRegisteredList(list);
+            adapter.RegisterList(list);
+
+            object lastSender = null;
+            NotifyCollectionChangedEventArgs lastArgs = null;
+            var nCalls = 0;
+
+            IWaveBoundaryGeometricDefinition element0 = adapter[0];
+            var element1 = adapter[1];
+
+            void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs args)
+            {
+                nCalls += 1;
+                lastSender = sender;
+                lastArgs = args;
+            }
+
+            adapter.CollectionChanged += OnCollectionChanged;
+
+            Assert.That(adapter, Has.Count.EqualTo(2), 
+                        "Expected the adapter to have two members.");
+
+            // Call
+            bool result = adapter.Remove(element0);
+
+            // Assert
+            Assert.That(result, Is.True);
+            Assert.That(adapter, Has.Count.EqualTo(1));
+            Assert.That(adapter[0], Is.SameAs(element1));
+
+            Assert.That(nCalls, Is.EqualTo(1));
+            Assert.That(lastSender, Is.SameAs(adapter));
+            Assert.That(lastArgs.Action, Is.EqualTo(NotifyCollectionChangedAction.Remove));
+            Assert.That(lastArgs.NewItems, Is.Null);
+            Assert.That(lastArgs.OldItems, Has.Count.EqualTo(1));
+            Assert.That(lastArgs.OldItems[0], Is.EqualTo(element0));
+        }
+
+        [Test]
+        public void RemoveObject_ValidItem_RemovesElement()
+        {
+            // Setup
+            IEventedList<IWaveBoundary> list =
+                GetEventedList();
+            MultiIEventedListAdapter<IWaveBoundary, IWaveBoundaryGeometricDefinition> adapter =
+                GetAdapterWithRegisteredList(list);
+            adapter.RegisterList(list);
+
+            object lastSender = null;
+            NotifyCollectionChangedEventArgs lastArgs = null;
+            var nCalls = 0;
+
+            object element0 = adapter[0];
+            IWaveBoundaryGeometricDefinition element1 = adapter[1];
+
+            void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs args)
+            {
+                nCalls += 1;
+                lastSender = sender;
+                lastArgs = args;
+            }
+
+            adapter.CollectionChanged += OnCollectionChanged;
+
+            Assert.That(adapter, Has.Count.EqualTo(2), 
+                        "Expected the adapter to have two members.");
+
+            // Call
+            adapter.Remove(element0);
+
+            // Assert
+            Assert.That(adapter, Has.Count.EqualTo(1));
+            Assert.That(adapter[0], Is.SameAs(element1));
+
+            Assert.That(nCalls, Is.EqualTo(1));
+            Assert.That(lastSender, Is.SameAs(adapter));
+            Assert.That(lastArgs.Action, Is.EqualTo(NotifyCollectionChangedAction.Remove));
+            Assert.That(lastArgs.NewItems, Is.Null);
+            Assert.That(lastArgs.OldItems, Has.Count.EqualTo(1));
+            Assert.That(lastArgs.OldItems[0], Is.EqualTo(element0));
+        }
+
+        [Test]
+        public void RemoveObject_TDisplayedNotInAdapter_DoesNotChangeTheCollection()
+        {
+            // Setup
+            IEventedList<IWaveBoundary> list =
+                GetEventedList();
+            MultiIEventedListAdapter<IWaveBoundary, IWaveBoundaryGeometricDefinition> adapter =
+                GetAdapterWithRegisteredList(list);
+            adapter.RegisterList(list);
+
+            var nCalls = 0;
+            void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs args)
+            {
+                nCalls += 1;
+            }
+
+            adapter.CollectionChanged += OnCollectionChanged;
+
+            var element0 = adapter[0];
+            var element1 = adapter[1];
+
+            object objToRemove = Substitute.For<IWaveBoundaryGeometricDefinition>();
+
+            // Precondition
+            Assert.That(adapter, Has.Count.EqualTo(2), 
+                        "Expected the adapter to have two members.");
+
+            // Call
+            adapter.Remove(objToRemove);
+
+            // Assert
+            Assert.That(nCalls, Is.EqualTo(0));
+            Assert.That(adapter, Has.Count.EqualTo(2), 
+                        "Expected the adapter to not have changed.");
+            Assert.That(adapter[0], Is.SameAs(element0));
+            Assert.That(adapter[1], Is.SameAs(element1));
+        }
+
+        [Test]
+        public void RemoveTDisplayed_NotInAdapter_DoesNotChangeTheCollection()
+        {
+            // Setup
+            IEventedList<IWaveBoundary> list =
+                GetEventedList();
+            MultiIEventedListAdapter<IWaveBoundary, IWaveBoundaryGeometricDefinition> adapter =
+                GetAdapterWithRegisteredList(list);
+            adapter.RegisterList(list);
+
+            var nCalls = 0;
+            void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs args)
+            {
+                nCalls += 1;
+            }
+
+            adapter.CollectionChanged += OnCollectionChanged;
+
+            var element0 = adapter[0];
+            var element1 = adapter[1];
+
+            IWaveBoundaryGeometricDefinition objToRemove = Substitute.For<IWaveBoundaryGeometricDefinition>();
+
+            // Precondition
+            Assert.That(adapter, Has.Count.EqualTo(2), 
+                        "Expected the adapter to have two members.");
+
+            // Call
+            bool result = adapter.Remove(objToRemove);
+
+            // Assert
+            Assert.That(result, Is.False);
+            Assert.That(nCalls, Is.EqualTo(0));
+            Assert.That(adapter, Has.Count.EqualTo(2), 
+                        "Expected the adapter to not have changed.");
+            Assert.That(adapter[0], Is.SameAs(element0));
+            Assert.That(adapter[1], Is.SameAs(element1));
+        }
+
+
+        [Test]
+        public void RemoveObject_NonTDisplayed_DoesNotChangeTheCollection()
+        {
+            // Setup
+            IEventedList<IWaveBoundary> list =
+                GetEventedList();
+            MultiIEventedListAdapter<IWaveBoundary, IWaveBoundaryGeometricDefinition> adapter =
+                GetAdapterWithRegisteredList(list);
+            adapter.RegisterList(list);
+
+            var nCalls = 0;
+            void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs args)
+            {
+                nCalls += 1;
+            }
+
+            adapter.CollectionChanged += OnCollectionChanged;
+
+            var element0 = adapter[0];
+            var element1 = adapter[1];
+
+            // Precondition
+            Assert.That(adapter, Has.Count.EqualTo(2), 
+                        "Expected the adapter to have two members.");
+
+            // Call
+            adapter.Remove(new object());
+
+            // Assert
+            Assert.That(nCalls, Is.EqualTo(0));
+            Assert.That(adapter, Has.Count.EqualTo(2), 
+                        "Expected the adapter to not have changed.");
+            Assert.That(adapter[0], Is.SameAs(element0));
+            Assert.That(adapter[1], Is.SameAs(element1));
+        }
     }
 }

@@ -360,17 +360,42 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders
 
         public bool Remove(TDisplayed item)
         {
-            throw new NotImplementedException();
+            // We do not delete the item directly from the MultiIEventedListAdapter, 
+            // instead we delete the item in the underlying EventedList, and wait for the
+            // remove event to bubble up, at which time we will remove the actual item from
+            // this values.
+            Tuple<TDisplayed, IEventedList<TObserved>> itemInValues = 
+                values.FirstOrDefault(valueInList => Equals(valueInList.Item1, item));
+
+            if (itemInValues == null)
+            {
+                return false;
+            }
+
+            Tuple<TObserved, IEventedList<TObserved>> observedValue = ObtainObservedValue(itemInValues.Item1);
+            return itemInValues.Item2.Remove(observedValue.Item1);
         }
 
         public void Remove(object value)
         {
-            throw new NotImplementedException();
+            if (!(value is TDisplayed valueAsDisplayed))
+            {
+                return;
+            }
+
+            Remove(valueAsDisplayed);
         }
 
         public void RemoveAt(int index)
         {
-            throw new NotImplementedException();
+            if (index < 0 || index >= Count)
+            {
+                return;
+            }
+
+            Tuple<TDisplayed, IEventedList<TObserved>> removalCandidate = values[index];
+            Tuple<TObserved, IEventedList<TObserved>> observedValue = ObtainObservedValue(removalCandidate.Item1);
+            removalCandidate.Item2.Remove(observedValue.Item1);
         }
 
         object IList.this[int index]
