@@ -314,6 +314,7 @@
     <ProjectReference Include="..\DeltaShell.NGHS.Common\DeltaShell.NGHS.Common.csproj">
       <Project>{AE78982B-8798-4B5A-9DB4-FCA8F5C8428B}</Project>
       <Name>DeltaShell.NGHS.Common</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\DeltaShell.Plugins.DelftModels.RealTimeControl\DeltaShell.Plugins.DelftModels.RealTimeControl.csproj">
       <Project>{7dad8091-178d-43b1-97a7-d47a5c5faaea}</Project>

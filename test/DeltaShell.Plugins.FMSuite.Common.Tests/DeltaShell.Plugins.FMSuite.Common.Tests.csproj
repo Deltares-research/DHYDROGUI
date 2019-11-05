@@ -49,6 +49,7 @@
     </Reference>
     <Reference Include="DelftTools.Controls.Swf">
       <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.46520\lib\net461\DeltaShell\DelftTools.Controls.Swf.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Functions">
       <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.46520\lib\net461\DeltaShell\DelftTools.Functions.dll</HintPath>
@@ -61,9 +62,11 @@
     </Reference>
     <Reference Include="DelftTools.Shell.Gui">
       <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.46520\lib\net461\DeltaShell\DelftTools.Shell.Gui.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Shell.Gui.Swf">
       <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.46520\lib\net461\DeltaShell\DelftTools.Shell.Gui.Swf.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.TestUtils, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\DeltaShell.TestProject.1.4.0.46520\lib\net40\DelftTools.TestUtils.dll</HintPath>
@@ -80,6 +83,7 @@
     </Reference>
     <Reference Include="DeltaShell.Gui">
       <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.46520\lib\net461\DeltaShell\DeltaShell.Gui.exe</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="GeoAPI">
       <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.46520\lib\net461\DeltaShell\GeoAPI.dll</HintPath>
