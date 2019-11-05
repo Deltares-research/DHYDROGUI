@@ -297,10 +297,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders
             return correspondingItem.Item1;
         }
 
-        public void AddRange(IEnumerable<TDisplayed> enumerable)
-        {
-            throw new NotImplementedException();
-        }
+        public void AddRange(IEnumerable<TDisplayed> enumerable) => enumerable.ForEach(Add);
 
         public IEnumerator<TDisplayed> GetEnumerator() => values.Select(x => x.Item1).GetEnumerator();
 
@@ -308,12 +305,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders
 
         public void Add(TDisplayed item)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException("Currently not supported, implement when needed");
         }
 
         public int Add(object value)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException("Currently not supported, implement when needed");
         }
 
         public bool Contains(TDisplayed item) => values.Any(x => Equals(x.Item1, item));
@@ -325,7 +322,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders
                 return false;
             }
 
-            return this.Contains(displayedItem);
+            return Contains(displayedItem);
         }
 
         public int IndexOf(TDisplayed item)
@@ -353,12 +350,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders
 
         public void Insert(int index, TDisplayed item)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException("Currently not supported, implement when needed");
         }
 
         public void Insert(int index, object value)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException("Currently not supported, implement when needed");
         }
 
         public bool Remove(TDisplayed item)
@@ -379,13 +376,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders
         object IList.this[int index]
         {
             get => this[index];
-            set => throw new NotImplementedException();
+            set => throw new NotSupportedException("Currently not supported, implement when needed");
         }
 
         public TDisplayed this[int index]
         {
             get => values[index].Item1;
-            set => throw new NotImplementedException();
+            set => throw new NotSupportedException("Currently not supported, implement when needed");
         }
 
         public bool IsReadOnly => false;
@@ -397,12 +394,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders
 
         public void CopyTo(TDisplayed[] array, int arrayIndex)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException("Currently not supported, implement when needed");
         }
 
         public void CopyTo(Array array, int index)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException("Currently not supported, implement when needed");
         }
 
         public int Count => values.Count;

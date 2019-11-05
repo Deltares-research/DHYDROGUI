@@ -29,6 +29,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.FeatureProviders
             Assert.That(list, Is.InstanceOf<IEventedList<object>>());
             Assert.That(list, Is.InstanceOf<IList>());
             Assert.That(list, Has.Count.EqualTo(0));
+            Assert.That(list.SyncRoot, Is.Not.Null, "Expected Syncroot to not be null.");
         }
 
         [Test]
@@ -901,5 +902,183 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.FeatureProviders
             // Assert
             Assert.That(result, Is.False, "Expected a different result for IsFixedSize:");
         }
+
+        // Unsupported operation tests.
+        [Test]
+        public void AddTDisplayed_ThrowsUnsupportedException()
+        {
+            // Setup
+            IEventedList<IWaveBoundary> list = 
+                GetEventedList();
+            MultiIEventedListAdapter<IWaveBoundary, IWaveBoundaryGeometricDefinition> adapter =
+                GetAdapterWithRegisteredList(list);
+            adapter.RegisterList(list);
+
+            // Call
+            void Call() => adapter.Add(Substitute.For<IWaveBoundaryGeometricDefinition>());
+
+            // Assert
+            var exception = Assert.Throws<NotSupportedException>(Call);
+            Assert.That(exception, Has.Message.EqualTo("Currently not supported, implement when needed"));
+        }
+
+        [Test]
+        public void AddObject_ThrowsUnsupportedException()
+        {
+            // Setup
+            IEventedList<IWaveBoundary> list = 
+                GetEventedList();
+            MultiIEventedListAdapter<IWaveBoundary, IWaveBoundaryGeometricDefinition> adapter =
+                GetAdapterWithRegisteredList(list);
+            adapter.RegisterList(list);
+
+            object toAddValue = Substitute.For<IWaveBoundaryGeometricDefinition>();
+
+            // Call
+            void Call() => adapter.Add(toAddValue);
+
+            // Assert
+            var exception = Assert.Throws<NotSupportedException>(Call);
+            Assert.That(exception, Has.Message.EqualTo("Currently not supported, implement when needed"));
+        }
+
+        [Test]
+        public void AddRange_ThrowsUnsupportedException()
+        {
+            // Setup
+            IEventedList<IWaveBoundary> list = 
+                GetEventedList();
+            MultiIEventedListAdapter<IWaveBoundary, IWaveBoundaryGeometricDefinition> adapter =
+                GetAdapterWithRegisteredList(list);
+            adapter.RegisterList(list);
+
+            var addList = new List<IWaveBoundaryGeometricDefinition>
+            {
+                Substitute.For<IWaveBoundaryGeometricDefinition>()
+            };
+
+            // Call
+            void Call() => adapter.AddRange(addList);
+
+            // Assert
+            var exception = Assert.Throws<NotSupportedException>(Call);
+            Assert.That(exception, Has.Message.EqualTo("Currently not supported, implement when needed"));
+        }
+
+        [Test]
+        public void InsertTObserved_ThrowsUnsupportedException()
+        {
+            // Setup
+            IEventedList<IWaveBoundary> list = 
+                GetEventedList();
+            MultiIEventedListAdapter<IWaveBoundary, IWaveBoundaryGeometricDefinition> adapter =
+                GetAdapterWithRegisteredList(list);
+            adapter.RegisterList(list);
+
+            // Call
+            void Call() => adapter.Insert(1, Substitute.For<IWaveBoundaryGeometricDefinition>());
+
+            // Assert
+            var exception = Assert.Throws<NotSupportedException>(Call);
+            Assert.That(exception, Has.Message.EqualTo("Currently not supported, implement when needed"));
+        }
+
+        [Test]
+        public void InsertObject_ThrowsUnsupportedException()
+        {
+            // Setup
+            IEventedList<IWaveBoundary> list = 
+                GetEventedList();
+            MultiIEventedListAdapter<IWaveBoundary, IWaveBoundaryGeometricDefinition> adapter =
+                GetAdapterWithRegisteredList(list);
+            adapter.RegisterList(list);
+
+            object item = Substitute.For<IWaveBoundaryGeometricDefinition>();
+
+            // Call
+            void Call() => adapter.Insert(1, item);
+
+            // Assert
+            var exception = Assert.Throws<NotSupportedException>(Call);
+            Assert.That(exception, Has.Message.EqualTo("Currently not supported, implement when needed"));
+        }
+
+        [Test]
+        public void CopyToTObserved_ThrowsUnsupportedException()
+        {
+            // Setup
+            IEventedList<IWaveBoundary> list = 
+                GetEventedList();
+            MultiIEventedListAdapter<IWaveBoundary, IWaveBoundaryGeometricDefinition> adapter =
+                GetAdapterWithRegisteredList(list);
+            adapter.RegisterList(list);
+
+            IWaveBoundaryGeometricDefinition[] array = {};
+
+            // Call
+            void Call() => adapter.CopyTo(array, 0);
+
+            // Assert
+            var exception = Assert.Throws<NotSupportedException>(Call);
+            Assert.That(exception, Has.Message.EqualTo("Currently not supported, implement when needed"));
+        }
+
+        [Test]
+        public void CopyToObject_ThrowsUnsupportedException()
+        {
+            // Setup
+            IEventedList<IWaveBoundary> list = 
+                GetEventedList();
+            MultiIEventedListAdapter<IWaveBoundary, IWaveBoundaryGeometricDefinition> adapter =
+                GetAdapterWithRegisteredList(list);
+            adapter.RegisterList(list);
+
+            Array array = Enumerable.Empty<IWaveBoundaryGeometricDefinition>().ToArray();
+
+            // Call
+            void Call() => adapter.CopyTo(array, 0);
+
+            // Assert
+            var exception = Assert.Throws<NotSupportedException>(Call);
+            Assert.That(exception, Has.Message.EqualTo("Currently not supported, implement when needed"));
+        }
+
+        public void SetTDisplayed_ThrowsUnsupportedException()
+        {
+            // Setup
+            IEventedList<IWaveBoundary> list = 
+                GetEventedList();
+            MultiIEventedListAdapter<IWaveBoundary, IWaveBoundaryGeometricDefinition> adapter =
+                GetAdapterWithRegisteredList(list);
+            adapter.RegisterList(list);
+
+            // Call
+            void Call() => adapter[0] = Substitute.For<IWaveBoundaryGeometricDefinition>();
+
+            // Assert
+            var exception = Assert.Throws<NotSupportedException>(Call);
+            Assert.That(exception, Has.Message.EqualTo("Currently not supported, implement when needed"));
+        }
+
+        [Test]
+        public void SetObject_ThrowsUnsupportedException()
+        {
+            // Setup
+            IEventedList<IWaveBoundary> list = 
+                GetEventedList();
+            MultiIEventedListAdapter<IWaveBoundary, IWaveBoundaryGeometricDefinition> adapter =
+                GetAdapterWithRegisteredList(list);
+            adapter.RegisterList(list);
+
+            object toAddValue = Substitute.For<IWaveBoundaryGeometricDefinition>();
+
+            // Call
+            void Call() => ((IList)adapter)[0] = toAddValue;
+
+            // Assert
+            var exception = Assert.Throws<NotSupportedException>(Call);
+            Assert.That(exception, Has.Message.EqualTo("Currently not supported, implement when needed"));
+        }
+
     }
 }
