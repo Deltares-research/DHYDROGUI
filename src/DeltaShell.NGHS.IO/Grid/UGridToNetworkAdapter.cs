@@ -55,6 +55,7 @@ namespace DeltaShell.NGHS.IO.Grid
             }
 
             var loadedNetwork = LoadNetworkById(netFilePath, discretisationDataModel.NetworkId);
+            if (loadedNetwork == null)
             {
                 return null;
             }
