@@ -446,8 +446,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                     modelDefinition.GetModelProperty(KnownProperties.BndExtForceFile).GetValueAsString();
                 if (string.IsNullOrEmpty(bndExtFileName))
                 {
-                    bndExtFileName = System.IO.Path.GetFileNameWithoutExtension(extFileName) + "_bnd" +
-                                     FileConstants.ExternalForcingFileExtension;
+                    bndExtFileName = System.IO.Path.GetFileNameWithoutExtension(extFileName) + FileConstants.BoundaryExternalForcingFileExtension;
                 }
 
                 string bndExtForceFilePath = System.IO.Path.Combine(exportDirectory, bndExtFileName);

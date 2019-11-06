@@ -6,6 +6,7 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 {
@@ -107,7 +108,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             if (!existingOutputDir.StartsWith(FileConstants.OutputDirectoryName))
             {
                 outputDirProperty.SetValueAsString(FileConstants.OutputDirectoryName);
-                Log.InfoFormat("Running this model requires the OutputDirectory to be overwritten to: {0}",
+                Log.InfoFormat(Resources.WaterFlowFMModel_Running_this_model_requires_the_OutputDirectory_to_be_overwritten_to___0_,
                                FileConstants.OutputDirectoryName);
             }
 

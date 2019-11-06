@@ -1,27 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using DelftTools.Hydro;
+﻿using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Gui;
 using DeltaShell.NGHS.TestUtils;
-using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO.ImportExport;
-using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.ImportersExporters;
-using NetTopologySuite.Extensions.Features;
 using NUnit.Framework;
 using Rhino.Mocks;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 {
     [TestFixture]
     public class FlowFMApplicationPluginTest
     {
+        private FlowFMApplicationPlugin plugin;
+
+        [TestFixtureSetUp]
+        public void SetUp()
+        {
+            plugin = new FlowFMApplicationPlugin();
+        }
+
         /// <summary>
         /// GIVEN a FlowFMApplicationPlugin
         ///   AND an EventedList of Weir2Ds
@@ -34,7 +38,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void GivenAFlowFMApplicationPlugin_WhenGetExportersIsCalledAndGetSupportedExporterForItemIsCalled_ThenThereExistsAPliImporterExporterWithinTheResult(Type t)
         {
             // Given
-            var plugin = new FlowFMApplicationPlugin();
             var fileExportersGetterMock =
                 MockRepository.GenerateStrictMock<Func<object, IEnumerable<IFileExporter>>>();
 
@@ -66,31 +69,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                         "Expected a PliFileImporterExporter within the list of exporters, but found none.");
         }
 
-
         [Test]
         [Category(TestCategory.Integration)]
         public void GetParentProjectItem_WhenSelectionIsCompositeActivity_ThenHelperMethodReturnsCompositeActivityAndThisWillBeUsed()
         {
-            var flowFmApplicationPlugin = new FlowFMApplicationPlugin();
-            ApplicationPluginTestHelper.TestForGetParentProjectItemDelegateSetByApplicationPlugins_WhenApplicationPluginHelperReturnsNotNull(flowFmApplicationPlugin);
+            ApplicationPluginTestHelper.TestForGetParentProjectItemDelegateSetByApplicationPlugins_WhenApplicationPluginHelperReturnsNotNull(plugin);
         }
 
         [Test]
         [Category(TestCategory.Integration)]
         public void GetParentProjectItem_WhenSelectionIsNull_ThenHelperMethodReturnsNullAndRootFolderWillBeUsed()
         {
-            var flowFmApplicationPlugin = new FlowFMApplicationPlugin();
-            ApplicationPluginTestHelper.TestForGetParentProjectItemDelegateSetByApplicationPlugins_WhenApplicationPluginHelperReturnsNull(flowFmApplicationPlugin);
+            ApplicationPluginTestHelper.TestForGetParentProjectItemDelegateSetByApplicationPlugins_WhenApplicationPluginHelperReturnsNull(plugin);
         }
 
         [Test]
         public void GetFileExporters_ContainsExpectedExporterForFixedWeirs()
         {
-            // Set-up
-            var application = new FlowFMApplicationPlugin();
-
             // Call
-            IEnumerable<IFileExporter> exporters = application.GetFileExporters();
+            IEnumerable<IFileExporter> exporters = plugin.GetFileExporters();
 
             // Assert
             Type expectedType = typeof(PlizFileImporterExporter<FixedWeir, FixedWeir>);
@@ -101,11 +98,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         public void GetFileImporters_ContainsExpectedImporterForFixedWeirs()
         {
-            // Set-up
-            var application = new FlowFMApplicationPlugin();
-
             // Call
-            IEnumerable<IFileImporter> importer = application.GetFileImporters();
+            IEnumerable<IFileImporter> importer = plugin.GetFileImporters();
 
             // Assert
             Type expectedType = typeof(PlizFileImporterExporter<FixedWeir, FixedWeir>);
@@ -116,11 +110,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         public void GetFileExporters_ContainsExpectedExporterForEmbankments()
         {
-            // Set-up
-            var application = new FlowFMApplicationPlugin();
-
             // Call
-            IEnumerable<IFileExporter> exporters = application.GetFileExporters();
+            IEnumerable<IFileExporter> exporters = plugin.GetFileExporters();
 
             // Assert
             Type expectedType = typeof(PlizFileImporterExporter<Embankment, Embankment>);

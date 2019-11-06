@@ -14,7 +14,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Readers
     {
         [Test]
         [TestCaseSource(nameof(GetMultiValuedPropertiesFileContents))]
-        public void ReadDelftIniFile_WithMultipleValuedProperty_ThenPropertyIsReadCorrectly(string fileContent)
+        public void ReadDelftIniFile_WithMultipleValuedProperty_ThenPropertyIsReadCorrectly(string fileContent, string expectedComment)
         {
             // Setup
             var stream = new MemoryStream(Encoding.ASCII.GetBytes(fileContent));
@@ -29,72 +29,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Readers
             DelftIniProperty property = category.Properties.Single();
             Assert.That(property.Name, Is.EqualTo("ObsFile"));
             Assert.That(property.Value, Is.EqualTo("obs_1_obs.xyn obs_2_obs.xyn obs_3_obs.xyn"));
-            Assert.That(property.Comment, Is.EqualTo("My comment"));
+            Assert.That(property.Comment, Is.EqualTo(expectedComment));
         }
 
-        private static IEnumerable<string> GetMultiValuedPropertiesFileContents()
-        {
-            yield return "[output]"
-                         + Environment.NewLine
-                         + @"ObsFile  = obs_1_obs.xyn obs_2_obs.xyn obs_3_obs.xyn  # My comment";
-
-            yield return "[output]"
-                         + Environment.NewLine
-                         + @"ObsFile  = obs_1_obs.xyn obs_2_obs.xyn \"
-                         + Environment.NewLine
-                         + "obs_3_obs.xyn  # My comment";
-
-            yield return "[output]"
-                         + Environment.NewLine
-                         + @"ObsFile  = obs_1_obs.xyn \"
-                         + Environment.NewLine
-                         + @"obs_2_obs.xyn \"
-                         + Environment.NewLine
-                         + "obs_3_obs.xyn  # My comment";
-
-            yield return "[output]"
-                         + Environment.NewLine
-                         + @"ObsFile  = \"
-                         + Environment.NewLine
-                         + @"obs_1_obs.xyn \"
-                         + Environment.NewLine
-                         + @"obs_2_obs.xyn \"
-                         + Environment.NewLine
-                         + "obs_3_obs.xyn  # My comment";
-        }
-
-        [Test]
-        [TestCaseSource(nameof(GetInvalidFileContents))]
-        public void ReadDelftIniFile_WithMultipleValuedPropertyThatHasInvalidCommentFormat_ThrowsFormatException(string fileContent, int invalidLineNumber)
-        {
-            // Setup
-            var stream = new MemoryStream(Encoding.ASCII.GetBytes(fileContent));
-            var reader = new MduDelftIniReader();
-
-            // Call
-            const string fileName = "myFile.mdu";
-
-            void Call()
-            {
-                reader.ReadDelftIniFile(stream, fileName);
-            }
-
-            // Assert
-            var exception = Assert.Throws<FormatException>(Call);
-            Assert.That(exception.Message,
-                        Is.EqualTo($"Invalid comment placed on line {invalidLineNumber} in file '{fileName}'"));
-        }
-
-        private static IEnumerable<object> GetInvalidFileContents()
+        private static IEnumerable<object> GetMultiValuedPropertiesFileContents()
         {
             yield return new object[]
             {
                 "[output]"
                 + Environment.NewLine
-                + @"ObsFile  = obs_1_obs.xyn \ # Invalid place for comment"
+                + @"ObsFile  = obs_1_obs.xyn obs_2_obs.xyn obs_3_obs.xyn  # My comment",
+                "My comment"
+            };
+
+            yield return new object[]
+            {
+                "[output]"
+                + Environment.NewLine
+                + @"ObsFile  = obs_1_obs.xyn obs_2_obs.xyn \"
                 + Environment.NewLine
                 + "obs_3_obs.xyn  # My comment",
-                2
+                "My comment"
             };
 
             yield return new object[]
@@ -103,10 +58,57 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Readers
                 + Environment.NewLine
                 + @"ObsFile  = obs_1_obs.xyn \"
                 + Environment.NewLine
-                + @"obs_2_obs.xyn \ # Invalid place for comment"
+                + @"obs_2_obs.xyn \"
                 + Environment.NewLine
                 + "obs_3_obs.xyn  # My comment",
-                3
+                "My comment"
+            };
+
+            yield return new object[]
+            {
+                "[output]"
+                + Environment.NewLine
+                + @"ObsFile  = \"
+                + Environment.NewLine
+                + @"obs_1_obs.xyn \"
+                + Environment.NewLine
+                + @"obs_2_obs.xyn \"
+                + Environment.NewLine
+                + "obs_3_obs.xyn  # My comment",
+                "My comment"
+            };
+
+            yield return new object[]
+            {
+                "[output]"
+                + Environment.NewLine
+                + @"ObsFile  = obs_1_obs.xyn \"
+                + Environment.NewLine
+                + "obs_2_obs.xyn obs_3_obs.xyn",
+                string.Empty
+            };
+
+
+            yield return new object[]
+            {
+                "[output]"
+                + Environment.NewLine
+                + @"ObsFile  = obs_1_obs.xyn \ # This comment should be ignored"
+                + Environment.NewLine
+                + "obs_2_obs.xyn obs_3_obs.xyn  # My comment",
+                "My comment"
+            };
+
+            yield return new object[]
+            {
+                "[output]"
+                + Environment.NewLine
+                + @"ObsFile  = obs_1_obs.xyn \"
+                + Environment.NewLine
+                + @"obs_2_obs.xyn \ # This comment should be ignored"
+                + Environment.NewLine
+                + "obs_3_obs.xyn  # My comment",
+                "My comment"
             };
         }
     }

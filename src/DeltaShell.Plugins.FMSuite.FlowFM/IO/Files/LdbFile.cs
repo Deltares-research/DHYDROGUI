@@ -11,9 +11,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 {
     public class LdbFile : FMSuiteFileBase, IFeature2DFileBase<LandBoundary2D>
     {
-        public void Write(string polFilePath, IEnumerable<LandBoundary2D> area2DFeatures)
+        public void Write(string filePath, IEnumerable<LandBoundary2D> area2DFeatures)
         {
-            OpenOutputFile(polFilePath);
+            OpenOutputFile(filePath);
             try
             {
                 foreach (LandBoundary2D area2DFeature in area2DFeatures)
@@ -39,11 +39,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
         }
 
-        public IList<LandBoundary2D> Read(string ldbFilePath)
+        public IList<LandBoundary2D> Read(string filePath)
         {
             var features = new EventedList<LandBoundary2D>();
 
-            OpenInputFile(ldbFilePath);
+            OpenInputFile(filePath);
             try
             {
                 string line = GetNextLine();
@@ -63,7 +63,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                     if (lineFields.Count < 2)
                     {
                         throw new Exception(string.Format("Invalid numpoints/numcolums {0} in file {1}", LineNumber,
-                                                          ldbFilePath));
+                                                          filePath));
                     }
 
                     int numPoints = GetInt(lineFields[0], "value for nr of points");
@@ -73,7 +73,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                     {
                         throw new Exception(string.Format(
                                                 "Number of colums must be at least 2. (line: {0}) in file {1}",
-                                                LineNumber, ldbFilePath));
+                                                LineNumber, filePath));
                     }
 
                     var points = new List<Coordinate>();
@@ -85,7 +85,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                         if (lineFields.Count < numColumns)
                         {
                             throw new Exception(string.Format("Invalid point row on line {0} in file {1}", LineNumber,
-                                                              ldbFilePath));
+                                                              filePath));
                         }
 
                         double x = GetDouble(lineFields[0]);
@@ -98,7 +98,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                                                      ? baseName + counter++
                                                      : firstName + "_" + counter++;
 
-                            AddNewFeature(featureName, points, features, ldbFilePath);
+                            AddNewFeature(featureName, points, features, filePath);
                             points.Clear();
                         }
                         else
@@ -109,7 +109,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
                     string lastFeatureName = counter == 1 ? firstName :
                                              baseName != null ? baseName + counter : firstName + "_" + counter;
-                    AddNewFeature(lastFeatureName, points, features, ldbFilePath);
+                    AddNewFeature(lastFeatureName, points, features, filePath);
                     line = GetNextLine();
                 }
             }

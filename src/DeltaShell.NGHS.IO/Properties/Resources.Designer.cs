@@ -19,7 +19,7 @@ namespace DeltaShell.NGHS.IO.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -139,6 +139,15 @@ namespace DeltaShell.NGHS.IO.Properties {
             get {
                 return ResourceManager.GetString("DelftIniReader_GetKeyValueComment_Invalid_key_value_comment_line_on_line__0__in_f" +
                         "ile__1_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid group on line {0} in file {1}.
+        /// </summary>
+        public static string DelftIniReader_Invalid_group_on_line__0__in_file__1_ {
+            get {
+                return ResourceManager.GetString("DelftIniReader_Invalid_group_on_line__0__in_file__1_", resourceCulture);
             }
         }
         

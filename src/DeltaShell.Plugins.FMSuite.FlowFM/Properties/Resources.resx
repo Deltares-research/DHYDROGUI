@@ -601,7 +601,10 @@ Manhole with unique id '{4}' is not imported.</value>
   <data name="WaterFlowFMModel_DimrModel_GetDataItemByItemString_parameter_name__0__in__1__cannot_be_found_in_the_FM_model" xml:space="preserve">
     <value>parameter name {0} in {1} cannot be found in the FM model.</value>
   </data>
-  <data name="MduDelftIniReader_Invalid_comment_placed_on_line__0__in_file___1__" xml:space="preserve">
-    <value>Invalid comment placed on line {0} in file '{1}'</value>
+  <data name="WaterFlowFMModel_ImportRestartFile_Invalid_restart_file_name__0___your_file_should_be_formatted_as__name__yyyyMMdd_HHmmss_1_" xml:space="preserve">
+    <value>Invalid restart file name {0}: your file should be formatted as &lt;name&gt;_yyyyMMdd_HHmmss{1}</value>
+  </data>
+  <data name="WaterFlowFMModel_Running_this_model_requires_the_OutputDirectory_to_be_overwritten_to___0_" xml:space="preserve">
+    <value>Running this model requires the OutputDirectory to be overwritten to: {0}</value>
   </data>
 </root>

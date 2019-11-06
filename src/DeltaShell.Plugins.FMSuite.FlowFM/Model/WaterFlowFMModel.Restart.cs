@@ -11,6 +11,7 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 {
@@ -160,7 +161,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             if (length < 5 || splitFileName[length - 2] != "rst")
             {
                 throw new ArgumentException(
-                    $"Invalid restart file name {fileName}: your file should be formatted as <name>_yyyyMMdd_HHmmss{FileConstants.RestartFileExtension}");
+                    string.Format(Resources.WaterFlowFMModel_ImportRestartFile_Invalid_restart_file_name__0___your_file_should_be_formatted_as__name__yyyyMMdd_HHmmss_1_, fileName, 
+                                  FileConstants.RestartFileExtension));
             }
 
             if (splitFileName.Last() != "nc")
@@ -174,7 +176,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                                         DateTimeStyles.None, out dateTime))
             {
                 throw new ArgumentException(
-                    $"Invalid restart file name {fileName}: your file should be formatted as <name>_yyyyMMdd_HHmmss{FileConstants.RestartFileExtension}");
+                    string.Format(Resources.WaterFlowFMModel_ImportRestartFile_Invalid_restart_file_name__0___your_file_should_be_formatted_as__name__yyyyMMdd_HHmmss_1_, fileName, 
+                                  FileConstants.RestartFileExtension));
             }
 
             ModelStateHandler.ModelWorkingDirectory = Path.GetDirectoryName(Path.GetFullPath(MduFilePath));

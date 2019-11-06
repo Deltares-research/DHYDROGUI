@@ -522,15 +522,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Invalid comment placed on line {0} in file &apos;{1}&apos;.
-        /// </summary>
-        public static string MduDelftIniReader_Invalid_comment_placed_on_line__0__in_file___1__ {
-            get {
-                return ResourceManager.GetString("MduDelftIniReader_Invalid_comment_placed_on_line__0__in_file___1__", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Copied file at location &apos;{0}&apos; to location &apos;{1}&apos;,
         ///because the file existed outside of the project folder of model &apos;{2}&apos;..
         /// </summary>
@@ -1279,6 +1270,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid restart file name {0}: your file should be formatted as &lt;name&gt;_yyyyMMdd_HHmmss{1}.
+        /// </summary>
+        public static string WaterFlowFMModel_ImportRestartFile_Invalid_restart_file_name__0___your_file_should_be_formatted_as__name__yyyyMMdd_HHmmss_1_ {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModel_ImportRestartFile_Invalid_restart_file_name__0___your_file_shoul" +
+                        "d_be_formatted_as__name__yyyyMMdd_HHmmss_1_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Could not find log file: {0} at expected path: {1}.
         /// </summary>
         public static string WaterFlowFMModel_ReadDiaFile_Could_not_find_log_file___0__at_expected_path___1_ {
@@ -1293,6 +1294,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         public static string WaterFlowFMModel_ReadDiaFile_Error_reading_log_file___0____1_ {
             get {
                 return ResourceManager.GetString("WaterFlowFMModel_ReadDiaFile_Error_reading_log_file___0____1_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Running this model requires the OutputDirectory to be overwritten to: {0}.
+        /// </summary>
+        public static string WaterFlowFMModel_Running_this_model_requires_the_OutputDirectory_to_be_overwritten_to___0_ {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModel_Running_this_model_requires_the_OutputDirectory_to_be_overwritte" +
+                        "n_to___0_", resourceCulture);
             }
         }
         

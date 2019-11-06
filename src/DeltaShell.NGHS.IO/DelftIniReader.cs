@@ -101,7 +101,7 @@ namespace DeltaShell.NGHS.IO
                 int endIndex = line.LastIndexOf("]", StringComparison.Ordinal);
                 if (endIndex < 3)
                 {
-                    throw new FormatException(string.Format("Invalid group on line {0} in file {1}", LineNumber, InputFilePath));
+                    throw new FormatException(string.Format(Resources.DelftIniReader_Invalid_group_on_line__0__in_file__1_, LineNumber, InputFilePath));
                 }
                 newCategory = line.Substring(1, endIndex - 1).Trim();
                 return true;
