@@ -1,5 +1,8 @@
 ﻿using System;
+using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
+using GeoAPI.Extensions.Feature;
+using GeoAPI.Geometries;
 using SharpMap.Data.Providers;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries
@@ -19,12 +22,58 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries
     /// </remarks>
     public class BoundaryLineMapFeatureProvider : Feature2DCollection
     {
+        private readonly MultiIEventedListAdapter<IWaveBoundary, BoundaryLineFeature> lineFeatures;
         private readonly IBoundaryContainer boundaryContainer;
+
+        private Tuple<IWaveBoundary, IEventedList<IWaveBoundary>> ObtainWaveBoundaryFromFeature(BoundaryLineFeature feature)
+        {
+            return new Tuple<IWaveBoundary, IEventedList<IWaveBoundary>>(feature.ObservedWaveBoundary,
+                                                                         boundaryContainer.Boundaries);
+        }
+
+        private BoundaryLineFeature CreateBoundaryLineFeature(IWaveBoundary waveBoundary)
+        {
+            return new BoundaryLineFeature()
+            {
+                ObservedWaveBoundary = waveBoundary,
+            };
+        }
+        
 
         public BoundaryLineMapFeatureProvider(IBoundaryContainer boundaryContainer)
         {
             this.boundaryContainer = boundaryContainer ?? 
                                      throw new ArgumentNullException(nameof(boundaryContainer));
+
+            lineFeatures = new MultiIEventedListAdapter<IWaveBoundary, BoundaryLineFeature>(ObtainWaveBoundaryFromFeature, 
+                                                                                            CreateBoundaryLineFeature);
+        }
+
+        /// <summary>
+        /// Construct a new <see cref="BoundaryLineFeature"/> based upon the
+        /// geometry, and add this feature to this <see cref="BoundaryLineMapFeatureProvider"/>.
+        /// </summary>
+        /// <param name="geometry">The geometry.</param>
+        /// <returns>
+        /// The constructed <see cref="BoundaryLineFeature"/> if one could be constructed,
+        /// otherwise <c>null</c>.
+        /// </returns>
+        /// <remarks>
+        /// This will add an <see cref="IWaveBoundary"/> to the underlying model.
+        /// </remarks>
+        public override IFeature Add(IGeometry geometry)
+        {
+            if (geometry == null)
+            {
+                return null;
+            }
+
+            return null;
+        }
+
+        public override bool Add(IFeature feature)
+        {
+            throw new NotImplementedException("This has not been implemented yet.");
         }
     }
 }
